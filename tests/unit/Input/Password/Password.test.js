@@ -34,7 +34,7 @@ define(
                placeholder: '',
                revealable: true,
                textAlign: 'left',
-               autoComplete: true,
+               autoComplete: 'on',
                fontStyle: 'default',
                selectOnClick: false
             });
@@ -48,7 +48,6 @@ define(
                'textAlign',
                'fontStyle',
                'revealable',
-               'autoComplete',
                'inputCallback',
                'selectOnClick'
             ].sort());
@@ -130,7 +129,7 @@ define(
          });
          describe('The click event on the icon.', function() {
             it('Auto-completion is disabled.', function() {
-               ctrl._options.autoComplete = false;
+               ctrl._autoComplete = 'off';
                ctrl._toggleVisibilityHandler();
 
                assert.equal(ctrl._type, 'text');
@@ -142,7 +141,7 @@ define(
                assert.equal(ctrl._passwordVisible, false);
             });
             it('Auto-completion is enabled.', function() {
-               ctrl._options.autoComplete = true;
+               ctrl._autoComplete = 'on';
                ctrl._toggleVisibilityHandler();
 
                assert.equal(ctrl._type, 'text');

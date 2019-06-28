@@ -20,14 +20,18 @@
    content: '\200b';
 }
 
-.controls-RadioItem__caption {
-    padding-left: @spacing-between-radioItem-icon-caption;
+.controls-RadioItem__SwitchCircle {
+    padding-right: @spacing-between-radioItem-icon-caption;
  }
 
-.controls-RadioItem__caption_selected_disabled,
-.controls-RadioItem__caption_selected_enabled {
-   color: @color_RadioItem__caption_selected;
+.controls-RadioItem__caption {
+   font-size: @font-size_RadioItem__caption;
 }
+
+.controls-RadioItem__caption_selected_disabled,
+ .controls-RadioItem__caption_selected_enabled {
+    color: @color_RadioItem__caption_selected;
+ }
 
 .controls-RadioItem__caption_unselected_disabled {
    color: @color_RadioItem__caption_unselected_disabled;
@@ -45,6 +49,8 @@
 .controls-RadioGroup__wrapper_vertical {
    .inline-flexbox();
    .flex-direction(column);
+   //чтоб правильно считалась ширина при длинном заголовке
+   width: 100%;
 }
 
 .ws-is-no-touch {

@@ -10,10 +10,10 @@
  * @includes HeadingStyles Controls/_heading/Heading/HeadingStyles
  * @includes SeparatorStyles Controls/_heading/Separator/SeparatorStyles
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
-import Title = require('Controls/_heading/Heading');
+import {default as Title} from 'Controls/_heading/Heading';
 import Back = require('Controls/_heading/Back');
 import Separator = require('Controls/_heading/Separator');
 import Counter = require('Controls/_heading/Counter');

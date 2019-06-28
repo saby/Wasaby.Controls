@@ -13,7 +13,7 @@ import template = require('wml!Controls/_decorator/Number/Number');
        * @category Decorator
        * @demo Controls-demo/Decorators/Number/Number
        *
-       * @author Журавлев М.С.
+       * @author Красильников А.С.
        */
 
       /**

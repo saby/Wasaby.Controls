@@ -1,6 +1,16 @@
 .controls-FilterDropdown {
    display: inline-flex;
    align-items: center;
+   min-width: 1px;
+}
+
+.controls-FilterDropdown__content {
+   width: 100%;
+   flex-shrink: 1;
+}
+
+.controls-FilterDropdown__contentTemplate {
+   .text-overflow();
 }
 .controls-FilterDropdown__text {
    color: @color_FilterDropdown-text;
@@ -28,5 +38,6 @@
    .flexbox();
    .align-self(center);
    .icon-size(@size_icon_s);
+   flex-shrink: 0;
    cursor: pointer;
 }

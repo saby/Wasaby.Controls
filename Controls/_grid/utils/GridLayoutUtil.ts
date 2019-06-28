@@ -16,7 +16,7 @@ function isFullGridSupport(): boolean {
 }
 
 function isPartialGridSupport(): boolean {
-    return detection.isNotFullGridSupport;
+    return (detection.isNotFullGridSupport && !(detection.isWinXP || (detection.isIE && !detection.isModernIE)) || detection.safari11);
 }
 
 function isNoGridSupport(): boolean {
@@ -53,6 +53,42 @@ function getCellStyles(rowIndex: number, columnIndex: number, rowSpan: number = 
     }
     return toCssString(rules);
 }
+
+function getMultyHeaderStyles(startColumn, endColumn, startRow, endRow, additionalColumn) {
+    let gridStyles = [
+        {
+            name: 'grid-column',
+            value: `${startColumn + additionalColumn}/${endColumn + additionalColumn}`
+        },
+        {
+            name: 'grid-row',
+            value: `${startRow}/${endRow}`
+        },
+    ];
+
+    if (detection.isIE) {
+        gridStyles.push(
+            {
+                name: '-ms-grid-column',
+                value: `${startColumn + additionalColumn}`
+            },
+            {
+                name: '-ms-grid-row',
+                value: `${startRow}`
+            },
+            {
+                name: '-ms-grid-column-span',
+                value: `${endColumn - startColumn}`
+            },
+            {
+                name: '-ms-grid-row-span',
+                value: `${endRow - startRow}`
+            }
+        );
+    }
+    return toCssString(gridStyles);
+}
+
 
 function getTemplateColumnsStyle(columnsWidth: Array<string | number>) {
     let
@@ -133,5 +169,6 @@ export {
     getCellStyles,
     getTemplateColumnsStyle,
     getDefaultStylesFor,
-    toCssString
+    toCssString,
+    getMultyHeaderStyles
 };

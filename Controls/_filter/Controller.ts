@@ -3,7 +3,7 @@ import template = require('wml!Controls/_filter/Controller');
 import Deferred = require('Core/Deferred');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import historyUtils = require('Controls/_filter/HistoryUtils');
 import {Controller as SourceController} from 'Controls/source';
 import merge = require('Core/core-merge');
@@ -32,10 +32,16 @@ import 'Controls/context';
             return result;
          },
 
+         isEqualItems: function(item1, item2) {
+            return !!(getPropValue(item1, 'id') && (getPropValue(item1, 'id') === getPropValue(item2, 'id'))
+            || (getPropValue(item1, 'name') && getPropValue(item1, 'name') === getPropValue(item2, 'name')));
+         },
+
          equalItemsIterator: function(filterButtonItems, fastFilterItems, prepareCallback) {
             chain.factory(filterButtonItems).each(function(buttonItem, index) {
                chain.factory(fastFilterItems).each(function(fastItem) {
-                  if (getPropValue(buttonItem, 'id') === getPropValue(fastItem, 'id') && fastItem.hasOwnProperty('textValue') && buttonItem.hasOwnProperty('textValue')) {
+                  if (_private.isEqualItems(buttonItem, fastItem)
+                      && fastItem.hasOwnProperty('textValue') && buttonItem.hasOwnProperty('textValue')) {
                      prepareCallback(index, fastItem);
                   }
                });
@@ -57,34 +63,54 @@ import 'Controls/context';
             return _private.minimizeFilterItems(historyItems);
          },
 
+         minimizeItem: function(item) {
+            const textValue = getPropValue(item, 'textValue');
+            const value = textValue ? getPropValue(item, 'value') : getPropValue(item, 'resetValue');
+            const visibility = !textValue && getPropValue(item, 'visibility') ? false : getPropValue(item, 'visibility');
+            let minItem = {
+               value: value,
+               visibility: visibility
+            };
+
+            if (visibility !== false && textValue !== getPropValue(item, 'resetTextValue')) {
+               minItem.textValue = getPropValue(item, 'textValue');
+            } else {
+               minItem.textValue = undefined;
+            }
+
+            if (getPropValue(item, 'id')) {
+               minItem.id = getPropValue(item, 'id');
+            } else {
+               minItem.name = getPropValue(item, 'name');
+               minItem.viewMode = getPropValue(item, 'viewMode');
+            }
+            return minItem;
+         },
+
          minimizeFilterItems: function(items) {
             var minItems = [];
             chain.factory(items).each(function(item) {
-               minItems.push({
-                  id: getPropValue(item, 'id'),
-                  value: getPropValue(item, 'value'),
-                  textValue: getPropValue(item, 'visibility') !== false ? getPropValue(item, 'textValue') : undefined,
-                  visibility: getPropValue(item, 'visibility')
-               });
+               minItems.push(_private.minimizeItem(item));
             });
             return minItems;
          },
 
          getHistoryItems: function(self, id) {
-            var source = historyUtils.getHistorySource(id),
-               result, recent, lastFilter;
+            let result, recent, lastFilter;
 
             if (!id) {
                result =  Deferred.success([]);
             }
 
-            if (!self._sourceController) {
-               self._sourceController = new SourceController({
-                  source: source
-               });
-            }
-
             if (id) {
+               let source = historyUtils.getHistorySource(id);
+
+               if (!self._sourceController) {
+                  self._sourceController = new SourceController({
+                     source: source
+                  });
+               }
+
                result = new Deferred();
 
                self._sourceController.load({ $_history: true })
@@ -130,10 +156,11 @@ import 'Controls/context';
          itemsIterator: function(filterButtonItems, fastDataItems, differentCallback, equalCallback) {
             function processItems(items) {
                chain.factory(items).each(function(elem) {
-                  var value = getPropValue(elem, 'value');
-                  var visibility = getPropValue(elem, 'visibility');
+                  let value = getPropValue(elem, 'value');
+                  let visibility = getPropValue(elem, 'visibility');
+                  let viewMode = getPropValue(elem, 'viewMode');
 
-                  if (value !== undefined && (visibility === undefined || visibility === true)) {
+                  if (value !== undefined && ((visibility === undefined || visibility === true) || viewMode === 'frequent')) {
                      if (differentCallback) {
                         differentCallback(elem);
                      }
@@ -156,7 +183,7 @@ import 'Controls/context';
             var filter = {};
 
             function processItems(elem) {
-               filter[getPropValue(elem, 'id')] = getPropValue(elem, 'value');
+               filter[getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name')] = getPropValue(elem, 'value');
             }
 
             _private.itemsIterator(filterButtonItems, fastFilterItems, processItems);
@@ -170,7 +197,7 @@ import 'Controls/context';
             function processItems(elem) {
                // The filter can be changed by another control, in which case the value is set to the filter button, but textValue is not set.
                if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue')) && getPropValue(elem, 'textValue')) {
-                  filter[getPropValue(elem, 'id')] = getPropValue(elem, 'value');
+                  filter[getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name')] = getPropValue(elem, 'value');
                }
             }
 
@@ -183,7 +210,7 @@ import 'Controls/context';
             var removedKeys = [];
 
             function processItems(elem) {
-               removedKeys.push(getPropValue(elem, 'id'));
+               removedKeys.push(getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name'));
             }
 
             _private.itemsIterator(filterButtonItems, fastFilterItems, null, processItems);
@@ -238,10 +265,11 @@ import 'Controls/context';
          mergeFilterItems: function(items, historyItems) {
             chain.factory(items).each(function(item) {
                chain.factory(historyItems).each(function(historyItem) {
-                  if (getPropValue(item, 'id') === getPropValue(historyItem, 'id')) {
+                  if (_private.isEqualItems(item, historyItem)) {
                      var value = getPropValue(historyItem, 'value');
                      var textValue = getPropValue(historyItem, 'textValue');
                      var visibility = getPropValue(historyItem, 'visibility');
+                     var viewMode = getPropValue(historyItem, 'viewMode');
 
                      if (value !== undefined) {
                         setPropValue(item, 'value', value);
@@ -253,6 +281,10 @@ import 'Controls/context';
 
                      if (visibility !== undefined && item.hasOwnProperty('visibility')) {
                         setPropValue(item, 'visibility', visibility);
+                     }
+
+                     if (viewMode !== undefined && item.hasOwnProperty('viewMode')) {
+                        setPropValue(item, 'viewMode', viewMode);
                      }
                   }
                });
@@ -337,6 +369,20 @@ import 'Controls/context';
       }
 
       /**
+       * Контрол-контроллер, который позволяет фильтровать данные в {@link Controls/list:View}, используя {@link Filter/Button} или {@link Filter/Fast}.
+       * Контроллер позволяет сохранять историю фильтра и восстанавливать страницу после перезагрузки с последним примененным фильтром.
+       *
+       * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
+       *
+       * @class Controls/_filter/Controller
+       * @extends Core/Control
+       * @mixes Controls/interface/IFilter
+       * @control
+       * @public
+       * @author Герасимов А.М.
+       */
+
+      /*
        * The filter controller allows you to filter data in a {@link Controls/list:View} using {@link Filter/Button} or {@link Filter/Fast}.
        * The filter controller allows you to save filter history and restore page after reload with last applied filter.
        *
@@ -351,6 +397,41 @@ import 'Controls/context';
        */
 
       /**
+       * @name Controls/_filter/Controller#filterButtonSource
+       * @cfg {Array|Function|Types/collection:IList} Элемент или функция FilterButton, которая возвращает элемент FilterButton.
+       * @remark Если опция historyId передана, в функцию придет история фильтра.
+       * @example
+       * TMPL:
+       * <pre>
+       *    <Controls._filter.Controller
+       *       historyId="myHistoryId"
+       *       filterButtonSource="{{_filterButtonData}}">
+       *          ...
+       *          <Controls._filter.Button.Container>
+       *             <Controls._filter.Button />
+       *          </Controls._filter.Button.Container>
+       *          ...
+       *    </Controls._filter.Controller>
+       * </pre>
+       * JS:
+       * <pre>
+       *    this._filterButtonData = function(fromHistoryItems) {
+       *       var filterButtonItems = [{
+       *           id: '1',
+       *           resetValue: 'Yaroslavl'
+       *       }];
+       *
+       *       if (fromHistoryItems) {
+       *           filterButtonItems[0].value = fromHistoryItems[0].value + 'city'
+       *       }
+       *
+       *       return filterButtonItems;
+       *    }
+       * </pre>
+       * @see Controls/_filter/Button#items
+       */
+
+      /*
        * @name Controls/_filter/Controller#filterButtonSource
        * @cfg {Array|Function|Types/collection:IList} FilterButton items or function, that return FilterButton items
        * @remark if the historyId option is setted, function will receive filter history
@@ -386,6 +467,52 @@ import 'Controls/context';
        */
 
       /**
+       * @name Controls/_filter/Controller#fastFilterSource
+       * @cfg {Array|Function|Types/collection:IList} Элемент или функция FastFilter, которая возвращает элемент FastFilter.  
+       * @remark Если опция historyId передана, в функцию придет история фильтра.
+       * @example
+       * TMPL:
+       * <pre>
+       *    <Controls._filter.Controller
+       *       historyId="myHistoryId"
+       *       fastFilterSource="{{_fastFilterSource}}">
+       *       <Controls.list:DataContainer>
+       *          ...
+       *          <Controls._filter.Fast.Container>
+       *             <Controls._filter.Fast />
+       *          </Controls._filter.Fast.Container>
+       *          ...
+       *       </Controls.list:DataContainer>
+       *    </Controls._filter.Controller>
+       * </pre>
+       * JS:
+       * <pre>
+       *    this._fastFilterSource = function(fromHistoryItems) {
+       *        var fastFilterItems = [{
+       *            id: '1',
+       *            resetValue: 'Yaroslavl',
+       *            properties: {
+       *               keyProperty: 'title',
+       *               displayProperty: 'title',
+       *               source: new MemorySource({
+       *                  idProperty: 'title',
+       *                  data: [
+       *                      { key: '1', title: 'Yaroslavl' },
+       *                      { key: '2', title: 'Moscow' },
+       *                      { key: '3', title: 'St-Petersburg' }
+       *                  ]
+       *               })
+       *            }
+       *        }];
+       *        if (fromHistoryItems) {
+       *          fastFilterItems[0].value = fromHistoryItems[0].value + 'city'
+       *        }
+       *    }
+       * </pre>
+       * @see Controls/_filter/Fast#items
+       */
+
+      /*
        * @name Controls/_filter/Controller#fastFilterSource
        * @cfg {Array|Function|Types/collection:IList} FastFilter items or function, that return FastFilter items
        * @remark if the historyId option is setted, function will recive filter history
@@ -433,10 +560,21 @@ import 'Controls/context';
 
       /**
        * @name Controls/_filter/Controller#historyId
+       * @cfg {String} Идентификатор, под которым будет сохранена история фильтра.
+       */
+
+      /*
+       * @name Controls/_filter/Controller#historyId
        * @cfg {String} The identifier under which the filter history will be saved.
        */
 
       /**
+       * Controls/_filter/Controller#historyItems
+       * @cfg {Array|Types/collection:IList} Вы можете получить элементы фильтра из истории самостоятельно,
+       * эти элементы будут применены/объединены для filterButtonItems и fastFilterItem. История фильтра не будет загружаться, если этот параметр установлен.
+       */
+
+      /*
        * Controls/_filter/Controller#historyItems
        * @cfg {Array|Types/collection:IList} You can prepare filter items from history by your self,
        * this items will applied/merged to filterButtonItems and fastFilterItem. Filter history will not loading, if this option setted.

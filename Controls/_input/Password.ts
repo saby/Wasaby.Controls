@@ -16,7 +16,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
        * @public
        * @demo Controls-demo/Input/Password/PasswordPG
        *
-       * @author Журавлев М.С.
+       * @author Красильников А.С.
        */
 
       /**
@@ -44,6 +44,9 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
          },
          getTheme: function() {
             return this._options.theme;
+         },
+         isAutoComplete: function(autoComplete) {
+            return autoComplete !== 'off';
          }
       };
 
@@ -52,7 +55,8 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
 
          _getViewModelOptions: function(options) {
             return {
-               autoComplete: options.autoComplete,
+               readOnly: options.readOnly,
+               autoComplete: _private.isAutoComplete(this._autoComplete),
                passwordVisible: this._passwordVisible
             };
          },
@@ -64,7 +68,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
          _initProperties: function(options) {
             Password.superclass._initProperties.apply(this, arguments);
 
-            this._type = _private.calculateType(this._passwordVisible, options.autoComplete);
+            this._type = _private.calculateType(this._passwordVisible, _private.isAutoComplete(this._autoComplete));
 
             this._afterFieldWrapper.template = passwordVisibilityButtonTemplate;
             this._afterFieldWrapper.scope.getTheme = _private.getTheme.bind(this);
@@ -88,19 +92,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
 
             this._passwordVisible = passwordVisible;
             this._forceUpdate();
-            this._type = _private.calculateType(passwordVisible, this._options.autoComplete);
-         },
-
-         _getDisplayValue: function() {
-            var passwordVisible = this._passwordVisible;
-            var autoComplete = this._options.autoComplete;
-            var displayValue = this._viewModel.displayValue;
-
-            /**
-             * If auto-completion is true, then the displayed value can be saved to the browser history.
-             * Therefore, the field must have a value that is not replaced by •.
-             */
-            return autoComplete || passwordVisible ? displayValue : '•'.repeat(displayValue.length);
+            this._type = _private.calculateType(passwordVisible, _private.isAutoComplete(this._autoComplete));
          }
       });
 
@@ -111,7 +103,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
 
          defaultOptions.value = '';
          defaultOptions.revealable = true;
-         defaultOptions.autoComplete = true;
+         defaultOptions.autoComplete = 'on';
 
          return defaultOptions;
       };

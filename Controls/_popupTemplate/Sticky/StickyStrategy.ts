@@ -1,7 +1,7 @@
 /**
  * Created by as.krasilnikov on 21.03.2018.
  */
-import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
+import TouchKeyboardHelper from 'Controls/Utils/TouchKeyboardHelper';
 import cMerge = require('Core/core-merge');
 import Env = require('Env/Env');
 

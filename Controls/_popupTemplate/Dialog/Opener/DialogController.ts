@@ -1,7 +1,5 @@
 import BaseController = require('Controls/_popupTemplate/BaseController');
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
-import Env = require('Env/Env');
-import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
       var _private = {
          prepareConfig: function(item, sizes) {
             // After popup will be transferred to the synchronous change of coordinates,
@@ -28,20 +26,12 @@ import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
                }
             }
          },
-         getWindowSize: function() {
-            let height = window.innerHeight;
-
-            // if keyboard visible, then window height decreases on scrollTop value.
-            // if user scroll page, then window height will changed.
-            // get real window.height for same position with/without keyboard.
-            if (Env.detection.isMobileIOS) {
-               // todo: https://online.sbis.ru/opendoc.html?guid=7223381a-dc7c-44b4-a628-7f2d7ba8a703
-               height += window.scrollY;
-            }
+         getWindowSize() {
             return {
                width: window.innerWidth,
-               height: height,
-               scrollTop: 0,
+               height: window.innerHeight,
+               scrollTop: window.scrollY,
+               scrollLeft: window.scrollX
             };
          }
       };
@@ -63,19 +53,23 @@ import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
             /* start: We remove the set values that affect the size and positioning to get the real size of the content */
             var width = container.style.width;
             var height = container.style.height;
-            // We won't remove width and height, if they are set explicitly.
-            if(!cfg.popupOptions.width) {
-               container.style.width = 'auto';
+            // We won't remove width and height, if they are set explicitly or popup is maximize.
+
+            if (!cfg.popupOptions.maximize) {
+               if(!cfg.popupOptions.width) {
+                  container.style.width = 'auto';
+               }
+               if(!cfg.popupOptions.height) {
+                  container.style.height = 'auto';
+               }
+               if (cfg.popupOptions.maxWidth) {
+                  container.style.maxWidth = cfg.popupOptions.maxWidth + 'px';
+               }
+               if (cfg.popupOptions.maxHeight) {
+                  container.style.maxHeight = cfg.popupOptions.maxHeight + 'px';
+               }
             }
-            if(!cfg.popupOptions.height) {
-               container.style.height = 'auto';
-            }
-            if (cfg.popupOptions.maxWidth) {
-               container.style.maxWidth = cfg.popupOptions.maxWidth + 'px';
-            }
-            if (cfg.popupOptions.maxHeight) {
-               container.style.maxHeight = cfg.popupOptions.maxHeight + 'px';
-            }
+
 
             /* end: We remove the set values that affect the size and positioning to get the real size of the content */
             this.prepareConfig(cfg, container);
@@ -119,6 +113,11 @@ import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
             delete item.startPosition;
          },
 
+         pageScrolled(): boolean {
+            // Don't respond to page scrolling. The popup should remain where it originally positioned.
+            return false;
+         },
+
          prepareConfig: function(cfg, container) {
             var sizes = this._getPopupSizes(cfg, container);
             cfg.sizes = sizes;
@@ -126,7 +125,7 @@ import TouchKeyboardHelper = require('Controls/Utils/TouchKeyboardHelper');
          },
 
          needRecalcOnKeyboardShow: function() {
-            return false;
+            return true;
          },
          _private: _private
       });

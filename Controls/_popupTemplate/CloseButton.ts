@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/CloseButton/CloseButton');
 import Env = require('Env/Env');
-import 'css!theme?Controls/popupTemplate';
    /**
     * Specialized type of button for closing windows.
     *
@@ -82,17 +81,13 @@ import 'css!theme?Controls/popupTemplate';
             self._viewMode = options.viewMode;
          } else {
             //TODO: https://online.sbis.ru/opendoc.html?guid=1f771374-0295-4add-bbd4-12d478d14163
-            if(options.style==='popup') {
-               self._viewMode = options.style;
-            } else {
-               self._viewMode = (options.style === 'light' ? 'link' : 'toolButton');
-            }
-            if (options.style !== undefined) {
-               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Option "style" is deprecated and removed in 19.200. Use option "viewMode".');
-               if (options.style === 'primary') {
-                  Env.IoC.resolve('ILogger').warn(this._moduleName, 'Option "style" is deprecated and not regulated transparency. Use option "transparent".');
-                  self._transparent = false;
-               }
+            self._viewMode = (options.style === 'light' ? 'link' : 'toolButton');
+         }
+         if (options.style !== undefined) {
+            Env.IoC.resolve('ILogger').warn(this._moduleName, 'Option "style" is deprecated and removed in 19.200. Use option "viewMode".');
+            if (options.style === 'primary') {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Option "style" is deprecated and not regulated transparency. Use option "transparent".');
+               self._transparent = false;
             }
          }
       }

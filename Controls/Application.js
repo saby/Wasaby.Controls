@@ -272,7 +272,7 @@ define('Controls/Application',
             self.lite = cfg.lite || false;
 
             // TODO нужно удалить после решения https://online.sbis.ru/opendoc.html?guid=a9ceff55-1c8b-4238-90a7-22dde0e1bdbe
-            self.servicesPath = appData.servicesPath || cfg.servicesPath || Env.constants.defaultServiceUrl || '/service/';
+            self.servicesPath =  cfg.servicesPath || appData.servicesPath || Env.constants.defaultServiceUrl || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
             self.application = appData.application;
 
@@ -323,6 +323,12 @@ define('Controls/Application',
             return def;
          },
 
+         _afterMount: function() {
+            if (!Env.detection.isMobilePlatform) {
+               this.activate();
+            }
+         },
+
          _beforeUpdate: function(cfg) {
             if (this._scrollData.pagingVisible !== cfg.pagingVisible) {
                this._scrollData.pagingVisible = cfg.pagingVisible;
@@ -330,9 +336,15 @@ define('Controls/Application',
             }
          },
 
-         _afterUpdate: function() {
+         _afterUpdate: function(oldOptions) {
             var elements = document.getElementsByClassName('head-title-tag');
             if (elements.length === 1) {
+               // Chrome на ios при вызове History.replaceState, устанавливает в title текущий http адрес.
+               // Если после загрузки установить title, который уже был, то он не обновится, и в заголовке вкладки
+               // останется http адрес. Поэтому сначала сбросим title, а затем положим туда нужное значение.
+               if (Env.detection.isMobileIOS && Env.detection.chrome && oldOptions.title === this._options.title) {
+                  elements[0].textContent = '';
+               }
                elements[0].textContent = this._options.title;
             }
          },

@@ -411,7 +411,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             visibility: undefined
          }, {
             id: 'testId2',
-            value: 'testValue',
+            value: '',
             textValue: undefined,
             visibility: false
          }, {
@@ -493,7 +493,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             visibility: undefined
          }, {
             id: 'testId3',
-            value: 'testValue',
+            value: '',
             textValue: undefined,
             visibility: undefined
          }]);
@@ -505,7 +505,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             visibility: undefined
          }, {
             id: 'testId3',
-            value: 'testValue',
+            value: '',
             textValue: undefined,
             visibility: undefined
          }]);
@@ -584,13 +584,25 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             textValue: 'test2',
             visibility: undefined
          }]);
-         var filterButtonItems2 = [{
+         let filterButtonItems2 = [{
             id: 'testId2',
             value: 'testValue',
             textValue: 'test2',
             resetValue: 'testValue'
          }];
          assert.deepEqual(Filter._private.getHistoryData(filterButtonItems2), {});
+         filterButtonItems2 = [{
+            id: 'testId2',
+            value: 'testValue',
+            textValue: 'test2',
+            resetTextValue: 'test2'
+         }];
+         assert.deepEqual(Filter._private.getHistoryData(filterButtonItems2), [{
+            id: 'testId2',
+            value: 'testValue',
+            textValue: undefined,
+            visibility: undefined
+         }]);
       });
 
       it('_private.getHistoryItems', function(done) {
@@ -621,6 +633,56 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             assert.deepEqual(items, {});
             done();
          });
+      });
+
+      it('_private.updateHistory', function() {
+         let filterButtonItem = { id: '1' };
+         let fastFilterItem = { id: '1' };
+         assert.isTrue(Filter._private.isEqualItems(filterButtonItem, fastFilterItem));
+
+         filterButtonItem = {id: '2'};
+         assert.isFalse(Filter._private.isEqualItems(filterButtonItem, fastFilterItem));
+
+         filterButtonItem = {name: '2'};
+         fastFilterItem = {name: '1'};
+         assert.isFalse(Filter._private.isEqualItems(filterButtonItem, fastFilterItem));
+
+         fastFilterItem = {name: '2'};
+         assert.isTrue(Filter._private.isEqualItems(filterButtonItem, fastFilterItem));
+      });
+
+      it('_private.minimizeItem', function() {
+         let filterButtonItem = {
+            id: 'testId4',
+            value: 'testValue4',
+            textValue: 'textTextValue',
+            resetValue: '',
+            visibility: true
+         };
+         let expectedMinItem = {
+            id: 'testId4',
+            value: 'testValue4',
+            textValue: 'textTextValue',
+            visibility: true
+         };
+         assert.deepStrictEqual(Filter._private.minimizeItem(filterButtonItem), expectedMinItem);
+
+         filterButtonItem = {
+            name: 'testId4',
+            value: 'testValue4',
+            textValue: 'textTextValue',
+            resetValue: '',
+            visibility: true,
+            viewMode: 'basic'
+         };
+         expectedMinItem = {
+            name: 'testId4',
+            value: 'testValue4',
+            textValue: 'textTextValue',
+            visibility: true,
+            viewMode: 'basic'
+         };
+         assert.deepStrictEqual(Filter._private.minimizeItem(filterButtonItem), expectedMinItem);
       });
 
       it('applyItemsToFilter', function() {

@@ -34,7 +34,31 @@ var _private = {
 
    searchErrback: function(self, error) {
       self._searchDeferred.errback(error);
+   },
+
+   clearSearchDelay: function(self) {
+      if (self._searchDelayTimer) {
+         clearTimeout(self._searchDelayTimer);
+         self._searchDelayTimer = null;
+      }
+   },
+
+   callAfterDelay: function(self, callback) {
+      _private.clearSearchDelay(self);
+      self._searchDelayTimer = setTimeout(function() {
+         self._searchDelayTimer = null;
+         callback();
+      }, self._searchDelay);
+   },
+
+   resolveSearchCall: function (self, callback, force) {
+      if (force) {
+         callback();
+      } else {
+         _private.callAfterDelay(self, callback);
+      }
    }
+
 };
 
 /**
@@ -99,15 +123,10 @@ var Search  = extend({
       };
 
       //aborting current query
-      this.abort();
+      this.abort(true);
       this._searchDeferred = new Deferred();
 
-      if (force) {
-         load();
-      } else {
-         this._searchDelayTimer = setTimeout(load, this._searchDelay);
-      }
-
+      _private.resolveSearchCall(this, load, force);
       return this._searchDeferred;
    },
 
@@ -115,15 +134,22 @@ var Search  = extend({
     * Aborting search
     * @public
     */
-   abort: function() {
-      if (this._searchDelayTimer) {
-         clearTimeout(this._searchDelayTimer);
-         this._searchDelayTimer = null;
-      }
-      if (this._searchDeferred && !this._searchDeferred.isReady()) {
-         this._searchDeferred.cancel();
-      }
-      this._sourceController.cancelLoading();
+   abort: function(force):Deferred {
+      let self = this;
+      let abortDef = new Deferred();
+
+      let abort = function() {
+         if (self._searchDeferred && !self._searchDeferred.isReady()) {
+            self._searchDeferred.cancel();
+         }
+         self._sourceController.cancelLoading();
+         abortDef.callback();
+      };
+
+      _private.clearSearchDelay(this);
+      _private.resolveSearchCall(this, abort, force);
+
+      return abortDef;
    },
 
    isLoading: function() {

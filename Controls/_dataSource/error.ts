@@ -9,6 +9,9 @@
  * @includes DefaultTemplate Controls/_dataSource/_error/DefaultTemplate
  * @includes Handler Controls/_dataSource/_error/Handler
  * @includes ViewConfig Controls/_dataSource/_error/ViewConfig
+ * @includes IContainer Controls/_dataSource/_error/IContainer
+ * @includes IContainerConfig Controls/_dataSource/_error/IContainer.IContainerConfig
+ * @includes IContainerConstructor Controls/_dataSource/_error/IContainer.IContainerConstructor
  * @public
  * @author Заляев А.В.
  */
@@ -22,3 +25,8 @@ export { default as Controller, Config } from 'Controls/_dataSource/_error/Contr
 export { default as Mode } from 'Controls/_dataSource/_error/Mode';
 export { default as DefaultTemplate } from 'Controls/_dataSource/_error/DefaultTemplate';
 export { default as Container } from 'Controls/_dataSource/_error/Container';
+export {
+    default as IContainer,
+    IContainerConfig,
+    IContainerConstructor
+} from 'Controls/_dataSource/_error/IContainer';

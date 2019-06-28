@@ -4,6 +4,7 @@ import InfoBoxOpener from './Opener/InfoBox');
 import {TouchContextField} from 'Controls/context';
 import getZIndex = require('Controls/Utils/getZIndex');
 import Env = require('Env/Env');
+import entity = require('Types/entity');
 
 
       /**
@@ -119,6 +120,7 @@ import Env = require('Env/Env');
        * @variant info
        * @variant secondary
        * @variant success
+       * @variant primary
        */
 
 
@@ -127,12 +129,14 @@ import Env = require('Env/Env');
             return {
                opener: self,
                target: self._container,
-               template: self._options.templateName || self._options.template,
+               template: self._options.template,
                position: self._options.position,
                targetSide: self._options.targetSide,
                alignment: self._options.alignment,
                style: self._options.style,
-               floatCloseButton: self._options.floatCloseButton || self._options.float,
+                //InfoBox close by outside click only if trigger is set to 'demand' or 'click'.
+               closeOnOutsideClick: self._options.trigger === 'click' || self._options.trigger === 'demand',
+               floatCloseButton: self._options.floatCloseButton,
                eventHandlers: {
                   onResult: self._resultHandler,
                   onClose: self._closeHandler
@@ -237,8 +241,8 @@ import Env = require('Env/Env');
 
          _startOpeningPopup: function() {
             var self = this;
-
-            clearTimeout(this._closeId);
+            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=809254e8-e179-443b-b8b7-f4a37e05f7d8
+            _private.resetTimeOut(this);
 
             this._openId = setTimeout(function() {
                self._open();
@@ -309,8 +313,19 @@ import Env = require('Env/Env');
             isTouch: TouchContextField
          };
       };
+      InfoBox.getOptionTypes = function() {
+         return {
+            trigger: entity.descriptor(String).oneOf([
+               'hover',
+               'click',
+               'hover|touch',
+               'demand'
+            ])
+         };
+      };
 
-      InfoBox.getDefaultOptions = function() {
+
+InfoBox.getDefaultOptions = function() {
          return {
             targetSide: 'top',
             alignment: 'start',

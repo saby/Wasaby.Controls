@@ -47,4 +47,3 @@ import 'css!theme?Controls/filterPopup';
    };
 
    export = FilterDropdown;
-

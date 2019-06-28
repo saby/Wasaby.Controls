@@ -14,11 +14,12 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IOnlyPositive
  * @mixes Controls/interface/IInputNumber
+ * @mixes Controls/_interface/INumberFormat
  *
  * @public
  * @demo Controls-demo/Input/Number/NumberPG
  *
- * @author Журавлев М.С.
+ * @author Красильников А.С.
  */
 
 /**
@@ -44,30 +45,6 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * <pre>
  *    <Controls._input.Number bind:value="_inputValue" integersLength="{{10}}"/>
  * </pre>
- */
-
-/**
- * @name Controls/_input/Number#showEmptyDecimals
- * @cfg {Boolean} Determines whether trailing zeros are shown in the fractional part.
- * @default false
- * @remark
- * The option is applied after the completed of the input.
- * true - trailing zeros are shown in the fractional part.
- * false - trailing zeros are hidden in the fractional part.
- * @example
- * In this example you the _inputValue in the control state will store a number with a trailing  zeros in the fractional part.
- * <pre>
- *    <Controls._input.Number bind:value="_inputValue" showEmptyDecimals="{{true}}"/>
- * </pre>
- */
-
-/**
- * @name Controls/_input/Number#useGrouping
- * @cfg {Boolean} Determines whether to use grouping separators, such as thousands separators.
- * @default true
- * @remark
- * true - the number is separated into grouping.
- * false - does not do anything.
  */
 
 var _private = {

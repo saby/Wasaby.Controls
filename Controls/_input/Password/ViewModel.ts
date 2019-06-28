@@ -7,7 +7,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
        *
        * @private
        *
-       * @author Журавлев М.С.
+       * @author Красильников А.С.
        */
 
       var _private = {
@@ -15,7 +15,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
             return '•'.repeat(value.length);
          },
          isReplaceWithAsterisks: function(options) {
-            return !(options.autoComplete || options.passwordVisible);
+            return !(options.autoComplete || options.passwordVisible) || options.readOnly;
          },
          adjustSplitValue: function(splitValue, value) {
             splitValue.before = value.substring(0, splitValue.before.length);

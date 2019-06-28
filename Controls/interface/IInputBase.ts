@@ -26,13 +26,21 @@ import IInputField from "./IInputField";
  * @mixes Controls/interface/ICallback
  *
  * @public
- * @author Журавлев М.С.
+ * @author Красильников А.С.
  */
-type IInputBase = IPaste & IInputTag & IInputField & IInputPlaceholder & ISelectableInput & IInputTooltip & IInputStyle & {
+type IInputBase =
+    IPaste
+    & IInputTag
+    & IInputField
+    & IInputPlaceholder
+    & ISelectableInput
+    & IInputTooltip
+    & IInputStyle
+    & {
     readonly _options: {
         /**
          * @name Controls/interface/IInputBase#size
-         * @cfg {String} Field size.
+         * @cfg {Enum} Field size.
          * @variant s - The size of a small field.
          * @variant m - The size of a medium field.
          * @variant l - The size of a large field.
@@ -44,7 +52,7 @@ type IInputBase = IPaste & IInputTag & IInputField & IInputPlaceholder & ISelect
         size: 's' | 'm' | 'l' | 'default';
         /**
          * @name Controls/interface/IInputBase#fontStyle
-         * @cfg {String} Fonts of the text in field.
+         * @cfg {Enum} Fonts of the text in field.
          * @variant default - Font style in standard field.
          * @variant primary - Font style to attract attention.
          * @variant secondary - Font style in secondary field.
@@ -56,8 +64,8 @@ type IInputBase = IPaste & IInputTag & IInputField & IInputPlaceholder & ISelect
          * <pre>
          *    <div class="form">
          *       <div class="fio">
-         *          <Controls.input:Text name="firstName" font="primary"/>
-         *          <Controls.input:Text name="lastName" font="primary"/>
+         *          <Controls.input:Text name="firstName" fontStyle="primary"/>
+         *          <Controls.input:Text name="lastName" fontStyle="primary"/>
          *       </div>
          *       <div class="residence">
          *          <Controls.input:Text name="street"/>
@@ -68,7 +76,7 @@ type IInputBase = IPaste & IInputTag & IInputField & IInputPlaceholder & ISelect
         fontStyle: 'default' | 'primary' | 'secondary';
         /**
          * @name Controls/interface/IInputBase#textAlign
-         * @cfg {String} Horizontal alignment of the text in field.
+         * @cfg {Enum} Horizontal alignment of the text in field.
          * @variant left - The text are aligned to the left edge of the line box.
          * @variant right - The text are aligned to the right edge of the line box.
          * @default left
@@ -81,23 +89,46 @@ type IInputBase = IPaste & IInputTag & IInputField & IInputPlaceholder & ISelect
         textAlign: 'left' | 'right';
         /**
          * @name Controls/interface/IInputBase#autoComplete
-         * @cfg {Boolean} Determines whether to use browser-based auto-complete field.
-         * @default false
+         * @cfg {Enum} Управление браузерным автозаполнением в полях.
+         * @default off
+         * @variant off - Отключить автозаполнение.
+         * @variant on - Включить автозаполнение ранее введенными значениями.
+         * @variant username - Включить автозаполнение сохраненными именами пользователей.
+         * @variant current-password - Включить автозаполнение текущими паролями для учетной записи, указанной в поле для имени пользователя.
          * @remark
-         * true - The browser is allowed to automatically complete the input.
-         * false - The browser is not permitted to automatically enter or select a value for this field.
-         * Values for auto-complete are taken by the browser from its storage.
-         * The field name is used to access them. Therefore, to prevent values stored in one field from being applied to another,
-         * the fields must have different names. To do this, we proxy the name of the control to the name of the native field.
-         * Therefore, if you use true as the value of the option and do not want to cross the auto-completion values, specify the name of the control.
-         * Choose a name based on the scope of the field. For example, for a login and password registration form, it is preferable to use the login and password names.
+         * Значения для автозаполнения берутся браузером из его хранилища.
+         * Имя поля используется для доступа к ним. Поэтому, чтобы значения, хранящиеся в одном поле,
+         * не применялись к другому, поля должны иметь разные имена. Для этого мы проксируем имя контрола на нативное поле.
+         * Поэтому, если вы включили автозаполнение и не хотите пересечения значений автозаполнения, то укажите имя контрола.
+         * Выберать имя следует на основе области использования поля. Например, для формы регистрации логина и пароля предпочтительно использовать имена login и password.
          * @example
-         * In this example, when the field is clicked, a browser menu appears with the previously entered values in this field.
+         * В этом примере при щелчке по полю появляется меню браузера с ранее введенными значениями в этом поле.
          * <pre>
-         *    <Controls.input:Text autoComplete={{true}}/>
+         *    <Controls.input:Text autoComplete="on"/>
          * </pre>
          */
-        autoComplete: boolean;
+        /*
+         /*
+         @name Controls/interface/IInputBase#autoComplete
+         @cfg {Enum} Determines whether to use browser-based auto-complete field.
+         @default off
+         @variant on - The browser is allowed to automatically complete the input.
+         @variant off - The browser is not permitted to automatically enter or select a value for this field.
+         @variant username - The browser is allowed to automatically complete the input using a username.
+         @variant current-password - The browser is allowed to automatically complete the input using the current password for the account identified by the username field.
+         @remark
+         Values for auto-complete are taken by the browser from its storage.
+         The field name is used to access them. Therefore, to prevent values stored in one field from being applied to another,
+         the fields must have different names. To do this, we proxy the name of the control to the name of the native field.
+         Therefore, if you use true as the value of the option and do not want to cross the auto-completion values, specify the name of the control.
+         Choose a name based on the scope of the field. For example, for a login and password registration form, it is preferable to use the login and password names.
+         @example
+         In this example, when the field is clicked, a browser menu appears with the previously entered values in this field.
+         <pre>
+         <Controls.input:Text autoComplete="on"/>
+         </pre>
+          */
+        autoComplete: 'on' | 'off' | 'username' | 'current-password';
     }
 };
 

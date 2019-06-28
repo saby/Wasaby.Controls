@@ -87,6 +87,22 @@ import Env = require('Env/Env');
    };
 
    /**
+    * Контрол предоставляет пользователю возможность выбрать между двумя или более вкладками.
+    *
+    * <a href="/materials/demo-ws4-tabs">Demo-example</a>.
+    *
+    * @class Controls/_tabs/Buttons
+    * @extends Core/Control
+    * @mixes Controls/_interface/ISingleSelectable
+    * @mixes Controls/_interface/ISource
+    * @control
+    * @public
+    * @category List
+    * @author Михайловский Д.С.
+    * @demo Controls-demo/Tabs/ButtonsDemoPG
+    */
+
+   /*
     * Control are designed to give users a choice among two or more tabs.
     *
     * <a href="/materials/demo-ws4-tabs">Demo-example</a>.
@@ -99,10 +115,36 @@ import Env = require('Env/Env');
     * @public
     * @category List
     * @author Михайловский Д.С.
-    * @demo Controls-demo/_tabs/ButtonsDemoPG
+    * @demo Controls-demo/Tabs/ButtonsDemoPG
     */
 
    /**
+    * @name Controls/_tabs/Buttons#tabSpaceTemplate
+    * @cfg {Content} Устанавливает шаблон, отображаемый между вкладками.
+    * @default undefined
+    * @remark
+    * Вкладка может быть выровнена по левому и правому краю, это определяется свойством 'align'.
+    * Если у контрола есть левая и правая вкладки, то TabSpaceTemplate будет расположен между ними.
+    * @example
+    * Пример вкладок с шаблоном между ними:
+    * <pre>
+    *    <Controls.tabs:Buttons
+    *       .....
+    *       tabSpaceTemplate=".../spaceTemplate'"
+    *       .....
+    *    />
+    * </pre>
+    * spaceTemplate:
+    * <pre>
+    *    <div class="additionalContent">
+    *       <Controls.Button .../>
+    *       <Controls.Button .../>
+    *       <Controls.Button .../>
+    *    </div>
+    * </pre>
+    */
+
+   /*
     * @name Controls/_tabs/Buttons#tabSpaceTemplate
     * @cfg {Content} Contents of the area near the tabs.
     * @default undefined
@@ -129,6 +171,41 @@ import Env = require('Env/Env');
     */
 
    /**
+    * @name Controls/_tabs/Buttons#style
+    * @cfg {Enum} Стиль отображения вкладок.
+    * @variant primary
+    * @variant secondary
+    * @default primary
+    * @remark
+    * Если стандартная тема вам не подходит, вы можете переопределить переменные:
+    * <ul>
+    *     <li>@border-color_Tabs-item_selected_primary,</li>
+    *     <li>@text-color_Tabs-item_selected_primary,</li>
+    *     <li>@border-color_Tabs-item_selected_secondary,</li>
+    *     <li>@text-color_Tabs-item_selected_secondary</li>
+    * </ul>
+    * @example
+    * Вкладки с применением стиля 'secondary'.
+    * <pre>
+    *    <Controls.tabs:Buttons
+    *       bind:selectedKey='_selectedKey'
+    *       keyProperty="id"
+    *       source="{{_source}}
+    *       style="secondary"
+    *       .....
+    *    />
+    * </pre>
+    * Вкладки с применением стиля по умолчанию.
+    * <pre>
+    *    <Controls.tabs:Buttons
+    *       bind:selectedKey='_selectedKey'
+    *       keyProperty="id"
+    *       source="{{_source}}
+    *    />
+    * </pre>
+    */
+
+   /*
     * @name Controls/_tabs/Buttons#style
     * @cfg {Enum} Tabs buttons display style.
     * @variant primary
@@ -164,6 +241,44 @@ import Env = require('Env/Env');
     */
 
    /**
+    * @name Controls/_tabs/Buttons#source
+    * @cfg {Types/source:Base} Объект, реализующий ISource интерфейс для доступа к данным.
+    * @default undefined
+    * @remark
+    * Элементу можно задать свойство 'align', которое определяет выравнивание вкладок.
+    * @example
+    * На вкладках будут отображаться данные из _source. Первый элемент отображается с выравниванием по левому краю, другие элементы отображаются по умолчанию - справа.
+    * <pre>
+    *    <Controls.tabs:Buttons
+    *              bind:selectedKey='_selectedKey'
+    *              keyProperty="key"
+    *              source="{{_source}}"
+    *    />
+    * </pre>
+    * <pre>
+    *    _selectedKey: '1',
+    *    _source: new Memory({
+    *        idProperty: 'key',
+    *        data: [
+    *        {
+    *           key: '1',
+    *           title: 'Yaroslavl',
+    *           align: 'left'
+    *        },
+    *        {
+    *           key: '2',
+    *           title: 'Moscow'
+    *        },
+    *        {
+    *           key: '3',
+    *           title: 'St-Petersburg'
+    *        }
+    *        ]
+    *    })
+    * </pre>
+    */
+
+   /*
     * @name Controls/_tabs/Buttons#source
     * @cfg {Types/source:Base} Object that implements ISource interface for data access.
     * @default undefined
@@ -203,6 +318,34 @@ import Env = require('Env/Env');
 
    /**
     * @name Controls/_tabs/Buttons#itemTemplate
+    * @cfg {Function} Шаблон для рендеринга.
+    * @default Base template 'wml!Controls/_tabs/Buttons/ItemTemplate'
+    * @remark
+    * Чтобы определить шаблон, следует вызвать базовый шаблон 'wml!Controls/_tabs/Buttons/ItemTemplate'.
+    * Шаблон помещается в компонент с помощью тега ws:partial с атрибутом template.
+    * По умолчанию в шаблоне 'wml!Controls/_tabs/Buttons/ItemTemplate' будет отображаться только поле 'title'. Можно изменить формат отображения записей, задав следующие параметры:
+    * <ul>
+    *    <li>displayProperty - определяет поле отображения записи.</li>
+    * <ul>
+    * @example
+    * Tabs buttons with item template.
+    * <pre>
+    *    <Controls.tabs:Buttons
+    *                   bind:selectedKey='SelectedKey3'
+    *                   keyProperty="id"
+    *                   style="additional"
+    *                   source="{{_source3}}">
+    *       <ws:itemTemplate>
+    *          <ws:partial template="wml!Controls/_tabs/Buttons/ItemTemplate"
+    *                      item="{{itemTemplate.item}}"
+    *                      displayProperty="caption"/>
+    *       </ws:itemTemplate>
+    *    </Controls.tabs:Buttons>
+    * </pre>
+    */
+
+   /*
+    * @name Controls/_tabs/Buttons#itemTemplate
     * @cfg {Function} Template for item render.
     * @default Base template 'wml!Controls/_tabs/Buttons/ItemTemplate'
     * @remark
@@ -230,6 +373,41 @@ import Env = require('Env/Env');
     */
 
    /**
+    * @name Controls/_tabs/Buttons#itemTemplateProperty
+    * @cfg {String} Имя поля, которое содердит шаблон отображения элемента.
+    * @default Если параметр не задан, вместо него используется itemTemplate.
+    * @remark
+    * Чтобы определить шаблон, вы должны вызвать базовый шаблон 'wml!Controls/_tabs/Buttons/ItemTemplate'.
+    * Шаблон помещается в компонент с помощью тега ws:partial с атрибутом template.
+    * По умолчанию в шаблоне 'wml!Controls/_tabs/Buttons/ItemTemplate' будет отображаться только поле 'title'. Можно изменить формат отображения записей, задав следующие параметры:
+    * <ul>
+    *    <li>displayProperty - определяет поле отображения записи.</li>
+    * <ul>
+    * @example
+    * Tabs buttons with item template.
+    * <pre>
+    *    <Controls.tabs:Buttons itemTemplateProperty="myTemplate"
+    *                           source="{{_source}}
+    *                           ...>
+    *    </Controls.tabs:Buttons>
+    * </pre>
+    * myTemplate
+    * <pre>
+    *    <div class="controls-Tabs__item_custom">{{item.get(displayProperty || 'title')}}</div>
+    * </pre>
+    * <pre>
+    *    _source: new Memory({
+    *              idProperty: 'id',
+    *              data: [
+    *                     {id: 1, title: 'I agree'},
+    *                     {id: 2, title: 'I not decide'},
+    *                     {id: 4, title: 'Will not seem', caption: 'I not agree',  myTemplate: 'wml!.../myTemplate'}
+    *              ]
+    *    })
+    * </pre>
+    */
+
+   /*
     * @name Controls/_tabs/Buttons#itemTemplateProperty
     * @cfg {String} Name of the item property that contains template for item render.
     * @default If not set, itemTemplate is used instead.

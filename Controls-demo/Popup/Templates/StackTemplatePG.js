@@ -84,8 +84,9 @@ define('Controls-demo/Popup/Templates/StackTemplatePG',
                bodyContentTemplate: 'wml!Controls-demo/Popup/Templates/resources/defaultBodyContent',
                footerContentTemplate: 'wml!Controls-demo/Popup/Templates/resources/defaultFooterContent',
                draggable: true,
-               closeButtonStyle: 'default',
+               closeButtonViewMode: 'default',
                closeButtonVisibility: true,
+               closeButtonTransparent: true,
                maximizeButtonVisibility: true
             };
             this._metaData = config[this._content].properties['ws-config'].options;

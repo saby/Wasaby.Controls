@@ -4,7 +4,7 @@ import template = require('wml!Controls/_search/Controller');
 import {ContextOptions as DataOptions} from 'Controls/context';
 import clone = require('Core/core-clone');
 import _SearchController from './_SearchController';
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 import {RecordSet} from 'Types/collection';
 
@@ -61,13 +61,17 @@ var _private = {
       self._loading = false;
       if (self._viewMode === 'search') {
          self._searchValue = '';
-         self._inputSearchValue = '';
          self._misspellValue = '';
 
          if (self._options.parentProperty) {
             _private.deleteServiceFilters(filter);
          }
-         self._notify('filterChanged', [filter]);
+
+         //abortCallback is called on every input change, when input value is less then minSearchLength,
+         //but filter could be already changed, because viewMode: 'search' will change only after data loaded.
+         if (!isEqual(self._options.filter, filter)) {
+            self._notify('filterChanged', [filter]);
+         }
       }
    },
 
@@ -103,9 +107,10 @@ var _private = {
    },
    itemOpenHandler: function(root:string|number|null):void {
       if (root !== null) {
-         _private.getSearchController(this).abort();
-         this._root = root;
+         _private.getSearchController(this).abort(true);
+         this._inputSearchValue = '';
       }
+      this._root = root;
    },
 
    dataLoadCallback: function (self, data:RecordSet):void {
@@ -122,6 +127,7 @@ var _private = {
       if (self._options.dataLoadErrback) {
          self._options.dataLoadErrback(error);
       }
+      self._loading = false;
    }
 };
 
@@ -173,7 +179,13 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       this._previousViewMode = this._viewMode = options.viewMode;
 
       if (options.searchValue) {
-         this._search(null, options.searchValue);
+         this._inputSearchValue = options.searchValue;
+         this._searchValue = options.searchValue;
+
+         if (this._viewMode !== 'search') {
+            this._previousViewMode = this._viewMode;
+            this._viewMode = 'search';
+         }
       }
 
       if (options.root !== undefined) {
@@ -191,6 +203,10 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          filter = newOptions.filter;
       }
 
+      if (this._options.root !== newOptions.root) {
+         this._root = newOptions.root;
+      }
+
       if (this._searchController) {
          if (_private.needUpdateSearchController(currentOptions, this._dataOptions) || _private.needUpdateSearchController(this._options, newOptions)) {
             this._searchController.abort();
@@ -200,7 +216,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          }
       }
 
-      if (this._options.searchValue !== newOptions.searchValue) {
+      if (this._options.searchValue !== newOptions.searchValue && newOptions.searchValue !== this._inputSearchValue) {
          this._search(null, newOptions.searchValue);
       }
    },

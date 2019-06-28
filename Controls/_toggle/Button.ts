@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import Classes from './Button/Classes';
-import {buttonTemplate, iconsUtil} from 'Controls/buttons';
+import {ActualApi} from 'Controls/buttons';
+import ToggleButtonTemplate = require('wml!Controls/_toggle/Button/Button');
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {ITooltip, ITooltipOptions, IButton, IButtonOptions, IIconStyle, IIconStyleOptions} from 'Controls/interface';
 
@@ -90,8 +91,8 @@ const stickyButton = [
 
 class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
-   protected _template: TemplateFunction = buttonTemplate;
-   protected _theme: string[] = ['Controls/buttons', 'Controls/toggle'];
+   protected _template: TemplateFunction = ToggleButtonTemplate;
+
    protected _icon: string;
    protected _buttonStyle: string;
    protected _transparent: boolean;
@@ -110,7 +111,7 @@ class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
       this._state = (stickyButton.indexOf(this._viewMode) !== -1 && options.value ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
       this._caption = (options.captions ? (!options.value && options.captions[1] ? options.captions[1] : options.captions[0]) : '');
       this._icon = (options.icons ? (!options.value && options.icons[1] ? options.icons[1] : options.icons[0]) : '');
-      this._iconStyle = iconsUtil.iconStyleTransformation(options.iconStyle);
+      this._iconStyle = ActualApi.iconStyleTransformation(options.iconStyle);
    }
 
    private _clickHandler(): void {
@@ -127,6 +128,7 @@ class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
       this._optionsGeneration(newOptions);
    }
 
+   static _theme: string[] = ['Controls/buttons', 'Controls/toggle'];
    static getDefaultOptions(): object {
       return {
          viewMode: 'link',

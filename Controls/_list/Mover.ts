@@ -216,6 +216,20 @@ var _private = {
 };
 
 /**
+ * Контрол для перемещения элементов списка в recordSet и dataSource.
+ * Контрол должен располагаться в одном контейнере Controls.Container.Data со списком.
+ * <a href="/materials/demo-ws4-operations-panel">Demo examples</a>.
+ * @class Controls/_list/Mover
+ * @extends Core/Control
+ * @mixes Controls/interface/IMovable
+ * @mixes Controls/_interface/IHierarchy
+ * @control
+ * @public
+ * @author Авраменко А.С.
+ * @category List
+ */
+
+/*
  * Сontrol to move the list items in recordSet and dataSource.
  * Сontrol must be in one Controls.Container.Data with a list.
  * <a href="/materials/demo-ws4-operations-panel">Demo examples</a>.

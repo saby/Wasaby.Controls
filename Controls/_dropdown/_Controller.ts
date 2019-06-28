@@ -2,9 +2,10 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/_Controller');
 import {Controller as SourceController} from 'Controls/source';
 import chain = require('Types/chain');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
+import * as Deferred from 'Core/Deferred';
 
 // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 var
@@ -12,32 +13,45 @@ var
    defaultSelectedKeys = [];
 
 var _private = {
-   getSourceController: function (self, options) {
+   createSourceController: function(self, options) {
       if (!self._sourceController) {
          self._sourceController = new SourceController({
-            source: options.source,
+            source: self._source,
             navigation: options.navigation
          });
       }
       return self._sourceController;
    },
 
+   getSourceController: function (self, options) {
+        return historyUtils.getSource(options.source, options.historyId).addCallback((source) => {
+            self._source = source;
+            return _private.createSourceController(self, options);
+        });
+   },
+
    loadItems: function (self, options) {
-      self._filter = historyUtils.getSourceFilter(options.filter, options.source);
-      return _private.getSourceController(self, options).load(self._filter).addCallback(function (items) {
-         self._items = items;
-         if (options.dataLoadCallback) {
-            options.dataLoadCallback(items);
-         }
-         _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
-         return items;
-      });
+      return _private.getSourceController(self, options).addCallback((sourceController) => {
+          self._filter = historyUtils.getSourceFilter(options.filter, self._source);
+          return sourceController.load(self._filter).addCallback((items) => {
+              self._items = items;
+              if (options.dataLoadCallback) {
+                  options.dataLoadCallback(items);
+              }
+              _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
+              return items;
+          });
+       });
    },
 
    updateSelectedItems: function (self, emptyText, selectedKeys, keyProperty, selectedItemsChangedCallback) {
       var selectedItems = [];
-      if ((!selectedKeys.length || selectedKeys[0] === null) && emptyText) {
-         selectedItems.push(null);
+      if (!selectedKeys.length || selectedKeys[0] === null) {
+        if (emptyText) {
+           selectedItems.push(null);
+        } else if (self._items.getRecordById(null)) {
+           selectedItems.push(self._items.getRecordById(null));
+         }
       } else {
          chain.factory(self._items).each(function (item) {
             // fill the array of selected items from the array of selected keys
@@ -66,7 +80,7 @@ var _private = {
       var newItems = _private.getNewItems(self._items, selectedItems, self._options.keyProperty);
 
       // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
-      if (historyUtils.isHistorySource(self._options.source)) {
+      if (historyUtils.isHistorySource(self._source)) {
          if (newItems.length) {
             self._sourceController = null;
          }
@@ -85,11 +99,11 @@ var _private = {
    },
 
    updateHistory: function (self, items) {
-      if (historyUtils.isHistorySource(self._options.source)) {
-         self._options.source.update(items, historyUtils.getMetaHistory());
+      if (historyUtils.isHistorySource(self._source)) {
+         self._source.update(items, historyUtils.getMetaHistory());
 
-         if (self._sourceController && self._options.source.getItems) {
-            self._items = self._options.source.getItems();
+         if (self._sourceController && self._source.getItems) {
+            self._items = self._source.getItems();
          }
       }
    },
@@ -97,9 +111,9 @@ var _private = {
    onResult: function (event, result) {
       switch (result.action) {
          case 'pinClick':
-            result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._options.source);
+            result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._source);
             this._notify('pinClick', [result.data]);
-            this._items = this._options.source.getItems();
+            this._items = this._source.getItems();
             this._open();
             break;
          case 'applyClick':
@@ -108,15 +122,12 @@ var _private = {
             this._children.DropdownOpener.close();
             break;
          case 'itemClick':
-            result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._options.source);
+            result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._source);
             var res = this._notify('selectedItemsChanged', [result.data]);
-
-            var item = result.data[0];
-
-            _private.updateHistory(this, item);
 
             // dropDown must close by default, but user can cancel closing, if returns false from event
             if (res !== false) {
+               _private.updateHistory(this, result.data[0]);
                this._children.DropdownOpener.close();
             }
             break;
@@ -133,11 +144,13 @@ var _private = {
 
    setHandlers: function (self, options) {
       self._onOpen = function (event, args) {
+         self._notify('dropDownOpen');
          if (typeof (options.open) === 'function') {
             options.open(args);
          }
       };
       self._onClose = function(event, args) {
+         self._notify('dropDownClose');
          if (typeof (options.close) === 'function') {
             options.close(args);
          }
@@ -202,8 +215,11 @@ var _Controller = Control.extend({
       _private.setHandlers(this, options);
       if (!options.lazyItemsLoad) {
          if (receivedState) {
+            let self = this;
             this._items = receivedState;
-            _private.getSourceController(this, options).calculateState(this._items);
+            _private.getSourceController(this, options).addCallback((sourceController) => {
+                sourceController.calculateState(self._items);
+            });
             _private.updateSelectedItems(this, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
          } else if (options.source) {
             return _private.loadItems(this, options);
@@ -221,6 +237,7 @@ var _Controller = Control.extend({
       if ((newOptions.source && (newOptions.source !== this._options.source || !this._sourceController)) ||
          !isEqual(newOptions.navigation, this._options.navigation) ||
          !isEqual(newOptions.filter, this._options.filter)) {
+         this._source = null;
          this._sourceController = null;
          if (newOptions.lazyItemsLoad && !this._children.DropdownOpener.isOpened()) {
             /* source changed, items is not actual now */
@@ -249,7 +266,7 @@ var _Controller = Control.extend({
                items: self._items,
                //FIXME self._container[0] delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                width: self._options.width !== undefined ? (self._container[0] || self._container).offsetWidth : undefined,
-               hasMoreButton: _private.getSourceController(self, self._options).hasMoreData('down'),
+               hasMoreButton: self._sourceController.hasMoreData('down'),
                selectorOpener: self._children.selectorOpener,
                selectorDialogResult: self._onSelectorTemplateResult.bind(self)
             },
@@ -286,7 +303,9 @@ var _Controller = Control.extend({
       this._onResult(event, {action: 'selectorResult', data: items});
    },
 
-   _mousedown: function () {
+   _clickHandler: function(event) {
+      // stop bubbling event, so the list does not handle click event.
+      event.stopPropagation();
       var opener = this._children.DropdownOpener;
       if (opener.isOpened()) {
          opener.close();

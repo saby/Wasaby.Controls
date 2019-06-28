@@ -14,9 +14,8 @@ define(
 
             it('Text', function() {
                var parsedText = [{
-                  end: '.',
-                  type: 'text',
-                  value: 'test..'
+                  type: 'plain',
+                  value: 'test...'
                }];
 
                assert.equal(template({
@@ -26,225 +25,282 @@ define(
          });
 
          describe('parseText', function() {
-            var parseText = decorator.WrapURLs._private.parseText.bind(decorator.WrapURLs._private);
+            var ctrl;
+            beforeEach(function() {
+               ctrl = new decorator.WrapURLs({});
+            });
 
             it('Simple URL', function() {
-               result = parseText('http://regexpal.com/');
-               assert.deepEqual(result, [{
+               ctrl._beforeMount({
+                  text: 'http://regexpal.com/'
+               });
+               assert.deepEqual(ctrl._parsedText, [{
                   type: 'link',
                   href: 'http://regexpal.com/',
-                  www: false,
-                  end: ''
+                  scheme: 'http://'
                }]);
             });
             it('Simple URL with whitespaces', function() {
-               result = parseText('  http://regexpal.com/    ');
-               assert.deepEqual(result, [
+               ctrl._beforeMount({
+                  text: '  http://regexpal.com/    '
+               });
+               assert.deepEqual(ctrl._parsedText, [
                   {
-                     type: 'text',
-                     value: ' ',
-                     end: ' '
+                     type: 'plain',
+                     value: '  '
                   },
                   {
                      type: 'link',
                      href: 'http://regexpal.com/',
-                     www: false,
-                     end: ' '
+                     scheme: 'http://'
                   },
                   {
-                     type: 'text',
-                     value: '  ',
-                     end: ' '
+                     type: 'plain',
+                     value: '    '
                   }
                ]);
             });
             it('Simple URL with params', function() {
-               result = parseText('http://regexpal.com/home.php?request=q&theme=2');
-               assert.deepEqual(result, [{
+               ctrl._beforeMount({
+                  text: 'http://regexpal.com/home.php?request=q&theme=2'
+               });
+               assert.deepEqual(ctrl._parsedText, [{
                   type: 'link',
                   href: 'http://regexpal.com/home.php?request=q&theme=2',
-                  www: false,
-                  end: ''
+                  scheme: 'http://'
                }]);
             });
             it('Ru link', function() {
-               result = parseText('http://почта.рф/');
-               assert.deepEqual(result, [{
+               ctrl._beforeMount({
+                  text: 'http://почта.рф/'
+               });
+               assert.deepEqual(ctrl._parsedText, [{
                   type: 'link',
                   href: 'http://почта.рф/',
-                  www: false,
-                  end: ''
-               }]);
-            });
-            it('Link with brackets', function() {
-               result = parseText('http://sometext/(test)');
-               assert.deepEqual(result, [{
-                  type: 'link',
-                  href: 'http://sometext/(test)',
-                  www: false,
-                  end: ''
+                  scheme: 'http://'
                }]);
             });
             it('Link with port', function() {
-               result = parseText('http://ya.ru:80');
-               assert.deepEqual(result, [{
+               ctrl._beforeMount({
+                  text: 'http://ya.ru:80'
+               });
+               assert.deepEqual(ctrl._parsedText, [{
                   type: 'link',
                   href: 'http://ya.ru:80',
-                  www: false,
-                  end: ''
+                  scheme: 'http://'
                }]);
             });
             it('Link inside text', function() {
-               result = parseText('find here: http://ya.ru/, please');
-               assert.deepEqual(result, [
+               ctrl._beforeMount({
+                  text: 'find here: http://ya.ru/, please'
+               });
+               assert.deepEqual(ctrl._parsedText, [
                   {
-                     type: 'text',
-                     value: 'find here',
-                     end: ': '
+                     type: 'plain',
+                     value: 'find here: '
                   },
                   {
                      type: 'link',
                      href: 'http://ya.ru/',
-                     www: false,
-                     end: ', '
+                     scheme: 'http://'
                   },
                   {
-                     type: 'text',
-                     value: 'please',
-                     end: ''
+                     type: 'plain',
+                     value: ', please'
                   }
                ]);
             });
             it('Symbol \' inside link', function() {
-               result = parseText('https://wiki.postgresql.org/wiki/What\'s_new_in_PostgreSQL_9.5');
-               assert.deepEqual(result, [{
+               ctrl._beforeMount({
+                  text: 'https://wiki.postgresql.org/wiki/What\'s_new_in_PostgreSQL_9.5'
+               });
+               assert.deepEqual(ctrl._parsedText, [{
                   type: 'link',
                   href: 'https://wiki.postgresql.org/wiki/What\'s_new_in_PostgreSQL_9.5',
-                  www: false,
-                  end: ''
+                  scheme: 'https://'
                }]);
             });
             it('Link with anchor', function() {
-               result = parseText('http://axure.tensor.ru/ereport/#p=реестр_по_приложению_№4');
-               assert.deepEqual(result, [{
+               ctrl._beforeMount({
+                  text: 'http://axure.tensor.ru/ereport/#p=реестр_по_приложению_№4'
+               });
+               assert.deepEqual(ctrl._parsedText, [{
                   type: 'link',
                   href: 'http://axure.tensor.ru/ereport/#p=реестр_по_приложению_№4',
-                  www: false,
-                  end: ''
+                  scheme: 'http://'
                }]);
             });
             it('Link ends dot', function() {
-               result = parseText('http://regexpal.com/home.php?request=q&theme=2.');
-               assert.deepEqual(result, [{
-                  type: 'link',
-                  href: 'http://regexpal.com/home.php?request=q&theme=2',
-                  www: false,
-                  end: '.'
-               }]);
+               ctrl._beforeMount({
+                  text: 'http://regexpal.com/home.php?request=q&theme=2.'
+               });
+               assert.deepEqual(ctrl._parsedText, [
+                  {
+                     type: 'link',
+                     href: 'http://regexpal.com/home.php?request=q&theme=2',
+                     scheme: 'http://'
+                  },
+                  {
+                     type: 'plain',
+                     value: '.'
+                  }
+               ]);
             });
             it('Simple mail', function() {
-               result = parseText('e@mail.ru');
-               assert.deepEqual(result, [{
+               ctrl._beforeMount({
+                  text: 'e@mail.ru'
+               });
+               assert.deepEqual(ctrl._parsedText, [{
                   type: 'email',
-                  address: 'e@mail.ru',
-                  end: ''
+                  address: 'e@mail.ru'
                }]);
             });
             it('Mail with seperators', function() {
-               result = parseText('my-e.ma@il.ru');
-               assert.deepEqual(result, [{
+               ctrl._beforeMount({
+                  text: 'my-e.ma@il.ru'
+               });
+               assert.deepEqual(ctrl._parsedText, [{
                   type: 'email',
-                  address: 'my-e.ma@il.ru',
-                  end: ''
+                  address: 'my-e.ma@il.ru'
                }]);
             });
             it('Ru mail', function() {
-               result = parseText('почтальон@почта.рф');
-               assert.deepEqual(result, [{
+               ctrl._beforeMount({
+                  text: 'почтальон@почта.рф'
+               });
+               assert.deepEqual(ctrl._parsedText, [{
                   type: 'email',
-                  address: 'почтальон@почта.рф',
-                  end: ''
+                  address: 'почтальон@почта.рф'
                }]);
             });
             it('Colon mail', function() {
-               result = parseText('git@git.sbis.ru:');
-               assert.deepEqual(result, [{
-                  type: 'email',
-                  address: 'git@git.sbis.ru',
-                  end: ':'
-               }]);
-            });
-            it('After colon mail', function() {
-               result = parseText('git@git.sbis.ru: abc');
-               assert.deepEqual(result, [
+               ctrl._beforeMount({
+                  text: 'git@git.sbis.ru:'
+               });
+               assert.deepEqual(ctrl._parsedText, [
                   {
                      type: 'email',
-                     address: 'git@git.sbis.ru',
-                     end: ': '
+                     address: 'git@git.sbis.ru'
                   },
                   {
-                     type: 'text',
-                     value: 'abc',
-                     end: ''
+                     type: 'plain',
+                     value: ':'
+                  }]);
+            });
+            it('After colon mail', function() {
+               ctrl._beforeMount({
+                  text: 'git@git.sbis.ru: abc'
+               });
+               assert.deepEqual(ctrl._parsedText, [
+                  {
+                     type: 'email',
+                     address: 'git@git.sbis.ru'
+                  },
+                  {
+                     type: 'plain',
+                     value: ': abc'
                   }
                ]);
             });
             it('Top level domailn mail', function() {
-               result = parseText('email@topleveldomain');
-               assert.deepEqual(result, [{
-                  type: 'text',
-                  value: 'email@topleveldomain',
-                  end: ''
+               ctrl._beforeMount({
+                  text: 'email@topleveldomain'
+               });
+               assert.deepEqual(ctrl._parsedText, [{
+                  type: 'plain',
+                  value: 'email@topleveldomain'
                }]);
             });
             it('www', function() {
-               result = parseText('www.yandex.ru text after');
-               assert.deepEqual(result, [
+               ctrl._beforeMount({
+                  text: 'www.yandex.ru text after'
+               });
+               assert.deepEqual(ctrl._parsedText, [
                   {
                      type: 'link',
                      href: 'www.yandex.ru',
-                     www: true,
-                     end: ' '
+                     scheme: 'www.'
                   },
                   {
-                     type: 'text',
-                     value: 'text after',
-                     end: ''
+                     type: 'plain',
+                     value: ' text after'
                   }
                ]);
             });
             it('Space after protocol before www', function() {
-               result = parseText('https:// www.youtube.com/watch?v=_avffmEHKf8');
-               assert.deepEqual(result, [
+               ctrl._beforeMount({
+                  text: 'https:// www.youtube.com/watch?v=_avffmEHKf8'
+               });
+               assert.deepEqual(ctrl._parsedText, [
                   {
-                     type: 'text',
-                     value: 'https://',
-                     end: ' '
+                     type: 'plain',
+                     value: 'https:// '
                   },
                   {
                      type: 'link',
                      href: 'www.youtube.com/watch?v=_avffmEHKf8',
-                     www: true,
-                     end: ''
+                     scheme: 'www.'
                   }
                ]);
             });
             it('www without dot', function() {
-               result = parseText('wwwanytext');
-               assert.deepEqual(result, [{
-                  type: 'text',
-                  value: 'wwwanytext',
-                  end: ''
+               ctrl._beforeMount({
+                  text: 'wwwanytext'
+               });
+               assert.deepEqual(ctrl._parsedText, [{
+                  type: 'plain',
+                  value: 'wwwanytext'
                }]);
             });
             it('Star url', function() {
-               result = parseText('http://www.123assess.com/te/tbm/servlet?aid=gTXJuESfVsj7qTRkHepNsA**&mid=Olnl6KgvpofmSElvN69BeA**');
-               assert.deepEqual(result, [{
+               ctrl._beforeMount({
+                  text: 'http://www.123assess.com/te/tbm/servlet?aid=gTXJuESfVsj7qTRkHepNsA**&mid=Olnl6KgvpofmSElvN69BeA**'
+               });
+               assert.deepEqual(ctrl._parsedText, [{
                   type: 'link',
                   href: 'http://www.123assess.com/te/tbm/servlet?aid=gTXJuESfVsj7qTRkHepNsA**&mid=Olnl6KgvpofmSElvN69BeA**',
-                  www: false,
-                  end: ''
+                  scheme: 'http://'
                }]);
+            });
+            it('Url in double delimiters', function() {
+               ctrl._beforeMount({
+                  text: '(https://pre-test-online.sbis.ru/auth/?ret=%2F)'
+               });
+               assert.deepEqual(ctrl._parsedText, [
+                  {
+                     type: 'plain',
+                     value: '('
+                  },
+                  {
+                     type: 'link',
+                     href: 'https://pre-test-online.sbis.ru/auth/?ret=%2F',
+                     scheme: 'https://'
+                  },
+                  {
+                     type: 'plain',
+                     value: ')'
+                  }
+               ]);
+            });
+            it('Url in double delimiters in the middle of the text', function() {
+               ctrl._beforeMount({
+                  text: 'test test (https://pre-test-online.sbis.ru/auth/?ret=%2F) test test'
+               });
+               assert.deepEqual(ctrl._parsedText, [
+                  {
+                     type: 'plain',
+                     value: 'test test ('
+                  },
+                  {
+                     type: 'link',
+                     href: 'https://pre-test-online.sbis.ru/auth/?ret=%2F',
+                     scheme: 'https://'
+                  },
+                  {
+                     type: 'plain',
+                     value: ') test test'
+                  }
+               ]);
             });
          });
       });

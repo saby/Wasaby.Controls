@@ -34,6 +34,6 @@
  * @css @border-right-color_InputRender-tagStyle_primary Information icon color of the input field with the tagStyle option set to "primary".
  * @css @border-right-color_InputRender-tagStyle_disabled Information icon color of the disabled input field.
  * @public
- * @author Журавлев М.С.
+ * @author Красильников А.С.
  */
    

@@ -41,8 +41,8 @@ define(
                name: 'options'
             };
             var popupOptions = {
-               closeByExternalClick: true,
-               closeOnTargetScroll: true,
+               closeOnOutsideClick: true,
+               actionOnScroll: 'close',
                templateOptions: {
                   type: 'stack',
                   name: 'popupOptions'
@@ -58,6 +58,7 @@ define(
             assert.equal(baseConfig.templateOptions.type, 'stack');
             assert.equal(baseConfig.opener, null);
             assert.equal(baseConfig.actionOnScroll, 'close');
+            assert.equal(opener._actionOnScroll, 'close');
             let opener2 = new popup.BaseOpener();
             popupOptions = {
                templateOptions: {

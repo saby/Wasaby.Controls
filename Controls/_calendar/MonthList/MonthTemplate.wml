@@ -1,9 +1,37 @@
-<div class="controls-MonthList__month">
-   <Controls.Date.MonthView
-      showWeekdays="{{false}}"
-      showCaption="{{true}}"
-      month="{{date}}"
-      daysData="{{extData}}"
-      dayTemplate="{{dayTemplate}}"
-   />
-</div>
+<ws:template name="bodyTemplate">
+   <div class="controls-MonthList__month">
+      <div class="controls-MonthList__month-header">
+         <ws:if data="{{headerTemplate}}">
+            <ws:partial
+               template="{{headerTemplate}}"
+               date="{{date}}"
+               extData="{{extData}}"
+               _options="{{_options}}"
+            />
+         </ws:if>
+         <ws:else>
+            {{_formatMonth(date)}}
+         </ws:else>
+      </div>
+      <Controls._calendar.MonthView
+         showWeekdays="{{false}}"
+         month="{{date}}"
+         daysData="{{extData}}"
+         dayTemplate="{{dayTemplate}}"
+      />
+   </div>
+</ws:template>
+
+<ws:if data="{{_options.viewMode ==='month'}}">
+   <Controls.scroll:IntersectionObserverContainer data="{{date}}">
+      <ws:partial template="bodyTemplate"/>
+   </Controls.scroll:IntersectionObserverContainer>
+</ws:if>
+<ws:else>
+   <ws:partial template="bodyTemplate"/>
+</ws:else>
+
+
+
+
+

@@ -4,9 +4,10 @@ import template = require('wml!Controls/_list/Data');
 import getPrefetchSource from './getPrefetchSource';
 import {ContextOptions} from 'Controls/context';
 import Deferred = require('Core/Deferred');
-import sourceLib = require('Types/source');
 import clone = require('Core/core-clone');
+import {isEqual} from "Types/object"
 
+import {PrefetchProxy, DataSet} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
 
@@ -17,6 +18,20 @@ type GetSourceResult = {
 }
 
       /**
+       * Контрол-контейнер, предоставляющий контекстное поле "dataOptions" с необходимыми данными для дочерних контейнеров.
+       *
+       *<a href="/materials/demo-ws4-filter-search-new">Демо-пример</a>.
+       *
+       * @class Controls/_list/Data
+       * @mixes Controls/interface/IFilter
+       * @mixes Controls/interface/INavigation
+       * @extends Core/Control
+       * @control
+       * @public
+       * @author Герасимов А.М.
+       */
+      
+      /*
        * Container component that provides a context field "dataOptions" with necessary data for child containers.
        *
        * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
@@ -27,15 +42,25 @@ type GetSourceResult = {
        * @extends Core/Control
        * @control
        * @public
-       * @author A.M. Gerasimov
+       * @author Герасимов А.М.
        */
 
       /**
+       * @name Controls/_list/Data#source
+       * @cfg Объект, реализующий интерфейс ISource для поддержки доступа к данным.
+       */
+
+      /*
        * @name Controls/_list/Data#source
        * @cfg Object that implements ISource interface for data access.
        */
 
       /**
+       * @name Controls/_list/Data#keyProperty
+       * @cfg {String} Имя свойства, содержащего информацию об идентификаторе текущей строки.
+       */
+
+      /*
        * @name Controls/_list/Data#keyProperty
        * @cfg {String} Name of the item property that uniquely identifies collection item.
        */
@@ -96,7 +121,8 @@ type GetSourceResult = {
             self._sorting = options.sorting;
             self._keyProperty = options.keyProperty;
 
-            if (self._filter !== options.filter) {
+            //https://online.sbis.ru/opendoc.html?guid=8dd3b48d-9123-4d6c-ac26-9c908e6e25f8
+            if (!isEqual(self._options.filter, options.filter) || !self._filter) {
                self._filter = clone(options.filter);
 
                if (options.parentProperty && options.root) {
@@ -147,13 +173,13 @@ type GetSourceResult = {
             _private.resolveOptions(this, options);
 
             if (receivedState) {
-               source = options.source instanceof sourceLib.PrefetchProxy ? options.source.getOriginal() : options.source;
+               source = options.source instanceof PrefetchProxy ? options.source.getOriginal() : options.source;
 
                // need to create PrefetchProxy with source from options, because event subscriptions is not work on server
                // and source from receivedState will lose all subscriptions
                _private.createDataContextBySourceResult(this, {
                   data: receivedState,
-                  source: new sourceLib.PrefetchProxy({target: source})
+                  source: new PrefetchProxy({target: source})
                });
             } else if (self._source) {
                return _private.createPrefetchSource(this, null, options.dataLoadErrback).addCallback(function(result) {
@@ -197,16 +223,29 @@ type GetSourceResult = {
             this._dataOptionsContext.updateConsumers();
          },
 
-         _itemsChanged: function(event, items) {
-            var self = this;
-            event.stopPropagation();
-            _private.createPrefetchSource(this, items).addCallback(function(result) {
-               _private.resolvePrefetchSourceResult(self, result);
-               _private.updateDataOptions(self, self._dataOptionsContext);
-               self._dataOptionsContext.updateConsumers();
-               self._forceUpdate();
-               return result;
+         _rootChanged: function(event, root) {
+            this._notify('rootChanged', [root]);
+         },
+         _itemsChanged: function(event:Event, items):void {
+            //search:Cotnroller fires two events after search: itemsChanged, filterChanged
+            //on filterChanged event filter state will updated
+            //on itemChanged event prefetchSource will updated, but createPrefetchSource method work async becouse of promise,
+            //then we need to create prefetchSource synchronously
+            const source = new PrefetchProxy({
+               data: {
+                  query: items
+               },
+               target: this._source
             });
+
+            _private.resolvePrefetchSourceResult(this, {
+               source: source,
+               data: items
+            });
+
+            _private.updateDataOptions(this, this._dataOptionsContext);
+            this._dataOptionsContext.updateConsumers();
+            event.stopPropagation();
          },
 
          _getChildContext: function() {

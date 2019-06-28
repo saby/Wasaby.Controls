@@ -171,7 +171,7 @@ var
         },
 
         hasParentInItems: function (item, listModel) {
-            return !!listModel.getItemById(item.get(listModel._options.parentProperty));
+            return !!listModel._options.parentProperty && listModel.getItemById(item.get(listModel._options.parentProperty));
         },
 
         editNextRow: function (self, editNextRow) {
@@ -384,18 +384,24 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     },
 
     _onItemClick: function (e, record, originalEvent) {
+        const self = this;
         if (this._options.editingConfig && this._options.editingConfig.editOnClick && !this._options.readOnly && originalEvent.type === 'click') {
             if (originalEvent.target.closest('.js-controls-ListView__notEditable')) {
                 this.commitEdit();
             } else {
                 this.beginEdit({
                     item: record
+                }).addCallback((result) => {
+                   if (result && !result.cancelled) {
+                       // TODO KINGO. Заполняем информацию по клику только если редактирование по месту запустилось,
+                       // т.к. только в таком случае нужно восстанавливать курсор по координатам клика (в _afterUpdate).
+                       self._clickItemInfo = {
+                           clientX: originalEvent.nativeEvent.clientX,
+                           clientY: originalEvent.nativeEvent.clientY,
+                           item: record
+                       };
+                   }
                 });
-                this._clickItemInfo = {
-                    clientX: originalEvent.nativeEvent.clientX,
-                    clientY: originalEvent.nativeEvent.clientY,
-                    item: record
-                };
                 // The click should not bubble over the editing controller to ensure correct control works.
                 // e.c., a click can be processed by the selection controller, which should not occur when starting editing in place.
                 // https://online.sbis.ru/opendoc.html?guid=b3254c65-596b-4f89-af0f-c160217ce7a3
@@ -525,5 +531,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         _private.resetVariables(this);
     }
 });
+
+EditInPlace._private = _private;
 
 export = EditInPlace;

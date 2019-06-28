@@ -76,16 +76,22 @@ import 'Controls/breadcrumbs';
                self._options.itemsReadyCallback(items);
             }
          },
-         setViewMode: function(self, viewMode) {
+         setVirtualScrolling(self, viewMode, cfg): void {
+            // todo https://online.sbis.ru/opendoc.html?guid=7274717e-838d-46c4-b991-0bec75bd0162
+            // For viewMode === 'tile' disable virtualScrolling.
+            self._virtualScrolling = viewMode === 'tile' ? false : cfg.virtualScrolling;
+         },
+         setViewMode: function(self, viewMode, cfg) {
             var currentRoot = _private.getRoot(self);
             var dataRoot = _private.getDataRoot(self);
 
-            if (viewMode === 'search' && self._options.searchMode === 'root' && dataRoot !== currentRoot) {
+            if (viewMode === 'search' && cfg.searchStartingWith === 'root' && dataRoot !== currentRoot) {
                _private.setRoot(self, dataRoot);
             }
             self._viewMode = viewMode;
             self._viewName = VIEW_NAMES[viewMode];
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
+            _private.setVirtualScrolling(self, self._viewMode, cfg);
          },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
@@ -122,14 +128,15 @@ import 'Controls/breadcrumbs';
       };
 
    /**
-    * Hierarchical list that can expand and go inside the folders. Can load data from data source.
+    * Иерархический список, узел которого можно развернуть и перейти в него.
     * <a href="/materials/demo-ws4-explorer">Demo example</a>.
     * <a href="/materials/demo-ws4-explorer-with-search">Demo example with search</a>.
-    * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>here</a>.
+    * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>здесь</a>.
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
     * @mixes Controls/_interface/ISource
+    * @mixes Controls/interface/ITreeGridItemTemplate
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList
@@ -143,7 +150,41 @@ import 'Controls/breadcrumbs';
     * @mixes Controls/_explorer/interface/IExplorer
     * @mixes Controls/_tile/interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
-    * @mixes Controls/_tile/interface/IGridControl
+    * @mixes Controls/_list/interface/IVirtualScroll
+    * @mixes Controls/interface/IGroupedGrid
+    * @mixes Controls/_grid/interface/IGridControl
+    * @control
+    * @public
+    * @category List
+    * @author Авраменко А.С.
+    */
+
+   /*
+    * Hierarchical list that can expand and go inside the folders. Can load data from data source.
+    * <a href="/materials/demo-ws4-explorer">Demo example</a>.
+    * <a href="/materials/demo-ws4-explorer-with-search">Demo example with search</a>.
+    * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>here</a>.
+    *
+    * @class Controls/_explorer/View
+    * @extends Core/Control
+    * @mixes Controls/_interface/ISource
+    * @mixes Controls/interface/ITreeGridItemTemplate
+    * @mixes Controls/interface/IItemTemplate
+    * @mixes Controls/interface/IPromisedSelectable
+    * @mixes Controls/interface/IEditableList
+    * @mixes Controls/interface/IGrouped
+    * @mixes Controls/interface/INavigation
+    * @mixes Controls/interface/IFilter
+    * @mixes Controls/interface/IHighlighter
+    * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_interface/IHierarchy
+    * @mixes Controls/_treeGrid/interface/ITreeControl
+    * @mixes Controls/_explorer/interface/IExplorer
+    * @mixes Controls/_tile/interface/IDraggable
+    * @mixes Controls/_tile/interface/ITile
+    * @mixes Controls/_list/interface/IVirtualScroll
+    * @mixes Controls/interface/IGroupedGrid
+    * @mixes Controls/_grid/interface/IGridControl
     * @control
     * @public
     * @category List
@@ -151,6 +192,19 @@ import 'Controls/breadcrumbs';
     */
 
    /**
+    * @name Controls/_exploer/View#displayProperty
+    * @cfg {string} Имя свойства элемента, содержимое которого будет отображаться.
+    * @example
+    * <pre class="brush:html">
+    * <Controls.explorers:View
+    *   ...
+    *   displayProperty="title">
+    *       ...
+    * </Controls.explorer:View>
+    * </pre>
+    */
+
+   /*
     * @name Controls/_exploer/View#displayProperty
     * @cfg {string} sets the property to be displayed in search results
     * @example
@@ -172,6 +226,7 @@ import 'Controls/breadcrumbs';
       _viewModelConstructor: null,
       _dragOnBreadCrumbs: false,
       _hoveredBreadCrumb: undefined,
+      _virtualScrolling: false,
 
       _beforeMount: function(cfg) {
          this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
@@ -184,11 +239,15 @@ import 'Controls/breadcrumbs';
             this._breadCrumbsItems = _private.getPath(cfg.items);
          }
 
-         _private.setViewMode(this, cfg.viewMode);
+         _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
-            _private.setViewMode(this, cfg.viewMode);
+            _private.setViewMode(this, cfg.viewMode, cfg);
+            this._children.treeControl.resetExpandedItems();
+         }
+         if (cfg.virtualScrolling !== this._options.virtualScrolling) {
+            _private.setVirtualScrolling(this, this._viewMode, cfg);
          }
       },
       _getRoot: function() {
@@ -221,12 +280,14 @@ import 'Controls/breadcrumbs';
          // but is not called, because the template has no reactive properties.
          this._forceUpdate();
       },
-      _onItemClick: function(event, item, clickEvent) {
-         if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
-            _private.setRoot(this, item.getId());
+      _onItemClick: function(event, item, clickEvent): void {
+         const res = this._notify('itemClick', [item, clickEvent]);
+         if (res !== false) {
+            if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
+               _private.setRoot(this, item.getId());
+            }
          }
          event.stopPropagation();
-         this._notify('itemClick', [item, clickEvent]);
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());
@@ -272,7 +333,7 @@ import 'Controls/breadcrumbs';
          viewMode: DEFAULT_VIEW_MODE,
          backButtonStyle: 'secondary',
          stickyHeader: true,
-         searchMode: 'root'
+         searchStartingWith: 'root'
       };
    };
 

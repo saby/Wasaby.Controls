@@ -10,14 +10,15 @@
  * @includes _SearchController Controls/_search/_SearchController
  * @includes Styles Controls/_search/Styles
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import InputContainer = require('Controls/_search/Input/Container');
-import Misspell = require('Controls/_search/Misspell');
+import {default as Misspell} from 'Controls/_search/Misspell';
 import MisspellContainer = require('Controls/_search/Misspell/Container');
 import Controller = require('Controls/_search/Controller');
 import Input = require('Controls/_search/Input/Search');
+import FilterController = require('Controls/_search/FilterController');
 
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 
@@ -30,6 +31,7 @@ export {
    MisspellContainer,
    Controller,
    Input,
+   FilterController,
 
    getSwitcherStrFromData
 };

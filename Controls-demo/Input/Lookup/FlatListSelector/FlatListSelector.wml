@@ -2,7 +2,7 @@
     <ws:headerContentTemplate>
         <div attr:class="ControlsDemo-FlatListSelector-header">
             <ws:if data="{{_options.multiSelect && _selectionChanged}}">
-                <Controls.buttons:Button viewMode="button" style="primary" caption="{[Выбрать]}" on:click="_closeSelectorBind()" attr:class="ControlsDemo-FlatListSelector-confirmButton"/>
+                <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{[Выбрать]}" on:click="_closeSelectorBind()" attr:class="ControlsDemo-FlatListSelector-confirmButton"/>
             </ws:if>
         </div>
     </ws:headerContentTemplate>

@@ -1,6 +1,7 @@
 import {GridViewModel} from 'Controls/grid'
 import {GridLayoutUtil} from 'Controls/list'
 import {
+    getBottomPaddingRowIndex,
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
     getResultsIndex, getTopOffset, IBaseTreeGridRowIndexOptions
@@ -73,6 +74,10 @@ var
             this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
             this._model.subscribe('onNodeRemoved', this._onNodeRemovedFn);
             this._model.subscribe('expandedItemsChanged', this._onExpandedItemsChanged.bind(this));
+            this._model.subscribe('collapsedItemsChanged', this._onCollapsedItemsChanged.bind(this));
+        },
+        _onCollapsedItemsChanged: function(e, collapsedItems) {
+            this._notify('collapsedItemsChanged', collapsedItems);
         },
         _onExpandedItemsChanged: function(e, expandedItems) {
             this._notify('expandedItemsChanged', expandedItems);
@@ -91,6 +96,9 @@ var
         },
         setExpandedItems: function (expandedItems: Array<unknown>) {
             this._model.setExpandedItems(expandedItems);
+        },
+        setCollapsedItems: function (collapsedItems: Array<unknown>) {
+            this._model.setCollapsedItems(collapsedItems);
         },
         getExpandedItems: function () {
             return this._model.getExpandedItems();
@@ -203,6 +211,7 @@ var
                 cfg: IBaseTreeGridRowIndexOptions = {
                     display: this.getDisplay(),
                     hasHeader: !!this.getHeader(),
+                    hasBottomPadding: this._options._needBottomPadding,
                     resultsPosition: this.getResultsPosition(),
                     hierarchyRelation: self._model.getHierarchyRelation(),
                     hasMoreStorage: self._model.getHasMoreStorage() || {},
@@ -211,13 +220,18 @@ var
                 },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
 
+            if (this.getEditingItemData()) {
+                cfg.editingRowIndex = this.getEditingItemData().index;
+            }
+
             return {
                 getIndexByItem: (item) => getIndexByItem({item, ...cfg}),
                 getIndexById: (id) => getIndexById({id, ...cfg}),
                 getIndexByDisplayIndex: (index) => getIndexByDisplayIndex({index, ...cfg}),
                 getResultsIndex: () => getResultsIndex({hasEmptyTemplate, ...cfg}),
+                getBottomPaddingRowIndex: () => getBottomPaddingRowIndex(cfg),
                 getFooterIndex: () => getFooterIndex({hasEmptyTemplate, ...cfg}),
-                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition)
+                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition),
             };
         }
     });

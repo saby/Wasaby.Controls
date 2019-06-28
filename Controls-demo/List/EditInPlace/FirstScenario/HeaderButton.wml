@@ -4,10 +4,10 @@
                      readOnly="{{true}}"
                      attr:class="ControlsDemo-EipScenarios__headerCaption"
                      size="m"/>
-   <Controls.buttons:Button icon="icon-small icon-AddButtonNew"
-                    style="secondary"
+   <Controls.buttons:Button iconSize="s" icon="icon-AddButtonNew"
+                    buttonStyle="secondary"
                     iconStyle="secondary"
                     viewMode="toolButton"
-                    size="s"
+                    inlineHeight="m"
                     readOnly="{{true}}" />
 </div>

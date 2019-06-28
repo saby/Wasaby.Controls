@@ -1,5 +1,6 @@
 import BaseControl = require('Core/Control');
 import formatDate = require('Core/helpers/Date/format');
+import { SyntheticEvent } from 'Vdom/Vdom';
 import EventProxy from './Mixin/EventProxy';
 import {DateRangeModel, Utils as DateControlsUtils, dateRangeQuantum as quantumUtils} from 'Controls/dateRange';
 import {MonthModel} from 'Controls/calendar';
@@ -123,9 +124,11 @@ var Component = BaseControl.extend([EventProxy], {
         this._rangeModel.destroy();
     },
 
-    _monthCaptionClick: function (e, month) {
+    _monthCaptionClick: function(e: SyntheticEvent, yearDate: Date, month: number): void {
+        let date;
         if (this._monthSelectionEnabled) {
-            this._notify('fixedPeriodClick', [month, dateUtils.getEndOfMonth(month)]);
+            date = new Date(yearDate.getFullYear(), month);
+            this._notify('fixedPeriodClick', [date, dateUtils.getEndOfMonth(date)]);
         }
     },
 

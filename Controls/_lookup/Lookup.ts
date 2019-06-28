@@ -9,17 +9,21 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
  *
  * @class Controls/_lookup/Lookup
+ * @extends Core/Control
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/interface/ISelectorDialog
+ * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
- * @mixes Controls/interface/ISuggest
- * @mixes Controls/interface/ILookup
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/interface/IInputPlaceholder
+ * @mixes Controls/interface/IInputBase
+ * @mixes Controls/interface/IInputText
  * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/interface/ISelectableInput
  * @mixes Controls/_lookup/Lookup/LookupStyles
  * @control
  * @public
@@ -29,7 +33,7 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  */
 
 /**
- * @name Controls/interface/ILookup#multiLine
+ * @name Controls/_lookup/Lookup#multiLine
  * @cfg {Boolean} Determines then Lookup can be displayed in multi line mode.
  */
 
@@ -37,7 +41,7 @@ var Lookup = Control.extend({
    _template: template,
 
    showSelector: function (popupOptions) {
-      this._children.controller.showSelector(popupOptions);
+      return this._children.controller.showSelector(popupOptions);
    }
 });
 

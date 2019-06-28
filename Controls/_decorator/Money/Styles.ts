@@ -42,6 +42,6 @@
  * @css @font-weight_DecoratorMoney-fractional The font weight of a fractional part.
  *
  * @public
- * @author Журавлев М.С.
+ * @author Красильников А.С.
  */
 

@@ -56,11 +56,12 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
  * The module returns a function that allows scrolling content in parent scrollable containers
  * so that the passed dom element becomes visible.
  *
- * <h2>Function argument</h2>
+ * <h2>Function arguments</h2>
  *
- * The dom element to be made visible.
+ * <h3>element: HTMLElement - The dom element to be made visible</h3>
+ * <h3>toBottom: boolean - Determines if bottom edge should be visible</h3>
  *
- * <h2>Usage example</h2>
+ * <h3>Usage example</h3>
  * <pre>
  * require([
  *     'Controls/Utils/scrollToElement'
@@ -69,14 +70,16 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
  * ) {
  *     class Component extends Control {
  *         _onClick() {
- *             scrollToElement(this._children.child);
+ *             scrollToElement(this._children.child, true);
  *         }
  *     }
  * });
  * </pre>
+ *
+ * The
  * @class Controls/Utils/scrollToElement
  * @public
- * @author Mironov A.U.
+ * @author Миронов А.Ю.
  */
 function scrollToElement(element: HTMLElement, toBottom?: Boolean) {
    getScrollableParents(element).forEach(parent => {

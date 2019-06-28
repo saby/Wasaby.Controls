@@ -3,7 +3,7 @@
    <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id" bind:filter="_filter">
       <Controls.operations:Controller bind:selectedKeys="_selectedKeys"
                                         bind:excludedKeys="_excludedKeys">
-         <Controls.search:Controller searchParam="title" minSearchLength="{{3}}">
+         <Controls.search:Controller searchParam="title" minSearchLength="{{3}}" searchStartingWith="{{_searchStartingWith}}">
             <div class="ws-fragment">
                <Controls.search:InputContainer>
                   <Controls.search:Input/>
@@ -26,4 +26,10 @@
          </Controls.search:Controller>
       </Controls.operations:Controller>
    </Controls.list:DataContainer>
+   <div class="demo-Explorer__options">
+      <div>
+         <div>searchStartingWith:</div>
+         <Controls.toggle:RadioGroup bind:selectedKey="_searchStartingWith" source="{{_searchStartingWithSource}}" keyProperty="id"/>
+      </div>
+   </div>
 </div>

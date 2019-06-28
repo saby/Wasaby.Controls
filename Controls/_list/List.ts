@@ -25,6 +25,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_tile/interface/IDraggable
+ * @mixes Controls/interface/IGroupedList
  *
  * @mixes Controls/_list/interface/IVirtualScroll
  * @mixes Controls/_list/BaseControlStyles
@@ -48,6 +49,8 @@ var ListControl = Control.extend(/** @lends Controls/_list/List.prototype */{
     _viewName: viewName,
     _viewTemplate: viewTemplate,
     _viewModelConstructor: null,
+
+    _theme: ['Controls/list_multi'],
 
     _beforeMount: function() {
         this._viewModelConstructor = this._getModelConstructor();

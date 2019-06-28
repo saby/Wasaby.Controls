@@ -41,7 +41,7 @@ import buttons = require('Controls/buttons');
 
                // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
                // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
-               buttons.iconsUtil.itemsSetOldIconStyle(self._items);
+               buttons.ActualApi.itemsSetOldIconStyle(self._items);
                return self._items;
             });
          }
@@ -76,7 +76,7 @@ import buttons = require('Controls/buttons');
     * @cfg {Function} Template displayed on the right side of the panel.
     * @example
     * <pre>
-    *    <Controls._operations.Panel rightTemplate="wml!MyModule/OperationsPanelRightTemplate" />
+    *    <Controls.operations:Panel rightTemplate="wml!MyModule/OperationsPanelRightTemplate" />
     * </pre>
     */
 
@@ -87,7 +87,7 @@ import buttons = require('Controls/buttons');
     * @example
     * TMPL:
     * <pre>
-    *    <Controls._operations.Panel on:itemClick="onPanelItemClick()" />
+    *    <Controls.operations:Panel on:itemClick="onPanelItemClick()" />
     * </pre>
     * JS:
     * <pre>

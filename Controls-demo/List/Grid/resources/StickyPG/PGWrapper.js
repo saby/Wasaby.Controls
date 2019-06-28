@@ -71,16 +71,19 @@ define('Controls-demo/List/Grid/resources/StickyPG/PGWrapper',
 
 
             controlNodes.forEach(function(config) {
-               var notOrigin = config.control._notify;
+               var
+                  notOrigin = config.control._notify,
+                  resultNotify;
 
                config.control._notify = function(event, arg) {
                   self.myEvent += event + ' ';
                   if (event === opts.eventType) {
                      opts.componentOpt[opts.nameOption] = arg[0];
                   }
-                  notOrigin.apply(this, arguments);
+                  resultNotify = notOrigin.apply(this, arguments);
                   self._forceUpdate();
                   self._children.PropertyGrid._forceUpdate();
+                  return resultNotify;
                };
             });
          },

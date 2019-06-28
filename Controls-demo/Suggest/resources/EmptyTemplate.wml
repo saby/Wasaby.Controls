@@ -1,0 +1,3 @@
+<div class="ControlsDemo-Suggest_emptyTpl">
+    <Controls.buttons:Button attr:class="ControlsDemo-Suggest_emptyTpl_button" caption="Это новое" buttonStyle="primary" viewMode="button"/>
+</div>

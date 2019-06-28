@@ -26,6 +26,7 @@
                                   displayProperty="title"
                                   parentProperty="parent"
                                   nodeProperty="@parent"
+                                  attr:class="ControlsDemo-InputDropdown__item-limitMaxWidth"
                                   source="{{_createMemory(_hierarchyItems)}}"/>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">
@@ -59,7 +60,16 @@
                                   displayProperty="title"
                                   multiSelect="{{true}}"
                                   emptyText="All categories"
-                                  attr:class="ControlsDemo-InputDropdown__item-limitWidth"
+                                  attr:class="ControlsDemo-InputDropdown__item ControlsDemo-InputDropdown__item-limitWidth"
+                                  source="{{_createMemory(_multiSelectItems)}}">
+         </Controls.dropdown:Input>
+         <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMultiSelect3"
+                                  keyProperty="id"
+                                  displayProperty="title"
+                                  multiSelect="{{true}}"
+                                  emptyText="All categories"
+                                  itemTemplate="wml!Controls-demo/Input/Dropdown/itemTemplateDropdown"
+                                  attr:class="ControlsDemo-InputDropdown__item"
                                   source="{{_createMemory(_multiSelectItems)}}">
          </Controls.dropdown:Input>
       </div>
@@ -148,6 +158,8 @@
             </ws:itemTemplate>
          </Controls.dropdown:Input>
       </div>
+   </div>
+   <div class="ControlsDemo-InputDropdown_column">
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h3>With grouping</h3>
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysGroup"
@@ -161,11 +173,21 @@
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysGroupText"
                                   keyProperty="id"
                                   displayProperty="title"
+                                  attr:class="ControlsDemo-InputDropdown__item"
                                   groupingKeyCallback="{{_groupingKeyCallback}}"
                                   source="{{_createMemory(_groupTextItems)}}">
             <ws:groupTemplate>
                <ws:partial template="wml!Controls/_dropdownPopup/defaultGroupTemplate" showText="{{true}}"/>
             </ws:groupTemplate>
+         </Controls.dropdown:Input>
+         <Controls.dropdown:Input bind:selectedKeys="_selectedKeysGroupHierarchy"
+                                  keyProperty="id"
+                                  displayProperty="title"
+                                  parentProperty="parent"
+                                  nodeProperty="@parent"
+                                  groupingKeyCallback="{{_groupingKeyCallback}}"
+                                  groupTemplate="wml!Controls/_dropdownPopup/defaultGroupTemplate"
+                                  source="{{_createMemory(_groupHierarchyItems)}}">
          </Controls.dropdown:Input>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">

@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/PropertyGrid/PropertyGrid');
 import Utils = require('Types/util');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import Clone = require('Core/core-clone');
 import chain = require('Types/chain');
 import 'css!theme?Controls/filterPopup';
@@ -31,7 +31,7 @@ import 'css!theme?Controls/filterPopup';
          if (items['[Types/_entity/CloneableMixin]']) {
             return items.clone();
          }
-         return Clone(items);
+         return Utils.object.clone(items);
       },
 
       getIndexChangedVisibility: function(newItems, oldItems) {
@@ -67,15 +67,15 @@ import 'css!theme?Controls/filterPopup';
             get() {
                return value;
             }
-         })
+         });
       },
 
       observeItems: function(self, items) {
          chain.factory(items).each(function(item) {
             observableItemProps.forEach(function (propName) {
                _private.observeProp(self, propName, item);
-            })
-         })
+            });
+         });
       }
    };
 
@@ -122,6 +122,9 @@ import 'css!theme?Controls/filterPopup';
       },
 
       _visibilityChangedHandler: function(event, index, visibility) {
+         if (!visibility) {
+            this._options.items[index].value = this._options.items[index].resetValue;
+         }
          this._options.items[index].visibility = visibility;
          this._notify('itemsChanged', [this._options.items]);
       }

@@ -4,8 +4,6 @@
 import thelpers = require('View/Executor/TClosure');
 import validHtml = require('Core/validHtml');
 
-'use strict';
-
    var markupGenerator,
       defCollection,
       control,
@@ -28,7 +26,7 @@ import validHtml = require('Core/validHtml');
          'src': true,
          'usemap': true
       },
-      goodLinkAttributeRegExp = /^((https?|ftp|file|smb):(\/\/|\\\\)|mailto:|\/)/,
+      goodLinkAttributeRegExp = /^((https?|ftp|file|smb):(\/\/|\\\\)|mailto:|www\.|\.?\/)/,
       dataAttributeRegExp = /^data-([\w-])*/,
       escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
       additionalNotVdomEscapeRegExp = /(\u00a0)|(&#)/g;
@@ -46,7 +44,7 @@ import validHtml = require('Core/validHtml');
    function validAttributesInsertion(to, from) {
       var validAttributes = currentValidHtml.validAttributes;
       for (var key in from) {
-         if (!from.hasOwnProperty(key)) {
+         if (!from.hasOwnProperty(key) || typeof from[key] !== 'string') {
             continue;
          }
          if (!validAttributes[key] && !dataAttributeRegExp.test(key)) {

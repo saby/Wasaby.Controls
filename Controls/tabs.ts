@@ -4,7 +4,7 @@
  * @includes Buttons Controls/_tabs/Buttons
  * @includes ButtonsStyles Controls/_tabs/ButtonsStyles
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Buttons = require('Controls/_tabs/Buttons');

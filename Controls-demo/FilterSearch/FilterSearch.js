@@ -124,12 +124,12 @@ define('Controls-demo/FilterSearch/FilterSearch', [
             })
          }];
          this._source = new sourceLib.Memory({
-            data: memorySourceData,
+            data: memorySourceData.departments,
             idProperty: 'id'
          });
 
          this._sourceWithoutFilter = new sourceLib.Memory({
-            data: memorySourceData,
+            data: memorySourceData.departments,
             idProperty: 'id'
          });
 
@@ -147,7 +147,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
 
       _afterMount: function() {
          this._source = new sourceLib.Memory({
-            data: memorySourceData,
+            data: memorySourceData.departments,
             filter: memorySourceFilter({
                'owner': '0',
                'department': 'По департаменту'

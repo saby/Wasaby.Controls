@@ -37,7 +37,7 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
           * @example
           * wml
           * <pre>
-          *    <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
+          *    <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog" modal="{{true}}">
           *          <ws:templateOptions key="111"/>
           *    </Controls.popup:Dialog>
           *
@@ -112,7 +112,7 @@ export default Dialog;
      * @example
      * wml
      * <pre>
-     *    <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
+     *    <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog" modal="{{true}}">
      *          <ws:templateOptions key="111"/>
      *    </Controls.popup:Dialog>
      *

@@ -92,6 +92,27 @@
               tooltip="Add">
          <ws:headConfig caption="Add" menuStyle="titleHead"/>
       </Controls.dropdown:Button>
+      <Controls.dropdown:Button
+              keyProperty="id"
+              icon="icon-medium icon-AddButtonNew"
+              style="secondary"
+              viewMode="button"
+              source="{{_createMemory(_simpleAdd2)}}"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__addText"
+              tooltip="Add">
+         <ws:headerTemplate>
+            <ws:partial template="Controls/dropdownPopup:Template" caption="Add" />
+         </ws:headerTemplate>
+      </Controls.dropdown:Button>
+      <Controls.dropdown:Button
+              keyProperty="id"
+              icon="icon-medium icon-AddButtonNew"
+              style="secondary"
+              viewMode="button"
+              source="{{_createMemory(_simpleAdd3)}}"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__addText"
+              tooltip="Add">
+      </Controls.dropdown:Button>
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
@@ -229,6 +250,19 @@
          <ws:itemTemplate>
             <ws:partial template="Controls/dropdown:ItemTemplate" iconPadding=""/>
          </ws:itemTemplate>
+      </Controls.dropdown:Button>
+      <Controls.dropdown:Button
+              keyProperty="id"
+              style="primary"
+              caption="One group"
+              iconStyle="primary"
+              viewMode="button"
+              showHeader="{{false}}"
+              source="{{_createMemory(_oneGroupItems)}}"
+              groupingKeyCallback="{{_groupingKeyCallback}}"
+              groupTemplate="wml!Controls/_dropdownPopup/defaultGroupTemplate"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups"
+              tooltip="Add">
       </Controls.dropdown:Button>
    </div>
 

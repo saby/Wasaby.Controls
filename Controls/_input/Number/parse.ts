@@ -56,7 +56,7 @@ function calcSplitterPosition(value: string): number {
     let position: number;
 
     for (let i = 0; i < decimalSplitters.length; i++) {
-        const splitter = decimalSplitters[0];
+        const splitter = decimalSplitters[i];
 
         position = value.indexOf(splitter);
 

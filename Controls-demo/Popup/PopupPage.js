@@ -2,11 +2,11 @@ define('Controls-demo/Popup/PopupPage',
    [
       'Core/Control',
       'wml!Controls-demo/Popup/PopupPage',
-      'Core/helpers/Number/randomId',
+      'Controls/popup',
       'Controls-demo/Popup/TestDialog',
       'css!Controls-demo/Popup/PopupPage'
    ],
-   function (Control, template, randomId) {
+   function (Control, template, popupLib) {
       'use strict';
 
       var PopupPage = Control.extend({
@@ -115,6 +115,37 @@ define('Controls-demo/Popup/PopupPage',
                templateOptions: {
                   fakeOpener: this
                }
+            });
+         },
+
+         openInfoBoxByHelper: function() {
+            popupLib.Infobox.openPopup({
+               message: 'Great job',
+               target: this._children.helperButton1._container
+            });
+            setTimeout(function() {
+               popupLib.Infobox.closePopup();
+            }, 5000);
+         },
+
+         openNotificationByHelper: function() {
+            popupLib.Notification.openPopup({
+               template: 'Controls-demo/Popup/TestDialog',
+               autoClose: false
+            }).addCallback(function(popupId) {
+               setTimeout(function() {
+                  // don't use that. use autoClose option. it's example.
+                  popupLib.Notification.closePopup(popupId);
+               }, 5000);
+            });
+         },
+
+         openConfirmationByHelper: function() {
+            var self = this;
+            popupLib.Confirmation.openPopup({
+               message: 'Choose yes or no'
+            }).addCallback(function(result) {
+               self._helperConfirmationResult = result;
             });
          },
 

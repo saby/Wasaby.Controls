@@ -6,11 +6,11 @@ import template = require('wml!Controls/_filter/Button/Button');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Deferred = require('Core/Deferred');
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import 'css!theme?Controls/filter';
 /**
  * Control for data filtering. Consists of an icon-button and a string representation of the selected filter.
- * Clicking on a icon-button or a string opens the panel. {@link Controls/filterPopup/Panel}
+ * Clicking on a icon-button or a string opens the panel. {@link Controls/filterPopup:DetailPanel}
  * Supports the insertion of a custom template between the button and the filter string.
  * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>here</a>.
  * Here you can see <a href="/materials/demo-ws4-filter-button">demo-example</a>.
@@ -55,9 +55,10 @@ var _private = {
 
       chain.factory(items).each(function(item) {
          if (_private.isItemChanged(item) && (Utils.object.getPropertyValue(item, 'visibility') === undefined || Utils.object.getPropertyValue(item, 'visibility'))) {
-            var textValue = Utils.object.getPropertyValue(item, 'textValue');
+            let textValue = Utils.object.getPropertyValue(item, 'textValue');
+            let resetTextValue = Utils.object.getPropertyValue(item, 'resetTextValue');
 
-            if (textValue) {
+            if (textValue && textValue !== resetTextValue) {
                textArr.push(textValue);
             }
          }
@@ -90,16 +91,13 @@ var _private = {
          self._filterCompatible.updateFilterStructure(items);
       }
    },
-   setPopupOptions: function(self, options) {
+   setPopupOptions: function(self, alignment) {
       self._popupOptions = {
          closeOnOutsideClick: true,
-         eventHandlers: {
-            onResult: self._onFilterChanged
-         },
-         className: 'controls-FilterButton-popup-orientation-' + (options.alignment === 'right' ? 'left' : 'right')
+         className: 'controls-FilterButton-popup-orientation-' + (alignment === 'right' ? 'left' : 'right')
       };
 
-      if (options.alignment === 'right') {
+      if (alignment === 'right') {
          self._popupOptions.corner = {
             vertical: 'top',
             horizontal: 'right'
@@ -162,8 +160,7 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
       if (options.items) {
          _private.resolveItems(this, options.items);
       }
-      this._onFilterChanged = this._onFilterChanged.bind(this);
-      _private.setPopupOptions(this, options);
+      _private.setPopupOptions(this, options.alignment);
    },
 
    _beforeUpdate: function(options) {
@@ -171,7 +168,7 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
          _private.resolveItems(this, options.items);
       }
       if (this._options.alignment !== options.alignment) {
-         _private.setPopupOptions(this, options);
+         _private.setPopupOptions(this, options.alignment);
       }
    },
 
@@ -209,7 +206,7 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
       }
    },
 
-   _onFilterChanged: function(data) {
+   _onFilterChanged: function(event, data) {
       this._notify('filterChanged', [data.filter]);
       this._notify('itemsChanged', [data.items]);
    }

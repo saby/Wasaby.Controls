@@ -4,13 +4,13 @@
  * @interface Controls/interface/IInputStyle
  *
  * @public
- * @author Журавлев М.С.
+ * @author Красильников А.С.
  */
 interface IInputStyle {
     readonly _options: {
         /**
          * @name Controls/interface/IInputStyle#style
-         * @cfg {String} Display style of the field.
+         * @cfg {Enum} Display style of the field.
          * @variant info - information field display style.
          * @variant invalid - the display style of the field with invalid value.
          * @variant danger - the display style of the field with danger.
@@ -35,7 +35,7 @@ interface IInputStyle {
          *       </div>
          *       <Controls.input:Text name="login" style="primary" bind:value="_login"/>
          *       Controls.input:Password name="password" style="_passwordStyle" bind:value="_password" on:inputCompleted="_inputCompletedHandler()"/>
-         *       <Controls.Button name="register" caption="register" on:click="_sendDataClick()"/>
+         *       <Controls.buttons:Button name="register" caption="register" on:click="_sendDataClick()"/>
          *    </div>
          * </pre>
          *

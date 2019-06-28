@@ -12,9 +12,11 @@
                <ws:if data="{{_options.showRoot}}">
                   <Controls.buttons:Button attr:class="controls-MoveDialog__root"
                                            viewMode="link"
+                                           fontColorStyle="link"
                                            caption="{[В корень]}"
                                            on:click="_onItemActionsClick('move', _options.root)"
-                                           icon="icon-small icon-primary icon-Undo2"/>
+                                           icon="icon-Undo2"
+                                           iconSize="s" iconStyle="secodary"/>
                </ws:if>
                <Controls.scroll:Container attr:class="controls-MoveDialog__scroll">
                   <Controls.list:Container>

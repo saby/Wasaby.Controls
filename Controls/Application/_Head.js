@@ -5,10 +5,10 @@ define('Controls/Application/_Head',
       'wml!Controls/Application/_Head',
       'Core/helpers/getResourceUrl',
       'Application/Env',
-      'Controls/_decorator/Markup/resolvers/noOuterTag',
+      'Controls/decorator',
       'Core/Themes/ThemesControllerNew'
    ],
-   function(Base, Deferred, template, getResourceUrl, AppEnv, noOuterTagResolver, ThemesControllerNew) {
+   function(Base, Deferred, template, getResourceUrl, AppEnv, decorator, ThemesControllerNew) {
       'use strict';
 
       // Component for <head> html-node, it contents all css depends
@@ -121,14 +121,16 @@ define('Controls/Application/_Head',
             return Array.isArray(this.head);
          },
          headTagResolver: function(value, parent) {
-            var newValue = noOuterTagResolver(value, parent),
+            var newValue = decorator.noOuterTag(value, parent),
                attributes = Array.isArray(newValue) && typeof newValue[1] === 'object' &&
                   !Array.isArray(newValue[1]) && newValue[1];
             if (attributes) {
                for (var attributeName in attributes) {
-                  if (attributes.hasOwnProperty(attributeName)) {
+                  // TODO: call getResourceUrl for only right attributes. Add unit tests.
+                  // Task link: https://online.sbis.ru/opendoc.html?guid=b7d20750-7816-4eff-aa8b-25249ad4d04c.
+                  if (attributes.hasOwnProperty(attributeName) && attributeName !== 'content') {
                      // Try update all attributes as link, but only links would be updated.
-                     attributes[attributeName] = getResourceUrl(attributes[attributeName]);
+                     attributes[attributeName] = getResourceUrl('' + attributes[attributeName]);
                   }
                }
             }

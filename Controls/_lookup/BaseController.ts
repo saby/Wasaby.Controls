@@ -3,7 +3,7 @@ import template = require('wml!Controls/_lookup/BaseController/BaseController');
 import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
 import {Controller as SourceController} from 'Controls/source';
-import isEqual = require('Core/helpers/Object/isEqual');
+import {isEqual} from 'Types/object';
 import collection = require('Types/collection');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import ToSourceModel = require('Controls/Utils/ToSourceModel');
@@ -150,7 +150,7 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
     * @extends Core/Control
     * @control
     * @private
-    * @author Kraynov D.
+    * @author Крайнов Д.О.
     */
 
    var CollectionController = Control.extend({
@@ -268,6 +268,10 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
 
       _onUpdateItemsHandler: function(event, items) {
          this._setItems(items);
+      },
+
+      _closeHandler: function() {
+         this.activate();
       }
    });
 

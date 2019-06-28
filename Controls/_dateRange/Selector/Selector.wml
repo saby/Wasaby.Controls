@@ -9,8 +9,8 @@
       />
 
       <Controls.popup:Sticky name="opener"
-                                    template="SBIS3.CONTROLS/Date/RangeBigChoose"
                                     closeOnOutsideClick="{{true}}"
-                                    actionOnScroll="close">
+                                    actionOnScroll="close"
+                                    _vdomOnOldPage="{{_isVdomDialog()}}">
       </Controls.popup:Sticky>
 </div>

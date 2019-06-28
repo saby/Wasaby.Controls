@@ -6,6 +6,7 @@
  * @includes DoubleSwitch Controls/_toggle/DoubleSwitch
  * @includes RadioGroup Controls/_toggle/RadioGroup
  * @includes Checkbox Controls/_toggle/Checkbox
+ * @includes CheckboxGroup Controls/_toggle/CheckboxGroup
  * @includes Separator Controls/_toggle/Separator
  * @includes BigSeparator Controls/_toggle/BigSeparator
  * @includes BigSeparatorStyles Controls/_toggle/BigSeparator/BigSeparatorStyles
@@ -17,7 +18,7 @@
  * @includes SwitchStyles Controls/_toggle/Switch/SwitchStyles
  * @includes SwitchCircleStyles Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import {default as Button} from 'Controls/_toggle/Button';
@@ -29,6 +30,7 @@ import {default as Checkbox} from 'Controls/_toggle/Checkbox';
 import {default as Separator} from 'Controls/_toggle/Separator';
 import {default as BigSeparator} from 'Controls/_toggle/BigSeparator';
 import ItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
+import switchCircleTemplate = require('wml!Controls/_toggle/resources/SwitchCircle/SwitchCircle');
 
 export {
    Button,
@@ -39,5 +41,6 @@ export {
    CheckboxGroup,
    Separator,
    BigSeparator,
-   ItemTemplate
+   ItemTemplate,
+   switchCircleTemplate
 };

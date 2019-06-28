@@ -17,7 +17,7 @@ import ViewModel from 'Controls/_input/Money/ViewModel';
  * @public
  * @demo Controls-demo/Input/Money/Money
  *
- * @author Zhuravlev M.S.
+ * @author Красильников А.С.
  */
 
 class Money extends Base {

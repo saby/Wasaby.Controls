@@ -19,14 +19,12 @@ define([
 
       it('constructor', function() {
          var vsInstance = new list.VirtualScroll({
-            virtualSegmentSize: 30,
             virtualPageSize: 80,
-            itemsRenderMode: 'AllAtOnce'
          });
          assert.equal(0, vsInstance._startIndex, 'Wrong start index after ctor');
          assert.equal(80, vsInstance._stopIndex, 'Wrong stop index after ctor');
          assert.equal(80, vsInstance._virtualPageSize, 'Wrong virtualPageSize index after ctor');
-         assert.equal(30, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after ctor');
+         assert.equal(20, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after ctor');
       });
 
       it('default options in constructor', function() {
@@ -34,14 +32,12 @@ define([
          assert.equal(0, vsInstance._startIndex, 'Wrong start index after default ctor');
          assert.equal(100, vsInstance._stopIndex, 'Wrong stop index after default ctor');
          assert.equal(100, vsInstance._virtualPageSize, 'Wrong virtualPageSize index after default ctor');
-         assert.equal(20, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after default ctor');
+         assert.equal(25, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after default ctor');
       });
 
       it('resetItemsIndexes', function() {
          var vsInstance = new list.VirtualScroll({
-            virtualSegmentSize: 30,
             virtualPageSize: 80,
-            itemsRenderMode: 'AllAtOnce'
          });
 
          vsInstance._startIndex = 20;
@@ -50,7 +46,7 @@ define([
          assert.equal(0, vsInstance._startIndex, 'Wrong start index after reset');
          assert.equal(80, vsInstance._stopIndex, 'Wrong stop index after reset');
          assert.equal(80, vsInstance._virtualPageSize, 'Wrong virtualPageSize index after reset');
-         assert.equal(30, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after reset');
+         assert.equal(20, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after reset');
       });
 
       it('getter ItemsIndexes', function() {
@@ -136,35 +132,6 @@ define([
          assert.equal(4000, vsInstance._itemsCount);
       });
 
-      it('updateItemsSizes always', function() {
-         var
-            vsInstance = new list.VirtualScroll({
-               updateItemsHeightsMode: 'always'
-            }),
-            _items = {
-               children: [
-                  { offsetHeight: 20 },
-                  { offsetHeight: 45 },
-                  { offsetHeight: 10 },
-                  { offsetHeight: 44 },
-                  { offsetHeight: 78 },
-                  { offsetHeight: 45 },
-                  { offsetHeight: 92 }
-               ]
-            },
-            itemsHeights = [20, 45, 10, 44, 78, 45, 92];
-
-         vsInstance.ItemsCount = 7;
-
-         var isUpdated = false;
-         vsInstance._updateItemsSizes = function() {
-            isUpdated = true;
-         };
-         vsInstance.ItemsContainer = _items;
-
-         assert.isTrue(isUpdated);
-      });
-
       it('updateItemsSizes', function() {
          var
             vsInstance = new list.VirtualScroll({}),
@@ -185,109 +152,6 @@ define([
          vsInstance._updateItemsSizes(0, 7, true);
 
          assert.deepEqual(itemsHeights, vsInstance.ItemsHeights);
-      });
-
-      it('always itemsCount <= virtualPageSize (down scroll)', function() {
-         var vsInstance = new list.VirtualScroll({
-            startIndex: 0,
-            virtualPageSize: 30,
-         });
-
-         vsInstance.ItemsCount = 1000;
-
-         for (var i = 0; i < 10; i++) {
-            vsInstance.updateItemsIndexes('down');
-            assert.equal(30, vsInstance._stopIndex - vsInstance._startIndex);
-         }
-      });
-
-      it('always itemsCount <= virtualPageSize (up scroll)', function() {
-         var vsInstance = new list.VirtualScroll({
-            startIndex: 500,
-            virtualPageSize: 50,
-         });
-         vsInstance.ItemsCount = 1000;
-
-         for (var i = 0; i < 10; i++) {
-            vsInstance.updateItemsIndexes('up');
-            assert.equal(50, vsInstance._stopIndex - vsInstance._startIndex);
-         }
-      });
-
-      it('updateItemsIndexes direction="down"', function() {
-         var vsInstance = new list.VirtualScroll({
-            virtualPageSize: 115,
-            virtualSegmentSize: 35
-         });
-
-         vsInstance._startIndex = 120;
-         vsInstance._stopIndex = 235;
-
-         vsInstance.ItemsCount = 1000;
-
-         vsInstance.updateItemsIndexes('down');
-         assert.deepEqual({
-            start: 155,
-            stop: 270
-         }, vsInstance.ItemsIndexes);
-      });
-
-      it('updateItemsIndexes direction="up"', function() {
-         var vsInstance = new list.VirtualScroll({
-            virtualPageSize: 115,
-            virtualSegmentSize: 35
-         });
-
-         vsInstance._startIndex = 120;
-         vsInstance._stopIndex = 235;
-
-         vsInstance.ItemsCount = 1000;
-
-         vsInstance.updateItemsIndexes('up');
-         assert.deepEqual({
-            start: 85,
-            stop: 200
-         }, vsInstance.ItemsIndexes);
-
-      });
-
-      it('updateItemsIndexes: start index not less then 0', function() {
-         var vsInstance = new list.VirtualScroll({
-            virtualPageSize: 115,
-            virtualSegmentSize: 35
-         });
-         vsInstance.ItemsCount = 1000;
-         vsInstance._startIndex = 0;
-
-         vsInstance.updateItemsIndexes('up');
-         assert.equal(0, vsInstance._startIndex);
-         assert.equal(115, vsInstance._stopIndex);
-         vsInstance.updateItemsIndexes('up');
-         assert.equal(0, vsInstance._startIndex);
-         assert.equal(115, vsInstance._stopIndex);
-         vsInstance.updateItemsIndexes('up');
-         assert.equal(0, vsInstance._startIndex);
-         assert.equal(115, vsInstance._stopIndex);
-      });
-
-      it('updateItemsIndexes: stop index not bigger then itemsCount', function() {
-         var vsInstance = new list.VirtualScroll({
-            virtualPageSize: 100,
-            virtualSegmentSize: 40
-         });
-
-         vsInstance._startIndex = 380;
-         vsInstance.ItemsCount = 500;
-
-         vsInstance.updateItemsIndexes('down');
-         assert.equal(400, vsInstance._startIndex);
-         assert.equal(500, vsInstance._stopIndex);
-         vsInstance.updateItemsIndexes('down');
-         assert.equal(400, vsInstance._startIndex);
-         assert.equal(500, vsInstance._stopIndex);
-         vsInstance.updateItemsIndexes('down');
-         assert.equal(400, vsInstance._startIndex);
-         assert.equal(500, vsInstance._stopIndex);
       });
 
       it('getter Placeholders', function() {
@@ -369,15 +233,15 @@ define([
 
 
          //Top placeholder visible
-         assert.isTrue(vsInstance._isScrollInPlaceholder(300, 100));
+         assert.isFalse(vsInstance._isScrollInPlaceholder(300, 100));
 
          assert.isFalse(vsInstance._isScrollInPlaceholder(510, 50));
 
          //Bottom placeholder visible
-         assert.isTrue(vsInstance._isScrollInPlaceholder(500, 100));
+         assert.isFalse(vsInstance._isScrollInPlaceholder(500, 100));
 
          // Bottom  placeholder visible
-         assert.isTrue(vsInstance._isScrollInPlaceholder(700));
+         assert.isFalse(vsInstance._isScrollInPlaceholder(700));
       });
 
       it('updateItemsIndexesOnScrolling', function() {

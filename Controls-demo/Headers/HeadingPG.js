@@ -14,17 +14,17 @@ define('Controls-demo/Headers/HeadingPG',
       var HeadingPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Heading',
+         _content: 'Controls/heading:Title',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
-               style: {
+               fontColorStyle: {
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 0
                },
-               size: {
+               fontSize: {
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 1
@@ -32,9 +32,9 @@ define('Controls-demo/Headers/HeadingPG',
             };
             this._componentOptions = {
                readOnly: false,
-               size: 'm',
+               fontSize: 'l',
                caption: 'Heading',
-               style: 'secondary',
+               fontColorStyle: 'secondary',
                tooltip: '',
                name: 'Heading'
 

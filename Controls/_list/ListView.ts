@@ -8,7 +8,6 @@ import ListViewTpl = require('wml!Controls/_list/ListView/ListView');
 import defaultItemTemplate = require('wml!Controls/_list/ItemTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
 import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapper');
-import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 import {isEqual} from "Types/object";
 import 'wml!Controls/_list/resources/ItemOutput';
 import 'css!theme?Controls/list';
@@ -70,37 +69,21 @@ var ListView = BaseControl.extend(
         _groupTemplate: GroupTemplate,
         _defaultItemTemplate: defaultItemTemplate,
         _itemOutputWrapper: ItemOutputWrapper,
+        _pendingRedraw: false,
 
         constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);
-            let pendingRedraw = false;
             this._onListChangeFnc = (event, changesType) => {
                // todo refactor by task https://online.sbis.ru/opendoc.html?guid=80fbcf1f-5804-4234-b635-a3c1fc8ccc73
                if (changesType !== 'hoveredItemChanged' &&
                   changesType !== 'activeItemChanged' &&
                   changesType !== 'markedKeyChanged' &&
-                  !pendingRedraw) {
-                  pendingRedraw = true;
-                  scheduleCallbackAfterRedraw(
-                     this,
-                     () => {
-                        pendingRedraw = false;
-                        // todo COMPATIBLE. При отсутствии Application ColumnScroll не может получить событие resizeControl
-                        // fix by: https://online.sbis.ru/opendoc.html?guid=aabe8aa5-f593-4c3d-bd7e-ce9a9999a91d
-                        this._resizeNotifyOnListChanged();
-                     }
-                  );
+                  !this._pendingRedraw) {
+                  this._pendingRedraw = true;
                }
             };
         },
-
-       // todo COMPATIBLE. При отсутствии Application ColumnScroll не может получить событие resizeControl
-       // fix by: https://online.sbis.ru/opendoc.html?guid=aabe8aa5-f593-4c3d-bd7e-ce9a9999a91d
-        _resizeNotifyOnListChanged() {
-           _private.resizeNotifyOnListChanged(this);
-        },
-
-        _beforeMount: function(newOptions) {
+       _beforeMount: function(newOptions) {
             _private.checkDeprecated(newOptions);
             if (newOptions.groupTemplate) {
                 this._groupTemplate = newOptions.groupTemplate;
@@ -156,6 +139,13 @@ var ListView = BaseControl.extend(
             if (this._options.markedKey === undefined && (this._options.markerVisibility === 'always' || this._options.markerVisibility === 'visible')) {
                 this._notify('markedKeyChanged', [this._listModel.getMarkedKey()]);
             }
+        },
+
+        _afterRender: function() {
+            if (this._pendingRedraw) {
+                _private.resizeNotifyOnListChanged(this);
+            }
+            this._pendingRedraw = false;
         },
 
         getItemsContainer: function() {

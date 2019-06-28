@@ -12,7 +12,7 @@ import 'css!theme?Controls/popup';
  * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @control
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
       var itemHiddenTemplate = Control.extend({

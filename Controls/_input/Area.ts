@@ -22,7 +22,7 @@ import 'Controls/decorator';
        * @public
        * @demo Controls-demo/Input/Area/AreaPG
        *
-       * @author Журавлев М.С.
+       * @author Красильников А.С.
        */
 
       /**
@@ -206,6 +206,8 @@ import 'Controls/decorator';
          },
 
          _keyDownHandler: function(event) {
+            Area.superclass._keyDownHandler.apply(this, arguments);
+
             _private.newLineHandler(this, event, true);
          },
 

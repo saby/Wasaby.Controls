@@ -3,6 +3,7 @@
  */
 import {ItemsViewModel, BaseViewModel, ItemsUtil, getStyle} from 'Controls/list';
 import entity = require('Types/entity');
+import {factory} from 'Types/chain';
       var _private = {
          filterHierarchy: function(item) {
             var parent;
@@ -45,7 +46,12 @@ import entity = require('Types/entity');
 
          needHideGroup: function(self, key) {
             //FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
-            return self._itemsModel._display.getGroupItems(key).length === 0;
+
+            // Get items from the same group. Hide the separator, if the group is empty or all list items from the same group
+            let itemsGroup = self._itemsModel._display.getGroupItems(key);
+            // getCount of itemsModel returns count items includes groups
+            let numberItemsCurrentRoot = factory(self.getItems()).filter(_private.filterHierarchy.bind(self)).value().length;
+            return itemsGroup.length === 0 || itemsGroup.length === numberItemsCurrentRoot;
          }
       };
 
@@ -175,6 +181,7 @@ import entity = require('Types/entity');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
             itemsModelCurrent.spacingClassList = !this._options.multiSelect ? 'controls-DropdownList__item-leftPadding_default' : '';
+            itemsModelCurrent.multiSelect = this._options.multiSelect;
             return itemsModelCurrent;
          },
          _isItemSelected: function(item) {

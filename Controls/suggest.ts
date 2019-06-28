@@ -9,7 +9,7 @@
  * @includes Selector Controls/_suggest/Selector
  *
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Input = require('Controls/_suggest/Input');

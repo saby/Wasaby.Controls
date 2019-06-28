@@ -28,11 +28,10 @@ var _private = {
  * @mixes Controls/interface/IFilter
  * @mixes Controls/_interface/ISingleSelectable
  * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/interface/IInputDropdown
  * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/interface/IDropdown
- * @mixes Controls/interface/IInputDropdown
  * @css @margin-top_ComboBox-popup Offset on the top for pop-up.
+ * @css @spacing_ComboBox-between-arrow-rightBorder Spacing between arrow and right border of field.
  * @control
  * @public
  * @category Input

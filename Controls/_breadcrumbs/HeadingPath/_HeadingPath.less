@@ -64,20 +64,21 @@
    overflow: hidden;
    flex-grow: 1;
 }
-
+.controls-BreadCrumbsPath__breadCrumbs_home-path-spacing {
+   padding-left: @spacing_Path-between-home-and-crumbs;
+}
 .controls-BreadCrumbsPath__homeContainer {
    .baseline-fix();
    position: relative;
    display: inline-flex;
    align-items: baseline;
-   padding-right: @spacing_Path-between-home-and-crumbs;
-   &:before {
-      font-size:@font-size_BreadCrumbs-homeContainer;
-   }
 }
 
 .controls-BreadCrumbsPath__homeContainer_withoutBackButton {
    margin-left: @spacing_Path-between-home-and-backButton;
+   &:before {
+      font-size:@font-size_BreadCrumbs-homeContainer;
+   }
 }
 
 .controls-BreadCrumbsPath__backButton_short,

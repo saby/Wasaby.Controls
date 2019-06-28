@@ -14,7 +14,7 @@ import template = require('wml!Controls/_dateRange/RelationButton/RelationButton
  * @control
  * @public
  * @category Input
- * @author Mironov A.U.
+ * @author Миронов А.Ю.
  * @demo Controls-demo/dateRange/RelationController
  *
  */
