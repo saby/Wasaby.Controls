@@ -256,15 +256,21 @@ var _private = {
         }
         _private.setMarkedKey(self, newMarkedKey);
     },
-    moveMarkerToNext: function(self) {
+    moveMarkerToNext: function (self, event) {
         if (self._options.markerVisibility !== 'hidden') {
-            const model = self.getViewModel();
+            if (event) {
+                event.preventDefault();
+            }
+            var model = self.getViewModel();
             _private.moveMarker(self, model.getNextItemKey(model.getMarkedKey()));
         }
     },
-    moveMarkerToPrevious: function(self) {
+    moveMarkerToPrevious: function (self, event) {
         if (self._options.markerVisibility !== 'hidden') {
-            const model = self.getViewModel();
+            if (event) {
+                event.preventDefault();
+            }
+            var model = self.getViewModel();
             _private.moveMarker(self, model.getPreviousItemKey(model.getMarkedKey()));
         }
     },
