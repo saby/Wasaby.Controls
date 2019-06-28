@@ -20,7 +20,7 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
  * @implements Controls/_interface/ITooltip
  * @control
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @category Toggle
  * @demo Controls-demo/Switch/SwitchDemo
  *

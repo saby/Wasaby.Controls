@@ -22,7 +22,7 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
  * @implements Controls/_interface/ITooltip
  * @control
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @category Toggle
  *
  * @demo Controls-demo/Switch/DoubleSwitchDemo

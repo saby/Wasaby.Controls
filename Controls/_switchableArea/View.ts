@@ -10,7 +10,7 @@ import defaultItemTemplate from './ItemTpl';
  * @extends Core/Control
  * @control
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @demo Controls-demo/SwitchableArea/DemoSwitchableArea
  */
 

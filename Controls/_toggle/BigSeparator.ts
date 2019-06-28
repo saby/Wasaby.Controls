@@ -16,7 +16,7 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  * @extends Core/Control
  * @control
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @implements Controls/_toggle/interface/ICheckable
  *
  * @demo Controls-demo/Headers/BigSeparator/BigSeparatorDemo

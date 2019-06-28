@@ -17,7 +17,7 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
     * @extends Core/Control
     * @control
     * @public
-    * @author Михайловский Д.С.
+    * @author Красильников А.С.
     * @demo Controls-demo/Headers/headerDemo
     *
     * @mixes Controls/_interface/ITooltip

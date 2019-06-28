@@ -23,7 +23,7 @@ import {
  * @implements Controls/_toggle/interface/IToggleGroup
  * @control
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @category Toggle
  * @demo Controls-demo/Checkbox/Group
  */

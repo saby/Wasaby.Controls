@@ -14,7 +14,7 @@ import 'css!theme?Controls/heading';
     * @extends Core/Control
     * @control
     * @public
-    * @author Михайловский Д.С.
+    * @author Красильников А.С.
     *
     * @demo Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo
     *
