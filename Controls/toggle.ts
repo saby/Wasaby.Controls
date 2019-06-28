@@ -18,7 +18,7 @@
  * @includes SwitchStyles Controls/_toggle/Switch/SwitchStyles
  * @includes SwitchCircleStyles Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О. 
  */
 
 /*
