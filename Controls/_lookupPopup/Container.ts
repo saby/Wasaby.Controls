@@ -138,7 +138,16 @@ import {IData, IDecorator} from "Types/source";
          prepareFilter: function(filter:object, selection, searchParam:string|undefined):object {
             filter = Utils.object.clone(filter);
 
-            //FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
+             // FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
+             // TODO KINDO
+             // При отметке всех записей в фильтре проставляется selection в виде:
+             // marked: [null]
+             // excluded: [null]
+             // Если после поиска(через строку поиска) отметить всё, и нажать "Выбрать"
+             // то в фильтр необходимо посылать searchParam, иначе выборка будет включать все записи,
+             // даже которые не попали под фильтрацию при поиске.
+             // Если просто отмечают записи чекбоксами (не через панель массовых операций),
+             // то searchParam из фильтра надо удалять, т.к. записи могут отметить например в разных разделах.
             if (searchParam && selection.get('marked')[0] !== null) {
                delete filter[searchParam];
             }
