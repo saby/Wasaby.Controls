@@ -219,7 +219,7 @@ var
                 _private.fillItemsContainerForPartialSupport(this);
             }
             if (this._options.columnScroll) {
-                this._listModel._containerWidth = this._children.columnScroll._contentContainerSize;
+                this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
             }
         },
 
@@ -300,7 +300,7 @@ var
                 _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
             }
             if (this._options.columnScroll) {
-                this._listModel._containerWidth = this._children.columnScroll._contentContainerSize;
+                this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
             }
         },
 
