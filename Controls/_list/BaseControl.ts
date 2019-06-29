@@ -680,7 +680,7 @@ var _private = {
                             // если это не подгрузка с БЛ по скролу и
                             // если мы были в конце списка (отрисована последняя запись и виден нижний триггер)
                             // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
-                            if (self._listViewModel.getStopIndex() === newCount - newItems.length &&
+                            if (self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
                                isElementVisible(self._children.bottomVirtualScrollTrigger) &&
                                !self._itemsFromLoadToDirection) {
                                 self._virtualScroll.recalcToDirection(direction);
