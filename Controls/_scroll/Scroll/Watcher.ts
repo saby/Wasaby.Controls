@@ -262,6 +262,12 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             Scroll.superclass.constructor.apply(this, arguments);
             this._sizeCache = {};
             this._observers = {};
+
+            // говорим браузеру не восстанавливать скролл на то место, на котором он был перед релоадом страницы
+            // TODO Kingo
+            if (history && 'scrollRestoration' in history) {
+               history.scrollRestoration = 'manual';
+            }
          },
 
          _beforeMount: function() {
@@ -296,9 +302,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             if (registerType === 'listScroll') {
                this._registrar.register(event, component, callback);
 
-               //IntersectionObserver doesn't work correctly in Firefox
-               //https://online.sbis.ru/opendoc.html?guid=aa514bbc-c5ac-40f7-81d4-50ba55f8e29d
-               if (global && global.IntersectionObserver && triggers && !Env.detection.firefox) {
+               if (global && global.IntersectionObserver && triggers) {
                   this._canObserver = true;
                   _private.initIntersectionObserver(this, triggers, component);
                }
