@@ -3,10 +3,10 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
 
 
 /**
- * Контрол Lookup позволяет выбрать значение из справочника или предложить список возможных значений.
+ * Контрол «Lookup» позволяет выбрать значение из справочника или предложить список возможных значений.
  * Может отображаться в однострочном и многострочном режиме.
  * Поддерживает одиночный и множественный выбор.
- * <a href="/materials/demo-ws4-engine-selector-lookup">Демо-пример</a>.
+ * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-lookup">демонстрационный пример</a>.
  *
  * @class Controls/_lookup/Lookup
  * @extends Core/Control
@@ -19,16 +19,15 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
+ * @mixes Controls/_interface/ISorting
  * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IInputText
- * @mixes Controls/_lookup/Lookup/LookupStyles
+ * @mixes Controls/_lookup/BaseLookupView/LookupStyles
  * @control
  * @public
  * @author Капустин И.А.
- * @category Input
  * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
  */
-
 /*
  * The Lookup control allows you to select a value from a dialog or suggest containing a list of possible values.
  * Сan be displayed in single-line and multi-line mode.
@@ -37,6 +36,7 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  *
  * @class Controls/_lookup/Lookup
  * @extends Core/Control
+ * @mixes Controls/_interface/ILookup
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/interface/ISuggest
@@ -46,12 +46,8 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISorting
- * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IInputText
- * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputTag
- * @mixes Controls/interface/ISelectableInput
  * @mixes Controls/_lookup/BaseLookupView/LookupStyles
  * @control
  * @public
@@ -61,9 +57,8 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
 
 /**
  * @name Controls/_lookup/Lookup#multiLine
- * @cfg {Boolean} Определяет, можел ли поиск отображаться в многострочном режиме.
+ * @cfg {Boolean} Определяет, отображать ли Lookup в многострочном режиме.
  */
-
 /*
  * @name Controls/_lookup/Lookup#multiLine
  * @cfg {Boolean} Determines then Lookup can be displayed in multi line mode.

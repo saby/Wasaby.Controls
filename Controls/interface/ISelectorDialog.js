@@ -1,25 +1,23 @@
 define('Controls/interface/ISelectorDialog', [
 ], function() {
-
    /**
     * Интерфейс для контролов, открывающих диалоговое окно выбора.
     * @interface Controls/interface/ISelectorDialog
     * @public
     * @author Капустин И.А.
     */
-
    /*
     * Interface for controls that open selector dialog.
     * @interface Controls/interface/ISelectorDialog
     * @public
-    * @author Капустин И.А.
+    * @author Kapustin I.A.
     */
 
    /**
     * @name Controls/interface/ISelectorDialog#selectorTemplate
-    * @cfg {ConfigSelector[]}
+    * @cfg {ConfigSelector[]} selectorTemplate
     * @example
-    * В следующем примере мы создадим поле выбора из справочника, указав selectorTemplate, перед этим мы заранее определим значение templateOptions.
+    * В следующем примере создадем Controls.lookup:Input, указав selectorTemplate, перед этим заранее определив значения templateOptions и popupOptions.
     * WML:
     * <pre>
     *    <Controls.lookup:Input
@@ -44,12 +42,11 @@ define('Controls/interface/ISelectorDialog', [
     *    }
     * </pre>
     */
-
    /*
     * @name Controls/interface/ISelectorDialog#selectorTemplate
-    * @cfg {ConfigSelector[]}
+    * @cfg {ConfigSelector[]} selectorTemplate
     * @example
-    * In the following example, we will create a lookup by specifying selectorTemplate, before this we define the templateOptions value in advance.
+    * In the following example, we will create a lookup by specifying selectorTemplate, before this we define the templateOptions and popupOptions value in advance.
     * WML:
     * <pre>
     *    <Controls.lookup:Input
@@ -79,14 +76,12 @@ define('Controls/interface/ISelectorDialog', [
     * @typedef {Object} ConfigSelector
     * @property {Function} templateName Шаблон панели выбора элементов.
     * @property {Object} templateOptions Параметры шаблона всплывающего окна.
-    * @property {Object} popupOptions Параметры шаблона стекового окна.
+    * @property {Object} popupOptions Параметры всплывающего окна.
     */
-
    /*
     * @typedef {Object} ConfigSelector
     * @property {Function} templateName Items selection panel template.
     * @property {Object} templateOptions Popup template options.
     * @property {Object} popupOptions Stack popup options.
     */
-
 });

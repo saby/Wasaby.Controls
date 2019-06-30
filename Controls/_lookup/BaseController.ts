@@ -145,12 +145,20 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
    };
 
    /**
-    * SelectedCollection Controller
+    * Контроллер выбранной коллекции.
     * @class Controls/_lookup/SelectedCollection/Controller
     * @extends Core/Control
     * @control
     * @private
     * @author Крайнов Д.О.
+    */
+   /*
+    * SelectedCollection Controller
+    * @class Controls/_lookup/SelectedCollection/Controller
+    * @extends Core/Control
+    * @control
+    * @private
+    * @author Krainov D.O.
     */
 
    var CollectionController = Control.extend({

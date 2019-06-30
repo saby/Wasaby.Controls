@@ -20,7 +20,6 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
  * @public
  * @author Капустин И.А.
  */
-
 /*
  * Control, that display collection of items.
  *
@@ -29,7 +28,7 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
  * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @control
  * @public
- * @author Капустин И.А.
+ * @author Kapustin I.A.
  */
 
 
