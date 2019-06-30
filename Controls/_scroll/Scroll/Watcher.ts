@@ -265,8 +265,8 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 
             // говорим браузеру не восстанавливать скролл на то место, на котором он был перед релоадом страницы
             // TODO Kingo
-            if (history && 'scrollRestoration' in history) {
-               history.scrollRestoration = 'manual';
+            if (window && window.history && 'scrollRestoration' in window.history) {
+               window.history.scrollRestoration = 'manual';
             }
          },
 
