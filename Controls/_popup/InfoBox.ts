@@ -134,6 +134,8 @@ import entity = require('Types/entity');
                targetSide: self._options.targetSide,
                alignment: self._options.alignment,
                style: self._options.style,
+                //InfoBox close by outside click only if trigger is set to 'demand' or 'click'.
+               closeOnOutsideClick: self._options.trigger === 'click' || self._options.trigger === 'demand',
                floatCloseButton: self._options.floatCloseButton,
                eventHandlers: {
                   onResult: self._resultHandler,
@@ -162,6 +164,12 @@ import entity = require('Types/entity');
          _beforeMount: function(options) {
             this._resultHandler = this._resultHandler.bind(this);
             this._closeHandler = this._closeHandler.bind(this);
+            if (options.float) {
+               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
+            }
+            if (options.templateName) {
+               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
+            }
          },
 
          /**

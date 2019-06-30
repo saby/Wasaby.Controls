@@ -19,7 +19,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * @control
  * @public
  * @category Toolbar
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/ToolbarPG
  */
 

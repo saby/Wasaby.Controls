@@ -14,7 +14,7 @@ import 'Controls/_scroll/StickyHeader/_StickyHeader';
        * @public
        * @extends Core/Control
        * @class Controls/_scroll/StickyHeader
-       * @author Михайловский Д.С.
+       * @author Красильников А.С.
        */
 
       /**

@@ -6,7 +6,7 @@ import Control = require('Core/Control');
 import Controller from 'Controls/Popup/Compatible/ManagerWrapper/Controller';
 import template = require('wml!Controls/_compatiblePopup/ManagerWrapper/ManagerWrapper');
 import {Controller as ControllerPopup} from 'Controls/popup';
-import Vdom = require('Vdom/Vdom');
+import { SyntheticEvent } from 'Vdom/Vdom';
 
 var ManagerWrapper = Control.extend({
    _template: template,
@@ -50,7 +50,7 @@ var ManagerWrapper = Control.extend({
 
    _eventRegistratorHandler: function(registratorName, event) {
       // vdom control used synthetic event
-      this._children[registratorName].start(new Vdom.SyntheticEvent(event));
+      this._children[registratorName].start(new SyntheticEvent(event));
    },
 
    _mouseDownHandler: function(event) {

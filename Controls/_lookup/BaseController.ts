@@ -150,7 +150,7 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
     * @extends Core/Control
     * @control
     * @private
-    * @author Kraynov D.
+    * @author Крайнов Д.О.
     */
 
    var CollectionController = Control.extend({
@@ -268,6 +268,10 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
 
       _onUpdateItemsHandler: function(event, items) {
          this._setItems(items);
+      },
+
+      _closeHandler: function() {
+         this.activate();
       }
    });
 

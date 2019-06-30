@@ -18,7 +18,7 @@ import entity = require('Types/entity');
        * @mixes Controls/interface/IInputBase
        * @mixes Controls/interface/IInputMaskValue
        * @public
-       * @author Миронов А.Ю.
+       * @author Красильников А.С.
        * @demo Controls-demo/Input/Mask/MaskPG
        */
 

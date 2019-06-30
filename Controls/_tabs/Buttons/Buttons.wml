@@ -10,8 +10,12 @@
                     selected="{{item[_options.keyProperty] === _options.selectedKey ? true : false}}"
                     displayProperty="{{_options.displayProperty}}"
                     item="{{item}}"/>
+            <ws:if data="{{item.get('contentTab')}}">
+                <div class="controls-Tabs__itemSeparator controls-Tabs__itemSeparator_theme_{{_options.theme}}
+                        controls-Tabs__itemSeparator_align_left"></div>
+            </ws:if>
             <div class="controls-Tabs__itemSeparator controls-Tabs__itemSeparator_theme_{{_options.theme}}
-                        controls-Tabs__itemSeparator_align_{{item.get('align') || 'right'}}"></div>
+                        controls-Tabs__itemSeparator_align_{{item.get('contentTab') ? 'right' : item.get('align') || 'right'}}"></div>
         </div>
     </ws:for>
     <div class="controls-Tabs__space controls-Tabs__space_theme_{{_options.theme}}">

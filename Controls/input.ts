@@ -23,7 +23,7 @@
  * @includes InputRenderStyles Controls/_input/resources/InputRender/InputRenderStyles
  *
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Base = require('Controls/_input/Base');

@@ -1,6 +1,6 @@
 import BaseControl = require('Core/Control');
 import formatDate = require('Core/helpers/Date/format');
-import { SyntheticEvent } from 'Core/vdom/Synchronizer/resources/SyntheticEvent';
+import { SyntheticEvent } from 'Vdom/Vdom';
 import EventProxy from './Mixin/EventProxy';
 import {DateRangeModel, Utils as DateControlsUtils, dateRangeQuantum as quantumUtils} from 'Controls/dateRange';
 import {MonthModel} from 'Controls/calendar';
@@ -17,7 +17,7 @@ import 'css!theme?Controls/datePopup';
  * @class Controls/_datePopup/DateRange
  * @extends Core/Control
  * @control
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  *
  */
 

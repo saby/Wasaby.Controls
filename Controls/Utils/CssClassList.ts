@@ -88,7 +88,7 @@ class StaticCssClassList {
  *
  * @class CssClassList
  * @public
- * @author Родионов Е.А.
+ * @author Авраменко А.С.
  */
 class CssClassList {
     

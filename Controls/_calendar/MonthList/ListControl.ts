@@ -12,7 +12,7 @@ import baseControlTmpl = require('wml!Controls/_list/ListControl/ListControl');
  * @class Controls/_calendar/MonthList/ListControl
  * @extends Controls/List
  * @control
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 
 const MONTHS_IN_YEAR = 12;

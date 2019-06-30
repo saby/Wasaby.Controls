@@ -25,7 +25,7 @@ import 'css!theme?Controls/input';
     * @public
     * @demo Controls-demo/Input/Date/PickerPG
     * @category Input
-    * @author Миронов А.Ю.
+    * @author Красильников А.С.
     */
 
    var Component = Control.extend([], {

@@ -10,7 +10,7 @@
  * @includes HeadingStyles Controls/_heading/Heading/HeadingStyles
  * @includes SeparatorStyles Controls/_heading/Separator/SeparatorStyles
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import {default as Title} from 'Controls/_heading/Heading';

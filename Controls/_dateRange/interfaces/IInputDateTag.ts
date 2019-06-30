@@ -3,7 +3,7 @@
  *
  * @interface Controls/_dateRange/interfaces/IInputDateTag
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 
 /**

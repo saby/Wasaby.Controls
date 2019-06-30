@@ -19,7 +19,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * @implements Controls/_interface/ITooltip
  * @control
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @category Toggle
  * @demo Controls-demo/Checkbox/CheckBoxDemoPG
  *
@@ -121,7 +121,6 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IIcon, ITo
 
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = checkBoxTemplate;
-   protected _theme: string[] = ['Controls/toggle'];
 
    private _notifyChangeValue(value: boolean | null): void {
       this._notify('valueChanged', [value]);
@@ -133,6 +132,8 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IIcon, ITo
          this._notifyChangeValue(map[this._options.value + '']);
       }
    }
+
+   static _theme: string[] = ['Controls/toggle'];
 
    static getDefaultOptions(): object {
       return {

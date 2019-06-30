@@ -41,23 +41,24 @@
 
 /**
  * @name Controls/_list/interface/IList#emptyTemplate
- * @cfg {Function} Шаблон пустого списка.
- * <a href="/materials/demo-ws4-list-base">Example</a>.
+ * @cfg {Function} Шаблон пустого списка (без элементов).
+ * См.<a href="/materials/demo-ws4-list-base">демо-пример</a>
  * @remark
- * Рекомендуемый шаблон по умолчанию для emptyTemplate: wml!Controls/_list/emptyTemplate
- * Шаблон принимает следующие параметры:
- * - contentTemplate - содержимое шаблона emptyTemplate
- * - topSpacing - расстояние между верхней границей и содержимым шаблона emptyTemplate
- * - bottomSpacing - расстояние между нижней границей и содержимым шаблона emptyTemplate
+ * По умолчанию для emptyTemplate используется шаблон "wml!Controls/_list/emptyTemplate".
+ * Он рекомендован к использованию при описании собственного шаблона, отображаемого для пустого списка.
+ * Шаблон "wml!Controls/_list/emptyTemplate" принимает следующие параметры:
+ * - contentTemplate — контент шаблона;
+ * - topSpacing — расстояние между верхней границей и контентом шаблона;
+ * - bottomSpacing — расстояние между нижней границей и контентом шаблона;
  * @example
  * <pre>
- *    <Controls.List>
+ *    <Controls.list:View>
  *       <ws:emptyTemplate>
- *          <ws:partial template="wml!Controls/_list/emptyTemplate" topSpacing="xl" bottomSpacing="l">
+ *          <ws:partial template="Controls/_list/emptyTemplate" topSpacing="xl" bottomSpacing="l">
  *             <ws:contentTemplate>Нет данных</ws:contentTemplate>
  *          </ws:partial>
  *       </ws:emptyTemplate>
- *    </Controls.List>
+ *    </Controls.list:View>
  * </pre>
  */
 
@@ -73,13 +74,13 @@
  * - bottomSpacing Spacing between bottom border and content of emptyTemplate
  * @example
  * <pre>
- *    <Controls.List>
+ *    <Controls.list:View>
  *       <ws:emptyTemplate>
  *          <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xl" bottomSpacing="l">
  *             <ws:contentTemplate>Нет данных</ws:contentTemplate>
  *          </ws:partial>
  *       </ws:emptyTemplate>
- *    </Controls.List>
+ *    </Controls.list:View>
  * </pre>
  */
 
@@ -93,30 +94,6 @@
  * @name Controls/_list/interface/IList#footerTemplate
  * @cfg {Function} Template that will be rendered below the list.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- */
-
-/**
- * @name Controls/_list/interface/IList#resultsTemplate
- * @cfg {Function} Шаблон строки итогов.
- */
-
-/*
- * @name Controls/_list/interface/IList#resultsTemplate
- * @cfg {Function} Results row template.
- */
-
-/**
- * @name Controls/_list/interface/IList#resultsPosition
- * @cfg {String} Положение строки итогов.
- * @variant top Вывести итоги над списком.
- * @variant bottom Вывести итоги под списком.
- */
-
-/*
- * @name Controls/_list/interface/IList#resultsPosition
- * @cfg {String} Results row position.
- * @variant top Show results above the list.
- * @variant bottom Show results below the list.
  */
 
 /**

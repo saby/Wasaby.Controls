@@ -1,9 +1,9 @@
 <table attr:class="controls-Grid controls-Grid_layout_fixed controls-Grid_{{_options.style}}">
     <ws:partial template="wml!Controls/_grid/ColGroup" listModel="{{_listModel}}"/>
-    <ws:if data="{{_listModel.shouldDrawHeader()}}">
+    <ws:if data="{{_listModel.getHeader()}}">
         <ws:partial template="wml!Controls/_grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
     </ws:if>
-    <ws:if data="{{_listModel.shouldDrawResultsAt('top')}}">
+    <ws:if data="{{_listModel.getResultsPosition() === 'top'}}">
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
     </ws:if>
     <tbody name="itemsContainer">
@@ -24,17 +24,20 @@
         <ws:if data="{{_options.emptyTemplate}}">
             <tr>
                 <td colspan="{{(_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0))}}">
-                    <ws:partial template="{{_options.emptyTemplate}}"/>
+                    <ws:if data="{{_options.columnScroll}}">
+                        <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{'max-width: ' + _listModel.getContainerWidth() + 'px;'}}"/>
+                    </ws:if>
+                    <ws:else>
+                        <ws:partial template="{{_options.emptyTemplate}}"/>
+                    </ws:else>
                 </td>
             </tr>
         </ws:if>
     </tbody>
-    <ws:if data="{{_listModel.shouldDrawResultsAt('bottom')}}">
+    <ws:if data="{{_listModel.getResultsPosition() === 'bottom'}}">
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
     </ws:if>
-    <ws:if data="{{_listModel.shouldDrawFooter()}}">
-        <div attr:class="{{_calcFooterPaddingClass(_options)}}">
-            <ws:partial template="{{_options.footerTemplate}}"/>
-        </div>
-    </ws:if>
+    <div attr:class="{{_calcFooterPaddingClass(_options)}}">
+        <ws:partial template="{{_options.footerTemplate}}"/>
+    </div>
 </table>

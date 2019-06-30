@@ -30,7 +30,7 @@ import template = require('wml!Controls/_dateRange/Input/Input');
  * @public
  * @demo Controls-demo/Input/Date/RangePG
  * @category Input
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 
 var Component = Control.extend([], {

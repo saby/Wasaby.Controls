@@ -5,7 +5,7 @@
  * @includes SearchItemTemplate wml!Controls/_treeGrid/SearchView/Item
  * @includes IExplorer Controls/_explorer/interface/IExplorer
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import View = require('Controls/_explorer/View');

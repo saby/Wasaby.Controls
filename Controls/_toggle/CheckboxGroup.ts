@@ -4,11 +4,13 @@ import groupTemplate = require('wml!Controls/_toggle/CheckboxGroup/GroupTemplate
 import defaultItemTemplate = require('wml!Controls/_toggle/CheckboxGroup/resources/ItemTemplate');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
-import {descriptor as EntityDescriptor} from 'Types/entity';
-import {ICrudPlus} from 'Types/source';
+import {descriptor as EntityDescriptor, Record} from 'Types/entity';
+import {RecordSet} from 'Types/collection';
 import {IToggleGroup, IToggleGroupOptions} from './interface/IToggleGroup';
-import {ISource, ISourceOptions, IMultiSelectable,
-   IMultiSelectableOptions, IHierarchy, IHierarchyOptions} from 'Controls/interface';
+import {
+    ISource, ISourceOptions, IMultiSelectable,
+    IMultiSelectableOptions, IHierarchy, IHierarchyOptions
+} from 'Controls/interface';
 
 /**
  * Controls are designed to give users a multichoice among two or more settings.
@@ -21,13 +23,12 @@ import {ISource, ISourceOptions, IMultiSelectable,
  * @implements Controls/_toggle/interface/IToggleGroup
  * @control
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @category Toggle
  * @demo Controls-demo/Checkbox/Group
  */
 
-export interface ICheckboxGroupOptions extends
-   IControlOptions, IMultiSelectableOptions, IHierarchyOptions, ISourceOptions {
+export interface ICheckboxGroupOptions extends IControlOptions, IMultiSelectableOptions, IHierarchyOptions, ISourceOptions {
     direction?: string;
 }
 
@@ -35,28 +36,25 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions> {
     protected _template: TemplateFunction = template;
     protected _groupTemplate: Function = groupTemplate;
     protected _defaultItemTemplate: Function = defaultItemTemplate;
-    protected _items: any;
+    protected _items: RecordSet;
     protected _sourceController: any;
-    protected _selectedKeys: number[]|string[];
-    protected _triStateKeys: number[]|string[];
+    protected _selectedKeys: string[] = [];
+    protected _triStateKeys: string[] = [];
     protected _groups: object;
 
-    protected _theme: string[] = ['Controls/toggle'];
-
-    protected _beforeMount(options: ICheckboxGroupOptions, context, receivedState): void {
+    protected _beforeMount(options: ICheckboxGroupOptions, context: object, receivedState: RecordSet): void|Promise<RecordSet> {
         this._isSelected = this._isSelected.bind(this);
         if (receivedState) {
-            this._items = receivedState;
+            this._prepareItems(options, receivedState);
         } else {
-            this._initItems(options.source);
+            return this._initItems(options);
         }
     }
 
     protected _beforeUpdate(newOptions: ICheckboxGroupOptions): void {
-        var self = this;
         if (newOptions.source && newOptions.source !== this._options.source) {
-            return this._initItems(newOptions.source).addCallback(function(items) {
-                self._forceUpdate();
+            this._initItems(newOptions).then(() => {
+                this._forceUpdate();
             });
         }
         if (newOptions.selectedKeys && !isEqual(this._selectedKeys, newOptions.selectedKeys)) {
@@ -64,39 +62,40 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions> {
         }
     }
 
-    private _initItems(source: ICrudPlus): any {
+    private _initItems(options: ICheckboxGroupOptions): Promise<RecordSet> {
         const self = this;
         self._sourceController = new SourceController({
-            source: source
+            source: options.source
         });
-        return self._sourceController.load().addCallback(function(items) {
-            self._items = items;
-            self.sortGroup(self, items);
-            if (self._options.parentProperty) {
-                self._prepareSelected(self._options);
-            }
+        return self._sourceController.load().addCallback((items) => {
+            this._prepareItems(options, items);
             return items;
         });
     }
 
-    private sortGroup(self: any, items: any): void {
-        self._groups = {};
+    private _prepareItems(options: ICheckboxGroupOptions, items: RecordSet): void {
+        this._items = items;
+        this.sortGroup(options, items);
+        this._prepareSelected(options);
+    }
+
+    private sortGroup(options: ICheckboxGroupOptions, items: RecordSet): void {
+        this._groups = {};
         items.each((item) => {
-            let parentProperty = self._options.parentProperty;
-            let parent = parentProperty ? item.get(parentProperty) : null;
-            if (!self._groups[parent]) {
-                self._groups[parent] = [];
+            const parent = options.parentProperty ? item.get(options.parentProperty) : null;
+            if (!this._groups[parent]) {
+                this._groups[parent] = [];
             }
-            self._groups[parent].push(item);
+            this._groups[parent].push(item);
         });
     }
 
     private _prepareSelected(options: ICheckboxGroupOptions): void {
         this._selectedKeys = options.selectedKeys ? [...options.selectedKeys] : [];
         this._triStateKeys = [];
-        if (this._options.parentProperty) {
+        if (options.parentProperty) {
             this._items.each((item) => {
-                this._setItemsSelection(item);
+                this._setItemsSelection(item, options);
             });
             if (!isEqual(this._selectedKeys, options.selectedKeys || [])) {
                 this._notifySelectedKeys();
@@ -104,17 +103,17 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions> {
         }
     }
 
-    private _isSelected(item: any): boolean | null {
-        if (this._selectedKeys.indexOf(this._getItemKey(item)) > -1) {
+    private _isSelected(item: Record): boolean | null {
+        if (this._selectedKeys.indexOf(this._getItemKey(item, this._options)) > -1) {
             return true;
         }
-        if (this._triStateKeys.indexOf(this._getItemKey(item)) > -1) {
+        if (this._triStateKeys.indexOf(this._getItemKey(item, this._options)) > -1) {
             return null;
         }
         return false;
     }
 
-    private _addKey(key: string | number): void {
+    private _addKey(key: string): void {
         this._removeTriStateKey(key);
         if (this._selectedKeys.indexOf(key) < 0) {
             this._selectedKeys.push(key);
@@ -122,31 +121,32 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions> {
         }
     }
 
-    private _addTriStateKey(key: string | number): void {
+    private _addTriStateKey(key: string): void {
         if (this._triStateKeys.indexOf(key) < 0) {
             this._triStateKeys.push(key);
         }
     }
-    private _removeTriStateKey(key: string | number): void {
-        let index = this._triStateKeys.indexOf(key);
+
+    private _removeTriStateKey(key: string): void {
+        const index = this._triStateKeys.indexOf(key);
         if (index > -1) {
             this._triStateKeys.splice(index, 1);
         }
     }
 
-    private _removeKey(key: string | number): void {
+    private _removeKey(key: string): void {
         this._removeTriStateKey(key);
-        let index = this._selectedKeys.indexOf(key);
+        const index = this._selectedKeys.indexOf(key);
         if (index > -1) {
             this._selectedKeys.splice(index, 1);
         }
     }
 
-    private _updateItemChildSelection(itemKey: any, value: boolean | null): void {
-        let child = this._groups[itemKey];
+    private _updateItemChildSelection(itemKey: string, value: boolean | null): void {
+        const child = this._groups[itemKey];
         if (child) {
             child.map((childItem) => {
-                let childKey = childItem.get(this._options.keyProperty);
+                const childKey = childItem.get(this._options.keyProperty);
                 if (value) {
                     this._addKey(childKey);
                 } else {
@@ -155,38 +155,38 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions> {
                 }
             });
         }
-        let item = this._items.getRecordById(itemKey);
-        let parentId = item.get(this._options.parentProperty);
+        const item = this._items.getRecordById(itemKey);
+        const parentId = item.get(this._options.parentProperty);
         if (parentId) {
-            let parent = this._items.getRecordById(parentId);
+            const parent = this._items.getRecordById(parentId);
             this._removeKey(parentId);
-            this._setItemsSelection(parent);
+            this._setItemsSelection(parent, this._options);
 
         }
     }
 
-    private _setItemsSelection(item: any): boolean | null {
-        let itemKey = this._getItemKey(item);
-        let isItemInSelectedKeys = this._selectedKeys.indexOf(itemKey) > -1;
+    private _setItemsSelection(item: Record, options: ICheckboxGroupOptions): boolean | null {
+        const itemKey = this._getItemKey(item, options);
+        const isItemInSelectedKeys = this._selectedKeys.indexOf(itemKey) > -1;
         if (isItemInSelectedKeys) {
             return true;
         }
-        let parentId = item.get(this._options.parentProperty);
+        const parentId = item.get(options.parentProperty);
         if (parentId) {
-            let parent = this._items.getRecordById(parentId);
-            let isParentSelected = this._selectedKeys.indexOf(this._getItemKey(parent)) > -1;
+            const parent = this._items.getRecordById(parentId);
+            const isParentSelected = this._selectedKeys.indexOf(this._getItemKey(parent, options)) > -1;
             if (isParentSelected) {
                 this._addKey(itemKey);
                 return true;
             }
         }
 
-        if (item.get(this._options.nodeProperty)) {
+        if (item.get(options.nodeProperty)) {
             let hasSelectedChild = null;
             let hasUnselectedChild = null;
-            let child = this._groups[this._getItemKey(item)];
+            const child = this._groups[this._getItemKey(item, options)];
             child.map((childItem) => {
-                if (this._setItemsSelection(childItem)) {
+                if (this._setItemsSelection(childItem, options)) {
                     hasSelectedChild = true;
                 } else {
                     hasUnselectedChild = true;
@@ -195,8 +195,8 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions> {
             if (hasSelectedChild && hasUnselectedChild === null) {
                 this._addKey(itemKey);
                 if (parentId) {
-                    let parent = this._items.getRecordById(parentId);
-                    this._setItemsSelection(parent);
+                    const parent = this._items.getRecordById(parentId);
+                    this._setItemsSelection(parent, options);
                 }
                 return true;
             }
@@ -208,12 +208,12 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions> {
         return false;
     }
 
-    private _getItemKey(item: any): string | number {
-        return item.get(this._options.keyProperty);
+    private _getItemKey(item: Record, options: ICheckboxGroupOptions): string {
+        return item.get(options.keyProperty);
     }
 
-    private _valueChangedHandler(e: any, item: any, value: boolean | null): void {
-        let key = this._getItemKey(item);
+    private _valueChangedHandler(e: Event, item: Record, value: boolean | null): void {
+        const key = this._getItemKey(item, this._options);
         if (value) {
             this._addKey(key);
         } else {
@@ -227,12 +227,15 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions> {
         this._notify('selectedKeysChanged', [this._selectedKeys]);
     }
 
+    static _theme: string[] = ['Controls/toggle'];
+
     static getDefaultOptions(): object {
         return {
             direction: 'vertical',
             keyProperty: 'id'
         };
     }
+
     static getOptionTypes(): object {
         return {
             direction: EntityDescriptor(String),
@@ -242,4 +245,3 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions> {
 }
 
 export default CheckboxGroup;
-

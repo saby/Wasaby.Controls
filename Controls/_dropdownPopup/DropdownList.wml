@@ -39,7 +39,8 @@
    <ws:if data="{{_options.footerTemplate || _needShowApplyButton || (_options.hasMoreButton && _options.selectorTemplate)}}">
       <div class="controls-DropdownList__footer theme_{{_options.theme}}" on:mouseenter="_mouseenterHandler()">
          <ws:if data="{{_options.footerTemplate}}">
-            <ws:partial template="{{_options.footerTemplate}}" attr:class="controls-DropdownList__footer-content_theme_{{_options.theme}}" on:click="_footerClick()"/>
+            <ws:partial template="{{_options.footerTemplate}}" attr:class="controls-DropdownList__footer-content_theme_{{_options.theme}}"
+                        itemData="{{_options.footerItemData}}" on:click="_footerClick()"/>
          </ws:if>
          <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate || _needShowApplyButton}}">
             <div class="controls-DropdownList__footer-content_theme_{{_options.theme}} controls-DropdownList__footer-buttons_theme_{{_options.theme}}">

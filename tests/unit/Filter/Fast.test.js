@@ -598,11 +598,17 @@ define(
             var fastFilter = getFastFilter(configWithItems);
             fastFilter._beforeMount(configWithItems).addCallback(function(result) {
                let newConfigItems = Clone(configWithItems);
-               newConfigItems.items[3].value = 'Великобритания';
-               newConfigItems.items[2].properties.filter = {key: 1};
+               newConfigItems.items[3].value = undefined;
+               newConfigItems.items[2].properties.filter = {};
                fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
-                  assert.equal(fastFilter._items.at(3).value, 'Великобритания');
-                  done();
+                  assert.equal(fastFilter._configs[3]._items.getCount(), 2);
+
+                  newConfigItems.items[3].value = 'Великобритания';
+                  newConfigItems.items[2].properties.filter = {key: 1};
+                  fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
+                     assert.equal(fastFilter._items.at(3).value, 'Великобритания');
+                     done();
+                  });
                });
             });
          });

@@ -20,11 +20,12 @@ import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
 import 'wml!Controls/_list/BaseControl/Footer';
 import 'css!theme?Controls/list';
 import { error as dataSourceError } from 'Controls/dataSource';
-import { constants, IoC } from 'Env/Env';
+import { detection, constants, IoC } from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
-import {Focus} from 'Vdom/Vdom'
+import {Focus} from 'Vdom/Vdom';
+import isElementVisible = require('Core/helpers/Hcontrol/isElementVisible');
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -232,13 +233,16 @@ var _private = {
     },
     restoreScrollPosition: function(self) {
         if (self._saveAndRestoreScrollPosition) {
-            /**
-             * This event should bubble, because there can be anything between Scroll/Container and the list,
-             * and we can't force everyone to manually bubble it.
-             */
-            self._notify('restoreScrollPosition', [], {
-                bubbling: true
-            });
+            // todo KINGO. Если распорки виртуального скрола хватает для завершения инерционного скрола, то не нужно восстанавливать скролл.
+            if (!detection.isMobileIOS || !self._virtualScroll || self._topPlaceholderSize === 0) {
+                /**
+                 * This event should bubble, because there can be anything between Scroll/Container and the list,
+                 * and we can't force everyone to manually bubble it.
+                 */
+                self._notify('restoreScrollPosition', [], {
+                    bubbling: true
+                });
+            }
             self._saveAndRestoreScrollPosition = false;
             return;
         }
@@ -256,15 +260,17 @@ var _private = {
         }
         _private.setMarkedKey(self, newMarkedKey);
     },
-    moveMarkerToNext: function(self) {
+    moveMarkerToNext: function (self, event) {
         if (self._options.markerVisibility !== 'hidden') {
-            const model = self.getViewModel();
+            event.preventDefault();
+            var model = self.getViewModel();
             _private.moveMarker(self, model.getNextItemKey(model.getMarkedKey()));
         }
     },
-    moveMarkerToPrevious: function(self) {
+    moveMarkerToPrevious: function (self, event) {
         if (self._options.markerVisibility !== 'hidden') {
-            const model = self.getViewModel();
+            event.preventDefault();
+            var model = self.getViewModel();
             _private.moveMarker(self, model.getPreviousItemKey(model.getMarkedKey()));
         }
     },
@@ -281,8 +287,7 @@ var _private = {
             model = self.getViewModel();
             markedKey = model.getMarkedKey();
             self._children.selectionController.onCheckBoxClick(markedKey, model.getSelectionStatus(markedKey));
-            _private.moveMarkerToNext(self);
-            event.preventDefault();
+            _private.moveMarkerToNext(self, event);
         }
     },
     prepareFooter: function(self, navigation, sourceController) {
@@ -324,6 +329,9 @@ var _private = {
                 //надо инициировать подгрузку порции записей, больше за нас это никто не сделает.
                 //Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
                 var cnt1 = self._listViewModel.getCount();
+                if (self._virtualScroll) {
+                    self._itemsFromLoadToDirection = true;
+                }
                 if (direction === 'down') {
                     self._listViewModel.appendItems(addedItems);
                 } else if (direction === 'up') {
@@ -345,17 +353,9 @@ var _private = {
                 // If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                 if (!addedItems.getCount() || (self._options.task1176625749 && cnt2 == cnt1)) {
                     _private.checkLoadToDirectionCapability(self);
-                } else if (self._virtualScroll) {
-                    // После догрузки данных потенциально увеличивается количество записей, нужно пересчитать индексы
-                    self._virtualScroll.ItemsCount = self._listViewModel.getCount();
-                    if (direction === 'up') {
-                        // TODO: KINGO. Когда добавляется пачка записей сверху индексы начала и конца виртуальной страницы
-                        // увеличиваются на размер пачки.
-                        // Например, показываем записи с 0 по 30. Затем, загрузили 20 записей сверху.
-                        // Индексы показываемых записей должны стать с 20 по 50.
-                        self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + addedItems.getCount();
-                    }
-                    _private.applyVirtualScrollIndexes(self, direction);
+                }
+                if (self._virtualScroll) {
+                    self._itemsFromLoadToDirection = false;
                 }
 
                 _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -672,17 +672,38 @@ var _private = {
                 }
 
                 if (!!action && self._virtualScroll) {
-                    self._virtualScroll.ItemsCount = self.getViewModel().getCount();
+                    let
+                       newCount = self.getViewModel().getCount();
+                    self._virtualScroll.ItemsCount = newCount;
                     if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
                         self._virtualScroll.insertItemsHeights(newItemsIndex - 1, newItems.length);
-                        self._virtualScroll.recalcItemsIndexes(newItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down');
+                        const
+                           direction = newItemsIndex <= self._listViewModel.getStartIndex() ? 'up' : 'down';
+                        if (direction === 'down') {
+                            // если это не подгрузка с БЛ по скролу и
+                            // если мы были в конце списка (отрисована последняя запись и виден нижний триггер)
+                            // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
+                            if (self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
+                               isElementVisible(self._children.bottomVirtualScrollTrigger) &&
+                               !self._itemsFromLoadToDirection) {
+                                self._virtualScroll.recalcToDirection(direction);
+                            } else {
+                                // если данные добавились сверху - просто обновляем индексы видимых записей
+                                self._virtualScroll.recalcItemsIndexes(direction);
+                            }
+                        } else {
+                            if (self._itemsFromLoadToDirection) {
+                                // если элементы были подгружены с БЛ, то увеличиваем стартовый индекс на кол-во
+                                // загруженных элементов. работаем именно через проекцию, т.к. может быть группировка и
+                                // кол-во загруженных элементов может отличаться от кол-ва рисуемых элементов
+                                self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + newItems.length;
+                            }
+                            self._virtualScroll.recalcItemsIndexes(direction);
+                        }
                     }
                     if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
                         self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
                         self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down');
-                    }
-                    if (action === collection.IObservable.ACTION_RESET) {
-                        self._virtualScroll.resetItemsIndexes();
                     }
                     _private.applyVirtualScrollIndexesToListModel(self);
                 }

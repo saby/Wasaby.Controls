@@ -9,7 +9,7 @@ import dateUtils = require('Controls/Utils/Date');
     *
     * @class Controls/_input/DateTime/Model
     *
-    * @author Александр Миронов
+    * @author Красильников А.С.
     * @public
     * @noShow
     */

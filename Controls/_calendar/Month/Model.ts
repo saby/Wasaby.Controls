@@ -4,7 +4,7 @@ import DateUtil = require('Controls/Utils/Date');
 /**
  * Модель для представления месяца с поддержкой выделения.
  * @class Controls/_calendar/Month/Model
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 
 var ModuleClass = MonthViewModel.extend({

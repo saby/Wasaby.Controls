@@ -15,7 +15,6 @@ interface PopupOptions {
  */
 export default function(self, popupOptions, multiSelect) {
     let
-        indicatorId,
         selectorOpener = self._children.selectorOpener,
         selectorTemplate = self._options.selectorTemplate,
         defaultPopupOptions: PopupOptions = merge({
@@ -35,10 +34,6 @@ export default function(self, popupOptions, multiSelect) {
             }
         }, selectorTemplate.templateOptions || {});
 
-        indicatorId = self._notify('showIndicator', [], {bubbling: true});
-
-        return selectorOpener.open(merge(defaultPopupOptions, popupOptions || {})).then(function() {
-            self._notify('hideIndicator', [indicatorId], {bubbling: true});
-        });
+        return selectorOpener.open(merge(defaultPopupOptions, popupOptions || {}));
     }
 }

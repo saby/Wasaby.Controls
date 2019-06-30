@@ -1,5 +1,5 @@
 /**
- * @author Gerasimov A.M.
+ * @author Герасимов А.М.
  * @mixin Controls/_grid/SortButtonStyles
  * @public
  *

@@ -1,6 +1,8 @@
 import {Base as BaseSource} from 'Types/source';
+import {date as formatDate} from 'Types/formatter';
 import {Control} from 'UI/Base';
 import coreMerge = require('Core/core-merge');
+import {SyntheticEvent} from 'Core/vdom/Synchronizer/resources/SyntheticEvent';
 import YearsSource from './MonthList/YearsSource';
 import MonthsSource from './MonthList/MonthsSource';
 import monthListUtils from './MonthList/Utils';
@@ -17,8 +19,29 @@ import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
  * @mixes Controls/_calendar/interface/IMonthListSource
  * @control
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @demo Controls-demo/Date/MonthList
+ */
+
+/**
+ * @event Controls/_calendar/MonthList#positionChanged Происходит когда меняется год или месяц. Т.е. когда
+ * год или месяц пересекают верхнюю границу.
+ * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+ * @param {date} Date отображаемый в самом верху год или месяц.
+ * @example
+ * Обновляем заголовок в зависимости от отображаемого года.
+ * <pre>
+ *    <Controls.calendar:MonthList startPosition="_date" on:positionChanged="_positionChangedHandler()"/>
+ * </pre>
+ * <pre>
+ *    class  ModuleComponent extends Control {
+ *       ...
+ *       _positionChangedHandler(e, date) {
+ *          this.setTitle(date);
+ *       }
+ *       ...
+ *    }
+ * </pre>
  */
 
 const
@@ -36,6 +59,8 @@ class  ModuleComponent extends Control {
     private _endValue: Date;
 
     private _itemTemplate: Function;
+
+    private _lastNotifiedPositionChangedDate: Date;
 
     protected _beforeMount(options) {
         this._updateItemTemplate(options);
@@ -94,11 +119,36 @@ class  ModuleComponent extends Control {
             this._position = newPosition;
         }
     }
+
+    private _intersectHandler(event: SyntheticEvent, entries) {
+        let date;
+        for (const entry of entries) {
+            if (entry.boundingClientRect.top - entry.rootBounds.top < 0) {
+                if (entry.boundingClientRect.bottom - entry.rootBounds.top >= 0) {
+                    date = entry.data;
+                } else if (entry.rootBounds.top - entry.boundingClientRect.bottom < entry.target.offsetHeight) {
+                    if (this._options.viewMode ==='year') {
+                        date = new Date(entry.data.getFullYear() + 1, entry.data.getMonth());
+                    } else {
+                        date = new Date(entry.data.getFullYear(), entry.data.getMonth() + 1);
+                    }
+                }
+            }
+            if (date && date !== this._lastNotifiedPositionChangedDate) {
+                this._lastNotifiedPositionChangedDate = date;
+                this._notify('positionChanged', [date]);
+            }
+        }
+    }
+
     protected _getItem(data: object) {
         return {
             date: monthListUtils.idToDate(data.getId()),
             extData: data.get('extData')
         };
+    }
+    protected  _formatMonth(date) {
+        return date ? formatDate(date, formatDate.FULL_MONTH) : '';
     }
 }
 

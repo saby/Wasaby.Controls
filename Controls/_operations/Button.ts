@@ -31,9 +31,10 @@ class OperationsButton extends Control<IOperationsButtonOptions> implements IExp
    '[Controls/_toggle/interface/IExpandable]': true;
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = ButtonTemplate;
-   protected _theme: string[] = ['Controls/operations'];
+
    private _onClick(): void {
       this._notify('expandedChanged', [!this._options.expanded]);
    }
+   static _theme: string[] = ['Controls/operations'];
 }
 export default OperationsButton;

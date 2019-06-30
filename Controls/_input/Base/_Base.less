@@ -20,7 +20,6 @@
  */
 .controls-InputBase__field_ie {
    height: 100%;
-   align-self: center;
 }
 
 .controls-InputBase__placeholder {
@@ -144,4 +143,13 @@
  */
 .ws-is-ie .controls-InputBase__stretcher-block {
    padding-right: 2px;
+}
+
+/**
+ * TODO: KINGO
+ * Механизм растягивания <input> по контенту требует его абсолютного позиционирования.
+ * Это нарушает выравнивание <input> относительно контейнера. Выравнивание должно быть по центру.
+ */
+.controls-InputBase__field_fixStretcherIE {
+   align-self: center;
 }

@@ -98,7 +98,7 @@ import Env = require('Env/Env');
     * @control
     * @public
     * @category List
-    * @author Михайловский Д.С.
+    * @author Красильников А.С.
     * @demo Controls-demo/Tabs/ButtonsDemoPG
     */
 
@@ -114,7 +114,7 @@ import Env = require('Env/Env');
     * @control
     * @public
     * @category List
-    * @author Михайловский Д.С.
+    * @author Красильников А.С.
     * @demo Controls-demo/Tabs/ButtonsDemoPG
     */
 
@@ -125,6 +125,7 @@ import Env = require('Env/Env');
     * @remark
     * Вкладка может быть выровнена по левому и правому краю, это определяется свойством 'align'.
     * Если у контрола есть левая и правая вкладки, то TabSpaceTemplate будет расположен между ними.
+    * Если одной из крайних вкладок надо отобразить оба разделителя, слева и справа, то используйте свойство contentTab в значении true
     * @example
     * Пример вкладок с шаблоном между ними:
     * <pre>
@@ -151,6 +152,7 @@ import Env = require('Env/Env');
     * @remark
     * Tab can be left and right aligned, this is determined by the item property 'align'.
     * If control has left and right tabs then  TabSpaceTemplate will be between them.
+    * If item may having both separator, you may using opion contentTab with value true.
     * @example
     * Tabs buttons with space template.
     * <pre>

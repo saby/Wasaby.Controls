@@ -450,6 +450,7 @@ var
         _columns: [],
         _curColumnIndex: 0,
 
+        _lastItemKey: undefined,
         _headerRows: [],
         _headerColumns: [],
         _curHeaderColumnIndex: 0,
@@ -491,6 +492,7 @@ var
                 this._notify('onGroupsExpandChange', changes);
             }.bind(this);
             this._onCollectionChangeFn = function() {
+                this._updateLastItemKey();
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
             // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
@@ -502,8 +504,15 @@ var
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
             this._ladder = _private.prepareLadder(this);
             this._setColumns(this._options.columns);
-            if (this._options.header && this._options.header.length) { this._isMultyHeader = this.getMultyHeader(this._options.header); }
+            if (this._options.header && this._options.header.length) { this._isMultyHeader = this.isMultyHeader(this._options.header); }
             this._setHeader(this._options.header);
+            this._updateLastItemKey();
+        },
+
+        _updateLastItemKey(): void {
+            if (this.getItems()) {
+                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+            }
         },
 
         _updateIndexesCallback(): void {
@@ -562,10 +571,10 @@ var
             this._setHeader(columns);
             this._nextModelVersion();
         },
-        getMultyHeader: function(columns) {
+        isMultyHeader: function(columns) {
             let k = 0;
             while(columns.length > k) {
-                if (columns[k].startRow && columns[k].endRow) {
+                if (columns[k].endRow > 2) {
                     return true;
                 }
                 k++;
@@ -576,6 +585,9 @@ var
             if (columns && columns.length) {
                 this._headerRows = getRowsArray(columns, multiSelectVisibility);
                 this._maxEndRow = getMaxEndRow(this._headerRows);
+                if (multiSelectVisibility && columns[0] && columns[0].isBreadCrumbs) {
+                    this._headerRows[0][0].hiddenForBreadCrumbs = true;
+                }
             } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
             } else {
@@ -773,21 +785,10 @@ var
             return this._options.resultsPosition;
         },
 
-        shouldDrawHeader(): boolean {
-            return !!this.getHeader() && this.getCount() > 0;
+        setResultsPosition: function(position) {
+            this._options.resultsPosition = position;
         },
-
-        shouldDrawResultsAt(position: 'top' | 'bottom'): boolean {
-            if (this.getResultsPosition() !== position) {
-                return false;
-            }
-            return this.getCount() > 1;
-        },
-
-        shouldDrawFooter(): boolean {
-            return !!this._options.footerTemplate && this.getCount() > 0;
-        },
-
+        
         getStyleForCustomResultsTemplate: function() {
             return _private.getColspan(
                this._options.multiSelectVisibility,
@@ -1252,6 +1253,7 @@ var
 
         setItems: function(items) {
             this._model.setItems(items);
+            this._updateLastItemKey();
         },
 
         setItemTemplateProperty: function(itemTemplateProperty) {
@@ -1303,10 +1305,9 @@ var
 
         _calcItemVersion: function(item, key) {
             var
-                version = this._model._calcItemVersion(item, key),
-                lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+                version = this._model._calcItemVersion(item, key);
 
-            if (lastItemKey === key) {
+            if (this._lastItemKey === key) {
                 version = 'LAST_ITEM_' + version;
             }
 
@@ -1440,6 +1441,14 @@ var
         getEmptyTemplateStyles: function() {
             return _private.getEmptyTemplateStyles(this);
         },
+
+        getContainerWidth: function() {
+            return this._containerWidth || 0;
+        },
+        setContainerWidth: function(containerWidth) {
+            this._containerWidth = containerWidth;
+        },
+
         getBottomPaddingStyles(): string {
             let styles = '';
 
