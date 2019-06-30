@@ -54,6 +54,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
                   }
                }
                if (needValid) {
+                  results.hasErrors = true;
                   this.activateValidator(needValid);
                }
                this._validates.reverse();
