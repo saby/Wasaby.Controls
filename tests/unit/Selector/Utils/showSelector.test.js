@@ -59,31 +59,5 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
          showSelector.default(baseController, undefined, true);
          assert.isTrue(lastPopupOptions.templateOptions.multiSelect);
       });
-
-      it('check toggle indicator', function(done) {
-         let
-            isShowIndicator = false,
-            isHideIndicator = false;
-
-         baseController._notify = function(eventName, result) {
-            let indicatorId = 'indicatorId';
-
-            switch(eventName) {
-               case 'showIndicator':
-                  isShowIndicator = true;
-                  return indicatorId;
-
-               case 'hideIndicator':
-                  isHideIndicator = true;
-            }
-         };
-
-         showSelector.default(baseController).then(function() {
-            assert.isTrue(isHideIndicator);
-            done();
-         });
-         assert.isTrue(isShowIndicator);
-         assert.isFalse(isHideIndicator);
-      });
    });
 });
