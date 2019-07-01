@@ -7,7 +7,7 @@ var MOVE_DIRECTION = {
 
 var cachedDisplay;
 
-function getDisplay(items, parentProperty, nodeProperty) {
+function getDisplay(items, parentProperty, nodeProperty, root) {
    //Кешируем проекцию, т.к. её создание тежеловесная операция, а данный метод будет вызываться для каждой записи в списке.
    if (!cachedDisplay || cachedDisplay.getCollection() !== items || cachedDisplay.getCollection().getVersion() !== items.getVersion()) {
       cachedDisplay = TreeItemsUtil.getDefaultDisplayTree(items, {
@@ -16,10 +16,13 @@ function getDisplay(items, parentProperty, nodeProperty) {
          nodeProperty: nodeProperty
       }, {});
    }
+   if (root !== undefined) {
+       cachedDisplay.setRoot(root);
+   }
    return cachedDisplay;
 }
 
-function getSiblingItem(direction, item, items, parentProperty, nodeProperty) {
+function getSiblingItem(direction, item, items, parentProperty, nodeProperty, root) {
     var
        result,
        display,
@@ -33,7 +36,7 @@ function getSiblingItem(direction, item, items, parentProperty, nodeProperty) {
     //Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
     //Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
     if (parentProperty) {
-        display = getDisplay(items, parentProperty, nodeProperty);
+        display = getDisplay(items, parentProperty, nodeProperty, root);
         itemFromProjection = display.getItemBySourceItem(items.getRecordById(item.getId()));
         siblingItem = display[direction === MOVE_DIRECTION.UP ? 'getPrevious' : 'getNext'](itemFromProjection);
         result = siblingItem ? siblingItem.getContents() : null;
@@ -67,6 +70,7 @@ var helpers = {
      * @param {Types/collection:RecordSet} items List of all items.
      * @param {Controls/_interface/IHierarchy#parentProperty} parentProperty Name of the field that contains information about parent node.
      * @param {Controls/_interface/IHierarchy#nodeProperty} nodeProperty Name of the field describing the type of the node (list, node, hidden node).
+     * @param {String} root Current root
      */
 
     /**
@@ -78,7 +82,7 @@ var helpers = {
        *    var result = true;
        *
        *    if (action.id === 'up' || action.id === 'down') {
-       *       result = visibilityCallback.reorderMoveActionsVisibility(action.id, item, this._items, 'Parent');
+       *       result = visibilityCallback.reorderMoveActionsVisibility(action.id, item, this._items, 'Parent', '', this._root);
        *    }
        *
        *    return result;
@@ -92,15 +96,15 @@ var helpers = {
        *    var result = true;
        *
        *    if (action.id === 'up' || action.id === 'down') {
-       *       result = visibilityCallback.reorderMoveActionsVisibility(action.id, item, this._items, 'Parent', 'Parent@');
+       *       result = visibilityCallback.reorderMoveActionsVisibility(action.id, item, this._items, 'Parent', 'Parent@', this._root);
        *    }
        *
        *    return result;
        * }
      * </pre>
      */
-    reorderMoveActionsVisibility: function (direction, item, items, parentProperty, nodeProperty) {
-        var siblingItem = getSiblingItem(direction, item, items, parentProperty, nodeProperty);
+    reorderMoveActionsVisibility: function (direction, item, items, parentProperty, nodeProperty, root) {
+        var siblingItem = getSiblingItem(direction, item, items, parentProperty, nodeProperty, root);
 
         return !!siblingItem &&
             (!parentProperty || siblingItem.get(parentProperty) === item.get(parentProperty)) && //items in one folder
