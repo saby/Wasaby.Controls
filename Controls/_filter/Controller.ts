@@ -65,8 +65,9 @@ import 'Controls/context';
 
          minimizeItem: function(item) {
             const textValue = getPropValue(item, 'textValue');
-            const value = textValue ? getPropValue(item, 'value') : getPropValue(item, 'resetValue');
-            const visibility = !textValue && getPropValue(item, 'visibility') ? false : getPropValue(item, 'visibility');
+            const isNeedSaveHistory = textValue !== undefined && textValue !== null;
+            const value = isNeedSaveHistory ? getPropValue(item, 'value') : getPropValue(item, 'resetValue');
+            const visibility = !isNeedSaveHistory && getPropValue(item, 'visibility') ? false : getPropValue(item, 'visibility');
             let minItem = {
                value: value,
                visibility: visibility
