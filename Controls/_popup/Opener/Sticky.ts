@@ -226,9 +226,9 @@ import coreMerge = require('Core/core-merge');
 
 /**
  * @name Controls/_popup/Opener/Sticky#fittingMode
- * @cfg {Enum} A method of adjusting the popup panel to the free space next to the target.
- * @variant fixed
- * @variant overflow
- * @variant adaptive
+ * @cfg {Enum} Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
+ * @variant fixed Позиционнирование не меняется. Уменьшаются размеры окна.
+ * @variant overflow Окно сдвигается относительно таргета, если и в этом случае места не хватает, то контент ужимается.
+ * @variant adaptive Выбирается способ позиционнирования, при котором на экране сможет уместиться наибольшая часть контента.
  * @default adaptive
  */

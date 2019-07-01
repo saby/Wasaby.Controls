@@ -1,5 +1,35 @@
 import cInstance = require('Core/core-instance');
-
+/**
+ * Функция, позволяющая проверить значение в контейнере на пустоту.
+ *
+ * <h2>Function argument</h2>
+ *
+ * value - значение, которое будет проверяться на пустоту
+ * doNotValidate: Boolean -  требуется ли валидация
+ *
+ * <h2>Returns</h2>
+ *
+ * <ul>
+ *     <li><b>true</b> - поле заполнено</li>
+ *     <li><b>String</b> - поле не заполнено ( возвращается сообщение об ошибке ) </li>
+ * </ul>
+ *
+ * <h2>Usage example</h2>
+ * <pre>
+ *   <Controls.validate:InputContainer name="InputValidate">
+ *     <ws:validators>
+ *      <ws:Function value="{{_valueIsRequired}}">Controls/validate:isRequired</ws:Function>
+ *      </ws:validators>
+ *      <ws:content>
+ *        <Controls.input:Text bind:value="_valueIsRequired"/>
+ *      </ws:content>
+ *  </Controls.validate:InputContainer>
+ * </pre>
+ *
+ * @class Controls/_validate/Validators/IsRequired
+ * @public
+ * @author Красильников А.С.
+ */
 export = function (args) {
    //Если передали в аргументах doNotValidate, значит возвращаем true (параметр нужен для опционального включения/отключения валидатора)
    if (args.doNotValidate) {
