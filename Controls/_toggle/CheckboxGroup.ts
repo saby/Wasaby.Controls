@@ -13,6 +13,22 @@ import {
 } from 'Controls/interface';
 
 /**
+ * Группа контролов, которые предоставляют пользователям возможность выбора между двумя или более параметрами.
+ *
+ * @class Controls/_toggle/CheckboxGroup
+ * @extends Core/Control
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/_interface/IMultiSelectable
+ * @mixes Controls/_interface/IHierarchy
+ * @implements Controls/_toggle/interface/IToggleGroup
+ * @control
+ * @public
+ * @author Красильников А.С.
+ * @category Toggle
+ * @demo Controls-demo/Checkbox/Group
+ */
+
+/*
  * Controls are designed to give users a multichoice among two or more settings.
  *
  * @class Controls/_toggle/CheckboxGroup

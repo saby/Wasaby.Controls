@@ -8,6 +8,25 @@ export interface IClick {
    readonly '[Controls/_buttons/interface/IClick]': boolean;
 }
 /**
+ * @event Controls/_buttons/interface/IClick#click Происходит при клике на элемент.
+ * @remark Если кнопка с readOnly установлена в true, то событие не всплывает.
+ * @example
+ * Кнопка со стилем 'primary' режимом viewMode - 'button' и иконкой 'icon-Send'. Если пользователь произведет клик по кнопке, произойдет отправка документа.
+ * <pre>
+ *    <Controls.buttons:Button on:click="_clickHandler()" icon="icon-Send" buttonStyle="primary" viewMode="button"/>
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       ...
+ *       _clickHandler(e) {
+ *          this.sendDocument();
+ *       }
+ *       ...
+ *    });
+ * </pre>
+ */
+
+/*
  * @event Controls/_buttons/interface/IClick#click Occurs when item was clicked.
  * @remark If button with readOnly set to true then event does not bubble.
  * @example

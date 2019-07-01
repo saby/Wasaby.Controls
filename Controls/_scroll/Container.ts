@@ -667,7 +667,17 @@ var
           * Otherwise we can accidentally scroll a wrong element.
           */
          e.stopPropagation();
+         // todo KINGO. Костыль с родословной из старых списков. Инерционный скролл приводит к дерганью: мы уже
+         // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
+         // дерганья и лишняя загрузка данных.
+         // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
+         if (Env.detection.isMobileIOS) {
+            this._children.content.webkitOverflowScrolling = 'auto';
+         }
          this._children.content.scrollTop = this._children.content.scrollHeight - this._savedScrollPosition;
+         if (Env.detection.isMobileIOS) {
+            this._children.content.webkitOverflowScrolling = '';
+         }
       },
 
       _fixedHandler: function(event, topHeight, bottomHeight) {

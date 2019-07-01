@@ -8,6 +8,25 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
 }
 
 /**
+ * Контрол, позволяющий пользователю управлять параметром с двумя состояниями — включено и отключено.
+ *
+ * <a href="/materials/demo-ws4-checkbox">Demo-example</a>.
+ *
+ * @class Controls/_toggle/Checkbox
+ * @extends Core/Control
+ * @implements Controls/_interface/ICaption
+ * @implements Controls/_interface/IIcon
+ * @implements Controls/_interface/ITooltip
+ * @control
+ * @public
+ * @author Красильников А.С.
+ * @category Toggle
+ * @demo Controls-demo/Checkbox/CheckBoxDemoPG
+ *
+ * @mixes Controls/_toggle/Checkbox/CheckboxStyles
+ */
+
+/*
  * Represents a control that a user can select and clear.
  *
  * <a href="/materials/demo-ws4-checkbox">Demo-example</a>.
@@ -27,6 +46,31 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  */
 
 /**
+ * @name Controls/_toggle/Checkbox#triState
+ * @cfg {Boolean} Определяет, разрешено ли устанавливать чекбоксу третье состояние — "не определен" (null).
+ * @default False
+ * @remark
+ * True - Разрешено устанавливать третье состояние.
+ * False - Не разрешено устанавливать третье состояние.
+ * Если установлен режим triState, то значение может быть "null".
+ * @example
+ * Чекбокс с включенным triState.
+ * <pre>
+ *    Boolean variable value: <Controls.toggle:Checkbox on:valueChanged="_updateCheckBox()" triState="{{true}}" value="{{_checkBoxValue}}"/>
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       ...
+ *       _updateCheckBox(event, value) {
+ *          _checkBoxValue = value;
+ *       }
+ *       ...
+ *    });
+ * </pre>
+ * @see option Value
+ */
+
+/*
  * @name Controls/_toggle/Checkbox#triState
  * @cfg {Boolean} Determines whether the Checkbox will allow three check status rather than two.
  * @default False
@@ -52,6 +96,47 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  */
 
 /**
+ * @name Controls/_toggle/Checkbox#value
+ * @cfg {Boolean|null} Значение, которое определяет текущее состояние.
+ * @default False
+ * @remark
+ * True - Чекбокс в состоянии "отмечено".
+ * False - Чекбокс в состоянии "не отмечено". Это состояние по умолчанию.
+ * Null - Состояние чекбокса при включенной опции TriState.
+ * Вариант "null" возможен только при включенной опции triState.
+ * @example
+ * Чекбокс, регулирующий тему в контроле.
+ * <pre>
+ *    <Controls.toggle:Checkbox caption="Enable dark theme" value="{{_checkBoxValue}}" on:valueChanged="{{_darkThemeSwitched()}}"/>
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       ...
+ *       _darkThemeSwitched(e, value) {
+ *          _checkBoxValue = value;
+ *          this._notify('themeChanged', [_checkBoxValue]);
+ *       }
+ *       ...
+ *    });
+ * </pre>
+ * Чекбокс с включенной опцией triState.
+ * <pre>
+ *    Boolean variable value: <Controls.toggle:Checkbox on:valueChanged="_updateCheckBox()" triState="{{true}}" value="{{_checkBoxValue}}"/>
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       ...
+ *       _updateCheckBox(event, value) {
+ *          _checkBoxValue = value;
+ *       }
+ *       ...
+ *    });
+ * </pre>
+ * @see option triState
+ * @see event valueChanged()
+ */
+
+/*
  * @name Controls/_toggle/Checkbox#value
  * @cfg {Boolean|null} Current value, it's determines current state.
  * @default False
@@ -93,6 +178,28 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  */
 
 /**
+ * @event Controls/_toggle/Checkbox#valueChanged Происходит при изменении состояния контрола.
+ * @param {Boolean|null} New value.
+ * @remark Событие необходимо для реагирования на изменения, внесенные пользователем в чекбокс. Значение, возвращаемое в событии, не вставляется в контрол, если не передать его обратно в поле в качестве опции. Значение может быть null только тогда, когда включена опция tristate.
+ * @example
+ * Пример:
+ * <pre>
+ *    <Controls.toggle:Checkbox value="{{_checkBoxValue}}" on:valueChanged="_valueChangedHandler()" />
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       ...
+ *       _valueChangedHandler(e, value) {
+ *          this._checkBoxValue= value;
+ *       }
+ *       ...
+ *    });
+ * </pre>
+ * @see value
+ * @see triState
+ */
+
+/*
  * @event Controls/_toggle/Checkbox#valueChanged Occurs when state changes.
  * @param {Boolean|null} New value.
  * @remark This event should be used to react to changes user makes in the checkbox. Value returned in the event is not inserted in control unless you pass it back to the field as an option. Value may be null only when checkbox tristate option is true.

@@ -411,10 +411,7 @@ import dataSource = require('Controls/dataSource');
          // запускаем валидацию
          var validationDef = this._children.validation.submit();
          validationDef.addCallback(function(results) {
-            var isError = Object.keys(results).find(function(key) {
-               return Array.isArray(results[key]);
-            });
-            if (!isError) {
+            if (!results.hasErrors) {
                // при успешной валидации пытаемся сохранить рекорд
                self._notify('validationSuccessed', [], { bubbling: true });
                var res = self._children.crud.update(record, self._isNewRecord);

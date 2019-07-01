@@ -20,7 +20,7 @@ import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
 import 'wml!Controls/_list/BaseControl/Footer';
 import 'css!theme?Controls/list';
 import { error as dataSourceError } from 'Controls/dataSource';
-import { constants, IoC } from 'Env/Env';
+import { detection, constants, IoC } from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
@@ -233,13 +233,16 @@ var _private = {
     },
     restoreScrollPosition: function(self) {
         if (self._saveAndRestoreScrollPosition) {
-            /**
-             * This event should bubble, because there can be anything between Scroll/Container and the list,
-             * and we can't force everyone to manually bubble it.
-             */
-            self._notify('restoreScrollPosition', [], {
-                bubbling: true
-            });
+            // todo KINGO. Если распорки виртуального скрола хватает для завершения инерционного скрола, то не нужно восстанавливать скролл.
+            if (!detection.isMobileIOS || !self._virtualScroll || self._topPlaceholderSize === 0) {
+                /**
+                 * This event should bubble, because there can be anything between Scroll/Container and the list,
+                 * and we can't force everyone to manually bubble it.
+                 */
+                self._notify('restoreScrollPosition', [], {
+                    bubbling: true
+                });
+            }
             self._saveAndRestoreScrollPosition = false;
             return;
         }
@@ -680,7 +683,7 @@ var _private = {
                             // если это не подгрузка с БЛ по скролу и
                             // если мы были в конце списка (отрисована последняя запись и виден нижний триггер)
                             // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
-                            if (self._listViewModel.getStopIndex() === newCount - newItems.length &&
+                            if (self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
                                isElementVisible(self._children.bottomVirtualScrollTrigger) &&
                                !self._itemsFromLoadToDirection) {
                                 self._virtualScroll.recalcToDirection(direction);
