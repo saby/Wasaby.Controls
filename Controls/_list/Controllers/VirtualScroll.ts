@@ -12,11 +12,9 @@ type Direction = 'down' | 'up';
  * @typedef VirtualScrollConfig
  * @type {object}
  * @property {number} virtualPageSize - The size of the virtual page indicates maximum number of simultaneously displayed items in the list.
- * @property {number} virtualSegmentSize - Number of items that will be inserted/removed on reaching the end of displayed items.
  */
 type VirtualScrollConfig = {
     virtualPageSize?: number;
-    virtualSegmentSize?: number;
 }
 
 

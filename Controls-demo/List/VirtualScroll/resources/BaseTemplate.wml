@@ -6,7 +6,6 @@
         </div>
         <pre class="cDemo-configuration">
             virtualPageSize: {{_virtualPageSize}},
-            virtualSegmentSize: {{_virtualSegmentSize}},
             navigation: {
             pageSize: {{_navigation.sourceConfig.pageSize}},
             page: {{_navigation.sourceConfig.page}}
@@ -21,7 +20,6 @@
                 displayProperty="title"
                 virtualScrolling="{{true}}"
                 virtualPageSize="{{_virtualPageSize}}"
-                virtualSegmentSize="{{_virtualSegmentSize}}"
                 navigation="{{_navigation}}">
         </Controls.list:View>
     </Controls.scroll:Container>

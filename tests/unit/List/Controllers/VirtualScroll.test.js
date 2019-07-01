@@ -214,8 +214,7 @@ define([
       it('_isScrollInPlaceholder', function () {
          var
             vsInstance = new list.VirtualScroll({
-               virtualPageSize: 5,
-               virtualSegmentSize: 3
+               virtualPageSize: 5
             });
          vsInstance._startIndex = 30;
          vsInstance._stopIndex = 35;

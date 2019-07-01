@@ -9,8 +9,7 @@
                                 name="{{gridOne}}"
                                 columns="{{_columns}}"
                                 virtualScrolling="{{true}}"
-                                virtualPageSize="{{30}}"
-                                virtualSegmentSize="{{5}}">
+                                virtualPageSize="{{30}}">
                             <ws:navigation source="page" view="infinity">
                                 <ws:sourceConfig pageSize="{{200}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
                             </ws:navigation>
