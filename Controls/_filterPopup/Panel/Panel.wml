@@ -34,7 +34,7 @@
     <Controls.popupTemplate:Dialog headingCaption="{{_options.headingCaption}}"
                                                     headingStyle="{{_options.headingStyle}}"
                                                     attr:class="controls-PanelFilter
-                                                    {{_options.orientation === 'horizontal' ? 'controls-FilterPanel__horizontal'}}">
+                                                    controls-FilterPanel__{{_options.orientation}}">
        <ws:headerContentTemplate>
           <div class="controls-FilterPanel__header">
              <ws:if data="{{_options.topTemplate}}">
