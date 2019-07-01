@@ -616,6 +616,14 @@ var
             }
             return scrollTop;
          }
+         // todo KINGO. Костыль с родословной из старых списков. Инерционный скролл приводит к дерганью: мы уже
+         // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
+         // дерганья и лишняя загрузка данных.
+         // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
+         // https://popmotion.io/blog/20170704-manually-set-scroll-while-ios-momentum-scroll-bounces/
+         if (Env.detection.isMobileIOS) {
+            this._children.content.style.webkitOverflowScrolling = 'auto';
+         }
          this._savedScrollPosition = this._children.content.scrollHeight - getScrollTop(this._children.content);
       },
 
@@ -625,16 +633,14 @@ var
           * Otherwise we can accidentally scroll a wrong element.
           */
          e.stopPropagation();
+         this._children.content.scrollTop = this._children.content.scrollHeight - this._savedScrollPosition;
          // todo KINGO. Костыль с родословной из старых списков. Инерционный скролл приводит к дерганью: мы уже
          // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
          // дерганья и лишняя загрузка данных.
          // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
+         // https://popmotion.io/blog/20170704-manually-set-scroll-while-ios-momentum-scroll-bounces/
          if (Env.detection.isMobileIOS) {
-            this._children.content.webkitOverflowScrolling = 'auto';
-         }
-         this._children.content.scrollTop = this._children.content.scrollHeight - this._savedScrollPosition;
-         if (Env.detection.isMobileIOS) {
-            this._children.content.webkitOverflowScrolling = '';
+            this._children.content.style.webkitOverflowScrolling = '';
          }
       },
 
