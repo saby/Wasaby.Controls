@@ -1,0 +1,6 @@
+<Controls.Application.ApplicationWrapper caption="Demo-example: CheckboxGroup."
+                                         demoname="Controls-demo/Checkbox/Group.wml">
+   <ws:content>
+      <Controls-demo.Checkbox.Group/>
+   </ws:content>
+</Controls.Application.ApplicationWrapper>
