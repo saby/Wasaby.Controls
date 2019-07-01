@@ -232,16 +232,13 @@ var _private = {
     },
     restoreScrollPosition: function(self) {
         if (self._saveAndRestoreScrollPosition) {
-            // todo KINGO. Если распорки виртуального скрола хватает для завершения инерционного скрола, то не нужно восстанавливать скролл.
-            if (!detection.isMobileIOS || !self._virtualScroll || self._topPlaceholderSize === 0) {
-                /**
-                 * This event should bubble, because there can be anything between Scroll/Container and the list,
-                 * and we can't force everyone to manually bubble it.
-                 */
-                self._notify('restoreScrollPosition', [], {
-                    bubbling: true
-                });
-            }
+            /**
+             * This event should bubble, because there can be anything between Scroll/Container and the list,
+             * and we can't force everyone to manually bubble it.
+             */
+            self._notify('restoreScrollPosition', [], {
+                bubbling: true
+            });
             self._saveAndRestoreScrollPosition = false;
             return;
         }
