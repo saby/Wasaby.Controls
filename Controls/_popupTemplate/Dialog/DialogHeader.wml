@@ -1,14 +1,9 @@
 <div class="controls-DialogTemplate__top-area controls-DialogTemplate__top-area_theme_{{_options.theme}} {{_options.draggable ? 'controls-DialogTemplate__top-area-draggable'}}">
    <div class="controls-DialogTemplate__top-area-content" on:mousedown="_onMouseDown()" on:touchstart="_onMouseDown()">
       <ws:if data="{{_options.headingCaption}}">
-         <div class="controls-DialogTemplate__caption controls-DialogTemplate__caption_theme_{{_options.theme}}">
-            <Controls.heading:Title attr:class="controls-DialogTemplate__caption_text"
-                                    caption="{{headingCaption}}"
-                                    fontColorStyle="{{headingStyle}}"
-                                    fontSize="{{headingSize}}"
-                                    theme="{{headingTheme}}"
-                                    readOnly="{{true}}"
-                                    tooltip="{{headingCaption}}"/>
+         <div class="controls-DialogTemplate__caption controls-DialogTemplate__caption_theme_{{_options.theme}} controls-DialogTemplate__caption_style_{{_options.headingStyle}}_theme_{{_options.theme}}"
+              title="{{_options.caption || _options.headingCaption}}">
+            <div class="controls-DialogTemplate__caption_text">{{_options.headingCaption}}</div>
          </div>
       </ws:if>
       <ws:if data="{{_options.headerContentTemplate}}" >
