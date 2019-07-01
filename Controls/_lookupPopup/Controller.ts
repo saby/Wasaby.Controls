@@ -162,6 +162,8 @@ var Controller = Control.extend({
       if (this._selectionLoadDef) {
          this._selectionLoadDef.done().getResult().addCallback(function(result) {
             if (multiSelect === false) {
+               // toDO !KONGO Если выбрали элемент из справочника в режиме единичного выбора,
+               // то очистим список выбранных элементов и возьмем только запись из этого справочника
                self._selectedItems.clear();
             }
             _private.processSelectionResult(result, self._selectedItems, multiSelect);
