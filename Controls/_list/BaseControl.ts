@@ -25,7 +25,6 @@ import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import {Focus} from 'Vdom/Vdom';
-import isElementVisible = require('Core/helpers/Hcontrol/isElementVisible');
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -684,8 +683,7 @@ var _private = {
                             // если мы были в конце списка (отрисована последняя запись и виден нижний триггер)
                             // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
                             if (self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
-                               isElementVisible(self._children.bottomVirtualScrollTrigger) &&
-                               !self._itemsFromLoadToDirection) {
+                               self._virtualScrollTriggerVisibility.down && !self._itemsFromLoadToDirection) {
                                 self._virtualScroll.recalcToDirection(direction);
                             } else {
                                 // если данные добавились сверху - просто обновляем индексы видимых записей
