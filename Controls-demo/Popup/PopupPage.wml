@@ -112,6 +112,15 @@
          <span style="margin-left: 10px;">Пользователь выбрал {{_helperConfirmationResult ? 'да' : 'нет'}}</span>
       </ws:if>
    </div>
+   <div>
+      <Controls.buttons:Button name="helperButton4" caption="open Sticky by popupHelper" on:click="openStickyByHelper()" attr:class="ControlsDemo-PopupPage__helperStickyButton"/>
+   </div>
+   <div>
+      <Controls.buttons:Button name="helperButton5" caption="open Stack by popupHelper" on:click="openStackByHelper()" attr:class="ControlsDemo-PopupPage__helperStackButton"/>
+   </div>
+   <div>
+      <Controls.buttons:Button name="helperButton6" caption="open Dialog by popupHelper" on:click="openDialogByHelper()" attr:class="ControlsDemo-PopupPage__helperDialogButton"/>
+   </div>
    <div style="margin-top: 10px;">
       <Controls.input:Text placeholder="for focusing" attr:class="ControlsDemo-PopupPage__forFocusing"/>
    </div>
