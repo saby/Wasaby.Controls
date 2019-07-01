@@ -1,140 +1,67 @@
-<html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="_" attr:id="root"
-      attr:component="Controls/Application"
-      attr:class="{{ onServer && !isCompatible ? 'pre-load' : '' }}">
-<Controls.Application._Head
-   wsRoot="{{ wsRoot }}"
-   linkResolver="{{ linkResolver }}"
-   resourceRoot="{{ resourceRoot }}"
-   appRoot="{{ appRoot }}"
-   lite="{{lite}}"
-   RUMEnabled="{{ RUMEnabled }}"
-   pageName="{{ pageName }}"
-   compat="{{ compat }}"
-   head="{{ _options.head }}"
-   headJson="{{ _options.headJson }}"
-   title="{{ _options.title }}"
-   staticDomains="{{ staticDomains }}"
-   buildnumber="{{ buildnumber }}"
-   viewport="{{ _options.viewport }}"
-   preInitScript="{{ _options.preInitScript }}"
-   servicesPath="{{ servicesPath }}"
-   product="{{ product }}">
-</Controls.Application._Head>
-<Controls.event:Register name="scrollDetect" register="scroll" attr:fixCompatible="1">
-   <Controls.event:Register name="resizeDetect" register="controlResize" attr:fixCompatible="1">
-      <Controls.event:Register name="mousemoveDetect" register="mousemove" attr:fixCompatible="1">
-         <Controls.event:Register name="mouseupDetect" register="mouseup" attr:fixCompatible="1">
-            <Controls.event:Register name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
-               <Controls.event:Register name="touchendDetect" register="touchend" attr:fixCompatible="1">
-                  <Controls.event:Register name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
-                     <Controls.popup:Global>
-                     <Controls.popup:Manager
-                             on:managerPopupCreated="_popupCreatedHandler()"
-                             on:managerPopupDestroyed="_popupDestroyedHandler()"
-                             stackRootWidth="{{_options.width}}">
-                        <Controls.Application.TouchDetector name="touchDetector">
-                           <Controls.dragnDrop:Controller name="dragNDropContainer">
-                              <UI.HotKeys:Dispatcher>
-                                 <body
-                                 class="{{BodyClasses()}} {{_scrollingClass}} {{_options.bodyClass}} {{_touchclass()}}"
-                                 id="body"
-                                 key="1_2_"
-                                 on:scroll="_scrollPage()"
-                                 on:resize="_resizePage()"
-                                 on:mousemove="_mousemovePage()"
-                                 on:touchmove="_touchmovePage()"
-                                 on:touchend="_touchendPage()"
-                                 on:mousedown="_mousedownPage()"
-                                 on:mouseup="_mouseupPage()"
-                                 on:keyPress="_keyPressHandler()"
-                                 on:mouseup="_mouseupPage()"
-                                 on:suggestStateChanged="_suggestStateChangedHandler()">
-                              <ws:if data="{{isCompatible}}">
-                                 <div class="ws-focus-in"></div>
-                              </ws:if>
-                              <ws:if data="{{  _options.content }}">
-                                 <!-- use private method for loadingIndicator. todo https://online.sbis.ru/opendoc.html?guid=0ebfe128-42ca-43e5-b27b-90e12f81313c -->
-                                 <Controls.Application._Wait>
-                                    <ws:partial
-                                       template="{{ _options.content }}"
-                                       scope="{{ templateConfig }}"
-                                       on:showIndicator="LoadingIndicator._showHandler()"
-                                       on:hideIndicator="LoadingIndicator._hideHandler()"/>
-                                 </Controls.Application._Wait>
-                                 <Controls.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
-                                    <div></div>
-                                 </Controls.LoadingIndicator>
-                              </ws:if>
-                              <ws:else>
-                                 <Controls.Application._Wait content="">
-                                 </Controls.Application._Wait>
-                              </ws:else>
+<UI.Base:HTML>
+   <ws:bodyTemplate>
+      <Controls.event:Register name="scrollDetect" register="scroll" attr:fixCompatible="1">
+         <Controls.event:Register name="resizeDetect" register="controlResize" attr:fixCompatible="1">
+            <Controls.event:Register name="mousemoveDetect" register="mousemove" attr:fixCompatible="1">
+               <Controls.event:Register name="mouseupDetect" register="mouseup" attr:fixCompatible="1">
+                  <Controls.event:Register name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
+                     <Controls.event:Register name="touchendDetect" register="touchend" attr:fixCompatible="1">
+                        <Controls.event:Register name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
+                           <Controls.popup:Global>
+                              <Controls.popup:Manager
+                                 on:managerPopupCreated="_popupCreatedHandler()"
+                                 on:managerPopupDestroyed="_popupDestroyedHandler()"
+                                 stackRootWidth="{{_options.width}}">
+                                 <Controls.Application.TouchDetector name="touchDetector">
+                                    <Controls.dragnDrop:Controller name="dragNDropContainer">
+                                       <UI.HotKeys:Dispatcher>
+                                          <ws:partial template="{{bodyTemplate.content}}"
+                                                      class="{{BodyClasses()}} {{_scrollingClass}} {{_options.bodyClass}} {{_touchclass()}}"
+                                                      id="body"
+                                                      key="1_2_"
+                                                      on:scroll="_scrollPage()"
+                                                      on:resize="_resizePage()"
+                                                      on:mousemove="_mousemovePage()"
+                                                      on:touchmove="_touchmovePage()"
+                                                      on:touchend="_touchendPage()"
+                                                      on:mousedown="_mousedownPage()"
+                                                      on:mouseup="_mouseupPage()"
+                                                      on:keyPress="_keyPressHandler()"
+                                                      on:mouseup="_mouseupPage()"
+                                                      on:suggestStateChanged="_suggestStateChangedHandler()">
+                                             <ws:bodyContent>
+                                                <ws:partial
+                                                   template="{{ _options.content }}"
+                                                   scope="{{ templateConfig }}"
+                                                   on:showIndicator="LoadingIndicator._showHandler()"
+                                                   on:hideIndicator="LoadingIndicator._hideHandler()"/>
+                                                <Controls.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
+                                                   <div></div>
+                                                </Controls.LoadingIndicator>
 
-                              <ws:if data="{{ content.draggingTemplate }}">
-                                 <ws:partial template="Controls/dragnDrop:DraggingTemplateWrapper"
-                                             draggingTemplateOptions="{{content.draggingTemplateOptions}}"
-                                             draggingTemplate="{{content.draggingTemplate}}"/>
-                              </ws:if>
+                                                <ws:if data="{{ content.draggingTemplate }}">
+                                                   <ws:partial template="Controls/dragnDrop:DraggingTemplateWrapper"
+                                                               draggingTemplateOptions="{{content.draggingTemplateOptions}}"
+                                                               draggingTemplate="{{content.draggingTemplate}}"/>
+                                                </ws:if>
 
-                              <Controls.popup:Container attr:id="popup"
-                                                                eventHandler="{{content._managerEventHandler}}"/>
+                                                <Controls.popup:Container attr:id="popup"
+                                                                          eventHandler="{{content._managerEventHandler}}"/>
 
-                              <ws:if data="{{ _options.scripts && _options.beforeScripts}}">
-                                 <ws:for data="i in _options.scripts">
-                                    <ws:partial template="{{ i }}"/>
-                                 </ws:for>
-                              </ws:if>
-                              <script key="bundles" type="text/javascript"
-                                      src="{{resourceRoot}}bundles.js"></script>
-                              <script key="require" type="text/javascript"
-                                      src="/cdn/RequireJS/2.3.5-p5/require-min.js"></script>
-                              <script key="contents" type="text/javascript" src="{{ linkResolver.resolveLink('contents', 'js') }}"></script>
-                              <script key="config" type="text/javascript"
-                                      src="{{wsRoot}}ext/requirejs/config.js"></script>
-
-
-                              <ws:if data="{{_options.builder && _options.builderCompatible}}">
-                                 <ws:partial template="wml!Controls/Application/builderRunnerCompatible"
-                                             _options="{{_options}}"/>
-                              </ws:if>
-                              <ws:if data="{{_options.builder && !_options.builderCompatible}}">
-                                 <ws:partial template="wml!Controls/Application/builderRunner"
-                                             _options="{{_options}}"/>
-                              </ws:if>
-                              <ws:else data="{{!_options.builderCompatible}}">
-                                 <div>
-                                    <Controls.Application._JsLinks attr:tabindex="-1"
-                                                                   appRoot="{{ appRoot }}"
-                                                                   linkResolver="{{ linkResolver }}"/>
-
-                                    <!--
-                                       beforeScripts - опция для переноса скриптов перед вставкой серверных скриптов
-                                       то есть, потребовалась задача вставлять jquery до вставки скриптов, ведь они тут могут полезть в jquery
-                                    /-->
-
-                                    <ws:if data="{{ _options.scripts && !_options.beforeScripts }}">
-                                       <ws:for data="i in _options.scripts">
-                                          <ws:partial template="{{ i }}"/>
-                                       </ws:for>
-                                    </ws:if>
-                                    <Controls.Application.startApplicationScript compat="{{compat}}" appRoot="{{ appRoot }}" onServer="{{ onServer }}"/>
-                                 </div>
-                              </ws:else>
-                              <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" pageName="{{ pageName }}" />
-                              <ws:if data="{{ themeChanging }}">
-                                 <div id="theme-changing-overlay"></div>
-                              </ws:if>
-                              </body>
-                              </UI.HotKeys:Dispatcher>
-                           </Controls.dragnDrop:Controller>
-                        </Controls.Application.TouchDetector>
-                     </Controls.popup:Manager>
-                     </Controls.popup:Global>
+                                                <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" pageName="{{ pageName }}" />
+                                             </ws:bodyContent>
+                                          </ws:partial>
+                                       </UI.HotKeys:Dispatcher>
+                                    </Controls.dragnDrop:Controller>
+                                 </Controls.Application.TouchDetector>
+                              </Controls.popup:Manager>
+                           </Controls.popup:Global>
+                        </Controls.event:Register>
+                     </Controls.event:Register>
                   </Controls.event:Register>
                </Controls.event:Register>
             </Controls.event:Register>
          </Controls.event:Register>
       </Controls.event:Register>
-   </Controls.event:Register>
-</Controls.event:Register>
-</html>
+   </ws:bodyTemplate>
+</UI.Base:HTML>
