@@ -34,7 +34,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                horizontalAlign: {
                   side: align
                },
-               corner: {
+               targetPoint: {
                   horizontal: align
                }
             };
@@ -49,7 +49,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
             // The first level of the popup is always positioned on the right by standard
             if (!options.rootKey) {
                return {
-                  corner: {
+                  targetPoint: {
                      horizontal: 'right'
                   },
                   horizontalAlign: {
@@ -91,7 +91,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                   dropdownClassName: options.dropdownClassName,
                   defaultItemTemplate: options.defaultItemTemplate
                },
-               corner: subMenuPosition.corner,
+               targetPoint: subMenuPosition.targetPoint,
                horizontalAlign: subMenuPosition.horizontalAlign,
                target: event.target
             };

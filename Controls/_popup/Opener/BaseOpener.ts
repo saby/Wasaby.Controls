@@ -450,7 +450,7 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Используется устаревшая опция corner, используйте опцию targetPoint');
     }
     if (baseCfg.hasOwnProperty('verticalAlign') || baseCfg.hasOwnProperty('horizontalAlign')) {
-        Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
+        Env.IoC.resolve('ILogger').warn(Base.prototype._moduleName, 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
     }
 
     return baseCfg;
