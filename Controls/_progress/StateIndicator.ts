@@ -25,7 +25,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
 }
 /**
  * Progress state indicator
- * <a href="/demo/demo-ws4-stateindicator">Demo-example</a>.
+ * <a href="/materials/demo-ws4-stateindicator">Demo-example</a>.
  * @class Controls/_progress/StateIndicator
  * @extends Core/Control
  * @author Колесов В.А.
@@ -57,7 +57,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * @name Controls/_progress/StateIndicator#data
  * @cfg {Array.<IndicatorCategory>} Array of indicator categories
  * <pre class="brush:html">
- *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]]}}"/>
+ *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
  * </pre>
  */
 
