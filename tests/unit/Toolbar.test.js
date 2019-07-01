@@ -108,7 +108,7 @@ define(
                toolbar._children.popupTarget = {
                   _container: 'target'
                };
-               toolbar._showMenu();
+               toolbar._showMenu({ stopPropagation: () => {} });
             });
             it('click toolbar item', function() {
                let isNotify = false;
