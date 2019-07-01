@@ -23,6 +23,28 @@ var _private = {
          tooltips.push(getPropValue(item, displayProperty));
       });
       return tooltips.join(', ');
+   },
+
+   isEmptyItem: function(self, item) {
+      return self._options.emptyText && (getPropValue(item, self._options.keyProperty) === null || !item);
+   },
+
+   getText: function(self, items) {
+      let text = '';
+      if (_private.isEmptyItem(self, items[0])) {
+         text = dropdownUtils.prepareEmpty(self._options.emptyText);
+      } else {
+         text = getPropValue(items[0], self._options.displayProperty);
+      }
+      return text;
+   },
+
+   getMoreText: function(items) {
+      let moreText = '';
+      if (items.length > 1) {
+         moreText = ', ' + rk('еще') + ' ' + (items.length - 1);
+      }
+      return moreText;
    }
 };
 
@@ -135,13 +157,8 @@ var Input = Control.extend({
       }
    },
 
-   _afterUpdate: function (newOptions) {
-      if (!isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
-         this._notify('textValueChanged', [this._text + this._hasMoreText]);
-      }
-   },
-
    _selectedItemsChangedHandler: function (event, items) {
+      this._notify('textValueChanged', [_private.getText(this, items) + _private.getMoreText(items)]);
       return this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
    },
 
@@ -152,19 +169,10 @@ var Input = Control.extend({
    _setText: function (items) {
       if (items.length) {
          this._item = items[0];
-         this._isEmptyItem = this._options.emptyText && (getPropValue(items[0], this._options.keyProperty) === null || !items[0]);
-         if (this._isEmptyItem) {
-            this._text = dropdownUtils.prepareEmpty(this._options.emptyText);
-            this._icon = null;
-         } else {
-            this._text = getPropValue(items[0], this._options.displayProperty);
-            this._icon = getPropValue(items[0], 'icon');
-         }
-         if (items.length > 1) {
-            this._hasMoreText = ', ' + rk('еще ') + (items.length - 1);
-         } else {
-            this._hasMoreText = '';
-         }
+         this._isEmptyItem = _private.isEmptyItem(this, this._item);
+         this._icon = this._isEmptyItem ? null : getPropValue(this._item, 'icon');
+         this._text = _private.getText(this, items);
+         this._hasMoreText = _private.getMoreText(items);
          this._tooltip = _private.getTooltip(items, this._options.displayProperty);
       }
    }

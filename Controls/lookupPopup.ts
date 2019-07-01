@@ -6,7 +6,7 @@
  * @includes Controller Controls/_lookupPopup/Controller
  * @includes Collection Controls/_lookupPopup/SelectedCollection/Popup
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 

@@ -13,7 +13,7 @@
  * @includes GlobalTemplate wml!Controls/_popup/Global/Global
  * @includes PreviewerTemplate wml!Controls/_popup/Global/Global
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Confirmation = require('Controls/_popup/Opener/Confirmation');

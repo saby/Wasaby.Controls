@@ -1,103 +1,31 @@
-import Control = require('Core/Control');
-import entity = require('Types/entity');
-import env = require('Env/Env');
-import template = require('wml!Controls/_progress/StateIndicator/StateIndicator');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {descriptor as EntityDescriptor} from 'Types/entity';
+import {IoC} from 'Env/Env';
+import stateIndicatorTemplate = require('wml!Controls/_progress/StateIndicator/StateIndicator');
+import { SyntheticEvent } from 'Vdom/Vdom';
 
-var defaultColors = [
-      'controls-StateIndicator__sector1',
-      'controls-StateIndicator__sector2',
-      'controls-StateIndicator__sector3'
-   ],
-   DEFAULT_EMPTY_COLOR_CLASS = 'controls-StateIndicator__emptySector',
-   _private = {
+const defaultColors = [
+   'controls-StateIndicator__sector1',
+   'controls-StateIndicator__sector2',
+   'controls-StateIndicator__sector3'
+];
+const DEFAULT_EMPTY_COLOR_CLASS = 'controls-StateIndicator__emptySector';
+const defaultScaleValue = 10;
+const maxPercentValue = 100;
 
-      /**
-       * Chooses colors to be applied to indicator sectors
-       * @param {Array.<IndicatorCategory>} data Current data
-       * @return {Array.<String>} Colors to be applied to indicator sectors
-       */
-      setColors: function(data) {
-         var colors = [];
-         for (var i = 0; i < data.length; i++) {
-            colors[i] = data[i].className ? data[i].className : (defaultColors[i] ? defaultColors[i] : '');
-         }
-         return colors;
-      },
+export interface IIndicatorCategory {
+   value: number;
+   className: string;
+   title: string;
+}
 
-      /**
-       * Calculates sector categories corresponding to options
-       * @param {Object} opts Options
-       * @param {Array.<String>} _colors Colors will be used
-       * @param {Number} _numSectors number of indicator sectors
-       * @return {Array.<String>} Colors to apply to indicator sectors
-       */
-      calculateColorState: function(opts, _colors, _numSectors) {
-         var
-            sectorSize = (opts.scale <= 0 || opts.scale > 100 ?  10 : Math.floor(opts.scale)),
-            colorValues = [],
-            curSector = 0,
-            totalSectorsUsed = 0,
-            maxSectorsPerValue = 0,
-            longestValueStart, i, j, itemValue, itemNumSectors, excess;
-
-         for (i = 0; i < Math.min(opts.data.length); i++) {
-            // do not draw more colors, than we know
-            if (i < _colors.length) {
-               // convert to number, ignore negative ones
-               itemValue = Math.max(0, + opts.data[i].value || 0);
-               itemNumSectors = Math.floor(itemValue / sectorSize);
-               if (itemValue > 0 && itemNumSectors === 0) {
-                  // if state value is positive and corresponding sector number is zero, increase it by 1 (look specification)
-                  itemNumSectors = 1;
-               }
-               if (itemNumSectors > maxSectorsPerValue) {
-                  longestValueStart = curSector;
-                  maxSectorsPerValue = itemNumSectors;
-               }
-               totalSectorsUsed += itemNumSectors;
-               for (j = 0; j < itemNumSectors; j++) {
-                  colorValues[curSector++] = i + 1;
-               }
-            }
-         }
-         // if we count more sectors, than we have in indicator, trim the longest value
-         if (totalSectorsUsed  > _numSectors ) {
-            excess = totalSectorsUsed - _numSectors;
-            colorValues.splice(longestValueStart, excess);
-         }
-         return colorValues;
-      },
-
-      /**
-       * Checks if options are valid
-       * @param {Object} opts Options
-       */
-      checkData: function(opts) {
-         var sum = 0;
-
-         if (isNaN(opts.scale)) {
-            env.IoC.resolve('ILogger').error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect, it is non-numeric value');
-         }
-         if (opts.scale > 100 || opts.scale < 1) {
-            env.IoC.resolve('ILogger').error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect, it must be in range (0..100]');
-         }
-
-         sum = opts.data.map(Object).reduce(function(sum, d) {
-               return sum + Math.max(d.value, 0);
-            }, 0);
-
-         if (isNaN(sum)) {
-            env.IoC.resolve('ILogger').error('StateIndicator', 'Data is incorrect, it contains non-numeric values');
-         }
-         if (sum > 100) {
-            env.IoC.resolve('ILogger').error('StateIndicator', 'Data is incorrect. Values total is greater than 100%');
-         }
-      }
-   };
-/// <amd-module name="Controls/_progress/StateIndicator" />
+export interface IStateIndicatorOptions extends IControlOptions {
+   scale?: number;
+   data?: IIndicatorCategory[];
+}
 /**
  * Progress state indicator
- * <a href="/demo/demo-ws4-stateindicator">Demo-example</a>.
+ * <a href="/materials/demo-ws4-stateindicator">Demo-example</a>.
  * @class Controls/_progress/StateIndicator
  * @extends Core/Control
  * @author Колесов В.А.
@@ -129,65 +57,139 @@ var defaultColors = [
  * @name Controls/_progress/StateIndicator#data
  * @cfg {Array.<IndicatorCategory>} Array of indicator categories
  * <pre class="brush:html">
- *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]]}}"/>
+ *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
  * </pre>
  */
-var StateIndicator = Control.extend(
-   {
-      /**
-       * @event itemEnter appears when mouse enters sectors of indicator
-       * @param {Env/Event:Object} eventObject event descriptor.
-       *
-       */
-      _template: template,
-      _colorState: [],
-      _colors: [],
-      _numSectors: 10,
 
-      _beforeMount: function(opts) {
-       	this.applyNewState(opts);
-      },
+/**
+ * @event Controls/_progress/StateIndicator#itemEnter Occurs when mouse enters sectors of indicator
+ * @param {Env/Event:Object} eventObject event descriptor.
+ *
+ */
+class StateIndicator extends Control<IStateIndicatorOptions>{
+   protected _template: TemplateFunction = stateIndicatorTemplate;
+   private _colorState: number[];
+   private _colors: string[];
+   private _numSectors: number = 10;
 
-      _beforeUpdate: function(opts) {
-         if (opts.data!==this._options.data||opts.scale!==this._options.scale)
-            this.applyNewState(opts);
-      },
+   private _checkData(opts: IStateIndicatorOptions): void {
+      let sum = 0;
+      if (isNaN(opts.scale)) {
+         IoC.resolve('ILogger').error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect,' +
+                              'it is non-numeric value');
+      }
+      if (opts.scale > maxPercentValue || opts.scale < 1) {
+         IoC.resolve('ILogger').error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect,' +
+                              'it must be in range (0..100]');
+      }
 
-      _mouseEnterIndicatorHandler: function(e) {
-         this._notify('itemEnter', [e.target]);
-      },
+      sum = opts.data.map(Object).reduce((sum, d) => {
+         return sum + Math.max(d.value, 0);
+      }, 0);
 
-      /**
-       * Processes and applies new options
-       * @param {Object} opts Options
-       */
-      applyNewState: function(opts) {
-         _private.checkData(opts);
-         this._numSectors = Math.floor(100 / (opts.scale <= 0 || opts.scale > 100 ?  10 : opts.scale));
-         this._colors = _private.setColors(opts.data);
-         this._colorState  = _private.calculateColorState(opts, this._colors, this._numSectors);
-      },
+      if (isNaN(sum)) {
+         IoC.resolve('ILogger').error('StateIndicator', 'Data is incorrect,' +
+                              'it contains non-numeric values');
+      }
+      if (sum > maxPercentValue) {
+         IoC.resolve('ILogger').error('StateIndicator', 'Data is incorrect.' +
+                               'Values total is greater than 100%');
+      }
+   }
 
-   });
+   private _setColors(data: IIndicatorCategory[]): string[] {
+      let colors: string[] = [];
+      for (let i = 0; i < data.length; i++) {
+         colors[i] = data[i].className ? data[i].className : (defaultColors[i] ? defaultColors[i] : '');
+      }
+      return colors;
+   }
 
-StateIndicator.getDefaultOptions = function getDefaultOptions() {
-   return {
-      theme: "default",
-      scale: 10,
-      data: [{value:0, title:'', className:''}],
-   };
-};
+   private _calculateColorState(opts: IStateIndicatorOptions, _colors: string[], _numSectors: number): number[] {
+      const colorValues = [];
+      let correctScale: number = opts.scale;
+      let sectorSize: number;
+      let curSector = 0;
+      let totalSectorsUsed = 0;
+      let maxSectorsPerValue = 0;
+      let longestValueStart;
+      let itemValue;
+      let itemNumSectors;
+      let excess;
 
-StateIndicator.getOptionTypes = function getOptionTypes() {
-   return {
-      scale: entity.descriptor(Number),
-      data: entity.descriptor(Array),
-   };
-};
+      if (opts.scale <= 0 || opts.scale > maxPercentValue) {
+         correctScale = defaultScaleValue;
+      }
+      sectorSize = Math.floor(correctScale);
+      for (let i = 0; i < Math.min(opts.data.length); i++) {
+         // do not draw more colors, than we know
+         if (i < _colors.length) {
+            // convert to number, ignore negative ones
+            itemValue = Math.max(0, + opts.data[i].value || 0);
+            itemNumSectors = Math.floor(itemValue / sectorSize);
+            if (itemValue > 0 && itemNumSectors === 0) {
+               // if state value is positive and corresponding sector number is 0, increase it by 1 (look specification)
+               itemNumSectors = 1;
+            }
+            if (itemNumSectors > maxSectorsPerValue) {
+               longestValueStart = curSector;
+               maxSectorsPerValue = itemNumSectors;
+            }
+            totalSectorsUsed += itemNumSectors;
+            for (let j = 0; j < itemNumSectors; j++) {
+               colorValues[curSector++] = i + 1;
+            }
+         }
+      }
+      // if we count more sectors, than we have in indicator, trim the longest value
+      if (totalSectorsUsed  > _numSectors ) {
+         excess = totalSectorsUsed - _numSectors;
+         colorValues.splice(longestValueStart, excess);
+      }
+      return colorValues;
+   }
 
-StateIndicator._theme = ['Controls/progress'];
+   private _applyNewState(opts: IStateIndicatorOptions): void {
+      let correctScale: number = opts.scale;
+      this._checkData(opts);
+      if (opts.scale <= 0 || opts.scale > maxPercentValue) {
+         correctScale = defaultScaleValue;
+      }
+      this._numSectors = Math.floor(maxPercentValue / correctScale);
+      this._colors = this._setColors(opts.data);
+      this._colorState  = this._calculateColorState(opts, this._colors, this._numSectors);
+   }
 
-StateIndicator._private = _private;
+   private _mouseEnterIndicatorHandler(e: SyntheticEvent): void {
+      this._notify('itemEnter', [e.target]);
+   }
+
+   protected _beforeMount(opts: IStateIndicatorOptions): void {
+      this._applyNewState(opts);
+   }
+
+   protected _beforeUpdate(opts: IStateIndicatorOptions): void {
+      if (opts.data !== this._options.data || opts.scale !== this._options.scale) {
+         this._applyNewState(opts);
+      }
+   }
+
+   static _theme: string[] = ['Controls/progress'];
+
+   static getDefaultOptions(): object {
+      return {
+         theme: 'default',
+         scale: 10,
+         data: [{value: 0, title: '', className: ''}]
+      };
+   }
+
+   static getOptionTypes(): object {
+      return {
+         scale: EntityDescriptor(Number),
+         data: EntityDescriptor(Array),
+      };
+   }
+}
+
 export default StateIndicator;
-
-

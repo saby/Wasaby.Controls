@@ -9,7 +9,7 @@ import {decimalSplitter, decimalSplitters} from 'Controls/_input/Number/constant
 /**
  * @class Controls/_input/Number/ViewModel
  * @private
- * @author Krasilnikov A.S.
+ * @author Красильников А.С.
  */
 
 const _private = {
@@ -130,7 +130,7 @@ var ViewModel = BaseViewModel.extend({
         var displayValue = value === null ? '' : value.toString();
 
         if (displayValue && this._options.showEmptyDecimals) {
-            displayValue = format(parse(displayValue), this._options, 0).value;
+            return format(parse(displayValue), this._options, 0).value;
         }
 
         if (this._options.useGrouping) {

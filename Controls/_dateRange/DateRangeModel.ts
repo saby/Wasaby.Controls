@@ -5,7 +5,7 @@ import DateUtil = require('Controls/Utils/Date');
 
 /**
  * Model for date range controls.
- * @author Александр Миронов
+ * @author Красильников А.С.
  * @public
  * @noShow
  */

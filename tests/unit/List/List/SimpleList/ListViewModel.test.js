@@ -125,7 +125,8 @@ define([
                items: new collection.RecordSet({
                   rawData: [],
                   idProperty: 'id'
-               })
+               }),
+               virtualScrolling: true
             });
          assert.equal(model._startIndex, 0, 'Invalid value of "_startIndex" after constructor.');
          assert.equal(model._stopIndex, 0, 'Invalid value of "_stopIndex" after constructor.');

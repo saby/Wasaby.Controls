@@ -249,6 +249,15 @@ define(
                },
                value: 12,
                displayValue: '12'
+            }, {
+               options: {
+                  precision: 2,
+                  useGrouping: true,
+                  showEmptyDecimals: true,
+                  useAdditionToMaxPrecision: true
+               },
+               value: 123456.3,
+               displayValue: '123 456.30'
             }].forEach(function(test) {
                it(`value: ${test.value}, displayValue: ${test.displayValue}, options: ${JSON.stringify(test.options)}`, function() {
                   const model = new ViewModel(test.options, null);

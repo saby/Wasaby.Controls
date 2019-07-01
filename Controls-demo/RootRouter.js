@@ -10,7 +10,20 @@ define('Controls-demo/RootRouter', [
 
    var ModuleClass = BaseControl.extend(
       {
-         _template: template,
+          isReloading: false,
+          reload: function() {
+              this.isReloading = true;
+          },
+
+          _afterMount: function() {
+              window.reloadDemo = this.reload.bind(this);
+          },
+
+          _afterUpdate: function() {
+              this.isReloading = false;
+          },
+
+          _template: template,
          backClickHdl: function() {
             window.history.back();
          }

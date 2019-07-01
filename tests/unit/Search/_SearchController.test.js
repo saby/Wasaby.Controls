@@ -97,6 +97,29 @@ define(
             }, 60);
          });
 
+         it('abort', function() {
+            var aborted = false;
+            var searchController = new searchLib._SearchController({
+               minSearchLength: 3,
+               source: source,
+               searchDelay: 50,
+               searchParam: 'name',
+               filter: {},
+               abortCallback: function() {
+                  aborted = true;
+               },
+            });
+
+            searchController.search('test');
+            assert.isFalse(aborted);
+
+            searchController.abort();
+            assert.isFalse(aborted);
+
+            searchController.abort(true);
+            assert.isTrue(aborted);
+         });
+
          it('search with sorting', function(done) {
             var filter = {};
             var searchController = new searchLib._SearchController({

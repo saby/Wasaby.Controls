@@ -1,4 +1,4 @@
-<UI.Base:HTML>
+<UI.Base:HTML scope="{{_options}}">
    <ws:bodyTemplate>
       <Controls.event:Register name="scrollDetect" register="scroll" attr:fixCompatible="1">
          <Controls.event:Register name="resizeDetect" register="controlResize" attr:fixCompatible="1">
@@ -9,6 +9,7 @@
                         <Controls.event:Register name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
                            <Controls.popup:Global>
                               <Controls.popup:Manager
+                                 popupHeaderTheme="{{_options.popupHeaderTheme}}"
                                  on:managerPopupCreated="_popupCreatedHandler()"
                                  on:managerPopupDestroyed="_popupDestroyedHandler()"
                                  stackRootWidth="{{_options.width}}">
@@ -30,25 +31,27 @@
                                                       on:mouseup="_mouseupPage()"
                                                       on:suggestStateChanged="_suggestStateChangedHandler()">
                                              <ws:bodyContent>
-                                                <ws:partial
-                                                   template="{{ _options.content }}"
-                                                   scope="{{ templateConfig }}"
-                                                   on:showIndicator="LoadingIndicator._showHandler()"
-                                                   on:hideIndicator="LoadingIndicator._hideHandler()"/>
-                                                <Controls.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
-                                                   <div></div>
-                                                </Controls.LoadingIndicator>
+                                                <div>
+                                                   <ws:partial
+                                                      template="{{ _options.content }}"
+                                                      scope="{{ templateConfig }}"
+                                                      on:showIndicator="LoadingIndicator._showHandler()"
+                                                      on:hideIndicator="LoadingIndicator._hideHandler()"/>
+                                                   <Controls.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
+                                                      <div></div>
+                                                   </Controls.LoadingIndicator>
 
-                                                <ws:if data="{{ content.draggingTemplate }}">
-                                                   <ws:partial template="Controls/dragnDrop:DraggingTemplateWrapper"
-                                                               draggingTemplateOptions="{{content.draggingTemplateOptions}}"
-                                                               draggingTemplate="{{content.draggingTemplate}}"/>
-                                                </ws:if>
+                                                   <ws:if data="{{ content.draggingTemplate }}">
+                                                      <ws:partial template="Controls/dragnDrop:DraggingTemplateWrapper"
+                                                                  draggingTemplateOptions="{{content.draggingTemplateOptions}}"
+                                                                  draggingTemplate="{{content.draggingTemplate}}"/>
+                                                   </ws:if>
 
-                                                <Controls.popup:Container attr:id="popup"
-                                                                          eventHandler="{{content._managerEventHandler}}"/>
+                                                   <Controls.popup:Container attr:id="popup"
+                                                                             eventHandler="{{content._managerEventHandler}}"/>
 
-                                                <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" pageName="{{ pageName }}" />
+                                                   <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" pageName="{{ pageName }}" />
+                                                </div>
                                              </ws:bodyContent>
                                           </ws:partial>
                                        </UI.HotKeys:Dispatcher>

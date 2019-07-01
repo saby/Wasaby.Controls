@@ -18,14 +18,16 @@
    <Controls.buttons:Button
       attr:class="controls-Input-DatePicker__button"
       attr:tabindex="-1"
-      style="secondary"
+      fontColorStyle="link"
       viewMode="link"
-      icon="icon-small icon-Calendar2 icon-primary"
+      icon="icon-Calendar2"
+      iconSize="s"
+      iconStyle="secondary"
       on:click="_openDialog()"
    />
    <Controls.popup:Sticky name="opener"
                                  closeOnOutsideClick="{{true}}"
                                  actionOnScroll="close"
-                                 _vdomOnOldPage="{{_options.vdomDialog}}">
+                                 _vdomOnOldPage="{{_isVdomDialog()}}">
    </Controls.popup:Sticky>
 </div>

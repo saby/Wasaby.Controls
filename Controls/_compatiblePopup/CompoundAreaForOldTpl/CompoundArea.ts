@@ -14,7 +14,7 @@ import {Controller} from 'Controls/popup';
 import {InstantiableMixin} from 'Types/entity';
 import callNext = require('Core/helpers/Function/callNext');
 import cInstance = require('Core/core-instance');
-import Vdom = require('Vdom/Vdom');
+import { SyntheticEvent } from 'Vdom/Vdom';
 import 'css!theme?Controls/compatiblePopup';
 
 function removeOperation(operation, array) {
@@ -456,7 +456,7 @@ var CompoundArea = CompoundContainer.extend([
       // d'n'd работает, когда кликнули непосредственно в шапку
       var isClickedInControl = $(event.target).wsControl() !== this;
       if (dialogTemplate && !isClickedInControl) {
-         dialogTemplate._startDragNDrop(new Vdom.SyntheticEvent(event));
+         dialogTemplate._startDragNDrop(new SyntheticEvent(event));
       }
    },
 
@@ -873,7 +873,7 @@ var CompoundArea = CompoundContainer.extend([
       const self = this;
       self._notifyVDOM('registerPending', [new cDeferred(), {
          showLoadingIndicator: false,
-         validate(): boolean {
+         validateCompatible(): boolean {
             if (cInstance.instanceOfModule(self._childControl, 'SBIS3.CONTROLS/FormController')) {
                self.close();
                return !self._beforeCloseHandlerResult;

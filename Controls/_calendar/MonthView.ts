@@ -21,7 +21,7 @@ import 'css!theme?Controls/calendar'
  * @mixes Controls/_calendar/interface/IMonth
  * @control
  * @private
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @demo Controls-demo/Date/MonthView
  *
  */

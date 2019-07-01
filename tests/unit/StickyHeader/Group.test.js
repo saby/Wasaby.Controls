@@ -266,6 +266,63 @@ define([
             component._stickyRegisterHandler(event, { id: id }, false);
             assert.isUndefined(component._headers[id]);
          });
+
+         it('should generate event on first header registered', function() {
+            const
+               component = createComponent(scroll.Group, options),
+               event = {
+                  stopImmediatePropagation: sinon.fake()
+               };
+
+            sinon.stub(component, '_notify');
+            component._stickyRegisterHandler(event, { id: 2 }, true);
+
+            sinon.assert.calledWith(component._notify, 'stickyRegister');
+            sinon.restore();
+         });
+
+         it('should not generate event on second header registered', function() {
+            const
+               component = createComponent(scroll.Group, options),
+               event = {
+                  stopImmediatePropagation: sinon.fake()
+               };
+            component._stickyRegisterHandler(event, { id: 2 }, true);
+            sinon.stub(component, '_notify');
+            component._stickyRegisterHandler(event, { id: 3 }, true);
+
+            sinon.assert.notCalled(component._notify);
+            sinon.restore();
+         });
+
+         it('should generate event on last header unregistered', function() {
+            const
+               component = createComponent(scroll.Group, options),
+               event = {
+                  stopImmediatePropagation: sinon.fake()
+               };
+            component._stickyRegisterHandler(event, { id: 2 }, true);
+            sinon.stub(component, '_notify');
+            component._stickyRegisterHandler(event, { id: 2 }, false);
+
+            sinon.assert.calledWith(component._notify, 'stickyRegister');
+            sinon.restore();
+         });
+
+         it('should not generate event on not last header unregistered', function() {
+            const
+               component = createComponent(scroll.Group, options),
+               event = {
+                  stopImmediatePropagation: sinon.fake()
+               };
+            component._stickyRegisterHandler(event, { id: 2 }, true);
+            component._stickyRegisterHandler(event, { id: 3 }, true);
+            sinon.stub(component, '_notify');
+            component._stickyRegisterHandler(event, { id: 3 }, false);
+
+            sinon.assert.notCalled(component._notify);
+            sinon.restore();
+         });
       });
    });
 

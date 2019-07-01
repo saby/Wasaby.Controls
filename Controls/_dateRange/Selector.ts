@@ -18,7 +18,7 @@ import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
  * @control
  * @public
  * @category Input
- * @author Mironov A.U.
+ * @author Миронов А.Ю.
  * @demo Controls-demo/Input/Date/RangeLink
  *
  */
@@ -47,13 +47,13 @@ var Component = BaseControl.extend({
     },
 
     _openDialog: function (event) {
-        const quantum = this._options.quantum;
+        const ranges = this._options.ranges;
         let className = 'controls-DatePopup__selector-marginTop ';
 
         if (this._options.selectionType !== 'single' &&
-            (!quantum || (isEmpty(quantum) ||
-                (('months' in quantum || 'quarters' in quantum || 'halfyears' in quantum || 'years' in quantum) &&
-                    ('days' in quantum || 'weeks' in quantum)))) &&
+            (!ranges || (isEmpty(ranges) ||
+                (('months' in ranges || 'quarters' in ranges || 'halfyears' in ranges || 'years' in ranges) &&
+                    ('days' in ranges || 'weeks' in ranges)))) &&
             (!this._options.minRange || this._options.minRange  === 'day')) {
             className += 'controls-DatePopup__selector-marginLeft';
         } else {
@@ -84,7 +84,7 @@ var Component = BaseControl.extend({
 
         // TODO problems with ie in datePopup will be solved by the task
         //  https://online.sbis.ru/opendoc.html?guid=b2e54e78-8dae-4206-8647-559822d3d8e6
-        if (!this._options.vdomDialog || (detection.isIE && detection.IEVersion < 13)) {
+        if (!this._isVdomDialog()) {
             cfg.template = 'SBIS3.CONTROLS/Date/RangeBigChoose';
             cfg.isCompoundTemplate = true;
             cfg.templateOptions.handlers = { onChoose: this._onResultWS3.bind(this) };
@@ -95,6 +95,11 @@ var Component = BaseControl.extend({
         this._children.opener.open(cfg);
 
     },
+
+    _isVdomDialog: function() {
+        return this._options.vdomDialog && !(detection.isIE && detection.IEVersion < 13);
+    },
+
     _onResultWS3: function (event, startValue, endValue) {
         this._onResult(startValue, endValue);
     },

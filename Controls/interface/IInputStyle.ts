@@ -4,7 +4,7 @@
  * @interface Controls/interface/IInputStyle
  *
  * @public
- * @author Krasilnikov A.S.
+ * @author Красильников А.С.
  */
 interface IInputStyle {
     readonly _options: {

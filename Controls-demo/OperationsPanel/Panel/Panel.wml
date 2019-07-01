@@ -36,7 +36,7 @@
       </div>
       <div class="eventBlock">
          <span>Event that surfaced:</span>
-         <Controls.buttons:Button attr:class="demo-ResetButton" on:click="_reset()" style="linkMain3" caption="reset"/>
+         <Controls.buttons:Button attr:class="demo-ResetButton" on:click="_reset()" fontColorStyle="unaccented" viewMode="link" caption="reset"/>
          <br/>
          <span class="ControlsDemo__eventName">{{_eventName}}</span>
       </div>

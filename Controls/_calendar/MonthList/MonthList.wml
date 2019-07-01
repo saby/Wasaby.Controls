@@ -1,36 +1,40 @@
-<Controls.scroll:Container
-   attr:class="MonthList-ScrollContainer"
-   scrollbarVisible="{{false}}">
-   <Controls._calendar.MonthList.List
-      source="{{_viewSource}}"
-      sourceExt="{{_options.source}}"
-      viewMode="{{_options.viewMode}}"
-      name="months"
-      keyProperty="id"
-      markerVisibility="hidden"
-      on:drawItems="_drawItemsHandler()"
-      >
+<Controls.scroll:IntersectionObserverController on:intersect="_intersectHandler()" threshold="{{[0, 0.01, 0.99, 1]}}">
+   <Controls.scroll:Container
+      name="scroll"
+      attr:class="MonthList-ScrollContainer"
+      scrollbarVisible="{{false}}">
+      <Controls._calendar.MonthList.List
+         source="{{_viewSource}}"
+         sourceExt="{{_options.source}}"
+         viewMode="{{_options.viewMode}}"
+         name="months"
+         keyProperty="id"
+         markerVisibility="hidden"
+         on:drawItems="_drawItemsHandler()"
+         >
+         <ws:itemPadding left="null" right="null" bottom="null" top="null"/>
+         <ws:navigation source="position" view="infinity">
+            <ws:sourceConfig limit="{{2}}" position="{{_position}}" direction="both" field="id"></ws:sourceConfig>
+         </ws:navigation>
 
-      <ws:navigation source="position" view="infinity">
-         <ws:sourceConfig limit="{{2}}" position="{{_position}}" direction="both" field="id"></ws:sourceConfig>
-      </ws:navigation>
-
-      <ws:itemTemplate>
-         <ws:partial template="Controls/list:ItemTemplate"
-                     itemData="{{itemTemplate.itemData}}"
-                     highlightOnHover="{{false}}">
-            <ws:contentTemplate>
-               <ws:partial
-                  template="{{_itemTemplate}}"
-                  date="{{itemTemplate.itemData.item.date}}"
-                  extData="{{itemTemplate.itemData.item.extData}}"
-                  monthTemplate="{{_options.monthTemplate}}"
-                  dayTemplate="{{_options.dayTemplate}}"
-                  _options="{{_options}}"
-                  _getMonth="{{_getMonth}}"
-               />
-            </ws:contentTemplate>
-         </ws:partial>
-      </ws:itemTemplate>
-   </Controls._calendar.MonthList.List>
-</Controls.scroll:Container>
+         <ws:itemTemplate>
+            <ws:partial template="Controls/list:ItemTemplate"
+                        itemData="{{itemTemplate.itemData}}"
+                        highlightOnHover="{{false}}">
+               <ws:contentTemplate>
+                  <ws:partial
+                     template="{{_itemTemplate}}"
+                     date="{{itemTemplate.itemData.item.date}}"
+                     extData="{{itemTemplate.itemData.item.extData}}"
+                     monthTemplate="{{_options.monthTemplate}}"
+                     dayTemplate="{{_options.dayTemplate}}"
+                     _formatMonth="{{_formatMonth}}"
+                     _options="{{_options}}"
+                     _getMonth="{{_getMonth}}"
+                  />
+               </ws:contentTemplate>
+            </ws:partial>
+         </ws:itemTemplate>
+      </Controls._calendar.MonthList.List>
+   </Controls.scroll:Container>
+</Controls.scroll:IntersectionObserverController>

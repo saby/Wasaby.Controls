@@ -4,13 +4,32 @@ import entity = require('Types/entity');
 import 'css!theme?Controls/list';
 
 /**
+ * Специализированный тип кнопки.
+ *
+ * @class Controls/_list/AddButton
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Красильников А.С.
+ * @mixes Controls/_list/AddButton/Styles
+ *
+ *
+ * @name Controls/_list/AddButton#caption
+ * @cfg {String} Control caption text.
+ * @example
+ * <pre>
+ *    <Controls.list:AddButton caption="add record"/>
+ * </pre>
+ */
+
+/*
  * Specialized type of button.
  *
  * @class Controls/_list/AddButton
  * @extends Core/Control
  * @control
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @mixes Controls/_list/AddButton/Styles
  *
  *

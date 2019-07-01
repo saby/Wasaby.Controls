@@ -5,7 +5,7 @@ import entity = require('Types/entity');
  *
  * @interface Controls/_input/interface/IDateTimeMask
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 
 export = {

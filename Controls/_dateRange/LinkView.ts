@@ -15,7 +15,7 @@ import 'css!theme?Controls/dateRange';
  * @control
  * @private
  * @category Input
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/LinkView
  *
  */

@@ -232,23 +232,34 @@ define(
                   notEmpty: ['test']
                };
                let self = {
+                  _options: {
+                    parentProperty: 'parent',
+                    nodeProperty: 'node',
+                    rootKey: '1'
+                  },
                   _itemsModel: {
                      _display: {
                         getGroupItems: function(key) {
                            return groupItems[key];
                         }
-                     },
-                     getCount: () => {
-                        return 2;
                      }
+                  },
+                  getItems: () => {
+                     return new collectionLib.RecordSet({
+                        idProperty: 'id',
+                        rawData: [{id: '1'}, {id: '2'}]
+                     });
                   }
                };
 
                assert.isTrue(DropdownViewModel._private.needHideGroup(self, 'empty'));
                assert.isFalse(DropdownViewModel._private.needHideGroup(self, 'notEmpty'));
 
-               self._itemsModel.getCount = () => {
-                  return 1;
+               self.getItems = () => {
+                  return new collectionLib.RecordSet({
+                     idProperty: 'id',
+                     rawData: [{id: '1', parent: '1'}]
+                  });
                };
                assert.isTrue(DropdownViewModel._private.needHideGroup(self, 'notEmpty'));
             });

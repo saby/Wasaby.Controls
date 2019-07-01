@@ -50,6 +50,7 @@ const DEFAULT_CONFIG = {
     targetSide: 'top',
     alignment: 'start',
     floatCloseButton: false,
+    closeOnOutsideClick: true,
     hideDelay: INFOBOX_HIDE_DELAY,
     showDelay: INFOBOX_SHOW_DELAY
 };
@@ -65,16 +66,6 @@ const _private = {
                 }
             }
         }
-        if (cfg.float) {
-            newCfg.floatCloseButton = cfg.float;
-        }
-        if (cfg.style === 'error') {
-            Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшее значение опции style error, используйте danger');
-        }
-        if (cfg.position) {
-            Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшая опция position, используйте опции targetSide, alignment ');
-        }
-        newCfg.style = _private.prepareDisplayStyle(cfg.style);
 
         if (cfg.targetSide || cfg.alignment) {
             newCfg.position = _private.preparePosition(cfg.targetSide, cfg.alignment);
@@ -96,7 +87,7 @@ const _private = {
             maxWidth: newCfg.maxWidth,
             zIndex: newCfg.zIndex || getZIndex(newCfg.opener || this),
             eventHandlers: newCfg.eventHandlers,
-            closeOnOutsideClick: true,
+            closeOnOutsideClick: newCfg.closeOnOutsideClick,
             opener: newCfg.opener,
             templateOptions: { // for template: Opener/InfoBox/resources/template
                 template: newCfg.template,
@@ -108,19 +99,6 @@ const _private = {
             },
             template: 'Controls/popupTemplate:templateInfoBox'
         };
-    },
-    prepareDisplayStyle(color) {
-        let resColor = color;
-        if (color === 'lite') {
-            resColor = 'secondary';
-        }
-        if (color === 'error') {
-            resColor = 'danger';
-        }
-        if (color === 'help') {
-            resColor = 'warning';
-        }
-        return resColor;
     },
     preparePosition(targetSide, alignment) {
         let position = targetSide[0];
@@ -180,12 +158,6 @@ const InfoBox = BaseOpener.extend({
      *   });
      * </pre>
      */
-    _beforeMount(options) {
-        InfoBox.superclass._beforeMount.apply(this, arguments);
-        if (options.float) {
-            Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшая опция float, используйте floatCloseButton');
-        }
-    },
 
     _beforeUnmount() {
         this.close(0);
@@ -238,6 +210,7 @@ const InfoBox = BaseOpener.extend({
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ See more}.
  * @function Controls/_popup/Opener/InfoBox#openPopup
  * @param {Object} config InfoBox options. See {@link Controls/_popup/InfoBox description}.
+ * @static
  * @see closePopup
  */
 InfoBox.openPopup = (config: object): void => {
@@ -255,6 +228,7 @@ InfoBox.openPopup = (config: object): void => {
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ See more}.
  * @function Controls/_popup/Opener/InfoBox#closeInfoBox
  * @see openPopup
+ * @static
  */
 InfoBox.closePopup = (): void => {
     BaseOpener.closeDialog(InfoBoxId);
@@ -263,7 +237,7 @@ InfoBox.closePopup = (): void => {
 InfoBox.getDefaultOptions = () => {
     const options = BaseOpener.getDefaultOptions();
 
-    options.closeOnTargetScroll = true;
+    options.actionOnScroll = 'close';
     options._vdomOnOldPage = true; // Open vdom popup in the old environment
     return options;
 };

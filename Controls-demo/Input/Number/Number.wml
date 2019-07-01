@@ -50,7 +50,7 @@
                                       bind:validationErrorsValue="_validationErrorsValue"/>
       </div>
       <div>
-         <Controls.buttons:Button attr:class="demo-pasteButton" on:click="paste_text()" style="linkMain3" caption="paste"/>
+         <Controls.buttons:Button attr:class="demo-pasteButton" on:click="paste_text()" fontColorStyle="unaccented" viewMode="link" caption="paste"/>
       </div>
    </ws:componentProperty>
 </Controls-demo.Wrapper.Wrapper>

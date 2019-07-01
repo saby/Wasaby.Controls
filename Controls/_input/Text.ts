@@ -17,7 +17,7 @@ import ViewModel = require('Controls/_input/Text/ViewModel');
        * @public
        * @demo Controls-demo/Input/Text/TextPG
        *
-       * @author Krasilnikov A.S.
+       * @author Красильников А.С.
        */
 
       var _private = {

@@ -13,7 +13,6 @@
          });
       </script>
    </div>
-</ws:else>
-<ws:else>
+</ws:else><ws:else>
    <invisible-node />
 </ws:else>

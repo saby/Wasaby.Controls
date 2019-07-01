@@ -12,7 +12,7 @@ import {ITooltip, ITooltipOptions,
    IFontSize, IFontSizeOptions,
    IHeight, IHeightOptions
 } from 'Controls/interface';
-import { SyntheticEvent } from 'Core/vdom/Synchronizer/resources/SyntheticEvent';
+import { SyntheticEvent } from 'Vdom/Vdom';
 
 export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
    IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions {
@@ -40,7 +40,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @mixes Controls/_interface/ITooltip
  * @control
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @category Button
  * @demo Controls-demo/Buttons/ButtonDemoPG
  */
@@ -69,7 +69,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  */
 
 /**
- * @name Controls/Button#contrastBackground
+ * @name Controls/_buttons/Button#contrastBackground
  * @cfg {Boolean} Determines if button has contrast background.
  * @default true
  * @remark
@@ -88,7 +88,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  */
 
 /**
- * @name Controls/Button#buttonStyle
+ * @name Controls/_buttons/Button#buttonStyle
  * @cfg {Enum} Set style parameters for button. These are background color or border color for different values of viewMode
  * @variant primary
  * @variant secondary
@@ -105,7 +105,6 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
 class Button extends Control<IButtonOptions> implements
       IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize, IClick, IFontColorStyle, IFontSize, IHeight {
    protected _template: TemplateFunction = ButtonTemplate;
-   protected _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
 
    // Называть _style нельзя, так как это состояние используется для темизации
    private _buttonStyle: string;
@@ -165,6 +164,8 @@ class Button extends Control<IButtonOptions> implements
          e.stopPropagation();
       }
    }
+
+   static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
 
    static getDefaultOptions(): object {
       return {

@@ -8,7 +8,7 @@
             <div class="theme_button" on:click="changeTheme('carry')">carry</div>
             <div class="theme_button theme_dark" on:click="changeTheme('presto')">presto</div>
          </div>
-         <Controls.buttons:Button if="{{componentName !== 'Controls-demo/Index'}}" attr:id="Back" caption="Назад" viewMode="link" style="secondary" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
+         <Controls.buttons:Button if="{{componentName !== 'Controls-demo/Index'}}" attr:id="Back" caption="Назад" viewMode="link" fontColorStyle="link" iconSize="s" icon="icon-DayBackward" iconStyle="secondary" on:click="backClickHdl()" />
          <Controls.scroll:Container attr:class="ControlsDemo-Page_scrollContainer">
             <ws:partial attr:id="newListView" attr:class="ControlsDemo-Page_content" template="{{componentName}}" />
          </Controls.scroll:Container>

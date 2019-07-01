@@ -25,10 +25,10 @@
  * @example
  * В следующем примере показано, как включить возможность перемещения элементов с помощью drag'n'drop.
  * <pre>
- *    <Controls.List source="{{_viewSource}}"
+ *    <Controls.list:View source="{{_viewSource}}"
  *                   keyProperty="id"
  *                   itemsDragNDrop="allow">
- *     </Controls.List>
+ *     </Controls.list:View>
  * </pre>
  *
  * <pre>
@@ -51,10 +51,10 @@
  * @example
  * The following example shows how to enable the ability to move items using drag'n'drop.
  * <pre>
- *    <Controls.List source="{{_viewSource}}"
+ *    <Controls.list:View source="{{_viewSource}}"
  *                   keyProperty="id"
  *                   itemsDragNDrop="allow">
- *     </Controls.List>
+ *     </Controls.list:View>
  * </pre>
  *
  * <pre>
@@ -76,7 +76,7 @@
  * @example
  * В следующем примере показано, как использовать стандартный шаблон перемещения элементов.
  * <pre>
- *    <Controls.List source="{{_viewSource}}"
+ *    <Controls.list:View source="{{_viewSource}}"
  *                   keyProperty="id"
  *                   on:dragStart="_onDragStart()"
  *                   itemsDragNDrop="allow">
@@ -87,7 +87,7 @@
  *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
  *          </ws:partial>
  *       </ws:draggingTemplate>
- *    </Controls.List>
+ *    </Controls.list:View>
  * </pre>
  *
  * <pre>
@@ -118,7 +118,7 @@
  * @example
  * The following example shows how to use a standard dragging template.
  * <pre>
- *    <Controls.List source="{{_viewSource}}"
+ *    <Controls.list:View source="{{_viewSource}}"
  *                   keyProperty="id"
  *                   on:dragStart="_onDragStart()"
  *                   itemsDragNDrop="allow">
@@ -129,7 +129,7 @@
  *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
  *          </ws:partial>
  *       </ws:draggingTemplate>
- *    </Controls.List>
+ *    </Controls.list:View>
  * </pre>
  *
  * <pre>
@@ -161,11 +161,11 @@
  * @example
  * В следующем примере показано, как начать перемещение элементов с помощью drag'n'drop, если все элементы имеют одинаковый тип.
  * <pre>
- *     <Controls.List source="{{_viewSource}}"
+ *     <Controls.list:View source="{{_viewSource}}"
  *                    keyProperty="id"
  *                    on:dragStart="_dragStart()"
  *                    itemsDragNDrop="allow">
- *     </Controls.List>
+ *     </Controls.list:View>
  * </pre>
  *
  * <pre>
@@ -199,11 +199,11 @@
  * @example
  * The following example shows how to start moving items using drag'n'drop if all items are of the same type.
  * <pre>
- *     <Controls.List source="{{_viewSource}}"
+ *     <Controls.list:View source="{{_viewSource}}"
  *                    keyProperty="id"
  *                    on:dragStart="_dragStart()"
  *                    itemsDragNDrop="allow">
- *     </Controls.List>
+ *     </Controls.list:View>
  * </pre>
  *
  * <pre>
@@ -252,9 +252,9 @@
  * В следующем примере показано, как перемещать элементы с помощью Controls/_list/Mover.
  * <pre>
  *     <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
- *        <Controls.List on:dragEnd="_dragEnd()"
+ *        <Controls.list:View on:dragEnd="_dragEnd()"
  *                       itemsDragNDrop="allow">
- *        </Controls.List>
+ *        </Controls.list:View>
  *        <Controls._list.Mover name="listMover">
  *     <Controls.Container.Data>
  * </pre>
@@ -284,9 +284,9 @@
  * The following example shows how to move items using Controls/_list/Mover after the drag is complete.
  * <pre>
  *     <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
- *        <Controls.List on:dragEnd="_dragEnd()"
+ *        <Controls.list:View on:dragEnd="_dragEnd()"
  *                       itemsDragNDrop="allow">
- *        </Controls.List>
+ *        </Controls.list:View>
  *        <Controls._list.Mover name="listMover">
  *     <Controls.Container.Data>
  * </pre>
@@ -328,14 +328,14 @@
  * В следующем примере показано, как перемещать в список объекты определенного типа.
  * <pre>
  *     <Controls.Container.Data source="{{_firstSource}}" keyProperty="id">
- *        <Controls.List on:dragStart="_dragStart()"
+ *        <Controls.list:View on:dragStart="_dragStart()"
  *                       itemsDragNDrop="allow">
- *        </Controls.List>
+ *        </Controls.list:View>
  *     <Controls.Container.Data>
  *     <Controls.Container.Data source="{{_secondSource}}" keyProperty="id">
- *        <Controls.List on:dragEnter="_dragEnter()"
+ *        <Controls.list:View on:dragEnter="_dragEnter()"
  *                       itemsDragNDrop="allow">
- *        </Controls.List>
+ *        </Controls.list:View>
  *     <Controls.Container.Data>
  * </pre>
  *
@@ -373,14 +373,14 @@
  * The following example shows how to allow dragging to a list of entities of a particular type.
  * <pre>
  *     <Controls.Container.Data source="{{_firstSource}}" keyProperty="id">
- *        <Controls.List on:dragStart="_dragStart()"
+ *        <Controls.list:View on:dragStart="_dragStart()"
  *                       itemsDragNDrop="allow">
- *        </Controls.List>
+ *        </Controls.list:View>
  *     <Controls.Container.Data>
  *     <Controls.Container.Data source="{{_secondSource}}" keyProperty="id">
- *        <Controls.List on:dragEnter="_dragEnter()"
+ *        <Controls.list:View on:dragEnter="_dragEnter()"
  *                       itemsDragNDrop="allow">
- *        </Controls.List>
+ *        </Controls.list:View>
  *     <Controls.Container.Data>
  * </pre>
  *
@@ -420,9 +420,9 @@
  * В следующем примере показано, как предотвратить изменение порядка закрепленных элементов.
  * <pre>
  *    <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
- *       <Controls.List on:changeDragTarget="_changeDragTarget()"
+ *       <Controls.list:View on:changeDragTarget="_changeDragTarget()"
  *                      itemsDragNDrop="allow">
- *       </Controls.List>
+ *       </Controls.list:View>
  *    <Controls.Container.Data>
  * </pre>
  *
@@ -453,9 +453,9 @@
  * The following example shows how to prevent the change of the order of a pinned item.
  * <pre>
  *    <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
- *       <Controls.List on:changeDragTarget="_changeDragTarget()"
+ *       <Controls.list:View on:changeDragTarget="_changeDragTarget()"
  *                      itemsDragNDrop="allow">
- *       </Controls.List>
+ *       </Controls.list:View>
  *    <Controls.Container.Data>
  * </pre>
  *

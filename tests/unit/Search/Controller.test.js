@@ -132,6 +132,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          controller._misspellValue = 'testStr';
          controller._loading = true;
          controller._searchValue = 'test';
+         controller._inputSearchValue = 'testInputValue';
          controller._options.parentProperty = 'test';
          controller._options.filter = { 'Разворот': 'С разворотом', 'usePages': 'full', test: 'test', searchParam: 'testValue' };
 
@@ -146,7 +147,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.isFalse(controller._loading);
          assert.equal(controller._misspellValue, '');
          assert.equal(controller._searchValue, '');
-         assert.equal(controller._inputSearchValue, '');
+         assert.equal(controller._inputSearchValue, 'testInputValue');
          assert.deepEqual(filter, {test: 'test'});
 
          controller._options.filter = { test: 'test' };
@@ -322,21 +323,26 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
       it('itemOpenHandler', function() {
          var searchController = getSearchController(defaultOptions);
          var searchAborted = false;
+         var abortForced = false;
 
          //Controller moch
          searchController._searchController = {
-            abort: function() {
+            abort: function(force) {
                searchAborted = true;
+               abortForced = force;
             }
-         }
+         };
 
+         searchController._root = 'test';
          searchController._itemOpenHandler(null);
          assert.isFalse(searchAborted);
          assert.equal(searchController._root, null);
 
          searchController._itemOpenHandler('test');
          assert.isTrue(searchAborted);
+         assert.isTrue(abortForced);
          assert.equal(searchController._root, 'test');
+         assert.equal(searchController._inputSearchValue, '');
       });
 
    });

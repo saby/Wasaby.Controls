@@ -1,10 +1,23 @@
 import merge = require('Core/core-merge');
 
-var showSelector = function (self, popupOptions, multiSelect) {
-    var
+interface PopupOptions {
+    opener: any;
+    isCompoundTemplate: boolean;
+    templateOptions: any;
+}
+
+/**
+ * Open selector
+ * @param {Controls/_lookup/BaseController} self
+ * @param {Object} popupOptions
+ * @param {Boolean} multiSelect
+ * @returns {Promise}
+ */
+export default function(self, popupOptions, multiSelect) {
+    let
         selectorOpener = self._children.selectorOpener,
         selectorTemplate = self._options.selectorTemplate,
-        defaultPopupOptions = merge({
+        defaultPopupOptions: PopupOptions = merge({
             opener: self,
             isCompoundTemplate: self._options.isCompoundTemplate
         }, selectorTemplate && selectorTemplate.popupOptions || {});
@@ -21,8 +34,6 @@ var showSelector = function (self, popupOptions, multiSelect) {
             }
         }, selectorTemplate.templateOptions || {});
 
-        selectorOpener.open(merge(defaultPopupOptions, popupOptions || {}));
+        return selectorOpener.open(merge(defaultPopupOptions, popupOptions || {}));
     }
-};
-
-export = showSelector;
+}

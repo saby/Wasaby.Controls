@@ -40,6 +40,7 @@
                                     on:itemExpanded="_notifyHandler('itemExpanded')"
                                     on:itemCollapsed="_notifyHandler('itemCollapsed')"
                                     on:expandedItemsChanged="_notifyHandler('expandedItemsChanged')"
+                                    on:collapsedItemsChanged="_notifyHandler('collapsedItemsChanged')"
                                     itemsReadyCallback="{{_itemsReadyCallback}}"
                                     dataLoadCallback="{{_dataLoadCallback}}"/>
       </Controls._explorer.PathController>

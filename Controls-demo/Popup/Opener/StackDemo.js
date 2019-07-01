@@ -23,7 +23,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
          openModalStack: function() {
             this._children.stack.open({
                opener: this._children.button4,
-               isModal: true,
+               modal: true,
                template: 'Controls-demo/Popup/Opener/resources/StackTemplate',
                width: 600
             });
@@ -42,7 +42,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
                templateOptions: {
                   footerContentTemplate: 'wml!Controls-demo/Popup/Opener/resources/footer',
                },
-               isModal: true,
+               modal: true,
                height: 500,
                maxHeight: 700
             });

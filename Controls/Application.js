@@ -236,91 +236,9 @@ define('Controls/Application',
             }
          },
 
-
-         _beforeMount: function(cfg, context, receivedState) {
-            var self = this,
-               def = new Deferred();
-
-            var appData = AppData.getAppData();
-
-            self._scrollData = new scroll._scrollContext({pagingVisible: cfg.pagingVisible});
-
-            self.onServer = typeof window === 'undefined';
-            self.isCompatible = cfg.compat || self.compat;
-            _private.initState(self, receivedState || cfg);
-            if (!receivedState) {
-               receivedState = {};
-            }
-
-            self.buildnumber = cfg.buildnumber || Env.constants.buildnumber;
-
-            // TODO Ждем https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
-            self.appRoot = cfg.appRoot || appData.appRoot || (cfg.builder ? '/' : Env.constants.appRoot);
-            self.staticDomains = cfg.staticDomains || appData.staticDomains || Env.constants.staticDomains || '[]';
-            if (typeof self.staticDomains !== 'string') {
-               self.staticDomains = '[]';
-            }
-
-            self.wsRoot = cfg.wsRoot || Env.constants.wsRoot;
-            self.resourceRoot = cfg.resourceRoot || Env.constants.resourceRoot;
-
-            // TODO сейчас нельзя удалить, ждем реквеста https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
-            // Т.к. это должно храниться в отдельном сторе
-            self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (appData.RUMEnabled || '');
-            self.pageName = cfg.pageName || appData.pageName || '';
-            self.product = appData.product || cfg.product || Env.constants.product;
-            self.lite = cfg.lite || false;
-
-            // TODO нужно удалить после решения https://online.sbis.ru/opendoc.html?guid=a9ceff55-1c8b-4238-90a7-22dde0e1bdbe
-            self.servicesPath =  cfg.servicesPath || appData.servicesPath || Env.constants.defaultServiceUrl || '/service/';
-            self.BodyClasses = _private.calculateBodyClasses;
-            self.application = appData.application;
-
-
-            if (typeof window === 'undefined' && cfg.theme !== 'default') {
-               ThemesController.getInstance().themes = {};
-               ThemesController.getInstance().setTheme(cfg.theme);
-            }
-            var headData = AppEnv.getStore('HeadData');
-
-            self.linkResolver = new LinkResolver(headData.isDebug,
-               self.buildnumber,
-               self.wsRoot,
-               self.appRoot,
-               self.resourceRoot);
-
-            // LinkResolver.getInstance().init(context.headData.isDebug, self.buildnumber, self.appRoot, self.resourceRoot);
-
-            headData.pushDepComponent(self.application, false);
-
-            // Временно положим это в HeadData, потом это переедет в константы реквеста
-            headData.isNewEnvironment = !self.isCompatible;
-
-            if (receivedState.csses && !headData.isDebug) {
-               ThemesController.getInstance().initCss({
-                  themedCss: receivedState.csses.themedCss,
-                  simpleCss: receivedState.csses.simpleCss
-               });
-            }
-
-            /**
-             * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
-             * роутинга и с ним же надо восстанавливаться на клиенте.
-             */
-            def.callback({
-               buildnumber: self.buildnumber,
-               lite: self.lite,
-               csses: ThemesController.getInstance().getCss(),
-               appRoot: self.appRoot,
-               staticDomains: self.staticDomains,
-               wsRoot: self.wsRoot,
-               resourceRoot: self.resourceRoot,
-               templateConfig: self.templateConfig,
-               servicesPath: self.servicesPath,
-               compat: self.compat,
-               product: self.product
-            });
-            return def;
+         _beforeMount: function(cfg) {
+            this.BodyClasses = _private.calculateBodyClasses;
+            this._scrollData = new scroll._scrollContext({pagingVisible: cfg.pagingVisible});
          },
 
          _afterMount: function() {

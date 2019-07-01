@@ -2,14 +2,19 @@
    <Controls.buttons:Button if="{{componentName !== 'Controls-demo/Index'}}"
                     attr:id="Back" caption="Назад"
                     attr:style="width: 100px"
-                    viewMode="link" style="secondary" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
+                    viewMode="link" fontColorStyle="link" iconSize="s" iconStyle="secondary" icon="icon-DayBackward" on:click="backClickHdl()" />
 
    <Controls.scroll:Container attr:class="ControlsDemo-Page_scrollContainer">
       <Router.router:Route mask="app/:app">
          <Controls-demo.RootTemplateWrapper>
             <ws:if data="{{content.app && content.templateLoaded}}">
-               <Controls.Container.Async templateName="{{content.app}}"
-                                         attr:id="newListView" attr:class="ControlsDemo-Page_content"/>
+               <ws:if data="{{ isReloading }}">
+                  <invisible-node/>
+               </ws:if>
+               <ws:else>
+                  <Controls.Container.Async templateName="{{content.app}}"
+                                            attr:id="newListView" attr:class="ControlsDemo-Page_content"/>
+               </ws:else>
             </ws:if>
             <ws:else>
                <div>{{_options.correctTemplate ? 'Не указан шаблон.' : 'Шаблон не найден.'}} Может быть перейти на&nbsp;

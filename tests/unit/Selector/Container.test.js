@@ -1,4 +1,4 @@
-define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collection'], function(lookupPopup, entity, sourceLib, collection) {
+define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collection', 'Controls/operations'], function(lookupPopup, entity, sourceLib, collection, operations) {
 
    var getItems = function() {
       var items = [];
@@ -84,17 +84,21 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          var filter = {
             searchParam: 'test'
          };
-         var selection = {
-            selected: [1, 2],
-            excluded: [3, 4]
-         };
-
+         var source = new sourceLib.Memory();
+         var selection = operations.selectionToRecord({ selected: [1, 2], excluded: [3, 4] }, source.getAdapter());
          var preparedFilter = lookupPopup.Container._private.prepareFilter(filter, selection, 'searchParam');
 
-         assert.deepEqual(preparedFilter.selection.selected, [1, 2]);
-         assert.deepEqual(preparedFilter.selection.excluded, [3, 4]);
+         assert.deepEqual(preparedFilter.selection.get('marked'), ['1', '2']);
+         assert.deepEqual(preparedFilter.selection.get('excluded'), ['3', '4']);
          assert.isTrue(preparedFilter !== filter);
          assert.isTrue(!preparedFilter.searchParam);
+
+         selection = operations.selectionToRecord({ selected: [null], excluded: [null] }, source.getAdapter());
+         preparedFilter = lookupPopup.Container._private.prepareFilter(filter, selection, 'searchParam');
+         assert.deepEqual(preparedFilter.selection.get('marked'), [null]);
+         assert.deepEqual(preparedFilter.selection.get('excluded'), [null]);
+         assert.isTrue(preparedFilter !== filter);
+         assert.isTrue(preparedFilter.searchParam === 'test');
       });
 
       it('prepareResult', function() {

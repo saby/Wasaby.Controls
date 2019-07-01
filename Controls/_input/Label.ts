@@ -26,7 +26,7 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
  * @public
  * @demo Controls-demo/Label/Label
  *
- * @author Krasilnikov A.S.
+ * @author Красильников А.С.
  */
 
 /**
@@ -48,7 +48,7 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
  */
 class Label extends Control<ILabelOptions> implements ICaption {
    protected _template: TemplateFunction = LabelTemplate;
-   protected _theme: string[] = ['Controls/input'];
+
    readonly '[Controls/_interface/ICaption]': true;
 
    private _warn(labelContainer: HTMLElement, className: string, optionValue: string): void {
@@ -69,11 +69,15 @@ class Label extends Control<ILabelOptions> implements ICaption {
       this._warn(container, 'controls-Label_underline-hovered', 'hovered');
       this._warn(container, 'controls-Label_underline_color-hovered', 'fixed');
    }
+
+   static _theme: string[] = ['Controls/input'];
+
    static getDefaultOptions(): object {
       return {
          underline: 'none'
       };
    }
+
 
    static getOptionTypes(): object {
       return {

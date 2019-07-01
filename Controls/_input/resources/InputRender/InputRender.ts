@@ -16,7 +16,7 @@ import 'css!theme?Controls/input';
        * @control
        * @private
        * @category Input
-       * @author Krasilnikov A.S.
+       * @author Красильников А.С.
        */
 
       var _private = {

@@ -10,7 +10,7 @@
  * @includes _SearchController Controls/_search/_SearchController
  * @includes Styles Controls/_search/Styles
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import InputContainer = require('Controls/_search/Input/Container');

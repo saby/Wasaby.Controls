@@ -5,7 +5,7 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
    /**
     * A standard dialog template for selecting a target item for moving items.
     * <a href="/materials/demo-ws4-operations-panel">Demo examples.</a>.
-    * @class Controls/_list/Mover/MoveDialog
+    * @class Controls/MoveDialog
     * @extends Core/Control
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/interface/IFilter
@@ -15,7 +15,7 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_explorer/interface/IExplorer
     *
-    * @mixes Controls/_list/Mover/MoveDialog/Styles
+    * @mixes Controls/_MoveDialog/Styles
     * @control
     * @public
     * @author Авраменко А.С.
@@ -23,7 +23,7 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
     */
 
    /**
-    * @name Controls/_list/Mover/MoveDialog#root
+    * @name Controls/MoveDialog#root
     * @cfg {String} Identifier of the root node.
     * @default null
     */
