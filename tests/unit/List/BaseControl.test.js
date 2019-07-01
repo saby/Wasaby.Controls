@@ -1516,24 +1516,24 @@ define([
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
 
-         assert.equal(lnBaseControl._keyDisplayedItem, null);
+         assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
 
          return new Promise(function (resolve) {
             setTimeout(function () {
                lists.BaseControl._private.reload(lnBaseControl, lnCfg);
                setTimeout(function () {
-                  assert.equal(lnBaseControl._keyDisplayedItem, null);
+                  assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
                   lnCfg = clone(lnCfg);
                   lnCfg.source = lnSource2;
                   lnBaseControl._isScrollShown = true;
                   lnBaseControl._beforeUpdate(lnCfg).addCallback(function() {
-                     assert.equal(lnBaseControl._keyDisplayedItem, 4);
-                     lnBaseControl._keyDisplayedItem = null;
+                     assert.equal(lnBaseControl._markedKeyForRestoredScroll, 4);
+                     lnBaseControl._markedKeyForRestoredScroll = null;
 
                      lnCfg = clone(lnCfg);
                      lnCfg.source = lnSource3;
                      lnBaseControl._beforeUpdate(lnCfg).addCallback(function(res) {
-                        assert.equal(lnBaseControl._keyDisplayedItem, null);
+                        assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
                         resolve();
                         return res;
                      });
@@ -1541,6 +1541,52 @@ define([
                }, 10);
             },10);
          });
+      });
+
+      it('reloadRecordSet', function() {
+
+         var
+            lnSource = new sourceLib.Memory({
+               idProperty: 'id',
+               data: data
+            }),
+            lnSource2 = new sourceLib.Memory({
+               idProperty: 'id',
+               data: [{
+                  id: 4,
+                  title: 'Четвертый',
+                  type: 1
+               },
+                  {
+                     id: 5,
+                     title: 'Пятый',
+                     type: 2
+                  }]
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               markedKey: 3,
+               viewModelConstructor: lists.ListViewModel
+            },
+            lnBaseControl = new lists.BaseControl(lnCfg);
+
+         lnBaseControl.saveOptions(lnCfg);
+         lnBaseControl._beforeMount(lnCfg);
+         assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
+
+         lnBaseControl._isScrollShown = true;
+         lnBaseControl.reload().addCallback(() => {
+            assert.equal(lnBaseControl._markedKeyForRestoredScroll, 3); // set to existing markedKey
+         }).addCallback(() => {
+            let lnCfg2 = clone(lnCfg);
+            lnCfg2.source = lnSource2;
+            lnBaseControl._isScrollShown = true;
+            lnBaseControl._beforeUpdate(lnCfg2).addCallback(() => {
+               assert.equal(lnBaseControl._markedKeyForRestoredScroll, 4); // set to first item, because markedKey = 3, no longer exist
+            });
+         })
       });
 
       it('mouseEnter handler', function () {
