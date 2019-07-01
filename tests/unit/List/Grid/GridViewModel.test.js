@@ -1235,6 +1235,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.deepEqual([{}], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" with multiselect.');
             gridViewModel._prepareHeaderColumns(gridHeader, true);
             assert.deepEqual([[{}, ...gridHeader]], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" with multiselect.');
+            gridViewModel._prepareHeaderColumns([{isBreadCrumbs: true}], true);
+            assert.isTrue(gridViewModel._headerRows[0][0].hiddenForBreadCrumbs);
          });
 
          it('_prepareResultsColumns', function() {
