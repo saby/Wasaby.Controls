@@ -1,5 +1,5 @@
 <ws:template name="defaultFolderTpl">
-   <div class="controls-TileView__item js-controls-TileView__withoutZoom controls-ListView__itemV controls-TreeTileView__item js-controls-SwipeControl__actionsContainer
+   <div attr:class="controls-TileView__item js-controls-TileView__withoutZoom controls-ListView__itemV controls-TreeTileView__item js-controls-SwipeControl__actionsContainer
             {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility)}}
             controls-ListView__item_showActions
             {{marker !== false && markerVisibility !== 'hidden' && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
@@ -12,11 +12,11 @@
                              multiSelectStatus="{{itemData.multiSelectStatus}}"
                              key="{{itemData.key}}" />
       </ws:partial>
-      <span class="controls-TreeTileView__nodeIcon icon-large icon-Folder icon-disabled"></span>
+      <span attr:class="controls-TreeTileView__nodeIcon icon-large icon-Folder icon-disabled"></span>
       <ws:if data="{{!!itemData.dragTargetNode}}">
-         <div class="controls-TreeTileView__dragTargetNode"></div>
+         <div attr:class="controls-TreeTileView__dragTargetNode"></div>
       </ws:if>
-      <div class="controls-TreeTileView__title" title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}</div>
+      <div attr:class="controls-TreeTileView__title" title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}</div>
       <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
                   highlightOnHover="{{highlightOnHover}}"
                   template="{{swipeTemplate}}"
@@ -46,7 +46,7 @@
       multiSelectTpl="{{multiSelectTpl}}"/>
 </ws:template>
 <ws:if data="{{invisible}}">
-   <div class="controls-TileView__item controls-TileView__item_invisible"
+   <div attr:class="controls-TileView__item controls-TileView__item_invisible"
         attr:style="{{'-ms-flex-preferred-size: ' + (type === 'leaf' ? (itemWidth || itemData.defaultItemWidth) : (folderWidth || itemData.defaultFolderWidth)) + 'px; ' +
                      'flex-basis: ' + (type === 'leaf' ? (itemWidth || itemData.defaultItemWidth) : (folderWidth || itemData.defaultFolderWidth)) + 'px;'}}"></div>
 </ws:if>
