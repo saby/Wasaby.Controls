@@ -18,7 +18,7 @@
 </ws:if>
 <ws:else>
     <ws:if data="{{itemData.column.textOverflow}}">
-        <div class="controls-Grid__cell_{{itemData.column.textOverflow}}">
+        <div class="controls-Grid__cell_{{itemData.column.textOverflow}}" title="{{itemData.column.template ? '' : itemData.item[itemData.column.displayProperty] }}">
             <ws:partial template="defaultCellContent"/>
         </div>
     </ws:if>
