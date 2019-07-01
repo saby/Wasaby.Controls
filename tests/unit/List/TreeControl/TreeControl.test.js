@@ -335,14 +335,15 @@ define([
 
 
       it('TreeControl._afterUpdate', function() {
+         var source = new sourceLib.Memory({
+            data: [],
+            idProperty: 'id'
+         });
          var treeControl = correctCreateTreeControl({
             columns: [],
             root: 1,
             parentProperty: 'testParentProperty',
-            source: new sourceLib.Memory({
-               data: [],
-               idProperty: 'id'
-            })
+            source: source
          });
          var treeViewModel = treeControl._children.baseControl.getViewModel();
          var isNeedForceUpdate = false;
@@ -401,7 +402,7 @@ define([
             setTimeout(function() {
                treeControl._options.root = undefined;
                treeControl._root = 12;
-               treeControl._afterUpdate({filter: {}});
+               treeControl._afterUpdate({filter: {}, source: source});
                setTimeout(function() {
                   assert.deepEqual([], treeViewModel.getExpandedItems());
                   assert.equal(12, treeViewModel._model._root);
@@ -483,12 +484,13 @@ define([
             setRootCalled = false,
             filterOnOptionChange = null,
             isSourceControllerDestroyed = false,
+            source = new sourceLib.Memory({
+               data: [],
+               idProperty: 'id'
+            }),
             treeControl = correctCreateTreeControl({
                columns: [],
-               source: new sourceLib.Memory({
-                  data: [],
-                  idProperty: 'id'
-               }),
+               source: source,
                items: new collection.RecordSet({
                   rawData: [],
                   idProperty: 'id'
@@ -545,7 +547,7 @@ define([
                      reject(e);
                   }
 
-                  treeControl._afterUpdate({root: null, filter: {}});
+                  treeControl._afterUpdate({root: null, filter: {}, source: source});
                   treeControl._children.baseControl._sourceController._loader.addCallback(function() {
                      try {
                         assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
