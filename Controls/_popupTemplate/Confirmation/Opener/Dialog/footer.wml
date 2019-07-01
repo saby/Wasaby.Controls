@@ -21,7 +21,7 @@
             on:click="_sendResultHandler(true)"
          />
       </div>
-      <div class="controls-ConfirmationDialog__button-{{type === 'yesnocancel' ? 'mini' : 'standard'}}">
+      <div class="controls-ConfirmationDialog__button-{{type === 'yesnocancel' ? 'mini' : 'standard'}} controls-ConfirmationDialog__no-cancel-button">
          <Controls.buttons:Button
             style="{{primaryAction === 'no' ? 'primary' : 'secondary'}}"
             caption="{{noCaption}}"
@@ -30,7 +30,7 @@
          />
       </div>
       <ws:if data="{{type === 'yesnocancel'}}">
-         <div class="controls-ConfirmationDialog__button-mini">
+         <div class="controls-ConfirmationDialog__button-mini controls-ConfirmationDialog__no-cancel-button">
             <Controls.buttons:Button
                caption="{{cancelCaption}}"
                attr:class="controls-ConfirmationDialog__button controls-Button__ellipsis"
