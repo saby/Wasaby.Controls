@@ -402,6 +402,12 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             textValue: 'textTextValue',
             resetValue: '',
             visibility: true
+         }, {
+            id: 'testId5',
+            value: 'testValue5',
+            textValue: null,
+            resetValue: 'resetValue',
+            visibility: true
          }];
          var minItems = Filter._private.minimizeFilterItems(items);
          assert.deepEqual(minItems, [{
@@ -411,7 +417,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             visibility: undefined
          }, {
             id: 'testId2',
-            value: '',
+            value: 'testValue',
             textValue: undefined,
             visibility: false
          }, {
@@ -424,6 +430,11 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             value: 'testValue4',
             textValue: 'textTextValue',
             visibility: true
+         }, {
+            id: 'testId5',
+            value: 'resetValue',
+            textValue: undefined,
+            visibility: false
          }]);
       });
 
