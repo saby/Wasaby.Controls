@@ -604,9 +604,10 @@ define(
                   assert.equal(fastFilter._configs[3]._items.getCount(), 2);
 
                   newConfigItems.items[3].value = 'Великобритания';
-                  newConfigItems.items[2].properties.filter = {key: 1};
+                  newConfigItems.items[3].properties.filter = {key: 1};
                   fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
                      assert.equal(fastFilter._items.at(3).value, 'Великобритания');
+                     assert.equal(fastFilter._configs[3]._items.getCount(), 1);
                      done();
                   });
                });
