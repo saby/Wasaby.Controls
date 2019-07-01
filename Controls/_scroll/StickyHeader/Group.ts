@@ -11,7 +11,7 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
        *
        * @extends Core/Control
        * @class Controls/_scroll/StickyHeader/Group
-       * @author Миронов А.Ю.
+       * @author Красильников А.С.
        */
 
       /**
@@ -53,6 +53,7 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
          _shadowVisible: false,
 
          _headers: null,
+         _isRegistry: false,
 
          _beforeMount: function(options, context, receivedState) {
             this._isStickySupport = stickyUtils.isStickySupport();
@@ -86,6 +87,7 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
             for (var id in this._headers) {
                this._headers[id].inst.top = value;
             }
+            this._top = value;
          },
          set bottom(value) {
             for (var id in this._headers) {
@@ -125,16 +127,20 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
          _stickyRegisterHandler: function(event, data, register) {
             event.stopImmediatePropagation();
             if (register) {
+               if (this._top) {
+                  data.inst.top = this._top;
+               }
                this._headers[data.id] = data;
 
                // Register group after first header is registred
-               if (Object.keys(this._headers).length === 1) {
+               if (!this._isRegistry) {
                   this._notify('stickyRegister', [{
                      id: this._index,
                      inst: this,
                      position: data.position,
                      mode: data.mode,
                   }, true], { bubbling: true });
+                  this._isRegistry = true;
                }
             } else {
                delete this._headers[data.id];
@@ -142,6 +148,7 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
                // Unregister group after last header is unregistred
                if (!Object.keys(this._headers).length) {
                   this._notify('stickyRegister', [{ id: this._index }, false], { bubbling: true });
+                  this._isRegistry = false;
                }
             }
          }

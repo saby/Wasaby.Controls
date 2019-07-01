@@ -5,7 +5,7 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
 import keysHandler = require('Controls/Utils/keysHandler');
-import isEmpty = require('Core/helpers/Object/isEmpty');
+import {isEqual} from 'Types/object';
 
 var
     HOT_KEYS = {
@@ -165,10 +165,23 @@ var _private = {
     },
 
     afterReloadCallback: function(self, options) {
-        // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-        if (self._children.baseControl && !_private.isDeepReload(options, self._deepReload)) {
-            self._children.baseControl.getViewModel().resetExpandedItems();
+        const viewModel = self._children.baseControl && self._children.baseControl.getViewModel();
+
+        if (viewModel) {
+            const modelRoot = viewModel.getRoot();
+            const root = self._options.root !== undefined ? self._options.root : self._root;
+            const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
+
+            // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
+            if (!_private.isDeepReload(options, self._deepReload)) {
+                viewModel.resetExpandedItems();
+            }
+
+            if (viewModelRoot !== root) {
+                viewModel.setRoot(root);
+            }
         }
+
         //reset deepReload after loading data (see reload method or constructor)
         self._deepReload = false;
     },
@@ -228,6 +241,7 @@ var _private = {
         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
         listModel.subscribe('onNodeRemoved', self._onNodeRemovedFn);
         listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
+        listModel.subscribe('collapsedItemsChanged', self._onCollapsedItemsChanged.bind(self));
     },
 
     nodeChildsIterator: function(viewModel, nodeKey, nodeProp, nodeCallback, leafCallback) {
@@ -267,6 +281,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _updatedRoot: false,
     _deepReload: false,
     _nodesSourceControllers: null,
+    _needResetExpandedItems: false,
     _beforeReloadCallback: null,
     _afterReloadCallback: null,
     _beforeLoadToDirectionCallback: null,
@@ -286,7 +301,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
     _afterMount: function() {
         _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
-        this._children.baseControl.getViewModel().subscribe('collapsedItemsChanged', this._onCollapsedItemsChanged.bind(this));
     },
 
     _dataLoadCallback: function() {
@@ -302,7 +316,10 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._root = newOptions.root;
             this._updatedRoot = true;
         }
-
+        if (this._needResetExpandedItems) {
+            this._children.baseControl.getViewModel().resetExpandedItems();
+            this._needResetExpandedItems = false;
+        }
         //если expandedItems задана статично, то при обновлении в модель будет отдаваться всегда изначальная опция. таким образом происходит отмена разворота папок.
         if (newOptions.expandedItems) {
             this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
@@ -326,12 +343,12 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._updatedRoot = false;
             _private.clearSourceControllers(this);
             var self = this;
-
             //При смене корне, не надо запрашивать все открытые папки, т.к. их может не быть и мы загрузим много лишних данных.
-            this._children.baseControl.getViewModel().resetExpandedItems();
-            this._children.baseControl.reload().addCallback(function() {
-                self._children.baseControl.getViewModel().setRoot(self._root);
-            });
+            this._needResetExpandedItems = true;
+            //If filter was changed, do not need to reload again, baseControl reload list in beforeUpdate
+            if (isEqual(this._options.filter, oldOptions.filter)) {
+                this._children.baseControl.reload();
+            }
         }
         if ((oldOptions.groupMethod !== this._options.groupMethod) || (oldOptions.viewModelConstructor !== this._viewModelConstructor)) {
             _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
@@ -355,12 +372,12 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _onLoadMoreClick: function(e, dispItem) {
         _private.loadMore(this, dispItem);
     },
-    _onExpandedItemsChanged(e, expandedItems){
+    _onExpandedItemsChanged(e, expandedItems) {
         this._notify('expandedItemsChanged', [expandedItems]);
         //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные expandedItems
         this._forceUpdate();
     },
-    _onCollapsedItemsChanged(e, collapsedItems){
+    _onCollapsedItemsChanged(e, collapsedItems) {
         this._notify('collapsedItemsChanged', [collapsedItems]);
         //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные collapsedItems
         this._forceUpdate();

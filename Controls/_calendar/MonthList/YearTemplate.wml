@@ -1,15 +1,41 @@
-<div class="controls-MonthList__year">
-   <div class="controls-MonthList__year-header">{{date.getFullYear()}}</div>
-   <div  class="controls-MonthList__year-months">
-      <ws:for data="month in 12">
-         <ws:partial
-            template="{{_options.monthTemplate}}"
-            date="{{_getMonth(date.getFullYear(), month)}}"
-            extData="{{extData[month]}}"
-            _options="{{_options}}"
-            _getMonth="{{_getMonth}}"
-            dayTemplate="{{dayTemplate}}"
-         />
-      </ws:for>
+<Controls.scroll:IntersectionObserverContainer data="{{ date }}">
+   <div class="controls-MonthList__year">
+      <div class="controls-MonthList__year-header">
+         <ws:if data="{{headerTemplate}}">
+            <ws:partial
+               template="{{headerTemplate}}"
+               date="{{date}}"
+               extData="{{extData}}"
+               _options="{{_options}}"
+            />
+         </ws:if>
+         <ws:else>
+            {{date.getFullYear()}}
+         </ws:else>
+      </div>
+
+      <div  class="controls-MonthList__year-months">
+         <ws:if data="{{bodyTemplate}}">
+            <ws:partial
+               template="{{headerTemplate}}"
+               date="{{date}}"
+               extData="{{extData}}"
+               _options="{{_options}}"
+            />
+         </ws:if>
+         <ws:else>
+            <ws:for data="month in 12">
+               <ws:partial
+                  template="{{_options.monthTemplate}}"
+                  date="{{_getMonth(date.getFullYear(), month)}}"
+                  extData="{{extData[month]}}"
+                  _formatMonth="{{_formatMonth}}"
+                  _options="{{_options}}"
+                  _getMonth="{{_getMonth}}"
+                  dayTemplate="{{dayTemplate}}"
+               />
+            </ws:for>
+         </ws:else>
+      </div>
    </div>
-</div>
+</Controls.scroll:IntersectionObserverContainer>

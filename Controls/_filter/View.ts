@@ -16,6 +16,20 @@ import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
 
 /**
+ * Контрол для фильтрации данных. Состоит из иконки-кнопки, строкового представления выбранного фильтра и параметров быстрого фильтра.
+ * При клике на иконку-кнопку или строку представления открывается панель фильтров. {@link Controls/filterPopup:DetailPanel}
+ * Клик на параметры быстрого фильтра открывает простую панель. {@link Controls/filterPopup:SimplePanel}
+ * <a href="/materials/demo-ws4-filter-view">Демо-пример</a>.
+ *
+ * @class Controls/_filter/View
+ * @extends Core/Control
+ * @mixes Controls/_filter/interface/IFilterView
+ * @control
+ * @public
+ * @author Золотова Э.Е.
+ */
+
+/*
  * Control for data filtering. Consists of an icon-button, a string representation of the selected filter and fast filter parameters.
  * Clicking on a icon-button or a string opens the detail panel. {@link Controls/filterPopup:DetailPanel}
  * Clicking on fast filter parameters opens the simple panel. {@link Controls/filterPopup:SimplePanel}
@@ -295,8 +309,11 @@ var Filter = Control.extend({
 
     _beforeUpdate: function(newOptions) {
         if (newOptions.source && newOptions.source !== this._options.source) {
+            const self = this;
             _private.prepareItems(this, newOptions.source);
-            return _private.reload(this);
+            return _private.reload(this).addCallback(function() {
+                self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
+            });
         }
     },
 
@@ -326,8 +343,11 @@ var Filter = Control.extend({
             let items = new RecordSet({
                 rawData: _private.setPopupConfig(this, this._configs, this._source)
             });
-            let popupOptions = { template: this._options.panelTemplateName,
-                                 className: 'controls-FilterView-SimplePanel-popup' };
+            let popupOptions = {
+                template: this._options.panelTemplateName,
+                actionOnScroll: 'close',
+                className: 'controls-FilterView-SimplePanel-popup'
+            };
             if (fastItem) {
                 popupOptions.target = this._children[fastItem.name];
             }

@@ -129,12 +129,14 @@ import entity = require('Types/entity');
             return {
                opener: self,
                target: self._container,
-               template: self._options.templateName || self._options.template,
+               template: self._options.template,
                position: self._options.position,
                targetSide: self._options.targetSide,
                alignment: self._options.alignment,
                style: self._options.style,
-               floatCloseButton: self._options.floatCloseButton || self._options.float,
+                //InfoBox close by outside click only if trigger is set to 'demand' or 'click'.
+               closeOnOutsideClick: self._options.trigger === 'click' || self._options.trigger === 'demand',
+               floatCloseButton: self._options.floatCloseButton,
                eventHandlers: {
                   onResult: self._resultHandler,
                   onClose: self._closeHandler

@@ -16,6 +16,7 @@
                   attr:class="demo-Grid__control demo-PopupEditOpener__grid"
                   itemPadding="{{ _itemPadding }}"
                   displayProperty="title"
+                  dataLoadCallback="{{_dataLoadCallback}}"
                   rowSeparatorVisibility="{{true}}"
                   header="{{gridHeader}}"
                   itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
@@ -35,5 +36,9 @@
             <ws:templateOptions source="{{_viewSource}}" width="{{400}}" isFormControllerDemo="{{true}}"/>
          </Controls.popup:Edit>
       </Controls.popup:EditContainer>
+
+      <Controls.buttons:Button caption="Добавить 10 записей" on:click="_addRecords()" class="demo-PopupEditOpener__addRecords"/>
+      <Controls.buttons:Button caption="Обновить записи" on:click="_mergeRecords()" class="demo-PopupEditOpener__mergeRecords"/>
+      <Controls.buttons:Button caption="Удалить записи" on:click="_deleteRecords()" class="demo-PopupEditOpener__deleteRecords"/>
    </div>
 </Controls.list:DataContainer>

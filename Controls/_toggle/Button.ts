@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import Classes from './Button/Classes';
-import {buttonTemplate, iconsUtil} from 'Controls/buttons';
+import {ActualApi} from 'Controls/buttons';
+import ToggleButtonTemplate = require('wml!Controls/_toggle/Button/Button');
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {ITooltip, ITooltipOptions, IButton, IButtonOptions, IIconStyle, IIconStyleOptions} from 'Controls/interface';
 
@@ -12,6 +13,25 @@ export interface IToggleButtonOptions extends
 }
 
 /**
+ * Кнопка, которая переключается между двумя состояниями: включено и выключено.
+ *
+ * <a href="/materials/demo-ws4-buttons">Демо-пример</a>.
+ *
+ * @class Controls/_toggle/Button
+ * @implements Controls/_toggle/interface/ICheckable
+ * @implements Controls/_interface/ITooltip
+ * @implements Controls/_interface/IButton
+ * @implements Controls/_interface/IIconStyle
+ * @mixes Controls/_toggle/Button/Styles
+ * @control
+ * @public
+ * @author Красильников А.С.
+ * @category Toggle
+ *
+ * @demo Controls-demo/Buttons/Toggle/ToggleButtonPG
+ */
+
+/*
  * Button that switches between two states: on-state and off-state.
  *
  * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
@@ -24,13 +44,29 @@ export interface IToggleButtonOptions extends
  * @mixes Controls/_toggle/Button/Styles
  * @control
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @category Toggle
  *
  * @demo Controls-demo/Buttons/Toggle/ToggleButtonPG
  */
 
 /**
+ * @name Controls/_toggle/Button#icons
+ * @cfg {Array} Пара иконок.
+ * Первая иконка отображается, когда переключатель выключен.
+ * Первая иконка отображается, когда переключатель включен.
+ * @example
+ * Переключатель с одной иконкой:
+ * <pre>
+ *    <Controls.toggle:Button icons="{{['icon-small icon-ArrangeList03']}}" viewMode="link"/>
+ * </pre>
+ * Переключатель с двумя иконками:
+ * <pre>
+ *    <Controls.toggle:Button icons="{{['icon-small icon-ArrangeList03', 'icon-small icon-ArrangeList04']}}" iconStyle="success" style="primary" viewMode="link"/>
+ * </pre>
+ */
+
+/*
  * @name Controls/_toggle/Button#icons
  * @cfg {Array} Pair of icons.
  * First icon displayed when toggle switch is off.
@@ -48,6 +84,22 @@ export interface IToggleButtonOptions extends
 
 /**
  * @name Controls/_toggle/Button#captions
+ * @cfg {Array} Пара заголовков.
+ * Первый заголовок отображается, когда переключатель в состоянии "выключено".
+ * Второй заголовок отображается, когда переключатель в состоянии "включено".
+ * @example
+ * Переключатель с двумя заголовками:
+ * <pre>
+ *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link"/>
+ * </pre>
+ * Переключатель с одним заголовком
+ * <pre>
+ *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Save']}}" style="info" viewMode="link"/>
+ * </pre>
+ */
+
+/*
+ * @name Controls/_toggle/Button#captions
  * @cfg {Array} Pair of captions.
  * First caption displayed when toggle switch is off.
  * Second caption displayed when toggle switch is on.
@@ -63,6 +115,28 @@ export interface IToggleButtonOptions extends
  */
 
 /**
+ * @name Controls/_toggle/Button#viewMode
+ * @cfg {Enum} Кнопка переключения режима отображения.
+ * @variant link Декорированная гиперссылка.
+ * @variant pushButton Декорированная гиперссылка, преобразованная в кнопку на панели инструментов.
+ * @variant toolButton Кнопка на панели инструментов.
+ * @default link
+ * @example
+ * Кнопка-переключатель в режиме отображения - 'link'.
+ * <pre>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" style="primary" viewMode="link" size="xl"/>
+ * </pre>
+ * Кнопка-переключатель в режиме отображения - 'toolButton'.
+ * <pre>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" style="danger" viewMode="toolButton"/>
+ * </pre>
+ * Кнопка-переключатель в режиме отображения - 'pushButton'.
+ * <pre>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" style="primary" viewMode="pushButton"/>
+ * </pre>
+ */
+
+/*
  * @name Controls/_toggle/Button#viewMode
  * @cfg {Enum} Toggle button view mode.
  * @variant link Decorated hyperlink.
@@ -90,8 +164,8 @@ const stickyButton = [
 
 class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
-   protected _template: TemplateFunction = buttonTemplate;
-   protected _theme: string[] = ['Controls/buttons', 'Controls/toggle'];
+   protected _template: TemplateFunction = ToggleButtonTemplate;
+
    protected _icon: string;
    protected _buttonStyle: string;
    protected _transparent: boolean;
@@ -110,7 +184,7 @@ class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
       this._state = (stickyButton.indexOf(this._viewMode) !== -1 && options.value ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
       this._caption = (options.captions ? (!options.value && options.captions[1] ? options.captions[1] : options.captions[0]) : '');
       this._icon = (options.icons ? (!options.value && options.icons[1] ? options.icons[1] : options.icons[0]) : '');
-      this._iconStyle = iconsUtil.iconStyleTransformation(options.iconStyle);
+      this._iconStyle = ActualApi.iconStyleTransformation(options.iconStyle);
    }
 
    private _clickHandler(): void {
@@ -127,6 +201,7 @@ class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
       this._optionsGeneration(newOptions);
    }
 
+   static _theme: string[] = ['Controls/buttons', 'Controls/toggle'];
    static getDefaultOptions(): object {
       return {
          viewMode: 'link',

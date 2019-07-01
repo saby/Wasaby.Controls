@@ -91,32 +91,13 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
          },
 
          onResizeContainer: function(self, container, withObserver) {
-            var scrollCompensation = 0;
             var sizeCache = _private.getSizeCache(self, container);
-            if (self._needCompensation) {
-               var prevHeight = sizeCache.scrollHeight;
-               var curHeight = container.scrollHeight;
 
-               if (self._scrollTopCache < (curHeight - prevHeight)) {
-                  scrollCompensation = curHeight - prevHeight;
-               }
-            }
             _private.calcSizeCache(self, container);
             sizeCache = _private.getSizeCache(self, container);
-            container.scrollTop = self._scrollTopCache;
             _private.sendCanScroll(self, sizeCache.clientHeight, sizeCache.scrollHeight);
             if (!withObserver) {
-               if (scrollCompensation) {
-                  container.scrollTop += scrollCompensation;
-
-                  //TODO https://online.sbis.ru/opendoc.html?guid=0fb7a3a6-a05d-4eb3-a45a-c76cbbddb16f
-                  //если была компенсация скролла, то следующую проверку необходимости надо звать по таймауту, чтоб подскролл точно успел пройти
-                  window.setTimeout(function() {
-                     _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
-                  }, 60);
-               } else {
-                  _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
-               }
+               _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
             }
 
          },
@@ -165,8 +146,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 
          },
 
-         // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
-         initIntersectionObserver: function(self, elements, component, task1177135045) {
+         initIntersectionObserver: function(self, elements, component) {
             if (!self._observers[component.getInstanceId()]) {
                let eventName;
                let curObserver: IntersectionObserver;
@@ -189,18 +169,18 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                               eventName = 'loadBottomStop';
                            }
                            break;
-                        case elements.topListTrigger:
+                        case elements.topVirtualScrollTrigger:
                            if (changes[i].isIntersecting) {
-                              eventName = 'listTop';
-                           } else if (task1177135045) {
-                               eventName = 'listTopStop';
+                              eventName = 'virtualPageTopStart';
+                           } else {
+                               eventName = 'virtualPageTopStop';
                            }
                            break;
-                        case elements.bottomListTrigger:
+                        case elements.bottomVirtualScrollTrigger:
                            if (changes[i].isIntersecting) {
-                              eventName = 'listBottom';
-                           } else if (task1177135045) {
-                               eventName = 'listBottomStop';
+                              eventName = 'virtualPageBottomStart';
+                           } else {
+                               eventName = 'virtualPageBottomStop';
                            }
                            break;
                      }
@@ -214,8 +194,8 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                curObserver.observe(elements.topLoadTrigger);
                curObserver.observe(elements.bottomLoadTrigger);
 
-               curObserver.observe(elements.topListTrigger);
-               curObserver.observe(elements.bottomListTrigger);
+               curObserver.observe(elements.topVirtualScrollTrigger);
+               curObserver.observe(elements.bottomVirtualScrollTrigger);
 
                self._observers[component.getInstanceId()] = curObserver;
             }
@@ -254,13 +234,6 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                   } else {
                      if (scrollParam === 'pageDown') {
                         container.scrollTop += clientHeight;
-                     } else {
-                        if (scrollParam === 'scrollCompensation') {
-                           if (container.scrollTop === 0) {
-                              container.scrollTop = 1;
-                           }
-                           self._needCompensation = true;
-                        }
                      }
                   }
                }
@@ -284,12 +257,17 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
          _scrollTopTimer: null,
          _scrollPositionCache: null,
          _canScrollCache: null,
-         _needCompensation: false,
 
          constructor: function() {
             Scroll.superclass.constructor.apply(this, arguments);
             this._sizeCache = {};
             this._observers = {};
+
+            // говорим браузеру не восстанавливать скролл на то место, на котором он был перед релоадом страницы
+            // TODO Kingo
+            if (window && window.history && 'scrollRestoration' in window.history) {
+               window.history.scrollRestoration = 'manual';
+            }
          },
 
          _beforeMount: function() {
@@ -320,16 +298,13 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             _private.onResizeContainer(this, _private.getDOMContainer(this._container), withObserver);
          },
 
-          // https://online.sbis.ru/opendoc.html?guid=b1bb565c-43de-4e8e-a6cc-19394fdd1eba
-         _registerIt: function(event, registerType, component, callback, triggers, task1177135045) {
+         _registerIt: function(event, registerType, component, callback, triggers) {
             if (registerType === 'listScroll') {
                this._registrar.register(event, component, callback);
 
-               //IntersectionObserver doesn't work correctly in Edge and Firefox
-               //https://online.sbis.ru/opendoc.html?guid=aa514bbc-c5ac-40f7-81d4-50ba55f8e29d
-               if (global && global.IntersectionObserver && triggers && !Env.detection.isIE && !Env.detection.isIE12 && !Env.detection.firefox) {
+               if (global && global.IntersectionObserver && triggers) {
                   this._canObserver = true;
-                  _private.initIntersectionObserver(this, triggers, component, task1177135045);
+                  _private.initIntersectionObserver(this, triggers, component);
                }
 
                _private.onRegisterNewComponent(this, _private.getDOMContainer(this._container), component, this._canObserver);
@@ -349,6 +324,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                this._registrar.unregister(event, component);
                if (this._observers && this._observers[component.getInstanceId()]) {
                   this._observers[component.getInstanceId()].disconnect();
+                  delete(this._observers[component.getInstanceId()]);
                }
             }
          },

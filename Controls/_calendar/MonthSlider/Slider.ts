@@ -73,7 +73,7 @@ var _private = {
  * @extends Core/Control
  * @control
  * @private
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @noShow
  */
 

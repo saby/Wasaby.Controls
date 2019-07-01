@@ -20,10 +20,17 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
 
    var _private = {
       initializeConstants: function(self) {
+         let
+            fieldWrapperStyles,
+            templateOptions = {
+               theme: self._options.theme
+            };
+
          if (!SHOW_SELECTOR_WIDTH) {
-            SHOW_SELECTOR_WIDTH = getWidthUtil.getWidth(self._showSelectorTemplate());
-            CLEAR_RECORDS_WIDTH = getWidthUtil.getWidth(self._clearRecordsTemplate());
-            LEFT_OFFSET_COUNTER = parseInt(getComputedStyle(self._fieldWrapper).paddingLeft, 10);
+            fieldWrapperStyles = getComputedStyle(self._fieldWrapper);
+            SHOW_SELECTOR_WIDTH = getWidthUtil.getWidth(self._showSelectorTemplate(templateOptions));
+            CLEAR_RECORDS_WIDTH = getWidthUtil.getWidth(self._clearRecordsTemplate(templateOptions));
+            LEFT_OFFSET_COUNTER = parseInt(fieldWrapperStyles.paddingLeft, 10) + parseInt(fieldWrapperStyles.borderLeftWidth, 10);
          }
       },
 
@@ -261,7 +268,7 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
          return !options.readOnly && (this._isEmpty(options) || options.multiSelect);
       },
 
-      _openInfoBox: function(config) {
+      _openInfoBox: function(event, config) {
          LookupView.superclass._openInfoBox.apply(this, arguments);
          config.offset = {
             horizontal: -LEFT_OFFSET_COUNTER

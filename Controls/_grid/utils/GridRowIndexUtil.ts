@@ -2,7 +2,7 @@ import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil')
 import {Collection, CollectionItem} from 'Types/display'
 
 /**
- * @author Rodionov E.A.
+ * @author Родионов Е.А.
  */
 
 
@@ -16,8 +16,10 @@ import {Collection, CollectionItem} from 'Types/display'
 interface IBaseGridRowIndexOptions {
     display: Collection<unknown, CollectionItem<unknown>>;
     hasHeader: boolean;
+    hasBottomPadding: boolean;
     resultsPosition?: 'top' | 'bottom';
     multyHeaderOffset?: number;
+    editingRowIndex?: number
 }
 
 /**
@@ -100,25 +102,52 @@ function getIndexByDisplayIndex(cfg: GridRowIndexOptions<DisplayItemIndex>): num
  * @param {GridRowIndexOptions<HasEmptyTemplate>} cfg Конфигурационый объект.
  * @return {Number} Номер строки в списке для строки результатов.
  */
-// offset
 function getResultsIndex(cfg: GridRowIndexOptions<HasEmptyTemplate>): number {
 
     let index = cfg.hasHeader ? 1 : 0;
     index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
 
     if (cfg.resultsPosition === "bottom") {
-        let itemsCount = cfg.display.getCount();
+        let
+            itemsCount = cfg.display.getCount(),
+            hasEditingItem = typeof cfg.editingRowIndex === "number";
 
         if (itemsCount) {
             index += itemsCount;
         } else {
             index += cfg.hasEmptyTemplate ? 1 : 0;
         }
+
+        index += hasEditingItem ? 1 : 0;
+        index += cfg.hasBottomPadding ? 1 : 0;
     }
 
     return index;
 }
 
+
+/**
+ * Возвращает номер строки в списке для строки-отступа между последней записью в таблице и
+ * результатами/подвалом/нижней границей таблицы.
+ *
+ * @param {GridRowIndexOptions} cfg Конфигурационый объект.
+ * @return {Number} Номер строки в списке для строки-отступа.
+ */
+function getBottomPaddingRowIndex(cfg: GridRowIndexOptions): number {
+    let
+        index = 0,
+        isResultsInTop = cfg.resultsPosition === "top",
+        itemsCount = cfg.display.getCount(),
+        hasEditingItem = typeof cfg.editingRowIndex === "number";
+
+    index += cfg.hasHeader ? 1 : 0;
+    index += isResultsInTop ? 1 : 0;
+    index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
+    index += hasEditingItem ? 1 : 0;
+    index += itemsCount;
+
+    return index;
+}
 
 
 /**
@@ -131,11 +160,14 @@ function getResultsIndex(cfg: GridRowIndexOptions<HasEmptyTemplate>): number {
 function getFooterIndex(cfg: GridRowIndexOptions<HasEmptyTemplate>): number {
     let
         hasResults = !!cfg.resultsPosition,
-        itemsCount = cfg.display.getCount(), index = 0;
+        itemsCount = cfg.display.getCount(), index = 0,
+        hasEditingItem = typeof cfg.editingRowIndex === "number";
 
     index += cfg.hasHeader ? 1 : 0;
     index += hasResults ? 1 : 0;
+    index += cfg.hasBottomPadding ? 1 : 0;
     index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
+    index += hasEditingItem ? 1 : 0;
 
     if (itemsCount) {
         index += itemsCount;
@@ -184,18 +216,16 @@ function getItemRealIndex(cfg: GridRowIndexOptions<DisplayItemIndex>): number {
 /**
  * Функция takeWhile, для пика элеменотов до условия в отсортированном массиве.
  */
-
 const takeWhile = (f, xs) => xs.length ? takeWhileNotEmpty(f, xs) : [];
 const takeWhileNotEmpty = (f, [x, ...xs]) =>  f(x) ? [x, ...takeWhile(f, xs)] : [];
 
 /**
  * Функция сортировки колонок хэдера начиная с левой стороны.
- * @param {Array} массив строк хэдера.
- * @return {Array} отсортированный массив строк хэдера.
+ * @param {Array} array Массив строк хэдера.
+ * @return {Array} Отсортированный массив строк хэдера.
  */
-
-function sortedColumns(arr) {
-    return arr.map((cur) => {
+function sortedColumns(array) {
+    return array.map((cur) => {
         const sort = cur.sort((a, b) => {
             if (a.startColumn > b.startColumn) {
                 return 1;
@@ -204,39 +234,39 @@ function sortedColumns(arr) {
                 return -1;
             }
             return 0;
-        })
+        });
         return sort;
     });
-};
+}
 
 /**
  * Функция подсчета строк в массиве объектов columns.
- * @param {Array} массив объектов columns.
+ * @param {Array} array Массив объектов columns.
  * @return {Number} Колличество строк в хэдере.
  */
 
-function getRowsCount(arr): number {
+function getRowsCount(array): number {
     let maxEndRow = 0;
-    arr.forEach((cur) => {
+    array.forEach((cur) => {
         if (cur.endRow > maxEndRow) {
             maxEndRow = cur.endRow;
         }
-    })
+    });
     return maxEndRow - 1;
 }
 
 /**
  * Функция подсчета максимальной строки в массиве строк.
- * @param {Array} массив строк _headerRows.
+ * @param {Array} array Массив строк _headerRows.
  * @return {Number} Максимальная строка.
  */
 
-function getMaxEndRow(arr): number {
+function getMaxEndRow(array): number {
     let max = 0;
-    if (arr.length === 1) {
+    if (array.length === 1) {
         return 2;
-    };
-    arr.forEach((cur) => {
+    }
+    array.forEach((cur) => {
         cur.forEach((c) => {
             if (c.endRow > max) {
                 max = c.endRow;
@@ -248,20 +278,20 @@ function getMaxEndRow(arr): number {
 
 /**
  * Функция создания массива строк хэдера из массива объектов columns.
- * @param {Array} массив объектов columns.
- * @param {Boolean} отображаются чекбоксы или нет.
+ * @param {Array} array Массив объектов columns.
+ * @param {Boolean} hasMultiselect Отображаются чекбоксы или нет.
  * @return {Array} массив строк хэдера.
  * @example getROwsArray(
  *  [{title: 'name', startRow: 1, endRow: 2...}, {title: 'Price', startRow: 2, endRow: 3...}, ...], true
  *  ) -> [[{}, {title: 'name', startRow: 1, endRow: 2...}}], [{{title: 'Price', startRow: 2, endRow: 3...}}], ...]
  */
 
-function getRowsArray(arr, multiSelectVisibility) {
+function getRowsArray(array, hasMultiselect) {
     let result = [];
-    if (!arr[0].startRow) {
-        result.push(arr);
+    if (!array[0].startRow) {
+        result.push(array);
     } else {
-        let sortedArray = arr.sort((a, b) => {
+        let sortedArray = array.sort((a, b) => {
             if (a.startRow > b.startRow) {
                 return 1;
             }
@@ -269,7 +299,7 @@ function getRowsArray(arr, multiSelectVisibility) {
                 return -1;
             }
             return 0;
-        })
+        });
         for (let i = 1, rows = getRowsCount(sortedArray); i <= rows; i++) {
             const odd = (x) => x.startRow === i;
             const row = takeWhile(odd, sortedArray);
@@ -278,7 +308,7 @@ function getRowsArray(arr, multiSelectVisibility) {
         }
         result = sortedColumns(result);
     }
-    if (multiSelectVisibility) {
+    if (hasMultiselect) {
         result[0] = [{}, ...result[0]];
     }
     return result;
@@ -299,6 +329,7 @@ export {
     getResultsIndex,
     getFooterIndex,
     getTopOffset,
+    getBottomPaddingRowIndex,
     getRowsArray,
     getMaxEndRow
 }

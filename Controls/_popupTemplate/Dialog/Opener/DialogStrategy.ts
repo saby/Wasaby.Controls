@@ -54,7 +54,7 @@
       _calculateValue: function(popupOptions, containerValue, windowValue, popupValue) {
          if (popupValue) {
             return popupValue;
-         } else if (popupOptions.maximize || containerValue > windowValue) {
+         } else if (popupOptions.maximize || containerValue >= windowValue) {
             return windowValue;
          }
       },

@@ -1,5 +1,5 @@
 /**
- * Grid library
+ * Иерархический список.
  * @library Controls/treeGrid
  * @includes View Controls/_treeGrid/View
  * @includes ItemTemplate wml!Controls/_treeGrid/TreeGridView/Item
@@ -7,7 +7,7 @@
  * @includes ITreeControl Controls/_treeGrid/interface/ITreeControl
  * @includes RowEditor wml!Controls/_treeGrid/TreeGrid/RowEditor
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import View = require('Controls/_treeGrid/View');

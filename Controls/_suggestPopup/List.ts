@@ -6,54 +6,66 @@ import template = require('wml!Controls/_suggestPopup/List/List');
 import clone = require('Core/core-clone');
 import _SuggestOptionsField = require('Controls/_suggestPopup/_OptionsField');
 import tmplNotify = require('Controls/Utils/tmplNotify');
+import { constants } from 'Env/Env';
 
 
+var DIALOG_PAGE_SIZE = 25;
 
+var _private = {
+   checkContext: function(self, context) {
+      if (context && context.suggestOptionsField) {
+         self._suggestListOptions = context.suggestOptionsField.options;
 
+         if (self._suggestListOptions.dialogMode) {
+            var navigation = clone(self._suggestListOptions.navigation);
 
-      var DIALOG_PAGE_SIZE = 25;
-
-      var _private = {
-         checkContext: function(self, context) {
-            if (context && context.suggestOptionsField) {
-               self._suggestListOptions = context.suggestOptionsField.options;
-
-               if (self._suggestListOptions.dialogMode) {
-                  var navigation = clone(self._suggestListOptions.navigation);
-
-                  /* to turn on infinityScroll */
-                  navigation.view = 'infinity';
-                  if (!navigation.viewConfig) {
-                     navigation.viewConfig = {};
-                  }
-
-                  /* to show paging */
-                  navigation.viewConfig.pagingMode = true;
-                  navigation.sourceConfig.pageSize = DIALOG_PAGE_SIZE;
-                  self._navigation = navigation;
-               } else {
-                  self._navigation = self._suggestListOptions.navigation;
-               }
+            /* to turn on infinityScroll */
+            navigation.view = 'infinity';
+            if (!navigation.viewConfig) {
+               navigation.viewConfig = {};
             }
-         },
 
-         isTabChanged: function(options, tabKey) {
-            var currentTabSelectedKey = options.tabsSelectedKey;
-            return currentTabSelectedKey !== tabKey;
-         },
+            /* to show paging */
+            navigation.viewConfig.pagingMode = true;
+            navigation.sourceConfig.pageSize = DIALOG_PAGE_SIZE;
+            self._navigation = navigation;
+         } else {
+            let stickyPosition = self._suggestListOptions.stickyPosition;
 
-         getTabKeyFromContext: function(context) {
-            var tabKey = context && context.suggestOptionsField && context.suggestOptionsField.options.tabsSelectedKey;
-            return tabKey !== undefined ? tabKey : null;
-         },
-
-         dispatchEvent: function(container, nativeEvent, customEvent) {
-            customEvent.keyCode = nativeEvent.keyCode;
-            container.dispatchEvent(customEvent);
+            self._navigation = self._suggestListOptions.navigation;
+            self._reverseList = stickyPosition && stickyPosition.verticalAlign.side === 'top';
          }
-      };
+      }
+   },
+
+   isTabChanged: function(options, tabKey) {
+      var currentTabSelectedKey = options.tabsSelectedKey;
+      return currentTabSelectedKey !== tabKey;
+   },
+
+   getTabKeyFromContext: function(context) {
+      var tabKey = context && context.suggestOptionsField && context.suggestOptionsField.options.tabsSelectedKey;
+      return tabKey !== undefined ? tabKey : null;
+   },
+
+   dispatchEvent: function(container, nativeEvent, customEvent) {
+      customEvent.keyCode = nativeEvent.keyCode;
+      container.dispatchEvent(customEvent);
+   }
+};
 
 /**
+ * Контейнер для списка в выпадающем блоке автодополнения. 
+ * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>здесь</a>.
+ *
+ * @class Controls/_suggestPopup/List
+ * @extends Core/Control
+ * @author Герасимов Александр
+ * @control
+ * @public
+ */
+
+/*
  * Container for list inside Suggest.
  * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>here</a>.
  *
@@ -63,59 +75,91 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
  * @control
  * @public
  */
-      var List = Control.extend({
+var List = Control.extend({
 
-         _template: template,
-         _notifyHandler: tmplNotify,
+   _template: template,
+   _notifyHandler: tmplNotify,
+   _reverseList: false,
+   _markedKey: null,
+   _items: null
 
-         _beforeMount: function(options, context) {
-            _private.checkContext(this, context);
-         },
+   _beforeMount: function(options, context) {
+      this._searchEndCallback = this._searchEndCallback.bind(this);
+      _private.checkContext(this, context);
+   },
 
-         _beforeUpdate: function(newOptions, context) {
-            var tabKey = _private.getTabKeyFromContext(context);
+   _beforeUpdate: function(newOptions, context) {
+      var tabKey = _private.getTabKeyFromContext(context);
 
-            /* Need notify after getting tab from query */
-            if (_private.isTabChanged(this._suggestListOptions, tabKey)) {
-               this._notify('tabsSelectedKeyChanged', [tabKey]);
-            }
+      /* Need notify after getting tab from query */
+      if (_private.isTabChanged(this._suggestListOptions, tabKey)) {
+         this._notify('tabsSelectedKeyChanged', [tabKey]);
+      }
 
-            _private.checkContext(this, context);
-         },
+      _private.checkContext(this, context);
+   },
 
-         _tabsSelectedKeyChanged: function(event, key) {
-            /* It is necessary to separate the processing of the tab change by suggest layout and
-               a user of a control.
-               To do this, using the callback-option that only suggest layout can pass.
-               Event should fired only once and after list was loading,
-               because in this event user can change template of a List control. */
-            this._suggestListOptions.tabsSelectedKeyChangedCallback(key);
+   _tabsSelectedKeyChanged: function(event, key) {
+      /* It is necessary to separate the processing of the tab change by suggest layout and
+       a user of a control.
+       To do this, using the callback-option that only suggest layout can pass.
+       Event should fired only once and after list was loading,
+       because in this event user can change template of a List control. */
+      this._suggestListOptions.tabsSelectedKeyChangedCallback(key);
 
-            //FIXME remove after https://online.sbis.ru/opendoc.html?guid=5c91cf92-f61e-4851-be28-3f196945884c
-            if (this._options.task1176635657) {
-               this._notify('tabsSelectedKeyChanged', [key]);
-            }
-         },
+      //FIXME remove after https://online.sbis.ru/opendoc.html?guid=5c91cf92-f61e-4851-be28-3f196945884c
+      if (this._options.task1176635657) {
+         this._notify('tabsSelectedKeyChanged', [key]);
+      }
+   },
 
-         _inputKeydown: function(event, domEvent) {
-            //TODO will refactor on the project https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
-            var list = this._children.list;
+   _inputKeydown: function(event, domEvent) {
+      let
+         items = this._items,
+         itemsCount = items && items.getCount();
 
-            //remove list._container[0] after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-            var listContainer = list._container[0] || list._container;
-            var customEvent = new Event('keydown');
-            _private.dispatchEvent(listContainer, domEvent.nativeEvent, customEvent);
-         }
-      });
+      if (this._markedKey === null && itemsCount && domEvent.nativeEvent.keyCode === constants.key.up) {
+         let
+            idProperty = items.getIdProperty ? items.getIdProperty() : this._suggestListOptions.source.getIdProperty(),
+            indexItem = this._reverseList ? 0 : itemsCount - 1;
 
-      List.contextTypes = function() {
-         return {
-            suggestOptionsField: _SuggestOptionsField
-         };
-      };
+         this._markedKey = items.at(indexItem).get(idProperty);
+      } else {
+         /* TODO will refactor on the project https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
+          remove list._container[0] after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3 */
+         let
+            list = this._children.list,
+            listContainer = list._container[0] || list._container,
+            customEvent = new Event('keydown');
 
-      List._private = _private;
+         _private.dispatchEvent(listContainer, domEvent.nativeEvent, customEvent);
+      }
+   },
 
-      export = List;
+   _searchEndCallback: function(result, filter) {
+      if (this._suggestListOptions.searchEndCallback instanceof Function) {
+         this._suggestListOptions.searchEndCallback(result, filter);
+      }
+
+      if (result) {
+         this._items = result.data.getRawData();
+      }
+   },
+
+   _markedKeyChanged: function(event, key) {
+      this._markedKey = key;
+      this._notify('markedKeyChanged', [key]);
+   }
+});
+
+List.contextTypes = function() {
+   return {
+      suggestOptionsField: _SuggestOptionsField
+   };
+};
+
+List._private = _private;
+
+export = List;
 
 

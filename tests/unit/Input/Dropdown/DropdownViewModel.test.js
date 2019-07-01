@@ -232,6 +232,11 @@ define(
                   notEmpty: ['test']
                };
                let self = {
+                  _options: {
+                    parentProperty: 'parent',
+                    nodeProperty: 'node',
+                    rootKey: '1'
+                  },
                   _itemsModel: {
                      _display: {
                         getGroupItems: function(key) {
@@ -253,7 +258,7 @@ define(
                self.getItems = () => {
                   return new collectionLib.RecordSet({
                      idProperty: 'id',
-                     rawData: [{id: '1'}]
+                     rawData: [{id: '1', parent: '1'}]
                   });
                };
                assert.isTrue(DropdownViewModel._private.needHideGroup(self, 'notEmpty'));

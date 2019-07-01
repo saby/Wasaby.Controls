@@ -2,16 +2,22 @@
    display: inline-block;
 }
 
-.controls-Dropdown__wrapper.theme_@{themeName} {
-   .inline-flexbox();
-   .align-items(center);
-   width: 100%;
+.controls-Dropdown__wrapper_theme_@{themeName} {
+   display: inline-flex;
+   align-items: center;
    height: @height_Dropdown;
+   width: 100%;
 }
 
-.controls-Dropdown__wrapper.theme_@{themeName}:before {
+.controls-Dropdown__content-wrapper.theme_@{themeName} {
+   .inline-flexbox();
+   .align-items(baseline);
+   width: 100%;
+}
+
+.controls-Dropdown__content-wrapper.theme_@{themeName}:before {
    content: "\200b";
-   font-size: @font-size_DropdownList-text;
+   font-size: @font-size_DropdownList-text-baseline;
 }
 
 .controls-Dropdown__text-wrapper.theme_@{themeName} {

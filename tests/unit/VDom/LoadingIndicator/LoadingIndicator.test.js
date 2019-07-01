@@ -126,6 +126,17 @@ define([
          Loading._toggleIndicator = baseToggleMethod;
       });
 
+      it('LoadingIndicator - getOverlay', () => {
+         let LoadingInd = new LoadingIndicator();
+         let overlay = 'dark';
+         LoadingInd._isOverlayVisible = true;
+         LoadingInd._isMessageVisible = false;
+         assert.equal(LoadingInd._getOverlay(overlay), 'default');
+         LoadingInd._isMessageVisible = true;
+         assert.equal(LoadingInd._getOverlay(overlay), overlay)
+         LoadingInd.destroy();
+      });
+
       it('LoadingIndicator - hide', () => {
          let config = {
             message: 'message 1',
@@ -140,21 +151,35 @@ define([
 
       it('LoadingIndicator - toggleIndicator', (done) => {
          let LoadingInd = new LoadingIndicator();
+         LoadingInd._beforeMount({});
          let baseToggleIndicatorVisible = LoadingInd._toggleIndicatorVisible;
          let config = {
             delay: 1
          };
+         LoadingInd._stack.add({ delay: undefined });
          LoadingInd._toggleIndicator(true, config, true);
          assert.equal(LoadingInd._isOverlayVisible, true);
          assert.equal(LoadingInd._isMessageVisible, true);
 
          LoadingInd._toggleIndicator(false);
+         assert.equal(LoadingInd._isOverlayVisible, true);
+         assert.equal(LoadingInd._isMessageVisible, true);
+
+         LoadingInd._stack.clear();
+         LoadingInd._toggleIndicator(false);
          assert.equal(LoadingInd._isOverlayVisible, false);
          assert.equal(LoadingInd._isMessageVisible, false);
 
+         LoadingInd._stack.add({ delay: undefined });
          LoadingInd._toggleIndicator(true, config);
          assert.equal(LoadingInd._isOverlayVisible, true);
          assert.equal(LoadingInd._isMessageVisible, false);
+
+         LoadingInd._stack.clear();
+         LoadingInd._toggleIndicator(true, config);
+         assert.equal(LoadingInd._isOverlayVisible, true);
+         assert.equal(LoadingInd._isMessageVisible, false);
+
          LoadingInd._toggleIndicatorVisible = function() {
             baseToggleIndicatorVisible.apply(LoadingInd, arguments);
             assert.equal(LoadingInd._isMessageVisible, true);

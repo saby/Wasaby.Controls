@@ -1,5 +1,5 @@
 /**
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @mixin Controls/_tabs/ButtonsStyles
  * @public
  *

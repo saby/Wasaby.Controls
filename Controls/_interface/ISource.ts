@@ -5,6 +5,14 @@ export interface ISourceOptions {
 }
 
 /**
+ * Интерфейс для доступа к источнику данных.
+ *
+ * @interface Controls/_interface/ISource
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+/*
  * Interface for components that use data source.
  *
  * @interface Controls/_interface/ISource
@@ -17,7 +25,7 @@ export default interface ISource {
 /**
  * @name Controls/_interface/ISource#source
  * @cfg {Types/source:ICrud} Объект реализующий интерфейс {@link Types/source:ICrud}, необходимый для работы с источником данных.
- * Более подробно об источниках данных вы можете почитать <a href='doc/platform/developmentapl/interface-development/data-sources/'>здесь</a>.
+ * Более подробно об источниках данных вы можете почитать <a href='/doc/platform/developmentapl/interface-development/data-sources/'>здесь</a>.
  * @example
  * В приведённом примере для контрола {@link Controls/list:View} в опцию source передаётся {@link Types/source:Memory} источник.
  * Контрол получит данные из источника и выведет их.
@@ -115,6 +123,39 @@ export default interface ISource {
  */
 
 /**
+ * @name Controls/_interface/ISource#keyProperty
+ * @cfg {String} Имя свойства, содержащего информацию об идентификаторе текущей строки.
+ * @remark Например, идентификатор может быть первичным ключом записи в базе данных.
+ * @example
+ * <pre>
+ *    <Controls.list:View
+ *       source = "{{_source}}"
+ *       keyProperty="key">
+ *    </Controls.list:View>
+ * </pre>
+ * <pre>
+ *    _source: new Memory({
+ *       idProperty: 'key',
+ *       data: [
+ *       {
+ *          key: '1',
+ *          title: 'Yaroslavl'
+ *       },
+ *       {
+ *          key: '2',
+ *          title: 'Moscow'
+ *       },
+ *       {
+ *          key: '3',
+ *          title: 'St-Petersburg'
+ *       }
+ *       ]
+ *    })
+ * </pre>
+ *
+ */
+
+/*
  * @name Controls/_interface/ISource#keyProperty
  * @cfg {String} Name of the item property that uniquely identifies collection item.
  * @remark For example, the identifier may be the primary key of the record in the database.

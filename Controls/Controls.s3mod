@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<ui_module id="f6fdf353-3ab3-4dbb-8671-01c2b418bf0a" name="Controls" package="Платформа" responsible="Крайнов Д. О." required="1" version="1.00">
+<ui_module id="f6fdf353-3ab3-4dbb-8671-01c2b418bf0a" name="Controls" package="Платформа" responsible="Крайнов Д.О." required="1" version="1.00">
 
   <description>Новая библиотека контролов реализованных на технологии VDOM</description>
 
@@ -9,6 +9,11 @@
       <module id="63e1a7e5-4d75-42fa-91a3-977dc90ff1e1" name="SbisEnv"/>
       <module id="c7d8e465-1c28-4437-858f-81968ce81dec" name="Controls-theme"/>
       <module id="0df0fce3-53ba-47f8-987d-edf1fd078295" name="WS.Core"/>
+      <module id="636177e5-4d75-44fa-9173-977dc90ff111" name="Env"/>
+      <module id="656177e2-4d75-42fa-9173-977dc90ff121" name="Browser"/>
+      <module id="63e1a7e5-4d75-42fa-91a3-977dc90ff1e1" name="SbisEnv"/>
+      <module id="10efeac7-0f02-4c73-9474-0d1d0db077b6" name="View"/>
+      <module id="0f5d26db-dd61-4957-9375-8861ad66f219" name="Vdom"/>
     </depends>
 
   <load_after/>

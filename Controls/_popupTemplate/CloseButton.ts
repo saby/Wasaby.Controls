@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/CloseButton/CloseButton');
 import Env = require('Env/Env');
-import 'css!theme?Controls/popupTemplate';
    /**
     * Specialized type of button for closing windows.
     *
@@ -12,7 +11,7 @@ import 'css!theme?Controls/popupTemplate';
     * @extends Core/Control
     * @control
     * @public
-    * @author Михайловский Д.С.
+    * @author Красильников А.С.
     * @demo Controls-demo/Buttons/Close/CloseDemo
     * @mixes Controls/_buttons/interface/IClick
     *

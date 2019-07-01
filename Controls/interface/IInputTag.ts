@@ -3,7 +3,7 @@
  *
  * @interface Controls/interface/IInputTag
  * @public
- * @author Krasilnikov A.S.
+ * @author Красильников А.С.
  */
 interface IInputTag {
     readonly _options: {

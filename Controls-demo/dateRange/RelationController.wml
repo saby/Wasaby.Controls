@@ -3,7 +3,7 @@
 
    <div class="controlsDemo-dateRange-RelationController__row">
       <Controls.buttons:Button
-         icon="icon-medium icon-MarkLeftBold icon-primary"
+         iconSize="m" icon="icon-MarkLeftBold" iconStyle="secondary"
          on:click="dateRelation.shiftBackward()"/>
       <Controls.dateRange:RelationController
             name="dateRelation"
@@ -36,7 +36,7 @@
          </div>
       </Controls.dateRange:RelationController>
       <Controls.buttons:Button
-         icon="icon-medium icon-MarkRightBold icon-primary"
+         iconSize="m" icon="icon-MarkRightBold" iconStyle="secondary"
          on:click="dateRelation.shiftForward()"/>
 
    </div>
@@ -50,7 +50,7 @@
          bind:bindType="_bindType2">
       <div class="controlsDemo-dateRange-RelationController__row">
          <Controls.buttons:Button
-            icon="icon-medium icon-MarkLeftBold icon-primary"
+            iconSize="m" icon="icon-MarkLeftBold" iconStyle="secondary"
             on:click="dateRelation2.shiftBackward()"/>
          <Controls.dateRange:RelationWrapper
                number="{{0}}"
@@ -64,7 +64,7 @@
             <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector"/>
          </Controls.dateRange:RelationWrapper>
          <Controls.buttons:Button
-            icon="icon-medium icon-MarkRightBold icon-primary"
+            iconSize="m" icon="icon-MarkRightBold" iconStyle="secondary"
             on:click="dateRelation2.shiftForward()"/>
       </div>
    </Controls.dateRange:RelationController>
@@ -77,7 +77,7 @@
          bind:endValue1="_endValue3_1">
       <div class="controlsDemo-dateRange-RelationController__row">
          <Controls.buttons:Button
-            icon="icon-medium icon-MarkLeftBold icon-primary"
+            iconSize="m" icon="icon-MarkLeftBold" iconStyle="secondary"
             on:click="dateRelation3.shiftBackward()"/>
          <Controls.dateRange:RelationWrapper
                number="{{0}}"
@@ -92,7 +92,7 @@
             <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector"/>
          </Controls.dateRange:RelationWrapper>
          <Controls.buttons:Button
-            icon="icon-medium icon-MarkRightBold icon-primary"
+            iconSize="m" icon="icon-MarkRightBold" iconStyle="secondary"
             on:click="dateRelation3.shiftForward()"/>
       </div>
    </Controls.dateRange:RelationController>

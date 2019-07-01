@@ -1,10 +1,25 @@
-import Control = require('Core/Control');
-import template = require('wml!Controls/_buttons/Button');
-import classesUtil from './classesUtil';
-import iconsUtil from './iconsUtil';
-// @ts-ignore
-import { IoC } from 'Env/Env';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import ButtonTemplate = require('wml!Controls/_buttons/Button');
+import ActualApi from './ActualApi';
+import {IHref, IHrefOptions} from './interface/IHref';
+import {IClick} from './interface/IClick';
+import {ITooltip, ITooltipOptions,
+   ICaption, ICaptionOptions,
+   IIcon, IIconOptions,
+   IIconStyle, IIconStyleOptions,
+   IIconSize, IIconSizeOptions,
+   IFontColorStyle, IFontColorStyleOptions,
+   IFontSize, IFontSizeOptions,
+   IHeight, IHeightOptions
+} from 'Controls/interface';
+import { SyntheticEvent } from 'Vdom/Vdom';
 
+export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
+   IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions {
+   contrastBackground?: boolean;
+   buttonStyle?: string;
+   viewMode?: string;
+}
 
 /**
  * Graphical control element that provides the user a simple way to trigger an event.
@@ -13,107 +28,149 @@ import { IoC } from 'Env/Env';
  *
  * @class Controls/_buttons/Button
  * @extends Core/Control
- * @mixes Controls/interface/IHref
+ * @mixes Controls/_buttons/interface/IHref
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_buttons/interface/IClick
  * @mixes Controls/_interface/IIcon
  * @mixes Controls/_interface/IIconStyle
+ * @mixes Controls/_interface/IIconSize
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IHeight
  * @mixes Controls/_interface/ITooltip
- * @mixes Controls/_interface/IButton
- * @mixes Controls/_button/ButtonStyles
  * @control
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  * @category Button
  * @demo Controls-demo/Buttons/ButtonDemoPG
  */
 
 /**
- * @name Controls/Button#transparent
- * @cfg {Boolean} Determines whether button having background.
- * @default false
+ * @name Controls/_buttons/Button#viewMode
+ * @cfg {Enum} Button view mode.
+ * @variant link Decorated hyperlink.
+ * @variant button Default button.
+ * @variant toolButton Toolbar button.
+ * @default button
+ * @example
+ * Button with 'link' viewMode.
+ * <pre>
+ *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
+ * </pre>
+ * Button with 'toolButton' viewMode.
+ * <pre>
+ *    <Controls.buttons:Path caption="Send document" style="danger" viewMode="toolButton"/>
+ * </pre>
+ * Button with 'button' viewMode.
+ * <pre>
+ *    <Controls.buttons:Path caption="Send document" style="success" viewMode="button"/>
+ * </pre>
+ * @see Size
+ */
+
+/**
+ * @name Controls/_buttons/Button#contrastBackground
+ * @cfg {Boolean} Determines if button has contrast background.
+ * @default true
  * @remark
- * true - Button has transparent background.
- * false - Button has default background for this viewmode and style.
+ * true - Button has contrast background
+ * false - Button has the harmony background.
  * @example
  * Button has transparent background.
  * <pre>
- *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{true}}" size="l"/>
+ *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" contrastBackground="{{false}}" size="l"/>
  * </pre>
  * Button hasn't transparent background.
  * <pre>
- *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{false}}"/>
+ *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" />
  * </pre>
  * @see style
  */
 
-class Button extends Control {
-   private _template: Function = template;
+/**
+ * @name Controls/_buttons/Button#buttonStyle
+ * @cfg {Enum} Set style parameters for button. These are background color or border color for different values of viewMode
+ * @variant primary
+ * @variant secondary
+ * @variant success
+ * @variant warning
+ * @variant danger
+ * @default secondary
+ * @example
+ * Primary button with default icon style.
+ * <pre>
+ *    <Controls.buttons:Button viewMode="button" buttonStyle="primary"/>
+ * </pre>
+ */
+class Button extends Control<IButtonOptions> implements
+      IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize, IClick, IFontColorStyle, IFontSize, IHeight {
+   protected _template: TemplateFunction = ButtonTemplate;
 
    // Называть _style нельзя, так как это состояние используется для темизации
-   private _buttonStyle: String;
-   private _transparent: Boolean;
-   private _viewMode: String;
-   private _state: String;
-   private _caption: String | Function;
-   private _stringCaption: Boolean;
-   private _icon: String;
-   private _iconSize: String;
-   private _iconStyle: String;
-   private _regExp: RegExp = new RegExp('\\bicon-(large|small|medium|default|16|24|32)\\b' , 'g');
+   private _buttonStyle: string;
+   private _fontColorStyle: string;
+   private _fontSize: string;
+   private _contrastBackground: boolean;
+   private _hasIcon: boolean;
+   private _viewMode: string;
+   private _height: string;
+   private _state: string;
+   private _caption: string | TemplateFunction;
+   private _stringCaption: boolean;
+   private _icon: string;
+   private _iconSize: string;
+   private _iconStyle: string;
 
-   static _theme: Array<string> = ['Controls/buttons'];
-   private prepareIconSize(icon): String {
-      return icon.replace(this._regExp, '');
-   }
-   private cssStyleGeneration(options) {
-      const currentButtonClass = classesUtil.getCurrentButtonClass(options.style);
+   private cssStyleGeneration(options: IButtonOptions): void {
+      const currentButtonClass = ActualApi.styleToViewMode(options.style);
+      const oldViewModeToken = ActualApi.viewMode(currentButtonClass.viewMode, options.viewMode);
 
-      this._buttonStyle = currentButtonClass.style ? currentButtonClass.style : options.style;
-      this._transparent = options.transparent;
-      this._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
-      if (this._viewMode === 'transparentQuickButton' || this._viewMode === 'quickButton') {
-         if (this._viewMode === 'transparentQuickButton') {
-            this._transparent = true;
-         }
-         this._viewMode = 'toolButton';
-         IoC.resolve('ILogger').warn('Button', 'В кнопке используется viewMode = quickButton, transparentQuickButton используйте значение опции viewMode toolButton и опцию transparent');
+      this._buttonStyle = ActualApi.buttonStyle(currentButtonClass.style, options.style, options.buttonStyle, options.readOnly);
+      this._contrastBackground = ActualApi.contrastBackground(options);
+      this._viewMode = oldViewModeToken.viewMode;
+      if (typeof oldViewModeToken.contrast !== 'undefined') {
+         this._contrastBackground = oldViewModeToken.contrast;
       }
+      this._height = ActualApi.actualHeight(options.size, options.inlineHeight, this._viewMode);
+      this._fontColorStyle = ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
+      this._fontSize = ActualApi.fontSize(options);
+      this._hasIcon = !!options.icon;
+
       this._state = options.readOnly ? '_readOnly' : '';
       this._caption = options.caption;
       this._stringCaption = typeof options.caption === 'string';
-      this._icon = options.iconSize ? this.prepareIconSize(options.icon): options.icon;
-      this._iconSize = options.iconSize;
-      this._iconStyle = currentButtonClass.buttonAdd ? 'default' : iconsUtil.iconStyleTransformation(options.iconStyle);
+
+      this._icon = options.icon;
+      this._iconSize = ActualApi.iconSize(options);
+      this._iconStyle = ActualApi.iconStyle(options);
    }
 
-   _beforeMount(options) {
+   protected _beforeMount(options: IButtonOptions): void {
       this.cssStyleGeneration(options);
    }
 
-   _beforeUpdate(newOptions) {
+   protected _beforeUpdate(newOptions: IButtonOptions): void {
       this.cssStyleGeneration(newOptions);
    }
 
-   _keyUpHandler(e) {
+   private _keyUpHandler(e: SyntheticEvent): void {
       if (e.nativeEvent.keyCode === 13 && !this._options.readOnly) {
          this._notify('click');
       }
    }
 
-   _clickHandler(e) {
+   private _clickHandler(e: SyntheticEvent): void {
       if (this._options.readOnly) {
          e.stopPropagation();
       }
    }
 
-   static getDefaultOptions() {
+   static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
+
+   static getDefaultOptions(): object {
       return {
-         style: 'secondary',
          viewMode: 'button',
-         size: 'default',
          iconStyle: 'secondary',
-         transparent: true,
          theme: 'default'
       };
    }

@@ -81,19 +81,39 @@ define([
             }]);
          });
       });
+      describe('needCrumbs', function() {
+         var pathController = new PathController();
+         var needCrumbs = PathController._private.needCrumbs;
+         it('BackButton is in header, items.length === 1', function() {
+            assert.equal(needCrumbs([{title:'back'}], ['first']), false);
+         });
+         it('BackButton is not in header, items.length === 1', function() {
+            assert.equal(needCrumbs(undefined, ['first']), true);
+         });
+         it('BackButton is in header, items.length === 2', function() {
+            assert.equal(needCrumbs([{title:'back'}], ['first','second']), true);
+         });
+         it('items === null', function() {
+            assert.equal(needCrumbs(undefined, null), false);
+         });
+      });
       describe('_beforeUpdate', function() {
-         it('old items', function() {
+         it('old items + update header', async function() {
             var
-               instance = new PathController(),
-               header = [];
-            instance._header = header;
-            instance.saveOptions({
-               items: items
-            });
-            instance._beforeUpdate({
-               items: items
-            });
-            assert.equal(instance._header, header);
+               cfg = {
+                  items: items,
+                  header: [{}]
+               },
+               newCfg = {
+                  items: items,
+                  header: [{}, {}]
+               },
+               instance = new PathController(cfg);
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            assert.equal(1, instance._header.length);
+            instance._beforeUpdate(newCfg);
+            assert.equal(2, instance._header.length);
          });
          it('new items', function() {
             var

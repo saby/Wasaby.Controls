@@ -38,6 +38,12 @@
    flex-direction: column;
 }
 
+.controls-Grid_columnScroll .controls-Grid__header-cell {
+   // With enabled column scroll and setting the value of grid column width as 'auto' in template columns, flex starts to shrink
+   // because grid has no fixed width and hac af min-width allows such behaviour.
+   min-width: auto;
+}
+
 .controls-Grid__header-cell_spacing_money:after {
    content: ".99";
    visibility: hidden;
@@ -49,8 +55,7 @@
    min-height: @min-height_Grid-multy-header;
    display: flex;
    justify-content: flex-start;
-   align-items: flex-end;
-   flex: 1;
+   align-items: baseline; //baseline align by default;
 }
 
 .controls-Grid__row-header__content_baseline:before {
@@ -78,7 +83,7 @@
    background-color: @background-color_Grid-row-sticky;
    z-index: 1;
    min-width: 0;
-   height: @height_Grid-results-cell;
+   min-height: @height_Grid-results-cell;
 }
 .controls-GridViewV__itemsContainer {
    display: contents;

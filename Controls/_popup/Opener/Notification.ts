@@ -114,7 +114,7 @@ const Notification = BaseOpener.extend({
     open(popupOptions) {
         return new Promise((resolve) => {
             if (isNewEnvironment()) {
-                BaseOpener.prototype.open.call(this, this._preparePopupOptions(popupOptions), POPUP_CONTROLLER)
+                BaseOpener.prototype.open.call(this, popupOptions, POPUP_CONTROLLER)
                     .then((popupId) => resolve(popupId));
             } else {
                 _private.compatibleOpen(this, popupOptions);
@@ -125,18 +125,6 @@ const Notification = BaseOpener.extend({
     close() {
         Notification.superclass.close.apply(this, arguments);
         _private.compatibleClose(this);
-    },
-
-    _preparePopupOptions(popupOptions) {
-        if (popupOptions && popupOptions.templateOptions && popupOptions.templateOptions.hasOwnProperty('autoClose')) {
-            Env.IoC.resolve('ILogger').error(this._moduleName, 'The option "autoClose" must be specified on control options');
-            popupOptions.autoClose = popupOptions.templateOptions.autoClose;
-        }
-        if (this._options.templateOptions && this._options.templateOptions.hasOwnProperty('autoClose')) {
-            Env.IoC.resolve('ILogger').error(this._moduleName, 'The option "autoClose" must be specified on control options');
-            this._options.autoClose = this._options.templateOptions.autoClose;
-        }
-        return popupOptions;
     }
 });
 
@@ -146,6 +134,7 @@ const Notification = BaseOpener.extend({
  * @function Controls/_popup/Opener/Notification#openPopup
  * @param {PopupOptions[]} config Notification popup options.
  * @return {Promise<string>} Returns id of popup. This id used for closing popup.
+ * @static
  * @see closePopup
  */
 Notification.openPopup = (config: object): Promise<string> => {
@@ -174,6 +163,7 @@ Notification.openPopup = (config: object): Promise<string> => {
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
  * @function Controls/_popup/Opener/Notification#closePopup
  * @param {String} popupId Id of popup.
+ * @static
  * @see openPopup
  */
 Notification.closePopup = (popupId: string): void => {

@@ -2,7 +2,7 @@
  * filterCompatible library
  * @library Controls/filterCompatible
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 

@@ -6,13 +6,32 @@
  * @includes View Controls/_filter/View
  * @includes ButtonContainer Controls/_filter/Button/Container
  * @includes FastContainer Controls/_filter/Fast/Container
+ * @includes ViewContainer Controls/_filter/View/Container
  * @includes Controller Controls/_filter/Controller
  * @includes ButtonStyles Controls/_filter/Button/Styles
  * @includes FastStyles Controls/_filter/Fast/FastStyles
  * @includes IFilterView Controls/_filter/View/interface/IFilterView
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
+
+/*
+ * Библиотека фильтра.
+ * @library Controls/filter
+ * @includes Selector Controls/_filter/Button
+ * @includes Fast Controls/_filter/Fast
+ * @includes View Controls/_filter/View
+ * @includes ButtonContainer Controls/_filter/Button/Container
+ * @includes FastContainer Controls/_filter/Fast/Container
+ * @includes ViewContainer Controls/_filter/View/Container
+ * @includes Controller Controls/_filter/Controller
+ * @includes ButtonStyles Controls/_filter/Button/Styles
+ * @includes FastStyles Controls/_filter/Fast/FastStyles
+ * @includes IFilterView Controls/_filter/View/interface/IFilterView
+ * @public
+ * @author Крайнов Д.О.
+ */
+
 
 import Selector = require('Controls/_filter/Button');
 import Fast = require('Controls/_filter/Fast');

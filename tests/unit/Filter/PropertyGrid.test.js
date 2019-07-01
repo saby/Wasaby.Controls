@@ -30,6 +30,7 @@ define(
          function getPropertyGrid(PGConfig) {
             var pGrid = new PropertyGrid(PGConfig);
             pGrid._beforeMount(PGConfig);
+            pGrid.saveOptions(PGConfig);
             return pGrid;
          }
 
@@ -140,6 +141,30 @@ define(
             assert.equal(pGrid._isItemVisible(config.items[0]), true);
             assert.equal(pGrid._isItemVisible(config.items[1]), true);
             assert.equal(pGrid._isItemVisible(config.items[2]), false);
+         });
+
+         it('_visibilityChangedHandler', function() {
+            let pGrid = getPropertyGrid(config);
+            let result;
+            pGrid._notify = (event, data) => {
+               if (event === 'itemsChanged') {
+                  result = data[0];
+               }
+            };
+            pGrid._visibilityChangedHandler('visibilityChanged', 2, true);
+            assert.deepStrictEqual(result[2], {
+               id: 'bool',
+               value: true,
+               resetValue: false,
+               visibility: true
+            });
+            pGrid._visibilityChangedHandler('visibilityChanged', 2, false);
+            assert.deepStrictEqual(result[2], {
+               id: 'bool',
+               value: false,
+               resetValue: false,
+               visibility: false
+            });
          });
 
       });

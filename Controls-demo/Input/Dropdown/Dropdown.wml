@@ -26,6 +26,7 @@
                                   displayProperty="title"
                                   parentProperty="parent"
                                   nodeProperty="@parent"
+                                  attr:class="ControlsDemo-InputDropdown__item-limitMaxWidth"
                                   source="{{_createMemory(_hierarchyItems)}}"/>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">
@@ -128,6 +129,14 @@
                                   on:footerClick="footerClickHandler()"
                                   footerTemplate="wml!Controls-demo/Input/Dropdown/footerTemplateDropdown">
          </Controls.dropdown:Input>
+         <h3>With footer on the second level</h3>
+         <Controls.dropdown:Input bind:selectedKeys="_selectedKeysFooterHierarchy"
+                                  keyProperty="id"
+                                  displayProperty="title"
+                                  parentProperty="parent"
+                                  nodeProperty="@parent"
+                                  nodeFooterTemplate="wml!Controls-demo/Input/Dropdown/footerHierarchyItem"
+                                  source="{{_createMemory(_hierarchyFooterItems)}}"/>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h3>With history</h3>
@@ -157,6 +166,8 @@
             </ws:itemTemplate>
          </Controls.dropdown:Input>
       </div>
+   </div>
+   <div class="ControlsDemo-InputDropdown_column">
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h3>With grouping</h3>
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysGroup"

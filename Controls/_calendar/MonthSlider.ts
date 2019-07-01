@@ -32,7 +32,7 @@ var _private = {
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @control
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @demo Controls-demo/Calendar/MonthSlider
  *
  */

@@ -16,42 +16,84 @@ import 'css!theme?Controls/scroll';
 
 
 /**
- * Container with thin scrollbar.
+ * Контейнер с тонким скроллом.
  * For the component, a {@link Controls/_scroll/Scroll/Context context} is required.
  *
- * @class Controls/_scroll/Scroll
+ * @class Controls/_scroll/Container
  * @extends Core/Control
  * @control
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
+ * @category Container
+ * @demo Controls-demo/Container/Scroll
+ *
+ */
+
+/*
+ * Container with thin scrollbar.
+ * For the component, a {@link Controls/_scroll/Scroll/Context context} is required.
+ *
+ * @class Controls/_scroll/Container
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Красильников А.С.
  * @category Container
  * @demo Controls-demo/Container/Scroll
  *
  */
 
 /**
+ * @event scroll Скроллируемая область.
+ * @param {SyntheticEvent} eventObject.
+ * @param {Number} scrollTop Скролл располагается сверху относительно контейнера.
+ */
+
+/*
  * @event scroll Scrolling content.
  * @param {SyntheticEvent} eventObject.
  * @param {Number} scrollTop Top position of content relative to container.
  */
 
 /**
- * @name Controls/_scroll/Scroll#content
+ * @name Controls/_scroll/Container#content
+ * @cfg {Content} Содержимое контейнера.
+ */
+
+/*
+ * @name Controls/_scroll/Container#content
  * @cfg {Content} Container contents.
  */
 
 /**
- * @name Controls/_scroll/Scroll#shadowVisible
+ * @name Controls/_scroll/Container#shadowVisible
+ * @cfg {Boolean} Следует ли показывать тень (когда содержимое не подходит).
+ */
+
+/*
+ * @name Controls/_scroll/Container#shadowVisible
  * @cfg {Boolean} Whether shadow should be shown (when content doesn't fit).
  */
 
 /**
- * @name Controls/_scroll/Scroll#scrollbarVisible
+ * @name Controls/_scroll/Container#scrollbarVisible
+ * @cfg {Boolean} Следует ли отображать скролл.
+ */
+
+/*
+ * @name Controls/_scroll/Container#scrollbarVisible
  * @cfg {Boolean} Whether scrollbar should be shown.
  */
 
 /**
- * @name Controls/_scroll/Scroll#style
+ * @name Controls/_scroll/Container#style
+ * @cfg {String} Цветовая схема (цвета тени и скролла).
+ * @variant normal Тема по умолчанию (для ярких фонов).
+ * @variant inverted Преобразованная тема (для темных фонов).
+ */
+
+/*
+ * @name Controls/_scroll/Container#style
  * @cfg {String} Color scheme (colors of the shadow and scrollbar).
  * @variant normal Default theme (for bright backgrounds).
  * @variant inverted Inverted theme (for dark backgrounds).
@@ -540,18 +582,18 @@ var
       },
 
       getDataId: function() {
-               return 'Controls/_scroll/Scroll';
+               return 'Controls/_scroll/Container';
       },
 
       /**
        * Скроллит к выбранной позиции. Позиция определяется в пикселях от верха контейнера.
-       * @function Controls/_scroll/Scroll#scrollTo
+       * @function Controls/_scroll/Container#scrollTo
        * @param {Number} Позиция в пикселях
        */
 
       /*
        * Scrolls to the given position from the top of the container.
-       * @function Controls/_scroll/Scroll#scrollTo
+       * @function Controls/_scroll/Container#scrollTo
        * @param {Number} Offset
        */
       scrollTo: function(offset) {
@@ -560,12 +602,12 @@ var
 
       /**
        * Скроллит к верху контейнера
-       * @function Controls/_scroll/Scroll#scrollToTop
+       * @function Controls/_scroll/Container#scrollToTop
        */
 
       /*
        * Scrolls to the top of the container.
-       * @function Controls/_scroll/Scroll#scrollToTop
+       * @function Controls/_scroll/Container#scrollToTop
        */
       scrollToTop: function() {
          _private.setScrollTop(this, 0);
@@ -573,12 +615,12 @@ var
 
       /**
        * Скроллит к низу контейнера
-       * @function Controls/_scroll/Scroll#scrollToBottom
+       * @function Controls/_scroll/Container#scrollToBottom
        */
 
       /*
        * Scrolls to the bottom of the container.
-       * @function Controls/_scroll/Scroll#scrollToBottom
+       * @function Controls/_scroll/Container#scrollToBottom
        */
       scrollToBottom: function() {
          _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
@@ -616,6 +658,14 @@ var
             }
             return scrollTop;
          }
+         // todo KINGO. Костыль с родословной из старых списков. Инерционный скролл приводит к дерганью: мы уже
+         // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
+         // дерганья и лишняя загрузка данных.
+         // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
+         // https://popmotion.io/blog/20170704-manually-set-scroll-while-ios-momentum-scroll-bounces/
+         if (Env.detection.isMobileIOS) {
+            this._children.content.style.webkitOverflowScrolling = 'auto';
+         }
          this._savedScrollPosition = this._children.content.scrollHeight - getScrollTop(this._children.content);
       },
 
@@ -626,6 +676,14 @@ var
           */
          e.stopPropagation();
          this._children.content.scrollTop = this._children.content.scrollHeight - this._savedScrollPosition;
+         // todo KINGO. Костыль с родословной из старых списков. Инерционный скролл приводит к дерганью: мы уже
+         // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
+         // дерганья и лишняя загрузка данных.
+         // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
+         // https://popmotion.io/blog/20170704-manually-set-scroll-while-ios-momentum-scroll-bounces/
+         if (Env.detection.isMobileIOS) {
+            this._children.content.style.webkitOverflowScrolling = '';
+         }
       },
 
       _fixedHandler: function(event, topHeight, bottomHeight) {

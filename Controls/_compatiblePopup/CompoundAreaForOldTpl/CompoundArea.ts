@@ -14,7 +14,7 @@ import {Controller} from 'Controls/popup';
 import {InstantiableMixin} from 'Types/entity';
 import callNext = require('Core/helpers/Function/callNext');
 import cInstance = require('Core/core-instance');
-import Vdom = require('Vdom/Vdom');
+import { SyntheticEvent } from 'Vdom/Vdom';
 import 'css!theme?Controls/compatiblePopup';
 
 function removeOperation(operation, array) {
@@ -43,8 +43,8 @@ var CompoundArea = CompoundContainer.extend([
    _template: template,
    _compoundId: undefined,
 
+   _beforeCloseHandlerResult: true,
    _isClosing: false,
-
    _pending: null,
    _pendingTrace: null,
    _waiting: null,
@@ -300,6 +300,7 @@ var CompoundArea = CompoundContainer.extend([
       }
 
       self._trackTarget(true);
+      self._createBeforeCloseHandlerPending();
 
       self.rebuildChildControl().addCallback(function() {
          runDelayed(function() {
@@ -455,7 +456,7 @@ var CompoundArea = CompoundContainer.extend([
       // d'n'd работает, когда кликнули непосредственно в шапку
       var isClickedInControl = $(event.target).wsControl() !== this;
       if (dialogTemplate && !isClickedInControl) {
-         dialogTemplate._startDragNDrop(new Vdom.SyntheticEvent(event));
+         dialogTemplate._startDragNDrop(new SyntheticEvent(event));
       }
    },
 
@@ -868,6 +869,19 @@ var CompoundArea = CompoundContainer.extend([
    hide: function() {
       this.close();
    },
+   _createBeforeCloseHandlerPending(): void {
+      const self = this;
+      self._notifyVDOM('registerPending', [new cDeferred(), {
+         showLoadingIndicator: false,
+         validateCompatible(): boolean {
+            if (cInstance.instanceOfModule(self._childControl, 'SBIS3.CONTROLS/FormController')) {
+               self.close();
+               return !self._beforeCloseHandlerResult;
+            }
+            return false;
+         }
+      }], { bubbling: true });
+   },
    close: function(arg) {
       if (!this.isDestroyed()) {
          if (this._logicParent.waitForPopupCreated) {
@@ -888,9 +902,12 @@ var CompoundArea = CompoundContainer.extend([
             }
             this._isClosing = true;
             if (this._notifyCompound('onBeforeClose', arg) !== false) {
+               this._beforeCloseHandlerResult = true;
                this._notifyVDOM('close', null, { bubbling: true });
                this._notifyCompound('onClose', arg);
                this._notifyCompound('onAfterClose', arg);
+            } else {
+               this._beforeCloseHandlerResult = false;
             }
             this._isClosing = false;
          }

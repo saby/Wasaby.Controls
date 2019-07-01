@@ -10,7 +10,7 @@ define('Controls/Input/OldText/OldViewModel',
       /**
        * @class Controls/input:TextViewModel
        * @private
-       * @author Krasilnikov A.S.
+       * @author Красильников А.С.
        */
 
       var

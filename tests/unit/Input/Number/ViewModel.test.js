@@ -201,6 +201,17 @@ define(
                assert.equal(model.displayValue, '-');
                assert.deepEqual(model.selection, getSelection(1));
             });
+            it('Enter "." before is "123 456"', function() {
+               model.handleInput({
+                  after: '',
+                  before: '123 456',
+                  insert: '.',
+                  delete: ''
+               }, 'insert');
+
+               assert.equal(model.displayValue, '123 456');
+               assert.deepEqual(model.selection, getSelection(7));
+            });
             it('Enter "12,34".', function() {
                model.handleInput({
                   after: '',
@@ -238,6 +249,15 @@ define(
                },
                value: 12,
                displayValue: '12'
+            }, {
+               options: {
+                  precision: 2,
+                  useGrouping: true,
+                  showEmptyDecimals: true,
+                  useAdditionToMaxPrecision: true
+               },
+               value: 123456.3,
+               displayValue: '123 456.30'
             }].forEach(function(test) {
                it(`value: ${test.value}, displayValue: ${test.displayValue}, options: ${JSON.stringify(test.options)}`, function() {
                   const model = new ViewModel(test.options, null);

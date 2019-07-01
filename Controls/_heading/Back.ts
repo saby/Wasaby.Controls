@@ -16,7 +16,7 @@ import 'css!theme?Controls/heading';
     * @mixes Controls/_heading/Back/BackStyles
     * @control
     * @public
-    * @author Михайловский Д.С.
+    * @author Красильников А.С.
     *
     *
     * @demo Controls-demo/Buttons/BackButton/BackButtonDemoPG

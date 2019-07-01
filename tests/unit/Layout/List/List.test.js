@@ -1,4 +1,4 @@
-define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Deferred', 'Core/core-clone', 'Controls/history'], function(deprecatedList, sourceLib, collection, Deferred, clone, history) {
+define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Deferred', 'Core/core-clone', 'Controls/history', 'Types/entity'], function(deprecatedList, sourceLib, collection, Deferred, clone, history, entity) {
 
    if (typeof mocha !== 'undefined') {
       //Из-за того, что загрузка через Core/moduleStubs добавляет в global Lib/Control/LoadingIndicator/LoadingIndicator,
@@ -61,6 +61,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
             searchDelay: 0,
             minSearchLength: 3,
             filter: {},
+            reverseList: false,
             navigation: {
                source: 'page',
                view: 'page',
@@ -105,16 +106,24 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
          assert.deepEqual(listLayout._filter, {testKey: 'testFilter2'});
       });
 
-      it('.updateSource', function() {
+      describe('.updateSource', function() {
          var recordSet = new collection.RecordSet({
             rawData:[
                { id: 1, title: 'Sasha' },
                { id: 2, title: 'Dmitry' }
                ]
          });
-         deprecatedList.Container._private.updateSource(listLayout, recordSet);
 
-         assert.deepEqual(recordSet.getRawData(), listLayout._source._$data);
+         it ('list is not reverse', function() {
+            deprecatedList.Container._private.updateSource(listLayout, recordSet);
+            assert.deepEqual(recordSet.getRawData(), listLayout._source._$data);
+         });
+
+         it('list is reverse', function() {
+            listLayout._options.reverseList = true;
+            deprecatedList.Container._private.updateSource(listLayout, recordSet);
+            assert.deepEqual(recordSet.getRawData().reverse(), listLayout._source._$data);
+         });
       });
 
       it('.abortCallback', function() {
@@ -268,7 +277,10 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
 
       it('._beforeUpdate', function(done) {
          /* Изолированный тест beforeUpdate */
-         var context = {
+         var
+            newOpts = clone(listOptions),
+            listLayout = new deprecatedList.Container(listOptions),
+            context = {
             filterLayoutField: {
                filter: {}
             },
@@ -276,7 +288,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
                searchValue: ''
             }
          };
-         var listLayout = new deprecatedList.Container(listOptions);
+
          listLayout._saveContextObject({
             filterLayoutField: {filter: {}},
             searchLayoutField: {searchValue: ''}
@@ -292,6 +304,13 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
          /* Nothing changes */
          assert.deepEqual(listLayout._filter, {});
          assert.deepEqual(listLayout._source._$data, listSourceData);
+
+         // reverseList changed
+         var reversedData = clone(listSourceData).reverse();
+         newOpts.reverseList = true;
+         listLayout._beforeUpdate(newOpts, context);
+         assert.deepEqual(listLayout._source._$target._$data, reversedData);
+         newOpts.reverseList = false;
 
          /* SearchValue changed */
          context.searchLayoutField.searchValue = 'Sasha';
@@ -320,7 +339,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
                data: listSourceData,
                idProperty: 'id'
             });
-            var newOpts = clone(listOptions);
+            newOpts = clone(listOptions);
             newOpts.source = newSource;
             listLayout._beforeUpdate(newOpts, context);
             assert.equal(listLayout._searchController._options.source, newSource);
@@ -430,6 +449,49 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
 
          assert.deepEqual({title: 'Sasha'}, deprecatedList.Container._private.getFilterFromContext(listLayout, context));
          assert.deepEqual({title: ''}, deprecatedList.Container._private.getFilterFromContext(listLayout, emptyContext));
+      });
+
+      it('reverseData', function() {
+         var sbisSource = new sourceLib.SbisService();
+         var recordSetSbis = new collection.RecordSet({
+            rawData: {
+               d: [
+                  [1, 'Инженер-программист'],
+                  [2, 'Руководитель группы']
+               ],
+               s: [
+                  {
+                     n: 'id',
+                     t: 'ЧислоЦелое'
+                  },
+                  {
+                     n: 'code_name',
+                     t: 'Текст'
+                  }
+               ]
+            },
+            adapter: new entity.adapter.Sbis()
+         });
+
+         var reversedData = deprecatedList.Container._private.reverseData(recordSetSbis.getRawData(), sbisSource);
+         assert.deepEqual(reversedData,
+            {
+               d: [
+                  [2, 'Руководитель группы'],
+                  [1, 'Инженер-программист']
+               ],
+               s: [
+                  {
+                     n: 'id',
+                     t: 'ЧислоЦелое'
+                  },
+                  {
+                     n: 'code_name',
+                     t: 'Текст'
+                  }
+               ],
+               _type: 'recordset'
+            });
       });
 
    });

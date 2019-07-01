@@ -5,7 +5,7 @@ import {descriptor} from 'Types/entity';
  *
  * @interface Controls/_dateRange/interfaces/IDateTimeMask
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 
 export default {

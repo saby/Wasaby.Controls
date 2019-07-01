@@ -3,7 +3,7 @@
  * @library Controls/operationsPopup
  * @includes ReportDialog Controls/_operationsPopup/ReportDialog
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import ReportDialog = require('Controls/_operationsPopup/ReportDialog');

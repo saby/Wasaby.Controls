@@ -8,7 +8,7 @@ import InputProcessor = require('Controls/_input/Mask/InputProcessor');
       /**
        * @class Controls/_input/Text/ViewModel
        * @private
-       * @author Миронов А.Ю.
+       * @author Красильников А.С.
        */
 
       var _private = {

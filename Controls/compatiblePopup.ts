@@ -4,7 +4,7 @@
  * @includes BaseOpener Controls/_compatiblePopup/BaseOpener
  * @includes ShowDialogHelpers Controls/_compatiblePopup/ShowDialogHelpers
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 export {default as BaseOpener} from './_compatiblePopup/BaseOpener';

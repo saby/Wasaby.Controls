@@ -33,7 +33,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  * @mixes Controls/_list/ItemActions/ItemActionsStyles
  * @mixes Controls/_list/Swipe/SwipeStyles
  *
- * @mixes Controls/_list/Mover/MoveDialog/Styles
+ * @mixes Controls/_MoveDialog/Styles
  * @mixes Controls/_paging/PagingStyles
  * @mixes Controls/_paging/DigitButtonsStyles
  *
@@ -49,6 +49,8 @@ var ListControl = Control.extend(/** @lends Controls/_list/List.prototype */{
     _viewName: viewName,
     _viewTemplate: viewTemplate,
     _viewModelConstructor: null,
+
+    _theme: ['Controls/list_multi'],
 
     _beforeMount: function() {
         this._viewModelConstructor = this._getModelConstructor();

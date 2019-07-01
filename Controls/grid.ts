@@ -1,5 +1,5 @@
 /**
- * Grid library
+ * Библиотека табличного представления.
  * @library Controls/grid
  * @includes View Controls/_grid/Grid
  * @includes ItemTemplate wml!Controls/_grid/Item
@@ -12,7 +12,7 @@
  * @includes SortButtonStyles Controls/_grid/SortButtonStyles
  * @includes IGridControl Controls/_grid/interface/IGridControl
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import View = require('Controls/_grid/Grid');

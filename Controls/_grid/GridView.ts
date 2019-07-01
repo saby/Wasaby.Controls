@@ -15,29 +15,7 @@ import 'wml!Controls/_grid/Results';
 import 'wml!Controls/_grid/ColGroup';
 import 'css!theme?Controls/grid';
 import {ScrollEmitter} from 'Controls/list';
-
-// todo: removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
-function isEqualWithSkip(obj1, obj2, skipFields) {
-    if ((!obj1 && obj2) || (obj1 && !obj2)) {
-        return false;
-    }
-    if (!obj1 && !obj2) {
-        return true;
-    }
-    if (obj1.length !== obj2.length) {
-        return false;
-    }
-    for (var i = 0; i < obj1.length; i++) {
-        for (var j in obj1[i]) {
-            if (!skipFields[j] && obj1[i].hasOwnProperty(j)) {
-                if (!obj2[i].hasOwnProperty(j) || obj1[i][j] !== obj2[i][j]) {
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-}
+import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
 
 var
     _private = {
@@ -52,7 +30,7 @@ var
         },
 
         getGridTemplateColumns: function(columns, hasMultiselect: boolean): string {
-            let columnsWidths: Array<string> = (hasMultiselect ? ['auto'] : []).concat(columns.map((column => column.width || '1fr')));
+            let columnsWidths: Array<string> = (hasMultiselect ? ['max-content'] : []).concat(columns.map((column => column.width || '1fr')));
             return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
         },
 
@@ -201,14 +179,18 @@ var
         _beforeUpdate: function(newCfg) {
             GridView.superclass._beforeUpdate.apply(this, arguments);
             // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
-
-            if (!isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
+            if (this._options.resultsPosition !== newCfg.resultsPosition) {
+                if (this._listModel) {
+                    this._listModel.setResultsPosition(newCfg.resultsPosition);
+                }
+            }
+            if (!GridIsEqualUtil.isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                 this._listModel.setColumns(newCfg.columns);
                 if (!Env.detection.isNotFullGridSupport) {
                     _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
                 }
             }
-            if (!isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
+            if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._listModel.setHeader(newCfg.header);
                 if (!Env.detection.isNotFullGridSupport) {
                     _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
@@ -232,18 +214,12 @@ var
 
         },
 
-        // todo COMPATIBLE. При отсутствии Application ColumnScroll не может получить событие resizeControl
-        // fix by: https://online.sbis.ru/opendoc.html?guid=aabe8aa5-f593-4c3d-bd7e-ce9a9999a91d
-        _resizeNotifyOnListChanged(): void {
-            GridView.superclass._resizeNotifyOnListChanged.apply(this, arguments);
-            if (this._options.columnScroll) {
-                this._children.columnScroll.updateSizes();
-            }
-        },
-
         _afterUpdate() {
             if (GridLayoutUtil.isPartialGridSupport()) {
                 _private.fillItemsContainerForPartialSupport(this);
+            }
+            if (this._options.columnScroll) {
+                this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
             }
         },
 
@@ -277,7 +253,7 @@ var
         },
 
         _beforePaint: function() {
-            if (this._options.header && this._listModel.isStickyHeader()) {
+            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader()) {
                 const newHeader = this._setHeaderWithHeight();
                 this._listModel.setHeaderCellMinHeight(newHeader);
             }
@@ -286,7 +262,10 @@ var
             // todo Сейчас stickyHeader не умеет работать с многоуровневыми Grid-заголовками, это единственный вариант их фиксировать
             // поправим по задаче: https://online.sbis.ru/opendoc.html?guid=2737fd43-556c-4e7a-b046-41ad0eccd211
             let resultOffset = 0;
-            const container = this._container;
+            // toDO Такое получение контейнера до исправления этой ошибки https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+            const container = this._container.length !== undefined ? this._container[0] : this._container;
+            const stickyHeaderCells = container.getElementsByClassName('controls-Grid__header')[0].childNodes;
+            const resultsHeaderCells = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
             const multyselectVisibility = this._listModel._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
             const newColumns = this._options.header.map((cur, i) => {
                 if (cur.startRow && cur.endRow) {
@@ -300,7 +279,7 @@ var
                         height
                     };
                 }
-                const curElHeight = container.getElementsByClassName('controls-StickyHeader controls-StickyHeader_position controls-Grid__header-cell')[i].getBoundingClientRect().height
+                const curElHeight = stickyHeaderCells[i].getBoundingClientRect().height
                 if (curElHeight > resultOffset) {
                     resultOffset = curElHeight;
                 }
@@ -310,7 +289,7 @@ var
                 };
             });
             if (resultOffset === 0 && this._listModel.getResultsPosition() === 'top') {
-                resultOffset = container.getElementsByClassName('controls-StickyHeader controls-StickyHeader_position controls-Grid__results-cell')[0].offsetTop;
+                resultOffset = resultsHeaderCells[0].offsetTop;
             }
             return [newColumns, resultOffset];
         },
@@ -319,6 +298,9 @@ var
             GridView.superclass._afterMount.apply(this, arguments);
             if (!Env.detection.isNotFullGridSupport) {
                 _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
+            }
+            if (this._options.columnScroll) {
+                this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
             }
         },
 

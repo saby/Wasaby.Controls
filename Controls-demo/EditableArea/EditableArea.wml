@@ -33,11 +33,10 @@
                   source="{{_toolbarSource}}"
                />
                <Controls.buttons:Button caption="Сохранить"
-                                style="linkMain2"
-                                size="m"
+                                fontColorStyle="unaccented" viewMode="link"
                                 attr:class="ControlsDemo-EditableArea__button" />
                <Controls.buttons:Button caption="На выполнение"
-                                style="buttonPrimary"
+                                buttonStyle="primary" viewMode="button"
                                 attr:class="ControlsDemo-EditableArea__button" />
             </div>
          </div>
@@ -60,8 +59,7 @@
          <div class="ControlsDemo-EditableArea__topAreaWrapper">
             <div class="ControlsDemo-EditableArea__row">
                <Controls.buttons:Button caption="Сохранить"
-                                style="linkMain2"
-                                size="m"
+                                        fontColorStyle="unaccented" viewMode="link"
                                 attr:class="ControlsDemo-EditableArea__button" />
             </div>
          </div>

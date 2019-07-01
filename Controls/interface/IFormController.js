@@ -50,25 +50,30 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * Updates a record in the data source.  More {@link Types/source/ICrud#update}
+    * @name Controls/interface/IFormController#errorContainer
+    * @cfg {Controls/dataSource:error.IContainerConstructor} Компонент для отображения шаблона ошибки по данным от {@link Controls/_dataSource/_error/Controller}
+    */
+
+   /**
+    * Updates a record in the data source.  More {@link Types/source:ICrud#update}
     * @function Controls/interface/IFormController#update
     */
 
    /**
-    * Creates an empty record through a data source. More {@link Types/source/ICrud#create}
+    * Creates an empty record through a data source. More {@link Types/source:ICrud#create}
     * @function Controls/interface/IFormController#create
     * @param {Object} createMetaData
     */
 
    /**
-    * Reads an entry from a data source.  More {@link Types/source/ICrud#read}
+    * Reads an entry from a data source.  More {@link Types/source:ICrud#read}
     * @function Controls/interface/IFormController#read
     * @param {String} key
     * @param {Object} readMetaData
     */
 
    /**
-    * Removes an record from the data source. More {@link Types/source/ICrud#delete}
+    * Removes an record from the data source. More {@link Types/source:ICrud#delete}
     * @function Controls/interface/IFormController#delete
     * @param {Object} destroyMetaData
     */

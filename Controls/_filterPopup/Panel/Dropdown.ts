@@ -23,35 +23,15 @@ import 'css!theme?Controls/filterPopup';
     * </pre>
     */
 
-   const _private = {
-      dataLoadCallback: function(items) {
-         this._items = items;
-         if (this._options.dataLoadCallback) {
-             this._options.dataLoadCallback(items);
-         }
-      }
-   };
-
    var FilterDropdown = Control.extend({
       _template: template,
-      _items: null,
-
-      _beforeMount: function() {
-         this._dataLoadCallbackHandler = _private.dataLoadCallback.bind(this);
-      },
 
       _selectedKeysChangedHandler: function(event, keys:Array):Boolean|undefined {
          return this._notify('selectedKeysChanged', [keys]);
       },
 
       _textValueChangedHandler: function(event, text) {
-         let isEmptyItemSelected = this._options.selectedKeys[0] === null && this._options.emptyText,
-             isFirstItemSelected = this._items && this._items.getIndexByValue(this._options.keyProperty, this._options.selectedKeys) === 0;
-         if (isEmptyItemSelected || isFirstItemSelected) {
-            this._notify('textValueChanged', ['']);
-         } else {
-            this._notify('textValueChanged', [text]);
-         }
+         this._notify('textValueChanged', [text]);
       },
 
       _resetHandler: function() {
@@ -66,7 +46,4 @@ import 'css!theme?Controls/filterPopup';
       };
    };
 
-   FilterDropdown._private = _private;
-
    export = FilterDropdown;
-

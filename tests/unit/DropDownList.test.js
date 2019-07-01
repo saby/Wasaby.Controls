@@ -330,6 +330,8 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                   parentProperty: dropDownList._options.parentProperty,
                   nodeProperty: dropDownList._options.nodeProperty,
                   selectedKeys: dropDownList._options.selectedKeys,
+                  footerTemplate: dropDownList._options.nodeFooterTemplate,
+                  footerItemData: {key: 1, item: items.at(0)},
                   rootKey: items.at(0).get(dropDownList._options.keyProperty),
                   iconSize: dropDownList._options.iconSize,
                   showHeader: false,

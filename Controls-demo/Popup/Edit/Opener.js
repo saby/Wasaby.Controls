@@ -4,22 +4,25 @@ define('Controls-demo/Popup/Edit/Opener',
       'wml!Controls-demo/Popup/Edit/Opener',
       'Types/source',
       'Controls-demo/List/Grid/GridData',
+      'Controls/Utils/RecordSynchronizer',
       'wml!Controls-demo/List/Grid/DemoItem',
       'wml!Controls-demo/List/Grid/DemoBalancePrice',
       'wml!Controls-demo/List/Grid/DemoCostPrice',
       'wml!Controls-demo/List/Grid/DemoHeaderCostPrice',
       'wml!Controls-demo/List/Grid/DemoName'
    ],
-   function(Control, template, source, GridData) {
+   function(Control, template, source, GridData, RecordSynchronizer) {
       'use strict';
 
       var EditOpener = Control.extend({
          _template: template,
          _addPosition: 0,
+         _addRecordCount: 1,
          _cancelEdit: false,
          _openRecordByNewKey: false,
 
          _beforeMount: function(opt, context) {
+            this._dataLoadCallback = this._dataLoadCallback.bind(this);
             this._itemPadding = { left: 'S', right: 'M', bottom: 'M' };
             this._viewSource = new source.Memory({
                idProperty: 'id',
@@ -131,8 +134,41 @@ define('Controls-demo/Popup/Edit/Opener',
             if (additionaData && additionaData.isNewRecord) {
                additionaData.at = this._addPosition;
             }
-         }
+         },
 
+         _dataLoadCallback: function(items) {
+            this._items = items;
+            this._baseRecord = this._items.at(0).clone();
+         },
+
+         _addRecords: function() {
+            var addRecords = [];
+            for (var i = this._addRecordCount; i < this._addRecordCount + 10; i++) {
+               var cloneRecord = this._baseRecord.clone();
+               cloneRecord.set('id', i);
+               cloneRecord.set('name', 'Созданная запись ' + i);
+               addRecords.push(cloneRecord);
+            };
+            this._addRecordCount += 10;
+            RecordSynchronizer.addRecord(addRecords, {}, this._items);
+         },
+         _mergeRecords: function() {
+            var editRecord = [];
+            var i = 0;
+            this._items.each(function(model) {
+               var a = model.clone();
+               a.set('name', 'Обновленная запись ' + ++i);
+               editRecord.push(a);
+            });
+            RecordSynchronizer.mergeRecord(editRecord, this._items);
+         },
+         _deleteRecords: function() {
+            var ids = [];
+            this._items.each(function(model) {
+               ids.push(model.getId());
+            });
+            RecordSynchronizer.deleteRecord(this._items, ids);
+         }
       });
 
       return EditOpener;

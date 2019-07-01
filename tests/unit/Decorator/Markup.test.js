@@ -79,7 +79,7 @@ define([
             href: 'http://www.ya.ru',
             target: '_blank'
          },
-         'http://www.ya.ru'
+         'www.ya.ru'
       ],
       ftpLinkNode = ['a',
          {
@@ -506,7 +506,7 @@ define([
                '<pre>' + decoratedLinkHtml + '</pre>' +
                '<div>' + decoratedLinkHtml + '</div>' +
                '<p>' + decoratedLinkHtml + '&nbsp;&nbsp;   </p>' +
-               '<p>' + linkHtml + '   ' + decoratedLinkHtml + '</p>' +
+               '<p>' + decoratedLinkHtml + '   ' + decoratedLinkHtml + '</p>' +
                '<p>' + linkHtml + 'text </p>' +
                '<p>' + decoratedLinkHtml + '<br />text</p>' +
                '<p>' + decoratedLinkHtml + '   <br />text</p>' +
@@ -773,6 +773,168 @@ define([
                'http://ya.ru'
             ]];
             assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('only good links, separated by space chars', function() {
+            var i,
+               parentNode = ['p',
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  ' ',
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  '   ' + nbsp + '\t',
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  ['br'],
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  '      ',
+                  ['a', { href: 'http://a' }, 'http://a'],
+               ],
+               expectedNeedDecorate = [undefined,
+                  true,
+                  true,
+                  false,
+                  true,
+                  false,
+                  true,
+                  false,
+                  true,
+                  false,
+                  true
+               ],
+               checkNeedDecorate;
+
+            for (i = 1; i < parentNode.length; ++i) {
+               checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
+            }
+         });
+         it('br tag as end of paragraph', function() {
+            var i,
+               parentNode = ['p',
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  ['br'],
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  'some text'
+               ],
+               expectedNeedDecorate = [undefined,
+                  true,
+                  true,
+                  false,
+                  false,
+                  false
+               ],
+               checkNeedDecorate;
+
+            for (i = 1; i < parentNode.length; ++i) {
+               checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
+            }
+         });
+         it('two links before text and two links after', function() {
+            var i,
+               parentNode = ['p',
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  'some text',
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  ['a', { href: 'http://a' }, 'http://a']
+               ],
+               expectedNeedDecorate = [undefined,
+                  false,
+                  false,
+                  false,
+                  true,
+                  true
+               ],
+               checkNeedDecorate;
+
+            for (i = 1; i < parentNode.length; ++i) {
+               checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
+            }
+         });
+         it('two links before tag with text and two links after', function() {
+            var i,
+               parentNode = ['p',
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  ['span', 'some text'],
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  ['a', { href: 'http://a' }, 'http://a']
+               ],
+               expectedNeedDecorate = [undefined,
+                  false,
+                  false,
+                  false,
+                  true,
+                  true
+               ],
+               checkNeedDecorate;
+
+            for (i = 1; i < parentNode.length; ++i) {
+               checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
+            }
+         });
+         it('good link, space, bad link, good link', function() {
+            var i,
+               parentNode = ['p',
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  ' ',
+                  ['a', { href: 'http://ResidentSleeper' }, 'http://a'],
+                  ['a', { href: 'http://a' }, 'http://a']
+               ],
+               expectedNeedDecorate = [undefined,
+                  false,
+                  false,
+                  false,
+                  true
+               ],
+               checkNeedDecorate;
+
+            for (i = 1; i < parentNode.length; ++i) {
+               checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
+            }
+         });
+         it('spaces after link', function() {
+            var i,
+               parentNode = ['p',
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  '  \t '
+               ],
+               expectedNeedDecorate = [undefined,
+                  true,
+                  false
+               ],
+               checkNeedDecorate;
+
+            for (i = 1; i < parentNode.length; ++i) {
+               checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
+            }
+         });
+         it('spaces with style after link', function() {
+            var i,
+               parentNode = ['p',
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  ['span',
+                     { style: 'text-decoration: underline' },
+                     ['strong',
+                        '        '
+                     ]
+                  ]
+               ],
+               expectedNeedDecorate = [undefined,
+                  false,
+                  false
+               ],
+               checkNeedDecorate;
+
+            for (i = 1; i < parentNode.length; ++i) {
+               checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
+            }
          });
       });
       describe('decorateLink', function() {

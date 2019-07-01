@@ -21,7 +21,7 @@ import 'css!theme?Controls/datePopup';
  * @mixes Controls/_datePopup/interfaces/IDatePopup
  * @control
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @demo Controls-demo/datePopup/datePopup
  *
  * @css @background-color_PeriodDialog Background color of dialog.
@@ -297,7 +297,11 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _applyClick: function (e) {
-        _private.sendResult(this);
+        this._children.formController.submit().addCallback((results: object) => {
+            if (!Object.keys(results).find((key) => Array.isArray(results[key]))) {
+                _private.sendResult(this);
+            }
+        });
     },
 
     _closeClick: function () {

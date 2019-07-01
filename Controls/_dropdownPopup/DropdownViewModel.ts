@@ -3,6 +3,7 @@
  */
 import {ItemsViewModel, BaseViewModel, ItemsUtil, getStyle} from 'Controls/list';
 import entity = require('Types/entity');
+import {factory} from 'Types/chain';
       var _private = {
          filterHierarchy: function(item) {
             var parent;
@@ -48,7 +49,9 @@ import entity = require('Types/entity');
 
             // Get items from the same group. Hide the separator, if the group is empty or all list items from the same group
             let itemsGroup = self._itemsModel._display.getGroupItems(key);
-            return itemsGroup.length === 0 || itemsGroup.length === self.getItems().getCount();
+            // getCount of itemsModel returns count items includes groups
+            let numberItemsCurrentRoot = factory(self.getItems()).filter(_private.filterHierarchy.bind(self)).value().length;
+            return itemsGroup.length === 0 || itemsGroup.length === numberItemsCurrentRoot;
          }
       };
 

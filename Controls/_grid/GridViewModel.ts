@@ -7,8 +7,9 @@ import {isEqual} from 'Types/object';
 import {
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
-    getResultsIndex, getTopOffset, IBaseGridRowIndexOptions, getRowsArray, getMaxEndRow
+    getResultsIndex, getTopOffset, IBaseGridRowIndexOptions, getRowsArray, getMaxEndRow, getBottomPaddingRowIndex
 } from 'Controls/_grid/utils/GridRowIndexUtil';
+
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -392,7 +393,7 @@ var
             let
                 columns: Array<{ width: string }> = self._columns,
                 hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
-                columnsWidth = hasMultiselect ? ['auto'] : [],
+                columnsWidth = hasMultiselect ? ['max-content'] : [],
                 hasAutoWidth = !!columns.find((column) => {
                     return column.width === 'auto';
                 });
@@ -449,6 +450,7 @@ var
         _columns: [],
         _curColumnIndex: 0,
 
+        _lastItemKey: undefined,
         _headerRows: [],
         _headerColumns: [],
         _curHeaderColumnIndex: 0,
@@ -490,6 +492,7 @@ var
                 this._notify('onGroupsExpandChange', changes);
             }.bind(this);
             this._onCollectionChangeFn = function() {
+                this._updateLastItemKey();
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
             // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
@@ -501,7 +504,15 @@ var
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
             this._ladder = _private.prepareLadder(this);
             this._setColumns(this._options.columns);
+            if (this._options.header && this._options.header.length) { this._isMultyHeader = this.isMultyHeader(this._options.header); }
             this._setHeader(this._options.header);
+            this._updateLastItemKey();
+        },
+
+        _updateLastItemKey(): void {
+            if (this.getItems()) {
+                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+            }
         },
 
         _updateIndexesCallback(): void {
@@ -517,6 +528,9 @@ var
                 result = cClone(column);
             if (isNoGridSupport) {
                 if (result.width === '1fr') {
+                    result.width = 'auto';
+                }
+                if (result.width === 'max-content') {
                     result.width = 'auto';
                 }
             }
@@ -557,11 +571,23 @@ var
             this._setHeader(columns);
             this._nextModelVersion();
         },
-
+        isMultyHeader: function(columns) {
+            let k = 0;
+            while(columns.length > k) {
+                if (columns[k].endRow > 2) {
+                    return true;
+                }
+                k++;
+            }
+            return false;
+        },
         _prepareHeaderColumns: function(columns, multiSelectVisibility) {
             if (columns && columns.length) {
                 this._headerRows = getRowsArray(columns, multiSelectVisibility);
                 this._maxEndRow = getMaxEndRow(this._headerRows);
+                if (multiSelectVisibility && columns[0] && columns[0].isBreadCrumbs) {
+                    this._headerRows[0][0].hiddenForBreadCrumbs = true;
+                }
             } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
             } else {
@@ -576,7 +602,7 @@ var
         setHeaderCellMinHeight: function(data) {
             if (!isEqual(getRowsArray(data[0], this._options.multiSelectVisibility !== 'hidden'), this._headerRows)) {
                 this._prepareHeaderColumns(data[0], this._options.multiSelectVisibility !== 'hidden');
-                if (data[1]) { this._setResultOffset(data[1]); };
+                if (data[1]) { this._setResultOffset(data[1]); }
                 this._nextModelVersion();
             }
         },
@@ -688,6 +714,7 @@ var
                );
             }
 
+
             if (headerColumn.column.sortingProperty) {
                 headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
             }
@@ -714,28 +741,22 @@ var
                     }
 
                     const additionalColumn = this._options.multiSelectVisibility === 'hidden' ? 0 : 1;
-                    const gridStyles = [
-                        {
-                            name: 'grid-column',
-                            value: `${startColumn + additionalColumn} / ${endColumn + additionalColumn}`
-                        },
-                        {
-                            name: 'grid-row',
-                            value: `${startRow} / ${endRow}`
-                        }
-                    ];
-
-                    cellStyles += GridLayoutUtil.toCssString(gridStyles);
+                    const gridStyles = GridLayoutUtil.getMultyHeaderStyles(startColumn, endColumn, startRow, endRow, additionalColumn);
+                    cellStyles += gridStyles;
 
                 }
                 cellContentClasses += rowIndex !== this._headerRows.length - 1 && endRow - startRow === 1 ? ' controls-Grid__cell_header-content_border-bottom' : '';
                 cellContentClasses += endRow - startRow === 1 ? ' control-Grid__cell_header-nowrap' : '';
+            } else if (GridLayoutUtil.isPartialGridSupport()) {
+                cellStyles += GridLayoutUtil.getCellStyles(rowIndex, columnIndex);
             }
 
-            if (columnIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerRows[rowIndex][columnIndex + 1].startColumn && !cell.title) {
-                cellStyles = `grid-row:1/${this._maxEndRow};grid-column:1/2;`;
-                headerColumn.rowSpan = this._maxEndRow - 1;
-                headerColumn.colSpan = 1;
+            if (columnIndex === 0 && rowIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerRows[rowIndex][columnIndex + 1].startColumn && !cell.title) {
+                cellStyles = GridLayoutUtil.getMultyHeaderStyles(1, 2, 1, this._maxEndRow, 0)
+                if (this.isNoGridSupport()) {
+                    headerColumn.rowSpan = this._maxEndRow - 1;
+                    headerColumn.colSpan = 1;
+                }
             }
             if (headerColumn.column.align) {
                 cellContentClasses += ' controls-Grid__header-cell_justify_content_' + headerColumn.column.align;
@@ -753,7 +774,6 @@ var
             return headerColumn;
         },
 
-
         // -----------------------------------------------------------
         // ---------------------- resultColumns ----------------------
         // -----------------------------------------------------------
@@ -765,6 +785,10 @@ var
             return this._options.resultsPosition;
         },
 
+        setResultsPosition: function(position) {
+            this._options.resultsPosition = position;
+        },
+        
         getStyleForCustomResultsTemplate: function() {
             return _private.getColspan(
                this._options.multiSelectVisibility,
@@ -1035,14 +1059,20 @@ var
                     hasHeader: !!this.getHeader(),
                     resultsPosition: this.getResultsPosition(),
                     multyHeaderOffset: this.getMultyHeaderOffset(),
+                    hasBottomPadding: this._options._needBottomPadding
                 },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
+
+            if (this.getEditingItemData()) {
+                cfg.editingRowIndex = this.getEditingItemData().index;
+            }
 
             return {
                 getIndexByItem: (item) => getIndexByItem({item, ...cfg}),
                 getIndexById: (id) => getIndexById({id, ...cfg}),
                 getIndexByDisplayIndex: (index) => getIndexByDisplayIndex({index, ...cfg}),
                 getResultsIndex: () => getResultsIndex({...cfg, hasEmptyTemplate}),
+                getBottomPaddingRowIndex: () => getBottomPaddingRowIndex(cfg),
                 getFooterIndex: () => getFooterIndex({...cfg, hasEmptyTemplate}),
                 getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multyHeaderOffset)
             };
@@ -1223,6 +1253,7 @@ var
 
         setItems: function(items) {
             this._model.setItems(items);
+            this._updateLastItemKey();
         },
 
         setItemTemplateProperty: function(itemTemplateProperty) {
@@ -1274,10 +1305,9 @@ var
 
         _calcItemVersion: function(item, key) {
             var
-                version = this._model._calcItemVersion(item, key),
-                lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+                version = this._model._calcItemVersion(item, key);
 
-            if (lastItemKey === key) {
+            if (this._lastItemKey === key) {
                 version = 'LAST_ITEM_' + version;
             }
 
@@ -1373,6 +1403,10 @@ var
             return this._model.getStartIndex();
         },
 
+        getStopIndex(): number {
+            return this._model.getStopIndex();
+        },
+
         setHoveredItem: function (item) {
             this._model.setHoveredItem(item);
         },
@@ -1406,6 +1440,27 @@ var
         // Only for browsers with partial grid support. Explicit grid styles for empty template with grid row and grid column
         getEmptyTemplateStyles: function() {
             return _private.getEmptyTemplateStyles(this);
+        },
+
+        getContainerWidth: function() {
+            return this._containerWidth || 0;
+        },
+        setContainerWidth: function(containerWidth) {
+            this._containerWidth = containerWidth;
+        },
+
+        getBottomPaddingStyles(): string {
+            let styles = '';
+
+            if (GridLayoutUtil.isPartialGridSupport()) {
+                let
+                    columnStart = this.getMultiSelectVisibility() === 'hidden' ? 0 : 1,
+                    rowIndex = this._getRowIndexHelper().getBottomPaddingRowIndex();
+
+                styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, 1, this._columns.length);
+            }
+
+            return styles;
         },
 
         setHandlersForPartialSupport: function(handlersList: Record<string, Function>): void {

@@ -8,7 +8,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
       /**
        * @class Controls/_input/Text/ViewModel
        * @private
-       * @author Миронов А.Ю.
+       * @author Красильников А.С.
        */
       var _private = {
          updateFormatMaskChars: function(self, formatMaskChars) {

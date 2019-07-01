@@ -4,6 +4,26 @@ import template = require('wml!Controls/_toggle/RadioGroup/RadioGroup');
 import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 
    /**
+    * Группа контролов, которые предоставляют пользователям возможность выбора между двумя или более параметрами.
+    *
+    * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
+    *
+    * @class Controls/_toggle/RadioGroup
+    * @extends Core/Control
+    * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/ISingleSelectable
+    * @implements Controls/_toggle/interface/IToggleGroup
+    * @control
+    * @public
+    * @author Красильников А.С.
+    * @category Toggle
+    * @demo Controls-demo/RadioGroup/RadioGroupDemoPG
+    *
+    * @mixes Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
+    * @mixes Controls/_toggle/RadioGroup/RadioGroupStyles
+    */
+
+   /*
     * Controls are designed to give users a choice among two or more settings.
     *
     * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
@@ -12,10 +32,10 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
     * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/ISingleSelectable
-    * @mixes Controls/_toggle/interface/IToggleGroup
+    * @implements Controls/_toggle/interface/IToggleGroup
     * @control
     * @public
-    * @author Михайловский Д.С.
+    * @author Красильников А.С.
     * @category Toggle
     * @demo Controls-demo/RadioGroup/RadioGroupDemoPG
     *

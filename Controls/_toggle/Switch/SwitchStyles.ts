@@ -2,7 +2,7 @@
  *
  * @mixin Controls/_toggle/Switch/SwitchStyles
  * @public
- * @author Михайловский Д.С.
+ * @author Красильников А.С.
  *
  * @css @width_Switch Toggle width.
  * @css @height_Switch Toggle height.
