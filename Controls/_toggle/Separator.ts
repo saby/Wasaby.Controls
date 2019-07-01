@@ -11,6 +11,24 @@ export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
 }
 
 /**
+ * Кнопка-разделитель с поддержкой различных стилей отображения и жирным шрифтом. Может использоваться как самостоятельно, так и в составе сложных заголовков.
+ * Контрол состоит из <a href="/docs/js/Controls/Heading/?v=3.18.500">заголовка</a>, <a href="/docs/js/Controls/Heading/Separator/?v=3.18.500">заголовка-разделителя</a> и <a href="/docs/js/Controls/Heading/Counter/?v=3.18.500">счетчика</a>.
+ *
+ * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+ *
+ * @class Controls/_toggle/Separator
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Красильников А.С.
+ * @implements Controls/_toggle/interface/ICheckable
+ *
+ * @demo Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo
+ *
+ * @mixes Controls/_toggle/Separator/SeparatorStyles
+ */
+
+/*
  * Button separator with support different display styles and can be bold thickness. Can be used independently or as part of complex headers(you can see it in Demo-example)
  * consisting of a <a href="/docs/js/Controls/Heading/?v=3.18.500">header</a>, a <a href="/docs/js/Controls/Heading/Separator/?v=3.18.500">header-separator</a> and a <a href="/docs/js/Controls/Heading/Counter/?v=3.18.500">counter</a>.
  *
@@ -30,6 +48,14 @@ export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
 
 /**
  * @name Controls/_toggle/Separator#style
+ * @cfg {String} Стиль отображения разделителя.
+ * @variant secondary
+ * @variant additional
+ * @variant primary
+ */
+
+/*
+ * @name Controls/_toggle/Separator#style
  * @cfg {String} Separator display style.
  * @variant secondary
  * @variant additional
@@ -37,6 +63,11 @@ export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
  */
 
 /**
+ * @name Controls/_toggle/Separator#bold
+ * @cfg {Boolean} Определяет толщину двойного разделителя.
+ */
+
+/*
  * @name Controls/_toggle/Separator#bold
  * @cfg {Boolean} Determines the double separator thickness.
  */

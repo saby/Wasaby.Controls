@@ -12,6 +12,29 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
    orientation?: string;
 }
 /**
+ * Двойной переключатель, который позволяет выбрать один из двух взаимоисключающих вариантов. 
+ *
+ * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
+ *
+ * @class Controls/_toggle/DoubleSwitch
+ * @extends Core/Control
+ * @implements Controls/_toggle/interface/ICheckable
+ * @implements Controls/_interface/ITooltip
+ * @control
+ * @public
+ * @author Красильников А.С.
+ * @category Toggle
+ *
+ * @demo Controls-demo/Switch/DoubleSwitchDemo
+ *
+ * @mixes Controls/_toggle/resources/Switch/SwitchStyles
+ * @mixes Controls/_toggle/resources/DoubleSwitch/DoubleSwitchStyles
+ * @mixes Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
+ *
+ * @css @line-height_DoubleSwitch_vertical Line-height of vertical double switcher. It's align vertical switch toggle.
+ */
+
+/*
  * Switch with two captions and with support two orientation.
  *
  * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
@@ -36,10 +59,22 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
 
 /**
  * @name Controls/_toggle/DoubleSwitch#captions
+ * @cfg {Array.<String>} Массив из двух подписей. Если количество подписей не равно двум, то возникает ошибка.
+ */
+
+/*
+ * @name Controls/_toggle/DoubleSwitch#captions
  * @cfg {Array.<String>} Array of two captions. If caption number is not equal to two, then an error occurs.
  */
 
 /**
+ * @name Controls/_toggle/DoubleSwitch#orientation
+ * @cfg {String} Двойной переключатель ориентации в пространстве.
+ * @variant horizontal Горизонтальная ориентация. Значение по умолчанию.
+ * @variant vertical Вертикальная ориентация.
+ */
+
+/*
  * @name Controls/_toggle/DoubleSwitch#orientation
  * @cfg {String} Double switch orientation in space.
  * @variant horizontal Horizontal orientation. It is default value.
