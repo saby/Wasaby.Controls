@@ -1098,8 +1098,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._needScrollCalculation) {
             if (newOptions.virtualScrolling) {
                 this._virtualScroll = new VirtualScroll({
-                    virtualPageSize: newOptions.virtualPageSize,
-                    virtualSegmentSize: newOptions.virtualSegmentSize
+                    virtualPageSize: newOptions.virtualPageSize
                 });
 
             }
