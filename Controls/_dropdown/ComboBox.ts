@@ -31,6 +31,7 @@ var _private = {
  * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/interface/IDropdown
  * @css @margin-top_ComboBox-popup Offset on the top for pop-up.
+ * @css @spacing_ComboBox-between-arrow-rightBorder Spacing between arrow and right border of field.
  * @control
  * @public
  * @category Input

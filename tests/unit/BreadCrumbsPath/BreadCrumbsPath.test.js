@@ -22,6 +22,7 @@ define([
       const ARROW_WIDTH = 16;
       const BREAD_CRUMB_MIN_WIDTH = 36;
       const HOME_WIDTH = 36;
+      const HOME_PATH_SPACING = 4;
 
       function mockBreadCrumbsUtil(backButtonWidth, maxCrumbsWidth) {
          getWidth = getWidthUtil.getWidth;
@@ -37,6 +38,9 @@ define([
                   break;
                case '<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward"></span>':
                   width = ARROW_WIDTH;
+                  break;
+               case '<div class="controls-BreadCrumbsPath__breadCrumbs_home-path-spacing"></div>':
+                  width = HOME_PATH_SPACING;
                   break;
                default:
                   width = backButtonWidth;
@@ -175,6 +179,19 @@ define([
             });
             assert.isNull(path._visibleItems);
             assert.isNull(path._breadCrumbsItems);
+         });
+
+         it('container is hidden', function() {
+            mockBreadCrumbsUtil(650, 650);
+            path._visibleItems = [1, 2, 3];
+            path._breadCrumbsItems = [2, 3];
+            path._container = {
+               clientWidth: 0
+            };
+            path._beforeUpdate({ items: path._options.items });
+
+            assert.deepEqual(path._visibleItems, [1, 2, 3]);
+            assert.deepEqual(path._breadCrumbsItems, [2, 3]);
          });
       });
 

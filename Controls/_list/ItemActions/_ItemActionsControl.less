@@ -68,6 +68,10 @@
   }
 }
 
+.controls-itemActionsV_outside-spacing {
+  height: @height_ItemActions_outside;
+}
+
 .controls-itemActionsV_position_bottomRight {
   bottom: 0;
   right: 0;
@@ -121,7 +125,7 @@
 
 //since Opener does not know the specific size of the icon
 .controls-itemActionsV__popup .icon-size{
-  .icon-size-without-important(@size_icon_m, @font-family_ItemActions-icon_size_m);
+  .icon-size-without-important(@font-size_ItemActions-icon_size_m, @font-family_ItemActions-icon_size_m);
 }
 
 .controls-itemActionsV__action_icon_size_m {

@@ -350,6 +350,14 @@ import 'wml!Controls/_input/Base/Stretcher';
              * only to inform the model about it.
              */
             self._viewModel.changesHaveBeenApplied();
+         },
+
+         compatAutoComplete: function(autoComplete) {
+            if (typeof autoComplete === 'boolean') {
+               return autoComplete ? 'on' : 'off';
+            }
+
+            return autoComplete;
          }
       };
 
@@ -544,13 +552,15 @@ import 'wml!Controls/_input/Base/Stretcher';
          },
 
          _beforeMount: function(options) {
-            var viewModelCtr = this._getViewModelConstructor();
-            var viewModelOptions = this._getViewModelOptions(options);
+            this._autoComplete = _private.compatAutoComplete(options.autoComplete);
+
+            const viewModelCtr = this._getViewModelConstructor();
+            const viewModelOptions = this._getViewModelOptions(options);
 
             this._initProperties(options);
             _private.initViewModel(this, viewModelCtr, viewModelOptions, options.value);
 
-            if (options.autoComplete) {
+            if (this._autoComplete !== 'off') {
                /**
                 * Browsers use auto-fill to the fields with the previously stored name.
                 * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
@@ -598,6 +608,7 @@ import 'wml!Controls/_input/Base/Stretcher';
                scope: {
                   _useStretcher: false,
                   controlName: CONTROL_NAME,
+                  autoComplete: this._autoComplete,
                   calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
                   isFieldFocused: _private.isFieldFocused.bind(_private, this)
                }
@@ -802,11 +813,19 @@ import 'wml!Controls/_input/Base/Stretcher';
           */
          _focusOutHandler: function() {
             /**
-             * After the focus disappears, the field should be scrolled to the beginning.
-             * Each browser works differently. For example, chrome scrolled to the beginning.
-             * IE, Firefox does not scrolled. So we do it ourselves.
+             * TODO: KINGO
+             * Когда меняется режим редактирования на чтения происходит перерисовка. Поле удаляется и
+             * фокус уходит. Поэтому в обработчике потери фокуса поля не будет, и все действия с ним не могут быть совершены.
+             * Обрабатываем такую ситуация проверкой на существование поля.
              */
-            this._getField().scrollLeft = 0;
+            if (this._getField()) {
+               /**
+                * After the focus disappears, the field should be scrolled to the beginning.
+                * Each browser works differently. For example, chrome scrolled to the beginning.
+                * IE, Firefox does not scrolled. So we do it ourselves.
+                */
+               this._getField().scrollLeft = 0;
+            }
 
             _private.notifyChangeOfFocusState(this, false);
 
@@ -964,8 +983,8 @@ import 'wml!Controls/_input/Base/Stretcher';
             size: 'default',
             placeholder: '',
             textAlign: 'left',
+            autoComplete: 'off',
             fontStyle: 'default',
-            autoComplete: false,
             selectOnClick: false
          };
       };
@@ -978,7 +997,12 @@ import 'wml!Controls/_input/Base/Stretcher';
              * value: descriptor(String|null),
              */
             tooltip: entity.descriptor(String),
-            autoComplete: entity.descriptor(Boolean),
+            /*autoComplete: entity.descriptor(String).oneOf([
+               'on',
+               'off',
+               'username',
+               'current-password'
+            ]),*/
             selectOnClick: entity.descriptor(Boolean),
             inputCallback: entity.descriptor(Function),
 

@@ -60,6 +60,7 @@
         template="{{ _options.content }}"
         scope="{{_options}}"
         _pagingVisible="{{_pagingVisible}}"
+        _needBottomPadding="{{_needBottomPadding}}"
         listModel="{{_listViewModel}}"
         on:animationend="_onAnimationEnd()"
         on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
@@ -109,9 +110,8 @@
     <div class="controls-BaseControl" on:sortingChanged="_sortingChanged()">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
         <ws:if data="{{_needScrollCalculation}}">
-            <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger" style="{{_options.task1177135045 ? ('bottom: -' + (_loadOffset*1.5) + 'px;') : ''}}"></div>
-            <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
-            <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
+            <div class="controls-BaseControl__trigger controls-BaseControl__loadTrigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{ _loadOffset * 1.3 }}px;"></div>
+            <div class="controls-BaseControl__trigger controls-BaseControl__topPlaceholder controls-BaseControl__topVirtualScrollTrigger" name="topVirtualScrollTrigger" style="bottom: -{{_loadOffset}}px; height: {{_topPlaceholderSize}}px;"></div>
         </ws:if>
 
         <ws:if data="{{_listViewModel}}">
@@ -160,9 +160,8 @@
         </ws:if>
 
         <ws:if data="{{_needScrollCalculation}}">
-            <div class="controls-BaseControl__trigger controls-BaseControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{_loadOffset}}px;"></div>
-            <div class="controls-BaseControl__bottomPlaceholder" style="height: {{_bottomPlaceholderHeight}}px;"></div>
-            <div class="controls-BaseControl__trigger controls-BaseControl__bottomListTrigger" name="bottomListTrigger" style="{{_options.task1177135045 ? ('top: -' + (_loadOffset*1.5) + 'px;') : ''}}"></div>
+            <div class="controls-BaseControl__trigger controls-BaseControl__bottomPlaceholder controls-BaseControl__bottomVirtualScrollTrigger" name="bottomVirtualScrollTrigger" style="top: -{{_loadOffset}}px;height: {{_bottomPlaceholderSize}}px;"></div>
+            <div class="controls-BaseControl__trigger controls-BaseControl__loadTrigger controls-BaseControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{ _loadOffset * 1.3 }}px;"></div>
         </ws:if>
 
         <ws:if data="{{_needScrollCalculation}}">

@@ -125,12 +125,9 @@ var _private = {
             result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._source);
             var res = this._notify('selectedItemsChanged', [result.data]);
 
-            var item = result.data[0];
-
-            _private.updateHistory(this, item);
-
             // dropDown must close by default, but user can cancel closing, if returns false from event
             if (res !== false) {
+               _private.updateHistory(this, result.data[0]);
                this._children.DropdownOpener.close();
             }
             break;
@@ -147,11 +144,13 @@ var _private = {
 
    setHandlers: function (self, options) {
       self._onOpen = function (event, args) {
+         self._notify('dropDownOpen');
          if (typeof (options.open) === 'function') {
             options.open(args);
          }
       };
       self._onClose = function(event, args) {
+         self._notify('dropDownClose');
          if (typeof (options.close) === 'function') {
             options.close(args);
          }
@@ -304,7 +303,9 @@ var _Controller = Control.extend({
       this._onResult(event, {action: 'selectorResult', data: items});
    },
 
-   _mousedown: function () {
+   _clickHandler: function(event) {
+      // stop bubbling event, so the list does not handle click event.
+      event.stopPropagation();
       var opener = this._children.DropdownOpener;
       if (opener.isOpened()) {
          opener.close();

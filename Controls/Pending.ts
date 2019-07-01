@@ -89,6 +89,8 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 
             validate: config.validate,
 
+            validateCompatible: config.validateCompatible,
+
             // its function what helps pending to finish when query goes from finishPendingOperations
             onPendingFail: config.onPendingFail,
 
@@ -125,6 +127,9 @@ import ParallelDeferred = require('Core/ParallelDeferred');
             var isValid = true;
             if (pending.validate) {
                isValid = pending.validate();
+            } else if (pending.validateCompatible) {
+               // ignore compatible pendings
+               isValid = false;
             }
 
             // We have at least 1 active pending
@@ -165,6 +170,8 @@ import ParallelDeferred = require('Core/ParallelDeferred');
             var isValid = true;
             if (pending.validate) {
                isValid = pending.validate();
+            } else if (pending.validateCompatible) { //todo compatible
+               isValid = pending.validateCompatible();
             }
             if (isValid) {
                if (pending.onPendingFail) {

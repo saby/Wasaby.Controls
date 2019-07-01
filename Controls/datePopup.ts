@@ -297,7 +297,11 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _applyClick: function (e) {
-        _private.sendResult(this);
+        this._children.formController.submit().addCallback((results: object) => {
+            if (!Object.keys(results).find((key) => Array.isArray(results[key]))) {
+                _private.sendResult(this);
+            }
+        });
     },
 
     _closeClick: function () {

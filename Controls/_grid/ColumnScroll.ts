@@ -21,6 +21,12 @@ const
          if (self._contentSize !== newContentSize || self._contentContainerSize !== newContentContainerSize) {
             self._contentSize = self._children.content.scrollWidth;
             self._contentContainerSize = self._children.content.offsetWidth;
+
+            // reset scroll position after resize, if we don't need scroll
+            if (self._contentSize <= self._contentContainerSize) {
+               self._scrollPosition = 0;
+               _private.drawTransform(self, self._scrollPosition);
+            }
             self._shadowState =
                _private.calculateShadowState(self._scrollPosition, self._contentContainerSize, self._contentSize);
             self._fixedColumnsWidth =
@@ -59,6 +65,13 @@ const
             shadowStyles = 'left: ' + self._fixedColumnsWidth + 'px;';
          }
          return shadowStyles;
+      },
+      drawTransform (self, position) {
+         // This is the fastest synchronization method scroll position and cell transform.
+         // Scroll position synchronization via VDOM is much slower.
+         self._children.contentStyle.innerHTML =
+            '.' + self._transformSelector +
+            ' .controls-Grid__cell_transform { transform: translateX(-' + position + 'px); }';
       }
    },
    ColumnScroll = Control.extend({
@@ -84,12 +97,6 @@ const
          _private.updateSizes(this);
       },
 
-      // todo COMPATIBLE. При отсутствии Application ColumnScroll не может получить событие resizeControl
-      // fix by: https://online.sbis.ru/opendoc.html?guid=aabe8aa5-f593-4c3d-bd7e-ce9a9999a91d
-      updateSizes(): void {
-         _private.updateSizes(this);
-      },
-
       _isColumnScrollVisible() {
          return this._contentSize > this._contentContainerSize;
       },
@@ -109,12 +116,12 @@ const
             this._scrollPosition = newScrollPosition;
             this._shadowState =
                _private.calculateShadowState(this._scrollPosition, this._contentContainerSize, this._contentSize);
-            // This is the fastest synchronization method scroll position and cell transform.
-            // Scroll position synchronization via VDOM is much slower.
-            this._children.contentStyle.innerHTML =
-               '.' + this._transformSelector +
-               ' .controls-Grid__cell_transform { transform: translateX(-' + this._scrollPosition + 'px); }';
+
+            _private.drawTransform(this, this._scrollPosition);
          }
+      },
+      getContentContainerSize() {
+         return this._contentContainerSize;
       }
    });
 export = ColumnScroll;

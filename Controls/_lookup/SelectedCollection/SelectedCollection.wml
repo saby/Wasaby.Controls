@@ -3,6 +3,7 @@
    <ws:if data="{{_items.length > _options.maxVisibleItems}}">
       <Controls.popup:Sticky
             name="infoBox"
+            attr:class="controls-SelectedCollection_sticky"
             closeOnOutsideClick="{{true}}"
             template="Controls/lookupPopup:Collection"
             on:close="_notifyHandler('closeInfoBox')"

@@ -2,6 +2,8 @@
  * Created by as.krasilnikov on 20.11.2018.
  */
 
+import {SyntheticEvent} from 'Vdom/Vdom';
+
 export default {
    _managerWrapper: null,
    _globalPopup: null,
@@ -36,6 +38,14 @@ export default {
    unregisterListener: function(event, registerType, component) {
       if (this._managerWrapper) {
          this._managerWrapper.unregisterListener(event, registerType, component);
+      }
+   },
+   startResizeEmitter(): void {
+      if (this._managerWrapper) {
+         const eventCfg = {
+            type: 'controlResize'
+         };
+         this._managerWrapper.startResizeEmitter(new SyntheticEvent(null, eventCfg));
       }
    }
 };

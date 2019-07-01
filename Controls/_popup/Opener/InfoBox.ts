@@ -1,5 +1,6 @@
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
+import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import getZIndex = require('Controls/Utils/getZIndex');
 import {DefaultOpenerFinder} from "Vdom/Vdom";
@@ -49,6 +50,7 @@ const DEFAULT_CONFIG = {
     targetSide: 'top',
     alignment: 'start',
     floatCloseButton: false,
+    closeOnOutsideClick: true,
     hideDelay: INFOBOX_HIDE_DELAY,
     showDelay: INFOBOX_SHOW_DELAY
 };
@@ -83,7 +85,11 @@ const _private = {
         if (!newCfg.opener) {
             newCfg.opener = DefaultOpenerFinder.find(newCfg.target);
         }
-
+        if (!isNewEnvironment()) {
+            // For the old page, set the zIndex manually
+            //InfoBox must be above all the popup windows on the page.
+            newCfg.zIndex = 10000;
+        }
         return {
             target: newCfg.target && newCfg.target[0] || newCfg.target, // todo: https://online.sbis.ru/doc/7c921a5b-8882-4fd5-9b06-77950cbe2f79
             position: newCfg.position,
@@ -91,7 +97,7 @@ const _private = {
             maxWidth: newCfg.maxWidth,
             zIndex: newCfg.zIndex || getZIndex(newCfg.opener || this),
             eventHandlers: newCfg.eventHandlers,
-            closeOnOutsideClick: true,
+            closeOnOutsideClick: newCfg.closeOnOutsideClick,
             opener: newCfg.opener,
             templateOptions: { // for template: Opener/InfoBox/resources/template
                 template: newCfg.template,
@@ -233,6 +239,7 @@ const InfoBox = BaseOpener.extend({
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ See more}.
  * @function Controls/_popup/Opener/InfoBox#openPopup
  * @param {Object} config InfoBox options. See {@link Controls/_popup/InfoBox description}.
+ * @static
  * @see closePopup
  */
 InfoBox.openPopup = (config: object): void => {
@@ -250,6 +257,7 @@ InfoBox.openPopup = (config: object): void => {
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ See more}.
  * @function Controls/_popup/Opener/InfoBox#closeInfoBox
  * @see openPopup
+ * @static
  */
 InfoBox.closePopup = (): void => {
     BaseOpener.closeDialog(InfoBoxId);

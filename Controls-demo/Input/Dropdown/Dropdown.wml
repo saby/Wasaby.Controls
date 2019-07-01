@@ -26,6 +26,7 @@
                                   displayProperty="title"
                                   parentProperty="parent"
                                   nodeProperty="@parent"
+                                  attr:class="ControlsDemo-InputDropdown__item-limitMaxWidth"
                                   source="{{_createMemory(_hierarchyItems)}}"/>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">

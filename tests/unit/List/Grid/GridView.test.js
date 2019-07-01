@@ -17,7 +17,7 @@ define(['Controls/grid'], function(gridMod) {
             width: '1fr'
          }
       ],
-      preparedColumnsWithMultiselect = 'grid-template-columns: auto 1fr auto 100px 1fr;',
+      preparedColumnsWithMultiselect = 'grid-template-columns: max-content 1fr auto 100px 1fr;',
       preparedColumnsWithoutMiltiselect = 'grid-template-columns: 1fr auto 100px 1fr;';
 
    describe('Controls.List.Grid.GridView', function() {
@@ -61,7 +61,15 @@ define(['Controls/grid'], function(gridMod) {
          gridMod.GridView.superclass._beforeUpdate = superclassBeforeUpdate;
          assert.isTrue(superclassBeforeUpdateCalled, 'Superclass method not called in "_beforeUpdate".');
       });
-
+      it('resultPosition update', function(){
+         let gridView = new gridMod.GridView({resultsPosition: 'top'});
+         let setResultPosinionCalled = false;
+         gridView._listModel = {setResultsPosition: function() {
+               setResultPosinionCalled = true;
+            }};
+         gridView._beforeUpdate({resultsPosition: 'bottom'});
+         assert.isTrue(setResultPosinionCalled, 'setPesultPosinion');
+      });
       it('fill itemsContainer from separated columns', function () {
 
          let
@@ -95,7 +103,7 @@ define(['Controls/grid'], function(gridMod) {
                 {displayProperty: 'field3'},
              ];
 
-         assert.equal(gridMod.GridView._private.getGridTemplateColumns(columns, true), 'grid-template-columns: auto 1fr auto 1fr;');
+         assert.equal(gridMod.GridView._private.getGridTemplateColumns(columns, true), 'grid-template-columns: max-content 1fr auto 1fr;');
          assert.equal(gridMod.GridView._private.getGridTemplateColumns(columns, false), 'grid-template-columns: 1fr auto 1fr;');
       });
 

@@ -4,6 +4,8 @@ import {IoC} from "Env/Env";
  * TODO: Сделать правильные экспорты, чтобы можно было и в js писать просто new VirtualScroll() и в TS файле использовать типы
  */
 
+type Direction = 'down' | 'up';
+
 /**
  * Configuration object.
  *
@@ -89,6 +91,11 @@ class VirtualScroll {
         };
     }
 
+    set StartIndex(startIndex: number): void {
+        this._startIndex = Math.max(0, startIndex);
+        this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
+    }
+
     get ItemsHeights(): Array<number> {
         return this._itemsHeights;
     }
@@ -106,7 +113,6 @@ class VirtualScroll {
 
     set ItemsContainer(value: ItemsContainer) {
         this._itemsContainer = value;
-        this.updateItemsSizes();
     }
 
     get ItemsContainer(): ItemsContainer {
@@ -140,20 +146,71 @@ class VirtualScroll {
 
         this._updateItemsSizes(startUpdateIndex, updateLength);
         this._updatePlaceholdersSizes();
-
     }
 
-    //TODO Add enum BaseControl.Direction(LoadDirection) or List.Direction(LoadDirection)
-    public updateItemsIndexes(direction: String): void {
-        if (direction === 'down') {
-            this._startIndex = this._startIndex + this._virtualSegmentSize;
-            this._startIndex = Math.min(this._startIndex, this._itemsCount - this._virtualPageSize);
-        } else {
-            this._startIndex = this._startIndex - this._virtualSegmentSize;
+    // метод для того, чтобы пересчитать текущие индексы согласно обновленному количеству отображаемых элементов.
+    // + нужно работать с проекцией, т.к. группировка, хлебные крошки только в ней учитываются.
+    // когда данный метод планируется вызывать:
+    // когда загрузили новую страницу
+    public recalcItemsIndexes(direction): void {
+
+        // допустим показывали при первой загрузке с 0 по 27 элемент, а virtualPageSize = 40.
+        // докрутили до триггера загрузки итемов, загрузили ещё 20 элементов,
+        // показываем с 20 по 47 индексы
+        // а надо показывать с 7 по 47 индексы.
+        const
+           sub = this._virtualPageSize - (this._stopIndex - this._startIndex); // 40 - (27 - 0) = 13
+        if (sub > 0) { // 13 > 0
+            if (direction === 'up') {
+                // при direction === 'up' максимально уменьшаем startIndex
+                if (this._startIndex >= sub) { // если startIndex полностью хватает для компенсации, то берем всё из него
+                    this._startIndex -= sub;
+                } else { // иначе - берем сколько можем из startIndex, остальное возьмем из stopIndex.
+                    this._startIndex = 0;
+                }
+                this._stopIndex = Math.min(this._startIndex + this._virtualPageSize, this._itemsCount);
+            }
+            if (direction === 'down') {
+                // а при direction === 'down' наоборот - максимально увеличиваем stopIndex
+                this._stopIndex = Math.min(this._startIndex + this._virtualPageSize, this._itemsCount);
+
+                // если всё ещё мало записей - можно попробовать уменьшать startIndex ВОТ В ЭТОМ МЕСТЕ.
+            }
         }
-        this._startIndex = Math.max(0, this._startIndex);
-        this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
-        this._updatePlaceholdersSizes();
+    }
+
+    // метод для того, чтобы пересчитать текущие индексы при скролле
+    // (аналог loadToDirection, но не загружает данные с источника, а оперирует уже имеющимися в рекордсете)
+    // + нужно работать с проекцией, т.к. группировка, хлебные крошки только в ней учитываются.
+    // когда данный метод планируется вызывать:
+    // скролл вверх/вниз
+    public recalcToDirection(direction): void {
+
+        // допустим показывали с 7 по 47
+        // докрутили до верхнего триггера загрузки виртуального скрола, нужно нарисовать ещё 10 элементов вверх, а есть только 7
+        // показываем с 0 по 40 индексы
+
+        if (direction === 'up') {
+            if (this._startIndex >= this._virtualSegmentSize) {
+                this._startIndex -= this._virtualSegmentSize;
+            } else {
+               this._startIndex = 0;
+            }
+            this._stopIndex = Math.min(this._startIndex + this._virtualPageSize, this._itemsCount);
+        } else {
+            // допустим показывали с 15 до 45 записи, а всего их 50.
+            // скролим вниз, должны показывать с 20 по 50.
+
+            // если для сдвига stopIndex хватает количества элементов, то просто увеличиваем stopIndex
+            if (this._stopIndex + this._virtualSegmentSize <= this._itemsCount) { // 45 + 10 = 55, 55 < 50
+                this._stopIndex += this._virtualSegmentSize;
+            } else { // иначе - сдвигаем на сколько можем, остальное пытаемся взять из _startIndex
+                const
+                   sub = this._itemsCount - this._stopIndex; // 45 + 10 - 50 = 5
+                this._stopIndex += sub;
+            }
+            this._startIndex = Math.max(this._stopIndex - this._virtualPageSize, 0);
+        }
     }
 
     public insertItemsHeights(itemIndex: number, itemsHeightsCount: number): void {
@@ -166,52 +223,35 @@ class VirtualScroll {
         }
 
         this._itemsHeights = topItemsHeight.concat(insertedItemsHeights, bottomItemsHeight);
-        this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
-        this._updatePlaceholdersSizes();
     }
 
     public cutItemsHeights(itemIndex: number, itemsHeightsCount: number): void {
         this._itemsHeights.splice(itemIndex + 1, itemsHeightsCount);
-        this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
-        this._updatePlaceholdersSizes();
     }
 
-    public updateItemsIndexesOnScrolling(scrollTop: number, containerHeight: number): void {
-        if (this._isScrollInPlaceholder(scrollTop, containerHeight)) {
-            let
-                offsetHeight = 0,
-                heightsCount = this._itemsHeights.length;
-
-            for (let i = 0; i < heightsCount; i++) {
-                offsetHeight += this._itemsHeights[i];
-
-                // Находим первую видимую запись по скролл топу и считаем этот элемент серединой виртуальной страницы
-                if (offsetHeight >= scrollTop) {
-                    this._startIndex = Math.max(0, Math.ceil(i - this._virtualPageSize / 2));
-
-                    // Проверяем, что собираемся показать элементы, которые были отрисованы ранее
-                    if (this._startIndex + this._virtualPageSize > heightsCount) {
-                        this._stopIndex = heightsCount;
-                        this._startIndex = Math.max(0, heightsCount - this._virtualPageSize);
-                    } else {
-                        this._stopIndex = Math.min(this._startIndex + this._virtualPageSize, heightsCount);
-                    }
-                    break;
-                }
-            }
-
-            this._updatePlaceholdersSizes();
+    public hasEnoughDataToDirection(direction: Direction): boolean {
+        if (direction === 'up') {
+            return this._startIndex >= this._virtualSegmentSize;
+        } else {
+            return this._itemsCount >= this._stopIndex + this._virtualSegmentSize;
         }
     }
 
+    private _isEnd(): boolean {
+        return (this._itemsHeights.length === this._itemsCount) && (this._stopIndex >= this._itemsHeights.length);
+    }
 
     private _isScrollInPlaceholder(scrollTop: number, containerHeight: number = 0): boolean {
-        let itemsHeight = 0,
-            topPlaceholderSize = this._getItemsHeight(0, this._startIndex);
-        for (let i = this._startIndex; i < this._stopIndex; i++) {
-            itemsHeight += this._itemsHeights[i];
+
+        if (this._topPlaceholderSize === 0 && this._bottomPlaceholderSize === 0) {
+            return false;
         }
-        return (scrollTop <= topPlaceholderSize || (scrollTop+containerHeight) >= (itemsHeight + topPlaceholderSize));
+
+        let
+            topPlaceholderEnd = this._topPlaceholderSize,
+            bottomPlaceholderStart = this._topPlaceholderSize + this._getItemsHeight(this._startIndex, this._stopIndex);
+
+        return ((scrollTop <= topPlaceholderEnd) || ((scrollTop + containerHeight) >= bottomPlaceholderStart));
     }
 
     private _getItemsHeight(startIndex: number, stopIndex: number): number {
@@ -225,16 +265,18 @@ class VirtualScroll {
         return height;
     }
 
+    updatePlaceholdersSizes(): void {
+        this._updatePlaceholdersSizes();
+    }
+
     private _updatePlaceholdersSizes(): void {
         this._topPlaceholderSize = this._getItemsHeight(0, this._startIndex);
         this._bottomPlaceholderSize = this._getItemsHeight(this._stopIndex, this._itemsHeights.length);
     }
 
     private _updateItemsSizes(startUpdateIndex, updateLength, isUnitTesting = false): void {
-        if (isUnitTesting) {
-            for (let i = 0; i < updateLength; i++) {
-                this._itemsHeights[startUpdateIndex + i] = this._getRowHeight(this._itemsContainer.children[i], isUnitTesting);
-            }
+        for (let i = 0; i < updateLength; i++) {
+            this._itemsHeights[startUpdateIndex + i] = this._getRowHeight(this._itemsContainer.children[i], isUnitTesting);
         }
     }
 

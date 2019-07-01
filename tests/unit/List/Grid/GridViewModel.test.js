@@ -846,7 +846,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   'getChildren','getStartIndex', 'getActiveItem', 'setRightSwipedItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
                callStackMethods = [];
 
-            gridViewModel._model = {};
+            gridViewModel._model = {
+               getItems: function() {}
+            };
             callMethods.forEach(function(item) {
                gridViewModel._model[item] = function() {
                   callStackMethods.push(item);
@@ -1047,6 +1049,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         width: '100px'
                      },
                      {
+                        title: 'fourth',
+                        width: 'max-content'
+                     },
+                     {
                         title: 'last',
                         width: 'auto'
                      }
@@ -1063,6 +1069,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                      {
                         title: 'third',
                         width: '100px'
+                     },
+                     {
+                        title: 'fourth',
+                        width: 'auto'
                      },
                      {
                         title: 'last',
@@ -1202,11 +1212,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(4, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" before "resetHeaderColumns()".');
             headerRow.resetHeaderColumns();
             assert.equal(0, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
-            });
-            it('getResultsPosition()', function() {
-               assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
-            });
+         });
+         it('getResultsPosition()', function() {
+            assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
+         });
+         it('is multiheader', function() {
 
+            let gridViewModel = new gridMod.GridViewModel(cfg);
+            assert.isFalse(gridViewModel.isMultyHeader([{startRow: 1, endRow: 2}]),"simple header");
+            assert.isTrue(gridViewModel.isMultyHeader([{startRow: 1, endRow: 3}]),"multyHeader header");
+         });
          it('_prepareHeaderColumns', function() {
             gridViewModel._headerRows = [];
             // gridViewModel._prepareHeaderColumns(gridHeader, false);
@@ -1220,6 +1235,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.deepEqual([{}], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" with multiselect.');
             gridViewModel._prepareHeaderColumns(gridHeader, true);
             assert.deepEqual([[{}, ...gridHeader]], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" with multiselect.');
+            gridViewModel._prepareHeaderColumns([{isBreadCrumbs: true}], true);
+            assert.isTrue(gridViewModel._headerRows[0][0].hiddenForBreadCrumbs);
          });
 
          it('_prepareResultsColumns', function() {
@@ -1336,13 +1353,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                    isEditing: true,
                    rowIndex: 2
                 };
+
             gridViewModel.getColumnsWidthForEditingRow = () => ['1fr', '123px', '321px'];
             gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gridViewModel, editingItemData);
             gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gridViewModel, groupItemData);
 
             assert.equal(
                 editingItemData.getEditingRowStyles(),
-                'display: grid; display: -ms-grid; grid-template-columns: auto 1fr 123px 321px; grid-column: 1 / 5; grid-row: 3;'
+                'display: grid; display: -ms-grid; grid-template-columns: max-content 1fr 123px 321px; grid-column: 1 / 5; grid-row: 3;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
          });
@@ -1366,7 +1384,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             calledCallback = false;
             gridViewModel.setMultiSelectVisibility('visible');
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['auto', '1fr', '15px', '16px']);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1fr', '15px', '16px']);
             assert.isTrue(calledCallback);
 
             calledCallback = false;
@@ -1376,7 +1394,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isFalse(calledCallback);
 
             gridViewModel.setMultiSelectVisibility('visible');
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['auto', '1fr']);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1fr']);
             assert.isFalse(calledCallback);
 
             gridViewModel.setColumns(savedColumns);

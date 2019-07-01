@@ -75,7 +75,7 @@ define(
                searchCallback: function(res, resFilter) {
                   assert.equal(res.data.getCount(), 1);
                   assert.equal(res.data.at(0).get('name'), 'Sasha');
-                  assert.isTrue(aborted);
+                  assert.isFalse(aborted);
                   assert.isTrue(searchStarted);
                   assert.isTrue(filter !== resFilter);
                },
@@ -95,6 +95,29 @@ define(
                searchController.search('Sasha');
                done();
             }, 60);
+         });
+
+         it('abort', function() {
+            var aborted = false;
+            var searchController = new searchLib._SearchController({
+               minSearchLength: 3,
+               source: source,
+               searchDelay: 50,
+               searchParam: 'name',
+               filter: {},
+               abortCallback: function() {
+                  aborted = true;
+               },
+            });
+
+            searchController.search('test');
+            assert.isFalse(aborted);
+
+            searchController.abort();
+            assert.isFalse(aborted);
+
+            searchController.abort(true);
+            assert.isTrue(aborted);
          });
 
          it('search with sorting', function(done) {
@@ -129,12 +152,15 @@ define(
                var searched = false;
                var forced = false;
 
+               let originalSearch = search.search;
                search.search = function(value, force) {
                   searched = true;
 
                   if (force) {
                      forced = true;
                   }
+
+                  return originalSearch.apply(search, arguments);
                };
 
                searchController.search('1', true);
@@ -157,12 +183,14 @@ define(
             var searched = false;
             var forced = false;
 
+            let originalSearch = searchController._search.search;
             searchController._search.search = function(value, force) {
                searched = true;
 
                if (force) {
                   forced = true;
                }
+               return originalSearch.apply(searchController._search, arguments);
             };
 
             searchController.search('t');

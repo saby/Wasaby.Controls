@@ -49,6 +49,8 @@ var ListControl = Control.extend(/** @lends Controls/_list/List.prototype */{
     _viewTemplate: viewTemplate,
     _viewModelConstructor: null,
 
+    _theme: ['Controls/list_multi'],
+
     _beforeMount: function() {
         this._viewModelConstructor = this._getModelConstructor();
     },

@@ -7,6 +7,7 @@ import {descriptor} from 'Types/entity';
 var selectionTypes = {
     range: 'range',
     single: 'single',
+    quantum: 'quantum',
     disable: 'disable'
 };
 

@@ -1,12 +1,12 @@
 define(
-   ['Controls/suggestPopup'],
-   function(suggestPopup) {
+   ['Controls/suggestPopup', 'Env/Env', 'Types/entity', 'Types/collection'],
+   function(suggestPopup, Env, entity, collection) {
       
       'use strict';
       
       describe('Controls.Container.Suggest.List', function() {
-         
-         it('_beforeUpdate', function() {
+
+         describe('_beforeUpdate', function() {
             var suggestList = new suggestPopup.ListContainer();
             var contextObject = {
                suggestOptionsField: {
@@ -22,6 +22,18 @@ define(
                   }
                }
             };
+            var contextObjectWithStickyPosition = {
+               suggestOptionsField: {
+                  options: {
+                     stickyPosition: {
+                        verticalAlign: {
+                           side: 'top'
+                        }
+                     }
+                  }
+               }
+            };
+
             var eventFired = false;
             var tab = null;
    
@@ -33,16 +45,26 @@ define(
                eventFired = true;
                tab = id[0];
             };
+
+            it('default', function() {
+               suggestList._beforeUpdate({}, contextObject);
+
+               assert.isFalse(eventFired);
+               assert.equal(tab, null);
+            });
    
-            suggestList._beforeUpdate({}, contextObject);
-            
-            assert.isFalse(eventFired);
-            assert.equal(tab, null);
+            it('with new tab key', function() {
+               suggestList._beforeUpdate({}, contextObjectWithNewKey);
+
+               assert.isTrue(eventFired);
+               assert.equal(tab, 'test');
+            });
    
-            suggestList._beforeUpdate({}, contextObjectWithNewKey);
-   
-            assert.isTrue(eventFired);
-            assert.equal(tab, 'test');
+            it('with stickyPosition reverse', function() {
+               suggestList._reverseList = false;
+               suggestList._beforeUpdate({}, contextObjectWithStickyPosition);
+               assert.isTrue(suggestList._reverseList);
+            });
          });
          
          it('_tabsSelectedKeyChanged', function() {
@@ -74,7 +96,7 @@ define(
 
             suggestPopup.ListContainer._private.dispatchEvent(container, {keyCode: 'testKeyCode'}, {});
             assert.isTrue(eventDispatched);
-         })
+         });
 
          it('getTabKeyFromContext', function() {
             var emptyContext = {};
@@ -89,7 +111,48 @@ define(
             assert.equal(suggestPopup.ListContainer._private.getTabKeyFromContext(emptyContext), null);
             assert.equal(suggestPopup.ListContainer._private.getTabKeyFromContext(contextWithValue), 1);
          });
-         
+
+         describe('_inputKeydown, markedKey is null', function() {
+            var
+               suggestList = new suggestPopup.ListContainer(),
+               domEvent = {
+                  nativeEvent: {
+                     keyCode: Env.constants.key.up
+                  }
+               };
+
+            suggestList._items = new collection.List({
+               items: [
+                  new entity.Model({
+                     rawData: {id: 'first'},
+                     idProperty: 'id'
+                  }),
+                  new entity.Model({
+                     rawData: {id: 'last'},
+                     idProperty: 'id'
+                  })
+               ]
+            });
+            suggestList._suggestListOptions = {
+               source: {
+                  getIdProperty: function() {
+                     return 'id';
+                  }
+               }
+            };
+
+            it('list is not reverse', function() {
+               suggestList._inputKeydown(null, domEvent);
+               assert.equal(suggestList._markedKey, 'last');
+            });
+
+            it('list is reverse', function() {
+               suggestList._reverseList = true;
+               suggestList._markedKey = null;
+               suggestList._inputKeydown(null, domEvent);
+               assert.equal(suggestList._markedKey, 'first');
+            });
+         });
       });
    }
 );

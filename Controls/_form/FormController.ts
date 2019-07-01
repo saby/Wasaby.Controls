@@ -137,6 +137,7 @@ import dataSource = require('Controls/dataSource');
       _template: tmpl,
       _record: null,
       _isNewRecord: false,
+      _errorContainer: dataSource.error.Container,
 
       constructor: function(options) {
          FormController.superclass.constructor.apply(this, arguments);

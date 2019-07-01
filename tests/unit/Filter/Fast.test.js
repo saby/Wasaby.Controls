@@ -148,7 +148,7 @@ define(
             open: setTrue.bind(this, assert)
          };
 
-         it('_beforeMount', function() {
+         it('_beforeMount', function(done) {
             let fastFilter = getFastFilter(configItems);
             let receivedItems = [{
                id: 'first',
@@ -197,6 +197,17 @@ define(
             optionsItemsSelector.items[0].properties.selectorTemplate = 'new template';
             fastFilter._beforeMount(optionsItemsSelector);
             assert.isTrue(fastFilter._hasSelectorTemplate);
+
+            fastFilter._hasSelectorTemplate = undefined;
+            let sourceOptions = Clone(source);
+            sourceOptions[0].properties.selectorTemplate = 'new template';
+            fastFilter._beforeMount({source: new sourceLib.Memory({
+               data: sourceOptions,
+               idProperty: 'id'
+            })}).addCallback(function() {
+               assert.isTrue(fastFilter._hasSelectorTemplate);
+               done();
+            });
          });
 
          it('beforeUpdate new items property not changed', function(done) {
@@ -398,6 +409,13 @@ define(
             fastData2 = getFastFilterWithItems(configMultiSelect);
             filterMod.Fast._private.selectItems.call(fastData2, []);
             assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
+
+            // resetValue selection
+            configMultiSelect.items[0].resetValue = 'все страны';
+            fastData2 = getFastFilterWithItems(configMultiSelect);
+            fastData2._configs[0].multiSelect = true;
+            filterMod.Fast._private.selectItems.call(fastData2, [{ key: 0, title: 'все страны' }]);
+            assert.deepEqual(fastData2._items.at(0).value, 'все страны');
          });
 
          it('setText', function(done) {
@@ -572,6 +590,26 @@ define(
                   assert.equal(fastFilter._items.at(3).value, 'Великобритания');
                   assert.isFalse(isCallback);
                   done();
+               });
+            });
+         });
+
+         it('_beforeUpdate reload new items by key', function(done) {
+            var fastFilter = getFastFilter(configWithItems);
+            fastFilter._beforeMount(configWithItems).addCallback(function(result) {
+               let newConfigItems = Clone(configWithItems);
+               newConfigItems.items[3].value = undefined;
+               newConfigItems.items[2].properties.filter = {};
+               fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
+                  assert.equal(fastFilter._configs[3]._items.getCount(), 2);
+
+                  newConfigItems.items[3].value = 'Великобритания';
+                  newConfigItems.items[3].properties.filter = {key: 1};
+                  fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
+                     assert.equal(fastFilter._items.at(3).value, 'Великобритания');
+                     assert.equal(fastFilter._configs[3]._items.getCount(), 1);
+                     done();
+                  });
                });
             });
          });

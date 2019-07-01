@@ -61,7 +61,6 @@ var _private = {
       self._loading = false;
       if (self._viewMode === 'search') {
          self._searchValue = '';
-         self._inputSearchValue = '';
          self._misspellValue = '';
 
          if (self._options.parentProperty) {
@@ -108,9 +107,10 @@ var _private = {
    },
    itemOpenHandler: function(root:string|number|null):void {
       if (root !== null) {
-         _private.getSearchController(this).abort();
-         this._root = root;
+         _private.getSearchController(this).abort(true);
+         this._inputSearchValue = '';
       }
+      this._root = root;
    },
 
    dataLoadCallback: function (self, data:RecordSet):void {
@@ -180,6 +180,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
       if (options.searchValue) {
          this._inputSearchValue = options.searchValue;
+         this._searchValue = options.searchValue;
 
          if (this._viewMode !== 'search') {
             this._previousViewMode = this._viewMode;
@@ -202,6 +203,10 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          filter = newOptions.filter;
       }
 
+      if (this._options.root !== newOptions.root) {
+         this._root = newOptions.root;
+      }
+
       if (this._searchController) {
          if (_private.needUpdateSearchController(currentOptions, this._dataOptions) || _private.needUpdateSearchController(this._options, newOptions)) {
             this._searchController.abort();
@@ -211,7 +216,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          }
       }
 
-      if (this._options.searchValue !== newOptions.searchValue) {
+      if (this._options.searchValue !== newOptions.searchValue && newOptions.searchValue !== this._inputSearchValue) {
          this._search(null, newOptions.searchValue);
       }
    },

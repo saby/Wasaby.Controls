@@ -180,6 +180,7 @@ const Confirmation = BaseOpener.extend({
  * @function Controls/_popup/Opener/Confirmation#openPopup
  * @param {popupOptions[]} templateOptions Confirmation options.
  * @return {Promise<boolean>} Promise that ending with user choice results
+ * @static
  */
 Confirmation.openPopup = (templateOptions: object) => {
     return new Promise((resolve) => {

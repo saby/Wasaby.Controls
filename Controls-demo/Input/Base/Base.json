@@ -61,10 +61,16 @@
               "right": "right"
             }
           },
-          "readOnly": {
-            "type": "Boolean"
-          },
           "autoComplete": {
+            "type": "enum",
+            "enum": {
+              "on": "on",
+              "off": "off",
+              "username": "username",
+              "current-password": "current-password"
+            }
+          },
+          "readOnly": {
             "type": "Boolean"
           },
           "selectOnClick": {
