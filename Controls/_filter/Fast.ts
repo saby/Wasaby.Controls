@@ -244,7 +244,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                let keys = _private.getKeysLoad(configs[index], item.value instanceof Array ? item.value: [item.value]);
                if (keys.length) {
                   let properties = {source: getPropValue(item, 'properties').source};
-                  properties.filter = properties.filter || {};
+                  properties.filter = getPropValue(item, 'properties').filter || {};
                   properties.filter[getPropValue(item, 'properties').keyProperty] = keys;
                   let result = _private.loadItemsFromSource({}, properties).addCallback(function(items) {
                      configs[index]._items.prepend(items);
