@@ -65,8 +65,11 @@ import 'Controls/context';
 
          minimizeItem: function(item) {
             const textValue = getPropValue(item, 'textValue');
-            // We understand whether to save the filter in history by textValue.
-            // If textValue = '' - the filter is saved to history.
+            // Two case of saving filter in history
+            // 1 case - need to hide textValue in line near button, but save value in history
+            // 2 case - need to hide textValue in line near button and not save value in history
+            // if textValue is empty string (''), save filter in history
+            // if textValue is null, do not save
             const isNeedSaveHistory = textValue !== undefined && textValue !== null;
             const value = isNeedSaveHistory ? getPropValue(item, 'value') : getPropValue(item, 'resetValue');
             const visibility = !isNeedSaveHistory && getPropValue(item, 'visibility') ? false : getPropValue(item, 'visibility');
