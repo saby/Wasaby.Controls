@@ -121,6 +121,9 @@ define(
                   }
                };
 
+            suggestList._options = {
+               keyProperty: 'id'
+            };
             suggestList._items = new collection.List({
                items: [
                   new entity.Model({
@@ -133,13 +136,6 @@ define(
                   })
                ]
             });
-            suggestList._suggestListOptions = {
-               source: {
-                  getIdProperty: function() {
-                     return 'id';
-                  }
-               }
-            };
 
             it('list is not reverse', function() {
                suggestList._inputKeydown(null, domEvent);
