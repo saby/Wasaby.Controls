@@ -1,34 +1,30 @@
-import Control = require('Core/Control');
-import Env = require('Env/Env');
-import entity = require('Types/entity');
-import template = require('wml!Controls/_slider/sliderTemplate');
-import utils from 'Controls/_slider/Utils';
-import {Container as DragNDrop} from 'Controls/dragnDrop';
-import Range from './Range';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {IoC} from 'Env/Env';
+import {descriptor as EntityDescriptor} from 'Types/entity';
+import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
+import {IScaleData, default as Utils} from './Utils';
+import { SyntheticEvent } from 'Vdom/Vdom';
 
-var _private = {
-   _checkOptions(opts) {
-      utils.checkOptions(opts);
-      if (opts.value < opts.minValue || opts.value > opts.maxValue) {
-         Env.IoC.resolve('ILogger').error('Slider', 'value must be in the range [minValue..maxValue].');
-      }
-   },
-   _setValue(self, val) {
-      self._notify('valueChanged', [val]);
-   },
-   _render(self, minValue, maxValue, value) {
-      const rangeLength = maxValue - minValue;
-      const right =  Math.min(Math.max((value - minValue), 0), rangeLength) / rangeLength * 100;
-      self._pointData[0].position = right;
-      self._lineData.width = right;
-   },
-   _needUpdate(oldOpts, newOpts) {
-      return (oldOpts.scaleStep !== newOpts.scaleStep ||
-         oldOpts.minValue !== newOpts.minValue ||
-         oldOpts.maxValue !== newOpts.maxValue ||
-         oldOpts.value !== newOpts.value);
-   }
-};
+export interface ISliderBaseOptions extends IControlOptions {
+   size?: string;
+   borderVisible?: boolean;
+   minValue: number;
+   maxValue: number;
+   scaleStep?: number;
+   value: number;
+   precision: number;
+}
+interface ILineData {
+   position: number;
+   width: number;
+}
+interface IPointData {
+   name: string;
+   position: number;
+}
+type IPointDataList = IPointData[];
+const maxPercentValue = 100;
+
 /**
  * Basic slider with single movable point for choosing value.
  *
@@ -42,7 +38,7 @@ var _private = {
 
 /**
  * @name Controls/_slider/Base#size
- * @cfg {Boolean} sets the size of slider point
+ * @cfg {String} sets the size of slider point
  * @example
  * Slider with diameter of point = 12px
  * <pre class="brush:html">
@@ -116,81 +112,103 @@ var _private = {
  *   <Controls.slider:Base precision="{{0}}"/>
  * </pre>
  */
-var Base = Control.extend({
-   _template: template,
-   _value: undefined,
-   _lineData: undefined,
-   _pointData: undefined,
-   _scaleData: undefined,
-   _beforeMount(options) {
-      _private._checkOptions(options);
-      this._scaleData = utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
+class Base extends Control<ISliderBaseOptions> {
+   protected _template: TemplateFunction = SliderTemplate;
+   private _value: number = undefined;
+   _lineData: ILineData = undefined;
+   _pointData: IPointDataList = undefined;
+   _scaleData: IScaleData[] = undefined;
+
+   private _render(minValue: number, maxValue: number, value: number): void {
+      const rangeLength = maxValue - minValue;
+      const right =  Math.min(Math.max((value - minValue), 0), rangeLength) / rangeLength * maxPercentValue;
+      this._pointData[0].position = right;
+      this._lineData.width = right;
+   }
+
+   private _needUpdate(oldOpts: ISliderBaseOptions, newOpts: ISliderBaseOptions): boolean {
+      return (oldOpts.scaleStep !== newOpts.scaleStep ||
+         oldOpts.minValue !== newOpts.minValue ||
+         oldOpts.maxValue !== newOpts.maxValue ||
+         oldOpts.value !== newOpts.value);
+   }
+
+   private _checkOptions(opts: ISliderBaseOptions): void {
+      Utils.checkOptions(opts);
+      if (opts.value < opts.minValue || opts.value > opts.maxValue) {
+         IoC.resolve('ILogger').error('Slider', 'value must be in the range [minValue..maxValue].');
+      }
+   }
+
+   private _setValue(val: number): void {
+      this._notify('valueChanged', [val]);
+   }
+
+   protected _beforeMount(options: ISliderBaseOptions): void {
+      this._checkOptions(options);
+      this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
       this._value = options.value === undefined ? options.maxValue : options.value;
       this._pointData = [{name: 'point', position: 100}];
       this._lineData = {position: 0, width: 100};
-      _private._render(this, options.minValue, options.maxValue, this._value);
-   },
-   _beforeUpdate(options) {
-      if (_private._needUpdate(this._options, options)) {
-         _private._checkOptions(options);
-         this._scaleData = utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
+      this._render(options.minValue, options.maxValue, this._value);
+   }
+
+   protected _beforeUpdate(options: ISliderBaseOptions): void {
+      if (this._needUpdate(this._options, options)) {
+         this._checkOptions(options);
+         this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
       }
-      _private._render(this, options.minValue, options.maxValue, options.value);
-   },
-   /**
-    * Handler for the mousedown event.
-    */
-   _onMouseDownHandler(event) {
+      this._render(options.minValue, options.maxValue, options.value);
+   }
+
+   private _onMouseDownHandler(event: SyntheticEvent): void {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
-         const ratio = utils.getRatio(event.nativeEvent.pageX, box.left + window.pageXOffset, box.width);
-         this._value = utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
-         _private._setValue(this, this._value);
+         const ratio = Utils.getRatio(event.nativeEvent.pageX, box.left + window.pageXOffset, box.width);
+         this._value = Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
+         this._setValue(this._value);
          this._children.dragNDrop.startDragNDrop(this._children.point, event);
       }
-   },
-   /**
-    * Handler for the dragmove event.
-    */
-   _onDragNDropHandler(e, dragObject) {
+   }
+
+   private _onDragNDropHandler(e: SyntheticEvent, dragObject) {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
-         const ratio = utils.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
-         this._value = utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
-         _private._setValue(this, this._value);
+         const ratio = Utils.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
+         this._value = Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
+         this._setValue(this._value);
       }
    }
-});
 
-Base.getDefaultOptions = function() {
-   return {
-      theme: 'default',
-      size: 'm',
-      borderVisible: false,
-      minValue: undefined,
-      maxValue: undefined,
-      scaleStep: undefined,
-      value: undefined,
-      precision: 0
-   };
-};
+   static _theme: string[] = ['Controls/slider'];
 
-Base.getOptionTypes = function() {
-   return {
-      size: entity.descriptor(String).oneOf([
-         's',
-         'm'
-      ]),
-      borderVisible: entity.descriptor(Boolean),
-      minValue: entity.descriptor(Number).required,
-      maxValue: entity.descriptor(Number).required,
-      scaleStep: entity.descriptor(Number),
-      value: entity.descriptor(Number),
-      precision: entity.descriptor(Number)
-   };
+   static getDefaultOptions(): object {
+      return {
+         theme: 'default',
+         size: 'm',
+         borderVisible: false,
+         minValue: undefined,
+         maxValue: undefined,
+         scaleStep: undefined,
+         value: undefined,
+         precision: 0
+      };
+   }
+
+   static getOptionTypes(): object {
+      return {
+         size: EntityDescriptor(String).oneOf([
+            's',
+            'm'
+         ]),
+         borderVisible: EntityDescriptor(Boolean),
+         minValue: EntityDescriptor(Number).required,
+         maxValue: EntityDescriptor(Number).required,
+         scaleStep: EntityDescriptor(Number),
+         value: EntityDescriptor(Number),
+         precision: EntityDescriptor(Number)
+      };
+   }
 }
 
-Base._theme = ['Controls/slider'];
-
-Base._private = _private;
 export default Base;

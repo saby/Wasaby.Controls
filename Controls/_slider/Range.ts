@@ -1,14 +1,23 @@
-import Control = require('Core/Control');
-import Env = require('Env/Env');
-import entity = require('Types/entity');
-import template = require('wml!Controls/_slider/sliderTemplate');
-import utils from 'Controls/_slider/Utils';
-import {Container as DragNDrop} from 'Controls/dragnDrop';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {IoC} from 'Env/Env';
+import {descriptor as EntityDescriptor} from 'Types/entity';
+import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
+import {IScaleData, default as Utils} from './Utils';
 
+export interface ISliderRangeOptions extends IControlOptions {
+   size?: string;
+   borderVisible?: boolean;
+   minValue: number;
+   maxValue: number;
+   scaleStep?: number;
+   startValue: number;
+   endValue: number;
+   precision: number;
+}
 
 const _private = {
    _checkOptions(opts) {
-      utils.checkOptions(opts);
+      Utils.checkOptions(opts);
       if (opts.startValue < opts.minValue || opts.startValue > opts.maxValue) {
          Env.IoC.resolve('ILogger').error('Slider', 'startValue must be in the range [minValue..maxValue].');
       }
@@ -153,9 +162,8 @@ const _private = {
  *   <Controls.slider:Base precision="{{0}}"/>
  * </pre>
  */
-const Range = Control.extend({
-
-   _template: template,
+class Range extends Control<ISliderRangeOptions> {
+   protected _template: TemplateFunction = SliderTemplate;
    _value: undefined,
    _lineData: undefined,
    _pointData: undefined,
@@ -164,7 +172,7 @@ const Range = Control.extend({
    _endValue: undefined,
    _beforeMount(options) {
       _private._checkOptions(options);
-      this._scaleData = utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
+      this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
       this._endValue = options.endValue === undefined ? options.maxValue : Math.min(options.maxValue, options.endValue);
       this._startValue = options.startValue === undefined ? options.minValue : Math.max(options.minValue, options.startValue);
       this._value = undefined;
@@ -175,7 +183,7 @@ const Range = Control.extend({
    _beforeUpdate(options) {
       if (_private._needUpdate(this._options, options)) {
          _private._checkOptions(options);
-         this._scaleData = utils.getScaleData( options.minValue, options.maxValue, options.scaleStep);
+         this._scaleData = Utils.getScaleData( options.minValue, options.maxValue, options.scaleStep);
       }
       this._endValue = options.endValue === undefined ? options.maxValue : Math.min(options.maxValue, options.endValue);
       this._startValue = options.startValue === undefined ? options.minValue : Math.max(options.minValue, options.startValue);
@@ -187,8 +195,8 @@ const Range = Control.extend({
    _onMouseDownHandler(event) {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
-         const ratio = utils.getRatio(event.nativeEvent.pageX, box.left + window.pageXOffset, box.width);
-         this._value = utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
+         const ratio = Utils.getRatio(event.nativeEvent.pageX, box.left + window.pageXOffset, box.width);
+         this._value = Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
          const pointName = _private._getClosestPoint(this._value, this._startValue, this._endValue);
          if (pointName === 'start') {
             _private._setStartValue(this, this._value);
@@ -206,8 +214,8 @@ const Range = Control.extend({
    _onDragNDropHandler(e, dragObject) {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
-         const ratio = utils.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
-         this._value = utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
+         const ratio = Utils.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
+         this._value = Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
          if (dragObject.entity === this._children.pointStart) {
             _private._setStartValue(this, Math.min(this._value, this._endValue));
          }
@@ -216,7 +224,7 @@ const Range = Control.extend({
          }
       }
    }
-});
+};
 
 Range.getDefaultOptions = function() {
    return {
