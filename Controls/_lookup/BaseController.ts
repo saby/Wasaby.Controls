@@ -165,7 +165,8 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
          this._selectedKeys = options.selectedKeys.slice();
 
          if (this._selectedKeys.length) {
-            if (receivedState) {
+            // toDO Проверка на соответствие до исправления баги с ключами https://online.sbis.ru/open_dialog.html?guid=7db2a73d-4469-4f50-8151-3160639bceb1
+            if (receivedState && receivedState.getIndexByValue(options.keyProperty, this._selectedKeys[0]) !== -1) {
                this._items = receivedState;
             } else {
                return _private.loadItems(this, options, options.selectedKeys);
