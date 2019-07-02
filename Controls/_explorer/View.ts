@@ -249,6 +249,10 @@ import 'Controls/breadcrumbs';
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);
       },
+      reloadItem: function() {
+         let treeControl = this._children.treeControl;
+         return treeControl.reloadItem.apply(treeControl, arguments);
+      },
       beginEdit: function(options) {
          return this._children.treeControl.beginEdit(options);
       },
