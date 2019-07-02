@@ -43,6 +43,8 @@ import {RecordSet} from 'Types/collection';
  * @author Золотова Э.Е.
  */
 
+const DELAY_OPEN = 100;
+
 var _private = {
     getItemByName: function(items, name) {
         var result;
@@ -287,6 +289,7 @@ var Filter = Control.extend({
     _configs: null,
     _source: null,
     _idOpenSelector: null,
+    _delayOpenTimeout: null,
 
     _beforeMount: function(options, context, receivedState) {
         this._configs = {};
@@ -336,6 +339,24 @@ var Filter = Control.extend({
         } else {
             this._openPanel();
         }
+    },
+
+    _startTimer: function(event, item) {
+        if (!this._delayOpenTimeout) {
+            this._delayOpenTimeout = setTimeout(function () {
+                this._openPanel(event, item);
+            }.bind(this), DELAY_OPEN);
+        }
+    },
+
+    _restartTimer: function(event, item) {
+        this._resetTimer();
+        this._startTimer(event, item);
+    },
+
+    _resetTimer: function() {
+        clearTimeout(this._delayOpenTimeout);
+        this._delayOpenTimeout = null;
     },
 
     _openPanel: function(event, fastItem) {

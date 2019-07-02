@@ -32,6 +32,9 @@
                            title="{{_displayText[item.name].title}}"
                            hasMoreText="{{_displayText[item.name].hasMoreText}}"
                            on:click="_openPanel(item)"
+                           on:mouseenter="_startTimer(item)"
+                           on:mousemove="_restartTimer(item)"
+                           on:mouseleave="_resetTimer()"
                            name="{{item.name}}"/>
                <ws:partial template="cross" on:click="_reset(item)" />
          </ws:if>

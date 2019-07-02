@@ -300,6 +300,24 @@ define(
             assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'In any state', title: 'In any state', hasMoreText: ''}});
          });
 
+         it('_startTimer', function() {
+            let opened, resultConfig;
+            let view = getView(defaultConfig);
+            view._children = {'fast': 'target'};
+            view._options.panelTemplateName = 'panelTemplateName.wml';
+            view._children = {
+               DropdownOpener: { open: (config) => {
+                  resultConfig = config;
+                  opened = true;
+               } }
+            };
+            view._startTimer('mouseenter', {name: 'fast', title: 'My department'});
+            setTimeout(() => {
+               assert.isTrue(opened);
+               assert.strictEqual(resultConfig.target, 'target');
+            }, 110);
+         });
+
          describe('View::resultHandler', function() {
             let view;
             beforeEach(function() {
