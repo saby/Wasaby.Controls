@@ -1,7 +1,21 @@
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import {IoC} from 'Env/Env';
-
 /**
+ * Контрол, открывающий всплывающее окно, которое позиционнируется в центре экрана.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ See more}
+ * <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
+ * @class Controls/_popup/Opener/Dialog
+ * @extends Controls/_popup/Opener/BaseOpener
+ * @mixes Controls/interface/IOpener
+ * @mixes Controls/_popup/Opener/Confirmation/Dialog/DialogStyles
+ * @control
+ * @author Красильников А.С.
+ * @category Popup
+ * @demo Controls-demo/Popup/Opener/DialogPG
+ * @public
+ */
+
+/*
  * Component that opens a popup that is positioned in the center of the browser window. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ See more}
  * <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
  * @class Controls/_popup/Opener/Dialog
@@ -13,7 +27,6 @@ import {IoC} from 'Env/Env';
  * @category Popup
  * @demo Controls-demo/Popup/Opener/DialogPG
  * @public
- *
  */
 
 const _private = {
@@ -28,13 +41,20 @@ const _private = {
 const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';
 
 const Dialog = BaseOpener.extend({
-
     /**
      * Open dialog popup.
      * If you call this method while the window is already opened, it will cause the redrawing of the window.
      * @function Controls/_popup/Opener/Dialog#open
      * @returns {Undefined}
      * @param {PopupOptions[]} popupOptions Dialog popup options.
+     */
+
+    /**
+     * Метод открытия диалогового окна.
+     * Повторный вызов этого метода инициирует перерисовку окна с новыми опциями.
+     * @function Controls/_popup/Opener/Dialog#open
+     * @returns {Undefined}
+     * @param {PopupOptions[]} popupOptions Конфигурация диалогового окна.
      * @remark
      * {@link https://wi.sbis.ru/docs/js/Controls/interface/IDialogOptions#popupOptions popupOptions}
      * @example
@@ -113,38 +133,46 @@ export default Dialog;
 
 /**
  * @name Controls/_popup/Opener/Dialog#height
- * @cfg {Number} Height of popup.
+ * @cfg {Number} Текущая высота всплывающего окна
  */
 
 /**
  * @name Controls/_popup/Opener/Dialog#maxHeight
- * @cfg {Number} The maximum height of popup.
+ * @cfg {Number} Максимально допустимая высота всплывающего окна
  */
 /**
  * @name Controls/_popup/Opener/Dialog#minHeight
- * @cfg {Number} The minimum height of popup.
+ * @cfg {Number} Минимально допустимая высота всплывающего окна
  */
 /**
  * @name Controls/_popup/Opener/Dialog#maxWidth
- * @cfg {Number} The maximum width of popup.
+ * @cfg {Number} Максимально допустимая ширина всплывающего окна
  */
 /**
  * @name Controls/_popup/Opener/Dialog#minWidth
- * @cfg {Number} The minimum width of popup.
+ * @cfg {Number} Минимально допустимая ширина всплывающего окна
  */
-/**
+/*
  * @name Controls/_popup/Opener/Dialog#top
  * @cfg {Number} Distance from the window to the top of the screen.
  */
 /**
+ * @name Controls/_popup/Opener/Dialog#top
+ * @cfg {Number} Расстояние от всплывающего окна до верхнего края экрана.
+ */
+/*
  * @name Controls/_popup/Opener/Dialog#left
  * @cfg {Number} Distance from the window to the left border of the screen.
+ */
+/**
+ * @name Controls/_popup/Opener/Dialog#left
+ * @cfg {Number} Расстояние от всплывающего окна до левого края экрана.
  */
 
 /**
  * @name Controls/_popup/Opener/Dialog#close
  * @function
- * @description Close dialog popup.
+ * @description Метод закрытия диалогового окна.
  * @returns {Undefined}
  * @example
  * wml

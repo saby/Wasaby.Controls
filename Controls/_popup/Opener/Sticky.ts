@@ -12,9 +12,21 @@ const _private = {
 };
 
 const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
+/*
+ * Component that opens a popup that is positioned relative to a specified element.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
+ * @class Controls/_popup/Opener/Sticky
+ * @extends Controls/_popup/Opener/BaseOpener
+ * @mixes Controls/interface/IOpener
+ * @control
+ * @author Красильников А.С.
+ * @category Popup
+ * @demo Controls-demo/Popup/Opener/StickyPG
+ * @public
+ */
 
 /**
- * Component that opens a popup that is positioned relative to a specified element.
+ * Контрол, открывающий всплывающее окно, которое позиционнируется относительно вызывающего элемента.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
  * @class Controls/_popup/Opener/Sticky
  * @extends Controls/_popup/Opener/BaseOpener
@@ -142,7 +154,7 @@ export = Sticky;
 
 /**
  * @name Controls/_popup/Opener/Sticky#close
- * @description Close sticky popup.
+ * @description Метод вызова закрытия всплывающего окна
  * @function
  * @returns {Undefined}
  * @example
@@ -186,33 +198,42 @@ export = Sticky;
 
 /**
  * @name Controls/_popup/Opener/Sticky#minWidth
- * @cfg {Number} The minimum width of popup.
+ * @cfg {Number} Минимальная ширина всплывающего окна
  */
 
 /**
  * @name Controls/_popup/Opener/Sticky#maxWidth
- * @cfg {Number} The maximum width of popup.
+ * @cfg {Number} Максимальная ширина всплывающего окна
  */
 
 /**
  * @name Controls/_popup/Opener/Sticky#minHeight
- * @cfg {Number} The minimum height of popup.
+ * @cfg {Number} Минимальная высота всплывающего окна
  */
 
 /**
  * @name Controls/_popup/Opener/Sticky#maxHeight
- * @cfg {Number} The maximum height of popup.
+ * @cfg {Number} Максимальная высота всплывающего окна
  */
 /**
  * @name Controls/_popup/Opener/Sticky#height
- * @cfg {Number} The height of popup.
+ * @cfg {Number} Текущая высота всплывающего окна
  */
 /**
  * @name Controls/_popup/Opener/Sticky#width
- * @cfg {Number} The width of popup.
+ * @cfg {Number} Текущая ширина всплывающего окна
  */
 
 /**
+ * @name Controls/_popup/Opener/Sticky#actionOnScroll
+ * @cfg {String} Определяет реакцию всплывающего окна на скролл родительской области
+ * @variant close Всплывающее окно закрывается
+ * @variant track  Всплывающее окно движется вместе со своей точкой позиционнирования.
+ * @variant none Всплывающее окно остается на месте расположения, вне зависимости от движения точки позиционнирования.
+ * @default none
+ */
+
+/*
  * @name Controls/_popup/Opener/Sticky#actionOnScroll
  * @cfg {String} Determines the popup action on scroll.
  * @variant close
@@ -220,12 +241,13 @@ export = Sticky;
  * @variant none
  * @default none
  */
-/**
- * @name Controls/_popup/Opener/Sticky#offset
- * @cfg {offset} Point positioning of the target relative to sticky.
- */
 
 /**
+ * @name Controls/_popup/Opener/Sticky#targetPoint
+ * @cfg {direction} Точка позиционнирования всплывающего окна относительно вызывающего элемента.
+ */
+
+/*
  * @name Controls/_popup/Opener/Sticky#targetPoint
  * @cfg {direction} Point positioning of the target relative to sticky.
  */
@@ -250,14 +272,23 @@ export = Sticky;
 
 /**
  * @name Controls/_popup/Opener/Sticky#direction
+ * @cfg {direction} Устанавливает выравнивание всплывающей подсказки относительно точки позиционнирования.
+ */
+
+/*
+ * @name Controls/_popup/Opener/Sticky#direction
  * @cfg {direction} Sets the alignment of the popup.
  */
 
 /**
  * @name Controls/_popup/Opener/Sticky#offset
+ * @cfg {offset} Устанавливает отступы от точки позиционнирования до всплывающего окна
+ */
+
+/*
+ * @name Controls/_popup/Opener/Sticky#offset
  * @cfg {offset} Sets the offset of the targetPoint.
- *
- * /
+ */
 
  /**
  * @typedef {Object} offset
