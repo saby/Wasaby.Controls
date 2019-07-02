@@ -31,7 +31,7 @@ def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws (workspace){
         deleteDir()
         checkout([$class: 'GitSCM',
-            branches: [[name: "19.410/feature/bls/fix_test_edge"]],
+            branches: [[name: "rc-${version}"]],
             doGenerateSubmoduleConfigurations: false,
             extensions: [[
                 $class: 'RelativeTargetDirectory',
