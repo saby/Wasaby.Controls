@@ -15,6 +15,7 @@ const
          return fixedCellContainer.offsetLeft + fixedCellContainer.offsetWidth;
       },
       updateSizes(self) {
+         _private.drawTransform(self, 0);
          const
             newContentSize = self._children.content.scrollWidth,
             newContentContainerSize = self._children.content.offsetWidth;
@@ -33,6 +34,10 @@ const
                _private.calculateFixedColumnWidth(self._children.content, self._options.multiSelectVisibility);
             self._forceUpdate();
          }
+         if (newContentContainerSize + self._scrollPosition > newContentSize) {
+            self._scrollPosition -= (newContentContainerSize + self._scrollPosition) - newContentSize;
+         }
+         _private.drawTransform(self, self._scrollPosition);
       },
       calculateShadowState(scrollPosition, containerSize, contentSize) {
          let
