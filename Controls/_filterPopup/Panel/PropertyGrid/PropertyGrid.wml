@@ -10,7 +10,9 @@
                             on:textValueChanged="_textValueChangedHandler(index)"
                             tabindex="{{_changedIndex === index ? '1' : '0'}}"
                             on:selectedKeysChanged="_valueChangedHandler(index)"
-                            on:selectedKeyChanged="_valueChangedHandler(index)"/>
+                            on:selectedKeyChanged="_valueChangedHandler(index)"
+                            on:rangeChanged="_rangeChangedHandler(index)"
+                />
             </div>
         </ws:if>
     </ws:for>

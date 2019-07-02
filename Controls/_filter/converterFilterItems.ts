@@ -17,12 +17,7 @@ function convertToFilterSource(detailPanelItems) {
         }
         filterSourceItem.name = item.id;
         if (item.visibility !== undefined) {
-            filterSourceItem.viewMode = 'extended';
             filterSourceItem.visibility = item.visibility;
-        } else if (item.editorOptions) {  // по наличию editorOptions определяем быстрый фильтр
-            filterSourceItem.viewMode = 'frequent';
-        } else {
-            filterSourceItem.viewMode = 'basic';
         }
         filterSource.push(filterSourceItem);
     });

@@ -4,13 +4,11 @@ import template = require('wml!Controls/_filter/View/View');
 import {isEqual} from 'Types/object';
 import CoreClone = require('Core/core-clone');
 import Merge = require('Core/core-merge');
-import cInstance = require('Core/core-instance');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import {Controller as SourceController} from 'Controls/source';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import converterFilterItems = require('Controls/_filter/converterFilterItems');
-
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
@@ -62,6 +60,16 @@ var _private = {
             });
         }
         return self._sourceController;
+    },
+
+    getDateRangeItem: function(items) {
+        let dateRangeItem;
+        factory(items).each((item) => {
+           if (item.editorName === 'dateRange') {
+               dateRangeItem = item;
+           }
+        });
+        return dateRangeItem;
     },
 
     setPopupConfig: function(self, configs, items) {
@@ -127,6 +135,7 @@ var _private = {
             }
         });
         self._filterText = _private.getFilterButtonText(self, items);
+        self._dateRangeItem = _private.getDateRangeItem(items);
         self._forceUpdate();
     },
 
@@ -273,6 +282,7 @@ var Filter = Control.extend({
     _configs: null,
     _source: null,
     _idOpenSelector: null,
+    _dateRangeItem: null,
 
     _beforeMount: function(options, context, receivedState) {
         this._configs = {};
@@ -347,16 +357,23 @@ var Filter = Control.extend({
                 items: items,
                 theme: this._options.theme
             },
+            _vdomOnOldPage: true,
             target: this._container[0] || this._container
         };
         this._children.DropdownOpener.open(Merge(popupOptions, panelPopupOptions), this);
+    },
+
+    _rangeChangedHandler: function(event, start, end) {
+        _private.getDateRangeItem(this._source).value = [start, end];
+        _private.notifyChanges(this, this._source);
+        this._dateRangeItem = object.clone(_private.getDateRangeItem(this._source));
     },
 
     _resultHandler: function(event, result) {
         if (!result.action) {
             var filterSource = converterFilterItems.convertToFilterSource(result.items);
             _private.prepareItems(this, filterSource);
-            _private.updateText(this, filterSource, this._configs);
+            _private.updateText(this, this._source, this._configs);
         } else {
             _private[result.action].call(this, result);
         }
