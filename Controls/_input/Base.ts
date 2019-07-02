@@ -365,7 +365,7 @@ import 'wml!Controls/_input/Base/Stretcher';
        * Base controls that allows user to enter text.
        *
        * @class Controls/_input/Base
-       * @extends Core/Control
+       * @extends UI/_base/Control
        *
        * @mixes Controls/interface/IInputBase
        *
@@ -514,7 +514,7 @@ import 'wml!Controls/_input/Base/Stretcher';
           * @protected
           */
          get _renderStyle() {
-            return this._options.style;
+            return '';
          },
 
          /**
