@@ -9,6 +9,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 import EnvEvent = require('Env/Event');
 import Env = require('Env/Env');
 import Vdom = require('Vdom/Vdom');
+import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 
 const _private = {
     activeElement: {},
@@ -91,8 +92,13 @@ const _private = {
         }
     },
 
+    isNewEnvironment(): boolean {
+        return isNewEnvironment();
+    },
+
     activatePopup(item) {
-        if (item.controller.needRestoreFocus(item.isActive)) {
+        // on old page vdom manager don't know about old windows/
+        if (_private.isNewEnvironment() && item.controller.needRestoreFocus(item.isActive)) {
             const maxId = _private.getMaxZIndexPopupIdForActivate();
             if (maxId) {
                 const child = ManagerController.getContainer().getPopupById(maxId);
