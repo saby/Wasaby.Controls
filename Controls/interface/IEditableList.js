@@ -2,6 +2,17 @@ define('Controls/interface/IEditableList', [
 ], function() {
 
    /**
+    * Интерфейс для списков с возможностью редактирования по месту. 
+    *
+    * @interface Controls/interface/IEditableList
+    * @public
+    * @author Авраменко А.С.
+    * @see Controls/View
+    * @remark 
+    * Разница между этим интерфейсом и {@link Controls/View Controls/editableArea:View} заключается в том, что первый используется в списках, а второй-вне их (например, на вкладках).
+    */
+
+   /*
     * Interface for lists that have editing. The difference between this interface and {@link Controls/View Controls/editableArea:View} is that the former is used in lists and the latter is used outside of them (e.g., in tabs).
     *
     * @interface Controls/interface/IEditableList
@@ -11,6 +22,11 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
+    * @typedef {Object} ItemEditOptions
+    * @property {Types/entity:Record} [options.item] Запись с исходными данными.
+    */
+
+   /*
     * @typedef {Object} ItemEditOptions
     * @property {Types/entity:Record} [options.item] Record with initial data.
     */
@@ -35,15 +51,28 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @typedef {String|Types/entity:Record|Core/Deferred} ItemEditResult
-    * @variant {String} Cancel Cancel start of editing.
-    * @variant {ItemEditOptions} options Options of editing.
-    * @variant {Core/Deferred} Deferred is used for asynchronous preparation of edited record. It is necessary to fullfill deferred with {@link ItemEditOptions ItemEditOptions} or 'Cancel'. If deferred takes too long to resolve then loading indicator will be shown.
+    * @variant cancel Отменить начало редактирования.
+    * @variant options Параметры редактирования.
+    * @variant deferred Используется для асинхронной подготовки редактируемой записи. Необходимо выполнить deffered с {@link ItemEditOptions ItemEditOptions} или 'Cancel'. Если процесс занимает слишком много времени, будет показан индикатор загрузки.
+    */
+
+   /*
+    * @typedef {String|Types/entity:Record|Core/Deferred} ItemEditResult
+    * @variant cancel Cancel start of editing.
+    * @variant options Options of editing.
+    * @variant deferred Deferred is used for asynchronous preparation of edited record. It is necessary to fullfill deferred with {@link ItemEditOptions ItemEditOptions} or 'Cancel'. If deferred takes too long to resolve then loading indicator will be shown.
     */
 
    /**
     * @typedef {String|Core/Deferred} EndEditResult
-    * @variant {String} Cancel Cancel ending of editing\adding.
-    * @variant {Core/Deferred} Deferred is used for saving with custom logic.
+    * @variant Cancel Отмена окончания редактирования\добавления.
+    * @variant Deferred Используется для сохранения с пользовательской логикой.
+    */
+
+   /*
+    * @typedef {String|Core/Deferred} EndEditResult
+    * @variant Cancel Cancel ending of editing\adding.
+    * @variant Deferred Deferred is used for saving with custom logic.
     */
 
    /**
@@ -385,6 +414,32 @@ define('Controls/interface/IEditableList', [
     */    
 
    /**
+    * Начинает редактирование по месту.
+    * @function Controls/interface/IEditableList#beginEdit
+    * @param {ItemEditOptions} options Параметры редактирования.
+    * @returns {Core/Deferred}
+    * @remark
+    * Используйте этот метод в ситуациях, когда вы хотите начать редактирование из нестандартного места, например, из панели действий элемента.
+    * @example
+    * В следующем примере показано, как начать редактирование элемента.
+    * WML:
+    * <pre>
+    *    <Controls.list:View name="list" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    foo: function() {
+    *       this._children.list.beginEdit({
+    *          item: this._items.at(0)
+    *       });
+    *    }
+    * </pre>
+    * @see beginAdd
+    * @see commitEdit
+    * @see cancelEdit
+    */
+
+   /*
     * Starts editing.
     * @function Controls/interface/IEditableList#beginEdit
     * @param {ItemEditOptions} options Options of editing.
@@ -411,6 +466,30 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
+    * Начинает добавление элемента.
+    * @function Controls/interface/IEditableList#beginAdd
+    * @param {ItemEditOptions} options Параметры добавления.
+    * @returns {Core/Deferred}
+    * @remark
+    * Если вы не передадите параметры, будет вызван метод {@link Types/source:ICrud#create create} источника списка, и результат будет добавлен в список.
+    * @example
+    * В следующем примере показано, как начать добавление элемента.
+    * WML:
+    * <pre>
+    *    <Controls.list:View name="list" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    foo: function() {
+    *       this._children.list.beginAdd();
+    *    }
+    * </pre>
+    * @see beginEdit
+    * @see commitEdit
+    * @see cancelEdit
+    */
+
+   /*
     * Starts adding.
     * @function Controls/interface/IEditableList#beginAdd
     * @param {ItemEditOptions} options Options of adding.
@@ -435,6 +514,30 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
+    * Завершает редактирование и фиксирует изменения.
+    * @function Controls/interface/IEditableList#commitEdit
+    * @returns {Core/Deferred}
+    * @remark
+    * Используйте этот метод, когда вы хотите завершить редактирование в ответ на действие пользователя, 
+    * например, когда пользователь пытается закрыть диалоговое окно, используйте этот метод для сохранения изменений.
+    * @example
+    * В следующем примере показано, как завершить редактирование и зафиксировать изменения.
+    * WML:
+    * <pre>
+    *    <Controls.list:View name="list" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    foo: function() {
+    *       this._children.list.commitEdit();
+    *    }
+    * </pre>
+    * @see beginEdit
+    * @see beginAdd
+    * @see cancelEdit
+    */
+
+   /*
     * Ends editing and commits changes.
     * @function Controls/interface/IEditableList#commitEdit
     * @returns {Core/Deferred}
@@ -458,6 +561,29 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
+    * Завершает редактирование и удаляет изменения.
+    * @function Controls/interface/IEditableList#cancelEdit
+    * @returns {Core/Deferred}
+    * @remark
+    * Используйте этот метод, когда вы хотите завершить редактирование в ответ на действия пользователя, например, когда пользователь нажимает на кнопку "Отмена".
+    * @example
+    * В следующем примере показано, как завершить редактирование и отменить изменения.
+    * WML:
+    * <pre>
+    *    <Controls.list:View name="list" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    foo: function() {
+    *       this._children.list.cancelEdit();
+    *    }
+    * </pre>
+    * @see beginEdit
+    * @see beginAdd
+    * @see commitEdit
+    */
+
+   /*
     * Ends editing and discards changes.
     * @function Controls/interface/IEditableList#cancelEdit
     * @returns {Core/Deferred}

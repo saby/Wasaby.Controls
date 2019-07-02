@@ -46,6 +46,14 @@ function getSiblingItem(direction, item, items, parentProperty, nodeProperty) {
 }
 
 /**
+ * Список хелперов для отображения панели операций над записью.
+ * @class Controls/_list/ItemActions/Helpers
+ * @public
+ * @author Сухоручкин А.С.
+ * @category List
+ */
+
+/*
  * List of helpers for displaying item actions.
  * @class Controls/_list/ItemActions/Helpers
  * @public
@@ -54,12 +62,29 @@ function getSiblingItem(direction, item, items, parentProperty, nodeProperty) {
  */
 var helpers = {
 
-    /** @typedef {String} MoveDirection
+    /**
+     *  @typedef {String} MoveDirection
+     *  @variant {String} up Двигаться вверх.
+     *  @variant {String} down Двигаться вниз
+     */
+
+    /*
+     *  @typedef {String} MoveDirection
      *  @variant {String} up Move up
      *  @variant {String} down Move down
      */
 
     /**
+     * Хелпер для отображения панели операций над записью наверху/внизу.
+     * @function Controls/_list/ItemActions/Helpers#reorderMoveActionsVisibility
+     * @param {MoveDirection} direction
+     * @param {Types/entity:Record} item Экземпляр элемента, действие которого обрабатывается.
+     * @param {Types/collection:RecordSet} items Список всех элементов.
+     * @param {Controls/_interface/IHierarchy#parentProperty} parentProperty Имя поля, содержащего сведения о родительском узле.
+     * @param {Controls/_interface/IHierarchy#nodeProperty} nodeProperty Имя поля, описывающего тип узла (список, узел, скрытый узел).
+     */
+
+    /*
      * Helper to display up/down item actions.
      * @function Controls/_list/ItemActions/Helpers#reorderMoveActionsVisibility
      * @param {MoveDirection} direction
@@ -71,32 +96,63 @@ var helpers = {
 
     /**
      * @example
+     * В следующем примере разрешается перемещать только элементы, находящиеся в одном родительском элементе.
+     * JS:
+     * <pre>
+     * _itemActionVisibilityCallback: function(action, item) {
+     *    var result = true;
+     *
+     *    if (action.id === 'up' || action.id === 'down') {
+     *       result = visibilityCallback.reorderMoveActionsVisibility(action.id, item, this._items, 'Parent');
+     *    }
+     *
+     *    return result;
+     * }
+     * </pre>
+     *
+     * В следующем примере разрешается перемещать только элементы, которые находятся в том же родительском элементе и имеют тот же тип.
+     * JS:
+     * <pre>
+     * _itemActionVisibilityCallback: function(action, item) {
+     *    var result = true;
+     *
+     *    if (action.id === 'up' || action.id === 'down') {
+     *       result = visibilityCallback.reorderMoveActionsVisibility(action.id, item, this._items, 'Parent', 'Parent@');
+     *    }
+     *
+     *    return result;
+     * }
+     * </pre>
+     */
+
+    /*
+     * @example
      * In the following example, only items that are in the same parent are allowed to be moved.
      * JS:
      * <pre>
      * _itemActionVisibilityCallback: function(action, item) {
-       *    var result = true;
-       *
-       *    if (action.id === 'up' || action.id === 'down') {
-       *       result = visibilityCallback.reorderMoveActionsVisibility(action.id, item, this._items, 'Parent');
-       *    }
-       *
-       *    return result;
-       * }
+     *    var result = true;
+     *
+     *    if (action.id === 'up' || action.id === 'down') {
+     *       result = visibilityCallback.reorderMoveActionsVisibility(action.id, item, this._items, 'Parent');
+     *    }
+     *
+     *    return result;
+     * }
      * </pre>
      *
      * In the following example, only items that are in the same parent and have the same type are allowed to be moved.
      * JS:
      * <pre>
      * _itemActionVisibilityCallback: function(action, item) {
-       *    var result = true;
-       *
-       *    if (action.id === 'up' || action.id === 'down') {
-       *       result = visibilityCallback.reorderMoveActionsVisibility(action.id, item, this._items, 'Parent', 'Parent@');
-       *    }
-       *
-       *    return result;
-       * }
+     *    var result = true;
+     *
+     *    if (action.id === 'up' || action.id === 'down') {
+     *       result = visibilityCallback.reorderMoveActionsVisibility(action.id, item, this._items, 'Parent', 'Parent@');
+     *    }
+     *
+     *    return result;
+     * }
      * </pre>
      */
     reorderMoveActionsVisibility: function (direction, item, items, parentProperty, nodeProperty) {
