@@ -48,12 +48,10 @@ import 'Controls/breadcrumbs';
                }
                self._restoredMarkedKeys[self._root].markedKey = root
                self._root = root;
-               self._children.treeControl._children.baseControl.setRestoredKeyFromExplorer(self._restoredMarkedKeys);
             }
             if (action === EXPLORER_ACTION.onBredcrumbs) {
                _private.pathCleaner(self, root)
                self._root = root;
-               self._children.treeControl._children.baseControl.setRestoredKeyFromExplorer(self._restoredMarkedKeys);
             }
             if (!self._options.hasOwnProperty('root')) {
                self._root = root;
@@ -254,6 +252,12 @@ import 'Controls/breadcrumbs';
             _private.setVirtualScrolling(this, this._viewMode, cfg);
          }
       },
+       _afterUpdate: function() {
+           if (this._isGoingBack) {
+               this._children.treeControl._children.baseControl.getViewModel().setMarkedKey(this._restoredMarkedKeys[this._root].markedKey);
+               this._isGoingBack = false;
+           }
+       },
       _getRoot: function() {
          return _private.getRoot(this);
       },
@@ -297,6 +301,7 @@ import 'Controls/breadcrumbs';
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId(), EXPLORER_ACTION.onBredcrumbs);
+         this._isGoingBack = true;
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);
