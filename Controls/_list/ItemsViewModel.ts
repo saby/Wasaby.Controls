@@ -364,6 +364,15 @@ var ItemsViewModel = BaseViewModel.extend({
 
     appendItems: function(items) {
         this._items.append(items);
+        const metaData = {...this._items.getMetaData()};
+        const newMetaData = items.getMetaData();
+        if (typeof metaData.more === 'boolean') {
+            metaData.more = !!newMetaData.more;
+        } else if (metaData.more instanceof Object) {
+            metaData.more.after = !!newMetaData.more;
+        }
+
+        this._items.setMetaData(metaData);
     },
 
     mergeItems: function(items, options) {
