@@ -15,12 +15,12 @@
          appinit();
          require(['Core/app-start', 'Controls/Application/Core', 'View/Executor/TClosure',
             'Core/helpers/Hcontrol/makeInstanceCompatible', 'Core/Control',
-            {{_options.dependencies | unescape}}], function(AppStart, Core, tclosure, makeInstanceCompatible, Control) {
+            {{ __setHTMLUnsafe(_options.dependencies) }}], function(AppStart, Core, tclosure, makeInstanceCompatible, Control) {
             var templCtr = new Control({});
             makeInstanceCompatible(templCtr);
             templCtr.destroy();
             window.startContextData = {};
-            var templateFn = {{_options.builder | unescape}};
+            var templateFn = {{ __setHTMLUnsafe(_options.builder) }};
             templateFn.stable = true;
             var cnt = Core.extend({
                _template: templateFn
