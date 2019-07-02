@@ -24,6 +24,11 @@ define('Controls-demo/Popup/Compatible/TestCompoundAreaForOldTpl', [
       openInputStack: function() {
          this._children.inputStackOpener.open();
       },
+      openInputDisabledStack: function() {
+         this._children.inputStackOpener.open({
+            enabled: false
+         });
+      },
       openValidateStack: function() {
          this._children.validateStackOpener.open({
             catchFocus: false // Focus is put down independently on the template
@@ -44,6 +49,12 @@ define('Controls-demo/Popup/Compatible/TestCompoundAreaForOldTpl', [
       },
       openOpenerStack: function() {
          this._children.openerStackOpener.open();
+      },
+      openActionParentStack: function() {
+         this._children.actionParentStackOpener.open();
+      },
+      openNewInOld: function() {
+         this._children.newInOldOpener.open();
       }
    });
 });
