@@ -30,6 +30,12 @@ import {parse as load} from 'Core/library';
  */
 const POPUP_CONTROLLER = 'Controls/popupTemplate:NotificationController';
 
+const BASE_OPTIONS = {
+    autofocus: false,
+    displayMode: 'multiple',
+    autoClose: true
+};
+
 const _private = {
     compatibleOpen(self, popupOptions) {
         const config =  BaseOpener.getConfig({}, self ? self._options : {}, popupOptions);
@@ -143,7 +149,7 @@ Notification.openPopup = (config: object): Promise<string> => {
             if (!config.hasOwnProperty('opener')) {
                 config.opener = null;
             }
-            const newConfig = BaseOpener.getConfig({}, {}, config);
+            const newConfig = BaseOpener.getConfig({}, BASE_OPTIONS, config);
             BaseOpener.requireModules(config, POPUP_CONTROLLER).then((result) => {
                 BaseOpener.showDialog(result[0], newConfig, result[1]).then((popupId: string) => {
                     resolve(popupId);
@@ -171,11 +177,7 @@ Notification.closePopup = (popupId: string): void => {
 };
 
 Notification.getDefaultOptions = function() {
-    return {
-        autofocus: false,
-        displayMode: 'multiple',
-        autoClose: true
-    };
+    return BASE_OPTIONS;
 };
 
 Notification._private = _private;

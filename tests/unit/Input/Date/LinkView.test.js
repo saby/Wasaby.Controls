@@ -106,6 +106,16 @@ define([
             sinon.assert.calledWith(component._notify, 'linkClick');
             sandbox.restore();
          });
+         it('should not generate "linkClick" event if control disabled', function() {
+            const sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(dateRange.LinkView, { readOnly: true });
+
+            sandbox.stub(component, '_notify');
+            component._onClick();
+
+            sinon.assert.notCalled(component._notify);
+            sandbox.restore();
+         });
       });
       describe('_clearDate', function() {
          it('should clear startValue and endValue', function() {

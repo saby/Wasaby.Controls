@@ -149,6 +149,40 @@ define('Controls-demo/Popup/PopupPage',
             });
          },
 
+         openStickyByHelper: function () {
+            popupLib.Sticky.openPopup({
+               template: 'Controls-demo/Popup/TestDialog',
+               opener: this._children.helperButton4,
+               target: this._children.helperButton4._container
+            }).addCallback(function(popupId) {
+               setTimeout(function() {
+                  popupLib.Sticky.closePopup(popupId);
+               }, 5000);
+            });
+         },
+
+         openStackByHelper: function() {
+            popupLib.Stack.openPopup({
+               template: 'Controls-demo/Popup/TestStack',
+               opener: this._children.helperButton5
+            }).addCallback(function(popupId) {
+               setTimeout(function() {
+                  popupLib.Stack.closePopup(popupId);
+               }, 5000);
+            });
+         },
+
+         openDialogByHelper: function() {
+            popupLib.Dialog.openPopup({
+               template: 'Controls-demo/Popup/TestDialog',
+               opener: this._children.helperButton6
+            }).addCallback(function(popupId) {
+               setTimeout(function() {
+                  popupLib.Dialog.closePopup(popupId);
+               }, 5000);
+            });
+         },
+
          _onResult: function (result) {
             if( result ){
                alert(result);
