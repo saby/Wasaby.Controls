@@ -363,20 +363,8 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     appendItems: function(items) {
+        this._items.setMetaData(items.getMetaData());
         this._items.append(items);
-
-        // Тут нужно обновлять metaData, но полностью обновлять её в 19.412 опасно, т.к. та metaData, которая
-        // приходит с сервера может по формату отличаться от той, которая сейчас находится в рекордсете.
-        // В 19.412 обновим только more, а в 19.510 будем менять metaData целиком.
-        const metaData = {...this._items.getMetaData()};
-        const newMetaData = items.getMetaData();
-        if (typeof metaData.more === 'boolean') {
-            metaData.more = !!newMetaData.more;
-        } else if (metaData.more instanceof Object) {
-            metaData.more.after = !!newMetaData.more;
-        }
-
-        this._items.setMetaData(metaData);
     },
 
     mergeItems: function(items, options) {
