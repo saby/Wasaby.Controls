@@ -1,6 +1,10 @@
-<ws:partial template="wml!Controls/_dropdown/itemTemplate"
-            itemData="{{itemData}}"
-            displayProperty="{{displayProperty}}"
-            multiSelect="{{false}}"
-            showClose="{{true}}"
-            class="controls-SimplePanel-dropdown__emptyItem_theme_{{_options.theme}}"/>
+<Controls.scroll:StickyHeader
+        mode="replaceable"
+        shadowVisibility="visible">
+   <ws:partial template="wml!Controls/_dropdown/itemTemplate"
+               itemData="{{itemData}}"
+               displayProperty="{{displayProperty}}"
+               multiSelect="{{false}}"
+               showClose="{{true}}"
+               class="controls-SimplePanel-dropdown__emptyItem_theme_{{_options.theme}}"/>
+</Controls.scroll:StickyHeader>
