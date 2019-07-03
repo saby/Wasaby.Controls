@@ -58,7 +58,7 @@ const Stack = BaseOpener.extend({
      * @function Controls/_popup/Opener/Stack#open
      * @param {PopupOptions[]} popupOptions Конфигурация стековой панели
      * @remark
-     * Если требуется открыть окно, без создания popup:Stack в верстке, см. метод {@link openPopup}.
+     * Если требуется открыть окно, без создания popup:Stack в верстке, следует использовать статический метод {@link openPopup}.
      * @example
      * В этом примере показано, как открыть и закрыть стековую панель.
      * wml
@@ -187,7 +187,7 @@ export = Stack;
  * @property {String} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
  * @property {Boolean} closeOnOutsideClick Определяет возможность закрытия всплывающего окна по клику вне.
  * @property {function|String} template Шаблон всплывающего окна
- * @property {function|String} templateOptions Опции для шаблона всплывающего окна
+ * @property {function|String} templateOptions  Опции для котнрола, переданного в {@link template}
  * @property {Number} minWidth Минимально допустимая ширина всплывающего окна
  * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна
  * @property {Number} width Текущая ширина всплывающего окна

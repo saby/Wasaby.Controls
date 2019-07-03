@@ -99,7 +99,7 @@ define('Controls/interface/IOpener', [], function() {
 
    /**
     * @name Controls/interface/IOpener#templateOptions
-    * @cfg {String|Function} Опции для шаблона всплывающего окна
+    * @cfg {String|Function} Опции для котнрола, переданного в {@link template}
     */
 
    /*

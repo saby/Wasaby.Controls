@@ -16,6 +16,12 @@ import {parse as load} from 'Core/library';
  * @demo Controls-demo/Popup/Opener/NotificationPG
  */
 
+/*
+ * Component that opens a popup that is positioned in the lower right corner of the browser window.
+ * Multiple notification Windows can be opened at the same time. In this case, they are stacked vertically.
+ *  {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
+ */
+
 /**
  * @name Controls/_popup/Opener/Notification#className
  * @cfg {String} Имена классов, которые будут применены к корневой ноде всплывающего окна.
@@ -27,7 +33,7 @@ import {parse as load} from 'Core/library';
 
 /**
  * @name Controls/_popup/Opener/Notification#templateOptions
- * @cfg {String|Function} Опции для шаблона всплывающего окна
+ * @cfg {String|Function} Опции для котнрола, переданного в {@link template}
  */
 const POPUP_CONTROLLER = 'Controls/popupTemplate:NotificationController';
 
@@ -122,6 +128,13 @@ const Notification = BaseOpener.extend({
      * @see openPopup
      * @see closePopup
      */
+
+    /*
+     * Open dialog popup.
+     * @function Controls/_popup/Opener/Notification#open
+     * @param {PopupOptions[]} popupOptions Notification popup options.
+     */
+
     open(popupOptions) {
         return new Promise((resolve) => {
             if (isNewEnvironment()) {
@@ -168,6 +181,15 @@ const Notification = BaseOpener.extend({
  * @see close
  * @see open
  */
+
+/*
+ * Open Notification popup.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
+ * @function Controls/_popup/Opener/Notification#openPopup
+ * @param {PopupOptions[]} config Notification popup options.
+ * @return {Promise<string>} Returns id of popup. This id used for closing popup.
+*/
+
 Notification.openPopup = (config: object): Promise<string> => {
     return new Promise((resolve) => {
         if (isNewEnvironment()) {
@@ -217,6 +239,14 @@ Notification.openPopup = (config: object): Promise<string> => {
  * @see opener
  * @see close
  */
+
+/*
+ * Close Notification popup.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
+ * @function Controls/_popup/Opener/Notification#closePopup
+ * @param {String} popupId Id of popup.
+*/
+
 Notification.closePopup = (popupId: string): void => {
     BaseOpener.closeDialog(popupId);
 };
@@ -247,4 +277,10 @@ export = Notification;
  * @name Controls/_popup/Opener/Notification#isOpened
  * @function
  * @description  Возвращает информацию о том, открыто ли всплывающее окно.
+ */
+
+/*
+ * @name Controls/_popup/Opener/Notification#isOpened
+ * @function
+ * @description Popup opened status.
  */

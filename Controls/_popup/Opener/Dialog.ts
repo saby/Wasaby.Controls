@@ -254,7 +254,7 @@ export default Dialog;
  * @property {String} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
  * @property {Boolean} closeOnOutsideClick Определяет возможность закрытия всплывающего окна по клику вне.
  * @property {function|String} template Шаблон всплывающего окна
- * @property {function|String} templateOptions Опции для шаблона всплывающего окна
+ * @property {function|String} templateOptions  Опции для котнрола, переданного в {@link template}
  * @property {Number} width Текущая ширина всплывающего окна
  * @property {Number} height Текущая высота всплывающего окна
  * @property {Number} maxHeight Максимально допустимая высота всплывающего окна
