@@ -45,8 +45,27 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity'], function(ColumnScroll, E
          assert.isTrue(columnScroll._isColumnScrollVisible());
       });
       it('_calculateShadowStyles', function() {
+         let cont = columnScroll._container;
+         columnScroll._container = {
+            getElementsByClassName: function(className) {
+               if (className === 'controls-BaseControl__emptyTemplate') {
+                  return [];
+               }
+            }
+         };
          assert.equal(columnScroll._calculateShadowStyles('start'), '');
          assert.equal(columnScroll._calculateShadowStyles('end'), '');
+
+         columnScroll._container = {
+            getElementsByClassName: function(className) {
+               if (className === 'controls-BaseControl__emptyTemplate') {
+                  return [{offsetTop: 60}];
+               }
+            }
+         };
+         assert.equal(columnScroll._calculateShadowStyles('start'), 'height: 60px;');
+         assert.equal(columnScroll._calculateShadowStyles('end'), 'height: 60px;');
+         columnScroll._container = cont;
       });
       it('_calculateShadowClasses', function() {
          assert.equal(columnScroll._calculateShadowClasses('start'),
@@ -95,6 +114,13 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity'], function(ColumnScroll, E
       });
       it('_positionChangedHandler', function() {
          // Scroll to 100px
+         columnScroll._container = {
+            getElementsByClassName: function(className) {
+               if (className === 'controls-BaseControl__emptyTemplate') {
+                  return [];
+               }
+            }
+         };
          columnScroll._positionChangedHandler({}, 100);
          assert.equal(columnScroll._scrollPosition, 100);
          assert.deepEqual(columnScroll._shadowState, 'startend');

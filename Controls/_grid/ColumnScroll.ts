@@ -69,6 +69,10 @@ const
          if (position === 'start' && _private.isShadowVisible(self._shadowState, position)) {
             shadowStyles = 'left: ' + self._fixedColumnsWidth + 'px;';
          }
+         let emptyTemplate = self._container.getElementsByClassName('controls-BaseControl__emptyTemplate')[0];
+         if (emptyTemplate) {
+            shadowStyles += 'height: ' + emptyTemplate.offsetTop + 'px;';
+         }
          return shadowStyles;
       },
       drawTransform (self, position) {
