@@ -105,11 +105,13 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          var result = 'result';
          var selectedKeys = [];
          var keyProperty = 'id';
+         var selectCompleteInitiator = true;
 
-         assert.deepEqual(lookupPopup.Container._private.prepareResult(result, selectedKeys, keyProperty), {
+         assert.deepEqual(lookupPopup.Container._private.prepareResult(result, selectedKeys, keyProperty, selectCompleteInitiator), {
             resultSelection: result,
             initialSelection: selectedKeys,
-            keyProperty: keyProperty
+            keyProperty: keyProperty,
+            selectCompleteInitiator: selectCompleteInitiator
          });
       });
 

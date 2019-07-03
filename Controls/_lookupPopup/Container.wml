@@ -4,6 +4,7 @@
                 bind:selectedKeys="_selectedKeys"
                 bind:excludedKeys="_excludedKeys"
                 on:selectedKeysChanged="_selectedKeysChanged()"
-                on:excludedKeysChanged="_excludedKeysChanged()"/>
+                on:excludedKeysChanged="_excludedKeysChanged()"
+                on:selectComplete="_selectCompleteHandler()"/>
     <Controls.event:Listener event="selectComplete" on:selectComplete="_selectComplete()" />
 </div>

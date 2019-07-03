@@ -113,7 +113,9 @@ define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
       });
 
       it('itemClick', function() {
-         var self = {};
+         var self = {
+            _options: {}
+         };
          var selectCompleted = false;
          var clickSelection = false;
 
