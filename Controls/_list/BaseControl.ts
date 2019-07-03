@@ -1605,7 +1605,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _onAfterBeginEdit: function (event, item, isAdd) {
-        this._canUpdateItemsActions = true;
+
+        /*
+        * TODO: KINGO
+        * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
+        * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
+        * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
+        * _canUpdateItemsActions  приведет к показу неактуальных операций.
+        */
+        this._children.itemActions.updateItemActions(item);
         return this._notify('afterBeginEdit', [item, isAdd]);
     },
 
