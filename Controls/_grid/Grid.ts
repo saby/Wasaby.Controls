@@ -96,9 +96,9 @@ import {ListControl as viewTemplate} from 'Controls/list';
 
    Grid.getDefaultOptions = function() {
       return {
-         stickyHeader: true
+         stickyHeader: true,
+         stickyColumnsCount: 1
       };
    };
 
    export = Grid;
-

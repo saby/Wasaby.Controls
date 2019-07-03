@@ -5,7 +5,8 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity'], function(ColumnScroll, E
    describe('Controls.ColumnScroll', function() {
       var
          cfg = {
-            multiSelectVisibility: 'visible'
+            multiSelectVisibility: 'visible',
+            stickyColumnsCount: 1
          },
          columnScroll = new ColumnScroll(cfg);
       columnScroll._children = {
@@ -40,6 +41,55 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity'], function(ColumnScroll, E
          assert.equal(columnScroll._contentContainerSize, 250);
          assert.deepEqual(columnScroll._shadowState, 'end');
          assert.deepEqual(columnScroll._fixedColumnsWidth, 100);
+      });
+      it('_afterMount + _afterUpdate non-default stickyColumnsCount', function() {
+         var
+            changedCfg = Object.assign({}, cfg, { stickyColumnsCount: 3 }),
+            sccColumnScroll = new ColumnScroll(changedCfg);
+
+         sccColumnScroll._children = {
+            contentStyle: {
+               innerHTML: ''
+            },
+            content: {
+               scrollWidth: 600,
+               offsetWidth: 400,
+               querySelector: function(selector) {
+                  var column = parseInt(selector.slice('.controls-Grid__cell_fixed:nth-child('.length), 10);
+                  // make every fixed column 50 pixels
+                  return {
+                     offsetLeft: (column - 1) * 50,
+                     offsetWidth: 50
+                  };
+               }
+            }
+         };
+
+         sccColumnScroll.saveOptions(changedCfg);
+         sccColumnScroll._afterMount(changedCfg);
+         assert.strictEqual(sccColumnScroll._contentSize, 600);
+         assert.strictEqual(sccColumnScroll._contentContainerSize, 400);
+         assert.strictEqual(sccColumnScroll._shadowState, 'end');
+         // 3 * 50 pixels fixed columns + 1 * 50 pixels multiselect column
+         assert.strictEqual(sccColumnScroll._fixedColumnsWidth, 200);
+
+         // check with hidden multiselect
+         var noMultiselectCfg = Object.assign({}, changedCfg, { multiSelectVisibility: 'hidden' });
+         // reset values
+         sccColumnScroll._contentSize = 0;
+         sccColumnScroll._contentContainerSize = 0;
+
+         sccColumnScroll.saveOptions(noMultiselectCfg);
+         sccColumnScroll._afterMount(noMultiselectCfg);
+         assert.strictEqual(sccColumnScroll._contentSize, 600);
+         assert.strictEqual(sccColumnScroll._contentContainerSize, 400);
+         assert.strictEqual(sccColumnScroll._fixedColumnsWidth, 150);
+
+         // can update fixed column count
+         var updatedCfg = Object.assign({}, noMultiselectCfg, { stickyColumnsCount: 5 });
+         sccColumnScroll.saveOptions(updatedCfg);
+         sccColumnScroll._afterUpdate(noMultiselectCfg);
+         assert.strictEqual(sccColumnScroll._fixedColumnsWidth, 250);
       });
       it('_isColumnScrollVisible', function() {
          assert.isTrue(columnScroll._isColumnScrollVisible());

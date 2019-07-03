@@ -8,11 +8,15 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 
 const
    _private = {
-      calculateFixedColumnWidth(container, multiSelectVisibility ) {
+      calculateFixedColumnWidth(container, multiSelectVisibility, stickyColumnsCount) {
          const
-            fixedCellContainer = container.querySelector(multiSelectVisibility === 'hidden' ?
-               '.controls-Grid__cell_fixed' : '.controls-Grid__cell_fixed:nth-child(2)');
-         return fixedCellContainer.offsetLeft + fixedCellContainer.offsetWidth;
+            hasMultiSelect = multiSelectVisibility !== 'hidden',
+            columnOffset = hasMultiSelect ? 1 : 0,
+            lastStickyColumnIndex = stickyColumnsCount + columnOffset,
+            lastStickyColumnSelector = `.controls-Grid__cell_fixed:nth-child(${lastStickyColumnIndex})`,
+            stickyCellContainer = container.querySelector(lastStickyColumnSelector);
+
+         return stickyCellContainer.offsetLeft + stickyCellContainer.offsetWidth;
       },
       updateSizes(self) {
          _private.drawTransform(self, 0);
@@ -30,14 +34,20 @@ const
             }
             self._shadowState =
                _private.calculateShadowState(self._scrollPosition, self._contentContainerSize, self._contentSize);
-            self._fixedColumnsWidth =
-               _private.calculateFixedColumnWidth(self._children.content, self._options.multiSelectVisibility);
+            _private.updateFixedColumnWidth(self);
             self._forceUpdate();
          }
          if (newContentContainerSize + self._scrollPosition > newContentSize) {
             self._scrollPosition -= (newContentContainerSize + self._scrollPosition) - newContentSize;
          }
          _private.drawTransform(self, self._scrollPosition);
+      },
+      updateFixedColumnWidth(self) {
+         self._fixedColumnsWidth = _private.calculateFixedColumnWidth(
+            self._children.content,
+            self._options.multiSelectVisibility,
+            self._options.stickyColumnsCount
+         );
       },
       calculateShadowState(scrollPosition, containerSize, contentSize) {
          let
@@ -100,6 +110,12 @@ const
 
       _afterMount() {
          _private.updateSizes(this);
+      },
+
+      _afterUpdate(oldCfg) {
+         if (this._options.stickyColumnsCount !== oldCfg.stickyColumnsCount) {
+            _private.updateFixedColumnWidth(this);
+         }
       },
 
       _resizeHandler() {

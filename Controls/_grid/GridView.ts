@@ -208,10 +208,12 @@ var
             if (this._options.showRowSeparator !== newCfg.showRowSeparator) {
                 this._listModel.setShowRowSeparator(newCfg.showRowSeparator);
             }
+            if (this._options.stickyColumnsCount !== newCfg.stickyColumnsCount) {
+                this._listModel.setStickyColumnsCount(newCfg.stickyColumnsCount);
+            }
             if (this._options.resultsTemplate !== newCfg.resultsTemplate) {
                 this._resultsTemplate = newCfg.resultsTemplate || DefaultResultsTemplate;
             }
-
         },
 
         _afterUpdate() {

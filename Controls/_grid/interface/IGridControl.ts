@@ -155,7 +155,7 @@
 /**
  * @typedef {String} TextOverflow Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
  * @variant ellipsis Текст обрезается, и в конец строки добавляется многоточие.
- * @variant none Стандартное поведение при незаданном свойстве. 
+ * @variant none Стандартное поведение при незаданном свойстве.
  * @default none
  */
 
@@ -276,7 +276,25 @@
  * @name Controls/_grid/interface/IGridControl#columnScroll
  * @cfg {Boolean} Enable column scroll.
  * @default false
- */ 
+ */
+
+ /**
+  * @name Controls/_grid/interface/IGridControl#stickyColumnsCount
+  * @cfg {Number} Определяет число зафиксированных столбцов, которые не двигаются при горизонтальном скролле.
+  * @default 1
+  * @see Controls/_grid/interface/IGridControl#columnScroll
+  * @remark
+  * Столбец флагов множественного выбора всегда зафиксирован, и не входит в число stickyColumnsCount.
+  */
+
+/*
+ * @name Controls/_grid/interface/IGridControl#stickyColumnsCount
+ * @cfg {Number} Determines the number of fixed columns that do not move during horizontal scroll.
+ * @default 1
+ * @see Controls/_grid/interface/IGridControl#columnScroll
+ * @remark
+ * Multiple selection column is always fixed and does not count towards this number.
+ */
 
 /**
  * @name Controls/_grid/interface/IGridControl#rowSeparatorVisibility
