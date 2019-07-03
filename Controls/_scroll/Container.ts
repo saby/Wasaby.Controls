@@ -422,6 +422,9 @@ var
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
+            if (this._shadowVisibleAlways) {
+               this._displayState.hasScroll = true;
+            }
          }
 
          _private.calcPagingStateBtn(this);
