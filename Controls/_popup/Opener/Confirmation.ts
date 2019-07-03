@@ -6,6 +6,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * Контрол, открывающий диалог подтверждения.
  * Окно блокирует работу пользователя с родительским приложением.
  * Позиционируется в центре экрана.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/ Подробнее}
  * <a href="/materials/demo-ws4-confirmation">Demo-example</a>.
  *
  * @class Controls/_popup/Opener/Confirmation
@@ -16,11 +17,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * @demo Controls-demo/Popup/Opener/ConfirmationPG
  */
 
-/*
-* Component that opens the confirmation popup.
-*/
-
- /**
+/**
  * @css @font-size_SubmitPopup-message Font-size of message.
  * @css @font-weight_SubmitPopup-message Font-weight of message.
  * @css @color_SubmitPopup-message Color of message.
@@ -38,9 +35,9 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 /**
  * @name Controls/_popup/Opener/Confirmation#type
  * @cfg {String} Тип диалогового окна. Определяет с каким результатом будет закрыто окно подтверждения.
- * @variant ok (undefined)
- * @variant yesno  ( true/false)
- * @variant yesnocancel  (true/false/undefined)
+ * @variant ok (Результат: undefined)
+ * @variant yesno (Результат: true/false)
+ * @variant yesnocancel (Результат: true/false/undefined)
  */
 
 /*
@@ -71,8 +68,8 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * @name Controls/_popup/Opener/Confirmation#size
  * @cfg {String} Размер диалога подтверждения. Размер меняется автоматически, если длина основного сообщения превышает
  * 100 символов или длина дополнительного текста превышает 160 символов.
- * @variant m ( ширина 350px)
- * @variant l ( ширина 440px)
+ * @variant m (ширина 350px)
+ * @variant l (ширина 440px)
  */
 
 /*
@@ -203,17 +200,15 @@ const Confirmation = BaseOpener.extend({
      */
 
     /**
-     * Метод закрытия диалога подтверждения
-     * @function Controls/_popup/Opener/Confirmation#close
-     */
-
-    /**
-     * Метод открытия окна подтверждения
+     * Метод открытия окна подтверждения.
      * @function Controls/_popup/Opener/Confirmation#open
      * @param {popupOptions[]} templateOptions Конфигурация диалога подтверждения.
      * @returns {Deferred} Результат будет возвращен после того, как пользователь закроет всплывающее окно.
      * @remark
-     * Если вы хотите использовать собственный шаблон в диалоге подтверждения {@link dialog opener} используйте шаблон {@link ConfirmationTemplate}.
+     * 1. Если требуется открыть окно, без создания popup:Confirmation в верстке, см. метод {@link openPopup}.
+     * 2. Если вы хотите использовать собственный шаблон в диалоге подтверждения используйте шаблон, смотрите
+     * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/#config-template инструкцию}
+     * @see openPopup
      * @example
      * wml
      * <pre>
@@ -232,13 +227,21 @@ const Confirmation = BaseOpener.extend({
      *              message: 'Save changes?'
      *              type: 'yesnocancel'
      *           }
-     *           this._children.confirmationOpener.open(config)
+     *           this._children.confirmationOpener.open(config).addCallback(function(result) {
+     *              if (result === true) {
+     *                  console.log('Пользователь выбрал "Да"');
+     *              } else if (result === false) {
+     *                  console.log('Пользователь выбрал "Нет"');
+     *              } else {
+     *                  console.log('Пользователь выбрал "Отмена"');
+     *              }
+     *           });
      *        }
      *     });
      * </pre>
      */
 
-    /**
+    /*
      * Open confirmation popup.
      * @function Controls/_popup/Opener/Confirmation#open
      * @param {popupOptions[]} templateOptions Confirmation options.
@@ -256,12 +259,32 @@ const Confirmation = BaseOpener.extend({
 });
 
 /**
- * Open Confirmation popup.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/ See more}.
+ * Статический метод для открытия окна подтверждения. При использовании метода не требуется создавать popup:Confirmation в верстке.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/ Подробнее}.
  * @function Controls/_popup/Opener/Confirmation#openPopup
- * @param {popupOptions[]} templateOptions Confirmation options.
- * @return {Promise<boolean>} Promise that ending with user choice results
+ * @param {popupOptions[]} templateOptions Конфигурация окна подтверждени
+ * @return {Promise<boolean>} Результат будет возвращен после того, как пользователь закроет всплывающее окно.
  * @static
+ * @see open
+ * @example
+ * js
+ * <pre>
+ *    import {Confirmation} from 'Controls/popup';
+ *    ...
+ *    openConfirmation() {
+ *        Confirmation.openPopup({
+ *          message: 'Choose yes or no'
+ *        }).then(function(result) {
+ *          if (result === true) {
+ *              console.log('Пользователь выбрал "Да"');
+ *          } else if (result === false) {
+ *              console.log('Пользователь выбрал "Нет"');
+ *          } else {
+ *              console.log('Пользователь выбрал "Отмена"');
+ *          }
+ *        });
+ *    }
+ * </pre>
  */
 Confirmation.openPopup = (templateOptions: object) => {
     return new Promise((resolve) => {

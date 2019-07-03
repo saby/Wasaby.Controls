@@ -11,7 +11,7 @@ import entity = require('Types/entity');
        * Контрол, отображающий всплывающую подсказку относительно указанного элемента.
        * Всплывающую подсказку вызывает событие, указанное в опции trigger.
        * В один момент времени на странице может отображаться только одна всплывающая подсказка.
-       * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ see more}.
+       * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ Подробнее}.
        *
        * <a href="/materials/demo-ws4-infobox">Demo-example</a>.
        * @class Controls/_popup/InfoBox
@@ -91,7 +91,7 @@ import entity = require('Types/entity');
 
 /**
  * @name Controls/_popup/InfoBox#hideDelay
- * @cfg {Number} Определяет сколько времени пройдет после ухода мыши с таргета и до закрытия всплывающей подсказки ( измеряется в миллисекундах)
+ * @cfg {Number} Определяет задержку перед началом закрытия всплывающей подсказки. ( измеряется в миллисекундах)
  * @default 300
  */
 
@@ -103,7 +103,7 @@ import entity = require('Types/entity');
 
 /**
  * @name Controls/_popup/InfoBox#showDelay
- * @cfg {Number} Определяет сколько времени пройдет после наведения мышью на таргет и до открытия всплывающей подсказки ( измеряется в миллисекундах)
+ * @cfg {Number} Определяет задержку перед началом открытия всплывающей подсказки. ( измеряется в миллисекундах)
  * @default 300
  */
 
@@ -339,9 +339,10 @@ import entity = require('Types/entity');
          },
 
          /**
-          * Метод открытитя всплывающей подсказки.
+          * Метод открытия всплывающей подсказки.
           * @function Controls/_popup/InfoBox#open
           * @param {PopupOptions[]} popupOptions Опции всплывающей подсказки.
+          * @see close
           */
 
          /*
@@ -356,6 +357,7 @@ import entity = require('Types/entity');
          /**
           * Метод закрытия всплывающей подсказки
           * @function Controls/_popup/InfoBox#close
+          * @see open
           */
 
          /*
@@ -430,7 +432,6 @@ InfoBox.getDefaultOptions = function() {
 /**
  * @typedef {Object} PopupOptions
  * @description Конфигурация всплывающей подсказки.
- * @property {function|String} content Элемент управления, к которому добавляется логика открытия и закрытия всплывающей подсказки.
  * @property {function|String} template Шаблон всплывающей подсказки
  * @property {Object} templateOptions Опции шаблона всплывающей подсказки
  * @property {String} trigger Определяет, какое событие будет иницировать открытие и закрытие всплывающей подсказки.
@@ -438,8 +439,8 @@ InfoBox.getDefaultOptions = function() {
  * @property {String} alignment Выравнивание всплывающей подсказки относительно вызывающего её элемента.
  * @property {Boolean} floatCloseButton  Определяет, будет ли контент обтекать кнопку закрытия.
  * @property {String} style Внешний вид всплывающей подсказки.
- * @property {Number} hideDelay Определяет сколько времени пройдет после ухода мыши с таргета и до закрытия всплывающей подсказки ( измеряется в миллисекундах)
- * @property {Number} showDelay Определяет сколько времени пройдет после наведение мыши на таргет до открытия всплывающей подсказки ( измеряется в миллисекундах)
+ * @property {Number} hideDelay Определяет задержку перед началом закрытия всплывающей подсказки. ( измеряется в миллисекундах)
+ * @property {Number} showDelay Определяет задержку перед началом открытия всплывающей подсказки. ( измеряется в миллисекундах)
  */
 
       /*
