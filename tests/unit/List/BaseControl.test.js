@@ -2130,6 +2130,42 @@ define([
          assert.isTrue(setRightSwipedItemCalled);
       });
 
+      it('can\'t start drag on readonly list', function () {
+         let
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                source: source,
+                viewConfig: {
+                   keyProperty: 'id'
+                },
+                viewModelConfig: {
+                   items: rs,
+                   keyProperty: 'id',
+                   selectedKeys: [1, 3]
+                },
+                viewModelConstructor: lists.ListViewModel,
+                navigation: {
+                   source: 'page',
+                   sourceConfig: {
+                      pageSize: 6,
+                      page: 0,
+                      hasMore: false
+                   },
+                   view: 'infinity',
+                   viewConfig: {
+                      pagingMode: 'direct'
+                   }
+                },
+                readOnly: true,
+             },
+             ctrl = new lists.BaseControl();
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+         ctrl.itemsDragNDrop = true;
+         ctrl._itemMouseDown({}, {key: 1}, {});
+         assert.isUndefined(ctrl._itemDragData);
+      });
+
       it('_documentDragEnd', function() {
          var
             dragEnded,
