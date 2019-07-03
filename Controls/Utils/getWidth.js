@@ -17,7 +17,9 @@ define('Controls/Utils/getWidth', [
          }
          document.body.appendChild(measurer);
          width = measurer.clientWidth;
-         document.body.removeChild(measurer);
+         setTimeout(()=>{
+            document.body.removeChild(measurer);
+         });
          return width;
       }
    };
