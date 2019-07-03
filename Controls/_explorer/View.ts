@@ -35,28 +35,8 @@ import 'Controls/breadcrumbs';
          tile: TreeTileViewModel,
          table: TreeGridViewModel
       },
-      EXPLORER_ACTION = {
-         onBredcrumbs: 'onBreadcrumbs',
-         onItemClick: 'onItemClick'
-      },
       _private = {
-         setRoot: function(self, root, action) {
-            if (action === EXPLORER_ACTION.onItemClick) {
-               self._restoredMarkedKeys[root] = {
-                  parent: self._root,
-                  markedKey: null,
-               }
-                if (self._restoredMarkedKeys[self._root]) {
-                    self._restoredMarkedKeys[self._root].markedKey = root;
-                }
-               self._root = root;
-                console.log(self._restoredMarkedKeys);
-            }
-            if (action === EXPLORER_ACTION.onBredcrumbs) {
-               _private.pathCleaner(self, root)
-               self._root = root;
-               console.log(self._restoredMarkedKeys);
-            }
+         setRoot: function(self, root) {
             if (!self._options.hasOwnProperty('root')) {
                self._root = root;
             }
@@ -66,6 +46,20 @@ import 'Controls/breadcrumbs';
             }
             self._forceUpdate();
          },
+          setRestoredKeyObject: function(self, root) {
+              self._restoredMarkedKeys[root] = {
+                  parent: self._root,
+                  markedKey: null,
+              }
+              if (self._restoredMarkedKeys[self._root]) {
+                  self._restoredMarkedKeys[self._root].markedKey = root;
+              }
+              self._root = root;
+          },
+          cleanRestoredKeyObject: function(self, root) {
+              _private.pathCleaner(self, root)
+              self._root = root;
+          },
          pathCleaner: function(self, root) {
             for (const prop in self._restoredMarkedKeys) {
                if (prop == String(root)) {
@@ -112,11 +106,17 @@ import 'Controls/breadcrumbs';
             return breadCrumbs;
          },
          dataLoadCallback: function(self, data) {
-            self._breadCrumbsItems = _private.getPath(data);
-            self._forceUpdate();
-            if (self._options.dataLoadCallback) {
-               self._options.dataLoadCallback(data);
-            }
+             self._breadCrumbsItems = _private.getPath(data);
+             if (self._isGoingBack) {
+                 if (self._restoredMarkedKeys[self._root]) {
+                     self._children.treeControl.setMarkedKey(self._restoredMarkedKeys[self._root].markedKey);
+                 }
+                 self._isGoingBack = false;
+             }
+             self._forceUpdate();
+             if (self._options.dataLoadCallback) {
+                self._options.dataLoadCallback(data);
+             }
          },
          itemsReadyCallback: function(self, items) {
             self._items = items;
@@ -243,8 +243,9 @@ import 'Controls/breadcrumbs';
          }
 
          _private.setViewMode(this, cfg.viewMode, cfg);
-         const root = cfg.root !== undefined ? cfg.root : null;
-         this._root = root;
+         // const root = cfg.root !== undefined ? cfg.root : null;
+         // this._root = root;
+         const root = _private.getRoot(this);
          this._restoredMarkedKeys = {
          [root]: {
                markedKey: null
@@ -260,14 +261,6 @@ import 'Controls/breadcrumbs';
             _private.setVirtualScrolling(this, this._viewMode, cfg);
          }
       },
-       _afterUpdate: function() {
-           if (this._isGoingBack) {
-               if(this._restoredMarkedKeys[this._root]) {
-                   this._children.treeControl._children.baseControl.getViewModel().setMarkedKey(this._restoredMarkedKeys[this._root].markedKey);
-               }
-               this._isGoingBack = false;
-           }
-       },
       _getRoot: function() {
          return _private.getRoot(this);
       },
@@ -302,16 +295,16 @@ import 'Controls/breadcrumbs';
          const res = this._notify('itemClick', [item, clickEvent]);
          if (res !== false) {
             if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
-               _private.setRoot(this, item.getId(), EXPLORER_ACTION.onItemClick);
-            } else if (item.getId) {
-               this._restoredMarkedKeys[this._root].markedKey = item.getId();
+                _private.setRestoredKeyObject(this, item.getId());
+                _private.setRoot(this, item.getId());
             }
          }
          event.stopPropagation();
       },
       _onBreadCrumbsClick: function(event, item) {
-         _private.setRoot(this, item.getId(), EXPLORER_ACTION.onBredcrumbs);
-         this._isGoingBack = true;
+          _private.cleanRestoredKeyObject(this, item.getId());
+          _private.setRoot(this, item.getId());
+          this._isGoingBack = true;
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);
