@@ -55,6 +55,7 @@ import template = require('wml!Controls/_input/Render/Render');
                's',
                'm',
                'l',
+               'xl',
                'default'
             ]).required(),
             fontStyle: entity.descriptor(String).oneOf([
