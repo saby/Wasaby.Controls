@@ -46,12 +46,16 @@ import 'Controls/breadcrumbs';
                   parent: self._root,
                   markedKey: null,
                }
-               self._restoredMarkedKeys[self._root].markedKey = root
+                if (self._restoredMarkedKeys[self._root]) {
+                    self._restoredMarkedKeys[self._root].markedKey = root;
+                }
                self._root = root;
+                console.log(self._restoredMarkedKeys);
             }
             if (action === EXPLORER_ACTION.onBredcrumbs) {
                _private.pathCleaner(self, root)
                self._root = root;
+               console.log(self._restoredMarkedKeys);
             }
             if (!self._options.hasOwnProperty('root')) {
                self._root = root;
@@ -75,6 +79,10 @@ import 'Controls/breadcrumbs';
                   } else {
                      _remoover2(root);
                   }
+               } else if (self._restoredMarkedKeys[prop].parent == root) {
+                   _remoover2(root);
+               } else if (prop == self._root) {
+                   delete self._restoredMarkedKeys[prop];
                }
             }
             function _remoover2(key) {
@@ -254,7 +262,9 @@ import 'Controls/breadcrumbs';
       },
        _afterUpdate: function() {
            if (this._isGoingBack) {
-               this._children.treeControl._children.baseControl.getViewModel().setMarkedKey(this._restoredMarkedKeys[this._root].markedKey);
+               if(this._restoredMarkedKeys[this._root]) {
+                   this._children.treeControl._children.baseControl.getViewModel().setMarkedKey(this._restoredMarkedKeys[this._root].markedKey);
+               }
                this._isGoingBack = false;
            }
        },
