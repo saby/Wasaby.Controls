@@ -1812,11 +1812,17 @@ define([
                    }
                 },
                 called = false,
+                actionsUpdated = false,
                 ctrl = new lists.BaseControl(cfg);
             ctrl._children = {
                editInPlace: {
                   beginEdit: () => {
                      return ctrl._onAfterBeginEdit();
+                  }
+               },
+               itemActions: {
+                  updateItemActions: () => {
+                     actionsUpdated = true;
                   }
                }
             };
@@ -1829,15 +1835,13 @@ define([
                }
                return {anyField: 12};
             };
-            assert.isFalse(ctrl._canUpdateItemsActions);
             let result  = ctrl.beginEdit();
             assert.deepEqual({anyField: 12}, result);
-            assert.isTrue(ctrl._canUpdateItemsActions);
+            assert.isTrue(actionsUpdated);
             assert.isTrue(called);
             ctrl._afterUpdate({
                viewModelConstructor: null
             });
-            assert.isFalse(ctrl._canUpdateItemsActions);
          });
 
          it('beginAdd', function() {
@@ -2942,6 +2946,12 @@ define([
                 },
                 item = {},
                 instance = new lists.BaseControl(cfg);
+
+            instance._children = {
+               itemActions: {
+                  updateItemActions: () => {}
+               }
+            };
 
             instance._notify = (eventName, args) => {
                assert.equal('afterBeginEdit', eventName);
