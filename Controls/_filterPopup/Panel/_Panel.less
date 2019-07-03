@@ -8,17 +8,34 @@
 }
 
 //Panel width
-.controls-FilterPanel__width-m {
+.controls-FilterPanel__width-m.controls-FilterPanel__vertical {
    width: @width_FilterPanel-size_m;
 }
 
-.controls-FilterPanel__width-l {
+.controls-FilterPanel__width-l.controls-FilterPanel__vertical {
    width: @width_FilterPanel-size_l;
 }
 
-.controls-FilterPanel__width-xl {
+.controls-FilterPanel__width-xl.controls-FilterPanel__vertical {
    width: @width_FilterPanel-size_xl;
 }
+
+.controls-FilterPanel__width-m .controls-FilterPanel__filtersWrapper {
+   width: @width_FilterPanel-filtersWrapper-size_m;
+}
+
+.controls-FilterPanel__width-m .controls-HistoryList__horizontal {
+   width: @width_FilterPanel-HistoryList-size_m;
+}
+
+.controls-FilterPanel__width-l .controls-FilterPanel__filtersWrapper {
+   width: @width_FilterPanel-filtersWrapper-size_l;
+}
+
+.controls-FilterPanel__width-l .controls-HistoryList__horizontal {
+   width: @width_FilterPanel-HistoryList-size_l;
+}
+
 //Wrong class name, for compatibility
 .controls-PanelFilter__width-m {
    width: @width_FilterPanel-size_m;

@@ -15,7 +15,7 @@ import 'css!theme?Controls/list';
  *
  *
  * @name Controls/_list/AddButton#caption
- * @cfg {String} Control caption text.
+ * @cfg {String} Текст заголовка контрола.
  * @example
  * <pre>
  *    <Controls.list:AddButton caption="add record"/>

@@ -1,19 +1,25 @@
-.controls-Render_theme_@{themeName}_style_search {
+.controls-Render_state-search-valid_theme-@{themeName} {
    border-color: @border-color_Search;
    background: @background-color_Search;
 }
 
-.controls-Render_theme_@{themeName}_style_search_active {
+.ws-is-no-touch {
+   .controls-Render_state-search-valid_theme-@{themeName}:hover {
+      border-color: @border-color_Search_active;
+   }
+}
+
+.controls-Render_state-search-active_theme-@{themeName} {
    border-color: @border-color_Search_active;
    background: @background-color_Search;
 }
 
-.controls-Render_theme_@{themeName}_style_search_readOnly {
+.controls-Render_state-search-readonly_theme-@{themeName} {
    border-color: @border-color_Search_readOnly;
    background: @background-color_Search;
 }
 
-.controls-Render_theme_@{themeName}_style_search:focus-within {
+.controls-Render_state-search-valid_theme-@{themeName}:focus-within {
    border-color: @border-color_Search_active;
    background: @background-color_Search;
 }
@@ -75,13 +81,13 @@
 }
 
 .controls-Search__nativeField_theme_@{themeName}_caretFilled {
-   caret-color: @caret-color_InputBase;
+   caret-color: @caret-color_empty_inputText;
 }
 
 //ios doesn't support dynamic color change of caret
 //demo https://jsfiddle.net/gersasha/ew03jha4/2/
 .ws-is-mobile-safari {
    .controls-Search__nativeField_theme_@{themeName}_caretEmpty {
-      caret-color: @caret-color_InputBase;
+      caret-color: @caret-color_empty_inputText;
    }
 }

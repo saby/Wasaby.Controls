@@ -3,6 +3,7 @@ import cClone = require('Core/core-clone');
 import _entity = require('Types/entity');
 import collection = require('Types/collection');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
+import {isEqual} from 'Types/object';
 
 var
     _private = {
@@ -255,16 +256,20 @@ var
         },
 
         setExpandedItems: function(expandedItems: Array<unknown>) {
-            this._expandedItems = expandedItems ? cClone(expandedItems) : [];
-            this._collapsedItems = _private.prepareCollapsedItems(expandedItems, this._options.collapsedItems);
-            this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-            this._nextModelVersion();
+            if (!isEqual(this._expandedItems, expandedItems)) {
+                this._expandedItems = expandedItems ? cClone(expandedItems) : [];
+                this._collapsedItems = _private.prepareCollapsedItems(expandedItems, this._options.collapsedItems);
+                this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+                this._nextModelVersion();
+            }
         },
 
         setCollapsedItems: function(collapsedItems: Array<unknown>) {
-            this._collapsedItems = _private.prepareCollapsedItems(this._options.expandedItems, collapsedItems ? collapsedItems : []);
-            this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-            this._nextModelVersion();
+            if (!isEqual(this._collapsedItems, collapsedItems)) {
+                this._collapsedItems = _private.prepareCollapsedItems(this._options.expandedItems, collapsedItems ? collapsedItems : []);
+                this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+                this._nextModelVersion();
+            }
         },
 
         getExpandedItems: function() {

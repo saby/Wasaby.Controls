@@ -1,4 +1,14 @@
 /**
+ * Библиотка хлебных крошек.
+ * @library Controls/breadcrumbs
+ * @includes Path Controls/_breadcrumbs/Path
+ * @includes HeadingPath Controls/_breadcrumbs/HeadingPath
+ * @includes BreadCrumbsStyles Controls/_breadcrumbs/BreadCrumbsStyles
+ * @includes PathStyles Controls/_breadcrumbs/PathStyles
+ * @author Авраменко А. С.
+ */
+
+/*
  * Breadcrumbs library
  * @library Controls/breadcrumbs
  * @includes Path Controls/_breadcrumbs/Path

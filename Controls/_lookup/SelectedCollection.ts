@@ -11,6 +11,17 @@ import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTe
 import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
 
 /**
+ * Контрол, отображающий коллекцию элементов.
+ *
+ * @class Controls/_lookup/SelectedCollection
+ * @extends Core/Control
+ * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
+ * @control
+ * @public
+ * @author Капустин И.А.
+ */
+
+/*
  * Control, that display collection of items.
  *
  * @class Controls/_lookup/SelectedCollection
