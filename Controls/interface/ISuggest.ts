@@ -40,7 +40,7 @@ interface ISuggest {
       /**
        * @name Controls/interface/ISuggest#suggestTemplate
        * @cfg {ISuggestTemplateProp|null} Template for suggest, that showing search results.
-       * @remark Root control of suggest must be Controls/Container/Suggest/List, for this control you can pass in content option a control (such Controls.list:View or Controls/grid:View), that will displaying a list.
+       * @remark Root control of suggest must be {@link Controls/suggestPopup:ListContainer}, for this control you can pass in content option a control (such {@link Controls/list:View} or {@link Controls/grid:View}), that will displaying a list.
        * @remark You can set width of suggestions popup by adding own class on suggestTemplate and set min-width by this class. By default width of the suggest is equal input field width.
        * @editor function
        * @example
