@@ -139,7 +139,7 @@ const Sticky = BaseOpener.extend({
  *    openSticky() {
  *        Sticky.openPopup({
  *          template: 'Example/MyStickyTemplate',
- *          autoClose: true
+ *          opener: this._children.myButton
  *        }).then((popupId) => {
  *          this._popupId = popupId;
  *        });
