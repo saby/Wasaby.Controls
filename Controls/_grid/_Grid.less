@@ -416,6 +416,16 @@
    }
 }
 
+.ws-is-ie {
+   //pointer-events: none does not work in ie on pseudo elements
+   //because of this, click on actions is didn't work
+   //z-index: 2 is used is new browsers (chrome, ff) to overlap white line in :after
+   //but in ie it works fine with z-index: 1
+   .controls-Grid__row-cell_selected-master:before {
+      z-index: 1;
+   }
+}
+
 .ws-is-no-touch {
    .controls-Grid__row_master:hover .controls-Grid__row-cell-background-hover,
    .controls-Grid__row_master.controls-Grid_row-cell_hovered {
