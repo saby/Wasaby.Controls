@@ -205,6 +205,8 @@ var
 
       _pagingState: null,
 
+      _shadowVisibleAlways: false,
+
       /**
              * @type {Controls/_scroll/Context|null}
        * @private
@@ -340,6 +342,9 @@ var
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
+            if (this._shadowVisibleAlways) {
+               this._displayState.hasScroll = true;
+            }
             this._updateStickyHeaderContext();
 
             this._forceUpdate();
@@ -352,8 +357,43 @@ var
          if (typeof this._displayState.shadowPosition !== 'string') {
             return false;
          }
+         switch(this._shadowVisibleAlways) {
+            case 'top': if (position === 'top') {
+                  return true;
+               }
+               break;
+            case 'bottom': if (position === 'bottom') {
+                  return true;
+               }
+               break;
+            case 'both': return true;
+         }
 
          return this._displayState.shadowPosition.indexOf(position) !== -1 && !this._children.stickyController.hasFixed(position);
+      },
+
+      shadowTaken: function(value) {
+         this._shadowVisibleAlways = value;
+      },
+
+      shadowReleased: function(value) {
+         if (value === 'both') {
+            this._shadowVisibleAlways = 'none';
+         }
+         if (this._shadowVisibleAlways === 'both') {
+            switch(value) {
+               case 'top': this._shadowVisibleAlways = 'bottom';
+                  break;
+               case 'bottom': this._shadowVisibleAlways = 'top';
+                  break;
+            }
+         }
+         if (this._shadowVisibleAlways === 'top' && value === 'top') {
+            this._shadowVisibleAlways = '';
+         }
+         if (this._shadowVisibleAlways === 'bottom' && value === 'bottom') {
+            this._shadowVisibleAlways = '';
+         }
       },
 
       /**
