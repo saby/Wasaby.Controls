@@ -497,6 +497,13 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         }
     },
 
+    _onItemClick: function(e, item, originalEvent) {
+        if (this._options.expandByItemClick && item.get(this._options.nodeProperty) !== null) {
+            let display = this._children.baseControl.getViewModel().getDisplay();
+            _private.toggleExpanded(this, display.getItemBySourceItem(item));
+        }
+    },
+
     _onTreeViewKeyDown: function(event) {
         keysHandler(event, HOT_KEYS, _private, this);
     },
@@ -512,6 +519,7 @@ TreeControl.getDefaultOptions = function() {
         uniqueKeys: true,
         filter: {},
         markItemByExpanderClick: true,
+        expandByItemClick: false,
         root: null,
         columns: DEFAULT_COLUMNS_VALUE
     };
