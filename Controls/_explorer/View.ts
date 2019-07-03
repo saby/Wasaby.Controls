@@ -70,6 +70,7 @@ import 'Controls/breadcrumbs';
                            markedKey: markedKey
                         }
                      }
+                     return;
                   } else {
                      _remoover2(root);
                   }
