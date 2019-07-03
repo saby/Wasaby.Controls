@@ -145,7 +145,15 @@ var _private = {
                     if (self._isActive) {
                         isActive = true;
                     }
+                    const curKey = listModel.getMarkedKey();
                     listModel.setItems(list);
+                    const nextKey = listModel.getMarkedKey();
+                    if (nextKey && nextKey !== curKey
+                        && self._listViewModel.getCount() && self._isScrollShown
+                        && !self._options.task46390860 && !self._options.task1177182277
+                    ) {
+                        self._markedKeyForRestoredScroll = nextKey;
+                    }
                     self._items = listModel.getItems();
                     if (isActive === true) {
                         self._children.listView.activate();
@@ -243,9 +251,9 @@ var _private = {
             return;
         }
 
-        if (self._keyDisplayedItem !== null) {
-            _private.scrollToItem(self, self._keyDisplayedItem);
-            self._keyDisplayedItem = null;
+        if (self._markedKeyForRestoredScroll !== null) {
+            _private.scrollToItem(self, self._markedKeyForRestoredScroll);
+            self._markedKeyForRestoredScroll = null;
         }
     },
     moveMarker: function(self, newMarkedKey) {
@@ -1025,7 +1033,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _template: BaseControlTpl,
     iWantVDOM: true,
     _isActiveByClick: false,
-    _keyDisplayedItem: null,
+    _markedKeyForRestoredScroll: null,
 
     _listViewModel: null,
     _viewModelConstructor: null,
@@ -1235,36 +1243,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (filterChanged || recreateSource || sortingChanged) {
             //return result here is for unit tests
-            return _private.reload(self, newOptions).addCallback(() => {
-
-                /*
-                * After reload need to reset scroll position to initial. Resetting a scroll position occurs by scrolling
-                * to first element.
-                */
-
-                // FIXME Не всегда спискам нужна подкрутка к первому элементу: список может просто выводить все записи и релоадиться.
-                // Как вариант - опция на списке или очередной контейнер/контроллер, отвечающий за подскролл к первому элементу.
-                // remove by https://online.sbis.ru/opendoc.html?guid=d611a793-2d96-48ac-aaa7-6923f50207a6
-                if (self._options.task1177182277) {
-                    return;
-                }
-
-                //FIXME _isScrollShown indicated, that the container in which the list is located, has scroll. If container has no scroll, we shouldn't not scroll to first item,
-                //because scrollToElement method will find scroll recursively by parent, and can scroll other container's. this is not best solution, will fixed by task https://online.sbis.ru/opendoc.html?guid=6bdf5292-ed8a-4eec-b669-b02e974e95bf
-                // FIXME self._options.task46390860
-                // In the chat, after reload, need to scroll to the last element, because the last message is from below.
-                // Now applied engineers do it themselves, checking whether the record was drawn via setTimeout and their handler works
-                // before ours, because afterUpdate is asynchronous. At 300, they will do this by 'drowItems' event, which may now be unstable.
-                // https://online.sbis.ru/opendoc.html?guid=733d0961-09d4-4d72-8b27-e463eb908d60
-                if (self._listViewModel.getCount() && self._isScrollShown && !self._options.task46390860) {
-                    const firstItem = self._listViewModel.getFirstItem();
-
-                    //the first item may be missing, if, for example, only groups are drawn in the list
-                    if (firstItem) {
-                        self._keyDisplayedItem = firstItem.getId();
-                    }
-                }
-            });
+            return _private.reload(self, newOptions);
         }
 
         if (this._itemsChanged) {
@@ -1761,12 +1740,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         newNavigation.sourceConfig.page = page - 1;
         this._recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
         var self = this;
-        _private.reload(self, self._options).addCallback(() => {
-                const firstItem = self._listViewModel.getFirstItem();
-                if (firstItem) {
-                    self._keyDisplayedItem = firstItem.getId();
-                }
-        });
+        _private.reload(self, self._options);
         this._shouldRestoreScrollPosition = true;
     },
 
