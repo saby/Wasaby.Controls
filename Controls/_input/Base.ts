@@ -536,7 +536,7 @@ import 'wml!Controls/_input/Base/Stretcher';
             this._isBrowserPlatform = Env.constants.isBrowserPlatform;
 
             /**
-             * Hide in chrome because it supports auto-completion of the field when hovering over an item
+             * Hide in chrome and firefox because it supports auto-completion of the field when hovering over an item
              * in the list of saved values. During this action no events are triggered and hide placeholder
              * using js is not possible.
              *
@@ -548,7 +548,7 @@ import 'wml!Controls/_input/Base/Stretcher';
              * from the value in the model. And when you change the selection, the field starts to focus.
              * There is a situation that you can not withdraw focus from the field.
              */
-            this._hidePlaceholderUsingCSS = Env.detection.chrome;
+            this._hidePlaceholderUsingCSS = Env.detection.chrome || Env.detection.firefox;
          },
 
          _beforeMount: function(options) {
