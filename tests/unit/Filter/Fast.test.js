@@ -4,9 +4,11 @@ define(
       'Types/source',
       'Core/core-clone',
       'Types/collection',
-      'Controls/history'
+      'Controls/history',
+      'Types/entity',
+      'Core/Deferred'
    ],
-   function(filterMod, sourceLib, Clone, collection, history) {
+   function(filterMod, sourceLib, Clone, collection, history, entity, Deferred) {
       describe('FastFilterVDom', function() {
          var items = [
             [{ key: 0, title: 'все страны' },
@@ -493,7 +495,8 @@ define(
             fastFilter._configs = [{_items: new collection.RecordSet({
                   idProperty: 'key',
                   rawData: items[0]
-               })}];
+               }),
+               _sourceController: { hasMoreData: () => {} }}];
             fastFilter._items = new collection.RecordSet({
                rawData: configItems.items,
                idProperty: 'title'
@@ -610,6 +613,77 @@ define(
                      assert.equal(fastFilter._configs[3]._items.getCount(), 1);
                      done();
                   });
+               });
+            });
+         });
+
+         describe('history', () => {
+            let historySource, historyConfig;
+            let fastFilter;
+            beforeEach(function() {
+               historySource = new history.Source({
+                  originSource: new sourceLib.Memory({
+                     idProperty: 'id',
+                     data: items[0]
+                  }),
+                  historySource: new history.Service({
+                     historyId: 'TEST_HISTORY_ID_FAST_FILTER'
+                  })
+               });
+               historySource.getItems = () => {
+                  return new collection.RecordSet({
+                     idProperty: 'id',
+                     rawData: [{id: 1}]
+                  });
+               };
+               historyConfig = {
+                  items: [{
+                     id: 'first',
+                     value: 'Россия',
+                     resetValue: 'все страны',
+                     textValue: '',
+                     properties: {
+                        keyProperty: 'title',
+                        displayProperty: 'title',
+                        source: historySource
+                     }
+                  }]
+               };
+               fastFilter = getFastFilter(historyConfig);
+
+            });
+            it('_private::updateHistory', function(done) {
+               fastFilter._beforeMount(historyConfig).addCallback(function(result) {
+                  assert.isOk(result.configs);
+                  assert.equal(Object.keys(result.configs).length, Object.keys(fastFilter._configs).length);
+
+                  let selectedItems = [new entity.Model({
+                     idProperty: 'key',
+                     rawData: { key: 1, title: 'Россия' }
+                  })];
+                  filterMod.Fast._private.updateHistory(fastFilter._configs[0], selectedItems);
+                  assert.strictEqual(fastFilter._configs[0]._items.getCount(), 1);
+                  done();
+               });
+            });
+
+            it('_private::onSelectorResult', function(done) {
+               fastFilter._beforeMount(historyConfig).addCallback(function(result) {
+                  assert.isOk(result.configs);
+                  assert.equal(Object.keys(result.configs).length, Object.keys(fastFilter._configs).length);
+
+                  filterMod.Fast._private.onSelectorResult(fastFilter._configs[0], [new entity.Model({
+                     idProperty: 'key',
+                     rawData: { key: 1, title: 'Россия' }
+                  })]);
+                  assert.strictEqual(fastFilter._configs[0]._items.getCount(), 1);
+
+                  filterMod.Fast._private.onSelectorResult(fastFilter._configs[0], [new entity.Model({
+                     idProperty: 'key',
+                     rawData: { key: 5, title: 'Китай' }
+                  })]);
+                  assert.isNull(fastFilter._configs[0]._sourceController);
+                  done();
                });
             });
          });

@@ -195,7 +195,9 @@ define(
                   isOpened: () => { return isOpen; }
                }
             };
+            dropdownController._depsDeferred = {};
             dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
+            assert.isNull(dropdownController._depsDeferred);
             assert.isFalse(opened);
 
             isOpen = true;
@@ -505,6 +507,14 @@ define(
             dropdownController._items = null;
             dropdownController._open();
             assert.isFalse(opened);
+         });
+
+         it('_private::requireTemplates', (done) => {
+            let dropdownController = getDropdownController(config);
+            dropdown._Controller._private.requireTemplates(dropdownController, config).addCallback(() => {
+               assert.isTrue(dropdownController._depsDeferred.isReady());
+               done();
+            });
          });
 
          it('_open one item', () => {

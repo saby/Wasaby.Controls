@@ -443,10 +443,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             if (this._markedKey && curenMarkerIndex === -1 && !curentItem) {
                 const prevValidItem = this.getPreviousItem(removedItemsIndex);
                 const nextValidItem = this.getNextItem(removedItemsIndex);
-                if (prevValidItem) {
-                    this.updateMarker(prevValidItem);
-                } else if (nextValidItem) {
+                if (nextValidItem) {
                     this.updateMarker(nextValidItem);
+                } else if (prevValidItem) {
+                    this.updateMarker(prevValidItem);
                 }
             }
         }

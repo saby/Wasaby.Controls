@@ -5,6 +5,20 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_breadcrumbs/Path/Path');
 
 /**
+ * Хлебные крошки.
+ * <a href="/materials/demo-ws4-breadcrumbs">Demo</a>.
+ *
+ * @class Controls/_breadcrumbs/Path
+ * @extends Core/Control
+ * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/BreadCrumbsStyles
+ * @control
+ * @public
+ * @author Авраменко А.С.
+ * @demo Controls-demo/BreadCrumbs/BreadCrumbsPG
+ */
+
+/*
  * Breadcrumbs.
  * <a href="/materials/demo-ws4-breadcrumbs">Demo</a>.
  *

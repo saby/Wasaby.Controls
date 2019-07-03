@@ -17,7 +17,7 @@
                                     <Controls.dragnDrop:Controller name="dragNDropContainer">
                                        <UI.HotKeys:Dispatcher>
                                           <ws:partial template="{{bodyTemplate.content}}"
-                                                      class="{{BodyClasses()}} {{_scrollingClass}} {{_options.bodyClass}} {{_touchclass()}}"
+                                                      class="{{BodyClasses()}} {{_scrollingClass}} {{_options.bodyClass}} {{_touchclass()}} zIndex-context"
                                                       id="body"
                                                       key="1_2_"
                                                       on:scroll="_scrollPage()"
@@ -31,7 +31,7 @@
                                                       on:mouseup="_mouseupPage()"
                                                       on:suggestStateChanged="_suggestStateChangedHandler()">
                                              <ws:bodyContent>
-                                                <div>
+                                                <div class="bodyContent">
                                                    <ws:partial
                                                       template="{{ _options.content }}"
                                                       scope="{{ templateConfig }}"

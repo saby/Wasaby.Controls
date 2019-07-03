@@ -49,6 +49,12 @@ var List = Control.extend({
         }
     },
 
+    _onItemSwipe: function(event, itemData) {
+        if (event.nativeEvent.direction === 'left') {
+            this._listModel.setSwipeItem(itemData);
+        }
+    },
+
     _moreButtonClick: function(event) {
         this._notify('moreButtonClick');
     },

@@ -201,7 +201,12 @@ class VirtualScroll {
 
             // если для сдвига stopIndex хватает количества элементов, то просто увеличиваем stopIndex
             if (this._stopIndex + this._virtualSegmentSize <= this._itemsCount) { // 45 + 10 = 55, 55 < 50
-                this._stopIndex += this._virtualSegmentSize;
+                const
+                    sub = this._virtualPageSize - this._stopIndex;
+
+                // Если изначально показывается настолько мало записей, что после обновления индексов количество записей
+                // все равно меньше, чем виртуальная страница, то увеличиваем индексы на сколько возможно.
+                this._stopIndex +=  sub > this._virtualSegmentSize ?  sub : this._virtualSegmentSize;
             } else { // иначе - сдвигаем на сколько можем, остальное пытаемся взять из _startIndex
                 const
                    sub = this._itemsCount - this._stopIndex; // 45 + 10 - 50 = 5

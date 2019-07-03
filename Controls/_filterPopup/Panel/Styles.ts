@@ -9,6 +9,11 @@
  * @css @width_FilterPanel-size_l The width of the panel on which css class controls-FilterPanel__width-l is set.
  * @css @width_FilterPanel-size_xl The width of the panel on which css class controls-FilterPanel__width-xl is set.
  *
+ * @css @width_FilterPanel-filtersWrapper-size_m The width of the panel's filters block, when orientation option set to "horizontal" and css class controls-FilterPanel__width-m is set.
+ * @css @width_FilterPanel-HistoryList-size_m The width of the panel's history block, when orientation option set to "horizontal" and css class controls-FilterPanel__width-m is set.
+ * @css @width_FilterPanel-filtersWrapper-size_l The width of the panel's filters block, when orientation option set to "horizontal" and css class controls-FilterPanel__width-l is set.
+ * @css @width_FilterPanel-HistoryList-size_l The width of the panel's history block, when orientation option set to "horizontal" and css class controls-FilterPanel__width-l is set.
+ *
  * @css @spacing_FilterPanel-between-resetButton-applyButton Spacing between reset filter button and apply filter button.
  * @css @spacing_FilterPanel-between-applyButton-closeButton Spacing between apply filter button and close panel button.
  * @css @spacing_FilterPanel-between-panelHeading-topTemplate Spacing between panel heading and top template content.

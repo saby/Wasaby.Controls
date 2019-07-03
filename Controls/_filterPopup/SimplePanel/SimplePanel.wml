@@ -4,16 +4,14 @@
            attr:class="controls-ScrollContainer__flex controls-SimplePanel__scroll_theme_{{_options.theme}}"
            shadowVisible="{{false}}">
 
-      <div>
          <ws:for data="index, item in _items">
             <ws:partial template="{{_options.itemTemplate}}"
-                        index="{{index}}"
+                        isLast="{{_items.length === index + 1}}"
                         scope="{{item}}"
                         on:itemClick="_itemClickHandler(item)"
                         on:checkBoxClick="_checkBoxClickHandler(index)"
                         on:moreButtonClick="_moreButtonClick(item)"/>
          </ws:for>
-      </div>
    </Controls.scroll:Container>
    <ws:if data="{{_needShowApplyButton}}">
       <div class="controls-SimplePanel__applyButton_theme_{{_options.theme}}">

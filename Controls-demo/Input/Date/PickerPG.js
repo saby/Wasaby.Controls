@@ -33,6 +33,7 @@ define('Controls-demo/Input/Date/PickerPG',
             this._componentOptions = {
                name: 'DatePicker',
                readOnly: false,
+               vdomDialog: true,
                tooltip: 'myTooltip',
                validationErrors: '',
                tagStyle: undefined

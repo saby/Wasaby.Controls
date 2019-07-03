@@ -11,14 +11,17 @@
                emptyTemplate="{{_emptyItemTemplate}}"
    />
    <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate}}">
-   <Controls.dropdownPopup:MoreButton
-           class="controls-SimplePanel-List__hasMoreButton_theme_{{_options.theme}}"
-           caption="{[Еще]}..."
-           items="{{_options.items}}"
-           selectedKeys="{{_listModel.getSelectedKeys()}}"
-           selectorTemplate="{{_options.selectorTemplate}}"
-           isCompoundTemplate="{{_options.isCompoundTemplate}}"
-           selectorOpener="{{_options.selectorOpener}}"
-           on:mousedown="_moreButtonClick()"/>
+      <Controls.dropdownPopup:MoreButton
+              class="controls-SimplePanel-List__hasMoreButton_theme_{{_options.theme}}"
+              caption="{[Еще]}..."
+              items="{{_options.items}}"
+              selectedKeys="{{_listModel.getSelectedKeys()}}"
+              selectorTemplate="{{_options.selectorTemplate}}"
+              isCompoundTemplate="{{_options.isCompoundTemplate}}"
+              selectorOpener="{{_options.selectorOpener}}"
+              on:mousedown="_moreButtonClick()"/>
+   </ws:if>
+   <ws:if data="{{!_options.isLast && _options.showSeparator !== false}}">
+      <div class="controls-SimplePanel__block_separator_theme_{{_options.theme}}"></div>
    </ws:if>
 </div>
