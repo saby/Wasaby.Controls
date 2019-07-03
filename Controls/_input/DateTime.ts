@@ -91,7 +91,7 @@ var Component = Control.extend([], {
          localDate.setDate(this._model.value.getDate() + delta);
          this._model.value = localDate;
       }
-   }
+   },
 
    _beforeUnmount: function() {
       this._model.destroy();
