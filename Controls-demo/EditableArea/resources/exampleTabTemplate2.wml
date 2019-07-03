@@ -13,7 +13,7 @@
          >
             <ws:editorTemplate>
                <Controls.input:Text selectOnClick="{{ false }}"
-                                    size="l"
+                                    size="m"
                                     fontStyle="secondary" />
             </ws:editorTemplate>
          </Controls.editableArea:Base>

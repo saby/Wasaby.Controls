@@ -52,7 +52,7 @@
 }
 
 .controls-Area__field_theme_@{themeName}_margin {
-   margin: @spacing_Area_between-topBorder-text @spacing_Area_between-rightBorder-text @spacing_Area_between-bottomBorder-text @spacing_Area_between-leftBorder-text;
+   margin: @padding-vertical_inputArea @padding-horizontal_inputText;
 }
 
 .ws-is-firefox .controls-Area__field_theme_@{themeName}_margin {
@@ -61,7 +61,7 @@
     * To ensure that the height is not changed let's increase the indentation between the text and the bottom border by 1px.
     * Presumably the problem is in the font. Error written https://online.sbis.ru/opendoc.html?guid=1e389bc5-8be7-4394-abdd-231e3ec040a8
     */
-   margin: @spacing_Area_between-topBorder-text - 1 @spacing_Area_between-rightBorder-text @spacing_Area_between-bottomBorder-text + 1 @spacing_Area_between-leftBorder-text;
+   margin: @padding-vertical_inputArea - 1 @padding-horizontal_inputText @padding-vertical_inputArea + 1 @padding-horizontal_inputText;
 }
 
 .ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
@@ -75,23 +75,23 @@
 }
 
 & {
-   @sizes: s, m, l, default;
+   @sizes: xs, s, m, l, xl, 2xl, 3xl, 4xl, 5xl;
    @countSupportLines: 10;
 
    .for(@countSupportLines * length(@sizes), {
       @lines: mod(@_i - 1, @countSupportLines) + 1;
       @size: extract(@sizes, ceil(@_i / @countSupportLines));
-      @sizeVariable: "height_Area_oneLine_size_@{size}";
+      @sizeVariable: "line-height_@{size}_inputArea";
       @sizeLines: @lines * @@sizeVariable;
 
       .controls-Area__minHeight_theme_@{themeName}_countLines_@{lines}_size_@{size} {
          min-height: @sizeLines;
       }
       .controls-Area__scroll.controls-Area__minHeight_theme_@{themeName}_countLines_@{lines}_size_@{size}_indented {
-         min-height: @sizeLines + @spacing_Area_between-topBorder-text + @spacing_Area_between-bottomBorder-text;
+         min-height: @sizeLines + 2 * @padding-vertical_inputArea;
       }
       .controls-Area__scroll.controls-Area__maxHeight_theme_@{themeName}_countLines_@{lines}_size_@{size}_indented {
-         max-height: @sizeLines + @spacing_Area_between-topBorder-text + @spacing_Area_between-bottomBorder-text;
+         max-height: @sizeLines + 2 * @padding-vertical_inputArea;
       }
    });
 }

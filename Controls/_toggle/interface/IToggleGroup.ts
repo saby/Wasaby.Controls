@@ -27,7 +27,7 @@ export interface IToggleGroup {
      * @cfg {string} Расположение элементов в контейнере.
      * @variant horizontal Элементы расположены один за другим (горизонтально).
      * @variant vertical Элементы расположены один под другим (вертикально).
-     * @default horizontal
+     * @default vertical
      * @example
      * Вертикальная ориентация.
      * <pre>

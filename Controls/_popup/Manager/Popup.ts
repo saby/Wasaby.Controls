@@ -50,6 +50,7 @@ import {debounce} from 'Types/function';
             /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
              * inside can be compoundArea and we have to wait for it, and there is an asynchronous phase. Look at the flag waitForPopupCreated */
             this._controlResize = debounce(this._controlResize.bind(this), 10);
+            this._scrollHandler = debounce(this._scrollHandler.bind(this), 10);
 
             if (this.waitForPopupCreated) {
                this.callbackCreated = (function() {

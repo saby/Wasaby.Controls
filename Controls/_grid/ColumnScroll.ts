@@ -15,6 +15,7 @@ const
          return fixedCellContainer.offsetLeft + fixedCellContainer.offsetWidth;
       },
       updateSizes(self) {
+         _private.drawTransform(self, 0);
          const
             newContentSize = self._children.content.scrollWidth,
             newContentContainerSize = self._children.content.offsetWidth;
@@ -33,6 +34,10 @@ const
                _private.calculateFixedColumnWidth(self._children.content, self._options.multiSelectVisibility);
             self._forceUpdate();
          }
+         if (newContentContainerSize + self._scrollPosition > newContentSize) {
+            self._scrollPosition -= (newContentContainerSize + self._scrollPosition) - newContentSize;
+         }
+         _private.drawTransform(self, self._scrollPosition);
       },
       calculateShadowState(scrollPosition, containerSize, contentSize) {
          let
@@ -63,6 +68,10 @@ const
             shadowStyles = '';
          if (position === 'start' && _private.isShadowVisible(self._shadowState, position)) {
             shadowStyles = 'left: ' + self._fixedColumnsWidth + 'px;';
+         }
+         let emptyTemplate = self._container.getElementsByClassName('controls-BaseControl__emptyTemplate')[0];
+         if (emptyTemplate) {
+            shadowStyles += 'height: ' + emptyTemplate.offsetTop + 'px;';
          }
          return shadowStyles;
       },

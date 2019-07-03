@@ -442,6 +442,16 @@ define(
                   arguments: ['MobileInputFocusOut']
                }]);
             });
+            it('Notification to the global channel about the occurrence of the focus out event. The environment is mobile IOS.', function() {
+               ctrl._isMobileIOS = true;
+
+               ctrl._focusOutHandler();
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['MobileInputFocusOut']
+               }]);
+            });
             it('Not occur notification to the global channel about the occurrence of the focus out event. The environment is not mobile IOS.', function() {
                ctrl._isMobileIOS = false;
 

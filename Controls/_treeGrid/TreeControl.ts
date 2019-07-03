@@ -363,6 +363,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         _private.toggleExpanded(this, item);
     },
     _onExpanderClick: function(e, dispItem) {
+        this._children.baseControl.focus();
         _private.toggleExpanded(this, dispItem);
         if (this._options.markItemByExpanderClick) {
             this._children.baseControl.getViewModel().setMarkedKey(dispItem.getContents().getId());

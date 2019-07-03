@@ -1,4 +1,12 @@
 /**
+ * Интерфейс для списков.
+ *
+ * @interface Controls/_list/interface/IList
+ * @public
+ * @author Авраменко А.С.
+ */
+
+/*
  * Interface for lists.
  *
  * @interface Controls/_list/interface/IList
@@ -548,6 +556,24 @@
  */
 
 /**
+ * Загружает модель из источника данных, объединяет изменения в текущих данные и отображает элемент.
+ * @function Controls/_list/interface/IList#reloadItem
+ * @param {String} key Идентификатор элемента коллекции, который должен быть перезагружен из источника.
+ * @param {Object} readMeta Метаинформация, которая будет передана методу запроса/чтения.
+ * @param {Boolean} replaceItem Определяет, как загруженный элемент будет применяться к коллекции.
+ * Если параметр имеет значение true, элемент коллекции будет заменен загруженным элементом.
+ * Если параметр имеет значение false (по умолчанию), загруженные элементы будут объединены в элемент коллекции.
+ * @param {reloadType} Определяет, как будет загружен элемент.
+ * @example
+ *  <pre>
+ *      _itemUpdated: function(id) {
+ *          var list = this._children.myList;
+ *          list.reloadItem(id);
+ *      }
+ * </pre>
+ */
+
+/*
  * Loads model from data source, merges changes into the current data and renders the item.
  * @function Controls/_list/interface/IList#reloadItem
  * @param {String} key Identifier of the collection item, that should be reloaded from source.
