@@ -467,7 +467,7 @@
 
 /**
  * @name Controls/_list/interface/IList#itemsReadyCallback
- * @cfg {Function} Callback, который вызывается, когда экземпляр данных списка готов.
+ * @cfg {Function} Функция обратного вызова, которая будет вызываться, когда экземпляр данных списка готов.
  * @remark
  * ARGUMENTS:
  * <ul>
@@ -488,7 +488,7 @@
 
 /**
  * @name Controls/_list/interface/IList#dataLoadCallback
- * @cfg {Function} Callback, который вызывается после загрузки данных из источника.
+ * @cfg {Function} Функция обратного вызова, которая будет вызываться, когда данные загружены источником.
  * @remark
  * ARGUMENTS:
  * <ul>
