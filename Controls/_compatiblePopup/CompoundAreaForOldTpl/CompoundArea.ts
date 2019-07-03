@@ -351,7 +351,15 @@ var CompoundArea = CompoundContainer.extend([
                function(event, offset, isInitial) {
                   if (!self.isDestroyed() && !isInitial) {
                      if (self._options.closeOnTargetScroll) {
-                        self.close();
+                        // 1. Если показалась клавиатура, то не реагируем на onMove таргета
+                        // 2. После скрытия клавиатуры тоже не реагируем.
+                        if (!self._isIosKeyboardVisible()) {
+                           if (!self._isKeyboardVisible) {
+                              self.close();
+                           } else {
+                              self._isKeyboardVisible = false;
+                           }
+                        }
                      } else {
                         // Перепозиционируемся
                         self._notifyVDOM('controlResize', [], { bubbling: true });
@@ -365,6 +373,14 @@ var CompoundArea = CompoundContainer.extend([
                   }
                });
       }
+   },
+
+   _isIosKeyboardVisible(): boolean {
+      const isVisible =  Env.constants.browser.isMobileIOS && window.scrollY > 0;
+      if (isVisible) {
+         this._isKeyboardVisible = true;
+      }
+      return isVisible;
    },
 
    _setCustomHeader: function() {
