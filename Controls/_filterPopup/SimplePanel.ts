@@ -31,14 +31,20 @@ var _private = {
     },
 
     isEqualKeys: function(oldKeys, newKeys) {
-        if (oldKeys[0] === null && !newKeys.length) {
-            return false;
+        let result;
+        if (oldKeys[0] === null && !newKeys.length || newKeys.length !== oldKeys.length) {
+            result = false;
+        } else {
+            const diffKeys = newKeys.filter((i) => {
+                return !oldKeys.includes(i);
+            });
+            result = !diffKeys.length;
         }
-        return isEqual(newKeys, oldKeys);
+        return result;
     },
 
     needShowApplyButton: function(items) {
-        var isNeedShowApplyButton = false;
+        let isNeedShowApplyButton = false;
         factory(items).each(function(item) {
             if (!_private.isEqualKeys(item.initSelectedKeys, item.selectedKeys)) {
                 isNeedShowApplyButton = true;
