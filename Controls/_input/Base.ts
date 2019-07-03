@@ -184,7 +184,7 @@ import 'wml!Controls/_input/Base/Stretcher';
              * After showing the keyboard only on ios, the workspace size does not change.
              * The keyboard is shown only if the field has received focus as a result of a user touch.
              */
-            if (self._isMobileIOS && self._fromTouch) {
+            if (self._isMobileIOS && (!hasFocus || self._fromTouch)) {
                var eventName = hasFocus ? 'MobileInputFocus' : 'MobileInputFocusOut';
 
                self._fromTouch = hasFocus;
