@@ -22,7 +22,8 @@ var _private = {
 
     beforeItemsRemove: function (self, items) {
         var beforeItemsRemoveResult = self._notify('beforeItemsRemove', [items]);
-        return beforeItemsRemoveResult instanceof Deferred ? beforeItemsRemoveResult : Deferred.success(beforeItemsRemoveResult);
+        return beforeItemsRemoveResult instanceof Deferred || beforeItemsRemoveResult instanceof Promise ?
+           beforeItemsRemoveResult : Deferred.success(beforeItemsRemoveResult);
     },
 
     afterItemsRemove: function (self, items, result) {
