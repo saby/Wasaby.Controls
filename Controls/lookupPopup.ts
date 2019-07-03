@@ -5,7 +5,7 @@
  * @includes ListContainer Controls/_lookupPopup/List/Container
  * @includes Controller Controls/_lookupPopup/Controller
  * @includes Collection Controls/_lookupPopup/SelectedCollection/Popup
- * @includes listMemorySourceFilter ontrols/_lookupPopup/List/Utils/memorySourceFilter
+ * @includes listMemorySourceFilter Сontrols/_lookupPopup/List/Utils/memorySourceFilter
  * @public
  * @author Kraynov D.
  */
