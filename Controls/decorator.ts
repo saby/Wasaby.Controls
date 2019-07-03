@@ -13,13 +13,13 @@
  * @author Крайнов Д.О.
  */
 
-import Highlight = require('Controls/_decorator/Highlight');
 import Markup = require('Controls/_decorator/Markup');
 import Money = require('Controls/_decorator/Money');
 import Number = require('Controls/_decorator/Number');
 import PhoneNumber = require('Controls/_decorator/PhoneNumber');
 
 import {default as WrapURLs, IWrapURLsOptions} from 'Controls/_decorator/WrapURLs';
+import {Highlight, SearchMode, IHighlightOptions} from 'Controls/_decorator/Highlight';
 
 import Converter = require('Controls/_decorator/Markup/Converter');
 import InnerText = require('Controls/_decorator/Markup/resolvers/innerText');
@@ -29,6 +29,8 @@ import linkDecorate = require('Controls/_decorator/Markup/resolvers/linkDecorate
 
 export {
     Highlight,
+    SearchMode,
+    IHighlightOptions,
     Markup,
     Money,
     Number,

@@ -1,9 +1,22 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_decorator/Highlight/Highlight';
+import {IoC} from  'Env/Env';
 import {descriptor} from 'Types/entity';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import * as RegExpUtil from 'Controls/Utils/RegExp';
+import * as template from 'wml!Controls/_decorator/Highlight/Highlight';
 
-/**
+/*
  * Highlighting the searched phrase.
+ *
+ * @class Controls/_decorator/Highlight
+ * @extends UI/_base/Control
+ *
+ * @public
+ * @demo Controls-demo/Decorator/Highlight
+ *
+ * @author Красильников А.С.
+ */
+/**
+ * Контрол выполняет поиск сопоставления между {@link text текстом} и {@link highlight искомой фразой}.
  *
  * @class Controls/_decorator/Highlight
  * @extends UI/_base/Control
@@ -17,27 +30,46 @@ import {descriptor} from 'Types/entity';
 export type SearchMode = 'word' | 'substring';
 
 export interface IHighlightOptions extends IControlOptions {
-    /**
+    /*
      * @name Controls/_decorator/Highlight#text
      * @cfg {String} The text in which to search.
      */
-    text: string;
     /**
+     * @name Controls/_decorator/Highlight#text
+     * @cfg {String} Текст в котором выполняется поиск.
+     */
+    text: string;
+    /*
      * @name Controls/_decorator/Highlight#highlight
      * @cfg {String} Text to search.
      */
-    highlight: string;
     /**
+     * @name Controls/_decorator/Highlight#highlight
+     * @cfg {String} Текст для поиска.
+     */
+    highlight: string;
+    /*
      * @name Controls/_decorator/Highlight#class
      * @cfg {String} Class for highlight.
      */
-    class: string;
     /**
+     * @name Controls/_decorator/Highlight#class
+     * @cfg {String} Класс подсвечивающий результат поиска.
+     */
+    class: string;
+    /*
      * @name Controls/_decorator/Highlight#searchMode
      * @cfg {Enum}
      * @variant word The search is carried out by words. A word is a set of characters,
      * length not less than 2. Words are separated by whitespace and punctuation.
      * @variant substring The search is carried out by substrings.
+     */
+    /**
+     * @name Controls/_decorator/Highlight#searchMode
+     * @cfg {Enum}
+     * @variant word Поиск осуществляется по словам.
+     * Слово - это набор символов,  длина не менее 2. Слова разделяются пробелом и пунктуацией.
+     * @variant substring Поиск осуществляется по подстрокам.
      */
     searchMode: SearchMode;
 }
@@ -52,6 +84,12 @@ interface IPlain {
     value: string;
 }
 
+interface ISearchResult {
+    index: number;
+    value: string;
+}
+
+type SearchBy = 'and' | 'or';
 type Element = IHighlight | IPlain;
 
 export class Highlight extends Control<IHighlightOptions> {
@@ -59,8 +97,78 @@ export class Highlight extends Control<IHighlightOptions> {
     protected _template: TemplateFunction = template;
     protected _theme: string[] = ['Controls/decorator'];
 
+    private _parseText(text: string, highlight: string, searchMode: SearchMode): Element[] {
+        const escapedHighlight: string = RegExpUtil.escapeSpecialChars(highlight);
+        const searchResultByAnd: Element[] = this._searchBy(text, escapedHighlight, searchMode, 'and');
+
+        if (searchResultByAnd.length) {
+            return searchResultByAnd;
+        }
+
+        return this._searchBy(text, escapedHighlight, searchMode, 'or');
+    }
+
+    private _searchBy(text: string, highlight: string, searchMode: SearchMode, by: SearchBy): Element[] {
+        let words: string[];
+        switch (by) {
+            case 'and':
+                words = [highlight];
+                break;
+            case 'or':
+                words = highlight.split(Highlight.WORD_SEPARATOR);
+
+                if (searchMode === 'word') {
+                    words = words.filter(Highlight._isWord);
+                }
+                break;
+            default:
+                IoC.resolve('ILogger').error(this._moduleName, `"${by}" search is not supported.`);
+                words = [highlight];
+                break;
+        }
+
+        words = words.filter(Highlight._isNotEmpty);
+
+        if (words.length === 0) {
+            IoC.resolve('ILogger').warn(this._moduleName, 'When searching there is a problem, there are no ' +
+                'words in the highlight option. Perhaps the control is not used for its intended purpose or ' +
+                'is not required now.');
+        }
+
+        const regexp: RegExp = this._calculateRegExp(words, searchMode);
+        const highlightSearchResult: ISearchResult[] = Highlight._search(text, regexp);
+
+        if (highlightSearchResult.length === 0) {
+            if (by === 'or') {
+                return [{
+                    type: 'plain',
+                    value: text
+                }];
+            }
+
+            return [];
+        }
+
+        return Highlight._split(text, highlightSearchResult);
+    }
+
+    private _calculateRegExp(valueArr: string[], searchMode: SearchMode): RegExp {
+        const flags: string = 'gi';
+        const value: string = valueArr.join('|');
+
+        switch (searchMode) {
+            case 'word':
+                return new RegExp(`\\b${value}\\b`, flags);
+            case 'substring':
+                return new RegExp(`${value}`, flags);
+            default:
+                IoC.resolve('ILogger').error(this._moduleName, `Unsupported search mode: ${searchMode}.`);
+                return new RegExp(`${value}`, flags);
+        }
+    }
+
     protected _beforeMount(options: IHighlightOptions): void {
-        this._parsedText = _private.parseText(options.text, options.highlight, options.searchMode);
+        this._parsedText = this._parseText(options.text, options.highlight, options.searchMode);
     }
 
     protected _beforeUpdate(newOptions: IHighlightOptions): void {
@@ -69,19 +177,80 @@ export class Highlight extends Control<IHighlightOptions> {
             newOptions.highlight !== this._options.highlight ||
             newOptions.searchMode !== this._options.searchMode
         ) {
-            this._parsedText = _private.parseText(newOptions.text, newOptions.highlight, newOptions.searchMode);
+            this._parsedText = this._parseText(newOptions.text, newOptions.highlight, newOptions.searchMode);
         }
     }
 
     private static WORD_SEPARATOR: RegExp = /\s+/g;
     private static MINIMUM_WORD_LENGTH: number = 2;
 
-    private static isEmpty(value: string): boolean {
-        return value === '';
+    private static _isNotEmpty(value: string): boolean {
+        return value !== '';
     }
 
-    private static isWord(value: string): boolean {
+    private static _isWord(value: string): boolean {
         return value.length >= Highlight.MINIMUM_WORD_LENGTH;
+    }
+
+    private static _search(text: string, regexp: RegExp): ISearchResult[] {
+        let iterations: number = 1e4;
+        const searchResult: ISearchResult[] = [];
+        let found: RegExpExecArray | null = regexp.exec(text);
+
+        while (found && iterations >= 1) {
+            searchResult.push({
+                value: found[0],
+                index: found.index
+            });
+
+            found = regexp.exec(text);
+            iterations--;
+        }
+
+        return searchResult;
+    }
+
+    private static _split(text: string, found: ISearchResult[]): Element[] {
+        const result: Element[] = [];
+        const foundLength: number = found.length;
+
+        if (foundLength === 0) {
+            result.push({
+                type: 'plain',
+                value: text
+            });
+
+            return result;
+        }
+
+        let index: number = 0;
+        for (let i = 0; i < foundLength; i++) {
+            const highlight = found[i];
+            const plainValue: string = text.substring(index, highlight.index);
+
+            if (plainValue) {
+                result.push({
+                    type: 'plain',
+                    value: plainValue
+                });
+            }
+
+            result.push({
+                type: 'highlight',
+                value: highlight.value
+            });
+
+            index = highlight.index + highlight.value.length;
+        }
+
+        if (index !== text.length) {
+            result.push({
+                type: 'plain',
+                value: text.substring(index)
+            });
+        }
+
+        return result;
     }
 
     static getDefaultOptions() {
@@ -103,166 +272,3 @@ export class Highlight extends Control<IHighlightOptions> {
         };
     }
 }
-
-var _private = {
-    MINIMUM_WORD_LENGTH: 2,
-
-    separatorsRegExp: /\s+/g,
-
-    isSearchByWords: function (searchMode) {
-        return searchMode === 'word';
-    },
-
-    isWord: function (value) {
-        return value.length >= _private.MINIMUM_WORD_LENGTH;
-    },
-
-    isNotEmpty: function (value) {
-        return value !== '';
-    },
-
-    calculateHighlightRegExp: function (highlightedWords, searchMode) {
-        var startSeparator = '';
-        var endSeparator = '';
-
-        /**
-         * The regular expression describes any word from the array.
-         */
-        var wordsRegExp = highlightedWords.join('|');
-
-        if (_private.isSearchByWords(searchMode)) {
-            /**
-             * Words must be separated from each other.
-             * The beginning of the word is separated by a whitespace character or the start of the line.
-             * The end of the word is separated by punctuation marks together with a whitespace character
-             * or the end of the line.
-             */
-            startSeparator = '(?:^|\\s)["(\']*';
-            endSeparator = '[,.;!?:")\']*(?:\\s|$)';
-        }
-
-        /**
-         * Add the beginning and end separated.
-         * Define substrings:
-         * $1 - start separator.
-         * $2 - search value for highlight.
-         * $3 - end separator.
-         */
-        var regExp = '(' + startSeparator + ')(' + wordsRegExp + ')(' + endSeparator + ')';
-
-        /**
-         * Set global search case-insensitive.
-         */
-        regExp = new RegExp(regExp, 'ig');
-
-        return regExp;
-    },
-
-    iterator: function (regExp, value) {
-        var obj = {
-            value: value,
-            hasFinished: false
-        };
-
-        obj.next = function () {
-            obj.lastIndex = regExp.lastIndex;
-
-            var resultSearch = regExp.exec(value);
-
-            obj.hasFinished = !resultSearch;
-
-            if (obj.hasFinished) {
-                obj.highlight = '';
-                obj.index = value.length;
-            } else {
-                var highlight = resultSearch[2];
-                var startSeparator = resultSearch[1];
-                var endSeparator = resultSearch[3];
-
-                obj.highlight = highlight;
-                regExp.lastIndex -= endSeparator.length;
-                obj.index = resultSearch.index + startSeparator.length;
-            }
-
-            return obj;
-        };
-
-        return obj;
-    },
-
-    addText: function (target, iterator) {
-        if (iterator.lastIndex !== iterator.index) {
-            target.push({
-                type: 'text',
-                value: iterator.value.substring(iterator.lastIndex, iterator.index)
-            });
-        }
-    },
-
-    addHighlight: function (target, iterator) {
-        target.push({
-            type: 'highlight',
-            value: iterator.highlight
-        });
-    },
-
-    uniteToSet: function (value) {
-        return value.reduce(function (result, current) {
-            var lastItem = result[result.length - 1];
-
-            switch (lastItem.type) {
-                case 'highlight':
-                    if (current.type === 'highlight' || /^\s+$/.test(current.value)) {
-                        lastItem.value += current.value;
-                    } else {
-                        result.push(current);
-                    }
-                    break;
-                case 'text':
-                    result.push(current);
-                    break;
-                default:
-                    break;
-            }
-
-            return result;
-        }, [value.shift()]);
-    },
-
-    parseText: function (text, highlight, searchMode) {
-        var highlightedWords =
-            RegExpUtil.escapeSpecialChars(highlight)
-                .split(_private.separatorsRegExp)
-                .filter(_private.isNotEmpty);
-
-        if (_private.isSearchByWords(searchMode)) {
-            highlightedWords = highlightedWords.filter(_private.isWord);
-        }
-
-        if (highlightedWords.length === 0) {
-            Env.IoC.resolve('ILogger').warn('Controls/_decorator/Highlight', 'When searching there is a problem, there are no words in the highlight option. Perhaps the control is not used for its intended purpose or is not required now.');
-
-            return [{
-                type: 'text',
-                value: text
-            }];
-        }
-
-        var highlightRegExp = _private.calculateHighlightRegExp(highlightedWords, searchMode);
-
-        var parsedText = [];
-        var iterator = _private.iterator(highlightRegExp, text).next();
-
-        while (!iterator.hasFinished) {
-            _private.addText(parsedText, iterator);
-            _private.addHighlight(parsedText, iterator);
-            iterator.next();
-        }
-
-        _private.addText(parsedText, iterator);
-
-        parsedText = _private.uniteToSet(parsedText);
-
-        return parsedText;
-    }
-};
