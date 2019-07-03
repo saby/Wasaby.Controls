@@ -17,6 +17,8 @@ define('Controls/Utils/getWidth', [
          }
          document.body.appendChild(measurer);
          width = measurer.clientWidth;
+
+         //Откладываем удаление элемента, чтобы не пересчитвывать лишний раз DOM и быстрее отобразить страницу
          setTimeout(function() {
             document.body.removeChild(measurer);
          });
