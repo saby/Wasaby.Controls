@@ -55,7 +55,7 @@ var _private = {
 };
 
 /**
- * Контейнер для списка в выпадающем блоке автодополнения. 
+ * Контейнер для списка в выпадающем блоке автодополнения.
  * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>здесь</a>.
  *
  * @class Controls/_suggestPopup/List
@@ -81,7 +81,7 @@ var List = Control.extend({
    _notifyHandler: tmplNotify,
    _reverseList: false,
    _markedKey: null,
-   _items: null
+   _items: null,
 
    _beforeMount: function(options, context) {
       this._searchEndCallback = this._searchEndCallback.bind(this);
