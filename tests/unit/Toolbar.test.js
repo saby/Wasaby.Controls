@@ -98,7 +98,9 @@ define(
                });
             });
             it('open menu', function() {
+               let isOpened = false;
                toolbar._notify = (e) => {
+                  isOpened = true;
                   assert.equal(e, 'menuOpened');
                };
                toolbar._children.menuOpener = {
@@ -108,7 +110,8 @@ define(
                toolbar._children.popupTarget = {
                   _container: 'target'
                };
-               toolbar._showMenu();
+               toolbar._showMenu({ stopPropagation: () => {} });
+               assert.equal(isOpened, true);
             });
             it('click toolbar item', function() {
                let isNotify = false;

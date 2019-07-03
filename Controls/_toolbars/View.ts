@@ -338,10 +338,13 @@ var Toolbar = Control.extend({
         }
     },
 
-    _showMenu: function () {
+    _showMenu: function (event) {
         var config = _private.generateMenuConfig(this);
         this._notify('menuOpened', [], {bubbling: true});
         _private.openPopup(config, this);
+        event.stopPropagation(); // Stop bubbling of 'click' after opening the menu.
+        // Nobody should have to catch the 'click'', if toolbar handled it.
+        // For example, list can catch this event and generate 'itemClick'.
     },
 
     _onResult: function (result) {
