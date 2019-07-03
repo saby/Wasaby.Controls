@@ -108,6 +108,22 @@ var _private = {
 };
 
 /**
+ * Хлебные крошки с кнопкой "Назад".
+ * <a href="/materials/demo-ws4-breadcrumbs">Демо-пример</a>.
+ *
+ * @class Controls/_breadcrumbs/HeadingPath
+ * @extends Core/Control
+ * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/PathStyles
+ * @mixes Controls/interface/IHighlighter
+ * @control
+ * @public
+ * @author Авраменко А.С.
+ *
+ * @demo Controls-demo/BreadCrumbs/PathPG
+ */
+
+/*
  * Breadcrumbs with back button.
  * <a href="/materials/demo-ws4-breadcrumbs">Demo</a>.
  *
@@ -125,6 +141,15 @@ var _private = {
 
 /**
  * @name Controls/_breadcrumbs/HeadingPath#backButtonStyle
+ * @cfg {String} Стиль отображения кнопки "Назад".
+ * @variant primary
+ * @variant secondary
+ * @default secondary
+ * @see Controls/_heading/Back#style
+ */
+
+/*
+ * @name Controls/_breadcrumbs/HeadingPath#backButtonStyle
  * @cfg {String} Back heading display style.
  * @variant primary
  * @variant secondary
@@ -134,10 +159,22 @@ var _private = {
 
 /**
  * @event Controls/_breadcrumbs/HeadingPath#arrowActivated Happens after clicking the button "View Model".
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
+ */
+
+/*
+ * @event Controls/_breadcrumbs/HeadingPath#arrowActivated Happens after clicking the button "View Model".
+ * @param {Env/Event:Object} eventObject The event descriptor.
  */
 
 /**
+ * @name Controls/_breadcrumbs/HeadingPath#showActionButton
+ * @cfg {Boolean} Определяет, должна ли отображаться стрелка рядом с кнопкой "Назад".
+ * @default
+ * true
+ */
+
+/*
  * @name Controls/_breadcrumbs/HeadingPath#showActionButton
  * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
  * @default

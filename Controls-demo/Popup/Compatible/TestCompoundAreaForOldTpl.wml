@@ -27,12 +27,25 @@
                                  template="Controls-demo/Popup/Compatible/TestOpener"
                                  isCompoundTemplate="{{true}}">
     </Controls.popup:Stack>
+    <Controls.popup:Stack
+        name="actionParentStackOpener"
+        template="Controls-demo/Popup/Compatible/TestActionParentLink/ParentPanel"
+        isCompoundTemplate="{{true}}">
+    </Controls.popup:Stack>
+    <Controls.popup:Stack
+        name="newInOldOpener"
+        template="Controls-demo/Popup/Compatible/TestNewOpenerInOldPanel/OldPanel"
+        isCompoundTemplate="{{true}}">
+    </Controls.popup:Stack>
     <div>
         <Controls.buttons:Button attr:class="openStackButton" caption="Open Stack" on:click="openTestStack()"/>
         <Controls.buttons:Button attr:class="openReviveButton" caption="Revive Test" on:click="openReviveStack()"/>
         <Controls.buttons:Button attr:class="openInputButton" caption="Input Test" on:click="openInputStack()"/>
         <Controls.buttons:Button attr:class="openValidateButton" caption="Validate Test" on:click="openValidateStack()"/>
         <Controls.buttons:Button attr:class="openOpenerButton" caption="Opener Test" on:click="openOpenerStack()"/>
+        <Controls.buttons:Button attr:class="openInputDisabledButton" caption="Input Disabled Test" on:click="openInputDisabledStack()"/>
+        <Controls.buttons:Button attr:class="openActionParentStackButton" caption="Action Parent Test" on:click="openActionParentStack()"/>
+        <Controls.buttons:Button attr:class="openNewInOldButton" caption="New in Old Test" on:click="openNewInOld()"/>
     </div>
     <div style="text-align: center;">
         <Controls.buttons:Button attr:class="openDialogButton" name="dialogButton" caption="Dialog Test" on:click="openDialog()"/>

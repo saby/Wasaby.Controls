@@ -22,6 +22,30 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
 }
 
 /**
+ * Графический контрол, который предоставляет пользователю возможность простого запуска события.
+ *
+ * <a href="/materials/demo-ws4-buttons">Демо-пример</a>.
+ *
+ * @class Controls/_buttons/Button
+ * @extends Core/Control
+ * @mixes Controls/_buttons/interface/IHref
+ * @mixes Controls/_interface/ICaption
+ * @mixes Controls/_buttons/interface/IClick
+ * @mixes Controls/_interface/IIcon
+ * @mixes Controls/_interface/IIconStyle
+ * @mixes Controls/_interface/IIconSize
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_interface/ITooltip
+ * @control
+ * @public
+ * @author Красильников А.С.
+ * @category Button
+ * @demo Controls-demo/Buttons/ButtonDemoPG
+ */
+
+/*
  * Graphical control element that provides the user a simple way to trigger an event.
  *
  * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
@@ -47,6 +71,29 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
 
 /**
  * @name Controls/_buttons/Button#viewMode
+ * @cfg {Enum} Режим отображения кнопки.
+ * @variant link Декорированная гиперссылка.
+ * @variant button Кнопка по умолчанию.
+ * @variant toolButton Кнопка панели инструментов.
+ * @default button
+ * @example
+ * Кнопка в режиме отображения 'link'.
+ * <pre>
+ *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
+ * </pre>
+ * Кнопка в режиме отображения 'toolButton'.
+ * <pre>
+ *    <Controls.buttons:Path caption="Send document" style="danger" viewMode="toolButton"/>
+ * </pre>
+ * Кнопка в режиме отображения 'button'.
+ * <pre>
+ *    <Controls.buttons:Path caption="Send document" style="success" viewMode="button"/>
+ * </pre>
+ * @see Size
+ */
+
+/*
+ * @name Controls/_buttons/Button#viewMode
  * @cfg {Enum} Button view mode.
  * @variant link Decorated hyperlink.
  * @variant button Default button.
@@ -70,6 +117,25 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
 
 /**
  * @name Controls/_buttons/Button#contrastBackground
+ * @cfg {Boolean} Определяет, имеет ли кнопка контрастный фон.
+ * @default true
+ * @remark
+ * true - У кнопки контрастный фон.
+ * false - У кнопки гармоничный фон.
+ * @example
+ * Кнопка имеет прозрачный фон.
+ * <pre>
+ *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" contrastBackground="{{false}}" size="l"/>
+ * </pre>
+ * У кнопки непрозрачный фон.
+ * <pre>
+ *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" />
+ * </pre>
+ * @see style
+ */
+
+/*
+ * @name Controls/_buttons/Button#contrastBackground
  * @cfg {Boolean} Determines if button has contrast background.
  * @default true
  * @remark
@@ -88,6 +154,22 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  */
 
 /**
+ * @name Controls/_buttons/Button#buttonStyle
+ * @cfg {Enum} Устанавливает параметры стиля для кнопки. Это цвет фона или цвет границы для различных значений режима отображения (viewMode).
+ * @variant primary
+ * @variant secondary
+ * @variant success
+ * @variant warning
+ * @variant danger
+ * @default secondary
+ * @example
+ * Кнопка со стилем "Primary" с иконкой по умолчанию.
+ * <pre>
+ *    <Controls.buttons:Button viewMode="button" buttonStyle="primary"/>
+ * </pre>
+ */
+
+/*
  * @name Controls/_buttons/Button#buttonStyle
  * @cfg {Enum} Set style parameters for button. These are background color or border color for different values of viewMode
  * @variant primary

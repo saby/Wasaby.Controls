@@ -128,4 +128,10 @@ define('Controls/interface/IFormController', [
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Error} Error
     */
+
+   /**
+    * @event Controls/interface/IFormController#isNewRecordChanged Happens when the record is initialized in the data source
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Boolean} isNewRecord
+    */
 });

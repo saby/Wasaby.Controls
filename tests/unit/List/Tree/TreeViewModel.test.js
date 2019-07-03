@@ -559,6 +559,11 @@ define([
 
             treeViewModel.setExpandedItems([1, 2]);
             assert.deepEqual([1, 2], treeViewModel.getExpandedItems());
+
+            let expanded = treeViewModel.getExpandedItems();
+            treeViewModel.setExpandedItems([1, 2]);
+            assert.isTrue(expanded === treeViewModel.getExpandedItems());
+
          });
          it('onCollectionChange', function() {
             var

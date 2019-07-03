@@ -9,6 +9,7 @@
  * @includes PhoneNumber Controls/_decorator/PhoneNumber
  * @includes WrapURLs Controls/_decorator/WrapURLs
  * @includes MoneyStyles Controls/_decorator/Money/Styles
+ * @includes Converter Controls/_decorator/Markup/Converter
  * @public
  * @author Крайнов Д.О.
  */

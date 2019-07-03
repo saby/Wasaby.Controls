@@ -3,6 +3,36 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
 
 
 /**
+ * Контрол Lookup позволяет выбрать значение из справочника или предложить список возможных значений.
+ * Может отображаться в однострочном и многострочном режиме.
+ * Поддерживает одиночный и множественный выбор.
+ * <a href="/materials/demo-ws4-engine-selector-lookup">Демо-пример</a>.
+ *
+ * @class Controls/_lookup/Lookup
+ * @extends Core/Control
+ * @mixes Controls/interface/ISelectedCollection
+ * @mixes Controls/interface/ISelectorDialog
+ * @mixes Controls/interface/ISuggest
+ * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IFilter
+ * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/IMultiSelectable
+ * @mixes Controls/interface/IInputPlaceholder
+ * @mixes Controls/interface/IInputBase
+ * @mixes Controls/interface/IInputText
+ * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/interface/ISelectableInput
+ * @mixes Controls/_lookup/Lookup/LookupStyles
+ * @control
+ * @public
+ * @author Капустин И.А.
+ * @category Input
+ * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
+ */
+
+/*
  * The Lookup control allows you to select a value from a dialog or suggest containing a list of possible values.
  * Сan be displayed in single-line and multi-line mode.
  * Supports single and multiple selection.
@@ -33,6 +63,11 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  */
 
 /**
+ * @name Controls/_lookup/Lookup#multiLine
+ * @cfg {Boolean} Определяет, можел ли поиск отображаться в многострочном режиме.
+ */
+
+/*
  * @name Controls/_lookup/Lookup#multiLine
  * @cfg {Boolean} Determines then Lookup can be displayed in multi line mode.
  */
