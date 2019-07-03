@@ -1,6 +1,6 @@
 <div class="controls-PagingV">
    <div class="controls-Paging__wrapper">
-      <span class="controls-Paging__btn controls-Paging__btn_first controls-Paging__arrow controls-Paging__arrow__state-{{_stateBegin}}" attr:title="{[В начало]}" on:click="__arrowClick('Begin')">
+      <span class="{{_options.showDigits ? 'ws-hidden'}} controls-Paging__btn controls-Paging__btn_first controls-Paging__arrow controls-Paging__arrow__state-{{_stateBegin}}" attr:title="{[В начало]}" on:click="__arrowClick('Begin')">
          <i class="icon-First controls-Paging__icon"></i>
       </span>
       <span class="controls-Paging__btn controls-Paging__arrow controls-Paging__arrow__state-{{_statePrev}}" attr:title="{[Назад]}" on:click="__arrowClick('Prev')">
