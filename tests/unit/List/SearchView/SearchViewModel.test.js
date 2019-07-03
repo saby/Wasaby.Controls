@@ -166,15 +166,15 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection'], fu
          },
          model;
 
-         cfg.markedKey = 5;
+         cfg.markedKey = 3;
          model = new SearchViewModel(cfg);
-         model.getItems().removeAt(4);
-         assert.equal(3, model.getMarkedKey());
+         model.getItems().removeAt(2);
+         assert.equal(5, model.getMarkedKey());
 
          cfg.markedKey = 2;
          model = new SearchViewModel(cfg);
          model.getItems().removeAt(1);
-         assert.equal(3, model.getMarkedKey());
+         assert.equal(5, model.getMarkedKey());
 
          cfg.markedKey = 7;
          model = new SearchViewModel(cfg);

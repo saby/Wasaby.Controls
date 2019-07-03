@@ -894,6 +894,7 @@ define([
       });
       it('markItemByExpanderClick true', function() {
          var
+            baseControlFocused = false,
             rawData = [
                { id: 1, type: true, parent: null },
                { id: 2, type: true, parent: null },
@@ -927,6 +928,9 @@ define([
             baseControl: {
                getViewModel: function() {
                   return treeGridViewModel;
+               },
+               focus: () => {
+                  baseControlFocused = true;
                }
             }
          };
@@ -935,15 +939,19 @@ define([
 
          treeControl._onExpanderClick(e, treeGridViewModel.at(0));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
+         assert.isTrue(baseControlFocused);
 
+         baseControlFocused = false;
          treeControl._onExpanderClick(e, treeGridViewModel.at(1));
          assert.deepEqual(2, treeGridViewModel._model._markedKey);
+         assert.isTrue(baseControlFocused);
 
       });
 
       it('markItemByExpanderClick false', function() {
 
          var
+            baseControlFocused = false,
             rawData = [
                { id: 1, type: true, parent: null },
                { id: 2, type: true, parent: null },
@@ -977,6 +985,9 @@ define([
             baseControl: {
                getViewModel: function() {
                   return treeGridViewModel;
+               },
+               focus: () => {
+                  baseControlFocused = true;
                }
             }
          };
@@ -985,9 +996,12 @@ define([
 
          treeControl._onExpanderClick(e, treeGridViewModel.at(0));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
+         assert.isTrue(baseControlFocused);
 
+         baseControlFocused = false;
          treeControl._onExpanderClick(e, treeGridViewModel.at(1));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
+         assert.isTrue(baseControlFocused);
       });
 
       it('reloadItem', function(done) {

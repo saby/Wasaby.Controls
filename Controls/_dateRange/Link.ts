@@ -66,7 +66,9 @@ var Component = BaseControl.extend({
 Component.EMPTY_CAPTIONS = ILinkView.EMPTY_CAPTIONS;
 
 Component.getDefaultOptions = function() {
-   return coreMerge(coreMerge({}, IRangeSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
+   return coreMerge(coreMerge({
+      vdomDialog: true
+   }, IRangeSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
 };
 
 Component.getOptionTypes = function() {

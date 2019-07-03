@@ -24,6 +24,18 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
                   'parent': null,
                   'parent@': null,
                   'group': '1'
+               },
+               {
+                  'id': 3,
+                  'parent': null,
+                  'parent@': true,
+                  'group': '1'
+               },
+               {
+                  'id': 4,
+                  'parent': 4,
+                  'parent@': null,
+                  'group': '1'
                }],
                idProperty: 'id'
             }),
@@ -81,22 +93,28 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
       it('getMultiSelectClassList visible', function() {
          treeTileViewModel._options.multiSelectVisibility = 'visible';
          var item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(2, 'id'));
-         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox controls-TreeTileView__checkbox js-controls-TileView__withoutZoom');
+         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox js-controls-TileView__withoutZoom');
+         item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(3, 'id'));
+         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox js-controls-TileView__withoutZoom controls-TreeTileView__checkbox');
       });
 
 
       it('getMultiSelectClassList onhover selected', function() {
          treeTileViewModel._options.multiSelectVisibility = 'onhover';
-         treeTileViewModel._selectedKeys = {2: true};
+         treeTileViewModel._selectedKeys = {2: true, 3: true};
          var item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(2, 'id'));
-         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox controls-TreeTileView__checkbox js-controls-TileView__withoutZoom');
+         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox js-controls-TileView__withoutZoom');
+         item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(3, 'id'));
+         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox js-controls-TileView__withoutZoom controls-TreeTileView__checkbox');
          treeTileViewModel._selectedKeys = {};
       });
 
       it('getMultiSelectClassList onhover unselected', function() {
          treeTileViewModel._options.multiSelectVisibility = 'onhover';
          var item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(2, 'id'));
-         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-TileView__checkbox controls-TreeTileView__checkbox js-controls-TileView__withoutZoom');
+         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-TileView__checkbox js-controls-TileView__withoutZoom');
+         item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(3, 'id'));
+         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-TileView__checkbox js-controls-TileView__withoutZoom controls-TreeTileView__checkbox');
       });
 
       it('setTileMode', function() {

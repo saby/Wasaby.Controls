@@ -1,20 +1,22 @@
 <Controls._input.Render attr:title="{{_tooltip}}"
-                       attr:class="controls-Area controls-Area_theme_{{_options.theme}}_size_{{_options.size}}"
-                       viewModel="{{_viewModel}}"
-                       size="{{_options.size}}"
-                       style="{{_options.style}}"
-                       multiline="{{_multiline}}"
-                       tagStyle="{{_options.tagStyle}}"
-                       fontStyle="{{_options.fontStyle}}"
-                       textAlign="{{_options.textAlign}}"
-                       placeholder="{{_options.placeholder}}"
-                       on:mouseenter="_mouseEnterHandler()"
-                       on:tagClick="_notifyHandler('tagClick')"
-                       on:tagHover="_notifyHandler('tagHover')">
+                        attr:class="controls-Area controls-Area_theme_{{_options.theme}}_size_{{_options.size}}"
+                        viewModel="{{_viewModel}}"
+                        size="{{_options.size}}"
+                        style="{{_options.style}}"
+                        multiline="{{_multiline}}"
+                        tagStyle="{{_options.tagStyle}}"
+                        fontStyle="{{_options.fontStyle}}"
+                        textAlign="{{_options.textAlign}}"
+                        placeholder="{{_options.placeholder}}"
+                        fontSize="{{_options.fontSize}}"
+                        fontColorStyle="{{_options.fontColorStyle}}"
+                        on:mouseenter="_mouseEnterHandler()"
+                        on:tagClick="_notifyHandler('tagClick')"
+                        on:tagHover="_notifyHandler('tagHover')">
    <Controls.scroll:Container name="scroll"
                               attr:class="controls-Area__scroll controls-InputBase__field
-                                          controls-Area__minHeight_theme_{{_options.theme}}_countLines_{{_options.minLines}}_size_{{_options.size}}_indented
-                                          {{_options.maxLines ? 'controls-Area__maxHeight_theme_' + _options.theme + '_countLines_' + _options.maxLines + '_size_' + _options.size + '_indented'}}">
+                                          controls-Area__minHeight_theme_{{_options.theme}}_countLines_{{_options.minLines}}_size_{{_heightLine}}_indented
+                                          {{_options.maxLines ? 'controls-Area__maxHeight_theme_' + _options.theme + '_countLines_' + _options.maxLines + '_size_' + _heightLine + '_indented'}}">
       <ws:if data="{{_options.readOnly}}">
          <ws:partial options="{{_options}}"
                      scope="{{_readOnlyField.scope}}"
@@ -27,11 +29,12 @@
                      options="{{_options}}"
                      scope="{{_field.scope}}"
                      fieldName="{{_fieldName}}"
+                     heightLine="{{_heightLine}}"
                      template="{{_field.template}}"
                      value="{{_viewModel.displayValue}}"
                      selection="{{_viewModel.selection}}"
                      hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
-                     isEdge="{{_isEdge}}" />
+                     isEdge="{{_isEdge}}"/>
       </ws:else>
    </Controls.scroll:Container>
 </Controls._input.Render>

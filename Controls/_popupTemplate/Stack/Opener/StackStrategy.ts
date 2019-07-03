@@ -13,7 +13,7 @@
    }
 
    // Minimum popup indentation from the right edge
-   const MINIMAL_PANEL_DISTANCE = 20;
+   const MINIMAL_PANEL_DISTANCE = 100;
 
    const _private = {
       getPanelWidth: function(item, tCoords, maxPanelWidth) {

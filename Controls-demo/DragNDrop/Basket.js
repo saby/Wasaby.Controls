@@ -10,7 +10,12 @@ define('Controls-demo/DragNDrop/Basket', [
       _template: template,
       _canDrop: false,
       _isDragEnter: false,
-      _items: [],
+      _items: null,
+
+      constructor: function() {
+         Basket.superclass.constructor.apply(this, arguments);
+         this._items = [];
+      },
 
       _documentDragStart: function(event, dragObject) {
          if (dragObject.entity.getItems) {

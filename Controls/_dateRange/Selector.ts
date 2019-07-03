@@ -97,7 +97,7 @@ var Component = BaseControl.extend({
     },
 
     _isVdomDialog: function() {
-        return this._options.vdomDialog && !(detection.isIE && detection.IEVersion < 13);
+        return this._options.vdomDialog;
     },
 
     _onResultWS3: function (event, startValue, endValue) {
@@ -120,7 +120,10 @@ var Component = BaseControl.extend({
 Component.EMPTY_CAPTIONS = ILinkView.EMPTY_CAPTIONS;
 
 Component.getDefaultOptions = function () {
-    return coreMerge(coreMerge({minRange: 'day'}, IInputSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
+    return coreMerge(coreMerge({
+        minRange: 'day',
+        vdomDialog: true
+    }, IInputSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
 };
 
 Component.getOptionTypes = function () {

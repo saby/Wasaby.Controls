@@ -1,5 +1,5 @@
 <ws:template name="itemTpl">
-   <div class="controls-TileView__item controls-ListView__itemV">
+   <div attr:class="controls-TileView__item controls-ListView__itemV">
       <ws:partial template="{{content}}"/>
    </div>
 </ws:template>
@@ -48,17 +48,17 @@
 </ws:template>
 
 <ws:template name="imageWrapperTpl">
-   <div class="controls-TileView__imageWrapper">
+   <div attr:class="controls-TileView__imageWrapper">
       <ws:partial template="{{content}}"/>
    </div>
 </ws:template>
 
 <ws:template name="imageTpl">
-   <img class="controls-TileView__image" src="{{itemData.item[itemData.imageProperty]}}"/>
+   <img attr:class="controls-TileView__image" src="{{itemData.item[itemData.imageProperty]}}"/>
 </ws:template>
 
 <ws:if data="{{invisible}}">
-   <div class="controls-TileView__item controls-TileView__item_invisible" attr:style="{{'-ms-flex-preferred-size: ' + (width || itemData.defaultItemWidth) + 'px; flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}"></div>
+   <div attr:class="controls-TileView__item controls-TileView__item_invisible" attr:style="{{'-ms-flex-preferred-size: ' + (width || itemData.defaultItemWidth) + 'px; flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}"></div>
 </ws:if>
 <ws:else>
    <ws:if data="{{itemData.tileMode === 'dynamic'}}">
@@ -81,7 +81,7 @@
             <ws:imageWrapper>
                <ws:partial template="imageWrapperTpl">
                   <ws:if data="{{!staticHeight}}">
-                     <div class="{{hasTitle ? 'controls-TileView__resizer'}}" style="{{'padding-top: ' + (itemData.itemsHeight / (width || itemData.defaultItemWidth)) * 100 + '%;'}}"></div>
+                     <div attr:class="{{hasTitle ? 'controls-TileView__resizer'}}" style="{{'padding-top: ' + (itemData.itemsHeight / (width || itemData.defaultItemWidth)) * 100 + '%;'}}"></div>
                   </ws:if>
                   <ws:partial template="imageTpl"/>
                </ws:partial>

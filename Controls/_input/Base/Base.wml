@@ -1,16 +1,20 @@
 <Controls._input.Render attr:title="{{_tooltip}}"
-                       style="{{_renderStyle}}"
-                       viewModel="{{_viewModel}}"
-                       size="{{_options.size}}"
-                       multiline="{{_multiline}}"
-                       roundBorder="{{_roundBorder}}"
-                       tagStyle="{{_options.tagStyle}}"
-                       fontStyle="{{_options.fontStyle}}"
-                       textAlign="{{_options.textAlign}}"
-                       placeholder="{{_options.placeholder}}"
-                       on:mouseenter="_mouseEnterHandler()"
-                       on:tagClick="_notifyHandler('tagClick')"
-                       on:tagHover="_notifyHandler('tagHover')">
+                        style="{{_options.style}}"
+                        state="{{_renderStyle}}"
+                        viewModel="{{_viewModel}}"
+                        size="{{_options.size}}"
+                        multiline="{{_multiline}}"
+                        roundBorder="{{_roundBorder}}"
+                        tagStyle="{{_options.tagStyle}}"
+                        fontStyle="{{_options.fontStyle}}"
+                        textAlign="{{_options.textAlign}}"
+                        placeholder="{{_options.placeholder}}"
+                        fontSize="{{_options.fontSize}}"
+                        inlineHeight="{{_options.inlineHeight}}"
+                        fontColorStyle="{{_options.fontColorStyle}}"
+                        on:mouseenter="_mouseEnterHandler()"
+                        on:tagClick="_notifyHandler('tagClick')"
+                        on:tagHover="_notifyHandler('tagHover')">
    <ws:beforeFieldWrapper>
       <ws:partial options="{{_options}}"
                   scope="{{_beforeFieldWrapper.scope}}"
@@ -32,7 +36,7 @@
                      value="{{_viewModel.displayValue}}"
                      hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
                      ieVersion="{{_ieVersion}}"
-                     isEdge="{{_isEdge}}" />
+                     isEdge="{{_isEdge}}"/>
       </ws:else>
    </ws:content>
    <ws:afterFieldWrapper>
