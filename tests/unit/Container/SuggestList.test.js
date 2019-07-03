@@ -5,6 +5,7 @@ define(
       'use strict';
       
       describe('Controls.Container.Suggest.List', function() {
+         suggestPopup.ListContainer._private.scrollToFirstItem = function(){};
 
          describe('_beforeUpdate', function() {
             var suggestList = new suggestPopup.ListContainer();
@@ -121,6 +122,9 @@ define(
                   }
                };
 
+            suggestList._options = {
+               keyProperty: 'id'
+            };
             suggestList._items = new collection.List({
                items: [
                   new entity.Model({
@@ -133,13 +137,6 @@ define(
                   })
                ]
             });
-            suggestList._suggestListOptions = {
-               source: {
-                  getIdProperty: function() {
-                     return 'id';
-                  }
-               }
-            };
 
             it('list is not reverse', function() {
                suggestList._inputKeydown(null, domEvent);
@@ -152,6 +149,19 @@ define(
                suggestList._inputKeydown(null, domEvent);
                assert.equal(suggestList._markedKey, 'first');
             });
+         });
+
+         it('_searchEndCallback', function() {
+            let
+               items = [1, 2, 3],
+               suggestList = new suggestPopup.ListContainer();
+
+            suggestList._suggestListOptions = {};
+            suggestList._searchEndCallback({
+               data: items
+            });
+
+            assert.equal(suggestList._items, items);
          });
       });
    }
