@@ -1,5 +1,11 @@
 /**
  * @typedef {Object} ISuggestTemplateProp
+ * @property {String} templateName Имя контрола, который будет отображаться в выпадающем блоке.
+ * @property {Object} templateOptions Опции для контрола, который будет отображаться в выпадающем блоке.
+ */
+
+/*
+ * @typedef {Object} ISuggestTemplateProp
  * @property {String} templateName Control name, that will be displayed list of items in suggest.
  * @property {Object} templateOptions Options for control , which is specified in the templateName field.
  */
@@ -9,6 +15,12 @@ export interface ISuggestTemplateProp {
 }
 
 /**
+ * @typedef {Object} IEmptyTemplateProp
+ * @property {String} templateName Имя шаблона пустого автодополнения, которое будет отображаться, когда результат не найден. 
+ * @property {Object} templateOptions Параметры шаблона, которые указаны в поле templateName.
+ */
+
+/*
  * @typedef {Object} IEmptyTemplateProp
  * @property {String} templateName Template name for suggest, which will showing when no result were found.
  * @property {Object} templateOptions Options for template, which is specified in the templateName field.
@@ -20,6 +32,12 @@ export interface IEmptyTemplateProp {
 
 /**
  * @typedef {Object} ISuggestFooterTemplate
+ * @property {String} templateName Имя шаблона, которое будет отображаться в нижней части автодополнения.
+ * @property {Object} templateOptions Параметры шаблона, которые указаны в поле templateName.
+ */
+
+/*
+ * @typedef {Object} ISuggestFooterTemplate
  * @property {String} templateName Name of template, which will showing in bottom of suggest.
  * @property {Object} templateOptions Options for template, which is specified in the templateName field.
  */
@@ -29,6 +47,14 @@ export interface ISuggestFooterTemplate {
 }
 
 /**
+ * Интерфейс для Input.Suggest.
+ *
+ * @interface Controls/interface/ISuggest
+ * @public
+ * @author Герасимов А.М.
+ */
+
+/*
  * Interface for Input.Suggest.
  *
  * @interface Controls/interface/ISuggest
@@ -38,6 +64,41 @@ export interface ISuggestFooterTemplate {
 interface ISuggest {
    readonly _options: {
       /**
+       * @name Controls/interface/ISuggest#suggestTemplate
+       * @cfg {ISuggestTemplateProp|null} Шаблон автодополнения, который отображает результаты поиска.
+       * @remark Корневым контролом автодополнения должен быть Controls/Container/Suggest/List, этому контролу можно передать в контентной опции контрол (как Controls.list:View or Controls/grid:View), который отобразит список.
+       * @remark Вы можете установить ширину окна с автодополнением, добавив собственный класс в suggestTemplate и установив минимальную ширину. По умолчанию ширина автодополнения равна ширине поля ввода.
+       * @editor function
+       * @example
+       * suggestTemplate.wml
+       * <pre>
+       *    <Controls.Container.Suggest.List attr:class="myClass">
+       *       <Controls.list:View keyProperty="id">
+       *          <ws:itemTemplate>
+       *             <ws:partial template="Controls/list:ItemTemplate" displayProperty="city"/>
+       *          </ws:itemTemplate>
+       *       </Controls.list:View>
+       *    </Controls.Container.Suggest.List>
+       * </pre>
+       *
+       * suggestTemplate.css
+       * <pre>
+       *    .myClass {
+       *       min-width: 300px;
+       *    }
+       * </pre>
+       *
+       * контрол с Input/Suggest:
+       * <pre>
+       *    <Controls.suggest:Input>
+       *       <ws:suggestTemplate templateName="wml!SuggestTemplate">
+       *          <ws:templateOptions />
+       *       </ws:suggestTemplate>
+       *    </Controls.suggest:Input>
+       * </pre>
+       */
+
+      /*
        * @name Controls/interface/ISuggest#suggestTemplate
        * @cfg {ISuggestTemplateProp|null} Template for suggest, that showing search results.
        * @remark Root control of suggest must be Controls/Container/Suggest/List, for this control you can pass in content option a control (such Controls.list:View or Controls/grid:View), that will displaying a list.
@@ -75,6 +136,26 @@ interface ISuggest {
 
       /**
        * @name Controls/interface/ISuggest#emptyTemplate
+       * @cfg {IEmptyTemplateProp|null} Шаблон пустого автодополнения, когда результаты не были найдены.
+       * @remark Если параметр имеет значение null, пустое автодополнение не появится.
+       * @example
+       * emptyTemplate.wml:
+       * <pre>
+       *    <div class="emptyTemplate-class">Sorry, no data today</div>
+       * </pre>
+       *
+       * MySuggest.wml:
+       * <pre>
+       * <Controls.suggest:Input>
+       *    <ws:emptyTemplate templateName="wml!emptyTemplate">
+       *       <ws:templateOptions showImage={{_showImage}}/>
+       *    </ws:emptyTemplate>
+       * </Controls.suggest:Input>
+       * </pre>
+       */
+
+      /*
+       * @name Controls/interface/ISuggest#emptyTemplate
        * @cfg {IEmptyTemplateProp|null} Template for suggest when no results were found.
        * @remark If option set to null, empty suggest won't appear.
        * @example
@@ -95,6 +176,34 @@ interface ISuggest {
       emptyTemplate: IEmptyTemplateProp | null;
 
       /**
+       * @name Controls/interface/ISuggest#footerTemplate
+       * @cfg {ISuggestFooterTemplate} Шаблон подвала автодополнения.
+       * @example
+       * myFooter.wml
+       * <pre>
+       *    <span on:click="_showTasksClick()">show tasks</span>
+       * </pre>
+       *
+       * myFooter.js
+       * <pre>
+       *    define('myFooter', ['Core/Control'], function(Control) {
+       *       return Control.extend({
+       *          _showTasksClick: function() {
+       *             stackOpener.open();
+       *          }
+       *       });
+       *    });
+       * </pre>
+       *
+       * mySuggest.wml
+       * <pre>
+       *    <Controls.suggest:Input>
+       *       <ws:suggestFooterTemplate templateName="myFooter">
+       *    </Controls.suggest:Input>
+       * </pre>
+       */
+
+      /*
        * @name Controls/interface/ISuggest#footerTemplate
        * @cfg {ISuggestFooterTemplate} Footer template of suggest.
        * @example
@@ -125,6 +234,16 @@ interface ISuggest {
 
       /**
        * @name Controls/interface/ISuggest#historyId
+       * @cfg {String} Уникальный идентификатор для сохранения истории ввода.
+       * @remark Если элементы были ранее выбраны, автодополнение с этими элементами будет отображаться после того, как на поле ввода перейдет фокус.
+       * @example
+       * <pre>
+       *    <Controls.suggest:Input historyId="myHistoryId"/>
+       * </pre>
+       */
+
+      /*
+       * @name Controls/interface/ISuggest#historyId
        * @cfg {String} Unique id to save input history.
        * @remark If items were previously selected, suggest with this items will be displayed after input get focused.
        * @example
@@ -136,6 +255,16 @@ interface ISuggest {
 
       /**
        * @name Controls/interface/ISuggest#autoDropDown
+       * @cfg {Boolean} Отобразить автодополнение, когда на поле ввода перейдет фокус.
+       * @example
+       * В этом примере автодополнение будет показано после фокусировки на поле ввода.
+       * <pre>
+       *    <Controls.suggest:Input autoSuggest={{true}}/>
+       * </pre>
+       */
+
+      /*
+       * @name Controls/interface/ISuggest#autoDropDown
        * @cfg {Boolean} Show suggest when the input get focused.
        * @example
        * In this example suggest will shown after input get focused.
@@ -146,6 +275,44 @@ interface ISuggest {
       autoDropDown: boolean;
 
       /**
+       * @name Controls/interface/ISuggest#displayProperty
+       * @cfg {String} Определяет, какое поле из списка автодополнений будет использоваться в качестве текста после выбора опции.
+       * @remark
+       * @example
+       * myModule.js
+       * <pre>
+       *    define('myModule', ['Core/Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
+       *       return Control.extend({
+       *          _template: template,
+       *          _suggestValue: null,
+       *          _source: null,
+       *
+       *          _beforeMount: function() {
+       *             this._source = new Memory({
+       *                rawData: [
+       *                   {id: 0, city: 'Yaroslavl'},
+       *                   {id: 1, city: 'Moscow'}
+       *                ]
+       *                idProperty: 'id'
+       *             });
+       *          },
+       *
+       *          _choose: function(event, value) {
+       *             this._suggestValue = value;
+       *          }
+       *       });
+       *    });
+       * </pre>
+       * myModule.wml
+       * <pre>
+       *    <div>
+       *       <Controls.suggest:Input displayProperty="city" on:choose="_choose()"/>
+       *    </div>
+       *    ChosenValue: {{_suggestValue || 'Nothing were chosen'}}
+       * </pre>
+       */
+
+      /*
        * @name Controls/interface/ISuggest#displayProperty
        * @cfg {String} Defines which field from suggest list will be used as text after selecting an option.
        * @remark
@@ -185,6 +352,44 @@ interface ISuggest {
       displayProperty: string;
 
       /**
+       * @event Происходит, когда пользователь выбирает элемент из автодополнения.
+       * @name Controls/interface/ISuggest#choose
+       * @param {String} value Выбранное значение.
+       * @example
+       * myModule.js
+       * <pre>
+       *    define('myModule', ['Core/Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
+       *       return Control.extend({
+       *          _template: template,
+       *          _suggestValue: null,
+       *          _source: null,
+       *
+       *          _beforeMount: function() {
+       *             this._source = new Memory({
+       *                rawData: [
+       *                   {id: 0, city: 'Yaroslavl'},
+       *                   {id: 1, city: 'Moscow'}
+       *                ]
+       *                idProperty: 'id'
+       *             });
+       *          },
+       *
+       *          _choose: function(event, value) {
+       *             this._suggestValue = value;
+       *          }
+       *       });
+       *    });
+       * </pre>
+       * myModule.wml
+       * <pre>
+       *    <div>
+       *       <Controls.suggest:Input displayProperty='city' on:choose="_choose()"/>
+       *    </div>
+       *    ChosenValue: {{_suggestValue || 'Nothing were chosen'}}
+       * </pre>
+       */
+
+      /*
        * @event Occurs when user selects item from suggest.
        * @name Controls/interface/ISuggest#choose
        * @param {String} value Selected value.

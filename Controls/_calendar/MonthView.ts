@@ -6,7 +6,6 @@ import DateUtil = require('Controls/Utils/Date');
 import {Utils as calendarUtils} from 'Controls/dateRange';
 import MonthViewModel from './MonthView/MonthViewModel';
 import dotTplFn = require('wml!Controls/_calendar/MonthView/MonthView');
-import tableBodyTmpl = require('wml!Controls/_calendar/MonthView/MonthViewTableBody');
 import dayTemplate = require('wml!Controls/_calendar/MonthView/dayTemplate');
 import IMonth from './interfaces/IMonth';
 
@@ -48,7 +47,6 @@ var _private = {
 
 var MonthView = BaseControl.extend({
    _template: dotTplFn,
-   _tableBodyTmpl: tableBodyTmpl,
 
    _month: null,
    _showWeekdays: null,

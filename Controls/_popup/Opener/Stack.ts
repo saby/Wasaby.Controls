@@ -1,5 +1,6 @@
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import {IoC} from 'Env/Env';
+
 /**
  * Контрол, открывающий всплывающее окно с пользовательским шаблоном внутри.
  * Всплывающее окно располагается в правой части контентной области приложения и растянуто на всю высоту экрана.
@@ -52,6 +53,7 @@ const _private = {
 const POPUP_CONTROLLER = 'Controls/popupTemplate:StackController';
 
 const Stack = BaseOpener.extend({
+
     /**
      * Метод открытия стековой панели.
      * Повторный вызов этого метода вызовет переририсовку контрола.
@@ -130,6 +132,16 @@ const Stack = BaseOpener.extend({
  * @see close
  * @see open
  */
+
+/*
+ * Open Stack popup.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ See more}.
+ * @function Controls/_popup/Opener/Stack#openPopup
+ * @param {PopupOptions[]} config Stack popup options.
+ * @return {Promise<string>} Returns id of popup. This id used for closing popup.
+ * @static
+ * @see closePopup
+ */
 Stack.openPopup = (config: object): Promise<string> => {
     return new Promise((resolve) => {
         const newCfg = _private.getStackConfig(config);
@@ -172,6 +184,16 @@ Stack.openPopup = (config: object): Promise<string> => {
  * @see opener
  * @see close
  */
+
+/*
+ * Close Stack popup.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ See more}.
+ * @function Controls/_popup/Opener/Stack#closePopup
+ * @param {String} popupId Id of popup.
+ * @static
+ * @see openPopup
+ */
+
 Stack.closePopup = (popupId: string): void => {
     BaseOpener.closeDialog(popupId);
 };
@@ -179,6 +201,7 @@ Stack.closePopup = (popupId: string): void => {
 Stack._private = _private;
 
 export = Stack;
+
 /**
  * @typedef {Object} PopupOptions
  * @description Конфигурация стековой панели.
@@ -203,15 +226,15 @@ export = Stack;
  * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
  * @property {function|String} template Template inside popup.
  * @property {function|String} templateOptions Template options inside popup.
- * @property {Number} minWidth  Минимально допустимая ширина стековой панели.
- * @property {Number} maxWidth Максимально допустимая ширина стековой панели.
- * @property {Number} width Текущая ширина стековой панели.
+ * @property {Number} minWidth The minimum width of popup.
+ * @property {Number} maxWidth The maximum width of popup.
+ * @property {Number} width Width of popup.
+
  */
 
 /**
  * @name Controls/_popup/Opener/Stack#close
  * @description Метод закрытия стековой панели.
- * @returns {Undefined}
  * @example
  * wml
  * <pre>
@@ -237,7 +260,6 @@ export = Stack;
 /*
  * @name Controls/_popup/Opener/Stack#close
  * @description Close Stack Popup.
- * @returns {Undefined}
  */
 
 /**

@@ -9,11 +9,10 @@
          </div>
       </div>
       <ws:partial
-         template="{{_tableBodyTmpl}}"
-         _options="{{_options}}"
+         template="wml!Controls/_calendar/MonthView/MonthViewTableBody"
+         dayTemplate="{{_options.dayTemplate}}"
          monthViewModel="{{_monthViewModel}}"
          _prepareClass="{{_prepareClass}}"
-         _dayTmpl="{{_dayTmpl}}"
          _themeCssClass="{{_themeCssClass}}"
           mode="{{_options.mode}}"
       />

@@ -1,6 +1,7 @@
 define('Controls/interface/IOpener', [], function() {
+
    /**
-    * Интерфейс для опенеров.
+    * Интерфейс контрола-опенера.
     *
     * @interface Controls/interface/IOpener
     * @public
@@ -26,6 +27,7 @@ define('Controls/interface/IOpener', [], function() {
     * @description Popup opened status.
     * @function
     */
+
 
    /**
     * Открывает всплывающее окно.
@@ -106,6 +108,7 @@ define('Controls/interface/IOpener', [], function() {
     * @name Controls/interface/IOpener#templateOptions
     * @cfg {String|Function} Template options inside popup.
     */
+
 
    /**
     * @event Controls/interface/IOpener#close Происходит при закрытии всплывающего окна
