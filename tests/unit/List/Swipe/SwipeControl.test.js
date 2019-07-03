@@ -376,6 +376,7 @@ define([
                itemActionsPosition: 'inside',
                actionCaptionPosition: 'none'
             });
+            instance._setMeasurer = function(){};
             instance._measurer = {
                getSwipeConfig: sandbox.stub().withArgs(itemData.itemActions.all, 1000, 'none').returns(swipeConfig)
             };
@@ -400,6 +401,7 @@ define([
                actionCaptionPosition: 'none'
             });
 
+            instance._setMeasurer = function(){};
             instance._measurer = {
                getSwipeConfig: sandbox.stub().withArgs(itemData.itemActions.all, 1000, 'none').returns(swipeConfig)
             };
