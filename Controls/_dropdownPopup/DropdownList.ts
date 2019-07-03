@@ -89,7 +89,10 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
          },
 
          needShowApplyButton: function(newKeys, oldKeys) {
-            return !isEqual(newKeys, oldKeys);
+            const diffKeys = newKeys.filter((i) => {
+               return !oldKeys.includes(i);
+            });
+            return newKeys.length !== oldKeys.length || !!diffKeys.length;
          },
 
          getResult: function(self, event, action) {
