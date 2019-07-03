@@ -17,7 +17,7 @@ define('Controls/Utils/getWidth', [
          }
          document.body.appendChild(measurer);
          width = measurer.clientWidth;
-         setTimeout(()=>{
+         setTimeout(function () {
             document.body.removeChild(measurer);
          });
          return width;
