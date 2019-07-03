@@ -55,7 +55,7 @@ const Dialog = BaseOpener.extend({
      * @function Controls/_popup/Opener/Dialog#open
      * @param {PopupOptions[]} popupOptions Конфигурация диалогового окна.
      * @remark
-     * Если требуется открыть окно, без создания popup:Dialog в верстке, см. метод {@link openPopup}.
+     * Если требуется открыть окно, без создания popup:Dialog в верстке, следует использовать статический метод {@link openPopup}
      * @example
      * wml
      * <pre>

@@ -96,7 +96,7 @@ const Notification = BaseOpener.extend({
      * @function Controls/_popup/Opener/Notification#open
      * @param {PopupOptions[]} popupOptions Конфигурация нотифицационного окна
      * @remark
-     * Если требуется открыть окно, без создания popup:Notification в верстке, см. метод {@link openPopup}.
+     * Если требуется открыть окно, без создания popup:Notification в верстке, следует использовать статический метод {@link openPopup}
      * @example
      * wml
      * <pre>
@@ -265,7 +265,7 @@ export = Notification;
  * @property {} autofocus Определяет, установится ли фокус на шаблон попапа после его открытия.
  * @property {} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
  * @property {} template Шаблон всплывающего окна
- * @property {} templateOptions Опции для шаблона всплывающего окна
+ * @property {} templateOptions Опции для котнрола, переданного в {@link template}
  */
 
 /**

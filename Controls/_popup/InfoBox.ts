@@ -6,7 +6,9 @@ import getZIndex = require('Controls/Utils/getZIndex');
 import Env = require('Env/Env');
 import entity = require('Types/entity');
 
-
+/*
+ * Component that opens a popup that is positioned relative to a specified element.
+*/
       /**
        * Контрол, отображающий всплывающую подсказку относительно указанного элемента.
        * Всплывающую подсказку вызывает событие, указанное в опции trigger.
@@ -135,7 +137,7 @@ import entity = require('Types/entity');
 
 /**
  * @name Controls/_popup/InfoBox#templateOptions
- * @cfg {Object} Опции шаблона всплывающей подсказки
+ * @cfg {Object} Опции для котнрола, переданного в {@link template}
  */
 
       /*
@@ -433,7 +435,7 @@ InfoBox.getDefaultOptions = function() {
  * @typedef {Object} PopupOptions
  * @description Конфигурация всплывающей подсказки.
  * @property {function|String} template Шаблон всплывающей подсказки
- * @property {Object} templateOptions Опции шаблона всплывающей подсказки
+ * @property {Object} templateOptions Опции для котнрола, переданного в {@link template}
  * @property {String} trigger Определяет, какое событие будет иницировать открытие и закрытие всплывающей подсказки.
  * @property {String} targetSide Сторона таргета, относительно которой будет позиционнироваться всплывающая подсказка.
  * @property {String} alignment Выравнивание всплывающей подсказки относительно вызывающего её элемента.

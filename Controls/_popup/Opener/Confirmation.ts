@@ -17,6 +17,10 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * @demo Controls-demo/Popup/Opener/ConfirmationPG
  */
 
+/*
+ * Component that opens the confirmation popup.
+*/
+
 /**
  * @css @font-size_SubmitPopup-message Font-size of message.
  * @css @font-weight_SubmitPopup-message Font-weight of message.
@@ -205,7 +209,7 @@ const Confirmation = BaseOpener.extend({
      * @param {popupOptions[]} templateOptions Конфигурация диалога подтверждения.
      * @returns {Deferred} Результат будет возвращен после того, как пользователь закроет всплывающее окно.
      * @remark
-     * 1. Если требуется открыть окно, без создания popup:Confirmation в верстке, см. метод {@link openPopup}.
+     * 1. Если требуется открыть окно, без создания popup:Confirmation в верстке, следует использовать статический метод {@link openPopup}
      * 2. Если вы хотите использовать собственный шаблон в диалоге подтверждения используйте шаблон, смотрите
      * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/#config-template инструкцию}
      * @see openPopup
