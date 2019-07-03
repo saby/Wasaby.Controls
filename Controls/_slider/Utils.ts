@@ -1,9 +1,19 @@
 import {IoC} from 'Env/Env';
 import {ISliderBaseOptions} from './Base';
+import {ISliderRangeOptions} from './Range';
 export interface IScaleData {
     value: number;
     position: number;
 }
+export interface ILineData {
+   position: number;
+   width: number;
+}
+export interface IPointData {
+   name: string;
+   position: number;
+}
+export type IPointDataList = IPointData[];
 const maxPercentValue = 100;
 const stepDenominator = 2;
 export default {
@@ -15,7 +25,7 @@ export default {
         const val = minValue + Math.max(Math.min(ratio, 1), 0) * rangeLength;
         return parseFloat(val.toFixed(perc));
     },
-    checkOptions(opts: ISliderBaseOptions): void {
+    checkOptions(opts: ISliderBaseOptions | ISliderRangeOptions): void {
         if (opts.minValue >= opts.maxValue) {
             IoC.resolve('ILogger').error('Slider', 'minValue must be less than maxValue.');
         }

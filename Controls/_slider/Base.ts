@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IoC} from 'Env/Env';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
-import {IScaleData, default as Utils} from './Utils';
+import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
 import { SyntheticEvent } from 'Vdom/Vdom';
 
 export interface ISliderBaseOptions extends IControlOptions {
@@ -14,15 +14,7 @@ export interface ISliderBaseOptions extends IControlOptions {
    value: number;
    precision: number;
 }
-interface ILineData {
-   position: number;
-   width: number;
-}
-interface IPointData {
-   name: string;
-   position: number;
-}
-type IPointDataList = IPointData[];
+
 const maxPercentValue = 100;
 
 /**
@@ -115,9 +107,9 @@ const maxPercentValue = 100;
 class Base extends Control<ISliderBaseOptions> {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
-   _lineData: ILineData = undefined;
-   _pointData: IPointDataList = undefined;
-   _scaleData: IScaleData[] = undefined;
+   private _lineData: ILineData = undefined;
+   private _pointData: IPointDataList = undefined;
+   private _scaleData: IScaleData[] = undefined;
 
    private _render(minValue: number, maxValue: number, value: number): void {
       const rangeLength = maxValue - minValue;
@@ -161,7 +153,7 @@ class Base extends Control<ISliderBaseOptions> {
       this._render(options.minValue, options.maxValue, options.value);
    }
 
-   private _onMouseDownHandler(event: SyntheticEvent): void {
+   private _onMouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
          const ratio = Utils.getRatio(event.nativeEvent.pageX, box.left + window.pageXOffset, box.width);
@@ -171,7 +163,7 @@ class Base extends Control<ISliderBaseOptions> {
       }
    }
 
-   private _onDragNDropHandler(e: SyntheticEvent, dragObject) {
+   private _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject) {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
          const ratio = Utils.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
