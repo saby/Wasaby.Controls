@@ -18,7 +18,7 @@ define('Controls/interface/IOpener', [], function() {
 
    /**
     * @name Controls/interface/IOpener#isOpened
-    * @description Признак открытости окна.
+    * @description Возвращает информацию о том, открыто ли всплывающее окно.
     * @function
     */
 
@@ -28,11 +28,12 @@ define('Controls/interface/IOpener', [], function() {
     * @function
     */
 
+
    /**
-    * Открыть всплывающую панель.
+    * Открывает всплывающее окно.
     * @function Controls/Popup/Opener/Base#open
-    * @param popupOptions Параметры всплывающего окна.
-    * @param controller Контроллер всплывающего окна.
+    * @param popupOptions Конфигурация всплывающего окна
+    * @param controller Контрол-контроллер для всплывающего окна.
     */
 
    /*
@@ -44,7 +45,7 @@ define('Controls/interface/IOpener', [], function() {
 
    /**
     * @name Controls/interface/IOpener#autofocus
-    * @cfg {Boolean} Определяет, установлен ли фокус на шаблон при открытии всплывающего окна.
+    * @cfg {Boolean} Определяет, установится ли фокус на шаблон попапа после его открытия.
     * @default true
     */
 
@@ -56,7 +57,7 @@ define('Controls/interface/IOpener', [], function() {
 
    /**
     * @name Controls/interface/IOpener#modal
-    * @cfg {Boolean} Определяет, является ли окно модальным.
+    * @cfg {Boolean} Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
     * @default false
     */
 
@@ -68,7 +69,7 @@ define('Controls/interface/IOpener', [], function() {
 
    /**
     * @name Controls/interface/IOpener#className
-    * @cfg {String} Имена классов всплывающих окон.
+    * @cfg {String} Имена классов, которые будут применены к корневой ноде всплывающего окна.
     */
 
    /*
@@ -78,7 +79,7 @@ define('Controls/interface/IOpener', [], function() {
 
    /**
     * @name Controls/interface/IOpener#closeOnOutsideClick
-    * @cfg {Boolean} Определяет, возможно ли закрыть всплывающее окно кликом за его пределами.
+    * @cfg {Boolean} Определяет возможность закрытия всплывающего окна по клику вне.
     * @default false
     */
 
@@ -90,7 +91,7 @@ define('Controls/interface/IOpener', [], function() {
 
    /**
     * @name Controls/interface/IOpener#template
-    * @cfg {String|Function} Шаблон содержимого всплывающего окна.
+    * @cfg {String|Function} Шаблон всплывающего окна
     */
 
    /*
@@ -100,7 +101,7 @@ define('Controls/interface/IOpener', [], function() {
 
    /**
     * @name Controls/interface/IOpener#templateOptions
-    * @cfg {String|Function} Параметры шаблона содержимого всплывающего окна.
+    * @cfg {String|Function} Опции для котнрола, переданного в {@link template}
     */
 
    /*
@@ -108,10 +109,11 @@ define('Controls/interface/IOpener', [], function() {
     * @cfg {String|Function} Template options inside popup.
     */
 
+
    /**
-    * @event Controls/interface/IOpener#close Происходит при закрытии всплывающего окна.
+    * @event Controls/interface/IOpener#close Происходит при закрытии всплывающего окна
     * @example
-    * В этом примере мы подписываемся на событие закрытия окна и удаления элемента из списка.
+    * В этом примере мы подписываемся на событие 'close' и в его обработчике удаляем элемент из списка.
     * <pre>
     *    <Controls.popup:Stack on:close="_popupCloseHandler()" />
     * </pre>
@@ -147,9 +149,9 @@ define('Controls/interface/IOpener', [], function() {
     */
 
    /**
-    * @event Controls/interface/IOpener#result Происходит, когда у дочернего контрола нотификационного окна срабатывает событие "sendResult".
+    * @event Controls/interface/IOpener#result Происходит, когда дочерний контрол всплывающего окна инициирует событие 'sendResult'
     * @example
-    * В этом примере мы подписываемся на событие "result" и сохраняем пользовательские данные.
+    * В этом примере мы подписываемся на событие 'result' и в его обработчике сохраняем данные с шаблона.
     * <pre>
     *    // MainControl.wml
     *    <Controls.popup:Stack on:result="_popupResultHandler()" />
@@ -211,9 +213,9 @@ define('Controls/interface/IOpener', [], function() {
     */
 
    /**
-    * @event Controls/interface/IOpener#open Происходит при открытии всплывающего окна.
+    * @event Controls/interface/IOpener#open Происходит при открытии всплывающего окна
     * @example
-    * В этом примере мы подписываемся на событие "open" и изменяем вводимый текст.
+    * В этом примере мы подписываемся на событие 'open' и в его обработчике меняем состояние '_popupOpened'
     * <pre>
     *    <Controls.popup:Stack on:open="_popupOpenHandler()" />
     * </pre>

@@ -1,10 +1,11 @@
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
-import Env = require('Env/Env');
 import {parse as load} from 'Core/library';
 
 /**
- * Component that opens a popup that is positioned in the lower right corner of the browser window. Multiple notification Windows can be opened at the same time. In this case, they are stacked vertically. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
+ *  Контрол, открывающий окно, которое позиционируется в правом нижнем углу окна браузера.
+ *  Одновременно может быть открыто несколько окон уведомлений. В этом случае они выстраиваются в стек по вертикали.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ Подробнее}.
  *
  * <a href="/materials/demo-ws4-notification">Demo-example</a>.
  * @class Controls/_popup/Opener/Notification
@@ -15,18 +16,24 @@ import {parse as load} from 'Core/library';
  * @demo Controls-demo/Popup/Opener/NotificationPG
  */
 
+/*
+ * Component that opens a popup that is positioned in the lower right corner of the browser window.
+ * Multiple notification Windows can be opened at the same time. In this case, they are stacked vertically.
+ *  {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
+ */
+
 /**
  * @name Controls/_popup/Opener/Notification#className
- * @cfg {String} Class names of popup.
+ * @cfg {String} Имена классов, которые будут применены к корневой ноде всплывающего окна.
  */
 /**
  * @name Controls/_popup/Opener/Notification#template
- * @cfg {String|Function} Template inside popup.
+ * @cfg {String|Function} Шаблон всплывающего окна
  */
 
 /**
  * @name Controls/_popup/Opener/Notification#templateOptions
- * @cfg {String|Function} Template options inside popup.
+ * @cfg {String|Function} Опции для котнрола, переданного в {@link template}
  */
 const POPUP_CONTROLLER = 'Controls/popupTemplate:NotificationController';
 
@@ -84,10 +91,12 @@ const _private = {
 const Notification = BaseOpener.extend({
 
     /**
-     * Open dialog popup.
+     * Метод открытия нотификационного окна.
+     * Повторный вызов этого метода вызовет переририсовку контрола.
      * @function Controls/_popup/Opener/Notification#open
-     * @param {PopupOptions[]} popupOptions Notification popup options.
-     * @returns {Undefined}
+     * @param {PopupOptions[]} popupOptions Конфигурация нотифицационного окна
+     * @remark
+     * Если требуется открыть окно, без создания popup:Notification в верстке, следует использовать статический метод {@link openPopup}
      * @example
      * wml
      * <pre>
@@ -116,7 +125,16 @@ const Notification = BaseOpener.extend({
      *   });
      * </pre>
      * @see close
+     * @see openPopup
+     * @see closePopup
      */
+
+    /*
+     * Open dialog popup.
+     * @function Controls/_popup/Opener/Notification#open
+     * @param {PopupOptions[]} popupOptions Notification popup options.
+     */
+
     open(popupOptions) {
         return new Promise((resolve) => {
             if (isNewEnvironment()) {
@@ -135,14 +153,43 @@ const Notification = BaseOpener.extend({
 });
 
 /**
+ * Статический метод для открытия нотификационного окна. При использовании метода не требуется создавать popup:Notification в верстке.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ Подробнее}.
+ * @function Controls/_popup/Opener/Notification#openPopup
+ * @param {PopupOptions[]} config Конфигурация нотификационного окна
+ * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
+ * @static
+ * @example
+ * js
+ * <pre>
+ *    import {Notification} from 'Controls/popup';
+ *    ...
+ *    openNotification() {
+ *        Notification.openPopup({
+ *          template: 'Example/MyStackTemplate',
+ *          autoClose: true
+ *        }).then((popupId) => {
+ *          this._popupId = popupId;
+ *        });
+ *    },
+ *
+ *    closeNotification() {
+ *       Notification.closePopup(this._popupId);
+ *    }
+ * </pre>
+ * @see closePopup
+ * @see close
+ * @see open
+ */
+
+/*
  * Open Notification popup.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
  * @function Controls/_popup/Opener/Notification#openPopup
  * @param {PopupOptions[]} config Notification popup options.
  * @return {Promise<string>} Returns id of popup. This id used for closing popup.
- * @static
- * @see closePopup
- */
+*/
+
 Notification.openPopup = (config: object): Promise<string> => {
     return new Promise((resolve) => {
         if (isNewEnvironment()) {
@@ -165,13 +212,41 @@ Notification.openPopup = (config: object): Promise<string> => {
 };
 
 /**
+ * Статический метод для закрытия окна по идентификатору.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ Подробнее}.
+ * @function Controls/_popup/Opener/Notification#closePopup
+ * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
+ * @static
+ * @example
+ * js
+ * <pre>
+ *    import {Notification} from 'Controls/popup';
+ *    ...
+ *    openNotification() {
+ *        Notification.openPopup({
+ *          template: 'Example/MyStackTemplate',
+ *          autoClose: true
+ *        }).then((popupId) => {
+ *          this._popupId = popupId;
+ *        });
+ *    },
+ *
+ *    closeNotification() {
+ *       Notification.closePopup(this._popupId);
+ *    }
+ * </pre>
+ * @see openPopup
+ * @see opener
+ * @see close
+ */
+
+/*
  * Close Notification popup.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
  * @function Controls/_popup/Opener/Notification#closePopup
  * @param {String} popupId Id of popup.
- * @static
- * @see openPopup
- */
+*/
+
 Notification.closePopup = (popupId: string): void => {
     BaseOpener.closeDialog(popupId);
 };
@@ -187,18 +262,24 @@ export = Notification;
 /**
  * @typedef {Object} PopupOptions
  * @description Sets the popup configuration.
- * @property {} autofocus Determines whether focus is set to the template when popup is opened.
- * @property {} className Class names of popup.
- * @property {} template Template inside popup.
- * @property {} templateOptions Template options inside popup.
+ * @property {} autofocus Определяет, установится ли фокус на шаблон попапа после его открытия.
+ * @property {} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
+ * @property {} template Шаблон всплывающего окна
+ * @property {} templateOptions Опции для котнрола, переданного в {@link template}
  */
 
 /**
  * @name Controls/_popup/Opener/Notification#close
- * @description Close popup.
+ * @description Метод закрытия нотификационного окна.
  * @function
  */
 /**
+ * @name Controls/_popup/Opener/Notification#isOpened
+ * @function
+ * @description  Возвращает информацию о том, открыто ли всплывающее окно.
+ */
+
+/*
  * @name Controls/_popup/Opener/Notification#isOpened
  * @function
  * @description Popup opened status.
