@@ -112,6 +112,7 @@ define(
                },
                isActive: true
             };
+            Manager._private.isNewEnvironment = () => true;
             assert.equal(myState, false);
             Manager._private.activatePopup(item);
             assert.equal(myState, true);
