@@ -156,14 +156,14 @@ import {IData, IDecorator} from "Types/source";
             return filter;
          },
 
-         prepareResult: function(result, selectedKeys, keyProperty) {
+         prepareResult: function(result, selectedKeys, keyProperty, selectCompleteInitiator) {
             return {
                resultSelection: result,
                initialSelection: selectedKeys,
-               keyProperty: keyProperty
+               keyProperty: keyProperty,
+               selectCompleteInitiator: selectCompleteInitiator
             };
          }
-
       };
 
       var Container = Control.extend({
@@ -172,6 +172,7 @@ import {IData, IDecorator} from "Types/source";
          _selectedKeys: null,
          _selection: null,
          _excludedKeys: null,
+         _selectCompleteInitiator: false,
 
          _beforeMount: function(options, context) {
             this._selectedKeys = _private.getSelectedKeys(options, context);
@@ -232,7 +233,7 @@ import {IData, IDecorator} from "Types/source";
                   self._notify('hideIndicator', [indicatorId], {bubbling: true});
                }
 
-               return _private.prepareResult(result, self._initialSelectedKeys, keyProperty);
+               return _private.prepareResult(result, self._initialSelectedKeys, keyProperty, self._selectCompleteInitiator);
             });
 
             this._notify('selectionLoad', [loadDef], {bubbling: true});
@@ -244,8 +245,11 @@ import {IData, IDecorator} from "Types/source";
 
          _excludedKeysChanged: function(event, excludedKey, added, removed) {
             this._notify('excludedKeysChanged', [excludedKey, added, removed], {bubbling: true});
-         }
+         },
 
+         _selectCompleteHandler: function() {
+            this._selectCompleteInitiator = true;
+         }
       });
 
       Container.contextTypes = function() {

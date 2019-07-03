@@ -123,7 +123,7 @@ var _private = {
 
    selectItem: function(self, itemClickResult) {
       self._notify('listSelectedKeysChanged', itemClickResult, {bubbling: true});
-      self._notify('selectComplete', [true], {bubbling: true});
+      self._notify('selectComplete', [self._options.multiSelect], {bubbling: true});
    },
 
    selectionChanged: function(self, itemClickResult) {
