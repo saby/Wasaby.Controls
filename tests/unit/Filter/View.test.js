@@ -303,14 +303,27 @@ define(
          it('_startTimer', function() {
             let opened, resultConfig;
             let view = getView(defaultConfig);
-            view._children = {'fast': 'target'};
             view._options.panelTemplateName = 'panelTemplateName.wml';
             view._children = {
                DropdownOpener: { open: (config) => {
                   resultConfig = config;
                   opened = true;
-               } }
+               }},
+               fast: 'target'
             };
+            view._source = Clone(defaultConfig.source);
+            view._configs = {
+               document: {
+                  items: Clone(defaultItems[0]),
+                  displayProperty: 'title',
+                  keyProperty: 'id'},
+               state: {
+                  items: Clone(defaultItems[1]),
+                  displayProperty: 'title',
+                  keyProperty: 'id',
+                  multiSelect: true}
+            };
+            view._container = {};
             view._startTimer('mouseenter', {name: 'fast', title: 'My department'});
             setTimeout(() => {
                assert.isTrue(opened);
