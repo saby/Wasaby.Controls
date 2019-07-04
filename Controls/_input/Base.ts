@@ -1017,6 +1017,7 @@ import 'wml!Controls/_input/Base/Stretcher';
                's',
                'm',
                'l',
+               'xl',
                'default'
             ]),
             fontStyle: entity.descriptor(String).oneOf([
