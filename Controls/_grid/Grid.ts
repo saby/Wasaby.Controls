@@ -8,11 +8,8 @@ import {ListControl as viewTemplate} from 'Controls/list';
    /**
     * Табличное представление. Может загружать данные из источника данных.
     * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>здесь</a>.
-    * List of examples:
-    * <ul>
-    *    <li><a href="/materials/demo-ws4-edit-in-place">Демо-пример</a>.</li>
-    * </ul>
-    *
+    * <a href="/materials/demo-ws4-edit-in-place">Демо-пример</a>.
+    * 
     * @class Controls/_grid/Grid
     * @extends Controls/list:View
     * @mixes Controls/_interface/ISource

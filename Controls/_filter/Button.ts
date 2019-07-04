@@ -9,6 +9,25 @@ import Deferred = require('Core/Deferred');
 import {isEqual} from 'Types/object';
 import 'css!theme?Controls/filter';
 /**
+ * Контрол для поддержки фильтрации данных. Состоит из иконки-кнопки и строкового представления выбранного фильтра.
+ * Клик по иконке-кнопке или строке открывает панель фильтрации. {@link Controls/filterPopup:DetailPanel}
+ * Поддерживает вставку пользовательского шаблона между кнопкой и строкой фильтра.
+ * Подробное описание и инструкцию по настройке контрола смотрите <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>здесь</a>.
+ * <a href="/materials/demo-ws4-filter-button">Демо-пример</a>.
+ *
+ * Инструкцию по настройке фильтрации в списке с помощью контрола "Filter Button" читайте <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
+ *
+ * @class Controls/_filter/Button
+ * @extends Core/Control
+ * @mixes Controls/interface/IFilterButton
+ * @demo Controls-demo/Filter/Button/ButtonPG
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ *
+ */
+
+/*
  * Control for data filtering. Consists of an icon-button and a string representation of the selected filter.
  * Clicking on a icon-button or a string opens the panel. {@link Controls/filterPopup:DetailPanel}
  * Supports the insertion of a custom template between the button and the filter string.
@@ -26,8 +45,6 @@ import 'css!theme?Controls/filter';
  * @author Герасимов А.М.
  *
  */
-
-
 
 var _private = {
    getFilterButtonCompatible: function(self) {
