@@ -205,7 +205,7 @@ var
 
       _pagingState: null,
 
-      _shadowVisibleAlways: false,
+      _shadowVisibleMode: null,
 
       /**
              * @type {Controls/_scroll/Context|null}
@@ -225,6 +225,10 @@ var
             self = this,
             def;
 
+         this._shadowVisibleMode = {
+            top: false,
+            bottom: false
+         }
          this._displayState = {};
          this._stickyHeaderContext = new StickyHeaderContext({
             shadowPosition: options.shadowVisible ? 'bottom' : ''
@@ -342,7 +346,7 @@ var
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
-            if (this._shadowVisibleAlways) {
+            if (this._isShadowVisibleMode()) {
                this._displayState.hasScroll = true;
             }
             this._updateStickyHeaderContext();
@@ -351,49 +355,25 @@ var
          }
       },
 
+      _isShadowVisibleMode: function() {
+         return this._shadowVisibleMode.top || this._shadowVisibleMode.bottom;
+      },
+
       _shadowVisible: function(position) {
          // Костыль для 320. Разобраться почему стало падать по
          // https://online.sbis.ru/opendoc.html?guid=cd7105de-9c05-4f91-964a-36c7f08765ad
          if (typeof this._displayState.shadowPosition !== 'string') {
             return false;
          }
-         switch(this._shadowVisibleAlways) {
-            case 'top': if (position === 'top') {
-                  return true;
-               }
-               break;
-            case 'bottom': if (position === 'bottom') {
-                  return true;
-               }
-               break;
-            case 'both': return true;
+         if (this._shadowVisibleMode[position]) {
+            return true;
          }
 
          return this._displayState.shadowPosition.indexOf(position) !== -1 && !this._children.stickyController.hasFixed(position);
       },
 
-      shadowTaken: function(value) {
-         this._shadowVisibleAlways = value;
-      },
-
-      shadowReleased: function(value) {
-         if (value === 'both') {
-            this._shadowVisibleAlways = 'none';
-         }
-         if (this._shadowVisibleAlways === 'both') {
-            switch(value) {
-               case 'top': this._shadowVisibleAlways = 'bottom';
-                  break;
-               case 'bottom': this._shadowVisibleAlways = 'top';
-                  break;
-            }
-         }
-         if (this._shadowVisibleAlways === 'top' && value === 'top') {
-            this._shadowVisibleAlways = '';
-         }
-         if (this._shadowVisibleAlways === 'bottom' && value === 'bottom') {
-            this._shadowVisibleAlways = '';
-         }
+      setShadowMode: function(shadowVisibleObject) {
+         this._shadowVisibleMode = shadowVisibleObject;
       },
 
       /**
@@ -422,7 +402,7 @@ var
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
-            if (this._shadowVisibleAlways) {
+            if (this._isShadowVisibleMode()) {
                this._displayState.hasScroll = true;
             }
          }
