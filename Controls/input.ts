@@ -16,6 +16,7 @@
  * @includes TimeInterval Controls/_input/TimeInterval
  * @includes Money Controls/_input/Money
  * @includes Render Controls/_input/Render
+ * @includes INewLineKey Controls/_input/interface/INewLineKey
  *
  * @includes BaseStyles Controls/_input/Base/Styles
  * @includes RenderStyles Controls/_input/Render/Styles
