@@ -224,7 +224,11 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                if (result.action === 'selectorResult') {
                   _private.onSelectorResult(this._configs[this.lastOpenIndex], result.data);
                } else {
-                  _private.updateHistory(this._configs[this.lastOpenIndex], result.data);
+                  // Отключаем обновление итории по опции. Откатываем в 19.500
+                  // Требуется доработка от прикладных разработчиков: https://online.sbis.ru/opendoc.html?guid=c83b0255-6a7c-43a9-bd9e-7712b582a610
+                  if (!this._options.notUpdateHistory) {
+                     _private.updateHistory(this._configs[this.lastOpenIndex], result.data);
+                  }
                }
                _private.selectItems.call(this, result.data);
                _private.notifyChanges(this, this._items);
