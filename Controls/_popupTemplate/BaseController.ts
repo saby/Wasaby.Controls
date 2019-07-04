@@ -1,6 +1,9 @@
 import CoreExtend = require('Core/core-extend');
 import Deferred = require('Core/Deferred');
 import Utils = require('Types/util');
+
+let _fakeDiv;
+
       var _private = {
 
          getContentSizes: function(container) {
@@ -29,6 +32,21 @@ import Utils = require('Types/util');
             };
          },
 
+         /**
+          * Creates fake div to calculate margins.
+          * Element is created with position absolute and far beyond the screen left position 
+          */
+         getFakeDiv: function() {
+            if (!_fakeDiv) {
+               _fakeDiv = document.createElement('div');
+               _fakeDiv.style.position = 'absolute';
+               _fakeDiv.style.left = '-1000px';
+               _fakeDiv.style.top = '0';
+               document.body.appendChild(_fakeDiv);
+            }
+            return _fakeDiv;
+         },
+
          getFakeDivMargins: function(config) {
             if (!document) {
                return {
@@ -36,19 +54,15 @@ import Utils = require('Types/util');
                   top: 0
                };
             }
-
-            // create fakeDiv for calculate margins
-            var fakeDiv = document.createElement('div');
+            
+            const fakeDiv = _private.getFakeDiv();
             fakeDiv.className = config.popupOptions.className;
-            document.body.appendChild(fakeDiv);
 
-            var styles = fakeDiv.currentStyle || window.getComputedStyle(fakeDiv);
-            var sizes = {
+            const styles = fakeDiv.currentStyle || window.getComputedStyle(fakeDiv);
+            return {
                top: parseInt(styles.marginTop, 10),
                left: parseInt(styles.marginLeft, 10)
             };
-            document.body.removeChild(fakeDiv);
-            return sizes;
          },
 
          // Get manager Controller dynamically, it cannot be loaded immediately due to cyclic dependencies
