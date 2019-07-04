@@ -158,7 +158,7 @@ var _private = {
  */
 
 /**
- * @event Controls/_breadcrumbs/HeadingPath#arrowActivated Happens after clicking the button "View Model".
+ * @event Controls/_breadcrumbs/HeadingPath#arrowActivated Происходит при клике на кнопку "Просмотр записи".
  * @param {Env/Event:Object} eventObject Дескриптор события.
  */
 

@@ -1,5 +1,5 @@
 /**
- * List library
+ * Библиотека плоских списков.
  * @library Controls/list
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
@@ -24,6 +24,31 @@
  * @author Крайнов Д.О.
  */
 
+/*
+ * List library
+ * @library Controls/list
+ * @includes AddButton Controls/_list/AddButton
+ * @includes Container Controls/_list/Container
+ * @includes EmptyTemplate wml!Controls/_list/emptyTemplate
+ * @includes GroupTemplate wml!Controls/_list/GroupTemplate
+ * @includes ItemTemplate wml!Controls/_list/ItemTemplate
+ * @includes View Controls/_list/List
+ * @includes Mover Controls/_list/Mover
+ * @includes Remover Controls/_list/Remover
+ * @includes Paging Controls/_paging/Paging
+ * @includes VirtualScroll Controls/_list/Controllers/VirtualScroll
+ * @includes DataContainer Controls/_list/Data
+ * @includes AddButtonStyles Controls/_list/AddButton/Styles
+ * @includes IHierarchy Controls/_interface/IHierarchy
+ * @includes IList Controls/_list/interface/IList
+ * @includes ListStyles Controls/_list/ListStyles
+ * @includes ItemActionsStyles Controls/_list/ItemActions/ItemActionsStyles
+ * @includes SwipeStyles Controls/_list/Swipe/SwipeStyles
+ * @includes BaseControlStyles Controls/_list/BaseControlStyles
+ * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
+ * @public
+ * @author Крайнов Д.О.
+ */ 
 import AddButton = require('Controls/_list/AddButton');
 import Container = require('Controls/_list/Container');
 import EmptyTemplate = require('wml!Controls/_list/emptyTemplate');

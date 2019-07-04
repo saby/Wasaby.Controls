@@ -129,8 +129,8 @@ import 'Controls/breadcrumbs';
 
    /**
     * Иерархический список, узел которого можно развернуть и перейти в него.
-    * <a href="/materials/demo-ws4-explorer">Demo example</a>.
-    * <a href="/materials/demo-ws4-explorer-with-search">Demo example with search</a>.
+    * <a href="/materials/demo-ws4-explorer">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-explorer-with-search">Демо-пример с поиском</a>.
     * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>здесь</a>.
     *
     * @class Controls/_explorer/View
