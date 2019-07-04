@@ -27,6 +27,7 @@
  * @includes Controller Controls/_filter/Controller
  * @includes ButtonStyles Controls/_filter/Button/Styles
  * @includes FastStyles Controls/_filter/Fast/FastStyles
+ * @includes FilterViewStyles Controls/_filter/View/FilterViewStyles
  * @includes IFilterView Controls/_filter/View/interface/IFilterView
  * @public
  * @author Крайнов Д.О.

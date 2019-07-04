@@ -36,9 +36,7 @@ export interface IPositionNavigationOptions {
 }
 
 /**
- *
  * @author Крайнов Дмитрий
- * @public
  */
 class PositionNavigation {
    protected _more: HasMore;
