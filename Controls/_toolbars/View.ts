@@ -16,6 +16,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
+ * @mixes Controls/interface/IIconSize
  * @control
  * @public
  * @category Toolbar
