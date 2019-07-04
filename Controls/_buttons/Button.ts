@@ -218,7 +218,6 @@ class Button extends Control<IButtonOptions> implements
       this._fontSize = ActualApi.fontSize(options);
       this._hasIcon = !!options.icon;
 
-      this._state = options.readOnly ? '_readOnly' : '';
       this._caption = options.caption;
       this._stringCaption = typeof options.caption === 'string';
 
