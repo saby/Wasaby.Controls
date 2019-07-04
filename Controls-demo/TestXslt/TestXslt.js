@@ -33,15 +33,26 @@ define('Controls-demo/TestXslt/TestXslt', [
       status: 'Не проверено',
       check: function() {
          var self = this;
-         var a = new Xslt({xml: self._xml, xsl: self._xsl, errback: self.refused});
-         a.execute().addCallback(function() {
+         self.refresh();
+         var a = new Xslt({
+            xml: self._xml,
+            xsl: self._xsl,
+            errback: function() {
+               self.refused();
+            }
+         });
+         a.execute().then(function() {
             if (a.checkDocument(a._xmlDoc)) {
                self.refused();
                return;
             }
-            a.transformToText().addCallback(function(result) {
+            a.transformToText().then(function(result) {
                self.checkResult(result, self._result) ? self.passed() : self.refused();
+            }, function() {
+               self.refused();
             });
+         }, function() {
+            self.refused();
          });
       },
       attrSort: function(match) {
@@ -58,6 +69,9 @@ define('Controls-demo/TestXslt/TestXslt', [
 
          return beforeAttrs + sortedAttrs + afterAttrs;
       },
+      refresh: function() {
+         this.status = 'Не проверено';
+      },
       passed: function() {
          this.status = 'Верно';
       },
@@ -67,12 +81,20 @@ define('Controls-demo/TestXslt/TestXslt', [
 
       checkResult: function(checkStr, goodStr) {
          if (~checkStr.indexOf('<transformiix:result xmlns:transformiix="http://www.mozilla.org/TransforMiix">')) {
-            checkStr = unescape(checkStr.replace(/<(\/|)transformiix:result[^>]*>/g, ''));
+            checkStr = checkStr.replace(/<(\/|)transformiix:result[^>]*>/g, '');
+
+            // Потому что Файрфокс. Может почему-то эскейпить результат, а может нет.
+            var indexOfLtCode = checkStr.indexOf('&lt;');
+            var indexOfRealLt = checkStr.indexOf('<');
+            if (indexOfLtCode !== -1 && (indexOfRealLt === -1 || indexOfLtCode < indexOfRealLt)) {
+               checkStr = unescape(checkStr);
+            }
          }
          var toAttrSortRegExp = /<[^/][^>]*>/g;
          var toRemoveRegExp = /(\r)|(\n)|(<html[^>]*>)|(<\/html>)|(<head[^>]*>)|(<\/head>)|(<body[^>]*>)|(<\/body>)|(<tbody[^>]*>)|(<\/tbody>)|( )|(\t)|(xmlns="http:\/\/www\.w3\.org\/1999\/xhtml")/g;
-         checkStr = checkStr.replace(toAttrSortRegExp, this.attrSort).replace(toRemoveRegExp, '');
-         goodStr = goodStr.replace(toAttrSortRegExp, this.attrSort).replace(toRemoveRegExp, '');
+         var brRegExp = /<\/?br[^>]*>/g;
+         checkStr = checkStr.replace(toAttrSortRegExp, this.attrSort).replace(toRemoveRegExp, '').replace(brRegExp, '<br>');
+         goodStr = goodStr.replace(toAttrSortRegExp, this.attrSort).replace(toRemoveRegExp, '').replace(brRegExp, '<br>');
          return  goodStr.indexOf(checkStr) === 0;
       }
    });
