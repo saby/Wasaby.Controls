@@ -343,10 +343,10 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._updatedRoot = false;
             _private.clearSourceControllers(this);
             var self = this;
-            //При смене корне, не надо запрашивать все открытые папки, т.к. их может не быть и мы загрузим много лишних данных.
+            // При смене корне, не надо запрашивать все открытые папки, т.к. их может не быть и мы загрузим много лишних данных.
             this._needResetExpandedItems = true;
-            //If filter was changed, do not need to reload again, baseControl reload list in beforeUpdate
-            if (isEqual(this._options.filter, oldOptions.filter)) {
+            // If filter or source was changed, do not need to reload again, baseControl reload list in beforeUpdate
+            if (isEqual(this._options.filter, oldOptions.filter) && this._options.source === oldOptions.source) {
                 this._children.baseControl.reload();
             }
         }
