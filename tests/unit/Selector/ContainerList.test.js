@@ -120,13 +120,13 @@ define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
          var clickSelection = false;
          var isByItemClick = false;
 
-         self._notify = function(eventName, byItemClick) {
+         self._notify = function(eventName, args) {
             if (eventName === 'listSelectedKeysChanged') {
                clickSelection = true;
             }
             if (eventName === 'selectComplete') {
                selectCompleted = true;
-               isByItemClick = byItemClick;
+               isByItemClick = args[1];
             }
          };
 
