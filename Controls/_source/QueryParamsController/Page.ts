@@ -8,9 +8,7 @@ export interface IPageNavigationOptions {
    hasMore?: boolean;
 }
 /**
- *
  * @author Крайнов Дмитрий
- * @public
  */
 class PageNavigation {
    protected _nextPage: number = 1;

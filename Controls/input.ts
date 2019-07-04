@@ -20,6 +20,7 @@
  * @includes BaseStyles Controls/_input/Base/Styles
  * @includes RenderStyles Controls/_input/Render/Styles
  * @includes PasswordStyles Controls/_input/Password/PasswordStyles
+ * @includes INewLineKey Controls/_input/interface/INewLineKey
  *
  * @public
  * @author Крайнов Д.О.
