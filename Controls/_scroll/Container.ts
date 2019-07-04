@@ -205,7 +205,7 @@ var
 
       _pagingState: null,
 
-      _shadowVisibleMode: null,
+      _shadowVisiblityMode: null,
 
       /**
              * @type {Controls/_scroll/Context|null}
@@ -225,9 +225,9 @@ var
             self = this,
             def;
 
-         this._shadowVisibleMode = {
-            top: false,
-            bottom: false
+         this._shadowVisiblityMode = {
+            top: 'auto',
+            bottom: 'auto'
          }
          this._displayState = {};
          this._stickyHeaderContext = new StickyHeaderContext({
@@ -356,7 +356,7 @@ var
       },
 
       _isShadowVisibleMode: function() {
-         return this._shadowVisibleMode.top || this._shadowVisibleMode.bottom;
+         return this._shadowVisiblityMode.top === 'visible' || this._shadowVisiblityMode.bottom === 'visible';
       },
 
       _shadowVisible: function(position) {
@@ -365,7 +365,7 @@ var
          if (typeof this._displayState.shadowPosition !== 'string') {
             return false;
          }
-         if (this._shadowVisibleMode[position]) {
+         if (this._shadowVisiblityMode[position] == 'visible') {
             return true;
          }
 
@@ -373,7 +373,7 @@ var
       },
 
       setShadowMode: function(shadowVisibleObject) {
-         this._shadowVisibleMode = shadowVisibleObject;
+         this._shadowVisiblityMode = shadowVisibleObject;
       },
 
       /**
