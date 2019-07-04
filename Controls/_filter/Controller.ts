@@ -140,7 +140,7 @@ import 'Controls/context';
             return result;
          },
 
-         updateHistory: function(filterButtonItems, fastFilterItems, historyId) {
+         updateHistory: function(self, filterButtonItems, fastFilterItems, historyId) {
             var meta = {
                '$_addFromData': true
             };
@@ -151,7 +151,7 @@ import 'Controls/context';
 
             if (!historyUtils.getHistorySource(historyId)._history) {
                // Getting history before updating if it hasn’t already done
-               _private.getHistoryItems(this, historyId).addCallback(function() {
+               _private.getHistoryItems(self, historyId).addCallback(function() {
                   update();
                });
             } else {
@@ -371,7 +371,7 @@ import 'Controls/context';
             throw new Error('Controls/_filter/Controller::historyId is required');
          }
          _private.resolveFilterButtonItems(cfg.filterButtonItems, cfg.fastFilterItems);
-         _private.updateHistory(cfg.filterButtonItems, cfg.fastFilterItems, cfg.historyId);
+         _private.updateHistory({}, cfg.filterButtonItems, cfg.fastFilterItems, cfg.historyId);
       }
 
       /**
@@ -624,7 +624,7 @@ import 'Controls/context';
             _private.updateFilterItems(this, items);
 
             if (this._options.historyId) {
-               _private.updateHistory(this._filterButtonItems, this._fastFilterItems, this._options.historyId);
+               _private.updateHistory(this, this._filterButtonItems, this._fastFilterItems, this._options.historyId);
             }
 
             _private.applyItemsToFilter(this, this._filter, items);

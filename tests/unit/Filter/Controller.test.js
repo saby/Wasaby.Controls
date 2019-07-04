@@ -639,7 +639,10 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
          var fastFilterItems = [];
 
          var filterButtonItems = [];
-         Filter._private.updateHistory(filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID');
+         let self = {};
+         Filter._private.updateHistory(self, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID_2');
+         assert.isOk(self._sourceController);
+         Filter._private.updateHistory(self, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID');
          Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
             assert.deepEqual(items, {});
             done();
