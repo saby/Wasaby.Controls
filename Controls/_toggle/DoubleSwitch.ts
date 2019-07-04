@@ -69,7 +69,7 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
 
 /**
  * @name Controls/_toggle/DoubleSwitch#orientation
- * @cfg {String} Двойной переключатель ориентации в пространстве.
+ * @cfg {String} Ориентация двойного переключателя в пространстве.
  * @variant horizontal Горизонтальная ориентация. Значение по умолчанию.
  * @variant vertical Вертикальная ориентация.
  */
