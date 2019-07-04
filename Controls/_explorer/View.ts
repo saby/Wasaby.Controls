@@ -55,37 +55,36 @@ import 'Controls/breadcrumbs';
                   self._restoredMarkedKeys[self._root].markedKey = root;
               }
               self._root = root;
+              console.log(self._restoredMarkedKeys)
           },
           cleanRestoredKeyObject: function(self, root) {
               _private.pathCleaner(self, root)
               self._root = root;
+             console.log(self._restoredMarkedKeys)
           },
          pathCleaner: function(self, root) {
-            for (const prop in self._restoredMarkedKeys) {
-               if (prop == String(root)) {
-                  if (self._restoredMarkedKeys[prop].parent === undefined) {
-                     const markedKey = self._restoredMarkedKeys[prop].markedKey
-                     self._restoredMarkedKeys = {
-                        [root]: {
-                           markedKey: markedKey
-                        }
+            if (self._restoredMarkedKeys[root]) {
+               if (self._restoredMarkedKeys[root].parent === undefined) {
+                  const markedKey = self._restoredMarkedKeys[root].markedKey
+                  self._restoredMarkedKeys = {
+                     [root]: {
+                        markedKey: markedKey
                      }
-                     return;
-                  } else {
-                     _remoover2(root);
                   }
-               } else if (self._restoredMarkedKeys[prop].parent == root) {
-                   _remoover2(root);
-               } else if (prop == self._root) {
-                   delete self._restoredMarkedKeys[prop];
+                  return;
+               } else {
+                  _remoover(root);
                }
+            } else if (root !== self._root) {
+                   delete self._restoredMarkedKeys[self._root];
             }
-            function _remoover2(key) {
+
+            function _remoover(key) {
                Object.keys(self._restoredMarkedKeys).forEach((cur) => {
                   if(self._restoredMarkedKeys[cur] && self._restoredMarkedKeys[cur].parent == String(key)) {
                      const nextKey = cur;
                      delete self._restoredMarkedKeys[cur];
-                     _remoover2(nextKey);
+                     _remoover(nextKey);
                   }
                });
             };
