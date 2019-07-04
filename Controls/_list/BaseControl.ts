@@ -20,11 +20,11 @@ import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
 import 'wml!Controls/_list/BaseControl/Footer';
 import 'css!theme?Controls/list';
 import { error as dataSourceError } from 'Controls/dataSource';
-import { constants, IoC } from 'Env/Env';
+import { detection, constants, IoC } from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
-import {Focus} from 'Vdom/Vdom'
+import {Focus} from 'Vdom/Vdom';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -145,7 +145,15 @@ var _private = {
                     if (self._isActive) {
                         isActive = true;
                     }
+                    const curKey = listModel.getMarkedKey();
                     listModel.setItems(list);
+                    const nextKey = listModel.getMarkedKey();
+                    if (nextKey && nextKey !== curKey
+                        && self._listViewModel.getCount() && self._isScrollShown
+                        && !self._options.task46390860 && !self._options.task1177182277
+                    ) {
+                        self._markedKeyForRestoredScroll = nextKey;
+                    }
                     self._items = listModel.getItems();
                     if (isActive === true) {
                         self._children.listView.activate();
@@ -243,9 +251,9 @@ var _private = {
             return;
         }
 
-        if (self._keyDisplayedItem !== null) {
-            _private.scrollToItem(self, self._keyDisplayedItem);
-            self._keyDisplayedItem = null;
+        if (self._markedKeyForRestoredScroll !== null) {
+            _private.scrollToItem(self, self._markedKeyForRestoredScroll);
+            self._markedKeyForRestoredScroll = null;
         }
     },
     moveMarker: function(self, newMarkedKey) {
@@ -256,15 +264,17 @@ var _private = {
         }
         _private.setMarkedKey(self, newMarkedKey);
     },
-    moveMarkerToNext: function(self) {
+    moveMarkerToNext: function (self, event) {
         if (self._options.markerVisibility !== 'hidden') {
-            const model = self.getViewModel();
+            event.preventDefault();
+            var model = self.getViewModel();
             _private.moveMarker(self, model.getNextItemKey(model.getMarkedKey()));
         }
     },
-    moveMarkerToPrevious: function(self) {
+    moveMarkerToPrevious: function (self, event) {
         if (self._options.markerVisibility !== 'hidden') {
-            const model = self.getViewModel();
+            event.preventDefault();
+            var model = self.getViewModel();
             _private.moveMarker(self, model.getPreviousItemKey(model.getMarkedKey()));
         }
     },
@@ -281,8 +291,7 @@ var _private = {
             model = self.getViewModel();
             markedKey = model.getMarkedKey();
             self._children.selectionController.onCheckBoxClick(markedKey, model.getSelectionStatus(markedKey));
-            _private.moveMarkerToNext(self);
-            event.preventDefault();
+            _private.moveMarkerToNext(self, event);
         }
     },
     prepareFooter: function(self, navigation, sourceController) {
@@ -324,6 +333,9 @@ var _private = {
                 //надо инициировать подгрузку порции записей, больше за нас это никто не сделает.
                 //Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
                 var cnt1 = self._listViewModel.getCount();
+                if (self._virtualScroll) {
+                    self._itemsFromLoadToDirection = true;
+                }
                 if (direction === 'down') {
                     self._listViewModel.appendItems(addedItems);
                 } else if (direction === 'up') {
@@ -345,18 +357,9 @@ var _private = {
                 // If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                 if (!addedItems.getCount() || (self._options.task1176625749 && cnt2 == cnt1)) {
                     _private.checkLoadToDirectionCapability(self);
-                } else if (self._virtualScroll) {
-                    // После догрузки данных потенциально увеличивается количество записей, нужно пересчитать индексы
-                    self._virtualScroll.ItemsCount = self._listViewModel.getCount();
-                    if (direction === 'up') {
-                        // TODO: KINGO. Когда добавляется пачка записей сверху индексы начала и конца виртуальной страницы
-                        // увеличиваются на размер пачки.
-                        // Например, показываем записи с 0 по 30. Затем, загрузили 20 записей сверху.
-                        // Индексы показываемых записей должны стать с 20 по 50.
-                        self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + addedItems.getCount();
-                    }
-                    self._virtualScroll.recalcItemsIndexes(direction);
-                    _private.applyVirtualScrollIndexes(self, direction);
+                }
+                if (self._virtualScroll) {
+                    self._itemsFromLoadToDirection = false;
                 }
 
                 _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -673,15 +676,37 @@ var _private = {
                 }
 
                 if (!!action && self._virtualScroll) {
-                    self._virtualScroll.ItemsCount = self.getViewModel().getCount();
+                    let
+                       newCount = self.getViewModel().getCount();
+                    self._virtualScroll.ItemsCount = newCount;
                     if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
                         self._virtualScroll.insertItemsHeights(newItemsIndex - 1, newItems.length);
+                        const
+                           direction = newItemsIndex <= self._listViewModel.getStartIndex() ? 'up' : 'down';
+                        if (direction === 'down') {
+                            // если это не подгрузка с БЛ по скролу и
+                            // если мы были в конце списка (отрисована последняя запись и виден нижний триггер)
+                            // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
+                            if (self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
+                               self._virtualScrollTriggerVisibility.down && !self._itemsFromLoadToDirection) {
+                                self._virtualScroll.recalcToDirection(direction);
+                            } else {
+                                // если данные добавились сверху - просто обновляем индексы видимых записей
+                                self._virtualScroll.recalcItemsIndexes(direction);
+                            }
+                        } else {
+                            if (self._itemsFromLoadToDirection) {
+                                // если элементы были подгружены с БЛ, то увеличиваем стартовый индекс на кол-во
+                                // загруженных элементов. работаем именно через проекцию, т.к. может быть группировка и
+                                // кол-во загруженных элементов может отличаться от кол-ва рисуемых элементов
+                                self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + newItems.length;
+                            }
+                            self._virtualScroll.recalcItemsIndexes(direction);
+                        }
                     }
                     if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
                         self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
-                    }
-                    if (action === collection.IObservable.ACTION_RESET) {
-                        self._virtualScroll.resetItemsIndexes();
+                        self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down');
                     }
                     _private.applyVirtualScrollIndexesToListModel(self);
                 }
@@ -976,6 +1001,10 @@ var _private = {
         if (options.keyProperty === undefined) {
             IoC.resolve('ILogger').warn('BaseControl', 'Option "keyProperty" is required.');
         }
+    },
+
+    needBottomPadding: function(options) {
+        return (options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
     }
 };
 
@@ -1004,7 +1033,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _template: BaseControlTpl,
     iWantVDOM: true,
     _isActiveByClick: false,
-    _keyDisplayedItem: null,
+    _markedKeyForRestoredScroll: null,
 
     _listViewModel: null,
     _viewModelConstructor: null,
@@ -1065,15 +1094,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
-        this._needBottomPadding = newOptions.itemActionsPosition === 'outside';
+        this._needBottomPadding = _private.needBottomPadding(newOptions);
         this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
         this._pagingNavigation = newOptions.navigation && newOptions.navigation.view === 'pages';
 
         if (this._needScrollCalculation) {
             if (newOptions.virtualScrolling) {
                 this._virtualScroll = new VirtualScroll({
-                    virtualPageSize: newOptions.virtualPageSize,
-                    virtualSegmentSize: newOptions.virtualSegmentSize
+                    virtualPageSize: newOptions.virtualPageSize
                 });
 
             }
@@ -1163,6 +1191,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
+        this._needBottomPadding = _private.needBottomPadding(newOptions);
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
@@ -1213,36 +1242,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (filterChanged || recreateSource || sortingChanged) {
             //return result here is for unit tests
-            return _private.reload(self, newOptions).addCallback(() => {
-
-                /*
-                * After reload need to reset scroll position to initial. Resetting a scroll position occurs by scrolling
-                * to first element.
-                */
-
-                // FIXME Не всегда спискам нужна подкрутка к первому элементу: список может просто выводить все записи и релоадиться.
-                // Как вариант - опция на списке или очередной контейнер/контроллер, отвечающий за подскролл к первому элементу.
-                // remove by https://online.sbis.ru/opendoc.html?guid=d611a793-2d96-48ac-aaa7-6923f50207a6
-                if (self._options.task1177182277) {
-                    return;
-                }
-
-                //FIXME _isScrollShown indicated, that the container in which the list is located, has scroll. If container has no scroll, we shouldn't not scroll to first item,
-                //because scrollToElement method will find scroll recursively by parent, and can scroll other container's. this is not best solution, will fixed by task https://online.sbis.ru/opendoc.html?guid=6bdf5292-ed8a-4eec-b669-b02e974e95bf
-                // FIXME self._options.task46390860
-                // In the chat, after reload, need to scroll to the last element, because the last message is from below.
-                // Now applied engineers do it themselves, checking whether the record was drawn via setTimeout and their handler works
-                // before ours, because afterUpdate is asynchronous. At 300, they will do this by 'drowItems' event, which may now be unstable.
-                // https://online.sbis.ru/opendoc.html?guid=733d0961-09d4-4d72-8b27-e463eb908d60
-                if (self._listViewModel.getCount() && self._isScrollShown && !self._options.task46390860) {
-                    const firstItem = self._listViewModel.getFirstItem();
-
-                    //the first item may be missing, if, for example, only groups are drawn in the list
-                    if (firstItem) {
-                        self._keyDisplayedItem = firstItem.getId();
-                    }
-                }
-            });
+            return _private.reload(self, newOptions);
         }
 
         if (this._itemsChanged) {
@@ -1526,12 +1526,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // https://online.sbis.ru/opendoc.html?guid=f47f7476-253c-47ff-b65a-44b1131d459c
         var target = originalEvent.target;
         if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && !target.closest('[contenteditable=true]') && !target.closest('.controls-InputRender, .controls-Render, .controls-EditableArea, .controls-Dropdown, .controls-Suggest_list')) {
-            this._focusTimeout = setTimeout(() => {
-                if (this._children.fakeFocusElem) {
-                    Focus.focus(this._children.fakeFocusElem);
-                }
-            }, 0);
+            this.focus();
         }
+    },
+
+    focus: function() {
+        this._focusTimeout = setTimeout(() => {
+            if (this._children.fakeFocusElem) {
+                Focus.focus(this._children.fakeFocusElem);
+            }
+        }, 0);
     },
 
     _viewResize: function() {
@@ -1583,7 +1587,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _onAfterBeginEdit: function (event, item, isAdd) {
-        this._canUpdateItemsActions = true;
+
+        /*
+        * TODO: KINGO
+        * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
+        * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
+        * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
+        * _canUpdateItemsActions  приведет к показу неактуальных операций.
+        */
+        this._children.itemActions.updateItemActions(item);
         return this._notify('afterBeginEdit', [item, isAdd]);
     },
 
@@ -1611,7 +1623,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             self = this,
             dragStartResult;
 
-        if (this._options.itemsDragNDrop && !domEvent.target.closest('.controls-DragNDrop__notDraggable')) {
+        if (!this._options.readOnly && this._options.itemsDragNDrop && !domEvent.target.closest('.controls-DragNDrop__notDraggable')) {
 
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
@@ -1731,12 +1743,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         newNavigation.sourceConfig.page = page - 1;
         this._recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
         var self = this;
-        _private.reload(self, self._options).addCallback(() => {
-                const firstItem = self._listViewModel.getFirstItem();
-                if (firstItem) {
-                    self._keyDisplayedItem = firstItem.getId();
-                }
-        });
+        _private.reload(self, self._options);
         this._shouldRestoreScrollPosition = true;
     },
 

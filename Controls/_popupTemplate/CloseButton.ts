@@ -11,7 +11,7 @@ import Env = require('Env/Env');
     * @extends Core/Control
     * @control
     * @public
-    * @author Михайловский Д.С.
+    * @author Красильников А.С.
     * @demo Controls-demo/Buttons/Close/CloseDemo
     * @mixes Controls/_buttons/interface/IClick
     *

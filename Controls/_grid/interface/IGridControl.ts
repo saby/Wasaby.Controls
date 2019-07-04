@@ -291,3 +291,27 @@
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @default false
  */
+
+ /**
+ * @name Controls/_list/interface/IList#resultsTemplate
+ * @cfg {Function} Шаблон строки итогов.
+ */
+
+/*
+ * @name Controls/_list/interface/IList#resultsTemplate
+ * @cfg {Function} Results row template.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#resultsPosition
+ * @cfg {String} Положение строки итогов.
+ * @variant top Вывести итоги над списком.
+ * @variant bottom Вывести итоги под списком.
+ */
+
+/*
+ * @name Controls/_list/interface/IList#resultsPosition
+ * @cfg {String} Results row position.
+ * @variant top Show results above the list.
+ * @variant bottom Show results below the list.
+ */

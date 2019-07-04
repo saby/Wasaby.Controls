@@ -1,114 +1,61 @@
-import Base = require('Controls/_popup/Opener/BaseOpener');
-      /**
-       * Component that opens a popup that is positioned in the center of the browser window. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ See more}
-       * <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
-       * @class Controls/_popup/Opener/Dialog
-       * @extends Controls/_popup/Opener/BaseOpener
-       * @mixes Controls/interface/IOpener
-       * @mixes Controls/_popup/Opener/Confirmation/Dialog/DialogStyles
-       * @control
-       * @author Красильников А.С.
-       * @category Popup
-       * @demo Controls-demo/Popup/Opener/DialogPG
-       * @public
-       *
-       */
+import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
+import {IoC} from 'Env/Env';
+/**
+ * Контрол, открывающий всплывающее окно, которое позиционнируется по центру экрана.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ Подробнее}
+ * <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
+ * @class Controls/_popup/Opener/Dialog
+ * @extends Controls/_popup/Opener/BaseOpener
+ * @mixes Controls/interface/IOpener
+ * @mixes Controls/_popup/Opener/Confirmation/Dialog/DialogStyles
+ * @control
+ * @author Красильников А.С.
+ * @category Popup
+ * @demo Controls-demo/Popup/Opener/DialogPG
+ * @public
+ */
 
-      var _private = {
-         getDialogConfig: function(config) {
-            config = config || {};
+/*
+ * Component that opens a popup that is positioned in the center of the browser window. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ See more}
+ * <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
+ * @class Controls/_popup/Opener/Dialog
+ * @extends Controls/_popup/Opener/BaseOpener
+ * @mixes Controls/interface/IOpener
+ * @mixes Controls/_popup/Opener/Confirmation/Dialog/DialogStyles
+ * @control
+ * @author Красильников А.С.
+ * @category Popup
+ * @demo Controls-demo/Popup/Opener/DialogPG
+ * @public
+ */
 
-            // The dialog is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
-            config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
-            return config;
-         }
-      };
+const _private = {
+    getDialogConfig(config) {
+        config = config || {};
+        // The dialog is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
+        config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
+        return config;
+    }
+};
 
-      var Dialog = Base.extend({
+const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';
 
-         /**
-          * Open dialog popup.
-          * If you call this method while the window is already opened, it will cause the redrawing of the window.
-          * @function Controls/_popup/Opener/Dialog#open
-          * @returns {Undefined}
-          * @param {PopupOptions[]} popupOptions Dialog popup options.
-          * @remark
-          * {@link https://wi.sbis.ru/docs/js/Controls/interface/IDialogOptions#popupOptions popupOptions}
-          * @example
-          * wml
-          * <pre>
-          *    <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog" modal="{{true}}">
-          *          <ws:templateOptions key="111"/>
-          *    </Controls.popup:Dialog>
-          *
-          *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
-          *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
-          * </pre>
-          * js
-          * <pre>
-          *   Control.extend({
-          *      ...
-          *
-          *       _openDialog() {
-          *          var popupOptions = {
-          *              autofocus: true
-          *          }
-          *          this._children.dialog.open(popupOptions)
-          *       }
-          *
-          *       _closeDialog() {
-          *          this._children.dialog.close()
-          *       }
-          *       ...
-          *   });
-          * </pre>
-          * @see close
-          */
-         open: function(config) {
-            config = _private.getDialogConfig(config, this);
-            Base.prototype.open.call(this, config, 'Controls/popupTemplate:DialogController');
-         }
-      });
-
-      Dialog._private = _private;
-
-export default Dialog;
-
-    /**
-     * @name Controls/_popup/Opener/Dialog#height
-     * @cfg {Number} Height of popup.
-     */
-
-    /**
-     * @name Controls/_popup/Opener/Dialog#maxHeight
-     * @cfg {Number} The maximum height of popup.
-     */
-    /**
-     * @name Controls/_popup/Opener/Dialog#minHeight
-     * @cfg {Number} The minimum height of popup.
-     */
-    /**
-     * @name Controls/_popup/Opener/Dialog#maxWidth
-     * @cfg {Number} The maximum width of popup.
-     */
-    /**
-     * @name Controls/_popup/Opener/Dialog#minWidth
-     * @cfg {Number} The minimum width of popup.
-     */
-    /**
-     * @name Controls/_popup/Opener/Dialog#top
-     * @cfg {Number} Distance from the window to the top of the screen.
-     */
-    /**
-     * @name Controls/_popup/Opener/Dialog#left
-     * @cfg {Number} Distance from the window to the left border of the screen.
-     */
-
-    /**
-     * @name Controls/_popup/Opener/Dialog#close
-     * @function
-     * @description Close dialog popup.
+const Dialog = BaseOpener.extend({
+    /*
+     * Open dialog popup.
+     * If you call this method while the window is already opened, it will cause the redrawing of the window.
+     * @function Controls/_popup/Opener/Dialog#open
      * @returns {Undefined}
+     * @param {PopupOptions[]} popupOptions Dialog popup options.
+     */
+
+    /**
+     * Метод открытия диалогового окна.
+     * Повторный вызов этого метода инициирует перерисовку окна с новыми опциями.
+     * @function Controls/_popup/Opener/Dialog#open
+     * @param {PopupOptions[]} popupOptions Конфигурация диалогового окна.
+     * @remark
+     * Если требуется открыть окно, без создания popup:Dialog в верстке, следует использовать статический метод {@link openPopup}
      * @example
      * wml
      * <pre>
@@ -122,39 +69,198 @@ export default Dialog;
      * js
      * <pre>
      *   Control.extend({
-    *      ...
-    *
-    *       _openDialog() {
-    *          var popupOptions = {
-    *              autofocus: true
-    *          }
-    *          this._children.dialog.open(popupOptions)
-    *       }
-    *
-    *       _closeDialog() {
-    *          this._children.dialog.close()
-    *       }
-    *       ...
-    *   });
+     *      ...
+     *
+     *       _openDialog() {
+     *          var popupOptions = {
+     *              autofocus: true
+     *          }
+     *          this._children.dialog.open(popupOptions)
+     *       }
+     *
+     *       _closeDialog() {
+     *          this._children.dialog.close()
+     *       }
+     *       ...
+     *   });
      * </pre>
-     * @see open
+     * @see close
+     * @see openPopup
+     * @see closePopup
      */
+    open(popupOptions) {
+        BaseOpener.prototype.open.call(this, _private.getDialogConfig(popupOptions), POPUP_CONTROLLER);
+    }
+});
 
-    /**
-     * @typedef {Object} PopupOptions
-     * @description Dialog popup options.
-     * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
-     * @property {Boolean} modal Determines whether the window is modal.
-     * @property {String} className Class names of popup.
-     * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
-     * @property {function|String} template Template inside popup.
-     * @property {function|String} templateOptions Template options inside popup.
-     * @property {Number} width Width of popup.
-     * @property {Number} height Height of popup.
-     * @property {Number} maxHeight The maximum height of popup.
-     * @property {Number} minHeight The minimum height of popup.
-     * @property {Number} maxWidth The maximum width of popup.
-     * @property {Number} minWidth The minimum width of popup.
-     * @property {Number} top Distance from the window to the top of the screen.
-     * @property {Number} left Distance from the window to the left border of the screen.
-     */
+/**
+ * Статический метод для открытия диалогового окна. При использовании метода не требуется создавать popup:Dialog в верстке.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ Подробнее}.
+ * @function Controls/_popup/Opener/Dialog#openPopup
+ * @param {PopupOptions[]} config Конфигурация диалогового окна
+ * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
+ * @static
+ * @example
+ * js
+ * <pre>
+ *    import {Dialog} from 'Controls/popup';
+ *    ...
+ *    openDialog() {
+ *        Dialog.openPopup({
+ *          template: 'Example/MyDialogTemplate',
+ *          opener: this._children.myButton
+ *        }).then((popupId) => {
+ *          this._popupId = popupId;
+ *        });
+ *    },
+ *
+ *    closeDialog() {
+ *       Dialog.closePopup(this._popupId);
+ *    }
+ * </pre>
+ * @see closePopup
+ * @see close
+ * @see open
+ */
+Dialog.openPopup = (config: object): Promise<string> => {
+    return new Promise((resolve) => {
+        const newCfg = _private.getDialogConfig(config);
+        if (!newCfg.hasOwnProperty('opener')) {
+            IoC.resolve('ILogger').error(Dialog.prototype._moduleName, 'Для открытия окна через статический метод, обязательно нужно указать опцию opener');
+        }
+        BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
+            BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
+                resolve(popupId);
+            });
+        });
+    });
+};
+
+/**
+ * Статический метод для закрытия окна по идентификатору.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ Подробнее}.
+ * @function Controls/_popup/Opener/Dialog#closePopup
+ * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
+ * @static
+ * @example
+ * js
+ * <pre>
+ *    import {Dialog} from 'Controls/popup';
+ *    ...
+ *    openDialog() {
+ *        Dialog.openPopup({
+ *          template: 'Example/MyDialogTemplate',
+ *          opener: this._children.myButton
+ *        }).then((dialogId) => {
+ *          this._dialogId = dialogId;
+ *        });
+ *    },
+ *
+ *    closeDialog() {
+ *       Dialog.closePopup(this._dialogId);
+ *    }
+ * </pre>
+ * @see openPopup
+ * @see opener
+ * @see close
+ */
+Dialog.closePopup = (popupId: string): void => {
+    BaseOpener.closeDialog(popupId);
+};
+
+Dialog._private = _private;
+
+export default Dialog;
+
+/**
+ * @name Controls/_popup/Opener/Dialog#height
+ * @cfg {Number} Текущая высота всплывающего окна
+ */
+
+/**
+ * @name Controls/_popup/Opener/Dialog#maxHeight
+ * @cfg {Number} Максимально допустимая высота всплывающего окна
+ */
+/**
+ * @name Controls/_popup/Opener/Dialog#minHeight
+ * @cfg {Number} Минимально допустимая высота всплывающего окна
+ */
+/**
+ * @name Controls/_popup/Opener/Dialog#maxWidth
+ * @cfg {Number} Максимально допустимая ширина всплывающего окна
+ */
+/**
+ * @name Controls/_popup/Opener/Dialog#minWidth
+ * @cfg {Number} Минимально допустимая ширина всплывающего окна
+ */
+/*
+ * @name Controls/_popup/Opener/Dialog#top
+ * @cfg {Number} Distance from the window to the top of the screen.
+ */
+/**
+ * @name Controls/_popup/Opener/Dialog#top
+ * @cfg {Number} Расстояние от всплывающего окна до верхнего края экрана.
+ */
+/*
+ * @name Controls/_popup/Opener/Dialog#left
+ * @cfg {Number} Distance from the window to the left border of the screen.
+ */
+/**
+ * @name Controls/_popup/Opener/Dialog#left
+ * @cfg {Number} Расстояние от всплывающего окна до левого края экрана.
+ */
+
+/**
+ * @name Controls/_popup/Opener/Dialog#close
+ * @function
+ * @description Метод закрытия диалогового окна.
+ * @returns {Undefined}
+ * @example
+ * wml
+ * <pre>
+ *    <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog" modal="{{true}}">
+ *          <ws:templateOptions key="111"/>
+ *    </Controls.popup:Dialog>
+ *
+ *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
+ *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
+ * </pre>
+ * js
+ * <pre>
+ *   Control.extend({
+ *      ...
+ *
+ *       _openDialog() {
+ *          var popupOptions = {
+ *              autofocus: true
+ *          }
+ *          this._children.dialog.open(popupOptions)
+ *       }
+ *
+ *       _closeDialog() {
+ *          this._children.dialog.close()
+ *       }
+ *       ...
+ *   });
+ * </pre>
+ * @see open
+ */
+
+/**
+ * @typedef {Object} PopupOptions
+ * @description Dialog popup options.
+ * @property {Boolean} autofocus Определяет, установится ли фокус на шаблон попапа после его открытия.
+ * @property {Boolean} modal Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
+ * @property {String} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
+ * @property {Boolean} closeOnOutsideClick Определяет возможность закрытия всплывающего окна по клику вне.
+ * @property {function|String} template Шаблон всплывающего окна
+ * @property {function|String} templateOptions  Опции для котнрола, переданного в {@link template}
+ * @property {Number} width Текущая ширина всплывающего окна
+ * @property {Number} height Текущая высота всплывающего окна
+ * @property {Number} maxHeight Максимально допустимая высота всплывающего окна
+ * @property {Number} minHeight Минимально допустимая высота всплывающего окна
+ * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна
+ * @property {Number} minWidth Минимально допустимая ширина всплывающего окна
+ * @property {Number} top Расстояние от всплывающего окна до верхнего края экрана.
+ * @property {Number} left Расстояние от всплывающего окна до левого края экрана.
+ */

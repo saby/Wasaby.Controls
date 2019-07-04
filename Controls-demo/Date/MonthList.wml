@@ -1,37 +1,65 @@
-<div class="PageWrap">
-   <div class="PageBlock__content">
-      <Controls.calendar:MonthList
-         startPosition="{{_month}}"
-         source="{{_source}}">
-         <ws:yearTemplate>
-            <ws:partial template="Controls/calendar:MonthListYearTemplate">
-               <ws:dayTemplate>
-                  <ws:partial template="Controls/calendar:MonthViewDayTemplate">
-                     <ws:contentTemplate>
-                        <ws:partial template="{{_dayTemplate}}"/>
-                     </ws:contentTemplate>
+<div class="demo-MonthList">
+   <div class="demo-MonthList__header">Controls.calendar:MonthList</div>
+   <div class="demo-MonthList__content">
+      <div class="demo-MonthList__content-row">
+         <div class="demo-MonthList__content-block">
+            <div class="demo-MonthList__content-block-header">Base, viewMode: year</div>
+            <Controls.calendar:MonthList startPosition="{{_month}}"/>
+         </div>
+         <div class="demo-MonthList__content-block">
+            <div class="demo-MonthList__content-block-header">Base, viewMode: month</div>
+            <Controls.calendar:MonthList startPosition="{{_month}}" viewMode="month"/>
+         </div>
+      </div>
+      <div class="demo-MonthList__content-row">
+         <div class="demo-MonthList__content-block">
+            <div class="demo-MonthList__content-block-header">Custom templates and source, viewMode: year</div>
+            <div class="demo-MonthList__monthList-header">{{_yearHeader}}</div>
+            <Controls.calendar:MonthList
+               startPosition="{{_month}}"
+               source="{{_source}}"
+               on:positionChanged="_yearPositionChangedHandler()">
+               <ws:yearTemplate>
+                  <ws:partial template="Controls/calendar:MonthListYearTemplate">
+                     <ws:headerTemplate>
+                        <div class="demo-MonthList__itemHeader">{{headerTemplate.date.getFullYear()}}</div>
+                     </ws:headerTemplate>
+                     <ws:dayTemplate>
+                        <ws:partial template="Controls/calendar:MonthViewDayTemplate">
+                           <ws:contentTemplate>
+                              <ws:partial template="{{_dayTemplate}}"/>
+                           </ws:contentTemplate>
+                        </ws:partial>
+                     </ws:dayTemplate>
                   </ws:partial>
-               </ws:dayTemplate>
-            </ws:partial>
-         </ws:yearTemplate>
-      </Controls.calendar:MonthList>
-   </div>
-   <div class="PageBlock__content">
-      <Controls.calendar:MonthList
-         startPosition="{{_month}}"
-         source="{{_source}}"
-         viewMode="month">
-         <ws:monthTemplate>
-            <ws:partial template="Controls/calendar:MonthListMonthTemplate">
-               <ws:dayTemplate>
-                  <ws:partial template="Controls/calendar:MonthViewDayTemplate">
-                     <ws:contentTemplate>
-                        <ws:partial template="{{_dayTemplate}}"/>
-                     </ws:contentTemplate>
+               </ws:yearTemplate>
+            </Controls.calendar:MonthList>
+         </div>
+         <div class="demo-MonthList__content-block">
+            <div class="demo-MonthList__content-block-header">Custom templates and source, viewMode: month</div>
+            <div class="demo-MonthList__monthList-header">{{_monthHeader}}</div>
+            <Controls.calendar:MonthList
+               startPosition="{{_month}}"
+               source="{{_source}}"
+               viewMode="month"
+               on:positionChanged="_monthPositionChangedHandler()">
+               <ws:monthTemplate>
+                  <ws:partial template="Controls/calendar:MonthListMonthTemplate">
+                     <ws:headerTemplate>
+                        <div class="demo-MonthList__itemHeader">{{_formatMonth(headerTemplate.date)}}</div>
+                     </ws:headerTemplate>
+                     <ws:dayTemplate>
+                        <ws:partial template="Controls/calendar:MonthViewDayTemplate">
+                           <ws:contentTemplate>
+                              <ws:partial template="{{_dayTemplate}}"/>
+                           </ws:contentTemplate>
+                        </ws:partial>
+                     </ws:dayTemplate>
                   </ws:partial>
-               </ws:dayTemplate>
-            </ws:partial>
-         </ws:monthTemplate>
-      </Controls.calendar:MonthList>
+               </ws:monthTemplate>
+            </Controls.calendar:MonthList>
+         </div>
+      </div>
    </div>
+
 </div>

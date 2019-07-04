@@ -7,7 +7,7 @@ import {isEqual} from 'Types/object';
 import {
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
-    getResultsIndex, getTopOffset, IBaseGridRowIndexOptions, getRowsArray, getMaxEndRow
+    getResultsIndex, getTopOffset, IBaseGridRowIndexOptions, getRowsArray, getMaxEndRow, getBottomPaddingRowIndex
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 
 
@@ -450,6 +450,7 @@ var
         _columns: [],
         _curColumnIndex: 0,
 
+        _lastItemKey: undefined,
         _headerRows: [],
         _headerColumns: [],
         _curHeaderColumnIndex: 0,
@@ -491,6 +492,7 @@ var
                 this._notify('onGroupsExpandChange', changes);
             }.bind(this);
             this._onCollectionChangeFn = function() {
+                this._updateLastItemKey();
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
             // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
@@ -502,8 +504,15 @@ var
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
             this._ladder = _private.prepareLadder(this);
             this._setColumns(this._options.columns);
-            if (this._options.header && this._options.header.length) { this._isMultyHeader = this.getMultyHeader(this._options.header); }
+            if (this._options.header && this._options.header.length) { this._isMultyHeader = this.isMultyHeader(this._options.header); }
             this._setHeader(this._options.header);
+            this._updateLastItemKey();
+        },
+
+        _updateLastItemKey(): void {
+            if (this.getItems()) {
+                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+            }
         },
 
         _updateIndexesCallback(): void {
@@ -562,10 +571,10 @@ var
             this._setHeader(columns);
             this._nextModelVersion();
         },
-        getMultyHeader: function(columns) {
+        isMultyHeader: function(columns) {
             let k = 0;
             while(columns.length > k) {
-                if (columns[k].startRow && columns[k].endRow) {
+                if (columns[k].endRow > 2) {
                     return true;
                 }
                 k++;
@@ -576,6 +585,9 @@ var
             if (columns && columns.length) {
                 this._headerRows = getRowsArray(columns, multiSelectVisibility);
                 this._maxEndRow = getMaxEndRow(this._headerRows);
+                if (multiSelectVisibility && columns[0] && columns[0].isBreadCrumbs) {
+                    this._headerRows[0][0].hiddenForBreadCrumbs = true;
+                }
             } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
             } else {
@@ -773,6 +785,10 @@ var
             return this._options.resultsPosition;
         },
 
+        setResultsPosition: function(position) {
+            this._options.resultsPosition = position;
+        },
+        
         getStyleForCustomResultsTemplate: function() {
             return _private.getColspan(
                this._options.multiSelectVisibility,
@@ -1043,14 +1059,20 @@ var
                     hasHeader: !!this.getHeader(),
                     resultsPosition: this.getResultsPosition(),
                     multyHeaderOffset: this.getMultyHeaderOffset(),
+                    hasBottomPadding: this._options._needBottomPadding
                 },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
+
+            if (this.getEditingItemData()) {
+                cfg.editingRowIndex = this.getEditingItemData().index;
+            }
 
             return {
                 getIndexByItem: (item) => getIndexByItem({item, ...cfg}),
                 getIndexById: (id) => getIndexById({id, ...cfg}),
                 getIndexByDisplayIndex: (index) => getIndexByDisplayIndex({index, ...cfg}),
                 getResultsIndex: () => getResultsIndex({...cfg, hasEmptyTemplate}),
+                getBottomPaddingRowIndex: () => getBottomPaddingRowIndex(cfg),
                 getFooterIndex: () => getFooterIndex({...cfg, hasEmptyTemplate}),
                 getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multyHeaderOffset)
             };
@@ -1231,6 +1253,7 @@ var
 
         setItems: function(items) {
             this._model.setItems(items);
+            this._updateLastItemKey();
         },
 
         setItemTemplateProperty: function(itemTemplateProperty) {
@@ -1282,10 +1305,9 @@ var
 
         _calcItemVersion: function(item, key) {
             var
-                version = this._model._calcItemVersion(item, key),
-                lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+                version = this._model._calcItemVersion(item, key);
 
-            if (lastItemKey === key) {
+            if (this._lastItemKey === key) {
                 version = 'LAST_ITEM_' + version;
             }
 
@@ -1418,6 +1440,27 @@ var
         // Only for browsers with partial grid support. Explicit grid styles for empty template with grid row and grid column
         getEmptyTemplateStyles: function() {
             return _private.getEmptyTemplateStyles(this);
+        },
+
+        getContainerWidth: function() {
+            return this._containerWidth || 0;
+        },
+        setContainerWidth: function(containerWidth) {
+            this._containerWidth = containerWidth;
+        },
+
+        getBottomPaddingStyles(): string {
+            let styles = '';
+
+            if (GridLayoutUtil.isPartialGridSupport()) {
+                let
+                    columnStart = this.getMultiSelectVisibility() === 'hidden' ? 0 : 1,
+                    rowIndex = this._getRowIndexHelper().getBottomPaddingRowIndex();
+
+                styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, 1, this._columns.length);
+            }
+
+            return styles;
         },
 
         setHandlersForPartialSupport: function(handlersList: Record<string, Function>): void {

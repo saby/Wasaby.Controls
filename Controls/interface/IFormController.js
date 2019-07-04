@@ -55,25 +55,25 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * Updates a record in the data source.  More {@link Types/source/ICrud#update}
+    * Updates a record in the data source.  More {@link Types/source:ICrud#update}
     * @function Controls/interface/IFormController#update
     */
 
    /**
-    * Creates an empty record through a data source. More {@link Types/source/ICrud#create}
+    * Creates an empty record through a data source. More {@link Types/source:ICrud#create}
     * @function Controls/interface/IFormController#create
     * @param {Object} createMetaData
     */
 
    /**
-    * Reads an entry from a data source.  More {@link Types/source/ICrud#read}
+    * Reads an entry from a data source.  More {@link Types/source:ICrud#read}
     * @function Controls/interface/IFormController#read
     * @param {String} key
     * @param {Object} readMetaData
     */
 
    /**
-    * Removes an record from the data source. More {@link Types/source/ICrud#delete}
+    * Removes an record from the data source. More {@link Types/source:ICrud#delete}
     * @function Controls/interface/IFormController#delete
     * @param {Object} destroyMetaData
     */
@@ -127,5 +127,11 @@ define('Controls/interface/IFormController', [
     * @event Controls/interface/IFormController#deleteFailed Happens when record delete failed
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Error} Error
+    */
+
+   /**
+    * @event Controls/interface/IFormController#isNewRecordChanged Happens when the record is initialized in the data source
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Boolean} isNewRecord
     */
 });

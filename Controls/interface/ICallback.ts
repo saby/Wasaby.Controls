@@ -4,7 +4,7 @@
  * @interface Controls/interface/ICallback
  *
  * @public
- * @author Krasilnikov A.S.
+ * @author Красильников А.С.
  */
 
 /**

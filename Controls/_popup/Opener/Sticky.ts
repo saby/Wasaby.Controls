@@ -1,108 +1,231 @@
-import Base = require('Controls/_popup/Opener/BaseOpener');
+import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import coreMerge = require('Core/core-merge');
-      /**
-       * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
-       * @class Controls/_popup/Opener/Sticky
-       * @extends Controls/_popup/Opener/BaseOpener
-       * @mixes Controls/interface/IOpener
-       * @control
-       * @author Красильников А.С.
-       * @category Popup
-       * @demo Controls-demo/Popup/Opener/StickyPG
-       * @public
-       */
-      var Sticky = Base.extend({
+import {IoC} from 'Env/Env';
 
-         /**
-          * @typedef {Object} PopupOptions
-          * @description Sticky popup options.
-          * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
-          * @property {Boolean} modal Determines whether the window is modal.
-          * @property {String} className Class names of popup.
-          * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
-          * @property {function|String} template Template inside popup.
-          * @property {function|String} templateOptions Template options inside popup.
-          * @property {Object} targetPoint Sets the popup build point relative target.
-          * @property {Object} direction Sets the alignment of the popup.
-          * @property {Object} offset Sets the offset between target and popup.
-          * @property {Number} target The maximum width of the panel in a maximized state.
-          * @property {Number} minWidth The target relative to which the popup is positioned.
-          * @property {Number} maxWidth The minimum width of popup.
-          * @property {Number} minHeight The maximum height of popup.
-          * @property {Number} maxHeight The maximum height of popup.
-          * @property {Number} height The height of popup.
-          * @property {Number} width The width of popup.
-          * @property {String} fittingMode A method of adjusting the popup panel to the free space next to the target.
-          */
+const _private = {
+    getStickyConfig(config) {
+        config = config || {};
+        config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
+        config._type = 'sticky'; // TODO: Compatible for compoundArea
+        return config;
+    }
+};
 
-         /**
-          * Open sticky popup.
-          * If you call this method while the window is already opened, it will cause the redrawing of the window.
-          * @function Controls/_popup/Opener/Sticky#open
-          * @param {PopupOptions[]} popupOptions Sticky popup options.
-          * @returns {Undefined}
-          * @remark {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
-          * @example
-          * wml
-          * <pre>
-          *    <Controls.popup:Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
-          *          <ws:verticalAlign side="bottom"/>
-          *          <ws:horizontalAlign side="left"/>
-          *          <ws:corner vertical="bottom" horizontal="left"/>
-          *   </Controls.popup:Sticky>
-          *
-          *   <div name="target">{{_text}}</div>
-          *
-          *   <Controls.Button name="openStickyButton" caption="open sticky" on:click="_open()"/>
-          *   <Controls.Button name="closeStickyButton" caption="close sticky" on:click="_close()"/>
-          * </pre>
-          * js
-          * <pre>
-          *    Control.extend({
-          *       ...
-          *
-          *       _open() {
-          *          var popupOptions = {
-          *              target: this._children.target,
-          *              opener: this._children.openStickyButton,
-          *              templateOptions: {
-          *                  record: this._record
-          *              }
-          *          }
-          *          this._children.sticky.open(popupOptions);
-          *      }
-          *
-          *      _close() {
-          *          this._children.sticky.close()
-          *      }
-          *      ...
-          *    });
-          * </pre>
-          * @see close
-          */
-         open: function(config) {
-            config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
-            this._setCompatibleConfig(config);
-            Base.prototype.open.call(this, config, 'Controls/popupTemplate:StickyController');
-         },
+const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
+/*
+ * Component that opens a popup that is positioned relative to a specified element.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
+ * @class Controls/_popup/Opener/Sticky
+ * @extends Controls/_popup/Opener/BaseOpener
+ * @mixes Controls/interface/IOpener
+ * @control
+ * @author Красильников А.С.
+ * @category Popup
+ * @demo Controls-demo/Popup/Opener/StickyPG
+ * @public
+ */
 
-         _setCompatibleConfig: function(config) {
-            config._type = 'sticky'; // for compoundArea
-         }
-      });
+/**
+ * Контрол, открывающий всплывающее окно, которое позиционнируется относительно вызывающего элемента.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ Подробнее}.
+ * @class Controls/_popup/Opener/Sticky
+ * @extends Controls/_popup/Opener/BaseOpener
+ * @mixes Controls/interface/IOpener
+ * @control
+ * @author Красильников А.С.
+ * @category Popup
+ * @demo Controls-demo/Popup/Opener/StickyPG
+ * @public
+ */
 
-      Sticky.getDefaultOptions = function() {
-         return coreMerge(Base.getDefaultOptions(), {});
-      };
-      export = Sticky;
+const Sticky = BaseOpener.extend({
 
+    /**
+     * @typedef {Object} PopupOptions
+     * @description Конфигурация прилипающего блока.
+     * @property {Boolean} autofocus Определяет, установится ли фокус на шаблон попапа после его открытия.
+     * @property {Boolean} modal Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
+     * @property {String} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
+     * @property {Boolean} closeOnOutsideClick Определяет возможность закрытия всплывающего окна по клику вне.
+     * @property {function|String} template Шаблон всплывающего окна
+     * @property {function|String} templateOptions  Опции для котнрола, переданного в {@link template}
+     * @property {Object} targetPoint Точка позиционнирования всплывающего окна относительно вызывающего элемента.
+     * @property {Object} direction  Устанавливает выравнивание всплывающего окна относительно точки позиционнирования.
+     * @property {Object} offset Устанавливает отступы от точки позиционнирования до всплывающего окна
+     * @property {Number} minWidth  Минимальная ширина всплывающего окна
+     * @property {Number} maxWidth Максимальная ширина всплывающего окна
+     * @property {Number} minHeight Минимальная высота всплывающего окна
+     * @property {Number} maxHeight Максимальная высота всплывающего окна
+     * @property {Number} height Текущая высота всплывающего окна
+     * @property {Number} width Текущая ширина всплывающего окна
+     * @property {String} fittingMode Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
+     */
 
+    /*
+     * Open sticky popup.
+     * If you call this method while the window is already opened, it will cause the redrawing of the window.
+     * @function Controls/_popup/Opener/Sticky#open
+     * @param {PopupOptions[]} popupOptions Sticky popup options.
+     * @remark {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
+     * @example
+     * wml
+     * <pre>
+     */
+
+    /**
+     * Метод открытия диалогового окна.
+     * Повторный вызов этого метода инициирует перерисовку окна с новыми опциями.
+     * @function Controls/_popup/Opener/Sticky#open
+     * @param {PopupOptions[]} popupOptions Конфигурация прилипающего блока {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
+     * @remark Если требуется открыть окно, без создания popup:Sticky в верстке, следует использовать статический метод {@link openPopup}
+     * @example
+     * wml
+     * <pre>
+     *    <Controls.popup:Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
+     *          <ws:verticalAlign side="bottom"/>
+     *          <ws:horizontalAlign side="left"/>
+     *          <ws:corner vertical="bottom" horizontal="left"/>
+     *   </Controls.popup:Sticky>
+     *
+     *   <div name="target">{{_text}}</div>
+     *
+     *   <Controls.Button name="openStickyButton" caption="open sticky" on:click="_open()"/>
+     *   <Controls.Button name="closeStickyButton" caption="close sticky" on:click="_close()"/>
+     * </pre>
+     * js
+     * <pre>
+     *    Control.extend({
+     *       ...
+     *
+     *       _open() {
+     *          var popupOptions = {
+     *              target: this._children.target,
+     *              opener: this._children.openStickyButton,
+     *              templateOptions: {
+     *                  record: this._record
+     *              }
+     *          }
+     *          this._children.sticky.open(popupOptions);
+     *      }
+     *
+     *      _close() {
+     *          this._children.sticky.close()
+     *      }
+     *      ...
+     *    });
+     * </pre>
+     * @see close
+     * @see openPopup
+     * @see closePopup
+
+     */
+    open(config) {
+        BaseOpener.prototype.open.call(this, _private.getStickyConfig(config), POPUP_CONTROLLER);
+    }
+});
+
+/**
+ * Статический метод для открытия всплывающего окна. При использовании метода не требуется создавать popup:Sticky в верстке.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ Подробнее}.
+ * @function Controls/_popup/Opener/Sticky#openPopup
+ * @param {PopupOptions[]} config Конфигурация прилипающего блока.
+ * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
+ * @static
+ * @example
+ * js
+ * <pre>
+ *    import {Sticky} from 'Controls/popup';
+ *    ...
+ *    openSticky() {
+ *        Sticky.openPopup({
+ *          template: 'Example/MyStickyTemplate',
+ *          opener: this._children.myButton
+ *        }).then((popupId) => {
+ *          this._popupId = popupId;
+ *        });
+ *    },
+ *
+ *    closeSticky() {
+ *       Sticky.closePopup(this._popupId);
+ *    }
+ * </pre>
+
+ * @see closePopup
+ * @see close
+ * @see open
+
+ */
+
+/*
+ * Open Sticky popup.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
+ * @function Controls/_popup/Opener/Sticky#openPopup
+ * @param {PopupOptions[]} config Sticky popup options.
+ * @return {Promise<string>} Returns id of popup. This id used for closing popup.
+ * @static
+ * @see closePopup
+ */
+Sticky.openPopup = (config: object): Promise<string> => {
+    return new Promise((resolve) => {
+        const newCfg = _private.getStickyConfig(config);
+        if (!newCfg.hasOwnProperty('opener')) {
+            IoC.resolve('ILogger').error(Sticky.prototype._moduleName, 'Для открытия окна через статический метод, обязательно нужно указать опцию opener');
+        }
+        BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
+            BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
+                resolve(popupId);
+            });
+        });
+    });
+};
+/**
+ * Статический метод для закрытия окна по идентификатору.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ Подробнее}.
+ * @function Controls/_popup/Opener/Sticky#closePopup
+ * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
+ * @static
+ * @example
+ * js
+ * <pre>
+ *    import {Sticky} from 'Controls/popup';
+ *    ...
+ *    openSticky() {
+ *        Sticky.openPopup({
+ *          template: 'Example/MyStickyTemplate',
+ *          autoClose: true
+ *        }).then((popupId) => {
+ *          this._popupId = popupId;
+ *        });
+ *    },
+ *
+ *    closeSticky() {
+ *       Sticky.closePopup(this._popupId);
+ *    }
+ * </pre>
+ * @see openPopup
+ */
+
+/*
+ * Close Sticky popup.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
+ * @function Controls/_popup/Opener/Sticky#closePopup
+ * @param {String} popupId Id of popup.
+ * @static
+ * @see openPopup
+ */
+Sticky.closePopup = (popupId: string): void => {
+    BaseOpener.closeDialog(popupId);
+};
+
+Sticky.getDefaultOptions = function() {
+    return coreMerge(BaseOpener.getDefaultOptions(), {});
+};
+export = Sticky;
 
 /**
  * @name Controls/_popup/Opener/Sticky#close
- * @description Close sticky popup.
+ * @description Метод вызова закрытия всплывающего окна
  * @function
- * @returns {Undefined}
  * @example
  * wml
  * <pre>
@@ -144,33 +267,42 @@ import coreMerge = require('Core/core-merge');
 
 /**
  * @name Controls/_popup/Opener/Sticky#minWidth
- * @cfg {Number} The minimum width of popup.
+ * @cfg {Number} Минимальная ширина всплывающего окна
  */
 
 /**
  * @name Controls/_popup/Opener/Sticky#maxWidth
- * @cfg {Number} The maximum width of popup.
+ * @cfg {Number} Максимальная ширина всплывающего окна
  */
 
 /**
  * @name Controls/_popup/Opener/Sticky#minHeight
- * @cfg {Number} The minimum height of popup.
+ * @cfg {Number} Минимальная высота всплывающего окна
  */
 
 /**
  * @name Controls/_popup/Opener/Sticky#maxHeight
- * @cfg {Number} The maximum height of popup.
+ * @cfg {Number} Максимальная высота всплывающего окна
  */
 /**
  * @name Controls/_popup/Opener/Sticky#height
- * @cfg {Number} The height of popup.
+ * @cfg {Number} Текущая высота всплывающего окна
  */
 /**
  * @name Controls/_popup/Opener/Sticky#width
- * @cfg {Number} The width of popup.
+ * @cfg {Number} Текущая ширина всплывающего окна
  */
 
 /**
+ * @name Controls/_popup/Opener/Sticky#actionOnScroll
+ * @cfg {String} Определяет реакцию всплывающего окна на скролл родительской области
+ * @variant close Всплывающее окно закрывается
+ * @variant track  Всплывающее окно движется вместе со своей точкой позиционнирования.
+ * @variant none Всплывающее окно остается на месте расположения, вне зависимости от движения точки позиционнирования.
+ * @default none
+ */
+
+/*
  * @name Controls/_popup/Opener/Sticky#actionOnScroll
  * @cfg {String} Determines the popup action on scroll.
  * @variant close
@@ -178,12 +310,13 @@ import coreMerge = require('Core/core-merge');
  * @variant none
  * @default none
  */
-/**
- * @name Controls/_popup/Opener/Sticky#offset
- * @cfg {offset} Point positioning of the target relative to sticky.
- */
 
 /**
+ * @name Controls/_popup/Opener/Sticky#targetPoint
+ * @cfg {direction} Точка позиционнирования всплывающего окна относительно вызывающего элемента.
+ */
+
+/*
  * @name Controls/_popup/Opener/Sticky#targetPoint
  * @cfg {direction} Point positioning of the target relative to sticky.
  */
@@ -206,17 +339,25 @@ import coreMerge = require('Core/core-merge');
  * @variant right
  */
 
-
 /**
+ * @name Controls/_popup/Opener/Sticky#direction
+ * @cfg {direction} Устанавливает выравнивание всплывающего окна относительно точки позиционнирования.
+ */
+
+/*
  * @name Controls/_popup/Opener/Sticky#direction
  * @cfg {direction} Sets the alignment of the popup.
  */
 
 /**
  * @name Controls/_popup/Opener/Sticky#offset
+ * @cfg {offset} Устанавливает отступы от точки позиционнирования до всплывающего окна
+ */
+
+/*
+ * @name Controls/_popup/Opener/Sticky#offset
  * @cfg {offset} Sets the offset of the targetPoint.
- *
- * /
+ */
 
  /**
  * @typedef {Object} offset
@@ -226,9 +367,9 @@ import coreMerge = require('Core/core-merge');
 
 /**
  * @name Controls/_popup/Opener/Sticky#fittingMode
- * @cfg {Enum} A method of adjusting the popup panel to the free space next to the target.
- * @variant fixed
- * @variant overflow
- * @variant adaptive
+ * @cfg {Enum} Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
+ * @variant fixed Позиционнирование не меняется. Уменьшаются размеры окна.
+ * @variant overflow Окно сдвигается относительно таргета, если и в этом случае места не хватает, то контент ужимается.
+ * @variant adaptive Выбирается способ позиционнирования, при котором на экране сможет уместиться наибольшая часть контента.
  * @default adaptive
  */

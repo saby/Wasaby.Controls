@@ -37,7 +37,7 @@ function proxyModelEvents(component, model, eventNames) {
  * @control
  * @public
  * @demo Controls-demo/Input/DateTime/DateTimePG
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @category Input
  */
 
@@ -91,7 +91,7 @@ var Component = Control.extend([], {
          localDate.setDate(this._model.value.getDate() + delta);
          this._model.value = localDate;
       }
-   }
+   },
 
    _beforeUnmount: function() {
       this._model.destroy();

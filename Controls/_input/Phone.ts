@@ -17,7 +17,7 @@ import ViewModel = require('Controls/_input/Phone/ViewModel');
        * @public
        * @demo Controls-demo/Input/Phone/PhonePG
        *
-       * @author Миронов А.Ю.
+       * @author Красильников А.С.
        */
 
       var _private = {

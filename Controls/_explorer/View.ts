@@ -128,6 +128,38 @@ import 'Controls/breadcrumbs';
       };
 
    /**
+    * Иерархический список, узел которого можно развернуть и перейти в него.
+    * <a href="/materials/demo-ws4-explorer">Demo example</a>.
+    * <a href="/materials/demo-ws4-explorer-with-search">Demo example with search</a>.
+    * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>здесь</a>.
+    *
+    * @class Controls/_explorer/View
+    * @extends Core/Control
+    * @mixes Controls/_interface/ISource
+    * @mixes Controls/interface/ITreeGridItemTemplate
+    * @mixes Controls/interface/IItemTemplate
+    * @mixes Controls/interface/IPromisedSelectable
+    * @mixes Controls/interface/IEditableList
+    * @mixes Controls/interface/IGrouped
+    * @mixes Controls/interface/INavigation
+    * @mixes Controls/interface/IFilter
+    * @mixes Controls/interface/IHighlighter
+    * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_interface/IHierarchy
+    * @mixes Controls/_treeGrid/interface/ITreeControl
+    * @mixes Controls/_explorer/interface/IExplorer
+    * @mixes Controls/_tile/interface/IDraggable
+    * @mixes Controls/_tile/interface/ITile
+    * @mixes Controls/_list/interface/IVirtualScroll
+    * @mixes Controls/interface/IGroupedGrid
+    * @mixes Controls/_grid/interface/IGridControl
+    * @control
+    * @public
+    * @category List
+    * @author Авраменко А.С.
+    */
+
+   /*
     * Hierarchical list that can expand and go inside the folders. Can load data from data source.
     * <a href="/materials/demo-ws4-explorer">Demo example</a>.
     * <a href="/materials/demo-ws4-explorer-with-search">Demo example with search</a>.
@@ -160,6 +192,19 @@ import 'Controls/breadcrumbs';
     */
 
    /**
+    * @name Controls/_exploer/View#displayProperty
+    * @cfg {string} Имя свойства элемента, содержимое которого будет отображаться.
+    * @example
+    * <pre class="brush:html">
+    * <Controls.explorers:View
+    *   ...
+    *   displayProperty="title">
+    *       ...
+    * </Controls.explorer:View>
+    * </pre>
+    */
+
+   /*
     * @name Controls/_exploer/View#displayProperty
     * @cfg {string} sets the property to be displayed in search results
     * @example
@@ -241,8 +286,8 @@ import 'Controls/breadcrumbs';
             if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
                _private.setRoot(this, item.getId());
             }
-            event.stopPropagation();
          }
+         event.stopPropagation();
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());

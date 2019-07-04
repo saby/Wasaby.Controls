@@ -10,6 +10,41 @@ import viewName = require('Controls/_list/ListView');
 import viewTemplate = require('Controls/_list/ListControl');
 
 /**
+ * Простой список с пользовательским шаблоном элемента. Может загружать данные из источника данных.
+ * Подробное описание и инструкцию по настройке контрола вы можете прочитать <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>здесь</a>.
+ *
+ * @class Controls/_list/List
+ * @extends Core/Control
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IItemTemplate
+ * @mixes Controls/interface/IPromisedSelectable
+ * @mixes Controls/interface/IGrouped
+ * @mixes Controls/interface/INavigation
+ * @mixes Controls/interface/IFilter
+ * @mixes Controls/interface/IHighlighter
+ * @mixes Controls/_list/interface/IList
+ * @mixes Controls/interface/IEditableList
+ * @mixes Controls/_tile/interface/IDraggable
+ * @mixes Controls/interface/IGroupedList
+ *
+ * @mixes Controls/_list/interface/IVirtualScroll
+ * @mixes Controls/_list/BaseControlStyles
+ * @mixes Controls/_list/ListStyles
+ * @mixes Controls/_list/ItemActions/ItemActionsStyles
+ * @mixes Controls/_list/Swipe/SwipeStyles
+ *
+ * @mixes Controls/_MoveDialog/Styles
+ * @mixes Controls/_paging/PagingStyles
+ * @mixes Controls/_paging/DigitButtonsStyles
+ *
+ * @control
+ * @author Авраменко А.С.
+ * @public
+ * @category List
+ * @demo Controls-demo/List/List/BasePG
+ */
+
+/*
  * Plain list with custom item template. Can load data from data source.
  * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>here</a>.
  *
@@ -33,7 +68,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  * @mixes Controls/_list/ItemActions/ItemActionsStyles
  * @mixes Controls/_list/Swipe/SwipeStyles
  *
- * @mixes Controls/_list/Mover/MoveDialog/Styles
+ * @mixes Controls/_MoveDialog/Styles
  * @mixes Controls/_paging/PagingStyles
  * @mixes Controls/_paging/DigitButtonsStyles
  *

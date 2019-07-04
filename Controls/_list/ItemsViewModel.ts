@@ -363,6 +363,9 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     appendItems: function(items) {
+        if (cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
+            this._items.setMetaData(items.getMetaData());
+        }
         this._items.append(items);
     },
 

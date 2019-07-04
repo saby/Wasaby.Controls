@@ -6,7 +6,7 @@
  * @includes ListStyles Controls/_dropdownPopup/DropdownListStyles
  * @includes itemTemplate tmpl!Controls/_dropdownPopup/itemTemplate
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Template = require('wml!Controls/_dropdownPopup/defaultHeadTemplate');

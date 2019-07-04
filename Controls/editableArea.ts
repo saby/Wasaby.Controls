@@ -5,7 +5,7 @@
  * @includes Base Controls/_editableArea/Templates/Editors/Base
  * @includes DateTime Controls/_editableArea/Templates/Editors/DateTime
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 export {default as View} from './_editableArea/View';

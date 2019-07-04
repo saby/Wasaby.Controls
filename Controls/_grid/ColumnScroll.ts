@@ -15,18 +15,29 @@ const
          return fixedCellContainer.offsetLeft + fixedCellContainer.offsetWidth;
       },
       updateSizes(self) {
+         _private.drawTransform(self, 0);
          const
             newContentSize = self._children.content.scrollWidth,
             newContentContainerSize = self._children.content.offsetWidth;
          if (self._contentSize !== newContentSize || self._contentContainerSize !== newContentContainerSize) {
             self._contentSize = self._children.content.scrollWidth;
             self._contentContainerSize = self._children.content.offsetWidth;
+
+            // reset scroll position after resize, if we don't need scroll
+            if (self._contentSize <= self._contentContainerSize) {
+               self._scrollPosition = 0;
+               _private.drawTransform(self, self._scrollPosition);
+            }
             self._shadowState =
                _private.calculateShadowState(self._scrollPosition, self._contentContainerSize, self._contentSize);
             self._fixedColumnsWidth =
                _private.calculateFixedColumnWidth(self._children.content, self._options.multiSelectVisibility);
             self._forceUpdate();
          }
+         if (newContentContainerSize + self._scrollPosition > newContentSize) {
+            self._scrollPosition -= (newContentContainerSize + self._scrollPosition) - newContentSize;
+         }
+         _private.drawTransform(self, self._scrollPosition);
       },
       calculateShadowState(scrollPosition, containerSize, contentSize) {
          let
@@ -58,7 +69,18 @@ const
          if (position === 'start' && _private.isShadowVisible(self._shadowState, position)) {
             shadowStyles = 'left: ' + self._fixedColumnsWidth + 'px;';
          }
+         let emptyTemplate = self._container.getElementsByClassName('controls-BaseControl__emptyTemplate')[0];
+         if (emptyTemplate) {
+            shadowStyles += 'height: ' + emptyTemplate.offsetTop + 'px;';
+         }
          return shadowStyles;
+      },
+      drawTransform (self, position) {
+         // This is the fastest synchronization method scroll position and cell transform.
+         // Scroll position synchronization via VDOM is much slower.
+         self._children.contentStyle.innerHTML =
+            '.' + self._transformSelector +
+            ' .controls-Grid__cell_transform { transform: translateX(-' + position + 'px); }';
       }
    },
    ColumnScroll = Control.extend({
@@ -103,12 +125,12 @@ const
             this._scrollPosition = newScrollPosition;
             this._shadowState =
                _private.calculateShadowState(this._scrollPosition, this._contentContainerSize, this._contentSize);
-            // This is the fastest synchronization method scroll position and cell transform.
-            // Scroll position synchronization via VDOM is much slower.
-            this._children.contentStyle.innerHTML =
-               '.' + this._transformSelector +
-               ' .controls-Grid__cell_transform { transform: translateX(-' + this._scrollPosition + 'px); }';
+
+            _private.drawTransform(this, this._scrollPosition);
          }
+      },
+      getContentContainerSize() {
+         return this._contentContainerSize;
       }
    });
 export = ColumnScroll;

@@ -64,15 +64,26 @@ import 'Controls/context';
          },
 
          minimizeItem: function(item) {
+            const textValue = getPropValue(item, 'textValue');
+            // Two case of saving filter in history
+            // 1 case - need to hide textValue in line near button, but save value in history
+            // 2 case - need to hide textValue in line near button and not save value in history
+            // if textValue is empty string (''), save filter in history
+            // if textValue is null, do not save
+            const isNeedSaveHistory = textValue !== undefined && textValue !== null;
+            const value = isNeedSaveHistory ? getPropValue(item, 'value') : getPropValue(item, 'resetValue');
+            const visibility = !isNeedSaveHistory && getPropValue(item, 'visibility') ? false : getPropValue(item, 'visibility');
             let minItem = {
-                value: getPropValue(item, 'value'),
-                visibility: getPropValue(item, 'visibility')
+               value: value,
+               visibility: visibility
             };
-            if (getPropValue(item, 'visibility') !== false && (getPropValue(item, 'textValue') !== getPropValue(item, 'resetTextValue'))) {
+
+            if (visibility !== false && textValue !== getPropValue(item, 'resetTextValue')) {
                minItem.textValue = getPropValue(item, 'textValue');
             } else {
                minItem.textValue = undefined;
             }
+
             if (getPropValue(item, 'id')) {
                minItem.id = getPropValue(item, 'id');
             } else {
@@ -364,6 +375,20 @@ import 'Controls/context';
       }
 
       /**
+       * Контрол-контроллер, который позволяет фильтровать данные в {@link Controls/list:View}, используя {@link Filter/Button} или {@link Filter/Fast}.
+       * Контроллер позволяет сохранять историю фильтра и восстанавливать страницу после перезагрузки с последним примененным фильтром.
+       *
+       * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
+       *
+       * @class Controls/_filter/Controller
+       * @extends Core/Control
+       * @mixes Controls/interface/IFilter
+       * @control
+       * @public
+       * @author Герасимов А.М.
+       */
+
+      /*
        * The filter controller allows you to filter data in a {@link Controls/list:View} using {@link Filter/Button} or {@link Filter/Fast}.
        * The filter controller allows you to save filter history and restore page after reload with last applied filter.
        *
@@ -378,6 +403,41 @@ import 'Controls/context';
        */
 
       /**
+       * @name Controls/_filter/Controller#filterButtonSource
+       * @cfg {Array|Function|Types/collection:IList} Элемент или функция FilterButton, которая возвращает элемент FilterButton.
+       * @remark Если опция historyId передана, в функцию придет история фильтра.
+       * @example
+       * TMPL:
+       * <pre>
+       *    <Controls._filter.Controller
+       *       historyId="myHistoryId"
+       *       filterButtonSource="{{_filterButtonData}}">
+       *          ...
+       *          <Controls._filter.Button.Container>
+       *             <Controls._filter.Button />
+       *          </Controls._filter.Button.Container>
+       *          ...
+       *    </Controls._filter.Controller>
+       * </pre>
+       * JS:
+       * <pre>
+       *    this._filterButtonData = function(fromHistoryItems) {
+       *       var filterButtonItems = [{
+       *           id: '1',
+       *           resetValue: 'Yaroslavl'
+       *       }];
+       *
+       *       if (fromHistoryItems) {
+       *           filterButtonItems[0].value = fromHistoryItems[0].value + 'city'
+       *       }
+       *
+       *       return filterButtonItems;
+       *    }
+       * </pre>
+       * @see Controls/_filter/Button#items
+       */
+
+      /*
        * @name Controls/_filter/Controller#filterButtonSource
        * @cfg {Array|Function|Types/collection:IList} FilterButton items or function, that return FilterButton items
        * @remark if the historyId option is setted, function will receive filter history
@@ -413,6 +473,52 @@ import 'Controls/context';
        */
 
       /**
+       * @name Controls/_filter/Controller#fastFilterSource
+       * @cfg {Array|Function|Types/collection:IList} Элемент или функция FastFilter, которая возвращает элемент FastFilter.  
+       * @remark Если опция historyId передана, в функцию придет история фильтра.
+       * @example
+       * TMPL:
+       * <pre>
+       *    <Controls._filter.Controller
+       *       historyId="myHistoryId"
+       *       fastFilterSource="{{_fastFilterSource}}">
+       *       <Controls.list:DataContainer>
+       *          ...
+       *          <Controls._filter.Fast.Container>
+       *             <Controls._filter.Fast />
+       *          </Controls._filter.Fast.Container>
+       *          ...
+       *       </Controls.list:DataContainer>
+       *    </Controls._filter.Controller>
+       * </pre>
+       * JS:
+       * <pre>
+       *    this._fastFilterSource = function(fromHistoryItems) {
+       *        var fastFilterItems = [{
+       *            id: '1',
+       *            resetValue: 'Yaroslavl',
+       *            properties: {
+       *               keyProperty: 'title',
+       *               displayProperty: 'title',
+       *               source: new MemorySource({
+       *                  idProperty: 'title',
+       *                  data: [
+       *                      { key: '1', title: 'Yaroslavl' },
+       *                      { key: '2', title: 'Moscow' },
+       *                      { key: '3', title: 'St-Petersburg' }
+       *                  ]
+       *               })
+       *            }
+       *        }];
+       *        if (fromHistoryItems) {
+       *          fastFilterItems[0].value = fromHistoryItems[0].value + 'city'
+       *        }
+       *    }
+       * </pre>
+       * @see Controls/_filter/Fast#items
+       */
+
+      /*
        * @name Controls/_filter/Controller#fastFilterSource
        * @cfg {Array|Function|Types/collection:IList} FastFilter items or function, that return FastFilter items
        * @remark if the historyId option is setted, function will recive filter history
@@ -460,10 +566,21 @@ import 'Controls/context';
 
       /**
        * @name Controls/_filter/Controller#historyId
+       * @cfg {String} Идентификатор, под которым будет сохранена история фильтра.
+       */
+
+      /*
+       * @name Controls/_filter/Controller#historyId
        * @cfg {String} The identifier under which the filter history will be saved.
        */
 
       /**
+       * Controls/_filter/Controller#historyItems
+       * @cfg {Array|Types/collection:IList} Вы можете получить элементы фильтра из истории самостоятельно,
+       * эти элементы будут применены/объединены для filterButtonItems и fastFilterItem. История фильтра не будет загружаться, если этот параметр установлен.
+       */
+
+      /*
        * Controls/_filter/Controller#historyItems
        * @cfg {Array|Types/collection:IList} You can prepare filter items from history by your self,
        * this items will applied/merged to filterButtonItems and fastFilterItem. Filter history will not loading, if this option setted.

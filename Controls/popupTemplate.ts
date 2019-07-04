@@ -13,7 +13,7 @@
  * @includes ConfirmationStyles Controls/_popupTemplate/Confirmation/ConfirmationStyles
  * @includes CloseButtonStyles Controls/_popupTemplate/CloseButton/CloseButtonStyles
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import CloseButton = require('Controls/_popupTemplate/CloseButton');

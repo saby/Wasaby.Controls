@@ -33,6 +33,14 @@
       content: "\200b";
    }
 }
+// баг ие10, дочерний элемент контейнера с флексом неправильно рассчитывает свои размеры
+// вследствии чего обрезание текста происходит неверно
+.ws-is-ie10 {
+   .controls-BaseButton__text {
+      display: inline-block;
+      -ms-flex-negative: 1;
+   }
+}
 .controls-Button__wrapper_viewMode-button, .controls-Button__wrapper_viewMode-toolButton {
    justify-content: center;
 }

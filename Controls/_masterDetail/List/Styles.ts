@@ -1,5 +1,5 @@
 /**
- * @author Родионов Е.А.
+ * @author Авраменко А.С.
  * @mixin Controls/_masterDetail/List/Styles
  * @public
  *

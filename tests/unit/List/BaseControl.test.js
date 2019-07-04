@@ -186,7 +186,7 @@ define([
             ctrl._beforeMount(cfg,null, [{id:1, title: 'qwe'}]);
             setTimeout(function () {
                assert.equal(ctrl.getViewModel().getStartIndex(), 0);
-               // assert.equal(ctrl.getViewModel().getStopIndex(), 1);
+               assert.equal(ctrl.getViewModel().getStopIndex(), 6);
                resolve();
             }, 10);
          });
@@ -654,61 +654,6 @@ define([
          });
       });
 
-      it('virtualScrollCalculation on list change', function() {
-         var callBackCount = 0;
-         var cfg = {
-                viewName: 'Controls/List/ListView',
-                viewConfig: {
-                   idProperty: 'id'
-                },
-                virtualScrolling: true,
-                viewModelConfig: {
-                   items: [],
-                   idProperty: 'id'
-                },
-                viewModelConstructor: lists.ListViewModel,
-                markedKey: 0,
-                source: source,
-                navigation: {
-                   view: 'infinity'
-                }
-             },
-             instance = new lists.BaseControl(cfg),
-             itemData = {
-                key: 1
-             };
-
-         instance.saveOptions(cfg);
-         instance._beforeMount(cfg);
-
-         var vm = instance.getViewModel();
-         vm.getCount = function() {
-            return 2;
-         };
-         assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
-
-         vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_ADD, [1,2], 0, [], null);
-         assert.equal(2, instance.getVirtualScroll()._itemsHeights.length);
-         assert.equal(0, vm.getStartIndex());
-         assert.equal(2, vm.getStopIndex());
-
-         vm.getCount = function() {
-            return 1;
-         };
-         vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_REMOVE, [], null, [1], 1);
-         assert.equal(1, instance.getVirtualScroll()._itemsHeights.length);
-         assert.equal(0, vm.getStartIndex());
-         assert.equal(1, vm.getStopIndex());
-
-         vm.getCount = function() {
-            return 5;
-         };
-         vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_RESET, [1,2,3,4,5], 0, [1], 0);
-         assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
-         assert.equal(0, vm.getStartIndex());
-         assert.equal(5, vm.getStopIndex());
-      });
-
       it('virtual scroll shouldn\'t update indexes on reload', async function() {
          let
              cfg = {
@@ -784,7 +729,8 @@ define([
             stopImmediatePropagation: function() {},
             nativeEvent: {
                keyCode: Env.constants.key.down
-            }
+            },
+            preventDefault: function() {},
          });
          assert.equal(3, baseControl._listViewModel.getMarkedKey());
          baseControl._onViewKeyDown({
@@ -796,7 +742,8 @@ define([
             stopImmediatePropagation: function() {},
             nativeEvent: {
                keyCode: Env.constants.key.up
-            }
+            },
+            preventDefault: function() {},
          });
          assert.equal(2, baseControl._listViewModel.getMarkedKey());
          lists.BaseControl._private.scrollToItem = originalScrollToItem;
@@ -833,7 +780,8 @@ define([
             stopImmediatePropagation: function() {},
             nativeEvent: {
                keyCode: Env.constants.key.down
-            }
+            },
+            preventDefault: function() {},
          });
          assert.equal(null, baseControl._listViewModel.getMarkedKey());
          baseControl._onViewKeyDown({
@@ -845,7 +793,8 @@ define([
             stopImmediatePropagation: function() {},
             nativeEvent: {
                keyCode: Env.constants.key.up
-            }
+            },
+            preventDefault: function() {},
          });
          assert.equal(null, baseControl._listViewModel.getMarkedKey());
       });
@@ -1519,24 +1468,24 @@ define([
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
 
-         assert.equal(lnBaseControl._keyDisplayedItem, null);
+         assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
 
          return new Promise(function (resolve) {
             setTimeout(function () {
                lists.BaseControl._private.reload(lnBaseControl, lnCfg);
                setTimeout(function () {
-                  assert.equal(lnBaseControl._keyDisplayedItem, null);
+                  assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
                   lnCfg = clone(lnCfg);
                   lnCfg.source = lnSource2;
                   lnBaseControl._isScrollShown = true;
                   lnBaseControl._beforeUpdate(lnCfg).addCallback(function() {
-                     assert.equal(lnBaseControl._keyDisplayedItem, 4);
-                     lnBaseControl._keyDisplayedItem = null;
+                     assert.equal(lnBaseControl._markedKeyForRestoredScroll, 4);
+                     lnBaseControl._markedKeyForRestoredScroll = null;
 
                      lnCfg = clone(lnCfg);
                      lnCfg.source = lnSource3;
                      lnBaseControl._beforeUpdate(lnCfg).addCallback(function(res) {
-                        assert.equal(lnBaseControl._keyDisplayedItem, null);
+                        assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
                         resolve();
                         return res;
                      });
@@ -1544,6 +1493,52 @@ define([
                }, 10);
             },10);
          });
+      });
+
+      it('reloadRecordSet', function() {
+
+         var
+            lnSource = new sourceLib.Memory({
+               idProperty: 'id',
+               data: data
+            }),
+            lnSource2 = new sourceLib.Memory({
+               idProperty: 'id',
+               data: [{
+                  id: 4,
+                  title: 'Четвертый',
+                  type: 1
+               },
+                  {
+                     id: 5,
+                     title: 'Пятый',
+                     type: 2
+                  }]
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               markedKey: 3,
+               viewModelConstructor: lists.ListViewModel
+            },
+            lnBaseControl = new lists.BaseControl(lnCfg);
+
+         lnBaseControl.saveOptions(lnCfg);
+         lnBaseControl._beforeMount(lnCfg);
+         assert.equal(lnBaseControl._markedKeyForRestoredScroll, null);
+
+         lnBaseControl._isScrollShown = true;
+         lnBaseControl.reload().addCallback(() => {
+            assert.equal(lnBaseControl._markedKeyForRestoredScroll, 3); // set to existing markedKey
+         }).addCallback(() => {
+            let lnCfg2 = clone(lnCfg);
+            lnCfg2.source = lnSource2;
+            lnBaseControl._isScrollShown = true;
+            lnBaseControl._beforeUpdate(lnCfg2).addCallback(() => {
+               assert.equal(lnBaseControl._markedKeyForRestoredScroll, 4); // set to first item, because markedKey = 3, no longer exist
+            });
+         })
       });
 
       it('mouseEnter handler', function () {
@@ -1771,7 +1766,26 @@ define([
          assert.isTrue(stopPropagationCalled);
          assert.equal(rs.at(2), ctrl._listViewModel.getMarkedItem().getContents());
       });
-
+      it ('needFooterPadding', function() {
+         let cfg = {
+            itemActionsPosition: 'outside'
+         };
+         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg), "itemActionsPosinon is outside, padding is needed");
+         cfg = {
+            itemActionsPosition: 'inside'
+         };
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg), "itemActionsPosinon is inside, padding is not needed");
+         cfg = {
+            itemActionsPosition: 'outside',
+            footerTemplate: "footer"
+         };
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg), "itemActionsPosinon is outside, footer exists, padding is not needed");
+         cfg = {
+            itemActionsPosition: 'outside',
+            resultsPosition: "bottom"
+         };
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg), "itemActionsPosinon is outside, results row is in bottom padding is not needed");
+      });
       describe('EditInPlace', function() {
          it('beginEdit', function() {
             var opt = {
@@ -1844,11 +1858,17 @@ define([
                    }
                 },
                 called = false,
+                actionsUpdated = false,
                 ctrl = new lists.BaseControl(cfg);
             ctrl._children = {
                editInPlace: {
                   beginEdit: () => {
                      return ctrl._onAfterBeginEdit();
+                  }
+               },
+               itemActions: {
+                  updateItemActions: () => {
+                     actionsUpdated = true;
                   }
                }
             };
@@ -1861,15 +1881,13 @@ define([
                }
                return {anyField: 12};
             };
-            assert.isFalse(ctrl._canUpdateItemsActions);
             let result  = ctrl.beginEdit();
             assert.deepEqual({anyField: 12}, result);
-            assert.isTrue(ctrl._canUpdateItemsActions);
+            assert.isTrue(actionsUpdated);
             assert.isTrue(called);
             ctrl._afterUpdate({
                viewModelConstructor: null
             });
-            assert.isFalse(ctrl._canUpdateItemsActions);
          });
 
          it('beginAdd', function() {
@@ -2156,6 +2174,42 @@ define([
             }
          });
          assert.isTrue(setRightSwipedItemCalled);
+      });
+
+      it('can\'t start drag on readonly list', function () {
+         let
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                source: source,
+                viewConfig: {
+                   keyProperty: 'id'
+                },
+                viewModelConfig: {
+                   items: rs,
+                   keyProperty: 'id',
+                   selectedKeys: [1, 3]
+                },
+                viewModelConstructor: lists.ListViewModel,
+                navigation: {
+                   source: 'page',
+                   sourceConfig: {
+                      pageSize: 6,
+                      page: 0,
+                      hasMore: false
+                   },
+                   view: 'infinity',
+                   viewConfig: {
+                      pagingMode: 'direct'
+                   }
+                },
+                readOnly: true,
+             },
+             ctrl = new lists.BaseControl();
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+         ctrl.itemsDragNDrop = true;
+         ctrl._itemMouseDown({}, {key: 1}, {});
+         assert.isUndefined(ctrl._itemDragData);
       });
 
       it('_documentDragEnd', function() {
@@ -2974,6 +3028,12 @@ define([
                 },
                 item = {},
                 instance = new lists.BaseControl(cfg);
+
+            instance._children = {
+               itemActions: {
+                  updateItemActions: () => {}
+               }
+            };
 
             instance._notify = (eventName, args) => {
                assert.equal('afterBeginEdit', eventName);

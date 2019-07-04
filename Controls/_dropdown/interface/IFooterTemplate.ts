@@ -14,7 +14,7 @@
     * @example
     * TMPL:
     * <pre>
-    *    <Controls.dropdown:Menu
+    *    <Controls.dropdown:Button
     *          keyProperty="id"
     *          icon="icon-Save icon-small"
     *          on:footerClick="footerClickHandler()"
@@ -24,7 +24,7 @@
     *             <Controls.Button caption="+ New template" size="l" viewMode="link"/>
     *          </div>
     *       </ws:footerTemplate>
-    *    </Controls.dropdown:Menu>
+    *    </Controls.dropdown:Button>
     * </pre>
     * JS:
     * <pre>
@@ -36,3 +36,34 @@
     * </pre>
     */
 
+   /**
+    * @name Controls/_dropdown/interface/IFooterTemplate#nodeFooterTemplate
+    * @cfg {Function | String} Шаблон подвала, отображающийся для всех подменю.
+    * В шаблон передается объект itemData со следующими полями:
+    *    key - ключ родительского элемента;
+    *    item - родительский элемент.
+    * @example
+    * TMPL:
+    * <pre>
+    *    <Controls.dropdown:Button
+    *          keyProperty="id"
+    *          icon="icon-Save icon-small"
+    *          parentProperty="parent"
+    *          nodeProperty="@parent"
+    *          source="{{_source}}">
+    *       <ws:nodeFooterTemplate>
+    *          <div class="ControlsDemo-InputDropdown-footerTpl">
+    *             <Controls.Button caption="+ New template" size="l" viewMode="link" on:click="_clickHandler(itemData.key)"/>
+    *          </div>
+    *       </ws:footerTemplate>
+    *    </Controls.dropdown:Button>
+    * </pre>
+    * JS:
+    * <pre>
+    *    _clickHandler: function(rootKey) {
+    *       this._children.stack.open({
+    *          opener: this._children.button
+    *       });
+    *    }
+    * </pre>
+    */

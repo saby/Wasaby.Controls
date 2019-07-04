@@ -4,7 +4,7 @@
  * @includes Register Controls/_event/Register
  * @includes Listener Controls/_event/Listener
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Register = require('Controls/_event/Register');

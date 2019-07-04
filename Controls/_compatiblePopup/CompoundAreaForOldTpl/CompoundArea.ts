@@ -14,7 +14,7 @@ import {Controller} from 'Controls/popup';
 import {InstantiableMixin} from 'Types/entity';
 import callNext = require('Core/helpers/Function/callNext');
 import cInstance = require('Core/core-instance');
-import Vdom = require('Vdom/Vdom');
+import { SyntheticEvent } from 'Vdom/Vdom';
 import 'css!theme?Controls/compatiblePopup';
 
 function removeOperation(operation, array) {
@@ -351,7 +351,15 @@ var CompoundArea = CompoundContainer.extend([
                function(event, offset, isInitial) {
                   if (!self.isDestroyed() && !isInitial) {
                      if (self._options.closeOnTargetScroll) {
-                        self.close();
+                        // 1. Если показалась клавиатура, то не реагируем на onMove таргета
+                        // 2. После скрытия клавиатуры тоже не реагируем.
+                        if (!self._isIosKeyboardVisible()) {
+                           if (!self._isKeyboardVisible) {
+                              self.close();
+                           } else {
+                              self._isKeyboardVisible = false;
+                           }
+                        }
                      } else {
                         // Перепозиционируемся
                         self._notifyVDOM('controlResize', [], { bubbling: true });
@@ -365,6 +373,14 @@ var CompoundArea = CompoundContainer.extend([
                   }
                });
       }
+   },
+
+   _isIosKeyboardVisible(): boolean {
+      const isVisible =  Env.constants.browser.isMobileIOS && window.scrollY > 0;
+      if (isVisible) {
+         this._isKeyboardVisible = true;
+      }
+      return isVisible;
    },
 
    _setCustomHeader: function() {
@@ -456,7 +472,7 @@ var CompoundArea = CompoundContainer.extend([
       // d'n'd работает, когда кликнули непосредственно в шапку
       var isClickedInControl = $(event.target).wsControl() !== this;
       if (dialogTemplate && !isClickedInControl) {
-         dialogTemplate._startDragNDrop(new Vdom.SyntheticEvent(event));
+         dialogTemplate._startDragNDrop(new SyntheticEvent(event));
       }
    },
 
@@ -873,7 +889,7 @@ var CompoundArea = CompoundContainer.extend([
       const self = this;
       self._notifyVDOM('registerPending', [new cDeferred(), {
          showLoadingIndicator: false,
-         validate(): boolean {
+         validateCompatible(): boolean {
             if (cInstance.instanceOfModule(self._childControl, 'SBIS3.CONTROLS/FormController')) {
                self.close();
                return !self._beforeCloseHandlerResult;

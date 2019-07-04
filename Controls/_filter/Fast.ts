@@ -13,6 +13,22 @@ import Merge = require('Core/core-merge');
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 
       /**
+       * Контрол "Быстрый фильтр".
+       * Использует выпадающие списки для фильтрации данных.
+       *
+       * <a href="/materials/demo-ws4-filter-search-new">Демо-пример</a>.
+       *
+       * @class Controls/_filter/Fast
+       * @extends Core/Control
+       * @mixes Controls/interface/IFastFilter
+       * @mixes Controls/_filter/Fast/FastStyles
+       * @demo Controls-demo/FastFilter/fastPG
+       * @control
+       * @public
+       * @author Герасимов А.М.
+       */
+
+      /*
        * Control "Fast Filter".
        * Use dropDown lists for filter data.
        *
@@ -45,7 +61,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             }
          },
 
-         getSourceController: function(self, {source, navigation, keyProperty}) {
+         createSourceController: function(self, source, navigation, keyProperty) {
             if (!self._sourceController) {
                self._sourceController = new SourceController({
                   source: source,
@@ -55,6 +71,13 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             }
             return self._sourceController;
          },
+
+          getSourceController: function(self, options) {
+             return historyUtils.getSource(options.source, options.historyId, {pinned: true}).addCallback((source) => {
+                 self._source = source;
+                 return _private.createSourceController(self, self._source, options.navigation, options.keyProperty);
+             });
+          },
 
          getItemPopupConfig: function(properties) {
             var itemConfig = {};
@@ -70,14 +93,16 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             return itemConfig;
          },
 
-         loadItemsFromSource: function(instance, {source, keyProperty, filter, navigation, dataLoadCallback}) {
+         loadItemsFromSource: function(instance, {source, keyProperty, filter, navigation, historyId, dataLoadCallback}) {
             // As the data source can be history source, then you need to merge the filter
-            return _private.getSourceController(instance, {source, navigation, keyProperty}).load(historyUtils.getSourceFilter(filter, source)).addCallback(function(items) {
-               instance._items = items;
-               if (dataLoadCallback) {
-                  dataLoadCallback(items);
-               }
-               return items;
+            return _private.getSourceController(instance, {source, navigation, keyProperty, historyId}).addCallback((sourceController) => {
+                return sourceController.load(historyUtils.getSourceFilter(filter, instance._source)).addCallback((items) => {
+                    instance._items = items;
+                    if (dataLoadCallback) {
+                        dataLoadCallback(items);
+                    }
+                    return items;
+                });
             });
          },
 
@@ -91,6 +116,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                return Deferred.success(self._configs[index]._items);
             } if (properties.source) {
                self._configs[index]._sourceController = null;
+               self._configs[index]._source = null;
                return _private.loadItemsFromSource(self._configs[index], properties);
             }
          },
@@ -104,13 +130,12 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 
             // At first, we will load all the lists in order not to cause blinking of the interface and many redraws.
             return pDef.done().getResult().addCallback(function() {
-               self._setText();
-               self._forceUpdate();
-
-               return {
-                  configs: self._configs,
-                  items: self._items
-               };
+               return _private.loadNewItems(self, self._items, self._configs).addCallback(() => {
+                  return {
+                     configs: self._configs,
+                     items: self._items
+                  };
+               });
             });
          },
 
@@ -170,11 +195,37 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             return newItems;
          },
 
+         updateHistory: function(currentFilter, items) {
+             if (historyUtils.isHistorySource(currentFilter._source)) {
+                 currentFilter._source.update(items, historyUtils.getMetaHistory());
+
+                 if (currentFilter._sourceController && currentFilter._source.getItems) {
+                     currentFilter._items = currentFilter._source.getItems();
+                 }
+             }
+         },
+
+         onSelectorResult: function (self, selectedItems) {
+             var newItems = _private.getNewItems(self, selectedItems);
+
+             // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
+             if (historyUtils.isHistorySource(self._source)) {
+                 if (newItems.length) {
+                     self._sourceController = null;
+                 }
+                 _private.updateHistory(self, chain.factory(selectedItems).toArray());
+             } else {
+                 self._items.prepend(newItems);
+             }
+         },
+
          onResult: function(event, result) {
-            if (result.action === 'selectorResult') {
-               this._configs[this.lastOpenIndex]._items.prepend(_private.getNewItems(this._configs[this.lastOpenIndex], result.data));
-            }
             if (result.data) {
+               if (result.action === 'selectorResult') {
+                  _private.onSelectorResult(this._configs[this.lastOpenIndex], result.data);
+               } else {
+                  _private.updateHistory(this._configs[this.lastOpenIndex], result.data);
+               }
                _private.selectItems.call(this, result.data);
                _private.notifyChanges(this, this._items);
             }
@@ -209,27 +260,29 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
          // Remove after execution: https://online.sbis.ru/opendoc.html?guid=96f11250-4bbd-419f-87dc-3a446ffa20ed
          calculateStateSourceControllers: function(configs, items) {
             chain.factory(configs).each(function(config, index) {
-               _private.getSourceController(config, getPropValue(items.at(index), 'properties')).calculateState(config._items);
+               _private.getSourceController(config, getPropValue(items.at(index), 'properties')).addCallback((sourceController) => {
+                    sourceController.calculateState(config._items);
+               });
             });
          },
 
          getKeysLoad: function(config, keys) {
             let result = [];
             chain.factory(keys).each(function(key) {
-               if (!config._items.getRecordById(key) && !(key === null && config.emptyText)) {
+               if (key !== undefined && !config._items.getRecordById(key) && !(key === null && config.emptyText)) {
                   result.push(key);
                }
             });
             return result;
          },
 
-         loadNewItems: function(items, configs) {
+         loadNewItems: function(self, items, configs) {
             let pDef = new pDeferred();
             chain.factory(items).each(function(item, index) {
                let keys = _private.getKeysLoad(configs[index], item.value instanceof Array ? item.value: [item.value]);
                if (keys.length) {
                   let properties = {source: getPropValue(item, 'properties').source};
-                  properties.filter = properties.filter || {};
+                  properties.filter = getPropValue(item, 'properties').filter || {};
                   properties.filter[getPropValue(item, 'properties').keyProperty] = keys;
                   let result = _private.loadItemsFromSource({}, properties).addCallback(function(items) {
                      configs[index]._items.prepend(items);
@@ -239,7 +292,9 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                   pDef.push(Deferred.success());
                }
             });
-            return pDef.done().getResult();
+            return pDef.done().getResult().addCallback(() => {
+               self._setText();
+            });
          },
 
          hasSelectorTemplate: function(configs) {
@@ -258,6 +313,16 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                   return result;
                });
             });
+         },
+
+         isNeedHistoryReload: function(configs) {
+            let needReload = false;
+            chain.factory(configs).each((config) => {
+               if (!config._sourceController) {
+                  needReload = true;
+               }
+            });
+            return needReload;
          }
       };
 
@@ -290,21 +355,20 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
          },
 
          _beforeUpdate: function(newOptions) {
-            var self = this,
-               resultDef;
+            var resultDef;
             if (newOptions.items && (newOptions.items !== this._options.items)) {
                _private.prepareItems(this, newOptions.items);
                if (_private.isNeedReload(this._options.items, newOptions.items)) {
                   resultDef = _private.reload(this);
                } else {
-                  resultDef = _private.loadNewItems(newOptions.items, this._configs).addCallback(function() {
-                     self._setText();
-                  });
+                  resultDef = _private.loadNewItems(this, newOptions.items, this._configs);
                }
                this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
             } else if (newOptions.source && !isEqual(newOptions.source, this._options.source)) {
                this._sourceController = null;
                resultDef = _private.loadConfigFromSource(this, newOptions);
+            } else if (_private.isNeedHistoryReload(this._configs)) {
+                resultDef = _private.reload(this);
             }
             return resultDef;
          },
@@ -318,8 +382,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                items: this._configs[index]._items,
                selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
                isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
-               hasMoreButton: _private.getSourceController(this._configs[index],
-                  getPropValue(this._items.at(index), 'properties')).hasMoreData('down'),
+               hasMoreButton: this._configs[index]._sourceController.hasMoreData('down'),
                selectorOpener: this._children.selectorOpener,
                selectorDialogResult: this._onSelectorTemplateResult.bind(this)
             };

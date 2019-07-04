@@ -50,6 +50,7 @@ const DEFAULT_CONFIG = {
     targetSide: 'top',
     alignment: 'start',
     floatCloseButton: false,
+    closeOnOutsideClick: true,
     hideDelay: INFOBOX_HIDE_DELAY,
     showDelay: INFOBOX_SHOW_DELAY
 };
@@ -86,7 +87,7 @@ const _private = {
             maxWidth: newCfg.maxWidth,
             zIndex: newCfg.zIndex || getZIndex(newCfg.opener || this),
             eventHandlers: newCfg.eventHandlers,
-            closeOnOutsideClick: true,
+            closeOnOutsideClick: newCfg.closeOnOutsideClick,
             opener: newCfg.opener,
             templateOptions: { // for template: Opener/InfoBox/resources/template
                 template: newCfg.template,
@@ -209,6 +210,7 @@ const InfoBox = BaseOpener.extend({
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ See more}.
  * @function Controls/_popup/Opener/InfoBox#openPopup
  * @param {Object} config InfoBox options. See {@link Controls/_popup/InfoBox description}.
+ * @static
  * @see closePopup
  */
 InfoBox.openPopup = (config: object): void => {
@@ -226,6 +228,7 @@ InfoBox.openPopup = (config: object): void => {
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ See more}.
  * @function Controls/_popup/Opener/InfoBox#closeInfoBox
  * @see openPopup
+ * @static
  */
 InfoBox.closePopup = (): void => {
     BaseOpener.closeDialog(InfoBoxId);

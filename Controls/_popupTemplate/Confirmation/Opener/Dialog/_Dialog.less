@@ -24,20 +24,23 @@
    text-align: center;
 }
 
-
-
 .controls-ConfirmationDialog__buttonContainer {
    .flexbox();
    .justify-content(center);
 }
+
 .controls-ConfirmationDialog__button-standard {
    min-width: @min-width_SubmitPopup-button;
-   margin: 0 @spacing_SubmitPopup-between-button-border;
 }
+
 .controls-ConfirmationDialog__button-mini {
    min-width: @min-width_SubmitPopup-button-small;
-   margin: 0 @spacing_SubmitPopup-between-button-border;
 }
+
+.controls-ConfirmationDialog__no-cancel-button {
+   margin-left: @spacing_SubmitPopup-between-footer-buttons;
+}
+
 .controls-ConfirmationDialog__button {
    height: @height_SubmitPopup-button;
    width: 100%;

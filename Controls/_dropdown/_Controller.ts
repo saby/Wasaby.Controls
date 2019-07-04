@@ -5,7 +5,7 @@ import chain = require('Types/chain');
 import {isEqual} from 'Types/object';
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
-import * as Deferred from 'Core/Deferred';
+import * as mStubs from 'Core/moduleStubs';
 
 // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 var
@@ -125,12 +125,9 @@ var _private = {
             result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._source);
             var res = this._notify('selectedItemsChanged', [result.data]);
 
-            var item = result.data[0];
-
-            _private.updateHistory(this, item);
-
             // dropDown must close by default, but user can cancel closing, if returns false from event
             if (res !== false) {
+               _private.updateHistory(this, result.data[0]);
                this._children.DropdownOpener.close();
             }
             break;
@@ -161,9 +158,26 @@ var _private = {
    },
 
    templateOptionsChanged: function(newOptions, options) {
-      if (newOptions.headTemplate !== options.headTemplate) {
+      if (newOptions.headTemplate !== options.headTemplate ||
+          newOptions.itemTemplate !== options.itemTemplate ||
+          newOptions.footerTemplate !== options.footerTemplate) {
          return true;
       }
+   },
+
+   requireTemplates: function(self, options) {
+      if (!self._depsDeferred) {
+         let templatesToLoad = [];
+         let templates = ['headTemplate', 'itemTemplate', 'footerTemplate'];
+
+         templates.forEach((template) => {
+            if (typeof options[template] === 'string') {
+               templatesToLoad.push(options[template]);
+            }
+         });
+         self._depsDeferred = mStubs.require(templatesToLoad);
+      }
+      return self._depsDeferred;
    }
 };
 
@@ -212,6 +226,7 @@ var _private = {
 var _Controller = Control.extend({
    _template: template,
    _items: null,
+   _depsDeferred: null,
 
    _beforeMount: function (options, context, receivedState) {
       this._onResult = _private.onResult.bind(this);
@@ -231,8 +246,11 @@ var _Controller = Control.extend({
    },
 
    _beforeUpdate: function (newOptions) {
-      if (_private.templateOptionsChanged(newOptions, this._options) && this._children.DropdownOpener.isOpened()) {
-         this._open();
+      if (_private.templateOptionsChanged(newOptions, this._options)) {
+         this._depsDeferred = null;
+         if (this._children.DropdownOpener.isOpened()) {
+            this._open();
+         }
       }
       if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
          _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.selectedItemsChangedCallback);
@@ -279,7 +297,9 @@ var _Controller = Control.extend({
             autofocus: false,
             closeOnOutsideClick: true
          };
-         self._children.DropdownOpener.open(config, self);
+         _private.requireTemplates(self, self._options).addCallback(() => {
+            self._children.DropdownOpener.open(config, self);
+         });
       }
 
       function itemsLoadCallback(items) {

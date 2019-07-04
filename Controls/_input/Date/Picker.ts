@@ -25,7 +25,7 @@ import 'css!theme?Controls/input';
     * @public
     * @demo Controls-demo/Input/Date/PickerPG
     * @category Input
-    * @author Миронов А.Ю.
+    * @author Красильников А.С.
     */
 
    var Component = Control.extend([], {
@@ -71,7 +71,7 @@ import 'css!theme?Controls/input';
       },
 
       _isVdomDialog: function() {
-         return this._options.vdomDialog && !(detection.isIE && detection.IEVersion < 13);
+         return this._options.vdomDialog;
       },
 
       _onResultWS3: function(event, startValue) {
@@ -92,7 +92,9 @@ import 'css!theme?Controls/input';
    });
 
    Component.getDefaultOptions = function() {
-      return coreMerge({}, IDateTimeMask.getDefaultOptions());
+      return coreMerge({
+          vdomDialog: true
+      }, IDateTimeMask.getDefaultOptions());
    };
 
    Component.getOptionTypes = function() {

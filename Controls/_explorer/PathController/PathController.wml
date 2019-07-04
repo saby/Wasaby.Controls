@@ -1,19 +1,17 @@
 <ws:template name="headingPath">
-   <ws:if data="{{_needCrumbs}}">
-      <Controls.breadcrumbs:HeadingPath scope="{{_options}}"
-                                        name="Path"
-                                        header="{{_header}}"
-                                        attr:class="controls-Explorer__Path"
-                                        on:backButtonClick="_notifyHandler('backButtonClick')"
-                                        on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
-                                        on:arrowActivated="_notifyHandler('arrowActivated')"
-                                        on:itemClick="_notifyHandler('itemClick')" />
-   </ws:if>
+   <Controls.breadcrumbs:HeadingPath scope="{{_options}}"
+                                     name="Path"
+                                     header="{{_header}}"
+                                     attr:class="controls-Explorer__Path"
+                                     on:backButtonClick="_notifyHandler('backButtonClick')"
+                                     on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+                                     on:arrowActivated="_notifyHandler('arrowActivated')"
+                                     on:itemClick="_notifyHandler('itemClick')" />
 </ws:template>
 <div>
-<ws:if data="{{_options.items || _options.rootVisible}}">
+<ws:if data="{{(_options.items || _options.rootVisible) && _needCrumbs}}">
    <ws:if data="{{_options.stickyHeader}}">
-      <Controls.scroll:StickyHeader mode="stackable">
+      <Controls.scroll:StickyHeader mode="stackable" shadowVisibility="hidden" fixedZIndex="{{5}}">
          <ws:partial template="headingPath" />
       </Controls.scroll:StickyHeader>
    </ws:if>

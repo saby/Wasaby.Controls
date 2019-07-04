@@ -13,7 +13,7 @@
  * @includes IMonthListCustomDays Controls/_calendar/interface/IMonthListCustomDays
  * @includes IMonth Controls/_calendar/interface/IMonth
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import MonthViewDayTemplate = require('wml!Controls/_calendar/MonthView/dayTemplate');

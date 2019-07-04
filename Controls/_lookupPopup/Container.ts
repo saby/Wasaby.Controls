@@ -138,22 +138,32 @@ import {IData, IDecorator} from "Types/source";
          prepareFilter: function(filter:object, selection, searchParam:string|undefined):object {
             filter = Utils.object.clone(filter);
 
-            //FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
-            if (searchParam) {
+             // FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
+             // TODO KINDO
+             // При отметке всех записей в фильтре проставляется selection в виде:
+             // marked: [null]
+             // excluded: [null]
+             // Если что-то поискать, отметить всё через панель массовых операций, и нажать "Выбрать"
+             // то в фильтр необходимо посылать searchParam и selection, иначе выборка будет включать все записи,
+             // даже которые не попали под фильтрацию при поиске.
+             // Если просто отмечают записи чекбоксами (не через панель массовых операций),
+             // то searchParam из фильтра надо удалять, т.к. записи могут отметить например в разных разделах,
+             // и запрос с searchParam в фильтре вернёт не все записи, которые есть в selection'e.
+            if (searchParam && selection.get('marked')[0] !== null) {
                delete filter[searchParam];
             }
             filter.selection = selection;
             return filter;
          },
 
-         prepareResult: function(result, selectedKeys, keyProperty) {
+         prepareResult: function(result, selectedKeys, keyProperty, selectCompleteInitiator) {
             return {
                resultSelection: result,
                initialSelection: selectedKeys,
-               keyProperty: keyProperty
+               keyProperty: keyProperty,
+               selectCompleteInitiator: selectCompleteInitiator
             };
          }
-
       };
 
       var Container = Control.extend({
@@ -162,6 +172,7 @@ import {IData, IDecorator} from "Types/source";
          _selectedKeys: null,
          _selection: null,
          _excludedKeys: null,
+         _selectCompleteInitiator: false,
 
          _beforeMount: function(options, context) {
             this._selectedKeys = _private.getSelectedKeys(options, context);
@@ -222,7 +233,7 @@ import {IData, IDecorator} from "Types/source";
                   self._notify('hideIndicator', [indicatorId], {bubbling: true});
                }
 
-               return _private.prepareResult(result, self._initialSelectedKeys, keyProperty);
+               return _private.prepareResult(result, self._initialSelectedKeys, keyProperty, self._selectCompleteInitiator);
             });
 
             this._notify('selectionLoad', [loadDef], {bubbling: true});
@@ -234,8 +245,11 @@ import {IData, IDecorator} from "Types/source";
 
          _excludedKeysChanged: function(event, excludedKey, added, removed) {
             this._notify('excludedKeysChanged', [excludedKey, added, removed], {bubbling: true});
-         }
+         },
 
+         _selectCompleteHandler: function() {
+            this._selectCompleteInitiator = true;
+         }
       });
 
       Container.contextTypes = function() {

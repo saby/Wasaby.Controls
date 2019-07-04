@@ -3,7 +3,7 @@
  *
  * @interface Controls/_list/interface/IVirtualScroll
  * @public
- * @author Родионов Е.А.
+ * @author Авраменко А.С.
  */
 
 /*
@@ -11,7 +11,7 @@
  *
  * @interface Controls/_list/interface/IVirtualScroll
  * @public
- * @author Родионов Е.А.
+ * @author Авраменко А.С.
  */
 
 /**
@@ -36,7 +36,7 @@
  * Оптимальное значение параметра virtualPageSize можно рассчитать по формуле: <b>virtualPageSize = M + (2 * S)</b>, где
  * <ul>
  *     <li>M - максимальное количество элементов в клиентской области списка;</li>
- *     <li>S - количество элементов, которые будут добавлены/удалены по достижении конца списка отображаемых элементов({@link Controls/_list/interface/IVirtualScroll#virtualSegmentSize virtualSegmentSize}).</li>
+ *     <li>S - количество элементов, которые будут добавлены/удалены по достижении конца списка отображаемых элементов.</li>
  * </ul>
  * <b>Примечание для Controls/Grid:View и Controls/TreeGrid:View</b>: значение опции virtualPageSize должно быть меньше 1000/общее количество столбцов в таблице.
  */
@@ -49,19 +49,7 @@
  * The optimal value of the virtualPageSize option can be calculated by the formula: <b>virtualPageSize = M + (2 * S)</b>, where
  * <ul>
  *     <li>M - maximum number of items in the client area of the list;</li>
- *     <li>S - number of items that will be inserted/removed on reaching the end of displayed items({@link Controls/_list/interface/IVirtualScroll#virtualSegmentSize virtualSegmentSize}).</li>
+ *     <li>S - number of items that will be inserted/removed on reaching the end of displayed items.</li>
  * </ul>
  * <b>Note for Controls/Grid:View and Controls/TreeGrid:View</b>: the value of the virtualPageSize should be less then 1000/total columns count in grid.
- */
-
-/**
- * @name Controls/_list/interface/IVirtualScroll#virtualSegmentSize
- * @cfg {Number} Количество элементов, которые будут добавлены/удалены по достижении конца списка отображаемых элементов.
- * @default 10
- */
-
-/*
- * @name Controls/_list/interface/IVirtualScroll#virtualSegmentSize
- * @cfg {Number} Number of items that will be inserted/removed on reaching the end of displayed items.
- * @default 10
  */

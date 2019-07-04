@@ -12,11 +12,9 @@ type Direction = 'down' | 'up';
  * @typedef VirtualScrollConfig
  * @type {object}
  * @property {number} virtualPageSize - The size of the virtual page indicates maximum number of simultaneously displayed items in the list.
- * @property {number} virtualSegmentSize - Number of items that will be inserted/removed on reaching the end of displayed items.
  */
 type VirtualScrollConfig = {
     virtualPageSize?: number;
-    virtualSegmentSize?: number;
 }
 
 
@@ -68,11 +66,11 @@ type PlaceholdersSizes = {
  * @mixes Controls/_list/interface/IVirtualScroll
  *
  * @public
- * @author Родионов Е.А.
+ * @author Авраменко А.С.
  */
 class VirtualScroll {
 
-    private readonly _virtualSegmentSize: number = 10;
+    private readonly _virtualSegmentSize: number;
     private readonly _virtualPageSize: number = 100;
 
     private _startIndex: number = 0;
@@ -126,7 +124,7 @@ class VirtualScroll {
      */
     public constructor(cfg: VirtualScrollConfig) {
         this._virtualPageSize = cfg.virtualPageSize || this._virtualPageSize;
-        this._virtualSegmentSize = cfg.virtualSegmentSize || this._virtualSegmentSize;
+        this._virtualSegmentSize = Math.ceil(this._virtualPageSize / 4);
         this._stopIndex = this._startIndex + this._virtualPageSize;
     }
 
@@ -203,7 +201,12 @@ class VirtualScroll {
 
             // если для сдвига stopIndex хватает количества элементов, то просто увеличиваем stopIndex
             if (this._stopIndex + this._virtualSegmentSize <= this._itemsCount) { // 45 + 10 = 55, 55 < 50
-                this._stopIndex += this._virtualSegmentSize;
+                const
+                    sub = this._virtualPageSize - this._stopIndex;
+
+                // Если изначально показывается настолько мало записей, что после обновления индексов количество записей
+                // все равно меньше, чем виртуальная страница, то увеличиваем индексы на сколько возможно.
+                this._stopIndex +=  sub > this._virtualSegmentSize ?  sub : this._virtualSegmentSize;
             } else { // иначе - сдвигаем на сколько можем, остальное пытаемся взять из _startIndex
                 const
                    sub = this._itemsCount - this._stopIndex; // 45 + 10 - 50 = 5
@@ -227,34 +230,6 @@ class VirtualScroll {
 
     public cutItemsHeights(itemIndex: number, itemsHeightsCount: number): void {
         this._itemsHeights.splice(itemIndex + 1, itemsHeightsCount);
-    }
-
-    public updateItemsIndexesOnScrolling(scrollTop: number, containerHeight: number): boolean {
-        // TODO: Сделать out параметр, чтобы не гулять по потенциально огромному массиву 2 а то и 3 раза.
-        if (this._isScrollInPlaceholder(scrollTop, containerHeight)) {
-            let
-                offsetHeight = 0,
-                heightsCount = this._itemsHeights.length;
-
-            for (let i = 0; i < heightsCount; i++) {
-                offsetHeight += this._itemsHeights[i];
-
-                // Находим первую видимую запись по скролл топу и считаем этот элемент серединой виртуальной страницы
-                if (offsetHeight >= scrollTop) {
-                    this._startIndex = Math.max(0, Math.ceil(i - this._virtualPageSize / 2));
-
-                    // Проверяем, что собираемся показать элементы, которые были отрисованы ранее
-                    if (this._startIndex + this._virtualPageSize > heightsCount) {
-                        this._stopIndex = heightsCount;
-                        this._startIndex = Math.max(0, heightsCount - this._virtualPageSize);
-                    } else {
-                        this._stopIndex = Math.min(this._startIndex + this._virtualPageSize, heightsCount);
-                    }
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public hasEnoughDataToDirection(direction: Direction): boolean {

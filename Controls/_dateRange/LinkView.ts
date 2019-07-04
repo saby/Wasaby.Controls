@@ -15,7 +15,7 @@ import 'css!theme?Controls/dateRange';
  * @control
  * @private
  * @category Input
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/LinkView
  *
  */
@@ -144,7 +144,9 @@ var Component = BaseControl.extend({
    },
 
    _onClick: function() {
-      this._notify('linkClick');
+      if (!this._options.readOnly) {
+         this._notify('linkClick');
+      }
    },
 
    _beforeUnmount: function() {

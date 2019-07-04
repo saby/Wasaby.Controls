@@ -53,19 +53,23 @@ import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStr
             /* start: We remove the set values that affect the size and positioning to get the real size of the content */
             var width = container.style.width;
             var height = container.style.height;
-            // We won't remove width and height, if they are set explicitly.
-            if(!cfg.popupOptions.width) {
-               container.style.width = 'auto';
+            // We won't remove width and height, if they are set explicitly or popup is maximize.
+
+            if (!cfg.popupOptions.maximize) {
+               if(!cfg.popupOptions.width) {
+                  container.style.width = 'auto';
+               }
+               if(!cfg.popupOptions.height) {
+                  container.style.height = 'auto';
+               }
+               if (cfg.popupOptions.maxWidth) {
+                  container.style.maxWidth = cfg.popupOptions.maxWidth + 'px';
+               }
+               if (cfg.popupOptions.maxHeight) {
+                  container.style.maxHeight = cfg.popupOptions.maxHeight + 'px';
+               }
             }
-            if(!cfg.popupOptions.height) {
-               container.style.height = 'auto';
-            }
-            if (cfg.popupOptions.maxWidth) {
-               container.style.maxWidth = cfg.popupOptions.maxWidth + 'px';
-            }
-            if (cfg.popupOptions.maxHeight) {
-               container.style.maxHeight = cfg.popupOptions.maxHeight + 'px';
-            }
+
 
             /* end: We remove the set values that affect the size and positioning to get the real size of the content */
             this.prepareConfig(cfg, container);

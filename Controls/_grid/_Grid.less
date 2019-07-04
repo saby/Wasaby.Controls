@@ -38,6 +38,12 @@
    flex-direction: column;
 }
 
+.controls-Grid_columnScroll .controls-Grid__header-cell {
+   // With enabled column scroll and setting the value of grid column width as 'auto' in template columns, flex starts to shrink
+   // because grid has no fixed width and hac af min-width allows such behaviour.
+   min-width: auto;
+}
+
 .controls-Grid__header-cell_spacing_money:after {
    content: ".99";
    visibility: hidden;
@@ -49,8 +55,7 @@
    min-height: @min-height_Grid-multy-header;
    display: flex;
    justify-content: flex-start;
-   align-items: flex-end;
-   flex: 1;
+   align-items: baseline; //baseline align by default;
 }
 
 .controls-Grid__row-header__content_baseline:before {
@@ -408,6 +413,16 @@
       position: absolute;
       right: -@border-width_List-masterList-right;
       background-color: @background-color_List-masterList-item_selected;
+   }
+}
+
+.ws-is-ie {
+   //pointer-events: none does not work in ie on pseudo elements
+   //because of this, click on actions is didn't work
+   //z-index: 2 is used is new browsers (chrome, ff) to overlap white line in :after
+   //but in ie it works fine with z-index: 1
+   .controls-Grid__row-cell_selected-master:before {
+      z-index: 1;
    }
 }
 

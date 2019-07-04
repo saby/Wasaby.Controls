@@ -7,7 +7,7 @@ import IInputStyle from "./IInputStyle";
 import IInputField from "./IInputField";
 
 /**
- * Interface for Input.Base.
+ * Интерфейс для контрола Input.Base.
  *
  * @interface Controls/interface/IInputBase
  *
@@ -26,7 +26,30 @@ import IInputField from "./IInputField";
  * @mixes Controls/interface/ICallback
  *
  * @public
- * @author Krasilnikov A.S.
+ * @author Красильников А.С.
+ */
+
+/*
+ * Interface for Input.Base.
+ *
+ * @interface Controls/interface/IInputBase
+ *
+ * @mixes Controls/interface/IPaste
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputPlaceholder
+ *
+ * @mixes Controls/interface/ISelectableInput
+ * @mixes Controls/interface/IInputTooltip
+ *
+ * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IFontColorStyle
+ *
+ * @mixes Controls/interface/ICallback
+ *
+ * @public
+ * @author Красильников А.С.
  */
 type IInputBase =
     IPaste
@@ -40,6 +63,18 @@ type IInputBase =
     readonly _options: {
         /**
          * @name Controls/interface/IInputBase#size
+         * @cfg {Enum} Размер поля.
+         * @variant s - Небольшой размер поля.
+         * @variant m - Средний размер поля.
+         * @variant l - Большой размер поля.
+         * @variant default - Стандартный размер поля.
+         * @default default
+         * @remark
+         * Размер выбирается в зависимости от контекста значения в поле.
+         */
+
+        /*
+         * @name Controls/interface/IInputBase#size
          * @cfg {Enum} Field size.
          * @variant s - The size of a small field.
          * @variant m - The size of a medium field.
@@ -51,6 +86,30 @@ type IInputBase =
          */
         size: 's' | 'm' | 'l' | 'default';
         /**
+         * @name Controls/interface/IInputBase#fontStyle
+         * @cfg {Enum} Шрифты текста в поле.
+         * @variant default - Стиль шрифта в стандартном поле.
+         * @variant primary - Стиль шрифта для привлечения внимания.
+         * @variant secondary - Стиль шрифта в дополнительном поле.
+         * @default default
+         * @remark
+         * Стиль шрифта выбирается в зависимости от контекста значения в поле.
+         * @example
+         * В этом примере мы создаем форму для ввода паспортных данных. Поля для ввода имеют акцентный шрифта.
+         * <pre>
+         *    <div class="form">
+         *       <div class="fio">
+         *          <Controls.input:Text name="firstName" fontStyle="primary"/>
+         *          <Controls.input:Text name="lastName" fontStyle="primary"/>
+         *       </div>
+         *       <div class="residence">
+         *          <Controls.input:Text name="street"/>
+         *       </div>
+         *    </div>
+         * </pre>
+         */
+
+        /*
          * @name Controls/interface/IInputBase#fontStyle
          * @cfg {Enum} Fonts of the text in field.
          * @variant default - Font style in standard field.
@@ -76,6 +135,18 @@ type IInputBase =
         fontStyle: 'default' | 'primary' | 'secondary';
         /**
          * @name Controls/interface/IInputBase#textAlign
+         * @cfg {Enum} Горизонтальное выравнивание текста в поле.
+         * @variant left - Текст выравнивается по левому краю поля.
+         * @variant right - Текст выравнивается по правому краю поля.
+         * @example
+         * В этом примере мы выравниваем текст по левому краю.
+         * <pre>
+         *    <Controls.input:Text textAlign="left"/>
+         * </pre>
+         */
+
+        /*
+         * @name Controls/interface/IInputBase#textAlign
          * @cfg {Enum} Horizontal alignment of the text in field.
          * @variant left - The text are aligned to the left edge of the line box.
          * @variant right - The text are aligned to the right edge of the line box.
@@ -87,6 +158,7 @@ type IInputBase =
          * </pre>
          */
         textAlign: 'left' | 'right';
+
         /**
          * @name Controls/interface/IInputBase#autoComplete
          * @cfg {Enum} Управление браузерным автозаполнением в полях.
@@ -107,27 +179,27 @@ type IInputBase =
          *    <Controls.input:Text autoComplete="on"/>
          * </pre>
          */
+
         /*
-         /*
-         @name Controls/interface/IInputBase#autoComplete
-         @cfg {Enum} Determines whether to use browser-based auto-complete field.
-         @default off
-         @variant on - The browser is allowed to automatically complete the input.
-         @variant off - The browser is not permitted to automatically enter or select a value for this field.
-         @variant username - The browser is allowed to automatically complete the input using a username.
-         @variant current-password - The browser is allowed to automatically complete the input using the current password for the account identified by the username field.
-         @remark
-         Values for auto-complete are taken by the browser from its storage.
-         The field name is used to access them. Therefore, to prevent values stored in one field from being applied to another,
-         the fields must have different names. To do this, we proxy the name of the control to the name of the native field.
-         Therefore, if you use true as the value of the option and do not want to cross the auto-completion values, specify the name of the control.
-         Choose a name based on the scope of the field. For example, for a login and password registration form, it is preferable to use the login and password names.
-         @example
-         In this example, when the field is clicked, a browser menu appears with the previously entered values in this field.
-         <pre>
-         <Controls.input:Text autoComplete="on"/>
-         </pre>
-          */
+         * @name Controls/interface/IInputBase#autoComplete
+         * @cfg {Enum} Determines whether to use browser-based auto-complete field.
+         * @default off
+         * @variant on - The browser is allowed to automatically complete the input.
+         * @variant off - The browser is not permitted to automatically enter or select a value for this field.
+         * @variant username - The browser is allowed to automatically complete the input using a username.
+         * @variant current-password - The browser is allowed to automatically complete the input using the current password for the account identified by the username field.
+         * @remark
+         * Values for auto-complete are taken by the browser from its storage.
+         * The field name is used to access them. Therefore, to prevent values stored in one field from being applied to another,
+         * the fields must have different names. To do this, we proxy the name of the control to the name of the native field.
+         * Therefore, if you use true as the value of the option and do not want to cross the auto-completion values, specify the name of the control.
+         * Choose a name based on the scope of the field. For example, for a login and password registration form, it is preferable to use the login and password names.
+         * @example
+         * In this example, when the field is clicked, a browser menu appears with the previously entered values in this field.
+         * <pre>
+         * <Controls.input:Text autoComplete="on"/>
+         * </pre>
+         */
         autoComplete: 'on' | 'off' | 'username' | 'current-password';
     }
 };

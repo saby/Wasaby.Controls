@@ -1,4 +1,12 @@
 /**
+ * Интерфейс для списков.
+ *
+ * @interface Controls/_list/interface/IList
+ * @public
+ * @author Авраменко А.С.
+ */
+
+/*
  * Interface for lists.
  *
  * @interface Controls/_list/interface/IList
@@ -41,23 +49,24 @@
 
 /**
  * @name Controls/_list/interface/IList#emptyTemplate
- * @cfg {Function} Шаблон пустого списка.
- * <a href="/materials/demo-ws4-list-base">Example</a>.
+ * @cfg {Function} Шаблон пустого списка (без элементов).
+ * См.<a href="/materials/demo-ws4-list-base">демо-пример</a>
  * @remark
- * Рекомендуемый шаблон по умолчанию для emptyTemplate: wml!Controls/_list/emptyTemplate
- * Шаблон принимает следующие параметры:
- * - contentTemplate - содержимое шаблона emptyTemplate
- * - topSpacing - расстояние между верхней границей и содержимым шаблона emptyTemplate
- * - bottomSpacing - расстояние между нижней границей и содержимым шаблона emptyTemplate
+ * По умолчанию для emptyTemplate используется шаблон "wml!Controls/_list/emptyTemplate".
+ * Он рекомендован к использованию при описании собственного шаблона, отображаемого для пустого списка.
+ * Шаблон "wml!Controls/_list/emptyTemplate" принимает следующие параметры:
+ * - contentTemplate — контент шаблона;
+ * - topSpacing — расстояние между верхней границей и контентом шаблона;
+ * - bottomSpacing — расстояние между нижней границей и контентом шаблона;
  * @example
  * <pre>
- *    <Controls.List>
+ *    <Controls.list:View>
  *       <ws:emptyTemplate>
- *          <ws:partial template="wml!Controls/_list/emptyTemplate" topSpacing="xl" bottomSpacing="l">
+ *          <ws:partial template="Controls/_list/emptyTemplate" topSpacing="xl" bottomSpacing="l">
  *             <ws:contentTemplate>Нет данных</ws:contentTemplate>
  *          </ws:partial>
  *       </ws:emptyTemplate>
- *    </Controls.List>
+ *    </Controls.list:View>
  * </pre>
  */
 
@@ -73,13 +82,13 @@
  * - bottomSpacing Spacing between bottom border and content of emptyTemplate
  * @example
  * <pre>
- *    <Controls.List>
+ *    <Controls.list:View>
  *       <ws:emptyTemplate>
  *          <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xl" bottomSpacing="l">
  *             <ws:contentTemplate>Нет данных</ws:contentTemplate>
  *          </ws:partial>
  *       </ws:emptyTemplate>
- *    </Controls.List>
+ *    </Controls.list:View>
  * </pre>
  */
 
@@ -93,30 +102,6 @@
  * @name Controls/_list/interface/IList#footerTemplate
  * @cfg {Function} Template that will be rendered below the list.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- */
-
-/**
- * @name Controls/_list/interface/IList#resultsTemplate
- * @cfg {Function} Шаблон строки итогов.
- */
-
-/*
- * @name Controls/_list/interface/IList#resultsTemplate
- * @cfg {Function} Results row template.
- */
-
-/**
- * @name Controls/_list/interface/IList#resultsPosition
- * @cfg {String} Положение строки итогов.
- * @variant top Вывести итоги над списком.
- * @variant bottom Вывести итоги под списком.
- */
-
-/*
- * @name Controls/_list/interface/IList#resultsPosition
- * @cfg {String} Results row position.
- * @variant top Show results above the list.
- * @variant bottom Show results below the list.
  */
 
 /**
@@ -482,7 +467,7 @@
 
 /**
  * @name Controls/_list/interface/IList#itemsReadyCallback
- * @cfg {Function} Callback, который вызывается, когда экземпляр данных списка готов.
+ * @cfg {Function} Функция обратного вызова, которая будет вызываться, когда экземпляр данных списка готов.
  * @remark
  * ARGUMENTS:
  * <ul>
@@ -503,7 +488,7 @@
 
 /**
  * @name Controls/_list/interface/IList#dataLoadCallback
- * @cfg {Function} Callback, который вызывается после загрузки данных из источника.
+ * @cfg {Function} Функция обратного вызова, которая будет вызываться, когда данные загружены источником.
  * @remark
  * ARGUMENTS:
  * <ul>
@@ -571,6 +556,24 @@
  */
 
 /**
+ * Загружает модель из источника данных, объединяет изменения в текущих данные и отображает элемент.
+ * @function Controls/_list/interface/IList#reloadItem
+ * @param {String} key Идентификатор элемента коллекции, который должен быть перезагружен из источника.
+ * @param {Object} readMeta Метаинформация, которая будет передана методу запроса/чтения.
+ * @param {Boolean} replaceItem Определяет, как загруженный элемент будет применяться к коллекции.
+ * Если параметр имеет значение true, элемент коллекции будет заменен загруженным элементом.
+ * Если параметр имеет значение false (по умолчанию), загруженные элементы будут объединены в элемент коллекции.
+ * @param {reloadType} Определяет, как будет загружен элемент.
+ * @example
+ *  <pre>
+ *      _itemUpdated: function(id) {
+ *          var list = this._children.myList;
+ *          list.reloadItem(id);
+ *      }
+ * </pre>
+ */
+
+/*
  * Loads model from data source, merges changes into the current data and renders the item.
  * @function Controls/_list/interface/IList#reloadItem
  * @param {String} key Identifier of the collection item, that should be reloaded from source.

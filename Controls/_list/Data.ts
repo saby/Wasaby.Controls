@@ -18,6 +18,20 @@ type GetSourceResult = {
 }
 
       /**
+       * Контрол-контейнер, предоставляющий контекстное поле "dataOptions" с необходимыми данными для дочерних контейнеров.
+       *
+       *<a href="/materials/demo-ws4-filter-search-new">Демо-пример</a>.
+       *
+       * @class Controls/_list/Data
+       * @mixes Controls/interface/IFilter
+       * @mixes Controls/interface/INavigation
+       * @extends Core/Control
+       * @control
+       * @public
+       * @author Герасимов А.М.
+       */
+      
+      /*
        * Container component that provides a context field "dataOptions" with necessary data for child containers.
        *
        * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
@@ -28,15 +42,25 @@ type GetSourceResult = {
        * @extends Core/Control
        * @control
        * @public
-       * @author A.M. Gerasimov
+       * @author Герасимов А.М.
        */
 
       /**
+       * @name Controls/_list/Data#source
+       * @cfg Объект, реализующий интерфейс ISource для поддержки доступа к данным.
+       */
+
+      /*
        * @name Controls/_list/Data#source
        * @cfg Object that implements ISource interface for data access.
        */
 
       /**
+       * @name Controls/_list/Data#keyProperty
+       * @cfg {String} Имя свойства, содержащего информацию об идентификаторе текущей строки.
+       */
+
+      /*
        * @name Controls/_list/Data#keyProperty
        * @cfg {String} Name of the item property that uniquely identifies collection item.
        */

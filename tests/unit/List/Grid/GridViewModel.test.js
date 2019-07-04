@@ -846,7 +846,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   'getChildren','getStartIndex', 'getActiveItem', 'setRightSwipedItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
                callStackMethods = [];
 
-            gridViewModel._model = {};
+            gridViewModel._model = {
+               getItems: function() {}
+            };
             callMethods.forEach(function(item) {
                gridViewModel._model[item] = function() {
                   callStackMethods.push(item);
@@ -1210,11 +1212,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(4, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" before "resetHeaderColumns()".');
             headerRow.resetHeaderColumns();
             assert.equal(0, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
-            });
-            it('getResultsPosition()', function() {
-               assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
-            });
+         });
+         it('getResultsPosition()', function() {
+            assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
+         });
+         it('is multiheader', function() {
 
+            let gridViewModel = new gridMod.GridViewModel(cfg);
+            assert.isFalse(gridViewModel.isMultyHeader([{startRow: 1, endRow: 2}]),"simple header");
+            assert.isTrue(gridViewModel.isMultyHeader([{startRow: 1, endRow: 3}]),"multyHeader header");
+         });
          it('_prepareHeaderColumns', function() {
             gridViewModel._headerRows = [];
             // gridViewModel._prepareHeaderColumns(gridHeader, false);
@@ -1228,6 +1235,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.deepEqual([{}], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" with multiselect.');
             gridViewModel._prepareHeaderColumns(gridHeader, true);
             assert.deepEqual([[{}, ...gridHeader]], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" with multiselect.');
+            gridViewModel._prepareHeaderColumns([{isBreadCrumbs: true}], true);
+            assert.isTrue(gridViewModel._headerRows[0][0].hiddenForBreadCrumbs);
          });
 
          it('_prepareResultsColumns', function() {

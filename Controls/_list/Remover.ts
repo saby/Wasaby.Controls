@@ -22,7 +22,8 @@ var _private = {
 
     beforeItemsRemove: function (self, items) {
         var beforeItemsRemoveResult = self._notify('beforeItemsRemove', [items]);
-        return beforeItemsRemoveResult instanceof Deferred ? beforeItemsRemoveResult : Deferred.success(beforeItemsRemoveResult);
+        return beforeItemsRemoveResult instanceof Deferred || beforeItemsRemoveResult instanceof Promise ?
+           beforeItemsRemoveResult : Deferred.success(beforeItemsRemoveResult);
     },
 
     afterItemsRemove: function (self, items, result) {
@@ -49,6 +50,19 @@ var _private = {
 };
 
 /**
+ * Контрол для удаления элементов списка в recordSet и dataSource.
+ * Контрол должен располагаться в одном контейнере Controls.Container.Data со списком.
+ * <a href="/materials/demo-ws4-operations-panel">Demo examples</a>.
+ * @class Controls/_list/Remover
+ * @extends Core/Control
+ * @mixes Controls/interface/IRemovable
+ * @control
+ * @public
+ * @author Авраменко А.С.
+ * @category List
+ */
+
+/*
  * Сontrol to remove the list items in recordSet and dataSource.
  * Сontrol must be in one Controls.Container.Data with a list.
  * <a href="/materials/demo-ws4-operations-panel">Demo examples</a>.

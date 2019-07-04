@@ -81,7 +81,10 @@ define([
          model.setExpandedItems(['1', '1_1', '2', '3']);
          return model;
       }
-      
+
+
+      let model;
+
       describe('TreeGrid with header and grouping', function () {
 
          describe('with results in top', function () {
@@ -89,96 +92,124 @@ define([
             describe('with node footer template', function () {
 
 
-               let
-                   model = createModel({resultsPosition: 'top', groupBy: 'group', nodeFooterTemplate: 'qwe'}),
-                   rowIndexHelper = model._getRowIndexHelper();
+               beforeEach(function () {
+                  model = createModel({resultsPosition: 'top', groupBy: 'group', nodeFooterTemplate: 'qwe'});
+               });
 
                it('getIndexById', function () {
-                  assert.equal(3, rowIndexHelper.getIndexById('1'));
-                  assert.equal(6, rowIndexHelper.getIndexById('1_1_2'));
-                  assert.equal(8, rowIndexHelper.getIndexById('1_2'));
-                  assert.equal(11, rowIndexHelper.getIndexById('2_1'));
-                  assert.equal(15, rowIndexHelper.getIndexById('3_1'));
-                  assert.equal(17, rowIndexHelper.getIndexById('4'));
+                  assert.equal(3, model._getRowIndexHelper().getIndexById('1'));
+                  assert.equal(6, model._getRowIndexHelper().getIndexById('1_1_2'));
+                  assert.equal(8, model._getRowIndexHelper().getIndexById('1_2'));
+                  assert.equal(11, model._getRowIndexHelper().getIndexById('2_1'));
+                  assert.equal(15, model._getRowIndexHelper().getIndexById('3_1'));
+                  assert.equal(17, model._getRowIndexHelper().getIndexById('4'));
                });
 
                it('getIndexByDisplayIndex', function () {
-                  assert.equal(3, rowIndexHelper.getIndexByDisplayIndex(1));
-                  assert.equal(6, rowIndexHelper.getIndexByDisplayIndex(4));
-                  assert.equal(8, rowIndexHelper.getIndexByDisplayIndex(5));
-                  assert.equal(11, rowIndexHelper.getIndexByDisplayIndex(7));
-                  assert.equal(15, rowIndexHelper.getIndexByDisplayIndex(10));
-                  assert.equal(17, rowIndexHelper.getIndexByDisplayIndex(11));
+                  assert.equal(3, model._getRowIndexHelper().getIndexByDisplayIndex(1));
+                  assert.equal(6, model._getRowIndexHelper().getIndexByDisplayIndex(4));
+                  assert.equal(8, model._getRowIndexHelper().getIndexByDisplayIndex(5));
+                  assert.equal(11, model._getRowIndexHelper().getIndexByDisplayIndex(7));
+                  assert.equal(15, model._getRowIndexHelper().getIndexByDisplayIndex(10));
+                  assert.equal(17, model._getRowIndexHelper().getIndexByDisplayIndex(11));
                });
 
                it('getIndexByItem', function () {
-                  assert.equal(3, rowIndexHelper.getIndexByItem(model.getDisplay().at(1)));
-                  assert.equal(6, rowIndexHelper.getIndexByItem(model.getDisplay().at(4)));
-                  assert.equal(8, rowIndexHelper.getIndexByItem(model.getDisplay().at(5)));
-                  assert.equal(11, rowIndexHelper.getIndexByItem(model.getDisplay().at(7)));
-                  assert.equal(15, rowIndexHelper.getIndexByItem(model.getDisplay().at(10)));
-                  assert.equal(17, rowIndexHelper.getIndexByItem(model.getDisplay().at(11)));
+                  assert.equal(3, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(1)));
+                  assert.equal(6, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(4)));
+                  assert.equal(8, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(5)));
+                  assert.equal(11, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(7)));
+                  assert.equal(15, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(10)));
+                  assert.equal(17, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(11)));
                });
 
                it('groups indexes', function () {
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 2);
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(8), 13);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(0), 2);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(8), 13);
                });
 
                it('getResultsIndex', function () {
-                  assert.equal(rowIndexHelper.getResultsIndex(), 1);
+                  assert.equal(model._getRowIndexHelper().getResultsIndex(), 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(model._getRowIndexHelper().getResultsIndex(), 1);
+                  model._options._needBottomPadding = true;
+                  assert.equal(model._getRowIndexHelper().getResultsIndex(), 1);
+               });
+
+               it('getBottomPaddingRowIndex', function () {
+                  let index = model._getRowIndexHelper().getBottomPaddingRowIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
                });
 
                it('getFooterIndex', function () {
-                  assert.isTrue(rowIndexHelper.getFooterIndex() > 11 * 2 + 1);
+                  let index = model._getRowIndexHelper().getFooterIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 1, model._getRowIndexHelper().getFooterIndex());
                });
 
             });
 
             describe('without node footer template', function () {
 
-               let
-                   model = createModel({resultsPosition: 'top', groupBy: 'group'}),
-                   rowIndexHelper = model._getRowIndexHelper();
+               beforeEach(function () {
+                  model = createModel({resultsPosition: 'top', groupBy: 'group'});
+               });
 
                it('getIndexById', function () {
-                  assert.equal(3, rowIndexHelper.getIndexById('1'));
-                  assert.equal(6, rowIndexHelper.getIndexById('1_1_2'));
-                  assert.equal(8, rowIndexHelper.getIndexById('1_2'));
-                  assert.equal(11, rowIndexHelper.getIndexById('2_1'));
-                  assert.equal(14, rowIndexHelper.getIndexById('3_1'));
-                  assert.equal(15, rowIndexHelper.getIndexById('4'));
+                  assert.equal(3, model._getRowIndexHelper().getIndexById('1'));
+                  assert.equal(6, model._getRowIndexHelper().getIndexById('1_1_2'));
+                  assert.equal(8, model._getRowIndexHelper().getIndexById('1_2'));
+                  assert.equal(11, model._getRowIndexHelper().getIndexById('2_1'));
+                  assert.equal(14, model._getRowIndexHelper().getIndexById('3_1'));
+                  assert.equal(15, model._getRowIndexHelper().getIndexById('4'));
                });
 
                it('getIndexByDisplayIndex', function () {
-                  assert.equal(3, rowIndexHelper.getIndexByDisplayIndex(1));
-                  assert.equal(6, rowIndexHelper.getIndexByDisplayIndex(4));
-                  assert.equal(8, rowIndexHelper.getIndexByDisplayIndex(5));
-                  assert.equal(11, rowIndexHelper.getIndexByDisplayIndex(7));
-                  assert.equal(14, rowIndexHelper.getIndexByDisplayIndex(10));
-                  assert.equal(15, rowIndexHelper.getIndexByDisplayIndex(11));
+                  assert.equal(3, model._getRowIndexHelper().getIndexByDisplayIndex(1));
+                  assert.equal(6, model._getRowIndexHelper().getIndexByDisplayIndex(4));
+                  assert.equal(8, model._getRowIndexHelper().getIndexByDisplayIndex(5));
+                  assert.equal(11, model._getRowIndexHelper().getIndexByDisplayIndex(7));
+                  assert.equal(14, model._getRowIndexHelper().getIndexByDisplayIndex(10));
+                  assert.equal(15, model._getRowIndexHelper().getIndexByDisplayIndex(11));
                });
 
                it('getIndexByItem', function () {
-                  assert.equal(3, rowIndexHelper.getIndexByItem(model.getDisplay().at(1)));
-                  assert.equal(6, rowIndexHelper.getIndexByItem(model.getDisplay().at(4)));
-                  assert.equal(8, rowIndexHelper.getIndexByItem(model.getDisplay().at(5)));
-                  assert.equal(11, rowIndexHelper.getIndexByItem(model.getDisplay().at(7)));
-                  assert.equal(14, rowIndexHelper.getIndexByItem(model.getDisplay().at(10)));
-                  assert.equal(15, rowIndexHelper.getIndexByItem(model.getDisplay().at(11)));
+                  assert.equal(3, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(1)));
+                  assert.equal(6, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(4)));
+                  assert.equal(8, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(5)));
+                  assert.equal(11, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(7)));
+                  assert.equal(14, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(10)));
+                  assert.equal(15, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(11)));
                });
 
                it('groups indexes', function () {
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 2);
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(8), 12);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(0), 2);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(8), 12);
                });
 
                it('getResultsIndex', function () {
-                  assert.equal(rowIndexHelper.getResultsIndex(), 1);
+                  assert.equal(model._getRowIndexHelper().getResultsIndex(), 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(model._getRowIndexHelper().getResultsIndex(), 1);
+                  model._options._needBottomPadding = true;
+                  assert.equal(model._getRowIndexHelper().getResultsIndex(), 1);
+               });
+
+               it('getBottomPaddingRowIndex', function () {
+                  let index = model._getRowIndexHelper().getBottomPaddingRowIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
                });
 
                it('getFooterIndex', function () {
-                  assert.isTrue(rowIndexHelper.getFooterIndex() > 11 * 2 + 1);
+                  let index = model._getRowIndexHelper().getFooterIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 1, model._getRowIndexHelper().getFooterIndex());
                });
 
             });
@@ -189,97 +220,130 @@ define([
 
             describe('with node footer template', function () {
 
-
-               let
-                   model = createModel({resultsPosition: 'bottom', groupBy: 'group', nodeFooterTemplate: 'qwe'}),
-                   rowIndexHelper = model._getRowIndexHelper();
+               beforeEach(function () {
+                  model = createModel({resultsPosition: 'bottom', groupBy: 'group', nodeFooterTemplate: 'qwe'});
+               });
 
                it('getIndexById', function () {
-                  assert.equal(2, rowIndexHelper.getIndexById('1'));
-                  assert.equal(5, rowIndexHelper.getIndexById('1_1_2'));
-                  assert.equal(7, rowIndexHelper.getIndexById('1_2'));
-                  assert.equal(10, rowIndexHelper.getIndexById('2_1'));
-                  assert.equal(14, rowIndexHelper.getIndexById('3_1'));
-                  assert.equal(16, rowIndexHelper.getIndexById('4'));
+                  assert.equal(2, model._getRowIndexHelper().getIndexById('1'));
+                  assert.equal(5, model._getRowIndexHelper().getIndexById('1_1_2'));
+                  assert.equal(7, model._getRowIndexHelper().getIndexById('1_2'));
+                  assert.equal(10, model._getRowIndexHelper().getIndexById('2_1'));
+                  assert.equal(14, model._getRowIndexHelper().getIndexById('3_1'));
+                  assert.equal(16, model._getRowIndexHelper().getIndexById('4'));
                });
 
                it('getIndexByDisplayIndex', function () {
-                  assert.equal(2, rowIndexHelper.getIndexByDisplayIndex(1));
-                  assert.equal(5, rowIndexHelper.getIndexByDisplayIndex(4));
-                  assert.equal(7, rowIndexHelper.getIndexByDisplayIndex(5));
-                  assert.equal(10, rowIndexHelper.getIndexByDisplayIndex(7));
-                  assert.equal(14, rowIndexHelper.getIndexByDisplayIndex(10));
-                  assert.equal(16, rowIndexHelper.getIndexByDisplayIndex(11));
+                  assert.equal(2, model._getRowIndexHelper().getIndexByDisplayIndex(1));
+                  assert.equal(5, model._getRowIndexHelper().getIndexByDisplayIndex(4));
+                  assert.equal(7, model._getRowIndexHelper().getIndexByDisplayIndex(5));
+                  assert.equal(10, model._getRowIndexHelper().getIndexByDisplayIndex(7));
+                  assert.equal(14, model._getRowIndexHelper().getIndexByDisplayIndex(10));
+                  assert.equal(16, model._getRowIndexHelper().getIndexByDisplayIndex(11));
                });
 
                it('getIndexByItem', function () {
-                  assert.equal(2, rowIndexHelper.getIndexByItem(model.getDisplay().at(1)));
-                  assert.equal(5, rowIndexHelper.getIndexByItem(model.getDisplay().at(4)));
-                  assert.equal(7, rowIndexHelper.getIndexByItem(model.getDisplay().at(5)));
-                  assert.equal(10, rowIndexHelper.getIndexByItem(model.getDisplay().at(7)));
-                  assert.equal(14, rowIndexHelper.getIndexByItem(model.getDisplay().at(10)));
-                  assert.equal(16, rowIndexHelper.getIndexByItem(model.getDisplay().at(11)));
+                  assert.equal(2, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(1)));
+                  assert.equal(5, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(4)));
+                  assert.equal(7, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(5)));
+                  assert.equal(10, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(7)));
+                  assert.equal(14, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(10)));
+                  assert.equal(16, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(11)));
                });
 
                it('groups indexes', function () {
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 1);
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(8), 12);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(0), 1);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(8), 12);
                });
 
                it('getResultsIndex', function () {
-                  assert.isTrue(rowIndexHelper.getResultsIndex() > 11 * 2);
+                  let index = model._getRowIndexHelper().getResultsIndex();
+                  assert.isTrue(index > 11 * 2);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getResultsIndex());
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 2, model._getRowIndexHelper().getResultsIndex());
+               });
+
+               it('getBottomPaddingRowIndex', function () {
+                  let index = model._getRowIndexHelper().getBottomPaddingRowIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
                });
 
                it('getFooterIndex', function () {
-                  assert.isTrue(rowIndexHelper.getFooterIndex() > 11 * 2 + 1);
+                  let index = model._getRowIndexHelper().getFooterIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getFooterIndex());
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 2, model._getRowIndexHelper().getFooterIndex());
                });
 
             });
 
             describe('without node footer template', function () {
 
-               let
-                   model = createModel({resultsPosition: 'bottom', groupBy: 'group'}),
-                   rowIndexHelper = model._getRowIndexHelper();
+               beforeEach(function () {
+                  model = createModel({resultsPosition: 'bottom', groupBy: 'group'});
+               });
 
                it('getIndexById', function () {
-                  assert.equal(2, rowIndexHelper.getIndexById('1'));
-                  assert.equal(5, rowIndexHelper.getIndexById('1_1_2'));
-                  assert.equal(7, rowIndexHelper.getIndexById('1_2'));
-                  assert.equal(10, rowIndexHelper.getIndexById('2_1'));
-                  assert.equal(13, rowIndexHelper.getIndexById('3_1'));
-                  assert.equal(14, rowIndexHelper.getIndexById('4'));
+                  assert.equal(2, model._getRowIndexHelper().getIndexById('1'));
+                  assert.equal(5, model._getRowIndexHelper().getIndexById('1_1_2'));
+                  assert.equal(7, model._getRowIndexHelper().getIndexById('1_2'));
+                  assert.equal(10, model._getRowIndexHelper().getIndexById('2_1'));
+                  assert.equal(13, model._getRowIndexHelper().getIndexById('3_1'));
+                  assert.equal(14, model._getRowIndexHelper().getIndexById('4'));
                });
 
                it('getIndexByDisplayIndex', function () {
-                  assert.equal(2, rowIndexHelper.getIndexByDisplayIndex(1));
-                  assert.equal(5, rowIndexHelper.getIndexByDisplayIndex(4));
-                  assert.equal(7, rowIndexHelper.getIndexByDisplayIndex(5));
-                  assert.equal(10, rowIndexHelper.getIndexByDisplayIndex(7));
-                  assert.equal(13, rowIndexHelper.getIndexByDisplayIndex(10));
-                  assert.equal(14, rowIndexHelper.getIndexByDisplayIndex(11));
+                  assert.equal(2, model._getRowIndexHelper().getIndexByDisplayIndex(1));
+                  assert.equal(5, model._getRowIndexHelper().getIndexByDisplayIndex(4));
+                  assert.equal(7, model._getRowIndexHelper().getIndexByDisplayIndex(5));
+                  assert.equal(10, model._getRowIndexHelper().getIndexByDisplayIndex(7));
+                  assert.equal(13, model._getRowIndexHelper().getIndexByDisplayIndex(10));
+                  assert.equal(14, model._getRowIndexHelper().getIndexByDisplayIndex(11));
                });
 
                it('getIndexByItem', function () {
-                  assert.equal(2, rowIndexHelper.getIndexByItem(model.getDisplay().at(1)));
-                  assert.equal(5, rowIndexHelper.getIndexByItem(model.getDisplay().at(4)));
-                  assert.equal(7, rowIndexHelper.getIndexByItem(model.getDisplay().at(5)));
-                  assert.equal(10, rowIndexHelper.getIndexByItem(model.getDisplay().at(7)));
-                  assert.equal(13, rowIndexHelper.getIndexByItem(model.getDisplay().at(10)));
-                  assert.equal(14, rowIndexHelper.getIndexByItem(model.getDisplay().at(11)));
+                  assert.equal(2, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(1)));
+                  assert.equal(5, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(4)));
+                  assert.equal(7, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(5)));
+                  assert.equal(10, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(7)));
+                  assert.equal(13, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(10)));
+                  assert.equal(14, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(11)));
                });
 
                it('groups indexes', function () {
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 1);
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(8), 11);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(0), 1);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(8), 11);
                });
 
                it('getResultsIndex', function () {
-                  assert.isTrue(rowIndexHelper.getResultsIndex() > 11 * 2);
+                  let index = model._getRowIndexHelper().getResultsIndex();
+                  assert.isTrue(index > 11 * 2);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getResultsIndex());
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 2, model._getRowIndexHelper().getResultsIndex());
+               });
+
+               it('getBottomPaddingRowIndex', function () {
+                  let index = model._getRowIndexHelper().getBottomPaddingRowIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
                });
 
                it('getFooterIndex', function () {
-                  assert.isTrue(rowIndexHelper.getFooterIndex() > 11 * 2 + 1);
+                  let index = model._getRowIndexHelper().getFooterIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getFooterIndex());
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 2, model._getRowIndexHelper().getFooterIndex());
                });
 
             });
@@ -290,93 +354,112 @@ define([
 
             describe('with node footer template', function () {
 
-
-               let
-                   model = createModel({groupBy: 'group', nodeFooterTemplate: 'qwe'}),
-                   rowIndexHelper = model._getRowIndexHelper();
+               beforeEach(function () {
+                  model = createModel({groupBy: 'group', nodeFooterTemplate: 'qwe'});
+               });
 
                it('getIndexById', function () {
-                  assert.equal(2, rowIndexHelper.getIndexById('1'));
-                  assert.equal(5, rowIndexHelper.getIndexById('1_1_2'));
-                  assert.equal(7, rowIndexHelper.getIndexById('1_2'));
-                  assert.equal(10, rowIndexHelper.getIndexById('2_1'));
-                  assert.equal(14, rowIndexHelper.getIndexById('3_1'));
-                  assert.equal(16, rowIndexHelper.getIndexById('4'));
+                  assert.equal(2, model._getRowIndexHelper().getIndexById('1'));
+                  assert.equal(5, model._getRowIndexHelper().getIndexById('1_1_2'));
+                  assert.equal(7, model._getRowIndexHelper().getIndexById('1_2'));
+                  assert.equal(10, model._getRowIndexHelper().getIndexById('2_1'));
+                  assert.equal(14, model._getRowIndexHelper().getIndexById('3_1'));
+                  assert.equal(16, model._getRowIndexHelper().getIndexById('4'));
                });
 
                it('getIndexByDisplayIndex', function () {
-                  assert.equal(2, rowIndexHelper.getIndexByDisplayIndex(1));
-                  assert.equal(5, rowIndexHelper.getIndexByDisplayIndex(4));
-                  assert.equal(7, rowIndexHelper.getIndexByDisplayIndex(5));
-                  assert.equal(10, rowIndexHelper.getIndexByDisplayIndex(7));
-                  assert.equal(14, rowIndexHelper.getIndexByDisplayIndex(10));
-                  assert.equal(16, rowIndexHelper.getIndexByDisplayIndex(11));
+                  assert.equal(2, model._getRowIndexHelper().getIndexByDisplayIndex(1));
+                  assert.equal(5, model._getRowIndexHelper().getIndexByDisplayIndex(4));
+                  assert.equal(7, model._getRowIndexHelper().getIndexByDisplayIndex(5));
+                  assert.equal(10, model._getRowIndexHelper().getIndexByDisplayIndex(7));
+                  assert.equal(14, model._getRowIndexHelper().getIndexByDisplayIndex(10));
+                  assert.equal(16, model._getRowIndexHelper().getIndexByDisplayIndex(11));
                });
 
                it('getIndexByItem', function () {
-                  assert.equal(2, rowIndexHelper.getIndexByItem(model.getDisplay().at(1)));
-                  assert.equal(5, rowIndexHelper.getIndexByItem(model.getDisplay().at(4)));
-                  assert.equal(7, rowIndexHelper.getIndexByItem(model.getDisplay().at(5)));
-                  assert.equal(10, rowIndexHelper.getIndexByItem(model.getDisplay().at(7)));
-                  assert.equal(14, rowIndexHelper.getIndexByItem(model.getDisplay().at(10)));
-                  assert.equal(16, rowIndexHelper.getIndexByItem(model.getDisplay().at(11)));
+                  assert.equal(2, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(1)));
+                  assert.equal(5, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(4)));
+                  assert.equal(7, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(5)));
+                  assert.equal(10, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(7)));
+                  assert.equal(14, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(10)));
+                  assert.equal(16, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(11)));
                });
 
                it('groups indexes', function () {
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 1);
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(8), 12);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(0), 1);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(8), 12);
+               });
+
+               it('getBottomPaddingRowIndex', function () {
+                  let index = model._getRowIndexHelper().getBottomPaddingRowIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
                });
 
                it('getFooterIndex', function () {
-                  assert.isTrue(rowIndexHelper.getFooterIndex() > 11 * 2 + 1);
+                  let index = model._getRowIndexHelper().getFooterIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getFooterIndex());
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 2, model._getRowIndexHelper().getFooterIndex());
                });
 
             });
 
             describe('without node footer template', function () {
 
-               let
-                   model = createModel({resultsPosition: 'bottom', groupBy: 'group'}),
-                   rowIndexHelper = model._getRowIndexHelper();
+               beforeEach(function () {
+                  model = createModel({resultsPosition: 'bottom', groupBy: 'group'});
+               });
 
                it('getIndexById', function () {
-                  assert.equal(2, rowIndexHelper.getIndexById('1'));
-                  assert.equal(5, rowIndexHelper.getIndexById('1_1_2'));
-                  assert.equal(7, rowIndexHelper.getIndexById('1_2'));
-                  assert.equal(10, rowIndexHelper.getIndexById('2_1'));
-                  assert.equal(13, rowIndexHelper.getIndexById('3_1'));
-                  assert.equal(14, rowIndexHelper.getIndexById('4'));
+                  assert.equal(2, model._getRowIndexHelper().getIndexById('1'));
+                  assert.equal(5, model._getRowIndexHelper().getIndexById('1_1_2'));
+                  assert.equal(7, model._getRowIndexHelper().getIndexById('1_2'));
+                  assert.equal(10, model._getRowIndexHelper().getIndexById('2_1'));
+                  assert.equal(13, model._getRowIndexHelper().getIndexById('3_1'));
+                  assert.equal(14, model._getRowIndexHelper().getIndexById('4'));
                });
 
                it('getIndexByDisplayIndex', function () {
-                  assert.equal(2, rowIndexHelper.getIndexByDisplayIndex(1));
-                  assert.equal(5, rowIndexHelper.getIndexByDisplayIndex(4));
-                  assert.equal(7, rowIndexHelper.getIndexByDisplayIndex(5));
-                  assert.equal(10, rowIndexHelper.getIndexByDisplayIndex(7));
-                  assert.equal(13, rowIndexHelper.getIndexByDisplayIndex(10));
-                  assert.equal(14, rowIndexHelper.getIndexByDisplayIndex(11));
+                  assert.equal(2, model._getRowIndexHelper().getIndexByDisplayIndex(1));
+                  assert.equal(5, model._getRowIndexHelper().getIndexByDisplayIndex(4));
+                  assert.equal(7, model._getRowIndexHelper().getIndexByDisplayIndex(5));
+                  assert.equal(10, model._getRowIndexHelper().getIndexByDisplayIndex(7));
+                  assert.equal(13, model._getRowIndexHelper().getIndexByDisplayIndex(10));
+                  assert.equal(14, model._getRowIndexHelper().getIndexByDisplayIndex(11));
                });
 
                it('getIndexByItem', function () {
-                  assert.equal(2, rowIndexHelper.getIndexByItem(model.getDisplay().at(1)));
-                  assert.equal(5, rowIndexHelper.getIndexByItem(model.getDisplay().at(4)));
-                  assert.equal(7, rowIndexHelper.getIndexByItem(model.getDisplay().at(5)));
-                  assert.equal(10, rowIndexHelper.getIndexByItem(model.getDisplay().at(7)));
-                  assert.equal(13, rowIndexHelper.getIndexByItem(model.getDisplay().at(10)));
-                  assert.equal(14, rowIndexHelper.getIndexByItem(model.getDisplay().at(11)));
+                  assert.equal(2, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(1)));
+                  assert.equal(5, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(4)));
+                  assert.equal(7, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(5)));
+                  assert.equal(10, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(7)));
+                  assert.equal(13, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(10)));
+                  assert.equal(14, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(11)));
                });
 
                it('groups indexes', function () {
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 1);
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(8), 11);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(0), 1);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(8), 11);
                });
 
-               it('getResultsIndex', function () {
-                  assert.isTrue(rowIndexHelper.getResultsIndex() > 11 * 2);
+               it('getBottomPaddingRowIndex', function () {
+                  let index = model._getRowIndexHelper().getBottomPaddingRowIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
                });
 
                it('getFooterIndex', function () {
-                  assert.isTrue(rowIndexHelper.getFooterIndex() > 11 * 2 + 1);
+                  let index = model._getRowIndexHelper().getFooterIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getFooterIndex());
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 2, model._getRowIndexHelper().getFooterIndex());
                });
 
             });
@@ -391,97 +474,128 @@ define([
 
             describe('with node footer template', function () {
 
-
-               let
-                   model = createModel({resultsPosition: 'top', header: null, groupBy: 'group', nodeFooterTemplate: 'qwe'}),
-                   rowIndexHelper = model._getRowIndexHelper();
+               beforeEach(function () {
+                  model = createModel({resultsPosition: 'top', header: null, groupBy: 'group', nodeFooterTemplate: 'qwe'});
+               });
 
                it('getIndexById', function () {
-                  assert.equal(2, rowIndexHelper.getIndexById('1'));
-                  assert.equal(5, rowIndexHelper.getIndexById('1_1_2'));
-                  assert.equal(7, rowIndexHelper.getIndexById('1_2'));
-                  assert.equal(10, rowIndexHelper.getIndexById('2_1'));
-                  assert.equal(14, rowIndexHelper.getIndexById('3_1'));
-                  assert.equal(16, rowIndexHelper.getIndexById('4'));
+                  assert.equal(2, model._getRowIndexHelper().getIndexById('1'));
+                  assert.equal(5, model._getRowIndexHelper().getIndexById('1_1_2'));
+                  assert.equal(7, model._getRowIndexHelper().getIndexById('1_2'));
+                  assert.equal(10, model._getRowIndexHelper().getIndexById('2_1'));
+                  assert.equal(14, model._getRowIndexHelper().getIndexById('3_1'));
+                  assert.equal(16, model._getRowIndexHelper().getIndexById('4'));
                });
 
                it('getIndexByDisplayIndex', function () {
-                  assert.equal(2, rowIndexHelper.getIndexByDisplayIndex(1));
-                  assert.equal(5, rowIndexHelper.getIndexByDisplayIndex(4));
-                  assert.equal(7, rowIndexHelper.getIndexByDisplayIndex(5));
-                  assert.equal(10, rowIndexHelper.getIndexByDisplayIndex(7));
-                  assert.equal(14, rowIndexHelper.getIndexByDisplayIndex(10));
-                  assert.equal(16, rowIndexHelper.getIndexByDisplayIndex(11));
+                  assert.equal(2, model._getRowIndexHelper().getIndexByDisplayIndex(1));
+                  assert.equal(5, model._getRowIndexHelper().getIndexByDisplayIndex(4));
+                  assert.equal(7, model._getRowIndexHelper().getIndexByDisplayIndex(5));
+                  assert.equal(10, model._getRowIndexHelper().getIndexByDisplayIndex(7));
+                  assert.equal(14, model._getRowIndexHelper().getIndexByDisplayIndex(10));
+                  assert.equal(16, model._getRowIndexHelper().getIndexByDisplayIndex(11));
                });
 
                it('getIndexByItem', function () {
-                  assert.equal(2, rowIndexHelper.getIndexByItem(model.getDisplay().at(1)));
-                  assert.equal(5, rowIndexHelper.getIndexByItem(model.getDisplay().at(4)));
-                  assert.equal(7, rowIndexHelper.getIndexByItem(model.getDisplay().at(5)));
-                  assert.equal(10, rowIndexHelper.getIndexByItem(model.getDisplay().at(7)));
-                  assert.equal(14, rowIndexHelper.getIndexByItem(model.getDisplay().at(10)));
-                  assert.equal(16, rowIndexHelper.getIndexByItem(model.getDisplay().at(11)));
+                  assert.equal(2, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(1)));
+                  assert.equal(5, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(4)));
+                  assert.equal(7, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(5)));
+                  assert.equal(10, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(7)));
+                  assert.equal(14, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(10)));
+                  assert.equal(16, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(11)));
                });
 
                it('groups indexes', function () {
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 1);
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(8), 12);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(0), 1);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(8), 12);
                });
 
                it('getResultsIndex', function () {
-                  assert.equal(rowIndexHelper.getResultsIndex(), 0);
+                  assert.equal(model._getRowIndexHelper().getResultsIndex(), 0);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(model._getRowIndexHelper().getResultsIndex(), 0);
+                  model._options._needBottomPadding = true;
+                  assert.equal(model._getRowIndexHelper().getResultsIndex(), 0);
+               });
+
+               it('getBottomPaddingRowIndex', function () {
+                  let index = model._getRowIndexHelper().getBottomPaddingRowIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
                });
 
                it('getFooterIndex', function () {
-                  assert.isTrue(rowIndexHelper.getFooterIndex() > 10 * 2 + 1);
+                  let index = model._getRowIndexHelper().getFooterIndex();
+                  assert.isTrue(index > 10 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getFooterIndex());
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 2, model._getRowIndexHelper().getFooterIndex());
                });
 
             });
 
             describe('without node footer template', function () {
 
-               let
-                   model = createModel({resultsPosition: 'top', header: null, groupBy: 'group'}),
-                   rowIndexHelper = model._getRowIndexHelper();
+               beforeEach(function () {
+                  model = createModel({resultsPosition: 'top', header: null, groupBy: 'group'});
+               });
 
                it('getIndexById', function () {
-                  assert.equal(2, rowIndexHelper.getIndexById('1'));
-                  assert.equal(5, rowIndexHelper.getIndexById('1_1_2'));
-                  assert.equal(7, rowIndexHelper.getIndexById('1_2'));
-                  assert.equal(10, rowIndexHelper.getIndexById('2_1'));
-                  assert.equal(13, rowIndexHelper.getIndexById('3_1'));
-                  assert.equal(14, rowIndexHelper.getIndexById('4'));
+                  assert.equal(2, model._getRowIndexHelper().getIndexById('1'));
+                  assert.equal(5, model._getRowIndexHelper().getIndexById('1_1_2'));
+                  assert.equal(7, model._getRowIndexHelper().getIndexById('1_2'));
+                  assert.equal(10, model._getRowIndexHelper().getIndexById('2_1'));
+                  assert.equal(13, model._getRowIndexHelper().getIndexById('3_1'));
+                  assert.equal(14, model._getRowIndexHelper().getIndexById('4'));
                });
 
                it('getIndexByDisplayIndex', function () {
-                  assert.equal(2, rowIndexHelper.getIndexByDisplayIndex(1));
-                  assert.equal(5, rowIndexHelper.getIndexByDisplayIndex(4));
-                  assert.equal(7, rowIndexHelper.getIndexByDisplayIndex(5));
-                  assert.equal(10, rowIndexHelper.getIndexByDisplayIndex(7));
-                  assert.equal(13, rowIndexHelper.getIndexByDisplayIndex(10));
-                  assert.equal(14, rowIndexHelper.getIndexByDisplayIndex(11));
+                  assert.equal(2, model._getRowIndexHelper().getIndexByDisplayIndex(1));
+                  assert.equal(5, model._getRowIndexHelper().getIndexByDisplayIndex(4));
+                  assert.equal(7, model._getRowIndexHelper().getIndexByDisplayIndex(5));
+                  assert.equal(10, model._getRowIndexHelper().getIndexByDisplayIndex(7));
+                  assert.equal(13, model._getRowIndexHelper().getIndexByDisplayIndex(10));
+                  assert.equal(14, model._getRowIndexHelper().getIndexByDisplayIndex(11));
                });
 
                it('getIndexByItem', function () {
-                  assert.equal(2, rowIndexHelper.getIndexByItem(model.getDisplay().at(1)));
-                  assert.equal(5, rowIndexHelper.getIndexByItem(model.getDisplay().at(4)));
-                  assert.equal(7, rowIndexHelper.getIndexByItem(model.getDisplay().at(5)));
-                  assert.equal(10, rowIndexHelper.getIndexByItem(model.getDisplay().at(7)));
-                  assert.equal(13, rowIndexHelper.getIndexByItem(model.getDisplay().at(10)));
-                  assert.equal(14, rowIndexHelper.getIndexByItem(model.getDisplay().at(11)));
+                  assert.equal(2, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(1)));
+                  assert.equal(5, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(4)));
+                  assert.equal(7, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(5)));
+                  assert.equal(10, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(7)));
+                  assert.equal(13, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(10)));
+                  assert.equal(14, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(11)));
                });
 
                it('groups indexes', function () {
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 1);
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(8), 11);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(0), 1);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(8), 11);
                });
 
                it('getResultsIndex', function () {
-                  assert.equal(rowIndexHelper.getResultsIndex(), 0);
+                  assert.equal(model._getRowIndexHelper().getResultsIndex(), 0);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(model._getRowIndexHelper().getResultsIndex(), 0);
+                  model._options._needBottomPadding = true;
+                  assert.equal(model._getRowIndexHelper().getResultsIndex(), 0);
+               });
+
+               it('getBottomPaddingRowIndex', function () {
+                  let index = model._getRowIndexHelper().getBottomPaddingRowIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
                });
 
                it('getFooterIndex', function () {
-                  assert.isTrue(rowIndexHelper.getFooterIndex() > 11 * 2 + 1);
+                  let index = model._getRowIndexHelper().getFooterIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getFooterIndex());
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 2, model._getRowIndexHelper().getFooterIndex());
                });
 
             });
@@ -492,97 +606,137 @@ define([
 
             describe('with node footer template', function () {
 
-
-               let
-                   model = createModel({resultsPosition: 'bottom', header: null, groupBy: 'group', nodeFooterTemplate: 'qwe'}),
-                   rowIndexHelper = model._getRowIndexHelper();
+               beforeEach(function () {
+                  model = createModel({resultsPosition: 'bottom', header: null, groupBy: 'group', nodeFooterTemplate: 'qwe'});
+               });
 
                it('getIndexById', function () {
-                  assert.equal(1, rowIndexHelper.getIndexById('1'));
-                  assert.equal(4, rowIndexHelper.getIndexById('1_1_2'));
-                  assert.equal(6, rowIndexHelper.getIndexById('1_2'));
-                  assert.equal(9, rowIndexHelper.getIndexById('2_1'));
-                  assert.equal(13, rowIndexHelper.getIndexById('3_1'));
-                  assert.equal(15, rowIndexHelper.getIndexById('4'));
+                  assert.equal(1, model._getRowIndexHelper().getIndexById('1'));
+                  assert.equal(4, model._getRowIndexHelper().getIndexById('1_1_2'));
+                  assert.equal(6, model._getRowIndexHelper().getIndexById('1_2'));
+                  assert.equal(9, model._getRowIndexHelper().getIndexById('2_1'));
+                  assert.equal(13, model._getRowIndexHelper().getIndexById('3_1'));
+                  assert.equal(15, model._getRowIndexHelper().getIndexById('4'));
                });
 
                it('getIndexByDisplayIndex', function () {
-                  assert.equal(1, rowIndexHelper.getIndexByDisplayIndex(1));
-                  assert.equal(4, rowIndexHelper.getIndexByDisplayIndex(4));
-                  assert.equal(6, rowIndexHelper.getIndexByDisplayIndex(5));
-                  assert.equal(9, rowIndexHelper.getIndexByDisplayIndex(7));
-                  assert.equal(13, rowIndexHelper.getIndexByDisplayIndex(10));
-                  assert.equal(15, rowIndexHelper.getIndexByDisplayIndex(11));
+                  assert.equal(1, model._getRowIndexHelper().getIndexByDisplayIndex(1));
+                  assert.equal(4, model._getRowIndexHelper().getIndexByDisplayIndex(4));
+                  assert.equal(6, model._getRowIndexHelper().getIndexByDisplayIndex(5));
+                  assert.equal(9, model._getRowIndexHelper().getIndexByDisplayIndex(7));
+                  assert.equal(13, model._getRowIndexHelper().getIndexByDisplayIndex(10));
+                  assert.equal(15, model._getRowIndexHelper().getIndexByDisplayIndex(11));
                });
 
                it('getIndexByItem', function () {
-                  assert.equal(1, rowIndexHelper.getIndexByItem(model.getDisplay().at(1)));
-                  assert.equal(4, rowIndexHelper.getIndexByItem(model.getDisplay().at(4)));
-                  assert.equal(6, rowIndexHelper.getIndexByItem(model.getDisplay().at(5)));
-                  assert.equal(9, rowIndexHelper.getIndexByItem(model.getDisplay().at(7)));
-                  assert.equal(13, rowIndexHelper.getIndexByItem(model.getDisplay().at(10)));
-                  assert.equal(15, rowIndexHelper.getIndexByItem(model.getDisplay().at(11)));
+                  assert.equal(1, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(1)));
+                  assert.equal(4, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(4)));
+                  assert.equal(6, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(5)));
+                  assert.equal(9, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(7)));
+                  assert.equal(13, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(10)));
+                  assert.equal(15, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(11)));
                });
 
                it('groups indexes', function () {
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 0);
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(8), 11);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(0), 0);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(8), 11);
                });
 
                it('getResultsIndex', function () {
-                  assert.isTrue(rowIndexHelper.getResultsIndex() > 11 * 2);
+                  let index = model._getRowIndexHelper().getResultsIndex();
+                  assert.isTrue(index > 11 * 2);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getResultsIndex());
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 2, model._getRowIndexHelper().getResultsIndex());
+               });
+
+               it('getBottomPaddingRowIndex', function () {
+                  let index = model._getRowIndexHelper().getBottomPaddingRowIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
+               });
+
+               it('getBottomPaddingRowIndex', function () {
+                  let index = model._getRowIndexHelper().getBottomPaddingRowIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
                });
 
                it('getFooterIndex', function () {
-                  assert.isTrue(rowIndexHelper.getFooterIndex() > 11 * 2 + 1);
+                  let index = model._getRowIndexHelper().getFooterIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getFooterIndex());
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 2, model._getRowIndexHelper().getFooterIndex());
                });
 
             });
 
             describe('without node footer template', function () {
 
-               let
-                   model = createModel({resultsPosition: 'bottom', header: null, groupBy: 'group'}),
-                   rowIndexHelper = model._getRowIndexHelper();
+               beforeEach(function () {
+                  model = createModel({resultsPosition: 'bottom', header: null, groupBy: 'group'});
+               });
 
                it('getIndexById', function () {
-                  assert.equal(1, rowIndexHelper.getIndexById('1'));
-                  assert.equal(4, rowIndexHelper.getIndexById('1_1_2'));
-                  assert.equal(6, rowIndexHelper.getIndexById('1_2'));
-                  assert.equal(9, rowIndexHelper.getIndexById('2_1'));
-                  assert.equal(12, rowIndexHelper.getIndexById('3_1'));
-                  assert.equal(13, rowIndexHelper.getIndexById('4'));
+                  assert.equal(1, model._getRowIndexHelper().getIndexById('1'));
+                  assert.equal(4, model._getRowIndexHelper().getIndexById('1_1_2'));
+                  assert.equal(6, model._getRowIndexHelper().getIndexById('1_2'));
+                  assert.equal(9, model._getRowIndexHelper().getIndexById('2_1'));
+                  assert.equal(12, model._getRowIndexHelper().getIndexById('3_1'));
+                  assert.equal(13, model._getRowIndexHelper().getIndexById('4'));
                });
 
                it('getIndexByDisplayIndex', function () {
-                  assert.equal(1, rowIndexHelper.getIndexByDisplayIndex(1));
-                  assert.equal(4, rowIndexHelper.getIndexByDisplayIndex(4));
-                  assert.equal(6, rowIndexHelper.getIndexByDisplayIndex(5));
-                  assert.equal(9, rowIndexHelper.getIndexByDisplayIndex(7));
-                  assert.equal(12, rowIndexHelper.getIndexByDisplayIndex(10));
-                  assert.equal(13, rowIndexHelper.getIndexByDisplayIndex(11));
+                  assert.equal(1, model._getRowIndexHelper().getIndexByDisplayIndex(1));
+                  assert.equal(4, model._getRowIndexHelper().getIndexByDisplayIndex(4));
+                  assert.equal(6, model._getRowIndexHelper().getIndexByDisplayIndex(5));
+                  assert.equal(9, model._getRowIndexHelper().getIndexByDisplayIndex(7));
+                  assert.equal(12, model._getRowIndexHelper().getIndexByDisplayIndex(10));
+                  assert.equal(13, model._getRowIndexHelper().getIndexByDisplayIndex(11));
                });
 
                it('getIndexByItem', function () {
-                  assert.equal(1, rowIndexHelper.getIndexByItem(model.getDisplay().at(1)));
-                  assert.equal(4, rowIndexHelper.getIndexByItem(model.getDisplay().at(4)));
-                  assert.equal(6, rowIndexHelper.getIndexByItem(model.getDisplay().at(5)));
-                  assert.equal(9, rowIndexHelper.getIndexByItem(model.getDisplay().at(7)));
-                  assert.equal(12, rowIndexHelper.getIndexByItem(model.getDisplay().at(10)));
-                  assert.equal(13, rowIndexHelper.getIndexByItem(model.getDisplay().at(11)));
+                  assert.equal(1, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(1)));
+                  assert.equal(4, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(4)));
+                  assert.equal(6, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(5)));
+                  assert.equal(9, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(7)));
+                  assert.equal(12, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(10)));
+                  assert.equal(13, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(11)));
                });
 
                it('groups indexes', function () {
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 0);
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(8), 10);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(0), 0);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(8), 10);
                });
 
                it('getResultsIndex', function () {
-                  assert.isTrue(rowIndexHelper.getResultsIndex() > 11 * 2);
+                  let index = model._getRowIndexHelper().getResultsIndex();
+                  assert.isTrue(index > 11 * 2);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getResultsIndex());
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 2, model._getRowIndexHelper().getResultsIndex());
+               });
+
+               it('getBottomPaddingRowIndex', function () {
+                  let index = model._getRowIndexHelper().getBottomPaddingRowIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
                });
 
                it('getFooterIndex', function () {
-                  assert.isTrue(rowIndexHelper.getFooterIndex() > 11 * 2 + 1);
+                  let index = model._getRowIndexHelper().getFooterIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getFooterIndex());
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 2, model._getRowIndexHelper().getFooterIndex());
                });
 
             });
@@ -593,93 +747,112 @@ define([
 
             describe('with node footer template', function () {
 
-
-               let
-                   model = createModel({groupBy: 'group', header: null, nodeFooterTemplate: 'qwe'}),
-                   rowIndexHelper = model._getRowIndexHelper();
+               beforeEach(function () {
+                  model = createModel({groupBy: 'group', header: null, nodeFooterTemplate: 'qwe'});
+               });
 
                it('getIndexById', function () {
-                  assert.equal(1, rowIndexHelper.getIndexById('1'));
-                  assert.equal(4, rowIndexHelper.getIndexById('1_1_2'));
-                  assert.equal(6, rowIndexHelper.getIndexById('1_2'));
-                  assert.equal(9, rowIndexHelper.getIndexById('2_1'));
-                  assert.equal(13, rowIndexHelper.getIndexById('3_1'));
-                  assert.equal(15, rowIndexHelper.getIndexById('4'));
+                  assert.equal(1, model._getRowIndexHelper().getIndexById('1'));
+                  assert.equal(4, model._getRowIndexHelper().getIndexById('1_1_2'));
+                  assert.equal(6, model._getRowIndexHelper().getIndexById('1_2'));
+                  assert.equal(9, model._getRowIndexHelper().getIndexById('2_1'));
+                  assert.equal(13, model._getRowIndexHelper().getIndexById('3_1'));
+                  assert.equal(15, model._getRowIndexHelper().getIndexById('4'));
                });
 
                it('getIndexByDisplayIndex', function () {
-                  assert.equal(1, rowIndexHelper.getIndexByDisplayIndex(1));
-                  assert.equal(4, rowIndexHelper.getIndexByDisplayIndex(4));
-                  assert.equal(6, rowIndexHelper.getIndexByDisplayIndex(5));
-                  assert.equal(9, rowIndexHelper.getIndexByDisplayIndex(7));
-                  assert.equal(13, rowIndexHelper.getIndexByDisplayIndex(10));
-                  assert.equal(15, rowIndexHelper.getIndexByDisplayIndex(11));
+                  assert.equal(1, model._getRowIndexHelper().getIndexByDisplayIndex(1));
+                  assert.equal(4, model._getRowIndexHelper().getIndexByDisplayIndex(4));
+                  assert.equal(6, model._getRowIndexHelper().getIndexByDisplayIndex(5));
+                  assert.equal(9, model._getRowIndexHelper().getIndexByDisplayIndex(7));
+                  assert.equal(13, model._getRowIndexHelper().getIndexByDisplayIndex(10));
+                  assert.equal(15, model._getRowIndexHelper().getIndexByDisplayIndex(11));
                });
 
                it('getIndexByItem', function () {
-                  assert.equal(1, rowIndexHelper.getIndexByItem(model.getDisplay().at(1)));
-                  assert.equal(4, rowIndexHelper.getIndexByItem(model.getDisplay().at(4)));
-                  assert.equal(6, rowIndexHelper.getIndexByItem(model.getDisplay().at(5)));
-                  assert.equal(9, rowIndexHelper.getIndexByItem(model.getDisplay().at(7)));
-                  assert.equal(13, rowIndexHelper.getIndexByItem(model.getDisplay().at(10)));
-                  assert.equal(15, rowIndexHelper.getIndexByItem(model.getDisplay().at(11)));
+                  assert.equal(1, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(1)));
+                  assert.equal(4, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(4)));
+                  assert.equal(6, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(5)));
+                  assert.equal(9, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(7)));
+                  assert.equal(13, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(10)));
+                  assert.equal(15, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(11)));
                });
 
                it('groups indexes', function () {
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 0);
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(8), 11);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(0), 0);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(8), 11);
+               });
+
+               it('getBottomPaddingRowIndex', function () {
+                  let index = model._getRowIndexHelper().getBottomPaddingRowIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
                });
 
                it('getFooterIndex', function () {
-                  assert.isTrue(rowIndexHelper.getFooterIndex() > 11 * 2 + 1);
+                  let index = model._getRowIndexHelper().getFooterIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getFooterIndex());
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 2, model._getRowIndexHelper().getFooterIndex());
                });
 
             });
 
             describe('without node footer template', function () {
 
-               let
-                   model = createModel({resultsPosition: 'bottom', header: null, groupBy: 'group'}),
-                   rowIndexHelper = model._getRowIndexHelper();
+               beforeEach(function () {
+                  model = createModel({resultsPosition: 'bottom', header: null, groupBy: 'group'});
+               });
 
                it('getIndexById', function () {
-                  assert.equal(1, rowIndexHelper.getIndexById('1'));
-                  assert.equal(4, rowIndexHelper.getIndexById('1_1_2'));
-                  assert.equal(6, rowIndexHelper.getIndexById('1_2'));
-                  assert.equal(9, rowIndexHelper.getIndexById('2_1'));
-                  assert.equal(12, rowIndexHelper.getIndexById('3_1'));
-                  assert.equal(13, rowIndexHelper.getIndexById('4'));
+                  assert.equal(1, model._getRowIndexHelper().getIndexById('1'));
+                  assert.equal(4, model._getRowIndexHelper().getIndexById('1_1_2'));
+                  assert.equal(6, model._getRowIndexHelper().getIndexById('1_2'));
+                  assert.equal(9, model._getRowIndexHelper().getIndexById('2_1'));
+                  assert.equal(12, model._getRowIndexHelper().getIndexById('3_1'));
+                  assert.equal(13, model._getRowIndexHelper().getIndexById('4'));
                });
 
                it('getIndexByDisplayIndex', function () {
-                  assert.equal(1, rowIndexHelper.getIndexByDisplayIndex(1));
-                  assert.equal(4, rowIndexHelper.getIndexByDisplayIndex(4));
-                  assert.equal(6, rowIndexHelper.getIndexByDisplayIndex(5));
-                  assert.equal(9, rowIndexHelper.getIndexByDisplayIndex(7));
-                  assert.equal(12, rowIndexHelper.getIndexByDisplayIndex(10));
-                  assert.equal(13, rowIndexHelper.getIndexByDisplayIndex(11));
+                  assert.equal(1, model._getRowIndexHelper().getIndexByDisplayIndex(1));
+                  assert.equal(4, model._getRowIndexHelper().getIndexByDisplayIndex(4));
+                  assert.equal(6, model._getRowIndexHelper().getIndexByDisplayIndex(5));
+                  assert.equal(9, model._getRowIndexHelper().getIndexByDisplayIndex(7));
+                  assert.equal(12, model._getRowIndexHelper().getIndexByDisplayIndex(10));
+                  assert.equal(13, model._getRowIndexHelper().getIndexByDisplayIndex(11));
                });
 
                it('getIndexByItem', function () {
-                  assert.equal(1, rowIndexHelper.getIndexByItem(model.getDisplay().at(1)));
-                  assert.equal(4, rowIndexHelper.getIndexByItem(model.getDisplay().at(4)));
-                  assert.equal(6, rowIndexHelper.getIndexByItem(model.getDisplay().at(5)));
-                  assert.equal(9, rowIndexHelper.getIndexByItem(model.getDisplay().at(7)));
-                  assert.equal(12, rowIndexHelper.getIndexByItem(model.getDisplay().at(10)));
-                  assert.equal(13, rowIndexHelper.getIndexByItem(model.getDisplay().at(11)));
+                  assert.equal(1, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(1)));
+                  assert.equal(4, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(4)));
+                  assert.equal(6, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(5)));
+                  assert.equal(9, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(7)));
+                  assert.equal(12, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(10)));
+                  assert.equal(13, model._getRowIndexHelper().getIndexByItem(model.getDisplay().at(11)));
                });
 
                it('groups indexes', function () {
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(0), 0);
-                  assert.equal(rowIndexHelper.getIndexByDisplayIndex(8), 10);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(0), 0);
+                  assert.equal(model._getRowIndexHelper().getIndexByDisplayIndex(8), 10);
                });
 
-               it('getResultsIndex', function () {
-                  assert.isTrue(rowIndexHelper.getResultsIndex() > 11 * 2);
+               it('getBottomPaddingRowIndex', function () {
+                  let index = model._getRowIndexHelper().getBottomPaddingRowIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
                });
 
                it('getFooterIndex', function () {
-                  assert.isTrue(rowIndexHelper.getFooterIndex() > 11 * 2 + 1);
+                  let index = model._getRowIndexHelper().getFooterIndex();
+                  assert.isTrue(index > 11 * 2 + 1);
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getFooterIndex());
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 2, model._getRowIndexHelper().getFooterIndex());
                });
 
             });

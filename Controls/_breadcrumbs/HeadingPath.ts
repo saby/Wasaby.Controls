@@ -49,12 +49,14 @@ var _private = {
         var
             backButtonWidth,
             availableWidth,
-            homeWidth;
+            homeWidth,
+            homePathSpacing;
 
         self._backButtonCaption = ItemsUtil.getPropertyValue(options.items[options.items.length - 1], self._options.displayProperty);
         if (options.items.length > 1) {
             self._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
            homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__homeContainer"><div class="controls-BreadCrumbsPath__home icon-Home3"></div></div>');
+           homePathSpacing = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__breadCrumbs_home-path-spacing"></div>');
            if (!options.header) {
               backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
                  _options: {
@@ -67,7 +69,7 @@ var _private = {
                  BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems, options.displayProperty),
                  BreadCrumbsUtil.getMinCrumbsWidth(self._breadCrumbsItems.length),
                  backButtonWidth,
-                 containerWidth - homeWidth
+                 containerWidth - homeWidth - homePathSpacing
               );
 
               if (self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half') {
@@ -77,9 +79,9 @@ var _private = {
               } else {
                   availableWidth = containerWidth - backButtonWidth;
               }
-              BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, availableWidth - homeWidth);
+              BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, availableWidth - homeWidth - homePathSpacing);
            } else {
-              BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, containerWidth - homeWidth);
+              BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, containerWidth - homeWidth - homePathSpacing);
               self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
            }
         } else {
@@ -106,6 +108,22 @@ var _private = {
 };
 
 /**
+ * Хлебные крошки с кнопкой "Назад".
+ * <a href="/materials/demo-ws4-breadcrumbs">Демо-пример</a>.
+ *
+ * @class Controls/_breadcrumbs/HeadingPath
+ * @extends Core/Control
+ * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/PathStyles
+ * @mixes Controls/interface/IHighlighter
+ * @control
+ * @public
+ * @author Авраменко А.С.
+ *
+ * @demo Controls-demo/BreadCrumbs/PathPG
+ */
+
+/*
  * Breadcrumbs with back button.
  * <a href="/materials/demo-ws4-breadcrumbs">Demo</a>.
  *
@@ -123,6 +141,15 @@ var _private = {
 
 /**
  * @name Controls/_breadcrumbs/HeadingPath#backButtonStyle
+ * @cfg {String} Стиль отображения кнопки "Назад".
+ * @variant primary
+ * @variant secondary
+ * @default secondary
+ * @see Controls/_heading/Back#style
+ */
+
+/*
+ * @name Controls/_breadcrumbs/HeadingPath#backButtonStyle
  * @cfg {String} Back heading display style.
  * @variant primary
  * @variant secondary
@@ -132,10 +159,22 @@ var _private = {
 
 /**
  * @event Controls/_breadcrumbs/HeadingPath#arrowActivated Happens after clicking the button "View Model".
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
+ */
+
+/*
+ * @event Controls/_breadcrumbs/HeadingPath#arrowActivated Happens after clicking the button "View Model".
+ * @param {Env/Event:Object} eventObject The event descriptor.
  */
 
 /**
+ * @name Controls/_breadcrumbs/HeadingPath#showActionButton
+ * @cfg {Boolean} Определяет, должна ли отображаться стрелка рядом с кнопкой "Назад".
+ * @default
+ * true
+ */
+
+/*
  * @name Controls/_breadcrumbs/HeadingPath#showActionButton
  * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
  * @default

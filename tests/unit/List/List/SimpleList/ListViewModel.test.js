@@ -125,7 +125,8 @@ define([
                items: new collection.RecordSet({
                   rawData: [],
                   idProperty: 'id'
-               })
+               }),
+               virtualScrolling: true
             });
          assert.equal(model._startIndex, 0, 'Invalid value of "_startIndex" after constructor.');
          assert.equal(model._stopIndex, 0, 'Invalid value of "_stopIndex" after constructor.');
@@ -328,7 +329,7 @@ define([
             model = new lists.ListViewModel(cfg);
             // remove item 3
             model.getItems().removeAt(2);
-            assert.equal(1, model.getMarkedKey()); // expect marker on item 1
+            assert.equal(5, model.getMarkedKey()); // expect marker on item 1
 
          /*
                ---------- 1 ---------
@@ -345,7 +346,7 @@ define([
             model = new lists.ListViewModel(cfg);
             // remove item 2 (item placed, before group expander)
             model.getItems().removeAt(1);
-            assert.equal(5, model.getMarkedKey()); // expected marker on item 5
+            assert.equal(4, model.getMarkedKey()); // expected marker on item 5
 
          /*
               ---------- 1 ---------

@@ -7,7 +7,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
        *
        * @private
        *
-       * @author Krasilnikov A.S.
+       * @author Красильников А.С.
        */
 
       var _private = {

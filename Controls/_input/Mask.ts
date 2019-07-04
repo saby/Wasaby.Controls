@@ -18,7 +18,7 @@ import entity = require('Types/entity');
        * @mixes Controls/interface/IInputBase
        * @mixes Controls/interface/IInputMaskValue
        * @public
-       * @author Миронов А.Ю.
+       * @author Красильников А.С.
        * @demo Controls-demo/Input/Mask/MaskPG
        */
 
@@ -162,6 +162,13 @@ import entity = require('Types/entity');
             _clickHandler: function() {
                 if (this._firstClick) {
                     this._viewModel.setCarriageDefaultPosition(this._getField().selectionStart);
+                    // We need a more convenient way to control the selection.
+                    // https://online.sbis.ru/opendoc.html?guid=d4bdb7cc-c324-4b4b-bda5-db6f8a46bc60
+                    // In the base class, the selection in the field is set asynchronously and after a click,
+                    // the selection is saved to the model asynchronously. Sometimes the preservation
+                    // of the selection will erase the previously established selection in the model.
+                    // To prevent this, immediately apply the selection set in the model to the input field.
+                    this._getField().setSelectionRange(this._viewModel.selection.start, this._viewModel.selection.end);
                 }
                 Mask.superclass._clickHandler.apply(this, arguments);
             }

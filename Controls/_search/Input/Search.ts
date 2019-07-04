@@ -81,7 +81,7 @@ var Search = Base.extend({
    _roundBorder: true,
 
    get _renderStyle() {
-      return 'search';
+      return 'search-';
    },
 
    _getViewModelOptions: function(options) {

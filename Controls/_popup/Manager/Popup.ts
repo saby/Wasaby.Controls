@@ -3,6 +3,7 @@ import template = require('wml!Controls/_popup/Manager/Popup');
 import runDelayed = require('Core/helpers/Function/runDelayed');
 import Env = require('Env/Env');
 import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
+import {debounce} from 'Types/function';
 
 
       var _private = {
@@ -48,6 +49,8 @@ import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
          _afterMount: function() {
             /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
              * inside can be compoundArea and we have to wait for it, and there is an asynchronous phase. Look at the flag waitForPopupCreated */
+            this._controlResize = debounce(this._controlResize.bind(this), 10);
+            this._scrollHandler = debounce(this._scrollHandler.bind(this), 10);
 
             if (this.waitForPopupCreated) {
                this.callbackCreated = (function() {

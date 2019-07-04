@@ -14,6 +14,7 @@
    <ws:partial
            template="{{_options.content}}"
            scope="{{_options}}"
+           attr:class="controls-Grid_columnScroll"
            on:itemClick="_notifyHandler('itemClick')"
            on:checkboxClick="_notifyHandler('checkboxClick')"
            on:itemSwipe="_notifyHandler('itemSwipe')"

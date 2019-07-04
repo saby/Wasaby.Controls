@@ -1,4 +1,12 @@
 /**
+ * Интерфейс для иерархических списков с возможностью проваливания в папки.
+ *
+ * @interface Controls/_explorer/interface/IExplorer
+ * @public
+ * @author Авраменко А.С.
+ */
+
+/*
  * Interface for hierarchical lists that can open folders.
  *
  * @interface Controls/_explorer/interface/IExplorer

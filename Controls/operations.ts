@@ -6,11 +6,11 @@
  * @includes Controller Controls/_operations/Controller
  * @includes Container Controls/_operations/Container
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Panel = require('Controls/_operations/Panel');
-import Button = require('Controls/_operations/Button');
+import {default as Button} from './_operations/Button';
 import Controller = require('Controls/_operations/Controller');
 import Container = require('Controls/_operations/Container');
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');

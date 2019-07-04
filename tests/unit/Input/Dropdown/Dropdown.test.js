@@ -66,26 +66,6 @@ define(
          };
          let dropdownList = new dropdown.Input(config);
 
-         it('_afterUpdate', () => {
-            let ddl = getDropdown(config),
-               text;
-            ddl._notify = (e, data) => {
-               if (e === 'textValueChanged') {
-                  text = data[0];
-               }
-            };
-            let newConfig = Clone(config);
-            newConfig.selectedKeys = ['8'];
-            ddl._text = 'Запись 8';
-            ddl._afterUpdate(newConfig);
-            assert.equal(text, 'Запись 8');
-
-            ddl._setText([itemsRecords.at(1), itemsRecords.at(3), itemsRecords.at(5)]);
-            newConfig.selectedKeys = ['2', '4', '6'];
-            ddl._afterUpdate(newConfig);
-            assert.strictEqual(text, 'Запись 2, еще 2');
-         });
-
          it('data load callback', () => {
             let ddl = getDropdown(config);
             ddl._setText([itemsRecords.at(5)]);
@@ -110,12 +90,18 @@ define(
 
          it('check selectedItemsChanged event', () => {
             let ddl = getDropdown(config);
+            let keys, text;
             ddl._notify = (e, data) => {
                if (e === 'selectedKeysChanged') {
-                  assert.deepEqual(data[0], ['6']);
+                  keys = data[0];
+               }
+               if (e === 'textValueChanged') {
+                  text = data[0];
                }
             };
             ddl._selectedItemsChangedHandler('itemClick', [itemsRecords.at(5)]);
+            assert.deepEqual(keys, ['6']);
+            assert.strictEqual(text, 'Запись 6');
          });
 
          it('dataLoadCallback empty items', () => {

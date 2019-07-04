@@ -8,7 +8,7 @@ import DateUtil = require('Controls/Utils/Date');
 /**
  * Модель для представления месяца.
  * @class Controls/_calendar/MonthView/MonthViewModel
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  */
 
 var ModuleClass = cExtend.extend([VersionableMixin], {

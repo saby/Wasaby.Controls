@@ -6,6 +6,7 @@ define([
    'Types/entity',
    'Types/collection'
 ], function(Lookup, entity, collection) {
+   'use strict';
 
    function getItems(countItems) {
       for (var items = []; countItems; countItems--) {
@@ -234,6 +235,28 @@ define([
 
          Lookup._private.getItemsSizesLastRow = getItemsSizesLastRow;
          Lookup._private.getCounterWidth = getCounterWidth;
+      });
+
+      it('_openInfoBox', function() {
+         const sandbox = sinon.createSandbox();
+
+         let
+            config = {},
+            lookup = new Lookup();
+
+         lookup._container = {};
+
+         if (window) {
+            sinon.stub(window, 'getComputedStyle').returns({paddingLeft: '4px', borderLeftWidth: '1px'});
+            Lookup._private.initializeConstants(lookup);
+            lookup._openInfoBox(null, config);
+
+            assert.equal(config.offset.horizontal, -5);
+         } else {
+            lookup._openInfoBox(null, config);
+
+            assert.equal(config.offset.horizontal, 0);
+         }
       });
    });
 });

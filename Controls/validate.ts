@@ -9,7 +9,7 @@
  * @includes isValidDate Controls/_validate/Validators/IsValidDate
  * @includes Selection Controls/_validate/Selection
  * @public
- * @author Kraynov D.
+ * @author Крайнов Д.О.
  */
 
 import Controller = require('Controls/_validate/FormController');

@@ -10,6 +10,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
    'wml!Controls-demo/Input/Dropdown/itemTemplateDropdownSub',
    'wml!Controls-demo/Input/Dropdown/contentTemplateDropdownIcon',
    'wml!Controls-demo/Input/Dropdown/footerTemplateDropdown',
+   'wml!Controls-demo/Input/Dropdown/footerHierarchyItem',
    'wml!Controls-demo/Input/Dropdown/StackTemplateDdl'
 ], function(Control, template, source, historySource, ControlsConstants) {
 
@@ -26,6 +27,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _titleItems: null,
       _duplicateItems: null,
       _footerItems: null,
+      _hierarchyFooterItems: null,
       _defaultItems: null,
       _historySource: null,
       _selectedKeysHistoryMulti: null,
@@ -45,6 +47,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _selectedKeysTitle: null,
       _selectedKeysDuplicate: null,
       _selectedKeysFooter: null,
+      _selectedKeysFooterHierarchy: null,
       _selectedKeysReadOnly: null,
       _selectedKeys0: null,
       _selectedKeys1: null,
@@ -134,6 +137,23 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
             {id: 1, title: 'Trading'},
             {id: 2, title: 'Software development'},
             {id: 3, title: 'Beauty saloon'}
+         ];
+
+         this._hierarchyFooterItems = [
+            {id: 1, title: 'Task in development', parent: null, '@parent': false},
+            {id: 2, title: 'Error in development', parent: null, '@parent': false},
+            {id: 3, title: 'Application', parent: null, '@parent': false},
+            {id: 4, title: 'Assignment', parent: null, '@parent': true},
+            {id: 5, title: 'Approval', parent: null, '@parent': false},
+            {id: 6, title: 'Coordination', parent: null, '@parent': true},
+            {id: 7, title: 'Working out', parent: null, '@parent': false},
+            {id: 8, title: 'Assignment for accounting', parent: 4, '@parent': false},
+            {id: 9, title: 'Assignment for delivery', parent: 4, '@parent': false},
+            {id: 10, title: 'Assignment for logisticians', parent: 4, '@parent': false},
+            { id: 11, title: 'Coordination', parent: 6 },
+            { id: 12, title: 'Negotiate the discount', parent: 6 },
+            { id: 13, title: 'Coordination of change prices', parent: 6 },
+            { id: 14, title: 'Matching new dish', parent: 6}
          ];
 
          this._defaultItems = [
@@ -235,6 +255,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          this._selectedKeysTitle = [1];
          this._selectedKeysDuplicate = [4];
          this._selectedKeysFooter = [1];
+         this._selectedKeysFooterHierarchy = [1];
          this._selectedKeysReadOnly = ['4'];
          this._selectedKeys0 = ['1'];
          this._selectedKeys1 = ['1'];

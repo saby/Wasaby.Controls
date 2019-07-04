@@ -16,6 +16,7 @@
    staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"
    viewport="{{ _options.viewport }}"
+   noscript="{{ _options.noscript }}"
    preInitScript="{{ _options.preInitScript }}"
    servicesPath="{{ servicesPath }}"
    product="{{ product }}">
@@ -29,6 +30,7 @@
                   <Controls.event:Register name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
                      <Controls.popup:Global>
                      <Controls.popup:Manager
+                             popupHeaderTheme="{{_options.popupHeaderTheme}}"
                              on:managerPopupCreated="_popupCreatedHandler()"
                              on:managerPopupDestroyed="_popupDestroyedHandler()"
                              stackRootWidth="{{_options.width}}">
@@ -85,7 +87,7 @@
                                  </ws:for>
                               </ws:if>
                               <script key="bundles" type="text/javascript"
-                                      src="{{ linkResolver.resolveLink('bundles', 'js') }}"></script>
+                                      src="{{resourceRoot}}bundles.js"></script>
                               <script key="require" type="text/javascript"
                                       src="/cdn/RequireJS/2.3.5-p5/require-min.js"></script>
                               <script key="contents" type="text/javascript" src="{{ linkResolver.resolveLink('contents', 'js') }}"></script>
