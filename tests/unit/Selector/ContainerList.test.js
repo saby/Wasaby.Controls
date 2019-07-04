@@ -118,19 +118,22 @@ define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
          };
          var selectCompleted = false;
          var clickSelection = false;
+         var isByItemClick = false;
 
-         self._notify = function(eventName) {
+         self._notify = function(eventName, args) {
             if (eventName === 'listSelectedKeysChanged') {
                clickSelection = true;
             }
             if (eventName === 'selectComplete') {
                selectCompleted = true;
+               isByItemClick = args[1];
             }
          };
 
          lookupPopup.ListContainer._private.itemClick(self, 'test', false, []);
          assert.isTrue(selectCompleted);
          assert.isTrue(clickSelection);
+         assert.isTrue(isByItemClick);
 
          selectCompleted = false;
          clickSelection = false;
