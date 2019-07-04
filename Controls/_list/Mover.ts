@@ -128,6 +128,9 @@ var _private = {
                 parentProperty: self._options.parentProperty,
                 nodeProperty: self._options.nodeProperty
             });
+            if (self._options.root) {
+                display.setRoot(self._options.root)
+            }
             itemFromProjection = display.getItemBySourceItem(_private.getModelByItem(self, item));
             siblingItem = display[position === MOVE_POSITION.before ? 'getPrevious' : 'getNext'](itemFromProjection);
             result = siblingItem ? siblingItem.getContents() : null;
