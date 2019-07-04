@@ -46,6 +46,10 @@ define(
             scroll._displayState = {
                contentHeight: 0
             }
+            scroll._shadowVisiblityMode = {
+               top: 'auto',
+               bottom: 'auto'
+            }
          });
 
          describe('_resizeHandler. Paging buttons.', function() {
