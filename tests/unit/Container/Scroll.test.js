@@ -46,9 +46,9 @@ define(
             scroll._displayState = {
                contentHeight: 0
             }
-            scroll._shadowVisibleMode = {
-               top: false,
-               bottom: false
+            scroll._shadowVisiblityMode = {
+               top: 'auto',
+               bottom: 'auto'
             }
          });
 
