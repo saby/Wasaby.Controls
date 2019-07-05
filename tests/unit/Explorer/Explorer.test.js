@@ -358,7 +358,19 @@ define([
          assert.equal(events[2].eventName, 'sortingChanged');
          assert.deepEqual(events[2].eventArgs, [{field: 'DESC'}]);
       });
-
+      it('reloadItem', function() {
+         let instance = new explorerMod.View();
+         let reloadItemCalled = false;
+         instance._children = {
+            treeControl: {
+               reloadItem: function() {
+                  reloadItemCalled = true;
+               }
+            }
+         };
+         instance.reloadItem();
+         assert.isTrue(reloadItemCalled);
+      });
       describe('_notify(rootChanged)', function() {
          var
             root,
