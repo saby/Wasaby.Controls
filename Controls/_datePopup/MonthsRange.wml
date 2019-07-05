@@ -1,6 +1,6 @@
 <Controls.calendar:MonthList
    attr:class="controls-PeriodDialog-MonthsRange"
-   date="{{_year}}"
+   startPosition="{{_startPosition}}"
    on:itemClick="_onItemClick()"
    on:scroll="_onScroll()"
 >
