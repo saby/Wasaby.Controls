@@ -27,7 +27,8 @@ class Component extends Control {
 
     _proxyEvent: Function = tmplNotify;
 
-    _year: Date;
+    _startPosition: Date;
+    _displayedPosition: Date;
     _rangeModel: DateRangeModel;
 
     constructor() {
@@ -37,7 +38,8 @@ class Component extends Control {
     }
 
     _beforeMount(options) {
-        this._year = dateUtils.getStartOfYear(options.year || new Date());
+        this._displayedPosition = dateUtils.getStartOfYear(options.year || new Date());
+        this._startPosition = this._displayedPosition;
         this._rangeModel.update(options);
 
         // this._updateRangeItems(options);
@@ -49,6 +51,10 @@ class Component extends Control {
 
     _beforeUpdate(options) {
         this._rangeModel.update(options);
+        if (options.year.getFullYear() !== this._displayedPosition.getFullYear()) {
+            this._displayedPosition = options.year;
+            this._startPosition = this._displayedPosition;
+        }
     }
 
     _beforeUnmount() {
@@ -64,17 +70,17 @@ class Component extends Control {
             firstItem = this._container.querySelector(ITEM_SELECTOR),
             firstYear = datePopupUtils.dataStringToDate(firstItem.dataset.date),
             year = firstYear.getFullYear() + Math.floor(scrollTop / firstItem.offsetHeight);
-        if (year !== this._year.getFullYear()) {
-            this._year = new Date(year, 0);
-            this._notify('yearChanged', [this._year]);
+        if (year !== this._displayedPosition.getFullYear()) {
+            this._displayedPosition = new Date(year, 0);
+            this._notify('yearChanged', [this._displayedPosition]);
         }
     }
 
     private _updateScrollPosition() {
-        if (!this._year) {
+        if (!this._displayedPosition) {
             return;
         }
-        datePopupUtils.scrollToDate(this._container, ITEM_BODY_SELECTOR, this._year);
+        datePopupUtils.scrollToDate(this._container, ITEM_BODY_SELECTOR, this._displayedPosition);
     }
 }
 
