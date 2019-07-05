@@ -58,7 +58,7 @@ define([
             {
                id: 0,
                title: 'прочитано',
-               showType: tUtil.default.showType.TOOLBAR,
+               showType: tUtil.showType.TOOLBAR,
                handler: function() {
                   console.log('action read Click');
                }
@@ -67,7 +67,7 @@ define([
                id: 1,
                icon: 'icon-primary icon-PhoneNull',
                title: 'phone',
-               showType: tUtil.default.showType.MENU,
+               showType: tUtil.showType.MENU,
                handler: function(item) {
                   console.log('action phone Click ', item);
                }
@@ -76,7 +76,7 @@ define([
                id: 2,
                icon: 'icon-primary icon-EmptyMessage',
                title: 'message',
-               showType: tUtil.default.showType.MENU,
+               showType: tUtil.showType.MENU,
                handler: function() {
                   alert('Message Click');
                }
@@ -85,7 +85,7 @@ define([
                id: 3,
                icon: 'icon-primary icon-Profile',
                title: 'profile',
-               showType: tUtil.default.showType.MENU_TOOLBAR,
+               showType: tUtil.showType.MENU_TOOLBAR,
                handler: function() {
                   console.log('action profile Click');
                }
@@ -94,7 +94,7 @@ define([
                id: 4,
                icon: 'icon-Erase icon-error',
                title: 'delete pls',
-               showType: tUtil.default.showType.TOOLBAR,
+               showType: tUtil.showType.TOOLBAR,
                handler: function() {
                   console.log('action delete Click');
                }
@@ -103,7 +103,7 @@ define([
                id: 5,
                icon: 'icon-done icon-Admin',
                title: 'delete pls',
-               showType: tUtil.default.showType.TOOLBAR,
+               showType: tUtil.showType.TOOLBAR,
                handler: function() {
                   console.log('action delete Click');
                }
@@ -147,7 +147,7 @@ define([
                      {
                         id: 0,
                         title: 'прочитано',
-                        showType: tUtil.default.showType.TOOLBAR
+                        showType: tUtil.showType.TOOLBAR
                      }
                   ]
                },
@@ -159,13 +159,13 @@ define([
                      {
                         id: 0,
                         title: 'прочитано',
-                        showType: tUtil.default.showType.TOOLBAR
+                        showType: tUtil.showType.TOOLBAR
                      },
                      {
                         id: 1,
                         icon: 'icon-primary icon-PhoneNull',
                         title: 'phone',
-                        showType: tUtil.default.showType.MENU
+                        showType: tUtil.showType.MENU
                      }
                   ]
                }
@@ -353,12 +353,12 @@ define([
                    {
                       id: 0,
                       title: 'first',
-                      showType: tUtil.default.showType.MENU
+                      showType: tUtil.showType.MENU
                    },
                    {
                       id: 1,
                       title: 'second',
-                      showType: tUtil.default.showType.TOOLBAR
+                      showType: tUtil.showType.TOOLBAR
                    }
                 ]
              },
@@ -379,12 +379,12 @@ define([
                itemActions: [{
                   id: 0,
                   title: 'first',
-                  showType: tUtil.default.showType.MENU
+                  showType: tUtil.showType.MENU
                },
                {
                   id: 1,
                   title: 'second',
-                  showType: tUtil.default.showType.TOOLBAR
+                  showType: tUtil.showType.TOOLBAR
                }],
                itemActionsPosition: 'outside'
             },
@@ -401,12 +401,12 @@ define([
             itemActions: [{
                id: 0,
                title: 'first',
-               showType: tUtil.default.showType.MENU
+               showType: tUtil.showType.MENU
             },
             {
                id: 1,
                title: 'second',
-               showType: tUtil.default.showType.TOOLBAR
+               showType: tUtil.showType.TOOLBAR
             }],
             itemActionsPosition: 'outside'
          };
@@ -421,14 +421,14 @@ define([
             title: 'first',
             iconStyle: 'secondary',
             style: 'secondary',
-            showType: tUtil.default.showType.MENU
+            showType: tUtil.showType.MENU
          },
          {
             id: 1,
             title: 'second',
             iconStyle: 'secondary',
             style: 'secondary',
-            showType: tUtil.default.showType.TOOLBAR
+            showType: tUtil.showType.TOOLBAR
          }], listViewModel._actions[0].showed);
       });
    });

@@ -11,7 +11,7 @@ import Deferred = require('Core/Deferred');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import collection = require('Types/collection');
-import tUtil from 'Controls/Utils/Toolbar';
+import {showType} from 'Controls/Utils/Toolbar';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
@@ -741,7 +741,7 @@ var _private = {
         showActions = (context || showAll) && itemData.itemActions.all
             ? itemData.itemActions.all
             : itemData.itemActions && itemData.itemActions.all.filter(function(action) {
-                return action.showType !== tUtil.showType.TOOLBAR;
+                return action.showType !== showType.TOOLBAR;
             });
         /**
          * During an opening of a menu, a row can get wrapped in a HoC and it would cause a full redraw of the row,
