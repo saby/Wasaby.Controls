@@ -8,7 +8,7 @@ import {Controller as SourceController} from 'Controls/source';
 import {selectionToRecord} from 'Controls/operations';
 import Deferred = require('Core/Deferred');
 import cInstance = require('Core/core-instance');
-import {adapter} from 'Types/entity'
+import {adapter} from 'Types/entity';
 import {IData, IDecorator} from "Types/source";
 
 /**
