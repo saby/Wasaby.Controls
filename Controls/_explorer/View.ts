@@ -46,6 +46,47 @@ import 'Controls/breadcrumbs';
             }
             self._forceUpdate();
          },
+          setRestoredKeyObject: function(self, root) {
+              self._restoredMarkedKeys[root] = {
+                  parent: self._root,
+                  markedKey: null,
+              }
+              if (self._restoredMarkedKeys[self._root]) {
+                  self._restoredMarkedKeys[self._root].markedKey = root;
+              }
+              self._root = root;
+          },
+          cleanRestoredKeyObject: function(self, root) {
+              _private.pathCleaner(self, root)
+              self._root = root;
+          },
+         pathCleaner: function(self, root) {
+            if (self._restoredMarkedKeys[root]) {
+               if (self._restoredMarkedKeys[root].parent === undefined) {
+                  const markedKey = self._restoredMarkedKeys[root].markedKey
+                  self._restoredMarkedKeys = {
+                     [root]: {
+                        markedKey: markedKey
+                     }
+                  }
+                  return;
+               } else {
+                  _remover(root);
+               }
+            } else if (root !== self._root) {
+                   delete self._restoredMarkedKeys[self._root];
+            }
+
+            function _remover(key) {
+               Object.keys(self._restoredMarkedKeys).forEach((cur) => {
+                  if (self._restoredMarkedKeys[cur] && self._restoredMarkedKeys[cur].parent == String(key)) {
+                     const nextKey = cur;
+                     delete self._restoredMarkedKeys[cur];
+                     _remover(nextKey);
+                  }
+               });
+            };
+         },
          getRoot: function(self) {
             return self._options.hasOwnProperty('root') ? self._options.root : self._root;
          },
@@ -63,11 +104,17 @@ import 'Controls/breadcrumbs';
             return breadCrumbs;
          },
          dataLoadCallback: function(self, data) {
-            self._breadCrumbsItems = _private.getPath(data);
-            self._forceUpdate();
-            if (self._options.dataLoadCallback) {
-               self._options.dataLoadCallback(data);
-            }
+             self._breadCrumbsItems = _private.getPath(data);
+             if (self._isGoingBack) {
+                 if (self._restoredMarkedKeys[self._root]) {
+                     self._children.treeControl.setMarkedKey(self._restoredMarkedKeys[self._root].markedKey);
+                 }
+                 self._isGoingBack = false;
+             }
+             self._forceUpdate();
+             if (self._options.dataLoadCallback) {
+                self._options.dataLoadCallback(data);
+             }
          },
          itemsReadyCallback: function(self, items) {
             self._items = items;
@@ -240,6 +287,12 @@ import 'Controls/breadcrumbs';
          }
 
          _private.setViewMode(this, cfg.viewMode, cfg);
+         const root = _private.getRoot(this);
+         this._restoredMarkedKeys = {
+         [root]: {
+               markedKey: null
+            }
+         };
       },
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
@@ -284,13 +337,16 @@ import 'Controls/breadcrumbs';
          const res = this._notify('itemClick', [item, clickEvent]);
          if (res !== false) {
             if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
-               _private.setRoot(this, item.getId());
+                _private.setRestoredKeyObject(this, item.getId());
+                _private.setRoot(this, item.getId());
             }
          }
          event.stopPropagation();
       },
       _onBreadCrumbsClick: function(event, item) {
-         _private.setRoot(this, item.getId());
+          _private.cleanRestoredKeyObject(this, item.getId());
+          _private.setRoot(this, item.getId());
+          this._isGoingBack = true;
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);

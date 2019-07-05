@@ -311,11 +311,22 @@ define([
                idProperty: 'id'
             }),
             instance = new explorerMod.View();
+            instance._children = {
+               treeControl: {
+
+               }
+         };
 
          instance.saveOptions({
             parentProperty: 'parent',
             keyProperty: 'id'
          });
+
+         instance._restoredMarkedKeys = {
+            null: {
+               markedKey: null
+            }
+         };
          instance._onBreadCrumbsClick({}, testBreadCrumbs.at(0));
          assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
          instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1));
@@ -440,6 +451,25 @@ define([
 
             explorer.saveOptions({});
             explorer._notify = _notify;
+            explorer._restoredMarkedKeys = {
+               null: {
+                  markedKey: null
+               }
+            }
+            explorer._children = {
+               treeControl: {
+                  _children: {
+
+                  }
+               }
+            };
+
+            explorer._restoredMarkedKeys = {
+               null: {
+                  markedKey: null
+               }
+            };
+
 
             explorer._onItemClick({
                stopPropagation: function() {
@@ -455,7 +485,13 @@ define([
             }, {
                nativeEvent: 123
             });
-
+            assert.deepEqual({
+               ...explorer._restoredMarkedKeys,
+               itemId: {
+                  parent: null,
+                  markedKey: null,
+               }
+            }, explorer._restoredMarkedKeys);
             assert.isTrue(isPropagationStopped);
             // Click
             assert.isTrue(isWeNotified);
@@ -500,14 +536,88 @@ define([
                explorer = new explorerMod.View({});
             explorer.saveOptions({});
             explorer._notify = _notify;
+            explorer._children = {
+               treeControl: {
+
+               }
+            };
+
+            explorer._restoredMarkedKeys = {
+               null: {
+                  markedKey: null
+               },
+               itemId: {parent: null, markedKey: null}
+            };
 
             explorer._onBreadCrumbsClick({}, {
-               getId: function() {}
+               getId: function() {
+                  return null;
+               }
             });
+
+            assert.deepEqual({
+               null: {
+                  markedKey: null
+               },
+            }, explorer._restoredMarkedKeys);
+
+            explorer._restoredMarkedKeys = {
+               null: {
+                  markedKey: null
+               },
+               itemId: {parent: null, markedKey: 'itemId1'},
+               itemId1: {parent: 'itemId', markedKey: null}
+            };
+            explorer._root = 'itemId1';
+
+            explorer._onBreadCrumbsClick({}, {
+               getId: function() {
+                  return 'itemId';
+               }
+            });
+
+            assert.deepEqual({
+               null: {
+                  markedKey: null
+               },
+               itemId: {parent: null, markedKey: 'itemId1'},
+            }, explorer._restoredMarkedKeys);
 
             assert.isTrue(isNotified);
          });
+
+         it('_pathCleaner', function() {
+            isNotified = false;
+
+            var
+               explorer = new explorerMod.View({});
+            explorer.saveOptions({});
+            explorer._notify = _notify;
+            explorer._children = {
+               treeControl: {
+
+               }
+            };
+
+            explorer._restoredMarkedKeys = {
+               null: {
+                  markedKey: null
+               },
+               itemId: {parent: null, markedKey: 'itemId1'},
+               itemId1: {parent: 'itemId', markedKey: 'itemId12'},
+               itemId12: {parent: 'itemId1', markedKey: null},
+            };
+            explorer._root = 'itemId12';
+            explorerMod.View._private.pathCleaner(explorer, 'itemId');
+
+            assert.deepEqual({
+               itemId: {parent: null, markedKey: "itemId1"},
+               null: {markedKey: null}
+            }, explorer._restoredMarkedKeys);
+         });
       });
+
+
 
       describe('EditInPlace', function() {
          it('beginEdit', function() {
