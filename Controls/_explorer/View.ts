@@ -55,12 +55,10 @@ import 'Controls/breadcrumbs';
                   self._restoredMarkedKeys[self._root].markedKey = root;
               }
               self._root = root;
-              console.log(self._restoredMarkedKeys)
           },
           cleanRestoredKeyObject: function(self, root) {
               _private.pathCleaner(self, root)
               self._root = root;
-             console.log(self._restoredMarkedKeys)
           },
          pathCleaner: function(self, root) {
             if (self._restoredMarkedKeys[root]) {
@@ -73,18 +71,18 @@ import 'Controls/breadcrumbs';
                   }
                   return;
                } else {
-                  _remoover(root);
+                  _remover(root);
                }
             } else if (root !== self._root) {
                    delete self._restoredMarkedKeys[self._root];
             }
 
-            function _remoover(key) {
+            function _remover(key) {
                Object.keys(self._restoredMarkedKeys).forEach((cur) => {
                   if(self._restoredMarkedKeys[cur] && self._restoredMarkedKeys[cur].parent == String(key)) {
                      const nextKey = cur;
                      delete self._restoredMarkedKeys[cur];
-                     _remoover(nextKey);
+                     _remover(nextKey);
                   }
                });
             };
