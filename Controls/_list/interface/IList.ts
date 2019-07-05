@@ -727,22 +727,3 @@
  * @name Controls/_list/interface/IList#itemPadding
  */
 
-/**
- * @typedef {Object} multyHeaderConfig
- * @property {Number} [startRow] Номер горизонтальной css grid границы, с который начинается строка.
- * @property {Number} [endRow] Номер горизонтальной css grid границы, на который заканчивается строка.
- * @property {Number} [startColumn] Номер верикальной css grid границы, на который начинается строка.
- * @property {Number} [endColumn] Номер Вертикальной css grid границы, на который заканчивается строка.
- */
-
-/**
- * @cfg {multyHeaderConfig} Конфигурация ячеек многоуровнего хэдера.
- * @name Controls/_list/interface/IList#multyHeaderConfig
- */
-
-/*
- * @cfg {multyHeaderConfig} Configuration multiply Header cells.
- * @name Controls/_list/interface/IList#multyHeaderConfig
- */
-
-

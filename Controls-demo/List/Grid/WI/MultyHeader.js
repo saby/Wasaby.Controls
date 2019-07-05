@@ -178,8 +178,6 @@ define('Controls-demo/List/Grid/WI/MultyHeader', [
     ],
         ModuleClass = BaseControl.extend({
             _template: template,
-            _fullSet: true,
-            _itemActions: null,
             _viewSource: null,
             gridColumns: null,
             gridColumns2: null,
