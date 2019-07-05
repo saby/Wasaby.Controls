@@ -84,6 +84,20 @@ define(
                assert.equal(model.displayValue, '1.0');
                assert.deepEqual(model.selection, getSelection(1));
             });
+            it('Enter "-". Only positive numbers.', function() {
+               model.options = cMerge(model.options, {
+                  onlyPositive: true
+               });
+               model.handleInput({
+                  after: '',
+                  before: '',
+                  insert: '-',
+                  delete: ''
+               }, 'insert');
+
+               assert.equal(model.displayValue, '');
+               assert.deepEqual(model.selection, getSelection(0));
+            });
             it('Enter "6" at the end of the integer part. The maximum length of the integer part equal 5.', function() {
                model.options = cMerge(model.options, {
                   integersLength: 5

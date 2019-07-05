@@ -110,26 +110,39 @@ define([
          assert.deepEqual(['listBottom', 'loadTopStop', 'loadBottomStart'], evType, 'Not send edge positions without observer');
       });
 
-      it('onScrollContainer', function () {
-         var ins = new scrollMod.Watcher();
-         ins._registrar = registrarMock;
-         var containerMock = {
-            scrollTop: 111,
-            clientHeight: 300,
-            scrollHeight: 400
-         };
+      it('onScrollContainer', function() {
+         return new Promise(function(resolve, reject) {
+            var ins = new scrollMod.Watcher();
+            ins._registrar = registrarMock;
+            var containerMock = {
+               scrollTop: 111,
+               clientHeight: 300,
+               scrollHeight: 400
+            };
 
-         evType = [];
-         scrollMod.Watcher._private.onScrollContainer(ins, containerMock);
-         assert.deepEqual(['scrollMove', 'listBottom', 'loadTopStop', 'loadBottomStart'], evType, 'Wrong scroll commands on change scroll without observer');
+            evType = [];
+            scrollMod.Watcher._private.onScrollContainer(ins, containerMock);
+            setTimeout(function() {
+               try {
+                  assert.deepEqual(['scrollMove', 'listBottom', 'loadTopStop', 'loadBottomStart'], evType, 'Wrong scroll commands on change scroll without observer');
 
-         evType = [];
-         ins._scrollPositionCache = null;
-         scrollMod.Watcher._private.onScrollContainer(ins, containerMock, true);
-         assert.deepEqual(['scrollMove'], evType, 'Wrong scroll commands on change scroll with observer');
-
-         assert.equal(111, ins._scrollTopCache, 'Wrong scrollTop cache value after scroll');
-
+                  evType = [];
+                  ins._scrollPositionCache = null;
+                  scrollMod.Watcher._private.onScrollContainer(ins, containerMock, true);
+                  setTimeout(function() {
+                     try {
+                        assert.deepEqual(['scrollMove'], evType, 'Wrong scroll commands on change scroll with observer');
+                        assert.equal(111, ins._scrollTopCache, 'Wrong scrollTop cache value after scroll');
+                        resolve();
+                     } catch (e) {
+                        reject(e);
+                     }
+                  });
+               } catch(e) {
+                  reject(e);
+               }
+            });
+         });
       });
 
       it('onScrollContainer debounce 3', function (done) {
@@ -169,6 +182,45 @@ define([
          }, 100);
       });
 
+      it('onScrollContainer 3 scroll events + start scrollPositionCache="up"', function (done) {
+         var ins = new scrollMod.Watcher();
+         var registrarMockDebounce = {
+            start: function(type, args) {
+               evType.push({
+                  eType: type,
+                  eArgs: args
+               });
+            }
+         };
+         ins._registrar = registrarMockDebounce;
+         var containerMock = {
+            scrollTop: 0,
+            clientHeight: 300,
+            scrollHeight: 400
+         };
+         ins._scrollPositionCache = 'up';
+
+         evType = [];
+         containerMock.scrollTop = 2;
+         scrollMod.Watcher._private.onScrollContainer(ins, containerMock, true);
+         setTimeout(function() {
+            containerMock.scrollTop = 12;
+            scrollMod.Watcher._private.onScrollContainer(ins, containerMock, true);
+            setTimeout(function(){
+               containerMock.scrollTop = 22;
+               scrollMod.Watcher._private.onScrollContainer(ins, containerMock, true);
+               setTimeout(function() {
+                  assert.deepEqual([
+                     {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 2, clientHeight: 300}},
+                     {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 12, clientHeight: 300}},
+                     {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 22, clientHeight: 300}}
+                  ], evType, 'Wrong scroll commands on change scroll without observer');
+                  done();
+               }, 100);
+            }, 100);
+         }, 10);
+      });
+
       it('onScrollContainer debounce 2 + 1', function (done) {
          //fast scrolling: 3 scroll events and check after 100ms
          var ins = new scrollMod.Watcher();
@@ -186,12 +238,12 @@ define([
             clientHeight: 300,
             scrollHeight: 400
          };
+         ins._scrollPositionCache = 'middle';
 
          evType = [];
          //fast scrolling
          scrollMod.Watcher._private.onScrollContainer(ins, containerMock, true);
 
-         evType = [];
          containerMock.scrollTop = 12;
          scrollMod.Watcher._private.onScrollContainer(ins, containerMock, true);
 

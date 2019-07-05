@@ -171,7 +171,7 @@ class VirtualScroll {
             if (direction === 'down') {
                 // а при direction === 'down' наоборот - максимально увеличиваем stopIndex
                 this._stopIndex = Math.min(this._startIndex + this._virtualPageSize, this._itemsCount);
-
+                this._startIndex = Math.max(this._stopIndex - this._virtualPageSize, 0);
                 // если всё ещё мало записей - можно попробовать уменьшать startIndex ВОТ В ЭТОМ МЕСТЕ.
             }
         }
@@ -213,6 +213,27 @@ class VirtualScroll {
                 this._stopIndex += sub;
             }
             this._startIndex = Math.max(this._stopIndex - this._virtualPageSize, 0);
+        }
+    }
+
+    recalcToDirectionByScrollTop(direction, scrollTop): void {
+        let
+           newStartIndex = 0,
+           tempPlaceholderSize = 0;
+        while (tempPlaceholderSize + this._itemsHeights[newStartIndex] <= scrollTop) {
+            tempPlaceholderSize += this._itemsHeights[newStartIndex];
+            newStartIndex++;
+        }
+        this._startIndex = Math.max(newStartIndex - (Math.trunc(this._virtualSegmentSize / 2)), 0);
+        this._stopIndex = Math.min(this._startIndex + this._virtualPageSize, this._itemsCount);
+        this.recalcItemsIndexes(direction);
+        this._topPlaceholderSize = 0;
+        for (let i = 0; i < this._startIndex; i++) {
+            this._topPlaceholderSize += this._itemsHeights[i];
+        }
+        this._bottomPlaceholderSize = 0;
+        for (let i = this._stopIndex; i < this._itemsHeights.length; i++) {
+            this._bottomPlaceholderSize += this._itemsHeights[i];
         }
     }
 

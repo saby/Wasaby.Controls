@@ -3,7 +3,7 @@ import {Controller as SourceController} from 'Controls/source';
 import template = require('wml!Controls/_toolbars/View');
 import toolbarItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
 import {factory} from 'Types/collection';
-import tUtil = require('Controls/Utils/Toolbar');
+import {getMenuItems, showType} from 'Controls/Utils/Toolbar';
 import {ActualApi as ButtonActualApi} from 'Controls/buttons';
 
 /**
@@ -191,7 +191,7 @@ var _private = {
     },
 
     getMenuItems: function (items) {
-        return tUtil.getMenuItems(items).value(factory.recordSet, {
+        return getMenuItems(items).value(factory.recordSet, {
             adapter: items.getAdapter(),
             idProperty: items.getIdProperty(),
             format: items.getFormat()
@@ -273,7 +273,7 @@ var _private = {
 };
 
 var Toolbar = Control.extend({
-    showType: tUtil.showType,
+    showType: showType,
     _template: template,
     _defaultItemTemplate: toolbarItemTemplate,
     _needShowMenu: null,

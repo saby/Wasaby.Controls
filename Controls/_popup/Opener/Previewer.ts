@@ -36,6 +36,11 @@ import Base = require('Controls/_popup/Opener/BaseOpener');
          _openingTimerId: null,
 
          _closingTimerId: null,
+         _beforeUnmount: function() {
+            _private.clearClosingTimeout(this);
+            _private.clearOpeningTimeout(this);
+
+         },
 
          open: function(cfg, type) {
             var self = this;

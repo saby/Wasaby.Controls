@@ -11,7 +11,7 @@ import Deferred = require('Core/Deferred');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import collection = require('Types/collection');
-import tUtil = require('Controls/Utils/Toolbar');
+import {showType} from 'Controls/Utils/Toolbar';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
@@ -25,6 +25,7 @@ import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import {Focus} from 'Vdom/Vdom';
+import throttle = require('Core/helpers/Function/throttle');
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -428,8 +429,6 @@ var _private = {
     updateVirtualWindowStart(self, direction: 'up' | 'down'): void {
         if (self._virtualScroll) {
             self._virtualScrollTriggerVisibility[direction] = true;
-            self._virtualScroll.recalcToDirection(direction);
-            _private.applyVirtualScrollIndexes(self, direction);
         }
     },
 
@@ -642,6 +641,14 @@ var _private = {
                 });
             }
         }
+
+        if (self._virtualScroll) {
+            if (self._virtualScrollTriggerVisibility.down) {
+                self._recalcVirtualScrollIndexes('down', scrollTop);
+            } else if (self._virtualScrollTriggerVisibility.up) {
+                self._recalcVirtualScrollIndexes('up', scrollTop);
+            }
+        }
     },
 
     needScrollCalculation: function (navigationOpt) {
@@ -741,7 +748,7 @@ var _private = {
         showActions = (context || showAll) && itemData.itemActions.all
             ? itemData.itemActions.all
             : itemData.itemActions && itemData.itemActions.all.filter(function(action) {
-                return action.showType !== tUtil.showType.TOOLBAR;
+                return action.showType !== showType.TOOLBAR;
             });
         /**
          * During an opening of a menu, a row can get wrapped in a HoC and it would cause a full redraw of the row,
@@ -1075,6 +1082,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
         this.__errorController = options.errorController || new dataSourceError.Controller({});
+        this._recalcVirtualScrollIndexes = throttle(function(direction, scrollTop) {
+            this._virtualScroll.recalcToDirectionByScrollTop(direction, scrollTop);
+            _private.applyVirtualScrollIndexes(this, direction);
+        }.bind(this), 50, true);
     },
 
     /**

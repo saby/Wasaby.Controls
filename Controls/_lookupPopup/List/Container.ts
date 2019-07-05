@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('tmpl!Controls/_lookupPopup/List/Container');
-import Toolbar = require('Controls/Utils/Toolbar');
+import {showType} from 'Controls/Utils/Toolbar';
 
 /**
  *
@@ -95,7 +95,7 @@ var ACTION_TITLE = rk('Выбрать');
 var ACTION = {
    id: ACTION_ID,
    title: ACTION_TITLE,
-   showType: Toolbar.showType.TOOLBAR
+   showType: showType.TOOLBAR
 };
 
 var _private = {
