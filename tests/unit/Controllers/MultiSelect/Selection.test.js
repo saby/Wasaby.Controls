@@ -211,6 +211,36 @@ define([
          assert.deepEqual({5: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
       });
 
+      it('remove', function() {
+         cfg = {
+            selectedKeys: [null],
+            excludedKeys: [2, 3, 4],
+            items: items,
+            keyProperty: 'id'
+         };
+         selectionInstance = new operations.Selection(cfg);
+         selectionInstance.remove([1, 2, 4]);
+         selection = selectionInstance.getSelection();
+         assert.deepEqual([null], selection.selected, 'Constructor: wrong field values');
+         assert.deepEqual([3], selection.excluded, 'Constructor: wrong field values');
+         assert.equal(6, selectionInstance.getCount());
+         assert.deepEqual({1: true, 2: true, 5: true, 4: true, 5: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
+
+         cfg = {
+            selectedKeys: [1, 2, 3],
+            excludedKeys: [4, 5],
+            items: items,
+            keyProperty: 'id'
+         };
+         selectionInstance = new operations.Selection(cfg);
+         selectionInstance.remove([2, 3, 5, 7]);
+         selection = selectionInstance.getSelection();
+         assert.deepEqual([1], selection.selected, 'Constructor: wrong field values');
+         assert.deepEqual([4], selection.excluded, 'Constructor: wrong field values');
+         assert.equal(1, selectionInstance.getCount());
+         assert.deepEqual({1: true}, selectionInstance.getSelectedKeysForRender());
+      });
+
       it('selectAll+unselectAll', function() {
          cfg = {
             selectedKeys: [1, 2, 3],

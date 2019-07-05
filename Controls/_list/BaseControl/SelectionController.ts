@@ -63,7 +63,7 @@ var _private = {
 
     onCollectionChange: function (event, action, newItems, newItemsIndex, removedItems) {
         if (action === collection.IObservable.ACTION_REMOVE) {
-            this._multiselection.unselect(_private.getItemsKeys(removedItems));
+            this._multiselection.remove(_private.getItemsKeys(removedItems));
         }
         _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
     },
