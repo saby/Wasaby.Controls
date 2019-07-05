@@ -5,6 +5,9 @@ import Env = require('Env/Env');
 import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
 import {debounce} from 'Types/function';
 
+const RESIZE_DELAY = 10;
+// on ios increase delay for scroll handler, because popup on frequent repositioning loop the scroll.
+const SCROLL_DELAY = Env.detection.isMobileIOS ? 100 : 10;
 
       var _private = {
          keyUp: function(event) {
@@ -49,8 +52,8 @@ import {debounce} from 'Types/function';
          _afterMount: function() {
             /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
              * inside can be compoundArea and we have to wait for it, and there is an asynchronous phase. Look at the flag waitForPopupCreated */
-            this._controlResize = debounce(this._controlResize.bind(this), 10);
-            this._scrollHandler = debounce(this._scrollHandler.bind(this), 10);
+            this._controlResize = debounce(this._controlResize.bind(this), RESIZE_DELAY);
+            this._scrollHandler = debounce(this._scrollHandler.bind(this), SCROLL_DELAY);
 
             if (this.waitForPopupCreated) {
                this.callbackCreated = (function() {
