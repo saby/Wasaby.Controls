@@ -205,6 +205,8 @@ var
 
       _pagingState: null,
 
+      _shadowVisiblityMode: null,
+
       /**
              * @type {Controls/_scroll/Context|null}
        * @private
@@ -223,6 +225,10 @@ var
             self = this,
             def;
 
+         this._shadowVisiblityMode = {
+            top: 'auto',
+            bottom: 'auto'
+         }
          this._displayState = {};
          this._stickyHeaderContext = new StickyHeaderContext({
             shadowPosition: options.shadowVisible ? 'bottom' : ''
@@ -340,10 +346,17 @@ var
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
+            if (this._isShadowVisibleMode()) {
+               this._displayState.hasScroll = true;
+            }
             this._updateStickyHeaderContext();
 
             this._forceUpdate();
          }
+      },
+
+      _isShadowVisibleMode: function() {
+         return this._shadowVisiblityMode.top === 'visible' || this._shadowVisiblityMode.bottom === 'visible';
       },
 
       _shadowVisible: function(position) {
@@ -352,8 +365,15 @@ var
          if (typeof this._displayState.shadowPosition !== 'string') {
             return false;
          }
+         if (this._shadowVisiblityMode[position] == 'visible') {
+            return true;
+         }
 
          return this._displayState.shadowPosition.indexOf(position) !== -1 && !this._children.stickyController.hasFixed(position);
+      },
+
+      setShadowMode: function(shadowVisibleObject) {
+         this._shadowVisiblityMode = shadowVisibleObject;
       },
 
       /**
@@ -382,6 +402,9 @@ var
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
+            if (this._isShadowVisibleMode()) {
+               this._displayState.hasScroll = true;
+            }
          }
 
          _private.calcPagingStateBtn(this);
