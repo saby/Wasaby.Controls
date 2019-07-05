@@ -3,7 +3,7 @@ import {Controller as SourceController} from 'Controls/source';
 import template = require('wml!Controls/_toolbars/View');
 import toolbarItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
 import {factory} from 'Types/collection';
-import tUtil = require('Controls/Utils/Toolbar');
+import tUtil from 'Controls/Utils/Toolbar';
 import {ActualApi as ButtonActualApi} from 'Controls/buttons';
 
 /**

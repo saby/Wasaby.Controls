@@ -31,15 +31,15 @@ define(
          ];
          it('getMenuItems', function() {
             let rawItems = new collection.RecordSet({rawData: defaultItems});
-            let filtetedItems = ToolbarUtil.getMenuItems(rawItems).value(collection.factory.recordSet, {
+            let filtetedItems = ToolbarUtil.default.getMenuItems(rawItems).value(collection.factory.recordSet, {
                adapter: new entity.adapter.Json(),
                idProperty: 'id'
             });
             let hasOnlyToolbarItem = false;
             assert.equal(filtetedItems.getCount(), 3);
-            assert.equal(filtetedItems.at(2).get('showType'), ToolbarUtil.showType.MENU);
+            assert.equal(filtetedItems.at(2).get('showType'), ToolbarUtil.default.showType.MENU);
             filtetedItems.forEach(function(item) {
-               if (item.get('showType') ===  ToolbarUtil.showType.TOOLBAR) {
+               if (item.get('showType') ===  ToolbarUtil.default.showType.TOOLBAR) {
                   hasOnlyToolbarItem = true;
                }
             });

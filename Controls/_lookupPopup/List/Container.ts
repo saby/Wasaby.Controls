@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('tmpl!Controls/_lookupPopup/List/Container');
-import Toolbar = require('Controls/Utils/Toolbar');
+import Toolbar from 'Controls/Utils/Toolbar';
 
 /**
  *
