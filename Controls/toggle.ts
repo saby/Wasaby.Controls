@@ -13,6 +13,7 @@
  * @includes ButtonStyles Controls/_toggle/Button/Styles
  * @includes CheckboxStyles Controls/_toggle/Checkbox/CheckboxStyles
  * @includes ICheckable Controls/_toggle/interface/ICheckable
+ * @includes IToggleGroup Controls/_toggle/interface/IToggleGroup
  * @includes RadioGroupStyles Controls/_toggle/RadioGroup/RadioGroupStyles
  * @includes SeparatorStyles Controls/_toggle/Separator/SeparatorStyles
  * @includes SwitchStyles Controls/_toggle/Switch/SwitchStyles
@@ -36,6 +37,7 @@
  * @includes ButtonStyles Controls/_toggle/Button/Styles
  * @includes CheckboxStyles Controls/_toggle/Checkbox/CheckboxStyles
  * @includes ICheckable Controls/_toggle/interface/ICheckable
+ * @includes IToggleGroup Controls/_toggle/interface/IToggleGroup
  * @includes RadioGroupStyles Controls/_toggle/RadioGroup/RadioGroupStyles
  * @includes SeparatorStyles Controls/_toggle/Separator/SeparatorStyles
  * @includes SwitchStyles Controls/_toggle/Switch/SwitchStyles
@@ -54,6 +56,7 @@ import {default as Separator} from 'Controls/_toggle/Separator';
 import {default as BigSeparator} from 'Controls/_toggle/BigSeparator';
 import ItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 import switchCircleTemplate = require('wml!Controls/_toggle/resources/SwitchCircle/SwitchCircle');
+import {IToggleGroupOptions, IToggleGroup} from 'Controls/_toggle/interface/IToggleGroup';
 
 export {
    Button,
@@ -65,5 +68,7 @@ export {
    Separator,
    BigSeparator,
    ItemTemplate,
-   switchCircleTemplate
+   switchCircleTemplate,
+   IToggleGroupOptions,
+   IToggleGroup
 };
