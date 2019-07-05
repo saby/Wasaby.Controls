@@ -79,7 +79,7 @@ import 'Controls/breadcrumbs';
 
             function _remover(key) {
                Object.keys(self._restoredMarkedKeys).forEach((cur) => {
-                  if(self._restoredMarkedKeys[cur] && self._restoredMarkedKeys[cur].parent == String(key)) {
+                  if (self._restoredMarkedKeys[cur] && self._restoredMarkedKeys[cur].parent == String(key)) {
                      const nextKey = cur;
                      delete self._restoredMarkedKeys[cur];
                      _remover(nextKey);
@@ -241,8 +241,6 @@ import 'Controls/breadcrumbs';
          }
 
          _private.setViewMode(this, cfg.viewMode, cfg);
-         // const root = cfg.root !== undefined ? cfg.root : null;
-         // this._root = root;
          const root = _private.getRoot(this);
          this._restoredMarkedKeys = {
          [root]: {
