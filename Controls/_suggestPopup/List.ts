@@ -61,7 +61,9 @@ var _private = {
          itemsContainers = listContainer.getElementsByClassName('controls-ListView__itemV'),
          indexFirstItem = self._reverseList ? itemsContainers.length - 1 : 0;
 
-      scrollToElement(itemsContainers[indexFirstItem], true);
+      if (itemsContainers.length) {
+         scrollToElement(itemsContainers[indexFirstItem], true);
+      }
    }
 };
 
@@ -111,13 +113,6 @@ var List = Control.extend({
       }
 
       _private.checkContext(this, context);
-
-      // toDO До .500, пока не появится опция https://online.sbis.ru/opendoc.html?guid=301f9f1b-9036-4b9b-b25f-1c363d0d32ee
-      if (oldReverseList !== this._reverseList) {
-         setTimeout(function() {
-            _private.scrollToFirstItem(self);
-         }, 0);
-      }
    },
 
    _tabsSelectedKeyChanged: function(event, key) {
@@ -168,6 +163,11 @@ var List = Control.extend({
    _markedKeyChanged: function(event, key) {
       this._markedKey = key;
       this._notify('markedKeyChanged', [key]);
+   },
+
+   _drawItems: function() {
+      // toDO До .500, пока не появится опция https://online.sbis.ru/opendoc.html?guid=301f9f1b-9036-4b9b-b25f-1c363d0d32ee
+      _private.scrollToFirstItem(this);
    }
 });
 
