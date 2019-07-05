@@ -340,6 +340,60 @@ define([
          assert.equal(instance._options.listModel.getMarkedKey(), fakeItemData.key);
       });
 
+      it('should update itemActions on click', function () {
+         let
+             cfg = {
+                listModel: listViewModel,
+                itemActions: actions
+             },
+             instance = new lists.ItemActionsControl(cfg);
+
+         instance.saveOptions(cfg);
+
+         let
+             fakeItem = {
+                get: () => 1
+             },
+             fakeItemData = {
+                item: fakeItem,
+                index: 0,
+                key: 2
+             },
+             fakeHTMLElement = {
+                className: 'controls-ListView__itemV'
+             },
+             itemActionsUpdated = false;
+
+         instance._container = {
+            querySelector: function(selector) {
+               if (selector === '.controls-ListView__itemV') {
+                  return {
+                     parentNode: {
+                        children: [fakeHTMLElement]
+                     }
+                  };
+               }
+            }
+         };
+         const fakeEvent = {
+            stopPropagation: function() {}
+         };
+         const action = {
+            handler: sandbox.stub()
+         };
+
+         assert.deepEqual({}, listViewModel._actions);
+         instance.updateItemActions(fakeItem);
+         assert.equal(6, listViewModel._actions["1"].all.length);
+         instance._options.itemActions = [{
+            id: 0,
+            title: 'прочитано',
+            showType: tUtil.showType.TOOLBAR
+         }];
+         instance._onItemActionsClick(fakeEvent, action, fakeItemData);
+         assert.equal(1, listViewModel._actions["1"].all.length);
+      });
+
       it('getDefaultOptions ', function() {
          var defOpts = lists.ItemActionsControl.getDefaultOptions();
          assert.equal(defOpts.itemActionsPosition, 'inside');
