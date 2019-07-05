@@ -327,7 +327,6 @@ define([
                markedKey: null
             }
          };
-         console.log(instance._restoredMarkedKeys)
          instance._onBreadCrumbsClick({}, testBreadCrumbs.at(0));
          assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
          instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1));
