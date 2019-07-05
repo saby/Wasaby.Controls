@@ -52,9 +52,9 @@
  * @cfg {Function} Шаблон пустого списка (без элементов).
  * См.<a href="/materials/demo-ws4-list-base">демо-пример</a>
  * @remark
- * По умолчанию для emptyTemplate используется шаблон "wml!Controls/_list/emptyTemplate".
+ * По умолчанию для emptyTemplate используется шаблон "Controls/list:EmptyTemplate".
  * Он рекомендован к использованию при описании собственного шаблона, отображаемого для пустого списка.
- * Шаблон "wml!Controls/_list/emptyTemplate" принимает следующие параметры:
+ * Шаблон "Controls/list:EmptyTemplate" принимает следующие параметры:
  * - contentTemplate — контент шаблона;
  * - topSpacing — расстояние между верхней границей и контентом шаблона;
  * - bottomSpacing — расстояние между нижней границей и контентом шаблона;
@@ -62,7 +62,7 @@
  * <pre>
  *    <Controls.list:View>
  *       <ws:emptyTemplate>
- *          <ws:partial template="Controls/_list/emptyTemplate" topSpacing="xl" bottomSpacing="l">
+ *          <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xl" bottomSpacing="l">
  *             <ws:contentTemplate>Нет данных</ws:contentTemplate>
  *          </ws:partial>
  *       </ws:emptyTemplate>
