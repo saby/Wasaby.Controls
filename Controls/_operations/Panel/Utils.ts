@@ -1,5 +1,5 @@
 import toolbars = require('Controls/toolbars');
-import tUtil = require('Controls/Utils/Toolbar');
+import tUtil from 'Controls/Utils/Toolbar';
 import getWidthUtil = require('Controls/Utils/getWidth');
 
 

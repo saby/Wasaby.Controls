@@ -11,7 +11,7 @@ import Deferred = require('Core/Deferred');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import collection = require('Types/collection');
-import tUtil = require('Controls/Utils/Toolbar');
+import tUtil from 'Controls/Utils/Toolbar';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
