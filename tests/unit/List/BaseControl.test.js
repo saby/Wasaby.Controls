@@ -2276,7 +2276,7 @@ define([
                   id: 1,
                   icon: 'icon-primary icon-PhoneNull',
                   title: 'phone',
-                  showType: tUtil.default..showType.MENU,
+                  showType: tUtil.default.showType.MENU,
                   handler: function(item) {
                      console.log('action phone Click ', item);
                   }
