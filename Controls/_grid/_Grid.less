@@ -165,11 +165,15 @@
    .controls-Grid__row_highlightOnHover_default.controls-Grid_row-cell_hovered {
       background-color: @background-color_Grid-row_hover;
    }
-   .controls-Grid__row:hover,
-   .controls-Grid_row-cell_hovered {
-      .controls-itemActionsV {
-         display: inline-block;
-      }
+
+   .controls-Grid__row:hover .controls-itemActionsV,
+   .controls-Grid_row-cell_hovered .controls-itemActionsV {
+      display: inline-block;
+   }
+
+   // Class controls-Grid_row-cell_hovered adds on all cells of hovered item only in browsers with partial grid support.
+   .controls-Grid_row-cell_hovered .controls-ListView__checkbox-onhover {
+      display: inline-block;
    }
 }
 
