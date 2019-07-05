@@ -281,7 +281,7 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
                     });
                 }
 
-                var newCfg = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(cfg, Tpl || cfg.template);
+                var newCfg = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(cfg, (Tpl && Tpl.default) || Tpl || cfg.template);
 
                 // Прокинем значение опции theme опенера, если другое не было передано в templateOptions.
                 // Нужно для открытия окон на старых страницах'.
