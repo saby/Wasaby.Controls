@@ -13,7 +13,7 @@
                      <Controls.explorer:View
                              readOnly="{{true}}"
                         attr:class="demo-Explorer"
-                        multiSelectVisibility="visible"
+                        multiSelectVisibility="{{_multiselectVisibility}}"
                         displayProperty="title"
                         bind:markedKey="_markedKey"
                         parentProperty="parent"
@@ -30,6 +30,10 @@
       <div>
          <div>searchStartingWith:</div>
          <Controls.toggle:RadioGroup bind:selectedKey="_searchStartingWith" source="{{_searchStartingWithSource}}" keyProperty="id"/>
+      </div>
+      <div>
+         <div>multiselectVisibility:</div>
+         <Controls.toggle:RadioGroup bind:selectedKey="_multiselectVisibility" source="{{_multiselectVisibilitySource}}" keyProperty="id"/>
       </div>
    </div>
 </div>
