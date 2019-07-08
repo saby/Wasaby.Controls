@@ -214,12 +214,15 @@ import dataSource = require('Controls/dataSource');
                         return res;
                      });
                   } else {
-                     self.read(newOptions.key, newOptions.readMetaData);
+                     self._tryDeleteNewRecord().addCallback(() => {
+                        self.read(newOptions.key, newOptions.readMetaData);
+                     });
                   }
                });
             } else {
                self.read(newOptions.key, newOptions.readMetaData);
             }
+            return;
          }
          // Если нет ключа и записи - то вызовем метод создать. Состояние isNewRecord обновим после того, как запись вычитается
          // Иначе можем удалить рекорд, к которому новое значение опции isNewRecord не относится
