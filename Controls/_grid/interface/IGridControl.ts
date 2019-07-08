@@ -331,24 +331,24 @@
  */
 
  /**
- * @name Controls/_list/interface/IList#resultsTemplate
+ * @name Controls/_grid/interface/IGridControl#resultsTemplate
  * @cfg {Function} Шаблон строки итогов.
  */
 
 /*
- * @name Controls/_list/interface/IList#resultsTemplate
+ * @name Controls/_grid/interface/IGridControl#resultsTemplate
  * @cfg {Function} Results row template.
  */
 
 /**
- * @name Controls/_list/interface/IList#resultsPosition
+ * @name Controls/_grid/interface/IGridControl#resultsPosition
  * @cfg {String} Положение строки итогов.
  * @variant top Вывести итоги над списком.
  * @variant bottom Вывести итоги под списком.
  */
 
 /*
- * @name Controls/_list/interface/IList#resultsPosition
+ * @name Controls/_grid/interface/IGridControl#resultsPosition
  * @cfg {String} Results row position.
  * @variant top Show results above the list.
  * @variant bottom Show results below the list.
