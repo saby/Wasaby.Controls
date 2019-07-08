@@ -83,11 +83,11 @@ var CompoundArea = CompoundContainer.extend([
       var _this = this;
 
       if (_options.hoverTarget) {
-         _options.hoverTarget.on('mouseenter', function() {
+         $(_options.hoverTarget).on('mouseenter', function() {
             clearTimeout(_this._hoverTimer);
             _this._hoverTimer = null;
          });
-         _options.hoverTarget.on('mouseleave', function() {
+         $(_options.hoverTarget).on('mouseleave', function() {
             _this._hoverTimer = setTimeout(function() {
                _this.hide();
             }, 1000);
