@@ -108,6 +108,17 @@ export class Highlight extends Control<IHighlightOptions> {
         return this._searchBy(text, escapedHighlight, searchMode, 'or');
     }
 
+    private _prepareParsedText(options: IHighlightOptions): Element[] {
+        if (options.highlight) {
+            return this._parseText(options.text, options.highlight, options.searchMode);
+        } else {
+            return [{
+                type: 'plain',
+                value: options.text
+            }];
+        }
+    }
+
     private _searchBy(text: string, highlight: string, searchMode: SearchMode, by: SearchBy): Element[] {
         let words: string[];
         switch (by) {
@@ -168,7 +179,7 @@ export class Highlight extends Control<IHighlightOptions> {
     }
 
     protected _beforeMount(options: IHighlightOptions): void {
-        this._parsedText = this._parseText(options.text, options.highlight, options.searchMode);
+        this._parsedText = this._prepareParsedText(options);
     }
 
     protected _beforeUpdate(newOptions: IHighlightOptions): void {
@@ -177,7 +188,7 @@ export class Highlight extends Control<IHighlightOptions> {
             newOptions.highlight !== this._options.highlight ||
             newOptions.searchMode !== this._options.searchMode
         ) {
-            this._parsedText = this._parseText(newOptions.text, newOptions.highlight, newOptions.searchMode);
+            this._parsedText = this._prepareParsedText(newOptions);
         }
     }
 
