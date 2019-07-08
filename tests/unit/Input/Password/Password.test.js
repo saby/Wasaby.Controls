@@ -42,6 +42,7 @@ define(
          it('Checking types of options.', function() {
             assert.deepEqual(Object.keys(input.Password.getOptionTypes()).sort(), [
                'size',
+               'value',
                'style',
                'tooltip',
                'tagStyle',
