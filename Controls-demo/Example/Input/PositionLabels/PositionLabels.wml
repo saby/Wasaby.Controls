@@ -15,15 +15,15 @@
       <div class="example-Base__wrapper example-BaseDemoInput__content">
          <Controls.input:Text name="text1" class="ControlsDemo-ExampleInput_leftLabel"
                               placeholder="Tooltip"
-                              bind:value="_value1"/>
+                              bind:value="_left1Value"/>
          <Controls.input:Text name="text2"
                               placeholder="Tooltip"
                               attr:class="example-BaseDemoInput__content_normalSpacing"
-                              bind:value="_value2"/>
+                              bind:value="_left2Value"/>
          <Controls.input:Text name="text3"
                               placeholder="Tooltip"
                               attr:class="example-BaseDemoInput__content_normalSpacing"
-                              bind:value="_value3"/>
+                              bind:value="_left3Value"/>
       </div>
    </div>
    <div class="example-Base__specify example-BaseDemoInput__content_normalSpacing">Right alignment</div>
@@ -42,15 +42,15 @@
       <div class="example-Base__wrapper example-BaseDemoInput__content">
          <Controls.input:Text name="text4"
                               placeholder="Tooltip"
-                              bind:value="_value4"/>
+                              bind:value="_right1Value"/>
          <Controls.input:Text name="text5"
                               placeholder="Tooltip"
                               attr:class="example-BaseDemoInput__content_normalSpacing"
-                              bind:value="_value5"/>
+                              bind:value="_right2Value"/>
          <Controls.input:Text name="text6"
                               placeholder="Tooltip"
                               attr:class="example-BaseDemoInput__content_normalSpacing"
-                              bind:value="_value6"/>
+                              bind:value="_right3Value"/>
       </div>
    </div>
 </div>

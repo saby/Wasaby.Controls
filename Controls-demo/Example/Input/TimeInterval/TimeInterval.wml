@@ -4,22 +4,22 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <Controls.input:TimeInterval bind:value="_value1" mask="HH:MM"/>
+                  <Controls.input:TimeInterval bind:value="_default1Value" mask="HH:MM"/>
                </ws:template>
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <Controls.input:TimeInterval bind:value="_value2" mask="HH:MM:SS"/>
+                  <Controls.input:TimeInterval bind:value="_default2Value" mask="HH:MM:SS"/>
                </ws:template>
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <Controls.input:TimeInterval bind:value="_value3" mask="HHH:MM"/>
+                  <Controls.input:TimeInterval bind:value="_default3Value" mask="HHH:MM"/>
                </ws:template>
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <Controls.input:TimeInterval bind:value="_value4" mask="HHH:MM:SS"/>
+                  <Controls.input:TimeInterval bind:value="_default4Value" mask="HHH:MM:SS"/>
                </ws:template>
             </ws:Object>
          </ws:Array>

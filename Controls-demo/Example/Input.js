@@ -26,5 +26,28 @@ define('Controls-demo/Example/Input',
       return Control.extend({
          _template: template,
 
+         /**
+          * @param demo
+          * @variant Area(dynamic, fixed)
+          * @variant Label(default1, default2, required1, required2, required3, required4)
+          * @variant Font(default1, default2, default3, filled1, filled2, filled3, filledRM,
+          * filledNumber1, filledNumber2, filledNumber3, filledNumberRM, filledMoney1, filledMoney2,
+          * filledMoney3, filledMoneyRM)
+          * @variant Mask(snils, cardNumber, mobilePhone)
+          * @variant Money(left, right)
+          * @variant Number(default, range, fractional)
+          * @variant Password(default, revealable)
+          * @variant Phone(phoneNumber)
+          * @variant PositionLabels(left1, left2, left3, right1, right2, right3)
+          * @variant RightAlignment(default, filled, filledRM, filledNumber, filledNumberRM, filledMoney, filledMoneyRM)
+          * @variant Suggest(default)
+          * @variant Tag(secondary, success, warning, danger, info, primary)
+          * @variant Text(default)
+          * @variant TimeInterval(default1, default2, default3, default4)
+          * @param value
+          */
+         setValue: function(demo, field, value) {
+            this._children[demo].setValue(field, value);
+         }
       });
    });
