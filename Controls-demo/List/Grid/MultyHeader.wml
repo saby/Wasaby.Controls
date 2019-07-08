@@ -38,7 +38,6 @@
                             <Controls.grid:View
                                     attr:class="demo-Grid__control test_grid_1"
                                     displayProperty="title"
-                                    resultsPosition="bottom"
                                     stickyHeader="{{false}}"
 
                                     rowSeparatorVisibility="{{true}}"

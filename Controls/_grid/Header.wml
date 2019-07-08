@@ -24,7 +24,7 @@
       </ws:if>
       <ws:else>
          <ws:partial
-                 attr:class="controls-Grid__row-header__content_baseline {{headerColumn.cellContentClasses}}"
+                 attr:class="{{headerColumn.cellContentClasses}}"
                  template="{{defaultHeaderContent}}"
                  colData="{{headerColumn}}"/>
       </ws:else>
