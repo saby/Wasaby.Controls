@@ -1078,6 +1078,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _canUpdateItemsActions: false,
 
     _needBottomPadding: false,
+    _emptyTemplateVisibility: true,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
