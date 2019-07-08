@@ -111,7 +111,7 @@ define('Controls/interface/IGrouped', [
 
    /**
     * @name Controls/interface/IGrouped#collapsedGroups
-    * @cfg {Array} Список идентификаторов свернутых групп. Идентификаторы групп получаются в результате вызова {@link groupingKeyCallback}.
+    * @cfg {Array} Список идентификаторов свернутых групп. Идентификаторы групп получаются в результате вызова {@link groupingKeyCallback}.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
     */
 
