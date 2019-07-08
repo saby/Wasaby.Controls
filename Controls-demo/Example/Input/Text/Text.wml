@@ -5,7 +5,7 @@
             <ws:Object>
                <ws:template>
                   <Controls.input:Text placeholder="Tooltip" class="ControlsDemo-ExampleInput_simpleTextField"
-                                       bind:value="_value1"/>
+                                       bind:value="_defaultValue"/>
                </ws:template>
             </ws:Object>
          </ws:Array>

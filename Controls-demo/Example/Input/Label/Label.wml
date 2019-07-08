@@ -6,7 +6,7 @@
                <ws:template>
                   <Controls.input:Text name="text2"
                                        placeholder="Tooltip"
-                                       bind:value="_value2"/>
+                                       bind:value="_default1Value"/>
                </ws:template>
                <ws:label position="left" value="Label1" name="text2"/>
             </ws:Object>
@@ -14,7 +14,7 @@
                <ws:template>
                   <Controls.input:Text name="text3" class="ControlsDemo-ExampleInput_focusText"
                                        placeholder="Tooltip"
-                                       bind:value="_value3"/>
+                                       bind:value="_default2Value"/>
                </ws:template>
                <ws:label position="top" value="Label1" name="text3"/>
             </ws:Object>
@@ -29,7 +29,7 @@
                <ws:template>
                   <Controls.input:Text name="text4"
                                        placeholder="Tooltip"
-                                       bind:value="_value4"/>
+                                       bind:value="_required1Value"/>
                </ws:template>
                <ws:label position="left" value="Label1" name="text4" required="{{true}}"/>
             </ws:Object>
@@ -37,7 +37,7 @@
                <ws:template>
                   <Controls.input:Text name="text5"
                                        placeholder="Tooltip"
-                                       bind:value="_value5"/>
+                                       bind:value="_required2Value"/>
                </ws:template>
                <ws:label position="left" value="Label2" name="text5" required="{{true}}"/>
             </ws:Object>
@@ -45,7 +45,7 @@
                <ws:template>
                   <Controls.input:Text name="text6"
                                        placeholder="Tooltip"
-                                       bind:value="_value6"/>
+                                       bind:value="_required3Value"/>
                </ws:template>
                <ws:label position="left" value="Label3" name="text6" required="{{true}}"/>
             </ws:Object>
@@ -53,7 +53,7 @@
                <ws:template>
                   <Controls.input:Text name="text8"
                                        placeholder="Tooltip"
-                                       bind:value="_value8"/>
+                                       bind:value="_required4Value"/>
                </ws:template>
                <ws:label position="top" value="Label1" name="text8" required="{{true}}"/>
             </ws:Object>
