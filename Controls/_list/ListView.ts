@@ -73,7 +73,7 @@ var ListView = BaseControl.extend(
 
         constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);
-            this._setHoveredItem = cDebounce(_private.setHoveredItem, DEBOUNCE_HOVERED_ITEM_CHANGED);
+            this._debouncedSetHoveredItem = cDebounce(_private.setHoveredItem, DEBOUNCE_HOVERED_ITEM_CHANGED);
             this._onListChangeFnc = (event, changesType) => {
                // todo refactor by task https://online.sbis.ru/opendoc.html?guid=80fbcf1f-5804-4234-b635-a3c1fc8ccc73
                if (changesType !== 'hoveredItemChanged' &&
@@ -191,13 +191,13 @@ var ListView = BaseControl.extend(
 
         _onItemMouseEnter: function(event, itemData) {
             this._notify('itemMouseEnter', [itemData, event]);
-            this._setHoveredItem(this, itemData.item, event);
+            this._debouncedSetHoveredItem(this, itemData.item, event);
         },
 
         //TODO: из-за того что ItemOutput.wml один для всех таблиц, приходится подписываться в нем на события,
         //которые не нужны для ListView. Выписана задача https://online.sbis.ru/opendoc.html?guid=9fd4922f-eb37-46d5-8c39-dfe094605164
         _onItemMouseLeave: function(event) {
-            this._setHoveredItem(this, null);
+            this._debouncedSetHoveredItem(this, null);
         },
 
         _onItemMouseMove: function(event, itemData) {
