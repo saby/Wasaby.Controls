@@ -198,6 +198,16 @@ import template = require('wml!Controls/_decorator/Highlight/Highlight');
             parsedText = _private.uniteToSet(parsedText);
 
             return parsedText;
+         },
+
+         prepareParsedText(options): void {
+            if (options.highlight) {
+               return _private.parseText(options.text, options.highlight, options.searchMode);
+            } else {
+               return [{
+                  value: options.text
+               }];
+            }
          }
       };
 
@@ -207,7 +217,7 @@ import template = require('wml!Controls/_decorator/Highlight/Highlight');
          _parsedText: null,
 
          _beforeMount: function(options) {
-            this._parsedText = _private.parseText(options.text, options.highlight, options.searchMode);
+            this._parsedText = _private.prepareParsedText(options);
          },
 
          _beforeUpdate: function(newOptions) {
@@ -216,7 +226,7 @@ import template = require('wml!Controls/_decorator/Highlight/Highlight');
                newOptions.highlight !== this._options.highlight ||
                newOptions.searchMode !== this._options.searchMode
             ) {
-               this._parsedText = _private.parseText(newOptions.text, newOptions.highlight, newOptions.searchMode);
+               this._parsedText = _private.prepareParsedText(newOptions);
             }
          }
       });
