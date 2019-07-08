@@ -179,6 +179,11 @@ define([
          updateCalled = false;
          readCalled = false;
          confirmPopupCalled = false;
+         let isDeleteRecord = false;
+         FC._tryDeleteNewRecord = () => {
+            isDeleteRecord = true;
+            return (new Deferred()).callback();
+         };
          FC._beforeUpdate({
             record: record,
             key: 'key'
@@ -186,6 +191,7 @@ define([
 
          assert.equal(setRecordCalled, false);
          assert.equal(confirmPopupCalled, true);
+         assert.equal(isDeleteRecord, true);
          assert.equal(readCalled, true);
          assert.equal(updateCalled, false);
          assert.equal(createCalled, false);
