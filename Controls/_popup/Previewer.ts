@@ -29,7 +29,7 @@ import 'css!theme?Controls/popup';
                opener: self,
                target: self._container,
                template: 'Controls/popup:PreviewerTemplate',
-               corner: {
+               targetPoint: {
                   vertical: 'bottom',
                   horizontal: 'right'
                },
@@ -44,8 +44,8 @@ import 'css!theme?Controls/popup';
                }
             };
 
-            if (self._options.corner) {
-               config.corner = self._options.corner;
+            if (self._options.targetPoint) {
+               config.targetPoint = self._options.targetPoint;
             }
             if (self._options.verticalAlign) {
                config.verticalAlign = self._options.verticalAlign;

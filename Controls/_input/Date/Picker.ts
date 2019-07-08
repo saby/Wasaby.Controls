@@ -48,7 +48,7 @@ import 'css!theme?Controls/input';
             template: 'Controls/datePopup',
             className: 'controls-PeriodDialog__picker-withoutModeBtn',
             horizontalAlign: { side: 'right' },
-            corner: { horizontal: 'left' },
+            targetPoint: { horizontal: 'left' },
             fittingMode: 'overflow',
             eventHandlers: {
                onResult: this._onResult.bind(this)

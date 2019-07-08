@@ -115,7 +115,7 @@ var _private = {
       };
 
       if (alignment === 'right') {
-         self._popupOptions.corner = {
+         self._popupOptions.targetPoint = {
             vertical: 'top',
             horizontal: 'right'
          };
