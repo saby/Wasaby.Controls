@@ -17,6 +17,7 @@ define('Controls-demo/Example/Input',
       'Controls-demo/Example/Input/Suggest',
       'Controls-demo/Example/Input/Tag',
       'Controls-demo/Example/Input/Text',
+      'Controls-demo/Example/Input/TimeInterval',
       'css!Controls-demo/Example/resource/Base'
    ],
    function(Control, template) {
