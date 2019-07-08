@@ -39,11 +39,11 @@ define(
 
             ctrl._beforeMount(options);
 
-            assert.deepEqual([{ value: 'text1' }], ctrl._parsedText);
+            assert.deepEqual([{ type: 'plain', value: 'text1' }], ctrl._parsedText);
 
             ctrl._beforeUpdate(newOptions);
 
-            assert.deepEqual([{ value: 'text2' }], ctrl._parsedText);
+            assert.deepEqual([{ type: 'plain', value: 'text2' }], ctrl._parsedText);
 
             ctrl._beforeUpdate(newOptions2);
 
@@ -52,7 +52,7 @@ define(
                value: 'text'
             },
             {
-               type: 'text',
+               type: 'plain',
                value: '3'
             }], ctrl._parsedText);
          });
