@@ -303,12 +303,12 @@ var _Controller = Control.extend({
       }
 
       function itemsLoadCallback(items) {
-         if (items.getCount() === 1) {
+         if (items.getCount() > 1 || items.getCount() === 1 && self._options.emptyText) {
+            open();
+         } else if (items.getCount() === 1) {
             self._notify('selectedItemsChanged', [
                [items.at(0)]
             ]);
-         } else if (items.getCount() > 1) {
-            open();
          }
       }
 
