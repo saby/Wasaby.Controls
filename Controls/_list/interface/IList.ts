@@ -246,7 +246,7 @@
  * @property {String} id Идентификатор операции.
  * @property {String} title Название операции.
  * @property {String} icon Иконка операции.
- * @property {Number} showType Положение операции. (0 - меню | 1 - панель инструментов и меню | 2 - панель инструментов).
+ * @property {Number} showType Местоположение операции. В свойство передается константа с соответствующим значением (0 - menu | 1 - toolbar and menu | 2 - toolbar). Если свойство не указано, то itemActions отображаются только в меню.
  * @property {String} style Режим визуального отображения операции. (secondary | warning | danger | success).
  * @property {String} iconStyle Режим визуального отображения иконки операции. (secondary | warning | danger | success).
  * @property {Function} handler Обработчик операции.
@@ -607,7 +607,7 @@
 
 /**
  * @event Controls/_list/interface/IList#itemSwipe Происходит при жесте "swipe" на элементе списка.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Экземпляр элемента списка, по которому производим swipe.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} originalEvent Дескриптор исходного события.
  * @remark
@@ -616,7 +616,7 @@
 
 /*
  * @event Controls/_list/interface/IList#itemSwipe Occurs when list item is swiped.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Env/Event:Object} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the swiped item.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} originalEvent Descriptor of the original event. It is useful if you want to get direction or target.
  * @remark
@@ -626,7 +626,7 @@
 /**
  * @event Controls/_list/interface/IList#hoveredItemChanged Происходит при наведении курсора мыши на элемент списка.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Экземпляр элемента, на который наводим курсор.
  * @param {HTMLElement} itemContainer Контейнер элемента.
  */
@@ -634,7 +634,7 @@
 /*
  * @event Controls/_list/interface/IList#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Env/Event:Object} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
  * @param {HTMLElement} itemContainer Container of the item.
  */
@@ -642,12 +642,14 @@
 /**
  * @event  Controls/_list/interface/IList#markedKeyChanged Происходит при выделении пользователем элемента списка.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Number} key Ключ выбранного элемента.
  */
 
 /*
  * @event  Controls/_list/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
  * <a href="/materials/demo-ws4-list-base">Example</a>.
+ * @param {Env/Event:Object} eventObject The event descriptor. 
  * @param {Number} key Key of the selected item.
  */
 
