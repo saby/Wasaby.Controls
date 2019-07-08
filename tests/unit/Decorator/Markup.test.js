@@ -439,6 +439,56 @@ define([
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json), html));
          });
 
+         it('validate data- attributes - 1', function() {
+            var
+               json = [
+                  ['p', { 'data-': 'value' }, 'text']
+               ],
+               checkHtml = decorator.Converter.jsonToHtml(json),
+               goodHtml = '<div><p>text</p></div>';
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
+
+         it('validate data- attributes - 2', function() {
+            var
+               json = [
+                  ['p', { 'data-ewghierg': 'value' }, 'text']
+               ],
+               checkHtml = decorator.Converter.jsonToHtml(json),
+               goodHtml = '<div><p data-ewghierg="value">text</p></div>';
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
+
+         it('validate data- attributes - 3', function() {
+            var
+               json = [
+                  ['p', { 'data-component': 'value' }, 'text']
+               ],
+               checkHtml = decorator.Converter.jsonToHtml(json),
+               goodHtml = '<div><p>text</p></div>';
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
+
+         it('validate data- attributes - 4', function() {
+            var
+               json = [
+                  ['p', { 'data-component-style': 'value' }, 'text']
+               ],
+               checkHtml = decorator.Converter.jsonToHtml(json),
+               goodHtml = '<div><p data-component-style="value">text</p></div>';
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
+
+         it('validate data- attributes - 5', function() {
+            var
+               json = [
+                  ['p', { 'data-key-': 'value' }, 'text']
+               ],
+               checkHtml = decorator.Converter.jsonToHtml(json),
+               goodHtml = '<div><p>text</p></div>';
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
+
          it('validHtml option', function() {
             var
                validHtml = {
