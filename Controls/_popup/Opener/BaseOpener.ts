@@ -40,6 +40,9 @@ var Base = Control.extend({
 
     _beforeMount: function (options) {
         this._popupIds = [];
+        if (options.displayMode && options.displayMode !== 'single') {
+            Env.IoC.resolve('ILogger').error(this._moduleName, 'Вместо опции displayMode используйте открытие окна через статический метод openPopup');
+        }
     },
 
     _afterMount: function () {

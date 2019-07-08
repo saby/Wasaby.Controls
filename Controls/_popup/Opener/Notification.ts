@@ -39,7 +39,6 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:NotificationController';
 
 const BASE_OPTIONS = {
     autofocus: false,
-    displayMode: 'multiple',
     autoClose: true
 };
 
@@ -136,15 +135,8 @@ const Notification = BaseOpener.extend({
      */
 
     open(popupOptions) {
-        return new Promise((resolve) => {
-            if (isNewEnvironment()) {
-                BaseOpener.prototype.open.call(this, popupOptions, POPUP_CONTROLLER)
-                    .then((popupId) => resolve(popupId));
-            } else {
-                _private.compatibleOpen(this, popupOptions);
-                resolve();
-            }
-        });
+        let config = {...this._options, ...popupOptions};
+        return Notification.openPopup(config);
     },
     close() {
         Notification.superclass.close.apply(this, arguments);
@@ -252,7 +244,8 @@ Notification.closePopup = (popupId: string): void => {
 };
 
 Notification.getDefaultOptions = function() {
-    return BASE_OPTIONS;
+    const baseOpenerOptions = BaseOpener.getDefaultOptions();
+    return {...baseOpenerOptions, ...BASE_OPTIONS};
 };
 
 Notification._private = _private;
