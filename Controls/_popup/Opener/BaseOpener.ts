@@ -231,8 +231,10 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
         if (!Base.isNewEnvironment()) {
             Base.getManager().addCallback(function () {
                 Base.getZIndexUtil().addCallback(function (getZIndex) {
-                    cfg.zIndex = cfg.zIndex || getZIndex(opener);
-                    cfg.theme = opener._options.theme;
+                    if (opener) {
+                        cfg.zIndex = cfg.zIndex || getZIndex(opener);
+                        cfg.theme = opener._options.theme;
+                    }
                     Base._openPopup(popupId, cfg, controller, def);
                 });
             });
