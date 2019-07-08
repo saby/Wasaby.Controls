@@ -146,6 +146,9 @@ class Range extends Control<ISliderRangeOptions> {
       if (opts.endValue < opts.minValue || opts.endValue > opts.maxValue) {
          IoC.resolve('ILogger').error('Slider', 'endValue must be in the range [minValue..maxValue].');
       }
+      if (opts.startValue > opts.endValue) {
+         IoC.resolve('ILogger').error('Slider', 'startValue must be less than or equal to endValue.');
+      }
    }
 
    private _needUpdate(oldOpts: ISliderRangeOptions, newOpts: ISliderRangeOptions): boolean {
