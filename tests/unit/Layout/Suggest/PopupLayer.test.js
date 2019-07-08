@@ -22,7 +22,7 @@ define(['Controls/_suggest/Layer/__PopupLayer'], function(PopupLayer) {
          layer._onResult({
             verticalAlign: {side: 'test'},
             horizontalAlign: {side: 'test'},
-            targetPoint: {side: 'test'}
+            corner: {side: 'test'}
          });
 
          assert.deepEqual(resultPopupOptions, layer._popupOptions)
