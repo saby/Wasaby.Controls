@@ -36,7 +36,7 @@
  *                                  {{itemData.item['date']}}
  *                               </div>
  *                            </ws:partial>
- *                         <ws:contentTemplate>
+ *                         </ws:contentTemplate>
  *                      </ws:partial>
  *                   </ws:template>
  *                </ws:Object>
@@ -69,7 +69,7 @@
  *                                  {{itemData.item['date']}}
  *                               </div>
  *                            </ws:partial>
- *                         <ws:contentTemplate>
+ *                         </ws:contentTemplate>
  *                      </ws:partial>
  *                   </ws:template>
  *                </ws:Object>

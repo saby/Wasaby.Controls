@@ -159,6 +159,8 @@ import 'css!theme?Controls/popup';
                clearTimeout(this._waitTimer);
                if (this._isPopupOpened()) {
                   this._debouncedAction('_close', [event]);
+               } else {
+                  this._cancel(event, 'opening');
                }
             }
          },

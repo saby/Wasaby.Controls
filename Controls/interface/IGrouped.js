@@ -66,7 +66,7 @@ define('Controls/interface/IGrouped', [
     * @cfg {Function} Шаблон группировки.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
     * @remark
-    * Базовый шаблон группировки "wml!Controls/list:GroupTemplate".
+    * Базовый шаблон группировки "Controls/grid:GroupTemplate".
     * Шаблон группировки поддерживает параметры:
     * <ul>
     *    <li>separatorVisibility (тип Boolean) — видимость горизонтальной линии-разделителя.</li>

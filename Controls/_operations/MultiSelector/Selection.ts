@@ -78,6 +78,18 @@ var Selection = cExtend.extend({
    },
 
    /**
+    * Delete keys from anywhere.
+    * @param {Array} keys Keys to remove.
+    */
+   remove: function(keys) {
+      this._selectedKeys = this._selectedKeys.slice();
+      this._excludedKeys = this._excludedKeys.slice();
+
+      ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
+      ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
+   },
+
+   /**
     * Select all items.
     * @remark Sets selectedKeys to [null].
     */
