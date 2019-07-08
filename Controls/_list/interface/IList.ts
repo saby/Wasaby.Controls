@@ -595,14 +595,14 @@
  * @event Controls/_list/interface/IList#itemClick Происходит при клике на элемент списка.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @param {eventObject} event Объект события.
- * @param {Types/entity:Record} item Элемент, по которому производим клик. 
+ * @param {Types/entity:Record} item Элемент, по которому производим клик.
  */
 
  /*
  * @event Controls/_list/interface/IList#itemClick Occurs when list item is clicked.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @param {eventObject} event Event object.
- * @param {Types/entity:Record} item Clicked item. 
+ * @param {Types/entity:Record} item Clicked item.
  */
 
 /**
@@ -726,3 +726,4 @@
  * @cfg {ItemPadding} Configuration inner paddings in the item.
  * @name Controls/_list/interface/IList#itemPadding
  */
+
