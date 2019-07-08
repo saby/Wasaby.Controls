@@ -507,6 +507,13 @@ define(
             dropdownController._items = null;
             dropdownController._open();
             assert.isFalse(opened);
+
+            // items's count = 1 + emptyText
+            opened = false;
+            dropdownController._items = new collection.RecordSet({keyProperty: 'id', rawData: [{id: '1', title: 'first'}]});
+            dropdownController._options.emptyText = 'Not selected';
+            dropdownController._open();
+            assert.isTrue(opened);
          });
 
          it('_private::requireTemplates', (done) => {
@@ -519,7 +526,9 @@ define(
 
          it('_open one item', () => {
             let selectedItems;
-            let dropdownController = getDropdownController(config);
+            let oneItemConfig = Clone(config);
+            oneItemConfig.emptyText = undefined;
+            let dropdownController = getDropdownController(oneItemConfig);
             let item = new collection.RecordSet({
                idProperty: 'id',
                rawData: [ {id: 1, title: 'Запись 1'} ]

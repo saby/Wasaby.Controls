@@ -115,6 +115,10 @@
  * @property {GridCellVAlign} [valign] Выравнивание содержимого ячейки по вертикали.
  * @property {String} [template] Шаблон заголовка ячейки. CSS-класс устанавливает правый отступ для заголовка ячейки для выравнивания по целым числам в полях ввода денег.
  * @property {String} [sortingProperty] Свойство, по которому выполняется сортировка.
+ * @property {Number} [startRow] Номер горизонтальной css grid границы, с который начинается строка.
+ * @property {Number} [endRow] Номер горизонтальной css grid границы, на который заканчивается строка.
+ * @property {Number} [startColumn] Номер верикальной css grid границы, на который начинается строка.
+ * @property {Number} [endColumn] Номер Вертикальной css grid границы, на который заканчивается строка.
  */
 
 /*
@@ -137,6 +141,40 @@
  * <pre>
  *    <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
  * </pre>
+ * @example
+ * Пример массива колонок многоуровнего заголовка
+ * <pre>
+ *     columns=[
+ *      {
+  *     title: 'Name',
+  *     startRow: 1,
+  *     endRow: 3,
+  *     startColumn: 1,
+  *     endColumn: 2,
+ *      },
+ *      {
+ *      title: 'Price',
+ *      startRow: 1,
+ *      endRow: 2,
+ *      startColumn: 2,
+ *      endColumn: 4,
+ *      },
+ *      {
+ *      title: 'Cell',
+ *      startRow: 2,
+ *      endRow: 3,
+ *      startColumn: 2,
+ *      endColumn: 3,
+ *      },
+ *      {
+ *      title: 'Residue',
+ *      startRow: 2,
+ *      endRow: 3,
+ *      startColumn: 3,
+ *      endColumn: 4,
+ *      },
+ *     ]
+ * </pre>
  */
 
 /*
@@ -155,7 +193,7 @@
 /**
  * @typedef {String} TextOverflow Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
  * @variant ellipsis Текст обрезается, и в конец строки добавляется многоточие.
- * @variant none Стандартное поведение при незаданном свойстве. 
+ * @variant none Стандартное поведение при незаданном свойстве.
  * @default none
  */
 
@@ -276,7 +314,7 @@
  * @name Controls/_grid/interface/IGridControl#columnScroll
  * @cfg {Boolean} Enable column scroll.
  * @default false
- */ 
+ */
 
 /**
  * @name Controls/_grid/interface/IGridControl#rowSeparatorVisibility

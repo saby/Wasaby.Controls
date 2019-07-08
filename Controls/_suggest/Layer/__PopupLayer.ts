@@ -40,7 +40,7 @@ var _private = {
          verticalAlign: {
             side: 'bottom'
          },
-         corner: {
+         targetPoint: {
             vertical: 'bottom'
          },
          eventHandlers: {
@@ -77,7 +77,7 @@ var __PopupLayer = Control.extend({
       //fix suggest position after show
       this._popupOptions.verticalAlign = position.verticalAlign;
       this._popupOptions.horizontalAlign = position.horizontalAlign;
-      this._popupOptions.corner = position.corner;
+      this._popupOptions.targetPoint = position.targetPoint;
       this._popupOptions.className = _private.getPopupClassName(position.verticalAlign.side);
       this._popupOptions.fittingMode = 'fixed';
    }

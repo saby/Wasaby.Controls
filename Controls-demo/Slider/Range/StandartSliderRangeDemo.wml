@@ -22,8 +22,8 @@
                size="s"
                minValue="{{0}}"
                maxValue="{{100}}"
-               bind:startValue="_myStartValue1"
-               bind:endValue="_myEndValue1"
+               bind:startValue="_startValue1"
+               bind:endValue="_endValue1"
             />
          </div>
          <div class="demo__element">
@@ -31,8 +31,8 @@
                size="m"
                minValue="{{0}}"
                maxValue="{{100}}"
-               bind:startValue="_myStartValue2"
-               bind:endValue="_myEndValue2"
+               bind:startValue="_startValue2"
+               bind:endValue="_endValue2"
             />
          </div>
       </div>
@@ -46,8 +46,8 @@
                minValue="{{0}}"
                maxValue="{{100}}"
                borderVisible="{{true}}"
-               bind:startValue="_myStartValue3"
-               bind:endValue="_myEndValue3"
+               bind:startValue="_startValue3"
+               bind:endValue="_endValue3"
             />
          </div>
          <div class="demo__element">
@@ -56,8 +56,8 @@
                minValue="{{0}}"
                maxValue="{{100}}"
                borderVisible="{{true}}"
-               bind:startValue="_myStartValue4"
-               bind:endValue="_myEndValue4"
+               bind:startValue="_startValue4"
+               bind:endValue="_endValue4"
             />
          </div>
       </div>
@@ -71,8 +71,8 @@
                minValue="{{0}}"
                maxValue="{{100}}"
                scaleStep="{{20}}"
-               bind:startValue="_myStartValue5"
-               bind:endValue="_myEndValue5"
+               bind:startValue="_startValue5"
+               bind:endValue="_endValue5"
             />
          </div>
          <div class="demo__element">
@@ -81,8 +81,8 @@
                minValue="{{0}}"
                maxValue="{{100}}"
                scaleStep="{{20}}"
-               bind:startValue="_myStartValue6"
-               bind:endValue="_myEndValue6"
+               bind:startValue="_startValue6"
+               bind:endValue="_endValue6"
             />
          </div>
       </div>
@@ -97,8 +97,8 @@
                minValue="{{0}}"
                maxValue="{{100}}"
                borderVisible="{{true}}"
-               bind:startValue="_myStartValue7"
-               bind:endValue="_myEndValue7"
+               bind:startValue="_startValue7"
+               bind:endValue="_endValue7"
             />
          </div>
          <div class="demo__element">
@@ -108,9 +108,48 @@
                minValue="{{0}}"
                maxValue="{{100}}"
                scaleStep="{{20}}"
-               bind:startValue="_myStartValue8"
-               bind:endValue="_myEndValue8"
+               bind:startValue="_startValue8"
+               bind:endValue="_endValue8"
             />
+         </div>
+      </div>
+      <div class="demo__block">
+         <div class="demo__label">
+            with input
+         </div>
+         <div class="demo__element">
+            <Controls.slider:Range
+                    size="s"
+                    minValue="{{_minValueI}}"
+                    maxValue="{{_maxValueI}}"
+                    borderVisible="{{true}}"
+                    on:startValueChanged="_startInputCompleted()"
+                    on:endValueChanged="_endInputCompleted()"
+                    bind:startValue="_startValueI"
+                    bind:endValue="_endValueI"
+            />
+            <style>
+               .demo_slider_input-wrapper {
+                  display:flex;
+               margin-top: 3px;
+               }
+               .demo_slider_input-label_first {
+                  margin-left: 3px;
+               }
+               .demo_slider_input-label {
+                  margin-left: 8px;
+               }
+               .demo_slider_input-label_last {
+                  margin-right: -6px;
+               }
+            </style>
+            <div class="demo_slider_input-wrapper">
+               <Controls.input:Label class="demo_slider_input-label_first" caption="from"></Controls.input:Label>
+               <Controls.input:Number name="inputStartValue" precision="{{0}}" bind:value="_inputStartValue" on:inputCompleted="_startInputCompleted()" on:keyDown="_inputKeyDown()"></Controls.input:Number>
+               <Controls.input:Label class="demo_slider_input-label" caption="to"></Controls.input:Label>
+               <Controls.input:Number name="inputEndValue" precision="{{0}}" bind:value="_inputEndValue" on:inputCompleted="_endInputCompleted()"></Controls.input:Number>
+               <Controls.input:Label class="demo_slider_input-label demo_slider_input-label_last" caption="$"></Controls.input:Label>
+            </div>
          </div>
       </div>
 

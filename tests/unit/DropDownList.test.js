@@ -338,7 +338,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                   defaultItemTemplate: dropDownList._options.defaultItemTemplate,
                   dropdownClassName: dropDownList._options.dropdownClassName
                },
-               corner: dropDownList._popupOptions.corner,
+               targetPoint: dropDownList._popupOptions.targetPoint,
                horizontalAlign: dropDownList._popupOptions.horizontalAlign,
                target: "MyTarget"
             };
@@ -347,7 +347,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             assert.deepEqual(expectedConfig, inFactConfig);
 
             dropDownList._options.rootKey = null;
-            expectedConfig.corner.horizontal = 'right';
+            expectedConfig.targetPoint.horizontal = 'right';
             expectedConfig.horizontalAlign.side = 'right';
 
             inFactConfig = dropdownPopup.List._private.getSubMenuOptions(dropDownList._options, dropDownList._popupOptions, { target: "MyTarget"}, items.at(0));

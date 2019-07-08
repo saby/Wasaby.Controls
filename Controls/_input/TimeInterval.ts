@@ -7,7 +7,7 @@ type IOptions = IModelOptions;
 
 /**
  * Controls that allows user to enter some amount of time with the accuracy from day to seconds.
- * <a href="/materials/demo-ws4-input-timeinterval">Demo examples.</a>.
+ * <a href="/materials/demo-ws4-input">Demo examples.</a>.
  *
  * @class Controls/_input/TimeInterval
  * @extends Controls/_input/Base

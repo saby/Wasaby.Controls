@@ -65,7 +65,7 @@ var Component = BaseControl.extend({
             template: 'Controls/datePopup',
             className,
             horizontalAlign: {side: 'right'},
-            corner: {horizontal: 'left'},
+            targetPoint: {horizontal: 'left'},
             fittingMode: 'overflow',
             eventHandlers: {
                 onResult: this._onResult.bind(this)

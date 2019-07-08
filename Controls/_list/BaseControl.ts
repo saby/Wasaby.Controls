@@ -793,7 +793,7 @@ var _private = {
                         onClose: self._closeActionsMenu
                     },
                     closeOnOutsideClick: true,
-                    corner: {vertical: 'top', horizontal: 'right'},
+                    targetPoint: {vertical: 'top', horizontal: 'right'},
                     horizontalAlign: {side: context ? 'right' : 'left'},
                     className: 'controls-Toolbar__popup__list_theme-' + self._options.theme,
                     nativeEvent: context ? childEvent.nativeEvent : false
