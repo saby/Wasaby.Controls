@@ -47,45 +47,47 @@ import 'Controls/breadcrumbs';
             self._forceUpdate();
          },
           setRestoredKeyObject: function(self, root) {
+              const curRoot = _private.getRoot(self);
               self._restoredMarkedKeys[root] = {
-                  parent: self._root,
-                  markedKey: null,
+                  parent: curRoot,
+                  markedKey: null
+              };
+              if (self._restoredMarkedKeys[curRoot]) {
+                  self._restoredMarkedKeys[curRoot].markedKey = root;
               }
-              if (self._restoredMarkedKeys[self._root]) {
-                  self._restoredMarkedKeys[self._root].markedKey = root;
-              }
-              self._root = root;
           },
           cleanRestoredKeyObject: function(self, root) {
-              _private.pathCleaner(self, root)
-              self._root = root;
+              _private.pathCleaner(self, root);
           },
          pathCleaner: function(self, root) {
             if (self._restoredMarkedKeys[root]) {
                if (self._restoredMarkedKeys[root].parent === undefined) {
-                  const markedKey = self._restoredMarkedKeys[root].markedKey
+                  const markedKey = self._restoredMarkedKeys[root].markedKey;
                   self._restoredMarkedKeys = {
                      [root]: {
                         markedKey: markedKey
                      }
-                  }
+                  };
                   return;
                } else {
                   _remover(root);
                }
-            } else if (root !== self._root) {
-                   delete self._restoredMarkedKeys[self._root];
+            } else {
+               const curRoot = _private.getRoot(self);
+               if (root !== curRoot) {
+                  delete self._restoredMarkedKeys[curRoot];
+               }
             }
 
             function _remover(key) {
                Object.keys(self._restoredMarkedKeys).forEach((cur) => {
-                  if (self._restoredMarkedKeys[cur] && self._restoredMarkedKeys[cur].parent == String(key)) {
+                  if (self._restoredMarkedKeys[cur] && self._restoredMarkedKeys[cur].parent === String(key)) {
                      const nextKey = cur;
                      delete self._restoredMarkedKeys[cur];
                      _remover(nextKey);
                   }
                });
-            };
+            }
          },
          getRoot: function(self) {
             return self._options.hasOwnProperty('root') ? self._options.root : self._root;
@@ -106,8 +108,9 @@ import 'Controls/breadcrumbs';
          dataLoadCallback: function(self, data) {
              self._breadCrumbsItems = _private.getPath(data);
              if (self._isGoingBack) {
-                 if (self._restoredMarkedKeys[self._root]) {
-                     self._children.treeControl.setMarkedKey(self._restoredMarkedKeys[self._root].markedKey);
+                const curRoot = _private.getRoot(self);
+                 if (self._restoredMarkedKeys[curRoot]) {
+                     self._children.treeControl.setMarkedKey(self._restoredMarkedKeys[curRoot].markedKey);
                  }
                  self._isGoingBack = false;
              }

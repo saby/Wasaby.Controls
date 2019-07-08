@@ -467,7 +467,7 @@ define([
                null: {
                   markedKey: null
                }
-            }
+            };
             explorer._children = {
                treeControl: {
                   _children: {
@@ -501,7 +501,7 @@ define([
                ...explorer._restoredMarkedKeys,
                itemId: {
                   parent: null,
-                  markedKey: null,
+                  markedKey: null
                }
             }, explorer._restoredMarkedKeys);
             assert.isTrue(isPropagationStopped);
