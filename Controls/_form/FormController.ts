@@ -214,7 +214,7 @@ import dataSource = require('Controls/dataSource');
                         return res;
                      });
                   } else {
-                     self._tryDeleteNewRecord().then(() => {
+                     self._tryDeleteNewRecord().addCallback(() => {
                         self.read(newOptions.key, newOptions.readMetaData);
                      });
                   }
