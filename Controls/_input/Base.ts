@@ -60,7 +60,7 @@ import 'wml!Controls/_input/Base/Stretcher';
                 * When a filled field in chrome, its carriage is placed at the beginning of the text.
                 * The carriage needs to have a position in accordance with the model. So we change it.
                 */
-               if (Env.detection.chrome) {
+               if (Env.detection.chrome || Env.detection.firefox) {
                   const selection = self._viewModel.selection;
                   field.setSelectionRange(selection.start, selection.end);
                }
