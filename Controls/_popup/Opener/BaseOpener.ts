@@ -143,10 +143,6 @@ var Base = Control.extend({
             onResult: this._notifyEvent,
             onClose: this._notifyEvent
         };
-
-        if (cfg.eventHandlers) {
-            Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use an opener subscription instead of popupOptions.eventHandlers');
-        }
     },
 
     _notifyEvent: function (eventName, args) {
@@ -441,16 +437,23 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
     const baseCfg = {...baseConfig, ...popupOptions, templateOptions};
 
     if (baseCfg.hasOwnProperty('closeOnTargetScroll')) {
-        Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "actionOnScroll" instead of "closeOnTargetScroll"');
+        Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Use option "actionOnScroll" instead of "closeOnTargetScroll"');
         if (baseCfg.closeOnTargetScroll) {
             baseCfg.actionOnScroll = 'close';
         }
     }
     if (baseCfg.hasOwnProperty('targetTracking')) {
-        Env.IoC.resolve('ILogger').error(this._moduleName, 'Use option "actionOnScroll" instead of "targetTracking"');
+        Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Use option "actionOnScroll" instead of "targetTracking"');
         if (baseCfg.targetTracking) {
             baseCfg.actionOnScroll = 'track';
         }
+    }
+
+    if (baseCfg.hasOwnProperty('corner')) {
+        Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Используется устаревшая опция corner, используйте опцию targetPoint');
+    }
+    if (baseCfg.hasOwnProperty('verticalAlign') || baseCfg.hasOwnProperty('horizontalAlign')) {
+        Env.IoC.resolve('ILogger').warn(Base.prototype._moduleName, 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
     }
 
     return baseCfg;

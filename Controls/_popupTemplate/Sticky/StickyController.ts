@@ -60,12 +60,7 @@ var _private = {
     prepareConfig: function (self, cfg, sizes) {
         cfg.popupOptions = _private.prepareOriginPoint(cfg.popupOptions);
         var popupCfg = self._getPopupConfig(cfg, sizes);
-        if (cfg.popupOptions.corner) {
-            Env.IoC.resolve('ILogger').warn('Sticky', 'Используется устаревшая опция corner, используйте опцию targetPoint');
-        }
-        if (cfg.popupOptions.verticalAlign || cfg.popupOptions.horisontalAlign) {
-            Env.IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
-        }
+
         cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
 
         cfg.popupOptions.stickyPosition = this.prepareStickyPosition(popupCfg);

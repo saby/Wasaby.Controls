@@ -12,7 +12,7 @@ define(['Controls/_suggest/Layer/__PopupLayer'], function(PopupLayer) {
          var resultPopupOptions = {
             verticalAlign: {side: 'test'},
             horizontalAlign: {side: 'test'},
-            corner: {side: 'test'},
+            targetPoint: {side: 'test'},
             className: 'controls-Suggest__suggestionsContainer_popup_test',
             fittingMode: 'fixed'
          };
@@ -22,7 +22,7 @@ define(['Controls/_suggest/Layer/__PopupLayer'], function(PopupLayer) {
          layer._onResult({
             verticalAlign: {side: 'test'},
             horizontalAlign: {side: 'test'},
-            corner: {side: 'test'}
+            targetPoint: {side: 'test'}
          });
 
          assert.deepEqual(resultPopupOptions, layer._popupOptions)

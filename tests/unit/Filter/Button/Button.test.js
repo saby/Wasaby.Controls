@@ -131,7 +131,7 @@ define(
             let expectedResult = {
                closeOnOutsideClick: true,
                className: 'controls-FilterButton-popup-orientation-left',
-               corner: {
+               targetPoint: {
                   vertical: 'top',
                   horizontal: 'right'
                },

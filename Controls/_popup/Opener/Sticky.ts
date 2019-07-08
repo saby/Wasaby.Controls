@@ -84,7 +84,7 @@ const Sticky = BaseOpener.extend({
      *    <Controls.popup:Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
      *          <ws:verticalAlign side="bottom"/>
      *          <ws:horizontalAlign side="left"/>
-     *          <ws:corner vertical="bottom" horizontal="left"/>
+     *          <ws:targetPoint vertical="bottom" horizontal="left"/>
      *   </Controls.popup:Sticky>
      *
      *   <div name="target">{{_text}}</div>
@@ -232,7 +232,7 @@ export = Sticky;
  *    <Controls.popup:Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
  *          <ws:verticalAlign side="bottom"/>
  *          <ws:horizontalAlign side="left"/>
- *          <ws:corner vertical="bottom" horizontal="left"/>
+ *          <ws:targetPoint vertical="bottom" horizontal="left"/>
  *    </Controls.popup:Sticky>
  *
  *    <div name="target">{{_text}}</div>

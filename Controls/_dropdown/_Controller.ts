@@ -292,7 +292,7 @@ var _Controller = Control.extend({
                selectorDialogResult: self._onSelectorTemplateResult.bind(self)
             },
             target: self._container,
-            corner: self._options.corner,
+            targetPoint: self._options.corner,
             opener: self,
             autofocus: false,
             closeOnOutsideClick: true
