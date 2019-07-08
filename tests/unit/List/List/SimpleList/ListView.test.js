@@ -337,6 +337,40 @@ define([
          });
       });
 
+      it('debounced setHoveredItem', function() {
+         var hoveredItemChangedCount = 0;
+         var mockNotify = function(eventName, args) {
+            if (eventName === 'hoveredItemChanged') {
+               hoveredItemChangedCount++;
+            }
+         };
+         var model = new lists.ListViewModel({
+            items: new collection.RecordSet({
+               rawData: data,
+               idProperty: 'id'
+            }),
+            keyProperty: 'id'
+         });
+         var cfg = {
+            listModel: model,
+            keyProperty: 'id'
+         };
+         var lv1 = new lists.ListView(cfg);
+         var lv2 = new lists.ListView(cfg);
+         lv1._hoveredItem = 1;
+         lv2._hoveredItem = 1;
+         lv1._notify = mockNotify;
+         lv2._notify = mockNotify;
+
+         lv1._onItemMouseLeave({});
+         lv2._onItemMouseLeave({});
+
+         setTimeout(function() {
+            assert.equal(2, hoveredItemChangedCount, 'event hoveredItemChanged should be notified on both listViews');
+         }, 150); //150 === DEBOUNCE_HOVERED_ITEM_CHANGED
+
+      });
+
       describe('_afterMount', function() {
          it('should fire markedKeyChanged if _options.markerVisibility is \'visible\'', function() {
             var model = new lists.ListViewModel({
