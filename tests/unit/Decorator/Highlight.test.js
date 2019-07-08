@@ -22,6 +22,41 @@ define(
             decorator.Highlight.getDefaultOptions();
          });
 
+         it('Value of parsedText without highlight', function() {
+            var
+               options = {
+                  text: 'text1',
+                  highlight: ''
+               },
+               newOptions = {
+                  text: 'text2',
+                  highlight: ''
+               },
+               newOptions2 = {
+                  text: 'text3',
+                  highlight: 'text'
+               };
+
+            ctrl._beforeMount(options);
+
+            assert.deepEqual([{ value: 'text1' }], ctrl._parsedText);
+
+            ctrl._beforeUpdate(newOptions);
+
+            assert.deepEqual([{ value: 'text2' }], ctrl._parsedText);
+
+            ctrl._beforeUpdate(newOptions2);
+
+            assert.deepEqual([{
+               type: 'highlight',
+               value: 'text'
+            },
+            {
+               type: 'text',
+               value: '3'
+            }], ctrl._parsedText);
+         });
+
          it('Template', function() {
             var tplOptions = {
                _options: {
