@@ -116,6 +116,7 @@ import entity = require('Types/entity');
          },
          Mask = Base.extend({
             _viewModel: null,
+             _defaultValue: '',
             _notifyHandler: tmplNotify,
 
             _maskWrapperCss: null,
@@ -176,7 +177,6 @@ import entity = require('Types/entity');
 
       Mask.getDefaultOptions = function() {
          var defaultOptions = Base.getDefaultOptions();
-         defaultOptions.value = '';
          defaultOptions.replacer = '';
          defaultOptions.formatMaskChars = {
             'L': '[А-ЯA-ZЁ]',
