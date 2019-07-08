@@ -128,7 +128,7 @@ var
                 preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase();
             }
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
-            if (columnIndex === 0 && !multiSelectVisibility) {
+            if (columnIndex === 0 && !multiSelectVisibility && rowIndex === 0) {
                 preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (itemPadding.left || 'default').toLowerCase();
             }
 
@@ -745,6 +745,7 @@ var
                     cellStyles += gridStyles;
 
                 }
+                cellClasses += endRow - startRow > 1 ? ' controls-Grid__header-cell_justify_content_center' : '';
                 cellContentClasses += rowIndex !== this._headerRows.length - 1 && endRow - startRow === 1 ? ' controls-Grid__cell_header-content_border-bottom' : '';
                 cellContentClasses += endRow - startRow === 1 ? ' control-Grid__cell_header-nowrap' : '';
             } else if (GridLayoutUtil.isPartialGridSupport()) {
@@ -788,7 +789,7 @@ var
         setResultsPosition: function(position) {
             this._options.resultsPosition = position;
         },
-        
+
         getStyleForCustomResultsTemplate: function() {
             return _private.getColspan(
                this._options.multiSelectVisibility,
