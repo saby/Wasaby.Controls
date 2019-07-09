@@ -180,11 +180,10 @@ var
             GridView.superclass._beforeUpdate.apply(this, arguments);
             if (this._options.resultsPosition !== newCfg.resultsPosition) {
                 if (this._listModel) {
-                    this._needUpdateResultsPosition = true;
                     this._listModel.setResultsPosition(newCfg.resultsPosition);
                 }
             }
-
+            
             // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                 this._listModel.setColumns(newCfg.columns);
@@ -219,10 +218,6 @@ var
         _afterUpdate() {
             if (GridLayoutUtil.isPartialGridSupport()) {
                 _private.fillItemsContainerForPartialSupport(this);
-            }
-            if (this._needUpdateResultsPosition === true) {
-                this._needUpdateResultsPosition = false;
-                this._listModel.setResultsPosition(this._options.resultsPosition);
             }
             if (this._options.columnScroll) {
                 this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
