@@ -16,7 +16,7 @@
 <ws:template name="cellContent">
    <ws:if data="{{ multiselect === 'hidden' || headerColumn.index !== 0 || headerColumn.column.title}}">
       <ws:if data="{{!!headerColumn.column.template}}">
-         <ws:partial attr:class="controls-Grid__row-header__content_baseline {{headerColumn.cellContentClasses}}"
+         <ws:partial attr:class="{{headerColumn.column.startRow ? ' controls-Grid__row-multy-header__content_baseline' : ' controls-Grid__row-header__content_baseline'}} {{headerColumn.cellContentClasses}}"
                      template="{{headerColumn.column.template}}"
                      scope="{{ headerColumn.column.templateOptions }}"
                      colData="{{headerColumn}}"/>
@@ -24,7 +24,7 @@
       </ws:if>
       <ws:else>
          <ws:partial
-                 attr:class="{{headerColumn.cellContentClasses}}"
+                 attr:class="{{headerColumn.column.startRow ? ' controls-Grid__row-multy-header__content_baseline' : ' controls-Grid__row-header__content_baseline'}}{{headerColumn.cellContentClasses}}"
                  template="{{defaultHeaderContent}}"
                  colData="{{headerColumn}}"/>
       </ws:else>
