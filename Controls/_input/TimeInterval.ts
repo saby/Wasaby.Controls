@@ -1,6 +1,6 @@
 import Base = require('Controls/_input/Base');
 
-import {descriptor} from 'Types/entity';
+import {descriptor, TimeInterval} from 'Types/entity';
 import {IOptions as IModelOptions, ViewModel} from 'Controls/_input/TimeInterval/ViewModel';
 
 type IOptions = IModelOptions;
@@ -22,6 +22,8 @@ type IOptions = IModelOptions;
  */
 
 class TimeInterval extends Base {
+    protected _defaultValue: TimeInterval | null = null;
+
     protected _getViewModelOptions(options: IOptions): IModelOptions {
         return {
             mask: options.mask
@@ -47,8 +49,6 @@ class TimeInterval extends Base {
 
     static getDefaultOptions(): object {
         const defaultOptions = Base.getDefaultOptions();
-
-        defaultOptions.value = null;
 
         return defaultOptions;
     }

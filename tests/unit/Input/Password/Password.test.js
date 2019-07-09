@@ -27,7 +27,6 @@ define(
 
          it('Checking default values of options.', function() {
             assert.deepEqual(input.Password.getDefaultOptions(), {
-               value: '',
                tooltip: '',
                style: 'info',
                size: 'default',
