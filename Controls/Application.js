@@ -11,7 +11,9 @@ define('Controls/Application',
       'Controls/Application/AppData',
       'Controls/scroll',
       'Core/LinkResolver/LinkResolver',
+      'Core/helpers/getResourceUrl',
       'Application/Env',
+      'Controls/decorator',
       'Core/Themes/ThemesController',
       'css!theme?Controls/Application/Application'
    ],
@@ -123,7 +125,9 @@ define('Controls/Application',
       AppData,
       scroll,
       LinkResolver,
+      getResourceUrl,
       AppEnv,
+      decorator,
       ThemesController) {
       'use strict';
 
@@ -151,6 +155,34 @@ define('Controls/Application',
             return bodyClasses;
          }
       };
+
+      function generateHeadValidHtml() {
+         // Tag names and attributes allowed in the head.
+         return {
+            validNodes: {
+               link: true,
+               style: true,
+               script: true,
+               meta: true,
+               title: true
+            },
+            validAttributes: {
+               rel: true,
+               as: true,
+               name: true,
+               sizes: true,
+               crossorigin: true,
+               type: true,
+               href: true,
+               property: true,
+               'http-equiv': true,
+               content: true,
+               id: true,
+               'class': true
+            }
+         };
+      }
+
       var Page = Base.extend({
          _template: template,
 
@@ -239,6 +271,16 @@ define('Controls/Application',
          _beforeMount: function(cfg) {
             this.BodyClasses = _private.calculateBodyClasses;
             this._scrollData = new scroll._scrollContext({pagingVisible: cfg.pagingVisible});
+            this.headJson = cfg.headJson;
+            this.headValidHtml = generateHeadValidHtml();
+
+            if (typeof window !== 'undefined') {
+               if (document.getElementsByClassName('head-custom-block').length > 0) {
+                  this.head = undefined;
+                  this.headJson = undefined;
+                  this.headValidHtml = undefined;
+               }
+            }
          },
 
          _afterMount: function() {
@@ -265,6 +307,23 @@ define('Controls/Application',
                }
                elements[0].textContent = this._options.title;
             }
+         },
+
+         headTagResolver: function(value, parent) {
+            var newValue = decorator.noOuterTag(value, parent),
+               attributes = Array.isArray(newValue) && typeof newValue[1] === 'object' &&
+                  !Array.isArray(newValue[1]) && newValue[1];
+            if (attributes) {
+               for (var attributeName in attributes) {
+                  // TODO: call getResourceUrl for only right attributes. Add unit tests.
+                  // Task link: https://online.sbis.ru/opendoc.html?guid=b7d20750-7816-4eff-aa8b-25249ad4d04c.
+                  if (attributes.hasOwnProperty(attributeName) && attributeName !== 'content') {
+                     // Try update all attributes as link, but only links would be updated.
+                     attributes[attributeName] = getResourceUrl('' + attributes[attributeName]);
+                  }
+               }
+            }
+            return newValue;
          },
 
          _keyPressHandler: function(event) {

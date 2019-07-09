@@ -1,4 +1,13 @@
 <UI.Base:HTML scope="{{_options}}">
+   <ws:headContent>
+      <ws:for data="json in headJson">
+         <Controls.decorator:Markup attr:data-vdomignore="true"
+                                    attr:class="head-custom-block"
+                                    value="{{ json }}"
+                                    tagResolver="{{ headTagResolver }}"
+                                    validHtml="{{ headValidHtml }}" />
+      </ws:for>
+   </ws:headContent>
    <ws:bodyTemplate>
       <Controls.event:Register name="scrollDetect" register="scroll" attr:fixCompatible="1">
          <Controls.event:Register name="resizeDetect" register="controlResize" attr:fixCompatible="1">
