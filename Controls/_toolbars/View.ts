@@ -3,7 +3,7 @@ import {Controller as SourceController} from 'Controls/source';
 import template = require('wml!Controls/_toolbars/View');
 import toolbarItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
 import {factory} from 'Types/collection';
-import tUtil = require('Controls/Utils/Toolbar');
+import {getMenuItems, showType} from 'Controls/Utils/Toolbar';
 import {ActualApi as ButtonActualApi} from 'Controls/buttons';
 
 /**
@@ -16,6 +16,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
+ * @mixes Controls/interface/IIconSize
  * @control
  * @public
  * @category Toolbar
@@ -190,7 +191,7 @@ var _private = {
     },
 
     getMenuItems: function (items) {
-        return tUtil.getMenuItems(items).value(factory.recordSet, {
+        return getMenuItems(items).value(factory.recordSet, {
             adapter: items.getAdapter(),
             idProperty: items.getIdProperty(),
             format: items.getFormat()
@@ -200,7 +201,7 @@ var _private = {
     setPopupOptions: function (self, newOptions) {
         self._popupOptions = {
             className: (newOptions.popupClassName || '') + ' controls-Toolbar__popup__list_theme-' + self._options.theme,
-            corner: {vertical: 'top', horizontal: 'right'},
+            targetPoint: {vertical: 'top', horizontal: 'right'},
             horizontalAlign: {side: 'left'},
             eventHandlers: {
                 onResult: self._onResult,
@@ -235,7 +236,7 @@ var _private = {
         }
         return {
             opener: self,
-            corner: {vertical: 'top', horizontal: 'left'},
+            targetPoint: {vertical: 'top', horizontal: 'left'},
             horizontalAlign: {side: 'right'},
             className: 'controls-Toolbar__popup__' + (itemConfig || 'link') + '_theme-' + self._options.theme + ' ' + (item.get('popupClassName') || ''),
             templateOptions: {
@@ -272,7 +273,7 @@ var _private = {
 };
 
 var Toolbar = Control.extend({
-    showType: tUtil.showType,
+    showType: showType,
     _template: template,
     _defaultItemTemplate: toolbarItemTemplate,
     _needShowMenu: null,

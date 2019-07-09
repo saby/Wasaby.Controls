@@ -8,6 +8,6 @@
    multiSelectTpl="{{multiSelectTpl}}"
    itemTemplate="{{(listModel.getCurrent().item.get && listModel.getCurrent().item.get(listModel.getCurrent().itemTemplateProperty)) || itemTemplate}}"
    itemData="{{listModel.getCurrent()}}"
-   attr:key="{{listModel.getCurrent().key}}"
+   attr:key="{{_$key}}_{{listModel.getCurrent().key}}"
    itemActionsPosition="{{itemActionsPosition}}" />
 {{listModel.goToNext()}}

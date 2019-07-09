@@ -4,13 +4,15 @@ define('Controls-demo/List/Tree/TreeWithEditing', [
    'wml!Controls-demo/List/Tree/TreeWithEditing',
    'Controls-demo/List/Tree/TreeMemory',
    'wml!Controls-demo/List/Tree/treeEditingTemplate',
+   'Core/core-clone',
    'css!Controls-demo/List/Tree/Tree'
 ], function(
    BaseControl,
    TreeWithEditingData,
    template,
    MemorySource,
-   treeEditingTemplate
+   treeEditingTemplate,
+   cClone
 ) {
 
    'use strict';
@@ -19,7 +21,6 @@ define('Controls-demo/List/Tree/TreeWithEditing', [
       TreeWithEditing = BaseControl.extend({
          _template: template,
          _viewSource: null,
-         gridData: null,
          gridColumns: null,
          _beforeMount: function() {
             this.gridColumns = [
@@ -36,9 +37,8 @@ define('Controls-demo/List/Tree/TreeWithEditing', [
             ];
             this._viewSource = new MemorySource({
                idProperty: 'id',
-               data: TreeWithEditingData.catalog
+               data: cClone(TreeWithEditingData.catalog)
             });
-            this.gridData = TreeWithEditingData;
          },
 
          _onBeforeBeginEdit: function(e, options, isAdd) {

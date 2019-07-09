@@ -263,6 +263,32 @@ define(
                assert.equal(historyItems.getFormat().getCount(), 10);
                hSource._history.pinned.removeAt(1);
             });
+            it('getItemsWithHistory number id', function() {
+               let newData = new sourceLib.DataSet({
+                  rawData: {
+                     frequent: createRecordSet(frequentData),
+                     pinned: createRecordSet(pinnedData),
+                     recent: createRecordSet(recentData)
+                  },
+                  itemsProperty: '',
+                  idProperty: 'ObjectId'
+               });
+               let oldItems = [...items];
+               oldItems = oldItems.map((item) => {
+                  item.id = Number(item.id);
+                  return item;
+               });
+               hSource._oldItems = new collection.RecordSet({
+                  rawData: oldItems,
+                  idProperty: 'id'
+               });
+               historyMod.Source._private.initHistory(hSource, newData, hSource._oldItems);
+               historyItems = hSource.getItems();
+               assert.equal(historyItems.at(0).get('title'), 'Запись 5');
+               assert.equal(historyItems.at(1).get('title'), 'Запись 4');
+               assert.equal(historyItems.at(2).get('title'), 'Запись 6');
+               assert.equal(historyItems.at(3).get('title'), 'Запись 8');
+            });
             it('getItems', function(done) {
                let historyConfig = {
                   originSource: new sourceLib.Memory({
@@ -318,6 +344,13 @@ define(
 
                list.remove(list.at(9));
                assert.isTrue(historyMod.Source._private.checkPinnedAmount(list));
+            });
+            it('getRawHistoryItem', function() {
+               let historyItem = historyMod.Source._private.getRawHistoryItem(hSource, '123', 'history_id');
+               assert.strictEqual(historyItem.getId(), '123');
+
+               historyItem = historyMod.Source._private.getRawHistoryItem(hSource, 123, 'history_id');
+               assert.strictEqual(historyItem.getId(), '123');
             });
             it('updateRecent', function() {
                let meta = {

@@ -19,7 +19,7 @@
    {{listModel.goToNext();}}
    <ws:if data="{{currentGroup.isGroupExpanded}}">
       <ws:for data="; listModel.isEnd() && !listModel.getCurrent().isGroup;">
-         <ws:partial template="itemOutputLocalTemplate" attr:key="{{listModel.getCurrent().key}}"/>
+         <ws:partial template="itemOutputLocalTemplate" attr:key="{{_$key}}_{{listModel.getCurrent().key}}"/>
       </ws:for>
    </ws:if>
 </ws:template>
@@ -30,11 +30,10 @@
                   listModel="{{listModel}}"/>
    </ws:if>
    <ws:if data="{{currentItem.isGroup}}">
-      <ws:partial template="groupOutputLocalTemplate" currentGroup="{{currentItem}}"
-                  attr:key="{{currentItem.key}}"/>
+      <ws:partial template="groupOutputLocalTemplate" currentGroup="{{currentItem}}"/>
    </ws:if>
    <ws:else>
-      <ws:partial template="itemOutputLocalTemplate" attr:key="{{currentItem.key}}"/>
+      <ws:partial template="itemOutputLocalTemplate"/>
    </ws:else>
    <ws:if data="{{currentItem.afterItemTemplate}}">
       <ws:partial template="{{currentItem.afterItemTemplate}}"

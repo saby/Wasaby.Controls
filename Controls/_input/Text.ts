@@ -2,7 +2,7 @@ import Env = require('Env/Env');
 import Base = require('Controls/_input/Base');
 import entity = require('Types/entity');
 import ViewModel = require('Controls/_input/Text/ViewModel');
-      
+
 
       /**
        * Controls that allows user to enter single-line text.
@@ -32,6 +32,8 @@ import ViewModel = require('Controls/_input/Text/ViewModel');
       };
 
       var Text = Base.extend({
+         _defaultValue: '',
+
          _getViewModelOptions: function(options) {
             return {
                maxLength: options.maxLength,
@@ -74,7 +76,6 @@ import ViewModel = require('Controls/_input/Text/ViewModel');
       Text.getDefaultOptions = function() {
          var defaultOptions = Base.getDefaultOptions();
 
-         defaultOptions.value = '';
          defaultOptions.trim = false;
 
          return defaultOptions;

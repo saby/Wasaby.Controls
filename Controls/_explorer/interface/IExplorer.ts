@@ -69,10 +69,10 @@
  */
 
 /**
- * @event Controls/_explorer/interface/IExplorer#rootChanged Происходит при изменении корня иерархии.
- * @description Например, такое происходит при переходе пользователя по хлебным крошкам.
+ * @event Controls/_explorer/interface/IExplorer#rootChanged Происходит при изменении корня иерархии. 
  * @param event {eventObject} Дескриптор события.
  * @param root {String} Идентификатор корневой записи. 
+ * @remark Например, такое событие происходит при переходе пользователя по хлебным крошкам.
  */
 
 /**

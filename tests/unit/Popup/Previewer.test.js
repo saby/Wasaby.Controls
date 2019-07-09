@@ -49,7 +49,7 @@ define(
       describe('Controls/_popup/Previewer', () => {
          it('getConfig', () => {
             let PWInstance = new popup.PreviewerTarget();
-            let corner = {
+            let targetPoint = {
                vertical: 'top'
             };
             let horizontalAlign = {
@@ -60,14 +60,14 @@ define(
             };
             let options = {
                isCompoundTemplate: true,
-               corner,
+               targetPoint,
                horizontalAlign,
                verticalAlign
             };
             PWInstance.saveOptions(options);
 
             let config = PWInstance._private.getCfg(PWInstance);
-            assert.equal(config.corner, corner);
+            assert.equal(config.targetPoint, targetPoint);
             assert.equal(config.verticalAlign, verticalAlign);
             assert.equal(config.horizontalAlign, horizontalAlign);
             assert.equal(config.isCompoundTemplate, true);
@@ -78,7 +78,7 @@ define(
                vertical: 'bottom',
                horizontal: 'right'
             };
-            assert.deepEqual(config.corner, baseCorner);
+            assert.deepEqual(config.targetPoint, baseCorner);
             assert.equal(config.hasOwnProperty('verticalAlign'), false);
             assert.equal(config.hasOwnProperty('horizontalAlign'), false);
          });

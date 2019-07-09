@@ -120,14 +120,16 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             }
 
             if (self._scrollPositionCache !== curPosition) {
-               _private.sendByRegistrar(self, 'scrollMove', {
-                  scrollTop: self._scrollTopCache,
-                  position: curPosition,
-                  clientHeight: sizeCache.clientHeight
-               });
-               if (!withObserver) {
-                  _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
-               }
+               setTimeout(() => {
+                  _private.sendByRegistrar(self, 'scrollMove', {
+                     scrollTop: self._scrollTopCache,
+                     position: curPosition,
+                     clientHeight: sizeCache.clientHeight
+                  });
+                  if (!withObserver) {
+                     _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
+                  }
+               }, 0);
                self._scrollPositionCache = curPosition;
                self._scrollTopTimer = null;
             } else {

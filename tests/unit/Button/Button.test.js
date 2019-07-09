@@ -124,7 +124,7 @@ define(['Controls/buttons'], function(buttons) {
       describe('fontColorStyle', function() {
          it('all undefined', function() {
             let cfg = actualAPI.fontColorStyle();
-            assert.equal('default', cfg, 'wrong cfg');
+            assert.equal(undefined, cfg, 'wrong cfg');
          });
          it('fontColorStyle', function() {
             let cfg = actualAPI.fontColorStyle(undefined, undefined, 'primary');
@@ -132,7 +132,7 @@ define(['Controls/buttons'], function(buttons) {
          });
          it('button', function() {
             let cfg = actualAPI.fontColorStyle('warning', 'button');
-            assert.equal('default', cfg, 'wrong cfg');
+            assert.equal(undefined, cfg, 'wrong cfg');
          });
          it('link primary', function() {
             let cfg = actualAPI.fontColorStyle('primary', 'link');

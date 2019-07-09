@@ -201,8 +201,6 @@ const ActualApi = {
                case 'default': return 'default'; break;
                case undefined: return 'link'; break;
             }
-         } else {
-            return 'default';
          }
       }
    },

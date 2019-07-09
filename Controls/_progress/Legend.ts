@@ -23,7 +23,7 @@ export interface ILegendOptions extends IControlOptions {
  *   <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]]}}"/>
  * </pre>
  */
-class Legend extends Control<ILegendOptions>{
+class Legend extends Control<ILegendOptions> {
    protected _template: TemplateFunction = legendTemplate;
 
    static _theme: string[] = ['Controls/progress'];

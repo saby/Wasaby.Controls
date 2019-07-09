@@ -404,6 +404,11 @@ define([
          assert.equal(siblingItem.getId(), 2);
          siblingItem = lists.Mover._private.getSiblingItem(mover, items.getRecordById(1), 'before');
          assert.isNull(siblingItem);
+
+         mover._options.root = 1;
+         siblingItem = lists.Mover._private.getSiblingItem(mover, items.getRecordById(4), 'after');
+         assert.equal(siblingItem.getId(), 5);
+
       });
 
    });

@@ -30,7 +30,7 @@ var Component = BaseControl.extend({
          template: 'Controls/datePopup',
          className: 'controls-PeriodDialog__picker',
          horizontalAlign: { side: 'right' },
-         corner: { horizontal: 'left' },
+         targetPoint: { horizontal: 'left' },
          eventHandlers: {
             onResult: this._onResult.bind(this)
          },

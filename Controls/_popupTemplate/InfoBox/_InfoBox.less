@@ -35,38 +35,66 @@
    box-sizing: border-box;
    position: relative;
 }
-.controls-InfoBoxTemplate__arrow-outline {
-  @variants: default,  danger;
-   .for(@variants, { &-@{_item} {
-     border-color: ~"@{border-color_Infobox_@{_item}}";
-   } });
-}
-.controls-InfoBoxTemplate__arrow-marker {
-  @variants: default,  danger, info, secondary, warning, success, primary;
-  .for(@variants, { &-@{_item} {
-    &.controls-InfoBoxTemplate__arrow-top {
+
+.controls-InfoBoxTemplate__arrow {
+  @variants: default, danger, info, secondary, warning, success, primary;
+  .for(@variants, {
+    &-@{_item} {
       border-color: ~"@{border-color_Infobox_@{_item}}";
     }
-  }
   });
 }
+
 .controls-InfoBoxTemplate_style_outline {
    @variants: default,  danger;
-   .for(@variants, { &_@{_item} {
+  .for(@variants, {
+    &_@{_item} {
       background: @background-color_Infobox_default;
       box-shadow: ~"@{color_Infobox-shadow_@{_item}}" @box-shadow_Infobox;
       border: @border-width_Infobox solid ~"@{border-color_Infobox_@{_item}}";
-   } });
+    }
+  });
 }
+
 .controls-InfoBoxTemplate_style_marker {
-   @variants: default,  danger, info, secondary, warning, success, primary;
-   .for(@variants, { &_@{_item} {
-      background: @background-color_Infobox_default;
-      box-shadow: @color_Infobox-shadow_default @box-shadow_Infobox;
-      border: @border-width_Infobox solid @border-color_Infobox_default;
-      border-top: @border-width_Infobox-marker solid ~"@{border-color_Infobox_@{_item}}";
-   } });
+  background: @background-color_Infobox_default;
+  box-shadow: @color_Infobox-shadow_default @box-shadow_Infobox;
+  border: @border-width_Infobox solid @border-color_Infobox_default;
 }
+
+.controls-InfoBoxTemplate_style_marker-top {
+  @variants: default, danger, info, secondary, warning, success, primary;
+  .for(@variants, {
+    &_@{_item} {
+      border-top: @border-width_Infobox-marker solid ~"@{border-color_Infobox_@{_item}}";
+    }
+  });
+}
+.controls-InfoBoxTemplate_style_marker-bottom {
+  @variants: default, danger, info, secondary, warning, success, primary;
+  .for(@variants, {
+    &_@{_item} {
+      border-bottom: @border-width_Infobox-marker solid ~"@{border-color_Infobox_@{_item}}";
+    }
+  });
+}
+.controls-InfoBoxTemplate_style_marker-left {
+  @variants: default, danger, info, secondary, warning, success, primary;
+  .for(@variants, {
+    &_@{_item} {
+      border-left: @border-width_Infobox-marker solid ~"@{border-color_Infobox_@{_item}}";
+    }
+  });
+}
+.controls-InfoBoxTemplate_style_marker-right {
+  @variants: default, danger, info, secondary, warning, success, primary;
+  .for(@variants, {
+    &_@{_item} {
+      border-right: @border-width_Infobox-marker solid ~"@{border-color_Infobox_@{_item}}";
+    }
+  });
+}
+
 .controls-InfoBoxTemplate__content {
    position: relative;
    box-sizing: border-box;
@@ -88,12 +116,12 @@
    }
 }
 
-.controls-InfoBoxTemplate__arrow-wrapper-top, .controls-InfoBoxTemplate__arrow-wrapper-bottom{
+.controls-InfoBoxTemplate__arrow-wrapper-top, .controls-InfoBoxTemplate__arrow-wrapper-bottom {
    width: @spacing_Infobox-between-target-popup + 1;
    height: @spacing_Infobox-between-target-popup;
    flex-shrink: 0;
 }
-.controls-InfoBoxTemplate__arrow-wrapper-left, .controls-InfoBoxTemplate__arrow-wrapper-right{
+.controls-InfoBoxTemplate__arrow-wrapper-left, .controls-InfoBoxTemplate__arrow-wrapper-right {
    width: @spacing_Infobox-between-target-popup;
    height: @spacing_Infobox-between-target-popup + 1;
    flex-shrink: 0;
@@ -113,6 +141,7 @@
    &.controls-InfoBoxTemplate__arrow-position-start {
       left: @horizontal-offset_Infobox-arrow + @spacing_Infobox-between-border-arrow  + @border-width_Infobox;
    }
+
    &.controls-InfoBoxTemplate__arrow-position-end {
       right: @horizontal-offset_Infobox-arrow + @spacing_Infobox-between-border-arrow + @border-width_Infobox;
    }

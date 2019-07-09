@@ -1,33 +1,34 @@
 define('Controls-demo/Example/Input/Font',
    [
       'Core/Control',
+      'Controls-demo/Example/Input/SetValueMixin',
       'wml!Controls-demo/Example/Input/Font/Font',
 
       'Controls/input',
       'css!Controls-demo/Example/resource/Base',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
-   function(Control, template) {
+   function(Control, SetValueMixin, template) {
       'use strict';
 
       var FILLED_VALUE = 'Text in the input field';
       var FILLED_MONEY_VALUE = '852.45';
       var FILLED_NUMBER_VALUE = 123.456;
 
-      return Control.extend({
+      return Control.extend([SetValueMixin], {
          _template: template,
 
-         _filledValue1: FILLED_VALUE,
-         _filledValue2: FILLED_VALUE,
-         _filledValue3: FILLED_VALUE,
-         _filledValueRM: FILLED_VALUE,
-         _filledMoneyValue1: FILLED_MONEY_VALUE,
-         _filledMoneyValue2: FILLED_MONEY_VALUE,
-         _filledMoneyValue3: FILLED_MONEY_VALUE,
-         _filledMoneyValueRM: FILLED_MONEY_VALUE,
-         _filledNumberValue1: FILLED_NUMBER_VALUE,
-         _filledNumberValue2: FILLED_NUMBER_VALUE,
-         _filledNumberValue3: FILLED_NUMBER_VALUE,
-         _filledNumberValueRM: FILLED_NUMBER_VALUE
+         _filled1Value: FILLED_VALUE,
+         _filled2Value: FILLED_VALUE,
+         _filled3Value: FILLED_VALUE,
+         _filledRMValue: FILLED_VALUE,
+         _filledMoney1Value: FILLED_MONEY_VALUE,
+         _filledMoney2Value: FILLED_MONEY_VALUE,
+         _filledMoney3Value: FILLED_MONEY_VALUE,
+         _filledMoneyRMValue: FILLED_MONEY_VALUE,
+         _filledNumber1Value: FILLED_NUMBER_VALUE,
+         _filledNumber2Value: FILLED_NUMBER_VALUE,
+         _filledNumber3Value: FILLED_NUMBER_VALUE,
+         _filledNumberRMValue: FILLED_NUMBER_VALUE
       });
    });

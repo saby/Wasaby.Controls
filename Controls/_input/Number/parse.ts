@@ -6,19 +6,25 @@ export interface IParsedNumber {
     fractional: string;
 }
 
-export function parse(value: string): IParsedNumber {
-    const tokens: string[] = lexicalValidate(value);
+export interface IOptions {
+    onlyPositive?: boolean;
+}
+
+export function parse(value: string, options: IOptions = {}): IParsedNumber {
+    const tokens: string[] = lexicalValidate(value, options.onlyPositive);
     const validValue: string = syntaxValidate(tokens);
 
     return calcParts(validValue);
 }
 
-function lexicalValidate(value: string): string[] {
+function lexicalValidate(original: string, onlyPositive: boolean = false): string[] {
+    const value: string = onlyPositive ? original.replace(minus, '') : original;
     const matchingValues: string[] | null = value.match(validValues);
 
     return matchingValues === null ? [] : matchingValues;
 }
 
+const minus: RegExp = /-/g;
 /**
  * <Minus>|<Digits_sequence>|<Decimal_splitter>
  */

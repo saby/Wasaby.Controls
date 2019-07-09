@@ -1,5 +1,6 @@
 import {detection} from 'Env/Env';
 import {descriptor} from 'Types/entity';
+import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 import {
@@ -85,7 +86,7 @@ class Render extends Control<IRenderOptions, void> implements IHeight, IFontColo
    protected _beforeUpdate(options: IRenderOptions): void {
       this.updateState(options);
    }
-   protected _setContentActive(newContentActive: boolean): void {
+   protected _setContentActive(event: SyntheticEvent, newContentActive: boolean): void {
       this.contentActive = newContentActive;
 
       this.updateState(this._options);

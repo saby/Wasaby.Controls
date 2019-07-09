@@ -105,11 +105,26 @@ const _private = {
 const RecordSynchronizer = {
 
     /**
-     * Добавляет запись в рекордсет
+     * Добавляет запись в рекордсет. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/#step6 Подробнее}
      * @function Controls/Utils/RecordSynchronizer#addRecord
      * @param {Model|Array} editRecord Запись, которую нужно добавить в рекордсет. Можно передать так же массив записей.
      * @param {additionalData} additionalData Дополнительные данные, которые могут потребоваться для добавления.
      * @param {RecordSet} items Рекордсет, в которые добавляется запись
+     * @example
+     * js
+     * <pre>
+     *     Control.extend({
+     *        ...
+     *
+     *        _addRecord(editRecord) {
+     *            var additionalData = {
+     *                at: 10 // Добавить запись в 10ю позицию в списке
+     *            }
+     *            RecordSynchronizer.addRecord(editRecord, additionalData, this._items)
+     *        }
+     *        ...
+     *     });
+     * </pre>
      */
     addRecord(editRecord: Model | Model[], additionalData: IAdditionalData, items: RecordSet): void {
         additionalData = additionalData || {};
@@ -126,12 +141,24 @@ const RecordSynchronizer = {
     },
 
     /**
-     * Обновляет запись в рекордсете
+     * Обновляет запись в рекордсете. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/#step6 Подробнее}
      * @function Controls/Utils/RecordSynchronizer#mergeRecord
      * @param {Model|Array} editRecord Запись, из которой берутся данные для обновления записи в рекордсете
      * Можно передать так же массив записей.
      * @param {RecordSet} items Рекордсет, в котором обновляется запись
      * @param {String} editKey Ключ обновляемой записи в рекордсете.
+     * @example
+     * js
+     * <pre>
+     *     Control.extend({
+     *        ...
+     *
+     *        _mergeRecordRecord(editRecord, editKey) {
+     *            RecordSynchronizer.mergeRecord(editRecord, this._items, editKey)
+     *        }
+     *        ...
+     *     });
+     * </pre>
      */
     mergeRecord(editRecord: Model | Model[], items: RecordSet, editKey: string): void {
         if (editRecord instanceof Array) {
@@ -146,10 +173,22 @@ const RecordSynchronizer = {
     },
 
     /**
-     * Удаляет запись из рекордсета
+     * Удаляет запись из рекордсета. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/#step6 Подробнее}
      * @function Controls/Utils/RecordSynchronizer#deleteRecord
      * @param {RecordSet} items Рекордсет, в котором удаляется запись
      * @param {String|Array} editKey Ключ удаляемой записи в рекордсете. Можно передать так же массив ключей.
+     * @example
+     * js
+     * <pre>
+     *     Control.extend({
+     *        ...
+     *
+     *        _deleteRecordRecord(removeKey) {
+     *            RecordSynchronizer.deleteRecord(this._items, removeKey)
+     *        }
+     *        ...
+     *     });
+     * </pre>
      */
     deleteRecord(items: RecordSet, editKey: string | string[]): void {
         if (editKey instanceof Array) {

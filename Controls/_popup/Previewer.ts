@@ -29,7 +29,7 @@ import 'css!theme?Controls/popup';
                opener: self,
                target: self._container,
                template: 'Controls/popup:PreviewerTemplate',
-               corner: {
+               targetPoint: {
                   vertical: 'bottom',
                   horizontal: 'right'
                },
@@ -44,8 +44,8 @@ import 'css!theme?Controls/popup';
                }
             };
 
-            if (self._options.corner) {
-               config.corner = self._options.corner;
+            if (self._options.targetPoint) {
+               config.targetPoint = self._options.targetPoint;
             }
             if (self._options.verticalAlign) {
                config.verticalAlign = self._options.verticalAlign;
@@ -87,6 +87,9 @@ import 'css!theme?Controls/popup';
             this._debouncedAction = debounce(this._debouncedAction, 10);
             this._enableClose = true;
          },
+         _beforeUnmount: function() {
+            clearTimeout(this._waitTimer);
+         },
 
          /**
           * @param type
@@ -122,7 +125,8 @@ import 'css!theme?Controls/popup';
             if (this._isNewEnvironment()) { // TODO: COMPATIBLE
                return this._notify('isPreviewerOpened', [], { bubbling: true });
             }
-            return this._children.openerPreviewer.isOpened();
+            //todo: https://online.sbis.ru/opendoc.html?guid=f0801603-d282-4694-bb5b-370999015888
+            return this._destroyed || this._children.openerPreviewer.isOpened();
          },
          _scrollHandler: function(event) {
             this._close(event);
@@ -155,6 +159,8 @@ import 'css!theme?Controls/popup';
                clearTimeout(this._waitTimer);
                if (this._isPopupOpened()) {
                   this._debouncedAction('_close', [event]);
+               } else {
+                  this._cancel(event, 'opening');
                }
             }
          },

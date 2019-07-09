@@ -1,6 +1,6 @@
 <div>
     <ws:if data="{{_options.misspellValue}}">
-        <Controls.Container.Async templateName="Controls/_search/Misspell" attr:class="{{_options.misspellClass}}">
+        <Controls.Container.Async templateName="Controls/search:Misspell" attr:class="{{_options.misspellClass}}">
             <ws:templateOptions>
                 <ws:caption>
                     <span on:click="_misspellClick()">{{_options.misspellValue}}</span>
