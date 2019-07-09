@@ -1,6 +1,6 @@
-define(['Controls/_suggest/Layer/__PopupLayer'], function(PopupLayer) {
+define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
 
-   describe('Controls._suggest.Layer.__PopupLayer', function() {
+   describe('Controls._suggestPopup.Layer.__PopupLayer', function() {
 
       it('_private.getPopupClassName', function() {
          assert.equal(PopupLayer.default._private.getPopupClassName('top'), 'controls-Suggest__suggestionsContainer_popup_top');
