@@ -7,7 +7,7 @@
  * @author Крайнов Д.О.
  */
 
-import EnumAdapter = require('Controls/_source/Adapter/Enum');
+import {default as EnumAdapter} from './_source/Adapter/Enum';
 import Controller = require('Controls/_source/SourceController');
 
 export {default as SelectedKey} from './_source/Adapter/SelectedKey';

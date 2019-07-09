@@ -12,7 +12,7 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
    orientation?: string;
 }
 /**
- * Двойной переключатель, который позволяет выбрать один из двух взаимоисключающих вариантов. 
+ * Двойной переключатель, который позволяет выбрать один из двух взаимоисключающих вариантов.
  *
  * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
  *
@@ -82,6 +82,8 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
  */
 const CAPTIONS_LENGTH = 2;
 class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, ITooltip {
+   '[Controls/_interface/ITooltip]': true;
+   '[Controls/_toggle/interface/ICheckable]': true;
 
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = DoubleSwitchTemplate;
@@ -96,14 +98,14 @@ class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, 
       }
    }
 
-   private _toggleSwitchHoverState(e: SyntheticEvent, toggledState?: boolean): void {
-      this._toggleHoverState = !!toggledState
+   private _toggleSwitchHoverState(e: SyntheticEvent<Event>, toggledState?: boolean): void {
+      this._toggleHoverState = !!toggledState;
    }
 
-   private _clickTextHandler(e: SyntheticEvent, _nextValue: boolean): void {
+   private _clickTextHandler(e: SyntheticEvent<Event>, _nextValue: boolean): void {
       if (this._options.value !== _nextValue && !this._options.readOnly) {
          this._notifyChanged();
-         this._toggleSwitchHoverState(false);
+         this._toggleSwitchHoverState(e, false);
       }
    }
 
@@ -144,8 +146,6 @@ class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, 
          captions: EntityDescriptor(Object)
       };
    }
-   '[Controls/_interface/ITooltip]': true;
-   '[Controls/_toggle/interface/ICheckable]': true;
 }
 
 export default DoubleSwitch;

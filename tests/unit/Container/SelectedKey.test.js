@@ -53,11 +53,12 @@ define(
             assert.isTrue(isStopped);
          });
          it('_private::getSelectedKeys', function() {
-            let resultKeys = source.SelectedKey._private.getSelectedKeys(null);
+            let sKeyContainer = new source.SelectedKey();
+            let resultKeys = sKeyContainer._getSelectedKeys(null);
             assert.deepEqual(resultKeys, []);
-            resultKeys = source.SelectedKey._private.getSelectedKeys(undefined);
+            resultKeys = sKeyContainer._getSelectedKeys(undefined);
             assert.deepEqual(resultKeys, []);
-            resultKeys = source.SelectedKey._private.getSelectedKeys('testKey');
+            resultKeys = sKeyContainer._getSelectedKeys('testKey');
             assert.deepEqual(resultKeys, ['testKey']);
          });
       });

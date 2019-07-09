@@ -12,7 +12,7 @@ import {ITooltip, ITooltipOptions,
    IFontSize, IFontSizeOptions,
    IHeight, IHeightOptions
 } from 'Controls/interface';
-import { SyntheticEvent } from 'Vdom/Vdom';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
    IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions {
