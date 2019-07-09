@@ -225,6 +225,9 @@ const mapTriState = {false: true, true: null, null: false};
 const mapBoolState = {true: false, false: true};
 
 class Checkbox extends Control<ICheckboxOptions> implements ICaption, IIcon, ITooltip {
+   '[Controls/_interface/ITooltip]': true;
+   '[Controls/_interface/ICaption]': true;
+   '[Controls/_interface/IIcon]': true;
 
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = checkBoxTemplate;
@@ -255,9 +258,6 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IIcon, ITo
          tooltip: EntityDescriptor(String)
       };
    }
-   '[Controls/_interface/ITooltip]': true;
-   '[Controls/_interface/ICaption]': true;
-   '[Controls/_interface/IIcon]': true;
 }
 
 export default Checkbox;
