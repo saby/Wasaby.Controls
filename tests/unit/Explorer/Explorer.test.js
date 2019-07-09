@@ -132,11 +132,11 @@ define([
 
          explorer.saveOptions(cfg);
          explorer._root = 'rootFromState';
-         assert.equal(explorerMod.View._private.getRoot(explorer, cfg), 'rootFromOptions');
+         assert.equal(explorerMod.View._private.getRoot(explorer, cfg.root), 'rootFromOptions');
 
          delete cfg.root;
          explorer.saveOptions(cfg);
-         assert.equal(explorerMod.View._private.getRoot(explorer, cfg), 'rootFromState');
+         assert.equal(explorerMod.View._private.getRoot(explorer, cfg.root), 'rootFromState');
       });
 
       it('_private.getDataRoot', function() {
