@@ -1482,6 +1482,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
          it('getItemDataByItem: hovered item should be compared by key', function () {
             let current = gridViewModel.getCurrent();
+            assert.isFalse(current.isHovered);
             gridViewModel.setHoveredItem(clone(current.item));
             gridViewModel.setItemActions(current.item, [{}, {}, {}]);
             assert.isTrue(gridViewModel.getCurrent().isHovered);
