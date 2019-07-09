@@ -1480,6 +1480,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                ' grid-column: 1 / 3;'
             );
          });
+         it('getItemDataByItem: hovered item should be compared by key', function () {
+            let current = gridViewModel.getCurrent();
+            gridViewModel.setHoveredItem(clone(current.item));
+            gridViewModel.setItemActions(current.item, [{}, {}, {}]);
+            assert.isTrue(gridViewModel.getCurrent().isHovered);
+         });
       });
 
       describe('partial grid support', () => {

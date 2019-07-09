@@ -1107,7 +1107,7 @@ var
                 current.columns = this._columns;
             }
 
-            current.isHovered = current.item === self._model.getHoveredItem();
+            current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
             if (stickyColumn && !Env.detection.isNotFullGridSupport) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
