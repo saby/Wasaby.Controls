@@ -156,7 +156,8 @@
  * @event Controls/_tile/interface/IDraggable#dragStart Происходит при начале перемещения элемента.
  * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Array.<String>} items Массив идентификаторов перемещаемых элементов.
- * @remark Чтобы начать перемещение drag'n'drop из события, необходимо вернуть объект перемещения. 
+ * @remark Чтобы начать перемещение drag'n'drop из события, необходимо вернуть объект перемещения. Событие срабатывает у контейнера, в котором началось перемещение. 
+ * Отличается от события {@link https://wi.sbis.ru/docs/js/Controls/tile/IDraggable/events/dragEnter/?v=19.500 dragEnter}, которое срабатывает у контейнера, в который была перемещена запись. 
  * @example
  * В следующем примере показано, как начать перемещение элементов с помощью drag'n'drop, если все элементы имеют одинаковый тип.
  * <pre>
@@ -307,14 +308,14 @@
 
 /**
  * @typedef {Boolean|Types/entity:Record} DragEnterResult
- * @variant {Boolean} Разрешить перемещение элементов в текущий список из другого списка.
- * @variant {Types/entity:Record} Разрешить перемещение элементов в текущий список из другого списка, возвращенная запись будет отображаться в списке как указатель на местоположение перемещения.
+ * @property {Boolean} Разрешить перемещение элементов в текущий список из другого списка.
+ * @property {Types/entity:Record} Разрешить перемещение элементов в текущий список из другого списка, возвращенная запись будет отображаться в списке как указатель на местоположение перемещения.
  */
 
 /*
  * @typedef {Boolean|Types/entity:Record} DragEnterResult
- * @variant {Boolean} Allow dragging items to the current list from another list.
- * @variant {Types/entity:Record} Allow dragging items to the current list from another list, the returned entry will be displayed in the list as a pointer to the move location.
+ * @property {Boolean} Allow dragging items to the current list from another list.
+ * @property {Types/entity:Record} Allow dragging items to the current list from another list, the returned entry will be displayed in the list as a pointer to the move location.
  */ 
 
 /**
@@ -322,7 +323,8 @@
  * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Controls/_dragnDrop/Entity/Items} entity Сущность перемещения.
  * @returns {DragEnterResult}
- * @remark Событие позволяет перемещать элементы в текущий список из другого списка.
+ * @remark Событие позволяет перемещать элементы в текущий список из другого списка. Событие срабатывает у контейнера, в который была перемещена запись. 
+ * Отличается от события {@link https://wi.sbis.ru/docs/js/Controls/tile/IDraggable/events/dragStart/?v=19.500 dragStart}, которое срабатывает у контейнера, из которого началось перемещение записи. 
  * @example
  * В следующем примере показано, как перемещать в список объекты определенного типа.
  * <pre>
