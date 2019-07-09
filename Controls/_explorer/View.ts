@@ -47,7 +47,7 @@ import 'Controls/breadcrumbs';
             self._forceUpdate();
          },
           setRestoredKeyObject: function(self, root) {
-              const curRoot = _private.getRoot(self);
+              const curRoot = _private.getRoot(self, self._options);
               self._restoredMarkedKeys[root] = {
                   parent: curRoot,
                   markedKey: null
@@ -73,7 +73,7 @@ import 'Controls/breadcrumbs';
                   _remover(root);
                }
             } else {
-               const curRoot = _private.getRoot(self);
+               const curRoot = _private.getRoot(self, self._options);
                if (root !== curRoot) {
                   delete self._restoredMarkedKeys[curRoot];
                }
@@ -89,8 +89,8 @@ import 'Controls/breadcrumbs';
                });
             }
          },
-         getRoot: function(self) {
-            return self._options.hasOwnProperty('root') ? self._options.root : self._root;
+         getRoot: function(self, cfg) {
+            return cfg.hasOwnProperty('root') ? cfg.root : self._root;
          },
 
          getPath: function(data) {
@@ -108,7 +108,7 @@ import 'Controls/breadcrumbs';
          dataLoadCallback: function(self, data) {
              self._breadCrumbsItems = _private.getPath(data);
              if (self._isGoingBack) {
-                const curRoot = _private.getRoot(self);
+                const curRoot = _private.getRoot(self, self._options);
                  if (self._restoredMarkedKeys[curRoot]) {
                      self._children.treeControl.setMarkedKey(self._restoredMarkedKeys[curRoot].markedKey);
                  }
@@ -132,7 +132,7 @@ import 'Controls/breadcrumbs';
             self._virtualScrolling = viewMode === 'tile' ? false : cfg.virtualScrolling;
          },
          setViewMode: function(self, viewMode, cfg) {
-            var currentRoot = _private.getRoot(self);
+            var currentRoot = _private.getRoot(self, cfg);
             var dataRoot = _private.getDataRoot(self);
 
             if (viewMode === 'search' && cfg.searchStartingWith === 'root' && dataRoot !== currentRoot) {
@@ -154,7 +154,7 @@ import 'Controls/breadcrumbs';
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
                result = self._breadCrumbsItems[0].get(self._options.parentProperty);
             } else {
-               result = _private.getRoot(self);
+               result = _private.getRoot(self, self._options);
             }
 
             return result;
@@ -244,7 +244,7 @@ import 'Controls/breadcrumbs';
          }
 
          _private.setViewMode(this, cfg.viewMode, cfg);
-         const root = _private.getRoot(this);
+         const root = _private.getRoot(this, cfg);
          this._restoredMarkedKeys = {
          [root]: {
                markedKey: null
@@ -261,7 +261,7 @@ import 'Controls/breadcrumbs';
          }
       },
       _getRoot: function() {
-         return _private.getRoot(this);
+         return _private.getRoot(this, this._options);
       },
       _dragHighlighter: function(itemKey, hasArrow) {
          return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey
@@ -280,7 +280,7 @@ import 'Controls/breadcrumbs';
          if (this._options.itemsDragNDrop && this._options.parentProperty && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')) {
 
             //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
-            this._dragOnBreadCrumbs = _private.getRoot(this) !== _private.getDataRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
+            this._dragOnBreadCrumbs = _private.getRoot(this, this._options) !== _private.getDataRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
          }
       },
       _hoveredCrumbChanged: function(event, item) {

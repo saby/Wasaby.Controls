@@ -132,11 +132,11 @@ define([
 
          explorer.saveOptions(cfg);
          explorer._root = 'rootFromState';
-         assert.equal(explorerMod.View._private.getRoot(explorer), 'rootFromOptions');
+         assert.equal(explorerMod.View._private.getRoot(explorer, cfg), 'rootFromOptions');
 
          delete cfg.root;
          explorer.saveOptions(cfg);
-         assert.equal(explorerMod.View._private.getRoot(explorer), 'rootFromState');
+         assert.equal(explorerMod.View._private.getRoot(explorer, cfg), 'rootFromState');
       });
 
       it('_private.getDataRoot', function() {
@@ -285,15 +285,19 @@ define([
             ],
             idProperty: 'id'
          });
-         let cfg = { items: {
-               getMetaData: () => {
+         let cfg = {
+            items: {
+               getMetaData: function() {
                   return { path: path };
                }
-            }
+            },
+            root: 1
          };
 
          instance._beforeMount(cfg);
          assert.equal(instance._breadCrumbsItems.length, 1);
+
+         assert.deepEqual({ 1: { markedKey: null } }, instance._restoredMarkedKeys);
 
          path.clear();
          instance._beforeMount(cfg);
