@@ -12,7 +12,9 @@
 </ws:template>
 
 <ws:template name="cross">
-   <span class="controls-FilterView__iconReset_theme_{{_options.theme}} icon-Close" ws-no-focus="{{true}}"></span>
+   <ws:if data="{{!_options.readOnly}}">
+      <span class="controls-FilterView__iconReset_theme_{{_options.theme}} icon-Close" ws-no-focus="{{true}}"></span>
+   </ws:if>
 </ws:template>
 
 <div class="controls-FilterView_theme_{{_options.theme}}">
@@ -32,6 +34,9 @@
                            title="{{_displayText[item.name].title}}"
                            hasMoreText="{{_displayText[item.name].hasMoreText}}"
                            on:click="_openPanel(item)"
+                           on:mouseenter="_startTimer(item)"
+                           on:mousemove="_restartTimer(item)"
+                           on:mouseleave="_resetTimer()"
                            name="{{item.name}}"/>
                <ws:partial template="cross" on:click="_reset(item)" />
          </ws:if>
@@ -44,7 +49,7 @@
             <ws:partial template="cross" on:click="_resetFilterText()" />
       </ws:if>
    </div>
-   <ws:if data="{{_options.detailPanelTemplateName || _isFastReseted()}}">
+   <ws:if data="{{(_options.detailPanelTemplateName || _isFastReseted()) && !_options.readOnly}}">
       <div name="detailPanelTarget" class="controls-FilterView__icon_theme_{{_options.theme}}
                                            controls-FilterView-button-{{_options.alignment}}_theme_{{_options.theme}}
                                            controls-FilterView__icon_state_{{_options.readOnly ? 'disabled' : 'enabled' }}_theme_{{_options.theme}}
