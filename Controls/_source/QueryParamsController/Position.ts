@@ -36,9 +36,7 @@ export interface IPositionNavigationOptions {
 }
 
 /**
- *
  * @author Крайнов Дмитрий
- * @public
  */
 class PositionNavigation {
    protected _more: HasMore;
@@ -178,7 +176,7 @@ class PositionNavigation {
       } else {
          if (more instanceof Object) {
             if (!loadDirection &&  this._options.direction === 'both') {
-               this._more = more;
+               this._more = {...more};
             } else {
                Env.IoC.resolve('ILogger')
                   .error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');

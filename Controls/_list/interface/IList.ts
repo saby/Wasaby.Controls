@@ -52,9 +52,9 @@
  * @cfg {Function} Шаблон пустого списка (без элементов).
  * См.<a href="/materials/demo-ws4-list-base">демо-пример</a>
  * @remark
- * По умолчанию для emptyTemplate используется шаблон "wml!Controls/_list/emptyTemplate".
+ * По умолчанию для emptyTemplate используется шаблон "Controls/list:EmptyTemplate".
  * Он рекомендован к использованию при описании собственного шаблона, отображаемого для пустого списка.
- * Шаблон "wml!Controls/_list/emptyTemplate" принимает следующие параметры:
+ * Шаблон "Controls/list:EmptyTemplate" принимает следующие параметры:
  * - contentTemplate — контент шаблона;
  * - topSpacing — расстояние между верхней границей и контентом шаблона;
  * - bottomSpacing — расстояние между нижней границей и контентом шаблона;
@@ -62,7 +62,7 @@
  * <pre>
  *    <Controls.list:View>
  *       <ws:emptyTemplate>
- *          <ws:partial template="Controls/_list/emptyTemplate" topSpacing="xl" bottomSpacing="l">
+ *          <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xl" bottomSpacing="l">
  *             <ws:contentTemplate>Нет данных</ws:contentTemplate>
  *          </ws:partial>
  *       </ws:emptyTemplate>
@@ -246,7 +246,7 @@
  * @property {String} id Идентификатор операции.
  * @property {String} title Название операции.
  * @property {String} icon Иконка операции.
- * @property {Number} showType Положение операции. (0 - меню | 1 - панель инструментов и меню | 2 - панель инструментов).
+ * @property {Number} showType Местоположение операции. В свойство передается константа с соответствующим значением (0 - menu | 1 - toolbar and menu | 2 - toolbar). Если свойство не указано, то itemActions отображаются только в меню.
  * @property {String} style Режим визуального отображения операции. (secondary | warning | danger | success).
  * @property {String} iconStyle Режим визуального отображения иконки операции. (secondary | warning | danger | success).
  * @property {Function} handler Обработчик операции.
@@ -467,7 +467,7 @@
 
 /**
  * @name Controls/_list/interface/IList#itemsReadyCallback
- * @cfg {Function} Callback, который вызывается, когда экземпляр данных списка готов.
+ * @cfg {Function} Функция обратного вызова, которая будет вызываться, когда экземпляр данных списка готов.
  * @remark
  * ARGUMENTS:
  * <ul>
@@ -488,7 +488,7 @@
 
 /**
  * @name Controls/_list/interface/IList#dataLoadCallback
- * @cfg {Function} Callback, который вызывается после загрузки данных из источника.
+ * @cfg {Function} Функция обратного вызова, которая будет вызываться, когда данные загружены источником.
  * @remark
  * ARGUMENTS:
  * <ul>
@@ -595,19 +595,19 @@
  * @event Controls/_list/interface/IList#itemClick Происходит при клике на элемент списка.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @param {eventObject} event Объект события.
- * @param {Types/entity:Record} item Элемент, по которому производим клик. 
+ * @param {Types/entity:Record} item Элемент, по которому производим клик.
  */
 
  /*
  * @event Controls/_list/interface/IList#itemClick Occurs when list item is clicked.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @param {eventObject} event Event object.
- * @param {Types/entity:Record} item Clicked item. 
+ * @param {Types/entity:Record} item Clicked item.
  */
 
 /**
  * @event Controls/_list/interface/IList#itemSwipe Происходит при жесте "swipe" на элементе списка.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Экземпляр элемента списка, по которому производим swipe.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} originalEvent Дескриптор исходного события.
  * @remark
@@ -616,7 +616,7 @@
 
 /*
  * @event Controls/_list/interface/IList#itemSwipe Occurs when list item is swiped.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Env/Event:Object} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the swiped item.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} originalEvent Descriptor of the original event. It is useful if you want to get direction or target.
  * @remark
@@ -626,7 +626,7 @@
 /**
  * @event Controls/_list/interface/IList#hoveredItemChanged Происходит при наведении курсора мыши на элемент списка.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Экземпляр элемента, на который наводим курсор.
  * @param {HTMLElement} itemContainer Контейнер элемента.
  */
@@ -634,7 +634,7 @@
 /*
  * @event Controls/_list/interface/IList#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Env/Event:Object} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
  * @param {HTMLElement} itemContainer Container of the item.
  */
@@ -642,12 +642,14 @@
 /**
  * @event  Controls/_list/interface/IList#markedKeyChanged Происходит при выделении пользователем элемента списка.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Number} key Ключ выбранного элемента.
  */
 
 /*
  * @event  Controls/_list/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
  * <a href="/materials/demo-ws4-list-base">Example</a>.
+ * @param {Env/Event:Object} eventObject The event descriptor. 
  * @param {Number} key Key of the selected item.
  */
 
@@ -726,3 +728,4 @@
  * @cfg {ItemPadding} Configuration inner paddings in the item.
  * @name Controls/_list/interface/IList#itemPadding
  */
+

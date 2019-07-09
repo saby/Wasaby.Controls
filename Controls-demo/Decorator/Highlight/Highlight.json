@@ -1,0 +1,26 @@
+{
+  "Controls/decorator:Highlight": {
+    "properties": {
+      "ws-config": {
+        "options": {
+          "text": {
+            "type": "String"
+          },
+          "highlight": {
+            "type": "String"
+          },
+          "class": {
+            "type": "String"
+          },
+          "searchMode": {
+            "type": "enum",
+            "enum": {
+              "substring": "substring",
+              "word": "word"
+            }
+          }
+        }
+      }
+    }
+  }
+}

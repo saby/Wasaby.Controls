@@ -130,7 +130,7 @@ var ViewModel = BaseViewModel.extend({
         var displayValue = value === null ? '' : value.toString();
 
         if (displayValue && this._options.showEmptyDecimals) {
-            return format(parse(displayValue), this._options, 0).value;
+            return format(parse(displayValue, this._options), this._options, 0).value;
         }
 
         if (this._options.useGrouping) {
@@ -171,7 +171,7 @@ var ViewModel = BaseViewModel.extend({
         }
 
         if (inputType === 'insert') {
-            parsedNumber = parse(splitValue.insert);
+            parsedNumber = parse(splitValue.insert, this._options);
 
             /**
              * If entered a negative number, then change the current one to the opposite.
@@ -196,7 +196,7 @@ var ViewModel = BaseViewModel.extend({
             return _private.superHandleInput(this, text, inputType);
         }
 
-        parsedNumber = parse(text.value);
+        parsedNumber = parse(text.value, this._options);
 
         return _private.superHandleInput(this, format(parsedNumber, this._options, text.carriagePosition), inputType);
     },

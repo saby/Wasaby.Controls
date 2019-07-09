@@ -46,6 +46,49 @@ import 'Controls/breadcrumbs';
             }
             self._forceUpdate();
          },
+          setRestoredKeyObject: function(self, root) {
+              const curRoot = _private.getRoot(self);
+              self._restoredMarkedKeys[root] = {
+                  parent: curRoot,
+                  markedKey: null
+              };
+              if (self._restoredMarkedKeys[curRoot]) {
+                  self._restoredMarkedKeys[curRoot].markedKey = root;
+              }
+          },
+          cleanRestoredKeyObject: function(self, root) {
+              _private.pathCleaner(self, root);
+          },
+         pathCleaner: function(self, root) {
+            if (self._restoredMarkedKeys[root]) {
+               if (self._restoredMarkedKeys[root].parent === undefined) {
+                  const markedKey = self._restoredMarkedKeys[root].markedKey;
+                  self._restoredMarkedKeys = {
+                     [root]: {
+                        markedKey: markedKey
+                     }
+                  };
+                  return;
+               } else {
+                  _remover(root);
+               }
+            } else {
+               const curRoot = _private.getRoot(self);
+               if (root !== curRoot) {
+                  delete self._restoredMarkedKeys[curRoot];
+               }
+            }
+
+            function _remover(key) {
+               Object.keys(self._restoredMarkedKeys).forEach((cur) => {
+                  if (self._restoredMarkedKeys[cur] && self._restoredMarkedKeys[cur].parent === String(key)) {
+                     const nextKey = cur;
+                     delete self._restoredMarkedKeys[cur];
+                     _remover(nextKey);
+                  }
+               });
+            }
+         },
          getRoot: function(self) {
             return self._options.hasOwnProperty('root') ? self._options.root : self._root;
          },
@@ -63,11 +106,18 @@ import 'Controls/breadcrumbs';
             return breadCrumbs;
          },
          dataLoadCallback: function(self, data) {
-            self._breadCrumbsItems = _private.getPath(data);
-            self._forceUpdate();
-            if (self._options.dataLoadCallback) {
-               self._options.dataLoadCallback(data);
-            }
+             self._breadCrumbsItems = _private.getPath(data);
+             if (self._isGoingBack) {
+                const curRoot = _private.getRoot(self);
+                 if (self._restoredMarkedKeys[curRoot]) {
+                     self._children.treeControl.setMarkedKey(self._restoredMarkedKeys[curRoot].markedKey);
+                 }
+                 self._isGoingBack = false;
+             }
+             self._forceUpdate();
+             if (self._options.dataLoadCallback) {
+                self._options.dataLoadCallback(data);
+             }
          },
          itemsReadyCallback: function(self, items) {
             self._items = items;
@@ -129,8 +179,8 @@ import 'Controls/breadcrumbs';
 
    /**
     * Иерархический список, узел которого можно развернуть и перейти в него.
-    * <a href="/materials/demo-ws4-explorer">Demo example</a>.
-    * <a href="/materials/demo-ws4-explorer-with-search">Demo example with search</a>.
+    * <a href="/materials/demo-ws4-explorer">Демо-пример</a>.
+    * <a href="/materials/demo-ws4-explorer-with-search">Демо-пример с поиском</a>.
     * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>здесь</a>.
     *
     * @class Controls/_explorer/View
@@ -240,6 +290,12 @@ import 'Controls/breadcrumbs';
          }
 
          _private.setViewMode(this, cfg.viewMode, cfg);
+         const root = _private.getRoot(this);
+         this._restoredMarkedKeys = {
+         [root]: {
+               markedKey: null
+            }
+         };
       },
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
@@ -284,16 +340,23 @@ import 'Controls/breadcrumbs';
          const res = this._notify('itemClick', [item, clickEvent]);
          if (res !== false) {
             if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
-               _private.setRoot(this, item.getId());
+                _private.setRestoredKeyObject(this, item.getId());
+                _private.setRoot(this, item.getId());
             }
          }
          event.stopPropagation();
       },
       _onBreadCrumbsClick: function(event, item) {
-         _private.setRoot(this, item.getId());
+          _private.cleanRestoredKeyObject(this, item.getId());
+          _private.setRoot(this, item.getId());
+          this._isGoingBack = true;
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);
+      },
+      reloadItem: function() {
+         let treeControl = this._children.treeControl;
+         return treeControl.reloadItem.apply(treeControl, arguments);
       },
       beginEdit: function(options) {
          return this._children.treeControl.beginEdit(options);

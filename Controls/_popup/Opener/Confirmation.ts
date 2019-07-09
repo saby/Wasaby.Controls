@@ -3,7 +3,10 @@ import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 
 /**
- * Component that opens the confirmation popup.
+ * Контрол, открывающий диалог подтверждения.
+ * Окно блокирует работу пользователя с родительским приложением.
+ * Позиционируется в центре экрана.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/ Подробнее}
  * <a href="/materials/demo-ws4-confirmation">Demo-example</a>.
  *
  * @class Controls/_popup/Opener/Confirmation
@@ -12,7 +15,13 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * @category Popup
  * @author Красильников А.С.
  * @demo Controls-demo/Popup/Opener/ConfirmationPG
- *
+ */
+
+/*
+ * Component that opens the confirmation popup.
+*/
+
+/**
  * @css @font-size_SubmitPopup-message Font-size of message.
  * @css @font-weight_SubmitPopup-message Font-weight of message.
  * @css @color_SubmitPopup-message Color of message.
@@ -29,6 +38,14 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 
 /**
  * @name Controls/_popup/Opener/Confirmation#type
+ * @cfg {String} Тип диалогового окна. Определяет с каким результатом будет закрыто окно подтверждения.
+ * @variant ok (Результат: undefined)
+ * @variant yesno (Результат: true/false)
+ * @variant yesnocancel (Результат: true/false/undefined)
+ */
+
+/*
+ * @name Controls/_popup/Opener/Confirmation#type
  * @cfg {String} Type of dialog. Determines  the result of  the confirmation window closed.
  * @variant ok (undefined)
  * @variant yesno  ( true/false)
@@ -36,6 +53,14 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  */
 
 /**
+ * @name Controls/_popup/Opener/Confirmation#style
+ * @cfg {String} Внешний вид диалога подтверждения.
+ * @variant default
+ * @variant success
+ * @variant danger
+ */
+
+/*
  * @name Controls/_popup/Opener/Confirmation#style
  * @cfg {String} Confirmation display style
  * @variant default
@@ -45,6 +70,14 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 
 /**
  * @name Controls/_popup/Opener/Confirmation#size
+ * @cfg {String} Размер диалога подтверждения. Размер меняется автоматически, если длина основного сообщения превышает
+ * 100 символов или длина дополнительного текста превышает 160 символов.
+ * @variant m (ширина 350px)
+ * @variant l (ширина 440px)
+ */
+
+/*
+ * @name Controls/_popup/Opener/Confirmation#size
  * @cfg {String} Confirmation size
  * @variant m
  * @variant l
@@ -52,34 +85,74 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 
 /**
  * @name Controls/_popup/Opener/Confirmation#message
+ * @cfg {String} Основной текст диалога подтверждения.
+ */
+
+/*
+ * @name Controls/_popup/Opener/Confirmation#message
  * @cfg {String} Main text
  */
 
 /**
+ * @name Controls/_popup/Opener/Confirmation#details
+ * @cfg {String} Дополнительный текст диалога подтверждения
+ */
+
+/*
  * @name Controls/_popup/Opener/Confirmation#details
  * @cfg {String} Additional text
  */
 
 /**
  * @name Controls/_popup/Opener/Confirmation#yesCaption
+ * @cfg {String} Текст кнопки подтверждения.
+ */
+
+/*
+ * @name Controls/_popup/Opener/Confirmation#yesCaption
  * @cfg {String} Сonfirmation button text
  */
 
 /**
  * @name Controls/_popup/Opener/Confirmation#noCaption
+ * @cfg {String} Текст кнопки отрицания
+ */
+
+/*
+ * @name Controls/_popup/Opener/Confirmation#noCaption
  * @cfg {String} Negation button text
  */
+
 /**
+ * @name Controls/_popup/Opener/Confirmation#cancelCaption
+ * @cfg {String} Текс кнопки отмены
+ */
+
+/*
  * @name Controls/_popup/Opener/Confirmation#cancelCaption
  * @cfg {String}    Cancel button text
  */
+
 /**
+ * @name Controls/_popup/Opener/Confirmation#PrimaryAction
+ * @cfg {String} Определяет, какая кнопка будет активирована по нажатию ctrl+enter
+ * @variant yes
+ * @variant no
+ */
+
+/*
  * @name Controls/_popup/Opener/Confirmation#PrimaryAction
  * @cfg {String} Determines which button is activated when ctrl+enter is pressed
  * @variant yes
  * @variant no
  */
+
 /**
+ * @name Controls/_popup/Opener/Confirmation#okCaption
+ * @cfg {String} Текст кнопки "принять"
+*/
+
+/*
  * @name Controls/_popup/Opener/Confirmation#okCaption
  * @cfg {String} Accept button text
  */
@@ -127,28 +200,26 @@ const Confirmation = BaseOpener.extend({
     /**
      * @name Controls/_popup/Opener/Confirmation#isOpened
      * @function
-     * @description Popup opened status.
+     * @description Возвращает информацию о том, открыто ли всплывающее окно.
      */
 
     /**
-     * Close popup.
-     * @function Controls/_popup/Opener/Confirmation#close
-     */
-
-    /**
-     * Open confirmation popup.
+     * Метод открытия окна подтверждения.
      * @function Controls/_popup/Opener/Confirmation#open
-     * @param {popupOptions[]} templateOptions Confirmation options.
-     * @returns {Deferred} The deferral will end with the result when the user closes the popup.
+     * @param {popupOptions[]} templateOptions Конфигурация диалога подтверждения.
+     * @returns {Deferred} Результат будет возвращен после того, как пользователь закроет всплывающее окно.
      * @remark
-     * If you want use custom layout in the dialog you need to open popup via {@link dialog opener} using the basic template {@link ConfirmationTemplate}.
+     * 1. Если требуется открыть окно, без создания popup:Confirmation в верстке, следует использовать статический метод {@link openPopup}
+     * 2. Если вы хотите использовать собственный шаблон в диалоге подтверждения используйте шаблон, смотрите
+     * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/#config-template инструкцию}
+     * @see openPopup
      * @example
      * wml
      * <pre>
      *    <Controls.popup:Confirmation name="confirmationOpener">
      *    </Controls.popup:Confirmation>
      *
-     *    <Controls.Button name="openConfirmation" caption="open confirmation" on:click="_open()"/>
+     *    <Controls.Button caption="open confirmation" on:click="_open()"/>
      * </pre>
      * js
      * <pre>
@@ -160,10 +231,27 @@ const Confirmation = BaseOpener.extend({
      *              message: 'Save changes?'
      *              type: 'yesnocancel'
      *           }
-     *           this._children.confirmationOpener.open(config)
+     *           this._children.confirmationOpener.open(config).addCallback(function(result) {
+     *              if (result === true) {
+     *                  console.log('Пользователь выбрал "Да"');
+     *              } else if (result === false) {
+     *                  console.log('Пользователь выбрал "Нет"');
+     *              } else {
+     *                  console.log('Пользователь выбрал "Отмена"');
+     *              }
+     *           });
      *        }
      *     });
      * </pre>
+     */
+
+    /*
+     * Open confirmation popup.
+     * @function Controls/_popup/Opener/Confirmation#open
+     * @param {popupOptions[]} templateOptions Confirmation options.
+     * @returns {Deferred} The deferral will end with the result when the user closes the popup.
+     * @remark
+     * If you want use custom layout in the dialog you need to open popup via {@link dialog opener} using the basic template {@link ConfirmationTemplate}.
      */
     open(templateOptions: object): Promise<boolean> {
         this._resultDef = new Deferred();
@@ -175,12 +263,32 @@ const Confirmation = BaseOpener.extend({
 });
 
 /**
- * Open Confirmation popup.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/ See more}.
+ * Статический метод для открытия окна подтверждения. При использовании метода не требуется создавать popup:Confirmation в верстке.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/ Подробнее}.
  * @function Controls/_popup/Opener/Confirmation#openPopup
- * @param {popupOptions[]} templateOptions Confirmation options.
- * @return {Promise<boolean>} Promise that ending with user choice results
+ * @param {popupOptions[]} templateOptions Конфигурация окна подтверждени
+ * @return {Promise<boolean>} Результат будет возвращен после того, как пользователь закроет всплывающее окно.
  * @static
+ * @see open
+ * @example
+ * js
+ * <pre>
+ *    import {Confirmation} from 'Controls/popup';
+ *    ...
+ *    openConfirmation() {
+ *        Confirmation.openPopup({
+ *          message: 'Choose yes or no'
+ *        }).then(function(result) {
+ *          if (result === true) {
+ *              console.log('Пользователь выбрал "Да"');
+ *          } else if (result === false) {
+ *              console.log('Пользователь выбрал "Нет"');
+ *          } else {
+ *              console.log('Пользователь выбрал "Отмена"');
+ *          }
+ *        });
+ *    }
+ * </pre>
  */
 Confirmation.openPopup = (templateOptions: object) => {
     return new Promise((resolve) => {
@@ -202,13 +310,13 @@ export = Confirmation;
 
 /**
  * @typedef {Object} popupOptions
- * @description Confirmation configuration.
- * @property {String} type Type of dialog.
- * @property {String} style Confirmation display style.
- * @property {String} message Main text.
- * @property {String} details Additional text.
- * @property {String} yesCaption Сonfirmation button text.
- * @property {String} noCaption Negation button text.
- * @property {String} cancelCaption Cancel button text.
- * @property {String} okCaption Accept text button.
+ * @description Конфигурация окна подтверждения.
+ * @property {String} type Тип окна подтверждения.
+ * @property {String} style Внешний вид окна подтверждения.
+ * @property {String} message Основной текст окна подтверждения
+ * @property {String} details Дополнительный текст окна подтверждения
+ * @property {String} yesCaption Текст кнопки подтверждения.
+ * @property {String} noCaption Текст кнопки отрицания.
+ * @property {String} cancelCaption Текст кнопки отмены.
+ * @property {String} okCaption Текст кнопки "принять".
  */

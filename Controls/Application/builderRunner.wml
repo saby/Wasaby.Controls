@@ -12,8 +12,8 @@
          AppEnv.setStore('HeadData', headData);
 
          window.startContextData = { };
-         require([ {{_options.dependencies | unescape}} ], function (){
-            var templateFn = {{_options.builder | unescape}};
+         require([ {{ __setHTMLUnsafe(_options.dependencies) }} ], function (){
+            var templateFn = {{ __setHTMLUnsafe(_options.builder) }};
             templateFn.stable = true;
             var cnt = Core.extend({
                _template: templateFn

@@ -7,6 +7,7 @@ import clone = require('Core/core-clone');
 import _SuggestOptionsField = require('Controls/_suggestPopup/_OptionsField');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import { constants } from 'Env/Env';
+import scrollToElement = require('Controls/Utils/scrollToElement');
 
 
 var DIALOG_PAGE_SIZE = 25;
@@ -51,6 +52,18 @@ var _private = {
    dispatchEvent: function(container, nativeEvent, customEvent) {
       customEvent.keyCode = nativeEvent.keyCode;
       container.dispatchEvent(customEvent);
+   },
+
+   scrollToFirstItem: function(self) {
+      let
+         list = self._children.list,
+         listContainer = list._container[0] || list._container,
+         itemsContainers = listContainer.getElementsByClassName('controls-ListView__itemV'),
+         indexFirstItem = self._reverseList ? itemsContainers.length - 1 : 0;
+
+      if (itemsContainers.length) {
+         scrollToElement(itemsContainers[indexFirstItem], true);
+      }
    }
 };
 
@@ -89,7 +102,10 @@ var List = Control.extend({
    },
 
    _beforeUpdate: function(newOptions, context) {
-      var tabKey = _private.getTabKeyFromContext(context);
+      let
+         self = this,
+         oldReverseList = this._reverseList,
+         tabKey = _private.getTabKeyFromContext(context);
 
       /* Need notify after getting tab from query */
       if (_private.isTabChanged(this._suggestListOptions, tabKey)) {
@@ -119,11 +135,9 @@ var List = Control.extend({
          itemsCount = items && items.getCount();
 
       if (this._markedKey === null && itemsCount && domEvent.nativeEvent.keyCode === constants.key.up) {
-         let
-            idProperty = items.getIdProperty ? items.getIdProperty() : this._suggestListOptions.source.getIdProperty(),
-            indexItem = this._reverseList ? 0 : itemsCount - 1;
+         let indexItem = this._reverseList ? 0 : itemsCount - 1;
 
-         this._markedKey = items.at(indexItem).get(idProperty);
+         this._markedKey = items.at(indexItem).getId();
       } else {
          /* TODO will refactor on the project https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
           remove list._container[0] after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3 */
@@ -142,13 +156,18 @@ var List = Control.extend({
       }
 
       if (result) {
-         this._items = result.data.getRawData();
+         this._items = result.data;
       }
    },
 
    _markedKeyChanged: function(event, key) {
       this._markedKey = key;
       this._notify('markedKeyChanged', [key]);
+   },
+
+   _drawItems: function() {
+      // toDO До .500, пока не появится опция https://online.sbis.ru/opendoc.html?guid=301f9f1b-9036-4b9b-b25f-1c363d0d32ee
+      _private.scrollToFirstItem(this);
    }
 });
 

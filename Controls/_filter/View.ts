@@ -322,7 +322,7 @@ var Filter = Control.extend({
             let panelItems = converterFilterItems.convertToDetailPanelItems(this._source);
             let popupOptions =  {};
             if (this._options.alignment === 'right') {
-                popupOptions.corner = {
+                popupOptions.targetPoint = {
                     vertical: 'top',
                     horizontal: 'right'
                 };

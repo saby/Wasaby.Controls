@@ -156,7 +156,6 @@
  * @event Controls/_tile/interface/IDraggable#dragStart Происходит при начале перемещения элемента.
  * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Array.<String>} items Массив идентификаторов перемещаемых элементов.
- * @returns {Controls/_dragnDrop/Entity/Items)
  * @remark Чтобы начать перемещение drag'n'drop из события, необходимо вернуть объект перемещения. 
  * @example
  * В следующем примере показано, как начать перемещение элементов с помощью drag'n'drop, если все элементы имеют одинаковый тип.

@@ -93,6 +93,27 @@ define([
          it('change order list and list', function() {
             assert.isTrue(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.getRecordById(5), rs, 'parent', 'parent@'));
          });
+
+         it('in folder', function() {
+            data = [{
+               id: 2,
+               parent: 1,
+               'parent@': null
+            }, {
+               id: 3,
+               parent: 1,
+               'parent@': null
+            }];
+            rs = new collection.RecordSet({
+               idProperty: 'id',
+               rawData: data
+            });
+            let root = 1;
+            assert.isFalse(lists.ItemActionsHelpers.reorderMoveActionsVisibility('up', rs.getRecordById(2), rs, 'parent', '', root));
+            assert.isTrue(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.getRecordById(2), rs, 'parent', '', root));
+            assert.isFalse(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.getRecordById(3), rs, 'parent', '', root));
+            assert.isTrue(lists.ItemActionsHelpers.reorderMoveActionsVisibility('up', rs.getRecordById(3), rs, 'parent', '', root));
+         });
       });
    });
 });

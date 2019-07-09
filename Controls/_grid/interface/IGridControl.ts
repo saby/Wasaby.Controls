@@ -36,7 +36,7 @@
  *                                  {{itemData.item['date']}}
  *                               </div>
  *                            </ws:partial>
- *                         <ws:contentTemplate>
+ *                         </ws:contentTemplate>
  *                      </ws:partial>
  *                   </ws:template>
  *                </ws:Object>
@@ -69,7 +69,7 @@
  *                                  {{itemData.item['date']}}
  *                               </div>
  *                            </ws:partial>
- *                         <ws:contentTemplate>
+ *                         </ws:contentTemplate>
  *                      </ws:partial>
  *                   </ws:template>
  *                </ws:Object>
@@ -115,6 +115,10 @@
  * @property {GridCellVAlign} [valign] Выравнивание содержимого ячейки по вертикали.
  * @property {String} [template] Шаблон заголовка ячейки. CSS-класс устанавливает правый отступ для заголовка ячейки для выравнивания по целым числам в полях ввода денег.
  * @property {String} [sortingProperty] Свойство, по которому выполняется сортировка.
+ * @property {Number} [startRow] Номер горизонтальной css grid границы, с который начинается строка.
+ * @property {Number} [endRow] Номер горизонтальной css grid границы, на который заканчивается строка.
+ * @property {Number} [startColumn] Номер верикальной css grid границы, на который начинается строка.
+ * @property {Number} [endColumn] Номер Вертикальной css grid границы, на который заканчивается строка.
  */
 
 /*
@@ -136,6 +140,40 @@
  * Пример добавления интервала между текстами заголовков для столбцов с денежными полями:
  * <pre>
  *    <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
+ * </pre>
+ * @example
+ * Пример массива колонок многоуровнего заголовка
+ * <pre>
+ *     columns=[
+ *      {
+  *     title: 'Name',
+  *     startRow: 1,
+  *     endRow: 3,
+  *     startColumn: 1,
+  *     endColumn: 2,
+ *      },
+ *      {
+ *      title: 'Price',
+ *      startRow: 1,
+ *      endRow: 2,
+ *      startColumn: 2,
+ *      endColumn: 4,
+ *      },
+ *      {
+ *      title: 'Cell',
+ *      startRow: 2,
+ *      endRow: 3,
+ *      startColumn: 2,
+ *      endColumn: 3,
+ *      },
+ *      {
+ *      title: 'Residue',
+ *      startRow: 2,
+ *      endRow: 3,
+ *      startColumn: 3,
+ *      endColumn: 4,
+ *      },
+ *     ]
  * </pre>
  */
 
@@ -278,14 +316,14 @@
  * @default false
  */
 
- /**
-  * @name Controls/_grid/interface/IGridControl#stickyColumnsCount
-  * @cfg {Number} Определяет число зафиксированных столбцов, которые не двигаются при горизонтальном скролле.
-  * @default 1
-  * @see Controls/_grid/interface/IGridControl#columnScroll
-  * @remark
-  * Столбец флагов множественного выбора всегда зафиксирован, и не входит в число stickyColumnsCount.
-  */
+/**
+ * @name Controls/_grid/interface/IGridControl#stickyColumnsCount
+ * @cfg {Number} Определяет число зафиксированных столбцов, которые не двигаются при горизонтальном скролле.
+ * @default 1
+ * @see Controls/_grid/interface/IGridControl#columnScroll
+ * @remark
+ * Столбец флагов множественного выбора всегда зафиксирован, и не входит в число stickyColumnsCount.
+ */
 
 /*
  * @name Controls/_grid/interface/IGridControl#stickyColumnsCount
@@ -311,24 +349,24 @@
  */
 
  /**
- * @name Controls/_list/interface/IList#resultsTemplate
+ * @name Controls/_grid/interface/IGridControl#resultsTemplate
  * @cfg {Function} Шаблон строки итогов.
  */
 
 /*
- * @name Controls/_list/interface/IList#resultsTemplate
+ * @name Controls/_grid/interface/IGridControl#resultsTemplate
  * @cfg {Function} Results row template.
  */
 
 /**
- * @name Controls/_list/interface/IList#resultsPosition
+ * @name Controls/_grid/interface/IGridControl#resultsPosition
  * @cfg {String} Положение строки итогов.
  * @variant top Вывести итоги над списком.
  * @variant bottom Вывести итоги под списком.
  */
 
 /*
- * @name Controls/_list/interface/IList#resultsPosition
+ * @name Controls/_grid/interface/IGridControl#resultsPosition
  * @cfg {String} Results row position.
  * @variant top Show results above the list.
  * @variant bottom Show results below the list.

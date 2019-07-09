@@ -1,5 +1,5 @@
 import toolbars = require('Controls/toolbars');
-import tUtil = require('Controls/Utils/Toolbar');
+import {showType} from 'Controls/Utils/Toolbar';
 import getWidthUtil = require('Controls/Utils/getWidth');
 
 
@@ -70,12 +70,12 @@ import getWidthUtil = require('Controls/Utils/getWidth');
          if (currentWidth > availableWidth) {
             currentWidth += MENU_WIDTH;
             for (var i = visibleItemsKeys.length - 1; i >= 0; i--) {
-               items.getRecordById(visibleItemsKeys[i]).set('showType', currentWidth > availableWidth ? tUtil.showType.MENU : tUtil.showType.MENU_TOOLBAR);
+               items.getRecordById(visibleItemsKeys[i]).set('showType', currentWidth > availableWidth ? showType.MENU : showType.MENU_TOOLBAR);
                currentWidth -= itemsSizes[i];
             }
          } else {
             items.each(function(item) {
-               item.set('showType', tUtil.showType.TOOLBAR);
+               item.set('showType', showType.TOOLBAR);
             });
          }
          return items;

@@ -290,18 +290,18 @@ const BaseOpener = {
          }
       }
 
-      if (!cfg.hasOwnProperty('corner') || typeof cfg.corner !== 'object') {
-         cfg.corner = {};
+      if ((!cfg.hasOwnProperty('corner') && !cfg.hasOwnProperty('targetPoint')) || (typeof cfg.corner !== 'object' && typeof cfg.targetPoint !== 'object')) {
+         cfg.targetPoint = {};
          if (cfg.hasOwnProperty('side')) {
-            cfg.corner.horizontal = cfg.side;
+            cfg.targetPoint.horizontal = cfg.side;
          }
       }
 
       if (cfg.hasOwnProperty('verticalAlign') && typeof cfg.verticalAlign !== 'object') {
-         cfg.corner = cfg.corner || {};
+         cfg.targetPoint = cfg.targetPoint || {};
 
          // Если object - значит api popupMixin'a, которое совпадает с новым api => ничего не меняем
-         cfg.corner.vertical = cfg.verticalAlign;
+         cfg.targetPoint.vertical = cfg.verticalAlign;
          delete cfg.verticalAlign;
       }
 
@@ -535,10 +535,14 @@ const BaseOpener = {
 
       if (cfg.corner && cfg.corner.vertical === 'bottom') {
          newCfg.dialogOptions.verticalAlign = 'bottom';
+      } else if (cfg.targetPoint && cfg.targetPoint.vertical === 'bottom') {
+         newCfg.dialogOptions.verticalAlign = 'bottom';
       }
 
       if (cfg.corner && cfg.corner.horizontal) {
          newCfg.dialogOptions.side = cfg.corner.horizontal;
+      } else if (cfg.targetPoint && cfg.targetPoint.horizontal) {
+         newCfg.dialogOptions.side = cfg.targetPoint.horizontal;
       }
 
       newCfg.dialogOptions.title = cfg.title;

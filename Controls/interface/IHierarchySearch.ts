@@ -8,7 +8,7 @@
 interface IHierarchySearch {
     readonly _options: {
         /**
-         * @name Controls/interface/ISearch#startingWith
+         * @name Controls/interface/IHierarchySearch#startingWith
          * @cfg {String} Режим поиска в иерархическом списке.
          * @variant root Поиск происходит в корне
          * @variant current Поиск происходит в текущем резделе

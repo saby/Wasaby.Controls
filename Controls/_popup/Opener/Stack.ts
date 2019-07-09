@@ -2,7 +2,9 @@ import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import {IoC} from 'Env/Env';
 
 /**
- * Component that opens the popup to the right of content area at the full height of the screen. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ See more}.
+ * Контрол, открывающий всплывающее окно с пользовательским шаблоном внутри.
+ * Всплывающее окно располагается в правой части контентной области приложения и растянуто на всю высоту экрана.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ Подробнее}.
  *
  *  <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
  * @class Controls/_popup/Opener/Stack
@@ -13,7 +15,24 @@ import {IoC} from 'Env/Env';
  * @mixes Controls/interface/IOpener
  * @demo Controls-demo/Popup/Opener/StackPG
  * @public
+ */
+
+/*
+ * Component that opens the popup to the right of content area at the full height of the screen.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ See more}.
  *
+ *  <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
+ * @class Controls/_popup/Opener/Stack
+ * @extends Controls/_popup/Opener/BaseOpener
+ * @control
+ * @author Красильников А.С.
+ * @category Popup
+ * @mixes Controls/interface/IOpener
+ * @demo Controls-demo/Popup/Opener/StackPG
+ * @public
+ */
+
+ /**
  *@css @size_Stack-border-left   Thickness of left border
  *@css @color_Stack-border-left  Color of left border
  *@css @padding_Stack-shadow     Padding for shadow
@@ -36,13 +55,14 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StackController';
 const Stack = BaseOpener.extend({
 
     /**
-     * Open stack popup.
-     * If you call this method while the window is already opened, it will cause the redrawing of the window.
+     * Метод открытия стековой панели.
+     * Повторный вызов этого метода вызовет переририсовку контрола.
      * @function Controls/_popup/Opener/Stack#open
-     * @returns {Undefined}
-     * @param {PopupOptions[]} popupOptions Stack popup options.
+     * @param {PopupOptions[]} popupOptions Конфигурация стековой панели
+     * @remark
+     * Если требуется открыть окно, без создания popup:Stack в верстке, следует использовать статический метод {@link openPopup}.
      * @example
-     * Open stack with specified configuration.
+     * В этом примере показано, как открыть и закрыть стековую панель.
      * wml
      * <pre>
      *     <Controls.popup:Stack name="stack" template="Controls-demo/Popup/TestStack" modal="{{true}}">
@@ -50,7 +70,6 @@ const Stack = BaseOpener.extend({
      *     </Controls.popup:Stack>
      *
      *     <Controls.Button name="openStackButton" caption="open stack" on:click="_openStack()"/>
-     *     <Controls.Button name="closeStackButton" caption="close stack" on:click="_closeStack()"/>
      * </pre>
      * js
      * <pre>
@@ -63,21 +82,58 @@ const Stack = BaseOpener.extend({
      *            }
      *            this._children.stack.open(popupOptions)
      *        }
-     *
-     *        _closeStack() {
-     *            this._children.stack.close()
-     *        }
      *        ...
      *     });
      * </pre>
      * @see close
+     * @see openPopup
+     * @see closePopup
      */
-    open(config) {
-        return BaseOpener.prototype.open.call(this, _private.getStackConfig(config), POPUP_CONTROLLER);
+
+    /*
+     * Open stack popup.
+     * If you call this method while the window is already opened, it will cause the redrawing of the window.
+     * @function Controls/_popup/Opener/Stack#open
+     * @returns {Undefined}
+     * @param {PopupOptions[]} popupOptions Stack popup options.
+     */
+
+    open(popupOptions) {
+        return BaseOpener.prototype.open.call(this, _private.getStackConfig(popupOptions), POPUP_CONTROLLER);
     }
 });
 
 /**
+ * Статический метод для открытия стекового окна. При использовании метода не требуется создавать popup:Stack в верстке.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ Подробнее}.
+ * @function Controls/_popup/Opener/Stack#openPopup
+ * @param {PopupOptions[]} config Конфигурация стекового окна
+ * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
+ * @static
+ * @example
+ * js
+ * <pre>
+ *    import {Stack} from 'Controls/popup';
+ *    ...
+ *    openStack() {
+ *        Stack.openPopup({
+ *          template: 'Example/MyStackTemplate',
+ *          opener: this._children.myButton
+ *        }).then((popupId) => {
+ *          this._popupId = popupId;
+ *        });
+ *    },
+ *
+ *    closeStack() {
+ *       Stack.closePopup(this._popupId);
+ *    }
+ * </pre>
+ * @see closePopup
+ * @see close
+ * @see open
+ */
+
+/*
  * Open Stack popup.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ See more}.
  * @function Controls/_popup/Opener/Stack#openPopup
@@ -101,6 +157,35 @@ Stack.openPopup = (config: object): Promise<string> => {
 };
 
 /**
+ * Статический метод для закрытия окна по идентификатору.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ Подробнее}.
+ * @function Controls/_popup/Opener/Stack#closePopup
+ * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
+ * @static
+ * @example
+ * js
+ * <pre>
+ *    import {Stack} from 'Controls/popup';
+ *    ...
+ *    openStack() {
+ *        Stack.openPopup({
+ *          template: 'Example/MyStackTemplate',
+ *          opener: this._children.myButton
+ *        }).then((popupId) => {
+ *          this._popupId = popupId;
+ *        });
+ *    },
+ *
+ *    closeStack() {
+ *       Stack.closePopup(this._popupId);
+ *    }
+ * </pre>
+ * @see openPopup
+ * @see opener
+ * @see close
+ */
+
+/*
  * Close Stack popup.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ See more}.
  * @function Controls/_popup/Opener/Stack#closePopup
@@ -108,6 +193,7 @@ Stack.openPopup = (config: object): Promise<string> => {
  * @static
  * @see openPopup
  */
+
 Stack.closePopup = (popupId: string): void => {
     BaseOpener.closeDialog(popupId);
 };
@@ -117,6 +203,21 @@ Stack._private = _private;
 export = Stack;
 
 /**
+ * @typedef {Object} PopupOptions
+ * @description Конфигурация стековой панели.
+ * @property {Boolean} autofocus Определяет, установится ли фокус на шаблон попапа после его открытия.
+ * @property {Boolean} modal Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
+ * @property {String} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
+ * @property {Boolean} closeOnOutsideClick Определяет возможность закрытия всплывающего окна по клику вне.
+ * @property {function|String} template Шаблон всплывающего окна
+ * @property {function|String} templateOptions  Опции для котнрола, переданного в {@link template}
+ * @property {Number} minWidth Минимально допустимая ширина всплывающего окна
+ * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна
+ * @property {Number} width Текущая ширина всплывающего окна
+ */
+
+
+/*
  * @typedef {Object} PopupOptions
  * @description Stack popup options.
  * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
@@ -133,8 +234,7 @@ export = Stack;
 
 /**
  * @name Controls/_popup/Opener/Stack#close
- * @description Close Stack Popup.
- * @returns {Undefined}
+ * @description Метод закрытия стековой панели.
  * @example
  * wml
  * <pre>
@@ -142,21 +242,12 @@ export = Stack;
  *             <ws:templateOptions key="111"/>
  *     </Controls.popup:Stack>
  *
- *     <Controls.Button name="openStackButton" caption="open stack" on:click="_openStack()"/>
  *     <Controls.Button name="closeStackButton" caption="close stack" on:click="_closeStack()"/>
  * </pre>
  * js
  * <pre>
  *     Control.extend({
  *        ...
- *
- *        _openStack() {
- *           var popupOptions = {
- *               autofocus: true
- *           }
- *           this._children.stack.open(popupOptions)
- *        }
- *
  *        _closeStack() {
  *           this._children.stack.close()
  *        }
@@ -166,17 +257,37 @@ export = Stack;
  * @see open
  */
 
+/*
+ * @name Controls/_popup/Opener/Stack#close
+ * @description Close Stack Popup.
+ */
+
 /**
+ * @name Controls/_popup/Opener/Stack#minWidth
+ * @cfg {Number} Минимально допустимая ширина стековой панели.
+ */
+
+/*
  * @name Controls/_popup/Opener/Stack#minWidth
  * @cfg {Number} The minimum width of popup.
  */
 
 /**
  * @name Controls/_popup/Opener/Stack#maxWidth
+ * @cfg {Number} Максимально допустимая ширина стековой панели.
+ */
+
+/*
+ * @name Controls/_popup/Opener/Stack#maxWidth
  * @cfg {Number} The maximum width of popup.
  */
 
 /**
+ * @name Controls/_popup/Opener/Stack#width
+ * @cfg {Number} Текущая ширина стековой панели.
+ */
+
+/*
  * @name Controls/_popup/Opener/Stack#width
  * @cfg {Number} Width of popup.
  */

@@ -1,6 +1,6 @@
 /**
  * Интерфейс для поддержки просмотра и редактирования полей фильтра.
- * @interface Controls/_filter/interface/IFilterView
+ * @interface Controls/_filter/View/interface/IFilterView
  * @public
  * @author Золотова Э.Е.
  */

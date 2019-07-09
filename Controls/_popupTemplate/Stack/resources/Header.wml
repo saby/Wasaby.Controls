@@ -6,7 +6,6 @@
                                     caption="{{headingCaption}}"
                                     style="{{headingStyle}}"
                                     size="{{headingSize}}"
-                                    theme="{{headingTheme}}"
                                     readOnly="{{true}}"
                                     tooltip="{{headingCaption}}"/>
          </div>
