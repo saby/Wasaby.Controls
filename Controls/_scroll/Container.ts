@@ -411,11 +411,13 @@ var
       },
 
       _scrollHandler: function(ev) {
-         if (!this._dragging) {
-            this._scrollTop = _private.getScrollTop(this._children.content);
-            this._notify('scroll', [this._scrollTop]);
+         if (this._scrollTop !== _private.getScrollTop(this._children.content)) {
+            if (!this._dragging) {
+               this._scrollTop = _private.getScrollTop(this._children.content);
+               this._notify('scroll', [this._scrollTop]);
+            }
+            this._children.scrollDetect.start(ev);
          }
-         this._children.scrollDetect.start(ev);
       },
 
       _keydownHandler: function(ev) {
