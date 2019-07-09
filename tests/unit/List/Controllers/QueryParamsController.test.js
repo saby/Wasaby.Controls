@@ -80,11 +80,11 @@ define(
                   rawData: [
                      {
                         id: 1,
-                        navResult: {more: true}
+                        nav_result: true
                      },
                      {
                         id: 2,
-                        navResult: {more: false}
+                        nav_result: false
                      }
                   ]
                });
@@ -163,11 +163,11 @@ define(
                   rawData: [
                      {
                         id: 1,
-                        navResult: {more: true}
+                        nav_result: {more: true}
                      },
                      {
                         id: 2,
-                        navResult: {more: false}
+                        nav_result: {more: false}
                      }
                   ]
                });
