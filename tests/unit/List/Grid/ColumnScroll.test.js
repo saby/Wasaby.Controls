@@ -1,4 +1,4 @@
-define(['Controls/_grid/ColumnScroll', 'Types/entity'], function(ColumnScroll, Entity) {
+define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], function(ColumnScroll, Entity, Clone) {
 
    'use strict';
 
@@ -40,6 +40,49 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity'], function(ColumnScroll, E
          assert.equal(columnScroll._contentContainerSize, 250);
          assert.deepEqual(columnScroll._shadowState, 'end');
          assert.deepEqual(columnScroll._fixedColumnsWidth, 100);
+      });
+      it('_afterUpdate: should update sizes if columns has been changed', function () {
+         let clearColumnScroll = new ColumnScroll(cfg);
+
+         clearColumnScroll._children = {
+            contentStyle: {
+               innerHTML: ''
+            },
+            content: {
+               scrollWidth: 500,
+               offsetWidth: 250,
+               querySelector: function() {
+                  return {
+                     offsetLeft: 24,
+                     offsetWidth: 76
+                  };
+               }
+            }
+         };
+
+         clearColumnScroll._afterMount(cfg);
+
+         assert.equal(clearColumnScroll._contentSize, 500);
+         assert.equal(clearColumnScroll._contentContainerSize, 250);
+         assert.deepEqual(clearColumnScroll._shadowState, 'end');
+         assert.deepEqual(clearColumnScroll._fixedColumnsWidth, 100);
+
+         clearColumnScroll._children.content = {
+            scrollWidth: 200,
+            offsetWidth: 100,
+            querySelector: function () {
+               return {
+                  offsetLeft: 15,
+                  offsetWidth: 50
+               };
+            }
+         };
+         clearColumnScroll._afterUpdate({...cfg, columns: [{}, {}]});
+
+         assert.equal(clearColumnScroll._contentSize, 200);
+         assert.equal(clearColumnScroll._contentContainerSize, 100);
+         assert.deepEqual(clearColumnScroll._shadowState, 'end');
+         assert.deepEqual(clearColumnScroll._fixedColumnsWidth,  65);
       });
       it('_isColumnScrollVisible', function() {
          assert.isTrue(columnScroll._isColumnScrollVisible());
