@@ -1,6 +1,7 @@
 import {QueryNavigationType} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {default as IAdditionalQueryParams, Direction} from './interface/IAdditionalQueryParams';
+import {default as More} from './More';
 
 export interface IPageNavigationOptions {
    page?: number;
@@ -13,7 +14,7 @@ export interface IPageNavigationOptions {
 class PageNavigation {
    protected _nextPage: number = 1;
    protected _prevPage: number = -1;
-   protected _more: boolean | number = null;
+   protected _more: More = null;
    protected _page: number = 0;
    protected _options: IPageNavigationOptions | null;
 
@@ -26,6 +27,38 @@ class PageNavigation {
       }
       if (!this._options.pageSize) {
          throw new Error('Option pageSize is undefined in PageNavigation');
+      }
+   }
+
+   private getMore(): More {
+      if (!this._more) {
+         this._more = new More();
+      }
+      return this._more;
+   }
+
+   private validateNavigation(navigationResult: boolean|number|RecordSet): void {
+      const self = this;
+      const validate = (more) => {
+         if (self._options.hasMore === false) {
+            // meta.more can be undefined is is not error
+            if (more && (typeof more !== 'number')) {
+               throw new Error('"more" Parameter has incorrect type. Must be numeric');
+            }
+         } else {
+            // meta.more can be undefined is is not error
+            if (more && (typeof more !== 'boolean')) {
+               throw new Error('"more" Parameter has incorrect type. Must be boolean');
+            }
+         }
+      };
+
+      if (navigationResult.each) {
+         navigationResult.each((navResult) => {
+            validate(navResult.get('nav_result'));
+         });
+      } else {
+         validate(navigationResult);
       }
    }
 
@@ -62,18 +95,8 @@ class PageNavigation {
    calculateState(list: RecordSet, direction: Direction): void {
       const meta = list.getMetaData();
 
-      if (this._options.hasMore === false) {
-         // meta.more can be undefined is is not error
-         if (meta.more && (typeof meta.more !== 'number')) {
-            throw new Error('"more" Parameter has incorrect type. Must be numeric');
-         }
-      } else {
-         // meta.more can be undefined is is not error
-         if (meta.more && (typeof meta.more !== 'boolean')) {
-            throw new Error('"more" Parameter has incorrect type. Must be boolean');
-         }
-      }
-      this._more = meta.more;
+      this.validateNavigation(meta.more);
+      this.getMore().setMoreMeta(meta.more);
 
       if (direction === 'down') {
          this._nextPage++;
@@ -88,25 +111,27 @@ class PageNavigation {
       }
    }
 
-   getAllDataCount(): boolean | number {
-      return this._more;
+   getAllDataCount(rootKey: string|number): boolean | number {
+      const dataCount = this.getMore().getMoreMeta(rootKey);
+      return dataCount as boolean | number;
    }
 
    getLoadedDataCount(): number {
       return this._nextPage * this._options.pageSize;
    }
 
-   hasMoreData(direction: Direction): boolean {
+   hasMoreData(direction: Direction, rootKey: number|string): boolean {
       if (direction === 'down') {
+         const moreResult = this.getMore().getMoreMeta(rootKey);
 
          if (this._options.hasMore === false) {
 
             // в таком случае в more приходит общее число записей в списке
             // значит умножим номер след. страницы на число записей на одной странице и сравним с общим
-            return typeof this._more === 'boolean' ? this._more : this.getLoadedDataCount() < this.getAllDataCount();
+            return typeof moreResult === 'boolean' ? moreResult : this.getLoadedDataCount() < this.getAllDataCount(rootKey);
          } else {
             // !! for TypeScript
-            return !!this._more;
+            return !!moreResult;
          }
       } else if (direction === 'up') {
          return this._prevPage >= 0;
