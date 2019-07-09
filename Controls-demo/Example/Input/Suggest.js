@@ -2,13 +2,14 @@ define('Controls-demo/Example/Input/Suggest',
    [
       'Core/Control',
       'Types/source',
+      'Controls-demo/Example/Input/SetValueMixin',
       'wml!Controls-demo/Example/Input/Suggest/Suggest',
       'css!Controls-demo/Example/Input/Suggest/Suggest',
 
       'Controls/suggest',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
-   function(Control, sourceLib, template) {
+   function(Control, sourceLib, SetValueMixin, template) {
       'strict use';
 
       var source = new sourceLib.Memory({
@@ -84,7 +85,7 @@ define('Controls-demo/Example/Input/Suggest',
          }
       });
 
-      return Control.extend({
+      return Control.extend([SetValueMixin], {
          _template: template,
 
          _source: null,

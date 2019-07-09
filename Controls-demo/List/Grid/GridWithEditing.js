@@ -3,6 +3,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
    'Controls-demo/List/Grid/GridWithEditingData',
    'wml!Controls-demo/List/Grid/GridWithEditing',
    'Types/source',
+   'Core/core-clone',
    'wml!Controls-demo/List/Tree/treeEditingTemplate',
    'wml!Controls-demo/List/Grid/DemoItem',
    'wml!Controls-demo/List/Grid/DemoBalancePrice',
@@ -14,13 +15,12 @@ define('Controls-demo/List/Grid/GridWithEditing', [
    'Controls/scroll',
    'Controls/grid',
    'Controls/Render/Money/Money'
-], function(BaseControl, GridData, template, source) {
+], function(BaseControl, GridData, template, source, cClone) {
    'use strict';
    var ModuleClass = BaseControl.extend({
       _template: template,
       _itemActions: null,
       _viewSource: null,
-      gridData: null,
       gridColumns: null,
       gridHeader: null,
       showType: null,
@@ -83,9 +83,8 @@ define('Controls-demo/List/Grid/GridWithEditing', [
          ];
          this._viewSource = new source.Memory({
             idProperty: 'id',
-            data: GridData.catalog
+            data: cClone(GridData.catalog)
          });
-         this.gridData = GridData;
          this.gridColumns = [
             {
                displayProperty: 'name',

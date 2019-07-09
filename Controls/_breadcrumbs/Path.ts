@@ -6,7 +6,7 @@ import template = require('wml!Controls/_breadcrumbs/Path/Path');
 
 /**
  * Хлебные крошки.
- * <a href="/materials/demo-ws4-breadcrumbs">Demo</a>.
+ * <a href="/materials/demo-ws4-breadcrumbs">Демо-пример</a>.
  *
  * @class Controls/_breadcrumbs/Path
  * @extends Core/Control

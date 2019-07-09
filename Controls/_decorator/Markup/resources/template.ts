@@ -27,7 +27,7 @@ import validHtml = require('Core/validHtml');
          'usemap': true
       },
       goodLinkAttributeRegExp = /^((https?|ftp|file|smb):(\/\/|\\\\)|mailto:|www\.|\.?\/)/,
-      dataAttributeRegExp = /^data-([\w-])*/,
+      dataAttributeRegExp = /^data-(?!component$)([\w-]*[\w])+$/,
       escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
       additionalNotVdomEscapeRegExp = /(\u00a0)|(&#)/g;
 

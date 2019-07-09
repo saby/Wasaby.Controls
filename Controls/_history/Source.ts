@@ -190,7 +190,8 @@ var _private = {
       this.fillFrequentItems(self, filteredHistory, oldItems, items);
       this.fillItems(self, filteredHistory, 'recent', oldItems, items);
       oldItems.forEach(function (item) {
-         var id = item.getId();
+         // id is always string at history. To check whether an item belongs to history, convert id to string.
+         var id = String(item.getId());
          var historyItem = historyIds.indexOf(id);
          var newItem;
          if (historyItem === -1 || item.get(self._parentProperty)) {
@@ -351,7 +352,7 @@ var _private = {
    getRawHistoryItem: function (self, id, hId) {
       return new entity.Model({
          rawData: {
-            d: [id, hId],
+            d: [String(id), hId], // id is always string at history.
             s: [{
                   n: 'ObjectId',
                   t: 'Строка'
