@@ -1,11 +1,11 @@
 define([
    'Controls/form',
    'Types/entity',
-   'Core/helpers/Function/runDelayed',
+   'Types/function',
    'Core/Deferred',
    'Types/source',
    'require'
-], function(form, entity, runDelayed, Deferred, source, require) {
+], function(form, entity, func, Deferred, source, require) {
    'use strict';
    
    //TODO: Удалить эти тесты из юнитов, написать задачу на интеграционное тестирование по этим сценариям
@@ -29,7 +29,7 @@ define([
 
             testControl._afterMount = function() {
                baseAfterMount.apply(this, arguments);
-               runDelayed(function() {
+               func.delay(function() {
                   waiting(function() {
                      def.callback(testControl);
                   });

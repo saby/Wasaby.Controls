@@ -2,7 +2,7 @@
  * Created by kraynovdo on 22.09.2017.
  */
 import BaseControl = require('Core/Control');
-import cDebounce = require('Core/helpers/Function/debounce');
+import {debounce as cDebounce} from 'Types/function';
 import Env = require('Env/Env');
 import ListViewTpl = require('wml!Controls/_list/ListView/ListView');
 import defaultItemTemplate = require('wml!Controls/_list/ItemTemplate');

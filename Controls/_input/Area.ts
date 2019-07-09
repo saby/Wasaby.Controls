@@ -1,7 +1,7 @@
 import Env = require('Env/Env');
 import entity = require('Types/entity');
 import Text = require('Controls/_input/Text');
-import runDelayed = require('Core/helpers/Function/runDelayed');
+import {delay as runDelayed} from 'Types/function';
 import template = require('wml!Controls/_input/Area/Area');
 import fieldTemplate = require('wml!Controls/_input/Area/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Area/ReadOnly');

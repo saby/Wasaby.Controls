@@ -25,7 +25,7 @@ import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import {Focus} from 'Vdom/Vdom';
-import throttle = require('Core/helpers/Function/throttle');
+import {throttle} from 'Types/function';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18

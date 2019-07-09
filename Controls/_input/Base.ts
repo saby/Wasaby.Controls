@@ -7,7 +7,7 @@ import {isEqual} from 'Types/object';
 import getTextWidth = require('Controls/Utils/getTextWidth');
 import randomName = require('Core/helpers/Number/randomId');
 import ViewModel = require('Controls/_input/Base/ViewModel');
-import runDelayed = require('Core/helpers/Function/runDelayed');
+import {delay as runDelayed} from 'Types/function';
 import unEscapeASCII = require('Core/helpers/String/unEscapeASCII');
 import hasHorizontalScroll = require('Controls/Utils/hasHorizontalScroll');
 import template = require('wml!Controls/_input/Base/Base');
