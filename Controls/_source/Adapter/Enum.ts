@@ -1,37 +1,19 @@
 /**
  * Created by kraynovdo on 26.04.2018.
  */
-import Control = require('Core/Control');
-import template = require('wml!Controls/_source/Adapter/Enum/Enum');
-import source = require('Types/source');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import EnumTemplate = require('wml!Controls/_source/Adapter/Enum/Enum');
+import {Memory} from 'Types/source';
+import {Enum} from 'Types/collection';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
-var _private = {
-   getArrayFromEnum: function(enumInstance) {
-      var arr = [];
-      enumInstance.each(function(item) {
-         arr.push({
-            title: item
-         });
-      });
-      return arr;
-   },
+export interface IEnumAdapterOptions extends IControlOptions {
+   enum: Enum<string>;
+}
 
-   getSourceFromEnum: function(enumInstance) {
-      var data = _private.getArrayFromEnum(enumInstance);
-      return new source.Memory({
-         data: data,
-         idProperty: 'title'
-      });
-   },
-
-   enumSubscribe: function(self, enumInstance) {
-      enumInstance.subscribe('onChange', function(e, index, value) {
-         self._selectedKey = value;
-         self._forceUpdate();
-      });
-   }
-
-};
+interface IRawDataElem {
+   type: string;
+}
 
 /**
  * Container component for working with controls.
@@ -44,48 +26,69 @@ var _private = {
  * @public
  */
 
-var SearchContainer = Control.extend({
+class EnumAdapter extends Control {
 
-   _template: template,
-   _source: null,
+   protected _template: TemplateFunction = EnumTemplate;
+   private _source: Memory = null;
+   private _enum: Enum<string> = null;
+   private _selectedKey: string;
 
-   _enum: null,
+   private _getArrayFromEnum(enumInstance: Enum<string>): IRawDataElem[] {
+      const arr = [];
+      enumInstance.each((item) => {
+         arr.push({
+            title: item
+         });
+      });
+      return arr;
+   }
 
-   _beforeMount: function(newOptions) {
+   private _getSourceFromEnum(enumInstance: Enum<string>): Memory {
+      const memoryData = this._getArrayFromEnum(enumInstance);
+      return new Memory({
+         data: memoryData,
+         keyProperty: 'title'
+      });
+   }
+
+   private _enumSubscribe(enumInstance: Enum<string>): void {
+      enumInstance.subscribe('onChange', (e, index, value) => {
+         this._selectedKey = value;
+         this._forceUpdate();
+      });
+   }
+
+   protected _beforeMount(newOptions: IEnumAdapterOptions): void {
       if (newOptions.enum) {
          this._enum = newOptions.enum;
-         _private.enumSubscribe(this, this._enum);
-         this._source = _private.getSourceFromEnum(newOptions.enum);
+         this._enumSubscribe(this._enum);
+         this._source = this._getSourceFromEnum(newOptions.enum);
          this._selectedKey = newOptions.enum.getAsValue();
       }
-   },
+   }
 
-   _beforeUpdate: function(newOptions) {
+   protected _beforeUpdate(newOptions: IEnumAdapterOptions): void {
       if ((newOptions.enum) && (newOptions.enum !== this._enum)) {
          this._enum = newOptions.enum;
-         _private.enumSubscribe(this, this._enum);
-         this._source = _private.getSourceFromEnum(newOptions.enum);
+         this._enumSubscribe(this._enum);
+         this._source = this._getSourceFromEnum(newOptions.enum);
          this._selectedKey = newOptions.enum.getAsValue();
       }
-   },
+   }
 
-   _changeKey: function(e, key) {
-      var resultKey = key;
-
-      //support of multiselection in dropdown
+   private _changeKey(e: SyntheticEvent<Event>, key: string | string[]): void {
+      let resultKey: string;
+      // support of multiselection in dropdown
       if (key instanceof Array) {
          resultKey = key[0];
+      } else {
+         resultKey = key;
       }
       if (this._enum) {
          this._enum.setByValue(resultKey);
       }
    }
 
-});
+}
 
-/*For tests*/
-
-SearchContainer._private = _private;
-
-export = SearchContainer;
-
+export default EnumAdapter;
