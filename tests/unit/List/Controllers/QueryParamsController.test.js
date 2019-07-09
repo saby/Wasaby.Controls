@@ -163,11 +163,11 @@ define(
                   rawData: [
                      {
                         id: 1,
-                        nav_result: {more: true}
+                        nav_result: true
                      },
                      {
                         id: 2,
-                        nav_result: {more: false}
+                        nav_result: false
                      }
                   ]
                });
