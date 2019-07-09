@@ -727,9 +727,6 @@ var
             let offsetTop = 0;
             let shadowVisibility = 'visible';
 
-            if (this._headerRows.length > 1) {
-                cellContentClasses += ' controls-Grid__header-cell_align_items_center';
-            }
             if (cell.startRow) {
                 if (this.isNoGridSupport()) {
                     headerColumn.rowSpan = endRow - startRow;
