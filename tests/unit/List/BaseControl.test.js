@@ -1391,6 +1391,21 @@ define([
          }, 100);
       });
 
+      it('_processError', function() {
+         var self = {
+            _loadingState: 'all',
+            _forceUpdate: () => {},
+            __errorController: {
+               process: () => {
+                  return new Promise(() => {});
+               }
+            }
+         };
+
+         lists.BaseControl._private.processError(self, {error: {}});
+         assert.equal(self._loadingState, null);
+      });
+
       it('__needShowEmptyTemplate', () => {
          let baseControlOptions = {
             viewModelConstructor: lists.ListViewModel,
@@ -1421,6 +1436,9 @@ define([
                assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
 
                baseControl._loadingState = 'all';
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+
+               baseControl._emptyTemplateVisibility = true;
                assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
 
                baseControl._listViewModel._editingItemData = {};
