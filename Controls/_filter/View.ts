@@ -12,6 +12,7 @@ import converterFilterItems = require('Controls/_filter/converterFilterItems');
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
+import getFormattedDateRange = require('Core/helpers/Date/getFormattedDateRange');
 
 /**
  * Control for data filtering. Consists of an icon-button, a string representation of the selected filter and fast filter parameters.
@@ -365,6 +366,7 @@ var Filter = Control.extend({
 
     _rangeChangedHandler: function(event, start, end) {
         _private.getDateRangeItem(this._source).value = [start, end];
+        _private.getDateRangeItem(this._source).textValue = getFormattedDateRange(start, end);
         _private.notifyChanges(this, this._source);
         this._dateRangeItem = object.clone(_private.getDateRangeItem(this._source));
     },
