@@ -26,13 +26,17 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
 
 /**
  * @typedef {Object} Item
- * @property {Boolean} [item.readOnly] Determine item readOnly state.
- * @property {Boolean} [item.buttonCaption] Caption of toolbar element.
+ * @property {Boolean} [item.readOnly] Determines item readOnly state.
+ * @property {String} [item.buttonCaption] Caption of toolbar element.
  * @property {Boolean} [item.buttonTransparent] Transparent of toolbar element.
- * @property {Boolean} [item.iconStyle] Icon style of toolbar element.
- * @property {Boolean} [item.icon] Icon of toolbar element.
- * @property {Boolean} [item.buttonStyle] Button style of toolbar element.
- * @property {Boolean} [item.buttonViewMode] Button style of toolbar element.
+ * @property {String} [item.buttonIconStyle] Icon style of toolbar element.
+ * @property {String} [item.icon] Icon of toolbar element.
+ * @property {String} [item.title] Determines item caption.
+ * @property {Boolean} [item.showHeader] Indicates whether folders should be displayed.
+ * @property {String} [item.tooltip] Text of the tooltip shown when the item is hovered over.
+ * @property {Number} [item.showType] Determines where item is displayed ( 0 - in menu,1 - in menu and toolbar, 2 - in toolbar)
+ * @property {String} [item.buttonStyle] Button style of toolbar element.
+ * @property {String} [item.buttonViewMode] Button style of toolbar element.
  */
 
 /**
