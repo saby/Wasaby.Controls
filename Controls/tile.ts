@@ -6,7 +6,7 @@
  * @includes TileStyles Controls/_tile/Tile/Styles
  * @includes TreeTileViewStyles Controls/_tile/TreeTileView/Styles
  * @includes ITile Controls/_tile/interface/ITile
- * @includes IDraggable Controls/_tile/interface/IDraggable
+ * @includes IDraggable Controls/interface/IDraggable
  * @public
  * @author Крайнов Д.О.
  */

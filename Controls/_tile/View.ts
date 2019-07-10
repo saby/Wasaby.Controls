@@ -22,7 +22,7 @@ import {TreeControl} from 'Controls/treeGrid';
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_treeGrid/interface/ITreeControl
- * @mixes Controls/_tile/interface/IDraggable
+ * @mixes Controls/interface/IDraggable
  * @mixes Controls/List/interface/ITile
  *
  * @mixes Controls/_list/interface/IVirtualScroll
