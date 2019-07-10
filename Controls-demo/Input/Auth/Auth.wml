@@ -1,0 +1,16 @@
+<div class="controlsDemo-Auth">
+   <form class="controlsDemo-Auth__form" name="form">
+      <div class="controlsDemo-Auth__fields">
+         <Controls.input:Text attr:class="controlsDemo-Auth__field"
+                              name="login"
+                              bind:value="_login" autoComplete="username" placeholder="{[Логин]}"/>
+         <Controls.input:Password attr:class="controlsDemo-Auth__field"
+                                  name="password"
+                                  bind:value="_password" autoComplete="current-password" placeholder="{[Пароль]}"/>
+      </div>
+      <div class="controlsDemo-Auth__submit" on:click="_signIn()">{[Войти]}</div>
+      <div class="controlsDemo-Auth__submit" on:click="_update()">{[Обновить страницу]}</div>
+   </form>
+
+   <Controls.popup:Confirmation name="confirmationEmptyField"/>
+</div>

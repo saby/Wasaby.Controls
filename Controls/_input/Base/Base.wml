@@ -34,6 +34,7 @@
                      fieldName="{{_fieldName}}"
                      template="{{_field.template}}"
                      value="{{_viewModel.displayValue}}"
+                     hidePlaceholder="{{_hidePlaceholder}}"
                      hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
                      ieVersion="{{_ieVersion}}"
                      isEdge="{{_isEdge}}"/>

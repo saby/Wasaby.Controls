@@ -511,6 +511,7 @@ import 'wml!Controls/_input/Base/Stretcher';
           */
          _isMobileIOS: null,
 
+         _hidePlaceholder: null,
          /**
           * @type {Boolean|null} Determined whether to hide the placeholder using css.
           * @private
@@ -550,7 +551,7 @@ import 'wml!Controls/_input/Base/Stretcher';
             this._isBrowserPlatform = Env.constants.isBrowserPlatform;
 
             /**
-             * Hide in chrome and firefox because it supports auto-completion of the field when hovering over an item
+             * Hide in chrome because it supports auto-completion of the field when hovering over an item
              * in the list of saved values. During this action no events are triggered and hide placeholder
              * using js is not possible.
              *
@@ -562,7 +563,7 @@ import 'wml!Controls/_input/Base/Stretcher';
              * from the value in the model. And when you change the selection, the field starts to focus.
              * There is a situation that you can not withdraw focus from the field.
              */
-            this._hidePlaceholderUsingCSS = Env.detection.chrome || Env.detection.firefox;
+            this._hidePlaceholderUsingCSS = Env.detection.chrome;
          },
 
          _beforeMount: function(options) {
@@ -591,10 +592,19 @@ import 'wml!Controls/_input/Base/Stretcher';
                   }
                }
             }
+
+            /**
+             * Placeholder is displayed in an empty field. To learn about the emptiness of the field
+             * with AutoFill enabled is possible through css or the status value from <input>.
+             * The state is not available until the control is mount to DOM. So hide the placeholder until then.
+             */
+            this._hidePlaceholder = this._autoComplete !== 'off' && !this._hidePlaceholderUsingCSS;
          },
 
          _afterMount: function() {
             _private.initField(this);
+
+            this._hidePlaceholder = false;
          },
 
          _beforeUpdate: function(newOptions) {

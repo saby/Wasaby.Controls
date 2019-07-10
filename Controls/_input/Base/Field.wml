@@ -30,7 +30,7 @@
          on:DOMAutoComplete="_domAutoCompleteHandler()"
       />
    </ws:partial>
-   <ws:if data="{{!value}}">
+   <ws:if data="{{!hidePlaceholder && !value}}">
       <div class="controls-InputBase__placeholder">
          <ws:partial template="{{placeholderTemplate}}" on:click="_placeholderClickHandler()"/>
       </div>
