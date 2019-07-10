@@ -26,7 +26,8 @@ import cInstance = require('Core/core-instance');
  *  </Controls.validate:InputContainer>
  * </pre>
  *
- * @class Controls/_validate/Validators/IsRequired
+ * @class
+ * @name Controls/_validate/Validators/IsRequired
  * @public
  * @author Красильников А.С.
  */
