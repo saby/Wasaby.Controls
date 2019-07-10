@@ -4,7 +4,7 @@ import LikeWindowMixin = require('Lib/Mixins/LikeWindowMixin');
 import arrayFindIndex = require('Core/helpers/Array/findIndex');
 import cDeferred = require('Core/Deferred');
 import makeInstanceCompatible = require('Core/helpers/Hcontrol/makeInstanceCompatible');
-import runDelayed = require('Core/helpers/Function/runDelayed');
+import {delay as runDelayed} from 'Types/function';
 import trackElement = require('Core/helpers/Hcontrol/trackElement');
 import doAutofocus = require('Core/helpers/Hcontrol/doAutofocus');
 import DialogRecord = require('optional!Deprecated/Controls/DialogRecord/DialogRecord');

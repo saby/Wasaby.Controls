@@ -2,8 +2,8 @@
  * Created by am.gerasimov on 17.07.2018.
  */
 define('Controls-demo/Utils/MemorySourceFilter', [
-   'Core/helpers/Object/isEqual'
-], function(isEqual) {
+   'Types/object'
+], function(obj) {
    
    'use strict';
    
@@ -58,7 +58,7 @@ define('Controls-demo/Utils/MemorySourceFilter', [
                } else {
                   addToData = compareValues(itemValue, filterValue, '=');
                }
-               if (emptyFields && isEqual(filterValue, emptyFields[filterField])) {
+               if (emptyFields && obj.isEqual(filterValue, emptyFields[filterField])) {
                   addToData = true;
                }
             }
