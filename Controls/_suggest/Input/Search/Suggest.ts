@@ -7,6 +7,23 @@ import 'Controls/search';
 'use strict';
 
 /**
+ * Строка поиска с автодополнением.
+ * Подробное описание и инструкцию по настройке смотрите <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>здесь</a>.
+ *
+ * @class Controls/_suggest/Input/Search/Suggest
+ * @extends Controls/_input/Text
+ * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IFilter
+ * @mixes Controls/interface/ISuggest
+ * @mixes Controls/interface/INavigation
+ * @demo Controls-demo/Input/Search/Suggest/SuggestPG
+ * @control
+ * @public
+ * @category Input
+ */
+
+/*
  * Search input that suggests options as you are typing.
  * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>here</a>.
  *
@@ -24,6 +41,11 @@ import 'Controls/search';
  */
 
 /**
+ * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
+ * @cfg {Boolean} Определяет, показывать ли иконку поиска.
+ */
+
+/*
  * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
  * @cfg {Boolean} Determines whether to show the search icon.
  */
