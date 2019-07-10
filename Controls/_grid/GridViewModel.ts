@@ -779,10 +779,12 @@ var
         // -----------------------------------------------------------
 
         getResultsPosition: function(): string {
-            if (this._options.results) {
-                return this._options.results.position;
+            if (this.getItems().getCount() > 1) {
+                if (this._options.results) {
+                    return this._options.results.position;
+                }
+                return this._options.resultsPosition;
             }
-            return this._options.resultsPosition;
         },
 
         setResultsPosition: function(position) {
