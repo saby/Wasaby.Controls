@@ -163,6 +163,11 @@ const stickyButton = [
 ];
 
 class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
+   '[Controls/_toggle/interface/ICheckable]': true;
+   '[Controls/_interface/IButton]': true;
+   '[Controls/_interface/IIconStyle]': true;
+   '[Controls/_interface/ITooltip]': true;
+
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = ToggleButtonTemplate;
 
@@ -184,7 +189,7 @@ class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
       this._state = (stickyButton.indexOf(this._viewMode) !== -1 && options.value ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
       this._caption = (options.captions ? (!options.value && options.captions[1] ? options.captions[1] : options.captions[0]) : '');
       this._icon = (options.icons ? (!options.value && options.icons[1] ? options.icons[1] : options.icons[0]) : '');
-      this._iconStyle = ActualApi.iconStyleTransformation(options.iconStyle);
+      this._iconStyle = ActualApi.iconStyleTransformation(options.iconStyle, true);
    }
 
    private _clickHandler(): void {
@@ -210,9 +215,5 @@ class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
          iconStyle: 'secondary'
       };
    }
-   '[Controls/_toggle/interface/ICheckable]': true;
-   '[Controls/_interface/IButton]': true;
-   '[Controls/_interface/IIconStyle]': true;
-   '[Controls/_interface/ITooltip]': true;
 }
 export default ToggleButton;

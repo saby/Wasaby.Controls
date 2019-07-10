@@ -52,6 +52,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
 
       var Password = Base.extend({
          _passwordVisible: false,
+         _defaultValue: '',
 
          _getViewModelOptions: function(options) {
             return {
@@ -101,7 +102,6 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
       Password.getDefaultOptions = function() {
          var defaultOptions = Base.getDefaultOptions();
 
-         defaultOptions.value = '';
          defaultOptions.revealable = true;
          defaultOptions.autoComplete = 'on';
 

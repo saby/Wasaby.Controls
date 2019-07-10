@@ -140,12 +140,12 @@
       <ws:if data="{{itemData.hasMultiSelect}}">
          <ws:partial template="partialGridSupportItem"
                      currentColumn="{{itemData.getCurrentColumn()}}"
-                     attr:key="{{_$key}}_{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" />
+                     attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" />
          {{itemData.goToNextColumn();}}
       </ws:if>
       <ws:partial template="partialGridSupportItem"
                   currentColumn="{{itemData.getCurrentColumn()}}"
-                  attr:key="{{_$key}}_{{itemData.key}}_{{itemData.getCurrentColumnKey()}}"
+                  attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}"
                   colspanCurrentNode="{{true}}"/>
    </ws:if>
    <ws:else>
@@ -153,7 +153,7 @@
          <div attr:style="{{itemData.getEditingRowStyles()}}">
             <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
                <ws:partial template="partialGridSupportItem"
-                           attr:key="{{_$key}}_{{itemData.key}}_{{itemData.getCurrentColumnKey()}}"
+                           attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}"
                            currentColumn="{{itemData.getCurrentColumn()}}"/>
             </ws:for>
          </div>
@@ -162,7 +162,7 @@
          <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
             <ws:partial template="partialGridSupportItem"
                         currentColumn="{{itemData.getCurrentColumn()}}"
-                        attr:key="{{_$key}}_{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" />
+                        attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" />
          </ws:for>
       </ws:else>
 
@@ -191,7 +191,7 @@
          </ws:if>
          <ws:else>
             <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-               <ws:partial template="stickyCell" attr:key="{{_$key}}_{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+               <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
             </ws:for>
          </ws:else>
       </div>
@@ -202,14 +202,14 @@
       <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
          {{itemData.resetColumnIndex();}}
          <ws:if data="{{itemData.hasMultiSelect}}">
-            <ws:partial template="colTpl" attr:key="{{_$key}}_{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+            <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
             {{itemData.goToNextColumn();}}
          </ws:if>
-         <ws:partial template="colTpl" attr:key="{{_$key}}_{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
+         <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
       </ws:if>
       <ws:else>
          <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-            <ws:partial template="colTpl" attr:key="{{_$key}}_{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+            <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
          </ws:for>
       </ws:else>
    </div>
