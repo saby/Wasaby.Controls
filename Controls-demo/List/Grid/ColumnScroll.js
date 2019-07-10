@@ -166,6 +166,7 @@ define('Controls-demo/List/Grid/ColumnScroll', [
          _gridHeader: null,
          _gridColumns: null,
          _itemActions: null,
+         _stickyColumnsCount: 1,
          _beforeMount: function() {
             this._viewSource = new source.Memory({
                idProperty: 'id',
