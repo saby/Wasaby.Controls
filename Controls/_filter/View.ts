@@ -66,7 +66,7 @@ var _private = {
     getDateRangeItem: function(items) {
         let dateRangeItem;
         factory(items).each((item) => {
-           if (item.editorName === 'dateRange') {
+           if (item.type === 'dateRange') {
                dateRangeItem = item;
            }
         });
