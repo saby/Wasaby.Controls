@@ -365,10 +365,11 @@ var Filter = Control.extend({
     },
 
     _rangeChangedHandler: function(event, start, end) {
-        _private.getDateRangeItem(this._source).value = [start, end];
-        _private.getDateRangeItem(this._source).textValue = getFormattedDateRange(start, end);
+        let dateRangeItem = _private.getDateRangeItem(this._source);
+        dateRangeItem.value = [start, end];
+        dateRangeItem.textValue = getFormattedDateRange(start, end);
         _private.notifyChanges(this, this._source);
-        this._dateRangeItem = object.clone(_private.getDateRangeItem(this._source));
+        this._dateRangeItem = object.clone(dateRangeItem);
     },
 
     _resultHandler: function(event, result) {
