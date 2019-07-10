@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_list/ItemActions/ItemActionsControl');
-import tUtil from 'Controls/Utils/Toolbar';
+import {showType} from 'Controls/Utils/Toolbar';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import ControlsConstants = require('Controls/Constants');
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
@@ -41,7 +41,7 @@ var _private = {
             showed = options.itemActionsPosition === 'outside'
                 ? all
                 : all.filter(function(action) {
-                    return action.showType === tUtil.showType.TOOLBAR || action.showType === tUtil.showType.MENU_TOOLBAR;
+                    return action.showType === showType.TOOLBAR || action.showType === showType.MENU_TOOLBAR;
                 });
 
         if (_private.needActionsMenu(all, options.itemActionsPosition)) {
@@ -84,10 +84,10 @@ var _private = {
             main = 0,
             additional = 0;
         actions && actions.forEach(function(action) {
-            if (action.showType === tUtil.showType.MENU_TOOLBAR) {
+            if (action.showType === showType.MENU_TOOLBAR) {
                 main++;
             }
-            if (action.showType === tUtil.showType.TOOLBAR) {
+            if (action.showType === showType.TOOLBAR) {
                 additional++;
             }
         });
@@ -156,6 +156,7 @@ var ItemActionsControl = Control.extend({
 
     _onItemActionsClick: function(event, action, itemData) {
         aUtil.itemActionsClick(this, event, action, itemData, this._options.listModel);
+        this.updateItemActions(itemData.item);
         this._options.listModel.setMarkedKey(itemData.key);
     },
 

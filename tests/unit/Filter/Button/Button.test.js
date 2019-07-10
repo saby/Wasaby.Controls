@@ -131,7 +131,7 @@ define(
             let expectedResult = {
                closeOnOutsideClick: true,
                className: 'controls-FilterButton-popup-orientation-left',
-               corner: {
+               targetPoint: {
                   vertical: 'top',
                   horizontal: 'right'
                },
@@ -151,6 +151,20 @@ define(
             alignment = 'left';
             filterMod.Selector._private.setPopupOptions(filterSelector, alignment);
             assert.deepStrictEqual(filterSelector._popupOptions, expectedResult);
+         });
+
+         it('_private.requireDeps', function() {
+            let self = {
+               _options: {}
+            };
+
+            return new Promise(function(resolve) {
+               self._options.templateName = 'Controls/filter:Selector';
+               filterMod.Selector._private.requireDeps(self).addCallback(function(mod) {
+                  assert.isTrue(!!mod);
+                  resolve();
+               });
+            });
          });
 
       });

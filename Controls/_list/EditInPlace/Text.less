@@ -3,14 +3,14 @@
    /* In browsers with partial grid layout support, the hovered element is calculated on JS using this class */
    .controls-Grid_row-cell_hovered {
       .controls-EditingTemplateText_enabled {
-         background-color: @background-color_InputRender;
+         background-color: @background-color_inputText;
          cursor: text;
       }
    }
 }
 
 .controls-EditingTemplateText_active {
-   background-color: @background-color_InputRender;
+   background-color: @background-color_inputText;
 }
 
 .controls-EditingTemplateText__editorWrapper {
@@ -40,10 +40,10 @@
    display: inline-flex;
    align-items: center;
    box-sizing: border-box;
-   border-width: @border-width_InputRender;
+   border-width: @border-thickness_inputText;
    border-style: solid;
    border-color: transparent;
-   padding: @padding_InputRender;
+   padding: 0 @padding-horizontal_inputText;
    width: 100%;
 }
 
@@ -58,21 +58,22 @@
 }
 
 .controls-EditingTemplateText_size_default {
-   height: @height_InputRender_default;
-   font-size: @font-size_InputRender_default;
+   height: @inline_height_default;
+   font-size: @font-size_default;
 }
 
 .controls-EditingTemplateText_size_m {
-   height: @height_InputRender_m;
-   font-size: @font-size_InputRender_m;
+   height: @inline_height_m;
+   font-size: @font-size_m;
 }
 
 .controls-EditingTemplateText_size_l {
-   height: @height_InputRender_l;
-   font-size: @font-size_InputRender_l;
+   height: @inline_height_m;
+   font-size: @font-size_3xl;
 }
 
 .controls-EditingTemplateText_size_s {
-   height: @height_InputRender_default;
+   height: @inline_height_default;
    font-size: @font-size_text_s;
 }
+

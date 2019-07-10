@@ -1,6 +1,12 @@
-import Control = require('Core/Control');
-import template = require('wml!Controls/_source/Adapter/SelectedKey/SelectedKey');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import SelectedKeyAdapterTemplate = require('wml!Controls/_source/Adapter/SelectedKey/SelectedKey');
+import {SyntheticEvent} from 'Vdom/Vdom';
 
+export interface ISelectedKeyAdapterOptions extends IControlOptions {
+   selectedKey?: number | string;
+}
+
+type TSelectedKeys = Array<string | number>;
 /**
  * Container for controls that implement interface {@link Controls/_interface/IMultiSelectable multiSelectable}.
  * Container receives selectedKey option and transfers selectedKeys option to children.
@@ -12,35 +18,30 @@ import template = require('wml!Controls/_source/Adapter/SelectedKey/SelectedKey'
  * @author Золотова Э.Е.
  */
 
-var _private = {
-   getSelectedKeys: function(selectedKey) {
+class SelectedKeyAdapter extends Control<ISelectedKeyAdapterOptions> {
+   protected _template: TemplateFunction = SelectedKeyAdapterTemplate;
+   private _selectedKeys: TSelectedKeys;
+
+   private _getSelectedKeys(selectedKey: number | string): TSelectedKeys  {
       return (selectedKey === null || selectedKey === undefined) ? [] : [selectedKey];
    }
-};
 
-var Adapter = Control.extend({
+   protected _beforeMount(options: ISelectedKeyAdapterOptions): void {
+      this._selectedKeys = this._getSelectedKeys(options.selectedKey);
+   }
 
-   _template: template,
-   _selectedKeys: null,
-
-   _beforeMount: function(options) {
-      this._selectedKeys = _private.getSelectedKeys(options.selectedKey);
-   },
-
-   _beforeUpdate: function(newOptions) {
+   protected _beforeUpdate(newOptions: ISelectedKeyAdapterOptions): void {
       if (this._options.selectedKey !== newOptions.selectedKey) {
-         this._selectedKeys = _private.getSelectedKeys(newOptions.selectedKey);
+         this._selectedKeys = this._getSelectedKeys(newOptions.selectedKey);
       }
-   },
+   }
 
-   _selectedKeysChanged: function(event, keys) {
+   private _selectedKeysChanged(event: SyntheticEvent<Event>, keys: TSelectedKeys): void {
       event.stopPropagation();
-      var selectedKey = keys.length ? keys[0] : null;
+      const selectedKey = keys.length ? keys[0] : null;
       this._notify('selectedKeyChanged', [selectedKey]);
    }
 
-});
+}
 
-Adapter._private = _private;
-
-export default Adapter;
+export default SelectedKeyAdapter;

@@ -47,48 +47,50 @@ import 'Controls/breadcrumbs';
             self._forceUpdate();
          },
           setRestoredKeyObject: function(self, root) {
+              const curRoot = _private.getRoot(self, self._options.root);
               self._restoredMarkedKeys[root] = {
-                  parent: self._root,
-                  markedKey: null,
+                  parent: curRoot,
+                  markedKey: null
+              };
+              if (self._restoredMarkedKeys[curRoot]) {
+                  self._restoredMarkedKeys[curRoot].markedKey = root;
               }
-              if (self._restoredMarkedKeys[self._root]) {
-                  self._restoredMarkedKeys[self._root].markedKey = root;
-              }
-              self._root = root;
           },
           cleanRestoredKeyObject: function(self, root) {
-              _private.pathCleaner(self, root)
-              self._root = root;
+              _private.pathCleaner(self, root);
           },
          pathCleaner: function(self, root) {
             if (self._restoredMarkedKeys[root]) {
                if (self._restoredMarkedKeys[root].parent === undefined) {
-                  const markedKey = self._restoredMarkedKeys[root].markedKey
+                  const markedKey = self._restoredMarkedKeys[root].markedKey;
                   self._restoredMarkedKeys = {
                      [root]: {
                         markedKey: markedKey
                      }
-                  }
+                  };
                   return;
                } else {
                   _remover(root);
                }
-            } else if (root !== self._root) {
-                   delete self._restoredMarkedKeys[self._root];
+            } else {
+               const curRoot = _private.getRoot(self, self._options.root);
+               if (root !== curRoot) {
+                  delete self._restoredMarkedKeys[curRoot];
+               }
             }
 
             function _remover(key) {
                Object.keys(self._restoredMarkedKeys).forEach((cur) => {
-                  if (self._restoredMarkedKeys[cur] && self._restoredMarkedKeys[cur].parent == String(key)) {
+                  if (self._restoredMarkedKeys[cur] && self._restoredMarkedKeys[cur].parent === String(key)) {
                      const nextKey = cur;
                      delete self._restoredMarkedKeys[cur];
                      _remover(nextKey);
                   }
                });
-            };
+            }
          },
-         getRoot: function(self) {
-            return self._options.hasOwnProperty('root') ? self._options.root : self._root;
+         getRoot: function(self, newRoot) {
+            return typeof newRoot !== "undefined" ? newRoot : self._root;
          },
 
          getPath: function(data) {
@@ -106,8 +108,9 @@ import 'Controls/breadcrumbs';
          dataLoadCallback: function(self, data) {
              self._breadCrumbsItems = _private.getPath(data);
              if (self._isGoingBack) {
-                 if (self._restoredMarkedKeys[self._root]) {
-                     self._children.treeControl.setMarkedKey(self._restoredMarkedKeys[self._root].markedKey);
+                const curRoot = _private.getRoot(self, self._options.root);
+                 if (self._restoredMarkedKeys[curRoot]) {
+                     self._children.treeControl.setMarkedKey(self._restoredMarkedKeys[curRoot].markedKey);
                  }
                  self._isGoingBack = false;
              }
@@ -129,7 +132,7 @@ import 'Controls/breadcrumbs';
             self._virtualScrolling = viewMode === 'tile' ? false : cfg.virtualScrolling;
          },
          setViewMode: function(self, viewMode, cfg) {
-            var currentRoot = _private.getRoot(self);
+            var currentRoot = _private.getRoot(self, cfg.root);
             var dataRoot = _private.getDataRoot(self);
 
             if (viewMode === 'search' && cfg.searchStartingWith === 'root' && dataRoot !== currentRoot) {
@@ -151,7 +154,7 @@ import 'Controls/breadcrumbs';
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
                result = self._breadCrumbsItems[0].get(self._options.parentProperty);
             } else {
-               result = _private.getRoot(self);
+               result = _private.getRoot(self, self._options.root);
             }
 
             return result;
@@ -287,7 +290,7 @@ import 'Controls/breadcrumbs';
          }
 
          _private.setViewMode(this, cfg.viewMode, cfg);
-         const root = _private.getRoot(this);
+         const root = _private.getRoot(this, cfg.root);
          this._restoredMarkedKeys = {
          [root]: {
                markedKey: null
@@ -304,7 +307,7 @@ import 'Controls/breadcrumbs';
          }
       },
       _getRoot: function() {
-         return _private.getRoot(this);
+         return _private.getRoot(this, this._options.root);
       },
       _dragHighlighter: function(itemKey, hasArrow) {
          return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey
@@ -323,7 +326,7 @@ import 'Controls/breadcrumbs';
          if (this._options.itemsDragNDrop && this._options.parentProperty && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')) {
 
             //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
-            this._dragOnBreadCrumbs = _private.getRoot(this) !== _private.getDataRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
+            this._dragOnBreadCrumbs = _private.getRoot(this, this._options.root) !== _private.getDataRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
          }
       },
       _hoveredCrumbChanged: function(event, item) {
@@ -350,6 +353,10 @@ import 'Controls/breadcrumbs';
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);
+      },
+      reloadItem: function() {
+         let treeControl = this._children.treeControl;
+         return treeControl.reloadItem.apply(treeControl, arguments);
       },
       beginEdit: function(options) {
          return this._children.treeControl.beginEdit(options);

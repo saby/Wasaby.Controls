@@ -788,7 +788,7 @@ var
         setResultsPosition: function(position) {
             this._options.resultsPosition = position;
         },
-        
+
         getStyleForCustomResultsTemplate: function() {
             return _private.getColspan(
                this._options.multiSelectVisibility,

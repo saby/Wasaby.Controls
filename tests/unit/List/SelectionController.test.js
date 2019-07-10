@@ -243,9 +243,9 @@ define([
          it('remove', async function() {
             await instance._beforeMount(cfg);
             instance._afterMount();
-            instance._multiselection.unselect = sandbox.stub();
+            instance._multiselection.remove = sandbox.stub();
             instance._options.items.remove(instance._options.items.getRecordById(3));
-            assert.isTrue(instance._multiselection.unselect.withArgs([3]).calledOnce);
+            assert.isTrue(instance._multiselection.remove.withArgs([3]).calledOnce);
          });
 
          it('add', async function() {

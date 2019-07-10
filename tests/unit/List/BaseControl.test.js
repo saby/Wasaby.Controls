@@ -1391,6 +1391,21 @@ define([
          }, 100);
       });
 
+      it('_processError', function() {
+         var self = {
+            _loadingState: 'all',
+            _forceUpdate: () => {},
+            __errorController: {
+               process: () => {
+                  return new Promise(() => {});
+               }
+            }
+         };
+
+         lists.BaseControl._private.processError(self, {error: {}});
+         assert.equal(self._loadingState, null);
+      });
+
       it('__needShowEmptyTemplate', () => {
          let baseControlOptions = {
             viewModelConstructor: lists.ListViewModel,
@@ -1421,6 +1436,9 @@ define([
                assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
 
                baseControl._loadingState = 'all';
+               assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+
+               baseControl._emptyTemplateVisibility = true;
                assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
 
                baseControl._listViewModel._editingItemData = {};
@@ -2267,7 +2285,7 @@ define([
                {
                   id: 0,
                   title: 'прочитано',
-                  showType: tUtil.default.showType.TOOLBAR,
+                  showType: tUtil.showType.TOOLBAR,
                   handler: function() {
                      console.log('action read Click');
                   }
@@ -2276,7 +2294,7 @@ define([
                   id: 1,
                   icon: 'icon-primary icon-PhoneNull',
                   title: 'phone',
-                  showType: tUtil.default.showType.MENU,
+                  showType: tUtil.showType.MENU,
                   handler: function(item) {
                      console.log('action phone Click ', item);
                   }
@@ -2285,7 +2303,7 @@ define([
                   id: 2,
                   icon: 'icon-primary icon-EmptyMessage',
                   title: 'message',
-                  showType: tUtil.default.showType.MENU,
+                  showType: tUtil.showType.MENU,
                   handler: function() {
                      alert('Message Click');
                   }
@@ -2294,7 +2312,7 @@ define([
                   id: 3,
                   icon: 'icon-primary icon-Profile',
                   title: 'profile',
-                  showType: tUtil.default.showType.MENU_TOOLBAR,
+                  showType: tUtil.showType.MENU_TOOLBAR,
                   handler: function() {
                      console.log('action profile Click');
                   }
@@ -2303,7 +2321,7 @@ define([
                   id: 4,
                   icon: 'icon-Erase icon-error',
                   title: 'delete pls',
-                  showType: tUtil.default.showType.TOOLBAR,
+                  showType: tUtil.showType.TOOLBAR,
                   handler: function() {
                      console.log('action delete Click');
                   }
@@ -2312,7 +2330,7 @@ define([
                   id: 5,
                   icon: 'icon-done icon-Admin',
                   title: 'delete pls',
-                  showType: tUtil.default.showType.TOOLBAR,
+                  showType: tUtil.showType.TOOLBAR,
                   handler: function() {
                      console.log('action delete Click');
                   }

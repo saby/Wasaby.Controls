@@ -3,6 +3,7 @@ import ColumnScrollTpl = require('wml!Controls/_grid/ColumnScroll');
 import 'css!theme?Controls/grid';
 import Env = require('Env/Env');
 import Entity = require('Types/entity');
+import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
 
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
@@ -100,6 +101,17 @@ const
 
       _afterMount() {
          _private.updateSizes(this);
+      },
+
+      _afterUpdate(oldOptions) {
+
+         /*
+         * TODO: Kingo
+         * Смена колонок может не вызвать событие resize на обёртке грида(ColumnScroll), если общая ширина колонок до обновления и после одинакова.
+         * */
+         if (!isEqualWithSkip(this._options.columns, oldOptions.columns, { template: true, resultTemplate: true })) {
+            _private.updateSizes(this);
+         }
       },
 
       _resizeHandler() {
