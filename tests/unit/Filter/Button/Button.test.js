@@ -153,5 +153,19 @@ define(
             assert.deepStrictEqual(filterSelector._popupOptions, expectedResult);
          });
 
+         it('_private.requireDeps', function() {
+            let self = {
+               _options: {}
+            };
+
+            return new Promise(function(resolve) {
+               self._options.templateName = 'Controls/filter:Selector';
+               filterMod.Selector._private.requireDeps(self).addCallback(function(mod) {
+                  assert.isTrue(!!mod);
+                  resolve();
+               });
+            });
+         });
+
       });
    });

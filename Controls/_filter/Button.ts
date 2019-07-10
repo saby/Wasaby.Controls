@@ -7,6 +7,7 @@ import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Deferred = require('Core/Deferred');
 import {isEqual} from 'Types/object';
+import libHelper = require('Core/library');
 import 'css!theme?Controls/filter';
 /**
  * Контрол для поддержки фильтрации данных. Состоит из иконки-кнопки и строкового представления выбранного фильтра.
@@ -128,9 +129,13 @@ var _private = {
    requireDeps: function(self) {
       if (!self._depsDeferred) {
          self._depsDeferred = new Deferred();
-         requirejs([self._options.templateName], function() {
+         if (typeof self._options.templateName === 'string') {
+            libHelper.load(self._options.templateName).then((mod) => {
+               self._depsDeferred.callback(mod);
+            });
+         } else {
             self._depsDeferred.callback();
-         });
+         }
       }
       return self._depsDeferred;
 

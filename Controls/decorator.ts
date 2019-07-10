@@ -10,6 +10,8 @@
  * @includes WrapURLs Controls/_decorator/WrapURLs
  * @includes MoneyStyles Controls/_decorator/Money/Styles
  * @includes Converter Controls/_decorator/Markup/Converter
+ * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
+ * @includes linkDecorateUtils Controls/_decorator/Markup/resources/linkDecorateUtils
  * @public
  * @author Крайнов Д.О.
  */
