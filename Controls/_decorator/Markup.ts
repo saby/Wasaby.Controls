@@ -6,6 +6,16 @@ import template = require('Controls/_decorator/Markup/resources/template');
    
 
    /**
+    * Создает контрол по данным в json-массиве.
+    *
+    * @class Controls/_decorator/Markup
+    * @extends Core/Control
+    * @category Decorator
+    * @author Кондаков Р.Н.
+    * @public
+    */
+
+   /*
     * Builds a control by data in Json array.
     *
     * @class Controls/_decorator/Markup
@@ -17,10 +27,34 @@ import template = require('Controls/_decorator/Markup/resources/template');
 
    /**
     * @name Controls/_decorator/Markup#value
+    * @cfg {Array} Json-массив на основе JsonML.
+    */
+
+   /*
+    * @name Controls/_decorator/Markup#value
     * @cfg {Array} Json array, based on JsonML.
     */
 
    /**
+    * @name Controls/_decorator/Markup#tagResolver
+    * @cfg {Function} Инструмент для изменения данных в формате Json перед сборкой, если это необходимо. Применяется к каждому узлу.
+    * @remark
+    * Аргументы функции:
+    * <ol>
+    *    <li>value - Json-узел для изменения.</li>
+    *    <li>parent - Json-узел, родитель "value".</li>
+    *    <li>resolverParams - Внешние данные для tagResolver из опции resolverParams.</li>
+    * </ol>
+    * Функция должна возвращать допустимый JsonML.  
+    * Если возвращаемое значение не равно (!= = ) исходному узлу, функция не будет применяться к дочерним элементам нового значения.
+    * Примечание: функция не должна изменять исходное значение.
+    *
+    * @example
+    * {@link Controls/_decorator/Markup/resolvers/highlight}
+    * {@link Controls/_decorator/Markup/resolvers/linkDecorate}
+    */
+
+   /*
     * @name Controls/_decorator/Markup#tagResolver
     * @cfg {Function} Tool to change Json before build, if it need. Applies to every node.
     * @remark
@@ -40,6 +74,11 @@ import template = require('Controls/_decorator/Markup/resources/template');
     */
 
    /**
+    * @name Controls/_decorator/Markup#resolverParams
+    * @cfg {Object} Внешние данные для tagResolver.
+    */
+
+   /*
     * @name Controls/_decorator/Markup#resolverParams
     * @cfg {Object} Outer data for tagResolver.
     */
