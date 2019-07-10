@@ -11,6 +11,8 @@ import { default as IContainer, IContainerConfig } from "Controls/_dataSource/_e
 
 type Config = ViewConfig & {
     isShowed?: boolean;
+    templateName?: string;
+    template?: any;
 }
 let getTemplate = (template: string | Control): Promise<Control> => {
     if (typeof template == 'string') {
@@ -37,7 +39,7 @@ export default class Container extends Control implements IContainer {
      */
     hide(): void {
         let mode = this.__viewConfig.mode;
-        this.__viewConfig = null;
+        this.__setConfig(null);
         if (mode == Mode.dialog) {
             return;
         }
@@ -53,7 +55,7 @@ export default class Container extends Control implements IContainer {
         if (viewConfig.mode == Mode.dialog) {
             return this.__showDialog(viewConfig)
         }
-        this.__viewConfig = viewConfig;
+        this.__setConfig(viewConfig);
         this._forceUpdate();
     }
     protected _beforeMount(options: IContainerConfig) {
@@ -95,9 +97,23 @@ export default class Container extends Control implements IContainer {
         this._notify('dialogClosed', []);
     }
     private __updateConfig(options: IContainerConfig) {
-        this.__viewConfig = options.viewConfig;
+        this.__setConfig(options.viewConfig);
         if (this.__viewConfig) {
             this.__viewConfig.isShowed = this.__viewConfig.isShowed || this.__viewConfig.mode !== Mode.dialog;
         }
+    }
+    private __setConfig(viewConfig?: ViewConfig) {
+        if (!viewConfig) {
+            this.__viewConfig = null;
+            return;
+        }
+        let templateName: string;
+        if (typeof viewConfig.template == 'string') {
+            templateName = viewConfig.template;
+        }
+        this.__viewConfig = {
+            ...viewConfig,
+            templateName
+        };
     }
 }

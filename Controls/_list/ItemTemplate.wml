@@ -7,7 +7,7 @@
        {{!!itemData.isEditing ? ' controls-ListView__item_editing'}}
        {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
        js-controls-SwipeControl__actionsContainer"
-       attr:key="{{_$key}}_{{itemData.item.getId()}}"
+       attr:key="{{itemData.item.getId()}}"
        template="{{content}}"/>
 </ws:template>
 <ws:template name="itemContentTpl">

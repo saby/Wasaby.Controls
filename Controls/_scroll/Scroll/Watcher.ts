@@ -124,7 +124,8 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                   _private.sendByRegistrar(self, 'scrollMove', {
                      scrollTop: self._scrollTopCache,
                      position: curPosition,
-                     clientHeight: sizeCache.clientHeight
+                     clientHeight: sizeCache.clientHeight,
+                     scrollHeight: sizeCache.scrollHeight
                   });
                   if (!withObserver) {
                      _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
@@ -136,7 +137,12 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                if (!self._scrollTopTimer) {
                   self._scrollTopTimer = setTimeout(function() {
                      if (self._scrollTopTimer) {
-                        _private.sendByRegistrar(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition, clientHeight: sizeCache.clientHeight});
+                        _private.sendByRegistrar(self, 'scrollMove', {
+                           scrollTop: self._scrollTopCache,
+                           position: curPosition,
+                           clientHeight: sizeCache.clientHeight,
+                           scrollHeight: sizeCache.scrollHeight
+                        });
                         if (!withObserver) {
                            _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
                         }
@@ -187,7 +193,12 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                            break;
                      }
                      if (eventName) {
-                        self._registrar.startOnceTarget(component, eventName);
+                        const sizes = _private.getSizeCache(self, _private.getDOMContainer(self._container));
+                        self._registrar.startOnceTarget(component, eventName, {
+                           scrollTop: self._scrollTopCache,
+                           clientHeight: sizes.clientHeight,
+                           scrollHeight: sizes.scrollHeight
+                        });
                         self._notify(eventName);
                         eventName = null;
                      }

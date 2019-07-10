@@ -1146,7 +1146,10 @@ define([
 
 
             // прокручиваем к низу, проверяем состояние пэйджинга
-            lists.BaseControl._private.handleListScroll(ctrl, 300, 'down');
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 300,
+               position: 'down'
+            });
             assert.deepEqual({
                stateBegin: 'normal',
                statePrev: 'normal',
@@ -1154,7 +1157,10 @@ define([
                stateEnd: 'normal'
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
 
-            lists.BaseControl._private.handleListScroll(ctrl, 200, 'middle');
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 200,
+               position: 'middle'
+            });
             assert.deepEqual({
                stateBegin: 'normal',
                statePrev: 'normal',
@@ -1166,7 +1172,10 @@ define([
             assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'normal', stateEnd: 'normal'}, ctrl._pagingCfg, 'Wrong state of paging after scrollHide');
             assert.isFalse(ctrl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
 
-            lists.BaseControl._private.handleListScroll(ctrl, 200, 'middle');
+            lists.BaseControl._private.handleListScroll(ctrl, {
+               scrollTop: 200,
+               position: 'middle'
+            });
 
             setTimeout(function() {
                assert.isFalse(ctrl._pagingVisible);

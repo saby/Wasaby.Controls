@@ -1,7 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import SeparatorTemplate = require('wml!Controls/_toggle/Separator/Separator');
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import { SyntheticEvent } from 'Vdom/Vdom';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import 'css!theme?Controls/toggle';
 
@@ -80,7 +79,7 @@ class Separator extends Control<ISeparatorOptions> implements ICheckable {
 
    protected _icon: String;
 
-   private _clickHandler(e: SyntheticEvent): void {
+   private _clickHandler(): void {
       this._notify('valueChanged', [!this._options.value]);
    }
 
