@@ -10,6 +10,7 @@ import template = require('wml!Controls/_list/HotKeysContainer');
  */
 class HotKeysContainer extends Control<IControlOptions> {
     protected _template: Function = template;
+    protected _defaultActions = [{keyCode: 38}, {keyCode: 40}];
 }
 
 export default HotKeysContainer;
