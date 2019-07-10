@@ -3,7 +3,7 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
 
 
 /**
- * Кнопка-ссылка с указанным текстом, при нажатии на которую открывается окно выбора.
+ * Кнопка-ссылка с заданным текстом, при клике на которую открывается окно выбора.
  * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-button">демонстрационный пример</a>.
  *
  * @class Controls/_lookup/Button

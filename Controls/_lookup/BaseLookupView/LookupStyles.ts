@@ -5,15 +5,15 @@
  *
  * @css @spacing_Lookup-multiLine-between-inputRenderWrapper-rightBorderLookup Интервал между оберткой контента и правой границей в режиме множественного выбора.
  * @css @min-height_Lookup-input-render_multiLine Минимальная высота контента в многострочном режиме.
- * @css @height_Lookup-input-wrapper Высота обертки с полем ввода.
- * @css @line-height_Lookup-input-wrapper Высота строки обертки с полем ввода.
+ * @css @height_Lookup-input-wrapper Высота обертки над полем ввода.
+ * @css @line-height_Lookup-input-wrapper Высота строки обертки над полем ввода.
  * @css @font-size_Lookup-showSelector Размер кнопки открывающей справочник.
- * @css @spacing_Lookup-between-showSelector-border Интервал между кнопкой отркывающей справочник и краями.
+ * @css @spacing_Lookup-between-showSelector-border Интервал между кнопкой отркывающей справочник и границами.
  * @css @color_Lookup-showSelector Цвет кнопки открывающей справочник.
  * @css @color_Lookup-showSelector_hovered Цвет кнопки открывающей справочник при наведении.
  * @css @color_Lookup-showSelector_active Цвет кнопки открывающей справочник при фокусе.
  * @css @font-size_Lookup-clearRecords Размер кнопки очищающей весь выбранный список записей.
- * @css @spacing_Lookup-between-clearRecords-border Интервал между кнопкой очищающей весь выбранный список записей и краями.
+ * @css @spacing_Lookup-between-clearRecords-border Интервал между кнопкой очищающей весь выбранный список записей и границами.
  * @css @color_Lookup-clearRecords Цвет кнопки очищающей весь выбранный список записей.
  * @css @color_Lookup-clearRecords_hovered Цвет кнопки очищающей весь выбранный список записей при наведнии.
  * @css @color_Lookup-clearRecords_active Цвет кнопки очищающей весь выбранный список записей при фокусе.
@@ -28,9 +28,9 @@
  * @author Kapustin I.A.
  *
  * @css @spacing_Lookup-multiLine-between-inputRenderWrapper-rightBorderLookup Spacing between input render wrapper and right border in multiple selection mode.
- * @css @min-height_Lookup-input-render_multiLine Minimum height input render in multiline mode.
- * @css @height_Lookup-input-wrapper Input wrapper height.
- * @css @line-height_Lookup-input-wrapper Input wrapper line height.
+ * @css @min-height_Lookup-input-render_multiLine The minimum height of the content in multi-line mode.
+ * @css @height_Lookup-input-wrapper The height of the wrapper over the input field.
+ * @css @line-height_Lookup-input-wrapper The height of the wrapper line above the input field.
  * @css @font-size_Lookup-showSelector The size of the button that opens the directory.
  * @css @spacing_Lookup-between-showSelector-border Spacing between directory opening button and borders.
  * @css @color_Lookup-showSelector The color of the button that opens the directory.

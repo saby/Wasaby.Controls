@@ -15,7 +15,7 @@ define('Controls/interface/ISelectorDialog', [
 
    /**
     * @name Controls/interface/ISelectorDialog#selectorTemplate
-    * @cfg {ConfigSelector[]} selectorTemplate
+    * @cfg {SelectorTemplate[]} Конфиг справочника.
     * @example
     * В следующем примере создадем Controls.lookup:Input, указав selectorTemplate, перед этим заранее определив значения templateOptions и popupOptions.
     * WML:
@@ -24,7 +24,9 @@ define('Controls/interface/ISelectorDialog', [
     *       source="{{_source}}"
     *       searchParam="title"
     *       keyProperty="id"
-    *       <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector" templateOptions="{{_templateOptions}}" popupOptions="{{_popupOptions}}"/>
+    *       <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"
+    *                            templateOptions="{{_templateOptions}}"
+    *                            popupOptions="{{_popupOptions}}"/>
     *    </Controls.lookup:Input>
     * </pre>
     * JS:
@@ -44,7 +46,7 @@ define('Controls/interface/ISelectorDialog', [
     */
    /*
     * @name Controls/interface/ISelectorDialog#selectorTemplate
-    * @cfg {ConfigSelector[]} selectorTemplate
+    * @cfg {SelectorTemplate[]} Directory config.
     * @example
     * In the following example, we will create a lookup by specifying selectorTemplate, before this we define the templateOptions and popupOptions value in advance.
     * WML:
@@ -53,7 +55,9 @@ define('Controls/interface/ISelectorDialog', [
     *       source="{{_source}}"
     *       searchParam="title"
     *       keyProperty="id"
-    *       <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector" templateOptions="{{_templateOptions}}" popupOptions="{{_popupOptions}}"/>
+    *       <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"
+    *                            templateOptions="{{_templateOptions}}"
+    *                            popupOptions="{{_popupOptions}}"/>
     *    </Controls.lookup:Input>
     * </pre>
     * JS:
@@ -73,13 +77,13 @@ define('Controls/interface/ISelectorDialog', [
     */
 
    /**
-    * @typedef {Object} ConfigSelector
+    * @typedef {Object} SelectorTemplate
     * @property {Function} templateName Шаблон панели выбора элементов.
     * @property {Object} templateOptions Параметры шаблона всплывающего окна.
     * @property {Object} popupOptions Параметры всплывающего окна.
     */
    /*
-    * @typedef {Object} ConfigSelector
+    * @typedef {Object} SelectorTemplate
     * @property {Function} templateName Items selection panel template.
     * @property {Object} templateOptions Popup template options.
     * @property {Object} popupOptions Stack popup options.

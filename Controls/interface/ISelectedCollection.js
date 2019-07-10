@@ -154,7 +154,7 @@ define('Controls/interface/ISelectedCollection', [
     * @param {Env/Event:Object} eventObject Декскриптор события.
     * @param {String} textValue Строка, сформированная из выбранных записей.
     * @example
-    * В следующем примере создается Selector/Button и демонстрируется сцерий использования.
+    * В следующем примере создается Controls/lookup:Selector и демонстрируется сценарий использования.
     * WML:
     * <pre>
     *    <Controls.lookup:Selector
@@ -175,7 +175,7 @@ define('Controls/interface/ISelectedCollection', [
     * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {String} textValue String formed from selected entries.
     * @example
-    * The following example creates Selector/Button and shows how to handle the event.
+    * The following example creates Controls/lookup:Selector and shows how to handle the event.
     * WML:
     * <pre>
     *    <Controls.lookup:Selector
@@ -194,10 +194,10 @@ define('Controls/interface/ISelectedCollection', [
 
    /**
     * @event Controls/interface/ISelectedCollection#itemsChanged Срабатывает при изменении набора выбранной коллекции.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+    * @param {Env/Event:Object} eventObject Дескриптор события.
     * @param {RecordSet} items Список выбранных записей.
     * @example
-    * В следующем примере создается Selector/Button и демонстрируется сцерий использования.
+    * В следующем примере создается Controls/lookup:Selector и демонстрируется сценарий использования.
     * WML:
     * <pre>
     *    <Controls.lookup:Selector
@@ -218,7 +218,7 @@ define('Controls/interface/ISelectedCollection', [
     * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {RecordSet} items List of selected entries.
     * @example
-    * The following example creates Selector/Button and shows how to handle the event.
+    * The following example creates Controls/lookup:Selector and shows how to handle the event.
     * WML:
     * <pre>
     *    <Controls.lookup:Selector
@@ -237,7 +237,7 @@ define('Controls/interface/ISelectedCollection', [
 
    /**
     * @event Controls/interface/ISelectedCollection#itemClick Срабатывает при нажатии на элемент коллекции.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+    * @param {Env/Event:Object} eventObject Дескриптор события.
     * @param {RecordSet} item Элемент выбраной коллекции.
     */
    /*
@@ -251,7 +251,7 @@ define('Controls/interface/ISelectedCollection', [
     * @param {Env/Event:Object} eventObject Дескриптор события.
     * @param {Object} config Конфиг, по которому будет построено всплывающее окно.
     * @example
-    * В следующем примере создается Controls/lookup:Input и демонстрируется сцерий использования.
+    * В следующем примере создается Controls/lookup:Input и демонстрируется сценарий использования.
     * WML:
     * <pre>
     *    <Controls.lookup:Input
