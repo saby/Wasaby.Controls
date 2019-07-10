@@ -2,13 +2,11 @@ define('Controls-demo/Popup/Opener/Compatible/demoOpener',
    [
       'Core/Control',
       'tmpl!Controls-demo/Popup/Opener/Compatible/demoOpener',
-      'SBIS3.CONTROLS/Action/List/OpenEditDialog',
-      'Types/entity',
       'require',
       'Types/source',
       'css!Controls-demo/Popup/Opener/Compatible/demoOpener'
    ],
-   function (Control, template, OpenEditDialog, entity, require, source) {
+   function (Control, template, require, source) {
       'use strict';
 
       var TestOpener = Control.extend({

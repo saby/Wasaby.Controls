@@ -2,12 +2,10 @@ define('Controls-demo/Input/Suggest/Suggest', [
    'Core/Control',
    'wml!Controls-demo/Input/Suggest/Suggest',
    'Types/source',
-   'Core/Deferred',
-   'Types/entity',
    'wml!Controls-demo/Input/Suggest/resources/SuggestTemplate',
    'css!Controls-demo/Input/Suggest/Suggest',
    'css!Controls-demo/Input/resources/VdomInputs'
-], function(Control, template, sourceLib, Deferred, entity, myTmpl) {
+], function(Control, template, sourceLib, myTmpl) {
 
    'use strict';
    var _private = {

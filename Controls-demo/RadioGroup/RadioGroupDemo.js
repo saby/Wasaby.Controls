@@ -11,9 +11,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
    'Types/collection'// Удалить после мержа https://online.sbis.ru/opendoc.html?guid=6989b29a-8e1d-4c3b-bb7d-23b09736ef2c
 ], function(Control,
              template,
-             sourceLib,
-             CustomItemTemplate,
-             SingleItemTemplate
+             sourceLib
 ) {
    'use strict';
    var RadioGroupDemo = Control.extend({

@@ -1,11 +1,10 @@
 define('Controls-demo/Popup/Opener/ConfirmationTpl',
    [
       'Core/Control',
-      'wml!Controls-demo/Popup/Opener/ConfirmationTpl',
-
+      'wml!Controls-demo/Popup/Opener/ConfirmationTpl'
    ],
 
-   function(Control, template, config) {
+   function(Control, template) {
       'use strict';
       var DialogPG = Control.extend({
          _template: template,

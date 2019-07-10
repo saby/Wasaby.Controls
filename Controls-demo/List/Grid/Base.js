@@ -155,7 +155,6 @@ define('Controls-demo/List/Grid/Base', [
                   title: 'прочитано',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-                     console.log('action read Click');
                   }
                },
                {
@@ -163,7 +162,6 @@ define('Controls-demo/List/Grid/Base', [
                   icon: 'icon-primary icon-PhoneNull',
                   title: 'phone',
                   handler: function(item) {
-                     console.log('action phone Click ', item);
                   }
                },
                {
@@ -180,7 +178,6 @@ define('Controls-demo/List/Grid/Base', [
                   title: 'profile',
                   showType: this.showType.MENU_TOOLBAR,
                   handler: function() {
-                     console.log('action profile Click');
                   }
                },
                {
@@ -189,7 +186,6 @@ define('Controls-demo/List/Grid/Base', [
                   title: 'delete pls',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-                     console.log('action delete Click');
                   }
                }
             ];

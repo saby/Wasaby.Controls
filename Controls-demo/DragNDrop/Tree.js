@@ -1,11 +1,10 @@
 define('Controls-demo/DragNDrop/Tree', [
    'Core/Control',
-   'Core/core-clone',
    'Controls-demo/DragNDrop/DemoData',
    'Controls-demo/DragNDrop/ListEntity',
    'wml!Controls-demo/DragNDrop/Tree/Tree',
    'Types/source'
-], function(BaseControl, cClone, DemoData, ListEntity, template, source) {
+], function(BaseControl, DemoData, ListEntity, template, source) {
    'use strict';
 
    var ModuleClass = BaseControl.extend({

@@ -2,7 +2,6 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
    [
       'Core/Control',
       'Core/Deferred',
-      'Core/core-clone',
       'Core/core-merge',
       'Core/library',
       'Controls-demo/PropertyGrid/propertyGridUtil',
@@ -27,7 +26,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, Deferred, cClone, cMerge, libHelper, propertyGridUtil, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
+   function(Control, Deferred, cMerge, libHelper, propertyGridUtil, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
       datetimeTmpl, booleanTmpl, functOrString, functionTmpl, enumTmpl, objTmpl, timeIntervalTmpl) {
       'use strict';
 

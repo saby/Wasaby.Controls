@@ -47,7 +47,7 @@ define('Controls-demo/List/ItemActions', [
             title: 'прочитано',
             showType: showType.TOOLBAR,
             handler: function() {
-               console.log('action read Click');
+
             }
          },
          {
@@ -55,7 +55,7 @@ define('Controls-demo/List/ItemActions', [
             icon: 'icon-PhoneNull',
             title: 'phone',
             handler: function(item) {
-               console.log('action phone Click ', item);
+
             }
          },
          {
@@ -76,7 +76,7 @@ define('Controls-demo/List/ItemActions', [
             parent: 2,
             'parent@': null,
             handler: function() {
-               console.log('action profile Click');
+
             }
          },
          {
@@ -85,7 +85,7 @@ define('Controls-demo/List/ItemActions', [
             parent: 2,
             'parent@': null,
             handler: function() {
-               console.log('action profile Click');
+
             }
          },
          {
@@ -95,7 +95,7 @@ define('Controls-demo/List/ItemActions', [
             title: 'delete pls',
             showType: showType.TOOLBAR,
             handler: function() {
-               console.log('action delete Click');
+
             }
          }
       ];
@@ -124,11 +124,11 @@ define('Controls-demo/List/ItemActions', [
          _itemActions: _firstItemActionsArray,
          _template: template,
          _onActionClick: function(event, action, item) {
-            console.log(arguments);
+
             this.__lastClicked = action.title;
          },
          _contentClick: function() {
-            console.log(arguments);
+
          },
 
          constructor: function() {

@@ -1,7 +1,6 @@
 define('Controls-demo/EditableArea/EditableAreaPG', [
    'Core/Control',
    'Types/entity',
-   'Types/source',
    'wml!Controls-demo/EditableArea/EditableAreaPG',
    'json!Controls-demo/EditableArea/EAPConfig',
    'wml!Controls-demo/EditableArea/resources/oneField',
@@ -11,7 +10,6 @@ define('Controls-demo/EditableArea/EditableAreaPG', [
 ], function(
    Control,
    entity,
-   source,
    template,
    config
 ) {

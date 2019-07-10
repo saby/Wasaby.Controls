@@ -133,7 +133,7 @@ define('Controls-demo/List/List/resources/DataDemoPG', [],
                title: 'Mark as read',
                showType: showType.TOOLBAR,
                handler: function() {
-                  console.log('itemActionsClick(Mark as read)');
+
                }
             },
             {
@@ -141,7 +141,7 @@ define('Controls-demo/List/List/resources/DataDemoPG', [],
                icon: 'icon-PhoneNull',
                title: 'Call',
                handler: function(item) {
-                  console.log('itemActionsClick(Call)', item);
+
                }
             },
             {
@@ -151,7 +151,7 @@ define('Controls-demo/List/List/resources/DataDemoPG', [],
                parent: null,
                'parent@': true,
                handler: function() {
-                  console.log('itemActionsClick(Message)');
+
                }
             },
             {
@@ -162,7 +162,7 @@ define('Controls-demo/List/List/resources/DataDemoPG', [],
                parent: null,
                'parent@': null,
                handler: function() {
-                  console.log('itemActionsClick(Profile)');
+
                }
             },
             {
@@ -172,7 +172,7 @@ define('Controls-demo/List/List/resources/DataDemoPG', [],
                parent: 2,
                'parent@': null,
                handler: function() {
-                  console.log('itemActionsClick(Email)');
+
                }
             },
             {
@@ -182,7 +182,7 @@ define('Controls-demo/List/List/resources/DataDemoPG', [],
                title: 'Remove',
                showType: showType.TOOLBAR,
                handler: function() {
-                  console.log('itemActionsClick(Remove)');
+
                }
             }
          ],
@@ -193,7 +193,7 @@ define('Controls-demo/List/List/resources/DataDemoPG', [],
                title: 'Skype',
                showType: showType.MENU,
                handler: function(item) {
-                  console.log('itemActionsClick(Skype)', item);
+
                }
             },
             {
@@ -202,7 +202,7 @@ define('Controls-demo/List/List/resources/DataDemoPG', [],
                title: 'Viber Message',
                showType: showType.MENU,
                handler: function() {
-                  console.log('itemActionsClick(Viber Message)');
+
                }
             },
             {
@@ -212,7 +212,7 @@ define('Controls-demo/List/List/resources/DataDemoPG', [],
                title: 'Remove',
                showType: showType.MENU_TOOLBAR,
                handler: function() {
-                  console.log('itemActionsClick(Remove)');
+
                }
             }
          ]

@@ -13,7 +13,6 @@ define('Controls-demo/Layouts/LayoutFilterComponent', [
    
          constructor: function(cfg) {
             ModuleClass.superclass.constructor.call(this, cfg);
-            console.log(cfg);
          },
          
          _switchValueHandler: function(event, value) {

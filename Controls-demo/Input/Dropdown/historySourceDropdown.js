@@ -1,6 +1,5 @@
 define('Controls-demo/Input/Dropdown/historySourceDropdown',
    [
-      'Core/Control',
       'Controls/history',
       'Core/Deferred',
       'Types/collection',
@@ -8,7 +7,7 @@ define('Controls-demo/Input/Dropdown/historySourceDropdown',
       'Types/source'
    ],
 
-   function(Control, history, Deferred, collection, entity, source) {
+   function(history, Deferred, collection, entity, source) {
       'use strict';
 
       var items = [

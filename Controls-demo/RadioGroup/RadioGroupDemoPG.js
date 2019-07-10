@@ -12,7 +12,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, template, config, sourceLib, itemTmpl) {
+   function(Control, template, config, sourceLib) {
       'use strict';
       var SwitchDemoPG = Control.extend({
          _template: template,

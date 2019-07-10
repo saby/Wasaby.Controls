@@ -3,18 +3,12 @@ define('Controls-demo/Buttons/ButtonsVdom', [
    'wml!Controls-demo/Buttons/ButtonsVdom',
    'css!Controls-demo/Buttons/ButtonsVdom',
    'Controls/buttons'
-], function (Control,
-             template) {
+],
+function(Control, template) {
    'use strict';
 
-
-   var ModuleClass = Control.extend(
-      {
-         _template: template,
-
-         clickHandler: function () {
-            console.log('click to button');
-         }
-      });
+   var ModuleClass = Control.extend({
+      _template: template
+   });
    return ModuleClass;
 });

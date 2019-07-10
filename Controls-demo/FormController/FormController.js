@@ -103,7 +103,7 @@ define('Controls-demo/FormController/FormController', [
          this._alert(msg);
       },
       _alert: function(msg) {
-         console.log(msg);
+
       },
       getRecordString: function() {
          if (!this._record) {

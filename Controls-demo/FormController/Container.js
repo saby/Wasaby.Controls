@@ -5,10 +5,7 @@ define('Controls-demo/FormController/Container', [
    'use strict';
 
    var module = Control.extend({
-      _template: tmpl,
-      _afterUpdate: function (cfg) {
-         console.log(cfg.record);
-      }
+      _template: tmpl
    });
 
    return module;

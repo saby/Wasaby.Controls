@@ -1,6 +1,5 @@
 define('Controls-demo/DragNDrop/MasterDetail', [
    'Core/Control',
-   'Types/entity',
    'wml!Controls-demo/DragNDrop/MasterDetail/MasterDetail',
    'Controls-demo/DragNDrop/MasterDetail/Data',
    'Types/source',
@@ -9,7 +8,7 @@ define('Controls-demo/DragNDrop/MasterDetail', [
    'Controls-demo/DragNDrop/MasterDetail/TasksEntity',
    'wml!Controls-demo/DragNDrop/MasterDetail/itemTemplates/masterItemTemplate',
    'css!Controls-demo/DragNDrop/MasterDetail/MasterDetail'
-], function(Control, entityLib, template, data, source, cInstance, dragnDrop, TasksEntity, itemTemplate) {
+], function(Control, template, data, source, cInstance, dragnDrop, TasksEntity, itemTemplate) {
    return Control.extend({
       _template: template,
       gridColumns: [{

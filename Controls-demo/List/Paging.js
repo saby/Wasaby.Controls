@@ -3,11 +3,9 @@
  */
 define('Controls-demo/List/Paging', [
    'Core/Control',
-   'wml!Controls-demo/List/Paging/Paging',
-   'Types/source'
+   'wml!Controls-demo/List/Paging/Paging'
 ], function (BaseControl,
-             template,
-             source
+             template
    ) {
    'use strict';
 

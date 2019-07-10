@@ -50,7 +50,7 @@ define('Controls-demo/List/ItemActionsWithConfig', [
             icon: 'icon-PhoneNull',
             title: 'phone',
             handler: function(item) {
-               console.log('action phone Click ', item);
+
             },
             group: ControlsConstants.view.hiddenGroup
          },
@@ -74,7 +74,7 @@ define('Controls-demo/List/ItemActionsWithConfig', [
             group: 1,
             'parent@': null,
             handler: function() {
-               console.log('action profile Click');
+
             }
          },
          {
@@ -84,7 +84,7 @@ define('Controls-demo/List/ItemActionsWithConfig', [
             group: 2,
             'parent@': null,
             handler: function() {
-               console.log('action profile Click');
+
             }
          }
       ];
@@ -113,11 +113,11 @@ define('Controls-demo/List/ItemActionsWithConfig', [
          _itemActions: _firstItemActionsArray,
          _template: template,
          _onActionClick: function(event, action, item) {
-            console.log(arguments);
+
             this.__lastClicked = action.title;
          },
          _contentClick: function() {
-            console.log(arguments);
+
          },
 
          constructor: function() {

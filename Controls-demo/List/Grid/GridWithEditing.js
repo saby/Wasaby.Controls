@@ -43,7 +43,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                title: 'прочитано',
                showType: this.showType.TOOLBAR,
                handler: function() {
-                  console.log('action read Click');
+
                }
             },
             {
@@ -51,7 +51,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                icon: 'icon-primary icon-PhoneNull',
                title: 'phone',
                handler: function(item) {
-                  console.log('action phone Click ', item);
+
                }
             },
             {
@@ -68,7 +68,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                title: 'profile',
                showType: this.showType.MENU_TOOLBAR,
                handler: function() {
-                  console.log('action profile Click');
+
                }
             },
             {
@@ -77,7 +77,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                title: 'delete pls',
                showType: this.showType.TOOLBAR,
                handler: function() {
-                  console.log('action delete Click');
+
                }
             }
          ];
@@ -166,7 +166,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
          return true;
       },
       _onActionClick: function(event, action, item) {
-         console.log(arguments);
+
       }
    });
 

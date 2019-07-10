@@ -46,7 +46,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
                   title: 'прочитано',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-                     console.log('action read Click');
+
                   }
                },
                {
@@ -54,7 +54,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
                   icon: 'icon-primary icon-PhoneNull',
                   title: 'phone',
                   handler: function(item) {
-                     console.log('action phone Click ', item);
+
                   }
                },
                {
@@ -71,7 +71,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
                   title: 'profile',
                   showType: this.showType.MENU_TOOLBAR,
                   handler: function() {
-                     console.log('action profile Click');
+
                   }
                },
                {
@@ -80,7 +80,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
                   title: 'delete pls',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-                     console.log('action delete Click');
+
                   }
                }
             ];

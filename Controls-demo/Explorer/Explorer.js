@@ -39,7 +39,6 @@ define('Controls-demo/Explorer/Explorer', [
                   title: 'phone',
                   showType: 0,
                   handler: function(item) {
-                     console.log('action phone Click ', item);
                   }
                },
                {
@@ -57,7 +56,6 @@ define('Controls-demo/Explorer/Explorer', [
                   title: 'profile',
                   showType: 0,
                   handler: function() {
-                     console.log('action profile Click');
                   }
                },
                {
@@ -67,7 +65,6 @@ define('Controls-demo/Explorer/Explorer', [
                   title: 'delete pls',
                   showType: 0,
                   handler: function() {
-                     console.log('action delete Click');
                   }
                },
                {
@@ -76,7 +73,6 @@ define('Controls-demo/Explorer/Explorer', [
                   title: 'phone',
                   showType: 0,
                   handler: function(item) {
-                     console.log('action phone Click ', item);
                   }
                },
                {
@@ -94,7 +90,6 @@ define('Controls-demo/Explorer/Explorer', [
                   title: 'profile',
                   showType: 0,
                   handler: function() {
-                     console.log('action profile Click');
                   }
                },
                {
@@ -104,7 +99,6 @@ define('Controls-demo/Explorer/Explorer', [
                   title: 'delete pls',
                   showType: 0,
                   handler: function() {
-                     console.log('action delete Click');
                   }
                }
             ];

@@ -1,16 +1,13 @@
 define('Controls-demo/Buttons/Menu/historySourceMenu',
    [
-      'Core/Control',
-      'Types/di',
       'Controls/history',
       'Core/Deferred',
       'Types/collection',
       'Types/entity',
-      'Core/Serializer',
       'Types/source'
    ],
 
-   function(Control, Di, history, Deferred, collection, entity, Serializer, source) {
+   function(history, Deferred, collection, entity, source) {
 
       'use strict';
 

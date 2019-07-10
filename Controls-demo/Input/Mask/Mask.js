@@ -2,13 +2,12 @@ define('Controls-demo/Input/Mask/Mask',
    [
       'Core/Control',
       'wml!Controls-demo/Input/Mask/Mask',
-      'Controls/_input/Mask/Formatter',
       'Types/source',
       'Controls/input',
       'css!Controls-demo/Input/resources/VdomInputs'
 
    ],
-   function(Control, template, Formatter, source) {
+   function(Control, template, source) {
       'use strict';
       var Mask = Control.extend({
          _template: template,

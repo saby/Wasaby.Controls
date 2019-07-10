@@ -2,7 +2,6 @@ define('Controls-demo/List/TreeGrid/resources/BasePG/PGWrapper',
    [
       'Core/Control',
       'Core/Deferred',
-      'Core/core-clone',
       'Core/core-merge',
 
       'Controls-demo/PropertyGrid/propertyGridUtil',
@@ -26,7 +25,7 @@ define('Controls-demo/List/TreeGrid/resources/BasePG/PGWrapper',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, Deferred, cClone, cMerge, propertyGridUtil, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
+   function(Control, Deferred, cMerge, propertyGridUtil, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
             datetimeTmpl, booleanTmpl, functOrString, functionTmpl, enumTmpl, objTmpl) {
       'use strict';
 

@@ -283,7 +283,7 @@ define('Controls-demo/List/NoScrollPaging', [
                   title: 'прочитано',
                   showType: 2,
                   handler: function() {
-                     console.log('action read Click');
+
                   }
                },
                {
@@ -291,7 +291,7 @@ define('Controls-demo/List/NoScrollPaging', [
                   icon: 'icon-primary icon-PhoneNull',
                   title: 'phone',
                   handler: function(item) {
-                     console.log('action phone Click ', item);
+
                   }
                },
                {
@@ -308,7 +308,7 @@ define('Controls-demo/List/NoScrollPaging', [
                   title: 'profile',
                   showType: 2,
                   handler: function() {
-                     console.log('action profile Click');
+
                   }
                },
                {
@@ -317,7 +317,7 @@ define('Controls-demo/List/NoScrollPaging', [
                   title: 'delete pls',
                   showType: 2,
                   handler: function() {
-                     console.log('action delete Click');
+
                   }
                }
             ];

@@ -3,12 +3,11 @@ define('Controls-demo/List/Tree/Tree', [
    'Controls-demo/List/Tree/GridData',
    'wml!Controls-demo/List/Tree/Tree',
    'Controls-demo/List/Tree/TreeMemory',
-   'Controls/Constants',
    'css!Controls-demo/List/Tree/Tree',
    'Controls/scroll',
    'Controls/treeGrid',
    'wml!Controls-demo/List/Tree/DemoContentTemplate'
-], function(BaseControl, GridData, template, MemorySource, ControlsConstants) {
+], function(BaseControl, GridData, template, MemorySource) {
    'use strict';
    var
       ModuleClass = BaseControl.extend({
@@ -47,7 +46,7 @@ define('Controls-demo/List/Tree/Tree', [
                   title: 'прочитано',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-                     console.log('action read Click');
+
                   }
                },
                {
@@ -55,7 +54,7 @@ define('Controls-demo/List/Tree/Tree', [
                   icon: 'icon-primary icon-PhoneNull',
                   title: 'phone',
                   handler: function(item) {
-                     console.log('action phone Click ', item);
+
                   }
                },
                {
@@ -72,7 +71,7 @@ define('Controls-demo/List/Tree/Tree', [
                   title: 'profile',
                   showType: this.showType.MENU_TOOLBAR,
                   handler: function() {
-                     console.log('action profile Click');
+
                   }
                },
                {
@@ -81,7 +80,7 @@ define('Controls-demo/List/Tree/Tree', [
                   title: 'delete pls',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-                     console.log('action delete Click');
+
                   }
                }
             ];

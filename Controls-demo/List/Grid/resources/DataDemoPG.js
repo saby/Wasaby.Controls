@@ -399,7 +399,7 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 title: 'Like it',
                 showType: showType.TOOLBAR,
                 handler: function(item) {
-                   console.log('itemActionsClick(Like it)', item);
+
                 }
              },
              {
@@ -408,7 +408,7 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 showType: showType.TOOLBAR,
                 title: 'Dislike it',
                 handler: function(item) {
-                   console.log('itemActionsClick(Dislike it)', item);
+
                 }
              },
              {
@@ -417,7 +417,7 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 title: 'Add to favorite',
                 showType: showType.TOOLBAR,
                 handler: function(item) {
-                   console.log('itemActionsClick(Add to favorite)', item);
+
                 }
              },
              {
@@ -427,7 +427,7 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 title: 'Remove from list',
                 showType: showType.MENU,
                 handler: function() {
-                   console.log('itemActionsClick(Remove from list)');
+
                 }
              },
              {
@@ -437,7 +437,7 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 parent: null,
                 'parent@': true,
                 handler: function() {
-                   console.log('itemActionsClick(Actors)', item);
+
                 }
              },
              {
@@ -447,7 +447,7 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 parent: 4,
                 'parent@': false,
                 handler: function() {
-                   console.log('itemActionsClick(Show all)', item);
+
                 }
              },
              {
@@ -457,7 +457,7 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 parent: 4,
                 'parent@': false,
                 handler: function() {
-                   console.log('itemActionsClick(More films with same actors)', item);
+
                 }
              }
           ],
@@ -468,7 +468,7 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 title: 'Attach file',
                 showType: showType.MENU_TOOLBAR,
                 handler: function(item) {
-                   console.log('itemActionsClick(Attach file)', item);
+
                 }
              },
              {
@@ -479,7 +479,7 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 parent: null,
                 'parent@': true,
                 handler: function(item) {
-                   console.log('itemActionsClick(Edit film)', item);
+
                 }
              },
              {
@@ -490,7 +490,7 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 'parent@': false,
                 showType: showType.MENU,
                 handler: function(item) {
-                   console.log('itemActionsClick(Edit description)', item);
+
                 }
              },
              {
@@ -501,7 +501,7 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 parent: 2,
                 'parent@': false,
                 handler: function(item) {
-                   console.log('itemActionsClick(Edit media)', item);
+
                 }
              },
              {
@@ -510,7 +510,7 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 title: 'Hide',
                 showType: showType.MENU_TOOLBAR,
                 handler: function() {
-                   console.log('itemActionsClick(Hide)');
+
                 }
              },
              {
@@ -520,7 +520,7 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 title: 'Delete',
                 showType: showType.MENU,
                 handler: function() {
-                   console.log('itemActionsClick(Delete)');
+
                 }
              }
           ]
