@@ -310,7 +310,7 @@ define(
                   option1: '1',
                   option2: '2'
                },
-               editorName: 'dateRange',
+               type: 'dateRange',
                viewMode: 'basic'
             };
             source.push(dateItem);
@@ -341,7 +341,7 @@ define(
                   option1: '1',
                   option2: '2'
                },
-               editorName: 'dateRange',
+               type: 'dateRange',
                viewMode: 'basic'
             };
             source.push(dateItem);
