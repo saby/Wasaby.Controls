@@ -292,7 +292,7 @@ var _Controller = Control.extend({
                selectorDialogResult: self._onSelectorTemplateResult.bind(self)
             },
             target: self._container,
-            corner: self._options.corner,
+            targetPoint: self._options.corner,
             opener: self,
             autofocus: false,
             closeOnOutsideClick: true
@@ -303,12 +303,12 @@ var _Controller = Control.extend({
       }
 
       function itemsLoadCallback(items) {
-         if (items.getCount() === 1) {
+         if (items.getCount() > 1 || items.getCount() === 1 && self._options.emptyText) {
+            open();
+         } else if (items.getCount() === 1) {
             self._notify('selectedItemsChanged', [
                [items.at(0)]
             ]);
-         } else if (items.getCount() > 1) {
-            open();
          }
       }
 

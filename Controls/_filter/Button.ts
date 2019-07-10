@@ -12,10 +12,10 @@ import 'css!theme?Controls/filter';
  * Контрол для поддержки фильтрации данных. Состоит из иконки-кнопки и строкового представления выбранного фильтра.
  * Клик по иконке-кнопке или строке открывает панель фильтрации. {@link Controls/filterPopup:DetailPanel}
  * Поддерживает вставку пользовательского шаблона между кнопкой и строкой фильтра.
- * Подробное описание и инструкцию по настройке контрола смотрите <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>здесь</a>.
+ * Подробное описание и инструкцию по настройке контрола смотрите <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filterbutton-and-fastfilters/'>здесь</a>.
  * <a href="/materials/demo-ws4-filter-button">Демо-пример</a>.
  *
- * Инструкцию по настройке фильтрации в списке с помощью контрола "Filter Button" читайте <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
+ * Инструкцию по настройке фильтрации в списке с помощью контрола "Filter Button" читайте <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/'>здесь</a>.
  *
  * @class Controls/_filter/Button
  * @extends Core/Control
@@ -115,7 +115,7 @@ var _private = {
       };
 
       if (alignment === 'right') {
-         self._popupOptions.corner = {
+         self._popupOptions.targetPoint = {
             vertical: 'top',
             horizontal: 'right'
          };

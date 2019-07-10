@@ -35,6 +35,7 @@ import ViewModel = require('Controls/_input/Phone/ViewModel');
       };
 
       var Phone = Base.extend({
+          _defaultValue: '',
          _getViewModelConstructor: function() {
             return ViewModel;
          },
@@ -49,8 +50,6 @@ import ViewModel = require('Controls/_input/Phone/ViewModel');
 
       Phone.getDefaultOptions = function() {
          var defaultOptions = Base.getDefaultOptions();
-
-         defaultOptions.value = '';
 
          return defaultOptions;
       };

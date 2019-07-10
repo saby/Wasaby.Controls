@@ -179,7 +179,6 @@ var _private = {
                     _private.checkLoadToDirectionCapability(self);
                 }
             }).addErrback(function(error) {
-                _private.hideIndicator(self);
                 return _private.processError(self, {
                     error: error,
                     dataLoadErrback: cfg.dataLoadErrback
@@ -366,7 +365,6 @@ var _private = {
                 _private.prepareFooter(self, self._options.navigation, self._sourceController);
                 return addedItems;
             }).addErrback(function(error) {
-                _private.hideIndicator(self);
                 return _private.crudErrback(self, {
                     error: error,
                     dataLoadErrback: userErrback
@@ -793,7 +791,7 @@ var _private = {
                         onClose: self._closeActionsMenu
                     },
                     closeOnOutsideClick: true,
-                    corner: {vertical: 'top', horizontal: 'right'},
+                    targetPoint: {vertical: 'top', horizontal: 'right'},
                     horizontalAlign: {side: context ? 'right' : 'left'},
                     className: 'controls-Toolbar__popup__list_theme-' + self._options.theme,
                     nativeEvent: context ? childEvent.nativeEvent : false
@@ -956,6 +954,9 @@ var _private = {
         if (config.dataLoadErrback instanceof Function) {
             config.dataLoadErrback(config.error);
         }
+        if (!config.error.canceled) {
+            _private.hideIndicator(self);
+        }
         return self.__errorController.process({
             error: config.error,
             mode: config.mode || dataSourceError.Mode.include
@@ -1077,6 +1078,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _canUpdateItemsActions: false,
 
     _needBottomPadding: false,
+    _emptyTemplateVisibility: true,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1432,9 +1434,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     __needShowEmptyTemplate: function(emptyTemplate: Function | null, listViewModel: ListViewModel, loadingState: LoadingState): boolean {
-        return emptyTemplate &&
-               !listViewModel.getCount() && !listViewModel.getEditingItemData() &&
-               (!loadingState || loadingState === 'all');
+        const newEmptyTemplateVisibility = emptyTemplate &&
+                                           !listViewModel.getCount() && !listViewModel.getEditingItemData() &&
+                                           (!loadingState || loadingState === 'all');
+
+        // TODO: KINGO
+        // Загружаются данные по скролу, первые несколько страниц оказываются пустыми (как в реестре контакы),
+        // в этот момент вызывают перезагрузку реестра (например поиском или фильтрацией)
+        // и мы не должны показывать в этом случае заглушку, что нет данных,
+        // пока реестр не загрузится
+        return this._emptyTemplateVisibility = newEmptyTemplateVisibility && (this._emptyTemplateVisibility || !loadingState);
     },
 
     _onCheckBoxClick: function(e, key, status) {

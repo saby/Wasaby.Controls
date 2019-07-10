@@ -1,5 +1,4 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import { SyntheticEvent } from 'Vdom/Vdom';
 import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
@@ -72,16 +71,17 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
  */
 
 class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable {
+   '[Controls/_interface/ITooltip]': true;
+   '[Controls/_toggle/interface/ICheckable]': true;
+
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = SwitchTemplate;
 
-   private _clickHandler(e: SyntheticEvent): void {
+   private _clickHandler(): void {
       if (!this._options.readOnly) {
          this._notify('valueChanged', [!this._options.value]);
       }
    }
-   '[Controls/_interface/ITooltip]': true;
-   '[Controls/_toggle/interface/ICheckable]': true;
 
    static _theme: string[] = ['Controls/toggle'];
 

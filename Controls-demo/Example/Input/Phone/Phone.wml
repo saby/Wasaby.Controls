@@ -7,7 +7,7 @@
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Mobile / Landline phone</div>
                      <Controls.input:Phone placeholder="Phone number"
-                                           bind:value="_phoneNumber"/>
+                                           bind:value="_phoneNumberValue"/>
                   </div>
                </ws:template>
             </ws:Object>

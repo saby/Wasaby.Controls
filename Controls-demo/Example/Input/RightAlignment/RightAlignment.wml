@@ -9,7 +9,7 @@
                      <Controls.input:Text fontStyle="default" class="ControlsDemo-ExampleInput_fontHeader"
                                           textAlign="right"
                                           placeholder="Tooltip"
-                                          bind:value="_value1"/>
+                                          bind:value="_defaultValue"/>
                   </div>
                </ws:template>
             </ws:Object>
@@ -26,7 +26,7 @@
                      <Controls.input:Text fontStyle="default"
                                           textAlign="right"
                                           placeholder="Tooltip"
-                                          bind:value="_filledValue1"/>
+                                          bind:value="_filledValue"/>
                   </div>
                </ws:template>
             </ws:Object>
@@ -44,7 +44,7 @@
                                           textAlign="right"
                                           placeholder="Tooltip"
                                           readOnly="{{true}}"
-                                          bind:value="_filledValueRM"/>
+                                          bind:value="_filledRMValue"/>
                   </div>
                </ws:template>
             </ws:Object>
@@ -61,7 +61,7 @@
                      <Controls.input:Number fontStyle="default"
                                           textAlign="right"
                                           placeholder="Tooltip"
-                                          bind:value="_filledNumberValue1"/>
+                                          bind:value="_filledNumberValue"/>
                   </div>
                </ws:template>
             </ws:Object>
@@ -79,7 +79,7 @@
                                           textAlign="right"
                                           placeholder="Tooltip"
                                           readOnly="{{true}}"
-                                          bind:value="_filledNumberValueRM"/>
+                                          bind:value="_filledNumberRMValue"/>
                   </div>
                </ws:template>
             </ws:Object>
@@ -96,7 +96,7 @@
 					 <Controls.input:Money fontStyle="default"
 										   textAlign="right"
 										   placeholder="Tooltip"
-										   bind:value="_filledMoneyValue1"/>
+										   bind:value="_filledMoneyValue"/>
 				  </div>
 			   </ws:template>
 			</ws:Object>
@@ -114,7 +114,7 @@
 										   textAlign="right"
 										   placeholder="Tooltip"
 										   readOnly="{{true}}"
-										   bind:value="_filledMoneyValueRM"/>
+										   bind:value="_filledMoneyRMValue"/>
 				  </div>
 			   </ws:template>
 			</ws:Object>

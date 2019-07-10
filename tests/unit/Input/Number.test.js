@@ -33,7 +33,6 @@ define(
 
          it('Checking default values of options.', function() {
             assert.deepEqual(inputMod.Number.getDefaultOptions(), {
-               value: 0,
                tooltip: '',
                style: 'info',
                size: 'default',

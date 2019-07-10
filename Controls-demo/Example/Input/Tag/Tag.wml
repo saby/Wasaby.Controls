@@ -8,7 +8,7 @@
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
-                                       bind:value="_value1"/>
+                                       bind:value="_secondaryValue"/>
                </ws:template>
             </ws:Object>
             <ws:Object spacing="normal">
@@ -17,7 +17,7 @@
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
-                                       bind:value="_value2"/>
+                                       bind:value="_successValue"/>
                </ws:template>
             </ws:Object>
             <ws:Object spacing="normal">
@@ -26,7 +26,7 @@
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
-                                       bind:value="_value3"/>
+                                       bind:value="_warningValue"/>
                </ws:template>
             </ws:Object>
             <ws:Object spacing="normal">
@@ -35,7 +35,7 @@
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
-                                       bind:value="_value4"/>
+                                       bind:value="_dangerValue"/>
                </ws:template>
             </ws:Object>
             <ws:Object spacing="normal">
@@ -44,7 +44,7 @@
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
-                                       bind:value="_value5"/>
+                                       bind:value="_infoValue"/>
                </ws:template>
             </ws:Object>
             <ws:Object spacing="normal">
@@ -53,7 +53,7 @@
                                        textAlign="right"
                                        placeholder="Tooltip"
                                        on:tagClick="_showInfoBox()"
-                                       bind:value="_value6"/>
+                                       bind:value="_primaryValue"/>
                </ws:template>
             </ws:Object>
          </ws:Array>

@@ -219,7 +219,7 @@ define(
                   config = {
                      opener: testSelf,
                      className: 'controls-Toolbar__popup__icon_theme-default popupClassName',
-                     corner: {
+                     targetPoint: {
                         horizontal: 'left',
                         vertical: 'top'
                      },

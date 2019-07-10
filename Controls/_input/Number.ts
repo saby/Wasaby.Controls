@@ -59,6 +59,7 @@ var _private = {
 };
 
 var NumberInput = Base.extend({
+    _defaultValue: 0,
     _getViewModelOptions: function (options) {
         _private.validateOptions(options);
 
@@ -104,7 +105,6 @@ var NumberInput = Base.extend({
 NumberInput.getDefaultOptions = function () {
     var defaultOptions = Base.getDefaultOptions();
 
-    defaultOptions.value = 0;
     defaultOptions.useGrouping = true;
     defaultOptions.onlyPositive = false;
     defaultOptions.showEmptyDecimals = false;

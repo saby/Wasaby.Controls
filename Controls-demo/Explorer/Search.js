@@ -18,6 +18,7 @@ define('Controls-demo/Explorer/Search', [
          _filter: { demo: 123 },
          _title: '',
          _searchStartingWith: 'root',
+         _multiselectVisibility: 'visible',
          _beforeMount: function() {
             this._viewColumns = [
                {
@@ -41,6 +42,20 @@ define('Controls-demo/Explorer/Search', [
                   },
                   {
                      id: 'current', title: 'current'
+                  }
+               ]
+            });
+            this._multiselectVisibilitySource = new source.Memory({
+               idProperty: 'id',
+               data: [
+                  {
+                     id: 'visible', title: 'visible'
+                  },
+                  {
+                     id: 'onhover', title: 'onhover'
+                  },
+                  {
+                     id: 'hidden', title: 'hidden'
                   }
                ]
             });

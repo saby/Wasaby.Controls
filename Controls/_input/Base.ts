@@ -60,7 +60,7 @@ import 'wml!Controls/_input/Base/Stretcher';
                 * When a filled field in chrome, its carriage is placed at the beginning of the text.
                 * The carriage needs to have a position in accordance with the model. So we change it.
                 */
-               if (Env.detection.chrome) {
+               if (Env.detection.chrome || Env.detection.firefox) {
                   const selection = self._viewModel.selection;
                   field.setSelectionRange(selection.start, selection.end);
                }
@@ -358,6 +358,18 @@ import 'wml!Controls/_input/Base/Stretcher';
             }
 
             return autoComplete;
+         },
+
+         getValue: function(self, options) {
+            if (options.hasOwnProperty('value')) {
+               return options.value === undefined ? self._defaultValue : options.value;
+            }
+
+            if (self._viewModel) {
+               return self._viewModel.value;
+            }
+
+            return self._defaultValue;
          }
       };
 
@@ -388,6 +400,8 @@ import 'wml!Controls/_input/Base/Stretcher';
           * @protected
           */
          _field: null,
+
+         _defaultValue: null,
 
          /**
           * @type {Controls/_input/Base/Types/DisplayingControl.typedef} Input field in read mode.
@@ -558,7 +572,7 @@ import 'wml!Controls/_input/Base/Stretcher';
             const viewModelOptions = this._getViewModelOptions(options);
 
             this._initProperties(options);
-            _private.initViewModel(this, viewModelCtr, viewModelOptions, options.value);
+            _private.initViewModel(this, viewModelCtr, viewModelOptions, _private.getValue(this, options));
 
             if (this._autoComplete !== 'off') {
                /**
@@ -586,7 +600,7 @@ import 'wml!Controls/_input/Base/Stretcher';
          _beforeUpdate: function(newOptions) {
             const newViewModelOptions = this._getViewModelOptions(newOptions);
 
-            _private.updateViewModel(this, newViewModelOptions, newOptions.value);
+            _private.updateViewModel(this, newViewModelOptions, _private.getValue(this, newOptions));
          },
 
          /**

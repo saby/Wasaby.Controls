@@ -6,6 +6,18 @@ import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
 import 'css!theme?Controls/lookup';
 
    /**
+    * Кнопка-ссылка для использования в Selector/Lookup.
+    *
+    * @class Controls/_lookup/Lookup/Link
+    * @extends Core/Control
+    * @mixes Controls/_interface/ICaption
+    * @mixes Controls/_lookup/Lookup/Link/LookupLinkStyles
+    * @control
+    * @public
+    * @author Капустин И.А.
+    */
+
+   /*
     * Link for use in Selector/Lookup
     *
     * @class Controls/_lookup/Lookup/Link
