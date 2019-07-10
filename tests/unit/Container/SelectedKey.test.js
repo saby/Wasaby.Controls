@@ -30,11 +30,12 @@ define(
          });
          it('_selectedKeysChanged', function() {
             let sKeyContainer = new source.SelectedKey(),
-               key, isStopped;
+               key, isStopped, selectedKeyChangedResult;
             sKeyContainer.saveOptions({ selectedKey: '1' });
             sKeyContainer._notify = function(event, data) {
                if (event === 'selectedKeyChanged') {
                   key = data[0];
+                  return selectedKeyChangedResult;
                }
             };
             let event = {
@@ -42,14 +43,19 @@ define(
                   isStopped = true;
                }
             };
+            selectedKeyChangedResult = true;
             sKeyContainer._selectedKey = '1';
-            sKeyContainer._selectedKeysChanged(event, ['4']);
+            let eventRes = sKeyContainer._selectedKeysChanged(event, ['4']);
             assert.equal(key, '4');
             assert.equal(sKeyContainer._selectedKey, '1');
+            assert.isTrue(eventRes);
             assert.isTrue(isStopped);
+
+            eventRes = false;
             sKeyContainer._selectedKeysChanged(event, []);
             assert.equal(key, null);
             assert.equal(sKeyContainer._selectedKey, '1');
+            assert.isFalse(eventRes);
             assert.isTrue(isStopped);
          });
          it('_private::getSelectedKeys', function() {
