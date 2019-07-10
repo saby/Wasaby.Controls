@@ -62,7 +62,7 @@
       "eslint": "^5.7.0",
       "express": "^4.16.3",
       "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.500",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#19.500/bugfix/ui-html",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.500",
       "Router": "git+https://github.com/saby/Router.git#rc-19.500",
       "serve-static": "1.11.x",
       "stylelint": "^9.7.1",
@@ -72,7 +72,7 @@
       "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.500",
       "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.500",
       "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.500",
-      "saby-ui": "git+https://github.com/saby/UI.git#19.500/bugfix/ui-html",
+      "saby-ui": "git+https://github.com/saby/UI.git#rc-19.500",
       "cdn": "git+https://github.com/saby/wasaby-cdn.git#rc-19.500",
       "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.500"
    }
