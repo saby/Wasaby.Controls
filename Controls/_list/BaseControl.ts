@@ -392,6 +392,33 @@ var _private = {
         }
     },
 
+   isFullPlaceholderVisibility: function(self, direction, params) {
+      if (direction === 'up') {
+         return params ? self._topPlaceholderSize - params.scrollTop > params.clientHeight : false;
+      } else {
+         return params ? params.scrollHeight - self._bottomPlaceholderSize < params.scrollTop : false;
+      }
+   },
+
+    checkVirtualScrollCapability: function(self, params) {
+       if (self._virtualScroll) {
+          if (self._virtualScrollTriggerVisibility.up) {
+             _private.updateVirtualWindow(self, 'up', params);
+          } else if (self._virtualScrollTriggerVisibility.down) {
+             _private.updateVirtualWindow(self, 'down', params);
+          }
+       }
+    },
+
+   updateVirtualWindow: function(self, direction, params) {
+      if (_private.isFullPlaceholderVisibility(self, direction, params)) {
+         self._recalcVirtualScrollIndexes(direction, params.scrollTop);
+      } else {
+         self._virtualScroll.recalcToDirection(direction);
+         _private.applyVirtualScrollIndexes(self, direction);
+      }
+   },
+
     checkLoadToDirectionCapability: function(self) {
         if (self._needScrollCalculation) {
             if (self._loadTriggerVisibility.up) {
@@ -400,18 +427,7 @@ var _private = {
             if (self._loadTriggerVisibility.down) {
                 _private.onScrollLoadEdge(self, 'down');
             }
-            if (self._virtualScroll) {
-                if (self._virtualScrollTriggerVisibility.up) {
-                    // copy-paste from updateVirtualWindowStart
-                    self._virtualScroll.recalcToDirection('up');
-                    _private.applyVirtualScrollIndexes(self, 'up');
-                }
-                if (self._virtualScrollTriggerVisibility.down) {
-                    // copy-paste from updateVirtualWindowStart
-                    self._virtualScroll.recalcToDirection('down');
-                    _private.applyVirtualScrollIndexes(self, 'down');
-                }
-            }
+            _private.checkVirtualScrollCapability(self);
         }
     },
     onScrollLoadEdgeStart: function (self, direction) {
@@ -424,9 +440,10 @@ var _private = {
     },
 
     // Вызывает обновление индексов виртуального окна при срабатывании триггера вверх|вниз и запоминает, что тригер в настоящий момент видимый
-    updateVirtualWindowStart(self, direction: 'up' | 'down'): void {
+    updateVirtualWindowStart(self, direction: 'up' | 'down', params): void {
         if (self._virtualScroll) {
             self._virtualScrollTriggerVisibility[direction] = true;
+            _private.checkVirtualScrollCapability(self, params);
         }
     },
 
@@ -616,12 +633,12 @@ var _private = {
     /**
      * Обработать прокрутку списка виртуальным скроллом
      */
-    handleListScroll: function(self, scrollTop, position, clientHeight: number) {
+    handleListScroll: function(self, params) {
         var hasMoreData;
 
         if (self._scrollPagingCtr) {
-            if (position === 'middle') {
-                self._scrollPagingCtr.handleScroll(scrollTop);
+            if (params.position === 'middle') {
+                self._scrollPagingCtr.handleScroll(params.scrollTop);
             } else {
                 // when scroll is at the edge we will send information to scrollPaging about the availability of data next/prev
                 if (self._sourceController) {
@@ -630,7 +647,7 @@ var _private = {
                         down: self._sourceController.hasMoreData('down')
                     };
                 }
-                self._scrollPagingCtr.handleScrollEdge(position, hasMoreData);
+                self._scrollPagingCtr.handleScrollEdge(params.position, hasMoreData);
             }
         } else {
             if (_private.needScrollPaging(self._options.navigation)) {
@@ -642,9 +659,13 @@ var _private = {
 
         if (self._virtualScroll) {
             if (self._virtualScrollTriggerVisibility.down) {
-                self._recalcVirtualScrollIndexes('down', scrollTop);
+               if (_private.isFullPlaceholderVisibility(self, 'down', params)) {
+                  self._recalcVirtualScrollIndexes('down', params.scrollTop);
+               }
             } else if (self._virtualScrollTriggerVisibility.up) {
-                self._recalcVirtualScrollIndexes('up', scrollTop);
+               if (_private.isFullPlaceholderVisibility(self, 'up', params)) {
+                  self._recalcVirtualScrollIndexes('up', params.scrollTop);
+               }
             }
         }
     },
@@ -1064,8 +1085,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _loadTriggerVisibility: null,
     _virtualScrollTriggerVisibility: null,
     _loadOffset: 0,
-    _topPlaceholderHeight: 0,
-    _bottomPlaceholderHeight: 0,
+    _topPlaceholderSize: 0,
+    _bottomPlaceholderSize: 0,
     _menuIsShown: null,
 
     _popupOptions: null,
@@ -1371,7 +1392,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._checkShouldLoadToDirection = true;
             this._forceUpdate();
         } else if (this._checkShouldLoadToDirection) {
-            _private.checkLoadToDirectionCapability(this);
+           setTimeout(function() {
+              _private.checkLoadToDirectionCapability(this);
+           }.bind(this));
             this._checkShouldLoadToDirection = false;
         }
     },
@@ -1421,13 +1444,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'loadBottomStart': _private.onScrollLoadEdgeStart(self, 'down'); break;
             case 'loadBottomStop': _private.onScrollLoadEdgeStop(self, 'down'); break;
 
-            case 'virtualPageTopStart': _private.updateVirtualWindowStart(self, 'up'); break;
+            case 'virtualPageTopStart': _private.updateVirtualWindowStart(self, 'up', params); break;
             case 'virtualPageTopStop': _private.updateVirtualWindowStop(self, 'up'); break;
-            case 'virtualPageBottomStart': _private.updateVirtualWindowStart(self, 'down'); break;
+            case 'virtualPageBottomStart': _private.updateVirtualWindowStart(self, 'down', params); break;
             case 'virtualPageBottomStop': _private.updateVirtualWindowStop(self, 'down'); break;
 
 
-            case 'scrollMove': _private.handleListScroll(self, params.scrollTop, params.position, params.clientHeight); break;
+            case 'scrollMove': _private.handleListScroll(self, params); break;
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;
         }
