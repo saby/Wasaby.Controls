@@ -1,5 +1,5 @@
 import BaseControl = require('Core/Control');
-import formatDate = require('Core/helpers/Date/format');
+import {date as formatDate} from 'Types/formatter';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import EventProxy from './Mixin/EventProxy';
 import {DateRangeModel, Utils as DateControlsUtils, dateRangeQuantum as quantumUtils} from 'Controls/dateRange';

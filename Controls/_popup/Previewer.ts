@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/Previewer/Previewer');
-import debounce = require('Core/helpers/Function/debounce');
+import {debounce} from 'Types/function';
 import PreviewerOpener from './Opener/Previewer';
 import Env = require('Env/Env');
 import 'css!theme?Controls/popup';

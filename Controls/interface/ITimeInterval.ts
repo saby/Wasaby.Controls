@@ -37,8 +37,8 @@ interface ITimeInterval {
          * @remark
          * TimeInterval value should be set with TimeInterval object usage:
          * For example: value = new TimeInterval('P20DT3H1M5S'),  value = new TimeInterval({days: 1, minutes: 5}) e t.c.
-         * More information in Core/TimeInterval
-         * @see Core/TimeInterval
+         * More information in Types/entity:TimeInterval
+         * @see Types/entity:TimeInterval
          */
         value: TimeInterval;
     };

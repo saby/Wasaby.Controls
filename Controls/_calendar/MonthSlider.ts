@@ -1,6 +1,6 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
-import formatDate = require('Core/helpers/Date/format');
+import {date as formatDate} from 'Types/formatter';
 import IMonth from './interfaces/IMonth';
 import Slider from './MonthSlider/Slider';
 import {Utils as calendarUtils} from 'Controls/dateRange';

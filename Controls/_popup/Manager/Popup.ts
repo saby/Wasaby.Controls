@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/Manager/Popup');
-import runDelayed = require('Core/helpers/Function/runDelayed');
+import {delay as runDelayed} from 'Types/function';
 import Env = require('Env/Env');
 import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
 import {debounce} from 'Types/function';
