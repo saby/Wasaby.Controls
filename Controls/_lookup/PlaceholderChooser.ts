@@ -2,6 +2,22 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_lookup/PlaceholderChooser/PlaceholderChooser');
 import collection = require('Types/collection');
 
+/**
+ * Контрол, который формирует "placeholder" для "Lookup".
+ * @class Controls/_lookup/PlaceholderChooser
+ * @control
+ * @extends Core/Control
+ * @public
+ * @author Капустин И.А.
+ */
+/*
+ * The control that forms the "placeholder" for the "Lookup".
+ * @class Controls/_lookup/PlaceholderChooser
+ * @control
+ * @extends Core/Control
+ * @public
+ * @author Kapustin I.A.
+ */
 
 var _private = {
     getPlaceholder: function(items, placeholders, placeholderKeyCallback) {
