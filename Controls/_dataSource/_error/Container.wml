@@ -1,8 +1,18 @@
 <ws:if data="{{ __viewConfig && __viewConfig.mode != 'dialog' }}">
-    <ws:partial
-        template="{{ __viewConfig.template }}"
-        scope="{{ __viewConfig.options }}"
-    />
+    <ws:if data="{{ __viewConfig.templateName }}">
+<!-- для шаблонов, переданных в виде строки, вставляем через async чтобы внутренние механизмы платформы, при построении на сервере, сами закинули в итоговую вёрстку стили из зависимостей шаблонов -->
+        <Controls.Container.Async
+            templateName="{{ __viewConfig.template }}"
+            templateOptions="{{ __viewConfig.options }}"
+        />
+    </ws:if>
+    <ws:else>
+<!-- когда нам передают шаблон в виде конструктора компонента -->
+        <ws:partial
+            template="{{ __viewConfig.template }}"
+            scope="{{ __viewConfig.options }}"
+        />
+    </ws:else>
 </ws:if>
 <ws:else>
     <ws:partial template="{{ _options.content }}"/>
