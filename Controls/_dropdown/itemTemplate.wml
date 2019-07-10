@@ -43,6 +43,6 @@
       <div    class="controls-HistoryMenu__iconPin {{itemData.isSwiped ? 'controls-HistoryMenu__iconPin_swiped'}}
               {{itemData.getPropValue(itemData.item, 'pinned') === true ? 'controls-HistoryMenu__iconUnnpin icon-PinOff' : 'icon-PinNull'}} theme_{{_options.theme}}"></div>
    </ws:if>
-   <div if="{{itemData.hasChildren}}" class="controls-DropdownList__arrow controls-DropdownList__arrow_{{readOnly ? 'readOnly' : 'default'}}
+   <div if="{{itemData.hasChildren}}" class="controls-DropdownList__arrow controls-DropdownList__arrow_{{(readOnly || itemData.getPropValue(itemData.item, 'readOnly')) ? 'readOnly' : 'default'}}
                                        icon-MarkCRightLight theme_{{_options.theme}}"></div>
 </div>

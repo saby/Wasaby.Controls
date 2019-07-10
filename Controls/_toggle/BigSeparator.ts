@@ -51,7 +51,9 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
  */
 class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
-   //TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
+   '[Controls/_toggle/interface/ICheckable]': true;
+
+   // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = BigSeparatorTemplate;
 
    protected _icon: string;
@@ -88,8 +90,6 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
          value: EntityDescriptor(Boolean)
       };
    }
-
-   '[Controls/_toggle/interface/ICheckable]': true;
 }
 
 export default BigSeparator;
