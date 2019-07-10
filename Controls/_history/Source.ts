@@ -417,7 +417,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
       return _private.getSourceByMeta(this, meta).read(key, meta);
    },
 
-   update: function (data, meta) {
+   update: function (data, meta, historyId?) {
       var self = this;
       if (meta.hasOwnProperty('$_pinned')) {
          return Deferred.success(_private.updatePinned(self, data, meta));
@@ -425,7 +425,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
       if (meta.hasOwnProperty('$_history')) {
          return Deferred.success(_private.updateRecent(self, data, meta));
       }
-      return _private.getSourceByMeta(this, meta).update(data, meta);
+      return _private.getSourceByMeta(this, meta).update(data, meta, historyId);
    },
 
    destroy: function (keys, meta) {

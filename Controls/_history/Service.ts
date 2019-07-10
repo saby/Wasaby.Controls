@@ -27,18 +27,18 @@ var _private = {
       return typeof id === 'number' ? intMethod : stringMethod;
    },
 
-   updateHistory: function (self, data) {
+   updateHistory: function (self, data, historyId?) {
       if (data.ids) {
          _private.getHistoryDataSource(self).call(_private.getMethodNameByIdType('AddList', 'AddIntList', data.ids[0]), {
             history_id: self._historyId,
-            ids: data.ids,
+            ids: historyId || data.ids,
             history_context: null
          });
       } else {
          var id = data.getId();
          _private.getHistoryDataSource(self).call(_private.getMethodNameByIdType('Add', 'AddInt', id), {
             history_id: data.get('HistoryId') || self._historyId,
-            id: id,
+            id: historyId || id,
             history_context: null
          });
       }
@@ -155,7 +155,7 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
       this._dataLoaded = cfg.dataLoaded;
    },
 
-   update: function (data, meta) {
+   update: function (data, meta, historyId) {
       if (meta.hasOwnProperty('$_addFromData')) {
          return _private.addFromData(this, data);
       }
@@ -163,7 +163,7 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
          _private.updatePinned(this, data, meta);
       }
       if (meta.hasOwnProperty('$_history')) {
-         _private.updateHistory(this, data, meta);
+         _private.updateHistory(this, data, meta, historyId);
       }
 
       return {};

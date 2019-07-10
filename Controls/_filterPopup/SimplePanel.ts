@@ -4,8 +4,8 @@ import * as defaultItemTemplate from 'wml!Controls/_filterPopup/SimplePanel/item
 
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
-import coreMerge = require('Core/core-merge');
 import CoreClone = require('Core/core-clone');
+import {dropdownHistoryUtils as historyUtils} from "Controls/dropdown";
 
 /**
  * Control dropdown list for {@link Controls/filter:View}.
@@ -20,25 +20,33 @@ import CoreClone = require('Core/core-clone');
  */
 
 var _private = {
+    loadItems: function(config) {
+        let filter = historyUtils.getSourceFilter(config.filter, config.source);
+        return config.sourceController.load(filter).addCallback((items) => {
+            return items;
+        });
+    },
+
     getItems: function(self, initItems) {
         var items = [];
         factory(initItems).each(function(item, index) {
             var curItem = item.getRawData();
             curItem.initSelectedKeys = self._items ? self._items[index].initSelectedKeys : CoreClone(item.get('selectedKeys'));
             items.push(curItem);
+
+            if (curItem._needQuery) {
+                _private.loadItems(curItem);
+            }
         });
         return items;
     },
 
     isEqualKeys: function(oldKeys, newKeys) {
         let result;
-        if (oldKeys[0] === null && !newKeys.length || newKeys.length !== oldKeys.length) {
+        if (oldKeys[0] === null && !newKeys.length) {
             result = false;
         } else {
-            const diffKeys = newKeys.filter((i) => {
-                return !oldKeys.includes(i);
-            });
-            result = !diffKeys.length;
+            result = isEqual(oldKeys, newKeys);
         }
         return result;
     },

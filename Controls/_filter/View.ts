@@ -107,6 +107,9 @@ var _private = {
                         _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter);
                     }
                     popupItem.hasMoreButton = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation).hasMoreData('down');
+                    popupItem._needQuery = !configs[item.name].source;
+                    popupItem.sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation);
+                    popupItem.source = item.editorOptions.source;
                     popupItem.selectorOpener = self._children.selectorOpener;
                     popupItem.selectorDialogResult = self._onSelectorTemplateResult.bind(self);
                 }
@@ -114,6 +117,24 @@ var _private = {
             }
         });
         return popupItems;
+    },
+
+    getFolderIds: function(items, nodeProperty, keyProperty) {
+        let folders = [];
+        factory(items).each((item) => {
+            if (item.get(nodeProperty)) {
+                folders.push(item.get(keyProperty));
+            }
+        });
+        return folders;
+    },
+
+    getDisplay: function(textArr) {
+        return {
+            text: textArr[0] || '',
+            title: textArr.join(', '),
+            hasMoreText: textArr.length > 1 ? ', ' + rk('еще ') + (textArr.length - 1) : ''
+        };
     },
 
     getFastText: function(config, selectedKeys) {
@@ -127,11 +148,15 @@ var _private = {
                 }
             });
         }
-        return {
-            text: textArr[0] || '',
-            title: textArr.join(', '),
-            hasMoreText: textArr.length > 1 ? ', ' + rk('еще ') + (textArr.length - 1) : ''
-        };
+        return textArr;
+    },
+
+    getHierarchyFastText: function(config, selectedKeys) {
+        let textArr = [];
+        factory(selectedKeys).each((sKey, index) => {
+            textArr = textArr.concat(_private.getFastText(config, sKey));
+        });
+        return _private.getDisplay(textArr);
     },
 
     getFilterButtonText: function(self, items) {
@@ -153,7 +178,11 @@ var _private = {
                 self._displayText[item.name] = {};
                 if (_private.isItemChanged(item)) {
                     var sKey = configs[item.name].multiSelect ? item.value : [item.value];
-                    self._displayText[item.name] = _private.getFastText(configs[item.name], sKey);
+                    if (configs[item.name].parentProperty) {
+                        self._displayText[item.name] = _private.getHierarchyFastText(configs[item.name], sKey);
+                    } else {
+                        self._displayText[item.name] = _private.getDisplay(_private.getFastText(configs[item.name], sKey));
+                    }
                     if (item.textValue !== undefined) {
                         item.textValue = self._displayText[item.name].text + self._displayText[item.name].hasMoreText;
                     }
@@ -202,8 +231,12 @@ var _private = {
     },
 
     loadItemsFromSource: function(instance, source, filter, navigation?, dataLoadCallback?) {
-        // As the data source can be history source, then you need to merge the filter
-        instance._filter = historyUtils.getSourceFilter(filter, source);
+        if (instance.nodeProperty) {
+            instance._filter = Merge(filter, {historyId: instance.historyId});
+        } else {
+            // As the data source can be history source, then you need to merge the filter
+            instance._filter = historyUtils.getSourceFilter(filter, source);
+        }
         return _private.getSourceController(instance, source, navigation).load(instance._filter).addCallback(function(items) {
             instance.items = items;
             if (dataLoadCallback) {
@@ -275,16 +308,6 @@ var _private = {
         object.setPropertyValue(item, 'value', value);
     },
 
-    selectItems: function(self, selectedKeys) {
-        factory(selectedKeys).each(function(sKey, index) {
-            if (sKey) {
-                _private.setValue(self, sKey, index);
-            }
-        });
-
-        _private.updateText(self, self._source, self._configs);
-    },
-
     getNewItems: function(self, selectedItems, config) {
         var newItems = [],
             curItems = config.items,
@@ -300,9 +323,21 @@ var _private = {
 
     getSelectedKeys: function(items, config) {
         var selectedKeys = [];
-        factory(items).each(function(item) {
-            selectedKeys.push(object.getPropertyValue(item, config.keyProperty));
-        });
+        if (config.nodeProperty) {
+            let folderIds = _private.getFolderIds(config.items, config.nodeProperty, config.keyProperty);
+            factory(folderIds).each((folderId, index) => {
+                selectedKeys.push([]);
+                factory(items).each((item) => {
+                    if (folderId === item.get(config.keyProperty) || folderId === item.get(config.parentProperty)) {
+                        selectedKeys[index].push(item.get(config.keyProperty));
+                    }
+                });
+            });
+        } else {
+            factory(items).each(function (item) {
+                selectedKeys.push(object.getPropertyValue(item, config.keyProperty));
+            });
+        }
         return selectedKeys;
     },
 
@@ -316,13 +351,44 @@ var _private = {
         return !!hasSelectorTemplate;
     },
 
+    getSelectedItems: function(items, selectedKeys) {
+        let selectedItems = [];
+        factory(selectedKeys).each((key) => {
+            selectedItems.push(items.getRecordById(key));
+        });
+        return selectedItems;
+    },
+
     itemClick: function(result) {
         _private.setValue(this, result.selectedKeys, result.id);
         _private.updateText(this, this._source, this._configs);
+        _private.updateHistory(this, result.id, result.data, result.selectedKeys);
+    },
+
+    prepareKeys: function(selectedKeys, curConfig) {
+        let folderIds = _private.getFolderIds(curConfig.items, curConfig.nodeProperty, curConfig.keyProperty);
+
+        return selectedKeys.map((keyArr) => {
+            // if folder is selected, delete other keys
+            let folderKey = keyArr.filter((key) => { return folderIds.includes(key); });
+            return folderKey.length ? folderKey : keyArr;
+        });
     },
 
     applyClick: function(result) {
-        _private.selectItems(this, result.selectedKeys);
+        const self = this;
+        factory(result.selectedKeys).each(function(sKey, index) {
+            if (sKey) {
+                let curConfig = self._configs[index];
+                if (curConfig.nodeProperty) {
+                    sKey = _private.prepareKeys(sKey, curConfig);
+                }
+                _private.setValue(self, sKey, index);
+                _private.updateHistory(self, index, result.data, sKey);
+            }
+        });
+
+        _private.updateText(this, this._source, this._configs);
     },
 
     selectorResult: function(result) {
@@ -333,7 +399,7 @@ var _private = {
             if (newItems.length) {
                 curConfig._sourceController = null;
             }
-            _private.updateHistory(curConfig, factory(result.data).toArray(), curItem.editorOptions.source);
+            _private.updateHistory(this, result.id, factory(result.data).toArray());
             _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
         } else {
             curConfig.items.prepend(newItems);
@@ -361,10 +427,36 @@ var _private = {
         return result;
     },
 
-    updateHistory: function(currentFilter, items, source) {
-        if (isHistorySource(source)) {
-            source.update(items, historyUtils.getMetaHistory());
+    updateHierarchyHistory: function(currentFilter, selectedItems, source) {
+        if (currentFilter.nodeProperty) {
+            let folders = _private.getFolders(currentFilter.items, currentFilter.nodeProperty);
+            let folderIds = factory(folders).map((folder) => {return folder.getId()}).toArray();
+            factory(folderIds).each((folderId) => {
+                let hId = source.historySource.getHistoryId() + folderId;
+                let historyItems = [];
+                factory(selectedItems).each((item) => {
+                    if (item.get(currentFilter.parentProperty) === folderId || item.get(currentFilter.nodeProperty) === folderId) {
+                        historyItems.push(item);
+                    }
+                });
+                source.update(historyItems, historyUtils.getMetaHistory(), hId);
+            });
+        }
+    },
 
+    updateHistory: function(self, name, items, selectedKeys?) {
+        let source = _private.getItemByName(self._source, name).editorOptions.source;
+        if (isHistorySource(source)) {
+            let currentFilter = self._configs[name];
+            let selectedItems = items;
+            if (selectedKeys) {
+                selectedItems = _private.getSelectedItems(currentFilter.items, selectedKeys);
+            }
+            if (currentFilter.nodeProperty) {
+                _private.updateHierarchyHistory(currentFilter, selectedItems, source);
+            } else {
+                source.update(selectedItems, historyUtils.getMetaHistory());
+            }
             if (currentFilter._sourceController && source.getItems) {
                 currentFilter.items = source.getItems();
             }
