@@ -8,6 +8,27 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
 }
 
    /**
+    * Простой заголовок с поддержкой различных стилей отображения и размеров.
+    * Может использоваться в составе сложных заголовков, состоящих из <a href="/docs/js/Controls/_heading/Counter/?v=3.18.500">counter</a>, <a href="/docs/js/Controls/_heading/Separator/?v=3.18.500">header-separator</a> и <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
+    *
+    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    *
+    *
+    * @class Controls/_heading/Heading
+    * @extends Core/Control
+    * @control
+    * @public
+    * @author Красильников А.С.
+    * @demo Controls-demo/Headers/headerDemo
+    *
+    * @mixes Controls/_interface/ITooltip
+    * @mixes Controls/_interface/ICaption
+    * @mixes Controls/_interface/IFontColorStyle
+    * @mixes Controls/_interface/IFontSize
+    * @mixes Controls/_heading/Heading/HeadingStyles
+    */
+
+   /*
     * Heading with support different display styles and sizes. Can be used independently or as part of complex headings(you can see it in <a href="/materials/demo-ws4-header-separator">Demo-example</a>) consisting of a <a href="/docs/js/Controls/_heading/Counter/?v=3.18.500">counter</a>, a <a href="/docs/js/Controls/_heading/Separator/?v=3.18.500">header-separator</a> and a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
