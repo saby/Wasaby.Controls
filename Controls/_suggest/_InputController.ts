@@ -278,6 +278,20 @@ var _private = {
 };
 
 /**
+ * Контейнер для поля ввода с автодополнением.
+ *
+ * @class Controls/_suggest/_InputController
+ * @extends Core/Control
+ * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IFilter
+ * @mixes Controls/interface/ISuggest
+ * @mixes Controls/interface/INavigation
+ * @control
+ * @public
+ */
+
+/*
  * Container for Input's that using suggest.
  *
  * @class Controls/_suggest/_InputController
