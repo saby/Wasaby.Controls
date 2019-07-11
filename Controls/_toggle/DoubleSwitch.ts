@@ -14,7 +14,7 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
 /**
  * Двойной переключатель, который позволяет выбрать один из двух взаимоисключающих вариантов.
  *
- * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
+ * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
  *
  * @class Controls/_toggle/DoubleSwitch
  * @extends Core/Control
