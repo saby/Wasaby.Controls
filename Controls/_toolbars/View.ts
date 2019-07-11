@@ -26,13 +26,32 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
 
 /**
  * @typedef {Object} Item
- * @property {Boolean} [item.readOnly] Determine item readOnly state.
- * @property {Boolean} [item.buttonCaption] Caption of toolbar element.
+ * @property {Boolean} [item.readOnly] Определяет, может ли пользователь изменить значение контрола. {@link UI/_base/Control#readOnly Подробнее}
+ * @property {String} [item.buttonCaption] Текст кнопки элемента. {@link Controls/_interface/ICaption#caption Подробнее}
+ * @property {Boolean} [item.buttonTransparent] Определяет, имеет ли кнопка элемента фон.{@link Controls/_buttons/Button#contrastBackground Подробнее}
+ * @property {String} [item.buttonIconStyle] Определяет цвет иконки элемента.{@link Controls/_interface/IIconStyle#iconStyle Подробнее}
+ * @property {String} [item.icon] Определяет иконку элемента. {@link Controls/_interface/IIcon#icon Подробнее}
+ * @property {String} [item.title] Определеяет текст элемента.
+ * @property {Boolean} [item.showHeader] Определяет, будет ли отображаться шапка у выпадающего списка элемента.
+ * @property {String} [item.tooltip] Текст подсказки, при наведении на элемент тулбара. {@link Controls/_interface/ITooltip#tooltip Подробнее}
+ * @property {Number} [item.showType] Определяет, где будет отображаться элемент( 0 - только в меню,1 - в меню и в тулбаре, 2 - только в тулбаре)
+ * @property {String} [item.buttonStyle] Определяет стиль отображения кнопки элемента.{@link Controls/_buttons/Button#buttonStyle Подробнее}
+ * @property {String} [item.buttonViewMode] Определяет стиль отображения кнопки элемента.{@link Controls/_buttons/Button#viewMode Подробнее }
+ */
+
+/*
+ * @typedef {Object} Item
+ * @property {Boolean} [item.readOnly] Determines item readOnly state.
+ * @property {String} [item.buttonCaption] Caption of toolbar element.
  * @property {Boolean} [item.buttonTransparent] Transparent of toolbar element.
- * @property {Boolean} [item.iconStyle] Icon style of toolbar element.
- * @property {Boolean} [item.icon] Icon of toolbar element.
- * @property {Boolean} [item.buttonStyle] Button style of toolbar element.
- * @property {Boolean} [item.buttonViewMode] Button style of toolbar element.
+ * @property {String} [item.buttonIconStyle] Icon style of toolbar element.
+ * @property {String} [item.icon] Icon of toolbar element.
+ * @property {String} [item.title] Determines item caption.
+ * @property {Boolean} [item.showHeader] Indicates whether folders should be displayed.
+ * @property {String} [item.tooltip] Text of the tooltip shown when the item is hovered over.
+ * @property {Number} [item.showType] Determines where item is displayed ( 0 - in menu,1 - in menu and toolbar, 2 - in toolbar)
+ * @property {String} [item.buttonStyle] Button style of toolbar element.
+ * @property {String} [item.buttonViewMode] Button style of toolbar element.
  */
 
 /**

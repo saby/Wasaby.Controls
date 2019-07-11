@@ -1,6 +1,6 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
-import formatDate = require('Core/helpers/Date/format');
+import {date as formatDate} from 'Types/formatter';
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import EventProxyMixin from './Mixin/EventProxy';
 import {MonthModel as modelViewModel} from 'Controls/calendar';

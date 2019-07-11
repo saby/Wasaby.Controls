@@ -5,6 +5,28 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import 'css!theme?Controls/suggest';
 
 /**
+ * Поле ввода с автодополнением.
+ *
+ * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+ *
+ * @class Controls/_suggest/Input
+ * @extends Core/Control
+ * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IFilter
+ * @mixes Controls/interface/ISuggest
+ * @mixes Controls/interface/INavigation
+ * @mixes Controls/_suggest/Input/Styles
+ * @mixes Controls/interface/IPaste
+ * @mixes Controls/interface/IInputText
+ * @control
+ * @public
+ * @category Input
+ * @demo Controls-demo/Input/Suggest/SuggestPG
+ * @author Герасимов А.М.
+ */
+
+/*
  * The Input/Suggest control is a normal text input enhanced by a panel of suggested options.
  *
  * Here you can see the <a href="/materials/demo-ws4-input">demo examples</a>.

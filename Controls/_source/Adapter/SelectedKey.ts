@@ -36,10 +36,10 @@ class SelectedKeyAdapter extends Control<ISelectedKeyAdapterOptions> {
       }
    }
 
-   private _selectedKeysChanged(event: SyntheticEvent<Event>, keys: TSelectedKeys): void {
+   private _selectedKeysChanged(event: SyntheticEvent<Event>, keys: TSelectedKeys): Boolean|undefined  {
       event.stopPropagation();
       const selectedKey = keys.length ? keys[0] : null;
-      this._notify('selectedKeyChanged', [selectedKey]);
+      return this._notify('selectedKeyChanged', [selectedKey]);
    }
 
 }

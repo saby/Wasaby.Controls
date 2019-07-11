@@ -174,10 +174,10 @@ var
         },
 
         isFixedCell: function(params) {
-           if (params.multiSelectVisibility === 'hidden') {
-              return params.columnIndex === 0;
-           }
-           return params.columnIndex <= 1;
+           const
+              hasMultiSelect = params.multiSelectVisibility !== 'hidden',
+              columnOffset = hasMultiSelect ? 1 : 0;
+           return params.columnIndex < (params.stickyColumnsCount + columnOffset);
         },
 
         getHeaderZIndex: function(params) {
@@ -670,7 +670,8 @@ var
             if (this.isStickyHeader()) {
                headerColumn.zIndex = _private.getHeaderZIndex({
                   columnIndex: columnIndex,
-                  multiSelectVisibility: this._options.multiSelectVisibility
+                  multiSelectVisibility: this._options.multiSelectVisibility,
+                  stickyColumnsCount: this._options.stickyColumnsCount
                });
             }
 
@@ -681,7 +682,8 @@ var
             if (this._options.columnScroll) {
                 cellClasses += _private.getColumnScrollCellClasses({
                     columnIndex: columnIndex,
-                    multiSelectVisibility: this._options.multiSelectVisibility
+                    multiSelectVisibility: this._options.multiSelectVisibility,
+                    stickyColumnsCount: this._options.stickyColumnsCount
                 });
             }
 
@@ -822,14 +824,16 @@ var
             if (this.isStickyHeader()) {
                 resultsColumn.zIndex = _private.getHeaderZIndex({
                     columnIndex: columnIndex,
-                    multiSelectVisibility: this._options.multiSelectVisibility
+                    multiSelectVisibility: this._options.multiSelectVisibility,
+                    stickyColumnsCount: this._options.stickyColumnsCount
                 });
             }
 
             if (this._options.columnScroll) {
                 cellClasses += _private.getColumnScrollCellClasses({
                     columnIndex: columnIndex,
-                    multiSelectVisibility: this._options.multiSelectVisibility
+                    multiSelectVisibility: this._options.multiSelectVisibility,
+                    stickyColumnsCount: this._options.stickyColumnsCount
                 });
             }
 
@@ -1096,6 +1100,7 @@ var
             current.isNoGridSupport = GridLayoutUtil.isNoGridSupport;
 
             current.columnScroll = this._options.columnScroll;
+            current.stickyColumnsCount = this._options.stickyColumnsCount;
 
             current.style = this._options.style;
             current.multiSelectClassList += current.hasMultiSelect ? ' controls-GridView__checkbox' : '';
@@ -1355,6 +1360,11 @@ var
 
         setRowSeparatorVisibility: function(rowSeparatorVisibility) {
             this._options.rowSeparatorVisibility = rowSeparatorVisibility;
+            this._nextModelVersion();
+        },
+
+        setStickyColumnsCount: function(stickyColumnsCount) {
+            this._options.stickyColumnsCount = stickyColumnsCount;
             this._nextModelVersion();
         },
 
