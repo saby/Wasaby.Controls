@@ -1006,10 +1006,7 @@ import 'wml!Controls/_input/Base/Stretcher';
       Base.getOptionTypes = function() {
          return {
 
-            /**
-             * https://online.sbis.ru/opendoc.html?guid=baf5be68-db8c-4a43-9ade-0c4baef078d7
-             * value: descriptor(String|null),
-             */
+            value: entity.descriptor(String, null),
             tooltip: entity.descriptor(String),
             /*autoComplete: entity.descriptor(String).oneOf([
                'on',

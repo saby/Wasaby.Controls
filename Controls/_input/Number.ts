@@ -115,12 +115,9 @@ NumberInput.getDefaultOptions = function () {
 NumberInput.getOptionTypes = function () {
     const optionTypes = Base.getOptionTypes();
 
-    /**
-     * https://online.sbis.ru/opendoc.html?guid=baf5be68-db8c-4a43-9ade-0c4baef078d7
-     * optionTypes.value = descriptor(Number|null);
-     * optionTypes.precision = descriptor(Number|null);
-     * optionTypes.integersLength = descriptor(Number|null);
-     */
+    optionTypes.value = entity.descriptor(Number, null);
+    optionTypes.precision = entity.descriptor(Number, null);
+    optionTypes.integersLength = entity.descriptor(Number, null);
     optionTypes.useGrouping = entity.descriptor(Boolean);
     optionTypes.onlyPositive = entity.descriptor(Boolean);
     optionTypes.showEmptyDecimals = entity.descriptor(Boolean);
