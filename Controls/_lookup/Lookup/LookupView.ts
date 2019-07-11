@@ -14,7 +14,7 @@ var
    MAX_VISIBLE_ITEMS = 20,
    SHOW_SELECTOR_WIDTH = 0,
    CLEAR_RECORDS_WIDTH = 0,
-   LIST_OF_DEPENDENT_OPTIONS = ['multiSelect', 'multiLine', 'items', 'displayProperty', 'maxVisibleItems', 'readOnly'],
+   LIST_OF_DEPENDENT_OPTIONS = ['multiSelect', 'multiLine', 'items', 'displayProperty', 'maxVisibleItems', 'readOnly', 'comment'],
    LEFT_OFFSET_COUNTER = 0;
 
 var _private = {
@@ -65,7 +65,7 @@ var _private = {
       return maxVisibleItems;
    },
 
-   getAvailableCollectionWidth: function(self, afterFieldWrapperWidth, readOnly, multiSelect) {
+   getAvailableCollectionWidth: function(self, afterFieldWrapperWidth, readOnly, multiSelect, comment) {
       var
          additionalWidth = afterFieldWrapperWidth,
 
@@ -73,7 +73,7 @@ var _private = {
          fieldWrapperMinHeight = _private.getFieldWrapperMinHeight(self),
          fieldWrapperWidth = self._getFieldWrapperWidth();
 
-      if (!readOnly && multiSelect) {
+      if (!readOnly && (multiSelect || comment) {
          additionalWidth += _private.getInputMinWidth(self._fieldWrapper.offsetWidth, afterFieldWrapperWidth, fieldWrapperMinHeight);
       }
 
@@ -209,7 +209,7 @@ var LookupView = BaseLookupView.extend({
 
    _isNeedCalculatingSizes: function(options) {
       // not calculating sizes in a single choice or with records no more than 1 in read mode, because calculations will be on css styles
-      return !this._isEmpty(options) && options.multiSelect && (!options.readOnly || options.items.getCount() > 1);
+      return !this._isEmpty(options) && (options.multiSelect || options.comment) && (!options.readOnly || options.items.getCount() > 1);
    },
 
    _calculatingSizes: function(newOptions) {
@@ -236,7 +236,7 @@ var LookupView = BaseLookupView.extend({
          itemsSizesLastRow = _private.getItemsSizesLastRow(fieldWrapperWidth, lastSelectedItems, newOptions, counterWidth);
          allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
          afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
-         availableWidth = _private.getAvailableCollectionWidth(this, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
+         availableWidth = _private.getAvailableCollectionWidth(this, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect, newOptions.comment);
 
          //For multi line define - inputWidth, for single line - maxVisibleItems
          if (newOptions.multiLine) {
@@ -259,7 +259,12 @@ var LookupView = BaseLookupView.extend({
    },
 
    _isInputVisible: function(options) {
-      return (!options.readOnly || this._inputValue && !options.multiSelect) && (this._isEmpty(options) || options.multiSelect);
+      return (!options.readOnly || this._inputValue && !options.multiSelect) &&
+         (this._isEmpty(options) || options.multiSelect || options.comment);
+   },
+
+   _isInputActive: function(options) {
+      return !options.readOnly && (this._isEmpty(options) || options.multiSelect);
    },
 
    _openInfoBox: function(event, config) {
@@ -267,6 +272,18 @@ var LookupView = BaseLookupView.extend({
       config.offset = {
          horizontal: -LEFT_OFFSET_COUNTER
       };
+   },
+
+   _getPlaceholder: function(options)  {
+      let placeholder;
+
+      if (!options.multiSelect && !this._isEmpty(options)) {
+         placeholder = options.comment;
+      } else {
+         placeholder = options.placeholder;
+      }
+
+      return placeholder;
    }
 });
 

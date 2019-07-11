@@ -1744,6 +1744,10 @@
             "type": "function|String",
             "title": "Input's placeholder text."
           },
+          "comment": {
+            "type": "String",
+            "title": "Input's comment text."
+          },
           "minSearchLength": {
             "type": "String"
           },
