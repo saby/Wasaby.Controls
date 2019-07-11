@@ -101,6 +101,13 @@ import { IoC } from 'Env/Env';
    }
 
    /**
+    * Преобразует html-строки в допустимый JsonML. Используется только на стороне клиента.
+    * @function Controls/_decorator/Markup/Converter#htmlToJson
+    * @param html {String}
+    * @returns {Array}
+    */
+
+   /*
     * Convert html string to valid JsonML. Is using on client-side only.
     * @function Controls/_decorator/Markup/Converter#htmlToJson
     * @param html {String}
@@ -148,6 +155,15 @@ import { IoC } from 'Env/Env';
    };
 
    /**
+    * Преобразует json-строки в строки формата html.
+    * @function Controls/_decorator/Markup/Converter#jsonToHtml
+    * @param json {Array} Json на основе JsonML.
+    * @param tagResolver {Function} точно как в {@link Controls/_decorator/Markup#tagResolver}.
+    * @param resolverParams {Object} точно как в {@link Controls/_decorator/Markup#resolverParams}.
+    * @returns {String}
+    */
+
+   /*
     * Convert Json to html string.
     * @function Controls/_decorator/Markup/Converter#jsonToHtml
     * @param json {Array} Json based on JsonML.
@@ -169,6 +185,13 @@ import { IoC } from 'Env/Env';
    };
 
    /**
+    * Преобразует json-массив в его копию по значению во всех узлах.
+    * @function Controls/_decorator/Markup/Converter#deepCopyJson
+    * @param json
+    * @return {Array}
+    */
+
+   /*
     * Convert Json array to its copy  by value in all nodes.
     * @function Controls/_decorator/Markup/Converter#deepCopyJson
     * @param json
@@ -183,6 +206,7 @@ import { IoC } from 'Env/Env';
     * @author Кондаков Р.Н.
     * @public
     */
+   
    var MarkupConverter = {
       htmlToJson: htmlToJson,
       jsonToHtml: jsonToHtml,

@@ -1,4 +1,4 @@
-import formatDate = require('Core/helpers/Date/format');
+import {date as formatDate} from 'Types/formatter';
 
 export default {
     dateToId: function(date: Date): string {

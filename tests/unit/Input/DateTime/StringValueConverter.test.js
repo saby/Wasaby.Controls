@@ -1,11 +1,11 @@
 define([
    'Core/core-merge',
-   'Core/helpers/Date/format',
+   'Types/formatter',
    'Controls/input',
    'Controls/Utils/Date'
 ], function(
    cMerge,
-   formatDate,
+   formatter,
    input,
    dateUtils
 ) {
@@ -59,9 +59,9 @@ define([
          let year = now.getFullYear(),
             month = now.getMonth(),
             date = now.getDate(),
-            shortYearStr = formatDate(now, 'YY'),
-            monthStr = formatDate(now, 'MM'),
-            dateStr = formatDate(now, 'DD');
+            shortYearStr = formatter.date(now, 'YY'),
+            monthStr = formatter.date(now, 'MM'),
+            dateStr = formatter.date(now, 'DD');
 
          [
             // The day and month are filled

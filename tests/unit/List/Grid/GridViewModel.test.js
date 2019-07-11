@@ -91,6 +91,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          markedKey: '123',
          markerVisibility: 'visible',
          multiSelectVisibility: 'visible',
+         stickyColumnsCount: 1,
          header: gridHeader,
          columns: gridColumns,
          items: new collection.RecordSet({
@@ -1486,6 +1487,65 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel.setHoveredItem(clone(current.item));
             gridViewModel.setItemActions(current.item, [{}, {}, {}]);
             assert.isTrue(gridViewModel.getCurrent().isHovered);
+         });
+         it('isFixedCell', function() {
+            var testCases = [
+               {
+                  settings: {
+                     multiSelectVisibility: 'visible',
+                     stickyColumnsCount: 1
+                  },
+                  tests: [
+                     [0, true],
+                     [1, true],
+                     [2, false]
+                  ]
+               },
+               {
+                  settings: {
+                     multiSelectVisibility: 'hidden',
+                     stickyColumnsCount: 1
+                  },
+                  tests: [
+                     [0, true],
+                     [1, false]
+                  ]
+               },
+               {
+                  settings: {
+                     multiSelectVisibility: 'visible',
+                     stickyColumnsCount: 2
+                  },
+                  tests: [
+                     [0, true],
+                     [1, true],
+                     [2, true],
+                     [3, false]
+                  ]
+               },
+               {
+                  settings: {
+                     multiSelectVisibility: 'hidden',
+                     stickyColumnsCount: 2
+                  },
+                  tests: [
+                     [0, true],
+                     [1, true],
+                     [2, false]
+                  ]
+               }
+            ];
+
+            testCases.forEach(function(t) {
+               t.tests.forEach(function(test) {
+                  var settings = Object.assign({}, t.settings, { columnIndex: test[0] });
+                  assert.strictEqual(
+                     gridMod.GridViewModel._private.isFixedCell(settings),
+                     test[1],
+                     'Expected "' + test[1] + '" for settings ' + JSON.stringify(settings)
+                  );
+               });
+            });
          });
       });
 

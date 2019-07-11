@@ -3,6 +3,26 @@ import template = require('wml!Controls/_MoveDialog/MoveDialog');
 import 'css!theme?Controls/_MoveDialog/MoveDialog';
 
    /**
+    * Стандартный шаблон диалогового окна выбора таргета для перемещения элементов.
+    * <a href="/materials/demo-ws4-operations-panel">Demo examples.</a>.
+    * @class Controls/MoveDialog
+    * @extends Core/Control
+    * @mixes Controls/_interface/IHierarchy
+    * @mixes Controls/interface/IFilter
+    * @mixes Controls/_interface/ISource
+    * @mixes Controls/_grid/interface/IGridControl
+    * @mixes Controls/_treeGrid/interface/ITreeControl
+    * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_explorer/interface/IExplorer
+    *
+    * @mixes Controls/_MoveDialog/Styles
+    * @control
+    * @public
+    * @author Авраменко А.С.
+    * @category List
+    */
+
+   /*
     * A standard dialog template for selecting a target item for moving items.
     * <a href="/materials/demo-ws4-operations-panel">Demo examples.</a>.
     * @class Controls/MoveDialog
@@ -24,14 +44,25 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
 
    /**
     * @name Controls/MoveDialog#root
-    * @cfg {String} Identifier of the root node.
+    * @cfg {String} Идентификатор корневого узла.
     * @default null
     */
 
+   /*
+    * @name Controls/MoveDialog#root
+    * @cfg {String} Identifier of the root node.
+    * @default null
+    */    
+
    /**
     * @name Controls/interface/ISearch#searchParam
-    * @cfg {String} Name of the field that search should operate on. Search value will insert in filter by this parameter.
+    * @cfg {String} Имя поля, в котором должен выполняться поиск. Значение поиска будет вставлено в фильтр по этому параметру.
     */
+
+   /*
+    * @name Controls/interface/ISearch#searchParam
+    * @cfg {String} Name of the field that search should operate on. Search value will insert in filter by this parameter.
+    */    
 
 let MoveDialog = Control.extend({
       _template: template,
