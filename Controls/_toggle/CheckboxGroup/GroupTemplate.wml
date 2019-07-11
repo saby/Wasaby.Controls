@@ -4,6 +4,7 @@
                     selected="{{isSelected(item)}}"
                     triState = "{{triStateKeys.indexOf(item[keyProperty]) > -1}}"
                     on:valueChanged="_valueChangedHandler(item)"
+                    attr:class="{{_options.direction === 'vertical' ? 'controls-CheckboxGroup__item-vertical_theme_' + _options.theme}}"
                     item="{{item}}"
                     readOnly="{{_options.readOnly}}"/>
         <ws:if data="{{item[_options.nodeProperty]}}">
