@@ -1,5 +1,5 @@
 /**
- * library with common interfaces
+ * Библиотека с общими интерфейсами. 
  * @library Controls/interface
  * @includes ITooltip Controls/_interface/ITooltip
  * @includes IButton Controls/_interface/IButton
@@ -20,6 +20,10 @@
  * @includes IExpandable Controls/_interface/IExpandable
  * @public
  * @author Крайнов Д.О.
+ */
+
+/*
+ * library with common interfaces
  */
 
 export {default as ITooltip, ITooltipOptions} from './_interface/ITooltip';
