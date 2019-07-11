@@ -11,14 +11,15 @@ import 'css!theme?Controls/suggest';
  *
  * @class Controls/_suggest/Input
  * @extends Core/Control
+ * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
- * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/INavigation
- * @mixes Controls/_suggest/Input/Styles
  * @mixes Controls/interface/IPaste
+ * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IInputText
+ * @mixes Controls/_suggest/Input/Styles
  * @control
  * @public
  * @category Input
@@ -33,19 +34,20 @@ import 'css!theme?Controls/suggest';
  *
  * @class Controls/_suggest/Input
  * @extends Core/Control
+ * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
- * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/INavigation
- * @mixes Controls/_suggest/Input/Styles
  * @mixes Controls/interface/IPaste
+ * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IInputText
+ * @mixes Controls/_suggest/Input/Styles
  * @control
  * @public
  * @category Input
  * @demo Controls-demo/Input/Suggest/SuggestPG
- * @author Герасимов А.М.
+ * @author Gerasimov A.M.
  */
 
 

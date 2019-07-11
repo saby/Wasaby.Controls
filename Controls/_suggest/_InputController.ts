@@ -12,14 +12,14 @@ import LoadService from './LoadService';
 import 'css!theme?Controls/suggest';
 
 
-var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
-var HISTORY_KEYS_FIELD = 'historyKeys';
+const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
+const HISTORY_KEYS_FIELD = 'historyKeys';
 
 /* if suggest is opened and marked key from suggestions list was changed,
    we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
-var ENTER_KEY = Env.constants.key.enter;
+const ENTER_KEY = Env.constants.key.enter;
 
-var PROCESSED_KEYDOWN_KEYS = {
+const PROCESSED_KEYDOWN_KEYS = {
 
    /* hot keys that should processed on input */
    INPUT: [Env.constants.key.esc],
@@ -28,7 +28,7 @@ var PROCESSED_KEYDOWN_KEYS = {
    SUGGESTIONS_LIST: [Env.constants.key.down, Env.constants.key.up, ENTER_KEY]
 };
 
-var DEPS = ['Controls/suggestPopup:_ListWrapper', 'Controls/scroll:Container', 'Controls/search:Misspell', 'Controls/LoadingIndicator'];
+const DEPS = ['Controls/suggestPopup:_ListWrapper', 'Controls/scroll:Container', 'Controls/search:Misspell', 'Controls/LoadingIndicator'];
 
 var _private = {
    hasMore: function(searchResult) {
