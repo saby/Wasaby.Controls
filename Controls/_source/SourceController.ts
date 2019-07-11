@@ -179,9 +179,9 @@ var SourceController = cExtend.extend({
       return this._options.navigation;
    },
 
-   hasMoreData: function(direction) {
+   hasMoreData: function(direction: 'up' | 'down', key?: string | number): boolean {
       if (this._queryParamsController) {
-         return this._queryParamsController.hasMoreData(direction);
+         return this._queryParamsController.hasMoreData(direction, key);
       }
    },
 

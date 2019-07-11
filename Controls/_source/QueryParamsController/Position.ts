@@ -3,6 +3,7 @@ import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import Env = require('Env/Env');
 import {default as IAdditionalQueryParams, Direction, DirectionCfg} from './interface/IAdditionalQueryParams';
+import {default as More} from './More';
 
 interface IPositionHasMore {
    before: boolean;
@@ -39,7 +40,7 @@ export interface IPositionNavigationOptions {
  * @author Крайнов Дмитрий
  */
 class PositionNavigation {
-   protected _more: HasMore;
+   protected _more: More;
    protected _beforePosition: Position = null;
    protected _afterPosition: Position = null;
    protected _options: IPositionNavigationOptions;
@@ -64,10 +65,12 @@ class PositionNavigation {
          throw new Error('Option limit is undefined in PositionNavigation');
       }
 
-      this._more = {
-         before: false,
-         after: false
-      };
+      this._more = new More({
+         moreMeta: {
+            before: false,
+            after: false
+         }
+      });
    }
 
    private _resolveDirection(loadDirection: Direction, optDirection: DirectionCfg): DirectionCfg {
@@ -168,19 +171,19 @@ class PositionNavigation {
       if (typeof more === 'boolean') {
          if (loadDirection || this._options.direction !== 'both') {
             navDirection = this._resolveDirection(loadDirection, this._options.direction);
-            this._more[navDirection] = more;
+            const newMore = this._more.getMoreMeta();
+            newMore[navDirection] = more;
+            this._more.setMoreMeta(newMore);
          } else {
             Env.IoC.resolve('ILogger')
                .error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be object');
          }
-      } else {
-         if (more instanceof Object) {
-            if (!loadDirection &&  this._options.direction === 'both') {
-               this._more = {...more};
-            } else {
-               Env.IoC.resolve('ILogger')
-                  .error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');
-            }
+      } else if (more instanceof Object) {
+         if (!loadDirection &&  this._options.direction === 'both') {
+            this._more.setMoreMeta({...more});
+         } else {
+            Env.IoC.resolve('ILogger')
+                .error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');
          }
       }
 
@@ -242,14 +245,14 @@ class PositionNavigation {
       // TODO
    }
 
-   hasMoreData(loadDirection: Direction): boolean {
+   hasMoreData(loadDirection: Direction, rootKey: string|number): boolean {
       let navDirection: DirectionCfg;
       if (loadDirection === 'up') {
          navDirection = 'before';
       } else if (loadDirection === 'down') {
          navDirection = 'after';
       }
-      return this._more[navDirection];
+      return this._more.getMoreMeta(rootKey)[navDirection];
    }
 
    setEdgeState(direction: Direction): void {
