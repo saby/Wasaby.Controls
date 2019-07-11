@@ -750,6 +750,7 @@ define([
             treeControl = correctCreateTreeControl({
                expandedItems: [2246, 452815, 457244, 471641],
                columns: [],
+               source: new sourceLib.Memory(),
                items: new collection.RecordSet({
                   rawData: [],
                   idProperty: 'id'
