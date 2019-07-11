@@ -22,7 +22,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             resetValue: ''
          }];
          filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems });
-         assert.deepEqual(filterLayout._filterButtonItems[0].textValue, '');
+         assert.deepEqual(filterLayout._filterButtonItems[0].textValue, 'testText');
          assert.deepEqual(filterLayout._filterButtonItems[1].textValue, 'testText2');
 
          return new Promise(function(resolve) {
@@ -100,7 +100,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             id: 'testKey',
             value: 'testValue',
             isFast: true,
-            textValue: '',
+            textValue: 'testText',
             resetValue: ''
          }, {
             id: 'testKey2',
@@ -464,7 +464,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
          assert.deepEqual(fbItems, [{
             id: 'testId2',
             value: '',
-            textValue: '',
+            textValue: 'test2',
             resetValue: '',
             isFast: true
          }, {
