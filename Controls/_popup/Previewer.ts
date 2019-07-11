@@ -91,7 +91,7 @@ import 'css!theme?Controls/popup';
             }
          },
          _beforeUnmount: function() {
-            clearTimeout(this._waitTimer);
+            this._clearWaitTimer();
          },
 
          /**
@@ -159,7 +159,7 @@ import 'css!theme?Controls/popup';
 
          _contentMouseleaveHandler: function(event) {
             if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
-               clearTimeout(this._waitTimer);
+               this._clearWaitTimer();
                if (this._isPopupOpened()) {
                   this._debouncedAction('_close', [event]);
                }
@@ -168,16 +168,21 @@ import 'css!theme?Controls/popup';
 
          _contentMousemoveHandler: function(event) {
             if (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick') {
-               var self = this;
-
                // wait, until user stop mouse on target.
                // Don't open popup, if mouse moves through the target
-               clearTimeout(this._waitTimer);
-               this._waitTimer = setTimeout(function() {
-                  if (!self._isPopupOpened()) {
-                     self._debouncedAction('_open', [event]);
+               this._clearWaitTimer();
+               this._waitTimer = setTimeout(() => {
+                  this._waitTimer = null;
+                  if (!this._isPopupOpened()) {
+                     this._debouncedAction('_open', [event]);
                   }
                }, CALM_DELAY);
+            }
+         },
+
+         _clearWaitTimer() {
+            if (this._waitTimer) {
+               clearTimeout(this._waitTimer);
             }
          },
 
