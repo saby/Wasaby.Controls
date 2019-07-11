@@ -124,6 +124,11 @@
       "name": "Inferno",
       "path": "./node_modules/sbis3-ws/Inferno",
       "required": true
+    },
+    {
+      "name": "cdn",
+      "path": "./node_modules/cdn",
+      "required": true
     }
   ]
 }

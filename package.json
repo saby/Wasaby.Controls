@@ -17,7 +17,7 @@
       "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json",
       "builder": "node node_modules/gulp/bin/gulp.js --gulpfile=node_modules/sbis3-builder/gulpfile.js build --config=../../buildTemplate.json --log-level=warning -LLLL",
       "compile": "tsc",
-      "start": "node app",
+      "start": "node app --pathToResources=application --pathToNodeModules=node_modules",
       "start:units": "node node_modules/saby-units/cli/server",
       "test": "saby-units %NODE_DEBUG_OPTION% --isolated",
       "test:node": "saby-units --isolated --report",
