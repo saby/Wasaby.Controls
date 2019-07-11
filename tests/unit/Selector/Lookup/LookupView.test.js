@@ -141,9 +141,22 @@ define([
             items: getItems(1)
          }));
 
-         assert.isFalse(lookup._isInputVisible({
+         assert.isFalse(!!lookup._isInputVisible({
             multiSelect: true,
             items: getItems(1),
+            readOnly: true
+         }));
+
+         lookup._inputValue = 'notEmpty';
+         assert.isFalse(lookup._isInputVisible({
+            multiSelect: true,
+            items: getItems(0),
+            readOnly: true
+         }));
+
+         assert.isTrue(lookup._isInputVisible({
+            multiSelect: false,
+            items: getItems(0),
             readOnly: true
          }));
       });

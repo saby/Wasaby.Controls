@@ -60,7 +60,7 @@
                   on:openInfoBox="_openInfoBox()"
                   on:closeInfoBox="_closeInfoBox()"
                   attr:class="controls-Lookup__collection_{{_options.multiSelect ? 'multi' : 'single'}}"
-                  attr:style="max-width:{{_options.multiSelect && !_options.readOnly ? _availableWidthCollection}}px;"/>
+                  attr:style="max-width:{{_isInputVisible(_options) ? _availableWidthCollection}}px;"/>
          </ws:if>
       </ws:beforeFieldWrapper>
 

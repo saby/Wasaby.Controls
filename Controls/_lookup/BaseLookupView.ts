@@ -104,7 +104,7 @@ var BaseLookupView = Control.extend({
             }
         }
 
-        if (!this._isInputVisible(this._options)) {
+        if (!this._isInputActive(this._options)) {
             this._suggestState = false;
         }
     },
@@ -120,7 +120,7 @@ var BaseLookupView = Control.extend({
         _private.resetInputValue(this);
 
         // move focus to input after select, because focus will be lost after closing popup
-        if (this._isInputVisible(this._options)) {
+        if (this._isInputActive(this._options)) {
             this.activate({enableScreenKeyboard: true});
         }
     },
@@ -167,13 +167,13 @@ var BaseLookupView = Control.extend({
     },
 
     _suggestStateChanged: function () {
-        if (this._infoboxOpened || !this._isInputVisible(this._options)) {
+        if (this._infoboxOpened || !this._isInputActive(this._options)) {
             this._suggestState = false;
         }
     },
 
     _determineAutoDropDown: function () {
-        return this._options.autoDropDown && this._isInputVisible(this._options);
+        return this._options.autoDropDown && this._isInputActive(this._options);
     },
 
     _isEmpty: function (options) {
@@ -182,6 +182,10 @@ var BaseLookupView = Control.extend({
 
     _isInputVisible: function () {
 
+    },
+
+    _isInputActive: function(options) {
+        return !options.readOnly && this._isInputVisible(options);
     },
 
     _openInfoBox: function (event, config) {
