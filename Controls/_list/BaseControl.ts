@@ -764,7 +764,7 @@ var _private = {
         if ((context && self._isTouch) || !itemData.itemActions) {
             return false;
         }
-        showActions = (context || showAll) && itemData.itemActions.all
+        showActions = showAll && itemData.itemActions.all
             ? itemData.itemActions.all
             : itemData.itemActions && itemData.itemActions.all.filter(function(action) {
                 return action.showType !== tUtil.showType.TOOLBAR;
