@@ -173,11 +173,9 @@ import { IoC } from 'Env/Env';
     */
    var jsonToHtml = function(json, tagResolver, resolverParams) {
       var result = template({
-         _options: {
-            value: json,
-            tagResolver: tagResolver,
-            resolverParams: resolverParams
-         }
+         value: json,
+         tagResolver: tagResolver,
+         resolverParams: resolverParams
       }, {});
 
       // Invisible node in vdom equals empty string in html.
@@ -206,7 +204,7 @@ import { IoC } from 'Env/Env';
     * @author Кондаков Р.Н.
     * @public
     */
-   
+
    var MarkupConverter = {
       htmlToJson: htmlToJson,
       jsonToHtml: jsonToHtml,

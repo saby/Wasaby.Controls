@@ -34,7 +34,7 @@
  * @author Крайнов Д.О.
  */
 
-import Markup = require('Controls/_decorator/Markup');
+import {default as Markup} from './_decorator/Markup';
 import Money = require('Controls/_decorator/Money');
 import Number = require('Controls/_decorator/Number');
 import PhoneNumber = require('Controls/_decorator/PhoneNumber');
