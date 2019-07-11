@@ -109,19 +109,20 @@ import validHtml = require('Core/validHtml');
          def: undefined
       };
       control = data;
-      resolver = data._options.tagResolver;
-      resolverParams = data._options.resolverParams || {};
+      resolver = data.tagResolver;
+      resolverParams = data.resolverParams || {};
       resolverMode = 1;
-      currentValidHtml = data._options.validHtml || validHtml;
+      currentValidHtml = data.validHtml || validHtml;
 
       var elements = [],
          key = (attr && attr.key) || '_',
          attrsToDecorate = {
             attributes: attr.attributes,
+            events: attr.events,
             context: attr.context
          },
          oldEscape,
-         value = data._options.value;
+         value = data.value;
       if (value && value.length) {
          // Need just one root node.
 
