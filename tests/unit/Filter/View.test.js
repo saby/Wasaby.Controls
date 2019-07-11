@@ -143,7 +143,21 @@ define(
             });
             view._configs = {};
             view._displayText = {};
+
+            //isNeedReload = true
             view._beforeUpdate(newConfig).addCallback(function() {
+               assert.deepStrictEqual(view._displayText, expectedDisplayText);
+
+               newConfig = Clone(defaultConfig);
+               newConfig.source[0].value = 2;
+               newConfig.source[1].value = [5];
+               expectedDisplayText = {
+                  document: {text: 'My department', title: 'My department', hasMoreText: ''},
+                  state: {text: 'Completed negative', title: 'Completed negative', hasMoreText: ''}
+               };
+
+               //isNeedReload = false
+               view._beforeUpdate(newConfig);
                assert.deepStrictEqual(view._displayText, expectedDisplayText);
                done();
             });
