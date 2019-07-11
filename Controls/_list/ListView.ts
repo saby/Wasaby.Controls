@@ -79,6 +79,7 @@ var ListView = BaseControl.extend(
                if (changesType !== 'hoveredItemChanged' &&
                   changesType !== 'activeItemChanged' &&
                   changesType !== 'markedKeyChanged' &&
+                  changesType !== 'itemActionsUpdated' &&
                   !this._pendingRedraw) {
                   this._pendingRedraw = true;
                }
