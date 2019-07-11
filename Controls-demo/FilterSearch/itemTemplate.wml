@@ -1,6 +1,6 @@
 <ws:template name="owner">
     <Controls.source:SelectedKey bind:selectedKey="item.value">
-        <Controls.dropdown:Input keyProperty='lastName' displayProperty='title' source='{{item.source}}'/>
+        <Controls.filterPopup:Dropdown keyProperty='lastName' displayProperty='title' source='{{item.source}}'/>
     </Controls.source:SelectedKey>
 </ws:template>
 
