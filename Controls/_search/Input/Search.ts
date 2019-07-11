@@ -159,10 +159,7 @@ Search._theme = Base._theme.concat(['Controls/search']);
 Search.getOptionTypes = function getOptionsTypes() {
    var optionTypes = Base.getOptionTypes();
 
-   /**
-    * https://online.sbis.ru/opendoc.html?guid=baf5be68-db8c-4a43-9ade-0c4baef078d7
-    * optionTypes.maxLength = descriptor(Number|null);
-    */
+   optionTypes.maxLength = entity.descriptor(Number, null);
    optionTypes.trim = entity.descriptor(Boolean);
    optionTypes.constraint = entity.descriptor(String);
 
