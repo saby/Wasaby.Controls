@@ -346,6 +346,66 @@ define([
          });
       });
 
+      it('toggleExpanded does not load if shouldLoadChildren===false', function() {
+         const
+            treeControl = correctCreateTreeControl({
+               columns: [],
+               root: null,
+               sorting: [{sortField: 'DESC'}],
+               source: new sourceLib.Memory({
+                  data: [],
+                  idProperty: 'id'
+               })
+            }),
+            originalCreateSourceController = treeGrid.TreeControl._private.createSourceController,
+            originalShouldLoadChildren = treeGrid.TreeControl._private.shouldLoadChildren,
+            model = treeControl._children.baseControl.getViewModel(),
+            fakeDispItem = {
+               getContents: function() {
+                  return {
+                     getId: function() {
+                        return 1;
+                     }
+                  };
+               },
+               isRoot: function() {
+                  return false;
+               }
+            };
+
+         let
+            loadedDataFromServer = false,
+            expandedCorrectItem = false,
+            expandedCorrectState = false;
+
+         treeGrid.TreeControl._private.createSourceController = function() {
+            return {
+               load: function() {
+                  loadedDataFromServer = true;
+                  return Deferred.success([]);
+               }
+            };
+         };
+
+         treeGrid.TreeControl._private.shouldLoadChildren = function() {
+            return false;
+         };
+
+         model.toggleExpanded = function(item, expanded) {
+            expandedCorrectItem = item === fakeDispItem;
+            expandedCorrectState = expanded === true;
+         };
+
+         treeGrid.TreeControl._private.toggleExpanded(treeControl, fakeDispItem);
+
+         treeGrid.TreeControl._private.createSourceController = originalCreateSourceController;
+         treeGrid.TreeControl._private.shouldLoadChildren = originalShouldLoadChildren;
+
+         assert.isFalse(loadedDataFromServer);
+         assert.isTrue(expandedCorrectItem);
+         assert.isTrue(expandedCorrectState);
+      });
+
       it('_private.isDeepReload', function() {
          assert.isFalse(!!treeGrid.TreeControl._private.isDeepReload({}, false));
          assert.isTrue(!!treeGrid.TreeControl._private.isDeepReload({}, true));
