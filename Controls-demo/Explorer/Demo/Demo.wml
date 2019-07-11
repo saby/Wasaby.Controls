@@ -2,7 +2,7 @@
    <h1>Плитка</h1>
    <h2>Плитка с одинаковой шириной</h2>
    <Controls.explorer:View
-      attr:class="demo-Tile__static"
+      attr:class="demo-Tile__static demo-Tile__static1"
       parentProperty="parent"
       nodeProperty="type"
       displayProperty="title"
@@ -29,7 +29,7 @@
    </Controls.explorer:View>
    <h2>Плитка с разной шириной (без увеличения)</h2>
    <Controls.tile:View
-      attr:class="demo-Tile__dynamic"
+      attr:class="demo-Tile__dynamic demo-Tile__dynamic1"
       tileMode="dynamic"
       displayProperty="title"
       imageProperty="image"
@@ -47,7 +47,7 @@
    </Controls.tile:View>
    <h2>Плитка с разной шириной (с увеличением)</h2>
    <Controls.tile:View
-      attr:class="demo-Tile__dynamic demo-Tile__dynamic_zoom"
+      attr:class="demo-Tile__dynamic demo-Tile__dynamic_zoom demo-Tile__dynamic2"
       tileMode="dynamic"
       displayProperty="title"
       imageProperty="image"
@@ -66,7 +66,7 @@
    </Controls.tile:View>
    <h2>Плитка с одинаковой шириной(увеличение внутри контейнера)</h2>
    <Controls.tile:View
-      attr:class="demo-Tile__static"
+      attr:class="demo-Tile__static demo-Tile__static2"
       parentProperty="parent"
       nodeProperty="type"
       displayProperty="title"
@@ -86,7 +86,7 @@
    </Controls.tile:View>
    <h2>Плитка с группировкой</h2>
    <Controls.tile:View
-      attr:class="demo-Tile__static"
+      attr:class="demo-Tile__static demo-Tile__static3"
       tileMode="static"
       displayProperty="title"
       imageProperty="image"
