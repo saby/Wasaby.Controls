@@ -457,7 +457,7 @@ var _private = {
     // Обновляет стартовый и конечный индексы виртуального окна
     applyVirtualScrollIndexes(self, direction): void {
         if (_private.applyVirtualScrollIndexesToListModel(self)) {
-            if (direction === 'up') {
+            if (direction === 'up' && self._topPlaceholderSize === 0) {
                 self._saveAndRestoreScrollPosition = true;
             }
             self._shouldRestoreScrollPosition = true;
