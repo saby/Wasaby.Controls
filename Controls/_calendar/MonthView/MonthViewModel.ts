@@ -1,5 +1,6 @@
 import {Utils as calendarUtils} from 'Controls/dateRange';
 import {VersionableMixin} from 'Types/entity';
+import {date as formatDate} from 'Types/formatter';
 import cExtend = require('Core/core-simpleExtend');
 import coreMerge = require('Core/core-merge');
 import DateUtil = require('Controls/Utils/Date');
@@ -63,6 +64,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
 
       obj.mode = state.mode;
       obj.date = date;
+      obj.id = formatDate(date, 'YYYY-MM-DD');
       obj.day = date.getDate();
       obj.dayOfWeek = date.getDay() ? date.getDay() - 1 : 6;
       obj.isCurrentMonth = DateUtil.isMonthsEqual(date, state.month);
