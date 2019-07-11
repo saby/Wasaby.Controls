@@ -6,7 +6,8 @@ const root = process.cwd();
 const fs = require('fs');
 const path = require('path');
 
-const pathToResources = process.argv[2].replace('--applicationRoot=', '');
+const hasPathToResources = process.argv[2] && process.argv[2].includes('--applicationRoot=');
+const pathToResources = hasPathToResources ? process.argv[2].replace('--applicationRoot=', '') : 'application';
 
 const requirejs = require(path.join('saby-units', 'lib', 'requirejs', 'r.js'));
 global.requirejs = requirejs;
