@@ -68,7 +68,7 @@ define([
          assert.isTrue(lookupView._isInputVisible(lookupView._options));
 
          lookupView._options.readOnly = true;
-         assert.isFalse(lookupView._isInputVisible(lookupView._options));
+         assert.isFalse(!!lookupView._isInputVisible(lookupView._options));
       });
 
       it('_isNeedCalculatingSizes', function() {
