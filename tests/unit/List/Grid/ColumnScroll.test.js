@@ -16,10 +16,19 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          content: {
             scrollWidth: 500,
             offsetWidth: 250,
+            getBoundingClientRect: () => {
+              return {
+                 left: 199
+              }
+            },
             querySelector: function() {
                return {
-                  offsetLeft: 24,
-                  offsetWidth: 76
+                  offsetWidth: 76,
+                  getBoundingClientRect: () => {
+                     return {
+                        left: 175
+                     }
+                  },
                };
             }
          }
@@ -100,9 +109,18 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             content: {
                scrollWidth: 500,
                offsetWidth: 250,
+               getBoundingClientRect: () => {
+                  return {
+                     left: 199
+                  }
+               },
                querySelector: function() {
                   return {
-                     offsetLeft: 24,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 175
+                        }
+                     },
                      offsetWidth: 76
                   };
                }
@@ -119,9 +137,18 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          clearColumnScroll._children.content = {
             scrollWidth: 200,
             offsetWidth: 100,
+            getBoundingClientRect: () => {
+               return {
+                  left: 175
+               }
+            },
             querySelector: function () {
                return {
-                  offsetLeft: 15,
+                  getBoundingClientRect: () => {
+                     return {
+                        left: 160
+                     }
+                  },
                   offsetWidth: 50
                };
             }
@@ -179,9 +206,18 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             content: {
                scrollWidth: 450,
                offsetWidth: 200,
+               getBoundingClientRect: () => {
+                  return {
+                     left: 199
+                  }
+               },
                querySelector: function() {
                   return {
-                     offsetLeft: 24,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 175
+                        }
+                     },
                      offsetWidth: 76
                   };
                }
