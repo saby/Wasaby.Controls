@@ -6,10 +6,9 @@ const root = process.cwd();
 const fs = require('fs');
 const path = require('path');
 
-const pathToResources = process.argv[2].replace('--pathToResources=', '');
-const pathToNodeModules = process.argv[3].replace('--pathToNodeModules=', '');
+const pathToResources = process.argv[2].replace('--applicationRoot=', '');
 
-const requirejs = require(path.join(root, pathToNodeModules, 'saby-units', 'lib', 'requirejs', 'r.js'));
+const requirejs = require(path.join('saby-units', 'lib', 'requirejs', 'r.js'));
 global.requirejs = requirejs;
 
 // Configuring requirejs
