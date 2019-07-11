@@ -63,11 +63,20 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             content: {
                scrollWidth: 600,
                offsetWidth: 400,
+               getBoundingClientRect: () => {
+                  return {
+                     left: 199
+                  }
+               },
                querySelector: function(selector) {
                   var column = parseInt(selector.slice('.controls-Grid__cell_fixed:nth-child('.length), 10);
                   // make every fixed column 50 pixels
                   return {
-                     offsetLeft: (column - 1) * 50,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 199 - ((column - 1) * 50)
+                        }
+                     },
                      offsetWidth: 50
                   };
                }
