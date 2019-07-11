@@ -314,5 +314,22 @@ define([
          assert.equal(self._inputValue, '');
          assert.isTrue(isValueChanged);
       });
+
+      it('_isInputActive', function() {
+         let
+            inputIsVisible = true,
+            lookup = new Lookup();
+
+         lookup._isInputVisible = function() {
+            return inputIsVisible;
+         };
+
+         assert.isTrue(lookup._isInputActive({readOnly: false}));
+         assert.isFalse(lookup._isInputActive({readOnly: true}));
+
+         inputIsVisible = false;
+         assert.isFalse(lookup._isInputActive({readOnly: false}));
+         assert.isFalse(lookup._isInputActive({readOnly: true}));
+      });
    });
 });
