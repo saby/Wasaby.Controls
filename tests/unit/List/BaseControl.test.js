@@ -429,115 +429,6 @@ define([
          }, 100);
       });
 
-      it('Navigation demand', function(done) {
-         var source = new sourceLib.Memory({
-            idProperty: 'id',
-            data: data
-         });
-
-         var dataLoadFired = false;
-
-         var cfg = {
-            viewName: 'Controls/List/ListView',
-            dataLoadCallback: function() {
-               dataLoadFired = true;
-            },
-            source: source,
-            viewConfig: {
-               keyProperty: 'id'
-            },
-            viewModelConfig: {
-               items: [],
-               keyProperty: 'id'
-            },
-            viewModelConstructor: lists.ListViewModel,
-            navigation: {
-               view: 'demand',
-               source: 'page',
-               sourceConfig: {
-                  pageSize: 3,
-                  page: 0,
-                  hasMore: false
-               }
-            }
-         };
-
-         var ctrl = new lists.BaseControl(cfg);
-
-
-         ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
-
-         setTimeout(function() {
-            assert.isTrue(ctrl._shouldDrawFooter, 'Failed draw footer on first load.');
-            assert.equal(ctrl._loadMoreCaption, 3, 'Failed draw footer on first load.');
-
-            lists.BaseControl._private.loadToDirection(ctrl, 'down');
-            assert.equal(ctrl._loadingState, 'down');
-            setTimeout(function() {
-               assert.isFalse(ctrl._shouldDrawFooter, 'Failed draw footer on second load.');
-
-               assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
-               assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
-               assert.equal(ctrl._loadingState, null);
-               done();
-            }, 100);
-         }, 100);
-      });
-
-      it('Navigation position', function() {
-         return new Promise(function(resolve, reject) {
-            var
-               ctrl,
-               source = new sourceLib.Memory({
-                  idProperty: 'id',
-                  data: data,
-                  filter: function() {
-                     return true;
-                  }
-               }),
-               cfg = {
-                  viewName: 'Controls/List/ListView',
-                  itemsReadyCallback: function(items) {
-                     setTimeout(function() {
-                        var
-                           newItem = items.at(items.getCount() - 1).clone();
-                        newItem.set('id', 777);
-                        items.add(newItem);
-                        try {
-                           assert.deepEqual(ctrl._sourceController._queryParamsController._afterPosition, [777]);
-                           resolve();
-                        } catch (e) {
-                           reject(e);
-                        }
-                     });
-                  },
-                  source: source,
-                  viewConfig: {
-                     keyProperty: 'id'
-                  },
-                  viewModelConfig: {
-                     items: [],
-                     keyProperty: 'id'
-                  },
-                  viewModelConstructor: lists.ListViewModel,
-                  navigation: {
-                     source: 'position',
-                     sourceConfig: {
-                        field: 'id',
-                        position: 0,
-                        direction: 'after',
-                        limit: 20
-                     }
-                  }
-               };
-
-            ctrl = new lists.BaseControl(cfg);
-            ctrl.saveOptions(cfg);
-            ctrl._beforeMount(cfg);
-         });
-      });
-
       it('prepareFooter', function() {
          var
             tests = [
@@ -3373,24 +3264,6 @@ define([
          assert.isTrue(fakeNotify.calledOnce);
       });
 
-      it('calculation paging state', function(){
-         var pageSize = 5,
-            hasMore = 10,
-            self = {
-               _currentPage: 1,
-               _knownPagesCount: 1
-            };
-         var newKnownPagesCount = lists.BaseControl._private.calcPaging(self, hasMore, pageSize);
-         assert.equal(newKnownPagesCount, 2);
-         hasMore = true;
-         self = {
-            _currentPage: 2,
-            _knownPagesCount: 2
-         };
-         newKnownPagesCount = lists.BaseControl._private.calcPaging(self, hasMore, pageSize);
-         assert.equal(newKnownPagesCount, 3);
-      });
-
       it('_afterUpdate while loading do not update loadingState', async function() {
          var cfg = {
                viewName: 'Controls/List/ListView',
@@ -3455,6 +3328,154 @@ define([
          instance._beforeUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
+      });
+
+      describe('navigation', function () {
+         it('Navigation demand', function(done) {
+            var source = new sourceLib.Memory({
+               idProperty: 'id',
+               data: data
+            });
+
+            var dataLoadFired = false;
+
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               dataLoadCallback: function() {
+                  dataLoadFired = true;
+               },
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  view: 'demand',
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 3,
+                     page: 0,
+                     hasMore: false
+                  }
+               }
+            };
+
+            var ctrl = new lists.BaseControl(cfg);
+
+
+            ctrl.saveOptions(cfg);
+            ctrl._beforeMount(cfg);
+
+            setTimeout(function() {
+               assert.isTrue(ctrl._shouldDrawFooter, 'Failed draw footer on first load.');
+               assert.equal(ctrl._loadMoreCaption, 3, 'Failed draw footer on first load.');
+
+               lists.BaseControl._private.loadToDirection(ctrl, 'down');
+               assert.equal(ctrl._loadingState, 'down');
+               setTimeout(function() {
+                  assert.isFalse(ctrl._shouldDrawFooter, 'Failed draw footer on second load.');
+
+                  assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+                  assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+                  assert.equal(ctrl._loadingState, null);
+                  done();
+               }, 100);
+            }, 100);
+         });
+         it('Navigation position', function() {
+            return new Promise(function(resolve, reject) {
+               var
+                   ctrl,
+                   source = new sourceLib.Memory({
+                      idProperty: 'id',
+                      data: data,
+                      filter: function() {
+                         return true;
+                      }
+                   }),
+                   cfg = {
+                      viewName: 'Controls/List/ListView',
+                      itemsReadyCallback: function(items) {
+                         setTimeout(function() {
+                            var
+                                newItem = items.at(items.getCount() - 1).clone();
+                            newItem.set('id', 777);
+                            items.add(newItem);
+                            try {
+                               assert.deepEqual(ctrl._sourceController._queryParamsController._afterPosition, [777]);
+                               resolve();
+                            } catch (e) {
+                               reject(e);
+                            }
+                         });
+                      },
+                      source: source,
+                      viewConfig: {
+                         keyProperty: 'id'
+                      },
+                      viewModelConfig: {
+                         items: [],
+                         keyProperty: 'id'
+                      },
+                      viewModelConstructor: lists.ListViewModel,
+                      navigation: {
+                         source: 'position',
+                         sourceConfig: {
+                            field: 'id',
+                            position: 0,
+                            direction: 'after',
+                            limit: 20
+                         }
+                      }
+                   };
+
+               ctrl = new lists.BaseControl(cfg);
+               ctrl.saveOptions(cfg);
+               ctrl._beforeMount(cfg);
+            });
+         });
+         describe('paging navigation', function () {
+            let pageSize, hasMore, self;
+
+            afterEach(() => {
+               pageSize = hasMore = self = null;
+            });
+
+            it('pageSize=5 && 10 more items && curPage=1 && totalPages=1', function () {
+               pageSize = 5;
+               hasMore = 10;
+               self = {
+                  _currentPage: 1,
+                  _knownPagesCount: 1
+               };
+
+               assert.equal(lists.BaseControl._private.calcPaging(self, hasMore, pageSize), 2);
+            });
+
+            it('pageSize=5 && hasMore true && curPage=2 && totalPages=2', function () {
+               pageSize = 5;
+               hasMore = true;
+               self = {
+                  _currentPage: 2,
+                  _knownPagesCount: 2
+               };
+               assert.equal(lists.BaseControl._private.calcPaging(self, hasMore, pageSize), 3);
+            });
+
+            it('pageSize=5 && hasMore false && curPage=1 && totalPages=1', function () {
+               pageSize = 5;
+               hasMore = false;
+               self = {
+                  _currentPage: 1,
+                  _knownPagesCount: 1
+               };
+               assert.equal(lists.BaseControl._private.calcPaging(self, hasMore, pageSize), 1);
+            });
+         });
       });
    });
 });
