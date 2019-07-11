@@ -220,7 +220,8 @@ const RecordSynchronizer = {
         } else {
             _private.deleteRecord(items, editKey);
         }
-    }
+    },
+    _private
 };
 
 // TODO TYPESCRIPT
