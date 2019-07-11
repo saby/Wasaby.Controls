@@ -211,6 +211,11 @@ export default Dialog;
  */
 
 /**
+ * @name Controls/_popup/Opener/Dialog#maximize
+ * @cfg {Boolean} Определяет, должно ли всплывающее окно открываться на весь экран.
+ */
+
+/**
  * @name Controls/_popup/Opener/Dialog#close
  * @function
  * @description Метод закрытия диалогового окна.
