@@ -142,11 +142,6 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
 
          if (newOptions.multiLine) {
             measurer.style.width = fieldWrapperWidth - SHOW_SELECTOR_WIDTH + 'px';
-
-            // indent for counter
-            if (counterWidth) {
-               measurer.children[0].style.marginLeft = counterWidth + 'px';
-            }
          }
 
          measurer.classList.add('controls-Lookup-collection__measurer');
@@ -265,7 +260,7 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
       },
 
       _isInputVisible: function(options) {
-         return !options.readOnly && (this._isEmpty(options) || options.multiSelect);
+         return (!options.readOnly || this._inputValue && !options.multiSelect) && (this._isEmpty(options) || options.multiSelect);
       },
 
       _openInfoBox: function(event, config) {
