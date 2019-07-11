@@ -1181,7 +1181,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
                     if (self._virtualScroll) {
                         // При серверной верстке применяем начальные значения
-                        self._virtualScroll.ItemsCount = self._items.getCount();
+                        self._virtualScroll.ItemsCount = self._listViewModel.getCount();
                         _private.applyVirtualScrollIndexesToListModel(self);
                     }
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
