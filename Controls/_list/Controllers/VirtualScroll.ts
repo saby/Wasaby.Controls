@@ -74,8 +74,8 @@ class VirtualScroll {
     private readonly _virtualPageSize: number = 100;
 
     private _startIndex: number = 0;
-    private _stopIndex: number;
-    private _itemsCount: number;
+    private _stopIndex: number = 0;
+    private _itemsCount: number = 0;
     private _itemsHeights: number[] = [];
     private _itemsContainer: ItemsContainer;
     private _topPlaceholderSize: number = 0;
@@ -125,13 +125,12 @@ class VirtualScroll {
     public constructor(cfg: VirtualScrollConfig) {
         this._virtualPageSize = cfg.virtualPageSize || this._virtualPageSize;
         this._virtualSegmentSize = Math.ceil(this._virtualPageSize / 4);
-        this._stopIndex = this._startIndex + this._virtualPageSize;
     }
 
 
     public resetItemsIndexes(): void {
         this._startIndex = 0;
-        this._stopIndex = this._startIndex + this._virtualPageSize;
+        this._stopIndex = Math.min(this._startIndex + this._virtualPageSize, this._itemsCount);
         this._itemsHeights = [];
         this._topPlaceholderSize = this._bottomPlaceholderSize = 0;
     }
