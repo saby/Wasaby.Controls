@@ -9,11 +9,14 @@
  * @includes Sticky Controls/_popup/Opener/Sticky
  * @includes InfoboxTarget Controls/_popup/InfoBox
  * @includes PreviewerTarget Controls/_popup/Previewer
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+/*
  * @includes Global Controls/_popup/Global
  * @includes GlobalTemplate wml!Controls/_popup/Global/Global
  * @includes PreviewerTemplate wml!Controls/_popup/Global/Global
- * @public
- * @author Крайнов Д.О.
  */
 
 import Confirmation = require('Controls/_popup/Opener/Confirmation');

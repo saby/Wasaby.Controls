@@ -32,8 +32,8 @@ define('Controls-demo/Popup/Opener/StackDemo',
             this._children.dialog.open({
                opener: this._children.button3,
                closeOnOutsideClick: true,
-               height: 500,
-               maxHeight: 700
+               maxHeight: 700,
+               maxWidth: 700
             });
          },
          openModalDialog: function() {
@@ -43,7 +43,6 @@ define('Controls-demo/Popup/Opener/StackDemo',
                   footerContentTemplate: 'wml!Controls-demo/Popup/Opener/resources/footer',
                },
                modal: true,
-               height: 500,
                maxHeight: 700
             });
          },
