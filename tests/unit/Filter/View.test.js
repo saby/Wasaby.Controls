@@ -300,6 +300,55 @@ define(
             assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'In any state', title: 'In any state', hasMoreText: ''}});
          });
 
+         it('_rangeChangedHandler', () => {
+            let source = [...defaultSource];
+            let dateItem = {
+               name: 'date',
+               value: [new Date(2019, 7, 1), new Date(2019, 7, 31)],
+               resetValue: [new Date(2019, 7, 1), new Date(2019, 7, 31)],
+               editorOptions: {
+                  option1: '1',
+                  option2: '2'
+               },
+               type: 'dateRange',
+               viewMode: 'basic'
+            };
+            source.push(dateItem);
+            let view = getView(source),
+               newFilter;
+            view._notify = (event, data) => {
+               if (event === 'filterChanged') {
+                  newFilter = data[0];
+               }
+            };
+            view._source = source;
+            view._rangeChangedHandler('rangeChanged', new Date(2019, 6, 1), new Date(2019, 6, 31));
+            assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).value, [new Date(2019, 6, 1), new Date(2019, 6, 31)]);
+            assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).textValue, "Июль'19");
+            assert.deepStrictEqual(newFilter, {
+               date: [new Date(2019, 6, 1), new Date(2019, 6, 31)],
+               author: 'Ivanov K.K.',
+               state: [1]});
+         });
+
+         it('_private:getDateRangeItem', () => {
+            let source = [...defaultSource];
+            let dateItem = {
+               name: 'date',
+               value: [new Date(2019, 7, 1), new Date(2019, 7, 31)],
+               resetValue: [new Date(2019, 7, 1), new Date(2019, 7, 31)],
+               editorOptions: {
+                  option1: '1',
+                  option2: '2'
+               },
+               type: 'dateRange',
+               viewMode: 'basic'
+            };
+            source.push(dateItem);
+            let item = filter.View._private.getDateRangeItem(source);
+            assert.deepStrictEqual(item, dateItem)
+         });
+
          describe('View::resultHandler', function() {
             let view;
             beforeEach(function() {

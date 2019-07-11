@@ -116,6 +116,11 @@ import 'css!theme?Controls/filterPopup';
          this._notify('itemsChanged', [this._options.items]);
       },
 
+      _rangeChangedHandler: function(event, index, start, end) {
+         this._options.items[index].value = [start, end];
+         this._notify('itemsChanged', [this._options.items]);
+      },
+
       _textValueChangedHandler: function(event, index, textValue) {
          this._options.items[index].textValue = textValue;
          this._notify('itemsChanged', [this._options.items]);
