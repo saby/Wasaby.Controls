@@ -411,6 +411,8 @@ var
       },
 
       _scrollHandler: function(ev) {
+
+         //Проверяем, изменился ли scrollTop, чтобы предотвратить ложные срабатывания события
          if (this._scrollTop !== _private.getScrollTop(this._children.content)) {
             if (!this._dragging) {
                this._scrollTop = _private.getScrollTop(this._children.content);
