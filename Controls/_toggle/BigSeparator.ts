@@ -10,7 +10,7 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
 /**
  * Контрол служит для визуального ограничения контента. При клике на него отображаются скрытые записи, попавшие в ограничение.
  *
- * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
+ * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
  *
  * @class Controls/_toggle/BigSeparator
  * @extends Core/Control
