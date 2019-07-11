@@ -1007,15 +1007,16 @@ var _private = {
         }
     },
 
-    calcPaging: function(self, hasMore, pageSize) {
+    calcPaging(self, hasMore: number | boolean, pageSize: number): number {
+        let newKnownPagesCount = self._knownPagesCount;
+
         if (typeof hasMore === 'number') {
-            return Math.ceil(hasMore / pageSize);
+            newKnownPagesCount = Math.ceil(hasMore / pageSize);
+        } else if (typeof hasMore === 'boolean' && hasMore && self._currentPage === self._knownPagesCount) {
+            newKnownPagesCount++;
         }
-        else
-        if (typeof hasMore === 'boolean' && hasMore) {
-            if (self._currentPage === self._knownPagesCount)
-                return self._knownPagesCount + 1;
-        }
+
+        return newKnownPagesCount;
     },
 
     getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty:string}): SourceController {
