@@ -360,7 +360,6 @@ define([
                   });
 
                   it('getResultsIndex', function () {
-                     console.log('rtespos', gridModel.getResultsPosition())
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
                      gridModel._setEditingItemData({index: 0});
                      assert.equal(gridModel._getRowIndexHelper().getResultsIndex(), 1);
