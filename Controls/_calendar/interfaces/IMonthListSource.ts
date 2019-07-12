@@ -18,7 +18,7 @@
    * @variant year Один отображаемый элемент - год.
    * @variant month Один отображаемый элемент - месяц.
    * @example
-   * <pre class="brush:xml">
+   * <pre>
    * <Controls.calendar:MonthList
    *     bind:month="_month"
    *     viewMode="month"/>
@@ -33,9 +33,9 @@
    * @cfg {Date} Год или месяц который отображается первым в верху скролируемой области.
    *
    * @example
-   * <pre class="brush:xml">
+   * <pre>
    * <Controls.calendar:MonthList bind:startPosition="_month"/>
-   *
+   * </pre>
    */
 
   /**
@@ -44,10 +44,9 @@
    * @remark
    * Должен поддерживать списочный метод с навигацией по курсору. В качестве идентификатора используется
    * дата начала месяца. Каждый элемент это месяц. Ответ должен содержать список объектов в котором есть поле extData.
-   * extData это массив объектов собержищих данные дня. Эти объекты будут переданы в шаблон дня.
+   * extData это массив объектов, содержащих данные дня. Эти объекты будут переданы в шаблон дня.
    * @example
-   * <pre class="brush:xml">
-   *
+   * <pre>
    *  <Controls.calendar:MonthList
    *      startPosition="_month"
    *      source="{{_source}}">
@@ -65,6 +64,7 @@
    *         </ws:partial>
    *      </ws:yearTemplate>
    * </Controls.calendar:MonthList>
+   * </pre>
    * @see Controls/_calendar/interface/IMonthListSource#yearTemplate
    * @see Controls/_calendar/interface/IMonthListSource#monthTemplate
    * @see Controls/_calendar/interface/IMonthListSource#viewMode
@@ -78,7 +78,7 @@
    * It must contain the extData field which is an array of 12 elements from the corresponding months.
    * Each element is an array with the objects to be transferred to the day template.
    * @example
-   * <pre class="brush:xml">
+   * <pre>
    *     <option name="source">_source</option>
    * </pre>
    */
@@ -95,7 +95,7 @@
    * @default Controls/calendar:MonthListYearTemplate
    *
    * @example
-   * <pre class="brush:xml">
+   * <pre>
    * <Controls.calendar:MonthList>
    *     <ws:yearTemplate>
    *         <ws:partial template="Controls/calendar:MonthListYearTemplate">
@@ -111,6 +111,7 @@
    *         </ws:partial>
    *      </ws:yearTemplate>
    * </Controls.calendar:MonthList>
+   * </pre>
    * @see Controls/_calendar/interface/IMonthListSource#monthTemplate
    * @see Controls/_calendar/interface/IMonthListSource#viewMode
    * @see Controls/_calendar/interface/IMonthListSource#source
@@ -127,7 +128,7 @@
    * @default Controls/calendar:MonthListMonthTemplate
    *
    * @example
-   * <pre class="brush:xml">
+   * <pre>
    * <Controls.calendar:MonthList>
    *     <ws:monthTemplate>
    *         <ws:partial template="Controls/calendar:MonthListMonthTemplate">
@@ -143,6 +144,7 @@
    *         </ws:partial>
    *      </ws:monthTemplate>
    * </Controls.calendar:MonthList>
+   * </pre>
    * @see Controls/_calendar/interface/IMonthListSource#yearTemplate
    * @see Controls/_calendar/interface/IMonthListSource#viewMode
    * @see Controls/_calendar/interface/IMonthListSource#source
@@ -152,7 +154,7 @@
    * @name Controls/_calendar/interface/IMonthListSource#dayTemplate
    * @cfg {Function} Day template.
    * @example
-   * <pre class="brush:xml">
+   * <pre>
    * <Controls.calendar:MonthList
    *     bind:month="_month"
    *     source="{{_source}}">
@@ -164,6 +166,7 @@
    *         </ws:partial>
    *     </ws:dayTemplate>
    * </Controls.calendar:MonthList>
+   * </pre>
    * @see Controls/_calendar/interface/IMonthListSource#source
    * @see Controls/_calendar/interface/IMonthListSource#itemMode
    */
