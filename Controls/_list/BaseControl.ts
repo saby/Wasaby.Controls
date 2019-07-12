@@ -528,7 +528,7 @@ var _private = {
     onScrollShow: function(self) {
         // ToDo option "loadOffset" is crutch for contacts.
         // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
-        if (self._virtualScroll && self._needScrollCalculation) {
+        if (self._needScrollCalculation) {
             self._setLoadOffset(self._loadOffsetTop, self._loadOffsetBottom, false);
         }
         self._isScrollShown = true;
@@ -547,7 +547,7 @@ var _private = {
     onScrollHide: function(self) {
         var needUpdate = false;
         if (!self._loadOffset || !self._loadOffset.isNull) {
-            if (self._virtualScroll) {
+            if (self._needScrollCalculation) {
                 self._setLoadOffset(0, 0, true);
             }
             needUpdate = true;
@@ -1220,9 +1220,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _afterMount: function() {
         if (this._needScrollCalculation) {
-            if (this._virtualScroll) {
-                this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom, false);
-            }
+            this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom, false);
             _private.startScrollEmitter(this);
         }
 
@@ -1465,7 +1463,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._children.bottomLoadTrigger.style.bottom = Math.floor(this._loadOffset.bottom * 1.3) + 'px';
     },
     _onViewPortResize: function(self, viewPortSize) {
-        if (self._virtualScroll && self._needScrollCalculation && !self._loadOffset.isNull) {
+        if (self._needScrollCalculation && !self._loadOffset.isNull) {
             let offset = Math.floor(viewPortSize / 3);
             self._setLoadOffset(offset, offset, false);
         }

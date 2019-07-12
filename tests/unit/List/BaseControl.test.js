@@ -192,37 +192,6 @@ define([
          });
       });
 
-      it('_onViewPortResize, setLoadOffset', function() {
-         let bc = new lists.BaseControl();
-         bc._virtualScroll = {};
-         bc._needScrollCalculation = true;
-         bc._loadOffset = {top: 100, bottom: 100, isNull: false};
-         bc._children = {
-            topVirtualScrollTrigger:{
-               style:{
-                  top:0
-               }
-            },
-            topLoadTrigger:{
-               style:{
-                  top:0
-               }
-            },
-            bottomVirtualScrollTrigger:{
-               style:{
-                  bottom:0
-               }
-            },
-            bottomLoadTrigger:{
-               style:{
-                  bottom:0
-               }
-            }
-         };
-         bc._onViewPortResize(bc, 600);
-         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200, isNull: false});
-
-      });
       it('_private::getSortingOnChange', function() {
          const emptySorting = [];
          const sortingASC = [{test: 'ASC'}];
@@ -1129,6 +1098,28 @@ define([
          }, 100);
       });
 
+      let triggers = {
+         topVirtualScrollTrigger:{
+            style:{
+               top:0
+            }
+         },
+         topLoadTrigger:{
+            style:{
+               top:0
+            }
+         },
+         bottomVirtualScrollTrigger:{
+            style:{
+               bottom:0
+            }
+         },
+         bottomLoadTrigger:{
+            style:{
+               bottom:0
+            }
+         }
+      };
       it('ScrollPagingController', function(done) {
          var rs = new collection.RecordSet({
             idProperty: 'id',
@@ -1168,6 +1159,7 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
+         ctrl._children = triggers;
          // эмулируем появление скролла
          lists.BaseControl._private.onScrollShow(ctrl);
 
@@ -1216,6 +1208,17 @@ define([
          }, 100);
       });
 
+
+      it('_onViewPortResize, setLoadOffset', function() {
+         let bc = new lists.BaseControl();
+         bc._needScrollCalculation = true;
+         bc._loadOffset = {top: 100, bottom: 100, isNull: false};
+         bc._children = triggers;
+         bc._onViewPortResize(bc, 600);
+         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200, isNull: false});
+
+      });
+
       it('scrollHide/scrollShow base control state', function() {
          var cfg = {
             navigation: {
@@ -1232,30 +1235,8 @@ define([
             }
          };
          var baseControl = new lists.BaseControl(cfg);
-         baseControl._children = {
-            topVirtualScrollTrigger:{
-               style:{
-                  top:0
-               }
-            },
-            topLoadTrigger:{
-               style:{
-                  top:0
-               }
-            },
-            bottomVirtualScrollTrigger:{
-               style:{
-                  bottom:0
-               }
-            },
-            bottomLoadTrigger:{
-               style:{
-                  bottom:0
-               }
-            }
-         };
+         baseControl._children = triggers;
          baseControl.saveOptions(cfg);
-         baseControl._virtualScroll = {};
          baseControl._needScrollCalculation = true;
          baseControl._loadOffset = {top: 0, bottom: 0, isNull: false};
 
@@ -1364,7 +1345,7 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
-
+         ctrl._children = triggers;
          // эмулируем появление скролла
          lists.BaseControl._private.onScrollShow(ctrl);
 
@@ -1432,6 +1413,7 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
+         ctrl._children = triggers;
 
          // эмулируем появление скролла
          lists.BaseControl._private.onScrollShow(ctrl);
