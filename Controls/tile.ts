@@ -23,4 +23,4 @@ export {
 
    TreeViewModel,
    TreeView
-}
+};

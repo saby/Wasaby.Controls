@@ -9,7 +9,7 @@ import {ListControl as viewTemplate} from 'Controls/list';
     * Табличное представление. Может загружать данные из источника данных.
     * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>здесь</a>.
     * <a href="/materials/demo-ws4-edit-in-place">Демо-пример</a>.
-    * 
+    *
     * @class Controls/_grid/Grid
     * @extends Controls/list:View
     * @mixes Controls/_interface/ISource
@@ -30,7 +30,7 @@ import {ListControl as viewTemplate} from 'Controls/list';
     * @mixes Controls/_list/ItemActions/ItemActionsStyles
     * @mixes Controls/_list/Swipe/SwipeStyles
     *
-    * @mixes Controls/_MoveDialog/Styles
+    * @mixes Controls/MoveDialog/Styles
     * @mixes Controls/_paging/PagingStyles
     * @mixes Controls/_paging/DigitButtonsStyles
     * @mixes Controls/_grid/SortButtonStyles
@@ -70,7 +70,7 @@ import {ListControl as viewTemplate} from 'Controls/list';
     * @mixes Controls/_list/ItemActions/ItemActionsStyles
     * @mixes Controls/_list/Swipe/SwipeStyles
     *
-    * @mixes Controls/_MoveDialog/Styles
+    * @mixes Controls/MoveDialog/Styles
     * @mixes Controls/_paging/PagingStyles
     * @mixes Controls/_paging/DigitButtonsStyles
     * @mixes Controls/_grid/SortButtonStyles

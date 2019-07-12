@@ -20,6 +20,8 @@
  * @includes SwipeStyles Controls/_list/Swipe/SwipeStyles
  * @includes BaseControlStyles Controls/_list/BaseControlStyles
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
+ * @includes HotKeysContainer Controls/_list/HotKeysContainer
+ * @includes IVirtualScroll Controls/_list/interface/IVirtualScroll
  * @public
  * @author Крайнов Д.О.
  */
@@ -46,9 +48,11 @@
  * @includes SwipeStyles Controls/_list/Swipe/SwipeStyles
  * @includes BaseControlStyles Controls/_list/BaseControlStyles
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
+ * @includes HotKeysContainer Controls/_list/HotKeysContainer
+ * @includes IVirtualScroll Controls/_list/interface/IVirtualScroll
  * @public
  * @author Крайнов Д.О.
- */ 
+ */
 import AddButton = require('Controls/_list/AddButton');
 import Container = require('Controls/_list/Container');
 import EmptyTemplate = require('wml!Controls/_list/emptyTemplate');
