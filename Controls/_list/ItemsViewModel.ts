@@ -171,6 +171,10 @@ var ItemsViewModel = BaseViewModel.extend({
         return this.getItemDataByItem(dispItem);
     },
 
+    setKeyProperty(keyProperty: string): void {
+        this._options.keyProperty = keyProperty;
+    },
+
     _nextModelVersion: function(notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
         if (!notUpdatePrefixItemVersion) {
             this._prefixItemVersion++;

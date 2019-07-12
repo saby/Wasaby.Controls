@@ -519,6 +519,10 @@ var
             this._ladder = _private.prepareLadder(this);
         },
 
+        setKeyProperty(keyProperty: string): void {
+            this._options.keyProperty = keyProperty;
+        },
+
         _nextModelVersion: function(notUpdatePrefixItemVersion) {
             this._model.nextModelVersion(notUpdatePrefixItemVersion);
         },
