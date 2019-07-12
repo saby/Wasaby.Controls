@@ -20,9 +20,9 @@ define('Controls-demo/Example/Input/TimeInterval',
             var fTimeInterval = entity.TimeInterval;
 
             this._default1Value = new fTimeInterval('P0DT12H30M00S');
-            this._default2value = new fTimeInterval('P0DT12H30M00S');
-            this._default3value = new fTimeInterval('P0DT120H00M00S');
-            this._default4value = new fTimeInterval('P0DT9H35M27S');
+            this._default2Value = new fTimeInterval('P0DT12H30M00S');
+            this._default3Value = new fTimeInterval('P0DT120H00M00S');
+            this._default4Value = new fTimeInterval('P0DT9H35M27S');
          }
       });
 
