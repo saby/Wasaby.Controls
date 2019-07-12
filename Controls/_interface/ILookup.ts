@@ -9,7 +9,6 @@ export interface ILookupOptions {
  * @public
  * @author Капустин И.А.
  */
-
 /*
  * Interface for fields and selection buttons.
  *
@@ -54,12 +53,12 @@ export default interface ILookup {
  */
 
 /**
- * Открыть стековое окно.
+ * Открыть справочник.
  * @function Controls/_interface/ILookup#showSelector
  * @returns {Promise}
- * @param {PopupOptions[]} popupOptions Параметры стекового окна.
+ * @param {PopupOptions[]} popupOptions Опции всплывающего окна.
  * @example
- * Стековое окно с установленной конфигурацией:
+ * Откроем окно с заданными параметрами.
  * wml
  * <pre>
  *     <Controls.lookup:Input
@@ -141,10 +140,10 @@ export default interface ILookup {
  */
 
 /**
- * @event Controls/_interface/ILookup#selectorCallback Происходит при выборе элементов с помощью селектора.
+ * @event Controls/_interface/ILookup#selectorCallback Срабатывает при выборе элементов из справочника.
  * @param {Env/Event:Object} eventObject Дескриптор события.
- * @param {RecordSet} currentItems Текущий список элементов в окне выбора из справочника.
- * @param {RecordSet} newItems Список элементов, выбранных из селектора.
+ * @param {RecordSet} currentItems Текущий список элементов в Lookup.
+ * @param {RecordSet} newItems Список элементов, выбранных из справочника.
  */
 /*
  * @event Controls/_interface/ILookup#selectorCallback Occurs when selected items with selector.
@@ -154,11 +153,11 @@ export default interface ILookup {
  */
 
 /**
- * @event Controls/_interface/ILookup#showSelector Происходит перед открытием справочника через интерфейс.
+ * @event Controls/_interface/ILookup#showSelector Срабатывает перед открытием справочника через интерфейс.
  * @param {Env/Event:Object} eventObject Дескриптор события.
- * @param {PopupOptions[]} popupOptions Параметры стекового окна.
+ * @param {PopupOptions[]} popupOptions Опции всплывающего окна.
  * @example
- * В следующем примере создается Controls/lookup:Input и показано, как обрабатывать событие.
+ * В следующем примере создается Controls/lookup:Input и демонстрируется сценарий использования.
  * WML:
  * <pre>
  *    <Controls.lookup:Input
@@ -171,19 +170,19 @@ export default interface ILookup {
  * JS:
  * <pre>
  *    _loadParams: function() {
-    *       ...
-    *    },
+ *       ...
+ *    },
  *
  *    _showSelectorHandler: function(e, popupOptions) {
-    *       var self = this;
-    *
-    *       this._loadParams(popupOptions).addCallback(function(newPopupOptions) {
-    *          self.showSelector(newPopupOptions);
-    *       });
-    *
-    *       // cancel the opening of the selector
-    *       return false;
-    *    }
+ *       var self = this;
+ *
+ *       this._loadParams(popupOptions).addCallback(function(newPopupOptions) {
+ *          self.showSelector(newPopupOptions);
+ *       });
+ *
+ *       // отменить открытие справочника
+ *       return false;
+ *    }
  * </pre>
  */
 /*
@@ -222,16 +221,16 @@ export default interface ILookup {
 
 /**
  * @typedef {Object} PopupOptions
- * @description Параметры стекового окна.
- * @property {Boolean} autofocus Определяет, на какой элемент необходимо установить фокус сразу после загрузки страницы.
- * @property {Boolean} modal Определяет, является ли окно модальным.
- * @property {String} className Имена классов всплывающих окон.
- * @property {Boolean} closeOnOutsideClick Определяет, возможно ли закрытие всплывающего окна при щелчке за пределами этого окна.
+ * @description Опции всплывающего окна.
+ * @property {Boolean} autofocus  Определяет, перевести ли фокус при открытии всплывающего окна.
+ * @property {Boolean} modal Задает модальность окна.
+ * @property {String} className Имена классов для вслпывающего окна.
+ * @property {Boolean} closeOnOutsideClick Определяет, надо ли закрывать всплывающее окно, при клике за пределы этого окна.
  * @property {function|String} template Шаблон внутри всплывающего окна.
- * @property {function|String} templateOptions Параметры шаблона внутри всплывающего окна.
- * @property {Number} minWidth Минимальная ширина всплывающего окна.
- * @property {Number} maxWidth Максимальная ширина всплывающего окна
- * @property {Number} width Ширина всплывающего окна.
+ * @property {function|String} templateOptions Опции для шаблона.
+ * @property {Number} minWidth Минимальная ширина окна.
+ * @property {Number} maxWidth Максимальная ширина окна.
+ * @property {Number} width Ширина окна.
  */
 /*
  * @typedef {Object} PopupOptions

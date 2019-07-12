@@ -150,7 +150,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#textValueChanged Происходит при изменении набора выбранной коллекции.
+    * @event Controls/interface/ISelectedCollection#textValueChanged Срабатывает при изменении набора выбранной коллекции.
     * @param {Env/Event:Object} eventObject Декскриптор события.
     * @param {String} textValue Строка, сформированная из выбранных записей.
     * @example
@@ -247,9 +247,9 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#openInfoBox Происходит перед открытием всплывающей подсказки со всеми выбранными записями.
+    * @event Controls/interface/ISelectedCollection#openInfoBox Срабатывает перед открытием всплывающего окна со всеми выбранными записями.
     * @param {Env/Event:Object} eventObject Дескриптор события.
-    * @param {Object} config Конфиг, на основе которого будет построена всплывающая подсказка.
+    * @param {Object} config Конфиг, по которому будет построено всплывающее окно.
     * @example
     * В следующем примере создается Controls/lookup:Input и демонстрируется сцерий использования.
     * WML:
@@ -274,8 +274,8 @@ define('Controls/interface/ISelectedCollection', [
     * </pre>
     */
    /*
-    * @event Controls/interface/ISelectedCollection#openInfoBox Occurs before opening a pop-up with all selected entries.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @event Controls/interface/ISelectedCollection#openInfoBox Occurs before opening a pop-up with all selected entries
+    * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {Object} config Config on which popup will be built.
     * @example
     * The following example creates Controls/lookup:Input and shows how to handle the event.
@@ -303,106 +303,10 @@ define('Controls/interface/ISelectedCollection', [
 
    /**
     * @event Controls/interface/ISelectedCollection#closeInfoBox Срабатывает при закрытии всплывающего окна со всеми выбранными записями.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+    * @param {Env/Event:Object} eventObject Дескриптор события.
     */
    /*
     * @event Controls/interface/ISelectedCollection#closeInfoBox Occurs when closing a pop-up with all selected entries.
     * @param {Env/Event:Object} eventObject The event descriptor.
-    */
-
-   /**
-    * @event Controls/interface/ISelectedCollection#showSelector Происходит перед открытием селектора через интерфейс.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
-    * @param {PopupOptions[]} popupOptions Параметры стекового окна.
-    * @example
-    * В следующем примере создается Controls/lookup:Input и показано, как обрабатывать событие.
-    * WML:
-    * <pre>
-    *    <Controls.lookup:Input
-    *       source="{{_source}}"
-    *       keyProperty="id"
-    *       searchParam="title"
-    *       on:showSelector="_showSelectorHandler()"
-    *    </Controls.lookup:Input>
-    * </pre>
-    * JS:
-    * <pre>
-    *    _loadParams: function() {
-    *       ...
-    *    },
-    *
-    *    _showSelectorHandler: function(e, popupOptions) {
-    *       var self = this;
-    *
-    *       this._loadParams(popupOptions).addCallback(function(newPopupOptions) {
-    *          self.showSelector(newPopupOptions);
-    *       });
-    *
-    *       // cancel the opening of the selector
-    *       return false;
-    *    }
-    * </pre>
-    */
-
-   /*
-    * @event Controls/interface/ISelectedCollection#showSelector Occurs before opening the selector through the interface.
-    * @param {Env/Event:Object} eventObject The event descriptor.
-    * @param {PopupOptions[]} popupOptions Stack popup options.
-    * @example
-    * The following example creates Controls/lookup:Input and shows how to handle the event.
-    * WML:
-    * <pre>
-    *    <Controls.lookup:Input
-    *       source="{{_source}}"
-    *       keyProperty="id"
-    *       searchParam="title"
-    *       on:showSelector="_showSelectorHandler()"
-    *    </Controls.lookup:Input>
-    * </pre>
-    * JS:
-    * <pre>
-    *    _loadParams: function() {
-    *       ...
-    *    },
-    *
-    *    _showSelectorHandler: function(e, popupOptions) {
-    *       var self = this;
-    *
-    *       this._loadParams(popupOptions).addCallback(function(newPopupOptions) {
-    *          self.showSelector(newPopupOptions);
-    *       });
-    *
-    *       // cancel the opening of the selector
-    *       return false;
-    *    }
-    * </pre>
-    */
-
-   /**
-    * @typedef {Object} PopupOptions
-    * @description Параметры стекового окна.
-    * @property {Boolean} autofocus Определяет, на какой элемент необходимо установить фокус сразу после загрузки страницы.
-    * @property {Boolean} modal Определяет, является ли окно модальным.
-    * @property {String} className Имена классов всплывающих окон.
-    * @property {Boolean} closeOnOutsideClick Определяет, возможно ли закрытие всплывающего окна при щелчке за пределами этого окна.
-    * @property {function|String} template Шаблон внутри всплывающего окна.
-    * @property {function|String} templateOptions Параметры шаблона внутри всплывающего окна.
-    * @property {Number} minWidth Минимальная ширина всплывающего окна.
-    * @property {Number} maxWidth Максимальная ширина всплывающего окна
-    * @property {Number} width Ширина всплывающего окна.
-    */
-
-   /*
-    * @typedef {Object} PopupOptions
-    * @description Stack popup options.
-    * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
-    * @property {Boolean} modal Determines whether the window is modal.
-    * @property {String} className Class names of popup.
-    * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
-    * @property {function|String} template Template inside popup.
-    * @property {function|String} templateOptions Template options inside popup.
-    * @property {Number} minWidth The minimum width of popup.
-    * @property {Number} maxWidth The maximum width of popup.
-    * @property {Number} width Width of popup.
     */
 });
