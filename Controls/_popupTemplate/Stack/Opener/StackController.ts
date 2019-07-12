@@ -199,8 +199,10 @@ const StackController = BaseController.extend({
         if (item.popupOptions.isCompoundTemplate) {
             _private.setStackContent(item);
             this._stack.add(item);
+            this._update();
+        } else if (this._stack.getCount() > 1) {
+            this._update();
         }
-        this._update();
     },
 
     elementUpdated(item, container) {
@@ -217,6 +219,10 @@ const StackController = BaseController.extend({
         item.popupOptions.width = state ? item.popupOptions.maxWidth : (item.popupOptions.minimizedWidth || item.popupOptions.minWidth);
         _private.prepareSizes(item, container);
         this._update();
+    },
+
+    popupResize(): boolean {
+        return false;
     },
 
     elementDestroyed(item) {
@@ -284,7 +290,17 @@ const StackController = BaseController.extend({
             } else {
                 this._stack.replace(item, itemIndex);
             }
-            this._update();
+
+            if (this._stack.getCount() > 1) {
+                this._update();
+            } else {
+                item.position = _private.getItemPosition(item);
+                _private.addShadowClass(item);
+                if (StackStrategy.isMaximizedPanel(item)) {
+                    _private.prepareMaximizedState(StackStrategy.getMaxPanelWidth(), item);
+                }
+                _private.updatePopupOptions(item);
+            }
         }
     },
 

@@ -6,6 +6,43 @@ import {TreeControl} from 'Controls/treeGrid';
 'use strict';
 
 /**
+ * Список элементов, отображаемых в виде плиток. Может загружать данные из источника данных.
+ * <a href="/materials/demo-ws4-tile">Демо-пример</a>.
+ * Подробное описание и инструкцию по настройке смотрите <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>здесь</a>.
+ *
+ * @class Controls/_tile/View
+ * @extends Controls/list:View
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IItemTemplate
+ * @mixes Controls/interface/IPromisedSelectable
+ * @mixes Controls/interface/IGrouped
+ * @mixes Controls/interface/INavigation
+ * @mixes Controls/interface/IFilter
+ * @mixes Controls/interface/IHighlighter
+ * @mixes Controls/_list/interface/IList
+ * @mixes Controls/_interface/IHierarchy
+ * @mixes Controls/_treeGrid/interface/ITreeControl
+ * @mixes Controls/interface/IDraggable
+ * @mixes Controls/List/interface/ITile
+ *
+ * @mixes Controls/_list/interface/IVirtualScroll
+ * @mixes Controls/_list/BaseControlStyles
+ * @mixes Controls/_list/ListStyles
+ * @mixes Controls/List/View/Styles
+ * @mixes Controls/_list/ItemActions/ItemActionsStyles
+ * @mixes Controls/_list/Swipe/SwipeStyles
+ *
+ * @mixes Controls/_MoveDialog/Styles
+ * @mixes Controls/_paging/PagingStyles
+ * @mixes Controls/_paging/DigitButtonsStyles
+ *
+ * @control
+ * @author Авраменко А.С.
+ * @public
+ * @category List
+ */
+
+/*
  * List in which items are displayed as tiles. Can load data from data source.
  * <a href="/materials/demo-ws4-tile">Demo examples</a>.
  * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>here</a>.

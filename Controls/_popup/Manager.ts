@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/Manager/Manager');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import randomId = require('Core/helpers/Number/randomId');
-import runDelayed = require('Core/helpers/Function/runDelayed');
+import {delay as runDelayed} from 'Types/function';
 import collection = require('Types/collection');
 import Deferred = require('Core/Deferred');
 import ParallelDeferred = require('Core/ParallelDeferred');

@@ -2,12 +2,14 @@
  * Created by kraynovdo on 31.01.2018.
  */
 define('Controls-demo/List/ItemActionsWithConfig', [
+   'Env/Env',
    'Core/Control',
    'wml!Controls-demo/List/ItemActions/ItemActionsWithConfig',
    'Types/source',
    'Controls/Constants',
    'css!Controls-demo/List/ItemActions/ItemActions',
 ], function(
+   Env,
    BaseControl,
    template,
    source,
@@ -50,7 +52,7 @@ define('Controls-demo/List/ItemActionsWithConfig', [
             icon: 'icon-PhoneNull',
             title: 'phone',
             handler: function(item) {
-
+               Env.IoC.resolve('ILogger').info('action phone Click ', item);
             },
             group: ControlsConstants.view.hiddenGroup
          },
@@ -74,7 +76,7 @@ define('Controls-demo/List/ItemActionsWithConfig', [
             group: 1,
             'parent@': null,
             handler: function() {
-
+               Env.IoC.resolve('ILogger').info('action profile Click');
             }
          },
          {
@@ -84,7 +86,7 @@ define('Controls-demo/List/ItemActionsWithConfig', [
             group: 2,
             'parent@': null,
             handler: function() {
-
+               Env.IoC.resolve('ILogger').info('action profile Click');
             }
          }
       ];
@@ -113,11 +115,11 @@ define('Controls-demo/List/ItemActionsWithConfig', [
          _itemActions: _firstItemActionsArray,
          _template: template,
          _onActionClick: function(event, action, item) {
-
+            Env.IoC.resolve('ILogger').info(arguments);
             this.__lastClicked = action.title;
          },
          _contentClick: function() {
-
+            Env.IoC.resolve('ILogger').info(arguments);
          },
 
          constructor: function() {

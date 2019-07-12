@@ -179,8 +179,8 @@ var ItemsViewModel = BaseViewModel.extend({
         this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     },
 
-    nextModelVersion: function(notUpdatePrefixItemVersion) {
-        this._nextModelVersion(notUpdatePrefixItemVersion);
+    nextModelVersion: function(notUpdatePrefixItemVersion, changesType) {
+        this._nextModelVersion(notUpdatePrefixItemVersion, changesType);
     },
 
     _calcItemVersion: function(item) {

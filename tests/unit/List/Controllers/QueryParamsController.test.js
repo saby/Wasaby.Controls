@@ -62,7 +62,7 @@ define(
                pNav.calculateState(dataRs);
 
                assert.equal(2, pNav._nextPage, 'State nextPage is incorrect after reload');
-               assert.isTrue(pNav._more, 'State more is incorrect  after reload');
+               assert.isTrue(pNav._more.getMoreMeta(), 'State more is incorrect  after reload');
                assert.isTrue(pNav.hasMoreData('down'), 'Method hasMoreData returns incorrect value after reload');
                assert.isTrue(pNav.hasMoreData('up'), 'Method hasMoreData returns incorrect value after reload');
 
@@ -71,9 +71,30 @@ define(
                pNav.calculateState(dataRsbyLoad, 'down');
 
                assert.equal(3, pNav._nextPage, 'State nextPage is incorrect after load down');
-               assert.isFalse(pNav._more, 'State more is incorrect after load down');
+               assert.isFalse(pNav._more.getMoreMeta(), 'State more is incorrect after load down');
                assert.isFalse(pNav.hasMoreData('down'), 'Method hasMoreData returns incorrect value after reload');
                assert.isTrue(pNav.hasMoreData('up'), 'Method hasMoreData returns incorrect value after reload');
+
+               let moreDataRs = new collection.RecordSet({
+                  idProperty: 'id',
+                  rawData: [
+                     {
+                        id: 1,
+                        nav_result: true
+                     },
+                     {
+                        id: 2,
+                        nav_result: false
+                     }
+                  ]
+               });
+               dataRsbyLoad.setMetaData({more: moreDataRs});
+               pNav.calculateState(dataRsbyLoad);
+               assert.equal(2, pNav._nextPage, 'State nextPage is incorrect after reload');
+               assert.isTrue(pNav._more.getMoreMeta(), 'State more is incorrect after reload');
+               assert.isTrue(pNav._more.getMoreMeta(1), 'State more is incorrect after reload');
+               assert.isFalse(pNav._more.getMoreMeta(2), 'State more is incorrect after reload');
+
             });
 
             it('calculateState + withHasMore=False', function () {
@@ -128,12 +149,31 @@ define(
                   position: 1
                });
 
-               assert.deepEqual({before: false, after: false}, pNav._more, 'Calculate state: wrong _more value');
+               assert.deepEqual({before: false, after: false}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
 
                //first query with direction: after
                dataRs.setMetaData({more: true});
                pNav.calculateState(dataRs);
-               assert.deepEqual({before: false, after: true}, pNav._more, 'Calculate state: wrong _more value');
+               assert.deepEqual({before: false, after: true}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
+               assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
+               assert.deepEqual([2], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
+
+               let moreDataRs = new collection.RecordSet({
+                  idProperty: 'id',
+                  rawData: [
+                     {
+                        id: 1,
+                        nav_result: true
+                     },
+                     {
+                        id: 2,
+                        nav_result: false
+                     }
+                  ]
+               });
+               dataRs.setMetaData({more: moreDataRs});
+               pNav.calculateState(dataRs);
+               assert.deepEqual({before: false, after: true}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
                assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
                assert.deepEqual([2], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
 
@@ -148,7 +188,7 @@ define(
                //first query with direction: both and multiple "field" value
                dataRs.setMetaData({more: {after: true, before: false}});
                pNav.calculateState(dataRs);
-               assert.deepEqual({before: false, after: true}, pNav._more, 'Calculate state: wrong _more value');
+               assert.deepEqual({before: false, after: true}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
                assert.deepEqual([1, 1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
                assert.deepEqual([2, 4], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
             });
@@ -170,7 +210,7 @@ define(
                dataRsbyLoad.setMetaData({more: false});
                pNav.calculateState(dataRsbyLoad, 'down');
                assert.isFalse(pNav.hasMoreData('down'), 'Wrong hasMoreData result');
-               assert.deepEqual({before: false, after: false}, pNav._more, 'Calculate state: wrong _more value');
+               assert.deepEqual({before: false, after: false}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
                assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
                assert.deepEqual([3], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
 
@@ -192,7 +232,7 @@ define(
                dataRsbyLoad.setMetaData({more: true});
                pNav.calculateState(dataRsbyLoad, 'up');
                assert.isTrue(pNav.hasMoreData('up'), 'Wrong hasMoreData result');
-               assert.deepEqual({before: true, after: true}, pNav._more, 'Calculate state: wrong _more value');
+               assert.deepEqual({before: true, after: true}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
                assert.deepEqual([3, 5], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
                assert.deepEqual([2, 4], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
 

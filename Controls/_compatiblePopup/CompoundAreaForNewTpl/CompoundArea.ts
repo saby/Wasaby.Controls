@@ -199,7 +199,11 @@ var moduleClass = CompoundControl.extend({
       ManagerWrapperController.startResizeEmitter();
    },
    _onCloseHandler(): void {
-      this._finishPendingOperations();
+      // We need to delay reaction to close event, because it shouldn't
+      // synchronously destroy all child controls of CompoundArea
+      setTimeout(() => {
+         this._finishPendingOperations();
+      }, 0);
    },
    _finishPendingOperations(): void {
       this._vDomTemplate.finishPendingOperations().addCallback(() => {

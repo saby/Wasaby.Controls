@@ -8,6 +8,22 @@ import {descriptor} from 'Types/entity';
 import 'css!theme?Controls/suggest';
 
 /**
+ * Поле ввода с выпадающим списком с возможностью автодополнения.
+ * <a href="/materials/demo-ws4-selector-suggest">Демо-пример</a>.
+ *
+ * @class Controls/_suggest/Selector
+ * @extends Controls/input:Text
+ * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IFilter
+ * @mixes Controls/interface/ISuggest
+ * @mixes Controls/interface/INavigation
+ * @demo Controls-demo/Input/Search/Suggest/SuggestPG
+ * @control
+ * @public
+ */
+
+/*
  * Combobox input that suggests options as you are typing.
  * <a href="/materials/demo-ws4-selector-suggest">Demo-example</a>.
  *

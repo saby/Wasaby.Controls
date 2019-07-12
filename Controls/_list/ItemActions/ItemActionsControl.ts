@@ -14,6 +14,8 @@ import { CollectionItem } from 'Types/display';
 var
     ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
 
+const ACTION_TYPE = 'itemActionsUpdated';
+
 var _private = {
     fillItemAllActions: function(item, options) {
         var actions = [];
@@ -70,7 +72,7 @@ var _private = {
                 }
             }
             self._isActual = true;
-            options.listModel.nextModelVersion(collectionChanged);
+            options.listModel.nextModelVersion(collectionChanged, ACTION_TYPE);
         }
     },
 
@@ -170,7 +172,7 @@ var ItemActionsControl = Control.extend({
 
     updateItemActions: function(item) {
         _private.updateItemActions(this, item, this._options);
-        this._options.listModel.nextModelVersion();
+        this._options.listModel.nextModelVersion(false, ACTION_TYPE);
     },
 
     _beforeUnmount: function() {

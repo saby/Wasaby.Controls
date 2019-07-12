@@ -1,4 +1,5 @@
 define('Controls-demo/List/Grid/GridWithEditing', [
+   'Env/Env',
    'Core/Control',
    'Controls-demo/List/Grid/GridWithEditingData',
    'wml!Controls-demo/List/Grid/GridWithEditing',
@@ -15,7 +16,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
    'Controls/scroll',
    'Controls/grid',
    'Controls/Render/Money/Money'
-], function(BaseControl, GridData, template, source, cClone) {
+], function(Env, BaseControl, GridData, template, source, cClone) {
    'use strict';
    var ModuleClass = BaseControl.extend({
       _template: template,
@@ -43,7 +44,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                title: 'прочитано',
                showType: this.showType.TOOLBAR,
                handler: function() {
-
+                  Env.IoC.resolve('ILogger').info('action read Click');
                }
             },
             {
@@ -51,7 +52,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                icon: 'icon-primary icon-PhoneNull',
                title: 'phone',
                handler: function(item) {
-
+                  Env.IoC.resolve('ILogger').info('action phone Click ', item);
                }
             },
             {
@@ -68,7 +69,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                title: 'profile',
                showType: this.showType.MENU_TOOLBAR,
                handler: function() {
-
+                  Env.IoC.resolve('ILogger').info('action profile Click');
                }
             },
             {
@@ -77,7 +78,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                title: 'delete pls',
                showType: this.showType.TOOLBAR,
                handler: function() {
-
+                  Env.IoC.resolve('ILogger').info('action delete Click');
                }
             }
          ];
@@ -166,7 +167,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
          return true;
       },
       _onActionClick: function(event, action, item) {
-
+         Env.IoC.resolve('ILogger').info(arguments);
       }
    });
 

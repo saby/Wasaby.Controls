@@ -1,4 +1,5 @@
 define('Controls-demo/List/Tree/Tree', [
+   'Env/Env',
    'Core/Control',
    'Controls-demo/List/Tree/GridData',
    'wml!Controls-demo/List/Tree/Tree',
@@ -7,7 +8,7 @@ define('Controls-demo/List/Tree/Tree', [
    'Controls/scroll',
    'Controls/treeGrid',
    'wml!Controls-demo/List/Tree/DemoContentTemplate'
-], function(BaseControl, GridData, template, MemorySource) {
+], function(Env, BaseControl, GridData, template, MemorySource) {
    'use strict';
    var
       ModuleClass = BaseControl.extend({
@@ -46,7 +47,7 @@ define('Controls-demo/List/Tree/Tree', [
                   title: 'прочитано',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-
+                     Env.IoC.resolve('ILogger').info('action read Click');
                   }
                },
                {
@@ -54,7 +55,7 @@ define('Controls-demo/List/Tree/Tree', [
                   icon: 'icon-primary icon-PhoneNull',
                   title: 'phone',
                   handler: function(item) {
-
+                     Env.IoC.resolve('ILogger').info('action phone Click ', item);
                   }
                },
                {
@@ -71,7 +72,7 @@ define('Controls-demo/List/Tree/Tree', [
                   title: 'profile',
                   showType: this.showType.MENU_TOOLBAR,
                   handler: function() {
-
+                     Env.IoC.resolve('ILogger').info('action profile Click');
                   }
                },
                {
@@ -80,7 +81,7 @@ define('Controls-demo/List/Tree/Tree', [
                   title: 'delete pls',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-
+                     Env.IoC.resolve('ILogger').info('action delete Click');
                   }
                }
             ];

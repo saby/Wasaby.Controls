@@ -1,4 +1,5 @@
 define('Controls-demo/List/Grid/Grid', [
+   'Env/Env',
    'Core/Control',
    'Controls-demo/List/Grid/GridData',
    'wml!Controls-demo/List/Grid/Grid',
@@ -14,7 +15,7 @@ define('Controls-demo/List/Grid/Grid', [
    'Controls/grid',
    'wml!Controls-demo/List/Grid/Results',
    'Controls/Render/Money/Money'
-], function(BaseControl, GridData, template, source) {
+], function(Env, BaseControl, GridData, template, source) {
    'use strict';
    var
       partialColumns = [
@@ -175,6 +176,7 @@ define('Controls-demo/List/Grid/Grid', [
                   title: 'прочитано',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
+                     Env.IoC.resolve('ILogger').info('action read Click');
                   }
                },
                {
@@ -182,6 +184,7 @@ define('Controls-demo/List/Grid/Grid', [
                   icon: 'icon-primary icon-PhoneNull',
                   title: 'phone',
                   handler: function(item) {
+                     Env.IoC.resolve('ILogger').info('action phone Click ', item);
                   }
                },
                {
@@ -198,6 +201,7 @@ define('Controls-demo/List/Grid/Grid', [
                   title: 'profile',
                   showType: this.showType.MENU_TOOLBAR,
                   handler: function() {
+                     Env.IoC.resolve('ILogger').info('action profile Click');
                   }
                },
                {
@@ -206,6 +210,7 @@ define('Controls-demo/List/Grid/Grid', [
                   title: 'delete pls',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
+                     Env.IoC.resolve('ILogger').info('action delete Click');
                   }
                }
             ];

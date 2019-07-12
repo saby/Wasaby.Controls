@@ -1,7 +1,7 @@
 import Env = require('Env/Env');
 import entity = require('Types/entity');
 import Text = require('Controls/_input/Text');
-import runDelayed = require('Core/helpers/Function/runDelayed');
+import {delay as runDelayed} from 'Types/function';
 import template = require('wml!Controls/_input/Area/Area');
 import fieldTemplate = require('wml!Controls/_input/Area/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Area/ReadOnly');
@@ -254,11 +254,8 @@ import 'Controls/decorator';
       Area.getOptionTypes = function() {
          var optionTypes = Text.getOptionTypes();
 
-         /**
-          * https://online.sbis.ru/opendoc.html?guid=baf5be68-db8c-4a43-9ade-0c4baef078d7
-          * optionTypes.minLines = descriptor(Number);
-          * optionTypes.maxLines = descriptor(Number);
-          */
+         optionTypes.minLines = entity.descriptor(Number, null);
+         optionTypes.maxLines = entity.descriptor(Number, null);
          optionTypes.newLineKey = entity.descriptor(String).oneOf([
             'enter',
             'ctrlEnter'

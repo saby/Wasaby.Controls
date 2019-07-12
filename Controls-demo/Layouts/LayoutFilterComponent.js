@@ -1,9 +1,10 @@
 define('Controls-demo/Layouts/LayoutFilterComponent', [
+   'Env/Env',
    'Core/Control',
    'wml!Controls-demo/Layouts/LayoutFilterComponent/LayoutFilterComponent',
    'Controls/toggle'
 
-], function (BaseControl, template) {
+], function (Env, BaseControl, template) {
    'use strict';
    
    var ModuleClass = BaseControl.extend(
@@ -13,6 +14,7 @@ define('Controls-demo/Layouts/LayoutFilterComponent', [
    
          constructor: function(cfg) {
             ModuleClass.superclass.constructor.call(this, cfg);
+            Env.IoC.resolve('ILogger').info(cfg);
          },
          
          _switchValueHandler: function(event, value) {

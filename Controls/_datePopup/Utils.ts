@@ -1,5 +1,5 @@
 import {detection} from 'Env/Env';
-import formatDate = require('Core/helpers/Date/format');
+import {date as formatDate} from 'Types/formatter';
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 

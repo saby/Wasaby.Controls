@@ -1,5 +1,6 @@
 define('Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
    [
+      'Env/Env',
       'Core/Control',
       'wml!Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
       'Controls-demo/List/Tree/GridData',
@@ -7,7 +8,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
       'Controls/Constants',
       'wml!Controls-demo/List/Tree/DemoContentTemplate'
    ],
-   function (Control, template, GridData, MemorySource) {
+   function (Env, Control, template, GridData, MemorySource) {
       'use strict';
 
       var PopupPage = Control.extend({
@@ -46,7 +47,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
                   title: 'прочитано',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-
+                     Env.IoC.resolve('ILogger').info('action read Click');
                   }
                },
                {
@@ -54,7 +55,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
                   icon: 'icon-primary icon-PhoneNull',
                   title: 'phone',
                   handler: function(item) {
-
+                     Env.IoC.resolve('ILogger').info('action phone Click ', item);
                   }
                },
                {
@@ -71,7 +72,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
                   title: 'profile',
                   showType: this.showType.MENU_TOOLBAR,
                   handler: function() {
-
+                     Env.IoC.resolve('ILogger').info('action profile Click');
                   }
                },
                {
@@ -80,7 +81,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
                   title: 'delete pls',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-
+                     Env.IoC.resolve('ILogger').info('action delete Click');
                   }
                }
             ];
