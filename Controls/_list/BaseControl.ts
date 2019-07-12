@@ -41,9 +41,9 @@ const
         enterHandler: constants.key.enter
     };
 
-var LOAD_TRIGGER_OFFSET = 100;
-
+const LOAD_TRIGGER_OFFSET = 100;
 const INITIAL_PAGES_COUNT = 1;
+const INERTIA_SCROLLING_DURATION = 100;
 /**
  * Object with state from server side rendering
  * @typedef {Object}
@@ -310,34 +310,60 @@ var _private = {
     },
 
     loadToDirection: function(self, direction, userCallback, userErrback) {
+        const beforeAddItems = (addedItems) => {
+            self._loadedItems = addedItems;
+            if (userCallback && userCallback instanceof Function) {
+                userCallback(addedItems, direction);
+            }
+
+            _private.resolveIndicatorStateAfterReload(self, addedItems);
+
+            if (self._virtualScroll) {
+                self._itemsFromLoadToDirection = true;
+            }
+        };
+
+        const afterAddItems = (countCurrentItems, addedItems) => {
+            const cnt2 = self._listViewModel.getCount();
+            // If received list is empty, make another request.
+            // If it’s not empty, the following page will be requested in resize event
+            // handler after current items are rendered on the page.
+            if (!addedItems.getCount() || (self._options.task1176625749 && countCurrentItems === cnt2)) {
+                _private.checkLoadToDirectionCapability(self);
+            }
+            if (self._virtualScroll) {
+                self._itemsFromLoadToDirection = false;
+            }
+
+            _private.prepareFooter(self, self._options.navigation, self._sourceController);
+        };
+
+        const drawItemsUp = (countCurrentItems, addedItems) => {
+            beforeAddItems(addedItems);
+            self._saveAndRestoreScrollPosition = true;
+            self._listViewModel.prependItems(addedItems);
+            afterAddItems(countCurrentItems, addedItems);
+        };
+
         _private.showIndicator(self, direction);
 
-        /**/
-
         if (self._sourceController) {
-            var filter = cClone(self._options.filter);
+            const filter = cClone(self._options.filter);
             if (self._options.beforeLoadToDirectionCallback) {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }
             return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
-                self._loadedItems = addedItems;
-                if (userCallback && userCallback instanceof Function) {
-                    userCallback(addedItems, direction);
-                }
-
-                _private.resolveIndicatorStateAfterReload(self, addedItems);
-
                 //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 //до реализации функционала и проблемы из новости делаем решение по месту:
                 //посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
                 //надо инициировать подгрузку порции записей, больше за нас это никто не сделает.
                 //Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
-                var cnt1 = self._listViewModel.getCount();
-                if (self._virtualScroll) {
-                    self._itemsFromLoadToDirection = true;
-                }
+                const countCurrentItems = self._listViewModel.getCount();
+
                 if (direction === 'down') {
+                    beforeAddItems(addedItems);
                     self._listViewModel.appendItems(addedItems);
+                    afterAddItems(countCurrentItems, addedItems);
                 } else if (direction === 'up') {
                     /**
                      * todo KINGO.
@@ -348,25 +374,18 @@ var _private = {
                      * Пробовали запоминать позицию скролла здесь, в loadToDirection. Из-за асинхронности отрисовки
                      * получается неактуальным запомненная позиция скролла и происходит дерганье контента таблицы.
                      */
-                    self._saveAndRestoreScrollPosition = true;
-                    self._listViewModel.prependItems(addedItems);
+                    if (detection.isMobileIOS) {
+                        _private.callAfterScrollStopped(self, () => {
+                            drawItemsUp(countCurrentItems, addedItems);
+                        });
+                    } else {
+                        drawItemsUp(countCurrentItems, addedItems);
+                    }
                 }
-                var cnt2 = self._listViewModel.getCount();
-
-                // If received list is empty, make another request.
-                // If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
-                if (!addedItems.getCount() || (self._options.task1176625749 && cnt2 == cnt1)) {
-                    _private.checkLoadToDirectionCapability(self);
-                }
-                if (self._virtualScroll) {
-                    self._itemsFromLoadToDirection = false;
-                }
-
-                _private.prepareFooter(self, self._options.navigation, self._sourceController);
                 return addedItems;
             }).addErrback(function(error) {
                 return _private.crudErrback(self, {
-                    error: error,
+                    error,
                     dataLoadErrback: userErrback
                 });
             });
@@ -456,13 +475,21 @@ var _private = {
 
     // Обновляет стартовый и конечный индексы виртуального окна
     applyVirtualScrollIndexes(self, direction): void {
-        if (_private.applyVirtualScrollIndexesToListModel(self)) {
-            if (direction === 'up' && self._topPlaceholderSize === 0) {
-                self._saveAndRestoreScrollPosition = true;
+        const updateIndexes = () => {
+            if (_private.applyVirtualScrollIndexesToListModel(self)) {
+                if (direction === 'up' && self._topPlaceholderSize === 0) {
+                    self._saveAndRestoreScrollPosition = true;
+                }
+                self._shouldRestoreScrollPosition = true;
+                self._virtualScroll.updatePlaceholdersSizes();
+                _private.applyPlaceholdersSizes(self);
             }
-            self._shouldRestoreScrollPosition = true;
-            self._virtualScroll.updatePlaceholdersSizes();
-            _private.applyPlaceholdersSizes(self);
+        };
+
+        if (detection.isMobileIOS && direction === 'up' && self._topPlaceholderSize === 0) {
+            _private.callAfterScrollStopped(self, updateIndexes);
+        } else {
+            updateIndexes();
         }
     },
 
@@ -667,6 +694,40 @@ var _private = {
                   self._recalcVirtualScrollIndexes('up', params.scrollTop);
                }
             }
+        }
+
+        // The content continues to scroll for a while
+        // after finishing the scroll gesture and removing your finger from the touchscreen.
+        // The speed and duration of the continued scrolling is proportional to how vigorous the scroll gesture was.
+        // 100ms is the average value (can be more or less) of the scrolling duration.
+        if (detection.isMobileIOS) {
+            self._isScrolling = true;
+            if (self._isScrollingTimer) {
+                clearTimeout(self._isScrollingTimer);
+            }
+            self._isScrollingTimer = setTimeout(() => {
+                self._isScrollingTimer = null;
+                self._isScrolling = false;
+
+                if (self._scrollStopWaitingCallbacks) {
+                    self._scrollStopWaitingCallbacks.forEach((func) => {
+                        func();
+                    });
+                    self._scrollStopWaitingCallbacks = [];
+                }
+            }, INERTIA_SCROLLING_DURATION);
+        }
+    },
+
+    callAfterScrollStopped: function(self, callback: Function): void {
+        if (self._isScrolling) {
+            if (!self._scrollStopWaitingCallbacks) {
+                self._scrollStopWaitingCallbacks = [];
+            }
+
+            self._scrollStopWaitingCallbacks.push(callback);
+        } else {
+            callback();
         }
     },
 
