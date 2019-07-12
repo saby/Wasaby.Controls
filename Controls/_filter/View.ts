@@ -39,7 +39,7 @@ var _private = {
         return result;
     },
 
-    isFastItem: function(item) {
+    isFrequentItem: function(item) {
       return item.viewMode === 'frequent';
     },
 
@@ -49,7 +49,7 @@ var _private = {
 
     calculateStateSourceControllers: function(configs, source) {
         factory(source).each(function(item) {
-            if (_private.isFastItem(item)) {
+            if (_private.isFrequentItem(item)) {
                 var sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source,
                      item.editorOptions.navigation);
                 sourceController.calculateState(configs[item.name].items);
@@ -80,7 +80,7 @@ var _private = {
     setPopupConfig: function(self, configs, items) {
         var popupItems = [];
         factory(items).each(function(item) {
-            if (_private.isFastItem(item)) {
+            if (_private.isFrequentItem(item)) {
                 var popupItem = configs[item.name];
                 popupItem.id = item.name;
                 popupItem.selectedKeys = configs[item.name].multiSelect ? item.value : [item.value];
@@ -116,7 +116,7 @@ var _private = {
     getFilterButtonText: function(self, items) {
         var textArr = [];
         factory(items).each(function(item) {
-            if (!_private.isFastItem(item) && item.type !== 'dateRange' && (item.viewMode !== 'extended' || item.visibility === true) && _private.isItemChanged(item)) {
+            if (!_private.isFrequentItem(item) && item.type !== 'dateRange' && (item.viewMode !== 'extended' || item.visibility === true) && _private.isItemChanged(item)) {
                 var textValue = item.textValue;
                 if (textValue) {
                     textArr.push(textValue);
@@ -190,7 +190,7 @@ var _private = {
     reload: function(self) {
         var pDef = new ParallelDeferred();
         factory(self._source).each(function(item) {
-            if (_private.isFastItem(item)) {
+            if (_private.isFrequentItem(item)) {
                 var result = _private.loadItems(self, item);
                 pDef.push(result);
             }
@@ -284,7 +284,7 @@ var _private = {
         let result = false;
         factory(oldItems).each((oldItem) => {
             const newItem = _private.getItemByName(newItems, oldItem.name);
-           if (newItem && _private.isFastItem(oldItem) &&
+           if (newItem && _private.isFrequentItem(oldItem) &&
                (!isEqual(oldItem.editorOptions.source, newItem.editorOptions.source) ||
                !isEqual(oldItem.editorOptions.filter, newItem.editorOptions.filter) ||
                !isEqual(oldItem.editorOptions.navigation, newItem.editorOptions.navigation))) {
@@ -415,7 +415,7 @@ var Filter = Control.extend({
     _isFastReseted: function() {
         var isReseted = true;
         factory(this._source).each(function(item) {
-            if (_private.isFastItem(item) && _private.isItemChanged(item)) {
+            if (_private.isFrequentItem(item) && _private.isItemChanged(item)) {
                 isReseted = false;
             }
         });
@@ -438,7 +438,7 @@ var Filter = Control.extend({
         }
         factory(this._source).each(function(item) {
             // Fast filters could not be reset from the filter button.
-            if (!_private.isFastItem(item)) {
+            if (!_private.isFrequentItem(item)) {
                 item.value = item.resetValue;
                 if (object.getPropertyValue(item, 'visibility') !== undefined) {
                     object.setPropertyValue(item, 'visibility', false);
