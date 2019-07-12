@@ -70,7 +70,7 @@ define(
          ];
 
          let defaultConfig = {
-           source: defaultSource
+            source: defaultSource
          };
 
          let getView = function (config) {
@@ -194,13 +194,13 @@ define(
             view._configs = {
                document: {
                   items: Clone(defaultItems[0]),
-                     displayProperty: 'title',
-                     keyProperty: 'id'},
+                  displayProperty: 'title',
+                  keyProperty: 'id'},
                state: {
                   items: Clone(defaultItems[1]),
-                     displayProperty: 'title',
-                     keyProperty: 'id',
-                     multiSelect: true}
+                  displayProperty: 'title',
+                  keyProperty: 'id',
+                  multiSelect: true}
             };
             view._openPanel();
 
@@ -361,6 +361,19 @@ define(
             source.push(dateItem);
             let item = filter.View._private.getDateRangeItem(source);
             assert.deepStrictEqual(item, dateItem)
+         });
+
+         it('_private:updateText filterText', function() {
+            let source = [
+               {name: 'date', type: 'dateRange', value: [new Date(2019, 7, 1), new Date(2019, 7, 31)], textValue: "July'19", resetValue: [new Date(2019, 6, 1), new Date(2019, 6, 31)], viewMode: 'basic'},
+               {name: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic'},
+               {name: 'sender', value: 'Vasiliev A.A.', textValue: 'Sender: Vasiliev A.A.', resetValue: '', viewMode: 'extended', visibility: false},
+               {name: 'responsible', value: 'test_extended', resetValue: '', textValue: 'test_extended', viewMode: 'extended', visibility: true},
+               {name: 'frequent', value: 'test_frequent', textValue: 'test_frequent', resetValue: '', viewMode: 'frequent'}
+            ];
+            let self = {};
+            filter.View._private.updateText(self, source, {});
+            assert.strictEqual(self._filterText, 'Author: Ivanov K.K., test_extended');
          });
 
          describe('View::resultHandler', function() {

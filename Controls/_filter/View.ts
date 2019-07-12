@@ -141,7 +141,7 @@ var _private = {
         });
         self._filterText = _private.getFilterButtonText(self, items);
         self._dateRangeItem = _private.getDateRangeItem(items);
-        self._forceUpdate();
+        self._displayText = {...self._displayText};
     },
 
     isItemChanged: function(item) {
