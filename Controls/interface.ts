@@ -19,6 +19,7 @@
  * @includes INumberFormat Controls/_interface/INumberFormat
  * @includes IExpandable Controls/_interface/IExpandable
  * @includes ISorting Controls/_interface/ISorting
+ * @includes ISorting Controls/_interface/ILookup
  * @public
  * @author Крайнов Д.О.
  */
@@ -44,3 +45,4 @@ export {default as IHierarchy, IHierarchyOptions} from './_interface/IHierarchy'
 export {default as INumberFormat, INumberFormatOptions} from './_interface/INumberFormat';
 export {default as IExpandable, IExpandableOptions} from './_interface/IExpandable';
 export {default as ISorting, ISortingOptions} from './_interface/ISorting';
+export {default as ILookup, ILookupOptions} from './_interface/ILookup';

@@ -8,6 +8,7 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  *
  * @class Controls/_lookup/MultipleInput
  * @extends Core/Control
+ * @mixes Controls/_interface/ILookup
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/interface/ISuggest
@@ -17,12 +18,8 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISorting
- * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IInputText
- * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputTag
- * @mixes Controls/interface/ISelectableInput
  * @mixes Controls/_lookup/BaseLookupView/LookupStyles
  * @control
  * @public
