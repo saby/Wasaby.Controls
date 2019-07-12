@@ -3,7 +3,7 @@ define('Controls-demo/Input/InfoInput/InfoInput',
       'Core/Control',
       'wml!Controls-demo/Input/InfoInput/InfoInput',
    ],
-   function(Control, template, Formatter) {
+   function(Control, template) {
 
       'use strict';
 

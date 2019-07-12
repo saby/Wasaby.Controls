@@ -1,14 +1,12 @@
 define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
    'Core/Control',
    'wml!Controls-demo/SwitchableArea/DemoSwitchableArea',
-   'Types/collection',
    'wml!Controls-demo/SwitchableArea/resources/content',
    'wml!Controls-demo/SwitchableArea/resources/content2',
    'wml!Controls-demo/SwitchableArea/resources/contentAsync',
    'wml!Controls-demo/SwitchableArea/resources/contentDop'
 ], function(Control,
-            template,
-            collection
+            template
 ) {
    'use strict';
    var demoSwitchableArea = Control.extend({
