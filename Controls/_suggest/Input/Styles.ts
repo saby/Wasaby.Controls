@@ -1,9 +1,9 @@
 /**
  * @mixin Controls/_suggest/Input/Styles
- * @css @background-image_Suggest-spinner Фон значка "Волчок".
- * @css @height_Suggest-spinner Высота значка "Волчок".
- * @css @width_Suggest-spinner Ширина значка "Волчок".
- * @css @spacing_Suggest-between-spinner-clear Интервал между кнопками "Очистить" и "Волчок".
+ * @css @background-image_Suggest-spinner Фон индикатора загрузки.
+ * @css @height_Suggest-spinner Высота индикатора загрузки.
+ * @css @width_Suggest-spinner Ширина индикатора загрузки.
+ * @css @spacing_Suggest-between-spinner-clear Интервал между кнопкой "Очистить" и индикатором загрузки.
  * @css @color_Suggest-clear Цвет кнопки "Очистить".
  * @css @icon-size_Suggest-clear Размер кнопки "Очистить".
  * @css @spacing_Suggest-between-afterFieldWrapper-inputRenderWrapper Интервал между правой границей ввода и блоком с иконками.

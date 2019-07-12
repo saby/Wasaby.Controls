@@ -17,7 +17,7 @@ export interface ISuggestTemplateProp {
 /**
  * @typedef {Object} IEmptyTemplateProp
  * @property {String} templateName Имя шаблона пустого автодополнения, которое будет отображаться, когда результат не найден. 
- * @property {Object} templateOptions Опции для контрола, который указан в поле templateName.
+ * @property {Object} templateOptions Параметры шаблона, которые указаны в поле templateName.
  */
 
 /*
@@ -33,7 +33,7 @@ export interface IEmptyTemplateProp {
 /**
  * @typedef {Object} ISuggestFooterTemplate
  * @property {String} templateName Имя шаблона, которое будет отображаться в нижней части автодополнения.
- * @property {Object} templateOptions Опции для контрола, который указан в поле templateName.
+ * @property {Object} templateOptions Параметры шаблона, которые указаны в поле templateName.
  */
 
 /*
@@ -276,7 +276,7 @@ interface ISuggest {
 
       /**
        * @name Controls/interface/ISuggest#displayProperty
-       * @cfg {String} Имя свойства элемента, содержимое которого будет отображаться.
+       * @cfg {String} Имя свойства элемента, значение которого отобразится в поле ввода поле выбора записи.
        * @remark
        * @example
        * myModule.js
