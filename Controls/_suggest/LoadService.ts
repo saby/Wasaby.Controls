@@ -1,6 +1,6 @@
 import Deferred = require('Core/Deferred');
-var COUNT_HISTORY_ITEMS = 12;
-var HistoryService;
+const COUNT_HISTORY_ITEMS = 12;
+let HistoryService;
 
 function createHistoryService(historyServiceLoad, config) {
    config.recent = config.recent || COUNT_HISTORY_ITEMS;
@@ -9,7 +9,7 @@ function createHistoryService(historyServiceLoad, config) {
 }
 
 export default function (config) {
-   var historyServiceLoad = new Deferred();
+   let historyServiceLoad = new Deferred();
 
    if (HistoryService) {
       createHistoryService(historyServiceLoad, config);
