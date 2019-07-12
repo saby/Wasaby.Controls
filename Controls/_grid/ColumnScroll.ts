@@ -12,8 +12,9 @@ const
       calculateFixedColumnWidth(container, multiSelectVisibility ) {
          const
             fixedCellContainer = container.querySelector(multiSelectVisibility === 'hidden' ?
-               '.controls-Grid__cell_fixed' : '.controls-Grid__cell_fixed:nth-child(2)');
-         return fixedCellContainer.offsetLeft + fixedCellContainer.offsetWidth;
+               '.controls-Grid__cell_fixed' : '.controls-Grid__cell_fixed:nth-child(2)'),
+            offsetLeft = container.getBoundingClientRect().left - fixedCellContainer.getBoundingClientRect().left;
+         return offsetLeft + fixedCellContainer.offsetWidth;
       },
       updateSizes(self) {
          _private.drawTransform(self, 0);
