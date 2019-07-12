@@ -1,8 +1,9 @@
 <div class="controlsDemo-Auth">
    <form class="controlsDemo-Auth__form" name="form">
       <div class="controlsDemo-Auth__fields">
-         <Controls.input:Text attr:class="controlsDemo-Auth__field"
-                              name="login"
+         <Controls.input:Text name="login"
+                              attr:ws-autofocus="true"
+                              attr:class="controlsDemo-Auth__field"
                               bind:value="_login" autoComplete="username" placeholder="{[Логин]}"/>
          <Controls.input:Password attr:class="controlsDemo-Auth__field"
                                   name="password"

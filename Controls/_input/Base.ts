@@ -17,6 +17,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
 import {split, getInputType, getAdaptiveInputType, IInputType, INativeInputType, ISplitValue} from 'Controls/_input/Base/InputUtil';
 
 import 'wml!Controls/_input/Base/Stretcher';
+import 'wml!Controls/_input/Base/FixValueAttr';
 
       var _private = {
 
