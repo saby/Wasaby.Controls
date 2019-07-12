@@ -26,6 +26,7 @@ import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import {Focus} from 'Vdom/Vdom';
 import throttle = require('Core/helpers/Function/throttle');
+import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -375,7 +376,7 @@ var _private = {
                      * получается неактуальным запомненная позиция скролла и происходит дерганье контента таблицы.
                      */
                     if (detection.isMobileIOS) {
-                        _private.callAfterScrollStopped(self, () => {
+                        _private.getIntertialScrolling().callAfterScrollStopped(() => {
                             drawItemsUp(countCurrentItems, addedItems);
                         });
                     } else {
@@ -487,7 +488,7 @@ var _private = {
         };
 
         if (detection.isMobileIOS && direction === 'up' && self._topPlaceholderSize === 0) {
-            _private.callAfterScrollStopped(self, updateIndexes);
+            _private.getIntertialScrolling().callAfterScrollStopped(updateIndexes);
         } else {
             updateIndexes();
         }
@@ -701,34 +702,12 @@ var _private = {
         // The speed and duration of the continued scrolling is proportional to how vigorous the scroll gesture was.
         // 100ms is the average value (can be more or less) of the scrolling duration.
         if (detection.isMobileIOS) {
-            self._isScrolling = true;
-            if (self._isScrollingTimer) {
-                clearTimeout(self._isScrollingTimer);
-            }
-            self._isScrollingTimer = setTimeout(() => {
-                self._isScrollingTimer = null;
-                self._isScrolling = false;
-
-                if (self._scrollStopWaitingCallbacks) {
-                    self._scrollStopWaitingCallbacks.forEach((func) => {
-                        func();
-                    });
-                    self._scrollStopWaitingCallbacks = [];
-                }
-            }, INERTIA_SCROLLING_DURATION);
+            _private.getIntertialScrolling().scrollStarted();
         }
     },
 
-    callAfterScrollStopped: function(self, callback: Function): void {
-        if (self._isScrolling) {
-            if (!self._scrollStopWaitingCallbacks) {
-                self._scrollStopWaitingCallbacks = [];
-            }
-
-            self._scrollStopWaitingCallbacks.push(callback);
-        } else {
-            callback();
-        }
+    getIntertialScrolling: function(): IntertialScrolling {
+        return this._intertialScrolling || (this._intertialScrolling = new IntertialScrolling());
     },
 
     needScrollCalculation: function (navigationOpt) {
@@ -1162,6 +1141,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _needBottomPadding: false,
     _emptyTemplateVisibility: true,
+    _intertialScrolling: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
