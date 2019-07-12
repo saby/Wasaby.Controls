@@ -59,14 +59,14 @@ export interface ISuggestFooterTemplate {
  *
  * @interface Controls/interface/ISuggest
  * @public
- * @author Герасимов А.М.
+ * @author Gerasimov A.M.
  */
 interface ISuggest {
    readonly _options: {
       /**
        * @name Controls/interface/ISuggest#suggestTemplate
        * @cfg {ISuggestTemplateProp|null} Шаблон автодополнения, который отображает результаты поиска.
-       * @remark Корневым контролом автодополнения должен быть Controls/Container/Suggest/List, этому контролу можно передать в контентной опции контрол (как Controls.list:View or Controls/grid:View), который отобразит список.
+       * @remark Корневым контролом автодополнения должен быть Controls/Container/Suggest/List, этому контролу можно передать в контентной опции контрол ({@link Controls/list:View} или {@link Controls/grid:View}), который отобразит список.
        * @remark Вы можете установить ширину окна с автодополнением, добавив собственный класс в suggestTemplate и установив минимальную ширину. По умолчанию ширина автодополнения равна ширине поля ввода.
        * @editor function
        * @example
@@ -177,7 +177,7 @@ interface ISuggest {
 
       /**
        * @name Controls/interface/ISuggest#footerTemplate
-       * @cfg {ISuggestFooterTemplate} Шаблон подвала автодополнения.
+       * @cfg {ISuggestFooterTemplate} Шаблон футера автодополнения.
        * @example
        * myFooter.wml
        * <pre>
@@ -276,7 +276,7 @@ interface ISuggest {
 
       /**
        * @name Controls/interface/ISuggest#displayProperty
-       * @cfg {String} Определяет, какое поле из списка автодополнений будет использоваться в качестве текста после выбора опции.
+       * @cfg {String} Имя свойства элемента, значение которого отобразится в поле ввода поле выбора записи.
        * @remark
        * @example
        * myModule.js
@@ -314,7 +314,7 @@ interface ISuggest {
 
       /*
        * @name Controls/interface/ISuggest#displayProperty
-       * @cfg {String} Defines which field from suggest list will be used as text after selecting an option.
+       * @cfg {String} Name of the item property which content will be displayed.
        * @remark
        * @example
        * myModule.js
