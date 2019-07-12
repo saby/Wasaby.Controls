@@ -199,7 +199,7 @@ var _private = {
  * @mixes Controls/interface/IGrouped
  * @author Красильников А.С.
  * @control
- * @public
+ * @private
  */
 
 /**
