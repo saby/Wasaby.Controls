@@ -20,7 +20,8 @@ import 'css!theme?Controls/compatiblePopup';
 var moduleClass = CompoundControl.extend({
    _dotTplFn: template,
    $protected: {
-      _isVDomTemplateMounted: false
+      _isVDomTemplateMounted: false,
+      _closeTimerId: null
    },
    init: function() {
       moduleClass.superclass.init.apply(this, arguments);
@@ -201,7 +202,13 @@ var moduleClass = CompoundControl.extend({
    _onCloseHandler(): void {
       // We need to delay reaction to close event, because it shouldn't
       // synchronously destroy all child controls of CompoundArea
-      setTimeout(() => {
+
+      // protect against multi call
+      if (this._closeTimerId) {
+         return;
+      }
+      this._closeTimerId = setTimeout(() => {
+         this._closeTimerId = null;
          this._finishPendingOperations();
       }, 0);
    },
