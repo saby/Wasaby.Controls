@@ -2,12 +2,14 @@
  * Created by kraynovdo on 31.01.2018.
  */
 define('Controls-demo/List/Swipe', [
+   'Env/Env',
    'Core/Control',
    'wml!Controls-demo/List/Swipe/Swipe',
    'Types/source',
    'Types/collection',
    'css!Controls-demo/List/Swipe/Swipe'
-], function(BaseControl,
+], function(Env,
+   BaseControl,
    template,
    source,
    collection) {
@@ -23,10 +25,10 @@ define('Controls-demo/List/Swipe', [
          showType: null,
          _selectedKeys: null,
          _onActionClick: function(event, action, item) {
-            console.log(arguments);
+            Env.IoC.resolve('ILogger').info(arguments);
          },
          _contentClick: function() {
-            console.log(arguments);
+            Env.IoC.resolve('ILogger').info(arguments);
          },
 
          _beforeMount: function() {
@@ -46,7 +48,7 @@ define('Controls-demo/List/Swipe', [
                      title: 'one actions without image',
                      showType: this.showType.TOOLBAR,
                      handler: function(item) {
-                        console.log('one phone Click ', item);
+                        Env.IoC.resolve('ILogger').info('one phone Click ', item);
                      }
                   }
                ],
@@ -57,7 +59,7 @@ define('Controls-demo/List/Swipe', [
                      title: 'phone',
                      showType: this.showType.MENU_TOOLBAR,
                      handler: function(item) {
-                        console.log('action phone Click ', item);
+                        Env.IoC.resolve('ILogger').info('action phone Click ', item);
                      }
                   },
                   {
@@ -77,7 +79,7 @@ define('Controls-demo/List/Swipe', [
                      title: 'phone',
                      showType: this.showType.MENU_TOOLBAR,
                      handler: function(item) {
-                        console.log('action phone Click ', item);
+                        Env.IoC.resolve('ILogger').info('action phone Click ', item);
                      }
                   },
                   {
@@ -95,7 +97,7 @@ define('Controls-demo/List/Swipe', [
                      title: 'profile',
                      showType: this.showType.MENU_TOOLBAR,
                      handler: function() {
-                        console.log('action profile Click');
+                        Env.IoC.resolve('ILogger').info('action profile Click');
                      }
                   }
                ],
@@ -105,7 +107,7 @@ define('Controls-demo/List/Swipe', [
                      icon: 'icon-primary icon-PhoneNull',
                      title: 'phone',
                      handler: function(item) {
-                        console.log('action phone Click ', item);
+                        Env.IoC.resolve('ILogger').info('action phone Click ', item);
                      }
                   },
                   {
@@ -122,7 +124,7 @@ define('Controls-demo/List/Swipe', [
                      title: 'profile',
                      showType: this.showType.MENU_TOOLBAR,
                      handler: function() {
-                        console.log('action profile Click');
+                        Env.IoC.resolve('ILogger').info('action profile Click');
                      }
                   },
                   {
@@ -132,7 +134,7 @@ define('Controls-demo/List/Swipe', [
                      title: 'delete pls',
                      showType: this.showType.TOOLBAR,
                      handler: function() {
-                        console.log('action delete Click');
+                        Env.IoC.resolve('ILogger').info('action delete Click');
                      }
                   }
                ],
@@ -143,7 +145,7 @@ define('Controls-demo/List/Swipe', [
                      icon: 'icon-primary icon-CbPlus',
                      showType: this.showType.TOOLBAR,
                      handler: function() {
-                        console.log('action read Click');
+                        Env.IoC.resolve('ILogger').info('action read Click');
                      }
                   },
                   {
@@ -151,7 +153,7 @@ define('Controls-demo/List/Swipe', [
                      icon: 'icon-primary icon-PhoneNull',
                      title: 'phone',
                      handler: function(item) {
-                        console.log('action phone Click ', item);
+                        Env.IoC.resolve('ILogger').info('action phone Click ', item);
                      }
                   },
                   {
@@ -168,7 +170,7 @@ define('Controls-demo/List/Swipe', [
                      title: 'profile',
                      showType: this.showType.MENU_TOOLBAR,
                      handler: function() {
-                        console.log('action profile Click');
+                        Env.IoC.resolve('ILogger').info('action profile Click');
                      }
                   },
                   {
@@ -178,7 +180,7 @@ define('Controls-demo/List/Swipe', [
                      title: 'delete pls',
                      showType: this.showType.TOOLBAR,
                      handler: function() {
-                        console.log('action delete Click');
+                        Env.IoC.resolve('ILogger').info('action delete Click');
                      }
                   }
                ],
@@ -189,7 +191,7 @@ define('Controls-demo/List/Swipe', [
                      icon: 'icon-primary icon-PhoneNull',
                      title: 'phone',
                      handler: function(item) {
-                        console.log('action phone Click ', item);
+                        Env.IoC.resolve('ILogger').info('action phone Click ', item);
                      }
                   },
                   {
@@ -206,7 +208,7 @@ define('Controls-demo/List/Swipe', [
                      title: 'profile',
                      showType: this.showType.MENU_TOOLBAR,
                      handler: function() {
-                        console.log('action profile Click');
+                        Env.IoC.resolve('ILogger').info('action profile Click');
                      }
                   },
                   {
@@ -215,7 +217,7 @@ define('Controls-demo/List/Swipe', [
                      iconStyle: 'danger',
                      title: 'delete pls',
                      handler: function() {
-                        console.log('action delete Click');
+                        Env.IoC.resolve('ILogger').info('action delete Click');
                      }
                   },
                   {
@@ -224,7 +226,7 @@ define('Controls-demo/List/Swipe', [
                      icon: 'icon-primary icon-CbPlus',
                      showType: this.showType.TOOLBAR,
                      handler: function() {
-                        console.log('action read Click');
+                        Env.IoC.resolve('ILogger').info('action read Click');
                      }
                   },
 
@@ -234,7 +236,7 @@ define('Controls-demo/List/Swipe', [
                      title: 'шестая кнопочка',
                      showType: this.showType.TOOLBAR,
                      handler: function() {
-                        console.log('action delete Click');
+                        Env.IoC.resolve('ILogger').info('action delete Click');
                      }
                   }
                ],
@@ -245,7 +247,7 @@ define('Controls-demo/List/Swipe', [
                      icon: 'icon-primary icon-PhoneNull',
                      title: 'phone',
                      handler: function(item) {
-                        console.log('action phone Click ', item);
+                        Env.IoC.resolve('ILogger').info('action phone Click ', item);
                      }
                   },
                   {
@@ -260,7 +262,7 @@ define('Controls-demo/List/Swipe', [
                      icon: 'icon-primary icon-Profile',
                      title: 'profile',
                      handler: function() {
-                        console.log('action profile Click');
+                        Env.IoC.resolve('ILogger').info('action profile Click');
                      }
                   },
                   {
@@ -269,7 +271,7 @@ define('Controls-demo/List/Swipe', [
                      iconStyle: 'danger',
                      title: 'delete pls',
                      handler: function() {
-                        console.log('action delete Click');
+                        Env.IoC.resolve('ILogger').info('action delete Click');
                      }
                   },
 
@@ -279,7 +281,7 @@ define('Controls-demo/List/Swipe', [
                      title: 'шестая кнопочка',
                      showType: this.showType.TOOLBAR,
                      handler: function() {
-                        console.log('action delete Click');
+                        Env.IoC.resolve('ILogger').info('action delete Click');
                      }
                   },
                   {
@@ -288,7 +290,7 @@ define('Controls-demo/List/Swipe', [
 
                      showType: this.showType.TOOLBAR,
                      handler: function() {
-                        console.log('action read Click');
+                        Env.IoC.resolve('ILogger').info('action read Click');
                      }
                   },
 
@@ -298,7 +300,7 @@ define('Controls-demo/List/Swipe', [
                      title: 'Седьмая кнопочка',
                      showType: this.showType.TOOLBAR,
                      handler: function() {
-                        console.log('action delete Click');
+                        Env.IoC.resolve('ILogger').info('action delete Click');
                      }
                   }
                ],
@@ -309,7 +311,7 @@ define('Controls-demo/List/Swipe', [
                      icon: 'icon-primary icon-PhoneNull',
                      title: 'phone',
                      handler: function(item) {
-                        console.log('action phone Click ', item);
+                        Env.IoC.resolve('ILogger').info('action phone Click ', item);
                      }
                   },
                   {
@@ -325,7 +327,7 @@ define('Controls-demo/List/Swipe', [
                      icon: 'icon-primary icon-Profile',
                      title: 'profile',
                      handler: function() {
-                        console.log('action profile Click');
+                        Env.IoC.resolve('ILogger').info('action profile Click');
                      }
                   },
                   {
@@ -334,7 +336,7 @@ define('Controls-demo/List/Swipe', [
                      iconStyle: 'danger',
                      title: 'delete pls',
                      handler: function() {
-                        console.log('action delete Click');
+                        Env.IoC.resolve('ILogger').info('action delete Click');
                      }
                   },
                   {
@@ -342,7 +344,7 @@ define('Controls-demo/List/Swipe', [
                      title: 'прочитано',
                      icon: 'icon-primary icon-CbPlus',
                      handler: function() {
-                        console.log('action read Click');
+                        Env.IoC.resolve('ILogger').info('action read Click');
                      }
                   },
 
@@ -352,7 +354,7 @@ define('Controls-demo/List/Swipe', [
                      title: 'шестая кнопочка',
                      showType: this.showType.TOOLBAR,
                      handler: function() {
-                        console.log('action delete Click');
+                        Env.IoC.resolve('ILogger').info('action delete Click');
                      }
                   },
                   {
@@ -360,7 +362,7 @@ define('Controls-demo/List/Swipe', [
                      title: '777 кнопочка',
                      showType: this.showType.TOOLBAR,
                      handler: function() {
-                        console.log('action delete Click');
+                        Env.IoC.resolve('ILogger').info('action delete Click');
                      }
                   },
                   {
@@ -369,7 +371,7 @@ define('Controls-demo/List/Swipe', [
                      title: '8888я кнопочка',
                      showType: this.showType.TOOLBAR,
                      handler: function() {
-                        console.log('action delete Click');
+                        Env.IoC.resolve('ILogger').info('action delete Click');
                      }
                   }
                ]

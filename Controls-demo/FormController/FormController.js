@@ -1,4 +1,5 @@
 define('Controls-demo/FormController/FormController', [
+   'Env/Env',
    'Core/Control',
    'wml!Controls-demo/FormController/FormController',
    'Types/source',
@@ -7,7 +8,7 @@ define('Controls-demo/FormController/FormController', [
    'Env/Env',
    'css!Controls-demo/FormController/FormController',
    'Controls/validate'
-], function(Control, tmpl, source, Deferred, entity, Env) {
+], function(Env, Control, tmpl, source, Deferred, entity, Env) {
    'use strict';
 
    var module = Control.extend({
@@ -103,7 +104,7 @@ define('Controls-demo/FormController/FormController', [
          this._alert(msg);
       },
       _alert: function(msg) {
-         console.log(msg);
+         Env.IoC.resolve('ILogger').info(msg);
       },
       getRecordString: function() {
          if (!this._record) {
