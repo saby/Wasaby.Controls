@@ -13,8 +13,8 @@ var _private = {
 
       // Find opener for Infobox
       if (!config.opener) {
-         requirejs(['UI/Base'], function(Base) {
-            config.opener = Base.DefaultOpenerFinder.find(config.target);
+         requirejs(['UI/Focus'], function(Focus) {
+            config.opener = Focus.DefaultOpenerFinder.find(config.target);
             def.callback(config);
          });
          return def;

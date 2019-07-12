@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
-import { DefaultOpenerFinder } from 'UI/Base';
+import { DefaultOpenerFinder } from 'UI/Focus';
 import CoreMerge = require('Core/core-merge');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');

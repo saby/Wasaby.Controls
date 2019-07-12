@@ -8,7 +8,7 @@ import Deferred = require('Core/Deferred');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import EnvEvent = require('Env/Event');
 import Env = require('Env/Env');
-import { goUpByControlTree } from 'UI/Base';
+import { goUpByControlTree } from 'UI/Focus';
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 
 const _private = {

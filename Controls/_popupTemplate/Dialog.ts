@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/Dialog/Dialog');
 import Env = require('Env/Env');
-import { goUpByControlTree } from 'UI/Base';
+import { goUpByControlTree } from 'UI/Focus';
 import {Controller as ManagerController} from 'Controls/popup';
 
 const prepareCloseButton = {
