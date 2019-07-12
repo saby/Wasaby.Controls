@@ -22,7 +22,7 @@ define([
             virtualPageSize: 80,
          });
          assert.equal(0, vsInstance._startIndex, 'Wrong start index after ctor');
-         assert.equal(80, vsInstance._stopIndex, 'Wrong stop index after ctor');
+         assert.equal(0, vsInstance._stopIndex, 'Wrong stop index after ctor');
          assert.equal(80, vsInstance._virtualPageSize, 'Wrong virtualPageSize index after ctor');
          assert.equal(20, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after ctor');
       });
@@ -30,7 +30,7 @@ define([
       it('default options in constructor', function () {
          var vsInstance = new list.VirtualScroll({});
          assert.equal(0, vsInstance._startIndex, 'Wrong start index after default ctor');
-         assert.equal(100, vsInstance._stopIndex, 'Wrong stop index after default ctor');
+         assert.equal(0, vsInstance._stopIndex, 'Wrong stop index after default ctor');
          assert.equal(100, vsInstance._virtualPageSize, 'Wrong virtualPageSize index after default ctor');
          assert.equal(25, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after default ctor');
       });
@@ -40,11 +40,13 @@ define([
             virtualPageSize: 80,
          });
 
-         vsInstance._startIndex = 20;
+         vsInstance._startIndex = 50;
+         vsInstance._stopIndex = 130;
+         vsInstance.ItemsCount = 20;
          vsInstance.resetItemsIndexes();
 
          assert.equal(0, vsInstance._startIndex, 'Wrong start index after reset');
-         assert.equal(80, vsInstance._stopIndex, 'Wrong stop index after reset');
+         assert.equal(20, vsInstance._stopIndex, 'Wrong stop index after reset');
          assert.equal(80, vsInstance._virtualPageSize, 'Wrong virtualPageSize index after reset');
          assert.equal(20, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after reset');
       });
