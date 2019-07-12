@@ -15,11 +15,21 @@ import 'css!theme?Controls/filterPopup';
    var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
    var _private = {
+      getItemId: function(item) {
+         let id;
+         if (item.hasOwnProperty('id')) {
+            id = getPropValue(item, 'id');
+         } else {
+            id = getPropValue(item, 'name');
+         }
+         return id;
+      },
+
       getStringHistoryFromItems: function(items, resetValues) {
          var textArr = [];
          chain.factory(items).each(function(elem) {
             var value = getPropValue(elem, 'value'),
-               resetValue = resetValues[getPropValue(elem, 'id')],
+               resetValue = resetValues[_private.getItemId(elem)],
                textValue = getPropValue(elem, 'textValue'),
                visibility = getPropValue(elem, 'visibility');
 
@@ -33,7 +43,7 @@ import 'css!theme?Controls/filterPopup';
       getResetValues: function(items) {
          var result = {};
          chain.factory(items).each(function(item) {
-            result[getPropValue(item, 'id')] = getPropValue(item, 'resetValue');
+            result[_private.getItemId(item)] = getPropValue(item, 'resetValue');
          });
          return result;
       },
