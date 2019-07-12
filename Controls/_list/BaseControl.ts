@@ -44,7 +44,6 @@ const
 
 const LOAD_TRIGGER_OFFSET = 100;
 const INITIAL_PAGES_COUNT = 1;
-const INERTIA_SCROLLING_DURATION = 100;
 /**
  * Object with state from server side rendering
  * @typedef {Object}
