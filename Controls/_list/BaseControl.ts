@@ -375,7 +375,7 @@ var _private = {
                      * получается неактуальным запомненная позиция скролла и происходит дерганье контента таблицы.
                      */
                     if (detection.isMobileIOS) {
-                        _private.getIntertialScrolling().callAfterScrollStopped(() => {
+                        _private.getIntertialScrolling(self).callAfterScrollStopped(() => {
                             drawItemsUp(countCurrentItems, addedItems);
                         });
                     } else {
@@ -487,7 +487,7 @@ var _private = {
         };
 
         if (detection.isMobileIOS && direction === 'up' && self._topPlaceholderSize === 0) {
-            _private.getIntertialScrolling().callAfterScrollStopped(updateIndexes);
+            _private.getIntertialScrolling(self).callAfterScrollStopped(updateIndexes);
         } else {
             updateIndexes();
         }
@@ -697,12 +697,12 @@ var _private = {
         }
 
         if (detection.isMobileIOS) {
-            _private.getIntertialScrolling().scrollStarted();
+            _private.getIntertialScrolling(self).scrollStarted();
         }
     },
 
-    getIntertialScrolling: function(): IntertialScrolling {
-        return this._intertialScrolling || (this._intertialScrolling = new IntertialScrolling());
+    getIntertialScrolling: function(self): IntertialScrolling {
+        return self._intertialScrolling || (self._intertialScrolling = new IntertialScrolling());
     },
 
     needScrollCalculation: function (navigationOpt) {
