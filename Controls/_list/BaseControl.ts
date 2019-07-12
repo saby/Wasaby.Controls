@@ -697,10 +697,6 @@ var _private = {
             }
         }
 
-        // The content continues to scroll for a while
-        // after finishing the scroll gesture and removing your finger from the touchscreen.
-        // The speed and duration of the continued scrolling is proportional to how vigorous the scroll gesture was.
-        // 100ms is the average value (can be more or less) of the scrolling duration.
         if (detection.isMobileIOS) {
             _private.getIntertialScrolling().scrollStarted();
         }
