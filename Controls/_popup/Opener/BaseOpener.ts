@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
-import Vdom = require('Vdom/Vdom');
+import { DefaultOpenerFinder } from 'UI/Base';
 import CoreMerge = require('Core/core-merge');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
@@ -125,7 +125,7 @@ var Base = Control.extend({
         let baseConfig = Base.getConfig({}, this._options, popupOptions);
         // if the .opener property is not set, then set the defaultOpener or the current control
         if (!baseConfig.hasOwnProperty('opener')) {
-            baseConfig.opener = Vdom.DefaultOpenerFinder.find(this) || this;
+            baseConfig.opener = DefaultOpenerFinder.find(this) || this;
         }
         if (baseConfig.actionOnScroll) {
             this._actionOnScroll = baseConfig.actionOnScroll;
