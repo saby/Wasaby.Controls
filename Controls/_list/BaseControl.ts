@@ -1139,7 +1139,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     virtualPageSize: newOptions.virtualPageSize,
                     virtualSegmentSize: newOptions.virtualSegmentSize
                 });
-
             }
             this._virtualScrollTriggerVisibility = {
                 up: false,
@@ -1243,6 +1242,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
             this._listViewModel.setCollapsedGroups(newOptions.collapsedGroups);
+        }
+
+        if (newOptions.keyProperty !== this._options.keyProperty) {
+            this._listViewModel.setKeyProperty(newOptions.keyProperty);
         }
 
         if (newOptions.markedKey !== this._options.markedKey) {
