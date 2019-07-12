@@ -2,7 +2,7 @@
  * Интерфейс для перемещения элементов списка с помощью drag'n'drop.
  * Больше информации можно прочитать <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">здесь</a>.
  *
- * @interface Controls/_tile/interface/IDraggable
+ * @interface Controls/interface/IDraggable
  * @public
  * @author Авраменко А.С.
  */
@@ -11,13 +11,13 @@
  * Interface to move elements of the list by using drag'n'drop.
  * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
  *
- * @interface Controls/_tile/interface/IDraggable
+ * @interface Controls/interface/IDraggable
  * @public
  * @author Авраменко А.С.
  */
 
 /**
- * @name Controls/_tile/interface/IDraggable#itemsDragNDrop
+ * @name Controls/interface/IDraggable#itemsDragNDrop
  * @cfg {String} Определяет, может ли пользователь перемещать элементы в списке с помощью drag'n'drop.
  * @variant none Перемещение запрещено.
  * @variant allow Перемещение разрешено.
@@ -43,7 +43,7 @@
  */
 
 /*
- * @name Controls/_tile/interface/IDraggable#itemsDragNDrop
+ * @name Controls/interface/IDraggable#itemsDragNDrop
  * @cfg {String} Determines whether the user can move entries in the list using drag'n'drop.
  * @variant none Dragging items is not allowed.
  * @variant allow Dragging items is allowed.
@@ -69,7 +69,7 @@
  */
 
 /**
- * @name Controls/_tile/interface/IDraggable#draggingTemplate
+ * @name Controls/interface/IDraggable#draggingTemplate
  * @cfg {Function} Шаблон перемещаемого элемета.
  * @default Controls/dragnDrop:DraggingTemplate
  * @remark В процессе перемещения рядом с курсором отображается эскиз перемещаемого объекта.
@@ -111,7 +111,7 @@
  */
 
 /*
- * @name Controls/_tile/interface/IDraggable#draggingTemplate
+ * @name Controls/interface/IDraggable#draggingTemplate
  * @cfg {Function} Template of the entity to be moved.
  * @default Controls/dragnDrop:DraggingTemplate
  * @remark In the process of moving, a thumbnail of the entity being moved is shown near the cursor.
@@ -153,11 +153,11 @@
  */
 
 /**
- * @event Controls/_tile/interface/IDraggable#dragStart Происходит при начале перемещения элемента.
+ * @event Controls/interface/IDraggable#dragStart Происходит при начале перемещения элемента.
  * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Array.<String>} items Массив идентификаторов перемещаемых элементов.
- * @remark Чтобы начать перемещение drag'n'drop из события, необходимо вернуть объект перемещения. Событие срабатывает у контейнера, в котором началось перемещение. 
- * Отличается от события {@link https://wi.sbis.ru/docs/js/Controls/tile/IDraggable/events/dragEnter/?v=19.500 dragEnter}, которое срабатывает у контейнера, в который была перемещена запись. 
+ * @remark Чтобы начать перемещение drag'n'drop из события, необходимо вернуть объект перемещения. Событие срабатывает у контейнера, в котором началось перемещение.
+ * Отличается от события {@link https://wi.sbis.ru/docs/js/Controls/tile/IDraggable/events/dragEnter/?v=19.500 dragEnter}, которое срабатывает у контейнера, в который была перемещена запись.
  * @example
  * В следующем примере показано, как начать перемещение элементов с помощью drag'n'drop, если все элементы имеют одинаковый тип.
  * <pre>
@@ -191,7 +191,7 @@
  */
 
 /*
- * @event Controls/_tile/interface/IDraggable#dragStart Occurs before the user starts dragging an element in the list.
+ * @event Controls/interface/IDraggable#dragStart Occurs before the user starts dragging an element in the list.
  * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Array.<String>} items An array of identifiers for items to be moved.
  * @returns {Controls/_dragnDrop/Entity/Items)
@@ -242,8 +242,8 @@
  * @variant on Insert moved items into the specified item.
  */
 
-/** 
- * @event Controls/_tile/interface/IDraggable#dragEnd Происходит при завершении перемещения элемента в списке.
+/**
+ * @event Controls/interface/IDraggable#dragEnd Происходит при завершении перемещения элемента в списке.
  * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Controls/_dragnDrop/Entity/Items} entity Сущность перемещения.
  * @param {Types/entity:Record} target Объект перемещения.
@@ -275,7 +275,7 @@
  */
 
 /*
- * @event Controls/_tile/interface/IDraggable#dragEnd Occurs after the user has finished dragging an item in the list.
+ * @event Controls/interface/IDraggable#dragEnd Occurs after the user has finished dragging an item in the list.
  * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @param {Types/entity:Record} target Target item to move.
@@ -304,7 +304,7 @@
  *    });
  * </pre>
  * @see dragStart
- */ 
+ */
 
 /**
  * @typedef {Boolean|Types/entity:Record} DragEnterResult
@@ -316,15 +316,15 @@
  * @typedef {Boolean|Types/entity:Record} DragEnterResult
  * @property {Boolean} Allow dragging items to the current list from another list.
  * @property {Types/entity:Record} Allow dragging items to the current list from another list, the returned entry will be displayed in the list as a pointer to the move location.
- */ 
+ */
 
 /**
- * @event Controls/_tile/interface/IDraggable#dragEnter Происходит при перемещении элемента из другого контрола.
+ * @event Controls/interface/IDraggable#dragEnter Происходит при перемещении элемента из другого контрола.
  * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Controls/_dragnDrop/Entity/Items} entity Сущность перемещения.
  * @returns {DragEnterResult}
- * @remark Событие позволяет перемещать элементы в текущий список из другого списка. Событие срабатывает у контейнера, в который была перемещена запись. 
- * Отличается от события {@link https://wi.sbis.ru/docs/js/Controls/tile/IDraggable/events/dragStart/?v=19.500 dragStart}, которое срабатывает у контейнера, из которого началось перемещение записи. 
+ * @remark Событие позволяет перемещать элементы в текущий список из другого списка. Событие срабатывает у контейнера, в который была перемещена запись.
+ * Отличается от события {@link https://wi.sbis.ru/docs/js/Controls/tile/IDraggable/events/dragStart/?v=19.500 dragStart}, которое срабатывает у контейнера, из которого началось перемещение записи.
  * @example
  * В следующем примере показано, как перемещать в список объекты определенного типа.
  * <pre>
@@ -365,7 +365,7 @@
  */
 
 /*
- * @event Controls/_tile/interface/IDraggable#dragEnter Occurs before moving items from another list to the current list.
+ * @event Controls/interface/IDraggable#dragEnter Occurs before moving items from another list to the current list.
  * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @returns {DragEnterResult}
@@ -410,7 +410,7 @@
  */
 
 /**
- * @event Controls/_tile/interface/IDraggable#changeDragTarget Происходит перед изменением позиции, в которую будет перемещен элемент.
+ * @event Controls/interface/IDraggable#changeDragTarget Происходит перед изменением позиции, в которую будет перемещен элемент.
  * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Controls/_dragnDrop/Entity/Items} entity Сущность перемещения.
  * @param {Types/entity:Record} target Элемент перемещения.
@@ -443,7 +443,7 @@
  */
 
 /*
- * @event Controls/_tile/interface/IDraggable#changeDragTarget Occurs before the change of the position of the drag.
+ * @event Controls/interface/IDraggable#changeDragTarget Occurs before the change of the position of the drag.
  * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @param {Types/entity:Record} target Target item to move.

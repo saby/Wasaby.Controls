@@ -11,7 +11,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * Подробное описание и инструкции по настройке редактирования по месту можно прочитать <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/edit-at-list/'>здесь</a>.
     * <a href="/materials/demo-ws4-edit-in-place">Демо-пример</a>
     * <a href="/materials/demo-ws4-tree-singleexpand">Дерево с опцией singleExpand</a>.
-    * 
+    *
     * @class Controls/_treeGrid/View
     * @extends Controls/_grid/Grid
     * @mixes Controls/_interface/ISource
@@ -37,7 +37,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/_list/ItemActions/ItemActionsStyles
     * @mixes Controls/_list/Swipe/SwipeStyles
     *
-    * @mixes Controls/_MoveDialog/Styles
+    * @mixes Controls/MoveDialog/Styles
     * @mixes Controls/_paging/PagingStyles
     * @mixes Controls/_paging/DigitButtonsStyles
     * @mixes Controls/_grid/SortButtonStyles
@@ -84,7 +84,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/_list/ItemActions/ItemActionsStyles
     * @mixes Controls/_list/Swipe/SwipeStyles
     *
-    * @mixes Controls/_MoveDialog/Styles
+    * @mixes Controls/MoveDialog/Styles
     * @mixes Controls/_paging/PagingStyles
     * @mixes Controls/_paging/DigitButtonsStyles
     * @mixes Controls/_grid/SortButtonStyles
