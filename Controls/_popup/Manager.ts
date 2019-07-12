@@ -8,7 +8,7 @@ import Deferred = require('Core/Deferred');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import EnvEvent = require('Env/Event');
 import Env = require('Env/Env');
-import Vdom = require('Vdom/Vdom');
+import { goUpByControlTree } from 'UI/Base';
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 
 const _private = {
@@ -223,7 +223,7 @@ const _private = {
     },
 
     goUpByControlTree(target) {
-        return Vdom.goUpByControlTree(target);
+        return goUpByControlTree(target);
     },
 
     getActiveControl() {
