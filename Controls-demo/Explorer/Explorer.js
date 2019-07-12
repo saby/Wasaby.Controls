@@ -1,11 +1,12 @@
 define('Controls-demo/Explorer/Explorer', [
+   'Env/Env',
    'Core/Control',
    'wml!Controls-demo/Explorer/Explorer',
    'Controls-demo/Explorer/ExplorerMemory',
    'Controls-demo/Explorer/ExplorerImages',
    'css!Controls-demo/Explorer/Explorer',
    'Controls/explorer'
-], function(BaseControl, template, MemorySource, explorerImages) {
+], function(Env, BaseControl, template, MemorySource, explorerImages) {
    'use strict';
    var
       ModuleClass = BaseControl.extend({
@@ -39,7 +40,7 @@ define('Controls-demo/Explorer/Explorer', [
                   title: 'phone',
                   showType: 0,
                   handler: function(item) {
-                     console.log('action phone Click ', item);
+                     Env.IoC.resolve('ILogger').info('action phone Click ', item);
                   }
                },
                {
@@ -57,7 +58,7 @@ define('Controls-demo/Explorer/Explorer', [
                   title: 'profile',
                   showType: 0,
                   handler: function() {
-                     console.log('action profile Click');
+                     Env.IoC.resolve('ILogger').info('action profile Click');
                   }
                },
                {
@@ -67,7 +68,7 @@ define('Controls-demo/Explorer/Explorer', [
                   title: 'delete pls',
                   showType: 0,
                   handler: function() {
-                     console.log('action delete Click');
+                     Env.IoC.resolve('ILogger').info('action delete Click');
                   }
                },
                {
@@ -76,7 +77,7 @@ define('Controls-demo/Explorer/Explorer', [
                   title: 'phone',
                   showType: 0,
                   handler: function(item) {
-                     console.log('action phone Click ', item);
+                     Env.IoC.resolve('ILogger').info('action phone Click ', item);
                   }
                },
                {
@@ -94,7 +95,7 @@ define('Controls-demo/Explorer/Explorer', [
                   title: 'profile',
                   showType: 0,
                   handler: function() {
-                     console.log('action profile Click');
+                     Env.IoC.resolve('ILogger').info('action profile Click');
                   }
                },
                {
@@ -104,7 +105,7 @@ define('Controls-demo/Explorer/Explorer', [
                   title: 'delete pls',
                   showType: 0,
                   handler: function() {
-                     console.log('action delete Click');
+                     Env.IoC.resolve('ILogger').info('action delete Click');
                   }
                }
             ];

@@ -1,12 +1,11 @@
 define('Controls-demo/DragNDrop/Grid', [
    'Core/Control',
    'Core/core-clone',
-   'Types/entity',
    'Controls-demo/DragNDrop/DemoData',
    'Controls-demo/DragNDrop/ListEntity',
    'wml!Controls-demo/DragNDrop/Grid/Grid',
    'Types/source'
-], function(BaseControl, cClone, entityLib, DemoData, ListEntity, template, source) {
+], function(BaseControl, cClone, DemoData, ListEntity, template, source) {
    'use strict';
 
    var ModuleClass = BaseControl.extend({

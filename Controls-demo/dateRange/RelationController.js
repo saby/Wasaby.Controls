@@ -1,11 +1,9 @@
 define('Controls-demo/dateRange/RelationController', [
    'Core/Control',
-   'Types/collection',
    'wml!Controls-demo/dateRange/RelationController',
    'css!Controls-demo/dateRange/RelationController'
 ], function(
    BaseControl,
-   collection,
    template
 ) {
    'use strict';

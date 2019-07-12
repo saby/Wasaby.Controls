@@ -1,9 +1,10 @@
 define('Controls-demo/Buttons/ButtonsVdom', [
+   'Env/Env',
    'Core/Control',
    'wml!Controls-demo/Buttons/ButtonsVdom',
    'css!Controls-demo/Buttons/ButtonsVdom',
    'Controls/buttons'
-], function (Control,
+], function (Env, Control,
              template) {
    'use strict';
 
@@ -13,7 +14,7 @@ define('Controls-demo/Buttons/ButtonsVdom', [
          _template: template,
 
          clickHandler: function () {
-            console.log('click to button');
+            Env.IoC.resolve('ILogger').info('click to button');
          }
       });
    return ModuleClass;
