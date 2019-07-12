@@ -26,6 +26,7 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * Here you can see <a href="/materials/demo-ws4-engine-selector-button">demo-example</a>.
  *
  * @class Controls/_lookup/Button
+ * @extends Core/Control
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/interface/ISelectorDialog
@@ -33,7 +34,6 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_lookup/Button/SelectorButtonStyles
- * @extends Core/Control
  * @control
  * @public
  * @author Капустин И.А.

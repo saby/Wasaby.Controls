@@ -9,6 +9,7 @@ import 'css!theme?Controls/filterPopup';
     * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
     * @class Controls/_filterPopup/Panel/Lookup
     * @extends Core/Control
+    * @mixes Controls/interface/ILookup
     * @mixes Controls/interface/ISelectedCollection
     * @mixes Controls/interface/ISelectorDialog
     * @mixes Controls/interface/ISuggest
@@ -17,13 +18,14 @@ import 'css!theme?Controls/filterPopup';
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/INavigation
     * @mixes Controls/_interface/IMultiSelectable
+    * @mixes Controls/_interface/ISorting
     * @mixes Controls/interface/IInputPlaceholder
     * @mixes Controls/interface/IInputBase
     * @mixes Controls/interface/IInputText
     * @mixes Controls/interface/IInputField
     * @mixes Controls/interface/IInputTag
     * @mixes Controls/interface/ISelectableInput
-    * @mixes Controls/_lookup/Lookup/LookupStyles
+    * @mixes Controls/_lookup/BaseLookupView/LookupStyles
     * @control
     * @public
     * @author Герасимов А.М.
