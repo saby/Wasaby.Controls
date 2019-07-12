@@ -1,4 +1,5 @@
 define('Controls-demo/List/Grid/Base', [
+   'Env/Env',
    'Core/Control',
    'Controls-demo/List/Grid/GridData',
    'wml!Controls-demo/List/Grid/resources/Base/Base',
@@ -14,7 +15,7 @@ define('Controls-demo/List/Grid/Base', [
    'Controls/grid',
    'Controls/Render/Money/Money',
    'css!Controls-demo/List/Grid/resources/Base/Base'
-], function(BaseControl, GridData, template, source) {
+], function(Env, BaseControl, GridData, template, source) {
    'use strict';
    var
       partialColumns = [
@@ -155,7 +156,7 @@ define('Controls-demo/List/Grid/Base', [
                   title: 'прочитано',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-                     console.log('action read Click');
+                     Env.IoC.resolve('ILogger').info('action read Click');
                   }
                },
                {
@@ -163,7 +164,7 @@ define('Controls-demo/List/Grid/Base', [
                   icon: 'icon-primary icon-PhoneNull',
                   title: 'phone',
                   handler: function(item) {
-                     console.log('action phone Click ', item);
+                     Env.IoC.resolve('ILogger').info('action phone Click ', item);
                   }
                },
                {
@@ -180,7 +181,7 @@ define('Controls-demo/List/Grid/Base', [
                   title: 'profile',
                   showType: this.showType.MENU_TOOLBAR,
                   handler: function() {
-                     console.log('action profile Click');
+                     Env.IoC.resolve('ILogger').info('action profile Click');
                   }
                },
                {
@@ -189,7 +190,7 @@ define('Controls-demo/List/Grid/Base', [
                   title: 'delete pls',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-                     console.log('action delete Click');
+                     Env.IoC.resolve('ILogger').info('action delete Click');
                   }
                }
             ];
