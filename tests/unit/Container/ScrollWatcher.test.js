@@ -176,7 +176,7 @@ define([
 
          setTimeout(function(){
             assert.deepEqual([
-               {eType: 'scrollMove', eArgs : {position : "middle", scrollTop: 22, clientHeight: 300}}
+               {eType: 'scrollMove', eArgs : {position : "middle", scrollTop: 22, clientHeight: 300, scrollHeight: 400}}
             ], evType, 'Wrong scroll commands on change scroll without observer');
             done();
          }, 100);
@@ -211,9 +211,9 @@ define([
                scrollMod.Watcher._private.onScrollContainer(ins, containerMock, true);
                setTimeout(function() {
                   assert.deepEqual([
-                     {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 2, clientHeight: 300}},
-                     {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 12, clientHeight: 300}},
-                     {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 22, clientHeight: 300}}
+                     {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 2, clientHeight: 300, scrollHeight: 400}},
+                     {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 12, clientHeight: 300, scrollHeight: 400}},
+                     {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 22, clientHeight: 300, scrollHeight: 400}}
                   ], evType, 'Wrong scroll commands on change scroll without observer');
                   done();
                }, 100);
@@ -253,8 +253,8 @@ define([
             scrollMod.Watcher._private.onScrollContainer(ins, containerMock, true);
             setTimeout(function() {
                assert.deepEqual([
-                  {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 12, clientHeight: 300}},
-                  {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 22, clientHeight: 300}}
+                  {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 12, clientHeight: 300, scrollHeight: 400}},
+                  {eType: 'scrollMove', eArgs: {position: "middle", scrollTop: 22, clientHeight: 300, scrollHeight: 400}}
                ], evType, 'Wrong scroll commands on change scroll without observer');
                done();
             }, 100);

@@ -453,11 +453,18 @@ var
       },
 
       _scrollHandler: function(ev) {
-         if (!this._dragging) {
-            this._scrollTop = _private.getScrollTop(this._children.content);
-            this._notify('scroll', [this._scrollTop]);
+
+         // Проверяем, изменился ли scrollTop, чтобы предотвратить ложные срабатывания события.
+         // Например, при пересчете размеров перед увеличением, плитка может растянуть контейнер между перерисовок,
+         // и вернуться к исходному размеру.
+         // После этого  scrollTop остается прежним, но срабатывает незапланированный нативный scroll
+         if (this._scrollTop !== _private.getScrollTop(this._children.content)) {
+            if (!this._dragging) {
+               this._scrollTop = _private.getScrollTop(this._children.content);
+               this._notify('scroll', [this._scrollTop]);
+            }
+            this._children.scrollDetect.start(ev);
          }
-         this._children.scrollDetect.start(ev);
       },
 
       _keydownHandler: function(ev) {

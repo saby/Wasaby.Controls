@@ -22,7 +22,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_list/interface/ITreeControl
     * @mixes Controls/interface/ITreeGridItemTemplate
-    * @mixes Controls/_tile/interface/IDraggable
+    * @mixes Controls/interface/IDraggable
     *
     * @mixes Controls/_list/BaseControlStyles
     * @mixes Controls/_list/ListStyles
@@ -63,7 +63,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_list/interface/ITreeControl
     * @mixes Controls/interface/ITreeGridItemTemplate
-    * @mixes Controls/_tile/interface/IDraggable
+    * @mixes Controls/interface/IDraggable
     *
     * @mixes Controls/_list/BaseControlStyles
     * @mixes Controls/_list/ListStyles

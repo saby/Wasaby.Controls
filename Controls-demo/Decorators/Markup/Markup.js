@@ -58,7 +58,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
          }
       },
       _beforeMount: function() {
-         this.allTagResolvers = [decorator.linkDecorate, highlightResolver, this._combineResolver];
+         this.allTagResolvers = [decorator.linkDecorate, decorator._highlightResolver, this._combineResolver];
          this._resolversMemorySource = new source.Memory({
             idProperty: 'id',
             data: [

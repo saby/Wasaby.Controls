@@ -25,7 +25,7 @@ import {DefaultOpenerFinder} from "Vdom/Vdom";
  * @description Infobox configuration.
  * @property {String|Function} template Template inside popup
  * @property {Object} templateOptions Template options inside popup.
- * @property {domNode} target The target relative to which the popup is positioned.
+ * @property {Node} target The target relative to which the popup is positioned.
  * @property {String} position Point positioning of the target relative to infobox.
  * @property {String} message The text in the body popup.
  * @property {Boolean} floatCloseButton Whether the content should wrap around the cross closure.

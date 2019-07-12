@@ -79,6 +79,56 @@ define(
             assert.equal(removeRecord, undefined);
          });
 
+         it('isEqual', () => {
+            let isEqual = RecordSynchronizer._private.isEqual;
+            let arg1 = 123;
+            let arg2 = '123';
+            assert.equal(isEqual(arg1, arg2), false);
+
+            arg1 = () => {};
+            arg2 = () => {};
+            assert.equal(isEqual(arg1, arg2), true);
+
+            arg1 = {
+               a: 1
+            };
+            arg2 = {
+               a: 1
+            };
+            assert.equal(isEqual(arg1, arg2), true);
+            arg2 = {
+               2: 1
+            };
+            assert.equal(isEqual(arg1, arg2), false);
+
+            arg1 = '123';
+            arg2 = '123';
+            assert.equal(isEqual(arg1, arg2), true);
+
+            arg1 = '1234';
+            arg2 = '123';
+            assert.equal(isEqual(arg1, arg2), false);
+
+            arg1 = new entity.Model({
+               rawData: {
+                  a: 1
+               }
+            });
+            arg2 = new entity.Model({
+               rawData: {
+                  a: 1
+               }
+            });
+            assert.equal(isEqual(arg1, arg2), true);
+
+            arg2 = new entity.Model({
+               rawData: {
+                  a: 2
+               }
+            });
+            assert.equal(isEqual(arg1, arg2), false);
+         });
+
          it('add records', () => {
             let editRecord = [];
             items.clear();

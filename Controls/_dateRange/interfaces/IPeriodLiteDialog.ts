@@ -123,7 +123,7 @@ export default {
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#itemTemplate
              * @cfg {String} Template of the year. Can accept the option monthCaptionTemplate - template header
              * of the month. The date of the first day of the month and date formatting function are passed
-             * to the template of the month {@link Core/helpers/Date/format}.
+             * to the template of the month {@link Types/formatter:date}.
              * @example
              * <ws:itemTemplate>
              *    <ws:partial template="{{itemTemplate.defaultTemplate}}">

@@ -10,7 +10,6 @@ define('Controls-demo/Slider/Range/SliderRangeDemo',
       'use strict';
       var SliderRangeDemo = Control.extend({
          _template: template,
-         _template: template,
          _minValue: undefined,
          _maxValue: undefined,
          _scaleStep: undefined,

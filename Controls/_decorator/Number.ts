@@ -4,7 +4,7 @@ import template = require('wml!Controls/_decorator/Number/Number');
       
 
       /**
-       * Divide the number into triads.
+       * Делит число на триады.
        *
        * @class Controls/_decorator/Number
        * @extends Core/Control
@@ -16,17 +16,48 @@ import template = require('wml!Controls/_decorator/Number/Number');
        * @author Красильников А.С.
        */
 
+      /*
+       * Divide the number into triads.
+       *
+       * @class Controls/_decorator/Number
+       * @extends Core/Control
+       * @control
+       * @public
+       * @category Decorator
+       * @demo Controls-demo/Decorators/Number/Number
+       *
+       * @author Красильников А.С.
+       */      
+
       /**
+       * @name Controls/_decorator/Number#number
+       * @cfg {Number} Число, которое будет разделено на триады.
+       */
+
+      /*
        * @name Controls/_decorator/Number#number
        * @cfg {Number} Number to divide into triads.
        */
 
       /**
        * @name Controls/_decorator/Number#fractionSize
+       * @cfg {Number} Количество знаков после запятой. Диапазон от 0 до 20.
+       */
+
+      /*
+       * @name Controls/_decorator/Number#fractionSize
        * @cfg {Number} Number of decimal places. Range from 0 to 20.
        */
 
       /**
+       * @name Controls/_decorator/Number#roundMode
+       * @cfg {String} Режим форматирования дробной части числа.
+       * @variant round При необходимости число округляется, а дробная часть дополняется нулями, чтобы она имела заданную длину.
+       * @variant trunc Усекает (отсекает) цифры справа от точки так, чтобы дробная часть имела заданную длину, независимо от того, является ли аргумент положительным или отрицательным числом.
+       * @default trunc
+       */
+
+      /*
        * @name Controls/_decorator/Number#roundMode
        * @cfg {String} The mode of formatting the fractional part of the number.
        * @variant round The number is rounded if necessary, and the fractional part is padded with zeros if necessary
@@ -38,6 +69,15 @@ import template = require('wml!Controls/_decorator/Number/Number');
 
       /**
        * @name Controls/_decorator/Number#useGrouping
+       * @cfg {Boolean} Определяет, следует ли использовать групповые разделители, например разделители тысяч.
+       * @default true
+       * @remark
+       * true - Число разделено на группы.
+       * false - Ничего не происходит.
+       */
+
+      /*
+       * @name Controls/_decorator/Number#useGrouping
        * @cfg {Boolean} Determines whether to use grouping separators, such as thousands separators.
        * @default true
        * @remark
@@ -48,6 +88,14 @@ import template = require('wml!Controls/_decorator/Number/Number');
       var _private = {
 
          /**
+          * Приведение числа к формату с делением на триады.
+          * @param number {@link number}
+          * @param roundMode {@link roundMode}
+          * @param [fractionSize] {@link fractionSize}
+          * @param useGrouping {@link useGrouping}
+          */
+
+         /*
           * Casting a number to a format with division on triads.
           * @param number {@link number}
           * @param roundMode {@link roundMode}

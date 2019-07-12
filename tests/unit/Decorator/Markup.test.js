@@ -4,13 +4,11 @@
 define([
    'Controls/decorator',
    'Controls/_decorator/Markup/resources/template',
-   'Controls/_decorator/Markup/resolvers/highlight',
    'Controls/_decorator/Markup/resources/linkDecorateUtils',
    'Env/Env'
 ], function(
    decorator,
    template,
-   highlightResolver,
    linkDecorateUtils,
    Env) {
    'use strict';
@@ -286,7 +284,7 @@ define([
          });
          it('escape', function() {
             var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><&#39;'];
-            var vdomTemplate = template({ '_options': { 'value': json } }, {}, undefined, true);
+            var vdomTemplate = template({ 'value': json }, {}, undefined, true);
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json), '<div><p title="&quot;&amp;lt;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;&amp;#39;</p></div>'));
             assert.equal(vdomTemplate[0].children[0].children[0].children, '&amp;gt;&amp;lt;><&amp;#39;');
             assert.equal(vdomTemplate[0].children[0].hprops.attributes.title, '"&amp;lt;<>');
@@ -517,11 +515,9 @@ define([
                   '<link />' +
                   '<script>alert(123);</script>',
                checkHtml = template({
-                  _options: {
-                     value: json,
-                     validHtml: validHtml,
-                     tagResolver: decorator.noOuterTag
-                  }
+                  value: json,
+                  validHtml: validHtml,
+                  tagResolver: decorator.noOuterTag
                }, {});
             assert.isTrue(equalsHtml(checkHtml, goodHtml));
          });
@@ -580,7 +576,7 @@ define([
                '<p><span class="controls-MarkupDecorator_highlight">aba</span>b<span class="controls-MarkupDecorator_highlight">aba</span>b<span class="controls-MarkupDecorator_highlight">aba</span></p>' +
                '<p>no highlight</p>' +
                '</div>';
-            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, highlightResolver, { textToHighlight: 'aBa' }), html));
+            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, decorator._highlightResolver, { textToHighlight: 'aBa' }), html));
          });
          it('with innerText resolver', function() {
             var json = [['p', 'text&amp;', ['br'], 'more text'], ['p', deepNode], ['p'], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
