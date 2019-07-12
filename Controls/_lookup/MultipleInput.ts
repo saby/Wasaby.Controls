@@ -3,7 +3,7 @@ import template = require('wml!Controls/_lookup/MultipleInput/MultipleInput');
 import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
 
 /**
- * Контрол позволяет выбрать значение в диалоговом окне или предложить список возможных значений.
+ * Контрол позволяет выбрать значение в диалоговом окне или предложить список возможных значений в автодополнении.
  * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-lookup">демонстрационный пример</a>
  *
  * @class Controls/_lookup/MultipleInput
