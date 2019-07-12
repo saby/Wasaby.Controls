@@ -1232,15 +1232,41 @@ define([
             }
          };
          var baseControl = new lists.BaseControl(cfg);
+         baseControl._children = {
+            topVirtualScrollTrigger:{
+               style:{
+                  top:0
+               }
+            },
+            topLoadTrigger:{
+               style:{
+                  top:0
+               }
+            },
+            bottomVirtualScrollTrigger:{
+               style:{
+                  bottom:0
+               }
+            },
+            bottomLoadTrigger:{
+               style:{
+                  bottom:0
+               }
+            }
+         };
          baseControl.saveOptions(cfg);
-         baseControl._loadOffset = {top: 100, bottom: 100, isNull: false};
+         baseControl._virtualScroll = {};
+         baseControl._needScrollCalculation = true;
+         baseControl._loadOffset = {top: 0, bottom: 0, isNull: false};
+
          lists.BaseControl._private.onScrollHide(baseControl);
-         assert.equal(baseControl._loadOffset, {top: 0, bottom: 0, isNull: true});
+         assert.deepEqual({top: 0, bottom: 0, isNull: true}, baseControl._loadOffset);
          assert.isFalse(baseControl._isScrollShown);
 
          lists.BaseControl._private.onScrollShow(baseControl);
-         assert.equal(baseControl._loadOffset, {top: 100, bottom: 100, isNull: false});
+         assert.deepEqual({top: 100, bottom: 100, isNull: false}, baseControl._loadOffset);
          assert.isTrue(baseControl._isScrollShown);
+
       });
 
       it('scrollToEdge without load', function(done) {

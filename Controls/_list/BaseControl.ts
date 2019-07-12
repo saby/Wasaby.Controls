@@ -528,7 +528,7 @@ var _private = {
     onScrollShow: function(self) {
         // ToDo option "loadOffset" is crutch for contacts.
         // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
-        if (this._virtualScroll && self._needScrollCalculation) {
+        if (self._virtualScroll && self._needScrollCalculation) {
             self._setLoadOffset(self._loadOffsetTop, self._loadOffsetBottom, false);
         }
         self._isScrollShown = true;
@@ -547,7 +547,7 @@ var _private = {
     onScrollHide: function(self) {
         var needUpdate = false;
         if (!self._loadOffset || !self._loadOffset.isNull) {
-            if (this._virtualScroll) {
+            if (self._virtualScroll) {
                 self._setLoadOffset(0, 0, true);
             }
             needUpdate = true;
@@ -1452,8 +1452,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (!this._loadOffset) {
             this._loadOffset = {};
         }
-        this._loadOffset.top = this._loadOffsetTop = top;
-        this._loadOffset.bottom = this._loadOffsetBottom = bottom;
+        this._loadOffset.top = top;
+        this._loadOffset.bottom = bottom;
+
+        this._loadOffsetTop = top || this._loadOffsetTop;
+        this._loadOffsetBottom = bottom || this._loadOffsetBottom;
+
         this._loadOffset.isNull = isNull;
         this._children.topVirtualScrollTrigger.style.top = Math.floor(this._loadOffset.top) + 'px';
         this._children.topLoadTrigger.style.top = Math.floor(this._loadOffset.top * 1.3) + 'px';
