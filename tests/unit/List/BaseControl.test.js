@@ -3209,6 +3209,31 @@ define([
          });
       });
 
+      it('update key property', async () => {
+         const cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            },
+            instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         let newKeyProperty;
+         instance._listViewModel.setKeyProperty = (value) => {
+            newKeyProperty = value;
+         };
+         const keyProperty = 'name';
+         const newCfg = {...cfg, keyProperty};
+         instance._beforeUpdate(newCfg);
+         assert.equal(newKeyProperty, 'name');
+         instance.destroy();
+      });
+
       it('should fire "drawItems" event if collection has changed', async function() {
          var
             cfg = {
