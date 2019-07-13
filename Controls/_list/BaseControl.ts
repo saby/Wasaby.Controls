@@ -419,21 +419,21 @@ var _private = {
       }
    },
 
-    checkVirtualScrollCapability: function(self, params) {
+    checkVirtualScrollCapability: function(self) {
        if (self._virtualScroll) {
           if (self._virtualScrollTriggerVisibility.up) {
-             _private.updateVirtualWindow(self, 'up', params);
+             _private.updateVirtualWindow(self, 'up');
           } else if (self._virtualScrollTriggerVisibility.down) {
-             _private.updateVirtualWindow(self, 'down', params);
+             _private.updateVirtualWindow(self, 'down');
           }
        }
     },
 
-   updateVirtualWindow: function(self, direction, params) {
-      if (_private.isFullPlaceholderVisibility(self, direction, params)) {
-         self._recalcVirtualScrollIndexes(direction, params.scrollTop);
+   updateVirtualWindow: function(self, direction) {
+      if (_private.isFullPlaceholderVisibility(self, direction, self._cachedScrollParams)) {
+         self._recalcVirtualScrollIndexes(direction);
       } else {
-         self._virtualScroll.recalcToDirection(direction);
+         self._virtualScroll.recalcToDirection(direction, self._cachedScrollParams, LOAD_TRIGGER_OFFSET);
          _private.applyVirtualScrollIndexes(self, direction);
       }
    },
@@ -458,11 +458,20 @@ var _private = {
         self._loadTriggerVisibility[direction] = false;
     },
 
+    cacheScrollParams(self, params): void {
+       self._cachedScrollParams = {
+          scrollTop: params.scrollTop,
+          scrollHeight: params.scrollHeight,
+          clientHeight: params.clientHeight
+       };
+    },
+
     // Вызывает обновление индексов виртуального окна при срабатывании триггера вверх|вниз и запоминает, что тригер в настоящий момент видимый
     updateVirtualWindowStart(self, direction: 'up' | 'down', params): void {
         if (self._virtualScroll) {
+            _private.cacheScrollParams(self, params);
             self._virtualScrollTriggerVisibility[direction] = true;
-            _private.checkVirtualScrollCapability(self, params);
+            _private.checkVirtualScrollCapability(self);
         }
     },
 
@@ -685,13 +694,14 @@ var _private = {
         }
 
         if (self._virtualScroll) {
+            _private.cacheScrollParams(self, params);
             if (self._virtualScrollTriggerVisibility.down) {
-               if (_private.isFullPlaceholderVisibility(self, 'down', params)) {
-                  self._recalcVirtualScrollIndexes('down', params.scrollTop);
+               if (_private.isFullPlaceholderVisibility(self, 'down', self._cachedScrollParams)) {
+                  self._recalcVirtualScrollIndexes('down');
                }
             } else if (self._virtualScrollTriggerVisibility.up) {
-               if (_private.isFullPlaceholderVisibility(self, 'up', params)) {
-                  self._recalcVirtualScrollIndexes('up', params.scrollTop);
+               if (_private.isFullPlaceholderVisibility(self, 'up', self._cachedScrollParams)) {
+                  self._recalcVirtualScrollIndexes('up');
                }
             }
         }
@@ -750,10 +760,10 @@ var _private = {
                             // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
                             if (self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
                                self._virtualScrollTriggerVisibility.down && !self._itemsFromLoadToDirection) {
-                                self._virtualScroll.recalcToDirection(direction);
+                               self._virtualScroll.recalcToDirection(direction, self._cachedScrollParams, LOAD_TRIGGER_OFFSET);
                             } else {
                                 // если данные добавились сверху - просто обновляем индексы видимых записей
-                                self._virtualScroll.recalcItemsIndexes(direction);
+                                self._virtualScroll.recalcItemsIndexes(direction, self._cachedScrollParams, LOAD_TRIGGER_OFFSET);
                             }
                         } else {
                             if (self._itemsFromLoadToDirection) {
@@ -762,7 +772,7 @@ var _private = {
                                 // кол-во загруженных элементов может отличаться от кол-ва рисуемых элементов
                                 self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + newItems.length;
                             }
-                            self._virtualScroll.recalcItemsIndexes(direction);
+                            self._virtualScroll.recalcItemsIndexes(direction, self._cachedScrollParams, LOAD_TRIGGER_OFFSET);
                         }
                     }
                     if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
@@ -1120,6 +1130,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _needScrollCalculation: false,
     _loadTriggerVisibility: null,
     _virtualScrollTriggerVisibility: null,
+    _cachedScrollParams: null,
     _loadOffset: 0,
     _topPlaceholderSize: 0,
     _bottomPlaceholderSize: 0,
@@ -1142,8 +1153,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
         this.__errorController = options.errorController || new dataSourceError.Controller({});
-        this._recalcVirtualScrollIndexes = throttle(function(direction, scrollTop) {
-            this._virtualScroll.recalcToDirectionByScrollTop(direction, scrollTop);
+        this._recalcVirtualScrollIndexes = throttle(function(direction) {
+            this._virtualScroll.recalcToDirectionByScrollTop(direction, this._cachedScrollParams, LOAD_TRIGGER_OFFSET);
             _private.applyVirtualScrollIndexes(this, direction);
         }.bind(this), 50, true);
     },
