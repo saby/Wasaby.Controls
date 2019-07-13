@@ -231,8 +231,6 @@ import 'Controls/context';
 
          setFilterButtonItems: function(filterButtonItems, fastFilterItems) {
             function prepareFastFilterItem(index) {
-               setPropValue(filterButtonItems[index], 'textValue', '');
-
                // Fast filters could not be reset from the filter button. We set flag for filters duplicated in the fast filter.
                filterButtonItems[index].isFast = true;
             }
