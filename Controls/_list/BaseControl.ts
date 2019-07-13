@@ -1396,7 +1396,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforeUnmount: function() {
-        clearTimeout(this._focusTimeout);
+        if (this._focusTimeout) {
+            clearTimeout(this._focusTimeout);
+        }
         if (this._sourceController) {
             this._sourceController.destroy();
         }
