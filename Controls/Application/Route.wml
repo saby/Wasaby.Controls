@@ -1,9 +1,9 @@
 <!doctype html>
-<Controls.Application.Core
+<UI.Base:Document
    application="{{application}}"
    scope="{{_options}}"
-   attr:component="{{application}}"
-   attr:data-component="Controls/Application/Core"
+   attr:application  ="{{application}}"
+   attr:rootapp="UI/Base:Document"
    attr:key="_"
    cssLinks="{{ cssLinks }}"
    wsRoot="{{wsRoot}}"
