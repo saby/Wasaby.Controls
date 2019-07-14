@@ -331,6 +331,36 @@ define(
          });
       });
 
+      describe('_scrollHandler', function() {
+         let scrollContainer = new scrollMod.Container({});
+         scrollContainer._children = {
+            content: {
+               scrollHeight: 200,
+               offsetHeight: 100,
+               scrollTop: 0
+            },
+            scrollDetect: {
+               start: function() {}
+            }
+         };
+         scrollContainer._scrollTop = 0;
+         let scrollEventCallCount = 0;
+         scrollContainer._notify = function(event, args) {
+            if (event === 'scroll') {
+               scrollEventCallCount++;
+            }
+         };
+         it('scrollTop has not changed. scroll should not fire', function() {
+            scrollContainer._scrollHandler({});
+            assert.equal(scrollEventCallCount, 0);
+         });
+         it('scrollTop has changed. scroll should fire', function() {
+            scrollContainer._children.content = 10;
+            scrollContainer._scrollHandler({});
+            assert.equal(scrollEventCallCount, 1);
+         });
+      });
+
       describe('Controls.Container.Shadow', function() {
          var result;
          describe('calcShadowPosition', function() {

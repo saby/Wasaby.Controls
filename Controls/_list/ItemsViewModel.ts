@@ -171,6 +171,10 @@ var ItemsViewModel = BaseViewModel.extend({
         return this.getItemDataByItem(dispItem);
     },
 
+    setKeyProperty(keyProperty: string): void {
+        this._options.keyProperty = keyProperty;
+    },
+
     _nextModelVersion: function(notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
         if (!notUpdatePrefixItemVersion) {
             this._prefixItemVersion++;
@@ -179,8 +183,8 @@ var ItemsViewModel = BaseViewModel.extend({
         this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     },
 
-    nextModelVersion: function(notUpdatePrefixItemVersion) {
-        this._nextModelVersion(notUpdatePrefixItemVersion);
+    nextModelVersion: function(notUpdatePrefixItemVersion, changesType) {
+        this._nextModelVersion(notUpdatePrefixItemVersion, changesType);
     },
 
     _calcItemVersion: function(item) {

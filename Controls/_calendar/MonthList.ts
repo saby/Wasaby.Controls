@@ -50,6 +50,12 @@ class  ModuleComponent extends Control {
         // this.selectionProcessing = options.selectionProcessing;
     }
 
+    protected _afterMount() {
+        // TODO: We need another api to control the shadow visibility
+        // https://online.sbis.ru/opendoc.html?guid=1737a12a-9dd1-45fa-a70c-bc0c9aa40a3d
+        this._children.scroll.setShadowMode({ top: 'visible', bottom: 'visible' });
+    }
+
     protected _beforeUpdate(options) {
         this._updateItemTemplate(options);
         this._updateSource(options);

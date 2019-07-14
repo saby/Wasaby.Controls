@@ -1,5 +1,6 @@
 .controls-FilterView_theme_@{themeName} {
-   display: flex;
+   display: inline-flex;
+   align-items: center;
    height: @height_FilterButton;
    min-width: 1px;
 }
@@ -8,6 +9,10 @@
    display: inline-flex;
    align-items: center;
    overflow: hidden;
+}
+
+.controls-FilterView__wrapper_theme_@{themeName}:before {
+   content: '\200b';
 }
 
 .controls-FilterView__wrapper_state_enabled_theme_@{themeName} {
@@ -19,7 +24,6 @@
    align-items: center;
    white-space: nowrap;
    min-width: @font-size_FilterButton_arrow + @min-width_FilterButton_text;
-   height: @height_FilterButton;
 }
 
 //Text
