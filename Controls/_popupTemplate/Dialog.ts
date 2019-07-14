@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/Dialog/Dialog');
 import Env = require('Env/Env');
-import Vdom = require('Vdom/Vdom');
+import { goUpByControlTree } from 'UI/Focus';
 import {Controller as ManagerController} from 'Controls/popup';
 
 const prepareCloseButton = {
@@ -111,7 +111,7 @@ const DialogTemplate = Control.extend({
     },
 
     _needStartDrag(target) {
-        const controlsArray = Vdom.goUpByControlTree(target);
+        const controlsArray = goUpByControlTree(target);
 
         // if click to control then control must handle click
         return this._options.draggable && controlsArray[0]._container === this._container;

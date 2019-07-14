@@ -24,7 +24,7 @@ import { detection, constants, IoC } from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
-import {Focus} from 'Vdom/Vdom';
+import {focus} from 'UI/Focus';
 import {throttle} from 'Types/function';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 
@@ -1629,7 +1629,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     focus: function() {
         this._focusTimeout = setTimeout(() => {
             if (this._children.fakeFocusElem) {
-                Focus.focus(this._children.fakeFocusElem);
+                focus(this._children.fakeFocusElem);
             }
         }, 0);
     },
