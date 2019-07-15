@@ -1,4 +1,0 @@
-<ws:partial template="{{ _templateFunction }}"
-            _control="{{ __selfLink }}"
-            temp="{{debug()}}"
-            on:contextmenu="_contextMenuHandler()" />

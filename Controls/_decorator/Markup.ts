@@ -3,8 +3,7 @@
  */
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import templateFunction = require('./Markup/resources/template');
-import template = require('wml!Controls/_decorator/Markup/Markup');
+import template = require('./Markup/resources/template');
 
 
    /**
@@ -87,17 +86,12 @@ import template = require('wml!Controls/_decorator/Markup/Markup');
 
    class MarkupDecorator extends Control<IControlOptions> {
       _template: TemplateFunction = template;
-      _templateFunction: TemplateFunction = templateFunction;
-      private __selfLink: Control = this;
 
       private _contextMenuHandler(event: SyntheticEvent): void {
          if (event.target.tagName.toLowerCase() === 'a') {
             // Для ссылок требуется браузерное контекстное меню.
             event.stopImmediatePropagation();
          }
-      }
-      private _beforeUnmount(): void {
-         this.__selfLink = null;
       }
    }
 

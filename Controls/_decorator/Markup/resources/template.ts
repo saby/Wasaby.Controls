@@ -35,6 +35,30 @@ import validHtml = require('Core/validHtml');
       return typeof value === 'string' || value instanceof String;
    }
 
+   function generateEventSubscribeObject(handlerName) {
+      return {
+         name: 'event',
+         args: [],
+         value: handlerName,
+         fn: (function(self) {
+            const f = (function() {
+               const event = arguments[0];
+               event.result = thelpers.getter(this, [handlerName]).apply(this, arguments);
+            }).bind(self);
+            f.control = self;
+            f.isControlEvent = false;
+            return f;
+         })(control)
+      };
+   }
+
+   function addEventListener(events, eventName, handlerName) {
+      if (!events[eventName]) {
+         events[eventName] = [];
+      }
+      events[eventName].push(generateEventSubscribeObject(handlerName));
+   }
+
    // A link from an attribute (for example, href in an a tag or src in an iframe tag) can't begin with "javascript:".
    // This is a way to call any javascript code after such a start.
    function isLinkAttributeWithJavascript(attributeName, attributeValue) {
@@ -57,7 +81,7 @@ import validHtml = require('Core/validHtml');
       }
    }
 
-   function recursiveMarkup(value, attrsToDecorate, key, parent) {
+   function recursiveMarkup(value, attrsToDecorate, key, parent?) {
       var valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
          wasResolved,
          i;
@@ -108,17 +132,21 @@ import validHtml = require('Core/validHtml');
          id: [],
          def: undefined
       };
-      control = data._control ? data._control : data;
+      control = data;
       resolver = control._options.tagResolver;
       resolverParams = control._options.resolverParams || {};
       resolverMode = 1;
       currentValidHtml = control._options.validHtml || validHtml;
 
+      const events = attr.events || {};
+      if (typeof window !== 'undefined') {
+         addEventListener(events, 'on:contextmenu', '_contextMenuHandler');
+      }
       var elements = [],
          key = (attr && attr.key) || '_',
          attrsToDecorate = {
             attributes: attr.attributes,
-            events: attr.events,
+            events: events,
             context: attr.context
          },
          oldEscape,
