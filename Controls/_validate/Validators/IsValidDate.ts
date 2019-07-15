@@ -1,7 +1,13 @@
 import dateUtils = require('Controls/Utils/Date');
 /**
  * Функция, позволяющая проверить дату и время на валидность.
+ * @class
+ * @name Controls/_validate/Validators/IsValidDate
+ * @public
+
+ * @author Красильников А.С.
  *
+ * @remark
  * <h2>Аргументы функции</h2>
  *
  * value - значение, которое будет проверяться на валидность.
@@ -26,11 +32,6 @@ import dateUtils = require('Controls/Utils/Date');
  *  </Controls.validate:InputContainer>
  * </pre>
  *
- * @class
- * @name Controls/_validate/Validators/IsRequired
- * @public
-
- * @author Красильников А.С.
  */
 
 export = function (args) {
