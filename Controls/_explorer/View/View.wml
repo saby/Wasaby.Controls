@@ -8,7 +8,7 @@
                                  on:hoveredItemChanged="_hoveredCrumbChanged()"
                                  on:arrowActivated="_notifyHandler('arrowActivated')"
                                  on:itemClick="_onBreadCrumbsClick()"
-                                 on:arrowClick="_test()">
+                                 on:arrowClick="_onArrowClick()">
          <Controls.treeGrid:TreeControl root="{{_getRoot()}}"
                                     scope="{{_options}}"
                                     header="{{content.header}}"
