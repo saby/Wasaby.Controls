@@ -3,18 +3,12 @@
  */
 define('Controls-demo/Index', [
    'Core/Control',
-   'Core/Deferred',
-   'Core/LinkResolver/LinkResolver',
-   'Env/Env',
    'wml!Controls-demo/Index',
    'Application/Initializer',
    'Application/Env',
    'css!Controls-demo/Demo/Page',
    'css!Controls-theme/themes/default/helpers/AreaBlocks'
 ], function (BaseControl,
-             Deferred,
-             LinkResolver,
-             Env,
              template,
              AppInit,
              AppEnv

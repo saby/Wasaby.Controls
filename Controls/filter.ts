@@ -42,6 +42,7 @@ import HistoryUtils = require('Controls/_filter/HistoryUtils');
 
 export {default as ButtonContainer} from './_filter/Button/Container';
 export {default as ViewContainer} from './_filter/View/Container';
+export {default as DateRangeEditor} from './_filter/Editors/DateRange';
 
 export {
    Selector,

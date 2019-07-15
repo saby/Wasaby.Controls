@@ -7,7 +7,7 @@ import {isEqual} from 'Types/object';
 import getTextWidth = require('Controls/Utils/getTextWidth');
 import randomName = require('Core/helpers/Number/randomId');
 import ViewModel = require('Controls/_input/Base/ViewModel');
-import runDelayed = require('Core/helpers/Function/runDelayed');
+import {delay as runDelayed} from 'Types/function';
 import unEscapeASCII = require('Core/helpers/String/unEscapeASCII');
 import hasHorizontalScroll = require('Controls/Utils/hasHorizontalScroll');
 import template = require('wml!Controls/_input/Base/Base');
@@ -17,6 +17,7 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
 import {split, getInputType, getAdaptiveInputType, IInputType, INativeInputType, ISplitValue} from 'Controls/_input/Base/InputUtil';
 
 import 'wml!Controls/_input/Base/Stretcher';
+import 'wml!Controls/_input/Base/FixValueAttr';
 
       var _private = {
 
@@ -511,6 +512,7 @@ import 'wml!Controls/_input/Base/Stretcher';
           */
          _isMobileIOS: null,
 
+         _hidePlaceholder: null,
          /**
           * @type {Boolean|null} Determined whether to hide the placeholder using css.
           * @private
@@ -550,7 +552,7 @@ import 'wml!Controls/_input/Base/Stretcher';
             this._isBrowserPlatform = Env.constants.isBrowserPlatform;
 
             /**
-             * Hide in chrome and firefox because it supports auto-completion of the field when hovering over an item
+             * Hide in chrome because it supports auto-completion of the field when hovering over an item
              * in the list of saved values. During this action no events are triggered and hide placeholder
              * using js is not possible.
              *
@@ -562,7 +564,7 @@ import 'wml!Controls/_input/Base/Stretcher';
              * from the value in the model. And when you change the selection, the field starts to focus.
              * There is a situation that you can not withdraw focus from the field.
              */
-            this._hidePlaceholderUsingCSS = Env.detection.chrome || Env.detection.firefox;
+            this._hidePlaceholderUsingCSS = Env.detection.chrome;
          },
 
          _beforeMount: function(options) {
@@ -591,10 +593,19 @@ import 'wml!Controls/_input/Base/Stretcher';
                   }
                }
             }
+
+            /**
+             * Placeholder is displayed in an empty field. To learn about the emptiness of the field
+             * with AutoFill enabled is possible through css or the status value from <input>.
+             * The state is not available until the control is mount to DOM. So hide the placeholder until then.
+             */
+            this._hidePlaceholder = this._autoComplete !== 'off' && !this._hidePlaceholderUsingCSS;
          },
 
          _afterMount: function() {
             _private.initField(this);
+
+            this._hidePlaceholder = false;
          },
 
          _beforeUpdate: function(newOptions) {
@@ -1006,10 +1017,7 @@ import 'wml!Controls/_input/Base/Stretcher';
       Base.getOptionTypes = function() {
          return {
 
-            /**
-             * https://online.sbis.ru/opendoc.html?guid=baf5be68-db8c-4a43-9ade-0c4baef078d7
-             * value: descriptor(String|null),
-             */
+            value: entity.descriptor(String, null),
             tooltip: entity.descriptor(String),
             /*autoComplete: entity.descriptor(String).oneOf([
                'on',

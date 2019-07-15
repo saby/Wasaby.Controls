@@ -198,7 +198,7 @@ import 'Controls/breadcrumbs';
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_treeGrid/interface/ITreeControl
     * @mixes Controls/_explorer/interface/IExplorer
-    * @mixes Controls/_tile/interface/IDraggable
+    * @mixes Controls/interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid
@@ -230,7 +230,7 @@ import 'Controls/breadcrumbs';
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_treeGrid/interface/ITreeControl
     * @mixes Controls/_explorer/interface/IExplorer
-    * @mixes Controls/_tile/interface/IDraggable
+    * @mixes Controls/interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid

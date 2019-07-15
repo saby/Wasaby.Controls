@@ -28,7 +28,8 @@ var
  *  </Controls.validate:InputContainer>
  * </pre>
  *
- * @class Controls/_validate/Validators/IsEmail
+ * @class
+ * @name Controls/_validate/Validators/IsEmail
  * @public
  * @author Красильников А.С.
  */

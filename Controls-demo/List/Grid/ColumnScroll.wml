@@ -17,12 +17,20 @@
                              columns="{{_gridColumns}}"
                              header="{{_gridHeader}}"
                              resultsPosition="top"
-                             columnScroll="{{true}}">
+                             columnScroll="{{true}}"
+                             stickyColumnsCount="{{_stickyColumnsCount > 0 ? _stickyColumnsCount : 1}}">
                      </Controls.grid:View>
                   </Controls.operations:Container>
                </Controls.list:Container>
             </Controls.scroll:Container>
          </Controls.operations:Controller>
       </Controls.list:DataContainer>
+   </div>
+   <div class="demo-Grid__stickyColumnsCount">
+      <span>Enter number of fixed columns:</span>
+      <Controls.input:Number
+         bind:value="_stickyColumnsCount"
+         precision="{{0}}"
+         onlyPositive="{{true}}" />
    </div>
 </div>

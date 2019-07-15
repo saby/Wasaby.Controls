@@ -75,7 +75,7 @@ var _private = {
          };
          if (self._pinned instanceof Array) {
             self._pinned.forEach(function (pinId) {
-               if (sourceItems.getRecordById(pinId)) {
+               if (sourceItems.getRecordById(pinId) && !self._history.pinned.getRecordById(pinId)) {
                   self._history.pinned.add(_private.getRawHistoryItem(self, pinId, self.historySource.getHistoryId()));
                }
             });

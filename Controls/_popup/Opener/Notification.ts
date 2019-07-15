@@ -44,7 +44,7 @@ const BASE_OPTIONS = {
 
 const _private = {
     compatibleOpen(self, popupOptions) {
-        const config =  BaseOpener.getConfig({}, self ? self._options : {}, popupOptions);
+        const config =  BaseOpener.getConfig({}, {}, popupOptions);
         return Promise.all([
             BaseOpener.requireModule('Controls/compatiblePopup:BaseOpener'),
             BaseOpener.requireModule('SBIS3.CONTROLS/Utils/InformationPopupManager'),

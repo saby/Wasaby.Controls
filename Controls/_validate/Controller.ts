@@ -293,7 +293,7 @@ import 'css!theme?Controls/validate';
 
 /**
  * @name Controls/_validate/Controller#validators
- * @cfg {Function} The function of validation.
+ * @cfg {Array} The function of validation.
  */
 
 /**

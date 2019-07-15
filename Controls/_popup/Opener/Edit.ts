@@ -13,6 +13,7 @@ import Deferred = require('Core/Deferred');
        *  <li>If option 'mode' is set to 'dialog' use  {@link Controls/popup:Dialog Dialog options}</li>
        *  <li>If option 'mode' is set to 'sticky' use  {@link Controls/popup:Sticky Sticky options}</li>
        * <a href="/materials/demo-ws4-popup-edit">Demo-example</a>
+       * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ Подробнее}
        * @class Controls/_popup/Opener/Edit
        * @control
        * @public

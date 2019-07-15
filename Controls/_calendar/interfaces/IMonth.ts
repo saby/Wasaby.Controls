@@ -1,4 +1,4 @@
-import dateFormat = require('Core/helpers/Date/format');
+import {date as dateFormat} from 'Types/formatter';
 import {descriptor} from 'Types/entity';
 import dateUtil = require('Controls/Utils/Date');
 
@@ -34,7 +34,7 @@ export default {
              * @name Controls/_calendar/interface/IMonth#captionFormat
              * @cfg {String} Формат заголовка
              * @remark
-             * Строка должна быть в формате поддерживаемым Core/helpers/Date/format.
+             * Строка должна быть в формате поддерживаемым Types/formatter:date.
              */
             captionFormat: dateFormat.FULL_MONTH,
 

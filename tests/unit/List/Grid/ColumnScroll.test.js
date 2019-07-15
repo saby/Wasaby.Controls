@@ -5,7 +5,8 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
    describe('Controls.ColumnScroll', function() {
       var
          cfg = {
-            multiSelectVisibility: 'visible'
+            multiSelectVisibility: 'visible',
+            stickyColumnsCount: 1
          },
          columnScroll = new ColumnScroll(cfg);
       columnScroll._children = {
@@ -15,10 +16,19 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          content: {
             scrollWidth: 500,
             offsetWidth: 250,
+            getBoundingClientRect: () => {
+              return {
+                 left: 199
+              }
+            },
             querySelector: function() {
                return {
-                  offsetLeft: 24,
-                  offsetWidth: 76
+                  offsetWidth: 76,
+                  getBoundingClientRect: () => {
+                     return {
+                        left: 175
+                     }
+                  },
                };
             }
          }
@@ -41,6 +51,63 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.deepEqual(columnScroll._shadowState, 'end');
          assert.deepEqual(columnScroll._fixedColumnsWidth, 100);
       });
+      it('_afterMount + _afterUpdate non-default stickyColumnsCount', function() {
+         var
+            changedCfg = Object.assign({}, cfg, { stickyColumnsCount: 3 }),
+            sccColumnScroll = new ColumnScroll(changedCfg);
+
+         sccColumnScroll._children = {
+            contentStyle: {
+               innerHTML: ''
+            },
+            content: {
+               scrollWidth: 600,
+               offsetWidth: 400,
+               getBoundingClientRect: () => {
+                  return {
+                     left: 199
+                  }
+               },
+               querySelector: function(selector) {
+                  var column = parseInt(selector.slice('.controls-Grid__cell_fixed:nth-child('.length), 10);
+                  // make every fixed column 50 pixels
+                  return {
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 199 - ((column - 1) * 50)
+                        }
+                     },
+                     offsetWidth: 50
+                  };
+               }
+            }
+         };
+         sccColumnScroll.saveOptions(changedCfg);
+         sccColumnScroll._afterMount(changedCfg);
+         assert.strictEqual(sccColumnScroll._contentSize, 600);
+         assert.strictEqual(sccColumnScroll._contentContainerSize, 400);
+         assert.strictEqual(sccColumnScroll._shadowState, 'end');
+         // 3 * 50 pixels fixed columns + 1 * 50 pixels multiselect column
+         assert.strictEqual(sccColumnScroll._fixedColumnsWidth, 200);
+
+         // check with hidden multiselect
+         var noMultiselectCfg = Object.assign({}, changedCfg, { multiSelectVisibility: 'hidden' });
+         // reset values
+         sccColumnScroll._contentSize = 0;
+         sccColumnScroll._contentContainerSize = 0;
+
+         sccColumnScroll.saveOptions(noMultiselectCfg);
+         sccColumnScroll._afterMount(noMultiselectCfg);
+         assert.strictEqual(sccColumnScroll._contentSize, 600);
+         assert.strictEqual(sccColumnScroll._contentContainerSize, 400);
+         assert.strictEqual(sccColumnScroll._fixedColumnsWidth, 150);
+
+         // can update fixed column count
+         var updatedCfg = Object.assign({}, noMultiselectCfg, { stickyColumnsCount: 5 });
+         sccColumnScroll.saveOptions(updatedCfg);
+         sccColumnScroll._afterUpdate(noMultiselectCfg);
+         assert.strictEqual(sccColumnScroll._fixedColumnsWidth, 250);
+      });
       it('_afterUpdate: should update sizes if columns has been changed', function () {
          let clearColumnScroll = new ColumnScroll(cfg);
 
@@ -51,9 +118,18 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             content: {
                scrollWidth: 500,
                offsetWidth: 250,
+               getBoundingClientRect: () => {
+                  return {
+                     left: 199
+                  }
+               },
                querySelector: function() {
                   return {
-                     offsetLeft: 24,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 175
+                        }
+                     },
                      offsetWidth: 76
                   };
                }
@@ -70,9 +146,18 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          clearColumnScroll._children.content = {
             scrollWidth: 200,
             offsetWidth: 100,
+            getBoundingClientRect: () => {
+               return {
+                  left: 175
+               }
+            },
             querySelector: function () {
                return {
-                  offsetLeft: 15,
+                  getBoundingClientRect: () => {
+                     return {
+                        left: 160
+                     }
+                  },
                   offsetWidth: 50
                };
             }
@@ -130,9 +215,18 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             content: {
                scrollWidth: 450,
                offsetWidth: 200,
+               getBoundingClientRect: () => {
+                  return {
+                     left: 199
+                  }
+               },
                querySelector: function() {
                   return {
-                     offsetLeft: 24,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 175
+                        }
+                     },
                      offsetWidth: 76
                   };
                }

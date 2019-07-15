@@ -317,6 +317,24 @@
  */
 
 /**
+ * @name Controls/_grid/interface/IGridControl#stickyColumnsCount
+ * @cfg {Number} Определяет число зафиксированных столбцов, которые не двигаются при горизонтальном скролле.
+ * @default 1
+ * @see Controls/_grid/interface/IGridControl#columnScroll
+ * @remark
+ * Столбец флагов множественного выбора всегда зафиксирован, и не входит в число stickyColumnsCount.
+ */
+
+/*
+ * @name Controls/_grid/interface/IGridControl#stickyColumnsCount
+ * @cfg {Number} Determines the number of fixed columns that do not move during horizontal scroll.
+ * @default 1
+ * @see Controls/_grid/interface/IGridControl#columnScroll
+ * @remark
+ * Multiple selection column is always fixed and does not count towards this number.
+ */
+
+/**
  * @name Controls/_grid/interface/IGridControl#rowSeparatorVisibility
  * @cfg {Boolean} Позволяет отображать/скрывать разделитель строк.
  * <a href="/materials/demo-ws4-grid-base">Example</a>

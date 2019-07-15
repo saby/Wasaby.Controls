@@ -2,11 +2,13 @@
  * Created by kraynovdo on 31.01.2018.
  */
 define('Controls-demo/List/ItemActions', [
+   'Env/Env',
    'Core/Control',
    'wml!Controls-demo/List/ItemActions/ItemActions',
    'Types/source',
    'css!Controls-demo/List/ItemActions/ItemActions'
 ], function(
+   Env,
    BaseControl,
    template,
    source
@@ -47,7 +49,7 @@ define('Controls-demo/List/ItemActions', [
             title: 'прочитано',
             showType: showType.TOOLBAR,
             handler: function() {
-               console.log('action read Click');
+               Env.IoC.resolve('ILogger').info('action read Click');
             }
          },
          {
@@ -55,7 +57,7 @@ define('Controls-demo/List/ItemActions', [
             icon: 'icon-PhoneNull',
             title: 'phone',
             handler: function(item) {
-               console.log('action phone Click ', item);
+               Env.IoC.resolve('ILogger').info('action phone Click ', item);
             }
          },
          {
@@ -76,7 +78,7 @@ define('Controls-demo/List/ItemActions', [
             parent: 2,
             'parent@': null,
             handler: function() {
-               console.log('action profile Click');
+               Env.IoC.resolve('ILogger').info('action profile Click');
             }
          },
          {
@@ -85,7 +87,7 @@ define('Controls-demo/List/ItemActions', [
             parent: 2,
             'parent@': null,
             handler: function() {
-               console.log('action profile Click');
+               Env.IoC.resolve('ILogger').info('action profile Click');
             }
          },
          {
@@ -95,7 +97,7 @@ define('Controls-demo/List/ItemActions', [
             title: 'delete pls',
             showType: showType.TOOLBAR,
             handler: function() {
-               console.log('action delete Click');
+               Env.IoC.resolve('ILogger').info('action delete Click');
             }
          }
       ];
@@ -124,11 +126,11 @@ define('Controls-demo/List/ItemActions', [
          _itemActions: _firstItemActionsArray,
          _template: template,
          _onActionClick: function(event, action, item) {
-            console.log(arguments);
+            Env.IoC.resolve('ILogger').info(arguments);
             this.__lastClicked = action.title;
          },
          _contentClick: function() {
-            console.log(arguments);
+            Env.IoC.resolve('ILogger').info(arguments);
          },
 
          constructor: function() {

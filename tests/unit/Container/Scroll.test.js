@@ -180,7 +180,7 @@ define(
                result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                                       '<div class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden">' +
+                                       '<div class="controls-Scroll__content controls-BlockLayout__blockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden">' +
                                           '<div class="controls-Scroll__userContent">test</div>' +
                                        '</div>' +
                                        '<div></div>' +
@@ -190,7 +190,7 @@ define(
                result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                                       '<div class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_scroll" style="margin-right: -15px;">' +
+                                       '<div class="controls-Scroll__content controls-BlockLayout__blockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_scroll" style="margin-right: -15px;">' +
                                           '<div class="controls-Scroll__userContent">test</div>' +
                                        '</div>' +
                                        '<div></div>' +
@@ -328,6 +328,36 @@ define(
             };
             instance.excludedKeysChanged(event, '1', '2', '3');
             assert.isFalse(notifyCalled);
+         });
+      });
+
+      describe('_scrollHandler', function() {
+         let scrollContainer = new scrollMod.Container({});
+         scrollContainer._children = {
+            content: {
+               scrollHeight: 200,
+               offsetHeight: 100,
+               scrollTop: 0
+            },
+            scrollDetect: {
+               start: function() {}
+            }
+         };
+         scrollContainer._scrollTop = 0;
+         let scrollEventCallCount = 0;
+         scrollContainer._notify = function(event, args) {
+            if (event === 'scroll') {
+               scrollEventCallCount++;
+            }
+         };
+         it('scrollTop has not changed. scroll should not fire', function() {
+            scrollContainer._scrollHandler({});
+            assert.equal(scrollEventCallCount, 0);
+         });
+         it('scrollTop has changed. scroll should fire', function() {
+            scrollContainer._children.content = 10;
+            scrollContainer._scrollHandler({});
+            assert.equal(scrollEventCallCount, 1);
          });
       });
 

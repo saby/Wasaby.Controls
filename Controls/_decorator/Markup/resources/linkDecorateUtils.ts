@@ -73,6 +73,12 @@ function isLinkGoodForDecorating(linkNode) {
 }
 
 /**
+ * Получает имена классов для декорирования ссылки.
+ * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getClasses
+ * @returns {Object}
+ */
+
+/*
  * Get class names for decorating link.
  * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getClasses
  * @returns {Object}
@@ -82,6 +88,12 @@ function getClasses() {
 }
 
 /**
+ * Получает имя сервиса декорирования ссылок.
+ * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getService
+ * @returns {String|undefined}
+ */
+
+/*
  * Get name of decorated link service.
  * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getService
  * @returns {String|undefined}
@@ -91,6 +103,12 @@ function getService() {
 }
 
 /**
+ * Получает максимальную длину ссылки, которую можно задекорировать.
+ * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getHrefMaxLength
+ * @returns {number}
+ */
+
+/*
  * Get name of decorated link service.
  * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getHrefMaxLength
  * @returns {number}
@@ -103,6 +121,14 @@ function getHrefMaxLength() {
 }
 
 /**
+ * Проверяет, является ли json-нода с данным именем тега и нодой первого ребёнка декорированной ссылкой.
+ * @function Controls/_decorator/Markup/resources/linkDecorateUtils#isDecoratedLink
+ * @param tagName {string}
+ * @param firstChildNode {JsonML}
+ * @returns {boolean}
+ */
+
+/*
  * Check if json node with given tag name and the first child node is a decorated link
  * @function Controls/_decorator/Markup/resources/linkDecorateUtils#isDecoratedLink
  * @param tagName {string}
@@ -124,6 +150,13 @@ function isDecoratedLink(tagName, firstChildNode) {
 }
 
 /**
+ * Превращает декорированную ссылку в обычную. Вызывается после функции "isDecoratedLink", linkNode здесь - это firstChildNode там. 
+ * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getUndecoratedLink
+ * @param linkNode {jsonML}
+ * @returns {jsonML}
+ */
+
+/*
  * Undecorate decorated link. Calls after "isDecoratedLink" function, link node here is the first child there.
  * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getUndecoratedLink
  * @param linkNode {jsonML}
@@ -139,6 +172,14 @@ function getUndecoratedLink(linkNode) {
 }
 
 /**
+ * Проверяет, является ли json-нода ссылкой, которая должна быть задекорирована.
+ * @function Controls/_decorator/Markup/resources/linkDecorateUtils#needDecorate
+ * @param jsonNode {jsonML}
+ * @param parentNode {jsonML}
+ * @returns {boolean}
+ */
+
+/*
  * Check if json node is a link, that should be decorated.
  * @function Controls/_decorator/Markup/resources/linkDecorateUtils#needDecorate
  * @param jsonNode {jsonML}
@@ -196,6 +237,13 @@ function needDecorate(jsonNode, parentNode) {
 }
 
 /**
+ * Получает json-ноду деворированной ссылки. Вызывается после функции "needDecorate".
+ * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getDecoratedLink
+ * @param linkNode {JsonML}
+ * @returns {JsonML}
+ */
+
+/*
  * Get json node of decorated link. Calls after "needDecorate" function.
  * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getDecoratedLink
  * @param linkNode {JsonML}
@@ -228,6 +276,15 @@ function getDecoratedLink(linkNode) {
 
 
 /**
+ *
+ * Модуль с утилитами для работы с декорированной ссылкой.
+ *
+ * @class Controls/_decorator/Markup/resources/linkDecorateUtils
+ * @public
+ * @author Кондаков Р.Н.
+ */
+
+/*
  *
  * Module with utils to work with decorated link.
  *

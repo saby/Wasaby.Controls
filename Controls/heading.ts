@@ -1,4 +1,19 @@
 /**
+ * Библиотека заголовков.
+ * @library Controls/heading
+ * @includes Title Controls/_heading/Heading
+ * @includes Back Controls/_heading/Back
+ * @includes Separator Controls/_heading/Separator
+ * @includes Counter Controls/_heading/Counter
+ * @includes BackStyles Controls/_heading/Back/BackStyles
+ * @includes HeadingCounterStyles Controls/_heading/Counter/HeadingCounterStyles
+ * @includes HeadingStyles Controls/_heading/Heading/HeadingStyles
+ * @includes SeparatorStyles Controls/_heading/Separator/SeparatorStyles
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+/*
  * heading library
  * @library Controls/heading
  * @includes Title Controls/_heading/Heading

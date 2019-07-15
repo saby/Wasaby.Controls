@@ -67,7 +67,7 @@ var LookupMultiSelectorView = BaseLookupView.extend({
     },
 
     _isInputVisible: function (options) {
-        return !options.readOnly && options.items.getCount() < options.maxVisibleItems;
+        return (!options.readOnly || this._inputValue) && options.items.getCount() < options.maxVisibleItems;
     },
 
     _isNeedCalculatingSizes: function(options) {
