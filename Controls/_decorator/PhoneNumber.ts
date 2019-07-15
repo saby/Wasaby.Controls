@@ -9,6 +9,20 @@ import phoneCodeModule = require('Controls/_decorator/PhoneNumber/Dictionary');
       
 
       /**
+       * Преобразует телефонный номер из строки, которая состоит из цифр и других символов(пробелов, скобок, дефисов) в форматированную строку
+       * для российских мобильных номеров формат +7(***) ***-**-**;
+       * для других российских мобильных номеров +7(****) **-**-** или +7(*****) *-**-** в зависимости от кода города;
+       * для иностранных номеров +(иностранный код)(остальные цифры).
+       *
+       * @class Controls/_decorator/PhoneNumber
+       * @extends Core/Control
+       * @control
+       * @public
+       * @author Красильников А.С.
+       * @category Decorators
+       */
+
+      /*
        * Beautify Phone number from string which consists of digits and another symbols(spaces, brackets, hyphens) to formatted string
        * for Russian mobile numbers format is +7(***) ***-**-**
        * for another Russian numbers +7(****) **-**-** or +7(*****) *-**-** depends on city code
@@ -23,6 +37,11 @@ import phoneCodeModule = require('Controls/_decorator/PhoneNumber/Dictionary');
        */
 
       /**
+       * @name Controls/_decorator/PhoneNumber#number
+       * @cfg {String} Номер, который будет преобразован.
+       */
+
+      /*
        * @name Controls/_decorator/PhoneNumber#number
        * @cfg {String} Number for beautifying
        */
@@ -47,12 +66,23 @@ import phoneCodeModule = require('Controls/_decorator/PhoneNumber/Dictionary');
                phone = phoneStr.substr(0, phone_max_length), // cut to normal number
                subphone = phoneStr.substr(phone_max_length), // extra symbols is additional number
                /**
+                * @param b_num - количество символов в коде города (будет в скобках).
+                * @type {number}
+                */
+
+               /*
                 * @param b_num - the number of symbols in the area code(will be in brackets)
                 * @type {number}
                 */
                b_num = 3,
 
                /**
+                * @param c_num - количество символов от закрывающей скобки до тире (1 - город, 2 - район, 3 - номер телефона, 
+                * 5 - 4 символа в конце номера с 1 символом, который определяет код страны).
+                * @type {number}
+                */
+
+               /*
                 * @param c_num - the number of symbols from closing bracket to hyphen (1 if city, 2 if district, 3 if this is mobile phone)
                 * 5 - is 4 symbols at the end of number with 1 symbol - is code of country
                 * @type {number}

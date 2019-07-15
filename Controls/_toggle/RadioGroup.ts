@@ -6,7 +6,7 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
    /**
     * Группа контролов, которые предоставляют пользователям возможность выбора между двумя или более параметрами.
     *
-    * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
+    * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
     *
     * @class Controls/_toggle/RadioGroup
     * @extends Core/Control

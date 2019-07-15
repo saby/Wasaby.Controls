@@ -3,6 +3,17 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_decorator/WrapURLs/WrapURLs';
 
 /**
+ * Выделяет цветом текст, содержащий ссылку.
+ *
+ * @class Controls/_decorator/WrapURLs
+ * @extends Core/Control
+ *
+ * @public
+ *
+ * @author Красильников А.С.
+ */
+
+/*
  * Wrap references in text.
  *
  * @class Controls/_decorator/WrapURLs
@@ -16,10 +27,20 @@ import * as template from 'wml!Controls/_decorator/WrapURLs/WrapURLs';
 export interface IWrapURLsOptions extends IControlOptions {
     /**
      * @name Controls/_decorator/WrapURLs#text
+     * @cfg {String} Текст для преобразования.
+     */
+
+    /*
+     * @name Controls/_decorator/WrapURLs#text
      * @cfg {String} Text to convert.
      */
     text: string;
     /**
+     * @name Controls/_decorator/WrapURLs#newTab
+     * @cfg {Boolean} Открыть ссылку в новой вкладке.
+     */
+
+    /*
      * @name Controls/_decorator/WrapURLs#newTab
      * @cfg {Boolean} Open link in new tab.
      */

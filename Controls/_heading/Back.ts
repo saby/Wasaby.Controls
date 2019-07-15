@@ -4,6 +4,25 @@ import entity = require('Types/entity');
 import Env = require('Env/Env');
 import 'css!theme?Controls/heading';
    /**
+    * Специализированный заголовок-кнопка для перехода на предыдущий уровень. 
+    *
+    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+    *
+    * @class Controls/_heading/Back
+    * @extends Core/Control
+    * @mixes Controls/_interface/ICaption
+    * @mixes Controls/_buttons/interface/IClick
+    * @mixes Controls/_interface/ITooltip
+    * @mixes Controls/_heading/Back/BackStyles
+    * @control
+    * @public
+    * @author Красильников А.С.
+    *
+    *
+    * @demo Controls-demo/Buttons/BackButton/BackButtonDemoPG
+    */
+
+   /*
     * Specialized heading to go to the previous level.
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
@@ -24,6 +43,23 @@ import 'css!theme?Controls/heading';
 
    /**
     * @name Controls/_heading/Back#style
+    * @cfg {String} Стиль отображения заголовка-кнопки "Назад".
+    * @variant primary
+    * @variant secondary
+    * @default primary
+    * @example
+    * Заголовок-кнопка со стилем по умолчанию.
+    * <pre>
+    *    <Controls._heading.Back/>
+    * </pre>
+    * Заголовок-кнопка со стилем "secondary".
+    * <pre>
+    *    <Controls._heading.Back style="secondary"/>
+    * </pre>
+    */
+
+   /*
+    * @name Controls/_heading/Back#style
     * @cfg {String} Back heading display style.
     * @variant primary
     * @variant secondary
@@ -40,6 +76,24 @@ import 'css!theme?Controls/heading';
     */
 
    /**
+    * @name Controls/_heading/Back#size
+    * @cfg {String} Размер заголовка-кнопки "Назад".
+    * @variant s Маленький заголовок.
+    * @variant m Средний заголовок.
+    * @variant l Большой заголовок.
+    * @default m
+    * @example
+    * Back heading has default size.
+    * <pre>
+    *    <Controls._heading.Back/>
+    * </pre>
+    * Back heading has 'l' size.
+    * <pre>
+    *    <Controls._heading.Back size="l"/>
+    * </pre>
+    */
+
+   /*
     * @name Controls/_heading/Back#size
     * @cfg {String} Back heading size.
     * @variant s Small heading size.

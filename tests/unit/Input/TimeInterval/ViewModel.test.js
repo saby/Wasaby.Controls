@@ -1,9 +1,9 @@
 define([
    'Controls/_input/TimeInterval/ViewModel',
-   'Core/TimeInterval'
+   'Types/entity'
 ], function(
    ViewModel,
-   constTimeInterval
+   entity
 ) {
    'use strict';
 
@@ -19,13 +19,13 @@ define([
       describe('._convertToValue', function() {
          it('should return correct TimeInterval object from String', function() {
             let model = new ViewModel(_options);
-            let value = new constTimeInterval({days: 1, hours: 20, minutes: 10, seconds: 20});
+            let value = new entity.TimeInterval({days: 1, hours: 20, minutes: 10, seconds: 20});
             assert.strictEqual(model._convertToValue('44:10:20')._normIntervalStr, value._normIntervalStr);
 
-            value = new constTimeInterval({hours: 20, minutes: 10, seconds: 20});
+            value = new entity.TimeInterval({hours: 20, minutes: 10, seconds: 20});
             assert.strictEqual(model._convertToValue('20:10:20')._normIntervalStr, value._normIntervalStr);
 
-            value = new constTimeInterval({seconds: 20});
+            value = new entity.TimeInterval({seconds: 20});
             assert.strictEqual(model._convertToValue('00:00:20')._normIntervalStr, value._normIntervalStr);
          });
       });
@@ -33,13 +33,13 @@ define([
       describe('._convertToDisplayValue', function() {
          it('should return correct displayValue from TimeInterval object', function() {
             let model = new ViewModel(_options);
-            let value = new constTimeInterval({days: 1, hours: 20, minutes: 10, seconds: 20});
+            let value = new entity.TimeInterval({days: 1, hours: 20, minutes: 10, seconds: 20});
             assert.strictEqual(model._convertToDisplayValue(value), '44:10:20');
 
-            value = new constTimeInterval({hours: 20, minutes: 10, seconds: 20});
+            value = new entity.TimeInterval({hours: 20, minutes: 10, seconds: 20});
             assert.strictEqual(model._convertToDisplayValue(value), '20:10:20');
 
-            value = new constTimeInterval({seconds: 20});
+            value = new entity.TimeInterval({seconds: 20});
             assert.strictEqual(model._convertToDisplayValue(value), '00:00:20');
          });
       });

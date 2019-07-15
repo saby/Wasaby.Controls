@@ -70,7 +70,7 @@ define(
          ];
 
          let defaultConfig = {
-           source: defaultSource
+            source: defaultSource
          };
 
          let getView = function (config) {
@@ -143,7 +143,21 @@ define(
             });
             view._configs = {};
             view._displayText = {};
+
+            //isNeedReload = true
             view._beforeUpdate(newConfig).addCallback(function() {
+               assert.deepStrictEqual(view._displayText, expectedDisplayText);
+
+               newConfig = Clone(defaultConfig);
+               newConfig.source[0].value = 2;
+               newConfig.source[1].value = [5];
+               expectedDisplayText = {
+                  document: {text: 'My department', title: 'My department', hasMoreText: ''},
+                  state: {text: 'Completed negative', title: 'Completed negative', hasMoreText: ''}
+               };
+
+               //isNeedReload = false
+               view._beforeUpdate(newConfig);
                assert.deepStrictEqual(view._displayText, expectedDisplayText);
                done();
             });
@@ -180,13 +194,13 @@ define(
             view._configs = {
                document: {
                   items: Clone(defaultItems[0]),
-                     displayProperty: 'title',
-                     keyProperty: 'id'},
+                  displayProperty: 'title',
+                  keyProperty: 'id'},
                state: {
                   items: Clone(defaultItems[1]),
-                     displayProperty: 'title',
-                     keyProperty: 'id',
-                     multiSelect: true}
+                  displayProperty: 'title',
+                  keyProperty: 'id',
+                  multiSelect: true}
             };
             view._openPanel();
 
@@ -329,6 +343,68 @@ define(
                assert.isTrue(opened);
                assert.strictEqual(resultConfig.target, 'target');
             }, 110);
+         });
+
+         it('_rangeChangedHandler', () => {
+            let source = [...defaultSource];
+            let dateItem = {
+               name: 'date',
+               value: [new Date(2019, 7, 1), new Date(2019, 7, 31)],
+               resetValue: [new Date(2019, 7, 1), new Date(2019, 7, 31)],
+               editorOptions: {
+                  option1: '1',
+                  option2: '2'
+               },
+               type: 'dateRange',
+               viewMode: 'basic'
+            };
+            source.push(dateItem);
+            let view = getView(source),
+               newFilter;
+            view._notify = (event, data) => {
+               if (event === 'filterChanged') {
+                  newFilter = data[0];
+               }
+            };
+            view._source = source;
+            view._rangeChangedHandler('rangeChanged', new Date(2019, 6, 1), new Date(2019, 6, 31));
+            assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).value, [new Date(2019, 6, 1), new Date(2019, 6, 31)]);
+            assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).textValue, "Июль'19");
+            assert.deepStrictEqual(newFilter, {
+               date: [new Date(2019, 6, 1), new Date(2019, 6, 31)],
+               author: 'Ivanov K.K.',
+               state: [1]});
+         });
+
+         it('_private:getDateRangeItem', () => {
+            let source = [...defaultSource];
+            let dateItem = {
+               name: 'date',
+               value: [new Date(2019, 7, 1), new Date(2019, 7, 31)],
+               resetValue: [new Date(2019, 7, 1), new Date(2019, 7, 31)],
+               editorOptions: {
+                  option1: '1',
+                  option2: '2'
+               },
+               type: 'dateRange',
+               viewMode: 'basic'
+            };
+            source.push(dateItem);
+            let item = filter.View._private.getDateRangeItem(source);
+            assert.deepStrictEqual(item, dateItem)
+         });
+
+         it('_private:updateText filterText', function() {
+            let source = [
+               {name: 'date', type: 'dateRange', value: [new Date(2019, 7, 1), new Date(2019, 7, 31)], textValue: "July'19", resetValue: [new Date(2019, 6, 1), new Date(2019, 6, 31)], viewMode: 'basic'},
+               {name: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic'},
+               {name: 'sender', value: 'Vasiliev A.A.', textValue: 'Sender: Vasiliev A.A.', resetValue: '', viewMode: 'extended', visibility: false},
+               {name: 'responsible', value: 'test_extended', resetValue: '', textValue: 'test_extended', viewMode: 'extended', visibility: true},
+               {name: 'frequent', value: 'test_frequent', textValue: 'test_frequent', resetValue: '', viewMode: 'frequent'}
+            ];
+            let self = {};
+            filter.View._private.updateText(self, source, {});
+            assert.strictEqual(self._filterText, 'Author: Ivanov K.K., test_extended');
          });
 
          describe('View::resultHandler', function() {

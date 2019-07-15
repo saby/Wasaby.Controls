@@ -5,6 +5,21 @@ import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
 import template = require('wml!Controls/_decorator/Money/Money');
 
 /**
+ * Преобразует число в денежный формат.
+ *
+ * @class Controls/_decorator/Money
+ * @extends Core/Control
+ *
+ * @mixes Controls/_decorator/Money/Styles
+ * @mixes Controls/_interface/INumberFormat
+ *
+ * @public
+ * @demo Controls-demo/Decorators/Money/Money
+ *
+ * @author Красильников А.С.
+ */
+
+/*
  * Converts a number to money.
  *
  * @class Controls/_decorator/Money
@@ -19,7 +34,7 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @author Красильников А.С.
  */
 
-/**
+/*
  * @name Controls/_decorator/Money#number
  * @cfg {Number} Number to convert.
  * @deprecated Use option {@link value}
@@ -27,10 +42,15 @@ import template = require('wml!Controls/_decorator/Money/Money');
 
 /**
  * @name Controls/_decorator/Money#value
+ * @cfg {String|Number} Значение в числовом формате для преобразования.
+ */
+
+/*
+ * @name Controls/_decorator/Money#value
  * @cfg {String|Number} Value in number format to convert.
  */
 
-/**
+/*
  * @name Controls/_decorator/Money#delimiters
  * @cfg {Boolean} Determines whether the number should be split into triads.
  * @default false
@@ -42,6 +62,21 @@ import template = require('wml!Controls/_decorator/Money/Money');
 
 
 /**
+ * @name Controls/_decorator/Money#style
+ * @cfg {String} Стиль отображения числа в денежном формате.
+ * @variant accentResults
+ * @variant noAccentResults
+ * @variant group
+ * @variant basicRegistry
+ * @variant noBasicRegistry
+ * @variant accentRegistry
+ * @variant noAccentRegistry
+ * @variant error
+ * @variant default
+ * @default default
+ */
+
+/*
  * @name Controls/_decorator/Money#style
  * @cfg {String} The type with which you want to display money.
  * @variant accentResults

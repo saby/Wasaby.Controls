@@ -1,7 +1,6 @@
 define('Controls-demo/Buttons/Menu/Menu', [
    'Core/Control',
    'wml!Controls-demo/Buttons/Menu/Menu',
-   'Core/core-clone',
    'Types/source',
    'Controls/Constants',
    'Controls-demo/Buttons/Menu/historySourceMenu',
@@ -9,7 +8,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
    'css!Controls-demo/Buttons/Menu/Menu',
    'wml!Controls-demo/Buttons/Menu/itemTemplateSub',
    'wml!Controls-demo/Buttons/Menu/itemTemplateComment'
-], function(Control, template, cClone, source, ControlsConstants, HistorySourceMenu) {
+], function(Control, template, source, ControlsConstants, HistorySourceMenu) {
    'use strict';
 
    var ModuleClass = Control.extend(

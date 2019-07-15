@@ -1,4 +1,22 @@
 /**
+ * Библиотека декораторов.
+ * @library Controls/decorator
+ * @includes Highlight Controls/_decorator/Highlight
+ * @includes Markup Controls/_decorator/Markup
+ * @includes Money Controls/_decorator/Money
+ * @includes MoneyStyles Controls/_decorator/MoneyStyles
+ * @includes Number Controls/_decorator/Number
+ * @includes PhoneNumber Controls/_decorator/PhoneNumber
+ * @includes WrapURLs Controls/_decorator/WrapURLs
+ * @includes MoneyStyles Controls/_decorator/Money/Styles
+ * @includes Converter Controls/_decorator/Markup/Converter
+ * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
+ * @includes linkDecorateUtils Controls/_decorator/Markup/resources/linkDecorateUtils
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+/*
  * Decoratror library
  * @library Controls/decorator
  * @includes Highlight Controls/_decorator/Highlight
@@ -16,7 +34,7 @@
  * @author Крайнов Д.О.
  */
 
-import Markup = require('Controls/_decorator/Markup');
+import {default as Markup} from './_decorator/Markup';
 import Money = require('Controls/_decorator/Money');
 import Number = require('Controls/_decorator/Number');
 import PhoneNumber = require('Controls/_decorator/PhoneNumber');

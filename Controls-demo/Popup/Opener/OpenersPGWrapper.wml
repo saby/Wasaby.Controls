@@ -1,3 +1,4 @@
+<Controls.scroll:Container attr:style="height: 100%;">
 <div class="controls-demo_Wrapper">
     <div class="controls-demo_options-wrapper">
         <Controls-demo.PropertyGridForDemo.PropertyGrid items="{{_options.description}}"
@@ -34,3 +35,4 @@
         </div>
     </div>
 </div>
+</Controls.scroll:Container>
