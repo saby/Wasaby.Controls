@@ -164,6 +164,63 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isFalse(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', ''));
             assert.isTrue(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', 'tes'));
          });
+         it('calcLadderVersion', function () {
+            var
+                onlySimpleLadder = {
+                   ladder: {
+                      0: {
+                         'property1': {
+                            ladderLength: 2
+                         },
+                         'property2': {
+                            ladderLength: 1
+                         },
+                         'property3': {}
+                      },
+                      1: {
+
+                      }
+                   },
+                   stickyLadder: {}
+                },
+               withSticky = {
+                  ladder: {
+                     0: {
+                        'property1': {
+                           ladderLength: 2
+                        },
+                        'property2': {
+                           ladderLength: 1
+                        },
+                        'property3': {}
+                     },
+                     1: {
+
+                     }
+                  },
+                  stickyLadder: {
+                     0: {
+                        'property1': {
+                           ladderLength: 2
+                        },
+                        'property2': {
+                           ladderLength: 1
+                        },
+                        'property3': {}
+                     },
+                     1: {
+
+                     }
+                  }
+               };
+            assert.equal('LP_2_1_0_', gridMod.GridViewModel._private.calcLadderVersion(onlySimpleLadder, 0));
+            assert.equal('LP_', gridMod.GridViewModel._private.calcLadderVersion(onlySimpleLadder, 1));
+
+            assert.equal('LP_2_1_0_SP_2_1_0_', gridMod.GridViewModel._private.calcLadderVersion(withSticky, 0));
+            assert.equal('LP_SP_', gridMod.GridViewModel._private.calcLadderVersion(withSticky, 1));
+
+
+         });
          it('isDrawActions', function() {
             var
                testCases = [
