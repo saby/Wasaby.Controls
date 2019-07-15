@@ -2,7 +2,7 @@ import {Model} from 'Types/entity';
 import Control = require('Core/Control');
 
 function onArrowClick(this: Control, e: Event) {
-   this._notify('arrowActivated');
+   this._notify('arrowClick');
    e.stopPropagation();
 }
 
