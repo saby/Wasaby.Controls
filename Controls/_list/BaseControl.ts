@@ -1123,13 +1123,14 @@ var _private = {
             if (resetPaging) {
                 _private.resetPagingNavigation(self);
             }
-            self._pagingNavigationVisible = self._knownPagesCount > 1;
         } else {
             self._pagingNavigationVisible = false;
             _private.resetPagingNavigation(self);
         }
-
     },
+    updateNavigation: function(self) {
+        self._pagingNavigationVisible = self._pagingNavigation && self._knownPagesCount > 1;
+    }
 
 };
 
@@ -1231,7 +1232,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.bindHandlers(this);
 
         _private.initializeNavigation(this, newOptions);
-
+        _private.updateNavigation(this);
         this._needBottomPadding = _private.needBottomPadding(newOptions);
 
         this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden';
@@ -1318,6 +1319,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (newOptions.navigation !== this._options.navigation) {
             _private.initializeNavigation(this, newOptions, resetPaging);
         }
+        _private.updateNavigation(this);
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
