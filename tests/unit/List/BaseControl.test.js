@@ -3560,13 +3560,24 @@ define([
             baseControl._children = triggers;
             it('infinity navigation', function() {
                lists.BaseControl._private.initializeNavigation(baseControl, cfg);
-               assert.isTrue(baseControl._needScrollCalculation && baseControl._pagingVisible);
+               assert.isTrue(baseControl._needScrollCalculation);
                assert.isFalse(baseControl._pagingNavigation);
             });
             it('page navigation', function() {
-               cfg.navigation.view = "pages";
+               cfg.navigation = {
+                  view: 'pages',
+                  source: 'page',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  },
+                  sourceConfig: {
+                     pageSize: 3,
+                     page: 0,
+                     hasMore: false
+                  }
+               }
                lists.BaseControl._private.initializeNavigation(baseControl, cfg);
-               assert.isFalse(baseControl._needScrollCalculation || baseControl._pagingVisible);
+               assert.isFalse(baseControl._needScrollCalculation);
                assert.isTrue(baseControl._pagingNavigation);
             });
          });

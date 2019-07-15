@@ -1099,7 +1099,7 @@ var _private = {
         self._pagingNavigation = _private.isPagingNavigation(cfg.navigation);
 
         if (self._needScrollCalculation) {
-            if (cfg.virtualScrolling) {
+            if (cfg.virtualScrolling && !self._virtualScroll) {
                 self._virtualScroll = new VirtualScroll({
                     virtualPageSize: cfg.virtualPageSize,
                     virtualSegmentSize: cfg.virtualSegmentSize
@@ -1113,7 +1113,6 @@ var _private = {
                 up: false,
                 down: false
             };
-            self._pagingVisible = true;
         } else {
             self._loadTriggerVisibility = null;
             self._virtualScrollTriggerVisibility = null;
@@ -1124,13 +1123,14 @@ var _private = {
             if (resetPaging) {
                 _private.resetPagingNavigation(self);
             }
-            self._pagingNavigationVisible = self._knownPagesCount > 1;
         } else {
             self._pagingNavigationVisible = false;
             _private.resetPagingNavigation(self);
         }
-
     },
+    updateNavigation: function(self) {
+        self._pagingNavigationVisible = self._pagingNavigation && self._knownPagesCount > 1;
+    }
 
 };
 
@@ -1232,7 +1232,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.bindHandlers(this);
 
         _private.initializeNavigation(this, newOptions);
-
+        _private.updateNavigation(this);
         this._needBottomPadding = _private.needBottomPadding(newOptions);
 
         this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden';
@@ -1316,8 +1316,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions);
-
-        _private.initializeNavigation(this, newOptions, resetPaging);
+        if (newOptions.navigation !== this._options.navigation) {
+            _private.initializeNavigation(this, newOptions, resetPaging);
+        }
+        _private.updateNavigation(this);
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
