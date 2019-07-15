@@ -18,6 +18,21 @@ import {split, getInputType, getAdaptiveInputType, IInputType, INativeInputType,
 
 import 'wml!Controls/_input/Base/Stretcher';
 
+interface IFieldTemplate {
+   template: 'wml!Controls/_input/Base/Field';
+   scope: {
+      emptySymbol: string;
+      controlName: string;
+      autoComplete: boolean;
+      ieVersion: number | null;
+      isFieldFocused: () => boolean;
+
+      value?: string;
+      options?: any;
+      autoWidth?: boolean;
+   };
+}
+
       var _private = {
 
          /**
@@ -404,6 +419,12 @@ import 'wml!Controls/_input/Base/Stretcher';
          _defaultValue: null,
 
          /**
+          * @type {Boolean} Determines whether the control stretch over the content.
+          * @protected
+          */
+         _autoWidth: false,
+
+         /**
           * @type {Controls/_input/Base/Types/DisplayingControl.typedef} Input field in read mode.
           * @protected
           */
@@ -620,7 +641,6 @@ import 'wml!Controls/_input/Base/Stretcher';
             this._field = {
                template: fieldTemplate,
                scope: {
-                  _useStretcher: false,
                   controlName: CONTROL_NAME,
                   autoComplete: this._autoComplete,
                   calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
