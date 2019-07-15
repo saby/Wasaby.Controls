@@ -64,6 +64,10 @@ const _private = {
         }
     },
 
+    prepareSizeWithoutDOM(item) {
+        return _private.prepareSizes(item);
+    },
+
     getContainerWidth(item, container) {
         // The width can be set when the panel is displayed. To calculate the width of the content, remove this value.
         const currentContainerWidth = container.style.width;
@@ -195,12 +199,17 @@ const StackController = BaseController.extend({
     },
 
     elementCreated(item, container) {
-        _private.prepareSizes(item, container);
+        const isSinglePopup = this._stack.getCount() < 2;
+        if (isSinglePopup) {
+            _private.prepareSizeWithoutDOM(item);
+        } else {
+            _private.prepareSizes(item, container);
+        }
         if (item.popupOptions.isCompoundTemplate) {
             _private.setStackContent(item);
             this._stack.add(item);
             this._update();
-        } else if (this._stack.getCount() > 1) {
+        } else if (!isSinglePopup) {
             this._update();
         }
     },
@@ -260,7 +269,7 @@ const StackController = BaseController.extend({
     },
 
     getDefaultConfig(item) {
-        _private.prepareSizes(item);
+        _private.prepareSizeWithoutDOM(item);
         _private.setStackContent(item);
         _private.addStackClasses(item.popupOptions);
         if (StackStrategy.isMaximizedPanel(item)) {
