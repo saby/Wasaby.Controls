@@ -68,7 +68,8 @@ var _private = {
         _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
     },
 
-    selectedTypeChangedHandler: function (typeName) {
+    selectedTypeChangedHandler: function (typeName, limit) {
+        this._multiselection.setLimit(limit);
         this._multiselection[typeName]();
         _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
     },

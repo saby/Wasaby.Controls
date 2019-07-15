@@ -36,6 +36,7 @@ var Selection = cExtend.extend({
    _selectedKeys: null,
    _excludedKeys: null,
    _items: null,
+   _limit: 0,
 
    constructor: function(options) {
       this._options = options;
@@ -54,7 +55,9 @@ var Selection = cExtend.extend({
    select: function(keys) {
       this._selectedKeys = this._selectedKeys.slice();
       this._excludedKeys = this._excludedKeys.slice();
-
+      if (this._limit && keys.length === 1 && !this._excludedKeys.includes(keys[0])) {
+         this.applyLimit();
+      }
       if (this._isAllSelection(this._getParams())) {
          ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
       } else {
@@ -95,7 +98,9 @@ var Selection = cExtend.extend({
     */
    selectAll: function() {
       this._selectedKeys = ALLSELECTION_VALUE;
-      this._excludedKeys = [];
+      if (!this._limit) {
+         this._excludedKeys = [];
+      }
    },
 
    /**
@@ -121,6 +126,35 @@ var Selection = cExtend.extend({
          this.selectAll();
          this.unselect(swap);
       }
+   },
+
+   /**
+    * Setting limit.
+    * @param {Integer} value
+    */
+   setLimit: function(value) {
+      this._limit = value;
+   },
+
+   /**
+    * Convert selection with limit to standart selection
+    */
+   applyLimit: function() {
+      var res = [],
+         self = this,
+         status,
+         limit = self._limit ? self._limit - this._excludedKeys.length : 0,
+         count = 0;
+      this._items.forEach(function(item) {
+         status = self._getSelectionStatus(item);
+         if (status !== false && (!limit || count < limit)) {
+            count++;
+            res.push(item.get(self._options.keyProperty));
+         }
+      });
+      self._limit = 0;
+      self._excludedKeys = [];
+      self._selectedKeys = res;
    },
 
    /**
@@ -152,7 +186,9 @@ var Selection = cExtend.extend({
          excludedKeys: this._excludedKeys,
          items: this._items
       })) {
-         return this._items.getCount() - this._excludedKeys.length;
+         var itemsCount = this._limit && this._items.getCount() > this._limit ?
+            this._limit : this._items.getCount();
+         return itemsCount - this._excludedKeys.length;
       }
       return this._selectedKeys.length;
    },
@@ -165,11 +201,14 @@ var Selection = cExtend.extend({
       var
          res = {},
          self = this,
-         status;
+         status,
+         limit = self._limit ? self._limit - this._excludedKeys.length : 0,
+         count = 0;
 
       this._items.forEach(function(item) {
          status = self._getSelectionStatus(item);
-         if (status !== false) {
+         if (status !== false && (!limit || count < limit)) {
+            count++;
             res[item.get(self._options.keyProperty)] = status;
          }
       });
