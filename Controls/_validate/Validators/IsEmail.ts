@@ -1,6 +1,13 @@
 var
    regExp = /^(([а-я0-9+_-]+\.)*[а-я0-9+_-]+@[а-я0-9+_-]+(\.[а-я0-9+_-]+)*\.[а-я]{2,9}|([a-z0-9+_-]+\.)*[a-z0-9+_-]+@[a-z0-9+_-]+(\.[a-z0-9+_-]+)*\.[a-z]{2,9}|([a-z0-9+_-]+\.)*[a-z0-9+_-]+@[а-я0-9+_-]+(\.[а-я0-9+_-]+)*\.[а-я]{2,9})$/;
 
+/*
+* Функция, позволяющая проверить введенный email на валидность.
+* @class
+* @name Controls/_validate/Validators/IsEmail
+* @public
+* @author Красильников А.С.
+*/
 
 /**
  * Функция, позволяющая проверить введенный email на валидность.
@@ -28,10 +35,6 @@ var
  *  </Controls.validate:InputContainer>
  * </pre>
  *
- * @class
- * @name Controls/_validate/Validators/IsEmail
- * @public
- * @author Красильников А.С.
  */
 
 export = function (args) {

@@ -27,7 +27,7 @@ import dateUtils = require('Controls/Utils/Date');
  * </pre>
  *
  * @class
- * @name Controls/_validate/Validators/IsRequired
+ * @name Controls/_validate/Validators/IsValidDate
  * @public
 
  * @author Красильников А.С.
