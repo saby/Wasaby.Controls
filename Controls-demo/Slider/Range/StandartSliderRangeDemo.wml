@@ -18,7 +18,7 @@
             simple
          </div>
          <div class="demo__element">
-            <Controls.slider:Range
+            <Controls.slider:Range attr:class="demo-standartSliderRange__simpleS"
                size="s"
                minValue="{{0}}"
                maxValue="{{100}}"
@@ -27,7 +27,7 @@
             />
          </div>
          <div class="demo__element">
-            <Controls.slider:Range
+            <Controls.slider:Range attr:class="demo-standartSliderRange__simpleM"
                size="m"
                minValue="{{0}}"
                maxValue="{{100}}"
@@ -41,7 +41,7 @@
             bordered
          </div>
          <div class="demo__element">
-            <Controls.slider:Range
+            <Controls.slider:Range attr:class="demo-standartSliderRange__borderedS"
                size="s"
                minValue="{{0}}"
                maxValue="{{100}}"
@@ -51,7 +51,7 @@
             />
          </div>
          <div class="demo__element">
-            <Controls.slider:Range
+            <Controls.slider:Range attr:class="demo-standartSliderRange__borderedM"
                size="m"
                minValue="{{0}}"
                maxValue="{{100}}"
@@ -66,7 +66,7 @@
             with scale
          </div>
          <div class="demo__element">
-            <Controls.slider:Range
+            <Controls.slider:Range attr:class="demo-standartSliderRange__scaleS"
                size="s"
                minValue="{{0}}"
                maxValue="{{100}}"
@@ -76,7 +76,7 @@
             />
          </div>
          <div class="demo__element">
-            <Controls.slider:Range
+            <Controls.slider:Range attr:class="demo-standartSliderRange__scaleM"
                size="m"
                minValue="{{0}}"
                maxValue="{{100}}"
@@ -91,7 +91,7 @@
             readOnly
          </div>
          <div class="demo__element">
-            <Controls.slider:Range
+            <Controls.slider:Range attr:class="demo-standartSliderRange__readOnlyS"
                size="s"
                readOnly="{{true}}"
                minValue="{{0}}"
@@ -102,7 +102,7 @@
             />
          </div>
          <div class="demo__element">
-            <Controls.slider:Range
+            <Controls.slider:Range attr:class="demo-standartSliderRange__readOnlyM"
                size="m"
                readOnly="{{true}}"
                minValue="{{0}}"
@@ -118,7 +118,7 @@
             with input
          </div>
          <div class="demo__element">
-            <Controls.slider:Range
+            <Controls.slider:Range attr:class="demo-standartSliderRange__inputS"
                     size="s"
                     minValue="{{_minValueI}}"
                     maxValue="{{_maxValueI}}"
