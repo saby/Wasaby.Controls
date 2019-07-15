@@ -284,7 +284,7 @@ define([
          });
          it('escape', function() {
             var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><&#39;'];
-            var vdomTemplate = template({ 'value': json }, {}, undefined, true);
+            var vdomTemplate = template({ _options: { 'value': json } }, {}, undefined, true);
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json), '<div><p title="&quot;&amp;lt;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;&amp;#39;</p></div>'));
             assert.equal(vdomTemplate[0].children[0].children[0].children, '&amp;gt;&amp;lt;><&amp;#39;');
             assert.equal(vdomTemplate[0].children[0].hprops.attributes.title, '"&amp;lt;<>');
@@ -515,9 +515,11 @@ define([
                   '<link />' +
                   '<script>alert(123);</script>',
                checkHtml = template({
-                  value: json,
-                  validHtml: validHtml,
-                  tagResolver: decorator.noOuterTag
+                  _options: {
+                     value: json,
+                     validHtml: validHtml,
+                     tagResolver: decorator.noOuterTag
+                  }
                }, {});
             assert.isTrue(equalsHtml(checkHtml, goodHtml));
          });

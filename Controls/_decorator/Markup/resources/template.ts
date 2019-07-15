@@ -102,17 +102,17 @@ import validHtml = require('Core/validHtml');
       return [markupGenerator.createTag(tagName, attrs, children, attrsToDecorate, defCollection, control, key)];
    }
 
-   var template = function(data, attr, context, isVdom, sets) {
+   var template = function(data, attr, context, isVdom, sets?) {
       markupGenerator = thelpers.getMarkupGenerator(isVdom);
       defCollection = {
          id: [],
          def: undefined
       };
-      control = data;
-      resolver = data.tagResolver;
-      resolverParams = data.resolverParams || {};
+      control = data._control ? data._control : data;
+      resolver = control._options.tagResolver;
+      resolverParams = control._options.resolverParams || {};
       resolverMode = 1;
-      currentValidHtml = data.validHtml || validHtml;
+      currentValidHtml = control._options.validHtml || validHtml;
 
       var elements = [],
          key = (attr && attr.key) || '_',
@@ -122,7 +122,7 @@ import validHtml = require('Core/validHtml');
             context: attr.context
          },
          oldEscape,
-         value = data.value;
+         value = control._options.value;
       if (value && value.length) {
          // Need just one root node.
 
@@ -156,14 +156,14 @@ import validHtml = require('Core/validHtml');
       try {
          elements = recursiveMarkup(value, attrsToDecorate, key + '0_');
       } catch (e) {
-         thelpers.templateError('Controls/_decorator/Markup', e, data);
+         thelpers.templateError(control._moduleName, e, control);
       } finally {
          markupGenerator.escape = oldEscape;
       }
 
       if (!elements.length) {
          elements = [markupGenerator.createTag('invisible-node', { key: key + '0_' }, [], attrsToDecorate,
-            defCollection, data, key + '0_')];
+            defCollection, control, key + '0_')];
       }
       return markupGenerator.joinElements(elements, key, defCollection);
    };

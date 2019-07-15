@@ -88,12 +88,16 @@ import template = require('wml!Controls/_decorator/Markup/Markup');
    class MarkupDecorator extends Control<IControlOptions> {
       _template: TemplateFunction = template;
       _templateFunction: TemplateFunction = templateFunction;
+      private __selfLink: Control = this;
 
       private _contextMenuHandler(event: SyntheticEvent): void {
          if (event.target.tagName.toLowerCase() === 'a') {
             // Для ссылок требуется браузерное контекстное меню.
             event.stopImmediatePropagation();
          }
+      }
+      private _beforeUnmount(): void {
+         this.__selfLink = null;
       }
    }
 
