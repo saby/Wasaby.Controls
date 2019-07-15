@@ -153,11 +153,23 @@ define([
       });
 
       describe('_yearsSelectionChanged', function() {
-         it('should update range models.', function() {
+         it('should update range models and displayed day.', function() {
             const component = calendarTestUtils.createComponent(PeriodDialog, {});
             component._yearsSelectionChanged(null, start, end);
             assert(dateUtils.isDatesEqual(component._headerRangeModel.startValue, start));
             assert(dateUtils.isDatesEqual(component._headerRangeModel.endValue, dateUtils.getEndOfYear(end)));
+            assert(dateUtils.isDatesEqual(component._rangeModel.startValue, start));
+            assert(dateUtils.isDatesEqual(component._rangeModel.endValue, dateUtils.getEndOfYear(end)));
+         });
+      });
+
+      describe('_onYearsSelectionHoveredValueChanged', function() {
+         it('should update range models and displayed day.', function() {
+            const
+               date = new Date(2018, 0, 1),
+               component = calendarTestUtils.createComponent(PeriodDialog, {});
+            component._onYearsSelectionHoveredValueChanged(null, date);
+            assert(dateUtils.isDatesEqual(component._displayedDate, date));
          });
       });
 
