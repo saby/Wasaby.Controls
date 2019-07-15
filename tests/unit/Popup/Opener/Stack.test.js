@@ -342,6 +342,50 @@ define(
 
          });
 
+         it('stack optimize open', () => {
+            const Controller = popupTemplate.StackController;
+            Controller._stack.clear();
+            const basePrepareSize = Controller._private.prepareSizes;
+            const basePrepareSizeWithoutDom = Controller._private.prepareSizeWithoutDOM;
+            const baseUpdate = Controller._update;
+            let isPrepareSizeCalled = false;
+            let isPrepareSizeWithoutDomCalled = false;
+            let isUpdateCalled = false;
+
+            Controller._private.prepareSizes = () => {
+               isPrepareSizeCalled = true;
+            };
+            Controller._private.prepareSizeWithoutDOM = () => {
+               isPrepareSizeWithoutDomCalled = true;
+            };
+            Controller._update = () => {
+               isUpdateCalled = true;
+            };
+            let item = { position: { stackWidth: 720 }, popupOptions: { stackClassName: '' } };
+
+            Controller.getDefaultConfig(item);
+            assert.equal(isPrepareSizeCalled, false);
+            assert.equal(isPrepareSizeWithoutDomCalled, true);
+            assert.equal(isUpdateCalled, false);
+
+            isPrepareSizeWithoutDomCalled = false;
+            Controller.elementCreated(item);
+            assert.equal(isPrepareSizeCalled, false);
+            assert.equal(isPrepareSizeWithoutDomCalled, true);
+            assert.equal(isUpdateCalled, false);
+
+            isPrepareSizeWithoutDomCalled = false;
+            Controller._stack.add({ position: { stackWidth: 720 }, popupOptions: { stackClassName: '' } });
+            Controller.elementCreated(item);
+            assert.equal(isPrepareSizeCalled, true);
+            assert.equal(isPrepareSizeWithoutDomCalled, false);
+            assert.equal(isUpdateCalled, true);
+
+            Controller._private.prepareSizes = basePrepareSize;
+            Controller._private.prepareSizeWithoutDOM = basePrepareSizeWithoutDom;
+            Controller._update = baseUpdate;
+         });
+
          it('stack compatible popup', () => {
             let item = {
                popupOptions: {
