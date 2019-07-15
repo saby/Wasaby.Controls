@@ -2,10 +2,4 @@
 AutoFilled field should not be cleared on mount.
 To do this, it must not have a empty value attribute.
 -->
-<ws:if data="{{value}}">
-   <ws:partial template="{{content}}"
-               attr:value="{{value}}"/>
-</ws:if>
-<ws:else>
-   <ws:partial template="{{content}}"/>
-</ws:else>
+<ws:partial template="{{content}}" attr:value="{{value ? value : undefined}}"/>
