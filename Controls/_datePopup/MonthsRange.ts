@@ -29,6 +29,7 @@ class Component extends Control {
 
     _startPosition: Date;
     _displayedPosition: Date;
+    _scrollToPosition: Date;
     _rangeModel: DateRangeModel;
 
     constructor() {
@@ -39,6 +40,7 @@ class Component extends Control {
 
     _beforeMount(options) {
         this._displayedPosition = dateUtils.getStartOfYear(options.year || new Date());
+        this._scrollToPosition = this._displayedPosition;
         this._startPosition = this._displayedPosition;
         this._rangeModel.update(options);
 
@@ -52,9 +54,18 @@ class Component extends Control {
     _beforeUpdate(options) {
         this._rangeModel.update(options);
         if (options.year.getFullYear() !== this._displayedPosition.getFullYear()) {
-            this._displayedPosition = options.year;
+            this._displayedPosition = dateUtils.getStartOfYear(options.year);
+            this._scrollToPosition = this._displayedPosition;
             this._startPosition = this._displayedPosition;
         }
+    }
+
+    _afterUpdate() {
+        this._updateScrollPosition();
+    }
+
+    _drawItemsHandler() {
+        this._updateScrollPosition();
     }
 
     _beforeUnmount() {
@@ -77,10 +88,12 @@ class Component extends Control {
     }
 
     private _updateScrollPosition() {
-        if (!this._displayedPosition) {
+        if (!this._scrollToPosition) {
             return;
         }
-        datePopupUtils.scrollToDate(this._container, ITEM_BODY_SELECTOR, this._displayedPosition);
+        if (datePopupUtils.scrollToDate(this._container, ITEM_BODY_SELECTOR, this._scrollToPosition)) {
+            this._scrollToPosition = null;
+        }
     }
 }
 
