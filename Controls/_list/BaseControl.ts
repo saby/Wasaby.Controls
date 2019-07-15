@@ -781,7 +781,7 @@ var _private = {
                     }
                     if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
                         self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
-                        self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down');
+                        self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down', self._cachedScrollParams, self._loadOffset.top);
                     }
                     _private.applyVirtualScrollIndexesToListModel(self);
                 }
@@ -1235,6 +1235,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     if (self._virtualScroll) {
                         // При серверной верстке применяем начальные значения
                         self._virtualScroll.ItemsCount = self._listViewModel.getCount();
+                        self._virtualScroll.resetItemsIndexes();
                         _private.applyVirtualScrollIndexesToListModel(self);
                     }
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
