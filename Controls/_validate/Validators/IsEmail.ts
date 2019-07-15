@@ -7,9 +7,8 @@ var
 * @name Controls/_validate/Validators/IsEmail
 * @public
 * @author Красильников А.С.
-*/
-
-/**
+ *
+ * @remark
  * <h2>Аргументы функции</h2>
  *
  * value - значение, которое будет проверяться на валидность.
