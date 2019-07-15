@@ -1089,6 +1089,48 @@ var _private = {
     isPagingNavigation: function(navigation) {
         return navigation && navigation.view === 'pages';
     },
+    resetPagingNavigation: function(self) {
+        self._knownPagesCount = INITIAL_PAGES_COUNT;
+        self._currentPage = INITIAL_PAGES_COUNT;
+    },
+
+    initializeNavigation: function(self, cfg, resetPaging) {
+        self._needScrollCalculation = _private.needScrollCalculation(cfg.navigation);
+        self._pagingNavigation = _private.isPagingNavigation(cfg.navigation);
+
+        if (self._needScrollCalculation) {
+            if (cfg.virtualScrolling) {
+                self._virtualScroll = new VirtualScroll({
+                    virtualPageSize: cfg.virtualPageSize,
+                    virtualSegmentSize: cfg.virtualSegmentSize
+                });
+            }
+            self._virtualScrollTriggerVisibility = {
+                up: false,
+                down: false
+            };
+            self._loadTriggerVisibility = {
+                up: false,
+                down: false
+            };
+            self._pagingVisible = true;
+        } else {
+            self._loadTriggerVisibility = null;
+            self._virtualScrollTriggerVisibility = null;
+            self._pagingVisible = false;
+        }
+
+        if (self._pagingNavigation) {
+            if (resetPaging) {
+                _private.resetPagingNavigation(self);
+            }
+            self._pagingNavigationVisible = self._knownPagesCount > 1;
+        } else {
+            self._pagingNavigationVisible = false;
+            _private.resetPagingNavigation(self);
+        }
+
+    },
 
 };
 
@@ -1189,7 +1231,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         _private.bindHandlers(this);
 
-        this._initializeNavigation(this, newOptions);
+        _private.initializeNavigation(this, newOptions);
 
         this._needBottomPadding = _private.needBottomPadding(newOptions);
 
@@ -1275,7 +1317,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions);
 
-        this._initializeNavigation(this, newOptions, resetPaging);
+        _private.initializeNavigation(this, newOptions, resetPaging);
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
@@ -1327,7 +1369,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
-            this._resetPagingNavigation(this);
+            _private.resetPagingNavigation(this);
 
             //return result here is for unit tests
             return _private.reload(self, newOptions);
@@ -1481,49 +1523,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 _private.hideIndicator(this);
             }
         }
-    },
-
-    _resetPagingNavigation: function(self) {
-        self._knownPagesCount = INITIAL_PAGES_COUNT;
-        self._currentPage = INITIAL_PAGES_COUNT;
-    },
-
-    _initializeNavigation: function(self, cfg, resetPaging) {
-        self._needScrollCalculation = _private.needScrollCalculation(cfg.navigation);
-        self._pagingNavigation = _private.isPagingNavigation(cfg.navigation);
-
-        if (self._needScrollCalculation) {
-            if (cfg.virtualScrolling) {
-                self._virtualScroll = new VirtualScroll({
-                    virtualPageSize: cfg.virtualPageSize,
-                    virtualSegmentSize: cfg.virtualSegmentSize
-                });
-            }
-            self._virtualScrollTriggerVisibility = {
-                up: false,
-                down: false
-            };
-            self._loadTriggerVisibility = {
-                up: false,
-                down: false
-            };
-            self._pagingVisible = true;
-        } else {
-            self._loadTriggerVisibility = null;
-            self._virtualScrollTriggerVisibility = null;
-            self._pagingVisible = false;
-        }
-
-        if (self._pagingNavigation) {
-            if (resetPaging) {
-                self._resetPagingNavigation(self);
-            }
-            self._pagingNavigationVisible = self._knownPagesCount > 1;
-        } else {
-            self._pagingNavigationVisible = false;
-            self._resetPagingNavigation(self);
-        }
-
     },
 
     __onPagingArrowClick: function(e, arrow) {

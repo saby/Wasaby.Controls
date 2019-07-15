@@ -3559,13 +3559,13 @@ define([
             baseControl.saveOptions(cfg);
             baseControl._children = triggers;
             it('infinity navigation', function() {
-               baseControl._initializeNavigation(baseControl, cfg);
+               lists.BaseControl._private.initializeNavigation(baseControl, cfg);
                assert.isTrue(baseControl._needScrollCalculation && baseControl._pagingVisible);
                assert.isFalse(baseControl._pagingNavigation);
             });
             it('page navigation', function() {
                cfg.navigation.view = "pages";
-               baseControl._initializeNavigation(baseControl, cfg);
+               lists.BaseControl._private.initializeNavigation(baseControl, cfg);
                assert.isFalse(baseControl._needScrollCalculation || baseControl._pagingVisible);
                assert.isTrue(baseControl._pagingNavigation);
             });
