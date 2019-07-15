@@ -3540,6 +3540,37 @@ define([
                assert.equal(lists.BaseControl._private.calcPaging(self, hasMore, pageSize), 1);
             });
          });
+         describe('navigation switch', function() {
+            var cfg = {
+               navigation: {
+                  view: 'infinity',
+                  source: 'page',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  },
+                  sourceConfig: {
+                     pageSize: 3,
+                     page: 0,
+                     hasMore: false
+                  }
+               }
+            };
+            var baseControl = new lists.BaseControl(cfg);
+            baseControl.saveOptions(cfg);
+            baseControl._children = triggers;
+            it('infinity navigation', function() {
+               lists.BaseControl._private.initializeNavigation(baseControl, cfg);
+               assert.isTrue(baseControl._needScrollCalculation && baseControl._pagingVisible);
+               assert.isFalse(baseControl._pagingNavigation);
+            });
+            it('page navigation', function() {
+               cfg.navigation.view = "pages";
+               lists.BaseControl._private.initializeNavigation(baseControl, cfg);
+               assert.isFalse(baseControl._needScrollCalculation || baseControl._pagingVisible);
+               assert.isTrue(baseControl._pagingNavigation);
+            });
+         });
+
       });
    });
 });

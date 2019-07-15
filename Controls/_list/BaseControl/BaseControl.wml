@@ -13,7 +13,7 @@
             <ws:partial template="{{_options.footerTemplate}}"/>
         </div>
     </ws:if>
-    <ws:if data="{{_pagingNavigation}}">
+    <ws:if data="{{_pagingNavigation && _pagingNavigationVisible}}">
         <div class="controls-BaseControl__footerPaging_wrapper">
             <Controls.paging:Paging showDigits = "{{true}}"
                                     pagesCount = "{{_knownPagesCount}}"
@@ -172,7 +172,7 @@
             <div class="controls-BaseControl_paging-Padding">
             </div>
             <div class="controls-BaseControl__pagingContainer">
-                <Controls.paging:Paging attr:class="controls-BaseControl__scrollPaging" scope="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></Controls.paging:Paging>
+                <Controls.paging:Paging attr:class="controls-BaseControl__scrollPaging" scope="{{_pagingCfg}}" scope1="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></Controls.paging:Paging>
             </div>
         </ws:if>
         <Controls.dropdown:Opener
