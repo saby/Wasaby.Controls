@@ -503,8 +503,10 @@ Base._openPopup = function (popupId, cfg, controller, def) {
         if (ManagerController.isPopupCreating(popupId)) {
             ManagerController.updateOptionsAfterInitializing(popupId, cfg);
         } else {
+
             popupId = ManagerController.update(popupId, cfg);
         }
+        def.callback(popupId);
     } else {
         cfg.creatingDef = def;
         popupId = ManagerController.show(cfg, controller);
