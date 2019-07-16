@@ -1,10 +1,10 @@
 import Control = require('Core/Control');
 import coreMerge = require('Core/core-merge');
+import {date as formatDate} from 'Types/formatter';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {DateRangeModel, Utils as CalendarControlsUtils} from 'Controls/dateRange';
 import dateUtils = require('Controls/Utils/Date');
 import MonthsRangeItem from './MonthsRangeItem';
-import datePopupUtils from './Utils';
 import componentTmpl = require('wml!Controls/_datePopup/MonthsRange');
 import 'css!theme?Controls/datePopup';
 
@@ -18,19 +18,15 @@ import 'css!theme?Controls/datePopup';
  *
  */
 
-const
-    ITEM_BODY_SELECTOR = '.controls-PeriodDialog-MonthsRange__body',
-    ITEM_SELECTOR = '.controls-PeriodDialog-MonthsRange';
-
 class Component extends Control {
     private _template: Function = componentTmpl;
 
     _proxyEvent: Function = tmplNotify;
 
-    _startPosition: Date;
-    _displayedPosition: Date;
-    _scrollToPosition: Date;
+    _position: Date;
     _rangeModel: DateRangeModel;
+
+    _formatDate: Function = formatDate;
 
     constructor() {
         super();
@@ -39,33 +35,15 @@ class Component extends Control {
     }
 
     _beforeMount(options) {
-        this._displayedPosition = dateUtils.getStartOfYear(options.year || new Date());
-        this._scrollToPosition = this._displayedPosition;
-        this._startPosition = this._displayedPosition;
+        this._position = dateUtils.getStartOfYear(options.position || new Date());
         this._rangeModel.update(options);
-
-        // this._updateRangeItems(options);
-    }
-
-    _afterMount() {
-        this._updateScrollPosition();
     }
 
     _beforeUpdate(options) {
         this._rangeModel.update(options);
-        if (options.year.getFullYear() !== this._displayedPosition.getFullYear()) {
-            this._displayedPosition = dateUtils.getStartOfYear(options.year);
-            this._scrollToPosition = this._displayedPosition;
-            this._startPosition = this._displayedPosition;
+        if (options.position.getFullYear() !== this._position.getFullYear()) {
+            this._position = dateUtils.getStartOfYear(options.position);
         }
-    }
-
-    _afterUpdate() {
-        this._updateScrollPosition();
-    }
-
-    _drawItemsHandler() {
-        this._updateScrollPosition();
     }
 
     _beforeUnmount() {
@@ -76,24 +54,8 @@ class Component extends Control {
         e.stopPropagation();
     }
 
-    _onScroll(e: Event, scrollTop: number) {
-        let
-            firstItem = this._container.querySelector(ITEM_SELECTOR),
-            firstYear = datePopupUtils.dataStringToDate(firstItem.dataset.date),
-            year = firstYear.getFullYear() + Math.floor(scrollTop / firstItem.offsetHeight);
-        if (year !== this._displayedPosition.getFullYear()) {
-            this._displayedPosition = new Date(year, 0);
-            this._notify('yearChanged', [this._displayedPosition]);
-        }
-    }
-
-    private _updateScrollPosition() {
-        if (!this._scrollToPosition) {
-            return;
-        }
-        if (datePopupUtils.scrollToDate(this._container, ITEM_BODY_SELECTOR, this._scrollToPosition)) {
-            this._scrollToPosition = null;
-        }
+    _onPositionChanged(e: Event, position: Date) {
+        this._notify('positionChanged', [position]);
     }
 }
 

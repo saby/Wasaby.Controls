@@ -1,6 +1,6 @@
 <div class="controls-PeriodDialog-DateRange">
    <div class="controls-PeriodDialog-DateRange__header">
-      <div class="controls-PeriodDialog-DateRange__year">{{_month.getFullYear()}}</div>
+      <div class="controls-PeriodDialog-DateRange__year">{{_options.position.getFullYear()}}</div>
       <div class="controls-PeriodDialog-DateRange-header-weekdays">
          <div for="weekday in _weekdaysCaptions"
               class="{{ _prepareCssClass(
@@ -16,38 +16,46 @@
          <div class="controls-PeriodDialog-DateRangeItem__months">
             <ws:for data="month in 12">
                <div class="controls-PeriodDialog-DateRangeItem__months-btn"
-                    on:click="_scrollToMonth(_month.getFullYear(), month)"
+                    on:click="_scrollToMonth(_options.position.getFullYear(), month)"
                     >
                   {{ _formatMonth(month) }}
                </div>
             </ws:for>
             <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn"
-                 on:click="_scrollToMonth(_month.getFullYear() + 1, 0)"
+                 on:click="_scrollToMonth(_options.position.getFullYear() + 1, 0)"
                   >
-               {{ _month.getFullYear() + 1 }}
+               {{ _options.position.getFullYear() + 1 }}
             </div>
          </div>
       </ws:if>
       <Controls.calendar:MonthList
          name="monthList"
-         date="{{_year}}"
+         position="{{_options.position}}"
          attr:class="controls-PeriodDialog-DateRange-dates-wrapper"
          calendarSource="{{_options.calendarSource}}"
          dayTemplate="{{_options.dayTemplate}}"
          on:itemClick="_onItemClick()"
-         on:scroll="_onScroll()"
-         on:drawItems="_drawItemsHandler()"
+         on:positionChanged="_onPositionChanged()"
       >
          <ws:yearTemplate>
-            <ws:partial
-               template="wml!Controls/_datePopup/DateRangeItem"
-               _options="{{_options}}"
-               _isStickySupport="{{_isStickySupport}}"
-               _formatDate="{{_formatDate}}"
-               _formatMonth="{{_formatMonth}}"
-               _monthSelectionEnabled="{{_monthSelectionEnabled}}"
-               _monthViewModel="{{_monthViewModel}}"
-            />
+            <ws:partial template="Controls/calendar:MonthListYearTemplate">
+               <ws:headerTemplate>
+                  <div></div>
+               </ws:headerTemplate>
+               <ws:bodyTemplate>
+                  <ws:partial
+                     template="wml!Controls/_datePopup/DateRangeItem"
+                     _options="{{_options}}"
+                     _isStickySupport="{{_isStickySupport}}"
+                     _formatDate="{{_formatDate}}"
+                     _formatMonth="{{_formatMonth}}"
+                     _getMonth="{{_getMonth}}"
+                     _monthSelectionEnabled="{{_monthSelectionEnabled}}"
+                     _monthViewModel="{{_monthViewModel}}"
+                     extData="{{extData}}"
+                  />
+               </ws:bodyTemplate>
+            </ws:partial>
          </ws:yearTemplate>
       </Controls.calendar:MonthList>
    </div>

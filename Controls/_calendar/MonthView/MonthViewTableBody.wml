@@ -3,6 +3,7 @@
         on:click="_dayClickHandler(value.date)"
         on:mouseenter="_mouseEnterHandler(value.date)"
         attr:class="controls-MonthViewVDOM__item {{ monthViewModel._prepareClass({'value': value}) }} {{_themeCssClass}}"
+        data-date="{{value.id}}"
    >
       <ws:partial
          template="{{dayTemplate}}"

@@ -1,7 +1,6 @@
 import {detection} from 'Env/Env';
 import {date as formatDate} from 'Types/formatter';
 import isEmpty = require('Core/helpers/Object/isEmpty');
-import scrollToElement = require('Controls/Utils/scrollToElement');
 
 export default {
     /**
@@ -29,24 +28,6 @@ export default {
      */
     isStateButtonDisplayed: function (options) {
         return this.isYearStateEnabled(options) && this.isMonthStateEnabled(options);
-    },
-
-    scrollToDate: function(container, selector, date): boolean {
-        var containerToScroll = this.getElementByDate(container, selector, date);
-
-        if (containerToScroll) {
-            scrollToElement(containerToScroll);
-            return true;
-        }
-        return false;
-    },
-
-    getElementByDate: function(container, selector, date) {
-        return container.querySelector(selector + '[data-date="' + this.dateToDataString(date) + '"]');
-    },
-
-    getAllElementsByDate: function(container, selector, date) {
-        return container.querySelectorAll(selector + '[data-date="' + this.dateToDataString(date) + '"]');
     },
 
     dateToDataString: function(date) {
