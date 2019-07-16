@@ -2216,6 +2216,18 @@ define([
          selection = lists.BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 4);
          assert.deepEqual(selection.selected, [4, 1, 2, 3]);
          assert.deepEqual(selection.excluded, []);
+
+         selection = lists.BaseControl._private.getSelectionForDragNDrop([null], [4], 4);
+         assert.deepEqual(selection.selected, [null]);
+         assert.deepEqual(selection.excluded, []);
+
+         selection = lists.BaseControl._private.getSelectionForDragNDrop([null], [], 4);
+         assert.deepEqual(selection.selected, [null]);
+         assert.deepEqual(selection.excluded, []);
+
+         selection = lists.BaseControl._private.getSelectionForDragNDrop([null], [3], 4);
+         assert.deepEqual(selection.selected, [null]);
+         assert.deepEqual(selection.excluded, [3]);
       });
 
       describe('ItemActions', function() {
