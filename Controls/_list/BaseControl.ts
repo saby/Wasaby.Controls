@@ -619,14 +619,17 @@ var _private = {
         var
             selected,
             excluded,
-            dragItemIndex;
-
+            dragItemIndex,
+            isSelectAll;
         selected = cClone(selectedKeys) || [];
+        isSelectAll = selected.indexOf(null) !== -1;
         dragItemIndex = selected.indexOf(dragKey);
         if (dragItemIndex !== -1) {
             selected.splice(dragItemIndex, 1);
         }
-        selected.unshift(dragKey);
+        if (!isSelectAll) {
+            selected.unshift(dragKey);
+        }
 
         excluded = cClone(excludedKeys) || [];
         dragItemIndex = excluded.indexOf(dragKey);
