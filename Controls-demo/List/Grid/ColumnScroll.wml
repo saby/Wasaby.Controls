@@ -11,7 +11,6 @@
                              markedKey="448390"
                              stickyHeader="{{true}}"
                              rowSeparatorVisibility="{{true}}"
-                             multiSelectVisibility="visible"
                              itemActions="{{_itemActions}}"
                              itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                              columns="{{_gridColumns}}"
