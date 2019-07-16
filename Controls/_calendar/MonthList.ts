@@ -1,5 +1,6 @@
 import {Base as BaseSource} from 'Types/source';
 import {date as formatDate} from 'Types/formatter';
+import {IoC} from 'Env/Env';
 import {Control} from 'UI/Base';
 import coreMerge = require('Core/core-merge');
 import {SyntheticEvent} from 'Core/vdom/Synchronizer/resources/SyntheticEvent';
@@ -7,6 +8,7 @@ import YearsSource from './MonthList/YearsSource';
 import MonthsSource from './MonthList/MonthsSource';
 import monthListUtils from './MonthList/Utils';
 import dateUtils = require('Controls/Utils/Date');
+import scrollToElement = require('Controls/Utils/scrollToElement');
 import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
 import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
@@ -48,31 +50,37 @@ const
     sourceMap = {
         year: YearsSource,
         month: MonthsSource
+    },
+    ITEM_BODY_SELECTOR = {
+        year: '.controls-MonthList__year-months',
+        month: '.controls-MonthList__month-body'
     };
 
 class  ModuleComponent extends Control {
     private _template: Function = template;
     private _viewSource: BaseSource;
-    private _position: string;
-
-    private _startValue: Date;
-    private _endValue: Date;
+    private _startPositionId: string;
+    private _scrollToPosition: Date;
+    private _displayedPosition: Date;
 
     private _itemTemplate: Function;
 
     private _lastNotifiedPositionChangedDate: Date;
 
     protected _beforeMount(options) {
+        const position = options.startPosition || options.position;
+        if (options.startPosition) {
+            IoC.resolve('ILogger').warn('MonthList', 'Используется устаревшая опция startPosition, используйте опцию position');
+        }
         this._updateItemTemplate(options);
         this._updateSource(options);
-        this._updatePosition(options);
+        this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
+        this._scrollToPosition = position;
+        this._displayedPosition = position;
+    }
 
-        // TODO: портировать установку года и подскрол к нужному месяцу когда будет корректно работать навигация по курсору.
-        // https://online.sbis.ru/opendoc.html?guid=f01aaceb-2c7e-4a19-9a86-2d59c5419254
-
-        // this._startValue = options.startValue;
-        // this._endValue = options.endValue;
-        // this.selectionProcessing = options.selectionProcessing;
+    protected _afterMount(): void {
+        this._updateScrollAfterViewModification();
     }
 
     protected _afterMount() {
@@ -84,29 +92,33 @@ class  ModuleComponent extends Control {
     protected _beforeUpdate(options) {
         this._updateItemTemplate(options);
         this._updateSource(options);
-        this._updatePosition(options);
+        if (!dateUtils.isMonthsEqual(options.position, this._displayedPosition)) {
+            this._updatePosition(options.position, this._options.position);
+        }
     }
 
-    startValueChangedHandler(event, value) {
-        // this._startValue = value;
+    protected _afterUpdate(options) {
+        this._updateScrollAfterViewModification();
+    }
+
+    startValueChangedHandler(event: SyntheticEvent, value: Date): void {
         this._notify('startValueChanged', [value]);
     }
 
-    endValueChangedHandler(event, value) {
-        // this._endValue = value;
+    endValueChangedHandler(event: SyntheticEvent, value: Date): void {
         this._notify('endValueChanged', [value]);
     }
 
-    selectionChangedHandler(event, start, end) {
+    selectionChangedHandler(event: SyntheticEvent, start: Date, end: Date): void {
         this._notify('selectionChanged', [start, end]);
     }
 
-    protected _getMonth(year, month) {
+    protected _getMonth(year: number, month: number): Date {
         return new Date(year, month, 1);
     }
 
-    protected _drawItemsHandler() {
-        this._notify('drawItems');
+    protected _drawItemsHandler(): void {
+        this._updateScrollAfterViewModification();
     }
 
     private _updateItemTemplate(options: object): void {
@@ -119,48 +131,102 @@ class  ModuleComponent extends Control {
             this._viewSource = new sourceMap[options.viewMode]();
         }
     }
-    private _updatePosition(options: object): void {
-        const newPosition = monthListUtils.dateToId(dateUtils.getStartOfYear(options.startPosition || options.date));
-        if (newPosition !== this._position) {
-            this._position = newPosition;
+    private _updatePosition(position: Date): void {
+        if (!position) {
+            return;
+        }
+
+        const newPosition = dateUtils.getStartOfMonth(position);
+
+        this._displayedPosition = newPosition;
+        this._scrollToPosition = newPosition;
+
+        if (this._container && !this._findElementByDate(newPosition)) {
+            this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
         }
     }
 
-    private _intersectHandler(event: SyntheticEvent, entries) {
+    private _normalizeStartPosition(date: Date): Date {
+        return this._options.viewMode === 'year' ?
+            dateUtils.getStartOfYear(date) : dateUtils.getStartOfMonth(date);
+    }
+
+    private _intersectHandler(event: SyntheticEvent, entries: object): void {
         let date;
         for (const entry of entries) {
-            if (entry.boundingClientRect.top - entry.rootBounds.top < 0) {
+            if (entry.boundingClientRect.top - entry.rootBounds.top <= 0) {
                 if (entry.boundingClientRect.bottom - entry.rootBounds.top >= 0) {
                     date = entry.data;
                 } else if (entry.rootBounds.top - entry.boundingClientRect.bottom < entry.target.offsetHeight) {
-                    if (this._options.viewMode ==='year') {
+                    if (this._options.viewMode === 'year') {
                         date = new Date(entry.data.getFullYear() + 1, entry.data.getMonth());
                     } else {
                         date = new Date(entry.data.getFullYear(), entry.data.getMonth() + 1);
                     }
                 }
             }
-            if (date && date !== this._lastNotifiedPositionChangedDate) {
+            if (date && !dateUtils.isMonthsEqual(date, this._lastNotifiedPositionChangedDate)) {
                 this._lastNotifiedPositionChangedDate = date;
+                this._displayedPosition = date;
                 this._notify('positionChanged', [date]);
             }
         }
     }
 
-    protected _getItem(data: object) {
+    protected _getItem(data: object): object {
         return {
             date: monthListUtils.idToDate(data.getId()),
             extData: data.get('extData')
         };
     }
-    protected  _formatMonth(date) {
+    protected  _formatMonth(date: Date): string {
         return date ? formatDate(date, formatDate.FULL_MONTH) : '';
+    }
+
+    private _updateScrollAfterViewModification(): void {
+        if (this._scrollToPosition) {
+            if (this._scrollToDate(this._scrollToPosition)) {
+                this._scrollToPosition = null;
+            }
+        }
+    }
+
+    private _scrollToDate(date: Date): boolean {
+        const containerToScroll: HTMLElement = this._findElementByDate(date);
+
+        if (containerToScroll) {
+            scrollToElement(containerToScroll);
+            return true;
+        }
+        return false;
+    }
+
+    private _findElementByDate(date: Date): HTMLElement {
+        let element: HTMLElement;
+
+        element = this._getElementByDate(
+            ITEM_BODY_SELECTOR.month,
+            monthListUtils.dateToId(dateUtils.getStartOfMonth(date)));
+
+        if (!element) {
+            element = this._getElementByDate(
+                ITEM_BODY_SELECTOR.year,
+                monthListUtils.dateToId(dateUtils.getStartOfYear(date)));
+        }
+        return element;
+    }
+
+    private _getElementByDate(selector: string, dateId: string): HTMLElement {
+        return this._container.querySelector(selector + '[data-date="' + dateId + '"]');
+    }
+
+    protected _dateToDataString(date: Date): string {
+        return monthListUtils.dateToId(date);
     }
 }
 
 ModuleComponent.getDefaultOptions = function () {
     return coreMerge({
-        position: dateUtils.getStartOfMonth(),
         viewMode: 'year',
         yearTemplate: yearTemplate,
         monthTemplate: monthTemplate

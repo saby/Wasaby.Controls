@@ -1,4 +1,4 @@
-<ws:template name="bodyTemplate">
+<ws:template name="monthTemplate">
    <div class="controls-MonthList__month">
       <div class="controls-MonthList__month-header">
          <ws:if data="{{headerTemplate}}">
@@ -13,22 +13,35 @@
             {{_formatMonth(date)}}
          </ws:else>
       </div>
-      <Controls._calendar.MonthView
-         showWeekdays="{{false}}"
-         month="{{date}}"
-         daysData="{{extData}}"
-         dayTemplate="{{dayTemplate}}"
-      />
+      <div class="controls-MonthList__month-body" data-date="{{_dateToDataString(date)}}">
+         <ws:if data="{{bodyTemplate}}">
+            <ws:partial
+               template="{{bodyTemplate}}"
+               date="{{date}}"
+               extData="{{extData}}"
+            />
+         </ws:if>
+         <ws:else>
+            <Controls._calendar.MonthView
+               attr:class="controls-MonthList__month-body"
+               attr:data-date="{{dateId}}"
+               showWeekdays="{{false}}"
+               month="{{date}}"
+               daysData="{{extData}}"
+               dayTemplate="{{dayTemplate}}"
+            />
+         </ws:else>
+      </div>
    </div>
 </ws:template>
 
 <ws:if data="{{_options.viewMode ==='month'}}">
    <Controls.scroll:IntersectionObserverContainer data="{{date}}">
-      <ws:partial template="bodyTemplate"/>
+      <ws:partial template="monthTemplate"/>
    </Controls.scroll:IntersectionObserverContainer>
 </ws:if>
 <ws:else>
-   <ws:partial template="bodyTemplate"/>
+   <ws:partial template="monthTemplate"/>
 </ws:else>
 
 

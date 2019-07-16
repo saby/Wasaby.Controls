@@ -29,8 +29,9 @@
    */
 
   /**
-   * @name Controls/_calendar/interface/IMonthListSource#startPosition
+   * @name Controls/_calendar/interface/IMonthListSource#position
    * @cfg {Date} Год или месяц который отображается первым в верху скролируемой области.
+   * При изменении значения лента скролится к новому году\месяцу.
    *
    * @example
    * <pre>

@@ -14,7 +14,7 @@
          >
          <ws:itemPadding left="null" right="null" bottom="null" top="null"/>
          <ws:navigation source="position" view="infinity">
-            <ws:sourceConfig limit="{{2}}" position="{{_position}}" direction="both" field="id"></ws:sourceConfig>
+            <ws:sourceConfig limit="{{2}}" position="{{_startPositionId}}" direction="both" field="id"></ws:sourceConfig>
          </ws:navigation>
 
          <ws:itemTemplate>
@@ -31,6 +31,7 @@
                      _formatMonth="{{_formatMonth}}"
                      _options="{{_options}}"
                      _getMonth="{{_getMonth}}"
+                     _dateToDataString="{{_dateToDataString}}"
                   />
                </ws:contentTemplate>
             </ws:partial>
