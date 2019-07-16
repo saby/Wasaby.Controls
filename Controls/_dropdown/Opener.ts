@@ -85,6 +85,18 @@ var _private = {
 };
 
 /**
+ * Контрол-опенер для открытия выпадающего меню.
+ *
+ * @class Controls/_dropdown/Opener
+ * @mixes Controls/interface/IDropdownList
+ * @extends Controls/_popup/Opener/Sticky
+ * @control
+ * @public
+ * @author Красильников А.С.
+ * @category Popup
+ */
+
+/*
  * Opener for dropdown menu.
  *
  * @class Controls/_dropdown/Opener

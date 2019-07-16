@@ -182,6 +182,27 @@ var _private = {
 };
 
 /**
+ * Контейнер для выпадающих списков.
+ *
+ * @class Controls/_dropdown/_Controller
+ * @extends Core/Control
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/IHierarchy
+ * @mixes Controls/interface/INavigation
+ * @mixes Controls/_interface/IMultiSelectable
+ * @mixes Controls/interface/IDropdown
+ * @mixes Controls/interface/IDropdownEmptyText
+ * @mixes Controls/_interface/ICaption
+ * @mixes Controls/_interface/IIcon
+ * @mixes Controls/_interface/IIconStyle
+ * @mixes Controls/interface/IGrouped
+ * @author Красильников А.С.
+ * @control
+ * @private
+ */
+
+/*
  * Container for dropdown lists
  *
  * @class Controls/_dropdown/_Controller
@@ -203,22 +224,43 @@ var _private = {
  */
 
 /**
+ * @event Controls/_dropdown/_Controller#selectedItemsChanged Происходит при изменении набора выбранных элементов.
+ */
+
+/*
  * @event Controls/_dropdown/_Controller#selectedItemsChanged Occurs when the selected items change.
  */
 
 /**
  * @name Controls/_dropdown/_Controller#typeShadow
+ * @cfg {String} Задает тип тени вокруг всплывающего окна.
+ * @variant default Тень по умолчанию.
+ * @variant suggestionsContainer Тень справа, слева, снизу.
+ */
+
+/*
+ * @name Controls/_dropdown/_Controller#typeShadow
  * @cfg {String} Specifies the type of shadow around the popup.
  * @variant default Default shadow.
  * @variant suggestionsContainer Shadow on the right, left, bottom.
- */
+ */ 
 
 /**
+ * @name Controls/_dropdown/_Controller#marker
+ * @cfg {Boolean} Определяет, будет ли маркер отображаться вокруг выбранного элемента.
+ */
+
+/*
  * @name Controls/_dropdown/_Controller#marker
  * @cfg {Boolean} Determines whether the marker is displayed around the selected item.
  */
 
 /**
+ * @name Controls/_dropdown/_Controller#showClose
+ * @cfg {Boolean} Определяет, отображается ли крестик закрытия.
+ */
+
+/*
  * @name Controls/_dropdown/_Controller#showClose
  * @cfg {Boolean} Determines whether the cross is displayed.
  */

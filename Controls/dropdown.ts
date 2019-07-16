@@ -1,4 +1,23 @@
 /**
+ * Библиотека выпадающих списков.
+ * @library Controls/dropdown
+ * @includes Button Controls/_dropdown/Button
+ * @includes Input Controls/_dropdown/Input
+ * @includes _Controller Controls/_dropdown/_Controller
+ * @includes Opener Controls/_dropdown/Opener
+ * @includes Combobox Controls/_dropdown/ComboBox
+ * @includes ItemTemplate Controls/_dropdown/itemTemplate
+ * @includes IFooterTemplate Controls/_dropdown/interface/IFooterTemplate
+ * @includes IGrouped Controls/_dropdown/interface/IGrouped
+ * @includes IHeaderTemplate Controls/_dropdown/interface/IHeaderTemplate
+ * @includes MenuStyles Controls/_dropdown/Button/MenuStyles
+ * @includes Styles Controls/_dropdown/Input/Styles
+ * @includes inputDefaultContentTemplate wml!Controls/_dropdown/Input/resources/defaultContentTemplate
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+/*
  * dropdown library
  * @library Controls/dropdown
  * @includes Button Controls/_dropdown/Button
