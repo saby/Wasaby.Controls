@@ -65,24 +65,28 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                innerHTML: ''
             },
             content: {
-               scrollWidth: 600,
-               offsetWidth: 400,
-               getBoundingClientRect: () => {
-                  return {
-                     left: 199
-                  }
-               },
-               querySelector: function(selector) {
-                  var column = parseInt(selector.slice('.controls-Grid__cell_fixed:nth-child('.length), 10);
-                  // make every fixed column 50 pixels
-                  return {
+               getElementsByClassName: () => {
+                  return [{
+                     scrollWidth: 600,
+                     offsetWidth: 400,
                      getBoundingClientRect: () => {
                         return {
-                           left: 199 - ((column - 1) * 50)
+                           left: 199
                         }
                      },
-                     offsetWidth: 50
-                  };
+                     querySelector: function (selector) {
+                        var column = parseInt(selector.slice('.controls-Grid__cell_fixed:nth-child('.length), 10);
+                        // make every fixed column 50 pixels
+                        return {
+                           getBoundingClientRect: () => {
+                              return {
+                                 left: 199 - ((column - 1) * 50)
+                              }
+                           },
+                           offsetWidth: 50
+                        };
+                     }
+                  }]
                }
             }
          };
