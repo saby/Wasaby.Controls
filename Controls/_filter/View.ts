@@ -476,7 +476,7 @@ var Filter = Control.extend({
         }
         factory(this._source).each(function(item) {
             // Fast filters could not be reset from the filter button.
-            if (!_private.isFrequentItem(item)) {
+            if (!_private.isFrequentItem(item) && item.type !== 'dateRange') {
                 item.value = item.resetValue;
                 if (object.getPropertyValue(item, 'visibility') !== undefined) {
                     object.setPropertyValue(item, 'visibility', false);

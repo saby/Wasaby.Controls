@@ -312,6 +312,23 @@ define(
             assert.strictEqual(view._source[2].value, '');
             assert.deepStrictEqual(filterChanged, {state: [1]});
             assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'In any state', title: 'In any state', hasMoreText: ''}});
+
+            view._source.push({
+               name: 'date',
+               value: [new Date(2019, 5, 1), new Date(2019, 5, 31)],
+               resetValue: [new Date(2019, 7, 1), new Date(2019, 7, 31)],
+               editorOptions: {
+                  option1: '1',
+                  option2: '2'
+               },
+               type: 'dateRange',
+               viewMode: 'basic'
+            });
+            closed = false;
+            view._resetFilterText();
+            assert.isTrue(closed);
+            assert.strictEqual(view._source[2].value, '');
+            assert.deepStrictEqual(view._source[5].value, [new Date(2019, 5, 1), new Date(2019, 5, 31)]);
          });
 
          it('_startTimer', function() {
