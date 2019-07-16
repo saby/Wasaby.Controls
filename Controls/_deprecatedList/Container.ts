@@ -72,6 +72,7 @@ var _private = {
          data: items,
          adapter: source.getAdapter()
       });
+      self._source._isReverseData = self._options.reverseList;
    },
 
    reverseData: function(data, source) {
@@ -329,8 +330,9 @@ var List = Control.extend({
          /* create searchController with new options */
          this._searchController = null;
          _private.getSearchController(this).setFilter(currentFilter);
-      } else if (this._options.reverseList !== newOptions.reverseList) {
+      } else if (!!this._source._isReverseData !== newOptions.reverseList) {
          _private.reverseSourceData(this);
+         this._source._isReverseData = newOptions.reverseList;
       }
       _private.checkContextValues(this, context);
    },
