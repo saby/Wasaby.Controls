@@ -218,9 +218,7 @@ import 'css!theme?Controls/scroll';
             },
 
              _scrollbarMouseDownHandler: function (event) {
-               if (this._options.direction === 'horizontal') {
-                   this._scrollbarBeginDragHandler(event);
-               }
+                 this._scrollbarBeginDragHandler(event);
              },
 
              _scrollbarTouchStartHandler: function (event) {
