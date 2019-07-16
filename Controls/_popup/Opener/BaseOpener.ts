@@ -382,6 +382,7 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
     // Все опции опенера брать нельзя, т.к. ядро добавляет свои опции опенеру (в режиме совместимости), которые на окно
     // попасть не должны.
     const usedOptions = [
+        'closeByExternalClick',
         'isCompoundTemplate',
         'eventHandlers',
         'autoCloseOnHide',
@@ -395,6 +396,7 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'cancelCaption',
         'okCaption',
         'autofocus',
+        'isModal',
         'modal',
         'closeOnOutsideClick',
         'closeOnTargetScroll',
@@ -420,6 +422,7 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'corner',
         'targetPoint',
         'targetTracking',
+        'locationStrategy',
         'actionOnScroll'
     ];
 
