@@ -1,3 +1,0 @@
-<ws:partial template="{{ _templateFunction }}"
-            scope="{{ _options }}"
-            on:contextmenu="_contextMenuHandler()" />

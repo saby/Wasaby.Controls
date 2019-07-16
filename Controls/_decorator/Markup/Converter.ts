@@ -173,10 +173,13 @@ import { IoC } from 'Env/Env';
     */
    var jsonToHtml = function(json, tagResolver, resolverParams) {
       var result = template({
-         value: json,
-         tagResolver: tagResolver,
-         resolverParams: resolverParams
-      }, {});
+         _options: {
+            value: json,
+            tagResolver: tagResolver,
+            resolverParams: resolverParams
+         },
+         _moduleName: 'Controls/decorator:Converter'
+      }, {}, {}, false);
 
       // Invisible node in vdom equals empty string in html.
       return result === '<invisible-node></invisible-node>' ? '' : result;
