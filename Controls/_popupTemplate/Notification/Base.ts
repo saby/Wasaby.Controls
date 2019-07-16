@@ -19,7 +19,6 @@ import 'css!theme?Controls/popupTemplate';
          _template: template,
 
          _timerId: null,
-         _style: null,
 
          _closeClick: function() {
             this._notify('close', []);
