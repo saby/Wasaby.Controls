@@ -1,5 +1,5 @@
 <div class="demo__wrapper">
-   <div >
+   <div class="demo-standartSliderRange__slidersBlock">
       <h1>Slider Range</h1>
       <h2>Horizontal</h2>
       <div class="demo__block">
