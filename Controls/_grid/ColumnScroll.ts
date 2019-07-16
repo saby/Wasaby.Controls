@@ -13,7 +13,7 @@ const
          const
             fixedCellContainer = container.querySelector(multiSelectVisibility === 'hidden' ?
                '.controls-Grid__cell_fixed' : '.controls-Grid__cell_fixed:nth-child(2)'),
-            offsetLeft = container.getBoundingClientRect().left - fixedCellContainer.getBoundingClientRect().left;
+            offsetLeft = fixedCellContainer.getBoundingClientRect().left - container.getBoundingClientRect().left;
          return offsetLeft + fixedCellContainer.offsetWidth;
       },
       updateSizes(self) {
