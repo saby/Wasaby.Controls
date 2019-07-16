@@ -1,4 +1,5 @@
 <Controls.scroll:Container
+   name="scroll"
    attr:class="MonthList-ScrollContainer"
    scrollbarVisible="{{false}}">
    <Controls._calendar.MonthList.List

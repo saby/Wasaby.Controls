@@ -7,9 +7,13 @@
    </ws:partial>
 </ws:if>
 <ws:else>
+   <!-- TODO: KINGO -->
+   <!-- Флаг canUpdateItemsActions нужен только ItemActionsController. -->
+   <!-- Опция является константой для предотвращения перерисовок вложенного контента из-за ее изменения. -->
    <ws:partial
       template="{{_options.content}}"
       scope="{{_options}}"
+      canUpdateItemsActions="{{ null }}"
       attr:class="{{_options.menuIsShown ? 'controls-itemActionsV_invisible'}}"
    >
       <ws:itemActionsTemplate>

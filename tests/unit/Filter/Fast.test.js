@@ -167,7 +167,9 @@ define(
                   idProperty: 'key',
                   rawData: items[0]
                })}],
-               items: receivedItems
+               items: new collection.List({
+                  items: receivedItems
+               })
             };
             let optionsItems = {
                items: [{
@@ -193,6 +195,28 @@ define(
             receivedStateSelector.configs[0].selectorTemplate = 'new template';
             fastFilter._beforeMount(optionsItems, {}, receivedStateSelector);
             assert.isTrue(fastFilter._hasSelectorTemplate);
+
+            receivedStateSelector = Clone(receivedState);
+            let optionsSource = {source: new sourceLib.Memory({
+                  idProperty: 'id',
+                  items: [{
+                     id: 'first',
+                     value: ['Россия'],
+                     resetValue: ['все страны'],
+                     textValue: '',
+                     properties: {
+                        keyProperty: 'title',
+                        displayProperty: 'title',
+                        source: new sourceLib.Memory({
+                           data: items[0],
+                           idProperty: 'key'
+                        })
+                     }}
+                  ]
+               })};
+            fastFilter._beforeMount(optionsSource, {}, receivedStateSelector);
+            assert.isOk(fastFilter._configs[0]._sourceController);
+            assert.isFalse(fastFilter._hasSelectorTemplate);
 
             fastFilter._hasSelectorTemplate = undefined;
             let optionsItemsSelector = Clone(optionsItems);

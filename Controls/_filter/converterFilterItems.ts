@@ -1,6 +1,4 @@
 import {factory} from 'Types/chain';
-import collection = require('Types/collection');
-import Utils = require('Types/util');
 
 var differentFields = ['name', 'id', 'visibility'];
 
@@ -15,14 +13,9 @@ function convertToFilterSource(detailPanelItems) {
                 }
             }
         }
-        filterSourceItem.name = item.id;
+        filterSourceItem.name = item.id ? item.id : item.name; // items from history have a field 'name' instead of 'id'
         if (item.visibility !== undefined) {
-            filterSourceItem.viewMode = 'extended';
             filterSourceItem.visibility = item.visibility;
-        } else if (item.editorOptions) {  // по наличию editorOptions определяем быстрый фильтр
-            filterSourceItem.viewMode = 'frequent';
-        } else {
-            filterSourceItem.viewMode = 'basic';
         }
         filterSource.push(filterSourceItem);
     });

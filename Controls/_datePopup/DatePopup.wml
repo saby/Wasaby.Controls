@@ -20,7 +20,8 @@
                on:rangeChanged="_yearsRangeChanged()"
                on:selectionChanged="_yearsSelectionChanged()"
                on:onBeforeSelectionStarted="_yearsSelectionStarted()"
-               on:selectionEnded="_yearsRangeSelectionEnded()">
+               on:selectionEnded="_yearsRangeSelectionEnded()"
+               on:selectionHoveredValueChanged="_onYearsSelectionHoveredValueChanged()">
 
             <Controls._datePopup.YearsRange
                year="{{_displayedDate}}"

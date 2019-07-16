@@ -243,8 +243,15 @@ var Component = BaseControl.extend([EventProxyMixin], {
         );
     },
 
-    _yearsSelectionChanged: function (e, start, end) {
-        _private.selectionChanged(this, start, end ? dateUtils.getEndOfYear(end) : null);
+    _yearsSelectionChanged: function (e, start, end, selectionDirection) {
+        const endYear = end ? dateUtils.getEndOfYear(end) : null;
+        _private.selectionChanged(this, start, endYear);
+        this._rangeModel.startValue = start;
+        this._rangeModel.endValue = endYear;
+    },
+
+    _onYearsSelectionHoveredValueChanged: function(e, value) {
+        this._displayedDate = value;
     },
 
     _yearsSelectionStarted: function (e, start, end) {

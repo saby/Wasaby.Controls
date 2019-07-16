@@ -64,6 +64,10 @@ import 'css!theme?Controls/popupTemplate';
             }
          },
 
+         prepareSizeWithoutDOM(item) {
+            return _private.prepareSizes(item);
+         },
+
          getContainerWidth: function(item, container) {
             // The width can be set when the panel is displayed. To calculate the width of the content, remove this value.
             var currentContainerWidth = container.style.width;
@@ -195,13 +199,20 @@ import 'css!theme?Controls/popupTemplate';
             this._stack = new collection.List();
          },
 
-         elementCreated: function(item, container) {
-            _private.prepareSizes(item, container);
+         elementCreated(item, container) {
+            const isSinglePopup = this._stack.getCount() < 2;
+            if (isSinglePopup) {
+               _private.prepareSizeWithoutDOM(item);
+            } else {
+               _private.prepareSizes(item, container);
+            }
             if (item.popupOptions.isCompoundTemplate) {
                _private.setStackContent(item);
                this._stack.add(item);
+               this._update();
+            } else if (!isSinglePopup) {
+               this._update();
             }
-            this._update();
          },
 
          elementUpdated: function(item, container) {
@@ -218,6 +229,10 @@ import 'css!theme?Controls/popupTemplate';
             item.popupOptions.width = state ? item.popupOptions.maxWidth : (item.popupOptions.minimizedWidth || item.popupOptions.minWidth);
             _private.prepareSizes(item, container);
             this._update();
+         },
+
+         popupResize(): boolean {
+            return false;
          },
 
          elementDestroyed: function(item) {
@@ -261,7 +276,7 @@ import 'css!theme?Controls/popupTemplate';
          },
 
          getDefaultConfig: function(item) {
-            _private.prepareSizes(item);
+            _private.prepareSizeWithoutDOM(item);
             _private.setStackContent(item);
             _private.addStackClasses(item.popupOptions);
             if (StackStrategy.isMaximizedPanel(item)) {
@@ -291,7 +306,17 @@ import 'css!theme?Controls/popupTemplate';
                 } else {
                     this._stack.replace(item, itemIndex);
                 }
-                this._update();
+
+                if (this._stack.getCount() > 1) {
+                   this._update();
+                } else {
+                   item.position = _private.getItemPosition(item);
+                   _private.addShadowClass(item);
+                   if (StackStrategy.isMaximizedPanel(item)) {
+                      _private.prepareMaximizedState(StackStrategy.getMaxPanelWidth(), item);
+                   }
+                   _private.updatePopupOptions(item);
+                }
             }
          },
 

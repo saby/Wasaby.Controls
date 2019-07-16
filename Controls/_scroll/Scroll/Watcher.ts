@@ -124,7 +124,8 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                   _private.sendByRegistrar(self, 'scrollMove', {
                      scrollTop: self._scrollTopCache,
                      position: curPosition,
-                     clientHeight: sizeCache.clientHeight
+                     clientHeight: sizeCache.clientHeight,
+                     scrollHeight: sizeCache.scrollHeight
                   });
                   if (!withObserver) {
                      _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
@@ -136,7 +137,12 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                if (!self._scrollTopTimer) {
                   self._scrollTopTimer = setTimeout(function() {
                      if (self._scrollTopTimer) {
-                        _private.sendByRegistrar(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition, clientHeight: sizeCache.clientHeight});
+                        _private.sendByRegistrar(self, 'scrollMove', {
+                           scrollTop: self._scrollTopCache,
+                           position: curPosition,
+                           clientHeight: sizeCache.clientHeight,
+                           scrollHeight: sizeCache.scrollHeight
+                        });
                         if (!withObserver) {
                            _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
                         }
@@ -187,7 +193,12 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                            break;
                      }
                      if (eventName) {
-                        self._registrar.startOnceTarget(component, eventName);
+                        const sizes = _private.getSizeCache(self, _private.getDOMContainer(self._container));
+                        self._registrar.startOnceTarget(component, eventName, {
+                           scrollTop: self._scrollTopCache,
+                           clientHeight: sizes.clientHeight,
+                           scrollHeight: sizes.scrollHeight
+                        });
                         self._notify(eventName);
                         eventName = null;
                      }
@@ -214,6 +225,8 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             } else {
                self._registrar.startOnceTarget(component, 'cantScroll');
             }
+
+            self._registrar.startOnceTarget(component, 'viewPortResize', [sizeCache.clientHeight]);
 
             if (!withObserver) {
                //TODO надо кидать не всем компонентам, а адресно одному
@@ -287,7 +300,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                _private.calcSizeCache(this, _private.getDOMContainer(this._container));
                _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight);
             }
-            this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
+            this._notify('register', ['controlResize', this, this._resizeHandlerOuter], {bubbling: true});
          },
 
 
@@ -298,6 +311,11 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
          _resizeHandler: function(e) {
             var withObserver = this._canObserver;
             _private.onResizeContainer(this, _private.getDOMContainer(this._container), withObserver);
+
+         },
+         _resizeHandlerOuter: function(e) {
+            this._resizeHandler(e);
+            _private.sendByRegistrar(this, 'viewPortResize', [this._sizeCache.clientHeight]);
          },
 
          _registerIt: function(event, registerType, component, callback, triggers) {

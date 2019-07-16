@@ -82,6 +82,35 @@ define(
             assert.deepStrictEqual(actualFilterSource, filterSource);
          });
 
+         it('convertToFilterSource items with name', function() {
+            let filterItems = [
+               {
+                  name: 'text',
+                  value: 'value1',
+                  viewMode: 'basic'
+               },
+               {
+                  name: 'boolean',
+                  value: 'value2',
+                  textValue: '123',
+                  viewMode: 'basic'
+               },
+               {
+                  name: 'Array',
+                  value: 'value3',
+                  viewMode: 'extended',
+                  visibility: false
+               },
+               {
+                  name: 'Number',
+                  value: 'value4',
+                  viewMode: 'frequent'
+               }
+            ];
+            let actualFilterItems = Converter.convertToFilterSource(filterItems);
+            assert.deepStrictEqual(actualFilterItems, filterItems);
+         });
+
       });
    }
 );
