@@ -119,6 +119,10 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                curPosition = 'middle';
             }
 
+            _private.sendByRegistrar(self, 'scrollMoveSync', {
+               scrollTop: self._scrollTopCache
+            });
+
             if (self._scrollPositionCache !== curPosition) {
                setTimeout(() => {
                   _private.sendByRegistrar(self, 'scrollMove', {

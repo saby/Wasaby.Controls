@@ -712,7 +712,9 @@ var _private = {
                }
             }
         }
+    },
 
+    handleListScrollSync(self) {
         if (detection.isMobileIOS) {
             _private.getIntertialScrolling(self).scrollStarted();
         }
@@ -1576,7 +1578,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'virtualPageBottomStart': _private.updateVirtualWindowStart(self, 'down', params); break;
             case 'virtualPageBottomStop': _private.updateVirtualWindowStop(self, 'down'); break;
 
-
+            // TODO KINGO. Проверяем именно синхронный скролл, т.к. стандартный scrollMove стреляет с debounce 100 мс.
+            case 'scrollMoveSync': _private.handleListScrollSync(self); break;
             case 'scrollMove': _private.handleListScroll(self, params); break;
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;
