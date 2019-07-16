@@ -175,7 +175,7 @@ var Base = Control.extend({
             }
         } else {
             if(visible){
-                Indicator.setMessage(message, 2000)
+                Indicator.setMessage(message,true)
             } else {
                 Indicator.hide();
             }
