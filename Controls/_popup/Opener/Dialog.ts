@@ -3,7 +3,7 @@ import {IoC} from 'Env/Env';
 /**
  * Контрол, открывающий всплывающее окно, которое позиционнируется по центру экрана.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ Подробнее}
- * <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
+ * <a href="/materials/demo-ws4-stack-dialog">Демо-пример</a>.
  * @class Controls/_popup/Opener/Dialog
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/interface/IOpener
