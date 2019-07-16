@@ -5,7 +5,7 @@ define(
       'use strict';
       
       describe('Controls.Container.Suggest.List', function() {
-         suggestPopup.ListContainer._private.scrollToFirstItem = function(){};
+         suggestPopup.ListContainer._private.scrollToLastItem = function(){};
 
          describe('_beforeUpdate', function() {
             var suggestList = new suggestPopup.ListContainer();
