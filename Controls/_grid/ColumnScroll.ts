@@ -23,11 +23,11 @@ const
       updateSizes(self) {
          _private.drawTransform(self, 0);
          const
-            newContentSize = self._children.content.scrollWidth,
-            newContentContainerSize = self._children.content.offsetWidth;
+            newContentSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].scrollWidth,
+            newContentContainerSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].offsetWidth;
          if (self._contentSize !== newContentSize || self._contentContainerSize !== newContentContainerSize) {
-            self._contentSize = self._children.content.scrollWidth;
-            self._contentContainerSize = self._children.content.offsetWidth;
+            self._contentSize = newContentSize;
+            self._contentContainerSize = newContentContainerSize;
 
             // reset scroll position after resize, if we don't need scroll
             if (self._contentSize <= self._contentContainerSize) {
