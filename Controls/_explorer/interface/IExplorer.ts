@@ -16,7 +16,7 @@
 
 /**
  * @typedef {String} explorerViewMode
- * @variant grid Таблица.
+ * @variant table Таблица.
  * @variant list Список.
  * @variant tile Плитка.
  */
