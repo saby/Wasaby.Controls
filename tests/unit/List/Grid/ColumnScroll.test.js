@@ -71,7 +71,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                      offsetWidth: 400,
                      getBoundingClientRect: () => {
                         return {
-                           left: 199
+                           left: 20
                         }
                      },
                      querySelector: function (selector) {
@@ -80,10 +80,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                         return {
                            getBoundingClientRect: () => {
                               return {
-                                 left: 199 - ((column - 1) * 50)
+                                 left: 44 + ((column - 1) * 50)
                               }
                            },
-                           offsetWidth: 50
+                           offsetWidth: 26
                         };
                      }
                   }]
