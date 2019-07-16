@@ -16,7 +16,7 @@ const
             lastStickyColumnIndex = stickyColumnsCount + columnOffset,
             lastStickyColumnSelector = `.controls-Grid__cell_fixed:nth-child(${lastStickyColumnIndex})`,
             stickyCellContainer = container.querySelector(lastStickyColumnSelector),
-            stickyCellOffsetLeft = stickyCellContainer.getBoundingClientRect().left - container.getBoundingClientRect().left;
+            stickyCellOffsetLeft = container.getBoundingClientRect().left - stickyCellContainer.getBoundingClientRect().left;
          return stickyCellOffsetLeft + stickyCellContainer.offsetWidth;
       },
       updateSizes(self) {
