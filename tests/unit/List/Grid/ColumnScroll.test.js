@@ -13,13 +13,17 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             innerHTML: ''
          },
          content: {
-            scrollWidth: 500,
-            offsetWidth: 250,
-            querySelector: function() {
-               return {
-                  offsetLeft: 24,
-                  offsetWidth: 76
-               };
+            getElementsByClassName: () => {
+               return [{
+                  scrollWidth: 500,
+                  offsetWidth: 250,
+                  querySelector: function() {
+                     return {
+                        offsetLeft: 24,
+                        offsetWidth: 76
+                     };
+                  }
+               }]
             }
          }
       };
@@ -49,13 +53,19 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                innerHTML: ''
             },
             content: {
-               scrollWidth: 500,
-               offsetWidth: 250,
-               querySelector: function() {
-                  return {
-                     offsetLeft: 24,
-                     offsetWidth: 76
-                  };
+               getElementsByClassName: () => {
+                  return [{
+                     scrollWidth: 500,
+                     offsetWidth: 250,
+                     querySelector:
+
+                         function () {
+                            return {
+                               offsetLeft: 24,
+                               offsetWidth: 76
+                            };
+                         }
+                  }]
                }
             }
          };
@@ -68,13 +78,17 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.deepEqual(clearColumnScroll._fixedColumnsWidth, 100);
 
          clearColumnScroll._children.content = {
-            scrollWidth: 200,
-            offsetWidth: 100,
-            querySelector: function () {
-               return {
-                  offsetLeft: 15,
-                  offsetWidth: 50
-               };
+            getElementsByClassName: () => {
+               return [{
+                  scrollWidth: 200,
+                  offsetWidth: 100,
+                  querySelector: function () {
+                     return {
+                        offsetLeft: 15,
+                        offsetWidth: 50
+                     };
+                  }
+               }]
             }
          };
          clearColumnScroll._afterUpdate({...cfg, columns: [{}, {}]});
@@ -128,13 +142,17 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          columnScroll._children = {
             contentStyle: {},
             content: {
-               scrollWidth: 450,
-               offsetWidth: 200,
-               querySelector: function() {
-                  return {
-                     offsetLeft: 24,
-                     offsetWidth: 76
-                  };
+               getElementsByClassName: () => {
+                  return [{
+                     scrollWidth: 450,
+                     offsetWidth: 200,
+                     querySelector: function () {
+                        return {
+                           offsetLeft: 24,
+                           offsetWidth: 76
+                        };
+                     }
+                  }]
                }
             }
          };
