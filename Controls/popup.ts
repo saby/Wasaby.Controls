@@ -1,4 +1,19 @@
 /**
+ * Библиотека всплывающих окон.
+ * @library Controls/popup
+ * @includes Confirmation Controls/_popup/Opener/Confirmation
+ * @includes Dialog Controls/_popup/Opener/Dialog
+ * @includes Stack Controls/_popup/Opener/Stack
+ * @includes Edit Controls/_popup/Opener/Edit
+ * @includes Notification Controls/_popup/Opener/Notification
+ * @includes Sticky Controls/_popup/Opener/Sticky
+ * @includes InfoboxTarget Controls/_popup/InfoBox
+ * @includes PreviewerTarget Controls/_popup/Previewer
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+/*
  * popup library
  * @library Controls/popup
  * @includes Confirmation Controls/_popup/Opener/Confirmation
