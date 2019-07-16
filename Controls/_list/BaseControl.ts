@@ -1084,7 +1084,54 @@ var _private = {
 
     needBottomPadding: function(options) {
         return (options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
+    },
+
+    isPagingNavigation: function(navigation) {
+        return navigation && navigation.view === 'pages';
+    },
+    resetPagingNavigation: function(self) {
+        self._knownPagesCount = INITIAL_PAGES_COUNT;
+        self._currentPage = INITIAL_PAGES_COUNT;
+    },
+
+    initializeNavigation: function(self, cfg, resetPaging) {
+        self._needScrollCalculation = _private.needScrollCalculation(cfg.navigation);
+        self._pagingNavigation = _private.isPagingNavigation(cfg.navigation);
+
+        if (self._needScrollCalculation) {
+            if (cfg.virtualScrolling && !self._virtualScroll) {
+                self._virtualScroll = new VirtualScroll({
+                    virtualPageSize: cfg.virtualPageSize,
+                    virtualSegmentSize: cfg.virtualSegmentSize
+                });
+            }
+            self._virtualScrollTriggerVisibility = {
+                up: false,
+                down: false
+            };
+            self._loadTriggerVisibility = {
+                up: false,
+                down: false
+            };
+        } else {
+            self._loadTriggerVisibility = null;
+            self._virtualScrollTriggerVisibility = null;
+            self._pagingVisible = false;
+        }
+
+        if (self._pagingNavigation) {
+            if (resetPaging) {
+                _private.resetPagingNavigation(self);
+            }
+        } else {
+            self._pagingNavigationVisible = false;
+            _private.resetPagingNavigation(self);
+        }
+    },
+    updateNavigation: function(self) {
+        self._pagingNavigationVisible = self._pagingNavigation && self._knownPagesCount > 1;
     }
+
 };
 
 /**
@@ -1148,6 +1195,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _knownPagesCount: INITIAL_PAGES_COUNT,
     _currentPage: INITIAL_PAGES_COUNT,
     _pagingNavigation: false,
+    _pagingNavigationVisible: false,
 
     _canUpdateItemsActions: false,
 
@@ -1182,26 +1230,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
+
+        _private.initializeNavigation(this, newOptions);
+        _private.updateNavigation(this);
         this._needBottomPadding = _private.needBottomPadding(newOptions);
-        this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
-        this._pagingNavigation = newOptions.navigation && newOptions.navigation.view === 'pages';
 
-        if (this._needScrollCalculation) {
-            if (newOptions.virtualScrolling) {
-                this._virtualScroll = new VirtualScroll({
-                    virtualPageSize: newOptions.virtualPageSize
-                });
-            }
-            this._virtualScrollTriggerVisibility = {
-                up: false,
-                down: false
-            };
-            this._loadTriggerVisibility = {
-                up: false,
-                down: false
-            };
-
-        }
         this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden';
 
         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
@@ -1279,10 +1312,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _beforeUpdate: function(newOptions) {
         var filterChanged = !isEqual(newOptions.filter, this._options.filter);
         var navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
-        var recreateSource = newOptions.source !== this._options.source || navigationChanged;
+        var resetPaging = this._pagingNavigation && filterChanged;
+        var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions);
+        if (newOptions.navigation !== this._options.navigation) {
+            _private.initializeNavigation(this, newOptions, resetPaging);
+        }
+        _private.updateNavigation(this);
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
@@ -1316,8 +1354,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setSearchValue(newOptions.searchValue);
         }
 
-        this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
-
         if (recreateSource) {
             this._recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
         }
@@ -1336,6 +1372,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
+            _private.resetPagingNavigation(this);
+
             //return result here is for unit tests
             return _private.reload(self, newOptions);
         }

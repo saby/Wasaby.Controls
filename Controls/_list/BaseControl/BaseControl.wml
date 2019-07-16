@@ -13,7 +13,7 @@
             <ws:partial template="{{_options.footerTemplate}}"/>
         </div>
     </ws:if>
-    <ws:if data="{{_pagingNavigation}}">
+    <ws:if data="{{_pagingNavigation && _pagingNavigationVisible}}">
         <div class="controls-BaseControl__footerPaging_wrapper">
             <Controls.paging:Paging showDigits = "{{true}}"
                                     pagesCount = "{{_knownPagesCount}}"
@@ -172,7 +172,8 @@
             <div class="controls-BaseControl_paging-Padding">
             </div>
             <div class="controls-BaseControl__pagingContainer">
-                <Controls.paging:Paging attr:class="controls-BaseControl__scrollPaging" scope="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></Controls.paging:Paging>
+                <!-- scope1 нужен потому что без него dirtyChecking не смотрит на scope при вычислении изменений https://online.sbis.ru/opendoc.html?guid=83c8c334-0e38-413e-9ef0-640d63408c01-->
+                <Controls.paging:Paging attr:class="controls-BaseControl__scrollPaging" scope="{{_pagingCfg}}" scope1="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></Controls.paging:Paging>
             </div>
         </ws:if>
         <Controls.dropdown:Opener
