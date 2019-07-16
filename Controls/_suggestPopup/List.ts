@@ -6,11 +6,12 @@ import template = require('wml!Controls/_suggestPopup/List/List');
 import clone = require('Core/core-clone');
 import _SuggestOptionsField = require('Controls/_suggestPopup/_OptionsField');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import { constants } from 'Env/Env';
+import { constants, detection } from 'Env/Env';
 import scrollToElement = require('Controls/Utils/scrollToElement');
 
 
-var DIALOG_PAGE_SIZE = 25;
+const SCROLL_DELAY = detection.isMobileIOS ? 100 : 0;
+const DIALOG_PAGE_SIZE = 25;
 
 var _private = {
    checkContext: function(self, context) {
@@ -54,15 +55,15 @@ var _private = {
       container.dispatchEvent(customEvent);
    },
 
-   scrollToFirstItem: function(self) {
+   scrollToLastItem: function(self) {
       let
          list = self._children.list,
          listContainer = list._container[0] || list._container,
          itemsContainers = listContainer.getElementsByClassName('controls-ListView__itemV'),
-         indexFirstItem = self._reverseList ? itemsContainers.length - 1 : 0;
+         indexLastItem = itemsContainers.length - 1;
 
       if (itemsContainers.length) {
-         scrollToElement(itemsContainers[indexFirstItem], true);
+         scrollToElement(itemsContainers[indexLastItem], true);
       }
    }
 };
@@ -102,10 +103,7 @@ var List = Control.extend({
    },
 
    _beforeUpdate: function(newOptions, context) {
-      let
-         self = this,
-         oldReverseList = this._reverseList,
-         tabKey = _private.getTabKeyFromContext(context);
+      let tabKey = _private.getTabKeyFromContext(context);
 
       /* Need notify after getting tab from query */
       if (_private.isTabChanged(this._suggestListOptions, tabKey)) {
@@ -166,8 +164,18 @@ var List = Control.extend({
    },
 
    _drawItems: function() {
+      let self = this;
+
       // toDO До .500, пока не появится опция https://online.sbis.ru/opendoc.html?guid=301f9f1b-9036-4b9b-b25f-1c363d0d32ee
-      _private.scrollToFirstItem(this);
+      if (this._reverseList) {
+         if (SCROLL_DELAY) {
+            setTimeout(function() {
+               _private.scrollToLastItem(self);
+            }, SCROLL_DELAY);
+         } else {
+            _private.scrollToLastItem(this);
+         }
+      }
    }
 });
 
