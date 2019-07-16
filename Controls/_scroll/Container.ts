@@ -376,6 +376,10 @@ var
          this._shadowVisiblityMode = shadowVisibleObject;
       },
 
+      setOverflowScrolling: function(value: string) {
+          this._children.content.style.webkitOverflowScrolling = value;
+      },
+
       /**
        * Если используем верстку блоков, то на content появится margin-right.
        * Его нужно добавить к margin-right для скрытия нативного скролла.
@@ -652,7 +656,7 @@ var
          // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
          // https://popmotion.io/blog/20170704-manually-set-scroll-while-ios-momentum-scroll-bounces/
          if (Env.detection.isMobileIOS) {
-            this._children.content.style.webkitOverflowScrolling = 'auto';
+            this.setOverflowScrolling('auto');
          }
          this._savedScrollPosition = this._children.content.scrollHeight - getScrollTop(this._children.content);
       },
@@ -670,7 +674,7 @@ var
          // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
          // https://popmotion.io/blog/20170704-manually-set-scroll-while-ios-momentum-scroll-bounces/
          if (Env.detection.isMobileIOS) {
-            this._children.content.style.webkitOverflowScrolling = '';
+            this.setOverflowScrolling('');
          }
       },
 

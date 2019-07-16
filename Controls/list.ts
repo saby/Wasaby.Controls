@@ -59,6 +59,7 @@ import ItemsView = require('Controls/_list/ItemsView');
 import ItemsViewModel = require('Controls/_list/ItemsViewModel');
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import HotKeysContainer from 'Controls/_list/HotKeysContainer';
+import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 
 import {Paging} from 'Controls/paging';
 
@@ -97,5 +98,6 @@ export {
     getStyle,
     ItemsView,
     ItemsViewModel,
-    HotKeysContainer
+    HotKeysContainer,
+    InertialScrolling
 };
