@@ -27,7 +27,7 @@ import DataContext = require('Core/DataContext');
  * @extends Core/DataContext
  * @control
  * @public
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @category Container
  *
  */
