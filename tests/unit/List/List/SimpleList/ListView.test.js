@@ -266,7 +266,7 @@ define([
                assert.equal(eventArgs.length, 3);
                assert.equal(eventArgs[0], fakeItemData);
                assert.equal(eventArgs[1], fakeNativeEvent);
-               assert.isTrue(eventArgs[2]);
+               assert.isFalse(eventArgs[2]);
                assert.isUndefined(eventOptions);
             };
             lv._onItemContextMenu(fakeNativeEvent, fakeItemData);
@@ -307,7 +307,7 @@ define([
                   contextMenuVisibility: true
                },
                lv = new lists.ListView(cfg),
-               notifyStub = sandbox.stub(lv, '_notify').withArgs('itemContextMenu', [{}, {}, true]);
+               notifyStub = sandbox.stub(lv, '_notify').withArgs('itemContextMenu', [{}, {}, false]);
             lv.saveOptions(cfg);
             lv._beforeMount(cfg);
             sandbox.stub(model, 'getEditingItemData').returns(null);
