@@ -5,6 +5,7 @@ import Vdom = require('Vdom/Vdom');
 import CoreMerge = require('Core/core-merge');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
+import Indicator = require('Core/Indicator');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import {parse as parserLib, load} from 'Core/library';
 
@@ -37,10 +38,11 @@ var _private = {
 var Base = Control.extend({
     _template: Template,
     _actionOnScroll: 'none',
+    _showOldIndicator: false,
 
     _beforeMount: function (options) {
         this._popupIds = [];
-
+        this._showOldIndicator = options.showOldIndicator;
         if (options.popupOptions) {
             Env.IoC.resolve('ILogger').error(this._moduleName, 'The "popupOptions" option will be removed. Use the configuration on the control options.');
         }
@@ -159,15 +161,24 @@ var Base = Control.extend({
     },
 
     _toggleIndicator: function (visible) {
-        if (visible) {
-            var cfg = {
-                id: this._indicatorId,
-                message: rk('Загрузка')
-            };
-            this._indicatorId = this._notify('showIndicator', [cfg], {bubbling: true});
-        } else if (this._indicatorId) {
-            this._notify('hideIndicator', [this._indicatorId], {bubbling: true});
-            this._indicatorId = null;
+        let message =  rk('Загрузка');
+        if(!this._showOldIndicator) {
+            if (visible) {
+                var cfg = {
+                    id: this._indicatorId,
+                    message: message
+                };
+                this._indicatorId = this._notify('showIndicator', [cfg], {bubbling: true});
+            } else if (this._indicatorId) {
+                this._notify('hideIndicator', [this._indicatorId], {bubbling: true});
+                this._indicatorId = null;
+            }
+        } else {
+            if(visible){
+                Indicator.setMessage(message, 2000)
+            } else {
+                Indicator.hide();
+            }
         }
     },
 
@@ -495,9 +506,9 @@ Base._openPopup = function (popupId, cfg, controller, def) {
             popupId = ManagerController.update(popupId, cfg);
         }
     } else {
+        cfg.creatingDef = def;
         popupId = ManagerController.show(cfg, controller);
     }
-    def.callback(popupId);
 };
 
 Base.getDefaultOptions = function () {
