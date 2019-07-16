@@ -22,6 +22,8 @@ type IOptions = IModelOptions;
  */
 
 class TimeInterval extends Base {
+    protected _autoWidth: boolean = true;
+
     protected _defaultValue: TimeInterval | null = null;
 
     protected _getViewModelOptions(options: IOptions): IModelOptions {
@@ -32,11 +34,6 @@ class TimeInterval extends Base {
 
     protected _getViewModelConstructor() {
         return ViewModel;
-    }
-
-    protected _initProperties() {
-        super._initProperties();
-        this._field.scope._useStretcher = true;
     }
 
     protected _changeHandler() {

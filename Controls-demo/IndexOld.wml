@@ -73,6 +73,17 @@
          </Router.router:Reference>
       </div>
       <div>
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/NoScrollPaging' }}">
+            <a href="{{content.href}}">List/NoScrollPaging</a>
+         </Router.router:Reference>
+      </div>
+      <div>
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/NavigationSwitching' }}">
+            <a href="{{content.href}}">List/NavigationSwitching</a>
+         </Router.router:Reference>
+      </div>
+
+      <div>
          <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/VirtualScroll' }}">
             <a href="{{content.href}}">List/VirtualScroll</a>
          </Router.router:Reference>

@@ -4,7 +4,8 @@
   <description/>
 
   <depends>
-        <bl_module id="f6fdf353-3ab3-4dbb-8671-01c2b418bf0a" name="Controls"/>
+    <module id="f6fdf353-3ab3-4dbb-8671-01c2b418bf0a" name="Controls"/>
+    <module id="0df0fce3-53ba-47f8-987d-edf1fd078295" name="WS.Core"/>
   </depends>
 
   <load_after/>

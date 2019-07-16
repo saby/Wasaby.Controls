@@ -1,13 +1,13 @@
 define('Controls-demo/Popup/Opener/resources/DialogTpl',
    [
+      'Env/Env',
       'Core/Control',
       'wml!Controls-demo/Popup/Opener/resources/DialogTpl',
       'Controls-demo/List/Tree/GridData',
       'Controls-demo/List/Tree/TreeMemory',
-      'Controls/Constants',
       'wml!Controls-demo/List/Tree/DemoContentTemplate'
    ],
-   function (Control, template,  GridData, MemorySource, ControlsConstants) {
+   function (Env, Control, template,  GridData, MemorySource) {
       'use strict';
 
       var PopupPage = Control.extend({
@@ -46,7 +46,7 @@ define('Controls-demo/Popup/Opener/resources/DialogTpl',
                   title: 'прочитано',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-                     console.log('action read Click');
+                     Env.IoC.resolve('ILogger').info('action read Click');
                   }
                },
                {
@@ -54,7 +54,7 @@ define('Controls-demo/Popup/Opener/resources/DialogTpl',
                   icon: 'icon-primary icon-PhoneNull',
                   title: 'phone',
                   handler: function(item) {
-                     console.log('action phone Click ', item);
+                     Env.IoC.resolve('ILogger').info('action phone Click ', item);
                   }
                },
                {
@@ -71,7 +71,7 @@ define('Controls-demo/Popup/Opener/resources/DialogTpl',
                   title: 'profile',
                   showType: this.showType.MENU_TOOLBAR,
                   handler: function() {
-                     console.log('action profile Click');
+                     Env.IoC.resolve('ILogger').info('action profile Click');
                   }
                },
                {
@@ -80,7 +80,7 @@ define('Controls-demo/Popup/Opener/resources/DialogTpl',
                   title: 'delete pls',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-                     console.log('action delete Click');
+                     Env.IoC.resolve('ILogger').info('action delete Click');
                   }
                }
             ];

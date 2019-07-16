@@ -31,6 +31,7 @@ let getTemplate = (template: string | Control): Promise<Control> => {
  */
 export default class Container extends Control implements IContainer {
     private __viewConfig: Config;
+    private __lastShowedId: number;
     protected _template = template;
     /**
      * Скрыть компонент, отображающий данные об ошибке
@@ -78,10 +79,12 @@ export default class Container extends Control implements IContainer {
         if (
             config.isShowed ||
             config.mode != Mode.dialog ||
+            config.getVersion && config.getVersion() == this.__lastShowedId ||
             !constants.isBrowserPlatform
         ) {
             return;
         }
+        this.__lastShowedId = config.getVersion && config.getVersion();
         config.isShowed = true;
         getTemplate(config.template).then((template) => {
             let result: Promise<void> = this._notify('serviceError', [

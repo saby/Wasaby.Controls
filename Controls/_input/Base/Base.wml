@@ -31,9 +31,11 @@
          <ws:partial type="{{_type}}"
                      options="{{_options}}"
                      scope="{{_field.scope}}"
+                     autoWidth="{{_autoWidth}}"
                      fieldName="{{_fieldName}}"
                      template="{{_field.template}}"
                      value="{{_viewModel.displayValue}}"
+                     hidePlaceholder="{{_hidePlaceholder}}"
                      hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
                      ieVersion="{{_ieVersion}}"
                      isEdge="{{_isEdge}}"/>

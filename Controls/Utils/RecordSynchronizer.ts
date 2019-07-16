@@ -19,6 +19,8 @@
 import {Record, Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {create as DICreate} from 'Types/di';
+import {isEqual} from 'Types/object';
+import cInstance = require('Core/core-instance');
 
 interface IAdditionalData {
     at?: number;
@@ -55,7 +57,7 @@ const _private = {
             if (editRecord.has(key)) {
                 recValue = editRecord.get(key);
 
-                if (recValue !== value && key !== editRecord.getIdProperty()) {
+                if (!_private.isEqual(recValue, value) && key !== editRecord.getIdProperty()) {
                     // clone the model, flags, etc because
                     // when they lose touch with the current record, the edit can still continue.
                     if (recValue && (typeof recValue.clone === 'function')) {
@@ -67,6 +69,24 @@ const _private = {
         });
 
         return newValues;
+    },
+    isEqual(recValue: any, value: any): boolean {
+        if (typeof recValue !== typeof value) {
+            return false;
+        }
+
+        if (cInstance.instanceOfMixin(recValue, 'Types/_entity/IEquatable') && cInstance.instanceOfMixin(value, 'Types/_entity/IEquatable')) {
+            return recValue.isEqual(value);
+        }
+
+        if (typeof recValue === 'function') {
+            return true;
+        }
+
+        if (typeof recValue === 'object') {
+            return isEqual(recValue, value);
+        }
+        return recValue === value;
     },
     setRecordValues(record: Model, values: object): void {
         // The property may not have a setter
@@ -200,7 +220,8 @@ const RecordSynchronizer = {
         } else {
             _private.deleteRecord(items, editKey);
         }
-    }
+    },
+    _private
 };
 
 // TODO TYPESCRIPT

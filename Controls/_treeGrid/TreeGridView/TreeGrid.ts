@@ -31,7 +31,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/_list/ItemActions/ItemActionsStyles
     * @mixes Controls/_list/Swipe/SwipeStyles
     *
-    * @mixes Controls/_MoveDialog/Styles
+    * @mixes Controls/MoveDialog/Styles
     * @mixes Controls/_paging/PagingStyles
     * @mixes Controls/_paging/DigitButtonsStyles
     * @mixes Controls/_list/Grid/SortButtonStyles
@@ -60,6 +60,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_interface/ISorting
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_list/interface/ITreeControl
     * @mixes Controls/interface/ITreeGridItemTemplate
@@ -72,7 +73,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/_list/ItemActions/ItemActionsStyles
     * @mixes Controls/_list/Swipe/SwipeStyles
     *
-    * @mixes Controls/_MoveDialog/Styles
+    * @mixes Controls/MoveDialog/Styles
     * @mixes Controls/_paging/PagingStyles
     * @mixes Controls/_paging/DigitButtonsStyles
     * @mixes Controls/_list/Grid/SortButtonStyles

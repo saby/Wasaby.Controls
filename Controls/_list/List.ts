@@ -33,7 +33,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  * @mixes Controls/_list/ItemActions/ItemActionsStyles
  * @mixes Controls/_list/Swipe/SwipeStyles
  *
- * @mixes Controls/_MoveDialog/Styles
+ * @mixes Controls/MoveDialog/Styles
  * @mixes Controls/_paging/PagingStyles
  * @mixes Controls/_paging/DigitButtonsStyles
  *
@@ -58,6 +58,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IList
+ * @mixes Controls/_interface/ISorting
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/interface/IDraggable
  * @mixes Controls/interface/IGroupedList
@@ -68,7 +69,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  * @mixes Controls/_list/ItemActions/ItemActionsStyles
  * @mixes Controls/_list/Swipe/SwipeStyles
  *
- * @mixes Controls/_MoveDialog/Styles
+ * @mixes Controls/MoveDialog/Styles
  * @mixes Controls/_paging/PagingStyles
  * @mixes Controls/_paging/DigitButtonsStyles
  *

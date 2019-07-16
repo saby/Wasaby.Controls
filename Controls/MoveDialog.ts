@@ -15,7 +15,7 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_explorer/interface/IExplorer
     *
-    * @mixes Controls/_MoveDialog/Styles
+    * @mixes Controls/MoveDialog/Styles
     * @control
     * @public
     * @author Авраменко А.С.
@@ -33,9 +33,10 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_treeGrid/interface/ITreeControl
     * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_interface/ISorting
     * @mixes Controls/_explorer/interface/IExplorer
     *
-    * @mixes Controls/_MoveDialog/Styles
+    * @mixes Controls/MoveDialog/Styles
     * @control
     * @public
     * @author Авраменко А.С.
@@ -52,7 +53,7 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
     * @name Controls/MoveDialog#root
     * @cfg {String} Identifier of the root node.
     * @default null
-    */    
+    */
 
    /**
     * @name Controls/interface/ISearch#searchParam
@@ -62,7 +63,7 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
    /*
     * @name Controls/interface/ISearch#searchParam
     * @cfg {String} Name of the field that search should operate on. Search value will insert in filter by this parameter.
-    */    
+    */
 
 let MoveDialog = Control.extend({
       _template: template,

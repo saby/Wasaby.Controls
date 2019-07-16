@@ -1,11 +1,10 @@
 define('Controls-demo/List/Remove', [
    'Core/Control',
    'Core/core-clone',
-   'Types/source',
    'Controls-demo/List/Remove/RemoveDemoSource',
    'wml!Controls-demo/List/Remove/Remove',
    'css!Controls-demo/List/Remove/Remove'
-], function(BaseControl, cClone, source, DemoSource, template) {
+], function(BaseControl, cClone, DemoSource, template) {
    'use strict';
    var ModuleClass = BaseControl.extend({
       _template: template,

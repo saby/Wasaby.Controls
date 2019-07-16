@@ -127,8 +127,7 @@ import entity = require('Types/entity');
                if (newOptions.value !== oldValue) {
                   this._viewModel.setCarriageDefaultPosition(0);
                }
-               // TODO redo after complete https://online.sbis.ru/opendoc.html?guid=6856e162-7b3b-4fdc-ba56-461ff1d9786b
-               this._field.scope._useStretcher = !!newOptions.replacer;
+               this._autoWidth = !!newOptions.replacer;
             },
 
             _getViewModelOptions: function(options) {
@@ -146,8 +145,7 @@ import entity = require('Types/entity');
 
             _initProperties: function(options) {
                Mask.superclass._initProperties.apply(this, arguments);
-               // TODO redo after complete https://online.sbis.ru/opendoc.html?guid=6856e162-7b3b-4fdc-ba56-461ff1d9786b
-               this._field.scope._useStretcher = !!options.replacer;
+               this._autoWidth = !!options.replacer;
             },
 
             _focusInHandler: function() {

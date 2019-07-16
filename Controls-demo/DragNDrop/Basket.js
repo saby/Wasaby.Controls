@@ -1,9 +1,8 @@
 define('Controls-demo/DragNDrop/Basket', [
    'Core/Control',
-   'Core/core-instance',
    'wml!Controls-demo/DragNDrop/Basket/Basket',
    'css!Controls-demo/DragNDrop/Basket/Basket'
-], function(BaseControl, cInstance, template) {
+], function(BaseControl, template) {
    'use strict';
 
    var Basket = BaseControl.extend({
