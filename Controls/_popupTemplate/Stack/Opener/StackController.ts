@@ -248,7 +248,7 @@ import 'css!theme?Controls/popupTemplate';
             this._stack.each(function(item) {
                if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                   item.position = _private.getItemPosition(item);
-                  let currentWidth = item.containerWidth || item.position.stackWidth;
+                  let currentWidth = item.containerWidth || item.position.stackWidth || item.position.stackMaxWidth;
 
                   if (currentWidth) {
                      if (!cache[currentWidth]) {
