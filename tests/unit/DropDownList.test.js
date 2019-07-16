@@ -263,6 +263,18 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             ddl._beforeMount(ddlConfig);
             assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
             assert.equal(ddl._headConfig.caption, 'Caption');
+
+            ddlConfig.iconSize = 's';
+            ddl._headConfig = {};
+            ddl._beforeMount(ddlConfig);
+            assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
+            assert.equal(ddl._headConfig.caption, 'Caption');
+
+            ddlConfig.iconSize = 's';
+            ddlConfig.rootKey = undefined;
+            ddl._beforeMount(ddlConfig);
+            assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
+            assert.equal(ddl._headConfig.caption, 'Caption');
          });
          it('check list view model', function() {
             let expectedConfig = {
