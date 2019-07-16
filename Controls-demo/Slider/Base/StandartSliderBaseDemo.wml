@@ -1,5 +1,5 @@
 <div class="demo__wrapper">
-   <div >
+   <div class="demo-standartSliderBase__slidersBlock">
       <h1>Slider Base</h1>
       <h2>Horizontal</h2>
       <div class="demo__block">
@@ -13,7 +13,7 @@
             <h3>m</h3>
          </div>
       </div>
-      <div class="demo__block">
+      <div class="demo__block demo-standartSliderBase__blockSimple">
          <div class="demo__label">
             simple
          </div>
@@ -34,7 +34,7 @@
             />
          </div>
       </div>
-      <div class="demo__block">
+      <div class="demo__block demo-standartSliderBase__blockBordered">
          <div class="demo__label">
             bordered
          </div>
@@ -57,7 +57,7 @@
             />
          </div>
       </div>
-      <div class="demo__block">
+      <div class="demo__block demo-standartSliderBase__blockScale">
          <div class="demo__label">
             with scale
          </div>
@@ -80,7 +80,7 @@
             />
          </div>
       </div>
-      <div class="demo__block">
+      <div class="demo__block demo-standartSliderBase__blockReadOnly">
          <div class="demo__label">
             readOnly
          </div>
