@@ -246,7 +246,7 @@ const StackController = BaseController.extend({
         this._stack.each(function(item) {
             if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                 item.position = _private.getItemPosition(item);
-                const currentWidth = item.containerWidth || item.position.stackWidth;
+                const currentWidth = item.containerWidth || item.position.stackWidth || item.position.stackMaxWidth;
 
                 if (currentWidth) {
                     if (cache.indexOf(currentWidth) === -1) {
