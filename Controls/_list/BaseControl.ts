@@ -1356,6 +1356,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (recreateSource) {
             this._recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
+
+            //Нужно обновлять опции записи не только при наведении мыши,
+            //так как запись может поменяться в то время, как курсор находится на ней
+            self._canUpdateItemsActions = true;
         }
 
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
