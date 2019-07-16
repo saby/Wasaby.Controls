@@ -13,17 +13,17 @@ const
          const
             fixedCellContainer = container.querySelector(multiSelectVisibility === 'hidden' ?
                '.controls-Grid__cell_fixed' : '.controls-Grid__cell_fixed:nth-child(2)'),
-            offsetLeft = container.getBoundingClientRect().left - fixedCellContainer.getBoundingClientRect().left;
+            offsetLeft = fixedCellContainer.getBoundingClientRect().left - container.getBoundingClientRect().left;
          return offsetLeft + fixedCellContainer.offsetWidth;
       },
       updateSizes(self) {
          _private.drawTransform(self, 0);
          const
-            newContentSize = self._children.content.scrollWidth,
-            newContentContainerSize = self._children.content.offsetWidth;
+            newContentSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].scrollWidth,
+            newContentContainerSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].offsetWidth;
          if (self._contentSize !== newContentSize || self._contentContainerSize !== newContentContainerSize) {
-            self._contentSize = self._children.content.scrollWidth;
-            self._contentContainerSize = self._children.content.offsetWidth;
+            self._contentSize = newContentSize;
+            self._contentContainerSize = newContentContainerSize;
 
             // reset scroll position after resize, if we don't need scroll
             if (self._contentSize <= self._contentContainerSize) {
@@ -33,7 +33,7 @@ const
             self._shadowState =
                _private.calculateShadowState(self._scrollPosition, self._contentContainerSize, self._contentSize);
             self._fixedColumnsWidth =
-               _private.calculateFixedColumnWidth(self._children.content, self._options.multiSelectVisibility);
+               _private.calculateFixedColumnWidth(self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0], self._options.multiSelectVisibility);
             self._forceUpdate();
          }
          if (newContentContainerSize + self._scrollPosition > newContentSize) {

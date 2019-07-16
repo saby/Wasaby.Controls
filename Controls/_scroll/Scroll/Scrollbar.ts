@@ -217,6 +217,31 @@ import 'css!theme?Controls/scroll';
                }
             },
 
+             _scrollbarMouseDownHandler: function (event) {
+                 this._scrollbarBeginDragHandler(event);
+             },
+
+             _scrollbarTouchStartHandler: function (event) {
+                 if (this._options.direction === 'horizontal') {
+                     this._scrollbarBeginDragHandler(event);
+                 }
+             },
+
+             _getPageOffset(syntheticEvent): number {
+               let
+                   offset: number,
+                   isVerticalDirection = this._options.direction === 'vertical',
+                   isTouchEvent = syntheticEvent.nativeEvent instanceof TouchEvent;
+
+                 if (isTouchEvent) {
+                     offset = syntheticEvent.nativeEvent.touches[0][isVerticalDirection ? 'pageY' : 'pageX'];
+                 } else {
+                     offset = syntheticEvent.nativeEvent[isVerticalDirection ? 'pageY' : 'pageX'];
+                 }
+
+               return offset;
+             },
+
             /**
              * Обработчик начала перемещения ползунка мышью.
              * @param {SyntheticEvent} event дескриптор события.
@@ -224,7 +249,7 @@ import 'css!theme?Controls/scroll';
             _scrollbarBeginDragHandler: function(event) {
                var
                   verticalDirection = this._options.direction === 'vertical',
-                  pageOffset = event.nativeEvent[verticalDirection ? 'pageY' : 'pageX'],
+                  pageOffset = this._getPageOffset(event),
                   thumbOffset = this._children.thumb.getBoundingClientRect()[verticalDirection ? 'top' : 'left'],
                   delta;
 
