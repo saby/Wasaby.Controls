@@ -87,20 +87,26 @@ var Base = Control.extend({
                 const popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
 
                 cfg._vdomOnOldPage = self._options._vdomOnOldPage;
-                Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function (result) {
-                    self._toggleIndicator(false);
+                Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function ({popupId, creatingDef}) {
+                    if(creatingDef) {
+                        creatingDef.addCallback(function () {
+                            self._toggleIndicator(false);
+                        });
+                    } else {
+                        self._toggleIndicator(false);
+                    }
                     if (self._useVDOM()) {
-                        if (self._popupIds.indexOf(result) === -1) {
-                            self._popupIds.push(result);
+                        if (self._popupIds.indexOf(popupId) === -1) {
+                            self._popupIds.push(popupId);
                         }
 
                         // Call redraw to create emitter on scroll after popup opening
                         self._forceUpdate();
                     } else {
-                        self._action = result;
+                        self._action = popupId;
                     }
 
-                    resolve(result);
+                    resolve(popupId);
                 });
             }).addErrback(() => {
                 self._toggleIndicator(false);
@@ -506,10 +512,11 @@ Base._openPopup = function (popupId, cfg, controller, def) {
 
             popupId = ManagerController.update(popupId, cfg);
         }
-        def.callback(popupId);
+        def.callback({popupId: popupId, creatingDef: null});
     } else {
-        cfg.creatingDef = def;
+        cfg.creatingDef = new Deferred();
         popupId = ManagerController.show(cfg, controller);
+        def.callback({popupId: popupId, creatingDef: cfg.creatingDef});
     }
 };
 
