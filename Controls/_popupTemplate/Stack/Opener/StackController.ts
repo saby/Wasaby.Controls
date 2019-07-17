@@ -78,7 +78,7 @@ const _private = {
             return templateWidth;
          },
          updatePopupWidth: function(item, self) {
-            if (!item.containerWidth && !item.position.stackWidth) {
+            if (!item.containerWidth && !item.position.stackWidth && item.popupState !== BaseController.POPUP_STATE_INITIALIZING) {
                item.containerWidth = _private.getContainerWidth(item, self._getPopupContainer(item.id));
             }
          },
@@ -252,9 +252,7 @@ const StackController = BaseController.extend({
         this._stack.each(function(item) {
             if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                 item.position = _private.getItemPosition(item);
-                if (item.popupState !== BaseController.POPUP_STATE_INITIALIZING) {
-                    _private.updatePopupWidth(item, self)
-                }
+                _private.updatePopupWidth(item, self);
                 const currentWidth = item.containerWidth || item.position.stackWidth;
                 if (currentWidth) {
                     if (cache.indexOf(currentWidth) === -1) {
