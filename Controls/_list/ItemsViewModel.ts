@@ -360,7 +360,16 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     _getDisplayItemCacheKey: function(dispItem) {
-        return ItemsUtil.getDisplayItemKey(dispItem);
+        let key = ItemsUtil.getDisplayItemKey(dispItem);
+
+        // Model can have an item with the key 1 and a group with the key "1".
+        // We need to differentiate between them in cache, so we add an _str postfix
+        // to the string ids (for cache only)
+        if (typeof key === 'string') {
+            key += '_str';
+        }
+
+        return key;
     },
     isCachedItemData: function(itemKey) {
         return (
