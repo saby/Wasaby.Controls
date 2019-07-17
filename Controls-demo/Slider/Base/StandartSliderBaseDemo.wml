@@ -1,5 +1,5 @@
 <div class="demo__wrapper">
-   <div >
+   <div class="demo-standartSliderBase__slidersBlock">
       <h1>Slider Base</h1>
       <h2>Horizontal</h2>
       <div class="demo__block">
@@ -13,12 +13,12 @@
             <h3>m</h3>
          </div>
       </div>
-      <div class="demo__block">
+      <div class="demo__block demo-standartSliderBase__blockSimple">
          <div class="demo__label">
             simple
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Base attr:class="demo-standartSliderBase__simpleS"
                size="s"
                minValue="{{0}}"
                maxValue="{{100}}"
@@ -26,7 +26,7 @@
             />
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Base attr:class="demo-standartSliderBase__simpleM"
                size="m"
                minValue="{{0}}"
                maxValue="{{100}}"
@@ -34,12 +34,12 @@
             />
          </div>
       </div>
-      <div class="demo__block">
+      <div class="demo__block demo-standartSliderBase__blockBordered">
          <div class="demo__label">
             bordered
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Base attr:class="demo-standartSliderBase__borderedS"
                size="s"
                minValue="{{0}}"
                maxValue="{{100}}"
@@ -48,7 +48,7 @@
             />
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Base attr:class="demo-standartSliderBase__borderedM"
                size="m"
                minValue="{{0}}"
                maxValue="{{100}}"
@@ -57,12 +57,12 @@
             />
          </div>
       </div>
-      <div class="demo__block">
+      <div class="demo__block demo-standartSliderBase__blockScale">
          <div class="demo__label">
             with scale
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Base attr:class="demo-standartSliderBase__scaleS"
                size="s"
                minValue="{{0}}"
                maxValue="{{100}}"
@@ -71,7 +71,7 @@
             />
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Base attr:class="demo-standartSliderBase__scaleM"
                size="m"
                minValue="{{0}}"
                maxValue="{{100}}"
@@ -80,12 +80,12 @@
             />
          </div>
       </div>
-      <div class="demo__block">
+      <div class="demo__block demo-standartSliderBase__blockReadOnly">
          <div class="demo__label">
             readOnly
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Base attr:class="demo-standartSliderBase__readOnlyS"
                size="s"
                readOnly="{{true}}"
                minValue="{{0}}"
@@ -95,7 +95,7 @@
             />
          </div>
          <div class="demo__element">
-            <Controls.slider:Base
+            <Controls.slider:Base attr:class="demo-standartSliderBase__readOnlyM"
                size="m"
                readOnly="{{true}}"
                minValue="{{0}}"
