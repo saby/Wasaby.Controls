@@ -11,6 +11,7 @@ var TreeTileViewModel = TreeViewModel.extend({
         this._tileModel = new TileViewModel(cfg);
         this._onListChangeFn = function(event, changesType) {
             this._nextVersion();
+            this._resetCacheOnChange(changesType);
             this._notify('onListChange', changesType);
         }.bind(this);
         this._tileModel.subscribe('onListChange', this._onListChangeFn);
