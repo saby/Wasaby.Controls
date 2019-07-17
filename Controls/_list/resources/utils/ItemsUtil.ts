@@ -3,7 +3,6 @@ import cInstance = require('Core/core-instance');
 import Utils = require('Types/util');
 
 var ItemsUtil = {
-
     getDefaultDisplayFlat: function(items, cfg, filter) {
         var projCfg = {};
         projCfg.idProperty = cfg.keyProperty;
@@ -72,6 +71,23 @@ var ItemsUtil = {
                 return item;
             }
             itemIdx--;
+        }
+    },
+
+    getDisplayItemKey: function(dispItem) {
+        let contents = dispItem.getContents();
+
+        if (contents instanceof Array) {
+            // Breadcrumbs key is the key of the last item
+            contents = contents[contents.length - 1];
+        }
+
+        if (contents && typeof contents.getId === 'function') {
+            // Standard item has a getId method
+            return contents.getId();
+        } else {
+            // Groups are unique identifiers themselves
+            return contents;
         }
     }
 };

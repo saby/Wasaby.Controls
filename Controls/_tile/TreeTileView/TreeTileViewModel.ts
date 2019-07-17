@@ -11,6 +11,7 @@ var TreeTileViewModel = TreeViewModel.extend({
         this._tileModel = new TileViewModel(cfg);
         this._onListChangeFn = function(event, changesType) {
             this._nextVersion();
+            this._resetCacheOnChange(changesType);
             this._notify('onListChange', changesType);
         }.bind(this);
         this._tileModel.subscribe('onListChange', this._onListChangeFn);
@@ -18,9 +19,16 @@ var TreeTileViewModel = TreeViewModel.extend({
 
     getItemDataByItem: function (dispItem) {
         var
-            prevItem,
-            hoveredItem = this._tileModel.getHoveredItem(),
+            prevItem, hoveredItem,
             current = TreeTileViewModel.superclass.getItemDataByItem.apply(this, arguments);
+
+        if (current._treeTileViewModelCached) {
+            return current;
+        } else {
+            current._treeTileViewModelCached = true;
+        }
+
+        hoveredItem = this._tileModel.getHoveredItem();
 
         if (current.hasMultiSelect) {
             current.multiSelectClassList += ' controls-TileView__checkbox js-controls-TileView__withoutZoom';

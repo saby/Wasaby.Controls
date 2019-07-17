@@ -131,6 +131,13 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments),
             dragItems,
             drawnActions;
+
+        if (itemsModelCurrent._listViewModelCached) {
+            return itemsModelCurrent;
+        } else {
+            itemsModelCurrent._listViewModelCached = true;
+        }
+
         itemsModelCurrent.isMenuShown = this._menuState === 'shown';
         itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === _private.getItemByMarkedKey(this, this._markedKey);
         itemsModelCurrent.itemActions = this.getItemActions(itemsModelCurrent.item);
@@ -504,6 +511,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             const id = item.get(this._options.keyProperty);
             if (this.hasItemById(id, this._options.keyProperty)) {
                this._actions[id] = actions;
+               this.resetCachedItemData(this._convertItemKeyToCacheKey(id));
             }
         }
     },

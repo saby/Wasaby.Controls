@@ -414,5 +414,60 @@ define([
 
          assert.isFalse(!!itemData.isGroup);
       });
+
+      it('getItemDataByItem caches results', function() {
+         const
+            cfg = {
+               items: data,
+               keyProperty: 'id'
+            },
+            model = new list.ItemsViewModel(cfg),
+            dispItem = {
+               getContents: function () {
+                  return {
+                     getId: function() {
+                        return 1;
+                     }
+                  };
+               }
+            };
+
+         const itemData = model.getItemDataByItem(dispItem);
+         const beforeCacheReset = model.getItemDataByItem(dispItem);
+
+         assert.strictEqual(beforeCacheReset, itemData, 'getItemDataByItem should cache the result');
+
+         model.nextModelVersion();
+
+         const afterCacheReset = model.getItemDataByItem(dispItem);
+
+         assert.notStrictEqual(afterCacheReset, itemData, 'changing model version should reset getItemDataByItem cache');
+      });
+
+      it('getItemDataByItem some changes do not reset cache', function() {
+         const
+            cfg = {
+               items: data,
+               keyProperty: 'id'
+            },
+            model = new list.ItemsViewModel(cfg),
+            dispItem = {
+               getContents: function () {
+                  return {
+                     getId: function() {
+                        return 1;
+                     }
+                  };
+               }
+            },
+            noCacheResetChangeTypes = ['itemActionsUpdated', 'indexesChanged'];
+
+         const itemData = model.getItemDataByItem(dispItem);
+         noCacheResetChangeTypes.forEach((changesType) => {
+            model.nextModelVersion(false, changesType);
+            const afterNextVersion = model.getItemDataByItem(dispItem);
+            assert.strictEqual(afterNextVersion, itemData, changesType + ' change should not reset getItemDataByItem cache');
+         });
+      });
    })
 });
