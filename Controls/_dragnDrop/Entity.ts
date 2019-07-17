@@ -14,6 +14,9 @@ import extend = require('Core/core-extend');
       var Entity = extend({
          constructor: function(options) {
             this._options = options;
+         },
+         getOptions: function() {
+            return this._options;
          }
       });
 

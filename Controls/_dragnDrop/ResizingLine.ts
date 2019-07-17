@@ -148,7 +148,7 @@ class ResizingLine extends Control<IContainerOptions, void> {
 
    protected _onEndDragHandler(e: SyntheticEvent, dragObject): void {
       this._dragging = false;
-      if (dragObject.entity._options.itemId === this.getInstanceId()) {
+      if (dragObject.entity && dragObject.entity.getOptions().itemId === this.getInstanceId()) {
          this._notify('offset', [this._offset]);
       }
    }
