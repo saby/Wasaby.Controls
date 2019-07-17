@@ -25,7 +25,7 @@ import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import {focus} from 'UI/Focus';
-import {throttle} from 'Types/function';
+import {debounce} from 'Types/function';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
@@ -431,10 +431,9 @@ var _private = {
 
    updateVirtualWindow: function(self, direction) {
       if (_private.isFullPlaceholderVisibility(self, direction, self._cachedScrollParams)) {
-         self._recalcVirtualScrollIndexes(direction);
+         self._recalcVirtualScrollIndexes('scrollTop', direction);
       } else {
-         self._virtualScroll.recalcToDirection(direction, self._cachedScrollParams, self._loadOffset.top);
-         _private.applyVirtualScrollIndexes(self, direction);
+         self._recalcVirtualScrollIndexes('toDirection', direction);
       }
    },
 
@@ -704,11 +703,11 @@ var _private = {
             _private.cacheScrollParams(self, params);
             if (self._virtualScrollTriggerVisibility.down) {
                if (_private.isFullPlaceholderVisibility(self, 'down', self._cachedScrollParams)) {
-                  self._recalcVirtualScrollIndexes('down');
+                  self._recalcVirtualScrollIndexes('scrollTop', 'down');
                }
             } else if (self._virtualScrollTriggerVisibility.up) {
                if (_private.isFullPlaceholderVisibility(self, 'up', self._cachedScrollParams)) {
-                  self._recalcVirtualScrollIndexes('up');
+                  self._recalcVirtualScrollIndexes('scrollTop', 'up');
                }
             }
         }
@@ -1212,10 +1211,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
         this.__errorController = options.errorController || new dataSourceError.Controller({});
-        this._recalcVirtualScrollIndexes = throttle(function(direction) {
-            this._virtualScroll.recalcToDirectionByScrollTop(direction, this._cachedScrollParams, this._loadOffset.top);
+        this._recalcVirtualScrollIndexes = debounce(function(method, direction) {
+            if (method === 'scrollTop') {
+                this._virtualScroll.recalcToDirectionByScrollTop(direction, this._cachedScrollParams, this._loadOffset.top);
+            } else if (method === 'toDirection') {
+                this._virtualScroll.recalcToDirection(direction, this._cachedScrollParams, this._loadOffset.top);
+            } else {
+                IoC.resolve('ILogger').error('BaseControl', `Unknown virtual scroll recalculation method: "${method}"`);
+            }
             _private.applyVirtualScrollIndexes(this, direction);
-        }.bind(this), 50, true);
+        }.bind(this), 150, false);
     },
 
     /**
