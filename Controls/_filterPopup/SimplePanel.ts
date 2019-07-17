@@ -9,6 +9,18 @@ import CoreClone = require('Core/core-clone');
 import {dropdownHistoryUtils as historyUtils} from "Controls/dropdown";
 
 /**
+ * Выпадающий список для {@link Controls/filter:View}.
+ *
+ * @class Controls/_filterPopup/SimplePanel
+ * @extends Core/Control
+ * @mixes Controls/_filterPopup/SimplePanel/SimplePanelStyles
+ * @control
+ * @public
+ * @author Золотова Э.Е.
+ *
+ */
+
+/*
  * Control dropdown list for {@link Controls/filter:View}.
  *
  * @class Controls/_filterPopup/SimplePanel

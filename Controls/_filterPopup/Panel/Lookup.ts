@@ -4,6 +4,51 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import Env = require('Env/Env');
 import 'Controls/lookup';
 import 'css!theme?Controls/filterPopup';
+   /**
+    * Кнопка-ссылка с возможностью поиска.
+    * <a href="/materials/demo-ws4-engine-selector-lookup">Демо-пример</a>.
+    * @class Controls/_filterPopup/Panel/Lookup
+    * @extends Core/Control
+    * @mixes Controls/_interface/ILookup
+    * @mixes Controls/interface/ISelectedCollection
+    * @mixes Controls/interface/ISelectorDialog
+    * @mixes Controls/interface/ISuggest
+    * @mixes Controls/interface/ISearch
+    * @mixes Controls/_interface/ISource
+    * @mixes Controls/interface/IFilter
+    * @mixes Controls/interface/INavigation
+    * @mixes Controls/_interface/IMultiSelectable
+    * @mixes Controls/_interface/ISorting
+    * @mixes Controls/interface/IInputBase
+    * @mixes Controls/interface/IInputText
+    * @mixes Controls/_lookup/BaseLookupView/LookupStyles
+    * @control
+    * @public
+    * @author Герасимов А.М.
+    */
+
+   /*
+    * Control link with lookup
+    * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
+    * @class Controls/_filterPopup/Panel/Lookup
+    * @extends Core/Control
+    * @mixes Controls/_interface/ILookup
+    * @mixes Controls/interface/ISelectedCollection
+    * @mixes Controls/interface/ISelectorDialog
+    * @mixes Controls/interface/ISuggest
+    * @mixes Controls/interface/ISearch
+    * @mixes Controls/_interface/ISource
+    * @mixes Controls/interface/IFilter
+    * @mixes Controls/interface/INavigation
+    * @mixes Controls/_interface/IMultiSelectable
+    * @mixes Controls/_interface/ISorting
+    * @mixes Controls/interface/IInputBase
+    * @mixes Controls/interface/IInputText
+    * @mixes Controls/_lookup/BaseLookupView/LookupStyles
+    * @control
+    * @public
+    * @author Герасимов А.М.
+    */
 
 /**
  * Метка с полем связи. Пока коллекция пуста - поле связи скрыто.
@@ -66,9 +111,25 @@ import 'css!theme?Controls/filterPopup';
  * @cfg {String} Текст ссылки, который отображается до первого выбора записи в контролле.
  */
 
-/* !KONGO
- Текст ссылки, который отображается до первого выбора записи в контролле - ???
- */
+   /**
+    * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
+    * @cfg {String} Имя контрола с тем же интерфейсом, что и Lookup.
+    * @default Controls/_lookup/Lookup
+    * @example
+    * <pre>
+    *   <Controls._filterPopup.Panel.Lookup lookupTempalteName="namePace/Lookup"/>
+    * </pre>
+    */
+
+   /*
+    * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
+    * @cfg {String} Name of the control with same interface as Lookup.
+    * @default Controls/_lookup/Lookup
+    * @example
+    * <pre>
+    *   <Controls._filterPopup.Panel.Lookup lookupTempalteName="namePace/Lookup"/>
+    * </pre>
+    */
 
 /**
  * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName

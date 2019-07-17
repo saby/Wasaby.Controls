@@ -14,6 +14,14 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @interface Controls/interface/IFilterPanel
     * @public
     * @author Герасимов А.М.
+    */
+
+   /*
+    * Interface for filter panel
+    *
+    * @interface Controls/interface/IFilterPanel
+    * @public
+    * @author Герасимов А.М.
     */    
 
    /**
@@ -35,9 +43,9 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @variant horizontal Горизонтальная ориентация панели. Блок истории отображается справа.
     * @default vertical
     * @remark
-    * Если указано значение “horizontal”, но на панели нет истории, то контрол будет отображаться в одном столбце.
+    * Если указано значение "horizontal", но на панели нет истории фильтрации, контрол будет отображаться в одном столбце.
     * @example
-    * В этом примере панель будет отображаться в двух столбцах.
+    * В данном примере панель будет отображаться в две колонки.
     * <pre>
     *    <Controls.filterPopup:Panel
     *          items={{_items}}
@@ -75,7 +83,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @cfg {String} Текст заголовка.
     * @default "Selected"
     * @example
-    * В этом примере панель имеет заголовок "Sales".
+    * В этом примере панель имеет заголовок "Sales"
     * <pre>
     *    <Controls.filterPopup:Panel
     *          items={{_items}}
