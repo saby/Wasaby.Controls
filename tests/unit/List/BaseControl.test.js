@@ -3593,7 +3593,50 @@ define([
                assert.isTrue(baseControl._pagingNavigation);
             });
          });
+         describe('initializeNavigation', function() {
+            let cfg, cfg1, bc;
+            cfg = {
+               navigation: {
+                  view: 'infinity',
+                  source: 'page',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  },
+                  sourceConfig: {
+                     pageSize: 3,
+                     page: 0,
+                     hasMore: false
+                  }
+               },
+               viewModelConstructor: lists.ListViewModel,
+            };
 
+            it('call check', async function() {
+               bc = new lists.BaseControl(cfg);
+               bc.saveOptions(cfg);
+               await bc._beforeMount(cfg);
+               bc._loadTriggerVisibility = {up:true, down:true};
+               await bc._beforeUpdate(cfg);
+               assert.deepEqual(bc._loadTriggerVisibility, {up:true, down:true});
+               cfg = {
+                  navigation: {
+                     view: 'infinity',
+                     source: 'page',
+                     viewConfig: {
+                        pagingMode: 'direct'
+                     },
+                     sourceConfig: {
+                        pageSize: 3,
+                        page: 0,
+                        hasMore: false
+                     }
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+               };
+               await bc._beforeUpdate(cfg);
+               assert.deepEqual(bc._loadTriggerVisibility, {up:true, down:true});
+            });
+         });
       });
    });
 });
