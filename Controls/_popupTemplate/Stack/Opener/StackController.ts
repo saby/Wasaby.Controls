@@ -77,6 +77,11 @@ import 'css!theme?Controls/popupTemplate';
             container.style.width = currentContainerWidth;
             return templateWidth;
          },
+         updatePopupWidth: function(item, self) {
+            if (!item.containerWidth && !item.position.stackWidth && item.popupState !== BaseController.POPUP_STATE_INITIALIZING) {
+               item.containerWidth = _private.getContainerWidth(item, self._getPopupContainer(item.id));
+            }
+         },
 
          getStackContentWrapperContainer(stackContainer) {
             return stackContainer.querySelector('.controls-Stack__content-wrapper');
@@ -245,11 +250,12 @@ import 'css!theme?Controls/popupTemplate';
             let maxPanelWidth = StackStrategy.getMaxPanelWidth();
             let maxWidth = 0;
             let cache = {};
+            let self = this;
             this._stack.each(function(item) {
                if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                   item.position = _private.getItemPosition(item);
-                  let currentWidth = item.containerWidth || item.position.stackWidth || item.position.stackMaxWidth;
-
+                  _private.updatePopupWidth(item, self);
+                   let currentWidth = item.containerWidth || item.position.stackWidth;
                   if (currentWidth) {
                      if (!cache[currentWidth]) {
                         cache[currentWidth] = 1;
