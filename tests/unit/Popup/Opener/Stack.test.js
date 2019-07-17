@@ -65,6 +65,8 @@ define(
             popupTemplate.StackController._stack.add({ containerWidth: 1100, popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._stack.add({ containerWidth: 850, popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._stack.add({ containerWidth: 950, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._private.getContainerWidth = function(items) {return items.templateWidth};
+            popupTemplate.StackController._stack.add({ position: {}, templateWidth: 711, containerWidth: '', popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._update();
             popupTemplate.StackController._update();
             popupTemplate.StackController._update();
@@ -83,6 +85,7 @@ define(
             assert.isTrue(popupTemplate.StackController._stack.at(12).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
             assert.isTrue(popupTemplate.StackController._stack.at(13).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
             assert.isTrue(popupTemplate.StackController._stack.at(14).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(15).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
 
             popupTemplate.StackController._private.getItemPosition = baseGetItemPosition;
          });
