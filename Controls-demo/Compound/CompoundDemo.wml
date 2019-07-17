@@ -21,7 +21,7 @@
       <div class="compound-demo__panel">
          <h3>Rebuild</h3>
          <Controls.input:Label caption="Type of change" required="{{false}}" />
-         <Controls.Input.ComboBox source="{{ _rebuildTypeItems }}"
+         <Controls.dropdown:Combobox source="{{ _rebuildTypeItems }}"
                                   keyProperty="id"
                                   displayProperty="title"
                                   attr:class="CompoundDemo-Checkpoints__rebuildTypeComboBox"

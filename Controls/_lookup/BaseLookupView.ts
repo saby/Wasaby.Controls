@@ -3,7 +3,7 @@ import template = require('wml!Controls/_lookup/BaseLookupView/BaseLookupView');
 import DOMUtil = require('Controls/Utils/DOMUtil');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {isEqual} from 'Types/object';
-import Env = require('Env/Env');
+import {constants, IoC} from 'Env/Env';
 import clearRecordsTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/clearRecordsTemplate');
 import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/showSelectorTemplate');
 
@@ -58,6 +58,10 @@ var BaseLookupView = Control.extend({
         } else {
             this._maxVisibleItems = options.items.getCount();
         }
+
+        if (options.suggestFooterTemplate) {
+            IoC.resolve('ILogger').warn('In the "Controls.lookup:Input" control, use "footerTemplate" option instead of "suggestFooterTemplate"');
+        }
     },
 
     _afterMount: function () {
@@ -104,7 +108,7 @@ var BaseLookupView = Control.extend({
             }
         }
 
-        if (!this._isInputVisible(this._options)) {
+        if (!this._isInputActive(this._options)) {
             this._suggestState = false;
         }
     },
@@ -120,7 +124,7 @@ var BaseLookupView = Control.extend({
         _private.resetInputValue(this);
 
         // move focus to input after select, because focus will be lost after closing popup
-        if (this._isInputVisible(this._options)) {
+        if (this._isInputActive(this._options)) {
             this.activate({enableScreenKeyboard: true});
         }
     },
@@ -167,13 +171,13 @@ var BaseLookupView = Control.extend({
     },
 
     _suggestStateChanged: function () {
-        if (this._infoboxOpened || !this._isInputVisible(this._options)) {
+        if (this._infoboxOpened || !this._isInputActive(this._options)) {
             this._suggestState = false;
         }
     },
 
     _determineAutoDropDown: function () {
-        return this._options.autoDropDown && this._isInputVisible(this._options);
+        return this._options.autoDropDown && this._isInputActive(this._options);
     },
 
     _isEmpty: function (options) {
@@ -182,6 +186,10 @@ var BaseLookupView = Control.extend({
 
     _isInputVisible: function () {
 
+    },
+
+    _isInputActive: function(options) {
+        return !options.readOnly && this._isInputVisible(options);
     },
 
     _openInfoBox: function (event, config) {
@@ -219,7 +227,7 @@ var BaseLookupView = Control.extend({
 
         if (keyCodeEvent === KEY_CODE_F2) {
             this._notify('showSelector');
-        } else if (keyCodeEvent === Env.constants.key.backspace &&
+        } else if (keyCodeEvent === constants.key.backspace &&
             !this._inputValue && !this._isEmpty(this._options)) {
 
             //If press backspace, the input field is empty and there are selected entries -  remove last item

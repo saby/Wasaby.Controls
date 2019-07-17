@@ -1,8 +1,7 @@
 define('Controls-demo/DepsDemo/DepsDemo', [
    'Core/Control',
-   'Core/Deferred',
    'tmpl!Controls-demo/DepsDemo/DepsDemo'
-], function(Control, Deferred, template) {
+], function(Control, template) {
 
    var DepsDemo = Control.extend({
       _template: template,

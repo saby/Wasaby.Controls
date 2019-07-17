@@ -119,6 +119,10 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                curPosition = 'middle';
             }
 
+            _private.sendByRegistrar(self, 'scrollMoveSync', {
+               scrollTop: self._scrollTopCache
+            });
+
             if (self._scrollPositionCache !== curPosition) {
                setTimeout(() => {
                   _private.sendByRegistrar(self, 'scrollMove', {
@@ -226,6 +230,8 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                self._registrar.startOnceTarget(component, 'cantScroll');
             }
 
+            self._registrar.startOnceTarget(component, 'viewPortResize', [sizeCache.clientHeight]);
+
             if (!withObserver) {
                //TODO надо кидать не всем компонентам, а адресно одному
                _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
@@ -298,7 +304,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                _private.calcSizeCache(this, _private.getDOMContainer(this._container));
                _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight);
             }
-            this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
+            this._notify('register', ['controlResize', this, this._resizeHandlerOuter], {bubbling: true});
          },
 
 
@@ -309,6 +315,11 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
          _resizeHandler: function(e) {
             var withObserver = this._canObserver;
             _private.onResizeContainer(this, _private.getDOMContainer(this._container), withObserver);
+
+         },
+         _resizeHandlerOuter: function(e) {
+            this._resizeHandler(e);
+            _private.sendByRegistrar(this, 'viewPortResize', [this._sizeCache.clientHeight]);
          },
 
          _registerIt: function(event, registerType, component, callback, triggers) {

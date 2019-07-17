@@ -72,7 +72,8 @@ var _private = {
       var textArr = [];
 
       chain.factory(items).each(function(item) {
-         if (_private.isItemChanged(item) && (Utils.object.getPropertyValue(item, 'visibility') === undefined || Utils.object.getPropertyValue(item, 'visibility'))) {
+         if (_private.isItemChanged(item) && !Utils.object.getPropertyValue(item, 'isFast')
+             && (Utils.object.getPropertyValue(item, 'visibility') === undefined || Utils.object.getPropertyValue(item, 'visibility'))) {
             let textValue = Utils.object.getPropertyValue(item, 'textValue');
             let resetTextValue = Utils.object.getPropertyValue(item, 'resetTextValue');
 

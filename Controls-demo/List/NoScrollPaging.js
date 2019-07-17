@@ -1,4 +1,5 @@
 define('Controls-demo/List/NoScrollPaging', [
+   'Env/Env',
    'Core/Control',
    'Controls-demo/List/Grid/GridData',
    'wml!Controls-demo/List/NoScrollPaging/NoScrollPaging',
@@ -7,7 +8,7 @@ define('Controls-demo/List/NoScrollPaging', [
    'wml!Controls-demo/List/Grid/DemoItem',
    'wml!Controls-demo/List/Grid/DemoCostPrice',
    'wml!Controls-demo/List/Grid/DemoName'
-], function (BaseControl,
+], function (Env, BaseControl,
              GridData,
              template,
              source
@@ -283,7 +284,7 @@ define('Controls-demo/List/NoScrollPaging', [
                   title: 'прочитано',
                   showType: 2,
                   handler: function() {
-                     console.log('action read Click');
+                     Env.IoC.resolve('ILogger').info('action read Click');
                   }
                },
                {
@@ -291,7 +292,7 @@ define('Controls-demo/List/NoScrollPaging', [
                   icon: 'icon-primary icon-PhoneNull',
                   title: 'phone',
                   handler: function(item) {
-                     console.log('action phone Click ', item);
+                     Env.IoC.resolve('ILogger').info('action phone Click ', item);
                   }
                },
                {
@@ -308,7 +309,7 @@ define('Controls-demo/List/NoScrollPaging', [
                   title: 'profile',
                   showType: 2,
                   handler: function() {
-                     console.log('action profile Click');
+                     Env.IoC.resolve('ILogger').info('action profile Click');
                   }
                },
                {
@@ -317,7 +318,7 @@ define('Controls-demo/List/NoScrollPaging', [
                   title: 'delete pls',
                   showType: 2,
                   handler: function() {
-                     console.log('action delete Click');
+                     Env.IoC.resolve('ILogger').info('action delete Click');
                   }
                }
             ];

@@ -722,6 +722,28 @@ define(
                }]);
             });
          });
+         describe('hidePlaceholder', function() {
+            it('The autoComplete equal "on".', function() {
+               ctrl._hidePlaceholderUsingCSS = false;
+               ctrl._beforeMount({
+                  value: '',
+                  autoComplete: 'on'
+               });
+               assert.equal(ctrl._hidePlaceholder, true);
+               ctrl._afterMount();
+               assert.equal(ctrl._hidePlaceholder, false);
+            });
+            it('The autoComplete equal "off".', function() {
+               ctrl._hidePlaceholderUsingCSS = false;
+               ctrl._beforeMount({
+                  value: '',
+                  autoComplete: 'off'
+               });
+               assert.equal(ctrl._hidePlaceholder, false);
+               ctrl._afterMount();
+               assert.equal(ctrl._hidePlaceholder, false);
+            });
+         });
       });
    }
 );

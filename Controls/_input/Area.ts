@@ -254,11 +254,8 @@ import 'Controls/decorator';
       Area.getOptionTypes = function() {
          var optionTypes = Text.getOptionTypes();
 
-         /**
-          * https://online.sbis.ru/opendoc.html?guid=baf5be68-db8c-4a43-9ade-0c4baef078d7
-          * optionTypes.minLines = descriptor(Number);
-          * optionTypes.maxLines = descriptor(Number);
-          */
+         optionTypes.minLines = entity.descriptor(Number, null);
+         optionTypes.maxLines = entity.descriptor(Number, null);
          optionTypes.newLineKey = entity.descriptor(String).oneOf([
             'enter',
             'ctrlEnter'

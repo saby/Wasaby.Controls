@@ -2,12 +2,16 @@ define([
    'Core/core-merge',
    'Controls/calendar',
    'SBIS3.CONTROLS/Utils/DateUtil',
-   'unit/Calendar/Utils'
+   'unit/Calendar/Utils',
+   'wml!Controls/_calendar/MonthList/MonthTemplate',
+   'wml!Controls/_calendar/MonthList/YearTemplate'
 ], function(
    coreMerge,
    calendar,
    DateUtil,
-   calendarTestUtils
+   calendarTestUtils,
+   MonthTemplate,
+   YearTemplate
 ) {
    'use strict';
    let config = {
@@ -15,6 +19,85 @@ define([
    };
 
    describe('Controls/_calendar/MonthList', function() {
+      describe('_beforeMount', function() {
+         it('default options', function() {
+            let ml = calendarTestUtils.createComponent(calendar.MonthList, config);
+            assert.strictEqual(ml._itemTemplate, YearTemplate);
+            assert.strictEqual(ml._scrollToPosition, config.startPosition);
+            assert.strictEqual(ml._displayedPosition, config.startPosition);
+            assert.strictEqual(ml._startPositionId, '2018-01-01');
+         });
+
+         it('should render by month if viewMode is equals "month"', function() {
+            let ml = calendarTestUtils.createComponent(
+               calendar.MonthList, coreMerge({ viewMode: 'month' }, config, { preferSource: true }));
+            assert.strictEqual(ml._itemTemplate, MonthTemplate);
+         });
+
+         it('position option', function() {
+            let
+               position = new Date(2018, 0, 1),
+               ml = calendarTestUtils.createComponent(calendar.MonthList, { position: position });
+            assert.equal(ml._scrollToPosition, position);
+            assert.equal(ml._displayedPosition, position);
+            assert.equal(ml._startPositionId, '2018-01-01');
+         });
+      });
+
+      describe('_beforeUpdate', function() {
+         it('should update position fields if position changed', function () {
+            let
+               sandbox = sinon.createSandbox(),
+               position = new Date(2018, 0, 1),
+               ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
+
+            sandbox.stub(ml, '_findElementByDate');
+            ml._container = {};
+
+            ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position }));
+            assert.isTrue(DateUtil.isDatesEqual(ml._scrollToPosition, position));
+            assert.isTrue(DateUtil.isDatesEqual(ml._displayedPosition, position));
+            assert.equal(ml._startPositionId, '2018-01-01');
+            sandbox.restore();
+         });
+
+         it('should not update _startPositionId field if item already rendered', function () {
+            let
+               sandbox = sinon.createSandbox(),
+               position = new Date(2018, 0, 1),
+               ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
+
+            sandbox.stub(ml, '_findElementByDate').returns([true]);
+            ml._container = {};
+
+            ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position }));
+            assert.isTrue(DateUtil.isDatesEqual(ml._scrollToPosition, position));
+            assert.isTrue(DateUtil.isDatesEqual(ml._displayedPosition, position));
+            assert.equal(ml._startPositionId, '2017-01-01');
+            sandbox.restore();
+         });
+      });
+
+      describe('_afterUpdate, _drawItemsHandler', function() {
+         [
+            '_afterUpdate',
+            '_drawItemsHandler'
+         ].forEach(function(test) {
+            it('should scroll to item after position changed', function() {
+               let
+                  sandbox = sinon.createSandbox(),
+                  position = new Date(2018, 0, 1),
+                  ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
+               sandbox.stub(ml, '_findElementByDate').returns([true]);
+               ml._container = {};
+               sandbox.stub(ml, '_scrollToDate');
+               ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position }));
+               ml[test]();
+               sinon.assert.called(ml._scrollToDate);
+            });
+         });
+      });
+
       describe('_getMonth', function() {
          it('should return correct month', function() {
             let mv = calendarTestUtils.createComponent(calendar.MonthList, config);

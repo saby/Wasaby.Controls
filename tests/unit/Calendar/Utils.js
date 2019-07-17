@@ -9,12 +9,16 @@ define('unit/Calendar/Utils', [
       createComponent: function(Component, cfg) {
          let mv;
          if (Component.getDefaultOptions) {
-            cfg = coreMerge(coreClone(cfg), Component.getDefaultOptions(), {preferSource: true});
+            cfg = this.prepareOptions(Component, cfg);
          }
          mv = new Component(cfg);
          mv.saveOptions(cfg);
          mv._beforeMount(cfg);
          return mv;
+      },
+
+      prepareOptions: function(Component, cfg) {
+         return coreMerge(coreClone(cfg), Component.getDefaultOptions(), { preferSource: true });
       },
 
       assertMonthView: function(weeks, dayAssertFn) {

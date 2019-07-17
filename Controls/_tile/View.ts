@@ -32,7 +32,7 @@ import {TreeControl} from 'Controls/treeGrid';
  * @mixes Controls/_list/ItemActions/ItemActionsStyles
  * @mixes Controls/_list/Swipe/SwipeStyles
  *
- * @mixes Controls/_MoveDialog/Styles
+ * @mixes Controls/MoveDialog/Styles
  * @mixes Controls/_paging/PagingStyles
  * @mixes Controls/_paging/DigitButtonsStyles
  *
@@ -57,6 +57,7 @@ import {TreeControl} from 'Controls/treeGrid';
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IList
+ * @mixes Controls/_interface/ISorting
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_treeGrid/interface/ITreeControl
  * @mixes Controls/interface/IDraggable
@@ -69,7 +70,7 @@ import {TreeControl} from 'Controls/treeGrid';
  * @mixes Controls/_list/ItemActions/ItemActionsStyles
  * @mixes Controls/_list/Swipe/SwipeStyles
  *
- * @mixes Controls/_MoveDialog/Styles
+ * @mixes Controls/MoveDialog/Styles
  * @mixes Controls/_paging/PagingStyles
  * @mixes Controls/_paging/DigitButtonsStyles
  *

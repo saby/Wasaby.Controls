@@ -436,6 +436,19 @@ define(
                   self._history.pinned.forEach(function(pinnedItem) {
                      assert.isFalse(pinnedItem.getId() === '9');
                   });
+
+                  newData = new sourceLib.DataSet({
+                     rawData: {
+                        frequent: createRecordSet(frequentData),
+                        pinned: createRecordSet(pinnedData),
+                        recent: createRecordSet(recentData)
+                     },
+                     itemsProperty: '',
+                     idProperty: 'ObjectId'
+                  });
+                  historyMod.Source._private.initHistory(self, newData, sourceItems);
+                  assert.equal(self._history.pinned.getCount(), 3);
+
                   done();
                });
             });
@@ -466,7 +479,7 @@ define(
                   };
                   let sourceItems = res.getAll();
                   historyMod.Source._private.initHistory(self, newData, sourceItems);
-                  assert.equal(self._history.pinned.getCount(), 3);
+                  assert.equal(self._history.pinned.getCount(), 2);
                   self._history.pinned.forEach(function(pinnedItem) {
                      assert.isFalse(pinnedItem.getId() == '1');
                      assert.isFalse(pinnedItem.getId() == '9');

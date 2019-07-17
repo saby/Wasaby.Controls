@@ -23,8 +23,14 @@
     * @css @font-size_SelectedCollection-size_3xl Font size of item with size 3xl.
     * @css @spacing_SelectedCollection-between-items Spacing between items.
     * @css @spacing_SelectedCollection-between-counter-items Spacing between counter and items.
+    * @css @spacing_SelectedCollection-between-counter-ellipsis Spacing between counter and ellipsis.
     * @css @spacing_SelectedCollection-between-infoBoxContent-borderLeft Outdent to the left of the edge of InfoBox content.
     * @css @spacing_SelectedCollection-between-infoBoxContent-borderRight Outdent to the right of the edge of InfoBox content.
     * @css @spacing_SelectedCollection-between-infoBoxContent-borderTop Outdent to the top of the edge of InfoBox content.
     * @css @spacing_SelectedCollection-between-infoBoxContent-borderBottom Outdent to the bottom of the edge of InfoBox content.
+    * @css @size_SelectedCollection-infoBoxContent-shadow Shadow size around InfoBox content.
+    * @css @color_SelectedCollection-infoBoxContent-shadow Shadow color around InfoBox content.
+    * @css @size_SelectedCollection-infoBoxContent-border Sizes of borders InfoBox content.
+    * @css @color-border_SelectedCollection-infoBoxContent Color of borders InfoBox content.
+    * @css @background-color_SelectedCollection-infoBoxContent Background color of InfoBox content.
     */

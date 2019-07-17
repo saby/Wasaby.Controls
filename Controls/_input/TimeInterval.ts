@@ -22,6 +22,8 @@ type IOptions = IModelOptions;
  */
 
 class TimeInterval extends Base {
+    protected _autoWidth: boolean = true;
+
     protected _defaultValue: TimeInterval | null = null;
 
     protected _getViewModelOptions(options: IOptions): IModelOptions {
@@ -32,11 +34,6 @@ class TimeInterval extends Base {
 
     protected _getViewModelConstructor() {
         return ViewModel;
-    }
-
-    protected _initProperties() {
-        super._initProperties();
-        this._field.scope._useStretcher = true;
     }
 
     protected _changeHandler() {
@@ -56,12 +53,7 @@ class TimeInterval extends Base {
     static getOptionTypes(): object {
         const optionTypes = Base.getOptionTypes();
 
-        /**
-         * TODO: Uncomment after execution.
-         * https://online.sbis.ru/opendoc.html?guid=8b36a045-d4f7-4d73-9d92-de4f190a65da
-         * optionTypes.value = descriptor(Object, null);
-         */
-
+        optionTypes.value = descriptor(Object, null);
         optionTypes.mask = descriptor(String).oneOf([
             'HH:MM',
             'HHH:MM',

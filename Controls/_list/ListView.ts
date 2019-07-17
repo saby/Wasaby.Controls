@@ -79,6 +79,7 @@ var ListView = BaseControl.extend(
                if (changesType !== 'hoveredItemChanged' &&
                   changesType !== 'activeItemChanged' &&
                   changesType !== 'markedKeyChanged' &&
+                  changesType !== 'itemActionsUpdated' &&
                   !this._pendingRedraw) {
                   this._pendingRedraw = true;
                }
@@ -166,7 +167,7 @@ var ListView = BaseControl.extend(
 
         _onItemContextMenu: function(event, itemData) {
            if (this._options.contextMenuEnabled !== false && this._options.contextMenuVisibility !== false && !this._options.listModel.getEditingItemData()) {
-                this._notify('itemContextMenu', [itemData, event, true]);
+                this._notify('itemContextMenu', [itemData, event, false]);
             }
         },
 

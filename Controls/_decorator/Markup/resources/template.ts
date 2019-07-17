@@ -35,6 +35,30 @@ import validHtml = require('Core/validHtml');
       return typeof value === 'string' || value instanceof String;
    }
 
+   function generateEventSubscribeObject(handlerName) {
+      return {
+         name: 'event',
+         args: [],
+         value: handlerName,
+         fn: (function(self) {
+            const f = (function() {
+               const event = arguments[0];
+               event.result = thelpers.getter(this, [handlerName]).apply(this, arguments);
+            }).bind(self);
+            f.control = self;
+            f.isControlEvent = false;
+            return f;
+         })(control)
+      };
+   }
+
+   function addEventListener(events, eventName, handlerName) {
+      if (!events[eventName]) {
+         events[eventName] = [];
+      }
+      events[eventName].push(generateEventSubscribeObject(handlerName));
+   }
+
    // A link from an attribute (for example, href in an a tag or src in an iframe tag) can't begin with "javascript:".
    // This is a way to call any javascript code after such a start.
    function isLinkAttributeWithJavascript(attributeName, attributeValue) {
@@ -57,7 +81,7 @@ import validHtml = require('Core/validHtml');
       }
    }
 
-   function recursiveMarkup(value, attrsToDecorate, key, parent) {
+   function recursiveMarkup(value, attrsToDecorate, key, parent?) {
       var valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
          wasResolved,
          i;
@@ -102,26 +126,31 @@ import validHtml = require('Core/validHtml');
       return [markupGenerator.createTag(tagName, attrs, children, attrsToDecorate, defCollection, control, key)];
    }
 
-   var template = function(data, attr, context, isVdom, sets) {
+   var template = function(data, attr, context, isVdom, sets?) {
       markupGenerator = thelpers.getMarkupGenerator(isVdom);
       defCollection = {
          id: [],
          def: undefined
       };
       control = data;
-      resolver = data._options.tagResolver;
-      resolverParams = data._options.resolverParams || {};
+      resolver = control._options.tagResolver;
+      resolverParams = control._options.resolverParams || {};
       resolverMode = 1;
-      currentValidHtml = data._options.validHtml || validHtml;
+      currentValidHtml = control._options.validHtml || validHtml;
 
+      const events = attr.events || {};
+      if (typeof window !== 'undefined') {
+         addEventListener(events, 'on:contextmenu', '_contextMenuHandler');
+      }
       var elements = [],
          key = (attr && attr.key) || '_',
          attrsToDecorate = {
             attributes: attr.attributes,
+            events: events,
             context: attr.context
          },
          oldEscape,
-         value = data._options.value;
+         value = control._options.value;
       if (value && value.length) {
          // Need just one root node.
 
@@ -155,14 +184,14 @@ import validHtml = require('Core/validHtml');
       try {
          elements = recursiveMarkup(value, attrsToDecorate, key + '0_');
       } catch (e) {
-         thelpers.templateError('Controls/_decorator/Markup', e, data);
+         thelpers.templateError(control._moduleName, e, control);
       } finally {
          markupGenerator.escape = oldEscape;
       }
 
       if (!elements.length) {
          elements = [markupGenerator.createTag('invisible-node', { key: key + '0_' }, [], attrsToDecorate,
-            defCollection, data, key + '0_')];
+            defCollection, control, key + '0_')];
       }
       return markupGenerator.joinElements(elements, key, defCollection);
    };

@@ -16,9 +16,14 @@ const STICKY_HEADER_ZINDEX = 3;
 
 var
     _private = {
-        calcItemColumnVersion: function(self, itemVersion, columnIndex) {
-            return itemVersion + '_' + self._columnsVersion + '_' +
-               (self._options.multiSelectVisibility === 'hidden' ? columnIndex : columnIndex - 1);
+        calcItemColumnVersion: function(self, itemVersion, columnIndex, index) {
+            let
+                hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
+                version = `${itemVersion}_${self._columnsVersion}_${hasMultiselect ? columnIndex - 1 : columnIndex}`;
+
+            version += _private.calcLadderVersion(self._ladder, index);
+
+            return version;
         },
         isDrawActions: function(itemData, currentColumn, colspan) {
             return itemData.drawActions &&
@@ -439,6 +444,33 @@ var
                 ]);
             }
 
+        },
+
+        calcLadderVersion(ladder = {}, index): string {
+
+            function getItemsLadderVersion(ladder) {
+                let ladderVersion = '';
+
+                Object.keys(ladder).forEach((ladderProperty) => {
+                    ladderVersion += (ladder[ladderProperty].ladderLength || 0) + '_';
+                });
+
+                return ladderVersion;
+            }
+
+            let
+                version = '',
+                simpleLadder = ladder.ladder && ladder.ladder[index],
+                stickyLadder = ladder.stickyLadder && ladder.stickyLadder[index];
+
+            if (simpleLadder) {
+                version += 'LP_' + getItemsLadderVersion(simpleLadder);
+            }
+            if (stickyLadder) {
+                version += 'SP_' + getItemsLadderVersion(stickyLadder);
+            }
+
+            return version;
         }
 
     },
@@ -517,6 +549,10 @@ var
 
         _updateIndexesCallback(): void {
             this._ladder = _private.prepareLadder(this);
+        },
+
+        setKeyProperty(keyProperty: string): void {
+            this._options.keyProperty = keyProperty;
         },
 
         _nextModelVersion: function(notUpdatePrefixItemVersion) {
@@ -1145,7 +1181,7 @@ var
             current.columnIndex = 0;
 
             current.getVersion = function() {
-                return self._calcItemVersion(current.item, current.key);
+                return self._calcItemVersion(current.item, current.key, current.index);
             };
 
             current.getItemColumnCellClasses = _private.getItemColumnCellClasses;
@@ -1183,7 +1219,7 @@ var
                         isEditing: current.isEditing,
                         isActive: current.isActive,
                         getVersion: function() {
-                           return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex);
+                           return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex, current.index);
                         },
                         _preferVersionAPI: true
                     };
@@ -1307,9 +1343,9 @@ var
             this._model.setItemActionVisibilityCallback(callback);
         },
 
-        _calcItemVersion: function(item, key) {
+        _calcItemVersion: function(item, key, index) {
             var
-                version = this._model._calcItemVersion(item, key);
+                version = this._model._calcItemVersion(item, key) + (item.getId ? item.getId() : '');
 
             if (this._lastItemKey === key) {
                 version = 'LAST_ITEM_' + version;
@@ -1318,6 +1354,9 @@ var
             if (GridLayoutUtil.isPartialGridSupport() && this._model.getHoveredItem() === item) {
                 version = 'HOVERED_' + version;
             }
+
+            version += _private.calcLadderVersion(this._ladder, index);
+
             return version;
         },
 

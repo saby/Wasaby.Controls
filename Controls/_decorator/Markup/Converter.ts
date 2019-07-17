@@ -177,8 +177,9 @@ import { IoC } from 'Env/Env';
             value: json,
             tagResolver: tagResolver,
             resolverParams: resolverParams
-         }
-      }, {});
+         },
+         _moduleName: 'Controls/decorator:Converter'
+      }, {}, {}, false);
 
       // Invisible node in vdom equals empty string in html.
       return result === '<invisible-node></invisible-node>' ? '' : result;
@@ -206,7 +207,7 @@ import { IoC } from 'Env/Env';
     * @author Кондаков Р.Н.
     * @public
     */
-   
+
    var MarkupConverter = {
       htmlToJson: htmlToJson,
       jsonToHtml: jsonToHtml,

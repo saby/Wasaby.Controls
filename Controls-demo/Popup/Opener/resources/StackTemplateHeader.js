@@ -1,5 +1,6 @@
 define('Controls-demo/Popup/Opener/resources/StackTemplateHeader',
    [
+      'Env/Env',
       'Core/Control',
       'wml!Controls-demo/Popup/Opener/resources/StackTemplateHeader',
       'Controls-demo/List/Tree/GridData',
@@ -9,7 +10,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateHeader',
       'css!Controls-demo/Popup/Opener/resources/StackHeader',
       'wml!Controls-demo/List/Tree/DemoContentTemplate'
    ],
-   function (Control, template, GridData, MemorySource, Source) {
+   function (Env, Control, template, GridData, MemorySource, Source) {
       'use strict';
 
       var PopupPage = Control.extend({
@@ -91,7 +92,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateHeader',
                   title: 'прочитано',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-                     console.log('action read Click');
+                     Env.IoC.resolve('ILogger').info('action read Click');
                   }
                },
                {
@@ -99,7 +100,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateHeader',
                   icon: 'icon-primary icon-PhoneNull',
                   title: 'phone',
                   handler: function(item) {
-                     console.log('action phone Click ', item);
+                     Env.IoC.resolve('ILogger').info('action phone Click ', item);
                   }
                },
                {
@@ -116,7 +117,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateHeader',
                   title: 'profile',
                   showType: this.showType.MENU_TOOLBAR,
                   handler: function() {
-                     console.log('action profile Click');
+                     Env.IoC.resolve('ILogger').info('action profile Click');
                   }
                },
                {
@@ -125,7 +126,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateHeader',
                   title: 'delete pls',
                   showType: this.showType.TOOLBAR,
                   handler: function() {
-                     console.log('action delete Click');
+                     Env.IoC.resolve('ILogger').info('action delete Click');
                   }
                }
             ];

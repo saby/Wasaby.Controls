@@ -342,8 +342,8 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                this._items = receivedState.items;
                if (options.items) {
                   _private.prepareItems(this, options.items);
-                  _private.calculateStateSourceControllers(this._configs, this._items);
                }
+               _private.calculateStateSourceControllers(this._configs, this._items);
             } else if (options.items) {
                _private.prepareItems(this, options.items);
                resultDef = _private.reload(this);
