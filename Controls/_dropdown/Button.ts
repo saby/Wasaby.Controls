@@ -59,6 +59,8 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 
 /**
  * @event Controls/_dropdown/Button#menuItemActivate Происходит при выборе элемента из списка.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Выбранный элемент.
  * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, выпадающий список не закроется.
  * По умолчанию, когда выбран пункт с иерархией, выпадающий список закрывается.
  */

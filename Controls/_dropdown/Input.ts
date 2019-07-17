@@ -49,11 +49,12 @@ var _private = {
 };
 
 /**
- * Строка-ссылка с возможностью выбора из выпадающего списка. По умолчанию список свернут, отображается только один выбор.
- * Полный список параметров отображается при клике на контрол.
+ * Ссылка с выпадающим меню. 
+ * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию закрыто. 
+ * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
  * <a href="/materials/demo-ws4-input-dropdown">Демо-пример</a>.
+ * Руководство разработчика {@link /doc/platform/developmentapl/interface-development/controls/dropdown-menu/index/ Меню и выпадающий список}.
  *
- * Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
  * @class Controls/_dropdown/Input
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
