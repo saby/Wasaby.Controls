@@ -89,9 +89,9 @@ var _private = {
     }
 };
 var ItemsViewModel = BaseViewModel.extend({
-
     _display: null,
     _items: null,
+    _itemDataCache: null,
     _curIndex: 0,
     _onCollectionChangeFnc: null,
     _collapsedGroups: null,
@@ -100,6 +100,7 @@ var ItemsViewModel = BaseViewModel.extend({
 
     constructor: function(cfg) {
         this._prefixItemVersion = 0;
+        this._itemDataCache = {};
         ItemsViewModel.superclass.constructor.apply(this, arguments);
         this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
         this._collapsedGroups = _private.prepareCollapsedGroupsByArray(cfg.collapsedGroups);
@@ -180,6 +181,16 @@ var ItemsViewModel = BaseViewModel.extend({
             this._prefixItemVersion++;
         }
         this._nextVersion();
+
+        let changedItems = [];
+        if (Array.isArray(newItems) && newItems.length > 0) {
+            changedItems = changedItems.concat(newItems);
+        }
+        if (Array.isArray(removedItems) && removedItems.length > 0) {
+            changedItems = changedItems.concat(removedItems);
+        }
+        this._resetCacheOnChange(changesType, changedItems);
+
         this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     },
 
@@ -201,6 +212,12 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     getItemDataByItem: function(dispItem) {
+        const cacheKey = this._getDisplayItemCacheKey(dispItem);
+
+        if (this._isCachedItemData(cacheKey)) {
+            return this._getCachedItemData(cacheKey);
+        }
+
         var
             self = this,
             itemData = {
@@ -237,6 +254,9 @@ var ItemsViewModel = BaseViewModel.extend({
                 itemData.metaData = this._items.getMetaData();
             }
         }
+
+        this._setCachedItemData(cacheKey, itemData);
+
         return itemData;
     },
 
@@ -339,6 +359,45 @@ var ItemsViewModel = BaseViewModel.extend({
         // method may be implemented
     },
 
+    _getDisplayItemCacheKey: function(dispItem) {
+        return ItemsUtil.getDisplayItemKey(dispItem);
+    },
+    _isCachedItemData: function(itemKey) {
+        return (
+            typeof itemKey !== 'undefined' &&
+            typeof this._itemDataCache[itemKey] !== 'undefined'
+        );
+    },
+    _getCachedItemData: function(itemKey) {
+        return this._itemDataCache[itemKey];
+    },
+    _setCachedItemData: function(itemKey, cache) {
+        this._itemDataCache[itemKey] = cache;
+    },
+    _resetCachedItemData: function(itemKey?) {
+        if (typeof itemKey !== 'undefined') {
+            delete this._itemDataCache[itemKey];
+        } else {
+            this._itemDataCache = {};
+        }
+    },
+    _resetCacheOnChange: function(changesType, changedItems?) {
+        if (
+            changesType === 'indexesChanged' ||
+            changesType === 'itemActionsUpdated'
+        ) {
+            return;
+        } else if (Array.isArray(changedItems) && changedItems.length > 0) {
+            changedItems.forEach((item) => {
+                const key = this._getDisplayItemCacheKey(item);
+                this._resetCachedItemData(key);
+            });
+        } else {
+            // Full cache reset
+            this._resetCachedItemData();
+        }
+    },
+
     _isGroup: function(item) {
         return item === ControlsConstants.view.hiddenGroup || !item.get
     },
@@ -401,6 +460,7 @@ var ItemsViewModel = BaseViewModel.extend({
             this._display = null;
         }
         this._items = null;
+        this._itemDataCache = null;
         this._curIndex = null;
         this._onCollectionChangeFnc = null;
     }

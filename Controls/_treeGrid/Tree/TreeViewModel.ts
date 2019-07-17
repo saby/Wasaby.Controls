@@ -379,6 +379,13 @@ var
         getItemDataByItem: function(dispItem) {
             var
                 current = TreeViewModel.superclass.getItemDataByItem.apply(this, arguments);
+
+            if (current._treeViewModelCached) {
+                return current;
+            } else {
+                current._treeViewModelCached = true;
+            }
+
             current.isExpanded = current.item.get && this.isExpanded(dispItem);
             current.parentProperty = this._options.parentProperty;
             current.nodeProperty = this._options.nodeProperty;

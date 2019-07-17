@@ -30,8 +30,14 @@ var
       getItemDataByItem() {
          var
             self = this,
-            data = SearchViewModel.superclass.getItemDataByItem.apply(this, arguments),
-            s = SearchViewModel.superclass;
+            data = SearchViewModel.superclass.getItemDataByItem.apply(this, arguments);
+
+         if (data._searchViewModelCached) {
+            return data;
+         } else {
+            data._searchViewModelCached = true;
+         }
+
          // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
          data.breadCrumbs = !!data.item.forEach;
          data.resolveItemTemplate = function(itemData) {

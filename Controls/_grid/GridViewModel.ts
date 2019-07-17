@@ -1122,12 +1122,32 @@ var
             this._model.setMenuState(state);
         },
 
+        _isCachedItemData: function(itemKey) {
+            return this._model._isCachedItemData(itemKey);
+        },
+        _getCachedItemData: function(itemKey) {
+            return this._model._getCachedItemData(itemKey);
+        },
+        _setCachedItemData: function(itemKey, cache) {
+            this._model._setCachedItemData(itemKey, cache);
+        },
+        _resetCachedItemData: function(itemKey?) {
+            this._model._resetCachedItemData(itemKey);
+        },
+
         getItemDataByItem: function(dispItem) {
             var
                 self = this,
-                stickyColumn = _private.getStickyColumn(this._options),
                 current = this._model.getItemDataByItem(dispItem),
-                isStickedColumn;
+                stickyColumn, isStickedColumn;
+
+            if (current._gridViewModelCached) {
+                return current;
+            } else {
+                current._gridViewModelCached = true;
+            }
+
+            stickyColumn = _private.getStickyColumn(this._options)
 
             //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             current.rowSpacing = this._options.rowSpacing;
