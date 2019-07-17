@@ -214,8 +214,8 @@ var ItemsViewModel = BaseViewModel.extend({
     getItemDataByItem: function(dispItem) {
         const cacheKey = this._getDisplayItemCacheKey(dispItem);
 
-        if (this._isCachedItemData(cacheKey)) {
-            return this._getCachedItemData(cacheKey);
+        if (this.isCachedItemData(cacheKey)) {
+            return this.getCachedItemData(cacheKey);
         }
 
         var
@@ -255,7 +255,7 @@ var ItemsViewModel = BaseViewModel.extend({
             }
         }
 
-        this._setCachedItemData(cacheKey, itemData);
+        this.setCachedItemData(cacheKey, itemData);
 
         return itemData;
     },
@@ -362,19 +362,19 @@ var ItemsViewModel = BaseViewModel.extend({
     _getDisplayItemCacheKey: function(dispItem) {
         return ItemsUtil.getDisplayItemKey(dispItem);
     },
-    _isCachedItemData: function(itemKey) {
+    isCachedItemData: function(itemKey) {
         return (
             typeof itemKey !== 'undefined' &&
             typeof this._itemDataCache[itemKey] !== 'undefined'
         );
     },
-    _getCachedItemData: function(itemKey) {
+    getCachedItemData: function(itemKey) {
         return this._itemDataCache[itemKey];
     },
-    _setCachedItemData: function(itemKey, cache) {
+    setCachedItemData: function(itemKey, cache) {
         this._itemDataCache[itemKey] = cache;
     },
-    _resetCachedItemData: function(itemKey?) {
+    resetCachedItemData: function(itemKey?) {
         if (typeof itemKey !== 'undefined') {
             delete this._itemDataCache[itemKey];
         } else {
@@ -390,11 +390,11 @@ var ItemsViewModel = BaseViewModel.extend({
         } else if (Array.isArray(changedItems) && changedItems.length > 0) {
             changedItems.forEach((item) => {
                 const key = this._getDisplayItemCacheKey(item);
-                this._resetCachedItemData(key);
+                this.resetCachedItemData(key);
             });
         } else {
             // Full cache reset
-            this._resetCachedItemData();
+            this.resetCachedItemData();
         }
     },
 

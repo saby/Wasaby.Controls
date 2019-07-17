@@ -17,17 +17,17 @@ var BaseViewModel = cExtend.extend([entity.ObservableMixin.prototype, entity.Ver
         this._options = cfg;
     },
 
-    _isCachedItemData: function(itemKey) {
-        throw new Error(`BaseViewModel#_isCachedItemData is not implemented for ${this._moduleName}`);
+    isCachedItemData: function(itemKey) {
+        throw new Error(`BaseViewModel#isCachedItemData is not implemented for ${this._moduleName}`);
     },
-    _getCachedItemData: function(itemKey) {
-        throw new Error(`BaseViewModel#_getCachedItemData is not implemented for ${this._moduleName}`);
+    getCachedItemData: function(itemKey) {
+        throw new Error(`BaseViewModel#getCachedItemData is not implemented for ${this._moduleName}`);
     },
-    _setCachedItemData: function(itemKey, cache) {
-        throw new Error(`BaseViewModel#_setCachedItemData is not implemented for ${this._moduleName}`);
+    setCachedItemData: function(itemKey, cache) {
+        throw new Error(`BaseViewModel#setCachedItemData is not implemented for ${this._moduleName}`);
     },
-    _resetCachedItemData: function(itemKey) {
-        throw new Error(`BaseViewModel#_resetCachedItemData is not implemented for ${this._moduleName}`);
+    resetCachedItemData: function(itemKey) {
+        throw new Error(`BaseViewModel#resetCachedItemData is not implemented for ${this._moduleName}`);
     },
 
     destroy: function () {

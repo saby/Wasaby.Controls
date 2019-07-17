@@ -1122,17 +1122,17 @@ var
             this._model.setMenuState(state);
         },
 
-        _isCachedItemData: function(itemKey) {
-            return this._model._isCachedItemData(itemKey);
+        isCachedItemData: function(itemKey) {
+            return this._model.isCachedItemData(itemKey);
         },
-        _getCachedItemData: function(itemKey) {
-            return this._model._getCachedItemData(itemKey);
+        getCachedItemData: function(itemKey) {
+            return this._model.getCachedItemData(itemKey);
         },
-        _setCachedItemData: function(itemKey, cache) {
-            this._model._setCachedItemData(itemKey, cache);
+        setCachedItemData: function(itemKey, cache) {
+            this._model.setCachedItemData(itemKey, cache);
         },
-        _resetCachedItemData: function(itemKey?) {
-            this._model._resetCachedItemData(itemKey);
+        resetCachedItemData: function(itemKey?) {
+            this._model.resetCachedItemData(itemKey);
         },
 
         getItemDataByItem: function(dispItem) {
