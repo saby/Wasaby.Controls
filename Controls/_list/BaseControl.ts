@@ -1327,7 +1327,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions);
-        if (newOptions.navigation !== this._options.navigation) {
+        if (!isEqual(newOptions.navigation, this._options.navigation)) {
             _private.initializeNavigation(this, newOptions, resetPaging);
         }
         _private.updateNavigation(this);
