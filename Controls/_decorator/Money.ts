@@ -134,6 +134,14 @@ var _private = {
       }
 
       return options.value;
+   },
+
+   getTitle: function(options, value) {
+      if (options.hasOwnProperty('title')) {
+         return options.title;
+      }
+
+      return value;
    }
 };
 
@@ -142,11 +150,14 @@ var Money = Control.extend({
 
    _parsedNumber: null,
 
+   _title: null,
+
    _beforeMount: function (options) {
       this._parsedNumber = _private.parseNumber(
          _private.getValue(options, true),
          _private.isUseGrouping(options, true)
       );
+      this._title = _private.getTitle(options, this._parsedNumber.number);
    },
 
    _beforeUpdate: function (newOptions) {
@@ -158,6 +169,7 @@ var Money = Control.extend({
       if (newValue !== oldValue || newUseGrouping !== oldUseGrouping) {
          this._parsedNumber = _private.parseNumber(newValue, newUseGrouping);
       }
+      this._title = _private.getTitle(newOptions, this._parsedNumber.number);
    },
 
    _isDisplayFractionPath: function(value, showEmptyDecimals) {
