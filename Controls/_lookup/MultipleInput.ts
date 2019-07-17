@@ -5,6 +5,7 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
 /**
  * Контрол позволяет выбрать значение в диалоговом окне или предложить список возможных значений в автодополнении.
  * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-lookup">демонстрационный пример</a>
+ * Смотрите так же {@link Controls/lookup:Link метка для Lookup} и {@link Controls/lookup:PlaceholderChooser}.
  *
  * @class Controls/_lookup/MultipleInput
  * @extends Core/Control
@@ -28,6 +29,7 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
 /*
  * The Lookup control allows you to select a value from a dialogs or suggest containing a list of possible values.
  * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
+ * See also {@link Controls/lookup:Link label for Lookup} and {@link Controls/lookup:PlaceholderChooser}.
  *
  * @class Controls/_lookup/MultipleInput
  * @extends Core/Control

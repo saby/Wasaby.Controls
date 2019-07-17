@@ -7,7 +7,9 @@ import 'css!theme?Controls/filterPopup';
 
 /**
  * Метка с полем связи. Пока коллекция пуста - поле связи скрыто.
- * Смотрите так же <a href="/materials/demo-ws4-engine-selector-lookup">демо пример</a>.
+ * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-lookup">демо пример</a>.
+ * Смотрите так же {@link Controls/lookup:Link метка для Lookup} и {@link Controls/lookup:PlaceholderChooser}.
+ *
  * @class Controls/_filterPopup/Panel/Lookup
  * @extends Core/Control
  * @mixes Controls/_interface/ILookup
@@ -30,6 +32,8 @@ import 'css!theme?Controls/filterPopup';
 /*
  * Label with a Lookup. While the collection is empty - the Lookup is hidden.
  * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
+ * See also {@link Controls/lookup:Link label for Lookup} and {@link Controls/lookup:PlaceholderChooser}.
+ *
  * @class Controls/_filterPopup/Panel/Lookup
  * @extends Core/Control
  * @mixes Controls/_interface/ILookup

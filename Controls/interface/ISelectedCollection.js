@@ -15,7 +15,7 @@ define('Controls/interface/ISelectedCollection', [
 
    /**
     * @name Controls/interface/ISelectedCollection#displayProperty
-    * @cfg {String} Название поля, значение которого будет отображаться.
+    * @cfg {String} Имя свойства элемента, содержимое которого будет отображаться.
     */
    /*
     * @name Controls/interface/ISelectedCollection#displayProperty
@@ -24,11 +24,11 @@ define('Controls/interface/ISelectedCollection', [
    
    /**
     * @name Controls/interface/ISelectedCollection#multiSelect
-    * @cfg {Boolean} Режим выбора, если значение false, можно выбрать только один элемент.
+    * @cfg {Boolean} Определяет режим выбора. Если значение false, можно выбрать только один элемент.
     */
    /*
     * @name Controls/interface/ISelectedCollection#multiSelect
-    * @cfg {Boolean} Selection mode, if value false you can choose only one item.
+    * @cfg {Boolean} Specifies the selection mode. If false, only one item can be selected.
     */
 
    /**
@@ -53,10 +53,10 @@ define('Controls/interface/ISelectedCollection', [
     * Базовый шаблон поддерживают такие параметры как:
     * <ul>
     *    <li>contentTemplate {Function|String} - Шаблон содержимого элемента.</li>
-    *    <li>crossTemplate {Function|String} - Шаблон кнопки удаления.</li>
+    *    <li>crossTemplate {Function|String} - Шаблон крестика удаления элемента.</li>
     *    <li>displayProperty {String} - Имя поля, значение которого будет отображаться.</li>
-    *    <li>clickable {Boolean} - Задает стиль кликабельности элементам коллекции, добавляет подчеркивание при наведении, актуален только в случае использования contentTemplate по умолчанию.</li>
-    *    <li>size {Enum} - Размер текста для содержимого элемента, актуален только в случае использования contentTemplate по умолчанию.</li>
+    *    <li>clickable {Boolean} - Определяет, показывать ли подчеркивание при наведении, допустим только в случае использования contentTemplate по умолчанию.</li>
+    *    <li>size {Enum} - Размер текста для содержимого элемента, допустим только в случае использования contentTemplate по умолчанию.</li>
     *    <ul>
     *       <li>m</li>
     *       <li>l</li>
@@ -64,7 +64,7 @@ define('Controls/interface/ISelectedCollection', [
     *       <li>2xl</li>
     *       <li>3xl</li>
     *    </ul>
-    *    <li>style {Enum} - Стиль текста для содержимого элемента, актуален только в случае использования contentTemplate по умолчанию.</li>
+    *    <li>style {Enum} - Стиль текста для содержимого элемента, допустим только в случае использования contentTemplate по умолчанию.</li>
     *    <ul>
     *       <li>default</li>
     *       <li>bold</li>
@@ -150,7 +150,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#textValueChanged Срабатывает при изменении набора выбранной коллекции.
+    * @event Controls/interface/ISelectedCollection#textValueChanged Происходит при изменении набора выбранной коллекции.
     * @param {Env/Event:Object} eventObject Декскриптор события.
     * @param {String} textValue Строка, сформированная из выбранных записей.
     * @example
@@ -193,7 +193,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#itemsChanged Срабатывает при изменении набора выбранной коллекции.
+    * @event Controls/interface/ISelectedCollection#itemsChanged Происходит при изменении набора выбранной коллекции.
     * @param {Env/Event:Object} eventObject Дескриптор события.
     * @param {RecordSet} items Список выбранных записей.
     * @example
@@ -236,7 +236,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#itemClick Срабатывает при нажатии на элемент коллекции.
+    * @event Controls/interface/ISelectedCollection#itemClick Происходит при нажатии на элемент коллекции.
     * @param {Env/Event:Object} eventObject Дескриптор события.
     * @param {RecordSet} item Элемент выбраной коллекции.
     */
@@ -247,7 +247,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#openInfoBox Срабатывает перед открытием всплывающего окна со всеми выбранными записями.
+    * @event Controls/interface/ISelectedCollection#openInfoBox Происходит перед открытием всплывающего окна со всеми выбранными записями.
     * @param {Env/Event:Object} eventObject Дескриптор события.
     * @param {Object} config Конфиг, по которому будет построено всплывающее окно.
     * @example
@@ -302,7 +302,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#closeInfoBox Срабатывает при закрытии всплывающего окна со всеми выбранными записями.
+    * @event Controls/interface/ISelectedCollection#closeInfoBox Происходит при закрытии всплывающего окна со всеми выбранными записями.
     * @param {Env/Event:Object} eventObject Дескриптор события.
     */
    /*

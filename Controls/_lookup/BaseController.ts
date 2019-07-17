@@ -145,20 +145,22 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
    };
 
    /**
-    * Контроллер выбранной коллекции.
+    * Контроллер выбранной коллекции, используется в полях связи и кнопках выбора из справочника.
+    * Загружает выбранную коллекцию по ключам и источнику, совершает операции над коллекцией: добавление, удалением элементов и т.д, работает со справочником.
     * @class Controls/_lookup/SelectedCollection/Controller
     * @extends Core/Control
     * @control
     * @private
-    * @author Крайнов Д.О.
+    * @author Капустин И.А.
     */
    /*
-    * SelectedCollection Controller
+    * The controller of the selected collection is used in the communication fields and the selection buttons from the directory.
+    * Loads the selected collection by key and source, performs operations on the collection: adding, deleting items, etc., works with the directory.
     * @class Controls/_lookup/SelectedCollection/Controller
     * @extends Core/Control
     * @control
     * @private
-    * @author Krainov D.O.
+    * @author Kapustin I.A.
     */
 
    var CollectionController = Control.extend({

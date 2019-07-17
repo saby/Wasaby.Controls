@@ -56,7 +56,7 @@ export default interface ILookup {
  * Открыть справочник.
  * @function Controls/_interface/ILookup#showSelector
  * @returns {Promise}
- * @param {PopupOptions[]} popupOptions Опции всплывающего окна.
+ * @param {Object} popupOptions {@link Controls/_popup/Opener/Stack/PopupOptions.typedef Опции всплывающего окна.}
  * @example
  * Откроем окно с заданными параметрами.
  * wml
@@ -99,7 +99,7 @@ export default interface ILookup {
  * Open stack popup.
  * @function Controls/_interface/ILookup#showSelector
  * @returns {Promise}
- * @param {PopupOptions[]} popupOptions Stack popup options.
+ * @param {Object} popupOptions {@link Controls/_popup/Opener/Stack/PopupOptions.typedef Stack popup options.}
  * @example
  * Open stack with specified configuration.
  * wml
@@ -140,22 +140,22 @@ export default interface ILookup {
  */
 
 /**
- * @event Controls/_interface/ILookup#selectorCallback Срабатывает при выборе элементов из справочника.
+ * @event Controls/_interface/ILookup#selectorCallback Происходит при выборе элементов из справочника.
  * @param {Env/Event:Object} eventObject Дескриптор события.
- * @param {RecordSet} currentItems Текущий список элементов в Lookup.
- * @param {RecordSet} newItems Список элементов, выбранных из справочника.
+ * @param {RecordSet} initialItems Список выбранных элементов, перед открытием справочника.
+ * @param {RecordSet} newItems Список выбранных элементов, после выбора из справочника.
  */
 /*
  * @event Controls/_interface/ILookup#selectorCallback Occurs when selected items with selector.
  * @param {Env/Event:Object} eventObject The event descriptor.
- * @param {RecordSet} currentItems Current list of items in Lookup.
- * @param {RecordSet} newItems List of items selected from selector.
+ * @param {RecordSet} initialItems List of selected items before opening the directory.
+ * @param {RecordSet} newItemsThe list of selected items, after selecting from the directory.
  */
 
 /**
- * @event Controls/_interface/ILookup#showSelector Срабатывает перед открытием справочника через интерфейс.
+ * @event Controls/_interface/ILookup#showSelector Происходит перед открытием справочника через интерфейс.
  * @param {Env/Event:Object} eventObject Дескриптор события.
- * @param {PopupOptions[]} popupOptions Опции всплывающего окна.
+ * @param {Object} popupOptions {@link Controls/_popup/Opener/Stack/PopupOptions.typedef Опции всплывающего окна.}
  * @example
  * В следующем примере создается Controls/lookup:Input и демонстрируется сценарий использования.
  * WML:
@@ -188,7 +188,7 @@ export default interface ILookup {
 /*
  * @event Controls/_interface/ILookup#showSelector Occurs before opening the selector through the interface.
  * @param {Env/Event:Object} eventObject The event descriptor.
- * @param {PopupOptions[]} popupOptions Stack popup options.
+ * @param {Object} popupOptions {@link Controls/_popup/Opener/Stack/PopupOptions.typedef Stack popup options.}
  * @example
  * The following example creates Controls/lookup:Input and shows how to handle the event.
  * WML:
@@ -217,31 +217,4 @@ export default interface ILookup {
  *       return false;
  *    }
  * </pre>
- */
-
-/**
- * @typedef {Object} PopupOptions
- * @description Опции всплывающего окна.
- * @property {Boolean} autofocus  Определяет, перевести ли фокус при открытии всплывающего окна.
- * @property {Boolean} modal Задает модальность окна.
- * @property {String} className Имена классов для вслпывающего окна.
- * @property {Boolean} closeOnOutsideClick Определяет, надо ли закрывать всплывающее окно, при клике за пределы этого окна.
- * @property {function|String} template Шаблон внутри всплывающего окна.
- * @property {function|String} templateOptions Опции для шаблона.
- * @property {Number} minWidth Минимальная ширина окна.
- * @property {Number} maxWidth Максимальная ширина окна.
- * @property {Number} width Ширина окна.
- */
-/*
- * @typedef {Object} PopupOptions
- * @description Stack popup options.
- * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
- * @property {Boolean} modal Determines whether the window is modal.
- * @property {String} className Class names of popup.
- * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
- * @property {function|String} template Template inside popup.
- * @property {function|String} templateOptions Template options inside popup.
- * @property {Number} minWidth The minimum width of popup.
- * @property {Number} maxWidth The maximum width of popup.
- * @property {Number} width Width of popup.
  */

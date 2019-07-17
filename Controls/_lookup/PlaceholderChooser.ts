@@ -3,7 +3,7 @@ import template = require('wml!Controls/_lookup/PlaceholderChooser/PlaceholderCh
 import collection = require('Types/collection');
 
 /**
- * Контрол, который формирует "placeholder" для "Lookup".
+ * Обертка над "Lookup", которая следит за изменениями выбранных записей, и на основании них отдает один из возможных заранее сформированных "placeholders".
  * @class Controls/_lookup/PlaceholderChooser
  * @control
  * @extends Core/Control
@@ -11,7 +11,7 @@ import collection = require('Types/collection');
  * @author Капустин И.А.
  */
 /*
- * The control that forms the "placeholder" for the "Lookup".
+ * A wrapper over the "Lookup" that monitors changes to the selected entries, and on the basis of them gives one of the possible pre-formed "placeholders".
  * @class Controls/_lookup/PlaceholderChooser
  * @control
  * @extends Core/Control

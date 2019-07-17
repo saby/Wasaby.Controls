@@ -7,6 +7,7 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * Может отображаться в однострочном и многострочном режиме.
  * Поддерживает одиночный и множественный выбор.
  * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-lookup">демонстрационный пример</a>.
+ * Смотрите так же {@link Controls/lookup:Link метка для Lookup} и {@link Controls/lookup:PlaceholderChooser}.
  *
  * @class Controls/_lookup/Lookup
  * @extends Core/Control
@@ -33,6 +34,7 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * Сan be displayed in single-line and multi-line mode.
  * Supports single and multiple selection.
  * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
+ * See also {@link Controls/lookup:Link label for Lookup} and {@link Controls/lookup:PlaceholderChooser}.
  *
  * @class Controls/_lookup/Lookup
  * @extends Core/Control

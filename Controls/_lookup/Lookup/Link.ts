@@ -6,7 +6,7 @@ import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
 import 'css!theme?Controls/lookup';
 
 /**
- * Кнопка-ссылка для использования в "Lookup".
+ * Метка для изспользования внутри поля связи.
  *
  * @class Controls/_lookup/Lookup/Link
  * @extends Core/Control
@@ -17,7 +17,7 @@ import 'css!theme?Controls/lookup';
  * @author Капустин И.А.
  */
 /*
- * Link for use in "Lookup"
+ * Label for use within the link field.
  *
  * @class Controls/_lookup/Lookup/Link
  * @extends Core/Control
