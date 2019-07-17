@@ -87,7 +87,8 @@ var Base = Control.extend({
                 const popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
 
                 cfg._vdomOnOldPage = self._options._vdomOnOldPage;
-                Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function ({popupId, creatingDef}) {
+                Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback((result) => {
+                    const {popupId, creatingDef} = result;
                     if(creatingDef) {
                         creatingDef.addCallback(function () {
                             self._toggleIndicator(false);
@@ -102,11 +103,11 @@ var Base = Control.extend({
 
                         // Call redraw to create emitter on scroll after popup opening
                         self._forceUpdate();
+                        resolve(popupId);
                     } else {
-                        self._action = popupId;
+                        self._action = result;
+                        resolve(result);
                     }
-
-                    resolve(popupId);
                 });
             }).addErrback(() => {
                 self._toggleIndicator(false);
