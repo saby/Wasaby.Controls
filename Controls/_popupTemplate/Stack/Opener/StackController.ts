@@ -243,11 +243,14 @@ const StackController = BaseController.extend({
     _update() {
         const maxPanelWidth = StackStrategy.getMaxPanelWidth();
         const cache = [];
+        const self = this;
         this._stack.each(function(item) {
             if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                 item.position = _private.getItemPosition(item);
-                const currentWidth = item.containerWidth || item.position.stackWidth || item.position.stackMaxWidth;
-
+                if (!item.containerWidth && !item.position.stackWidth) {
+                    item.containerWidth = _private.getContainerWidth(item, self._getPopupContainer(item.id));
+                }
+                const currentWidth = item.containerWidth || item.position.stackWidth;
                 if (currentWidth) {
                     if (cache.indexOf(currentWidth) === -1) {
                         cache.push(currentWidth);
