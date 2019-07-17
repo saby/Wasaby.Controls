@@ -1,4 +1,11 @@
 /**
+ * Библиотека контрола filterCompatible.
+ * @library Controls/filterCompatible
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+/*
  * filterCompatible library
  * @library Controls/filterCompatible
  * @public

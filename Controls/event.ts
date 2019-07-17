@@ -1,4 +1,13 @@
 /**
+ * Библиотека событий.
+ * @library Controls/event
+ * @includes Register Controls/_event/Register
+ * @includes Listener Controls/_event/Listener
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+/*
  * event library
  * @library Controls/event
  * @includes Register Controls/_event/Register
