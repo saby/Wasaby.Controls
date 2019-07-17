@@ -4,7 +4,7 @@ import template = require('wml!Controls/_decorator/Number/Number');
       
 
       /**
-       * Делит число на триады.
+       * Отображает числовое значение в форматированном виде. Форматом является число разбитое на триады с ограниченной дробной частью.
        *
        * @class Controls/_decorator/Number
        * @extends Core/Control
@@ -17,7 +17,7 @@ import template = require('wml!Controls/_decorator/Number/Number');
        */
 
       /*
-       * Divide the number into triads.
+       * Displays a numeric value in formatted view. The format is a number divided into triads with a limited fractional part.
        *
        * @class Controls/_decorator/Number
        * @extends Core/Control
