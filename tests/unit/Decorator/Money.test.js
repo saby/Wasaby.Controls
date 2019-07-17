@@ -86,6 +86,26 @@ define(
             result = decorator.Money.prototype._isDisplayFractionPath('.10', true);
             assert.equal(result, true);
          });
+         it('title', function() {
+            var ctrl = new decorator.Money();
+
+            ctrl._beforeMount({
+               value: '0.00'
+            });
+            assert.equal(ctrl._title, '0.00');
+
+            ctrl._beforeMount({
+               value: '0.00',
+               title: ''
+            });
+            assert.equal(ctrl._title, '');
+
+            ctrl._beforeMount({
+               value: '0.00',
+               title: 'title'
+            });
+            assert.equal(ctrl._title, 'title');
+         });
       });
    }
 );
