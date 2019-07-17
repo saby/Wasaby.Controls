@@ -408,6 +408,7 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
     // Все опции опенера брать нельзя, т.к. ядро добавляет свои опции опенеру (в режиме совместимости), которые на окно
     // попасть не должны.
     const usedOptions = [
+        'showOldIndicator',
         'closeByExternalClick',
         'isCompoundTemplate',
         'eventHandlers',
@@ -511,7 +512,9 @@ Base._openPopup = function (popupId, cfg, controller, def) {
         }
         def.callback({popupId: popupId, creatingDef: null});
     } else {
-        cfg.creatingDef = new Deferred();
+        if (cfg.showOldIndicator) {
+            cfg.creatingDef = new Deferred();
+        }
         popupId = ManagerController.show(cfg, controller);
         def.callback({popupId: popupId, creatingDef: cfg.creatingDef});
     }
