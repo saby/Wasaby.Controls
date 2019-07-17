@@ -64,6 +64,22 @@ var
    };
 
 /**
+ * Контроллер для редактирования полей ввода.
+ * <a href="/materials/demo-ws4-editable-area">Демо-пример</a>.
+ *
+ * @class Controls/_editableArea/View
+ * @extends Core/Control
+ * @mixes Controls/interface/IEditableArea
+ * @author Авраменко А.С.
+ * @public
+ *
+ * @css @background-color_EditableArea_style_withBackground Background color of the input field with the style option set to "accentHeader".
+ * @css @spacing_EditableArea-between-editor-toolbar Spacing between the editor and the toolbar.
+ *
+ * @demo Controls-demo/EditableArea/EditableAreaPG
+ */
+
+/*
  * Controller for editing of input fields.
  * <a href="/materials/demo-ws4-editable-area">Demo</a>.
  *

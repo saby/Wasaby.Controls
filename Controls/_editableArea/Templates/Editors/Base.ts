@@ -5,6 +5,26 @@ import 'css!theme?Controls/editableArea';
 'use strict';
 
 /**
+ * Базовый шаблон редактирования полей ввода. Имитирует стили {@link Controls/input:Text Text}.
+ * <a href="/materials/demo-ws4-editable-area">Демо-пример</a>.
+ *
+ * @class Controls/_editableArea/Templates/Editors/Base
+ * @extends Core/Control
+ * @author Авраменко А.С.
+ * @public
+ *
+ * @css @border-width_EditableAreaTemplate-Base Size of the border of the input field.
+ * @css @padding_EditableAreaTemplate-Base Input padding.
+ * @css @font-size_EditableAreaTemplate-Base_style_accentHeader Font size of the input field with the style option set to "accentHeader".
+ * @css @font-weight_EditableAreaTemplate-Base_style_accentHeader Font weight of the input field with the style option set to "accentHeader".
+ * @css @color_EditableAreaTemplate-Base_style_accentHeader Text color of the input field with the style option set to "accentHeader".
+ *
+ * @see Controls/_editableArea/Templates/Editors/DateTime
+ *
+ * @demo Controls-demo/EditableArea/EditableAreaPG
+ */
+
+/*
  * Base template for editing of input fields. Mimicks styles of {@link Controls/input:Text Text}.
  * <a href="/materials/demo-ws4-editable-area">Demo</a>.
  *
