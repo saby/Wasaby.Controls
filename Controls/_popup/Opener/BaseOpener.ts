@@ -3,6 +3,7 @@ import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import Vdom = require('Vdom/Vdom');
 import CoreMerge = require('Core/core-merge');
+import cInstance = require('Core/core-instance');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
 import Indicator = require('Core/Indicator');
@@ -343,8 +344,14 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
     return def;
 };
 
-Base.closeDialog = (popupId: string) => {
-    return ManagerController.remove(popupId);
+Base.closeDialog = (popupId: any) => {
+    // On old page all vdom popup opening by SBIS3 action
+    if (cInstance.instanceOfMixin(popupId, 'SBIS3.CONTROLS/Action/Mixin/DialogMixin')) {
+        //TODO: COMPATIBLE
+        popupId.closeDialog();
+    } else {
+        return ManagerController.remove(popupId);
+    }
 };
 
 // Lazy load template
