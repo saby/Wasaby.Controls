@@ -245,11 +245,14 @@ import 'css!theme?Controls/popupTemplate';
             let maxPanelWidth = StackStrategy.getMaxPanelWidth();
             let maxWidth = 0;
             let cache = {};
+            let self = this;
             this._stack.each(function(item) {
                if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                   item.position = _private.getItemPosition(item);
-                  let currentWidth = item.containerWidth || item.position.stackWidth || item.position.stackMaxWidth;
-
+                   if (!item.containerWidth && !item.position.stackWidth) {
+                       item.containerWidth = _private.getContainerWidth(item, self._getPopupContainer(item.id));
+                   }
+                   let currentWidth = item.containerWidth || item.position.stackWidth;
                   if (currentWidth) {
                      if (!cache[currentWidth]) {
                         cache[currentWidth] = 1;
