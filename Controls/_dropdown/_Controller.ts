@@ -182,7 +182,7 @@ var _private = {
 };
 
 /**
- * Контейнер для выпадающих списков.
+ * Контроллер для выпадающих списков.
  *
  * @class Controls/_dropdown/_Controller
  * @extends Core/Control
@@ -203,7 +203,7 @@ var _private = {
  */
 
 /*
- * Container for dropdown lists
+ * Controller for dropdown lists
  *
  * @class Controls/_dropdown/_Controller
  * @extends Core/Control
@@ -247,7 +247,7 @@ var _private = {
 
 /**
  * @name Controls/_dropdown/_Controller#marker
- * @cfg {Boolean} Определяет, будет ли маркер отображаться вокруг выбранного элемента.
+ * @cfg {Boolean} Определяет, будет ли маркер отображаться рядом с выбранным элементом.
  */
 
 /*

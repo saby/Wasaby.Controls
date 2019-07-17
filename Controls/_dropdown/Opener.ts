@@ -85,7 +85,7 @@ var _private = {
 };
 
 /**
- * Контрол-опенер для открытия выпадающего меню.
+ * Контрол-опенер для открытия выпадающего списка.
  *
  * @class Controls/_dropdown/Opener
  * @mixes Controls/interface/IDropdownList

@@ -53,7 +53,7 @@ var _private = {
  * Полный список параметров отображается при клике на контрол.
  * <a href="/materials/demo-ws4-input-dropdown">Демо-пример</a>.
  *
- * Для работы одним параметром selectedKeys вы можете использовать контрол с {@link Controls/source:SelectedKey}.
+ * Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
  * @class Controls/_dropdown/Input
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
@@ -109,7 +109,7 @@ var _private = {
  * @cfg {Function} Шаблон, который будет отображать вызываемый элемент.
  * @remark
  * Для определения шаблона вызовите базовый шаблон - "wml!Controls/_dropdown/Input/resources/defaultContentTemplate".
- * Шаблон должен быть помещен в компонент с помощью тега <ws:partial> с атрибутом "template".
+ * Шаблон должен быть помещен в контрол с помощью тега <ws:partial> с атрибутом "template".
  * Содержимое можно переопределить с помощью параметра "contentTemplate".
  * Базовый шаблон wml!Controls/_dropdown/Input/resources/defaultContentTemplate по умолчанию отображает только текст.
  * Для отображения иконки и текста используйте шаблон "wml!Controls/_dropdown/Input/resources/defaultContentTemplateWithIcon".
