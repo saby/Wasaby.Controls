@@ -511,7 +511,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             const id = item.get(this._options.keyProperty);
             if (this.hasItemById(id, this._options.keyProperty)) {
                this._actions[id] = actions;
-               this.resetCachedItemData(id);
+               this.resetCachedItemData(this._convertItemKeyToCacheKey(id));
             }
         }
     },
