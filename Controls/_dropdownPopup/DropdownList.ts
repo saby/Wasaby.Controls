@@ -170,7 +170,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
 
       /**
        *
-       * Шаблон для контролов, которые открывают выпадающий список.
+       * Контрол "Выпадающий список".
        * @control
        * @mixes Controls/_dropdownPopup/DropdownListStyles
        * @public
