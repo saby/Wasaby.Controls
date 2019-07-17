@@ -77,6 +77,11 @@ import 'css!theme?Controls/popupTemplate';
             container.style.width = currentContainerWidth;
             return templateWidth;
          },
+         updatePopupWidth: function(item, self) {
+            if (!item.containerWidth && !item.position.stackWidth) {
+               item.containerWidth = _private.getContainerWidth(item, self._getPopupContainer(item.id));
+            }
+         },
 
          getStackContentWrapperContainer(stackContainer) {
             return stackContainer.querySelector('.controls-Stack__content-wrapper');
@@ -249,8 +254,8 @@ import 'css!theme?Controls/popupTemplate';
             this._stack.each(function(item) {
                if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                   item.position = _private.getItemPosition(item);
-                   if (!item.containerWidth && !item.position.stackWidth) {
-                       item.containerWidth = _private.getContainerWidth(item, self._getPopupContainer(item.id));
+                   if (item.popupState !== BaseController.POPUP_STATE_INITIALIZING) {
+                      _private.updatePopupWidth(item, self)
                    }
                    let currentWidth = item.containerWidth || item.position.stackWidth;
                   if (currentWidth) {
