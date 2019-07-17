@@ -378,7 +378,7 @@ import 'Controls/context';
        * Контрол-контроллер, который позволяет фильтровать данные в {@link Controls/list:View}, используя {@link Filter/Button} или {@link Filter/Fast}.
        * Контроллер позволяет сохранять историю фильтра и восстанавливать страницу после перезагрузки с последним примененным фильтром.
        *
-       * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
+       * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/'>здесь</a>.
        *
        * @class Controls/_filter/Controller
        * @extends Core/Control
