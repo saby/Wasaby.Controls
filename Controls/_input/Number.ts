@@ -5,6 +5,24 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
 
 
 /**
+ * Поле ввода числовых значений.
+ * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+ *
+ * @class Controls/_input/Number
+ * @extends Controls/_input/Base
+ *
+ * @mixes Controls/interface/IInputBase
+ * @mixes Controls/interface/IOnlyPositive
+ * @mixes Controls/interface/IInputNumber
+ * @mixes Controls/_interface/INumberFormat
+ *
+ * @public
+ * @demo Controls-demo/Input/Number/NumberPG
+ *
+ * @author Красильников А.С.
+ */
+
+/*
  * Controls that allows user to enter single-line number.
  * <a href="/materials/demo-ws4-input">Demo example.</a>.
  *
@@ -24,6 +42,19 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
 
 /**
  * @name Controls/_input/Number#precision
+ * @cfg {Number} Количество знаков в десятичной части.
+ * @remark
+ * Если дробная часть заполнена не полностью, недостающие знаки будут заменены на 0.
+ * Если значение не задано, количество знаков не ограничено.
+ * @example
+ * В этом примере _inputValue будет хранить число с дробной частью, равной 2 знакам.
+ * <pre>
+ *    <Controls._input.Number bind:value="_inputValue" precision="{{2}}"/>
+ * </pre>
+ */
+
+/*
+ * @name Controls/_input/Number#precision
  * @cfg {Number} Number of characters in decimal part.
  * @remark
  * If the fractional part is not fully filled, the missing signs will be replaced by 0.
@@ -36,6 +67,18 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  */
 
 /**
+ * @name Controls/_input/Number#integersLength
+ * @cfg {Number} Максимальная длина целой части.
+ * @remark
+ * Если значение не задано, длина целой части не ограничена.
+ * @example
+ * В этом примере _inputValue будет хранить число с дробной частью не более 10 знаков.
+ * <pre>
+ *    <Controls._input.Number bind:value="_inputValue" integersLength="{{10}}"/>
+ * </pre>
+ */
+
+/*
  * @name Controls/_input/Number#integersLength
  * @cfg {Number} Maximum integer part length.
  * @remark

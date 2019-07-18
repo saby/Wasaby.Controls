@@ -7,6 +7,22 @@ import entity = require('Types/entity');
       
 
       /**
+       * Поле ввода с маской.
+       * Символы, которые еще не введены в поле, могут быть заменены другими символами.
+       * Если вводимый символ не соответствует формату, то символ не будет добавлен.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+       *
+       * @class Controls/_input/Mask
+       * @extends Controls/_input/Base
+       *
+       * @mixes Controls/interface/IInputBase
+       * @mixes Controls/interface/IInputMaskValue
+       * @public
+       * @author Красильников А.С.
+       * @demo Controls-demo/Input/Mask/MaskPG
+       */
+
+      /*
        * A component for entering text in a {@link mask specific format}.
        * Characters that are not yet entered in the field can be replaced by another {@link replacer character}.
        * If the input character does not fit the format, then character won't be added.
@@ -23,6 +39,43 @@ import entity = require('Types/entity');
        */
 
       /**
+       * @name Controls/_input/Mask#mask
+       * @cfg {String} Устанавливает маску в поле ввода.
+       *
+       * Маска может использовать следующие символы:
+       * <ol>
+       *    <li>d - цифра.</li>
+       *    <li>L - прописная буква.</li>
+       *    <li>l - строчная буква.</li>
+       *    <li>x - буква или цифра.</li>
+       * </ol>
+       * разделители и логические символы +, *, ?, {n[, m]}.
+       * Логические символы могут быть записаны перед символом \\.
+       * Логические символы могут применяться к ключам.
+       * Формат записи данных схож с регулярными выражениями.
+       *
+       * @example
+       * Маска времени:
+       * <pre class="brush:xml">
+       *    <Controls._input.Mask mask="dd.dd"/>
+       * </pre>
+       * Маска даты:
+       * <pre class="brush:xml">
+       *    <Controls._input.Mask mask="dd.dd.dddd"/>
+       * </pre>
+       * Маска, в которой сначала вводятся 1-3 цифры, а после них 1-3 буквы.
+       * <pre class="brush:xml">
+       *    <Controls._input.Mask mask="d\{1,3}l\{1,3}"/>
+       * </pre>
+       * Маска для ввода бесконечного количества цифр.
+       * <pre class="brush:xml">
+       *    <Controls._input.Mask mask="d\*"/>
+       * </pre>
+       *
+       * @see formatMaskChars
+       */
+
+      /*
        * @name Controls/_input/Mask#mask
        * @cfg {String} Input mask.
        *
@@ -61,6 +114,18 @@ import entity = require('Types/entity');
 
       /**
        * @name Controls/_input/Mask#replacer
+       * @cfg {String} Символ, который будет отображаться, если ничего не введено.
+       *
+       * @remark Если в маске используются логические символы, replacer установить невозможно.       
+       * @example
+       * <pre>
+       *    <Controls._input.Mask mask="dd.dd", replacer=" ", value="12.34"/>
+       *    Если вы удалите всё из поля ввода, поле изменится с '12.34' на '  .  '.
+       * </pre>
+       */
+
+      /*
+       * @name Controls/_input/Mask#replacer
        * @cfg {String} Symbol that will be shown when character is not entered.
        *
        * @remark If quantifiers are used in the mask, the replacer cannot be set.
@@ -74,6 +139,27 @@ import entity = require('Types/entity');
        */
 
       /**
+       * @name Controls/_input/Mask#formatMaskChars
+       * @cfg {Object} Объект, где ключи - символы маски, а значения - регулярные выражения, которые будут использоваться для фильтрации вводимых символов для соответствующих ключей.
+       *
+       * @example
+       * js:
+       * <pre>
+       *    _beforeMount: function() {
+       *       var formatMaskChars = {
+       *          '+': '[+]',
+       *          'd': '[0-9]'
+       *       }
+       *
+       *       this._formatMaskChars = formatMaskChars;
+       * </pre>
+       * tmpl:
+       * <pre>
+       *    <Controls._input.Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
+       * </pre>
+       */
+
+      /*
        * @name Controls/_input/Mask#formatMaskChars
        * @cfg {Object} Object, where keys are mask characters, and values are regular expressions that will be used to filter input characters for corresponding keys.
        *

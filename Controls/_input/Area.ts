@@ -10,6 +10,23 @@ import 'Controls/decorator';
       
 
       /**
+       * Контрол для ввода многострочного текста.
+       * Вы можете настроить {@link minLines минимальное} и {@link maxLines максимальное} количество строк.
+       * Если введенный текст не помещается в установленное {@link maxLines количество строк}, появляется скрол.
+       * Вы можете переместить текст в следующую строку с помощью {@link newLineKey горячих клавиш}.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+       *
+       * @class Controls/_input/Area
+       * @extends Controls/_input/Text
+       * @mixes Controls/_input/interface/INewLineKey
+       *
+       * @public
+       * @demo Controls-demo/Input/Area/AreaPG
+       *
+       * @author Красильников А.С.
+       */
+
+      /*
        * A component for entering multi-line text.
        * You can adjust the {@link minLines minimum} and {@link maxLines maximum} number of lines.
        * If the inputed text does not fit on the {@link maxLines number of lines}, a scroll bar appears.
@@ -28,6 +45,14 @@ import 'Controls/decorator';
 
       /**
        * @name Controls/_input/Area#minLines
+       * @cfg {Number} Минимальное количество строк.
+       * @remark
+       * Поддерживается значение от 1 до 10.
+       * @default 1
+       */
+      
+      /*
+       * @name Controls/_input/Area#minLines
        * @cfg {Number} Minimum number of lines.
        * @remark
        * A value between 1 and 10 is supported.
@@ -35,6 +60,13 @@ import 'Controls/decorator';
        */
 
       /**
+       * @name Controls/_input/Area#maxLines
+       * @cfg {Number} Максимальное количество строк.
+       * @remark
+       * Поддерживается значение от 1 до 10.
+       */
+
+      /*
        * @name Controls/_input/Area#maxLines
        * @cfg {Number} Maximum number of lines.
        * @remark
@@ -91,6 +123,14 @@ import 'Controls/decorator';
          },
 
          /**
+          * Изменение расположения видимой области поля так, чтобы отобразился курсор.
+          * Если курсор виден, расположение не изменяется. В противном случае новое местоположение будет таким, что курсор отобразится в середине области.
+          * @param {Controls/_input/Base} self Экземпляр контрола.
+          * @param {String} value
+          * @param {Controls/_input/Base/Types/Selection.typedef} selection
+          */
+
+         /*
           * Change the location of the visible area of the field so that the cursor is visible.
           * If the cursor is visible, the location is not changed. Otherwise, the new location will be such that
           * the cursor is visible in the middle of the area.

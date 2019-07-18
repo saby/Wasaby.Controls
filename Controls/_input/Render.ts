@@ -25,6 +25,21 @@ interface IRenderOptions extends IControlOptions, IHeightOptions, IFontColorStyl
 }
 
 /**
+ * Контрол для рендеринга текстовых полей.
+ *
+ * @class Controls/_input/Render
+ * @extends UI/_base/Control
+ *
+ * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IFontColorStyle
+ *
+ * @public
+ *
+ * @author Krasilnikov A.S.
+ */
+
+/*
  * Control the rendering of text fields.
  *
  * @class Controls/_input/Render

@@ -17,6 +17,31 @@ function proxyModelEvents(component, model, eventNames) {
 }
 
 /**
+ * Контрол для ввода даты и времени.
+ * В зависимости от маски может использоваться для ввода:
+ * <ol>
+ *    <li>даты,</li>
+ *    <li>времени,</li>
+ *    <li>даты и времени.</li>
+ * </ol>
+ * <a href="/materials/demo-ws4-input-datetime">Демо-пример</a>.
+ *
+ * @class Controls/_input/DateTime
+ * @extends Core/Control
+ * @mixes Controls/interface/IInputDateTime
+ * @mixes Controls/_input/interface/IDateTimeMask
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/interface/IInputBase
+ * @mixes Controls/interface/IInputPlaceholder
+ *
+ * @control
+ * @public
+ * @demo Controls-demo/Input/DateTime/DateTimePG
+ * @author Красильников А.С.
+ * @category Input
+ */
+
+/*
  * Control for entering date and time.
  * Depending on {@link mask mask} can be used to enter:
  * <ol>

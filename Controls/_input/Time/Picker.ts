@@ -1,4 +1,23 @@
 /**
+ * Поле ввода даты и времени.
+ * В зависимости от маски можно вводить:
+ * <ol>
+ *    <li>дату,</li>
+ *    <li>время,</li>
+ *    <li>дату и время.</li>
+ * </ol>
+ * @class Controls/_input/Time/Picker
+ * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputDateTime
+ * @mixes Controls/interface/ITimeMask
+ * @mixes Controls/interface/IValidation
+ * @control
+ * @public
+ * @author Красильников А.С.
+ * @category Input
+ */
+
+/*
  * Control for entering date and time.
  * Depending on {@link mask mask} can be used to enter:
  * <ol>
