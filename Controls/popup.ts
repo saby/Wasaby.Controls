@@ -1,5 +1,5 @@
 /**
- * Библиотека всплывающих окон.
+ * Библиотека контролов, открывающих всплывающие окна.
  * @library Controls/popup
  * @includes Confirmation Controls/_popup/Opener/Confirmation
  * @includes Dialog Controls/_popup/Opener/Dialog

@@ -1,5 +1,5 @@
 /**
- * Библиотека контролов, которые открывают выпадающий список.
+ * Библиотека выпадающих списков.
  * @library Controls/dropdown
  * @includes Button Controls/_dropdown/Button
  * @includes Input Controls/_dropdown/Input
