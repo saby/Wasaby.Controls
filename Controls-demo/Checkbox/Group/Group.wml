@@ -10,6 +10,7 @@
       <div class="ControlsDemo-CheckboxGroup__block_caption">Получать уведомления о следующих событиях</div>
       <Controls.toggle:CheckboxGroup source="{{_sourceHorizontal}}"
                                      direction="horizontal"
+                                     class="ControlsDemo-CheckboxGroup__item_width"
                                      bind:selectedKeys="_selectedKeysHorizontal"
                                      keyProperty="{{_keyProperty}}"/>
    </div>
