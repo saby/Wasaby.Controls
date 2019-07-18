@@ -56,7 +56,7 @@ var Selection = cExtend.extend({
       this._selectedKeys = this._selectedKeys.slice();
       this._excludedKeys = this._excludedKeys.slice();
       if (this._limit && keys.length === 1 && !this._excludedKeys.includes(keys[0])) {
-         this.applyLimit();
+         this._expandLimit(keys);
       }
       if (this._isAllSelection(this._getParams())) {
          ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
@@ -132,29 +132,35 @@ var Selection = cExtend.extend({
     * Setting limit.
     * @param {Integer} value
     */
-   setLimit: function(value) {
+   setLimit: function(value: Integer): void {
       this._limit = value;
    },
 
    /**
-    * Convert selection with limit to standart selection
+    * Expand limit on new item selection
+    * @param {Array} keys
+    * @private
     */
-   applyLimit: function() {
-      var res = [],
-         self = this,
-         status,
-         limit = self._limit ? self._limit - this._excludedKeys.length : 0,
-         count = 0;
-      this._items.forEach(function(item) {
-         status = self._getSelectionStatus(item);
-         if (status !== false && (!limit || count < limit)) {
+   _expandLimit: function(keys: any[]): void {
+      const self = this;
+      const limit = self._limit ? self._limit - this._excludedKeys.length : 0;
+      let count = 0;
+      const slicedKeys: any[] = keys.slice();
+      this._items.forEach((item) => {
+         const status = self._getSelectionStatus(item);
+         const key = item.get(self._options.keyProperty);
+         if (status !== false && count < limit) {
             count++;
-            res.push(item.get(self._options.keyProperty));
+         } else if (count >= limit && slicedKeys.length) {
+            count++;
+            self._limit++
+            if (slicedKeys.includes(key)) {
+               slicedKeys.splice(slicedKeys.indexOf(key), 1)
+            } else {
+               self._excludedKeys.push(key);
+            }
          }
       });
-      self._limit = 0;
-      self._excludedKeys = [];
-      self._selectedKeys = res;
    },
 
    /**
@@ -198,14 +204,13 @@ var Selection = cExtend.extend({
     * @returns {Object}
     */
    getSelectedKeysForRender: function() {
-      var
-         res = {},
-         self = this,
-         status,
-         limit = self._limit ? self._limit - this._excludedKeys.length : 0,
-         count = 0;
+      const res = {};
+      const self = this;
+      const limit = self._limit ? self._limit - this._excludedKeys.length : 0;
+      let status;
+      let count = 0;
 
-      this._items.forEach(function(item) {
+      this._items.forEach((item) => {
          status = self._getSelectionStatus(item);
          if (status !== false && (!limit || count < limit)) {
             count++;
