@@ -112,15 +112,15 @@ import 'css!theme?Controls/scroll';
                return end - start - thumbSize / 2;
             },
 
-            getPageOffset(syntheticEvent, direction): number {
+            getPageOffset(nativeEvent: Event, direction: 'vertical' | 'horizontal'): number {
                 let
                     offset: number,
                     offsetAxis = direction === 'vertical' ? 'pageY' : 'pageX';
 
-                if (syntheticEvent.nativeEvent instanceof MouseEvent) {
-                    offset = syntheticEvent.nativeEvent[offsetAxis];
+                if (nativeEvent instanceof MouseEvent) {
+                    offset = nativeEvent[offsetAxis];
                 } else {
-                    offset = syntheticEvent.nativeEvent.touches[0][offsetAxis];
+                    offset = (<TouchEvent>nativeEvent).touches[0][offsetAxis];
                 }
 
                 return offset;
@@ -248,7 +248,7 @@ import 'css!theme?Controls/scroll';
             _scrollbarBeginDragHandler: function(event) {
                var
                   verticalDirection = this._options.direction === 'vertical',
-                  pageOffset = _private.getPageOffset(event, this._options.direction),
+                  pageOffset = _private.getPageOffset(event.nativeEvent, this._options.direction),
                   thumbOffset = this._children.thumb.getBoundingClientRect()[verticalDirection ? 'top' : 'left'],
                   delta;
 
@@ -273,7 +273,7 @@ import 'css!theme?Controls/scroll';
              */
             _scrollbarOnDragHandler: function(e, event) {
                var
-                  pageOffset = event.domEvent[this._options.direction === 'vertical' ? 'pageY' : 'pageX'],
+                  pageOffset = _private.getPageOffset(event.domEvent, this._options.direction),
                   delta = pageOffset - this._currentPageOffset;
 
                if (this._setPosition(this._position + delta / this._scrollRatio, true)) {
