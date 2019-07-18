@@ -25,7 +25,7 @@ import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import {Focus} from 'Vdom/Vdom';
-import {throttle} from 'Types/function';
+import {debounce} from 'Types/function';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
@@ -431,10 +431,9 @@ var _private = {
 
    updateVirtualWindow: function(self, direction) {
       if (_private.isFullPlaceholderVisibility(self, direction, self._cachedScrollParams)) {
-         self._recalcVirtualScrollIndexes(direction);
+         self._recalcVirtualScrollIndexes('scrollTop', direction);
       } else {
-         self._virtualScroll.recalcToDirection(direction, self._cachedScrollParams, self._loadOffset.top);
-         _private.applyVirtualScrollIndexes(self, direction);
+         self._recalcVirtualScrollIndexes('toDirection', direction);
       }
    },
 
@@ -619,14 +618,17 @@ var _private = {
         var
             selected,
             excluded,
-            dragItemIndex;
-
+            dragItemIndex,
+            isSelectAll;
         selected = cClone(selectedKeys) || [];
+        isSelectAll = selected.indexOf(null) !== -1;
         dragItemIndex = selected.indexOf(dragKey);
         if (dragItemIndex !== -1) {
             selected.splice(dragItemIndex, 1);
         }
-        selected.unshift(dragKey);
+        if (!isSelectAll) {
+            selected.unshift(dragKey);
+        }
 
         excluded = cClone(excludedKeys) || [];
         dragItemIndex = excluded.indexOf(dragKey);
@@ -701,15 +703,17 @@ var _private = {
             _private.cacheScrollParams(self, params);
             if (self._virtualScrollTriggerVisibility.down) {
                if (_private.isFullPlaceholderVisibility(self, 'down', self._cachedScrollParams)) {
-                  self._recalcVirtualScrollIndexes('down');
+                  self._recalcVirtualScrollIndexes('scrollTop', 'down');
                }
             } else if (self._virtualScrollTriggerVisibility.up) {
                if (_private.isFullPlaceholderVisibility(self, 'up', self._cachedScrollParams)) {
-                  self._recalcVirtualScrollIndexes('up');
+                  self._recalcVirtualScrollIndexes('scrollTop', 'up');
                }
             }
         }
+    },
 
+    handleListScrollSync(self) {
         if (detection.isMobileIOS) {
             _private.getIntertialScrolling(self).scrollStarted();
         }
@@ -813,7 +817,7 @@ var _private = {
         if ((context && self._isTouch) || !itemData.itemActions) {
             return false;
         }
-        showActions = (context || showAll) && itemData.itemActions.all
+        showActions = showAll && itemData.itemActions.all
             ? itemData.itemActions.all
             : itemData.itemActions && itemData.itemActions.all.filter(function(action) {
                 return action.showType !== showType.TOOLBAR;
@@ -1084,7 +1088,54 @@ var _private = {
 
     needBottomPadding: function(options) {
         return (options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
+    },
+
+    isPagingNavigation: function(navigation) {
+        return navigation && navigation.view === 'pages';
+    },
+    resetPagingNavigation: function(self) {
+        self._knownPagesCount = INITIAL_PAGES_COUNT;
+        self._currentPage = INITIAL_PAGES_COUNT;
+    },
+
+    initializeNavigation: function(self, cfg, resetPaging) {
+        self._needScrollCalculation = _private.needScrollCalculation(cfg.navigation);
+        self._pagingNavigation = _private.isPagingNavigation(cfg.navigation);
+
+        if (self._needScrollCalculation) {
+            if (cfg.virtualScrolling && !self._virtualScroll) {
+                self._virtualScroll = new VirtualScroll({
+                    virtualPageSize: cfg.virtualPageSize,
+                    virtualSegmentSize: cfg.virtualSegmentSize
+                });
+            }
+            self._virtualScrollTriggerVisibility = {
+                up: false,
+                down: false
+            };
+            self._loadTriggerVisibility = {
+                up: false,
+                down: false
+            };
+        } else {
+            self._loadTriggerVisibility = null;
+            self._virtualScrollTriggerVisibility = null;
+            self._pagingVisible = false;
+        }
+
+        if (self._pagingNavigation) {
+            if (resetPaging) {
+                _private.resetPagingNavigation(self);
+            }
+        } else {
+            self._pagingNavigationVisible = false;
+            _private.resetPagingNavigation(self);
+        }
+    },
+    updateNavigation: function(self) {
+        self._pagingNavigationVisible = self._pagingNavigation && self._knownPagesCount > 1;
     }
+
 };
 
 /**
@@ -1148,6 +1199,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _knownPagesCount: INITIAL_PAGES_COUNT,
     _currentPage: INITIAL_PAGES_COUNT,
     _pagingNavigation: false,
+    _pagingNavigationVisible: false,
 
     _canUpdateItemsActions: false,
 
@@ -1159,10 +1211,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
         this.__errorController = options.errorController || new dataSourceError.Controller({});
-        this._recalcVirtualScrollIndexes = throttle(function(direction) {
-            this._virtualScroll.recalcToDirectionByScrollTop(direction, this._cachedScrollParams, this._loadOffset.top);
+        this._recalcVirtualScrollIndexes = debounce(function(method, direction) {
+            if (method === 'scrollTop') {
+                this._virtualScroll.recalcToDirectionByScrollTop(direction, this._cachedScrollParams, this._loadOffset.top);
+            } else if (method === 'toDirection') {
+                this._virtualScroll.recalcToDirection(direction, this._cachedScrollParams, this._loadOffset.top);
+            } else {
+                IoC.resolve('ILogger').error('BaseControl', `Unknown virtual scroll recalculation method: "${method}"`);
+            }
             _private.applyVirtualScrollIndexes(this, direction);
-        }.bind(this), 50, true);
+        }.bind(this), 150, false);
     },
 
     /**
@@ -1182,26 +1240,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
+
+        _private.initializeNavigation(this, newOptions);
+        _private.updateNavigation(this);
         this._needBottomPadding = _private.needBottomPadding(newOptions);
-        this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
-        this._pagingNavigation = newOptions.navigation && newOptions.navigation.view === 'pages';
 
-        if (this._needScrollCalculation) {
-            if (newOptions.virtualScrolling) {
-                this._virtualScroll = new VirtualScroll({
-                    virtualPageSize: newOptions.virtualPageSize
-                });
-            }
-            this._virtualScrollTriggerVisibility = {
-                up: false,
-                down: false
-            };
-            this._loadTriggerVisibility = {
-                up: false,
-                down: false
-            };
-
-        }
         this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden';
 
         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
@@ -1279,10 +1322,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _beforeUpdate: function(newOptions) {
         var filterChanged = !isEqual(newOptions.filter, this._options.filter);
         var navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
-        var recreateSource = newOptions.source !== this._options.source || navigationChanged;
+        var resetPaging = this._pagingNavigation && filterChanged;
+        var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions);
+        if (!isEqual(newOptions.navigation, this._options.navigation)) {
+            _private.initializeNavigation(this, newOptions, resetPaging);
+        }
+        _private.updateNavigation(this);
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
@@ -1316,10 +1364,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setSearchValue(newOptions.searchValue);
         }
 
-        this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
-
         if (recreateSource) {
             this._recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
+
+            //Нужно обновлять опции записи не только при наведении мыши,
+            //так как запись может поменяться в то время, как курсор находится на ней
+            self._canUpdateItemsActions = true;
         }
 
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
@@ -1336,6 +1386,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
+            _private.resetPagingNavigation(this);
+
             //return result here is for unit tests
             return _private.reload(self, newOptions);
         }
@@ -1535,7 +1587,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'virtualPageBottomStart': _private.updateVirtualWindowStart(self, 'down', params); break;
             case 'virtualPageBottomStop': _private.updateVirtualWindowStop(self, 'down'); break;
 
-
+            // TODO KINGO. Проверяем именно синхронный скролл, т.к. стандартный scrollMove стреляет с debounce 100 мс.
+            case 'scrollMoveSync': _private.handleListScrollSync(self); break;
             case 'scrollMove': _private.handleListScroll(self, params); break;
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;

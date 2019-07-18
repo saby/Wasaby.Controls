@@ -5,6 +5,7 @@ import Vdom = require('Vdom/Vdom');
 import CoreMerge = require('Core/core-merge');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
+import Indicator = require('Core/Indicator');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import {parse as parserLib, load} from 'Core/library';
 
@@ -37,9 +38,11 @@ var _private = {
 var Base = Control.extend({
     _template: Template,
     _actionOnScroll: 'none',
+    _showOldIndicator: false,
 
     _beforeMount: function (options) {
         this._popupIds = [];
+        this._showOldIndicator = options.showOldIndicator;
         if (options.displayMode && options.displayMode !== 'single') {
             Env.IoC.resolve('ILogger').error(this._moduleName, 'Вместо опции displayMode используйте открытие окна через статический метод openPopup');
         }
@@ -84,20 +87,27 @@ var Base = Control.extend({
                 const popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
 
                 cfg._vdomOnOldPage = self._options._vdomOnOldPage;
-                Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function (result) {
-                    self._toggleIndicator(false);
+                Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback((result) => {
+                    const {popupId, creatingDef} = result;
+                    if(creatingDef) {
+                        creatingDef.addCallback(function () {
+                            self._toggleIndicator(false);
+                        });
+                    } else {
+                        self._toggleIndicator(false);
+                    }
                     if (self._useVDOM()) {
-                        if (self._popupIds.indexOf(result) === -1) {
-                            self._popupIds.push(result);
+                        if (self._popupIds.indexOf(popupId) === -1) {
+                            self._popupIds.push(popupId);
                         }
 
                         // Call redraw to create emitter on scroll after popup opening
                         self._forceUpdate();
+                        resolve(popupId);
                     } else {
                         self._action = result;
+                        resolve(result);
                     }
-
-                    resolve(result);
                 });
             }).addErrback(() => {
                 self._toggleIndicator(false);
@@ -152,15 +162,24 @@ var Base = Control.extend({
     },
 
     _toggleIndicator: function (visible) {
-        if (visible) {
-            var cfg = {
-                id: this._indicatorId,
-                message: rk('Загрузка')
-            };
-            this._indicatorId = this._notify('showIndicator', [cfg], {bubbling: true});
-        } else if (this._indicatorId) {
-            this._notify('hideIndicator', [this._indicatorId], {bubbling: true});
-            this._indicatorId = null;
+        let message =  rk('Загрузка');
+        if(!this._showOldIndicator) {
+            if (visible) {
+                var cfg = {
+                    id: this._indicatorId,
+                    message: message
+                };
+                this._indicatorId = this._notify('showIndicator', [cfg], {bubbling: true});
+            } else if (this._indicatorId) {
+                this._notify('hideIndicator', [this._indicatorId], {bubbling: true});
+                this._indicatorId = null;
+            }
+        } else {
+            if(visible){
+                Indicator.setMessage(message,true)
+            } else {
+                Indicator.hide();
+            }
         }
     },
 
@@ -382,6 +401,8 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
     // Все опции опенера брать нельзя, т.к. ядро добавляет свои опции опенеру (в режиме совместимости), которые на окно
     // попасть не должны.
     const usedOptions = [
+        'showOldIndicator',
+        'closeByExternalClick',
         'isCompoundTemplate',
         'eventHandlers',
         'autoCloseOnHide',
@@ -395,6 +416,7 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'cancelCaption',
         'okCaption',
         'autofocus',
+        'isModal',
         'modal',
         'closeOnOutsideClick',
         'closeOnTargetScroll',
@@ -420,6 +442,7 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'corner',
         'targetPoint',
         'targetTracking',
+        'locationStrategy',
         'actionOnScroll'
     ];
 
@@ -480,10 +503,14 @@ Base._openPopup = function (popupId, cfg, controller, def) {
         } else {
             popupId = ManagerController.update(popupId, cfg);
         }
+        def.callback({popupId: popupId, creatingDef: null});
     } else {
+        if (cfg.showOldIndicator) {
+            cfg.creatingDef = new Deferred();
+        }
         popupId = ManagerController.show(cfg, controller);
+        def.callback({popupId: popupId, creatingDef: cfg.creatingDef});
     }
-    def.callback(popupId);
 };
 
 Base.getDefaultOptions = function () {

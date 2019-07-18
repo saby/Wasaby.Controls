@@ -161,7 +161,7 @@ define('Controls/Application/HeadData', [
       },
 
       isDebug: function() {
-         return Env.cookie.get('s3debug') === 'true' || contents.buildMode === 'debug';
+         return Env.cookie.get('s3debug') === 'true' || contents.buildMode !== 'release';
       },
 
       _getDictList: function() {

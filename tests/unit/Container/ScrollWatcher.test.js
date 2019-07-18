@@ -124,14 +124,14 @@ define([
             scrollMod.Watcher._private.onScrollContainer(ins, containerMock);
             setTimeout(function() {
                try {
-                  assert.deepEqual(['scrollMove', 'listBottom', 'loadTopStop', 'loadBottomStart'], evType, 'Wrong scroll commands on change scroll without observer');
+                  assert.deepEqual(['scrollMoveSync', 'scrollMove', 'listBottom', 'loadTopStop', 'loadBottomStart'], evType, 'Wrong scroll commands on change scroll without observer');
 
                   evType = [];
                   ins._scrollPositionCache = null;
                   scrollMod.Watcher._private.onScrollContainer(ins, containerMock, true);
                   setTimeout(function() {
                      try {
-                        assert.deepEqual(['scrollMove'], evType, 'Wrong scroll commands on change scroll with observer');
+                        assert.deepEqual(['scrollMoveSync', 'scrollMove'], evType, 'Wrong scroll commands on change scroll with observer');
                         assert.equal(111, ins._scrollTopCache, 'Wrong scrollTop cache value after scroll');
                         resolve();
                      } catch (e) {
@@ -150,10 +150,12 @@ define([
          var ins = new scrollMod.Watcher();
          var registrarMockDebounce = {
             start: function(type, args) {
-               evType.push({
-                  eType: type,
-                  eArgs: args
-               });
+               if (type === 'scrollMove') {
+                   evType.push({
+                       eType: type,
+                       eArgs: args
+                   });
+               }
             }
          };
          ins._registrar = registrarMockDebounce;
@@ -186,10 +188,12 @@ define([
          var ins = new scrollMod.Watcher();
          var registrarMockDebounce = {
             start: function(type, args) {
-               evType.push({
-                  eType: type,
-                  eArgs: args
-               });
+               if (type === 'scrollMove') {
+                  evType.push({
+                     eType: type,
+                     eArgs: args
+                  });
+               }
             }
          };
          ins._registrar = registrarMockDebounce;
@@ -226,10 +230,12 @@ define([
          var ins = new scrollMod.Watcher();
          var registrarMockDebounce = {
             start: function(type, args) {
-               evType.push({
-                  eType: type,
-                  eArgs: args
-               });
+               if (type === 'scrollMove') {
+                  evType.push({
+                     eType: type,
+                     eArgs: args
+                  });
+               }
             }
          };
          ins._registrar = registrarMockDebounce;
