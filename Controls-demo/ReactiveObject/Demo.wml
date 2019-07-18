@@ -1,0 +1,12 @@
+<section>
+    <h1>Reactive object as a view model</h1>
+    <article>
+        <h2>Click buttons below to see the action</h2>
+        <button on:click="_toggleVisibilityHandler()">Toggle visibility</button>
+        <button on:click="_toggleImageHandler()">Toggle image</button>
+        <figure style="display: {{_data.visible ? 'block' : 'none'}};">
+            <img src="{{_data.url}}" alt="{{_data.title}}"/>
+            <figcaption>{{_data.title}}</figcaption>
+        </figure>
+    </article>
+</section>
