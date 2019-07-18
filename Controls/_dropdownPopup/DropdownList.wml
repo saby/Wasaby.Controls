@@ -68,8 +68,6 @@
          </ws:if>
       </div>
    </ws:if>
-   <!--todo Emitter должен переехать в попап, когда будем делать попапы, показывающиеся при наведении мыши-->
-   <Controls.event:Listener event="mousemove" on:mousemove="_mousemoveHandler()"/>
    <Controls.dropdown:Opener if="{{_hasHierarchy}}"
                              name="subDropdownOpener"
                              on:result="_resultHandler()"
