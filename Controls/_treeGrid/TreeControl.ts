@@ -181,27 +181,25 @@ var _private = {
             if (viewModelRoot !== root) {
                 viewModel.setRoot(root);
             }
-        }
+            if (self._deepReload && viewModel.getExpandedItems().length) {
+                const sourceController = baseControl.getSourceController();
+                const hasMore = {};
+                let hasMoreData: unknown;
 
-        if (self._deepReload && viewModel.getExpandedItems().length) {
-            const sourceController = baseControl.getSourceController();
-            const hasMore = {};
-            let hasMoreData: unknown;
+                viewModel.getExpandedItems().forEach((key) => {
+                    hasMoreData = sourceController.hasMoreData('down', key);
 
-            viewModel.getExpandedItems().forEach((key) => {
-                hasMoreData = sourceController.hasMoreData('down', key);
+                    if (hasMoreData !== undefined) {
+                        hasMore[key] = hasMoreData;
+                    }
+                });
 
-                if (hasMoreData !== undefined) {
-                    hasMore[key] = hasMoreData;
+                // if method does not support multi navigation hasMore object will be empty
+                if (!isEqual({}, hasMore)) {
+                    viewModel.setHasMoreStorage(hasMore);
                 }
-            });
-
-            // if method does not support multi navigation hasMore object will be empty
-            if (!isEqual({}, hasMore)) {
-                viewModel.setHasMoreStorage(hasMore);
             }
         }
-
         // reset deepReload after loading data (see reload method or constructor)
         self._deepReload = false;
     },
