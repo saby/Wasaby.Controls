@@ -61,7 +61,8 @@ define(
                idProperty: 'id',
                data: items
             }),
-            nodeProperty: 'node'
+            nodeProperty: 'node',
+            itemTemplateProperty: 'itemTemplate'
          };
 
          let configLazyLoad = {
@@ -518,10 +519,40 @@ define(
 
          it('_private::requireTemplates', (done) => {
             let dropdownController = getDropdownController(config);
+            dropdownController._items = new collection.RecordSet({
+               idProperty: 'id',
+               rawData: []
+            });
             dropdown._Controller._private.requireTemplates(dropdownController, config).addCallback(() => {
                assert.isTrue(dropdownController._depsDeferred.isReady());
                done();
             });
+         });
+
+         it('_private::getItemsTemplates', () => {
+            let dropdownController = getDropdownController(config);
+
+            dropdownController._items = new collection.RecordSet({
+               idProperty: 'id',
+               rawData: [
+                  {
+                     id: 1,
+                     itemTemplate: 'first'
+                  }, {
+                     id: 2,
+                     itemTemplate: 'second'
+                  }, {
+                     id: 3
+                  }, {
+                     id: 4,
+                     itemTemplate: 'second'
+                  }, {
+                     id: 5,
+                     itemTemplate: 'five'
+                  }
+               ]
+            });
+            assert.deepEqual(dropdown._Controller._private.getItemsTemplates(dropdownController, config), ['first', 'second', 'five']);
          });
 
          it('_open one item', () => {
