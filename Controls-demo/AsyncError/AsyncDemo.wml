@@ -1,6 +1,6 @@
 <div>
    <div class="error-block">
-      <Controls.Container.Async templateName="Bad/Module/Not/Found СОЗДАНА ДЛЯ АВТОТЕСТА">
+      <Controls.Container.Async templateName="Bad/Module/Not/Found_CREATED_FOR_AUTOTEST">
          <ws:partail template="{{content.resolvedTemplate}}" />
       </Controls.Container.Async>
    </div>
