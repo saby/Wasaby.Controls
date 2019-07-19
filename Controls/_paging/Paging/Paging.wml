@@ -1,8 +1,10 @@
 <div class="controls-PagingV">
    <div class="controls-Paging__wrapper">
-      <span class="controls-Paging__btn controls-Paging__btn_first controls-Paging__arrow controls-Paging__arrow__state-{{_stateBegin}}" attr:title="{[В начало]}" on:click="__arrowClick('Begin')">
-         <i class="icon-First controls-Paging__icon"></i>
-      </span>
+      <ws:if data="{{!_options.showDigits}}">
+         <span class="controls-Paging__btn controls-Paging__btn_first controls-Paging__arrow controls-Paging__arrow__state-{{_stateBegin}}" attr:title="{[В начало]}" on:click="__arrowClick('Begin')">
+            <i class="icon-First controls-Paging__icon"></i>
+         </span>
+      </ws:if>
       <span class="controls-Paging__btn controls-Paging__arrow controls-Paging__arrow__state-{{_statePrev}}" attr:title="{[Назад]}" on:click="__arrowClick('Prev')">
          <i class="icon-Back2 controls-Paging__icon"></i>
       </span>
