@@ -189,6 +189,10 @@ var
                 self._expandedItems = [];
             }
             self._collapsedItems = _private.prepareCollapsedItems(self._expandedItems, self._options.collapsedItems);
+            if (self._display) {
+                self._display.setFilter(self.getDisplayFilter(self.prepareDisplayFilterData(), self._options));
+            }
+            this._nextModelVersion();
             self._notify('expandedItemsChanged', self._expandedItems);
         },
         collapseChildNodes: function(self, nodeId) {
@@ -278,10 +282,6 @@ var
 
         resetExpandedItems: function() {
             _private.resetExpandedItems(this);
-            if (this._display) {
-                this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-            }
-            this._nextModelVersion();
         },
 
         _prepareDisplay: function(items, cfg) {
