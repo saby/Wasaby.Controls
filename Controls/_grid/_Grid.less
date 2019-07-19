@@ -36,6 +36,7 @@
    background-color: @background-color_Grid-header;
    display: inline-flex;
    flex-direction: column;
+   min-height: 20px;
 }
 
 .controls-Grid_columnScroll .controls-Grid__header-cell,
@@ -62,6 +63,11 @@
 .controls-Grid__row-header__content_baseline:before {
    content: '\200b';
    font-size: @font-size_Grid-header-cell-baseline;
+}
+
+.controls-Grid__row-multy-header__content_baseline:before {
+   content: '\200b';
+   font-size: @font-size_Grid-multy-header-cell-baseline;
 }
 
 .controls-Grid__header-cell_valign_bottom {
