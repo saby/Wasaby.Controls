@@ -247,10 +247,6 @@ var BreadCrumbsPath = Control.extend({
        this._notify('itemClick', [this._getRootModel(this._options.items[0].get(this._options.parentProperty), this._options.keyProperty)]);
     },
 
-    _onArrowClick: function (e: Event) {
-        Common.onArrowClick.call(this, e);
-    },
-
    _getCounterCaption: function(items) {
       return items[items.length - 1].get('counterCaption');
    }

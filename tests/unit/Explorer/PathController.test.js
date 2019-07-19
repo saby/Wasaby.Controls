@@ -171,16 +171,12 @@ define([
          var
             instance = new PathController(),
             onarrowActivatedFired = false;
-         instance._notify = function(e, args) {
-            if (e === 'arrowActivated') {
+         instance._notifyHandler = function(e) {
+            if (e === 'arrowClick') {
                onarrowActivatedFired = true;
             }
          };
-         instance._onArrowClick({
-            stopPropagation: function() {
-
-            }
-         });
+         instance._notifyHandler('arrowClick');
          assert.isTrue(onarrowActivatedFired);
       });
    });

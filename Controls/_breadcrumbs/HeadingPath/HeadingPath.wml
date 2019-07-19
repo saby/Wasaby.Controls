@@ -8,7 +8,7 @@
                                                backButtonStyle="{{ _options.backButtonStyle }}"
                                                showActionButton="{{_options.showActionButton}}"
                                                on:backButtonClick="_onBackButtonClick()"
-                                               on:arrowClick="_onArrowClick()"/>
+                                               on:arrowClick="_notifyHandler('arrowClick')"/>
         </ws:if>
         <ws:if data="{{_visibleItems || _options.rootVisible}}">
             <div class="controls-BreadCrumbsPath__homeContainer {{!_backButtonCaption ? 'controls-BreadCrumbsPath__homeContainer_withoutBackButton'}} {{ _applyHighlighter(_options.highlighter, _options.items ? _options.items[0].get(_options.parentProperty) : _options.root) }}"
