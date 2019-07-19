@@ -278,6 +278,10 @@ var
 
         resetExpandedItems: function() {
             _private.resetExpandedItems(this);
+            if (this._display) {
+                this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+            }
+            this._nextModelVersion();
         },
 
         _prepareDisplay: function(items, cfg) {
