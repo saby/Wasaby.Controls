@@ -265,20 +265,23 @@ var _private = {
         _private.setMarkedKey(self, newMarkedKey);
     },
     moveMarkerToNext: function (self, event) {
-        if (self._options.markerVisibility !== 'hidden') {
+        if (self._options.markerVisibility !== 'hidden' && self._loadingIndicatorState !== 'all') {
             event.preventDefault();
             var model = self.getViewModel();
             _private.moveMarker(self, model.getNextItemKey(model.getMarkedKey()));
         }
     },
     moveMarkerToPrevious: function (self, event) {
-        if (self._options.markerVisibility !== 'hidden') {
+        if (self._options.markerVisibility !== 'hidden' && self._loadingIndicatorState !== 'all') {
             event.preventDefault();
             var model = self.getViewModel();
             _private.moveMarker(self, model.getPreviousItemKey(model.getMarkedKey()));
         }
     },
     enterHandler: function(self) {
+        if (self._loadingIndicatorState === 'all') {
+            return;
+        }
         let markedItem = self.getViewModel().getMarkedItem();
         if (markedItem) {
             self._notify('itemClick', [markedItem.getContents()], { bubbling: true });
@@ -287,7 +290,7 @@ var _private = {
     toggleSelection: function(self, event) {
         var
             model, markedKey;
-        if (self._children.selectionController) {
+        if (self._children.selectionController && self._loadingIndicatorState !== 'all') {
             model = self.getViewModel();
             markedKey = model.getMarkedKey();
             self._children.selectionController.onCheckBoxClick(markedKey, model.getSelectionStatus(markedKey));
@@ -1720,6 +1723,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 Focus.focus(this._children.fakeFocusElem);
             }
         }, 0);
+    },
+
+    showIndicator(pos) {
+        _private.showIndicator(this, pos);
+    },
+
+    hideIndicator() {
+        _private.hideIndicator(this);
     },
 
     _viewResize: function() {
