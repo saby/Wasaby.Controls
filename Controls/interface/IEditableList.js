@@ -391,9 +391,7 @@ define('Controls/interface/IEditableList', [
     * WML:
     * <pre>
     *    <Controls.list:View>
-    *       <ws:editingConfig>
-    *          <ws:Object editOnClick="{{true}}" showToolbar="{{true}}" />
-    *       </ws:editingConfig>
+    *       <ws:editingConfig editOnClick="{{true}}" showToolbar="{{true}}" />
     *    </Controls.list:View>
     * </pre>
     */
@@ -406,9 +404,7 @@ define('Controls/interface/IEditableList', [
     * WML:
     * <pre>
     *    <Controls.list:View>
-    *       <ws:editingConfig>
-    *          <ws:Object editOnClick="{{true}}" showToolbar="{{true}}" />
-    *       </ws:editingConfig>
+    *       <ws:editingConfig editOnClick="{{true}}" showToolbar="{{true}}" />
     *    </Controls.list:View>
     * </pre>
     */    
