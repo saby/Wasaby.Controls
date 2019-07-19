@@ -1,0 +1,14 @@
+<section>
+    <h2>Reactive object as a view model</h2>
+    <article>
+        <Controls.buttons:Button caption="Toggle visibility" on:click="_toggleVisibilityHandler()"/>
+        <Controls.buttons:Button caption="Toggle image" on:click="_toggleImageHandler()"/>
+
+        <h3>Model version: <strong>{{_data.getVersion()}}</strong></h3>
+
+        <figure style="visibility: {{_data.visible ? 'visible' : 'hidden'}};">
+            <img src="{{_data.url}}" alt="{{_data.title}}"/>
+            <figcaption>{{_data.title}}</figcaption>
+        </figure>
+    </article>
+</section>
