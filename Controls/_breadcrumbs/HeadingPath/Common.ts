@@ -1,11 +1,6 @@
 import {Model} from 'Types/entity';
 import Control = require('Core/Control');
 
-function onArrowClick(this: Control, e: Event) {
-   this._notify('arrowClick');
-   e.stopPropagation();
-}
-
 function getRootModel(root, keyProperty) {
    let rawData = {};
 
@@ -30,7 +25,6 @@ function onBackButtonClick(this: Control, e: Event) {
 }
 
 export default {
-   onArrowClick,
    getRootModel,
    onBackButtonClick
 }
