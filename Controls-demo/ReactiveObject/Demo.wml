@@ -1,11 +1,12 @@
 <section>
-    <h1>Reactive object as a view model</h1>
+    <h2>Reactive object as a view model</h2>
     <article>
-        <h2>Click buttons below to see the action</h2>
-        <button on:click="_toggleVisibilityHandler()">Toggle visibility</button>
-        <button on:click="_toggleImageHandler()">Toggle image</button>
-        <div>Model version: {{_data.getVersion()}}</div>
-        <figure style="display: {{_data.visible ? 'block' : 'none'}};">
+        <Controls.buttons:Button caption="Toggle visibility" on:click="_toggleVisibilityHandler()"/>
+        <Controls.buttons:Button caption="Toggle image" on:click="_toggleImageHandler()"/>
+
+        <h3>Model version: <strong>{{_data.getVersion()}}</strong></h3>
+
+        <figure style="visibility: {{_data.visible ? 'visible' : 'hidden'}};">
             <img src="{{_data.url}}" alt="{{_data.title}}"/>
             <figcaption>{{_data.title}}</figcaption>
         </figure>

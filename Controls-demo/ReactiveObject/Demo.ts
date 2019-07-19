@@ -1,10 +1,11 @@
-import {Control} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
 import {ReactiveObject} from 'Types/entity';
+import {constants} from 'Env/Env';
 import template = require('wml!Controls-demo/ReactiveObject/Demo');
 
 const images = {
-    main: 'https://images-na.ssl-images-amazon.com/images/I/81xQBb5jRzL._SY355_.jpg',
-    alternate: 'https://pbs.twimg.com/profile_images/1110319067280269312/iEqpsbUA_400x400.png'
+    main: constants.resourceRoot + 'Controls-demo/resources/images/board.png',
+    alternate: constants.resourceRoot + 'Controls-demo/resources/images/comics.png'
 };
 
 interface IViewModel {
@@ -15,14 +16,14 @@ interface IViewModel {
 
 function getDefaultViewModel(): IViewModel {
     return new ReactiveObject({
-        title: 'Apple',
+        title: 'Double dribble',
         url: images.main,
         visible: true
     });
 }
 
 class Demo extends Control {
-    private _template: Function = template;
+    private _template: TemplateFunction = template;
     private _data: IViewModel = getDefaultViewModel();
 
     private _toggleVisibilityHandler() {

@@ -328,6 +328,11 @@
          RadioGroup
       </a>
 
+      <h1>ReactiveObject</h1>
+      <a href="/Controls-demo/app/Controls-demo%252FReactiveObject%252FDemo">
+         Demo
+      </a>
+
       <h1>
          <a href="/Controls-demo/app/Controls-demo%252FDecorators%252FDecorators">
             Decorators
