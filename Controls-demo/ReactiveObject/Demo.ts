@@ -23,14 +23,14 @@ function getDefaultViewModel(): IViewModel {
 }
 
 class Demo extends Control {
-    private _template: TemplateFunction = template;
+    protected _template: TemplateFunction = template;
     private _data: IViewModel = getDefaultViewModel();
 
-    private _toggleVisibilityHandler() {
+    private _toggleVisibilityHandler(): void {
         this._data.visible = !this._data.visible;
     }
 
-    private _toggleImageHandler() {
+    private _toggleImageHandler(): void {
         this._data.url = this._data.url === images.main ? images.alternate : images.main;
     }
 }
