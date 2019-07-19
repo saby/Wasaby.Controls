@@ -11,7 +11,7 @@ function isEqualWithSkip(obj1, obj2, skipFields) {
    }
    for (var i = 0; i < obj1.length; i++) {
       for (var j in obj1[i]) {
-         if (!skipFields[j] && obj1[i].hasOwnProperty(j)) {
+         if ((!skipFields[j] || !(obj1[i][j] instanceof Object)) && obj1[i].hasOwnProperty(j)) {
             if (!obj2[i].hasOwnProperty(j) || obj1[i][j] !== obj2[i][j]) {
                return false;
             }
