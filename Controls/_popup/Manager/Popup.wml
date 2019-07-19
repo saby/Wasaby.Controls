@@ -11,7 +11,7 @@
          on:sendResult="_sendResult()"
          on:close="_close()"
          on:popupDragStart="_popupDragStart()"
-         on:popupDragEnd="_popupDragEnd()"
+         on:popupResizingLine="_popupResizingLine()"
          on:popupMouseEnter="_popupMouseEnter()"
          on:popupMouseLeave="_popupMouseLeave()"
          on:maximized="_maximized()"

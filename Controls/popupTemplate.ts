@@ -30,6 +30,7 @@ import DialogController = require('Controls/_popupTemplate/Dialog/Opener/DialogC
 import StickyController = require('Controls/_popupTemplate/Sticky/StickyController');
 import InfoBoxController = require('Controls/_popupTemplate/InfoBox/Opener/InfoBoxController');
 import StackController = require('Controls/_popupTemplate/Stack/Opener/StackController');
+import StackContent = require('Controls/_popupTemplate/Stack/Opener/StackContent');
 import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import NotificationController = require('Controls/_popupTemplate/Notification/Opener/NotificationController');
 import PreviewerController = require('Controls/_popupTemplate/Previewer/PreviewerController');
@@ -50,6 +51,7 @@ export {
    ConfirmationDialog,
    DialogController,
    StickyController,
+   StackContent,
    InfoBoxController,
    StackController,
    TargetCoords,

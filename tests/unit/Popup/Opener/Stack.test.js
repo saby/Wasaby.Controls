@@ -5,7 +5,7 @@ define(
       'Controls/popupTemplate',
       'Controls-demo/Popup/TestMaximizedStack',
       'Controls/_popupTemplate/BaseController',
-      'wml!Controls/_popupTemplate/Stack/Opener/StackContent'
+      'Controls/_popupTemplate/Stack/Opener/StackContent'
    ],
    (StackStrategy, popupMod, popupTemplate, TestMaximizedStack, BaseController, StackContent) => {
       'use strict';
@@ -411,6 +411,35 @@ define(
 
             popupTemplate.StackController.elementCreated(item);
             assert.equal(item.position.stackWidth, undefined);
+         });
+         it('stack resizing', () => {
+            let item = {
+               popupOptions: {
+                  template: {},
+                  stackMinWidth: 500,
+                  stackMaxWidth: 1200,
+                  stackWidth: 700
+               }
+            };
+            let offset1 = 100, offset2 = -300;
+            popupTemplate.StackController.popupResizingLine(item, offset1);
+            assert.equal(item.popupOptions.stackWidth, 800);
+            popupTemplate.StackController.popupResizingLine(item, offset2);
+            assert.equal(item.popupOptions.stackWidth, 500);
+         });
+         it('stack resizing', () => {
+            let item = {
+               stackMinWidth: 500,
+               stackMaxWidth: 1200,
+               stackWidth: 700
+            };
+            popupTemplate.StackContent.prototype._beforeMount(item);
+            assert.equal(popupTemplate.StackContent.prototype._minOffset, 200);
+            assert.equal(popupTemplate.StackContent.prototype._maxOffset, 500);
+            item.stackWidth += 200;
+            popupTemplate.StackContent.prototype._beforeUpdate(item);
+            assert.equal(popupTemplate.StackContent.prototype._minOffset, 400);
+            assert.equal(popupTemplate.StackContent.prototype._maxOffset, 300);
          });
       });
    }
