@@ -49,12 +49,14 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(columnScroll._scrollPosition, 0);
       });
       it('_afterMount', function() {
+         columnScroll.saveOptions(cfg);
          columnScroll._afterMount(cfg);
          assert.equal(columnScroll._contentSize, 500);
          assert.equal(columnScroll._contentContainerSize, 250);
          assert.deepEqual(columnScroll._shadowState, 'end');
          assert.deepEqual(columnScroll._fixedColumnsWidth, 100);
       });
+
       it('_afterMount + _afterUpdate non-default stickyColumnsCount', function() {
          var
             changedCfg = Object.assign({}, cfg, { stickyColumnsCount: 3 }),
@@ -150,6 +152,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             }
          };
 
+         clearColumnScroll.saveOptions(cfg);
          clearColumnScroll._afterMount(cfg);
 
          assert.equal(clearColumnScroll._contentSize, 500);
@@ -187,6 +190,48 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.deepEqual(clearColumnScroll._shadowState, 'end');
          assert.deepEqual(clearColumnScroll._fixedColumnsWidth,  74);
       });
+
+      it('no sticky columns', function() {
+         let clearColumnScroll = new ColumnScroll({...cfg, stickyColumnsCount: 0});
+
+         clearColumnScroll._children = {
+            contentStyle: {
+               innerHTML: ''
+            },
+            content: {
+               getElementsByClassName: () => {
+                  return [{
+                     scrollWidth: 500,
+                     offsetWidth: 250,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 20
+                        }
+                     },
+                     querySelector:
+
+                         function () {
+                            return {
+                               getBoundingClientRect: () => {
+                                  return {
+                                     left: 44
+                                  }
+                               },
+                               offsetWidth: 76
+                            };
+                         }
+                  }]
+               }
+            }
+         };
+         clearColumnScroll.saveOptions({...cfg, stickyColumnsCount: undefined});
+         clearColumnScroll._afterMount({...cfg, stickyColumnsCount: undefined});
+         assert.equal(clearColumnScroll._contentSize, 500);
+         assert.equal(clearColumnScroll._contentContainerSize, 250);
+         assert.deepEqual(clearColumnScroll._shadowState, 'end');
+         assert.deepEqual(clearColumnScroll._fixedColumnsWidth, 0);
+      });
+
       it('_isColumnScrollVisible', function() {
          assert.isTrue(columnScroll._isColumnScrollVisible());
       });

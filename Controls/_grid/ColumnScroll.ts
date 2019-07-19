@@ -10,6 +10,10 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 const
    _private = {
       calculateFixedColumnWidth(container, multiSelectVisibility, stickyColumnsCount) {
+         if (!stickyColumnsCount) {
+            return 0;
+         }
+
          const
             hasMultiSelect = multiSelectVisibility !== 'hidden',
             columnOffset = hasMultiSelect ? 1 : 0,
