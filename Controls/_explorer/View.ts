@@ -379,6 +379,10 @@ import 'Controls/breadcrumbs';
       toggleExpanded: function(id) {
          this._children.treeControl.toggleExpanded(id);
       },
+      _onArrowClick: function(e) {
+         let item = this._children.treeControl._children.baseControl.getViewModel().getMarkedItem().getContents();
+         this._notifyHandler(e, 'arrowClick', item);
+      },
       _notifyHandler: tmplNotify,
       _applyHighlighter: applyHighlighter
    });
