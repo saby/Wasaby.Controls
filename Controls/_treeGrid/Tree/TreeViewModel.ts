@@ -192,7 +192,7 @@ var
             if (self._display) {
                 self._display.setFilter(self.getDisplayFilter(self.prepareDisplayFilterData(), self._options));
             }
-            this._nextModelVersion();
+            self._nextModelVersion();
             self._notify('expandedItemsChanged', self._expandedItems);
         },
         collapseChildNodes: function(self, nodeId) {
