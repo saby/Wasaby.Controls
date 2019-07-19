@@ -1,5 +1,5 @@
 <ws:template name="groupContentTemplate">
-   <div class="controls-ListView__groupContent">
+   <div class="controls-ListView__groupContent {{ expander === false ? ' controls-ListView__groupContent_cursor-default' : '' }}">
       <ws:if data="{{columnAlignGroup !== undefined || textAlign !== 'left'}}">
          <div class="controls-ListView__groupSeparator-left">&nbsp;</div>
       </ws:if>
