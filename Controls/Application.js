@@ -169,6 +169,7 @@ define('Controls/Application',
             validAttributes: {
                rel: true,
                as: true,
+               src: true,
                name: true,
                sizes: true,
                crossorigin: true,
@@ -182,6 +183,11 @@ define('Controls/Application',
             }
          };
       }
+
+      var linkAttributes = {
+         src: true,
+         href: true
+      };
 
       var Page = Base.extend({
          _template: template,
@@ -315,11 +321,11 @@ define('Controls/Application',
                   !Array.isArray(newValue[1]) && newValue[1];
             if (attributes) {
                for (var attributeName in attributes) {
-                  // TODO: call getResourceUrl for only right attributes. Add unit tests.
-                  // Task link: https://online.sbis.ru/opendoc.html?guid=b7d20750-7816-4eff-aa8b-25249ad4d04c.
-                  if (attributes.hasOwnProperty(attributeName) && attributeName !== 'content') {
-                     // Try update all attributes as link, but only links would be updated.
-                     attributes[attributeName] = getResourceUrl('' + attributes[attributeName]);
+                  if (attributes.hasOwnProperty(attributeName)) {
+                     var attributeValue = attributes[attributeName];
+                     if (typeof attributeValue === 'string' && linkAttributes[attributeName]) {
+                        attributes[attributeName] = getResourceUrl(attributeValue);
+                     }
                   }
                }
             }

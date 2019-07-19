@@ -1,6 +1,7 @@
 define([
-   'Controls/dragnDrop'
-], function(dragnDrop) {
+   'Controls/dragnDrop',
+   'unit/resources/ProxyCall'
+], function(dragnDrop, ProxyCall) {
    'use strict';
 
    describe('Controls.dragnDrop.ResizingLine', function() {
@@ -85,6 +86,24 @@ define([
          assert.equal('300px', coords.cHeight, 'Wrong coords');
          assert.equal('auto', coords.cBottom, 'Wrong coords');
       });
+      it('_onEndDragHandler', function() {
+         var calls = [];
+         let rlInstance = new dragnDrop.ResizingLine({});
+         rlInstance._notify = ProxyCall.apply(rlInstance._notify, 'notify', calls, true);
+         rlInstance.getInstanceId = function() {
+            return 'testId';
+         };
+         rlInstance._offset = 100;
 
+         rlInstance._onEndDragHandler({}, {entity: null});
+         assert.equal(calls.length, 0);
+         rlInstance._onEndDragHandler({}, {entity: new dragnDrop.Entity({})});
+         assert.equal(calls.length, 0);
+         rlInstance._onEndDragHandler({}, {entity: new dragnDrop.Entity({itemId: 'testId'})});
+         assert.deepEqual(calls, [{
+            name: 'notify',
+            arguments: ['offset', [100]]
+         }]);
+      });
    });
 });
