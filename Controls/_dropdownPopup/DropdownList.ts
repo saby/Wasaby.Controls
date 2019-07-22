@@ -140,7 +140,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                headConfig.icon = headConfig.icon || options.icon || '';
                headConfig.menuStyle = headConfig.menuStyle || 'defaultHead';
 
-               let rootKey = options.parentProperty ? options.rootKey : options.parentProperty,
+               let rootKey = options.parentProperty ? _private.getRootKey(options.rootKey) : options.parentProperty,
                    iconSizes = ['small', 'medium', 'large'],
                    iconSize;
 
@@ -149,7 +149,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                      if (headConfig.icon.indexOf('icon-' + size) !== -1) {
                         iconSize = size;
                      }
-                  })
+                  });
                }
                if (!iconSize && options.iconPadding && options.iconPadding[rootKey]) {
                   headConfig.icon += ' ' + options.iconPadding[rootKey];
