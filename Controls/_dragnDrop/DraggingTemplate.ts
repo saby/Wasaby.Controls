@@ -16,6 +16,18 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
    };
 
    /**
+    * Стандартный шаблон перемещения для списка.
+    * Подробнее читайте <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">здесь</a>.
+    * @class Controls/_dragnDrop/DraggingTemplate
+    * @extends Core/Control
+    * @mixes Controls/_dragnDrop/DraggingTemplate/Styles
+    * @control
+    * @public
+    * @author Авраменко А.С.
+    * @category DragNDrop
+    */
+
+   /*
     * Standard dragging template for the list.
     * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
     * @class Controls/_dragnDrop/DraggingTemplate
@@ -28,6 +40,47 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     */
 
    /**
+    * @name Controls/_dragnDrop/DraggingTemplate#mainText
+    * @cfg {String} Основная информация о перемещаемой сущности.
+    * @default Запись реестра
+    * @example
+    * В следующем примере показано, как использовать стандартный шаблон перемещения.
+    * <pre>
+    *    <Controls.list:View source="{{_viewSource}}"
+    *                   keyProperty="id"
+    *                   on:dragStart="_onDragStart()"
+    *                   itemsDragNDrop="{{true}}">
+    *       <ws:draggingTemplate>
+    *          <ws:partial template="Controls/_dragnDrop/DraggingTemplate"
+    *                      mainText="{{draggingTemplate.entity._options.mainText}}"
+    *                      image="{{draggingTemplate.entity._options.image}}"
+    *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
+    *          </ws:partial>
+    *       </ws:draggingTemplate>
+    *    </Controls.list:View>
+    * </pre>
+    *
+    * <pre>
+    *    Control.extend({
+    *       ...
+    *       _onDragStart: function(event, items) {
+    *          var mainItem = this._items.getRecordById(items[0]);
+    *          return new Entity({
+    *             items: items,
+    *             mainText: mainItem.get('FIO'),
+    *             additionalText: mainItem.get('title'),
+    *             image: mainItem.get('userPhoto')
+    *          });
+    *       },
+    *       _beforeMount: function() {
+    *          this._viewSource= new Source({...});
+    *       }
+    *       ...
+    *    });
+    * </pre>
+    */
+
+   /*
     * @name Controls/_dragnDrop/DraggingTemplate#mainText
     * @cfg {String} Main information about the entity being moved.
     * @default Запись реестра
@@ -70,6 +123,46 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
 
    /**
     * @name Controls/_dragnDrop/DraggingTemplate#additionalText
+    * @cfg {String} Дополнительная информация о перемещаемой сущности (комментарий).
+    * @example
+    * В следующем примере показано, как использовать стандартный шаблон перемещения.
+    * <pre>
+    *    <Controls.list:View source="{{_viewSource}}"
+    *                   keyProperty="id"
+    *                   on:dragStart="_onDragStart()"
+    *                   itemsDragNDrop="{{true}}">
+    *       <ws:draggingTemplate>
+    *          <ws:partial template="Controls/_dragnDrop/DraggingTemplate"
+    *                      mainText="{{draggingTemplate.entity._options.mainText}}"
+    *                      image="{{draggingTemplate.entity._options.image}}"
+    *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
+    *          </ws:partial>
+    *       </ws:draggingTemplate>
+    *    </Controls.list:View>
+    * </pre>
+    *
+    * <pre>
+    *    Control.extend({
+    *       ...
+    *       _onDragStart: function(event, items) {
+    *          var mainItem = this._items.getRecordById(items[0]);
+    *          return new Entity({
+    *             items: items,
+    *             mainText: mainItem.get('FIO'),
+    *             additionalText: mainItem.get('title'),
+    *             image: mainItem.get('userPhoto')
+    *          });
+    *       },
+    *       _beforeMount: function() {
+    *          this._viewSource= new Source({...});
+    *       }
+    *       ...
+    *    });
+    * </pre>
+    */
+
+   /*
+    * @name Controls/_dragnDrop/DraggingTemplate#additionalText
     * @cfg {String} Additional information about the entity being moved.
     * @example
     * The following example shows how to use a standard dragging template.
@@ -109,6 +202,46 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     */
 
    /**
+    * @name Controls/_dragnDrop/DraggingTemplate#image
+    * @cfg {String} Ссылка на изображение перемещаемого объекта.
+    * @remark Опция должна содержать ссылку на изображение. Если этот параметр указан, параметр logo не применяется.
+    * @example
+    * В следующем примере показано, как использовать стандартный шаблон перемещения.
+    * <pre>
+    *    <Controls.list:View source="{{_viewSource}}"
+    *                   keyProperty="id"
+    *                   on:dragStart="_onDragStart()"
+    *                   itemsDragNDrop="{{true}}">
+    *       <ws:draggingTemplate>
+    *          <ws:partial template="Controls/_dragnDrop/DraggingTemplate"
+    *                      mainText="{{draggingTemplate.entity._options.mainText}}"
+    *                      image="/resources/imageForDragTemplate.jpg"
+    *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
+    *          </ws:partial>
+    *       </ws:draggingTemplate>
+    *    </Controls.list:View>
+    * </pre>
+    *
+    * <pre>
+    *    Control.extend({
+    *       ...
+    *       _onDragStart: function(event, items) {
+    *          var mainItem = this._items.getRecordById(items[0]);
+    *          return new Entity({
+    *             items: items,
+    *             mainText: mainItem.get('FIO'),
+    *             additionalText: mainItem.get('title')
+    *          });
+    *       },
+    *       _beforeMount: function() {
+    *          this._viewSource= new Source({...});
+    *       }
+    *       ...
+    *    });
+    * </pre>
+    */
+
+   /*
     * @name Controls/_dragnDrop/DraggingTemplate#image
     * @cfg {String} A image of the entity being moved.
     * @remark The option must contain a link to the image. If this option is specified, the logo option is not applied.
@@ -150,6 +283,46 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
 
    /**
     * @name Controls/_dragnDrop/DraggingTemplate#imageTemplate
+    * @cfg {String} Шаблон с изображением перемещаемого объекта.
+    * @remark Опция должна содержать ссылку на изображение. Если этот параметр указан, то параметр logo и параметр image не применяются.
+    * @example
+    * В следующем примере показано, как использовать стандартный шаблон перемещения.
+    * <pre>
+    *    <Controls.list:View source="{{_viewSource}}"
+    *                   keyProperty="id"
+    *                   on:dragStart="_onDragStart()"
+    *                   itemsDragNDrop="{{true}}">
+    *       <ws:draggingTemplate>
+    *          <ws:partial template="Controls/_dragnDrop/DraggingTemplate"
+    *                      mainText="{{draggingTemplate.entity._options.mainText}}"
+    *                      imageTemplate="wml!MyModule/draggingImageTemplate"
+    *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
+    *          </ws:partial>
+    *       </ws:draggingTemplate>
+    *    </Controls.list:View>
+    * </pre>
+    *
+    * <pre>
+    *    Control.extend({
+    *       ...
+    *       _onDragStart: function(event, items) {
+    *          var mainItem = this._items.getRecordById(items[0]);
+    *          return new Entity({
+    *             items: items,
+    *             mainText: mainItem.get('FIO'),
+    *             additionalText: mainItem.get('title')
+    *          });
+    *       },
+    *       _beforeMount: function() {
+    *          this._viewSource= new Source({...});
+    *       }
+    *       ...
+    *    });
+    * </pre>
+    */
+
+   /*
+    * @name Controls/_dragnDrop/DraggingTemplate#imageTemplate
     * @cfg {String} Template with image of the entity being moved.
     * @remark The option must contain a link to the image. If this option is specified, the logo option and image option is not applied.
     * @example
@@ -189,6 +362,47 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     */
 
    /**
+    * @name Controls/_dragnDrop/DraggingTemplate#logo
+    * @cfg {String} Логотип перемещаемого объекта.
+    * @default icon-DocumentUnknownType
+    * @remark Подробнее читайте <a href="/docs/js/icons/">здесь</a>. Этот параметр используется, если параметр image не указан.
+    * @example
+    * В следующем примере показано, как использовать стандартный шаблон перемещения.
+    * <pre>
+    *    <Controls.list:View source="{{_viewSource}}"
+    *                   keyProperty="id"
+    *                   on:dragStart="_onDragStart()"
+    *                   itemsDragNDrop="{{true}}">
+    *       <ws:draggingTemplate>
+    *          <ws:partial template="Controls/_dragnDrop/DraggingTemplate"
+    *                      mainText="{{draggingTemplate.entity._options.mainText}}"
+    *                      logo="icon-Album"
+    *                      additionalText="{{draggingTemplate.entity._options.additionalText}}">
+    *          </ws:partial>
+    *       </ws:draggingTemplate>
+    *    </Controls.list:View>
+    * </pre>
+    *
+    * <pre>
+    *    Control.extend({
+    *       ...
+    *       _onDragStart: function(event, items) {
+    *          var mainItem = this._items.getRecordById(items[0]);
+    *          return new Entity({
+    *             items: items,
+    *             mainText: mainItem.get('FIO'),
+    *             additionalText: mainItem.get('title')
+    *          });
+    *       },
+    *       _beforeMount: function() {
+    *          this._viewSource= new Source({...});
+    *       }
+    *       ...
+    *    });
+    * </pre>
+    */
+
+   /*
     * @name Controls/_dragnDrop/DraggingTemplate#logo
     * @cfg {String} A logo of the entity being moved.
     * @default icon-DocumentUnknownType
