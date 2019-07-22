@@ -1,6 +1,14 @@
 import {descriptor} from 'Types/entity';
 
 /**
+ * Интерфейс маски ввода даты/времени.
+ *
+ * @interface Controls/_dateRange/interfaces/IDateTimeMask
+ * @public
+ * @author Красильников А.С.
+ */
+
+/*
  * Interface for date/time inputs mask.
  *
  * @interface Controls/_dateRange/interfaces/IDateTimeMask
@@ -13,6 +21,69 @@ export default {
         return {
 
             /**
+             * @name Controls/_dateRange/interfaces/IDateTimeMask#mask
+             * @cfg {String} Формат даты.
+             * @variant 'DD.MM.YYYY'
+             * @variant 'DD.MM.YY'
+             * @variant 'DD.MM'
+             * @variant 'YYYY-MM-DD'
+             * @variant 'YY-MM-DD'
+             * @variant 'HH:mm:ss.UUU'
+             * @variant 'HH:mm:ss'
+             * @variant 'HH:mm'
+             * @variant 'DD.MM.YYYY HH:mm:ss.UUU'
+             * @variant 'DD.MM.YYYY HH:mm:ss'
+             * @variant 'DD.MM.YYYY HH:mm'
+             * @variant 'DD.MM.YY HH:mm:ss.UUU'
+             * @variant 'DD.MM.YY HH:mm:ss'
+             * @variant 'DD.MM.YY HH:mm'
+             * @variant 'DD.MM HH:mm:ss.UUU'
+             * @variant 'DD.MM HH:mm:ss'
+             * @variant 'DD.MM HH:mm'
+             * @variant 'YYYY-MM-DD HH:mm:ss.UUU'
+             * @variant 'YYYY-MM-DD HH:mm:ss'
+             * @variant 'YYYY-MM-DD HH:mm'
+             * @variant 'YY-MM-DD HH:mm:ss.UUU'
+             * @variant 'YY-MM-DD HH:mm:ss'
+             * @variant 'YY-MM-DD HH:mm'
+             * @variant 'YYYY'
+             * @variant 'MM.YYYY'
+             * @default 'DD.MM.YY'
+             * @remark
+             * Разрешенные символы маски:
+             * <ol>
+             *    <li>D - day.</li>
+             *    <li>M - month.</li>
+             *    <li>Y - year.</li>
+             *    <li>H - hour.</li>
+             *    <li>m - minute.</li>
+             *    <li>s - second.</li>
+             *    <li>U - millisecond.</li>
+             *    <li>".", "-", ":", "/", " " - delimiters.</li>
+             * </ol>
+             * @example
+             * В этом примере маска задана таким образом, что в поле ввода можно ввести только время.
+             * После ввода пользователем “09:30”, значение _inputValue будет равно 01.01.1900 09:30.000.
+             * <pre>
+             *    <Controls.input:DateBase bind:value="_inputValue" mask=”HH:mm”/>
+             * </pre>
+             * <pre>
+             *    Control.extend({
+             *       _inputValue: null,
+             *    });
+             * </pre>
+             * В следующем примере после ввода пользователем “09:30”, значение _inputValue будет равно 10.03.2018 09:30.000
+             * <pre>
+             *    <Controls.input:DateBase bind:value="_inputValue" mask=”HH:mm”/>
+             * </pre>
+             * <pre>
+             *    Control.extend({
+             *       _inputValue: new Date(2018, 2, 10),
+             *    });
+             * </pre>
+             */
+
+            /*
              * @name Controls/_dateRange/interfaces/IDateTimeMask#mask
              * @cfg {String} Date format.
              * @variant 'DD.MM.YYYY'

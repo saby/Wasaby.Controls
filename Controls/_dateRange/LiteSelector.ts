@@ -7,6 +7,21 @@ import CalendarControlsUtils from './Utils';
 import componentTmpl = require('wml!Controls/_dateRange/LiteSelector/LiteSelector');
 
 /**
+ * Кнопка-ссылка для отображения периода. Поддерживает смену периодов на смежные.
+ *
+ * @class Controls/_dateRange/LiteSelector
+ * @extends Core/Control
+ * @mixes Controls/_dateRange/interfaces/ILinkView
+ * @mixes Controls/_dateRange/interfaces/IPeriodLiteDialog
+ * @control
+ * @public
+ * @category Input
+ * @author Красильников А.С.
+ * @demo Controls-demo/Input/Date/RangeLinkLite
+ *
+ */
+
+/*
  * A link button that displays the period. Supports the change of periods to adjacent.
  *
  * @class Controls/_dateRange/LiteSelector

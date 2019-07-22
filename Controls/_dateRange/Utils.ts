@@ -25,6 +25,11 @@ var getDayRange = function(startDate, endDate, quantum) {
 var Utils = {
 
    /**
+    * Возвращает список дней недели.
+    * @returns {Array}
+    */
+
+   /*
     * Returns the list of days of the week
     * @returns {Array}
     */
@@ -41,6 +46,14 @@ var Utils = {
    },
 
    /**
+    * Возвращает форматированный период дат для заголовка контрола периода дат.
+    * @param startValue
+    * @param endValue
+    * @param emptyCaption
+    * @returns {*}
+    */
+
+   /*
     * Returns formatted date range for date range controls caption.
     * @param startValue
     * @param endValue
@@ -63,7 +76,7 @@ var Utils = {
    },
 
    /**
-    * Получить смещение первого дня месяца (количество дней перед первым числом)
+    * Получить смещение первого дня месяца (количество дней перед первым числом).
     * @param {Number} year год
     * @param {Number} month месяц
     * @returns {Number}
@@ -77,7 +90,7 @@ var Utils = {
    },
 
    /**
-    * Получить количество дней в месяце
+    * Получить количество дней в месяце.
     * @param {Number} year год
     * @param {Number} month месяц
     * @returns {Number}
@@ -87,7 +100,7 @@ var Utils = {
    },
 
    /**
-    * Получить количство всех недель в месяце
+    * Получить количство всех недель в месяце.
     * @param {Number} year
     * @param {Number} month
     * @returns {Number}
@@ -101,13 +114,11 @@ var Utils = {
    },
 
    /**
-    * Получить массив недель (строка) с массивом дней (ячейка) для MonthTableBody
+    * Получить массив недель (строка) с массивом дней (ячейка) для MonthTableBody.
     * @param {Date} date месяц
     * @param {String} mode
-    * @variant current Returns only the current month
-    * @variant extended Returns 6 weeks. Returns the first week of the current complete month,
-    * the last complete week and if the current month includes less than 6 weeks, then the weeks
-    * of the next month.
+    * @variant current Возвращает текущий месяц.
+    * @variant extended Возвращает массив из 6 недель. Возвращает первую неделю текущего месяца, последнюю полную неделю, и если текущий месяц включает менее 6 недель, то недели следующего месяца.
     * @returns {Array}
     */
    getWeeksArray: function(date, mode) {
