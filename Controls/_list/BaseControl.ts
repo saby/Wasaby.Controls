@@ -831,7 +831,7 @@ var _private = {
         const target = context ? null : _private.mockTarget(childEvent.target);
         if (showActions && showActions.length) {
             var
-                rs = new collection.RecordSet({ rawData: showActions });
+                rs = new collection.RecordSet({ rawData: showActions, idProperty: 'id' });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             self._listViewModel.setActiveItem(itemData);
@@ -895,7 +895,7 @@ var _private = {
                 opener: self._children.listView,
                 target: childEvent.target,
                 templateOptions: {
-                   items: new collection.RecordSet({ rawData: children }),
+                   items: new collection.RecordSet({ rawData: children, idProperty: 'id' }),
                    keyProperty: 'id',
                    parentProperty: 'parent',
                    nodeProperty: 'parent@',
