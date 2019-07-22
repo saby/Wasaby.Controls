@@ -50,11 +50,6 @@ const _private = {
             item.popupOptions.minimizedWidth = defaultOptions.minimizedWidth;
         }
 
-        // optimization: don't calculate the size of the container, if the configuration is set
-        if (container && !item.popupOptions.width) {
-            item.containerWidth = _private.getContainerWidth(item, container);
-        }
-
         if (container) {
             /* start: Return all values to the node. Need for vdom synchronizer */
             templateContainer.style.width = width;
@@ -77,11 +72,11 @@ const _private = {
             container.style.width = currentContainerWidth;
             return templateWidth;
          },
-         updatePopupWidth: function(item, self) {
-            if (!item.containerWidth && !item.position.stackWidth && item.popupState !== BaseController.POPUP_STATE_INITIALIZING) {
-               item.containerWidth = _private.getContainerWidth(item, self._getPopupContainer(item.id));
-            }
-         },
+    updatePopupWidth: function(item, self) {
+        if (!item.containerWidth && !item.position.stackWidth && item.popupState !== BaseController.POPUP_STATE_INITIALIZING) {
+            item.containerWidth = _private.getContainerWidth(item, self._getPopupContainer(item.id));
+        }
+    },
 
     getStackContentWrapperContainer(stackContainer) {
         return stackContainer.querySelector('.controls-Stack__content-wrapper');
@@ -97,15 +92,16 @@ const _private = {
         };
     },
 
-    getItemPosition(item) {
+    getItemPosition(item, self) {
         const targetCoords = _private.getStackParentCoords();
         item.position = StackStrategy.getPosition(targetCoords, item);
         item.popupOptions.stackWidth = item.position.stackWidth;
         item.popupOptions.stackMinWidth = item.position.stackMinWidth;
         item.popupOptions.stackMaxWidth = item.position.stackMaxWidth;
-
         // todo https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
         item.popupOptions.stackMinimizedWidth = item.popupOptions.minimizedWidth;
+
+        _private.updatePopupWidth(item, self);
         _private.updatePopupOptions(item);
         return item.position;
     },
@@ -251,7 +247,7 @@ const StackController = BaseController.extend({
         const self = this;
         this._stack.each(function(item) {
             if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
-                item.position = _private.getItemPosition(item);
+                item.position = _private.getItemPosition(item, self);
                 _private.updatePopupWidth(item, self);
                 const currentWidth = item.containerWidth || item.position.stackWidth;
                 if (currentWidth) {
@@ -287,7 +283,7 @@ const StackController = BaseController.extend({
 
         if (item.popupOptions.isCompoundTemplate) {
             // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
-            const position = _private.getItemPosition(item);
+            const position = _private.getItemPosition(item, this);
             item.position = {
                 top: -10000,
                 left: -10000,
@@ -309,7 +305,7 @@ const StackController = BaseController.extend({
             if (this._stack.getCount() > 1) {
                 this._update();
             } else {
-                item.position = _private.getItemPosition(item);
+                item.position = _private.getItemPosition(item, this);
                 _private.addShadowClass(item);
                 if (StackStrategy.isMaximizedPanel(item)) {
                     _private.prepareMaximizedState(StackStrategy.getMaxPanelWidth(), item);
