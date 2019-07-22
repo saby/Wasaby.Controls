@@ -41,25 +41,28 @@
                                                       on:suggestStateChanged="_suggestStateChangedHandler()">
                                              <ws:bodyContent>
                                                 <div class="bodyContent">
-                                                   <ws:partial
-                                                      template="{{ _options.content }}"
-                                                      scope="{{ templateConfig }}"
-                                                      on:showIndicator="LoadingIndicator._showHandler()"
-                                                      on:hideIndicator="LoadingIndicator._hideHandler()"/>
-                                                   <Controls.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
-                                                      <div></div>
-                                                   </Controls.LoadingIndicator>
+                                                   <!-- In case of using application in html.tmpl there will not be content option -->
+                                                   <ws:if data="{{!_options.builder}}">
+                                                      <ws:partial
+                                                         template="{{ _options.content }}"
+                                                         scope="{{ templateConfig }}"
+                                                         on:showIndicator="LoadingIndicator._showHandler()"
+                                                         on:hideIndicator="LoadingIndicator._hideHandler()"/>
+                                                      <Controls.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
+                                                         <div></div>
+                                                      </Controls.LoadingIndicator>
 
-                                                   <ws:if data="{{ content.draggingTemplate }}">
-                                                      <ws:partial template="Controls/dragnDrop:DraggingTemplateWrapper"
-                                                                  draggingTemplateOptions="{{content.draggingTemplateOptions}}"
-                                                                  draggingTemplate="{{content.draggingTemplate}}"/>
+                                                      <ws:if data="{{ content.draggingTemplate }}">
+                                                         <ws:partial template="Controls/dragnDrop:DraggingTemplateWrapper"
+                                                                     draggingTemplateOptions="{{content.draggingTemplateOptions}}"
+                                                                     draggingTemplate="{{content.draggingTemplate}}"/>
+                                                      </ws:if>
+
+                                                      <Controls.popup:Container attr:id="popup"
+                                                                                eventHandler="{{content._managerEventHandler}}"/>
+
+                                                      <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" pageName="{{ pageName }}" />
                                                    </ws:if>
-
-                                                   <Controls.popup:Container attr:id="popup"
-                                                                             eventHandler="{{content._managerEventHandler}}"/>
-
-                                                   <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" pageName="{{ pageName }}" />
                                                 </div>
                                              </ws:bodyContent>
                                           </ws:partial>
