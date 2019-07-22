@@ -389,6 +389,15 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             };
             let result = dropdownPopup.List._private.getResult(dropdownList, 'itemClick', 'itemClick');
             assert.deepEqual(result, expectedResult);
+
+            let ddlConfig = getDropDownConfig();
+            ddlConfig.emptyText = 'Not selected';
+            ddlConfig.selectedKeys = [null];
+            dropdownList = getDropDownListWithConfig(ddlConfig);
+            dropdownList._beforeMount(ddlConfig);
+            expectedResult.data.push(dropdownList._listModel.getEmptyItem().item);
+            result = dropdownPopup.List._private.getResult(dropdownList, 'itemClick', 'itemClick');
+            assert.deepStrictEqual(result, expectedResult);
          });
 
          it('_private::isNeedUpdateSelectedKeys', function() {
