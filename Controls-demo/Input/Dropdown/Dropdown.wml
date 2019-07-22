@@ -13,6 +13,7 @@
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysSub"
                                   keyProperty="id"
                                   displayProperty="text"
+                                  attr:class="demo-InputDropdown__subparagraphs"
                                   itemTemplateProperty="myTemplate"
                                   source="{{_createMemory(_subItems)}}">
 
@@ -52,7 +53,7 @@
                                   displayProperty="title"
                                   multiSelect="{{true}}"
                                   emptyText="All categories"
-                                  attr:class="ControlsDemo-InputDropdown__item"
+                                  attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__multiSelect"
                                   source="{{_createMemory(_multiSelectItems)}}">
          </Controls.dropdown:Input>
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMultiSelect2"
@@ -60,7 +61,7 @@
                                   displayProperty="title"
                                   multiSelect="{{true}}"
                                   emptyText="All categories"
-                                  attr:class="ControlsDemo-InputDropdown__item ControlsDemo-InputDropdown__item-limitWidth"
+                                  attr:class="ControlsDemo-InputDropdown__item ControlsDemo-InputDropdown__item-limitWidth demo-InputDropdown__multiSelect2"
                                   source="{{_createMemory(_multiSelectItems)}}">
          </Controls.dropdown:Input>
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMultiSelect3"
@@ -69,7 +70,7 @@
                                   multiSelect="{{true}}"
                                   emptyText="All categories"
                                   itemTemplate="wml!Controls-demo/Input/Dropdown/itemTemplateDropdown"
-                                  attr:class="ControlsDemo-InputDropdown__item"
+                                  attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__multiSelect3"
                                   source="{{_createMemory(_multiSelectItems)}}">
          </Controls.dropdown:Input>
       </div>
@@ -78,6 +79,7 @@
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMyTemplate"
                                   keyProperty="id"
                                   displayProperty="title"
+                                  attr:class="demo-InputDropdown__withComment"
                                   popupClassName="ControlsDemo-InputDropdownn-width"
                                   contentTemplate="wml!Controls-demo/Input/Dropdown/contentTemplateDropdownIcon"
                                   itemTemplate="wml!Controls-demo/Input/Dropdown/itemTemplateDropdown"
@@ -89,12 +91,13 @@
                                   keyProperty="id"
                                   displayProperty="title"
                                   emptyText="{{true}}"
-                                  attr:class="ControlsDemo-InputDropdown__item"
+                                  attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__withEmpty"
                                   source="{{_createMemory(_emptyItems)}}"/>
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysEmpty2"
                                   keyProperty="id"
                                   displayProperty="title"
                                   emptyText="Other region"
+                                  attr:class="demo-InputDropdown__withEmpty2"
                                   source="{{_createMemory(_emptyItems2)}}"/>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">
@@ -105,6 +108,7 @@
                                   source="{{_createMemory(_titleItems)}}"
                                   showHeader="{{true}}"
                                   caption="Sort"
+                                  attr:class="demo-InputDropdown__withTitle"
                                   contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
             <ws:headConfig iconSize="icon-small"/>
          </Controls.dropdown:Input>
@@ -114,10 +118,10 @@
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysDuplicate"
                                   keyProperty="id"
                                   displayProperty="title"
+                                  attr:class="demo-InputDropdown__withDuplicate"
                                   source="{{_createMemory(_duplicateItems)}}"
                                   showHeader="{{true}}">
             <ws:headConfig menuStyle="duplicateSelectedItem"/>
-
          </Controls.dropdown:Input>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">
@@ -125,6 +129,7 @@
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysFooter"
                                   keyProperty="id"
                                   displayProperty="title"
+                                  attr:class="demo-InputDropdown__withFooter"
                                   source="{{_createMemory(_footerItems)}}"
                                   on:footerClick="footerClickHandler()"
                                   footerTemplate="wml!Controls-demo/Input/Dropdown/footerTemplateDropdown">
@@ -135,6 +140,7 @@
                                   displayProperty="title"
                                   parentProperty="parent"
                                   nodeProperty="@parent"
+                                  attr:class="demo-InputDropdown__withFooterSecondLevel"
                                   nodeFooterTemplate="wml!Controls-demo/Input/Dropdown/footerHierarchyItem"
                                   source="{{_createMemory(_hierarchyFooterItems)}}"/>
       </div>
@@ -143,6 +149,7 @@
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysHistory"
                                   keyProperty="id"
                                   displayProperty="title"
+                                  attr:class="demo-InputDropdown__withHistory"
                                   source="{{_historySource}}">
          </Controls.dropdown:Input>
       </div>
@@ -152,6 +159,7 @@
                                   keyProperty="id"
                                   multiSelect="{{true}}"
                                   displayProperty="title"
+                                  attr:class="demo-InputDropdown__multiselectWithHistory"
                                   source="{{_historySourceMulti}}">
          </Controls.dropdown:Input>
       </div>
@@ -160,6 +168,7 @@
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysLong"
                                   keyProperty="id"
                                   displayProperty="title"
+                                  attr:class="demo-InputDropdown__withEllipsis"
                                   source="{{_createMemory(_longItems)}}">
             <ws:itemTemplate>
                <ws:partial template="Controls/dropdown:ItemTemplate" class="ControlsDemo-InputDropdown-limitWidth" />
@@ -175,13 +184,13 @@
                                   displayProperty="title"
                                   groupingKeyCallback="{{_groupingKeyCallback}}"
                                   groupTemplate="wml!Controls/_dropdownPopup/defaultGroupTemplate"
-                                  attr:class="ControlsDemo-InputDropdown__item"
+                                  attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__keysGroup"
                                   source="{{_createMemory(_groupItems)}}">
          </Controls.dropdown:Input>
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysGroupText"
                                   keyProperty="id"
                                   displayProperty="title"
-                                  attr:class="ControlsDemo-InputDropdown__item"
+                                  attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__keysGroupText"
                                   groupingKeyCallback="{{_groupingKeyCallback}}"
                                   source="{{_createMemory(_groupTextItems)}}">
             <ws:groupTemplate>
@@ -193,6 +202,7 @@
                                   displayProperty="title"
                                   parentProperty="parent"
                                   nodeProperty="@parent"
+                                  attr:class="demo-InputDropdown__keysGroupHierarchy"
                                   groupingKeyCallback="{{_groupingKeyCallback}}"
                                   groupTemplate="wml!Controls/_dropdownPopup/defaultGroupTemplate"
                                   source="{{_createMemory(_groupHierarchyItems)}}">
@@ -204,6 +214,7 @@
                                   keyProperty="id"
                                   displayProperty="title"
                                   readOnly="{{true}}"
+                                  attr:class="demo-InputDropdown__readOnly"
                                   source="{{_getDefaultMemory()}}"/>
       </div>
    </div>
@@ -211,6 +222,7 @@
       <Controls.dropdown:Input bind:selectedKeys="_selectedKeys0"
                                keyProperty="id"
                                displayProperty="title"
+                               attr:class="demo-InputDropdown__bottomLeft"
                                source="{{_getDefaultMemory()}}"/>
       <h3>Can't open down</h3>
    </div>
@@ -219,6 +231,7 @@
       <Controls.dropdown:Input bind:selectedKeys="_selectedKeys1"
                                keyProperty="id"
                                displayProperty="title"
+                               attr:class="demo-InputDropdown__bottomRight"
                                source="{{_getDefaultMemory()}}"/>
       <h3>Can't open down</h3>
    </div>
@@ -226,6 +239,7 @@
       <Controls.dropdown:Input bind:selectedKeys="_selectedKeys2"
                                keyProperty="id"
                                displayProperty="title"
+                               attr:class="demo-InputDropdown__topRight"
                                source="{{_getDefaultMemory()}}"/>
       <h3>Can't open up</h3>
    </div>
