@@ -110,7 +110,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                event: event
             };
             if (self._options.emptyText && self._listModel.getSelectedKeys()[0] === null) {
-               result.data = self._listModel.getEmptyItem();
+               result.data = [self._listModel.getEmptyItem().item];
             } else {
                let selectedItems = [];
                chain.factory(self._listModel.getSelectedKeys()).each(function (key) {
