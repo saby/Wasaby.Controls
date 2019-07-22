@@ -642,23 +642,23 @@ define([
 
       it('moveMarkerToNext && moveMarkerToPrevious with markerVisibility = "hidden"', async function() {
          var
-            cfg = {
-               viewModelConstructor: lists.ListViewModel,
-               markerVisibility: 'hidden',
-               keyProperty: 'key',
-               source: new sourceLib.Memory({
-                  idProperty: 'key',
-                  data: [{
-                     key: 1
-                  }, {
-                     key: 2
-                  }, {
-                     key: 3
-                  }]
-               }),
-               markedKey: 2
-            },
-            baseControl = new lists.BaseControl(cfg);
+             cfg = {
+                viewModelConstructor: lists.ListViewModel,
+                markerVisibility: 'hidden',
+                keyProperty: 'key',
+                source: new sourceLib.Memory({
+                   idProperty: 'key',
+                   data: [{
+                      key: 1
+                   }, {
+                      key: 2
+                   }, {
+                      key: 3
+                   }]
+                }),
+                markedKey: 2
+             },
+             baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
          assert.equal(null, baseControl._listViewModel.getMarkedKey());
@@ -690,8 +690,58 @@ define([
          assert.equal(null, baseControl._listViewModel.getMarkedKey());
       });
 
+      it('moveMarkerToNext && moveMarkerToPrevious while loading', async function() {
+         var
+             cfg = {
+                viewModelConstructor: lists.ListViewModel,
+                markerVisibility: 'visible',
+                keyProperty: 'key',
+                source: new sourceLib.Memory({
+                   idProperty: 'key',
+                   data: [{
+                      key: 1
+                   }, {
+                      key: 2
+                   }, {
+                      key: 3
+                   }]
+                })
+             },
+             baseControl = new lists.BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         assert.equal(1, baseControl._listViewModel.getMarkedKey());
+         baseControl._loadingIndicatorState = 'all';
+         baseControl._onViewKeyDown({
+            target: {
+               closest: function() {
+                  return false;
+               }
+            },
+            stopImmediatePropagation: function() {},
+            nativeEvent: {
+               keyCode: Env.constants.key.down
+            },
+            preventDefault: function() {},
+         });
+         assert.equal(1, baseControl._listViewModel.getMarkedKey());
+         baseControl._onViewKeyDown({
+            target: {
+               closest: function() {
+                  return false;
+               }
+            },
+            stopImmediatePropagation: function() {},
+            nativeEvent: {
+               keyCode: Env.constants.key.up
+            },
+            preventDefault: function() {},
+         });
+         assert.equal(1, baseControl._listViewModel.getMarkedKey());
+      });
+
       it('enterHandler', function () {
-        var notified = false;
+         var notified = false;
 
          // Without marker
          lists.BaseControl._private.enterHandler({
@@ -730,6 +780,70 @@ define([
             }
          });
          assert.isTrue(notified);
+      });
+
+      it('enterHandler while loading', function () {
+         let
+             myMarkedItem = null,
+             notified = false;
+
+         function enterClick(markedItem) {
+            lists.BaseControl._private.enterHandler({
+               getViewModel: () => ({
+                  getMarkedItem: () => myMarkedItem
+               }),
+               _notify: () => {
+                  notified = true;
+               },
+               _loadingIndicatorState: 'all'
+            });
+         }
+
+         // Without marker
+         enterClick(null);
+         assert.isFalse(notified);
+
+         // With marker
+         enterClick({getContents: () => ({key: 123})});
+         assert.isFalse(notified);
+      });
+
+      it('toggleSelection', async function () {
+
+         var
+             cfg = {
+                viewModelConstructor: lists.ListViewModel,
+                markerVisibility: 'visible',
+                keyProperty: 'key',
+                multiSelectVisibility: 'visible',
+                source: new sourceLib.Memory({
+                   idProperty: 'key',
+                   data: [{
+                      key: 1
+                   }, {
+                      key: 2
+                   }, {
+                      key: 3
+                   }]
+                })
+             },
+             baseControl = new lists.BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         baseControl._children.selectionController = {
+            onCheckBoxClick: (key, status) => {
+               if (status) {
+                  baseControl._listViewModel._selectedKeys.push(key);
+               } else {
+                  baseControl._listViewModel._selectedKeys.pop(key);
+               }
+            }
+         };
+         assert.deepEqual([], baseControl._listViewModel._selectedKeys);
+         baseControl._loadingIndicatorState = 'all';
+         lists.BaseControl._private.enterHandler(baseControl);
+         assert.deepEqual([], baseControl._listViewModel._selectedKeys);
+
       });
 
       it('loadToDirection up', function(done) {
