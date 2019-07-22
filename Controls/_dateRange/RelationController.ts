@@ -153,8 +153,8 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
 /**
  * @name Controls/_dateRange/RelationController#bindType
  * @cfg {String} Тип привязки.
- * @variant 'normal' В этом режиме изменение одного периода всегда приводит к пересчету остальных периодов.
- * @variant 'byCapacity' В этом режиме при изменении одного из периодов другие изменяются только в том случае, если изменился тип периода.
+ * @variant normal В этом режиме изменение одного периода всегда приводит к пересчету остальных периодов.
+ * @variant byCapacity В этом режиме при изменении одного из периодов другие изменяются только в том случае, если изменился тип периода.
  * @example
  * В этом примере показано, как задать тип привязки.
  * <pre>
@@ -172,8 +172,8 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
 /*
  * @name Controls/_dateRange/RelationController#bindType
  * @cfg {String} Bind type
- * @variant 'normal' In this mode, changing one period always results to recalculation of the remaining periods.
- * @variant 'byCapacity' In this mode, when one of the periods changes, the others change only if the type of the period has changed.
+ * @variant normal In this mode, changing one period always results to recalculation of the remaining periods.
+ * @variant byCapacity In this mode, when one of the periods changes, the others change only if the type of the period has changed.
  * @example
  * This example shows how to set the bind type.
  * <pre>

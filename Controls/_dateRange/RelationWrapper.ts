@@ -90,8 +90,8 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
 /**
  * @name Controls/_dateRange/RelationWrapper#relationMode
  * @cfg {String} Тип привязки.
- * @variant 'normal' В этом режиме изменение одного периода всегда приводит к пересчету остальных периодов.
- * @variant 'byCapacity' В этом режиме при изменении одного из периодов другие изменяются только в том случае, если изменился тип периода.
+ * @variant normal В этом режиме изменение одного периода всегда приводит к пересчету остальных периодов.
+ * @variant byCapacity В этом режиме при изменении одного из периодов другие изменяются только в том случае, если изменился тип периода.
  * @example
  * В этом примере изменение первого поля ввода только пересчитывает второе поле ввода, если тип периода изменяется или он становится после второго. 
  * Но изменения во втором поле ввода всегда изменяют первое.
@@ -122,8 +122,8 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
 /*
  * @name Controls/_dateRange/RelationWrapper#relationMode
  * @cfg {String} Bind type
- * @variant 'normal' In this mode, changing one period always results to recalculation of the remaining periods.
- * @variant 'byCapacity' In this mode, when one of the periods changes, the others change only if the type of the period has changed.
+ * @variant normal In this mode, changing one period always results to recalculation of the remaining periods.
+ * @variant byCapacity In this mode, when one of the periods changes, the others change only if the type of the period has changed.
  * @example
  * In this example, changing the first input field only recalculates the second input field if type of the period changes
  * or it becomes after than the second one. But changes to the second input field always change the first one.
