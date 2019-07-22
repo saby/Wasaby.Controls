@@ -32,6 +32,7 @@
               marker="{{_options.marker}}"
               emptyText="{{_getEmptyText()}}"
               icon="{{_options.icon}}"
+              iconSize="{{_options.iconSize}}"
               caption="{{_options.caption}}"
               typeShadow="{{_options.typeShadow}}"
               theme="{{_options.theme}}"/>
