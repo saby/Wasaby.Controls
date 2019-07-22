@@ -1498,7 +1498,7 @@ define([
          })
       });
 
-      it('mouseEnter handler', function () {
+      it('_canUpdateItemsActions (mouseEnter, hoveredItemChanged)', function () {
          var lnSource = new sourceLib.Memory({
                 idProperty: 'id',
                 data: data
@@ -1526,13 +1526,18 @@ define([
          };
 
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
-         lnBaseControl._itemMouseEnter({});
+         lnBaseControl._onMouseEnter({});
+         assert.isTrue(lnBaseControl._canUpdateItemsActions);
+         lnBaseControl._afterUpdate(lnCfg);
+         assert.isFalse(lnBaseControl._canUpdateItemsActions);
+
+         lnBaseControl._onHoveredItemChanged({});
          assert.isTrue(lnBaseControl._canUpdateItemsActions);
          lnBaseControl._afterUpdate(lnCfg);
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
 
          lnBaseControl._context.isTouch.isTouch = true;
-         lnBaseControl._itemMouseEnter({});
+         lnBaseControl._onMouseEnter({});
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
       });
 
