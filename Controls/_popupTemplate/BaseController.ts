@@ -42,7 +42,7 @@ let _fakeDiv;
                _fakeDiv = document.createElement('div');
                _fakeDiv.style.position = 'absolute';
                _fakeDiv.style.left = '-1000px';
-               _fakeDiv.style.top = '0';
+               _fakeDiv.style.top = '-1000px';
                document.body.appendChild(_fakeDiv);
             }
             return _fakeDiv;
