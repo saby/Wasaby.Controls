@@ -386,6 +386,7 @@ var Filter = Control.extend({
             }
             popupOptions.template = this._options.detailPanelTemplateName;
             popupOptions.className = 'controls-FilterButton-popup-orientation-' + (this._options.alignment === 'right' ? 'left' : 'right');
+            popupOptions.templateOptions = this._options.detailPanelTemplateOptions || {};
             this._open(panelItems, popupOptions);
         } else {
             this._openPanel();
@@ -405,6 +406,7 @@ var Filter = Control.extend({
             if (fastItem) {
                 popupOptions.target = this._children[fastItem.name];
             }
+            popupOptions.templateOptions = this._options.panelTemplateOptions || {};
             this._open(items, popupOptions);
         }
     },
