@@ -1525,19 +1525,13 @@ define([
             }
          };
 
-         assert.isFalse(lnBaseControl._canUpdateItemsActions);
-         lnBaseControl._onMouseEnter({});
-         assert.isTrue(lnBaseControl._canUpdateItemsActions);
-         lnBaseControl._afterUpdate(lnCfg);
-         assert.isFalse(lnBaseControl._canUpdateItemsActions);
-
          lnBaseControl._onHoveredItemChanged({});
          assert.isTrue(lnBaseControl._canUpdateItemsActions);
          lnBaseControl._afterUpdate(lnCfg);
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
 
          lnBaseControl._context.isTouch.isTouch = true;
-         lnBaseControl._onMouseEnter({});
+         lnBaseControl._onHoveredItemChanged({});
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
       });
 

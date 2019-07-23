@@ -1942,21 +1942,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // itemMouseEnter иногда срабатывает между _beforeUpdate и _afterUpdate.
         // при этом, в _afterUpdate затирается _canUpdateItemsActions, и обновления опций не происходит
         // hoveredItemChanged происходит вне цикла обновления списка, поэтому, когда требуется, опции обновятся
-        if (!this._context.isTouch.isTouch) {
-            this._canUpdateItemsActions = true;
-        }
-        this._notify('hoveredItemChanged', [item, container]);
-    },
-    _onMouseEnter: function(e) {
 
         // do not need to update itemAction on touch devices, if mouseenter event was fired,
         // otherwise actions will updated and redraw, because of this click on action will not work.
         // actions on touch devices drawing on swipe.
         if (!this._context.isTouch.isTouch) {
-             this._canUpdateItemsActions = true;
+            this._canUpdateItemsActions = true;
         }
-    }
-
+        this._notify('hoveredItemChanged', [item, container]);
+    },
 
 });
 
