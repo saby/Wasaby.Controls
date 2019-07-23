@@ -2184,13 +2184,16 @@ define([
 
          //dragend with deferred
          dragEnded = false;
+         // ctrl._dragEndResultPromise = new Promise((res) => {res('hello')})
          ctrl._dragEndResult = new cDeferred();
          ctrl._documentDragEnd();
          assert.isFalse(dragEnded);
          assert.isTrue(!!ctrl._loadingState);
-         ctrl._dragEndResult.callback();
-         assert.isTrue(dragEnded);
-         assert.isFalse(!!ctrl._loadingState);
+         ctrl._dragEndResult.then(() => {
+            assert.isTrue(dragEnded);
+            assert.isFalse(!!ctrl._loadingState);
+         });
+
 
       });
 
