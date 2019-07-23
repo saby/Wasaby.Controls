@@ -38,6 +38,7 @@ let _fakeDiv;
           * Element is created with position absolute and far beyond the screen left position
           */
          getFakeDiv: function() {
+            // create fake div on invisible part of window
             if (!_fakeDiv) {
                _fakeDiv = document.createElement('div');
                _fakeDiv.style.position = 'absolute';
