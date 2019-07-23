@@ -17,20 +17,25 @@ define('Controls-demo/ResizingLine/ResizingLine',
          _minOffsetRight: -100,
          _maxOffsetRight: 400,
 
+         _resize: function(offset) {
+            this._minOffsetRight -= offset;
+            this._maxOffsetRight -= offset;
+            this._minOffsetLeft -= offset;
+            this._maxOffsetLeft -= offset;
+         },
+
          _offsetHandlerRight: function(e, offset) {
             this._border = 'правый';
             this._offset = offset;
             this._width += offset;
-            this._maxOffsetRight -= offset;
-            this._minOffsetRight -= offset;
+            this._resize(offset);
          },
 
          _offsetHandlerLeft: function(e, offset) {
             this._border = 'левый';
             this._offset = offset;
             this._width += offset;
-            this._minOffsetLeft -= offset;
-            this._maxOffsetLeft -= offset;
+            this._resize(offset);
          }
       });
    });
