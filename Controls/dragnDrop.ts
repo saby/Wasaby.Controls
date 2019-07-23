@@ -9,7 +9,7 @@
  * @includes DraggingTemplateStyles Controls/_dragnDrop/DraggingTemplate/Styles
  * @includes ResizingLine Controls/_dragnDrop/ResizingLine
  * @public
- * @author Авраменко А. С.
+ * @author Авраменко А.С.
  */
 
 /*
@@ -23,7 +23,7 @@
  * @includes DraggingTemplateStyles Controls/_dragnDrop/DraggingTemplate/Styles
  * @includes ResizingLine Controls/_dragnDrop/ResizingLine
  * @public
- * @author Авраменко А. С.
+ * @author Авраменко А.С.
  */
 
 import Container = require('Controls/_dragnDrop/Container');
