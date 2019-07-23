@@ -816,7 +816,8 @@ var
         // -----------------------------------------------------------
 
         getResultsPosition: function(): string {
-            if (this.getItems().getCount() > 1) {
+            const items = this.getItems();
+            if (items && items.getCount() > 1) {
                 if (this._options.results) {
                     return this._options.results.position;
                 }
