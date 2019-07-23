@@ -2,15 +2,6 @@
 @LinkDecorator__gradient-startColor: rgba(249, 249, 249, 0);
 @LinkDecorator__gradient-endColor: rgba(249, 249, 249, 1);
 
-.LinkDecorator__gradient(@startColor, @endColor) {
-   background: -moz-linear-gradient(left, @startColor 0, @endColor 100%);
-   background: -webkit-gradient(linear, left top, right top, color-stop(0, @startColor), color-stop(100%, @endColor));
-   background: -webkit-linear-gradient(left, @startColor 0, @endColor 100%);
-   background: -o-linear-gradient(left, @startColor 0, @endColor 100%);
-   background: -ms-linear-gradient(left, @startColor 0, @endColor 100%);
-   background: linear-gradient(to right, @startColor 0, @endColor 100%);
-}
-
 .LinkDecorator__wrap {
    display: block;
    overflow: hidden;
@@ -33,7 +24,7 @@
       top: 0;
       height: 100%;
       width: 30px;
-      .LinkDecorator__gradient(@LinkDecorator__gradient-startColor, @LinkDecorator__gradient-endColor);
+      background: linear-gradient(to right, @LinkDecorator__gradient-startColor 0, @LinkDecorator__gradient-endColor 100%);
    }
 }
 
