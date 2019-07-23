@@ -1,4 +1,8 @@
-.controls-MultipleInput__SelectedCollection_item {
+/* toDO !KINGO
+   Записи выбранной коллекия отображается, если их больше одной, с flex-shrink: 0, т.к записи либо скрываются под счетчиком либо переходят на новую строку.
+   Здесь специфичный сценарий нам нужно разместить все записи на одной строке, поэтому приходиться перебить стиль каскадом.
+*/
+.controls-MultipleInput .controls-MultipleInput__SelectedCollection_item {
     flex-shrink: 1;
     min-width: 0;
 }

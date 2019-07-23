@@ -11,9 +11,11 @@ var
     LIST_OF_DEPENDENT_OPTIONS = ['items', 'displayProperty', 'readOnly', 'placeholder', 'isInputVisible'];
 
 var _private = {
-    initializeConstants: function () {
+    initializeConstants: function (theme) {
         if (!SHOW_SELECTOR_WIDTH) {
-            SHOW_SELECTOR_WIDTH = getWidthUtil.getWidth(showSelectorTemplate());
+            // The template runs in isolation from the application, so the theme will not be inherited from Application.
+            // So we pass the topic ourselves to class and correctly calculate the width of the icon.
+            SHOW_SELECTOR_WIDTH = getWidthUtil.getWidth(showSelectorTemplate({theme: theme}));
             OUTER_INDENT_INPUT = getWidthUtil.getWidth(inputRender());
         }
     },
@@ -57,7 +59,7 @@ var LookupMultiSelectorView = BaseLookupView.extend({
     },
 
     _afterMount: function () {
-        _private.initializeConstants();
+        _private.initializeConstants(this._options.theme);
         LookupMultiSelectorView.superclass._afterMount.apply(this, arguments);
     },
 
