@@ -806,8 +806,17 @@ interface IFieldTemplate {
             }
 
             _private.handleInput(this, splitValue, inputType);
-            _private.updateField(this, model.displayValue, model.selection);
-            model.changesHaveBeenApplied();
+
+            /**
+             * На Android изменение данных поля во время ввода приводит к ошибке
+             * https://online.sbis.ru/doc/92ce32b2-a6d5-467e-bf34-dbd273ee7c9b
+             * Предполагается, что проблема должна решиться после выполнения задачи
+             * https://online.sbis.ru/opendoc.html?guid=3b85ad37-7785-49bf-8770-c793753f9fb7
+             */
+            if (!this._isMobileAndroid) {
+               _private.updateField(this, model.displayValue, model.selection);
+               model.changesHaveBeenApplied();
+            }
          },
 
          /**
