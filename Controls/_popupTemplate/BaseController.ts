@@ -38,12 +38,12 @@ let _fakeDiv;
           * Element is created with position absolute and far beyond the screen left position
           */
          getFakeDiv: function() {
-            // create fake div on invisible part of window
+            // create fake div on invisible part of window, cause user class can overlap the body
             if (!_fakeDiv) {
                _fakeDiv = document.createElement('div');
                _fakeDiv.style.position = 'absolute';
-               _fakeDiv.style.left = '-1000px';
-               _fakeDiv.style.top = '-1000px';
+               _fakeDiv.style.left = '-10000px';
+               _fakeDiv.style.top = '-10000px';
                document.body.appendChild(_fakeDiv);
             }
             return _fakeDiv;
