@@ -61,22 +61,26 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * </pre>
     *
     * <pre>
-    *    Control.extend({
-    *       ...
-    *       _onDragStart: function(event, items) {
-    *          var mainItem = this._items.getRecordById(items[0]);
-    *          return new Entity({
-    *             items: items,
-    *             mainText: mainItem.get('FIO'),
-    *             additionalText: mainItem.get('title'),
-    *             image: mainItem.get('userPhoto')
-    *          });
+    *   define(...['Types/source', 'Controls/dragnDrop'], function(source, dragnDrop) {
+    *        _onDragStart: function(event, items) {
+    *            var mainItem = this._items.getRecordById(items[0]);
+    *            return new dragnDrop.Entity({
+    *                items: items,
+    *                mainText: mainItem.get('FIO'),
+    *                additionalText: mainItem.get('title'),
+    *                image: mainItem.get('userPhoto')
+    *           });
     *       },
     *       _beforeMount: function() {
-    *          this._viewSource= new Source({...});
-    *       }
-    *       ...
-    *    });
+    *                this._viewSource = new source.SbisService({
+    *                    ...
+    *               });
+    *           }
+    *           ...
+    *       return new dragnDrop.Entity({
+    *            ...
+    *       });
+    *   });
     * </pre>
     */
 
@@ -102,22 +106,26 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * </pre>
     *
     * <pre>
-    *    Control.extend({
-    *       ...
-    *       _onDragStart: function(event, items) {
-    *          var mainItem = this._items.getRecordById(items[0]);
-    *          return new Entity({
-    *             items: items,
-    *             mainText: mainItem.get('FIO'),
-    *             additionalText: mainItem.get('title'),
-    *             image: mainItem.get('userPhoto')
-    *          });
+    *   define(...['Types/source', 'Controls/dragnDrop'], function(source, dragnDrop) {
+    *        _onDragStart: function(event, items) {
+    *            var mainItem = this._items.getRecordById(items[0]);
+    *            return new dragnDrop.Entity({
+    *                items: items,
+    *                mainText: mainItem.get('FIO'),
+    *                additionalText: mainItem.get('title'),
+    *                image: mainItem.get('userPhoto')
+    *           });
     *       },
     *       _beforeMount: function() {
-    *          this._viewSource= new Source({...});
-    *       }
-    *       ...
-    *    });
+    *                this._viewSource = new source.SbisService({
+    *                    ...
+    *               });
+    *           }
+    *           ...
+    *       return new dragnDrop.Entity({
+    *            ...
+    *       });
+    *   });
     * </pre>
     */
 
@@ -142,22 +150,26 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * </pre>
     *
     * <pre>
-    *    Control.extend({
-    *       ...
-    *       _onDragStart: function(event, items) {
-    *          var mainItem = this._items.getRecordById(items[0]);
-    *          return new Entity({
-    *             items: items,
-    *             mainText: mainItem.get('FIO'),
-    *             additionalText: mainItem.get('title'),
-    *             image: mainItem.get('userPhoto')
-    *          });
+    *   define(...['Types/source', 'Controls/dragnDrop'], function(source, dragnDrop) {
+    *        _onDragStart: function(event, items) {
+    *            var mainItem = this._items.getRecordById(items[0]);
+    *            return new dragnDrop.Entity({
+    *                items: items,
+    *                mainText: mainItem.get('FIO'),
+    *                additionalText: mainItem.get('title'),
+    *                image: mainItem.get('userPhoto')
+    *           });
     *       },
     *       _beforeMount: function() {
-    *          this._viewSource= new Source({...});
-    *       }
-    *       ...
-    *    });
+    *                this._viewSource = new source.SbisService({
+    *                    ...
+    *               });
+    *           }
+    *           ...
+    *       return new dragnDrop.Entity({
+    *            ...
+    *       });
+    *   });
     * </pre>
     */
 
@@ -182,29 +194,33 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * </pre>
     *
     * <pre>
-    *    Control.extend({
-    *       ...
-    *       _onDragStart: function(event, items) {
-    *          var mainItem = this._items.getRecordById(items[0]);
-    *          return new Entity({
-    *             items: items,
-    *             mainText: mainItem.get('FIO'),
-    *             additionalText: mainItem.get('title'),
-    *             image: mainItem.get('userPhoto')
-    *          });
+    *   define(...['Types/source', 'Controls/dragnDrop'], function(source, dragnDrop) {
+    *        _onDragStart: function(event, items) {
+    *            var mainItem = this._items.getRecordById(items[0]);
+    *            return new dragnDrop.Entity({
+    *                items: items,
+    *                mainText: mainItem.get('FIO'),
+    *                additionalText: mainItem.get('title'),
+    *                image: mainItem.get('userPhoto')
+    *           });
     *       },
     *       _beforeMount: function() {
-    *          this._viewSource= new Source({...});
-    *       }
-    *       ...
-    *    });
+    *                this._viewSource = new source.SbisService({
+    *                    ...
+    *               });
+    *           }
+    *           ...
+    *       return new dragnDrop.Entity({
+    *            ...
+    *       });
+    *   });
     * </pre>
     */
 
    /**
     * @name Controls/_dragnDrop/DraggingTemplate#image
     * @cfg {String} Ссылка на изображение перемещаемого объекта.
-    * @remark Опция должна содержать ссылку на изображение. Если этот параметр указан, параметр logo не применяется.
+    * @remark Опция должна содержать ссылку на изображение. Если этот параметр указан, параметр {@link logo} не применяется.
     * @example
     * В следующем примере показано, как использовать стандартный шаблон перемещения.
     * <pre>
@@ -223,21 +239,25 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * </pre>
     *
     * <pre>
-    *    Control.extend({
-    *       ...
-    *       _onDragStart: function(event, items) {
-    *          var mainItem = this._items.getRecordById(items[0]);
-    *          return new Entity({
-    *             items: items,
-    *             mainText: mainItem.get('FIO'),
-    *             additionalText: mainItem.get('title')
-    *          });
+    *   define(...['Types/source', 'Controls/dragnDrop'], function(source, dragnDrop) {
+    *        _onDragStart: function(event, items) {
+    *            var mainItem = this._items.getRecordById(items[0]);
+    *            return new dragnDrop.Entity({
+    *               items: items,
+    *               mainText: mainItem.get('FIO'),
+    *               additionalText: mainItem.get('title')
+    *           });
     *       },
     *       _beforeMount: function() {
-    *          this._viewSource= new Source({...});
-    *       }
-    *       ...
-    *    });
+    *                this._viewSource = new source.SbisService({
+    *                    ...
+    *               });
+    *           }
+    *           ...
+    *       return new dragnDrop.Entity({
+    *            ...
+    *       });
+    *   });
     * </pre>
     */
 
@@ -263,21 +283,25 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * </pre>
     *
     * <pre>
-    *    Control.extend({
-    *       ...
-    *       _onDragStart: function(event, items) {
+    *   define(...['Types/source', 'Controls/dragnDrop'], function(source, dragnDrop) {
+    *     _onDragStart: function(event, items) {
     *          var mainItem = this._items.getRecordById(items[0]);
-    *          return new Entity({
-    *             items: items,
-    *             mainText: mainItem.get('FIO'),
-    *             additionalText: mainItem.get('title')
-    *          });
-    *       },
-    *       _beforeMount: function() {
-    *          this._viewSource= new Source({...});
-    *       }
-    *       ...
-    *    });
+    *          return new dragnDrop.Entity({
+    *              items: items,
+    *              mainText: mainItem.get('FIO'),
+    *              additionalText: mainItem.get('title')
+    *         });
+    *      },
+    *      _beforeMount: function() {
+    *                this._viewSource = new source.SbisService({
+    *                    ...
+    *               });
+    *            }
+    *            ...
+    *      return new dragnDrop.Entity({
+    *            ...
+    *     });
+    *   });
     * </pre>
     */
 
@@ -303,21 +327,25 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * </pre>
     *
     * <pre>
-    *    Control.extend({
-    *       ...
-    *       _onDragStart: function(event, items) {
-    *          var mainItem = this._items.getRecordById(items[0]);
-    *          return new Entity({
-    *             items: items,
-    *             mainText: mainItem.get('FIO'),
-    *             additionalText: mainItem.get('title')
-    *          });
+    *   define(...['Types/source', 'Controls/dragnDrop'], function(source, dragnDrop) {
+    *        _onDragStart: function(event, items) {
+    *            var mainItem = this._items.getRecordById(items[0]);
+    *            return new dragnDrop.Entity({
+    *               items: items,
+    *               mainText: mainItem.get('FIO'),
+    *               additionalText: mainItem.get('title')
+    *           });
     *       },
     *       _beforeMount: function() {
-    *          this._viewSource= new Source({...});
-    *       }
-    *       ...
-    *    });
+    *                this._viewSource = new source.SbisService({
+    *                    ...
+    *               });
+    *           }
+    *           ...
+    *       return new dragnDrop.Entity({
+    *            ...
+    *       });
+    *   });
     * </pre>
     */
 
@@ -343,21 +371,25 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * </pre>
     *
     * <pre>
-    *    Control.extend({
-    *       ...
-    *       _onDragStart: function(event, items) {
-    *          var mainItem = this._items.getRecordById(items[0]);
-    *          return new Entity({
-    *             items: items,
-    *             mainText: mainItem.get('FIO'),
-    *             additionalText: mainItem.get('title')
-    *          });
+    *   define(...['Types/source', 'Controls/dragnDrop'], function(source, dragnDrop) {
+    *        _onDragStart: function(event, items) {
+    *            var mainItem = this._items.getRecordById(items[0]);
+    *            return new dragnDrop.Entity({
+    *               items: items,
+    *               mainText: mainItem.get('FIO'),
+    *               additionalText: mainItem.get('title')
+    *           });
     *       },
     *       _beforeMount: function() {
-    *          this._viewSource= new Source({...});
-    *       }
-    *       ...
-    *    });
+    *               this._viewSource = new source.SbisService({
+    *                    ...
+    *               });
+    *           }
+    *           ...
+    *       return new dragnDrop.Entity({
+    *            ...
+    *       });
+    *   });
     * </pre>
     */
 
@@ -365,7 +397,7 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * @name Controls/_dragnDrop/DraggingTemplate#logo
     * @cfg {String} Логотип перемещаемого объекта.
     * @default icon-DocumentUnknownType
-    * @remark Подробнее читайте <a href="/docs/js/icons/">здесь</a>. Этот параметр используется, если параметр image не указан.
+    * @remark Подробнее читайте <a href="/docs/js/icons/">здесь</a>. Этот параметр используется, если параметр {@link image} не указан.
     * @example
     * В следующем примере показано, как использовать стандартный шаблон перемещения.
     * <pre>
@@ -384,21 +416,25 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * </pre>
     *
     * <pre>
-    *    Control.extend({
-    *       ...
-    *       _onDragStart: function(event, items) {
-    *          var mainItem = this._items.getRecordById(items[0]);
-    *          return new Entity({
-    *             items: items,
-    *             mainText: mainItem.get('FIO'),
-    *             additionalText: mainItem.get('title')
-    *          });
+    *   define(...['Types/source', 'Controls/dragnDrop'], function(source, dragnDrop) {
+    *        _onDragStart: function(event, items) {
+    *            var mainItem = this._items.getRecordById(items[0]);
+    *           return new dragnDrop.Entity({
+    *                items: items,
+    *                mainText: mainItem.get('FIO'),
+    *                additionalText: mainItem.get('title')
+    *           });
     *       },
     *       _beforeMount: function() {
-    *          this._viewSource= new Source({...});
-    *       }
-    *       ...
-    *    });
+    *                this._viewSource = new source.SbisService({
+    *                    ...
+    *               });
+    *           }
+    *           ...
+    *       return new dragnDrop.Entity({
+    *         ...
+    *       });
+    *   });
     * </pre>
     */
 
@@ -425,21 +461,25 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * </pre>
     *
     * <pre>
-    *    Control.extend({
-    *       ...
-    *       _onDragStart: function(event, items) {
-    *          var mainItem = this._items.getRecordById(items[0]);
-    *          return new Entity({
-    *             items: items,
-    *             mainText: mainItem.get('FIO'),
-    *             additionalText: mainItem.get('title')
-    *          });
+    *   define(...['Types/source', 'Controls/dragnDrop'], function(source, dragnDrop) {
+    *        _onDragStart: function(event, items) {
+    *            var mainItem = this._items.getRecordById(items[0]);
+    *           return new dragnDrop.Entity({
+    *                items: items,
+    *                mainText: mainItem.get('FIO'),
+    *                additionalText: mainItem.get('title')
+    *           });
     *       },
     *       _beforeMount: function() {
-    *          this._viewSource= new Source({...});
-    *       }
-    *       ...
-    *    });
+    *                this._viewSource = new source.SbisService({
+    *                    ...
+    *               });
+    *           }
+    *           ...
+    *       return new dragnDrop.Entity({
+    *         ...
+    *       });
+    *   });
     * </pre>
     */
 
