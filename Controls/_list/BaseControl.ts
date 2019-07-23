@@ -1839,7 +1839,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _dragEndHandler: function(dragObject) {
         var targetPosition = this._listViewModel.getDragTargetPosition();
-
         if (targetPosition) {
             this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
         }
@@ -1873,7 +1872,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var self = this;
 
         //Reset the state of the dragndrop after the movement on the source happens.
-        if (this._dragEndResult instanceof Deferred) {
+        if (this._dragEndResult instanceof Promise) {
             _private.showIndicator(self);
             this._dragEndResult.addBoth(function() {
                 self._documentDragEndHandler();
