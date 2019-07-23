@@ -5,13 +5,25 @@ define([
    'Controls/decorator',
    'Controls/_decorator/Markup/resources/template',
    'Controls/_decorator/Markup/resources/linkDecorateUtils',
+   'Controls/Application',
    'Env/Env'
 ], function(
    decorator,
    template,
    linkDecorateUtils,
-   Env) {
+   Application,
+   Env
+) {
    'use strict';
+
+   // В окружении юнит тестирования на сервере нет объекта contents, а для теста headJson там должен быть Controls.
+   if (!global.contents) {
+      global.contents = {
+         modules: {
+            Controls: {}
+         }
+      };
+   }
 
    var simpleNode = ['span', 'text'],
       deepNode = ['span',
@@ -114,17 +126,17 @@ define([
       linkHtml = '<a class="asLink" rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>',
       decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer" href="https://ya.ru" target="_blank"><img class="LinkDecorator__image" alt="https://ya.ru" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1" /></a></span>';
 
+   function sortAttrs(html) {
+      return html.replace(openTagRegExp, function(match, begin, attrs, end) {
+         return begin + (attrs + ' ').split('" ').sort().join('" ') + end;
+      });
+   }
+
+   function equalsHtml(html1, html2) {
+      return sortAttrs(html1) === sortAttrs(html2);
+   }
+
    describe('Controls.Decorator.Markup.Converter', function() {
-      function sortAttrs(html) {
-         return html.replace(openTagRegExp, function(match, begin, attrs, end) {
-            return begin + (attrs + ' ').split('" ').sort().join('" ') + end;
-         });
-      }
-
-      function equalsHtml(html1, html2) {
-         return sortAttrs(html1) === sortAttrs(html2);
-      }
-
       describe('deepCopyJson', function() {
          it('one big', function() {
             var json = [['p', 'text'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
@@ -999,6 +1011,115 @@ define([
                decoratedLinkFirstChildNode
             ]);
          });
+      });
+   });
+   describe('Controls.Application headJson options', function() {
+      var realBuildnumber;
+      var realResourceRoot;
+
+      beforeEach(function() {
+         realBuildnumber = global.contents.buildnumber;
+         global.contents.buildnumber = '0';
+         realResourceRoot = global.wsConfig.resourceRoot;
+         global.wsConfig.resourceRoot = '/test/';
+      });
+
+      afterEach(function() {
+         global.contents.buildnumber = realBuildnumber;
+         global.wsConfig.resourceRoot = realResourceRoot;
+      });
+
+      it('script with module scr', function() {
+         var app = new Application();
+         var json = [['script', { src: '/test/Controls/_decorator/Markup.js' }]];
+         app._beforeMount({ headJson: json });
+         var goodHtml = '<script src="/test/Controls/_decorator/Markup.js?x_module=0"></script>';
+         var checkHtml = template({
+            _options: {
+               value: app.headJson[0],
+               validHtml: app.headValidHtml,
+               tagResolver: app.headTagResolver
+            }
+         }, {});
+         assert.isTrue(equalsHtml(goodHtml, checkHtml));
+      });
+
+      it('link with module href', function() {
+         var app = new Application();
+         var json = [['link', { href: '/test/Controls/_decorator/Markup/resolvers/highlight.css' }]];
+         app._beforeMount({ headJson: json });
+         var goodHtml = '<link href="/test/Controls/_decorator/Markup/resolvers/highlight.css?x_module=0" />';
+         var checkHtml = template({
+            _options: {
+               value: app.headJson[0],
+               validHtml: app.headValidHtml,
+               tagResolver: app.headTagResolver
+            }
+         }, {});
+         assert.isTrue(equalsHtml(goodHtml, checkHtml));
+      });
+
+      it('script with non-module scr', function() {
+         var app = new Application();
+         var json = [['script', { src: 'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' }]];
+         app._beforeMount({ headJson: json });
+         var goodHtml = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js?x_version=0"></script>';
+         var checkHtml = template({
+            _options: {
+               value: app.headJson[0],
+               validHtml: app.headValidHtml,
+               tagResolver: app.headTagResolver
+            }
+         }, {});
+         assert.isTrue(equalsHtml(goodHtml, checkHtml));
+      });
+
+      it('link with non-module href', function() {
+         var app = new Application();
+         var json = [['link', { src: 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' }]];
+         app._beforeMount({ headJson: json });
+         var goodHtml = '<link src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?x_version=0" />';
+         var checkHtml = template({
+            _options: {
+               value: app.headJson[0],
+               validHtml: app.headValidHtml,
+               tagResolver: app.headTagResolver
+            }
+         }, {});
+         assert.isTrue(equalsHtml(goodHtml, checkHtml));
+      });
+
+      it('module link in an attribute that is not a link', function() {
+         var app = new Application();
+         var json = [['meta', {
+            name: '/test/Controls/_decorator/Markup.js',
+            content: 'yes'
+         }]];
+         app._beforeMount({ headJson: json });
+         var goodHtml = '<meta name="/test/Controls/_decorator/Markup.js" content="yes" />';
+         var checkHtml = template({
+            _options: {
+               value: app.headJson[0],
+               validHtml: app.headValidHtml,
+               tagResolver: app.headTagResolver
+            }
+         }, {});
+         assert.isTrue(equalsHtml(goodHtml, checkHtml));
+      });
+
+      it('just a title', function() {
+         var app = new Application();
+         var json = [['title', 'SABY']];
+         app._beforeMount({ headJson: json });
+         var goodHtml = '<title>SABY</title>';
+         var checkHtml = template({
+            _options: {
+               value: app.headJson[0],
+               validHtml: app.headValidHtml,
+               tagResolver: app.headTagResolver
+            }
+         }, {});
+         assert.isTrue(equalsHtml(goodHtml, checkHtml));
       });
    });
 });
