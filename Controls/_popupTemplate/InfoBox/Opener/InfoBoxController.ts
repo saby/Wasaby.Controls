@@ -115,6 +115,13 @@ const _private = {
             const targetWidth = target.offsetWidth || target.clientWidth;
             return _private.getOffset(targetWidth, alignSide, constants.ARROW_H_OFFSET, constants.ARROW_WIDTH);
         }
+    },
+    findItemById: function(popupItems, id) {
+        let index = popupItems && popupItems.getIndexByValue('id', id);
+        if (index > -1) {
+            return popupItems.at(index);
+        }
+        return null;
     }
 };
 
@@ -186,6 +193,15 @@ const InfoBoxController = StickyController.constructor.extend({
         // Protection against incorrect page design
         baseConfig.checkNegativePosition = false;
         return baseConfig;
+    },
+
+    getCustomZIndex(popupItems, item) {
+        const parentItem = _private.findItemById(popupItems, item.parentId);
+        if (parentItem) {
+            const parentZIndex = parentItem.currentZIndex;
+            return parentZIndex + 1;
+        }
+        return null;
     },
 
     prepareConfig(cfg, sizes) {
