@@ -15,7 +15,7 @@
         navigation="{{_options.navigation}}"
         autoDropDown="{{_options.autoDropDown}}"
         emptyTemplate="{{_options.emptyTemplate}}"
-        layerName="Controls/suggest:__PopupLayer"
+        layerName="Controls/suggestPopup:__PopupLayer"
         filter="{{_options.filter}}"
         sorting="{{_options.sorting}}"
         value="{{_options.value}}"
