@@ -170,7 +170,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
 
       /**
        *
-       * Контрол "Выпадающий список".
+       * Контрол меню.
        * @control
        * @mixes Controls/_dropdownPopup/DropdownListStyles
        * @public
