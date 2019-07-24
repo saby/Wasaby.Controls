@@ -1,5 +1,5 @@
 <ws:template name="loadingIndicator">
-        <div class="controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-{{_loadingIndicatorState}}">
+        <div class="{{ _getLoadingIndicatorClasses() }}" >
             <ws:if data="{{_showLoadingIndicatorImage}}">
                 <div class="controls-BaseControl__loadingIndicatorImg-wrapper">
                     <div class="controls-BaseControl__loadingIndicatorImg"></div>
