@@ -311,6 +311,9 @@ import dataSource = require('Controls/dataSource');
             if (!def.isReady()) {
                def.callback(false);
             }
+         } else {
+            // if user press 'cancel' button, then cancel finish pendings
+            this._notify('cancelFinishingPending', [], {bubbling: true});
          }
       },
 

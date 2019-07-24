@@ -201,9 +201,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 
             resultDeferred.callback(pendingResults);
          }).addErrback(function(e) {
-            if (!e.canceled) {
-               resultDeferred.errback(e);
-            }
+            resultDeferred.errback(e);
             return e;
          });
 
