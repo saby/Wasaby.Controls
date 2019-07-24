@@ -8,10 +8,10 @@
 
 /**
  * @name Controls/interface/IInputNumber#value
- * @cfg {Number|String|null} Число, которое будет проецироваться на текст в поле.
+ * @cfg {Number|String|null} Числое значение поля.
  * @default 0
  * @remark
- * Если вы не обновите опцию, то не сможете ничего ввести в поле. Для того чтобы её обновить, необходимо подписаться на событие _valueChanged и обновить состояние, связанное с опцией. Для упрощения вы можете использовать синтаксис связывания(bind).
+ * Для корректной работы пользователя с полем, вам нужно обновлить опцию. Иначе в поле ничего не введется. Для того чтобы её обновить, необходимо подписаться на событие _valueChanged и обновить состояние, связанное с опцией. Для упрощения вы можете использовать синтаксис связывания(bind).
  * Работая с типом Number, можно столкнуться с проблемой потери точности. Например, числа 99999999999999999999 не существует. Оно представляется как 100000000000000000000, ввиду особенностей движка javascript, регламентируемых стандартом {@link http://www.softelectro.ru/ieee754.html IEEE 754}. Для того чтобы избежать этой проблемы, необходимо работать с типом String.
  * @example
  * В этом примере состояние контрола _inputValue связывается с опцией value поля ввода. В любом хуке жизненного цикла контрола значение _inputValue будет содержать текущее значение поля ввода.
@@ -38,7 +38,7 @@
 /**
  * @event Происходит при изменении значения поля.
  * @name Controls/interface/IInputNumber#valueChanged
- * @param {Number|null} value Число, которое будет проецироваться на текст в поле.
+ * @param {Number|String|null} value Числое значение поля.
  * @param {String} displayValue Отображаемое значение в поле.
  * @remark
  * Это событие можно использовать в качестве реакции на изменения, вносимые пользователем в поле. Значение из аргументов события, не вставляется в контрол, если не передать его обратно в поле в качестве опции. Обычно, вместо этого можно использовать синтаксис связывания(bind).
@@ -69,7 +69,7 @@
 /**
  * @event Происходит, когда ввод завершен (поле потеряло фокус или пользователь нажал "enter").
  * @name Controls/interface/IInputNumber#inputCompleted
- * @param {Number|null} value Число, которое будет проецироваться на текст в поле.
+ * @param {Number|String|null} value Числое значение поля.
  * @param {String} displayValue Отображаемое значение в поле.
  * @remark
  * Реагируя на это событие, можно проверить поле на валидность введенных данных или отправить данные в другой контрол.
@@ -133,7 +133,7 @@ interface IInputNumber {
 /*
  * @event Occurs when field value was changed.
  * @name Controls/interface/IInputNumber#valueChanged
- * @param {Number|null} value The number that will be projected to the text in the field.
+ * @param {Number|String|null} value The number that will be projected to the text in the field.
  * @param {String} displayValue Value of the field.
  * @remark
  * This event should be used to react to changes user makes in the field. Value returned in the event is not inserted in control unless you pass it back to the field as an option. Usually you would use bind notation instead. Example below shows the difference.
@@ -164,7 +164,7 @@ interface IInputNumber {
 /*
  * @event Occurs when input is completed (field lost focus or user pressed ‘enter’).
  * @name Controls/interface/IInputNumber#inputCompleted
- * @param {Number|null} value The number that will be projected to the text in the field.
+ * @param {Number|String|null} value The number that will be projected to the text in the field.
  * @param {String} displayValue Value of the field.
  * @remark
  * This event can be used as a trigger to validate the field or send entered data to some other control.
