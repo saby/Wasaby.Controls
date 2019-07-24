@@ -40,6 +40,13 @@ define('Controls/Utils/hasHorizontalScroll',
             return result;
          }
 
-         return target.clientWidth !== target.scrollWidth;
+         var width = parseFloat(targetStyles.width);
+
+         /**
+          * The value of the scrollHeight property is an integer. The width can be fractional.
+          * In this case, the element that does not have a horizontal scroll will have a scrollHeight equal to the width rounded up.
+          * Therefore, when comparing scrollHeight and width, you need to round up the width.
+          */
+         return target.scrollWidth > Math.ceil(width);
       };
    });
