@@ -1,54 +1,78 @@
-<div class="Controls-demo_NotificationTemplateClass">
-        <Controls.popupTemplate:NotificationSimple name="myOpenerDanger" text="DANGER" style="danger" icon="icon-small icon-Subscribe">
-        </Controls.popupTemplate:NotificationSimple>
+<div class="Controls-demo_NotificationTemplateCommonClass">
+        <div class="Controls-demo_NotificationTemplateOpenerClass">
+                <Controls.popupTemplate:NotificationSimple name="myOpenerDanger"
+                                                           text="DANGER"
+                                                           style="danger"
+                                                           icon="icon-small icon-Subscribe">
+                </Controls.popupTemplate:NotificationSimple>
 
-        <Controls.popupTemplate:NotificationSimple name="myOpenerWarning" text="WARNING" style="warning" icon="icon-medium icon-Attach">
-        </Controls.popupTemplate:NotificationSimple>
+                <Controls.popupTemplate:NotificationSimple name="myOpenerWarning"
+                                                           text="WARNING"
+                                                           style="warning"
+                                                           icon="icon-medium icon-Attach">
+                </Controls.popupTemplate:NotificationSimple>
 
-        <Controls.popupTemplate:NotificationSimple name="myOpenerSuccess" text="Success" style="success" icon="icon-small icon-Vacation">
-        </Controls.popupTemplate:NotificationSimple>
+                <Controls.popupTemplate:NotificationSimple name="myOpenerSuccess"
+                                                           text="Success"
+                                                           style="success"
+                                                           icon="icon-small icon-Vacation">
+                </Controls.popupTemplate:NotificationSimple>
 
-        <Controls.popupTemplate:NotificationSimple name="myOpenerPrimary" text="Primary" style="primary" icon="icon-small icon-AdminInfo">
-        </Controls.popupTemplate:NotificationSimple>
+                <Controls.popupTemplate:NotificationSimple name="myOpenerPrimary"
+                                                           text="Primary"
+                                                           style="primary"
+                                                           icon="icon-small icon-AdminInfo">
+                </Controls.popupTemplate:NotificationSimple>
 
-        <Controls.popupTemplate:NotificationSimple name="myOpenerSuccess1" text="NotificationSimple- no closeButton, no icon" style="success" closeButtonVisibility="{{false}}">
-        </Controls.popupTemplate:NotificationSimple>
+                <Controls.popupTemplate:NotificationSimple name="myOpenerSuccess1"
+                                                           text="NotificationSimple- no closeButton, no icon"
+                                                           style="success"
+                                                           closeButtonVisibility="{{false}}">
+                </Controls.popupTemplate:NotificationSimple>
 
-        <Controls.popupTemplate:Notification name="myOpenerDanger2" bodyContentTemplate = "Notification - with closeButton" style="danger" closeButtonVisibility="{{true}}">
-        </Controls.popupTemplate:Notification>
+                <Controls.popupTemplate:Notification name="myOpenerDanger2"
+                                                     bodyContentTemplate = "Notification - with closeButton"
+                                                     style="danger"
+                                                     closeButtonVisibility="{{true}}">
+                </Controls.popupTemplate:Notification>
 
-        <Controls.popupTemplate:Notification name="myOpenerWarning2" bodyContentTemplate="Notification" style="warning">
-        </Controls.popupTemplate:Notification>
+                <Controls.popupTemplate:Notification name="myOpenerWarning2"
+                                                     bodyContentTemplate="Notification"
+                                                     style="warning">
+                </Controls.popupTemplate:Notification>
+        </div>
 
-        <Controls.popupTemplate:ConfirmationDialog attr:class = "Controls-demo_NotificationTemplateAdditional"
-                                                   name="Confirm1"
-                                                   message="Вы уверены?"
-                                                   style="success"
-                                                   type="yesnocancel">
-        </Controls.popupTemplate:ConfirmationDialog>
+        <div class="Controls-demo_NotificationTemplateConfirmClass">
+                <Controls.popupTemplate:ConfirmationDialog attr:class="Controls-demo_NotificationTemplateConfirmIndentsClass"
+                                                           name="Confirm1"
+                                                           message="Вы уверены?"
+                                                           style="success"
+                                                           type="yesnocancel">
+                </Controls.popupTemplate:ConfirmationDialog>
 
-        <Controls.popupTemplate:ConfirmationDialog attr:class = "Controls-demo_NotificationTemplateAdditional"
-                                                   name="Confirm2"
-                                                   message="Are you sure you want to delete?"
-                                                   style="danger"
-                                                   type="yesnocancel"
-                                                   primaryAction="no"
-                                                   yesCaption="Yes"
-                                                   noCaption="No"
-                                                   cancelCaption="Cancel">
-        </Controls.popupTemplate:ConfirmationDialog>
+                <Controls.popupTemplate:ConfirmationDialog attr:class="Controls-demo_NotificationTemplateConfirmIndentsClass"
+                                                           name="Confirm2"
+                                                           message="Are you sure you want to delete?"
+                                                           style="danger"
+                                                           type="yesnocancel"
+                                                           primaryAction="no"
+                                                           yesCaption="Yes"
+                                                           noCaption="No"
+                                                           cancelCaption="Cancel">
+                </Controls.popupTemplate:ConfirmationDialog>
 
-        <Controls.popupTemplate:ConfirmationDialog attr:class = "Controls-demo_NotificationTemplateAdditional"
-                                                   name="Confirm3"
-                                                   message="Сохранить изменения?"
-                                                   type="yesno">
-        </Controls.popupTemplate:ConfirmationDialog>
+                <Controls.popupTemplate:ConfirmationDialog attr:class="Controls-demo_NotificationTemplateConfirmIndentsClass"
+                                                           name="Confirm3"
+                                                           message="Сохранить изменения?"
+                                                           type="yesno">
+                </Controls.popupTemplate:ConfirmationDialog>
 
-        <Controls.popupTemplate:ConfirmationDialog attr:class = "Controls-demo_NotificationTemplateAdditional"
-                                                   name="Confirm4"
-                                                   message="Сообщение об ошибке"
-                                                   details="Детали сообщения"
-                                                   style="danger"
-                                                   type="ok">
-        </Controls.popupTemplate:ConfirmationDialog>
+                <Controls.popupTemplate:ConfirmationDialog attr:class="Controls-demo_NotificationTemplateConfirmIndentsClass"
+                                                           name="Confirm4"
+                                                           message="Сообщение об ошибке"
+                                                           details="Детали сообщения"
+                                                           style="danger"
+                                                           type="ok">
+                </Controls.popupTemplate:ConfirmationDialog>
+        </div>
 </div>
