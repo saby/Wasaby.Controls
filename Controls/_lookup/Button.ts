@@ -4,9 +4,10 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
 
 /**
  * Кнопка-ссылка с заданным текстом, при клике на которую открывается окно выбора.
- * <a href="/materials/demo-ws4-engine-selector-button">Демо-пример</a>.
+ * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-button">демонстрационный пример</a>.
  *
  * @class Controls/_lookup/Button
+ * @extends Core/Control
  * @mixes Controls/_interface/ILookup
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/interface/ISelectedCollection
@@ -15,13 +16,11 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_lookup/Button/SelectorButtonStyles
- * @extends Core/Control
  * @control
  * @public
  * @author Капустин И.А.
  * @demo Controls-demo/Buttons/SelectorButtonPG
  */
-
 /*
  * Button link with the specified text, on clicking on which a selection window opens.
  * Here you can see <a href="/materials/demo-ws4-engine-selector-button">demo-example</a>.
@@ -37,7 +36,7 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * @mixes Controls/_lookup/Button/SelectorButtonStyles
  * @control
  * @public
- * @author Капустин И.А.
+ * @author Kapustin I.A.
  * @demo Controls-demo/Buttons/SelectorButtonPG
  */
 
@@ -63,7 +62,6 @@ export = Button;
  * @variant default
  * @default secondary
  */
-
 /*
  * @name Controls/_lookup/Button#style
  * @cfg {Enum} Button display style.
