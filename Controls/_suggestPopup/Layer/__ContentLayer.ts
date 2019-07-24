@@ -3,7 +3,7 @@
  */
 
 import BaseLayer from './__BaseLayer';
-import template = require('wml!Controls/_suggest/Layer/__ContentLayer');
+import template = require('wml!Controls/_suggestPopup/Layer/__ContentLayer');
 import 'css!theme?Controls/suggest';
 
 var _private = {

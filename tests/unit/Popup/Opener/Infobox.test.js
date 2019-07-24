@@ -2,9 +2,10 @@ define(
    [
       'Controls/popup',
       'Controls/popupTemplate',
-      'Controls/_popupTemplate/InfoBox'
+      'Controls/_popupTemplate/InfoBox',
+      'Types/collection'
    ],
-   (popup, popupTemplate, InfoBoxTemplate) => {
+   (popup, popupTemplate, InfoBoxTemplate, collection) => {
       'use strict';
 
       describe('Controls/Popup/InfoBoxController', () => {
@@ -19,6 +20,25 @@ define(
             assert.equal(item.position.left, -10000);
             assert.equal(item.position.right, undefined);
             assert.equal(item.position.bottom, undefined);
+         });
+
+         it('getCustomZIndex', () => {
+            let popupList = new collection.List();
+            let infoBoxItem = {
+               id: 2,
+               parentId: 1
+            };
+            popupList.add({
+               id: 1,
+               currentZIndex: 10
+            });
+            popupList.add(infoBoxItem);
+            let zIndex = popupTemplate.InfoBoxController.getCustomZIndex(popupList, infoBoxItem);
+            assert.equal(zIndex, 11);
+            infoBoxItem.parentId = 3;
+            zIndex = popupTemplate.InfoBoxController.getCustomZIndex(popupList, infoBoxItem);
+            assert.equal(zIndex, null);
+            popupList.destroy();
          });
       });
 

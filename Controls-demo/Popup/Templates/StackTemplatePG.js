@@ -84,7 +84,7 @@ define('Controls-demo/Popup/Templates/StackTemplatePG',
                bodyContentTemplate: 'wml!Controls-demo/Popup/Templates/resources/defaultBodyContent',
                footerContentTemplate: 'wml!Controls-demo/Popup/Templates/resources/defaultFooterContent',
                draggable: true,
-               closeButtonViewMode: 'default',
+               closeButtonViewMode: 'popup',
                closeButtonVisibility: true,
                closeButtonTransparent: true,
                maximizeButtonVisibility: true

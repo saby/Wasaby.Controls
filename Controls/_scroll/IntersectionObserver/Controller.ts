@@ -44,6 +44,11 @@ class  ModuleComponent extends Control<IIntersectionObserverControllerOptions> {
    }
 
    private _unregisterHandler(event: SyntheticEvent, instId: string): void {
+      // TODO: remove after complete https://online.sbis.ru/opendoc.html?guid=310360e5-ab07-4aa2-8327-f5f8422aedd9
+      // _beforeUnmount in IntersectionObserverController called 2 times.
+      if (!this._items[instId]) {
+         return;
+      }
       this._observer.unobserve(this._items[instId].element);
       delete this._items[instId];
    }

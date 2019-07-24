@@ -3,7 +3,7 @@
  */
 
 import Control = require('Core/Control');
-import template = require('wml!Controls/_suggest/Layer/__PopupLayer');
+import template = require('wml!Controls/_suggestPopup/Layer/__PopupLayer');
 import templateContent from './__PopupContent';
 import {detection} from 'Env/Env';
 import getZIndex = require('Controls/Utils/getZIndex');
