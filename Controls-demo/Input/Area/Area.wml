@@ -33,7 +33,7 @@
       <Controls-demo.Input.resources.SuggestTwoLines attr:id="constraint" bind:suggestValue="_constraint" source="{{_items}}"
                                       attr:class="demo-TextBox ControlsDemo-Area__constraint"/>
       <Controls.input:Label name="myLabel1" caption="maxLength"/>
-      <Controls.input:Text attr:id="maxLength" bind:value="_maxLength" attr:class="demo-TextBox ControlsDemo-Area__maxLength"/>
+      <Controls.input:Number attr:id="maxLength" bind:value="_maxLength" attr:class="demo-TextBox ControlsDemo-Area__maxLength" precision="{{0}}"/>
       <Controls.input:Label name="myLabel1" caption="minLines"/>
       <Controls.input:Number attr:id="minLines" bind:value="_minLines" precision="{{0}}" attr:class="demo-TextBox ControlsDemo-Area__minLines"/>
       <Controls.input:Label name="myLabel1" caption="maxLines"/>
