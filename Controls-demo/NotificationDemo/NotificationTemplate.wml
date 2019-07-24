@@ -20,18 +20,11 @@
         <Controls.popupTemplate:Notification name="myOpenerWarning2" bodyContentTemplate="Notification" style="warning">
         </Controls.popupTemplate:Notification>
 
-        <!-- <Controls.popupTemplate:Confirmation name="Confirm"
-                                             bodyContentTemplate="Are you sure?"
-                                             footerContentTemplate = "wml!Controls/_popupTemplate/Confirmation/Opener/Dialog/footer"
-                                             type="yesnocancel">
-        </Controls.popupTemplate:Confirmation> -->
-
         <Controls.popupTemplate:ConfirmationDialog attr:class = "Controls-demo_NotificationTemplateAdditional"
                                                    name="Confirm1"
                                                    message="Вы уверены?"
                                                    style="success"
-                                                   type="yesnocancel"
-                                                   primaryAction="yes">
+                                                   type="yesnocancel">
         </Controls.popupTemplate:ConfirmationDialog>
 
         <Controls.popupTemplate:ConfirmationDialog attr:class = "Controls-demo_NotificationTemplateAdditional"
