@@ -160,7 +160,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
     _yearRangeSelectionType: null,
 
     _beforeMount: function (options) {
-        this._displayedDate = dateUtils.getStartOfMonth(options.startValue);
+        this._displayedDate = dateUtils.getStartOfMonth(
+            dateUtils.isValidDate(options.startValue) ? options.startValue : new Date());
 
         this._rangeModel = new DateRangeModel();
         this._rangeModel.update(options);
