@@ -713,13 +713,16 @@ var _private = {
         }
     },
 
-    unBlockItemActions: debounce(function(self) {
-        self._blockItemActionsByScroll = false;
+    unlockItemActions: debounce(function(self) {
+        self._lockItemActionsByScroll = false;
+        self._canUpdateItemsActions = self._savedCanUpdateItemsActions || self._canUpdateItemsActions;
+        self._savedCanUpdateItemsActions = false;
     }, 200),
 
     handleListScrollSync(self) {
-        self._blockItemActionsByScroll = true;
-        _private.unBlockItemActions(self);
+        self._savedCanUpdateItemsActions = self._canUpdateItemsActions || self._savedCanUpdateItemsActions;
+        self._lockItemActionsByScroll = true;
+        _private.unlockItemActions(self);
         if (detection.isMobileIOS) {
             _private.getIntertialScrolling(self).scrollStarted();
         }
@@ -1834,11 +1837,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragStart: function(event, dragObject) {
+        this._savedCanUpdateItemsActions = this._canUpdateItemsActions || this._savedCanUpdateItemsActions;
         this._listViewModel.setDragEntity(dragObject.entity);
         this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._itemDragData.dispItem));
     },
 
     _dragEnd: function(event, dragObject) {
+        this._canUpdateItemsActions = this._savedCanUpdateItemsActions || this._canUpdateItemsActions;
         if (this._options.itemsDragNDrop) {
             this._dragEndHandler(dragObject);
         }
@@ -1953,9 +1958,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // do not need to update itemAction on touch devices, if mouseenter event was fired,
         // otherwise actions will updated and redraw, because of this click on action will not work.
         // actions on touch devices drawing on swipe.
+
         let isDragging = !!this._listViewModel.getDragEntity();
-        if (!this._context.isTouch.isTouch && !this._blockItemActionsByScroll && !isDragging && item) {
-            this._canUpdateItemsActions = true;
+        if (!this._context.isTouch.isTouch){
+            if(!this._lockItemActionsByScroll && !isDragging && item) {
+                this._canUpdateItemsActions = true;
+                this._savedCanUpdateItemsActions = false;
+            } else {
+                this._savedCanUpdateItemsActions = true;
+            }
         }
         this._notify('hoveredItemChanged', [item, container]);
     },
