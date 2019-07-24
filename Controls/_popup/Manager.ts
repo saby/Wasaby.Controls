@@ -429,6 +429,9 @@ const Manager = Control.extend({
             EnvEvent.Bus.globalChannel().subscribe('MobileInputFocusOut', _private.controllerVisibilityChangeHandler);
         }
     },
+    _afterUpdate(){
+        ManagerController.setPopupHeaderTheme(this._options.popupHeaderTheme);
+    },
 
     /**
      * Show
