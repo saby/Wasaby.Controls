@@ -349,12 +349,20 @@ const _private = {
                 if (registrator._hasRegisteredPendings()) {
                     pendingCallback && pendingCallback();
                 }
-                const finishDef = registrator.finishPendingOperations();
-                finishDef.addCallbacks(function() {
+                if (item.removePending) {
+                    return item.removePending;
+                }
+                item.removePending = registrator.finishPendingOperations();
+                item.removePending.addCallbacks(function() {
+                    item.removePending = null;
                     pendingsFinishedCallback && pendingsFinishedCallback();
                 }, function(e) {
-                    Env.IoC.resolve('ILogger').error('Controls/_popup/Manager/Container', 'Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', e);
-                    pendingsFinishedCallback && pendingsFinishedCallback();
+                    item.removePending = null;
+                    if (e.canceled !== true) {
+                        Env.IoC.resolve('ILogger').error('Controls/_popup/Manager/Container', 'Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', e);
+                        pendingsFinishedCallback && pendingsFinishedCallback();
+                    }
+
                 });
             }
         } else {
