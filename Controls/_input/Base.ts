@@ -808,10 +808,13 @@ interface IFieldTemplate {
             _private.handleInput(this, splitValue, inputType);
 
             /**
-             * На Android изменение данных поля во время ввода приводит к ошибке
+             * На Android работа с данными поля во время ввода приводит к ошибке
              * https://online.sbis.ru/opendoc.html?guid=34bc55ac-807f-4d98-88b8-37b7ba0520de
-             * Предполагается, что проблема должна решиться после выполнения задачи
-             * https://online.sbis.ru/opendoc.html?guid=3b85ad37-7785-49bf-8770-c793753f9fb7
+             * Последующие значения атрибута value не обновляются после пользовательского ввода.
+             * Из-за невалидного value нарушается логика работы контрола. Поэтому работать с value нужно во
+             * время цикла синхронизации. Модель синхронизируется с полем во время цикла синхронизации, если изменения
+             * не были применены(у модели не был вызван метод changesHaveBeenApplied). Такой подход увеличит время перерисоки,
+             * но на Android визуально не заметно.
              */
             if (!this._isMobileAndroid) {
                _private.updateField(this, model.displayValue, model.selection);
