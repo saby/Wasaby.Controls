@@ -713,7 +713,13 @@ var _private = {
         }
     },
 
+    unBlockItemActions: debounce(function(self) {
+        self._blockItemActionsByScroll = false;
+    }, 200),
+
     handleListScrollSync(self) {
+        self._blockItemActionsByScroll = true;
+        _private.unBlockItemActions(self);
         if (detection.isMobileIOS) {
             _private.getIntertialScrolling(self).scrollStarted();
         }
@@ -1202,6 +1208,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _pagingNavigationVisible: false,
 
     _canUpdateItemsActions: false,
+    _blockItemActionsByScroll: false,
 
     _needBottomPadding: false,
     _emptyTemplateVisibility: true,
@@ -1946,7 +1953,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // do not need to update itemAction on touch devices, if mouseenter event was fired,
         // otherwise actions will updated and redraw, because of this click on action will not work.
         // actions on touch devices drawing on swipe.
-        if (!this._context.isTouch.isTouch) {
+        let isDragging = !!this._listViewModel.getDragEntity();
+        if (!this._context.isTouch.isTouch && !this._blockItemActionsByScroll && !isDragging && item) {
             this._canUpdateItemsActions = true;
         }
         this._notify('hoveredItemChanged', [item, container]);

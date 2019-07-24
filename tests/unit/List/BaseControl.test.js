@@ -1525,13 +1525,17 @@ define([
             }
          };
 
-         lnBaseControl._onHoveredItemChanged({});
+         lnBaseControl._onHoveredItemChanged({}, {});
          assert.isTrue(lnBaseControl._canUpdateItemsActions);
          lnBaseControl._afterUpdate(lnCfg);
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
 
+         lists.BaseControl._private.handleListScrollSync(lnBaseControl);
+         lnBaseControl._onHoveredItemChanged({}, {});
+         assert.isFalse(lnBaseControl._canUpdateItemsActions);
+
          lnBaseControl._context.isTouch.isTouch = true;
-         lnBaseControl._onHoveredItemChanged({});
+         lnBaseControl._onHoveredItemChanged({}, {});
          assert.isFalse(lnBaseControl._canUpdateItemsActions);
       });
 
