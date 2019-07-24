@@ -132,9 +132,13 @@ define([
          });
 
          it('resetExpandedItems', function() {
+            let updated = false;
+            treeViewModel._nextModelVersion = function() {
+               updated = true;
+            };
             treeViewModel.setExpandedItems(['123', '234', '1']);
             assert.equal(treeViewModel.getExpandedItems().length, 3);
-
+            assert.isTrue(updated);
             treeViewModel.resetExpandedItems();
             assert.equal(treeViewModel.getExpandedItems().length, 0);
          });
@@ -269,7 +273,7 @@ define([
                   'Invalid value "shouldDrawExpander(...)" for step ' + i + '.');
             });
          });
-         it('should redrow list if once folder was deleted', function() {
+         it('should redraw list if once folder was deleted', function() {
             var
                rs = new collection.RecordSet({
                   rawData: [

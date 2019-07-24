@@ -133,7 +133,7 @@ import 'css!theme?Controls/validate';
                   if (typeof validator === 'function') {
                      // если встретили функцию
                      validatorResult = validator();
-                  } else if (validator instanceof Deferred) {
+                  } else if (validator instanceof Promise) {
                      // если встретили deferred - значит значение уже провалидировано и ждем результат
                      validatorResult = validator;
                   } else {
@@ -142,7 +142,7 @@ import 'css!theme?Controls/validate';
                   }
 
                   // результат - либо deferred, либо готовое значение
-                  if (validatorResult instanceof Deferred) {
+                  if (validatorResult instanceof Promise) {
                      parallelDeferred.push(validatorResult);
                   } else {
                      if (typeof validatorResult === 'string') {
@@ -212,7 +212,7 @@ import 'css!theme?Controls/validate';
           */
          setValidationResult: function(validationResult) {
             this._validationResult = validationResult;
-            if (!(validationResult instanceof Deferred)) {
+            if (!(validationResult instanceof Promise)) {
                this._forceUpdate();
             }
             if (validationResult) {
@@ -280,7 +280,7 @@ import 'css!theme?Controls/validate';
 
          // todo это временный фикс, этот код должен уйти в контрол поля ввода, валидация уже отдает туда результат валидации, контролу нужно использовать эти данные
          _isValidResult: function() {
-            return this._validationResult && !(this._validationResult instanceof Deferred);
+            return this._validationResult && !(this._validationResult instanceof Promise);
          },
          _private: _private
       });

@@ -265,6 +265,9 @@ var _private = {
         _private.setMarkedKey(self, newMarkedKey);
     },
     moveMarkerToNext: function (self, event) {
+        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
+            return;
+        }
         if (self._options.markerVisibility !== 'hidden') {
             event.preventDefault();
             var model = self.getViewModel();
@@ -272,6 +275,9 @@ var _private = {
         }
     },
     moveMarkerToPrevious: function (self, event) {
+        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
+            return;
+        }
         if (self._options.markerVisibility !== 'hidden') {
             event.preventDefault();
             var model = self.getViewModel();
@@ -279,14 +285,19 @@ var _private = {
         }
     },
     enterHandler: function(self) {
+        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
+            return;
+        }
         let markedItem = self.getViewModel().getMarkedItem();
         if (markedItem) {
             self._notify('itemClick', [markedItem.getContents()], { bubbling: true });
         }
     },
     toggleSelection: function(self, event) {
-        var
-            model, markedKey;
+        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
+            return;
+        }
+        let model, markedKey;
         if (self._children.selectionController) {
             model = self.getViewModel();
             markedKey = model.getMarkedKey();
@@ -1134,6 +1145,9 @@ var _private = {
     },
     updateNavigation: function(self) {
         self._pagingNavigationVisible = self._pagingNavigation && self._knownPagesCount > 1;
+    },
+    isBlockedForLoading(loadingIndicatorState): boolean {
+        return loadingIndicatorState === 'all';
     }
 
 };
@@ -1839,7 +1853,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _dragEndHandler: function(dragObject) {
         var targetPosition = this._listViewModel.getDragTargetPosition();
-
         if (targetPosition) {
             this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
         }
@@ -1873,7 +1886,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var self = this;
 
         //Reset the state of the dragndrop after the movement on the source happens.
-        if (this._dragEndResult instanceof Deferred) {
+        if (this._dragEndResult instanceof Promise) {
             _private.showIndicator(self);
             this._dragEndResult.addBoth(function() {
                 self._documentDragEndHandler();

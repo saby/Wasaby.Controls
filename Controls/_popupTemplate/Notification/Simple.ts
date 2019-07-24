@@ -36,7 +36,8 @@ import template = require('wml!Controls/_popupTemplate/Notification/Simple/Simpl
       Notification.getDefaultOptions = function() {
          return {
             style: 'primary',
-            autoClose: true
+            autoClose: true,
+            closeButtonVisibility: true
          };
       };
 
@@ -46,6 +47,7 @@ import template = require('wml!Controls/_popupTemplate/Notification/Simple/Simpl
 /**
  * @name Controls/_popupTemplate/Notification/Simple#autoClose
  * @cfg {Number} Close by timeout after open
+ * @default true
  */
 
 /**
@@ -55,11 +57,13 @@ import template = require('wml!Controls/_popupTemplate/Notification/Simple/Simpl
  * @variant primary
  * @variant success
  * @variant danger
+ * @default primary
  */
 
 /**
  * @name Controls/_popupTemplate/Notification/Simple#closeButtonVisibility
  * @cfg {Boolean} Determines whether display of the close button.
+ * @default true
  */
 
 /**
