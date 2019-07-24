@@ -8,7 +8,7 @@
 /*
  * filterCompatible library
  * @library Controls/filterCompatible
- * @public
+ * @private
  * @author Крайнов Д.О.
  */
 

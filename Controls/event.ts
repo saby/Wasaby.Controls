@@ -1,5 +1,5 @@
 /**
- * Библиотека событий.
+ * Библиотека контролов, позволяющих организовать работу событий сверху вниз.
  * @library Controls/event
  * @includes Register Controls/_event/Register
  * @includes Listener Controls/_event/Listener
