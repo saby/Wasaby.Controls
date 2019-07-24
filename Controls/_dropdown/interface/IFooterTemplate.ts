@@ -1,7 +1,7 @@
 
 
    /**
-    * Интерфейс для выпадающих списков, поддерживающих шаблон под элементами списка.
+    * Интерфейс для выпадающих списков, поддерживающих шаблон подвала списка.
     *
     * @interface Controls/_dropdown/interface/IFooterTemplate
     * @public
@@ -18,7 +18,7 @@
 
    /**
     * @name Controls/_dropdown/interface/IFooterTemplate#footerTemplate
-    * @cfg {Function | String} Шаблон, который будет отображаться под списком.
+    * @cfg {Function | String} Шаблон подвала списка.
     * @example
     * TMPL:
     * <pre>

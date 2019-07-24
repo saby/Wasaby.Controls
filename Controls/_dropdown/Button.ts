@@ -4,7 +4,7 @@ import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
 /**
- * Кнопка, клик по которой открывает выпадающий список.
+ * Кнопка с меню.
  *
  * <a href="/materials/demo-ws4-button-menu">Демо-пример</a>.
  *
