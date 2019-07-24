@@ -8,19 +8,6 @@ export interface IMobileFocusController {
    touchStartHandler(event: SyntheticEvent<TouchEvent>): void;
 }
 
-/**
- * Method decorator calling the target function only on IOS mobile.
- */
-function forMobileIOS(target: Object, method: string, descriptor: PropertyDescriptor): void {
-   const originalMethod = descriptor.value;
-
-   descriptor.value = function(event: SyntheticEvent<FocusEvent>): void {
-      if (detection.isMobileIOS) {
-         return originalMethod.call(this, event);
-      }
-   };
-}
-
 type FocusEventName = 'MobileInputFocus' | 'MobileInputFocusOut';
 
 /**
@@ -33,15 +20,17 @@ class MobileFocusController implements IMobileFocusController {
    private _fromTouch: boolean = false;
    private _fromFocus: boolean = false;
 
-   @forMobileIOS
    touchStartHandler(): void {
+      if (!detection.isMobileIOS) {
+         return;
+      }
+
       this._fromTouch = true;
       MobileFocusController._notify('MobileInputFocus');
    }
 
-   @forMobileIOS
    focusHandler(): void {
-      if (this._fromTouch) {
+      if (this._fromTouch || !detection.isMobileIOS) {
          return;
       }
 
@@ -49,8 +38,11 @@ class MobileFocusController implements IMobileFocusController {
       MobileFocusController._notify('MobileInputFocus');
    }
 
-   @forMobileIOS
    blurHandler(): void {
+      if (!detection.isMobileIOS) {
+         return;
+      }
+
       if (this._fromTouch || this._fromFocus) {
          this._fromTouch = false;
          this._fromFocus = false;
