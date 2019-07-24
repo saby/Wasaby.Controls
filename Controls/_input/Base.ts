@@ -809,7 +809,7 @@ interface IFieldTemplate {
 
             /**
              * На Android изменение данных поля во время ввода приводит к ошибке
-             * https://online.sbis.ru/doc/92ce32b2-a6d5-467e-bf34-dbd273ee7c9b
+             * https://online.sbis.ru/opendoc.html?guid=34bc55ac-807f-4d98-88b8-37b7ba0520de
              * Предполагается, что проблема должна решиться после выполнения задачи
              * https://online.sbis.ru/opendoc.html?guid=3b85ad37-7785-49bf-8770-c793753f9fb7
              */
