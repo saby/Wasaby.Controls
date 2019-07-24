@@ -1,4 +1,15 @@
 /**
+ * Библиотека выпадающих списков.
+ * @library Controls/dropdownPopup
+ * @includes Template wml!Controls/_dropdownPopup/defaultHeadTemplate
+ * @includes List Controls/_dropdownPopup/DropdownList
+ * @includes ListStyles Controls/_dropdownPopup/DropdownListStyles
+ * @includes itemTemplate tmpl!Controls/_dropdownPopup/itemTemplate
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+/*
  * dropdownPopup library
  * @library Controls/dropdownPopup
  * @includes Template wml!Controls/_dropdownPopup/defaultHeadTemplate
