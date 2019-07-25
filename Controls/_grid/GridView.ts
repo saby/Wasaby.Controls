@@ -317,17 +317,22 @@ var
         setOffsetForHScroll: function() {
             const container = this._container.length !== undefined ? this._container[0] : this._container;
             const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0].childNodes;
-            if (this._options.multiSelectVisibility !== 'hidden') {
-                this._leftOffsetForHScroll = HeaderGroup[0].offsetWidth + HeaderGroup[0].offsetWidth;
+            if (HeaderGroup && !!HeaderGroup.length) {
+                if (this._options.multiSelectVisibility !== 'hidden') {
+                    this._leftOffsetForHScroll = HeaderGroup[0].offsetWidth + HeaderGroup[0].offsetWidth;
+                } else {
+                    this._leftOffsetForHScroll = HeaderGroup[0].offsetWidth;
+                }
+                this._offsetForHScroll = HeaderGroup[0].offsetHeight;
             } else {
-                this._leftOffsetForHScroll = HeaderGroup[0].offsetWidth;
+                this._offsetForHScroll = 0;
+                this._leftOffsetForHScroll = 0;
             }
-            this._offsetForHScroll = HeaderGroup ? HeaderGroup[0].offsetHeight : 0;
+
             if (this._listModel.getResultsPosition() === 'top') {
                 const ResultsGroup = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
                 this._offsetForHScroll += ResultsGroup[0].offsetHeight;
             }
-
         },
 
         _getColumnsWidthForEditingRow: function (itemData) {
