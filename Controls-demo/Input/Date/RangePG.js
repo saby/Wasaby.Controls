@@ -57,6 +57,13 @@ define('Controls-demo/Input/Date/RangePG',
                   placeholder: 'select',
                   keyProperty: 'id',
                   displayProperty: 'title'
+               },
+               inlineHeight: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
                }
             };
             this._componentOptions = {
