@@ -429,7 +429,8 @@ const Manager = Control.extend({
             EnvEvent.Bus.globalChannel().subscribe('MobileInputFocusOut', _private.controllerVisibilityChangeHandler);
         }
     },
-    _afterUpdate(){
+    _afterUpdate() {
+        //Theme of the popup header can be changed dynamically in Presto
         ManagerController.setPopupHeaderTheme(this._options.popupHeaderTheme);
     },
 
