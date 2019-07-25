@@ -7,7 +7,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * Окно блокирует работу пользователя с родительским приложением.
  * Позиционируется в центре экрана.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/ Подробнее}
- * <a href="/materials/demo-ws4-confirmation">Demo-example</a>.
+ * <a href="/materials/demo-ws4-confirmation">Демо-пример</a>.
  *
  * @class Controls/_popup/Opener/Confirmation
  * @control

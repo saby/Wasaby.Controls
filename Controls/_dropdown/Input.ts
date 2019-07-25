@@ -49,6 +49,35 @@ var _private = {
 };
 
 /**
+ * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки. 
+ * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию закрыто. 
+ * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
+ * <a href="/materials/demo-ws4-input-dropdown">Демо-пример</a>.
+ * Руководство разработчика {@link /doc/platform/developmentapl/interface-development/controls/dropdown-menu/index/ Меню и выпадающий список}.
+ *
+ * @class Controls/_dropdown/Input
+ * @extends Core/Control
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/_interface/IHierarchy
+ * @mixes Controls/interface/IFilter
+ * @mixes Controls/interface/INavigation
+ * @mixes Controls/Input/interface/IValidation
+ * @mixes Controls/_interface/IMultiSelectable
+ * @mixes Controls/_dropdown/interface/IFooterTemplate
+ * @mixes Controls/_dropdown/interface/IHeaderTemplate
+ * @mixes Controls/interface/ISelectorDialog
+ * @mixes Controls/interface/IDropdownEmptyText
+ * @mixes Controls/interface/IDropdown
+ * @mixes Controls/_dropdown/interface/IGrouped
+ * @mixes Controls/interface/ITextValue
+ * @control
+ * @public
+ * @author Золотова Э.Е.
+ * @category Input
+ * @demo Controls-demo/Input/Dropdown/DropdownPG
+ */
+
+/*
  * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
  * The full list of options is displayed when you click on the control.
  * <a href="/materials/demo-ws4-input-dropdown">Demo-example</a>.
@@ -77,6 +106,40 @@ var _private = {
  */
 
 /**
+ * @name Controls/_dropdown/Input#contentTemplate
+ * @cfg {Function} Шаблон, который будет отображать вызываемый элемент.
+ * @remark
+ * Для определения шаблона вызовите базовый шаблон - "wml!Controls/_dropdown/Input/resources/defaultContentTemplate".
+ * Шаблон должен быть помещен в контрол с помощью тега <ws:partial> с атрибутом "template".
+ * Содержимое можно переопределить с помощью параметра "contentTemplate".
+ * Базовый шаблон wml!Controls/_dropdown/Input/resources/defaultContentTemplate по умолчанию отображает только текст.
+ * Для отображения иконки и текста используйте шаблон "wml!Controls/_dropdown/Input/resources/defaultContentTemplateWithIcon".
+ * @example
+ * Отображение иконки и текста.
+ *
+ * WML:
+ * <pre>
+ * <Controls.dropdown:Input
+ *       bind:selectedKeys="_selectedKeys"
+ *       keyProperty="id"
+ *       displayProperty="title"
+ *       source="{{_source)}}"
+ *       contentTemplate="wml!Controls/_dropdown/Input/resources/defaultContentTemplateWithIcon">
+ * </Controls.dropdown:Input>
+ * </pre>
+ * JS:
+ * <pre>
+ * this._source = new Memory({
+ *    idProperty: 'id',
+ *    data: [
+ *       {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
+ *       {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
+ *    ]
+ * });
+ * </pre>
+ */
+
+/*
  * @name Controls/_dropdown/Input#contentTemplate
  * @cfg {Function} Template that will be render calling element.
  * @remark
@@ -111,6 +174,35 @@ var _private = {
  */
 
 /**
+ * @name Controls/_dropdown/Input#multiSelect
+ * @cfg {Boolean} Определяет, установлен ли множественный выбор.
+ * @example
+ * Множественный выбор установлен.
+ * WML:
+ * <pre>
+ * <Controls.dropdown:Input
+ *       bind:selectedKeys="_selectedKeys"
+ *       keyProperty="id"
+ *       displayProperty="title"
+ *       source="{{_source}}"
+ *       multiSelect="{{true}}">
+ * </Controls.dropdown:Input>
+ * </pre>
+ * JS:
+ * <pre>
+ * this._source = new Memory({
+ *    idProperty: 'id',
+ *    data: [
+ *       {id: 1, title: 'Yaroslavl'},
+ *       {id: 2, title: 'Moscow'},
+ *       {id: 3, title: 'St-Petersburg'}
+ *    ]
+ * });
+ * this._selectedKeys = [1, 3];
+ * </pre>
+ */
+
+/*
  * @name Controls/_dropdown/Input#multiSelect
  * @cfg {Boolean} Determines whether multiple selection is set.
  * @example
