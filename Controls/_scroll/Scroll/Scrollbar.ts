@@ -208,6 +208,7 @@ import 'css!theme?Controls/scroll';
             _setSizes: function(contentSize) {
                var
                   verticalDirection = this._options.direction === 'vertical',
+                  horizontalDirection = this._options.direction === 'horizontal',
                   scrollbar = this._children.scrollbar,
                   scrollbarSize = scrollbar[verticalDirection ? 'offsetHeight' : 'offsetWidth'],
                   scrollbarAvailableSize = scrollbar[verticalDirection ? 'clientHeight' : 'clientWidth'],
@@ -219,7 +220,12 @@ import 'css!theme?Controls/scroll';
                   _private.calcViewportRatio(scrollbarSize, contentSize),
                   this._options.direction
                );
-                scrollRatio = _private.calcScrollRatio(scrollbarSize, scrollbarAvailableSize, thumbSize, contentSize - this._options.leftOffset);
+               scrollRatio = _private.calcScrollRatio(
+                   scrollbarSize,
+                   scrollbarAvailableSize,
+                   thumbSize,
+                   horizontalDirection ? contentSize - this._options.leftOffset : contentSize
+               );
 
                if (this._thumbSize === thumbSize && this._scrollRatio === scrollRatio) {
                   return false;
