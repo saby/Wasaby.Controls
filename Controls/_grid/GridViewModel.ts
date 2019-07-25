@@ -651,7 +651,16 @@ var
         resetHeaderRows: function() {
             this._curHeaderRowIndex = 0;
         },
-
+        setOffsettForHscroll: function(offset, leftOffset) {
+            this._offsetForHScroll = offset;
+            this._leftOffsetForHScroll = leftOffset;
+        },
+        getOffsetTopForHscroll: function() {
+          return this._offsetForHScroll;
+        },
+        getOffsetLeftForHscroll: function() {
+            return this._leftOffsetForHScroll;
+        },
         goToNextHeaderRow: function() {
             this._curHeaderRowIndex++;
         },

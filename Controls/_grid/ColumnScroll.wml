@@ -6,7 +6,9 @@
               position="{{_scrollPosition}}"
               direction="horizontal"
               contentSize="{{_contentSize}}"
+              leftOffset="{{_options.listModel.getOffsetLeftForHscroll()}}"
               attr:class="controls-ColumnScroll"
+              attr:style="{{ getPositionStyle() }}"
               on:positionChanged="_positionChangedHandler()"/>
       <div class="{{_calculateShadowClasses('start')}}" style="{{_calculateShadowStyles('start')}}"></div>
       <div class="{{_calculateShadowClasses('end')}}"></div>

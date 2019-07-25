@@ -219,7 +219,7 @@ import 'css!theme?Controls/scroll';
                   _private.calcViewportRatio(scrollbarSize, contentSize),
                   this._options.direction
                );
-               scrollRatio = _private.calcScrollRatio(scrollbarSize, scrollbarAvailableSize, thumbSize, contentSize);
+                scrollRatio = _private.calcScrollRatio(scrollbarSize, scrollbarAvailableSize, thumbSize, contentSize - this._options.leftOffset);
 
                if (this._thumbSize === thumbSize && this._scrollRatio === scrollRatio) {
                   return false;

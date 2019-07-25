@@ -178,12 +178,16 @@ var
 
         _beforeUpdate: function(newCfg) {
             GridView.superclass._beforeUpdate.apply(this, arguments);
+            if (!this._offsetForHScroll && newCfg.columnScroll) {
+                this.setOffsetForHScroll();
+                this._listModel.setOffsettForHscroll(this._offsetForHScroll, this._leftOffsetForHScroll);
+            }
             if (this._options.resultsPosition !== newCfg.resultsPosition) {
                 if (this._listModel) {
                     this._listModel.setResultsPosition(newCfg.resultsPosition);
                 }
             }
-            
+
             // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                 this._listModel.setColumns(newCfg.columns);
@@ -192,6 +196,10 @@ var
                 }
             }
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
+                if (newCfg.columnScroll) {
+                    this.setOffsetForHScroll();
+                    this._listModel.setOffsettForHscroll(this._offsetForHScroll, this._leftOffsetForHScroll);
+                }
                 this._listModel.setHeader(newCfg.header);
                 if (!Env.detection.isNotFullGridSupport) {
                     _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
@@ -305,6 +313,21 @@ var
             if (this._options.columnScroll) {
                 this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
             }
+        },
+        setOffsetForHScroll: function() {
+            const container = this._container.length !== undefined ? this._container[0] : this._container;
+            const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0].childNodes;
+            if (this._options.multiSelectVisibility !== 'hidden') {
+                this._leftOffsetForHScroll = HeaderGroup[0].offsetWidth + HeaderGroup[0].offsetWidth;
+            } else {
+                this._leftOffsetForHScroll = HeaderGroup[0].offsetWidth;
+            }
+            this._offsetForHScroll = HeaderGroup ? HeaderGroup[0].offsetHeight : 0;
+            if (this._listModel.getResultsPosition() === 'top') {
+                const ResultsGroup = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
+                this._offsetForHScroll += ResultsGroup[0].offsetHeight;
+            }
+
         },
 
         _getColumnsWidthForEditingRow: function (itemData) {

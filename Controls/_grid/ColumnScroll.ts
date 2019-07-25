@@ -7,6 +7,8 @@ import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
 
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
+const FIXED_OFFSET_FOR_HORIZONTAL_THUMB = 3.5;
+
 const
    _private = {
       calculateFixedColumnWidth(container, multiSelectVisibility, stickyColumnsCount) {
@@ -159,6 +161,12 @@ const
       },
       getContentContainerSize() {
          return this._contentContainerSize;
-      }
+      },
+      getPositionStyle: function() {
+         const top = this._options.listModel.getOffsetTopForHscroll();
+         const left = this._options.listModel.getOffsetLeftForHscroll();
+         return `top:${top - FIXED_OFFSET_FOR_HORIZONTAL_THUMB}px;left:${left}px;`;
+      },
+
    });
 export = ColumnScroll;

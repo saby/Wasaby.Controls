@@ -17,7 +17,7 @@
    height: @width_Scrollbar + 2 * @margin_Scrollbar;
    padding: @margin_Scrollbar 0;
    border-width: 0 @margin_Scrollbar;
-   transition: height @animation-duration_Scrollbar ease-in-out;
+   transition: transform @animation-duration_Scrollbar ease-in-out;
 }
 
 .controls-VScrollbar__thumb_vertical {
@@ -28,10 +28,14 @@
 .controls-VScrollbar__thumb_horizontal {
    min-width: @min-height_Scrollbar-thumb;
    height: 100%;
+   background-color: @bg_Scrollbar-horizontal_thumb_normal;
 }
 
 .controls-VScrollbar__thumb {
    border-radius: @border-radius_Scrollbar-thumb;
+}
+
+.controls-VScrollbar__thumb:not(.controls-VScrollbar__thumb_horizontal) {
    background-color: @bg_Scrollbar-thumb_normal;
 }
 
@@ -46,7 +50,7 @@
 
 .controls-VScrollbar_horizontal:hover,
 .controls-VScrollbar_horizontal_dragging {
-   height: @width_Scrollbar_animation + 2 * @margin_Scrollbar;
+   transform: scaleY(@scale_Scrollbar-horizontal_thumb);
 }
 
 .controls-VScrollbar:hover .controls-VScrollbar__thumb,
@@ -54,7 +58,7 @@
    border-radius: @border-radius_Scrollbar-thumb_animation;
 }
 
-.controls-VScrollbar__thumb:hover,
+.controls-VScrollbar__thumb:not(.controls-VScrollbar__thumb_horizontal):hover,
 .controls-VScrollbar__thumb_dragging_normal {
    background-color: @bg_Scrollbar-thumb_active_normal;
 }
