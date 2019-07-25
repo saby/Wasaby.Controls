@@ -27,6 +27,7 @@ import {TouchContextField} from 'Controls/context';
 import {focus} from 'UI/Focus';
 import {debounce} from 'Types/function';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
+import {CssClassList} from "../Utils/CssClassList";
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -1148,6 +1149,12 @@ var _private = {
     },
     isBlockedForLoading(loadingIndicatorState): boolean {
         return loadingIndicatorState === 'all';
+    },
+    getLoadingIndicatorClasses(loadingIndicatorState, itemsCount): string {
+        return CssClassList.add('controls-BaseControl__loadingIndicator')
+            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
+            .add('controls-BaseControl-emptyView__loadingIndicator', itemsCount === 0)
+            .compile();
     }
 
 };
@@ -1955,6 +1962,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             keyProperty: newKeyProperty
         });
 
+    },
+
+    _getLoadingIndicatorClasses(): string {
+        return _private.getLoadingIndicatorClasses(this._loadingIndicatorState, this._listViewModel.getCount());
     }
 
 
