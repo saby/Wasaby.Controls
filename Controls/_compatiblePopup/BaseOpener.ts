@@ -599,6 +599,10 @@ const BaseOpener = {
          newCfg.dialogOptions.maximize = newCfg.maximize;
       }
 
+      if (cfg.hasOwnProperty('autofocus')) {
+         newCfg.dialogOptions.catchFocus = cfg.autofocus;
+      }
+
       if (newCfg.eventHandlers && newCfg.eventHandlers.onResult) {
          newCfg.dialogOptions.onResultHandler = newCfg.eventHandlers.onResult;
       }
