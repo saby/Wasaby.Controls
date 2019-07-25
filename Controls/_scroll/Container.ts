@@ -17,7 +17,7 @@ import 'css!theme?Controls/scroll';
 
 /**
  * Контейнер с тонким скроллом.
- * For the component, a {@link Controls/_scroll/Scroll/Context context} is required.
+ * Для контрола требуется {@link Controls/_scroll/Scroll/Context context}.
  *
  * @class Controls/_scroll/Container
  * @extends Core/Control
