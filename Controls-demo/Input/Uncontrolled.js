@@ -3,7 +3,7 @@ define('Controls-demo/Input/Uncontrolled',
       'UI/Base',
       'wml!Controls-demo/Input/Uncontrolled/Uncontrolled',
 
-      'controls/input',
+      'Controls/input',
       'css!Controls-demo/Input/Uncontrolled/Uncontrolled'
    ],
    function(Base, template) {
