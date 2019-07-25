@@ -24,8 +24,11 @@
       </ws:if>
       <ws:if data="{{_isFastReseted() && _options.detailPanelTemplateName && _options.panelTemplateName}}">
             <ws:partial template="textTemplate"
+                        name="all_frequent"
                         text="{[Все]}"
-                        on:click="_openPanel()"/>
+                        on:mousemove="_restartTimer('all_frequent')"
+                        on:mouseleave="_resetTimer()"
+                        on:click="_openPanel('all_frequent')"/>
       </ws:if>
       <ws:for data="index, item in _source">
          <ws:if data="{{_displayText[item.name].text}}">
@@ -33,8 +36,8 @@
                            text="{{_displayText[item.name].text}}"
                            title="{{_displayText[item.name].title}}"
                            hasMoreText="{{_displayText[item.name].hasMoreText}}"
-                           on:click="_openPanel(item)"
-                           on:mousemove="_restartTimer(item)"
+                           on:click="_openPanel(item.name)"
+                           on:mousemove="_restartTimer(item.name)"
                            on:mouseleave="_resetTimer()"
                            name="{{item.name}}"/>
                <ws:partial template="cross" on:click="_reset(item)" />
