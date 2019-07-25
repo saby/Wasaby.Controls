@@ -1,7 +1,7 @@
-<div class="PageWrap" style="padding-top: 50px;">
-   <div class="PageBlock">
+<div class="controlsDemo-LinkView__pageWrap">
+   <div class="controlsDemo-LinkView__pageBlock">
       <div class="PageBlock__title"></div>
-      <div class="PageBlock__componentWrap ws-flexbox" style="justify-content: space-evenly; align-items: baseline">
+      <div class="controlsDemo-LinkView__componentWrap ws-flexbox">
          <Controls.dateRange:LinkView
                prevArrowVisibility="{{true}}"
                nextArrowVisibility="{{true}}"
@@ -37,13 +37,76 @@
                viewMode="label"
          />
       </div>
-      <div class="PageBlock__componentWrap ws-flexbox" style="justify-content: space-evenly; align-items: baseline; padding-top: 30px;">
+      <div class="controlsDemo-LinkView__pageBlock-baseline ws-flexbox">
+         Baseline
          <Controls.dateRange:LinkView
+               attr:class="controlsDemo-LinkView__component"
                prevArrowVisibility="{{true}}"
                nextArrowVisibility="{{true}}"
                bind:startValue="_startValue"
                bind:endValue="_endValue"
+         />
+         <Controls.dateRange:LinkView
+               attr:class="controlsDemo-LinkView__component"
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"
+         />
+         <Controls.dateRange:LinkView
+               attr:class="controlsDemo-LinkView__component"
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"
+               viewMode="link"
+               styleMode="secondary"
+               clearButtonVisibility="{{true}}"
+         />
+         <Controls.dateRange:LinkView
+               attr:class="controlsDemo-LinkView__component"
+               startValue="{{_startValue}}"
+               endValue="{{_endValue}}"
+               viewMode="link"
                styleMode="info"
+         />
+         <Controls.dateRange:LinkView
+               attr:class="controlsDemo-LinkView__component"
+               startValue="{{_startValue}}"
+               endValue="{{_endValue}}"
+               viewMode="label"
+         />
+      </div>
+      <div class="controlsDemo-LinkView__pageBlock-baseline controlsDemo-LinkView__pageBlock-baseline-size ws-flexbox">
+         Baseline
+         <Controls.dateRange:LinkView
+               attr:class="controlsDemo-LinkView__component"
+               prevArrowVisibility="{{true}}"
+               nextArrowVisibility="{{true}}"
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"
+         />
+         <Controls.dateRange:LinkView
+               attr:class="controlsDemo-LinkView__component"
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"
+         />
+         <Controls.dateRange:LinkView
+               attr:class="controlsDemo-LinkView__component"
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"
+               viewMode="link"
+               styleMode="secondary"
+               clearButtonVisibility="{{true}}"
+         />
+         <Controls.dateRange:LinkView
+               attr:class="controlsDemo-LinkView__component"
+               startValue="{{_startValue}}"
+               endValue="{{_endValue}}"
+               viewMode="link"
+               styleMode="info"
+         />
+         <Controls.dateRange:LinkView
+               attr:class="controlsDemo-LinkView__component"
+               startValue="{{_startValue}}"
+               endValue="{{_endValue}}"
+               viewMode="label"
          />
       </div>
    </div>
