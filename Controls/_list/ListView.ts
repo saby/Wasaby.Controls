@@ -137,7 +137,17 @@ var ListView = BaseControl.extend(
         },
 
         _afterMount: function() {
-            _private.resizeNotifyOnListChanged(this);
+            /* TODO это временное решение для ускорения списка с вложенными плитками
+              суть - в том что когда у плитки случается afterMount - у внешнего списка уже все пересчитал с актуальными
+              размерами вложенных плиток. Поэтому нет вариантов, что afterMount плитки может поресайзить внешний список
+              Ресайзы вызывают кучу пересчетов и лишнего кода, и тормозят список.
+
+              Правильное решение - отделять контрол TileView от TileControl, в качестве вложенных плиток использовать
+              TileView которое не стреляет событиями
+            */
+            if (!this._options._innerList) {
+                _private.resizeNotifyOnListChanged(this);
+            }
             if (this._options.markedKey === undefined && (this._options.markerVisibility === 'always' || this._options.markerVisibility === 'visible')) {
                 this._notify('markedKeyChanged', [this._listModel.getMarkedKey()]);
             }
