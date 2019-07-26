@@ -66,6 +66,21 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * @cfg {Boolean} Determines then Lookup can be displayed in multi line mode.
  */
 
+/**
+ * @name Controls/_lookup/Lookup#comment
+ * @cfg {String} Текст, который отображается в пустом поле комментария.
+ * @remark
+ * Актуально только в режиме еденичного выбора.
+ * Если значение не задано, то поле с комментарием отображено не будет.
+ */
+/*
+ * @name Controls/_lookup/Lookup#comment
+ * @cfg {String} The text that is displayed in the empty comment box.
+ * @remark
+ * Actual only in the mode of single choice.
+ * If the value is not specified, the comment field will not be displayed.
+ */
+
 var Lookup = Control.extend({
    _template: template,
 

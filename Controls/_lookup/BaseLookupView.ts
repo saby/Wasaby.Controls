@@ -233,7 +233,15 @@ var BaseLookupView = Control.extend({
             //If press backspace, the input field is empty and there are selected entries -  remove last item
             this._notify('removeItem', [items.at(items.getCount() - 1)]);
         }
-    }
+    },
+
+   _getPlaceholder: function(options) {
+       return options.placeholder;
+   },
+
+   _isShowCollection: function() {
+       return !this._isEmpty(this._options) && (this._maxVisibleItems || this._options.readOnly);
+   }
 });
 
 BaseLookupView._theme = ['Controls/lookup'];
