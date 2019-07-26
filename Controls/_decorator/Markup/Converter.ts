@@ -61,21 +61,23 @@ import { IoC } from 'Env/Env';
    }
 
    var tagPattern = '(?:</?([a-z]+)[^>]*[>])',
-      linkPrefixPattern = '((?:https?|ftp|file|smb)://|www\\.)',
-      linkPattern = '(' + linkPrefixPattern + '(?:[^\\s\\x16<>]+))',
-      emailPattern = '([^\\s\\x16<>]+@[^\\s\\x16<>]+(?:\\.[^.,:\\s\\x16<>]{1,5}))',
+      domainLinkPrefixPattern = '((?:https?|ftp|file|smb)://)',
+      simpleLinkPrefixPattern = '([\\w\\-]+(?:\\.[a-zA-Z]+)*\\.[a-zA-Z]+(?::[0-9]+)?)',
+      linkPrefixPattern = `(?:${domainLinkPrefixPattern}|${simpleLinkPrefixPattern})`,
+      linkPattern = `(${linkPrefixPattern}(?:[^\\s\\x16<>]*))`,
+      emailPattern = '([\\wа-яёА-ЯЁ!#$%&\'*+\\-/=?^`{|}~.]+@[^\\s\\x16<>@]+(?:\\.[^.,:\\s\\x16<>@]{1,5}))',
       endingPattern = '([^.,:\\s\\x16<>])',
       nbsp = '&nbsp;',
       nbspReplacer = '\x16',
       nbspRegExp = new RegExp(nbsp, 'g'),
       nbspReplacerRegExp = new RegExp(nbspReplacer, 'g'),
-      linkParseRegExp = new RegExp(tagPattern + '|(?:(?:' + linkPattern + '|' + emailPattern + ')' + endingPattern + ')', 'g');
+      linkParseRegExp = new RegExp(`${tagPattern}|(?:(?:${linkPattern}|${emailPattern})${endingPattern})`, 'g');
 
    // Wrap all links and email addresses placed not in tag a.
    function wrapUrl(html) {
       var resultHtml = html.replace(nbspRegExp, nbspReplacer),
          linkIgnore = false;
-      resultHtml = resultHtml.replace(linkParseRegExp, function(match, tag, link, linkPrefix, email, ending) {
+      resultHtml = resultHtml.replace(linkParseRegExp, function(match, tag, link, domainLinkPrefix, simpleLinkPrefix, email, ending) {
          var linkParseResult;
          if (tag) {
             if (tag === 'a') {
@@ -88,7 +90,7 @@ import { IoC } from 'Env/Env';
             if (link) {
                link = link + ending;
                linkParseResult = '<a class="asLink" rel="noreferrer" href="' +
-                  (linkPrefix === 'www.' ? 'http://' : '') + link + '" target="_blank">' + link + '</a>';
+                  (simpleLinkPrefix ? 'http://' : '') + link + '" target="_blank">' + link + '</a>';
             } else {
                email = email + ending;
                linkParseResult = '<a href="mailto:' + email + '">' + email + '</a>';
@@ -211,7 +213,8 @@ import { IoC } from 'Env/Env';
    var MarkupConverter = {
       htmlToJson: htmlToJson,
       jsonToHtml: jsonToHtml,
-      deepCopyJson: deepCopyJson
+      deepCopyJson: deepCopyJson,
+      wrapUrl: wrapUrl
    };
 
    export = MarkupConverter;
