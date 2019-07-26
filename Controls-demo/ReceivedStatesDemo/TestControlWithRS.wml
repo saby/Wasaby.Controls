@@ -1,0 +1,4 @@
+<div>
+   <Controls.buttons:Button caption="{{ gotRSOuter }}"/>
+   <Controls.buttons:Button caption="{{ gotRSInner }}"/>
+</div>
