@@ -2,8 +2,8 @@ import Entity = require('Controls/_dragnDrop/Entity');
 
 
    /**
-    * Базовый класс, от которого наследуется сущность перетаскивания в списке.
-    * Сущность можно любым образом кастомизировать, записав туда любые необходимые данные.
+    * Базовый класс, от которого наследуется объект перемещения в списке.
+    * Объект можно любым образом кастомизировать, записав туда любые необходимые данные.
     * Подробнее читайте <a href="/doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/">здесь</a>.
     * @class Controls/_dragnDrop/Entity/Items
     * @public

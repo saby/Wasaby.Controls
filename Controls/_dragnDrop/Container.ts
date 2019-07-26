@@ -112,8 +112,8 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /**
        * @name Controls/_dragnDrop/Container#draggingTemplate
-       * @cfg {Function} Шаблон перемещаемой сущности.
-       * @remark В процессе перемещения, рядом с курсором отображается миниатюра перемещаемой сущности, для отображения которой используется отдельный шаблон.
+       * @cfg {Function} Шаблон перемещаемого объекта.
+       * @remark В процессе перемещения, рядом с курсором отображается миниатюра перемещаемого объекта, для отображения которой используется отдельный шаблон.
        * @example
        * В следующем примере показано, как настроить шаблон перемещения.
        * <pre>
@@ -173,8 +173,8 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
       /**
        * Метод для запуска процесса перемещения.
        * @function Controls/_dragnDrop/Container#startDragNDrop
-       * @param {Controls/_dragnDrop/Entity} entity Сущность перемещения.
-       * @param {Env/Event:Object} event Событие, которое пришло в обработчик события mouseDown (touchStart).
+       * @param {Controls/_dragnDrop/Entity} entity Объект перемещения.
+       * @param {Env/Event:Object} event Дескриптор события.
        * @example
        * В следующем примере показано, как запустить dragNDrop.
        * <pre>
@@ -243,9 +243,9 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        */
 
       /**
-       * @event Controls/_dragnDrop/Container#documentDragStart Происходит при начале перемещения элемента на странице.
+       * @event Controls/_dragnDrop/Container#documentDragStart Происходит при начале перемещения объекта на странице.
        * @param {Env/Event:Object} eventObject Дескриптор события.
-       * @param {dragObject} dragObject Объект с метаинформацией.
+       * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
        * @remark Событие срабатывает на всех контроллерах на странице, включая контроллер, в котором началось перемещение.
        * @example
        * В следующем примере показано, как изменить визуальное состояние контрола при запуске перетаскивания в другом контроле.
@@ -335,9 +335,9 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        */
 
       /**
-       * @event Controls/_dragnDrop/Container#documentDragEnd Происходит при завершении перетаскивания элемента на странице.
+       * @event Controls/_dragnDrop/Container#documentDragEnd Происходит при завершении перемещения объекта на странице.
        * @param {Env/Event:Object} eventObject Дескриптор события.
-       * @param {dragObject} dragObject Объект с метаинформацией.
+       * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
        * @remark Событие срабатывает на всех контроллерах на странице, включая контроллер, на котором закончилось перемещение.
        * @example
        * В следующем примере показано, как изменить визуальное состояние контрола при завершении перетаскивания в другом контроле.
@@ -433,12 +433,12 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        */
 
       /**
-       * @event Controls/_dragnDrop/Container#dragStart Происходит, когда пользователь начинает перетаскивать элемент в текущем контроллере.
+       * @event Controls/_dragnDrop/Container#dragStart Происходит, когда пользователь начинает перемещение объект в текущем контроллере.
        * @param {Env/Event:Object} eventObject Дескриптор события.
-       * @param {dragObject} dragObject Объект с метаинформацией.
+       * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
        * @remark Событие срабатывает только на контроллере, где началось перемещение.
        * @example
-       * В следующем примере показано, как скрыть подвижный элемент.
+       * В следующем примере показано, как скрыть подвижный объект.
        * <pre>
        *     <Controls._dragnDrop.Container name="dragNDropController" on:dragStart="_onDragStart()">
        *        <ws:draggingTemplate>
@@ -523,12 +523,12 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        */
 
       /**
-       * @event Controls/_dragnDrop/Container#dragEnd Происходит после того, как пользователь закончил перетаскивание элемента в текущем контроллере.
+       * @event Controls/_dragnDrop/Container#dragEnd Происходит после того, как пользователь закончил перемещение объекта в текущем контроллере.
        * @param {Env/Event:Object} eventObject Дескриптор события.
-       * @param {dragObject} dragObject Объект с метаинформацией.
+       * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
        * @remark Событие срабатывает только на контроллере, где завершилось перетаскивание.
        * @example
-       * В следующем примере показано, как обновить элемент в источнике после завершения перемещения.
+       * В следующем примере показано, как обновить объект в источнике после завершения перемещения.
        * <pre>
        *     <Controls._dragnDrop.Container name="dragNDropController" on:dragEnd="_onDragEnd()">
        *        <ws:draggingTemplate>
@@ -611,9 +611,9 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        */
 
       /**
-       * @event Controls/_dragnDrop/Container#dragEnter Происходит после перемещения элемента внутри контроллера.
+       * @event Controls/_dragnDrop/Container#dragEnter Происходит после перемещения объекта внутри контроллера.
        * @param {Env/Event:Object} eventObject Дескриптор события.
-       * @param {dragObject} dragObject Объект с метаинформацией.
+       * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
        * @example
        * В следующем примере показано, как изменить визуальное состояние контрола при наведении на него курсора.
        * <pre>
@@ -705,9 +705,9 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        */
 
       /**
-       * @event Controls/_dragnDrop/Container#dragLeave Происходит после перемещения элемента за пределы контроллера.
+       * @event Controls/_dragnDrop/Container#dragLeave Происходит после перемещения объекта за пределы контроллера.
        * @param {Env/Event:Object} eventObject Дескриптор события.
-       * @param {dragObject} dragObject Объект с метаинформацией.
+       * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
        * @example
        * В следующем примере показано, как изменить визуальное состояние контрола при наведении на него курсора.
        * <pre>
@@ -799,12 +799,12 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        */
 
       /**
-       * @event Controls/_dragnDrop/Container#dragMove Происходит при перемещении элемента на странице.
+       * @event Controls/_dragnDrop/Container#dragMove Происходит при перемещении объекта на странице.
        * @param {Env/Event:Object} eventObject Дескриптор события.
-       * @param {dragObject} dragObject Объект с метаинформацией.
+       * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
        * @remark Событие срабатывает только на контроллере, где началось перемещение. Событие срабатывает каждый раз, когда на странице происходит событие mousemove(touchmove).
        * @example
-       * В следующем примере показано, как изменить положение элемента на странице при перемещении.
+       * В следующем примере показано, как изменить положение объекта на странице при перемещении.
        * <pre>
        *     <Controls._dragnDrop.Container name="dragNDropController" on:dragMove="_dragMove()">
        *        <ws:content>
