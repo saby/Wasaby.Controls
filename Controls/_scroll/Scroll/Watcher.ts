@@ -307,8 +307,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             this._notify('register', ['controlResize', this, this._resizeHandlerOuter], {bubbling: true});
          },
 
-
-         _scrollHandler: function(e) {
+         _scrollHandler: function(e, scrollTop) {
             _private.onScrollContainer(this, _private.getDOMContainer(this._container), this._canObserver);
          },
 
@@ -341,6 +340,42 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 
          doScroll: function(scrollParam) {
             _private.doScroll(this, scrollParam, _private.getDOMContainer(this._container));
+         },
+
+         _isVirtualPlaceholderMode(): boolean {
+            return this._topPlaceholderSize || this._bottomPlaceholderSize;
+         },
+
+         updatePlaceholdersSize(placeholdersSizes: object): void {
+            this._topPlaceholderSize = placeholdersSizes.top;
+            this._bottomPlaceholderSize = placeholdersSizes.bottom;
+
+         },
+
+         setScrollTop(scrollTop: number): void {
+            var self = this;
+            const container = _private.getDOMContainer(self._container);
+            if (self._isVirtualPlaceholderMode()) {
+               self._cachedScrollTop = scrollTop;
+               const sizeCache = _private.getSizeCache(self, container);
+               const hasChanges = _private.sendByRegistrar(self, 'virtualScrollMove', {
+                  scrollTop,
+                  scrollHeight: sizeCache.scrollHeight,
+                  clientHeight: sizeCache.clientHeight,
+                  applyScrollTopCallback: () => {
+                     container.scrollTop = self._cachedScrollTop - self._topPlaceholderSize;
+                  }
+               });
+               if (!hasChanges) {
+                  container.scrollTop = scrollTop;
+               }
+            } else {
+               container.scrollTop = scrollTop;
+            }
+         },
+
+         _applyScrollTop(): void {
+            _private.getDOMContainer(this._container).scrollTop = this._cachedScrollTop - this._topPlaceholderSize;
          },
 
          _unRegisterIt: function(event, registerType, component) {
