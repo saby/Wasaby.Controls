@@ -14,6 +14,19 @@ import monthCaptionTemplate = require('wml!Controls/_dateLitePopup/MonthCaption'
 import 'css!theme?Controls/_dateLitePopup/DateLitePopup';
 
 /**
+ * Контрол выбора даты или периода.
+ *
+ * @class Controls/dateLitePopup
+ * @extends Core/Control
+ * @mixes Controls/_dateLitePopup/IDateLitePopup
+ * @control
+ * @public
+ * @author Красильников А.С.
+ * @demo Controls-demo/Date/PeriodLiteDialog
+ *
+ */
+
+/*
  * Control for date or period selection.
  *
  * @class Controls/dateLitePopup
