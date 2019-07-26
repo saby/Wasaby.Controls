@@ -4,7 +4,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 
 
    /**
-    * Контроллер для работаты с множественным выбором. 
+    * Контроллер для работы с множественным выбором. 
     * Передает состояние массового выделения дочерним контролам.
     * Подробное описание и инструкцию по настройке читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/operations/'>здесь</a>.
     *

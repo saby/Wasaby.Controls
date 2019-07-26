@@ -52,7 +52,7 @@ import buttons = require('Controls/buttons');
 
    /**
     * Контрол, предназначенный для операций над множеством записей списка.
-    * Подробное описание и иснтрукцию по настройке читайте <a href='/doc/platform/developmentapl/interface-development/controls/operations/'>здесь</a>.
+    * Подробное описание и инструкцию по настройке читайте <a href='/doc/platform/developmentapl/interface-development/controls/operations/'>здесь</a>.
     * <a href="/materials/demo-ws4-operations-panel">Демо-пример</a>.
     *
     * @class Controls/_operations/Panel
@@ -111,7 +111,7 @@ import buttons = require('Controls/buttons');
     */
 
    /**
-    * @event Controls/_operations/Panel#itemClick Происходит при клине на элемент.
+    * @event Controls/_operations/Panel#itemClick Происходит при клике на элемент.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Record} item Элемент, по которому произвели клик.
     * @example
