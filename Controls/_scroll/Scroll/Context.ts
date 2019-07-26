@@ -14,13 +14,13 @@ import DataContext = require('Core/DataContext');
  *          this._scrollDataContext = new DataContext({
  *              pagingVisible: false
  *          });
- *       }
+ *       },
  *       _getChildContext: function() {
  *          return {
  *             stickyHeader: this._scrollDataContext
  *          };
- *       },
- *    })
+ *       }
+ *    });
  * </pre>
  *
  * @class Controls/_scroll/Scroll/Context
