@@ -27,6 +27,7 @@ import {TouchContextField} from 'Controls/context';
 import {Focus} from 'Vdom/Vdom';
 import {debounce} from 'Types/function';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
+import {CssClassList} from "../Utils/CssClassList";
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -265,6 +266,9 @@ var _private = {
         _private.setMarkedKey(self, newMarkedKey);
     },
     moveMarkerToNext: function (self, event) {
+        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
+            return;
+        }
         if (self._options.markerVisibility !== 'hidden') {
             event.preventDefault();
             var model = self.getViewModel();
@@ -272,6 +276,9 @@ var _private = {
         }
     },
     moveMarkerToPrevious: function (self, event) {
+        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
+            return;
+        }
         if (self._options.markerVisibility !== 'hidden') {
             event.preventDefault();
             var model = self.getViewModel();
@@ -279,14 +286,19 @@ var _private = {
         }
     },
     enterHandler: function(self) {
+        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
+            return;
+        }
         let markedItem = self.getViewModel().getMarkedItem();
         if (markedItem) {
             self._notify('itemClick', [markedItem.getContents()], { bubbling: true });
         }
     },
     toggleSelection: function(self, event) {
-        var
-            model, markedKey;
+        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
+            return;
+        }
+        let model, markedKey;
         if (self._children.selectionController) {
             model = self.getViewModel();
             markedKey = model.getMarkedKey();
@@ -840,7 +852,7 @@ var _private = {
         const target = context ? null : _private.mockTarget(childEvent.target);
         if (showActions && showActions.length) {
             var
-                rs = new collection.RecordSet({ rawData: showActions });
+                rs = new collection.RecordSet({ rawData: showActions, idProperty: 'id' });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             self._listViewModel.setActiveItem(itemData);
@@ -904,7 +916,7 @@ var _private = {
                 opener: self._children.listView,
                 target: childEvent.target,
                 templateOptions: {
-                   items: new collection.RecordSet({ rawData: children }),
+                   items: new collection.RecordSet({ rawData: children, idProperty: 'id' }),
                    keyProperty: 'id',
                    parentProperty: 'parent',
                    nodeProperty: 'parent@',
@@ -1143,6 +1155,15 @@ var _private = {
     },
     updateNavigation: function(self) {
         self._pagingNavigationVisible = self._pagingNavigation && self._knownPagesCount > 1;
+    },
+    isBlockedForLoading(loadingIndicatorState): boolean {
+        return loadingIndicatorState === 'all';
+    },
+    getLoadingIndicatorClasses(loadingIndicatorState, itemsCount): string {
+        return CssClassList.add('controls-BaseControl__loadingIndicator')
+            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
+            .add('controls-BaseControl-emptyView__loadingIndicator', itemsCount === 0)
+            .compile();
     }
 
 };
@@ -1851,7 +1872,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _dragEndHandler: function(dragObject) {
         var targetPosition = this._listViewModel.getDragTargetPosition();
-
         if (targetPosition) {
             this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
         }
@@ -1885,7 +1905,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var self = this;
 
         //Reset the state of the dragndrop after the movement on the source happens.
-        if (this._dragEndResult instanceof Deferred) {
+        if (this._dragEndResult instanceof Promise) {
             _private.showIndicator(self);
             this._dragEndResult.addBoth(function() {
                 self._documentDragEndHandler();
@@ -1948,6 +1968,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         });
 
     },
+        _getLoadingIndicatorClasses(): string {
+            return _private.getLoadingIndicatorClasses(this._loadingIndicatorState, this._listViewModel.getCount());
+        }
 
     _onHoveredItemChanged: function(e, item, container) {
 

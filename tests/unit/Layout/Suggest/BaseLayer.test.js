@@ -1,6 +1,6 @@
-define(['Controls/_suggest/Layer/__BaseLayer'], function(__LayerBase) {
+define(['Controls/_suggestPopup/Layer/__BaseLayer'], function(__LayerBase) {
 
-   describe('Controls._suggest.Layer.__LayerBase', function() {
+   describe('Controls._suggestPopup.Layer.__LayerBase', function() {
 
       it('__LayerBase::_getChildContext', function() {
          var baseLayer = new __LayerBase.default();

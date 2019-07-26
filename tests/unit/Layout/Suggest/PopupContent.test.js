@@ -1,4 +1,4 @@
-define(['Controls/_suggest/Layer/__PopupContent', 'wml!Controls/_suggest/Layer/__PopupContent', 'Core/Deferred'], function(PopupContent, popupContentTemplate, Deferred) {
+define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPopup/Layer/__PopupContent', 'Core/Deferred'], function(PopupContent, popupContentTemplate, Deferred) {
 
    function removeConfigFromMarkup(markup) {
       var result = markup.replace(/ ?(ws-delegates-tabfocus|ws-creates-context|__config|config|tabindex|name)=".+?"/g, '');
@@ -19,7 +19,7 @@ define(['Controls/_suggest/Layer/__PopupContent', 'wml!Controls/_suggest/Layer/_
       }
    }
 
-   describe('Controls._suggest.Layer.__PopupContent', function() {
+   describe('Controls._suggestPopup.Layer.__PopupContent', function() {
 
       it('afterUpdate', function() {
          var options = {
@@ -78,7 +78,7 @@ define(['Controls/_suggest/Layer/__PopupContent', 'wml!Controls/_suggest/Layer/_
 
    });
 
-   describe('Controls._suggest.Layer.__PopupContent template tests', function() {
+   describe('Controls._suggestPopup.Layer.__PopupContent template tests', function() {
 
       it('showContent:false', function(done) {
          var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_popup controls-Suggest__suggestionsContainer_popup_shadow_ controls-Suggest__suggestionsContainer_hidden"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/scroll:Container"><div class="controls-Scroll__content controls-BlockLayout__blockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></div><div></div></div></div>';

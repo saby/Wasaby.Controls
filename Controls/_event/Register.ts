@@ -7,7 +7,6 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_event/Register');
 import Registrar = require('Controls/_event/Registrar');
 import entity = require('Types/entity');
-import 'wml!Controls/Application/CompatibleScripts';
 
 
 

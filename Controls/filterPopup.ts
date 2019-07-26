@@ -25,6 +25,7 @@ import Panel = require('Controls/_filterPopup/Panel');
 import DetailPanel = require('Controls/_filterPopup/DetailPanel');
 import SimplePanel = require('Controls/_filterPopup/SimplePanel');
 import SimplePanelItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/itemTemplate');
+import SimplePanelEmptyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_List/emptyItemTemplate');
 import Link = require('Controls/_filterPopup/Panel/Link');
 import Select = require('Controls/_filterPopup/Panel/Select');
 import Dropdown = require('Controls/_filterPopup/Panel/Dropdown');
@@ -39,6 +40,7 @@ export {
    DetailPanel,
    SimplePanel,
    SimplePanelItemTemplate,
+   SimplePanelEmptyItemTemplate,
    Link,
    Select,
    Dropdown,

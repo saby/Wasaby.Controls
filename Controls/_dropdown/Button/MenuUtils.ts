@@ -1,8 +1,32 @@
 import buttonLib = require('Controls/buttons');
 
+   function getIconSize(options) {
+      const sizes = ['small', 'medium', 'large'];
+      let iconSize;
+      if (options.iconSize) {
+         switch (options.iconSize) {
+            case 's':
+               iconSize = sizes[0];
+               break;
+            case 'm':
+               iconSize = sizes[1];
+               break;
+            case 'l':
+               iconSize = sizes[2];
+               break;
+         }
+      } else {
+         sizes.forEach(function (size) {
+            if (options.icon.indexOf('icon-' + size) !== -1) {
+               iconSize = size;
+            }
+         });
+      }
+      return iconSize;
+   }
+
    function cssStyleGeneration(options) {
-      var sizes = ['small', 'medium', 'large'],
-         menuStyle = options.headConfig && options.headConfig.menuStyle,
+      let menuStyle = options.headConfig && options.headConfig.menuStyle,
          currentButtonClass, iconSize;
 
       currentButtonClass = buttonLib.ActualApi.styleToViewMode(options.style);
@@ -13,15 +37,9 @@ import buttonLib = require('Controls/buttons');
       if ((!options.icon || options.viewMode === 'toolButton')) {
          offsetClassName += ('__' + options.size);
       } else if (options.icon) {
-         sizes.forEach(function(size) {
-            if (options.icon.indexOf('icon-' + size) !== -1) {
-               iconSize = size;
-            }
-         });
-
          // у кнопки типа 'Ссылка' высота вызывающего элемента зависит от размера иконки,
          // поэтому необходимо это учесть при сдвиге
-         offsetClassName += '_iconSize-' + iconSize;
+         offsetClassName += '_iconSize-' + getIconSize(options);
       }
       offsetClassName += (((menuStyle === 'duplicateHead' && options.showHeader) || (!options.headerTemplate && !options.showHeader)) ? '_duplicate' : '') + '_popup';
       return offsetClassName;

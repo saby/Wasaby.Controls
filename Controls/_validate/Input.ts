@@ -18,8 +18,8 @@ import template = require('wml!Controls/_validate/Input');
                this._forceUpdate();
             }
          },
-         _inputCompletedHandler: function(event, value) {
-            this._notify('inputCompleted', [value]);
+         _inputCompletedHandler: function(event, ...rest) {
+            this._notify('inputCompleted', rest);
             // Because of this error:
             // https://online.sbis.ru/opendoc.html?guid=ef52bfb5-56ea-4397-a77f-89e5c3413ed9
             // we need to stop event propagation, otherwise all subscribtions to inputComplete-event of
