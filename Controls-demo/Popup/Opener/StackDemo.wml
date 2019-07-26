@@ -12,30 +12,30 @@
         <ws:targetPoint vertical="bottom" horizontal="left"/>
     </Controls.popup:Sticky>
 <div>
-        <Controls.buttons:Button name="button1" caption="Open Stack" on:click="openStack()"/>
+        <Controls.buttons:Button attr:class="demo-StackDemo__stack" name="button1" caption="Open Stack" on:click="openStack()"/>
 </div>
     <div>
-    <Controls.buttons:Button name="button2" caption="Open Maximized Stack" on:click="openMaximizedStack()"/>
+    <Controls.buttons:Button attr:class="demo-StackDemo__maxStack" name="button2" caption="Open Maximized Stack" on:click="openMaximizedStack()"/>
     </div>
     <div>
-        <Controls.buttons:Button name="button4" caption="Open Modal Stack" on:click="openModalStack()"/>
+        <Controls.buttons:Button attr:class="demo-StackDemo__modalStack" name="button4" caption="Open Modal Stack" on:click="openModalStack()"/>
     </div>
     <div>
-        <Controls.buttons:Button name="button6" caption="Open Stack with headerTemplate" on:click="openStackCustomHeader()"/>
+        <Controls.buttons:Button attr:class="demo-StackDemo__headerStack" name="button6" caption="Open Stack with headerTemplate" on:click="openStackCustomHeader()"/>
     </div>
     <div>
-        <Controls.buttons:Button name="button7" caption="Open Stack without head" on:click="openStackWithoutHead()"/>
+        <Controls.buttons:Button attr:class="demo-StackDemo__withoutHeadStack" name="button7" caption="Open Stack without head" on:click="openStackWithoutHead()"/>
     </div>
     <div>
-        <Controls.buttons:Button name="button3" caption="Open Dialog" on:click="openDialog()"/>
+        <Controls.buttons:Button attr:class="demo-StackDemo__dialog" name="button3" caption="Open Dialog" on:click="openDialog()"/>
     </div>
     <div>
-        <Controls.buttons:Button name="button5" caption="Open Modal Dialog" on:click="openModalDialog()"/>
+        <Controls.buttons:Button attr:class="demo-StackDemo__modalDialog" name="button5" caption="Open Modal Dialog" on:click="openModalDialog()"/>
     </div>
     <div >
-        <Controls.buttons:Button caption="Open Sticky(close on scroll)" name="stickyButton" on:click="openStickyScroll()"/>
+        <Controls.buttons:Button attr:class="demo-StackDemo__stickyClose" caption="Open Sticky(close on scroll)" name="stickyButton" on:click="openStickyScroll()"/>
     </div>
     <div >
-        <Controls.buttons:Button caption="Open Sticky(track on scroll)" name="stickyButton" on:click="openSticky()"/>
+        <Controls.buttons:Button attr:class="demo-StackDemo__stickyTrack" caption="Open Sticky(track on scroll)" name="stickyButton" on:click="openSticky()"/>
     </div>
 </div>

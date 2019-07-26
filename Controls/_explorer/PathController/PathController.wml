@@ -6,7 +6,8 @@
                                      on:backButtonClick="_notifyHandler('backButtonClick')"
                                      on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                                      on:arrowActivated="_notifyHandler('arrowActivated')"
-                                     on:itemClick="_notifyHandler('itemClick')" />
+                                     on:itemClick="_notifyHandler('itemClick')"
+                                     on:arrowClick="_notifyHandler('arrowClick')"/>
 </ws:template>
 <div>
 <ws:if data="{{(_options.items || _options.rootVisible) && _needCrumbs}}">
@@ -23,5 +24,5 @@
             scope="{{ _options }}"
             header="{{ _header || _options.header }}"
             on:backButtonClick="_onBackButtonClick()"
-            on:arrowClick="_onArrowClick()" />
+            on:arrowClick="_notifyHandler('arrowClick')" />
 </div>

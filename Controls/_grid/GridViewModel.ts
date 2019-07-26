@@ -691,8 +691,7 @@ var
         },
 
         isStickyHeader: function() {
-           // todo https://online.sbis.ru/opendoc.html?guid=e481560f-ce95-4718-a7c1-c34eb8439c5b
-           return this._options.stickyHeader && !this.isNotFullGridSupport();
+           return this._options.stickyHeader && GridLayoutUtil.isFullGridSupport();
         },
 
         getCurrentHeaderColumn: function(rowIndex, columnIndex) {
@@ -815,7 +814,8 @@ var
         // -----------------------------------------------------------
 
         getResultsPosition: function(): string {
-            if (this.getItems().getCount() > 1) {
+            const items = this.getItems();
+            if (items && items.getCount() > 1) {
                 if (this._options.results) {
                     return this._options.results.position;
                 }
@@ -1168,7 +1168,7 @@ var
                 current.columns = this._columns;
             }
 
-            current.isHovered = current.item === self._model.getHoveredItem();
+            current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
             if (stickyColumn && !Env.detection.isNotFullGridSupport) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;

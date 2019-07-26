@@ -14,6 +14,7 @@
         nodeFooterTemplate="{{_options.nodeFooterTemplate}}"
         headConfig="{{_options.headConfig}}"
         icon="{{_options.icon}}"
+        iconSize="{{_options.iconSize}}"
         groupingKeyCallback="{{_options.groupingKeyCallback}}"
         groupMethod="{{_options.groupMethod}}"
         groupTemplate="{{_options.groupTemplate}}"
@@ -34,6 +35,7 @@
    <Controls.buttons:Button
                     attr:class="controls-MenuButton__BaseButton theme_{{_options.theme}}"
                     icon="{{_options.icon}}"
+                    iconSize="{{_options.iconSize}}"
                     iconStyle="{{_options.iconStyle}}"
                     caption="{{_options.caption}}"
                     style="{{_options.style}}"

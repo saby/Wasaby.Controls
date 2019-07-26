@@ -218,15 +218,12 @@ define([
 
       it('_onArrowClick', function() {
          var eventFired = false;
-         path._notify = function(e) {
-            if (e === 'arrowActivated') {
+         path._notifyHandler = function(e) {
+            if (e === 'arrowClick') {
                eventFired = true;
             }
          };
-         path._onArrowClick({
-            stopPropagation: function() {
-            }
-         });
+         path._notifyHandler('arrowClick');
          assert.isTrue(eventFired);
       });
    });

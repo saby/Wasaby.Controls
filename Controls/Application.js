@@ -8,7 +8,6 @@ define('Controls/Application',
       'Core/Deferred',
       'Core/BodyClasses',
       'Env/Env',
-      'Controls/Application/AppData',
       'Controls/scroll',
       'Core/LinkResolver/LinkResolver',
       'Core/helpers/getResourceUrl',
@@ -122,7 +121,6 @@ define('Controls/Application',
       Deferred,
       BodyClasses,
       Env,
-      AppData,
       scroll,
       LinkResolver,
       getResourceUrl,
@@ -286,12 +284,6 @@ define('Controls/Application',
                   this.headJson = undefined;
                   this.headValidHtml = undefined;
                }
-            }
-         },
-
-         _afterMount: function() {
-            if (!Env.detection.isMobilePlatform) {
-               this.activate();
             }
          },
 

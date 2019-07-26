@@ -29,12 +29,13 @@
       </ws:else>
    </ws:if>
    <ws:if data="{{colspan}}">
-      <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}"/>
+      <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"/>
    </ws:if>
    <ws:else>
       <ws:partial template="{{currentColumn.template}}"
                   attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}"
                   ladderWrapper="{{currentColumn.ladderWrapper}}"
+                  expanderTemplate="{{itemData.expanderTemplate}}"
                   itemData="{{currentColumn}}" />
    </ws:else>
    <ws:if data="{{itemData.isDrawActions(itemData, currentColumn, colspan)}}">

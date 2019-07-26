@@ -1,4 +1,4 @@
-<div>
+<div class="demo-BreadCrumbs__wrapper">
    <div class="demo-BreadCrumbs__example">
       <Controls.heading:Title caption="Реестр без заголовков"
                         size="xl"/>

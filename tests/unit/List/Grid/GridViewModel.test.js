@@ -1273,7 +1273,35 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
          it('getResultsPosition()', function() {
             assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
+            gridViewModel._options.resultsPosition = 'top'
+            assert.deepEqual('top', gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
+            let newGridModel = null;
+            newGridModel = new gridMod.GridViewModel({
+               keyProperty: 'id',
+               displayProperty: 'title',
+               header: gridHeader,
+               columns: gridColumns,
+               items: new collection.RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               }),
+               resultsPosition: 'top'
+            })
+            assert.deepEqual(undefined, newGridModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
+            newGridModel = new gridMod.GridViewModel({
+               keyProperty: 'id',
+               displayProperty: 'title',
+               header: gridHeader,
+               columns: gridColumns,
+               items: new collection.RecordSet({
+                  rawData: gridData,
+                  idProperty: 'id'
+               }),
+               resultsPosition: 'top'
+            })
+            assert.deepEqual('top', newGridModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
          });
+
          it('is multiheader', function() {
 
             let gridViewModel = new gridMod.GridViewModel(cfg);
@@ -1537,6 +1565,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                gridMod.GridViewModel._private.getColspan('visible', 1, 2, true),
                ' grid-column: 1 / 3;'
             );
+         });
+         it('getItemDataByItem: hovered item should be compared by key', function () {
+            let current = gridViewModel.getCurrent();
+            assert.isFalse(current.isHovered);
+            gridViewModel.setHoveredItem(clone(current.item));
+            gridViewModel.setItemActions(current.item, [{}, {}, {}]);
+            assert.isTrue(gridViewModel.getCurrent().isHovered);
          });
          it('isFixedCell', function() {
             var testCases = [

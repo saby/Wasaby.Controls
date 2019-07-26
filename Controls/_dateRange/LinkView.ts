@@ -54,32 +54,34 @@ var _private = {
       );
    },
 
-   _updateStyles: function(self, options) {
+   _updateStyles: function(self, options, newOption) {
       var changed = false;
 
       // TODO: remove style option https://online.sbis.ru/opendoc.html?guid=882c43d4-8f3c-4998-8660-bfa08fcef227
-      if (options.style && self._options.style !== options.style) {
-         self._viewMode = _private.styleMap[options.style].viewMode;
-         self._styleMode = _private.styleMap[options.style].styleMode;
+      if (newOption.style && options.style !== newOption.style) {
+         self._viewMode = _private.styleMap[newOption.style].viewMode;
+         self._styleMode = _private.styleMap[newOption.style].styleMode;
          changed = true;
-      } else if (self._options.viewMode !== options.viewMode || self._options.styleMode !== options.styleMode) {
-         self._viewMode = options.viewMode;
-         self._styleMode = options.styleMode || _private.defaultStyleMap[options.viewMode];
+      } else if (options.viewMode !== newOption.viewMode || options.styleMode !== newOption.styleMode) {
+         self._viewMode = newOption.viewMode;
+         self._styleMode = newOption.styleMode || _private.defaultStyleMap[newOption.viewMode];
          changed = true;
       }
-      if (self._options.readOnly !== options.readOnly) {
+      if (options.readOnly !== newOption.readOnly) {
          changed = true;
       }
       if (changed) {
          if (self._styleMode) {
             self._styleClass = 'controls-DateLinkView__style-';
             self._styleClass += self._styleMode;
-         }
-         if (options.readOnly) {
-            self._styleClass +=  '_readOnly';
+            if (newOption.readOnly) {
+               self._styleClass +=  '_readOnly';
+            }
+         } else {
+            self._styleClass = null;
          }
 
-         self._valueEnabledClass = options.readOnly ? '' : 'controls-DateLinkView__value-enabled';
+         self._valueEnabledClass = newOption.readOnly ? '' : 'controls-DateLinkView__value-enabled';
       }
    }
 };
@@ -103,7 +105,7 @@ var Component = BaseControl.extend({
    _beforeMount: function(options) {
       this._rangeModel.update(options);
       _private._updateCaption(this, options);
-      _private._updateStyles(this, options);
+      _private._updateStyles(this, {}, options);
 
       // TODO: remove style option https://online.sbis.ru/opendoc.html?guid=882c43d4-8f3c-4998-8660-bfa08fcef227
       if (options.style) {
@@ -125,7 +127,7 @@ var Component = BaseControl.extend({
       if (changed) {
          _private._updateCaption(this, options);
       }
-      _private._updateStyles(this, options);
+      _private._updateStyles(this, this._options, options);
    },
 
    shiftBack: function() {

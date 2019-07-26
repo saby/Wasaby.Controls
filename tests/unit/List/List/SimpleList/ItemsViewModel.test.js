@@ -233,6 +233,9 @@ define([
       });
 
       it('Append', function () {
+         var metaData = {
+            hasMore: true
+         };
          var rs1 = new collection.RecordSet({
             rawData: data,
             idProperty : 'id'
@@ -241,6 +244,7 @@ define([
             rawData: data2,
             idProperty : 'id'
          });
+         rs2.setMetaData(metaData);
          var cfg1 = {
             items: rs1,
             keyProperty: 'id',
@@ -253,6 +257,7 @@ define([
          assert.equal(6, iv._items.getCount(), 'Incorrect items count after appendItems');
          assert.equal(4, iv._items.at(3).get('id'), 'Incorrect items after appendItems');
          assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
+         assert.equal(iv._items.getMetaData(), metaData, 'Incorrect metaData appendItems');
 
       });
 
