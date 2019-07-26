@@ -71,13 +71,13 @@ import { IoC } from 'Env/Env';
       nbspReplacer = '\x16',
       nbspRegExp = new RegExp(nbsp, 'g'),
       nbspReplacerRegExp = new RegExp(nbspReplacer, 'g'),
-      linkParseRegExp = new RegExp(`${tagPattern}|(?:(?:${linkPattern}|${emailPattern})${endingPattern})`, 'g');
+      linkParseRegExp = new RegExp(`${tagPattern}|(?:(?:${emailPattern}|${linkPattern})${endingPattern})`, 'g');
 
    // Wrap all links and email addresses placed not in tag a.
    function wrapUrl(html) {
       var resultHtml = html.replace(nbspRegExp, nbspReplacer),
          linkIgnore = false;
-      resultHtml = resultHtml.replace(linkParseRegExp, function(match, tag, link, domainLinkPrefix, simpleLinkPrefix, email, ending) {
+      resultHtml = resultHtml.replace(linkParseRegExp, function(match, tag, email, link, domainLinkPrefix, simpleLinkPrefix, ending) {
          var linkParseResult;
          if (tag) {
             if (tag === 'a') {

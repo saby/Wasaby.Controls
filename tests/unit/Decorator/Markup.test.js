@@ -205,6 +205,12 @@ define([
             var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
             assert.equal(goodResultHtml, checkResultHtml);
          });
+         it('email - 2', function() {
+            var originHtml = '<p>rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru</p>';
+            var goodResultHtml = '<p><a href="mailto:rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru">rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
       });
 
       describe('htmlToJson', function() {
