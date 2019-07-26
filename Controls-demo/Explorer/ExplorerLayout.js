@@ -2,7 +2,7 @@ define('Controls-demo/Explorer/ExplorerLayout', [
    'Controls-demo/Explorer/Explorer',
    'Controls-demo/Explorer/ExplorerImagesLayout',
    'Controls-demo/Explorer/ExplorerMemory',
-], function(Explorer, explorerImagesLayoutLayout, MemorySource) {
+], function(Explorer, explorerImagesLayout, MemorySource) {
    'use strict';
    var
       ModuleClass = Explorer.extend({

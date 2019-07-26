@@ -2,7 +2,7 @@ define('Controls-demo/Explorer/DemoLayout', [
    'Controls-demo/Explorer/Demo',
    'Controls-demo/Explorer/ExplorerImagesLayout',
    'Types/source',
-], function(Demo, explorerImagesLayoutLayout, source) {
+], function(Demo, explorerImagesLayout, source) {
    'use strict';
    var
       ModuleClass = Demo.extend({
