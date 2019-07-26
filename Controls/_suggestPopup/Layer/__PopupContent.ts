@@ -1,6 +1,6 @@
 
 import BaseLayer from './__BaseLayer';
-import template = require('wml!Controls/_suggest/Layer/__PopupContent');
+import template = require('wml!Controls/_suggestPopup/Layer/__PopupContent');
 import 'css!theme?Controls/suggest';
 
 var _private = {

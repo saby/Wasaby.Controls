@@ -2441,6 +2441,7 @@ define([
                   open: function(args) {
                      callBackCount++;
                      assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
+                     assert.equal(args.templateOptions.items.getIdProperty(), 'id');
                      assert.equal(args.templateOptions.keyProperty, 'id');
                      assert.equal(args.templateOptions.parentProperty, 'parent');
                      assert.equal(args.templateOptions.nodeProperty, 'parent@');
@@ -3521,6 +3522,22 @@ define([
          instance._beforeUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
+      });
+
+      it('_getLoadingIndicatorClasses', function () {
+
+         function testCaseWithArgs(indicatorState, itemsCount) {
+            return lists.BaseControl._private.getLoadingIndicatorClasses(indicatorState, itemsCount);
+         }
+
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all controls-BaseControl-emptyView__loadingIndicator', testCaseWithArgs('all', 0));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up controls-BaseControl-emptyView__loadingIndicator', testCaseWithArgs('up', 0));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down controls-BaseControl-emptyView__loadingIndicator', testCaseWithArgs('down', 0));
+
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all', testCaseWithArgs('all', 1));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up', testCaseWithArgs('up', 1));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down', testCaseWithArgs('down', 1));
+
       });
 
       describe('navigation', function () {
