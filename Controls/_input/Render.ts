@@ -39,14 +39,15 @@ interface IRenderOptions extends IControlOptions, IHeightOptions, IFontColorStyl
  * @author Krasilnikov A.S.
  */
 class Render extends Control<IRenderOptions, void> implements IHeight, IFontColorStyle, IFontSize {
-   private contentActive: boolean = false;
+   private _tag: SVGElement | null = null;
+   private _contentActive: boolean = false;
+   private _notifyHandler = notifyHandler;
 
    protected _state: string;
    protected _fontSize: string;
    protected _inlineHeight: string;
    protected _fontColorStyle: string;
    protected _validationStatus: string;
-   protected _notifyHandler: notifyHandler;
    protected _template: TemplateFunction = template;
    protected _theme: string[] = ['Controls/input', 'Controls/Classes'];
 
@@ -73,7 +74,7 @@ class Render extends Control<IRenderOptions, void> implements IHeight, IFontColo
       /**
        * Only for ie and edge. Other browsers can work with :focus-within pseudo selector.
        */
-      if (this.contentActive && detection.isIE) {
+      if (this._contentActive && detection.isIE) {
          return this._validationStatus + '-active';
       }
 
@@ -83,11 +84,17 @@ class Render extends Control<IRenderOptions, void> implements IHeight, IFontColo
    protected _beforeMount(options: IRenderOptions): void {
       this.updateState(options);
    }
+   protected _afterMount(): void {
+      this._tag = this._children.tag;
+   }
    protected _beforeUpdate(options: IRenderOptions): void {
       this.updateState(options);
    }
+   protected _afterUpdate(): void {
+      this._tag = this._children.tag;
+   }
    protected _setContentActive(event: SyntheticEvent, newContentActive: boolean): void {
-      this.contentActive = newContentActive;
+      this._contentActive = newContentActive;
 
       this.updateState(this._options);
    }
