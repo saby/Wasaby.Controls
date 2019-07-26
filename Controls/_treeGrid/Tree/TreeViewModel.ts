@@ -189,6 +189,10 @@ var
                 self._expandedItems = [];
             }
             self._collapsedItems = _private.prepareCollapsedItems(self._expandedItems, self._options.collapsedItems);
+            if (self._display) {
+                self._display.setFilter(self.getDisplayFilter(self.prepareDisplayFilterData(), self._options));
+            }
+            self._nextModelVersion();
             self._notify('expandedItemsChanged', self._expandedItems);
         },
         collapseChildNodes: function(self, nodeId) {
@@ -379,6 +383,13 @@ var
         getItemDataByItem: function(dispItem) {
             var
                 current = TreeViewModel.superclass.getItemDataByItem.apply(this, arguments);
+
+            if (current._treeViewModelCached) {
+                return current;
+            } else {
+                current._treeViewModelCached = true;
+            }
+
             current.isExpanded = current.item.get && this.isExpanded(dispItem);
             current.parentProperty = this._options.parentProperty;
             current.nodeProperty = this._options.nodeProperty;

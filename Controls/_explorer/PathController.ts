@@ -56,9 +56,6 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
          HeadingPathCommon.onBackButtonClick.call(this, e);
       },
 
-      _onArrowClick: function(e) {
-         HeadingPathCommon.onArrowClick.call(this, e);
-      }
    });
    PathController._private = _private;
    export = PathController;

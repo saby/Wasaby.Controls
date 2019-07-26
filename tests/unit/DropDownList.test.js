@@ -263,6 +263,18 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             ddl._beforeMount(ddlConfig);
             assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
             assert.equal(ddl._headConfig.caption, 'Caption');
+
+            ddlConfig.iconSize = 's';
+            ddl._headConfig = {};
+            ddl._beforeMount(ddlConfig);
+            assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
+            assert.equal(ddl._headConfig.caption, 'Caption');
+
+            ddlConfig.iconSize = 's';
+            ddlConfig.rootKey = undefined;
+            ddl._beforeMount(ddlConfig);
+            assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
+            assert.equal(ddl._headConfig.caption, 'Caption');
          });
          it('check list view model', function() {
             let expectedConfig = {
@@ -389,6 +401,15 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             };
             let result = dropdownPopup.List._private.getResult(dropdownList, 'itemClick', 'itemClick');
             assert.deepEqual(result, expectedResult);
+
+            let ddlConfig = getDropDownConfig();
+            ddlConfig.emptyText = 'Not selected';
+            ddlConfig.selectedKeys = [null];
+            dropdownList = getDropDownListWithConfig(ddlConfig);
+            dropdownList._beforeMount(ddlConfig);
+            expectedResult.data.push(dropdownList._listModel.getEmptyItem().item);
+            result = dropdownPopup.List._private.getResult(dropdownList, 'itemClick', 'itemClick');
+            assert.deepStrictEqual(result, expectedResult);
          });
 
          it('_private::isNeedUpdateSelectedKeys', function() {

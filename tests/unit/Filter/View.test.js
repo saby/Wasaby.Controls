@@ -188,7 +188,7 @@ define(
             view._children = {
                DropdownOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} }
             };
-            view._container = {};
+            view._container = ['filter_container'];
             view._options.panelTemplateName = 'panelTemplateName.wml';
             view._source = defaultConfig.source;
             view._configs = {
@@ -206,6 +206,13 @@ define(
 
             assert.strictEqual(popupOptions.template, 'panelTemplateName.wml');
             assert.strictEqual(popupOptions.templateOptions.items.getCount(), 2);
+
+            view._children['second_filter'] = 'div_second_filter';
+            view._openPanel('click', 'second_filter');
+            assert.strictEqual(popupOptions.target, 'div_second_filter');
+
+            view._openPanel('click');
+            assert.deepStrictEqual(popupOptions.target, 'filter_container');
          });
 
          it('_open', function() {
@@ -312,37 +319,93 @@ define(
             assert.strictEqual(view._source[2].value, '');
             assert.deepStrictEqual(filterChanged, {state: [1]});
             assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'In any state', title: 'In any state', hasMoreText: ''}});
+
+            view._source.push({
+               name: 'date',
+               value: [new Date(2019, 5, 1), new Date(2019, 5, 31)],
+               resetValue: [new Date(2019, 7, 1), new Date(2019, 7, 31)],
+               editorOptions: {
+                  option1: '1',
+                  option2: '2'
+               },
+               type: 'dateRange',
+               viewMode: 'basic'
+            });
+            closed = false;
+            view._resetFilterText();
+            assert.isTrue(closed);
+            assert.strictEqual(view._source[2].value, '');
+            assert.deepStrictEqual(view._source[5].value, [new Date(2019, 5, 1), new Date(2019, 5, 31)]);
          });
 
-         it('_startTimer', function() {
-            let opened, resultConfig;
-            let view = getView(defaultConfig);
-            view._options.panelTemplateName = 'panelTemplateName.wml';
-            view._children = {
-               DropdownOpener: { open: (config) => {
+         describe('View::timer', function() {
+            let view;
+            beforeEach(function() {
+               view = getView(defaultConfig);
+               view._options.panelTemplateName = 'panelTemplateName.wml';
+               view._children = {
+                  fast: 'target'
+               };
+               view._source = Clone(defaultConfig.source);
+               view._configs = {
+                  document: {
+                     items: Clone(defaultItems[0]),
+                     displayProperty: 'title',
+                     keyProperty: 'id'},
+                  state: {
+                     items: Clone(defaultItems[1]),
+                     displayProperty: 'title',
+                     keyProperty: 'id',
+                     multiSelect: true}
+               };
+               view._container = {};
+            });
+
+            it('_startTimer', function() {
+               let opened, resultConfig;
+               view._children.DropdownOpener = { open: (config) => {
                   resultConfig = config;
                   opened = true;
-               }},
-               fast: 'target'
-            };
-            view._source = Clone(defaultConfig.source);
-            view._configs = {
-               document: {
-                  items: Clone(defaultItems[0]),
-                  displayProperty: 'title',
-                  keyProperty: 'id'},
-               state: {
-                  items: Clone(defaultItems[1]),
-                  displayProperty: 'title',
-                  keyProperty: 'id',
-                  multiSelect: true}
-            };
-            view._container = {};
-            view._startTimer('mouseenter', {name: 'fast', title: 'My department'});
-            setTimeout(() => {
-               assert.isTrue(opened);
-               assert.strictEqual(resultConfig.target, 'target');
-            }, 110);
+               }};
+               view._startTimer('mouseenter', 'fast');
+               setTimeout(() => {
+                  assert.isTrue(opened);
+                  assert.strictEqual(resultConfig.target, 'target');
+               }, 110);
+            });
+
+            it('_restartTimer', function() {
+               let opened, resultConfig;
+               view._children.DropdownOpener = { open: (config) => {
+                     resultConfig = config;
+                     opened = true;
+               }};
+               view._startTimer('mouseenter', 'fast');
+               setTimeout(() => {
+                  view._restartTimer('mousemove', 'fast');
+                  setTimeout(() => {
+                     assert.isTrue(opened);
+                     assert.strictEqual(resultConfig.target, 'target');
+                  }, 110);
+               }, 10);
+            });
+
+            it('_resetTimer', function() {
+               let opened = false, resultConfig = null;
+               view._children.DropdownOpener = { open: (config) => {
+                     resultConfig = config;
+                     opened = true;
+               }};
+               view._startTimer('mouseenter', 'fast');
+               setTimeout(() => {
+                  view._resetTimer();
+                  assert.isNull(view._delayOpenTimeout);
+                  setTimeout(() => {
+                     assert.isFalse(opened);
+                     assert.isNull(resultConfig);
+                  }, 110);
+               }, 10);
+            });
          });
 
          it('_rangeChangedHandler', () => {

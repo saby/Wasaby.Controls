@@ -258,6 +258,153 @@ define([
          assert.deepEqual([{sortField: 'DESC'}], expandSorting);
       });
 
+      it('_private.shouldLoadChildren', function() {
+         const
+            treeControl = correctCreateTreeControl({
+               columns: [],
+               parentProperty: 'parent',
+               nodeProperty: 'nodeType',
+               hasChildrenProperty: 'hasChildren',
+               source: new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: [
+                     {
+                        id: 'leaf',
+                        title: 'Leaf',
+                        parent: null,
+                        nodeType: null,
+                        hasChildren: false
+                     },
+                     {
+                        id: 'node_has_loaded_children',
+                        title: 'Has Loaded Children',
+                        parent: null,
+                        nodeType: true,
+                        hasChildren: true
+                     },
+                     {
+                        id: 'node_has_unloaded_children',
+                        title: 'Has Unloaded Children',
+                        parent: null,
+                        nodeType: true,
+                        hasChildren: true
+                     },
+                     {
+                        id: 'node_has_no_children',
+                        title: 'Has No Children',
+                        parent: null,
+                        nodeType: true,
+                        hasChildren: false
+                     },
+
+                     {
+                        id: 'leaf_2',
+                        title: 'Leaf 2',
+                        parent: 'node_has_loaded_children',
+                        nodeType: null,
+                        hasChildren: false
+                     },
+                     {
+                        id: 'leaf_3',
+                        title: 'Leaf 3',
+                        parent: 'node_has_unloaded_children',
+                        nodeType: null,
+                        hasChildren: false
+                     }
+                  ],
+                  filter: function(item, where) {
+                     if (!where.parent) {
+                        // Эмулируем метод БЛ, который по запросу корня возвращает еще и подзаписи родителя
+                        // с ключом node_has_loaded_children
+                        return !item.get('parent') || item.get('parent') === 'node_has_loaded_children'
+                     }
+                     return item.get('parent') === where.parent;
+                  }
+               })
+            }),
+            shouldLoadChildrenResult = {
+               'node_has_loaded_children': false,
+               'node_has_unloaded_children': true,
+               'node_has_no_children': false
+            },
+            listViewModel = treeControl._children.baseControl.getViewModel();
+
+         return new Promise(function(resolve) {
+            setTimeout(function() {
+               for (const nodeKey in shouldLoadChildrenResult) {
+                  const
+                     expectedResult = shouldLoadChildrenResult[nodeKey],
+                     node = listViewModel.getItemById(nodeKey).getContents();
+                  assert.strictEqual(
+                     treeGrid.TreeControl._private.shouldLoadChildren(treeControl, node),
+                     expectedResult,
+                     '_private.shouldLoadChildren returns unexpected result for ' + nodeKey
+                  );
+               }
+               resolve();
+            }, 10);
+         });
+      });
+
+      it('toggleExpanded does not load if shouldLoadChildren===false', function() {
+         const
+            treeControl = correctCreateTreeControl({
+               columns: [],
+               root: null,
+               sorting: [{sortField: 'DESC'}],
+               source: new sourceLib.Memory({
+                  data: [],
+                  idProperty: 'id'
+               })
+            }),
+            originalCreateSourceController = treeGrid.TreeControl._private.createSourceController,
+            originalShouldLoadChildren = treeGrid.TreeControl._private.shouldLoadChildren,
+            model = treeControl._children.baseControl.getViewModel(),
+            fakeDispItem = {
+               getContents: function() {
+                  return {
+                     getId: function() {
+                        return 1;
+                     }
+                  };
+               },
+               isRoot: function() {
+                  return false;
+               }
+            };
+
+         let
+            loadedDataFromServer = false,
+            expandedCorrectItem = false,
+            expandedCorrectState = false;
+
+         treeGrid.TreeControl._private.createSourceController = function() {
+            return {
+               load: function() {
+                  loadedDataFromServer = true;
+                  return Deferred.success([]);
+               }
+            };
+         };
+
+         treeGrid.TreeControl._private.shouldLoadChildren = function() {
+            return false;
+         };
+
+         model.toggleExpanded = function(item, expanded) {
+            expandedCorrectItem = item === fakeDispItem;
+            expandedCorrectState = expanded === true;
+         };
+
+         treeGrid.TreeControl._private.toggleExpanded(treeControl, fakeDispItem);
+
+         treeGrid.TreeControl._private.createSourceController = originalCreateSourceController;
+         treeGrid.TreeControl._private.shouldLoadChildren = originalShouldLoadChildren;
+
+         assert.isFalse(loadedDataFromServer);
+         assert.isTrue(expandedCorrectItem);
+         assert.isTrue(expandedCorrectState);
+      });
 
       it('_private.isDeepReload', function() {
          assert.isFalse(!!treeGrid.TreeControl._private.isDeepReload({}, false));

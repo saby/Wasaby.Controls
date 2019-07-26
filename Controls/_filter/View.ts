@@ -353,17 +353,17 @@ var Filter = Control.extend({
         }
     },
 
-    _startTimer: function(event, item) {
+    _startTimer: function(event, name) {
         if (!this._delayOpenTimeout) {
             this._delayOpenTimeout = setTimeout(function () {
-                this._openPanel(event, item);
+                this._openPanel(event, name);
             }.bind(this), DELAY_OPEN);
         }
     },
 
-    _restartTimer: function(event, item) {
+    _restartTimer: function(event, name) {
         this._resetTimer();
-        this._startTimer(event, item);
+        this._startTimer(event, name);
     },
 
     _resetTimer: function() {
@@ -386,13 +386,14 @@ var Filter = Control.extend({
             }
             popupOptions.template = this._options.detailPanelTemplateName;
             popupOptions.className = 'controls-FilterButton-popup-orientation-' + (this._options.alignment === 'right' ? 'left' : 'right');
+            popupOptions.templateOptions = this._options.detailPanelTemplateOptions || {};
             this._open(panelItems, popupOptions);
         } else {
             this._openPanel();
         }
     },
 
-    _openPanel: function(event, fastItem) {
+    _openPanel: function(event, name) {
         if (this._options.panelTemplateName) {
             let items = new RecordSet({
                 rawData: _private.setPopupConfig(this, this._configs, this._source)
@@ -402,9 +403,10 @@ var Filter = Control.extend({
                 actionOnScroll: 'close',
                 className: 'controls-FilterView-SimplePanel-popup'
             };
-            if (fastItem) {
-                popupOptions.target = this._children[fastItem.name];
+            if (name) {
+                popupOptions.target = this._children[name];
             }
+            popupOptions.templateOptions = this._options.panelTemplateOptions || {};
             this._open(items, popupOptions);
         }
     },
@@ -476,7 +478,7 @@ var Filter = Control.extend({
         }
         factory(this._source).each(function(item) {
             // Fast filters could not be reset from the filter button.
-            if (!_private.isFrequentItem(item)) {
+            if (!_private.isFrequentItem(item) && item.type !== 'dateRange') {
                 item.value = item.resetValue;
                 if (object.getPropertyValue(item, 'visibility') !== undefined) {
                     object.setPropertyValue(item, 'visibility', false);

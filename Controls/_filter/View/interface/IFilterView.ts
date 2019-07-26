@@ -147,7 +147,7 @@
  * @remark
  * В качестве шаблона рекомендуется использовать контрол {@link Controls/filterPopup:DetailPanel}
  * Подробнее о настройке панели фильтров читайте <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>здесь</a>.
- * Важно: для ленивой загрузки шаблона в опции укажите путь до контрола. 
+ * Важно: для ленивой загрузки шаблона в опции укажите путь до контрола.
  * @example
  * Пример настройки параметров для двух фильтров.
  * Шаблоны отображения обоих фильтров в главном блоке находятся в разделе "MyModule/mainBlockTemplate.wml"
@@ -217,7 +217,7 @@
 
 /**
  * @name Controls/_filter/interface/IFilterView#panelTemplateName
- * @cfg {String} Шаблон всплывающей панели, которая открывается после клика 
+ * @cfg {String} Шаблон всплывающей панели, которая открывается после клика.
  * @remark
  * В качестве шаблона ркомендуется использовать {@link Controls/filterPopup:SimplePanel}
  * При указании panelTemplateName, параметр items должен быть передан в шаблон.
@@ -300,6 +300,46 @@
  */
 
 /**
+ * @name Controls/_filter/interface/IFilterView#detailPanelTemplateOptions
+ * @cfg {Object} Опции для контрола, переданного в {@link detailPanelTemplateName}
+ * @example
+ * <pre>
+ *    <Controls.filter:View
+ *       items={{_items}}
+ *       detailPanelTemplateName="wml!MyModule/panelTemplate">
+ *       <ws:detailPanelTemplateOptions historyId="demo_history_id"/>
+ *    </Controls.filter:View>
+ * </pre>
+ *
+ * MyModule/panelTemplate.wml
+ * <pre>
+ *    <Controls.filterPopup:DetailPanel items="{{items}}" historyId="{{historyId}}">
+ *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
+ *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
+ *    </Controls.filterPopup:Panel>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_filter/interface/IFilterView#panelTemplateOptions
+ * @cfg {Object} Опция для контрола, переданного в {@link panelTemplateName}
+ * @example
+ * <pre>
+ *    <Controls.filter:View
+ *       items={{_items}}
+ *       panelTemplateName="wml!MyModule/panelTemplate">
+ *       <ws:panelTemplateOptions itemTemplate="wml!MyModule/panelTemplate/itemTemplate"/>
+ *    </Controls.filter:View>
+ * </pre>
+ *
+ * MyModule/panelTemplate/itemTemplate.wml
+ * <pre>
+ *    <Controls.filterPopup:SimplePanel itemTemplate={{itemTemplate}}>
+ *    </Controls.filterPopup:SimplePanel>
+ * </pre>
+ */
+
+/**
  * @name Controls/_filter/interface/IFilterView#alignment
  * @cfg {String} Устанавливает выравнивание кнопки фильтров.
  * @variant right Кнопка прикреплена к правому краю, всплывающая панель открывается слева.
@@ -310,7 +350,7 @@
  * @example
  * Пример открытия панели фильтров справа:
  * <pre>
- *    <Controls.filter:Selector
+ *    <Controls.filter:View
  *       detailPanelTemplateName="wml!MyModule/panelTemplate"
  *       source="{{_source}}"
  *       alignment="left" />
@@ -328,7 +368,7 @@
  * @example
  * Example of opening the filter panel in the right
  * <pre>
- *    <Controls.filter:Selector
+ *    <Controls.filter:View
  *       detailPanelTemplateName="wml!MyModule/panelTemplate"
  *       source="{{_source}}"
  *       alignment="left" />

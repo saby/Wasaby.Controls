@@ -1,6 +1,7 @@
 import CoreExtend = require('Core/core-extend');
 import Deferred = require('Core/Deferred');
 import Utils = require('Types/util');
+import {Controller as ManagerController} from 'Controls/popup';
 
 let _fakeDiv;
 
@@ -34,14 +35,15 @@ let _fakeDiv;
 
          /**
           * Creates fake div to calculate margins.
-          * Element is created with position absolute and far beyond the screen left position 
+          * Element is created with position absolute and far beyond the screen left position
           */
          getFakeDiv: function() {
+            // create fake div on invisible part of window, cause user class can overlap the body
             if (!_fakeDiv) {
                _fakeDiv = document.createElement('div');
                _fakeDiv.style.position = 'absolute';
-               _fakeDiv.style.left = '-1000px';
-               _fakeDiv.style.top = '0';
+               _fakeDiv.style.left = '-10000px';
+               _fakeDiv.style.top = '-10000px';
                document.body.appendChild(_fakeDiv);
             }
             return _fakeDiv;
@@ -54,7 +56,7 @@ let _fakeDiv;
                   top: 0
                };
             }
-            
+
             const fakeDiv = _private.getFakeDiv();
             fakeDiv.className = config.popupOptions.className;
 
@@ -231,6 +233,15 @@ let _fakeDiv;
                margins: _private.getMargins(config, container)
             };
             return config.sizes;
+         },
+         _getPopupContainer: function(id) {
+            const popupContainer = ManagerController.getContainer();
+            const item = popupContainer && popupContainer._children[id];
+            let container = item && item._container;// todo https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+            if (container && container.jquery) {
+               container = container[0];
+            }
+            return container;
          },
          _checkContainer: function(item, container, stage) {
             if (!container) {

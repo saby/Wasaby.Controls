@@ -73,6 +73,17 @@
          </Router.router:Reference>
       </div>
       <div>
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/NoScrollPaging' }}">
+            <a href="{{content.href}}">List/NoScrollPaging</a>
+          </Router.router:Reference>
+      </div>
+      <div>
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/NavigationSwitching' }}">
+            <a href="{{content.href}}">List/NavigationSwitching</a>
+         </Router.router:Reference>
+      </div>
+
+      <div>
          <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/VirtualScroll' }}">
             <a href="{{content.href}}">List/VirtualScroll</a>
          </Router.router:Reference>
@@ -360,23 +371,33 @@
             Bar
          </a>
       </div>
-
-      <h1>PropertyGrid</h1>
-      <a href="/Controls-demo/app/Controls-demo%252FPropertyGridNew%252FPropertyGrid?withoutLayout=true">
-         PropertyGrid
-      </a>
-
-      <h1>StateIndicator</h1>
       <div>
          <a href="/Controls-demo/app/Controls-demo%252FStateIndicator%252FStateIndicatorDemo">
             StateIndicator
          </a>
       </div>
 
+      <h1>PropertyGrid</h1>
+      <a href="/Controls-demo/app/Controls-demo%252FPropertyGridNew%252FPropertyGrid?withoutLayout=true">
+         PropertyGrid
+      </a>
+
       <h1>CompoundContainer</h1>
       <div>
          <a href="/Controls-demo/app/Controls-demo%252FCompound%252FCompoundDemo">
             CompoundDemo
+         </a>
+      </div>
+
+      <h1>Slider</h1>
+      <div>
+         <a href="/Controls-demo/app/Controls-demo%252FSlider%252FBase%252FSliderBaseDemo">
+            Base
+         </a>
+      </div>
+      <div>
+         <a href="/Controls-demo/app/Controls-demo%252FSlider%252FRange%252FSliderRangeDemo">
+            Range
          </a>
       </div>
    </div>

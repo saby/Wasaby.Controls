@@ -145,7 +145,7 @@ const ActualApi = {
       }
       return '';
    },
-   itemsSetOldIconStyle: function (items) {
+   itemsSetOldIconStyle: function(items) {
       items.forEach((item) => {
          if (item.get('icon') && !item.get('iconStyle')) {
             const newIconStyle = this.iconColorFromOptIconToIconStyle(item.get('icon'));
@@ -192,14 +192,14 @@ const ActualApi = {
          // для ссылок старое значение опции style влияло на цвет текста
          if (calcViewMode === 'link') {
             switch (calcStyle) {
-               case 'primary': return 'link'; break;
-               case 'success': return 'success'; break;
-               case 'danger': return 'danger'; break;
-               case 'warning': return 'warning'; break;
-               case 'info': return 'unaccented'; break;
-               case 'secondary': return 'link'; break;
-               case 'default': return 'default'; break;
-               case undefined: return 'link'; break;
+               case 'primary': return 'link';
+               case 'success': return 'success';
+               case 'danger': return 'danger';
+               case 'warning': return 'warning';
+               case 'info': return 'unaccented';
+               case 'secondary': return 'link';
+               case 'default': return 'default';
+               case undefined: return 'link';
             }
          }
       }
@@ -210,12 +210,12 @@ const ActualApi = {
       } else {
          if (_iconRegExp.exec(options.icon)) {
             switch (RegExp.$1) {
-               case '16': return 's'; break;
-               case '24': return 'm'; break;
-               case '32': return 'l'; break;
-               case 'small': return 's'; break;
-               case 'medium': return 'm'; break;
-               case 'large': return 'l'; break;
+               case '16': return 's';
+               case '24': return 'm';
+               case '32': return 'l';
+               case 'small': return 's';
+               case 'medium': return 'm';
+               case 'large': return 'l';
                default: return '';
             }
          } else {
@@ -243,24 +243,21 @@ const ActualApi = {
          if (typeof(options.size) !== 'undefined') {
             // IoC.resolve('ILogger').warn('Button', 'Опция size устарела, используйте height и fontSize');
             if (options.viewMode === 'button') {
-               //кнопки l размера имеют шрифт xl в теме
+               // кнопки l размера имеют шрифт xl в теме
                if (options.size === 'l') {
                   return 'xl';
                } else {
                   return 'm';
                }
             } else if (options.viewMode === 'link'){
-               //для ссылок все сложнее
+               // для ссылок все сложнее
                switch (options.size) {
                   case 's':
                      return 'xs';
-                     break;
                   case 'l':
                      return 'l';
-                     break;
                   case 'xl':
                      return '3xl';
-                     break;
                   default:
                      return 'm';
                }

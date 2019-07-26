@@ -12,12 +12,13 @@
       source="{{_viewSource}}"
       tileScalingMode="outside"
       multiSelectVisibility="visible"
+      markerVisibility="hidden"
       itemActions="{{_itemActions}}"
       bind:selectedKeys="_selectedKeys"
       bind:excludedKeys="_excludedKeys"
       itemsReadyCallback="{{_itemsReadyCallbackThird}}">
       <ws:tileItemTemplate>
-         <ws:partial template="Controls/tile:ItemTemplate" markerVisibility="hidden" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
+         <ws:partial template="Controls/tile:ItemTemplate" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
       </ws:tileItemTemplate>
       <ws:emptyTemplate>
          <ws:partial template="Controls/list:EmptyTemplate">

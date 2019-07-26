@@ -16,9 +16,14 @@ const STICKY_HEADER_ZINDEX = 3;
 
 var
     _private = {
-        calcItemColumnVersion: function(self, itemVersion, columnIndex) {
-            return itemVersion + '_' + self._columnsVersion + '_' +
-               (self._options.multiSelectVisibility === 'hidden' ? columnIndex : columnIndex - 1);
+        calcItemColumnVersion: function(self, itemVersion, columnIndex, index) {
+            let
+                hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
+                version = `${itemVersion}_${self._columnsVersion}_${hasMultiselect ? columnIndex - 1 : columnIndex}`;
+
+            version += _private.calcLadderVersion(self._ladder, index);
+
+            return version;
         },
         isDrawActions: function(itemData, currentColumn, colspan) {
             return itemData.drawActions &&
@@ -439,6 +444,33 @@ var
                 ]);
             }
 
+        },
+
+        calcLadderVersion(ladder = {}, index): string {
+
+            function getItemsLadderVersion(ladder) {
+                let ladderVersion = '';
+
+                Object.keys(ladder).forEach((ladderProperty) => {
+                    ladderVersion += (ladder[ladderProperty].ladderLength || 0) + '_';
+                });
+
+                return ladderVersion;
+            }
+
+            let
+                version = '',
+                simpleLadder = ladder.ladder && ladder.ladder[index],
+                stickyLadder = ladder.stickyLadder && ladder.stickyLadder[index];
+
+            if (simpleLadder) {
+                version += 'LP_' + getItemsLadderVersion(simpleLadder);
+            }
+            if (stickyLadder) {
+                version += 'SP_' + getItemsLadderVersion(stickyLadder);
+            }
+
+            return version;
         }
 
     },
@@ -659,8 +691,7 @@ var
         },
 
         isStickyHeader: function() {
-           // todo https://online.sbis.ru/opendoc.html?guid=e481560f-ce95-4718-a7c1-c34eb8439c5b
-           return this._options.stickyHeader && !this.isNotFullGridSupport();
+           return this._options.stickyHeader && GridLayoutUtil.isFullGridSupport();
         },
 
         getCurrentHeaderColumn: function(rowIndex, columnIndex) {
@@ -785,10 +816,13 @@ var
         // -----------------------------------------------------------
 
         getResultsPosition: function(): string {
-            if (this._options.results) {
-                return this._options.results.position;
+            const items = this.getItems();
+            if (items && items.getCount() > 1) {
+                if (this._options.results) {
+                    return this._options.results.position;
+                }
+                return this._options.resultsPosition;
             }
-            return this._options.resultsPosition;
         },
 
         setResultsPosition: function(position) {
@@ -1090,12 +1124,32 @@ var
             this._model.setMenuState(state);
         },
 
+        isCachedItemData: function(itemKey) {
+            return this._model.isCachedItemData(itemKey);
+        },
+        getCachedItemData: function(itemKey) {
+            return this._model.getCachedItemData(itemKey);
+        },
+        setCachedItemData: function(itemKey, cache) {
+            this._model.setCachedItemData(itemKey, cache);
+        },
+        resetCachedItemData: function(itemKey?) {
+            this._model.resetCachedItemData(itemKey);
+        },
+
         getItemDataByItem: function(dispItem) {
             var
                 self = this,
-                stickyColumn = _private.getStickyColumn(this._options),
                 current = this._model.getItemDataByItem(dispItem),
-                isStickedColumn;
+                stickyColumn, isStickedColumn;
+
+            if (current._gridViewModelCached) {
+                return current;
+            } else {
+                current._gridViewModelCached = true;
+            }
+
+            stickyColumn = _private.getStickyColumn(this._options)
 
             //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             current.rowSpacing = this._options.rowSpacing;
@@ -1116,7 +1170,7 @@ var
                 current.columns = this._columns;
             }
 
-            current.isHovered = current.item === self._model.getHoveredItem();
+            current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
             if (stickyColumn && !Env.detection.isNotFullGridSupport) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
@@ -1150,7 +1204,7 @@ var
             current.columnIndex = 0;
 
             current.getVersion = function() {
-                return self._calcItemVersion(current.item, current.key);
+                return self._calcItemVersion(current.item, current.key, current.index);
             };
 
             current.getItemColumnCellClasses = _private.getItemColumnCellClasses;
@@ -1188,7 +1242,7 @@ var
                         isEditing: current.isEditing,
                         isActive: current.isActive,
                         getVersion: function() {
-                           return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex);
+                           return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex, current.index);
                         },
                         _preferVersionAPI: true
                     };
@@ -1312,9 +1366,9 @@ var
             this._model.setItemActionVisibilityCallback(callback);
         },
 
-        _calcItemVersion: function(item, key) {
+        _calcItemVersion: function(item, key, index) {
             var
-                version = this._model._calcItemVersion(item, key);
+                version = this._model._calcItemVersion(item, key) + (item.getId ? item.getId() : '');
 
             if (this._lastItemKey === key) {
                 version = 'LAST_ITEM_' + version;
@@ -1323,6 +1377,9 @@ var
             if (GridLayoutUtil.isPartialGridSupport() && this._model.getHoveredItem() === item) {
                 version = 'HOVERED_' + version;
             }
+
+            version += _private.calcLadderVersion(this._ladder, index);
+
             return version;
         },
 

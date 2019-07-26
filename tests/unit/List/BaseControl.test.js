@@ -642,23 +642,23 @@ define([
 
       it('moveMarkerToNext && moveMarkerToPrevious with markerVisibility = "hidden"', async function() {
          var
-            cfg = {
-               viewModelConstructor: lists.ListViewModel,
-               markerVisibility: 'hidden',
-               keyProperty: 'key',
-               source: new sourceLib.Memory({
-                  idProperty: 'key',
-                  data: [{
-                     key: 1
-                  }, {
-                     key: 2
-                  }, {
-                     key: 3
-                  }]
-               }),
-               markedKey: 2
-            },
-            baseControl = new lists.BaseControl(cfg);
+             cfg = {
+                viewModelConstructor: lists.ListViewModel,
+                markerVisibility: 'hidden',
+                keyProperty: 'key',
+                source: new sourceLib.Memory({
+                   idProperty: 'key',
+                   data: [{
+                      key: 1
+                   }, {
+                      key: 2
+                   }, {
+                      key: 3
+                   }]
+                }),
+                markedKey: 2
+             },
+             baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
          assert.equal(null, baseControl._listViewModel.getMarkedKey());
@@ -690,8 +690,58 @@ define([
          assert.equal(null, baseControl._listViewModel.getMarkedKey());
       });
 
+      it('moveMarkerToNext && moveMarkerToPrevious while loading', async function() {
+         var
+             cfg = {
+                viewModelConstructor: lists.ListViewModel,
+                markerVisibility: 'visible',
+                keyProperty: 'key',
+                source: new sourceLib.Memory({
+                   idProperty: 'key',
+                   data: [{
+                      key: 1
+                   }, {
+                      key: 2
+                   }, {
+                      key: 3
+                   }]
+                })
+             },
+             baseControl = new lists.BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         assert.equal(1, baseControl._listViewModel.getMarkedKey());
+         baseControl._loadingIndicatorState = 'all';
+         baseControl._onViewKeyDown({
+            target: {
+               closest: function() {
+                  return false;
+               }
+            },
+            stopImmediatePropagation: function() {},
+            nativeEvent: {
+               keyCode: Env.constants.key.down
+            },
+            preventDefault: function() {},
+         });
+         assert.equal(1, baseControl._listViewModel.getMarkedKey());
+         baseControl._onViewKeyDown({
+            target: {
+               closest: function() {
+                  return false;
+               }
+            },
+            stopImmediatePropagation: function() {},
+            nativeEvent: {
+               keyCode: Env.constants.key.up
+            },
+            preventDefault: function() {},
+         });
+         assert.equal(1, baseControl._listViewModel.getMarkedKey());
+      });
+
       it('enterHandler', function () {
-        var notified = false;
+         var notified = false;
 
          // Without marker
          lists.BaseControl._private.enterHandler({
@@ -730,6 +780,70 @@ define([
             }
          });
          assert.isTrue(notified);
+      });
+
+      it('enterHandler while loading', function () {
+         let
+             myMarkedItem = null,
+             notified = false;
+
+         function enterClick(markedItem) {
+            lists.BaseControl._private.enterHandler({
+               getViewModel: () => ({
+                  getMarkedItem: () => myMarkedItem
+               }),
+               _notify: () => {
+                  notified = true;
+               },
+               _loadingIndicatorState: 'all'
+            });
+         }
+
+         // Without marker
+         enterClick(null);
+         assert.isFalse(notified);
+
+         // With marker
+         enterClick({getContents: () => ({key: 123})});
+         assert.isFalse(notified);
+      });
+
+      it('toggleSelection', async function () {
+
+         var
+             cfg = {
+                viewModelConstructor: lists.ListViewModel,
+                markerVisibility: 'visible',
+                keyProperty: 'key',
+                multiSelectVisibility: 'visible',
+                source: new sourceLib.Memory({
+                   idProperty: 'key',
+                   data: [{
+                      key: 1
+                   }, {
+                      key: 2
+                   }, {
+                      key: 3
+                   }]
+                })
+             },
+             baseControl = new lists.BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         baseControl._children.selectionController = {
+            onCheckBoxClick: (key, status) => {
+               if (status) {
+                  baseControl._listViewModel._selectedKeys.push(key);
+               } else {
+                  baseControl._listViewModel._selectedKeys.pop(key);
+               }
+            }
+         };
+         assert.deepEqual([], baseControl._listViewModel._selectedKeys);
+         baseControl._loadingIndicatorState = 'all';
+         lists.BaseControl._private.enterHandler(baseControl);
+         assert.deepEqual([], baseControl._listViewModel._selectedKeys);
+
       });
 
       it('loadToDirection up', function(done) {
@@ -2184,13 +2298,16 @@ define([
 
          //dragend with deferred
          dragEnded = false;
+         // ctrl._dragEndResultPromise = new Promise((res) => {res('hello')})
          ctrl._dragEndResult = new cDeferred();
          ctrl._documentDragEnd();
          assert.isFalse(dragEnded);
          assert.isTrue(!!ctrl._loadingState);
-         ctrl._dragEndResult.callback();
-         assert.isTrue(dragEnded);
-         assert.isFalse(!!ctrl._loadingState);
+         ctrl._dragEndResult.then(() => {
+            assert.isTrue(dragEnded);
+            assert.isFalse(!!ctrl._loadingState);
+         });
+
 
       });
 
@@ -2216,6 +2333,18 @@ define([
          selection = lists.BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 4);
          assert.deepEqual(selection.selected, [4, 1, 2, 3]);
          assert.deepEqual(selection.excluded, []);
+
+         selection = lists.BaseControl._private.getSelectionForDragNDrop([null], [4], 4);
+         assert.deepEqual(selection.selected, [null]);
+         assert.deepEqual(selection.excluded, []);
+
+         selection = lists.BaseControl._private.getSelectionForDragNDrop([null], [], 4);
+         assert.deepEqual(selection.selected, [null]);
+         assert.deepEqual(selection.excluded, []);
+
+         selection = lists.BaseControl._private.getSelectionForDragNDrop([null], [3], 4);
+         assert.deepEqual(selection.selected, [null]);
+         assert.deepEqual(selection.excluded, [3]);
       });
 
       describe('ItemActions', function() {
@@ -2312,6 +2441,7 @@ define([
                   open: function(args) {
                      callBackCount++;
                      assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
+                     assert.equal(args.templateOptions.items.getIdProperty(), 'id');
                      assert.equal(args.templateOptions.keyProperty, 'id');
                      assert.equal(args.templateOptions.parentProperty, 'parent');
                      assert.equal(args.templateOptions.nodeProperty, 'parent@');
@@ -3538,6 +3668,91 @@ define([
                   _knownPagesCount: 1
                };
                assert.equal(lists.BaseControl._private.calcPaging(self, hasMore, pageSize), 1);
+            });
+         });
+         describe('navigation switch', function() {
+            var cfg = {
+               navigation: {
+                  view: 'infinity',
+                  source: 'page',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  },
+                  sourceConfig: {
+                     pageSize: 3,
+                     page: 0,
+                     hasMore: false
+                  }
+               }
+            };
+            var baseControl = new lists.BaseControl(cfg);
+            baseControl.saveOptions(cfg);
+            baseControl._children = triggers;
+            it('infinity navigation', function() {
+               lists.BaseControl._private.initializeNavigation(baseControl, cfg);
+               assert.isTrue(baseControl._needScrollCalculation);
+               assert.isFalse(baseControl._pagingNavigation);
+            });
+            it('page navigation', function() {
+               cfg.navigation = {
+                  view: 'pages',
+                  source: 'page',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  },
+                  sourceConfig: {
+                     pageSize: 3,
+                     page: 0,
+                     hasMore: false
+                  }
+               }
+               lists.BaseControl._private.initializeNavigation(baseControl, cfg);
+               assert.isFalse(baseControl._needScrollCalculation);
+               assert.isTrue(baseControl._pagingNavigation);
+            });
+         });
+         describe('initializeNavigation', function() {
+            let cfg, cfg1, bc;
+            cfg = {
+               navigation: {
+                  view: 'infinity',
+                  source: 'page',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  },
+                  sourceConfig: {
+                     pageSize: 3,
+                     page: 0,
+                     hasMore: false
+                  }
+               },
+               viewModelConstructor: lists.ListViewModel,
+            };
+
+            it('call check', async function() {
+               bc = new lists.BaseControl(cfg);
+               bc.saveOptions(cfg);
+               await bc._beforeMount(cfg);
+               bc._loadTriggerVisibility = {up:true, down:true};
+               await bc._beforeUpdate(cfg);
+               assert.deepEqual(bc._loadTriggerVisibility, {up:true, down:true});
+               cfg = {
+                  navigation: {
+                     view: 'infinity',
+                     source: 'page',
+                     viewConfig: {
+                        pagingMode: 'direct'
+                     },
+                     sourceConfig: {
+                        pageSize: 3,
+                        page: 0,
+                        hasMore: false
+                     }
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+               };
+               await bc._beforeUpdate(cfg);
+               assert.deepEqual(bc._loadTriggerVisibility, {up:true, down:true});
             });
          });
       });

@@ -13,7 +13,7 @@
  * @mixes Controls/interface/IValidation
  * @control
  * @public
- * @author Мироново А.Ю.
+ * @author Красильников А.С.
  * @category Input
  */
 

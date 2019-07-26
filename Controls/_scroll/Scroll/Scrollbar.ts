@@ -110,7 +110,21 @@ import 'css!theme?Controls/scroll';
             },
             calcScrollbarDelta: function(start, end, thumbSize) {
                return end - start - thumbSize / 2;
-            }
+            },
+
+            getPageOffset(nativeEvent: Event, direction: 'vertical' | 'horizontal'): number {
+                let
+                    offset: number,
+                    offsetAxis = direction === 'vertical' ? 'pageY' : 'pageX';
+
+                if (nativeEvent instanceof MouseEvent) {
+                    offset = nativeEvent[offsetAxis];
+                } else {
+                    offset = (<TouchEvent>nativeEvent).touches[0][offsetAxis];
+                }
+
+                return offset;
+            },
          },
          Scrollbar = Control.extend({
             _template: template,
@@ -217,6 +231,16 @@ import 'css!theme?Controls/scroll';
                }
             },
 
+            _scrollbarMouseDownHandler: function (event) {
+                this._scrollbarBeginDragHandler(event);
+            },
+
+            _scrollbarTouchStartHandler: function (event) {
+                if (this._options.direction === 'horizontal') {
+                    this._scrollbarBeginDragHandler(event);
+                }
+            },
+
             /**
              * Обработчик начала перемещения ползунка мышью.
              * @param {SyntheticEvent} event дескриптор события.
@@ -224,7 +248,7 @@ import 'css!theme?Controls/scroll';
             _scrollbarBeginDragHandler: function(event) {
                var
                   verticalDirection = this._options.direction === 'vertical',
-                  pageOffset = event.nativeEvent[verticalDirection ? 'pageY' : 'pageX'],
+                  pageOffset = _private.getPageOffset(event.nativeEvent, this._options.direction),
                   thumbOffset = this._children.thumb.getBoundingClientRect()[verticalDirection ? 'top' : 'left'],
                   delta;
 
@@ -249,7 +273,7 @@ import 'css!theme?Controls/scroll';
              */
             _scrollbarOnDragHandler: function(e, event) {
                var
-                  pageOffset = event.domEvent[this._options.direction === 'vertical' ? 'pageY' : 'pageX'],
+                  pageOffset = _private.getPageOffset(event.domEvent, this._options.direction),
                   delta = pageOffset - this._currentPageOffset;
 
                if (this._setPosition(this._position + delta / this._scrollRatio, true)) {

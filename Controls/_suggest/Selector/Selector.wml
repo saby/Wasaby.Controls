@@ -19,7 +19,7 @@
         autoDropDown="{{_options.autoDropDown}}"
         filter="{{_options.filter}}"
         sorting="{{_options.sorting}}"
-        layerName="Controls/suggest:__PopupLayer">
+        layerName="Controls/suggestPopup:__PopupLayer">
    <Controls._suggest.Input.Render
            size="{{_options.size}}"
            value="{{_value}}"

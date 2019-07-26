@@ -22,7 +22,6 @@ define([
    describe('Controls/_datePopup/DateRange', function() {
       beforeEach(function() {
          sandbox = sinon.sandbox.create();
-         sandbox.stub(datePopupUtils.default, 'getElementByDate');
       });
 
       afterEach(function() {
@@ -79,20 +78,17 @@ define([
       });
 
       describe('_wheelHandler', function() {
-         beforeEach(function() {
-            sandbox.stub(DateRange._private, '_scrollToMonth');
-         });
          it('should should increase the year.', function() {
-            const component = calendarTestUtils.createComponent(DateRange, { month: year });
+            const component = calendarTestUtils.createComponent(DateRange, { position: year });
+            sandbox.stub(component, '_notify');
             component._wheelHandler({ preventDefault: function(){}, nativeEvent: { deltaY: 1 } });
-            sinon.assert.calledWith(
-               DateRange._private._scrollToMonth, component, new Date(year.getFullYear() + 1, 0, 1));
+            sinon.assert.calledWith(component._notify, 'positionChanged', [new Date(year.getFullYear() + 1, 0, 1)]);
          });
          it('should should decrease the year.', function() {
-            const component = calendarTestUtils.createComponent(DateRange, { month: year });
+            const component = calendarTestUtils.createComponent(DateRange, { position: year });
+            sandbox.stub(component, '_notify');
             component._wheelHandler({ preventDefault: function(){}, nativeEvent: { deltaY: -1 } });
-            sinon.assert.calledWith(
-               DateRange._private._scrollToMonth, component, new Date(year.getFullYear() - 1, 0, 1));
+            sinon.assert.calledWith(component._notify, 'positionChanged', [new Date(year.getFullYear() - 1, 0, 1)]);
          });
       });
 
