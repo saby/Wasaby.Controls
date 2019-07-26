@@ -480,3 +480,67 @@
    align-items: center;
 }
 
+.controls-Grid__row:hover {
+   .controls-Grid__editArrow-blur,
+   .controls-Grid__editArrow-wrapper {
+      visibility: visible;
+   }
+}
+.controls-Grid__row {
+   .controls-Grid__editArrow-blur,
+   .controls-Grid__editArrow-wrapper {
+      visibility: hidden;
+   }
+}
+.controls-Grid__editArrow-wrapper {
+   flex-shrink:0;
+}
+.controls-Grid__editArrow-cellContent {
+   flex-shrink:0;
+   max-width: 100%;
+}
+.controls-Grid__editArrow-blur {
+   height: 100%;
+   right: @spacing_Grid-column-between-content-borderRight + @width_Grid-editArrow;
+   display: inline-block;
+   width: @width_Grid-editArrow;
+   position: absolute;
+   background: linear-gradient(90deg, transparent, @background-color_Grid-row_hover);
+   z-index: 0;
+}
+
+.controls-Grid__editArrow {
+
+   //для базовой линии
+   top: 3px;
+   line-height: 1;
+   position: relative;
+   display: inline-block;
+   background: @background-color_Grid-row_hover;
+   height: @height_Grid-editArrow;
+   width: @width_Grid-editArrow;
+   z-index: 1;
+}
+.controls-Grid__editArrow:before {
+   font-family: @font-family-Grid-icons;
+   font-size: @font-size_Grid-editArrow;
+   content: @icon_Grid-editArrow;
+   color: @color_Grid-editArrow_normal;
+}
+
+.controls-Grid__editArrow:hover:before {
+   color: @color_Grid-editArrow_hover;
+}
+.controls-Grid__editArrow-overflow-ellipsis {
+   margin-right: -@width_Grid-editArrow;
+}
+.controls-Grid__editArrow-separator {
+   flex-shrink: 1;
+   min-width: 0px;
+   width: @spacing_Grid-editArrow_left;
+}
+.controls-Grid__editArrow-separator-big {
+   flex-shrink: 1;
+   min-width: 0px;
+   width: @spacing_Grid-editArrow_left + @width_Grid-editArrow;
+}

@@ -1,0 +1,4 @@
+<div class="controls-Grid__editArrow-wrapper">
+      <div on:click="_onEditArrowClick(itemData.item)" class="controls-Grid__editArrow" ></div>
+</div>
+<div class="controls-Grid__editArrow-blur"></div>
