@@ -178,6 +178,8 @@ import template = require('wml!Controls/_decorator/Number/Number');
          }
       });
 
+NumberDecorator._theme = ['Controls/decorator'];
+
       NumberDecorator.getDefaultOptions = function() {
          return {
             useGrouping: true,
