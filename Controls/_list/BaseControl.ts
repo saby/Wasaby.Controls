@@ -732,7 +732,9 @@ var _private = {
     }, 200),
 
     handleListScrollSync(self) {
-        self._savedCanUpdateItemsActions = self._canUpdateItemsActions || self._savedCanUpdateItemsActions;
+        if (self._options.itemActions){
+            self._savedCanUpdateItemsActions = self._canUpdateItemsActions || self._savedCanUpdateItemsActions;
+        }
         self._lockItemActionsByScroll = true;
         _private.unlockItemActions(self);
         if (detection.isMobileIOS) {
@@ -1344,7 +1346,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom, false);
             _private.startScrollEmitter(this);
         }
-
+        if (this._options.itemActions) {
+            this._canUpdateItemsActions = true;
+        }
         if (this._virtualScroll) {
             this._setScrollItemContainer();
         }
@@ -1425,6 +1429,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
+            if (this._options.itemActions){
+                if(!this._lockItemActionsByScroll) {
+                    this._canUpdateItemsActions = true;
+                    this._savedCanUpdateItemsActions = false;
+                } else {
+                    this._savedCanUpdateItemsActions = true;
+                }
+            }
         }
 
         if (this._loadedItems) {
@@ -1968,27 +1980,29 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         });
 
     },
-        _getLoadingIndicatorClasses(): string {
-            return _private.getLoadingIndicatorClasses(this._loadingIndicatorState, this._listViewModel.getCount());
-        }
+
+    _getLoadingIndicatorClasses(): string {
+        return _private.getLoadingIndicatorClasses(this._loadingIndicatorState, this._listViewModel.getCount());
+    }
 
     _onHoveredItemChanged: function(e, item, container) {
+        if (this._options.itemActions){
+            let isDragging = !!this._listViewModel.getDragEntity();
 
-        // itemMouseEnter иногда срабатывает между _beforeUpdate и _afterUpdate.
+            // itemMouseEnter иногда срабатывает между _beforeUpdate и _afterUpdate.
         // при этом, в _afterUpdate затирается _canUpdateItemsActions, и обновления опций не происходит
         // hoveredItemChanged происходит вне цикла обновления списка, поэтому, когда требуется, опции обновятся
 
         // do not need to update itemAction on touch devices, if mouseenter event was fired,
         // otherwise actions will updated and redraw, because of this click on action will not work.
         // actions on touch devices drawing on swipe.
-
-        let isDragging = !!this._listViewModel.getDragEntity();
-        if (!this._context.isTouch.isTouch){
-            if(!this._lockItemActionsByScroll && !isDragging && item) {
-                this._canUpdateItemsActions = true;
-                this._savedCanUpdateItemsActions = false;
-            } else {
-                this._savedCanUpdateItemsActions = true;
+            if (!this._context.isTouch.isTouch){
+                if(!this._lockItemActionsByScroll && !isDragging && item) {
+                    this._canUpdateItemsActions = true;
+                    this._savedCanUpdateItemsActions = false;
+                } else {
+                    this._savedCanUpdateItemsActions = true;
+                }
             }
         }
         this._notify('hoveredItemChanged', [item, container]);
