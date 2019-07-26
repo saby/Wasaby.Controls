@@ -115,7 +115,7 @@
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
         <ws:if data="{{_needScrollCalculation}}">
             <div class="controls-BaseControl__trigger controls-BaseControl__loadTrigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="top: {{ _loadOffset.top * 1.3 }}px;"></div>
-            <div class="controls-BaseControl__trigger controls-BaseControl__topPlaceholder controls-BaseControl__topVirtualScrollTrigger" name="topVirtualScrollTrigger" style="top: {{_loadOffset.top}}px; height: {{_topPlaceholderSize}}px;"></div>
+            <div class="controls-BaseControl__trigger controls-BaseControl__topPlaceholder controls-BaseControl__topVirtualScrollTrigger" name="topVirtualScrollTrigger" style="top: {{_loadOffset.top}}px;"></div>
         </ws:if>
 
         <ws:if data="{{_listViewModel}}">
@@ -169,7 +169,7 @@
         </ws:if>
 
         <ws:if data="{{_needScrollCalculation}}">
-            <div class="controls-BaseControl__trigger controls-BaseControl__bottomPlaceholder controls-BaseControl__bottomVirtualScrollTrigger" name="bottomVirtualScrollTrigger" style="bottom: {{_loadOffset.bottom}}px;height: {{_bottomPlaceholderSize}}px;"></div>
+            <div class="controls-BaseControl__trigger controls-BaseControl__bottomPlaceholder controls-BaseControl__bottomVirtualScrollTrigger" name="bottomVirtualScrollTrigger" style="bottom: {{_loadOffset.bottom}}px;"></div>
             <div class="controls-BaseControl__trigger controls-BaseControl__loadTrigger controls-BaseControl__bottomLoadTrigger" name="bottomLoadTrigger" style="bottom: {{ _loadOffset.bottom * 1.3 }}px;"></div>
         </ws:if>
 
