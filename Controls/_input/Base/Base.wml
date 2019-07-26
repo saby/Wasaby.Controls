@@ -33,6 +33,7 @@
                      scope="{{_field.scope}}"
                      fieldName="{{_fieldName}}"
                      template="{{_field.template}}"
+                     wasActionUser="{{_wasActionUser}}"
                      value="{{_viewModel.displayValue}}"
                      hidePlaceholder="{{_hidePlaceholder}}"
                      hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
