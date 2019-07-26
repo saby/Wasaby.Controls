@@ -1,5 +1,5 @@
 /**
- * Библиотека скролла.
+ * Библиотека контролов по управлению скроллом.
  * @library Controls/scroll
  * @includes Container Controls/_scroll/Container
  * @includes Watcher Controls/_scroll/Scroll/Watcher
