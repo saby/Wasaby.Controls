@@ -9,6 +9,7 @@
          _rangeModel="{{_rangeModel}}"
          _headerRangeModel="{{_headerRangeModel}}"
          _yearStateEnabled="{{_yearStateEnabled}}"
+         _monthStateEnabled="{{_monthStateEnabled}}"
       />
 
       <div if="{{ _state === _STATES.year }}" class="controls-PeriodDialog__months">

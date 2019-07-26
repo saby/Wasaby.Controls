@@ -40,6 +40,15 @@
             />
          </div>
 
+         <div>
+            <h3>The minimum period is a month</h3>
+            <Controls.datePopup
+               startValue="{{_startValue}}"
+               endValue="{{_endValue}}"
+               minRange="month"
+            />
+         </div>
+
       </div>
    </div>
 </div>

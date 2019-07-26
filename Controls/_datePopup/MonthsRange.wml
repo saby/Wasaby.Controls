@@ -12,7 +12,7 @@
          </ws:headerTemplate>
          <ws:bodyTemplate>
             <Controls._datePopup.MonthsRangeItem
-               monthClickable="_options.monthClickable"
+               monthClickable="{{_options.monthClickable}}"
                quantum="{{_options.quantum}}"
                selectionType="{{_options.selectionType}}"
                bind:startValue="_rangeModel.startValue"

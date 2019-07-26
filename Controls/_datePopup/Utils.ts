@@ -19,7 +19,8 @@ export default {
      */
     isMonthStateEnabled: function (options) {
         var quantum = options.quantum;
-        return !quantum || ((isEmpty(quantum) && options.minQuantum === 'day') || 'days' in quantum || 'weeks' in quantum);
+        return (quantum && ('days' in quantum || 'weeks' in quantum)) ||
+            ((!quantum || isEmpty(quantum)) && options.minRange === 'day');
     },
 
     /**
