@@ -1,92 +1,172 @@
 /**
- * Интерфейс для контрола Input.Number.
+ * Интерфейс управления значением числового контрола ввода.
  *
  * @interface Controls/interface/IInputNumber
  * @public
- * @author Журалев М.С.
+ * @author Красильников A.С.
  */
 
-/**
- * @name Controls/interface/IInputNumber#value
- * @cfg {Number|String|null} Числовое значение поля.
- * @default 0
- * @remark
- * Для корректной работы пользователя с полем, вам нужно обновлить опцию. Иначе в поле ничего не введется. Для того чтобы её обновить, необходимо подписаться на событие _valueChanged и обновить состояние, связанное с опцией. Для упрощения вы можете использовать синтаксис связывания(bind).
- * Работая с типом Number, можно столкнуться с проблемой потери точности. Например, числа 99999999999999999999 не существует. Оно представляется как 100000000000000000000, ввиду особенностей движка javascript, регламентируемых стандартом {@link http://www.softelectro.ru/ieee754.html IEEE 754}. Для того чтобы избежать этой проблемы, необходимо работать с типом String.
- * @example
- * В этом примере состояние контрола _inputValue связывается с опцией value поля ввода. В любом хуке жизненного цикла контрола значение _inputValue будет содержать текущее значение поля ввода.
- * <pre>
- *    <Controls.input:Number bind:value="_inputValue" />
- *    <Controls.Button on:click="_sendButtonClick()" />
- * </pre>
- *
- * <pre>
- *    Control.extend({
- *       ...
- *       _inputValue: 0,
- *
- *       _sendButtonClick() {
- *             this._sendData(this._inputValue);
- *       }
- *       ...
- *    });
- * </pre>
- * @see valueChanged
- * @see inputCompleted
- */
+interface IInputNumber {
+    readonly _options: {
+        /**
+         * @name Controls/interface/IInputNumber#value
+         * @cfg {Number|String|null} Значение контрола ввода.
+         * @default 0
+         * @remark
+         * Установливая опцию value в контроле ввода, отображаемое значение всегда будет соответствовать её значению. В этом случае родительский контрол управляет отображаемым значением. Например, вы можете менять значение по событию {@link valueChanged}:
+         * <pre>
+         *     <Controls:input:Number value="{{_value}}" on:valueChanged="_handleValueChange()"/>
+         *
+         *     export class Form extends Control<IControlOptions, void> {
+         *         private _value: number = 0;
+         *
+         *         private _handleValueChange(event: SyntheticEvent<Event>, value) {
+         *             this._value = value;
+         *         }
+         *     }
+         * </pre>
+         * Пример можно упростить воспользовавшись синтаксисом шаблонизатора {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/options/#two-way-binding bind}:
+         * <pre>
+         *     <Controls:input:Number bind:value="_value"/>
+         * </pre>
+         * Альтернатива - не задавать опцию value. Значение контрола будет кешироваться в контроле ввода:
+         * <pre>
+         *     <Controls.input:Text/>
+         * </pre>
+         * Не рекомендуем использовать опцию для изменения поведения обработки ввода. Такой подход увеличит время перерисовки.
+         * Плохо:
+         * <pre>
+         *     <Controls:input:Number value="{{_value}}" on:valueChanged="_handleValueChange()"/>
+         *
+         *     export class Form extends Control<IControlOptions, void> {
+         *         private _value: number = 0;
+         *
+         *         private _handleValueChange(event: SyntheticEvent<Event>, value) {
+         *             this._value = Math.floor(value);
+         *         }
+         *     }
+         * </pre>
+         * Лучшим подходом будет воспользоваться опцией {@link Controls/interface/ICallback#inputCallback}.
+         * Хорошо:
+         * <pre>
+         *     <Controls:input:Number bind:value="{{_value}}" inputCallback="{{_floor}}"/>
+         *
+         *     class Form extends Control<IControlOptions, void> {
+         *         private _value: string = '';
+         *
+         *         private _floor(data) {
+         *             return {
+         *                 position: data.position,
+         *                 value: Math.floor(data.value)
+         *             }
+         *         }
+         *     }
+         * </pre>
+         * Работая с типом Number, можно столкнуться с проблемой потери точности. Например, числа 99999999999999999999 не существует. Оно представляется как 100000000000000000000, ввиду особенностей движка javascript, регламентируемых стандартом {@link http://www.softelectro.ru/ieee754.html IEEE 754}. Для того чтобы избежать этой проблемы, необходимо работать с типом String:
+         * <pre>
+         *     <Controls:input:Number bind:value="{{_value}}"/>
+         *
+         *     class Form extends Control<IControlOptions, void> {
+         *         private _value: string = '0';
+         *     }
+         * </pre>
+         * @example
+         * Сохраняем данные о пользователе и текущее время при отправке формы.
+         * <pre>
+         *     <form action="Auth.php" name="form">
+         *         <Controls.input:Text bind:value="_login"/>
+         *         <Controls.input:Password bind:value="_password"/>
+         *         <Controls.input:Number precision="{{0}}" integerLength="{{3}}" bind:value="_age"/>
+         *         <Controls.Button on:click="_saveUser()" caption="Отправить"/>
+         *     </form>
+         *
+         *     export class Form extends Control<IControlOptions, void> {
+         *         private _login: string = '';
+         *         private _password: string = '';
+         *         private _age: number | null = null;
+         *         private _server: Server = new Server();
+         *
+         *         private _saveUser() {
+         *             this._server.saveData({
+         *                 age: this._age,
+         *                 date: new Date(),
+         *                 login: this._login,
+         *                 password: this._password
+         *             });
+         *
+         *             this._children.form.submit();
+         *         }
+         *     }
+         * </pre>
+         *
+         * @see valueChanged
+         * @see inputCompleted
+         */
+        value: number | string | null;
+    };
+}
 
 /**
- * @event Происходит при изменении значения поля.
- * @name Controls/interface/IInputNumber#valueChanged
- * @param {Number|String|null} value Числовое значение поля.
- * @param {String} displayValue Отображаемое значение в поле.
+ * @event valueChanged Происходит при изменении отображаемого значения контрола ввода.
+ * @name Controls/interface/IInputField#valueChanged
+ * @param {String|Number} value Значение контрола ввода.
+ * @param {String} displayValue Отображаемое значение контрола ввода.
  * @remark
- * Это событие можно использовать в качестве реакции на изменения, вносимые пользователем в поле. Значение из аргументов события, не вставляется в контрол, если не передать его обратно в поле в качестве опции. Обычно, вместо этого можно использовать синтаксис связывания(bind).
+ * Событие используется в качестве реакции на изменения, вносимые пользователем.
  * @example
- * В этом примере мы покажем, как можно связать состояние контрола _anotherFieldValue с опцией value. В первом поле мы делаем это вручную, используя событие valueChanged. Во втором поле - используя нотацию привязки(bind). Поведение этих полей будет одинаковым.
+ * Контрол ввода пароля с информационной подсказкой. Подсказка содержит информацию о его безопасности.
  * <pre>
- *    <Controls.input:Text value="_fieldValue" on:valueChanged="_valueChangedHandler()" />
+ *     <Controls.input:Password name="password" on:valueChanged="_validatePassword()"/>
  *
- *    <Controls.input:Text bind:value="_anotherFieldValue" />
+ *     export class InfoPassword extends Control<IControlOptions, void> {
+ *         private _validatePassword(event, value) {
+ *             let lengthPassword: number = value.length;
+ *             let cfg = {
+ *                 target: this._children.password,
+ *                 targetSide: 'top',
+ *                 alignment: 'end',
+ *                 message: null
+ *             }
+ *
+ *             if (lengthPassword < 6) {
+ *                 cfg.message = 'Сложность пароля низкая';
+ *             }
+ *             if (lengthPassword >= 6 && lengthPassword < 10) {
+ *                 cfg.message = 'Сложность пароля средняя';
+ *             }
+ *             if (lengthPassword >= 10) {
+ *                 cfg.message = 'Сложность пароля высокая';
+ *             }
+ *
+ *             this._notify('openInfoBox', [cfg], {
+ *                 bubbling: true
+ *             });
+ *         }
+ *     }
  * </pre>
  *
- * <pre>
- *    Control.extend({
- *       ...
- *       _fieldValue: '',
- *
- *       _valueChangedHandler(value) {
- *          this._fieldValue = value;
- *       },
- *
- *       _anotherFieldValue: ''
- *
- *    });
- * </pre>
  * @see value
  */
 
 /**
- * @event Происходит, когда ввод завершен (поле потеряло фокус или пользователь нажал "enter").
- * @name Controls/interface/IInputNumber#inputCompleted
- * @param {Number|String|null} value Числовое значение поля.
- * @param {String} displayValue Отображаемое значение в поле.
+ * @event inputCompleted Происходит при завершении ввода. Завершение ввода - это контрол потерял фокус, или пользователь нажал "enter".
+ * @name Controls/interface/IInputField#inputCompleted
+ * @param {String|Number} value Значение контрола ввода.
+ * @param {String} displayValue Отображаемое значение контрола ввода.
  * @remark
- * Реагируя на это событие, можно проверить поле на валидность введенных данных или отправить данные в другой контрол.
+ * Событие используется в качестве реакции на завершение ввода пользователем. Например, проверка на валидность введенных данных или отправка данных в другой контрол.
  * @example
- * В этом примере мы подписываемся на событие inputCompleted и сохраняем значение поля в базе данных.
+ * Подписываемся на событие inputCompleted и сохраняем значение поля в базе данных.
  * <pre>
- *    <Controls.input:Text on:inputCompleted="_inputCompletedHandler()" />
- * </pre>
+ *    <Controls.input:Number on:inputCompleted="_inputCompletedHandler()"/>
  *
- * <pre>
- *    Control.extend({
- *       ...
- *       _inputCompletedHandler(value) {
- *          this._saveEnteredValueToDatabase(value);
- *       }
- *       ...
- *    });
+ *    export class Form extends Control<IControlOptions, void> {
+ *        ...
+ *        private _inputCompletedHandler(event, value) {
+ *            this._saveEnteredValueToDatabase(value);
+ *        }
+ *        ...
+ *    }
  * </pre>
  * @see value
  */
@@ -98,37 +178,35 @@
  * @public
  * @author Журалев М.С.
  */
-interface IInputNumber {
-    /*
-     * @name Controls/interface/IInputNumber#value
-     * @cfg {Number|String|null} The number that will be projected to the text in the field.
-     * @default 0
-     * @remark
-     * If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
-     * Working with the Number type you can face the problem of loss of accuracy. For example, the number 999999999999999999 does not exist. It is represented as 100000000000000000000. The thing is that the number in js is represented by the {@link http://www.softelectro.ru/ieee754.html IEEE 754} standard. To avoid this problem, you must work with the String type.
-     * @example
-     * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
-     * <pre>
-     *    <Controls.input:Number bind:value="_inputValue" />
-     *    <Controls.Button on:click="_sendButtonClick()" />
-     * </pre>
-     *
-     * <pre>
-     *    Control.extend({
-     *        ...
-     *       _inputValue: 0,
-     *
-     *       _sendButtonClick() {
-     *          this._sendData(this._inputValue);
-     *       }
-     *       ...
-     *    });
-     * </pre>
-     * @see valueChanged
-     * @see inputCompleted
-     */
-    value: number | null;
-}
+
+/*
+ * @name Controls/interface/IInputNumber#value
+ * @cfg {Number|String|null} The number that will be projected to the text in the field.
+ * @default 0
+ * @remark
+ * If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
+ * Working with the Number type you can face the problem of loss of accuracy. For example, the number 999999999999999999 does not exist. It is represented as 100000000000000000000. The thing is that the number in js is represented by the {@link http://www.softelectro.ru/ieee754.html IEEE 754} standard. To avoid this problem, you must work with the String type.
+ * @example
+ * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
+ * <pre>
+ *    <Controls.input:Number bind:value="_inputValue" />
+ *    <Controls.Button on:click="_sendButtonClick()" />
+ * </pre>
+ *
+ * <pre>
+ *    Control.extend({
+ *        ...
+ *       _inputValue: 0,
+ *
+ *       _sendButtonClick() {
+ *          this._sendData(this._inputValue);
+ *       }
+ *       ...
+ *    });
+ * </pre>
+ * @see valueChanged
+ * @see inputCompleted
+ */
 
 /*
  * @event Occurs when field value was changed.
