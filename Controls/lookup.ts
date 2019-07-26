@@ -26,6 +26,7 @@
  * @includes Collection Controls/_lookup/SelectedCollection
  * @includes ItemTemplate wml!Controls/_lookup/SelectedCollection/ItemTemplate
  * @includes Opener Controls/_lookup/Opener
+ * @includes BaseLookupView Controls/_lookup/BaseLookupView
  * @includes LookupStyles Controls/_lookup/BaseLookupView/LookupStyles
  * @includes SelectorButtonStyles Controls/_lookup/Button/SelectorButtonStyles
  * @includes LookupLinkStyles Controls/_lookup/Lookup/Link/LookupLinkStyles
