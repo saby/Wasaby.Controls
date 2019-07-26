@@ -156,8 +156,6 @@ class VirtualScroll {
         // докрутили до триггера загрузки итемов, загрузили ещё 20 элементов,
         // показываем с 20 по 47 индексы
         // а надо показывать с 7 по 47 индексы.
-        // const topTriggerDistance = this._calcDistanceBetweenTriggerAndViewport('top', scrollParams, this._startIndex, this._stopIndex, triggerOffset);
-        // const bottomTriggerDistance = this._calcDistanceBetweenTriggerAndViewport('bottom', scrollParams, this._startIndex, this._stopIndex, triggerOffset);
         let newStartIndex = this._startIndex;
         let newStopIndex = this._stopIndex;
 
@@ -180,13 +178,6 @@ class VirtualScroll {
                 // если всё ещё мало записей - можно попробовать уменьшать startIndex ВОТ В ЭТОМ МЕСТЕ.
             }
         }
-        /*if (direction === 'up') {
-            if (newStopIndex < this._stopIndex) {
-               newStopIndex = Math.min(newStopIndex + this._calcIndexCompensationByTriggerDistance(bottomTriggerDistance, 'up', newStopIndex, this._stopIndex), this._itemsCount);
-            }
-        } else {
-            newStartIndex = Math.max(newStartIndex - this._calcIndexCompensationByTriggerDistance(topTriggerDistance, 'down', this._startIndex, newStartIndex), 0);
-        }*/
         this._oldStartIndex = this._startIndex;
         this._oldStopIndex = this._stopIndex;
         this._startIndex = newStartIndex;
@@ -199,8 +190,6 @@ class VirtualScroll {
     // когда данный метод планируется вызывать:
     // скролл вверх/вниз
     public recalcToDirection(direction: string, triggerOffset: number): void {
-        // const topTriggerDistance = this._calcDistanceBetweenTriggerAndViewport('top', scrollParams, this._startIndex, this._stopIndex, triggerOffset);
-        // const bottomTriggerDistance = this._calcDistanceBetweenTriggerAndViewport('bottom', scrollParams, this._startIndex, this._stopIndex, triggerOffset);
         let newStartIndex = this._startIndex;
         let newStopIndex = this._stopIndex;
 
@@ -234,13 +223,6 @@ class VirtualScroll {
             }
         }
         newStartIndex = Math.max(newStopIndex - this._virtualPageSize, 0);
-        /*if (direction === 'up') {
-            if (newStopIndex < this._stopIndex) {
-               newStopIndex = Math.min(newStopIndex + this._calcIndexCompensationByTriggerDistance(bottomTriggerDistance, 'up', newStopIndex, this._stopIndex), this._itemsCount);
-            }
-        } else {
-            newStartIndex = Math.max(newStartIndex - this._calcIndexCompensationByTriggerDistance(topTriggerDistance, 'down', this._startIndex, newStartIndex), 0);
-        }*/
         this._oldStartIndex = this._startIndex;
         this._oldStopIndex = this._stopIndex;
         this._startIndex = newStartIndex;

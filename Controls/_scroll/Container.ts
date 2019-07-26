@@ -544,8 +544,8 @@ var
        * TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=93779c1a-8d18-42fe-8dc8-1bab779d0943.
        * Переделать на bind в шаблоне и избавится от прокидывания опций.
        */
-      _positionChangedHandler: function(event, position, positionWithPlaceholder) {
-         _private.setScrollTop(this, position, positionWithPlaceholder);
+      _positionChangedHandler: function(event, position) {
+         _private.setScrollTop(this, position);
       },
 
       _draggingChangedHandler: function(event, dragging) {

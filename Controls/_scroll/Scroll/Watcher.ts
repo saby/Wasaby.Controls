@@ -307,7 +307,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             this._notify('register', ['controlResize', this, this._resizeHandlerOuter], {bubbling: true});
          },
 
-         _scrollHandler: function(e, scrollTop) {
+         _scrollHandler: function(e) {
             _private.onScrollContainer(this, _private.getDOMContainer(this._container), this._canObserver);
          },
 
