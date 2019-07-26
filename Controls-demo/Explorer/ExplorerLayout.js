@@ -7,7 +7,7 @@ define('Controls-demo/Explorer/ExplorerLayout', [
    var
       ModuleClass = Explorer.extend({
          _beforeMount: function() {
-            Explorer.superclass._beforeMount.apply(this, arguments);
+            ModuleClass.superclass._beforeMount.apply(this, arguments);
             this._viewSource = new MemorySource({
                idProperty: 'id',
                data: [{
@@ -281,7 +281,7 @@ define('Controls-demo/Explorer/ExplorerLayout', [
                   image: explorerImagesLayout[2],
                   isDocument: true
                }]
-         });
+            });
          }
       });
 

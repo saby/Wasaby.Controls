@@ -7,7 +7,7 @@ define('Controls-demo/Explorer/DemoLayout', [
    var
       ModuleClass = Demo.extend({
          _beforeMount: function() {
-            Demo.superclass._beforeMount.apply(this, arguments);
+            ModuleClass.superclass._beforeMount.apply(this, arguments);
             this._viewSource = new source.HierarchicalMemory({
                idProperty: 'id',
                parentProperty: 'parent',
