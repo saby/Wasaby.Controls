@@ -26,6 +26,7 @@ import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import {Focus} from 'Vdom/Vdom';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
+import {throttle} from 'Types/function';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -414,7 +415,7 @@ var _private = {
     },
 
     checkVirtualScrollCapability: function(self) {
-       if (self._virtualScroll) {
+       if (self._virtualScroll && !self._applyScrollTopCallback) {
           if (self._virtualScrollTriggerVisibility.up) {
              _private.updateVirtualWindow(self, 'up');
           } else if (self._virtualScrollTriggerVisibility.down) {
@@ -428,14 +429,17 @@ var _private = {
         _private.applyVirtualScrollIndexes(self, direction);
     },
 
+    throttledUpdateIndexesByVirtualScrollMove: throttle((self, params) => {
+        self._virtualScroll.recalcToDirectionByScrollTop(params, self._loadOffset.top);
+        if (_private.applyVirtualScrollIndexesToListModel(self)) {
+            _private.applyPlaceholdersSizes(self);
+        }
+    }, 150, true),
+
     virtualScrollMove: function(self, params) {
         if (self._virtualScroll) {
-            self._virtualScroll.recalcToDirectionByScrollTop(params, self._loadOffset.top);
-
-            if (_private.applyVirtualScrollIndexesToListModel(self)) {
-                _private.applyPlaceholdersSizes(self);
-            }
-            self._applyScrollTopAfterRender = params.applyScrollTopCallback;
+            self._applyScrollTopCallback = params.applyScrollTopCallback;
+            _private.throttledUpdateIndexesByVirtualScrollMove(self, params);
         }
     },
 
@@ -485,8 +489,7 @@ var _private = {
             }
         };
 
-        //todo remove UP???
-        if (detection.isMobileIOS && direction === 'up' && self._virtualScroll.PlaceholdersSizes.top === 0) {
+        if (detection.isMobileIOS && self._virtualScroll.PlaceholdersSizes.top === 0) {
             _private.getIntertialScrolling(self).callAfterScrollStopped(updateIndexes);
         } else {
             updateIndexes();
@@ -1464,9 +1467,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.applyPlaceholdersSizes(this);
         }
 
-        if (this._virtualScroll && this._applyScrollTopAfterRender) {
-            this._applyScrollTopAfterRender();
-            this._applyScrollTopAfterRender = null;
+        if (this._virtualScroll && this._applyScrollTopCallback) {
+            this._applyScrollTopCallback();
+            this._applyScrollTopCallback = null;
         }
 
         // todo KINGO.
