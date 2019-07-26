@@ -545,11 +545,12 @@ define(['Controls/_tile/TileView/TileView',
 
       it('_calculateHoveredItemPosition', function() {
          var
-            setHoveredItemCalled = false,
+            closestResult = false,
+            setHoveredItemCalled,
             event = {
                target: {
                   closest: function() {
-                     return false;
+                     return closestResult;
                   }
                }
             };
@@ -560,6 +561,13 @@ define(['Controls/_tile/TileView/TileView',
 
          cfg.tileScalingMode = 'none';
          tileView.saveOptions(cfg);
+         tileView._calculateHoveredItemPosition(event);
+         assert.isTrue(setHoveredItemCalled);
+
+         cfg.tileScalingMode = 'outside';
+         tileView.saveOptions(cfg);
+         setHoveredItemCalled = null;
+         closestResult = true;
          tileView._calculateHoveredItemPosition(event);
          assert.isTrue(setHoveredItemCalled);
       });
