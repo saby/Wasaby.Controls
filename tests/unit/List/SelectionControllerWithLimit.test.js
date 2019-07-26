@@ -73,17 +73,17 @@ define([
          assert.isTrue(instance._multiselection._excludedKeys.includes(2));
       });
 
-      it('expand limit on select', async function() {
+      it('increase limit on select', async function() {
          await instance._beforeMount(cfg);
-         const stubExpandLimit = sandbox.stub(instance._multiselection, '_expandLimit');
+         const stubExpandLimit = sandbox.stub(instance._multiselection, '_increaseLimit');
          SelectionController._private.selectedTypeChangedHandler.call(instance, 'selectAll', 3);
          instance.onCheckBoxClick(7, false);
          assert.isTrue(stubExpandLimit.withArgs([7]).calledOnce);
       });
 
-      it('call _expandLimit on select', async function() {
+      it('call _increaseLimit on select', async function() {
          await instance._beforeMount(cfg);
-         const stubExpandLimit = sandbox.stub(instance._multiselection, '_expandLimit');
+         const stubExpandLimit = sandbox.stub(instance._multiselection, '_increaseLimit');
          SelectionController._private.selectedTypeChangedHandler.call(instance, 'selectAll', 3);
          instance.onCheckBoxClick(7, false);
          assert.isTrue(stubExpandLimit.withArgs([7]).calledOnce);

@@ -56,7 +56,7 @@ var Selection = cExtend.extend({
       this._selectedKeys = this._selectedKeys.slice();
       this._excludedKeys = this._excludedKeys.slice();
       if (this._limit && keys.length === 1 && !this._excludedKeys.includes(keys[0])) {
-         this._expandLimit(keys);
+         this._increaseLimit(keys);
       }
       if (this._isAllSelection(this._getParams())) {
          ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
@@ -98,6 +98,9 @@ var Selection = cExtend.extend({
     */
    selectAll: function() {
       this._selectedKeys = ALLSELECTION_VALUE;
+
+      // При выборе "Отметить все" лимит не передается, а предыдущий установленный сбрасывается раньше вызова selectAll,
+      // в этом случае массив с исключениями всегда будут очищаться.
       if (!this._limit) {
          this._excludedKeys = [];
       }
@@ -129,19 +132,20 @@ var Selection = cExtend.extend({
    },
 
    /**
-    * Setting limit.
-    * @param {Integer} value
+    * Sets limit.
+    * @param {Number} value
     */
-   setLimit: function(value: Integer): void {
+   setLimit: function(value: Number): void {
       this._limit = value;
    },
 
    /**
-    * Expand limit on new item selection
+    * Increases the limit on the number of selected items, placing all other unselected in excluded list
+    * Увеличивает лимит на количество выбранных записей, все предыдущие невыбранные записи при этом попадают в исключение
     * @param {Array} keys
     * @private
     */
-   _expandLimit: function(keys: any[]): void {
+   _increaseLimit: function(keys: any[]): void {
       const self = this;
       const limit = self._limit ? self._limit - this._excludedKeys.length : 0;
       let count = 0;
@@ -153,7 +157,7 @@ var Selection = cExtend.extend({
             count++;
          } else if (count >= limit && slicedKeys.length) {
             count++;
-            self._limit++
+            self._limit++;
             if (slicedKeys.includes(key)) {
                slicedKeys.splice(slicedKeys.indexOf(key), 1)
             } else {
