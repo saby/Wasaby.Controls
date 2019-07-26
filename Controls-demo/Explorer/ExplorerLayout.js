@@ -281,7 +281,8 @@ define('Controls-demo/Explorer/ExplorerLayout', [
                   image: explorerImagesLayout[2],
                   isDocument: true
                }]
-         },
+         });
+         }
       });
 
    return ModuleClass;
