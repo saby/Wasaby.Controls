@@ -190,7 +190,7 @@ define([
             assert.equal(goodResultHtml, checkResultHtml);
          });
          it('inside link', function() {
-            var originHtml = '<p><a>https://ya.ru</a><a>yandex.ru</a></p>';
+            var originHtml = '<p><a>https://ya.ru</a><a>yandex.ru</a><a>rn.kondakov@tensor.ru</a></p>';
             var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
             assert.equal(originHtml, checkResultHtml);
          });
