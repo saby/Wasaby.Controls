@@ -336,7 +336,9 @@ Component.getDefaultOptions = function () {
          * @variant link
          * @variant input
          */
-        headerType: HEADER_TYPES.link
+        headerType: HEADER_TYPES.link,
+
+        minRange: 'day'
 
     }, IRangeSelectable.getDefaultOptions());
 };
