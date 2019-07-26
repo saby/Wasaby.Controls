@@ -77,14 +77,28 @@ define(
             newOptions.viewMode = 'link';
             menu._beforeUpdate(newOptions);
             assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-small_popup');
+
             newOptions.icon = 'icon-small icon-Doge icon-primary';
             newOptions.viewMode = 'button';
             menu._beforeUpdate(newOptions);
             assert.equal(menu._offsetClassName, 'controls-MenuButton_button_iconSize-small_popup');
+
             newOptions.showHeader = false;
             newOptions.viewMode = 'link';
             menu._beforeUpdate(newOptions);
             assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-small_duplicate_popup');
+
+            newOptions.icon = 'icon-Doge';
+            newOptions.iconSize = 's';
+            newOptions.viewMode = 'button';
+            menu._beforeUpdate(newOptions);
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_iconSize-small_duplicate_popup');
+
+
+            newOptions.viewMode = 'link';
+            newOptions.iconSize = 'l';
+            menu._beforeUpdate(newOptions);
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-large_duplicate_popup');
          });
       });
    }

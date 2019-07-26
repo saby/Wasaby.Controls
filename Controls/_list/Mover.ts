@@ -20,7 +20,7 @@ var MOVE_POSITION = {
 var _private = {
     beforeItemsMove: function (self, items, target, position) {
         var beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
-        return beforeItemsMoveResult instanceof Deferred ? beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
+        return beforeItemsMoveResult instanceof Promise ? beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
     },
     afterItemsMove: function (self, items, target, position, result) {
         self._notify('afterItemsMove', [items, target, position, result]);

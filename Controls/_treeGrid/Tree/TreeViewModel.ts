@@ -189,6 +189,10 @@ var
                 self._expandedItems = [];
             }
             self._collapsedItems = _private.prepareCollapsedItems(self._expandedItems, self._options.collapsedItems);
+            if (self._display) {
+                self._display.setFilter(self.getDisplayFilter(self.prepareDisplayFilterData(), self._options));
+            }
+            self._nextModelVersion();
             self._notify('expandedItemsChanged', self._expandedItems);
         },
         collapseChildNodes: function(self, nodeId) {

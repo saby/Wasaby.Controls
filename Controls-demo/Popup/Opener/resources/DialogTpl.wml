@@ -2,7 +2,7 @@
     <Controls.popupTemplate:Dialog headingCaption="Dialog" draggable="{{_options.draggable}}" footerContentTemplate="{{_options.footerContentTemplate}}">
         <ws:headerContentTemplate>
             <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
-                <Controls.buttons:Button caption="Закрыть" on:click="_close()"/>
+                <Controls.buttons:Button attr:class="demo-Header__closeButton" caption="Закрыть" on:click="_close()"/>
             </div>
         </ws:headerContentTemplate>
         <ws:bodyContentTemplate>

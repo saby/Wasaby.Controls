@@ -67,6 +67,7 @@ Button.getDefaultOptions = function () {
       viewMode: 'button',
       size: 'm',
       iconStyle: 'secondary',
+      iconSize: 'm',
       transparent: true
    };
 };

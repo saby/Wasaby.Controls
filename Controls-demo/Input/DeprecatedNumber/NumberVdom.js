@@ -16,11 +16,11 @@ define('Controls-demo/Input/DeprecatedNumber/NumberVdom', [
 		
 		// индивидуальные опции
 		
-		_number0: '',
-		_number1: '', _onlyPositive1: true,
-		_number2: '', _integersLength2: 5,		
-		_number3: '', _precision3: 2,
-		_number4: '', _precision4: 0
+		_number0: null,
+		_number1: null, _onlyPositive1: true,
+		_number2: null, _integersLength2: 5,
+		_number3: null, _precision3: 2,
+		_number4: null, _precision4: 0
 
 	});
 
