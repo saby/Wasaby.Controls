@@ -183,7 +183,7 @@ var
                     this._listModel.setResultsPosition(newCfg.resultsPosition);
                 }
             }
-            
+
             // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                 this._listModel.setColumns(newCfg.columns);
@@ -265,16 +265,21 @@ var
             // todo Сейчас stickyHeader не умеет работать с многоуровневыми Grid-заголовками, это единственный вариант их фиксировать
             // поправим по задаче: https://online.sbis.ru/opendoc.html?guid=2737fd43-556c-4e7a-b046-41ad0eccd211
             let resultOffset = 0;
+            let resultsHeaderCells;
+            const resultPosition = this._listModel.getResultsPosition();
             // toDO Такое получение контейнера до исправления этой ошибки https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
             const container = this._container.length !== undefined ? this._container[0] : this._container;
             const stickyHeaderCells = container.getElementsByClassName('controls-Grid__header')[0].childNodes;
-            const resultsHeaderCells = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
-            const multyselectVisibility = this._listModel._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
+            if (resultPosition === 'top') {
+                resultsHeaderCells = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
+            }
+            const multyselectVisibility = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
             const newColumns = this._options.header.map((cur, i) => {
                 if (cur.startRow && cur.endRow) {
                     const curEl = container.querySelector(
-                        `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`)
-                    const height = curEl.getBoundingClientRect().height;
+                    `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`
+                    )
+                    const height = curEl.offsetHeight;
                     const offset = curEl.offsetTop;
                     return {
                         ...cur,
@@ -282,7 +287,7 @@ var
                         height
                     };
                 }
-                const curElHeight = stickyHeaderCells[i].getBoundingClientRect().height
+                const curElHeight = stickyHeaderCells[i].offsetHeight
                 if (curElHeight > resultOffset) {
                     resultOffset = curElHeight;
                 }
@@ -291,7 +296,7 @@ var
                     offset: 0
                 };
             });
-            if (resultOffset === 0 && this._listModel.getResultsPosition() === 'top') {
+            if (resultOffset === 0 && resultPosition === 'top') {
                 resultOffset = resultsHeaderCells[0].offsetTop;
             }
             return [newColumns, resultOffset];
