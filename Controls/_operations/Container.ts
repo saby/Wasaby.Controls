@@ -2,8 +2,8 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_operations/Container/Container');
 
 /**
- * Container for list components.
- * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
+ * Контейнер для списочных контролов.
+ * Подробное описание и инструкцию по настройке читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/operations/'>здесь</a>.
  *
  * @class Controls/_operations/Container
  * @extends Core/Control
@@ -12,7 +12,26 @@ import template = require('wml!Controls/_operations/Container/Container');
  * @public
  */
 
+/*
+ * Container for list components.
+ * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
+ *
+ * @class Controls/_operations/Container
+ * @extends Core/Control
+ * @control
+ * @author Авраменко А.С.
+ * @public
+ */ 
+
 /**
+ * @event Controls/_operations/Container#listSelectedKeysChanged Происходит при изменении набора выбранных ключей.
+ * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+ * @param {Array} selectedKeys Массив ключей выбранных элементов.
+ * @param {Array} added Массив ключей, добавленных в выборку.
+ * @param {Array} deleted Массив удаленных из выборки ключей.
+ */
+
+/*
  * @event Controls/_operations/Container#listSelectedKeysChanged Occurs when selected keys were changed.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {Array} selectedKeys Array of selected items' keys.
@@ -21,6 +40,14 @@ import template = require('wml!Controls/_operations/Container/Container');
  */
 
 /**
+ * @event Controls/_operations/Container#listExcludedKeysChanged Происходит при изменении набора ключей, исключенных из выборки.
+ * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор событий.
+ * @param {Array} selectedKeys Массив ключей выбранных элементов.
+ * @param {Array} added Массив ключей, добавленных в выборку.
+ * @param {Array} deleted Массив удаленных из выборки ключей.
+ */
+
+/*
  * @event Controls/_operations/Container#listExcludedKeysChanged Occurs when excluded keys were changed.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {Array} selectedKeys Array of selected items' keys.
