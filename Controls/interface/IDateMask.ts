@@ -1,4 +1,12 @@
 /**
+ * Интерфейс поля ввода даты с маской.
+ *
+ * @interface Controls/interface/IDateMask
+ * @public
+ * @author Красильников А.С.
+ */
+
+/*
  * Interface for date inputs mask.
  *
  * @interface Controls/interface/IDateMask
@@ -8,6 +16,44 @@
 interface IDateMask {
     readonly _options: {
         /**
+         * @name Controls/interface/IDateMask#mask
+         * @cfg {String} Формат даты.
+         *
+         * @variant 'DD.MM.YYYY'
+         * @variant 'DD.MM.YY'
+         * @remark
+         * Допустимые символы маски:
+         * <ol>
+         *    <li>D - день.</li>
+         *    <li>M - месяц.</li>
+         *    <li>Y - год.</li>
+         *    <li>"." - разделитель.</li>
+         * </ol>
+         * Если какая-то часть даты отсутствует, она будет сохранена из ранее установленного значения параметра "value".
+         * Если предыдущее значение контрола - "null", то используются следующие данные - "01.01.1900 00: 00.000".
+         * @example
+         * В данном примере маска установлена так, что в поле можно ввести только время.
+         * После того, как пользователь ввел "01:01:2018", значениe _inputValue будет равно "01.01:2018 00:00.000".
+         * <pre>
+         *    <Controls._input.Date.Picker bind:value="_inputValue" mask=”DD.MM.YYYY”/>
+         * </pre>
+         * <pre>
+         *    Control.extend({
+         *       _inputValue: null
+         *    });
+         * </pre>
+         * В следующем примере после того, как пользователь ввел "01:01:2018", значение _inputValue будет равно "01.01.2018 14:15.000".
+         * <pre>
+         *    <Controls._input.Date.Picker bind:value="_inputValue" mask="DD.MM.YYYY"/>
+         * </pre>
+         * <pre>
+         *    Control.extend({
+         *       _inputValue: ew Date(2001, 2, 10, 14, 15 )
+         *    });
+         * </pre>
+         */
+
+        /*
          * @name Controls/interface/IDateMask#mask
          * @cfg {String} Date format.
          *

@@ -20,23 +20,38 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
              * @name Controls/dateLitePopup/IDateLitePopup#year
              * @cfg {Date} Displayed period
              */
+
+            /*
+             * @name Controls/_dateLitePopup/IDateLitePopup#year
+             * @cfg {Date} Отображает период.
+             */
             year: undefined,
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#chooseMonths
+             * @cfg {Boolean} Устанавливает возможность выбора месяца.
+             */
+
+            /*
+             * @name Controls/_dateLitePopup/IDateLitePopup#chooseMonths
              * @cfg {Boolean} Sets the option to choose a month
              */
             chooseMonths: true,
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#chooseQuarters
+             * @cfg {Boolean} Устанавливает возможность выбора квартала.
+             */
+
+            /*
+             * @name Controls/_dateLitePopup/IDateLitePopup#chooseQuarters
              * @cfg {Boolean} Sets the option to choose a quarter
              */
             chooseQuarters: true,
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#chooseHalfyears
-             * @cfg {Boolean} Sets the option to choose a half-year
+             * @cfg {Boolean} Устанавливает возможность выбора полугодия.
              */
             chooseHalfyears: true,
 
@@ -48,6 +63,11 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#emptyCaption
+             * @cfg {String} Отображаемый текст, когда в контроле не выбран период.
+             */
+        
+            /*
+             * @name Controls/_dateLitePopup/IDateLitePopup#emptyCaption
              * @cfg {String} Text that is used if the period is not selected
              */
             emptyCaption: undefined,
@@ -121,6 +141,25 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#itemTemplate
+             * @cfg {String} Шаблон отображения года. Можно использовать опцию monthCaptionTemplate как шаблон заголовка месяца.
+             * Дата первого дня месяца и функция форматирования даты передаются в шаблон месяца {@link Types/formatter:date}.
+             * @example
+             * <ws:itemTemplate>
+             *    <ws:partial template="{{itemTemplate.defaultTemplate}}">
+             *       <ws:monthCaptionTemplate>
+             *          <ws:if data="{{month.getMonth() % 2 === 0}}">
+             *             <div class="controls-PeriodLiteDialog__vLayoutItem-caption"
+             *                  style="{{ (month.getMonth() % 4 === 0) ? 'color: red;' }}">
+             *                {{ formatDate(month, "MMMM") }} !
+             *             </div>
+             *          </ws:if>
+             *        </ws:monthCaptionTemplate>
+             *    </ws:partial>
+             * </ws:itemTemplate>
+             */
+
+            /*
+             * @name Controls/_dateLitePopup/IDateLitePopup#itemTemplate
              * @cfg {String} Template of the year. Can accept the option monthCaptionTemplate - template header
              * of the month. The date of the first day of the month and date formatting function are passed
              * to the template of the month {@link Types/formatter:date}.
@@ -138,12 +177,18 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
              *    </ws:partial>
              * </ws:itemTemplate>
              */
+
             /* That not to drag dependence on a template in all, the default value we set only in the PeriodLiteDialog
              * itemTemplate: undefined,
              */
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#captionFormatter
+             * @cfg {Function} Функция форматирования заголовка.
+             */
+
+            /*
+             * @name Controls/_dateLitePopup/IDateLitePopup#captionFormatter
              * @cfg {Function} Caption formatting function.
              */
             captionFormatter: dateControlsUtils.formatDateRangeCaption
