@@ -1744,6 +1744,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (this._children.fakeFocusElem) {
                 Focus.focus(this._children.fakeFocusElem);
             }
+            this._focusTimeout = null;
         }, 0);
     },
 
