@@ -4,7 +4,7 @@
          <Controls.operations:Controller
                  bind:selectedKeys="_firstSelectedKeys"
                  name="multiSelector">
-            <Controls.scroll:Container attr:class="demo-Grid__wrapper vertical" scn="1" attr:style="width:100%">
+            <Controls.scroll:Container attr:class="demo-Grid__wrapper vertical" scn="1" attr:style="width:90%">
                <Controls.list:Container>
                   <Controls.operations:Container>
                      <Controls.grid:View

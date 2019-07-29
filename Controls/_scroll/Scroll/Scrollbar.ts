@@ -158,7 +158,7 @@ import 'css!theme?Controls/scroll';
                   shouldForceUpdatePosition = false,
                   shouldUpdatePosition = !this._dragging && oldOptions.position !== this._options.position;
 
-               if (oldOptions.contentSize !== this._options.contentSize) {
+               if (oldOptions.contentSize !== this._options.contentSize || oldOptions.leftOffset !== this._options.leftOffset) {
                   shouldForceUpdate = shouldForceUpdate || this._setSizes(this._options.contentSize);
                   shouldUpdatePosition = true;
                }
@@ -217,7 +217,7 @@ import 'css!theme?Controls/scroll';
                thumbSize = _private.calcThumbSize(
                   this._children.thumb,
                   scrollbarAvailableSize,
-                  _private.calcViewportRatio(scrollbarSize, contentSize),
+                  _private.calcViewportRatio(scrollbarSize, horizontalDirection ? contentSize - this._options.leftOffset : contentSize),
                   this._options.direction
                );
                scrollRatio = _private.calcScrollRatio(

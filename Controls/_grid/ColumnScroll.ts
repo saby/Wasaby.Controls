@@ -7,8 +7,6 @@ import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
 
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
-const FIXED_OFFSET_FOR_HORIZONTAL_THUMB = 3.5;
-
 const
    _private = {
       calculateFixedColumnWidth(container, multiSelectVisibility, stickyColumnsCount) {

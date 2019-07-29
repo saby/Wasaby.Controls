@@ -8,7 +8,7 @@
               contentSize="{{_contentSize}}"
               leftOffset="{{_leftOffsetForHScroll}}"
               attr:class="controls-ColumnScroll"
-              attr:style="top:{{_offsetForHScroll - 3.5}}px;left:{{_leftOffsetForHScroll}}px;"
+              attr:style="top:{{_offsetForHScroll}}px;left:{{_leftOffsetForHScroll}}px;"
               on:positionChanged="_positionChangedHandler()"/>
       <div class="{{_calculateShadowClasses('start')}}" style="{{_calculateShadowStyles('start')}}"></div>
       <div class="{{_calculateShadowClasses('end')}}"></div>
