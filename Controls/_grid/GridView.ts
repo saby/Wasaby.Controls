@@ -178,10 +178,6 @@ var
 
         _beforeUpdate: function(newCfg) {
             GridView.superclass._beforeUpdate.apply(this, arguments);
-            if (!this._offsetForHScroll && newCfg.columnScroll) {
-                this.setOffsetForHScroll();
-                this._listModel.setOffsettForHscroll(this._offsetForHScroll, this._leftOffsetForHScroll);
-            }
             if (this._options.resultsPosition !== newCfg.resultsPosition) {
                 if (this._listModel) {
                     this._listModel.setResultsPosition(newCfg.resultsPosition);
@@ -196,10 +192,6 @@ var
                 }
             }
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
-                if (newCfg.columnScroll) {
-                    this.setOffsetForHScroll();
-                    this._listModel.setOffsettForHscroll(this._offsetForHScroll, this._leftOffsetForHScroll);
-                }
                 this._listModel.setHeader(newCfg.header);
                 if (!Env.detection.isNotFullGridSupport) {
                     _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
@@ -312,26 +304,6 @@ var
             }
             if (this._options.columnScroll) {
                 this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
-            }
-        },
-        setOffsetForHScroll: function() {
-            const container = this._container.length !== undefined ? this._container[0] : this._container;
-            const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0].childNodes;
-            if (HeaderGroup && !!HeaderGroup.length) {
-                if (this._options.multiSelectVisibility !== 'hidden') {
-                    this._leftOffsetForHScroll = HeaderGroup[0].offsetWidth + HeaderGroup[0].offsetWidth;
-                } else {
-                    this._leftOffsetForHScroll = HeaderGroup[0].offsetWidth;
-                }
-                this._offsetForHScroll = HeaderGroup[0].offsetHeight;
-            } else {
-                this._offsetForHScroll = 0;
-                this._leftOffsetForHScroll = 0;
-            }
-
-            if (this._listModel.getResultsPosition() === 'top') {
-                const ResultsGroup = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
-                this._offsetForHScroll += ResultsGroup[0].offsetHeight;
             }
         },
 

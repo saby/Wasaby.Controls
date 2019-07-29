@@ -107,64 +107,6 @@ define(['Controls/grid'], function(gridMod) {
          assert.equal(gridMod.GridView._private.getGridTemplateColumns(columns, false), 'grid-template-columns: 1fr auto 1fr;');
       });
 
-      it('setOffsetForHScroll', function () {
-         let cfg = {
-            columns: [
-               { displayProperty: 'field1', template: 'column1' },
-               { displayProperty: 'field2', template: 'column2' }
-            ],
-            multiSelectVisibility: 'hidden',
-         };
-         let gridView = new gridMod.GridView(cfg);
-         gridView.saveOptions(cfg);
-         gridView._container = {
-            getElementsByClassName: function (className) {
-               if (className === 'controls-Grid__header') {
-                  return [
-                     {
-                        childNodes: [
-                           {
-                              offsetWidth: 350,
-                              offsetHeight: 50,
-                           },
-                           {
-                              offsetWidth: 450,
-                              offsetHeight: 50,
-                           },
-                        ]
-                     }
-                  ];
-               } else if (className === 'controls-Grid__results') {
-                  return [
-                     {
-                        childNodes: [
-                           {
-                              offsetHeight: 50,
-                           },
-                           {
-                              offsetHeight: 50,
-                           },
-                        ]
-                     }
-                  ];
-               }
-            }
-         };
-         gridView._listModel = {
-               getResultsPosition: () => null
-         }
-         gridView.setOffsetForHScroll();
-         assert.equal(gridView._leftOffsetForHScroll, 350);
-         assert.equal(gridView._offsetForHScroll, 50);
-
-         gridView._listModel = {
-            getResultsPosition: () => 'top'
-         }
-         gridView.setOffsetForHScroll();
-         assert.equal(gridView._leftOffsetForHScroll, 350);
-         assert.equal(gridView._offsetForHScroll, 100);
-      });
-
       it('getColumnsWidthForEditingRow', function () {
 
          let
