@@ -10,6 +10,25 @@ var _private = {
 };
 
 /**
+ * Кнопка меню с историей, клик по которой открывает выпадающий список.
+ *
+ * <a href="/materials/demo-ws4-button-menu">Демо-пример</a>.
+ *
+ * @class Controls/_history/Menu
+ * @extends Controls/dropdown:Button
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ * @category Menu
+ * @demo Controls-demo/Menu/MenuVdom
+ * @css @color_HistoryMenu-pin Pin icon color.
+ * @css @color_HistoryMenu-pin_hovered  Pin icon color in hover state.
+ * @css @icon-size_HistoryMenu-pin Pin icon size.
+ * @css @spacing_HistoryMenu-between-itemCaption-rightBorder Spacing between item caption and right border.
+ * @css @spacing_HistoryMenu-between-pin-rightBorder Spacing between pin icon and right border.
+ */
+
+/*
  * Button menu with history by clicking on which a drop-down list opens.
  *
  * <a href="/materials/demo-ws4-button-menu">Demo-example</a>.

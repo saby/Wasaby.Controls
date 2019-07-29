@@ -59,10 +59,20 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
 
 /**
  * @name Controls/_search/Input/Search#searchButtonVisible
- * @cfg {Boolean} Determines whether to show the search icon.
+ * @cfg {Boolean} Определяет, будет ли показана иконка поиска.
  */
 
+/*
+ * @name Controls/_search/Input/Search#searchButtonVisible
+ * @cfg {Boolean} Determines whether to show the search icon.
+ */ 
+
 /**
+ * @event Controls/_search/Input/Search#searchClick Происходит при клике на кнопку поиска.
+ * @event Controls/Input/resetClick#resetClick Происходит при клике на кнопку сброса.
+ */
+
+/*
  * @event Controls/_search/Input/Search#searchClick Occurs when search button is clicked.
  * @event Controls/Input/resetClick#resetClick Occurs when reset button is clicked.
  */

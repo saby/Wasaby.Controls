@@ -235,7 +235,7 @@ var _private = {
 };
 
 /**
- * A proxy that works only takes data from the history source
+ * Прокси-сервер, который принимает данные из источника истории.
  * @class Controls/_history/FilterSource
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
@@ -258,16 +258,51 @@ var _private = {
  * </pre>
  */
 
+/*
+ * A proxy that works only takes data from the history source
+ * @class Controls/_history/FilterSource
+ * @extends Core/core-extend
+ * @mixes Types/_entity/OptionsToPropertyMixin
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ * @category Menu
+ * @example
+ * <pre>
+ *    var source = new filterSource({
+ *           originSource: new Memory({
+ *               idProperty: 'id',
+ *               data: []
+ *           }),
+ *           historySource: new historyService({
+ *               historyId: 'TEST_FILTER_HISTORY_ID',
+ *               dataLoaded: true
+ *           })
+ *       });
+ * </pre>
+ */ 
+
 /**
+ * @name Controls/_history/FilterSource#originSource
+ * @cfg {Source} Источник данных.
+ */
+
+/*
  * @name Controls/_history/FilterSource#originSource
  * @cfg {Source} A data source
  */
 
 /**
  * @name Controls/_history/FilterSource#historySource
+ * @cfg {Source} Источник, который работает с историей.
+ * @see {Controls/_history/Service} Источник, который работает с сервисом InputHistory.
+ */
+
+/*
+ * @name Controls/_history/FilterSource#historySource
  * @cfg {Source} A source which work with history
  * @see {Controls/_history/Service} Source working with the service of InputHistory
- */
+ */ 
 
 var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
    _history: null,
