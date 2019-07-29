@@ -707,18 +707,7 @@ var _private = {
         }
     },
 
-    unlockItemActions: debounce(function(self) {
-        self._lockItemActionsByScroll = false;
-        self._canUpdateItemsActions = self._savedCanUpdateItemsActions || self._canUpdateItemsActions;
-        self._savedCanUpdateItemsActions = false;
-    }, 200),
-
     handleListScrollSync(self) {
-        if (self._options.itemActions){
-            self._savedCanUpdateItemsActions = self._canUpdateItemsActions || self._savedCanUpdateItemsActions;
-        }
-        self._lockItemActionsByScroll = true;
-        _private.unlockItemActions(self);
         if (detection.isMobileIOS) {
             _private.getIntertialScrolling(self).scrollStarted();
         }
@@ -1218,7 +1207,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _pagingNavigationVisible: false,
 
     _canUpdateItemsActions: false,
-    _blockItemActionsByScroll: false,
 
     _needBottomPadding: false,
     _emptyTemplateVisibility: true,
@@ -1320,9 +1308,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom, false);
             _private.startScrollEmitter(this);
         }
-        if (this._options.itemActions) {
-            this._canUpdateItemsActions = true;
-        }
+
         if (this._virtualScroll) {
             this._setScrollItemContainer();
         }
@@ -1403,14 +1389,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
-            if (this._options.itemActions){
-                if(!this._lockItemActionsByScroll) {
-                    this._canUpdateItemsActions = true;
-                    this._savedCanUpdateItemsActions = false;
-                } else {
-                    this._savedCanUpdateItemsActions = true;
-                }
-            }
         }
 
         if (this._loadedItems) {
@@ -1852,13 +1830,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragStart: function(event, dragObject) {
-        this._savedCanUpdateItemsActions = this._canUpdateItemsActions || this._savedCanUpdateItemsActions;
         this._listViewModel.setDragEntity(dragObject.entity);
         this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._itemDragData.dispItem));
     },
 
     _dragEnd: function(event, dragObject) {
-        this._canUpdateItemsActions = this._savedCanUpdateItemsActions || this._canUpdateItemsActions;
         if (this._options.itemsDragNDrop) {
             this._dragEndHandler(dragObject);
         }
@@ -1928,9 +1904,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 this._listViewModel.setDragTargetPosition(dragPosition);
             }
         }
+
+        // do not need to update itemAction on touch devices, if mouseenter event was fired,
+        // otherwise actions will updated and redraw, because of this click on action will not work.
+        // actions on touch devices drawing on swipe.
+        if (!this._context.isTouch.isTouch) {
+            this._canUpdateItemsActions = true;
+        }
     },
 
-    _itemMouseMove(event, itemData, nativeEvent) {
+    _itemMouseMove(event, itemData, nativeEvent){
         this._notify('itemMouseMove', [itemData, nativeEvent]);
     },
 
@@ -1967,28 +1950,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return _private.getLoadingIndicatorClasses(this._loadingIndicatorState, this._listViewModel.getCount());
     }
 
-    _onHoveredItemChanged: function(e, item, container) {
-        if (this._options.itemActions){
-            let isDragging = !!this._listViewModel.getDragEntity();
-
-            // itemMouseEnter иногда срабатывает между _beforeUpdate и _afterUpdate.
-        // при этом, в _afterUpdate затирается _canUpdateItemsActions, и обновления опций не происходит
-        // hoveredItemChanged происходит вне цикла обновления списка, поэтому, когда требуется, опции обновятся
-
-        // do not need to update itemAction on touch devices, if mouseenter event was fired,
-        // otherwise actions will updated and redraw, because of this click on action will not work.
-        // actions on touch devices drawing on swipe.
-            if (!this._context.isTouch.isTouch){
-                if(!this._lockItemActionsByScroll && !isDragging && item) {
-                    this._canUpdateItemsActions = true;
-                    this._savedCanUpdateItemsActions = false;
-                } else {
-                    this._savedCanUpdateItemsActions = true;
-                }
-            }
-        }
-        this._notify('hoveredItemChanged', [item, container]);
-    },
 
 });
 
