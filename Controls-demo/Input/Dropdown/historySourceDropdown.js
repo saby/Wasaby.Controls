@@ -32,7 +32,7 @@ define('Controls-demo/Input/Dropdown/historySourceDropdown',
       var pinnedData = {
          _type: 'recordset',
          d: [
-            [1], [2]
+            ['1'], ['2']
          ],
          s: [
             { n: 'ObjectId', t: 'Строка' },
@@ -79,6 +79,10 @@ define('Controls-demo/Input/Dropdown/historySourceDropdown',
             });
             def.callback(srcData);
             return def;
+         };
+         // Заглушка, чтобы демка не ломилась не сервис истории
+         hs.historySource.update = function() {
+            return {};
          };
          hs.query(query);
          hs.historySource.query();
