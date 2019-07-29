@@ -25,8 +25,9 @@ import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import {Focus} from 'Vdom/Vdom';
-import {debounce} from 'Types/function';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
+import {throttle} from 'Types/function';
+import {CssClassList} from "../Utils/CssClassList";
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -244,9 +245,10 @@ var _private = {
              * This event should bubble, because there can be anything between Scroll/Container and the list,
              * and we can't force everyone to manually bubble it.
              */
-            self._notify('restoreScrollPosition', [], {
-                bubbling: true
-            });
+            const size = self._saveAndRestoreScrollPosition === 'up' ?
+               self._virtualScroll.getItemsHeight(self._virtualScroll.ItemsIndexes.stop, self._savedStopIndex) :
+               self._virtualScroll.getItemsHeight(self._savedStartIndex, self._virtualScroll.ItemsIndexes.start);
+            self._notify('restoreScrollPosition', [ size, self._saveAndRestoreScrollPosition ], { bubbling: true });
             self._saveAndRestoreScrollPosition = false;
             return;
         }
@@ -351,7 +353,7 @@ var _private = {
 
         const drawItemsUp = (countCurrentItems, addedItems) => {
             beforeAddItems(addedItems);
-            self._saveAndRestoreScrollPosition = true;
+            self._saveAndRestoreScrollPosition = 'up';
             self._listViewModel.prependItems(addedItems);
             afterAddItems(countCurrentItems, addedItems);
         };
@@ -417,21 +419,15 @@ var _private = {
     // Обновляет высоту распорок при виртуальном скроле
     applyPlaceholdersSizes(self): void {
         if (self._virtualScroll) {
-            self._topPlaceholderSize = self._virtualScroll.PlaceholdersSizes.top;
-            self._bottomPlaceholderSize = self._virtualScroll.PlaceholdersSizes.bottom;
+            self._notify('updatePlaceholdersSize', [{
+                top: self._virtualScroll.PlaceholdersSizes.top,
+                bottom: self._virtualScroll.PlaceholdersSizes.bottom
+            }], { bubbling: true });
         }
     },
 
-   isFullPlaceholderVisibility: function(self, direction, params) {
-      if (direction === 'up') {
-         return params ? self._topPlaceholderSize - params.scrollTop > params.clientHeight : false;
-      } else {
-         return params ? params.scrollHeight - self._bottomPlaceholderSize < params.scrollTop : false;
-      }
-   },
-
     checkVirtualScrollCapability: function(self) {
-       if (self._virtualScroll) {
+       if (self._virtualScroll && !self._applyScrollTopCallback) {
           if (self._virtualScrollTriggerVisibility.up) {
              _private.updateVirtualWindow(self, 'up');
           } else if (self._virtualScrollTriggerVisibility.down) {
@@ -440,13 +436,24 @@ var _private = {
        }
     },
 
-   updateVirtualWindow: function(self, direction) {
-      if (_private.isFullPlaceholderVisibility(self, direction, self._cachedScrollParams)) {
-         self._recalcVirtualScrollIndexes('scrollTop', direction);
-      } else {
-         self._recalcVirtualScrollIndexes('toDirection', direction);
-      }
-   },
+    updateVirtualWindow: function(self, direction) {
+        self._virtualScroll.recalcToDirection(direction, self._loadOffset.top);
+        _private.applyVirtualScrollIndexes(self, direction);
+    },
+
+    throttledUpdateIndexesByVirtualScrollMove: throttle((self, params) => {
+        self._virtualScroll.recalcToDirectionByScrollTop(params, self._loadOffset.top);
+        if (_private.applyVirtualScrollIndexesToListModel(self)) {
+            _private.applyPlaceholdersSizes(self);
+        }
+    }, 150, true),
+
+    virtualScrollMove: function(self, params) {
+        if (self._virtualScroll) {
+            self._applyScrollTopCallback = params.applyScrollTopCallback;
+            _private.throttledUpdateIndexesByVirtualScrollMove(self, params);
+        }
+    },
 
     checkLoadToDirectionCapability: function(self) {
         if (self._needScrollCalculation) {
@@ -468,18 +475,9 @@ var _private = {
         self._loadTriggerVisibility[direction] = false;
     },
 
-    cacheScrollParams(self, params): void {
-       self._cachedScrollParams = {
-          scrollTop: params.scrollTop,
-          scrollHeight: params.scrollHeight,
-          clientHeight: params.clientHeight
-       };
-    },
-
     // Вызывает обновление индексов виртуального окна при срабатывании триггера вверх|вниз и запоминает, что тригер в настоящий момент видимый
     updateVirtualWindowStart(self, direction: 'up' | 'down', params): void {
         if (self._virtualScroll) {
-            _private.cacheScrollParams(self, params);
             self._virtualScrollTriggerVisibility[direction] = true;
             _private.checkVirtualScrollCapability(self);
         }
@@ -496,16 +494,14 @@ var _private = {
     applyVirtualScrollIndexes(self, direction): void {
         const updateIndexes = () => {
             if (_private.applyVirtualScrollIndexesToListModel(self)) {
-                if (direction === 'up' && self._topPlaceholderSize === 0) {
-                    self._saveAndRestoreScrollPosition = true;
-                }
+                self._saveAndRestoreScrollPosition = direction;
                 self._shouldRestoreScrollPosition = true;
                 self._virtualScroll.updatePlaceholdersSizes();
                 _private.applyPlaceholdersSizes(self);
             }
         };
 
-        if (detection.isMobileIOS && direction === 'up' && self._topPlaceholderSize === 0) {
+        if (detection.isMobileIOS && self._virtualScroll.PlaceholdersSizes.top === 0) {
             _private.getIntertialScrolling(self).callAfterScrollStopped(updateIndexes);
         } else {
             updateIndexes();
@@ -709,22 +705,20 @@ var _private = {
                 });
             }
         }
-
-        if (self._virtualScroll) {
-            _private.cacheScrollParams(self, params);
-            if (self._virtualScrollTriggerVisibility.down) {
-               if (_private.isFullPlaceholderVisibility(self, 'down', self._cachedScrollParams)) {
-                  self._recalcVirtualScrollIndexes('scrollTop', 'down');
-               }
-            } else if (self._virtualScrollTriggerVisibility.up) {
-               if (_private.isFullPlaceholderVisibility(self, 'up', self._cachedScrollParams)) {
-                  self._recalcVirtualScrollIndexes('scrollTop', 'up');
-               }
-            }
-        }
     },
 
+    unlockItemActions: debounce(function(self) {
+        self._lockItemActionsByScroll = false;
+        self._canUpdateItemsActions = self._savedCanUpdateItemsActions || self._canUpdateItemsActions;
+        self._savedCanUpdateItemsActions = false;
+    }, 200),
+
     handleListScrollSync(self) {
+        if (self._options.itemActions){
+            self._savedCanUpdateItemsActions = self._canUpdateItemsActions || self._savedCanUpdateItemsActions;
+        }
+        self._lockItemActionsByScroll = true;
+        _private.unlockItemActions(self);
         if (detection.isMobileIOS) {
             _private.getIntertialScrolling(self).scrollStarted();
         }
@@ -779,24 +773,26 @@ var _private = {
                             // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
                             if (self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
                                self._virtualScrollTriggerVisibility.down && !self._itemsFromLoadToDirection) {
-                               self._virtualScroll.recalcToDirection(direction, self._cachedScrollParams, self._loadOffset.top);
+                               self._virtualScroll.recalcToDirection(direction, self._loadOffset.top);
                             } else {
                                 // если данные добавились сверху - просто обновляем индексы видимых записей
-                                self._virtualScroll.recalcItemsIndexes(direction, self._cachedScrollParams, self._loadOffset.top);
+                                self._virtualScroll.recalcItemsIndexes(direction, self._loadOffset.top);
                             }
                         } else {
                             if (self._itemsFromLoadToDirection) {
                                 // если элементы были подгружены с БЛ, то увеличиваем стартовый индекс на кол-во
                                 // загруженных элементов. работаем именно через проекцию, т.к. может быть группировка и
                                 // кол-во загруженных элементов может отличаться от кол-ва рисуемых элементов
+                                self._savedStartIndex += newItems.length;
+                                self._savedStopIndex += newItems.length;
                                 self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + newItems.length;
                             }
-                            self._virtualScroll.recalcItemsIndexes(direction, self._cachedScrollParams, self._loadOffset.top);
+                            self._virtualScroll.recalcItemsIndexes(direction, self._loadOffset.top);
                         }
                     }
                     if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
                         self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
-                        self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down', self._cachedScrollParams, self._loadOffset.top);
+                        self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down', self._loadOffset.top);
                     }
                     _private.applyVirtualScrollIndexesToListModel(self);
                 }
@@ -1148,6 +1144,12 @@ var _private = {
     },
     isBlockedForLoading(loadingIndicatorState): boolean {
         return loadingIndicatorState === 'all';
+    },
+    getLoadingIndicatorClasses(loadingIndicatorState, itemsCount): string {
+        return CssClassList.add('controls-BaseControl__loadingIndicator')
+            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
+            .add('controls-BaseControl-emptyView__loadingIndicator', itemsCount === 0)
+            .compile();
     }
 
 };
@@ -1174,6 +1176,9 @@ var _private = {
  */
 
 var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
+    _savedStartIndex: 0,
+    _savedStopIndex: 0,
+
     _template: BaseControlTpl,
     iWantVDOM: true,
     _isActiveByClick: false,
@@ -1199,12 +1204,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _needScrollCalculation: false,
     _loadTriggerVisibility: null,
     _virtualScrollTriggerVisibility: null,
-    _cachedScrollParams: null,
     _loadOffset: null,
     _loadOffsetTop: LOAD_TRIGGER_OFFSET,
     _loadOffsetBottom: LOAD_TRIGGER_OFFSET,
-    _topPlaceholderSize: 0,
-    _bottomPlaceholderSize: 0,
     _menuIsShown: null,
 
     _popupOptions: null,
@@ -1216,6 +1218,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _pagingNavigationVisible: false,
 
     _canUpdateItemsActions: false,
+    _blockItemActionsByScroll: false,
 
     _needBottomPadding: false,
     _emptyTemplateVisibility: true,
@@ -1225,16 +1228,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
         this.__errorController = options.errorController || new dataSourceError.Controller({});
-        this._recalcVirtualScrollIndexes = debounce(function(method, direction) {
-            if (method === 'scrollTop') {
-                this._virtualScroll.recalcToDirectionByScrollTop(direction, this._cachedScrollParams, this._loadOffset.top);
-            } else if (method === 'toDirection') {
-                this._virtualScroll.recalcToDirection(direction, this._cachedScrollParams, this._loadOffset.top);
-            } else {
-                IoC.resolve('ILogger').error('BaseControl', `Unknown virtual scroll recalculation method: "${method}"`);
-            }
-            _private.applyVirtualScrollIndexes(this, direction);
-        }.bind(this), 150, false);
     },
 
     /**
@@ -1327,7 +1320,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom, false);
             _private.startScrollEmitter(this);
         }
-
+        if (this._options.itemActions) {
+            this._canUpdateItemsActions = true;
+        }
         if (this._virtualScroll) {
             this._setScrollItemContainer();
         }
@@ -1408,6 +1403,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
+            if (this._options.itemActions){
+                if(!this._lockItemActionsByScroll) {
+                    this._canUpdateItemsActions = true;
+                    this._savedCanUpdateItemsActions = false;
+                } else {
+                    this._savedCanUpdateItemsActions = true;
+                }
+            }
         }
 
         if (this._loadedItems) {
@@ -1501,10 +1504,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _beforePaint():void {
+    _beforePaint(): void {
         if (this._virtualScroll && this._itemsChanged) {
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);
+        }
+
+        if (this._virtualScroll && this._applyScrollTopCallback) {
+            this._applyScrollTopCallback();
+            this._applyScrollTopCallback = null;
         }
 
         // todo KINGO.
@@ -1516,6 +1524,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // некогда, завел подошибку: https://online.sbis.ru/opendoc.html?guid=d83711dd-a110-4e10-b279-ade7e7e79d38
         if (this._shouldRestoreScrollPosition) {
             _private.restoreScrollPosition(this);
+            this._savedStartIndex = this._listViewModel.getStartIndex();
+            this._savedStopIndex = this._listViewModel.getStopIndex();
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
             this._checkShouldLoadToDirection = true;
@@ -1604,6 +1614,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // TODO KINGO. Проверяем именно синхронный скролл, т.к. стандартный scrollMove стреляет с debounce 100 мс.
             case 'scrollMoveSync': _private.handleListScrollSync(self); break;
             case 'scrollMove': _private.handleListScroll(self, params); break;
+            case 'virtualScrollMove': _private.virtualScrollMove(self, params); break;
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;
 
@@ -1841,11 +1852,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragStart: function(event, dragObject) {
+        this._savedCanUpdateItemsActions = this._canUpdateItemsActions || this._savedCanUpdateItemsActions;
         this._listViewModel.setDragEntity(dragObject.entity);
         this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._itemDragData.dispItem));
     },
 
     _dragEnd: function(event, dragObject) {
+        this._canUpdateItemsActions = this._savedCanUpdateItemsActions || this._canUpdateItemsActions;
         if (this._options.itemsDragNDrop) {
             this._dragEndHandler(dragObject);
         }
@@ -1915,16 +1928,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 this._listViewModel.setDragTargetPosition(dragPosition);
             }
         }
-
-        // do not need to update itemAction on touch devices, if mouseenter event was fired,
-        // otherwise actions will updated and redraw, because of this click on action will not work.
-        // actions on touch devices drawing on swipe.
-        if (!this._context.isTouch.isTouch) {
-            this._canUpdateItemsActions = true;
-        }
     },
 
-    _itemMouseMove(event, itemData, nativeEvent){
+    _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData, nativeEvent]);
     },
 
@@ -1955,8 +1961,34 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             keyProperty: newKeyProperty
         });
 
+    },
+
+    _getLoadingIndicatorClasses(): string {
+        return _private.getLoadingIndicatorClasses(this._loadingIndicatorState, this._listViewModel.getCount());
     }
 
+    _onHoveredItemChanged: function(e, item, container) {
+        if (this._options.itemActions){
+            let isDragging = !!this._listViewModel.getDragEntity();
+
+            // itemMouseEnter иногда срабатывает между _beforeUpdate и _afterUpdate.
+        // при этом, в _afterUpdate затирается _canUpdateItemsActions, и обновления опций не происходит
+        // hoveredItemChanged происходит вне цикла обновления списка, поэтому, когда требуется, опции обновятся
+
+        // do not need to update itemAction on touch devices, if mouseenter event was fired,
+        // otherwise actions will updated and redraw, because of this click on action will not work.
+        // actions on touch devices drawing on swipe.
+            if (!this._context.isTouch.isTouch){
+                if(!this._lockItemActionsByScroll && !isDragging && item) {
+                    this._canUpdateItemsActions = true;
+                    this._savedCanUpdateItemsActions = false;
+                } else {
+                    this._savedCanUpdateItemsActions = true;
+                }
+            }
+        }
+        this._notify('hoveredItemChanged', [item, container]);
+    },
 
 });
 

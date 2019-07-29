@@ -138,6 +138,24 @@ define(
                assert.deepEqual({limit: 4, offset: 0, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.PAGE } }, params, 'Method prepareQueryParams returns incorrect parameters before load up');
             })
 
+            it('validateNavigation', function () {
+               var pNav = new PageNavigation.default({
+                  page: 1,
+                  pageSize: 4
+               });
+               pNav.validateNavigation(true);
+               pNav.validateNavigation(undefined);
+               pNav.destroy();
+               pNav = new PageNavigation.default({
+                  page: 1,
+                  pageSize: 4,
+                  hasMore: false
+               });
+               pNav.validateNavigation(1);
+               pNav.validateNavigation(undefined);
+               pNav.destroy();
+            });
+
          });
 
          describe('PositionNavigation', function () {

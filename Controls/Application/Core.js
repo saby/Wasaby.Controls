@@ -10,7 +10,7 @@ define('Controls/Application/Core',
       'Application/Env',
       'Controls/Application/StateReceiver',
       'Core/Themes/ThemesController',
-      'Controls/Application/AppData',
+      'UI/Base',
       'Controls/Application/HeadData',
       'native-css',
       'Core/css-resolve'
@@ -22,7 +22,7 @@ define('Controls/Application/Core',
       AppEnv,
       StateReceiver,
       ThemesController,
-      AppData,
+      UIBase,
       HeadData) {
       'use strict';
 
@@ -71,8 +71,8 @@ define('Controls/Application/Core',
 
             AppCore.superclass.constructor.apply(this, arguments);
 
-            AppData.initAppData(cfg);
-            this.ctxData = new AppData.getAppData();
+            UIBase.AppData.initAppData(cfg);
+            this.ctxData = new UIBase.AppData.getAppData();
 
             // Put Application/Core instance into the current request where
             // other modules can get it from

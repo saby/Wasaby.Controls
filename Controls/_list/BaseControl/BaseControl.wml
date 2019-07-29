@@ -1,5 +1,5 @@
 <ws:template name="loadingIndicator">
-        <div class="controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-{{_loadingIndicatorState}}">
+        <div class="{{ _getLoadingIndicatorClasses() }}" >
             <ws:if data="{{_showLoadingIndicatorImage}}">
                 <div class="controls-BaseControl__loadingIndicatorImg-wrapper">
                     <div class="controls-BaseControl__loadingIndicatorImg"></div>
@@ -74,7 +74,7 @@
         on:itemMouseDown="_itemMouseDown()"
         on:itemMouseEnter="_itemMouseEnter()"
         on:itemMouseMove="_itemMouseMove()"
-        on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+        on:hoveredItemChanged="_onHoveredItemChanged()"
         on:itemSwipe="_listSwipe()"
     >
         <ws:viewTemplate>
@@ -115,7 +115,7 @@
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
         <ws:if data="{{_needScrollCalculation}}">
             <div class="controls-BaseControl__trigger controls-BaseControl__loadTrigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="top: {{ _loadOffset.top * 1.3 }}px;"></div>
-            <div class="controls-BaseControl__trigger controls-BaseControl__topPlaceholder controls-BaseControl__topVirtualScrollTrigger" name="topVirtualScrollTrigger" style="top: {{_loadOffset.top}}px; height: {{_topPlaceholderSize}}px;"></div>
+            <div class="controls-BaseControl__trigger controls-BaseControl__topPlaceholder controls-BaseControl__topVirtualScrollTrigger" name="topVirtualScrollTrigger" style="top: {{_loadOffset.top}}px;"></div>
         </ws:if>
 
         <ws:if data="{{_listViewModel}}">
@@ -169,7 +169,7 @@
         </ws:if>
 
         <ws:if data="{{_needScrollCalculation}}">
-            <div class="controls-BaseControl__trigger controls-BaseControl__bottomPlaceholder controls-BaseControl__bottomVirtualScrollTrigger" name="bottomVirtualScrollTrigger" style="bottom: {{_loadOffset.bottom}}px;height: {{_bottomPlaceholderSize}}px;"></div>
+            <div class="controls-BaseControl__trigger controls-BaseControl__bottomPlaceholder controls-BaseControl__bottomVirtualScrollTrigger" name="bottomVirtualScrollTrigger" style="bottom: {{_loadOffset.bottom}}px;"></div>
             <div class="controls-BaseControl__trigger controls-BaseControl__loadTrigger controls-BaseControl__bottomLoadTrigger" name="bottomLoadTrigger" style="bottom: {{ _loadOffset.bottom * 1.3 }}px;"></div>
         </ws:if>
 
