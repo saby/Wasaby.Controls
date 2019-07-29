@@ -74,7 +74,7 @@
         on:itemMouseDown="_itemMouseDown()"
         on:itemMouseEnter="_itemMouseEnter()"
         on:itemMouseMove="_itemMouseMove()"
-        on:hoveredItemChanged="_onHoveredItemChanged()"
+        on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
         on:itemSwipe="_listSwipe()"
     >
         <ws:viewTemplate>
