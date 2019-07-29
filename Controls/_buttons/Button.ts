@@ -117,19 +117,16 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
 
 /**
  * @name Controls/_buttons/Button#contrastBackground
- * @cfg {Boolean} Определяет, имеет ли кнопка контрастный фон.
- * @default true
- * @remark
- * true - У кнопки контрастный фон.
- * false - У кнопки гармоничный фон.
+ * @cfg {Boolean} В значении true кнопке задаётся непрозрачный фон, а в значении false — прозрачный.
+ * @default false
  * @example
  * Кнопка имеет прозрачный фон.
  * <pre>
- *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" contrastBackground="{{false}}" size="l"/>
+ *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" size="l"/>
  * </pre>
  * У кнопки непрозрачный фон.
  * <pre>
- *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" />
+ *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" contrastBackground="{{true}}" />
  * </pre>
  * @see style
  */
