@@ -85,6 +85,11 @@ class Render extends Control<IRenderOptions, void> implements IHeight, IFontColo
       this.updateState(options);
    }
    protected _afterMount(): void {
+      /**
+       * The "tagClick" and "tagHover" event notification is in the template.
+       * Their argument is the tag element. Save it to the state for access in the template.
+       * Сannot use _children in the template, because _children is not yet populated at the time of construction.
+       */
       this._tag = this._children.tag;
    }
    protected _beforeUpdate(options: IRenderOptions): void {
