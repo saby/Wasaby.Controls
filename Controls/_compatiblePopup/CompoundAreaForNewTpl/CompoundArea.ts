@@ -72,7 +72,7 @@ var moduleClass = CompoundControl.extend({
          this._modifyInnerOptionsByHandlers();
 
          Promise.all([
-             load(this._options.template),
+             this._loadTemplate(this._options.template),
              import('Vdom/Vdom')
          ]).then(function() {
             // Пока грузили шаблон, компонент могли задестроить
@@ -102,6 +102,13 @@ var moduleClass = CompoundControl.extend({
 
          return def;
       });
+   },
+
+   _loadTemplate(tpl: string|Function): Promise<Function> {
+      if (typeof tpl === 'string') {
+         return load(tpl);
+      }
+      return Promise.resolve(tpl);
    },
 
    _keydownHandler: function(e) {
