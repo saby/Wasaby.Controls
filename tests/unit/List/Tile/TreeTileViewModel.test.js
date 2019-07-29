@@ -84,14 +84,14 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
       });
 
       it('getMultiSelectClassList hidden', function() {
-         treeTileViewModel._options.multiSelectVisibility = 'hidden';
+         treeTileViewModel.setMultiSelectVisibility('hidden');
          var item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(2, 'id'));
          assert.equal(item.multiSelectClassList, '');
       });
 
 
       it('getMultiSelectClassList visible', function() {
-         treeTileViewModel._options.multiSelectVisibility = 'visible';
+         treeTileViewModel.setMultiSelectVisibility('visible');
          var item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(2, 'id'));
          assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox js-controls-TileView__withoutZoom');
          item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(3, 'id'));
@@ -100,7 +100,7 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
 
 
       it('getMultiSelectClassList onhover selected', function() {
-         treeTileViewModel._options.multiSelectVisibility = 'onhover';
+         treeTileViewModel.setMultiSelectVisibility('onhover');
          treeTileViewModel._selectedKeys = {2: true, 3: true};
          var item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(2, 'id'));
          assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox js-controls-TileView__withoutZoom');
@@ -110,7 +110,7 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
       });
 
       it('getMultiSelectClassList onhover unselected', function() {
-         treeTileViewModel._options.multiSelectVisibility = 'onhover';
+         treeTileViewModel.setMultiSelectVisibility('onhover');
          var item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(2, 'id'));
          assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-TileView__checkbox js-controls-TileView__withoutZoom');
          item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(3, 'id'));

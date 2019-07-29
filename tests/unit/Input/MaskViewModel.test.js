@@ -63,18 +63,23 @@ define(
             }, {
                displayValue: '12.34.56',
                replacer: '',
-               currentPosition: 0,
+               currentPosition: undefined,
                resp: 8
             }, {
                displayValue: '12.34.',
                replacer: '',
-               currentPosition: 0,
+               currentPosition: undefined,
                resp: 6
             }, {
                displayValue: '',
                replacer: '',
                currentPosition: 0,
                resp: 0
+            }, {
+               displayValue: '12.34.56',
+               replacer: '',
+               currentPosition: 3,
+               resp: 3
             }].forEach(function(test) {
                it(`${test.displayValue}, ${test.replacer}, ${test.resp}`, function () {
                   var viewModel = new ViewModel({

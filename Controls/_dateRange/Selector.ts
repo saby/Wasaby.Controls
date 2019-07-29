@@ -18,7 +18,7 @@ import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
  * @control
  * @public
  * @category Input
- * @author Миронов А.Ю.
+ * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/RangeLink
  *
  */

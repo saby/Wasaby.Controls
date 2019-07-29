@@ -117,7 +117,7 @@ class ResizingLine extends Control<IContainerOptions, void> {
          } else {
             offset = -Math.min(Math.abs(offsetX), Math.abs(minOffset));
             left = this._clientRect.left + offset + 'px';
-            width = Math.abs(offset) + controlWidth + 'px';
+            width = Math.abs(offset) + 'px';
          }
       }
       top = this._clientRect.top + 'px';
@@ -148,7 +148,7 @@ class ResizingLine extends Control<IContainerOptions, void> {
 
    protected _onEndDragHandler(e: SyntheticEvent, dragObject): void {
       this._dragging = false;
-      if (dragObject.entity._options.itemId === this.getInstanceId()) {
+      if (dragObject.entity && dragObject.entity.getOptions().itemId === this.getInstanceId()) {
          this._notify('offset', [this._offset]);
       }
    }

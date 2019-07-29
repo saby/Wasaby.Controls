@@ -8,10 +8,11 @@ define('Controls/Application',
       'Core/Deferred',
       'Core/BodyClasses',
       'Env/Env',
-      'Controls/Application/AppData',
       'Controls/scroll',
       'Core/LinkResolver/LinkResolver',
+      'Core/helpers/getResourceUrl',
       'Application/Env',
+      'Controls/decorator',
       'Core/Themes/ThemesController',
       'css!theme?Controls/Application/Application'
    ],
@@ -120,10 +121,11 @@ define('Controls/Application',
       Deferred,
       BodyClasses,
       Env,
-      AppData,
       scroll,
       LinkResolver,
+      getResourceUrl,
       AppEnv,
+      decorator,
       ThemesController) {
       'use strict';
 
@@ -151,6 +153,40 @@ define('Controls/Application',
             return bodyClasses;
          }
       };
+
+      function generateHeadValidHtml() {
+         // Tag names and attributes allowed in the head.
+         return {
+            validNodes: {
+               link: true,
+               style: true,
+               script: true,
+               meta: true,
+               title: true
+            },
+            validAttributes: {
+               rel: true,
+               as: true,
+               src: true,
+               name: true,
+               sizes: true,
+               crossorigin: true,
+               type: true,
+               href: true,
+               property: true,
+               'http-equiv': true,
+               content: true,
+               id: true,
+               'class': true
+            }
+         };
+      }
+
+      var linkAttributes = {
+         src: true,
+         href: true
+      };
+
       var Page = Base.extend({
          _template: template,
 
@@ -236,96 +272,18 @@ define('Controls/Application',
             }
          },
 
+         _beforeMount: function(cfg) {
+            this.BodyClasses = _private.calculateBodyClasses;
+            this._scrollData = new scroll._scrollContext({pagingVisible: cfg.pagingVisible});
+            this.headJson = cfg.headJson;
+            this.headValidHtml = generateHeadValidHtml();
 
-         _beforeMount: function(cfg, context, receivedState) {
-            var self = this,
-               def = new Deferred();
-
-            var appData = AppData.getAppData();
-
-            self._scrollData = new scroll._scrollContext({pagingVisible: cfg.pagingVisible});
-
-            self.onServer = typeof window === 'undefined';
-            self.isCompatible = cfg.compat || self.compat;
-            _private.initState(self, receivedState || cfg);
-            if (!receivedState) {
-               receivedState = {};
-            }
-
-            self.buildnumber = cfg.buildnumber || Env.constants.buildnumber;
-
-            // TODO Ждем https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
-            self.appRoot = cfg.appRoot || appData.appRoot || (cfg.builder ? '/' : Env.constants.appRoot);
-            self.staticDomains = cfg.staticDomains || appData.staticDomains || Env.constants.staticDomains || '[]';
-            if (typeof self.staticDomains !== 'string') {
-               self.staticDomains = '[]';
-            }
-
-            self.wsRoot = cfg.wsRoot || Env.constants.wsRoot;
-            self.resourceRoot = cfg.resourceRoot || Env.constants.resourceRoot;
-
-            // TODO сейчас нельзя удалить, ждем реквеста https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
-            // Т.к. это должно храниться в отдельном сторе
-            self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (appData.RUMEnabled || '');
-            self.pageName = cfg.pageName || appData.pageName || '';
-            self.product = appData.product || cfg.product || Env.constants.product;
-            self.lite = cfg.lite || false;
-
-            // TODO нужно удалить после решения https://online.sbis.ru/opendoc.html?guid=a9ceff55-1c8b-4238-90a7-22dde0e1bdbe
-            self.servicesPath =  cfg.servicesPath || appData.servicesPath || Env.constants.defaultServiceUrl || '/service/';
-            self.BodyClasses = _private.calculateBodyClasses;
-            self.application = appData.application;
-
-
-            if (typeof window === 'undefined' && cfg.theme !== 'default') {
-               ThemesController.getInstance().themes = {};
-               ThemesController.getInstance().setTheme(cfg.theme);
-            }
-            var headData = AppEnv.getStore('HeadData');
-
-            self.linkResolver = new LinkResolver(headData.isDebug,
-               self.buildnumber,
-               self.wsRoot,
-               self.appRoot,
-               self.resourceRoot);
-
-            // LinkResolver.getInstance().init(context.headData.isDebug, self.buildnumber, self.appRoot, self.resourceRoot);
-
-            headData.pushDepComponent(self.application, false);
-
-            // Временно положим это в HeadData, потом это переедет в константы реквеста
-            headData.isNewEnvironment = !self.isCompatible;
-
-            if (receivedState.csses && !headData.isDebug) {
-               ThemesController.getInstance().initCss({
-                  themedCss: receivedState.csses.themedCss,
-                  simpleCss: receivedState.csses.simpleCss
-               });
-            }
-
-            /**
-             * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
-             * роутинга и с ним же надо восстанавливаться на клиенте.
-             */
-            def.callback({
-               buildnumber: self.buildnumber,
-               lite: self.lite,
-               csses: ThemesController.getInstance().getCss(),
-               appRoot: self.appRoot,
-               staticDomains: self.staticDomains,
-               wsRoot: self.wsRoot,
-               resourceRoot: self.resourceRoot,
-               templateConfig: self.templateConfig,
-               servicesPath: self.servicesPath,
-               compat: self.compat,
-               product: self.product
-            });
-            return def;
-         },
-
-         _afterMount: function() {
-            if (!Env.detection.isMobilePlatform) {
-               this.activate();
+            if (typeof window !== 'undefined') {
+               if (document.getElementsByClassName('head-custom-block').length > 0) {
+                  this.head = undefined;
+                  this.headJson = undefined;
+                  this.headValidHtml = undefined;
+               }
             }
          },
 
@@ -347,6 +305,23 @@ define('Controls/Application',
                }
                elements[0].textContent = this._options.title;
             }
+         },
+
+         headTagResolver: function(value, parent) {
+            var newValue = decorator.noOuterTag(value, parent),
+               attributes = Array.isArray(newValue) && typeof newValue[1] === 'object' &&
+                  !Array.isArray(newValue[1]) && newValue[1];
+            if (attributes) {
+               for (var attributeName in attributes) {
+                  if (attributes.hasOwnProperty(attributeName)) {
+                     var attributeValue = attributes[attributeName];
+                     if (typeof attributeValue === 'string' && linkAttributes[attributeName]) {
+                        attributes[attributeName] = getResourceUrl(attributeValue);
+                     }
+                  }
+               }
+            }
+            return newValue;
          },
 
          _keyPressHandler: function(event) {

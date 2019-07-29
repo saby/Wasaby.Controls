@@ -9,9 +9,10 @@
          _rangeModel="{{_rangeModel}}"
          _headerRangeModel="{{_headerRangeModel}}"
          _yearStateEnabled="{{_yearStateEnabled}}"
+         _monthStateEnabled="{{_monthStateEnabled}}"
       />
 
-      <div if="{{ _state === _STATES.year }}" class="controls-DateRangeBigChoose__months">
+      <div if="{{ _state === _STATES.year }}" class="controls-PeriodDialog__months">
          <Controls.dateRange:DateRangeSelectionController
                bind:startValue="_yearRangeModel.startValue"
                bind:endValue="_yearRangeModel.endValue"
@@ -20,7 +21,8 @@
                on:rangeChanged="_yearsRangeChanged()"
                on:selectionChanged="_yearsSelectionChanged()"
                on:onBeforeSelectionStarted="_yearsSelectionStarted()"
-               on:selectionEnded="_yearsRangeSelectionEnded()">
+               on:selectionEnded="_yearsRangeSelectionEnded()"
+               on:selectionHoveredValueChanged="_onYearsSelectionHoveredValueChanged()">
 
             <Controls._datePopup.YearsRange
                year="{{_displayedDate}}"
@@ -40,7 +42,7 @@
             <Controls._datePopup.MonthsRange
                attr:class="controls-DateRangeBigChoose__months-month-wrapper"
                monthClickable="{{_monthStateEnabled}}"
-               bind:year="_displayedDate"
+               bind:position="_displayedDate"
                bind:selectionViewType="_monthRangeSelectionViewType"
                on:monthClick="_monthRangeMonthClick()"
                on:fixedPeriodClick="_monthRangeFixedPeriodClick()"
@@ -62,7 +64,7 @@
          <Controls._datePopup.DateRange
             attr:class="controls-DateRangeBigChoose__months-month-wrapper"
             on:fixedPeriodClick="_dateRangeFixedPeriodClick()"
-            bind:month="_displayedDate"
+            bind:position="_displayedDate"
             selectionType="{{_options.selectionType}}"
             quantum="{{_options.quantum}}"
             calendarSource="{{_options.calendarSource}}"

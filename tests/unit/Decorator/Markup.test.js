@@ -263,12 +263,29 @@ define([
       });
 
       describe('jsonToHtml', function() {
+         var ILogger;
+         var errorFunction;
+         var errorArray;
+         before(function() {
+            ILogger = Env.IoC.resolve('ILogger');
+            errorFunction = ILogger.error;
+            ILogger.error = function() {
+               errorArray.push(arguments);
+            };
+            errorArray = [];
+         });
+         after(function() {
+            Env.IoC.resolve('ILogger').error = errorFunction;
+         });
          beforeEach(function() {
             decoratedLinkService = Env.constants.decoratedLinkService;
             Env.constants.decoratedLinkService = '/test/';
          });
          afterEach(function() {
             Env.constants.decoratedLinkService = decoratedLinkService;
+            while (errorArray.length) {
+               errorFunction.apply(ILogger, errorArray.shift());
+            }
          });
          it('empty', function() {
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml([]), ''));
@@ -284,7 +301,7 @@ define([
          });
          it('escape', function() {
             var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><&#39;'];
-            var vdomTemplate = template({ 'value': json }, {}, undefined, true);
+            var vdomTemplate = template({ _options: { 'value': json } }, {}, undefined, true);
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json), '<div><p title="&quot;&amp;lt;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;&amp;#39;</p></div>'));
             assert.equal(vdomTemplate[0].children[0].children[0].children, '&amp;gt;&amp;lt;><&amp;#39;');
             assert.equal(vdomTemplate[0].children[0].hprops.attributes.title, '"&amp;lt;<>');
@@ -332,6 +349,43 @@ define([
                checkHtml = decorator.Converter.jsonToHtml(json);
             assert.isTrue(equalsHtml(checkHtml, goodHtml));
          });
+
+         it('not string attribute', function() {
+            var json = [
+               ['p',
+                  {
+                     'class': true
+                  },
+                  'some test'
+               ]
+            ];
+            var goodHtml = '<div><p>some test</p></div>';
+            var goodError = 'Невалидное значение атрибута class, ожидается строковый тип.';
+            var checkHtml = decorator.Converter.jsonToHtml(json);
+            var chechError = errorArray.shift()[1];
+            assert.ok(equalsHtml(goodHtml, checkHtml));
+            assert.equal(goodError, chechError);
+         });
+
+         it('invalid JsonML', function() {
+            var json = [
+               ['p',
+                  {
+                     'class': 'myClass'
+                  },
+                  {
+                     'text': 'some text'
+                  }
+               ]
+            ];
+            var goodHtml = '<div><p class="myClass"></p></div>';
+            var goodError = 'Узел в JsonML должен быть строкой или массивом.';
+            var checkHtml = decorator.Converter.jsonToHtml(json);
+            var chechError = errorArray.shift()[1];
+            assert.ok(equalsHtml(goodHtml, checkHtml));
+            assert.equal(goodError, chechError);
+         });
+
          it('all valid tags and attributes', function() {
             var json = [
                ['p',
@@ -515,9 +569,11 @@ define([
                   '<link />' +
                   '<script>alert(123);</script>',
                checkHtml = template({
-                  value: json,
-                  validHtml: validHtml,
-                  tagResolver: decorator.noOuterTag
+                  _options: {
+                     value: json,
+                     validHtml: validHtml,
+                     tagResolver: decorator.noOuterTag
+                  }
                }, {});
             assert.isTrue(equalsHtml(checkHtml, goodHtml));
          });

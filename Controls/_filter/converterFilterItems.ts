@@ -13,7 +13,7 @@ function convertToFilterSource(detailPanelItems) {
                 }
             }
         }
-        filterSourceItem.name = item.id;
+        filterSourceItem.name = item.id ? item.id : item.name; // items from history have a field 'name' instead of 'id'
         if (item.visibility !== undefined) {
             filterSourceItem.visibility = item.visibility;
         }

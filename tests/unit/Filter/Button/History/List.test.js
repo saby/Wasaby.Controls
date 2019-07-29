@@ -141,5 +141,21 @@ define(
          });
 
 
+         it('_private::getStringHistoryFromItems', function() {
+            let resetValues = {
+               'period': [1],
+               'sender': 'test_sender',
+               'author': '',
+               'responsible': ''
+            };
+            let historyItems = [
+               {name: 'period', value: [2], textValue: 'Today'},
+               {name: 'sender', value: '', textValue: ''},
+               {name: 'author', value: 'Ivanov K.K.', textValue: 'Ivanov K.K.', visibility: true},
+               {name: 'responsible', value: '', textValue: 'Petrov T.T.', visibility: false}
+            ];
+            let historyString = List._private.getStringHistoryFromItems(historyItems, resetValues);
+            assert.strictEqual(historyString, 'Today, Ivanov K.K.');
+         });
       });
    });

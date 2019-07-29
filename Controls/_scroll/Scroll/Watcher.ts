@@ -119,6 +119,10 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                curPosition = 'middle';
             }
 
+            _private.sendByRegistrar(self, 'scrollMoveSync', {
+               scrollTop: self._scrollTopCache
+            });
+
             if (self._scrollPositionCache !== curPosition) {
                setTimeout(() => {
                   _private.sendByRegistrar(self, 'scrollMove', {
@@ -226,6 +230,8 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                self._registrar.startOnceTarget(component, 'cantScroll');
             }
 
+            self._registrar.startOnceTarget(component, 'viewPortResize', [sizeCache.clientHeight]);
+
             if (!withObserver) {
                //TODO надо кидать не всем компонентам, а адресно одному
                _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
@@ -298,9 +304,8 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                _private.calcSizeCache(this, _private.getDOMContainer(this._container));
                _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight);
             }
-            this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
+            this._notify('register', ['controlResize', this, this._resizeHandlerOuter], {bubbling: true});
          },
-
 
          _scrollHandler: function(e) {
             _private.onScrollContainer(this, _private.getDOMContainer(this._container), this._canObserver);
@@ -309,6 +314,11 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
          _resizeHandler: function(e) {
             var withObserver = this._canObserver;
             _private.onResizeContainer(this, _private.getDOMContainer(this._container), withObserver);
+
+         },
+         _resizeHandlerOuter: function(e) {
+            this._resizeHandler(e);
+            _private.sendByRegistrar(this, 'viewPortResize', [this._sizeCache.clientHeight]);
          },
 
          _registerIt: function(event, registerType, component, callback, triggers) {
@@ -330,6 +340,42 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 
          doScroll: function(scrollParam) {
             _private.doScroll(this, scrollParam, _private.getDOMContainer(this._container));
+         },
+
+         _isVirtualPlaceholderMode(): boolean {
+            return this._topPlaceholderSize || this._bottomPlaceholderSize;
+         },
+
+         updatePlaceholdersSize(placeholdersSizes: object): void {
+            this._topPlaceholderSize = placeholdersSizes.top;
+            this._bottomPlaceholderSize = placeholdersSizes.bottom;
+
+         },
+
+         setScrollTop(scrollTop: number): void {
+            var self = this;
+            const container = _private.getDOMContainer(self._container);
+            if (self._isVirtualPlaceholderMode()) {
+               self._cachedScrollTop = scrollTop;
+               const sizeCache = _private.getSizeCache(self, container);
+               const hasChanges = _private.sendByRegistrar(self, 'virtualScrollMove', {
+                  scrollTop,
+                  scrollHeight: sizeCache.scrollHeight,
+                  clientHeight: sizeCache.clientHeight,
+                  applyScrollTopCallback: () => {
+                     container.scrollTop = self._cachedScrollTop - self._topPlaceholderSize;
+                  }
+               });
+               if (!hasChanges) {
+                  container.scrollTop = scrollTop;
+               }
+            } else {
+               container.scrollTop = scrollTop;
+            }
+         },
+
+         _applyScrollTop(): void {
+            _private.getDOMContainer(this._container).scrollTop = this._cachedScrollTop - this._topPlaceholderSize;
          },
 
          _unRegisterIt: function(event, registerType, component) {

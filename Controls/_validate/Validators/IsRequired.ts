@@ -1,7 +1,13 @@
 import cInstance = require('Core/core-instance');
 /**
- * Функция, позволяющая проверить значение в контейнере на пустоту.
  *
+ * Функция, позволяющая проверить значение в контейнере на пустоту.
+ * @class
+ * @name Controls/_validate/Validators/IsRequired
+ * @public
+ * @author Красильников А.С.
+ *
+ * @remark
  * <h2>Аргументы функции</h2>
  *
  * value - значение, которое будет проверяться на валидность.
@@ -26,10 +32,6 @@ import cInstance = require('Core/core-instance');
  *  </Controls.validate:InputContainer>
  * </pre>
  *
- * @class
- * @name Controls/_validate/Validators/IsRequired
- * @public
- * @author Красильников А.С.
  */
 export = function (args) {
    //Если передали в аргументах doNotValidate, значит возвращаем true (параметр нужен для опционального включения/отключения валидатора)

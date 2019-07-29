@@ -34,7 +34,7 @@ var _private = {
       return _private.getSourceController(self, options).addCallback((sourceController) => {
           self._filter = historyUtils.getSourceFilter(options.filter, self._source);
           return sourceController.load(self._filter).addCallback((items) => {
-              self._items = items;
+             self._setItems(items);
               if (options.dataLoadCallback) {
                   options.dataLoadCallback(items);
               }
@@ -103,7 +103,7 @@ var _private = {
          self._source.update(items, historyUtils.getMetaHistory());
 
          if (self._sourceController && self._source.getItems) {
-            self._items = self._source.getItems();
+            self._setItems(self._source.getItems());
          }
       }
    },
@@ -113,7 +113,7 @@ var _private = {
          case 'pinClick':
             result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._source);
             this._notify('pinClick', [result.data]);
-            this._items = this._source.getItems();
+            this._setItems(this._source.getItems());
             this._open();
             break;
          case 'applyClick':
@@ -167,7 +167,7 @@ var _private = {
 
    requireTemplates: function(self, options) {
       if (!self._depsDeferred) {
-         let templatesToLoad = [];
+         let templatesToLoad = _private.getItemsTemplates(self, options);
          let templates = ['headTemplate', 'itemTemplate', 'footerTemplate'];
 
          templates.forEach((template) => {
@@ -178,6 +178,24 @@ var _private = {
          self._depsDeferred = mStubs.require(templatesToLoad);
       }
       return self._depsDeferred;
+   },
+
+   getItemsTemplates: function(self, options) {
+      let
+         templates = {},
+         itemTemplateProperty = options.itemTemplateProperty;
+
+      if (itemTemplateProperty) {
+         self._items.each(function(item) {
+            let itemTemplate = item.get(itemTemplateProperty);
+
+            if (typeof itemTemplate === 'string') {
+               templates[itemTemplate] = true;
+            }
+         });
+      }
+
+      return Object.keys(templates);
    }
 };
 
@@ -199,7 +217,7 @@ var _private = {
  * @mixes Controls/interface/IGrouped
  * @author Красильников А.С.
  * @control
- * @public
+ * @private
  */
 
 /**
@@ -234,7 +252,7 @@ var _Controller = Control.extend({
       if (!options.lazyItemsLoad) {
          if (receivedState) {
             let self = this;
-            this._items = receivedState;
+            this._setItems(receivedState);
             _private.getSourceController(this, options).addCallback((sourceController) => {
                 sourceController.calculateState(self._items);
             });
@@ -262,7 +280,7 @@ var _Controller = Control.extend({
          this._sourceController = null;
          if (newOptions.lazyItemsLoad && !this._children.DropdownOpener.isOpened()) {
             /* source changed, items is not actual now */
-            this._items = null;
+            this._setItems(null);
          } else {
             var self = this;
             return _private.loadItems(this, newOptions).addCallback(function(items) {
@@ -346,6 +364,11 @@ var _Controller = Control.extend({
 
    _getEmptyText: function () {
       return dropdownUtils.prepareEmpty(this._options.emptyText);
+   },
+
+   _setItems: function(items) {
+      this._items = items;
+      this._depsDeferred = null;
    }
 });
 

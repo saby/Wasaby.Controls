@@ -12,6 +12,7 @@ define(
 
       describe('Controls/_popup/Opener/Stack', () => {
          StackStrategy.getMaxPanelWidth = () => 1000;
+         popupTemplate.StackController._private.getContainerWidth = function(items) {return items.templateWidth};
          let item = {
             popupOptions: {
                minWidth: 600,
@@ -65,6 +66,7 @@ define(
             popupTemplate.StackController._stack.add({ containerWidth: 1100, popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._stack.add({ containerWidth: 850, popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._stack.add({ containerWidth: 950, popupOptions: { stackClassName: '' } });
+            popupTemplate.StackController._stack.add({ position: {}, templateWidth: 711, containerWidth: '', popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._update();
             popupTemplate.StackController._update();
             popupTemplate.StackController._update();
@@ -83,6 +85,7 @@ define(
             assert.isTrue(popupTemplate.StackController._stack.at(12).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
             assert.isTrue(popupTemplate.StackController._stack.at(13).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
             assert.isTrue(popupTemplate.StackController._stack.at(14).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(15).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
 
             popupTemplate.StackController._private.getItemPosition = baseGetItemPosition;
          });
@@ -340,6 +343,50 @@ define(
             maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, 2000, tCoords);
             assert.equal(maxWidth, 900);
 
+         });
+
+         it('stack optimize open', () => {
+            const Controller = popupTemplate.StackController;
+            Controller._stack.clear();
+            const basePrepareSize = Controller._private.prepareSizes;
+            const basePrepareSizeWithoutDom = Controller._private.prepareSizeWithoutDOM;
+            const baseUpdate = Controller._update;
+            let isPrepareSizeCalled = false;
+            let isPrepareSizeWithoutDomCalled = false;
+            let isUpdateCalled = false;
+
+            Controller._private.prepareSizes = () => {
+               isPrepareSizeCalled = true;
+            };
+            Controller._private.prepareSizeWithoutDOM = () => {
+               isPrepareSizeWithoutDomCalled = true;
+            };
+            Controller._update = () => {
+               isUpdateCalled = true;
+            };
+            let item = { position: { stackWidth: 720 }, popupOptions: { stackClassName: '' } };
+
+            Controller.getDefaultConfig(item);
+            assert.equal(isPrepareSizeCalled, false);
+            assert.equal(isPrepareSizeWithoutDomCalled, true);
+            assert.equal(isUpdateCalled, false);
+
+            isPrepareSizeWithoutDomCalled = false;
+            Controller.elementCreated(item);
+            assert.equal(isPrepareSizeCalled, false);
+            assert.equal(isPrepareSizeWithoutDomCalled, true);
+            assert.equal(isUpdateCalled, false);
+
+            isPrepareSizeWithoutDomCalled = false;
+            Controller._stack.add({ position: { stackWidth: 720 }, popupOptions: { stackClassName: '' } });
+            Controller.elementCreated(item);
+            assert.equal(isPrepareSizeCalled, true);
+            assert.equal(isPrepareSizeWithoutDomCalled, false);
+            assert.equal(isUpdateCalled, true);
+
+            Controller._private.prepareSizes = basePrepareSize;
+            Controller._private.prepareSizeWithoutDOM = basePrepareSizeWithoutDom;
+            Controller._update = baseUpdate;
          });
 
          it('stack compatible popup', () => {

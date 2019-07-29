@@ -3,7 +3,8 @@
         <ws:headerContentTemplate>
             <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
                 <Controls.input:Text attr:style="width: 50px;" bind:value="_headText"/>
-                <Controls.buttons:Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
+                <Controls.buttons:Button caption="Закрыть {{_options.type}}" on:click="_close()"
+                    attr:class="ControlsDemo-TestDialog__close{{_options.type}}"/>
             </div>
         </ws:headerContentTemplate>
         <ws:bodyContentTemplate>
@@ -14,7 +15,8 @@
                 </Controls.popup:Stack>
                 <Controls.toggle:Checkbox bind:value="_draggable" caption="Включить d'n'd" on:valueChanged="_draggableChanged()"/>
                 <br />
-                <Controls.buttons:Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"/>
+                <Controls.buttons:Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"
+                    attr:class="ControlsDemo-TestDialog__stack"/>
             </div>
         </ws:bodyContentTemplate>
     </Controls.popupTemplate:Dialog>

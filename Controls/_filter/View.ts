@@ -55,13 +55,17 @@ var _private = {
         return result;
     },
 
+    isFrequentItem: function(item) {
+      return item.viewMode === 'frequent';
+    },
+
     prepareItems: function(self, items) {
         self._source = object.clone(items);
     },
 
     calculateStateSourceControllers: function(configs, source) {
         factory(source).each(function(item) {
-            if (item.viewMode === 'frequent') {
+            if (_private.isFrequentItem(item)) {
                 var sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source,
                      item.editorOptions.navigation);
                 sourceController.calculateState(configs[item.name].items);
@@ -92,7 +96,7 @@ var _private = {
     setPopupConfig: function(self, configs, items) {
         var popupItems = [];
         factory(items).each(function(item) {
-            if (item.viewMode === 'frequent') {
+            if (_private.isFrequentItem(item)) {
                 var popupItem = configs[item.name];
                 popupItem.id = item.name;
                 popupItem.selectedKeys = configs[item.name].multiSelect ? item.value : [item.value];
@@ -128,7 +132,7 @@ var _private = {
     getFilterButtonText: function(self, items) {
         var textArr = [];
         factory(items).each(function(item) {
-            if (item.viewMode !== 'frequent' && (item.viewMode !== 'extended' || item.visibility === true) && _private.isItemChanged(item)) {
+            if (!_private.isFrequentItem(item) && item.type !== 'dateRange' && (item.viewMode !== 'extended' || item.visibility === true) && _private.isItemChanged(item)) {
                 var textValue = item.textValue;
                 if (textValue) {
                     textArr.push(textValue);
@@ -153,14 +157,45 @@ var _private = {
         });
         self._filterText = _private.getFilterButtonText(self, items);
         self._dateRangeItem = _private.getDateRangeItem(items);
-        self._forceUpdate();
+        self._displayText = {...self._displayText};
     },
 
     isItemChanged: function(item) {
         return !isEqual(object.getPropertyValue(item, 'value'), object.getPropertyValue(item, 'resetValue'));
     },
 
-    loadItemsFromSource: function(instance, source, keyProperty, filter, navigation, dataLoadCallback) {
+    getLoadKeys: function(config, value) {
+        let selectedKeys = value instanceof Array ? value : [value];
+        return factory(selectedKeys).filter((key) => {
+            if (key !== undefined && !config.items.getRecordById(key) && !(key === null && config.emptyText)) {
+                return key;
+            }
+        }).value();
+    },
+
+    loadSelectedItems: function(items, configs) {
+        let pDef = new ParallelDeferred();
+        factory(items).each(function(item) {
+            if (_private.isFrequentItem(item)) {
+                const config = configs[item.name];
+                let keys = _private.getLoadKeys(config, item.value);
+                if (keys.length) {
+                    let editorOpts = {source: config.source};
+                    editorOpts.filter = config.filter || {};
+
+                    const keyProperty = config.keyProperty;
+                    editorOpts.filter[keyProperty] = keys;
+                    let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
+                        configs[item.name].items.prepend(newItems);
+                    });
+                    pDef.push(result);
+                }
+            }
+        });
+        return pDef.done().getResult();
+    },
+
+    loadItemsFromSource: function(instance, source, filter, navigation?, dataLoadCallback?) {
         // As the data source can be history source, then you need to merge the filter
         instance._filter = historyUtils.getSourceFilter(filter, source);
         return _private.getSourceController(instance, source, navigation).load(instance._filter).addCallback(function(items) {
@@ -168,6 +203,7 @@ var _private = {
             if (dataLoadCallback) {
                 dataLoadCallback(items);
             }
+            return items;
         });
     },
 
@@ -178,7 +214,7 @@ var _private = {
         self._configs[item.name].emptyText = item.emptyText;
 
         if (options.source) {
-            return _private.loadItemsFromSource(self._configs[item.name], options.source, options.keyProperty, options.filter, options.navigation, options.dataLoadCallback);
+            return _private.loadItemsFromSource(self._configs[item.name], options.source, options.filter, options.navigation, options.dataLoadCallback);
         } else {
             return Deferred.success();
         }
@@ -202,7 +238,7 @@ var _private = {
     reload: function(self) {
         var pDef = new ParallelDeferred();
         factory(self._source).each(function(item) {
-            if (item.editorOptions) {
+            if (_private.isFrequentItem(item)) {
                 var result = _private.loadItems(self, item);
                 pDef.push(result);
             }
@@ -210,10 +246,12 @@ var _private = {
 
         // At first, we will load all the lists in order not to cause blinking of the interface and many redraws.
         return pDef.done().getResult().addCallback(function() {
-            _private.updateText(self, self._source, self._configs);
-            return {
-                configs: self._configs
-            };
+            return _private.loadSelectedItems(self._source, self._configs).addCallback(() => {
+                _private.updateText(self, self._source, self._configs);
+                return {
+                    configs: self._configs
+                };
+            });
         });
     },
 
@@ -290,6 +328,20 @@ var _private = {
 
     moreButtonClick: function(result) {
         this._idOpenSelector = result.id;
+    },
+
+    isNeedReload: function(oldItems, newItems) {
+        let result = false;
+        factory(oldItems).each((oldItem) => {
+            const newItem = _private.getItemByName(newItems, oldItem.name);
+           if (newItem && _private.isFrequentItem(oldItem) &&
+               (!isEqual(oldItem.editorOptions.source, newItem.editorOptions.source) ||
+               !isEqual(oldItem.editorOptions.filter, newItem.editorOptions.filter) ||
+               !isEqual(oldItem.editorOptions.navigation, newItem.editorOptions.navigation))) {
+               result = true;
+           }
+        });
+        return result;
     }
 };
 
@@ -323,25 +375,29 @@ var Filter = Control.extend({
 
     _beforeUpdate: function(newOptions) {
         if (newOptions.source && newOptions.source !== this._options.source) {
-            const self = this;
             _private.prepareItems(this, newOptions.source);
-            return _private.reload(this).addCallback(function() {
-                self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
-            });
+            if (_private.isNeedReload(this._options.source, newOptions.source)) {
+                const self = this;
+                return _private.reload(this).addCallback(() => {
+                    self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
+                });
+            } else {
+                _private.updateText(this, this._source, this._configs);
+            }
         }
     },
 
-    _startTimer: function(event, item) {
+    _startTimer: function(event, name) {
         if (!this._delayOpenTimeout) {
             this._delayOpenTimeout = setTimeout(function () {
-                this._openPanel(event, item);
+                this._openPanel(event, name);
             }.bind(this), DELAY_OPEN);
         }
     },
 
-    _restartTimer: function(event, item) {
+    _restartTimer: function(event, name) {
         this._resetTimer();
-        this._startTimer(event, item);
+        this._startTimer(event, name);
     },
 
     _resetTimer: function() {
@@ -364,13 +420,14 @@ var Filter = Control.extend({
             }
             popupOptions.template = this._options.detailPanelTemplateName;
             popupOptions.className = 'controls-FilterButton-popup-orientation-' + (this._options.alignment === 'right' ? 'left' : 'right');
+            popupOptions.templateOptions = this._options.detailPanelTemplateOptions || {};
             this._open(panelItems, popupOptions);
         } else {
             this._openPanel();
         }
     },
 
-    _openPanel: function(event, fastItem) {
+    _openPanel: function(event, name) {
         if (this._options.panelTemplateName) {
             let items = new RecordSet({
                 rawData: _private.setPopupConfig(this, this._configs, this._source)
@@ -380,9 +437,10 @@ var Filter = Control.extend({
                 actionOnScroll: 'close',
                 className: 'controls-FilterView-SimplePanel-popup'
             };
-            if (fastItem) {
-                popupOptions.target = this._children[fastItem.name];
+            if (name) {
+                popupOptions.target = this._children[name];
             }
+            popupOptions.templateOptions = this._options.panelTemplateOptions || {};
             this._open(items, popupOptions);
         }
     },
@@ -394,9 +452,9 @@ var Filter = Control.extend({
         var popupOptions = {
             templateOptions: {
                 items: items,
+                historyId: this._options.historyId,
                 theme: this._options.theme
             },
-            _vdomOnOldPage: true,
             target: this._container[0] || this._container
         };
         this._children.DropdownOpener.open(Merge(popupOptions, panelPopupOptions), this);
@@ -431,7 +489,7 @@ var Filter = Control.extend({
     _isFastReseted: function() {
         var isReseted = true;
         factory(this._source).each(function(item) {
-            if (item.viewMode === 'frequent' && _private.isItemChanged(item)) {
+            if (_private.isFrequentItem(item) && _private.isItemChanged(item)) {
                 isReseted = false;
             }
         });
@@ -454,7 +512,7 @@ var Filter = Control.extend({
         }
         factory(this._source).each(function(item) {
             // Fast filters could not be reset from the filter button.
-            if (item.viewMode !== 'frequent') {
+            if (!_private.isFrequentItem(item) && item.type !== 'dateRange') {
                 item.value = item.resetValue;
                 if (object.getPropertyValue(item, 'visibility') !== undefined) {
                     object.setPropertyValue(item, 'visibility', false);

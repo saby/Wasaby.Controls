@@ -3,8 +3,7 @@
  */
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import templateFunction = require('./Markup/resources/template');
-import template = require('wml!Controls/_decorator/Markup/Markup');
+import template = require('./Markup/resources/template');
 
 
    /**
@@ -87,7 +86,6 @@ import template = require('wml!Controls/_decorator/Markup/Markup');
 
    class MarkupDecorator extends Control<IControlOptions> {
       _template: TemplateFunction = template;
-      _templateFunction: TemplateFunction = templateFunction;
 
       private _contextMenuHandler(event: SyntheticEvent): void {
          if (event.target.tagName.toLowerCase() === 'a') {

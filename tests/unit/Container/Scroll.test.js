@@ -249,7 +249,7 @@ define(
                   oldScrollTop = scroll._children.content.scrollTop;
                scroll._saveScrollPosition({stopPropagation: function(){}});
                scroll._children.content.scrollHeight += addedHeight;
-               scroll._restoreScrollPosition({stopPropagation: function(){}});
+               scroll._restoreScrollPosition({stopPropagation: function(){}}, 0, 'up');
                assert.equal(scroll._children.content.scrollTop, oldScrollTop + addedHeight);
             });
          });
@@ -398,7 +398,7 @@ define(
                assert.equal(result, 100);
             });
             it('getScrollTop', function() {
-               result = scrollMod.Container._private.getScrollTop(container);
+               result = scrollMod.Container._private.getScrollTop({ _topPlaceholderSize: 0 }, container);
                assert.equal(result, 0);
             });
          });

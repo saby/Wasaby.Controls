@@ -88,7 +88,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
                }
                return isFiled ? currentPosition : Math.min(currentPosition, position);
             }
-            return this.displayValue.length;
+            return currentPosition === undefined ? this.displayValue.length : currentPosition;
          }
       }
 

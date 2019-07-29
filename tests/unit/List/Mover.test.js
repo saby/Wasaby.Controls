@@ -310,15 +310,16 @@ define([
 
          mover._notify = function(event) {
             if (event === 'beforeItemsMove') {
-               return Deferred.success('MoveInItems');
+               return Promise.resolve('MoveInItems');
             }
          };
 
-         mover.moveItems([item], target, 'after');
-         assert.equal(items.at(2).getId(), item.getId());
-         mover._source.query().addCallback(function(dataSet) {
-            assert.equal(dataSet.getAll().at(0).getId(), item.getId());
-            done();
+         mover.moveItems([item], target, 'after').then(() => {
+            assert.equal(items.at(2).getId(), item.getId());
+            mover._source.query().addCallback(function(dataSet) {
+               assert.equal(dataSet.getAll().at(0).getId(), item.getId());
+               done();
+            });
          });
       });
 

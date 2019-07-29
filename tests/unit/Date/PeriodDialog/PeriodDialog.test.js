@@ -20,13 +20,30 @@ define([
       describe('Initialisation', function() {
 
          it('should create the correct range model when empty range passed.', function() {
-            const component = calendarTestUtils.createComponent(PeriodDialog, {});
+            const
+               now = new Date(2019, 6, 1),
+               clock = sinon.useFakeTimers(now.getTime(), 'Date'),
+               component = calendarTestUtils.createComponent(PeriodDialog, {});
 
             assert.isTrue(component._monthStateEnabled);
             assert.isTrue(component._yearStateEnabled);
             assert.strictEqual(component._state, component._STATES.year);
             assert.strictEqual(component._yearRangeSelectionType, 'range');
             assert.strictEqual(component._headerType, 'link');
+            assert(dateUtils.isDatesEqual(component._displayedDate, now));
+
+            clock.restore();
+         });
+
+         it('should initialize if invalid start and end dates passed.', function() {
+            const
+               now = new Date(2019, 6, 1),
+               clock = sinon.useFakeTimers(now.getTime(), 'Date'),
+               component = calendarTestUtils.createComponent(PeriodDialog, {});
+
+            assert(dateUtils.isDatesEqual(component._displayedDate, now));
+
+            clock.restore();
          });
 
          it('should create the correct range models when empty range passed.', function() {
@@ -153,11 +170,23 @@ define([
       });
 
       describe('_yearsSelectionChanged', function() {
-         it('should update range models.', function() {
+         it('should update range models and displayed day.', function() {
             const component = calendarTestUtils.createComponent(PeriodDialog, {});
             component._yearsSelectionChanged(null, start, end);
             assert(dateUtils.isDatesEqual(component._headerRangeModel.startValue, start));
             assert(dateUtils.isDatesEqual(component._headerRangeModel.endValue, dateUtils.getEndOfYear(end)));
+            assert(dateUtils.isDatesEqual(component._rangeModel.startValue, start));
+            assert(dateUtils.isDatesEqual(component._rangeModel.endValue, dateUtils.getEndOfYear(end)));
+         });
+      });
+
+      describe('_onYearsSelectionHoveredValueChanged', function() {
+         it('should update range models and displayed day.', function() {
+            const
+               date = new Date(2018, 0, 1),
+               component = calendarTestUtils.createComponent(PeriodDialog, {});
+            component._onYearsSelectionHoveredValueChanged(null, date);
+            assert(dateUtils.isDatesEqual(component._displayedDate, date));
          });
       });
 

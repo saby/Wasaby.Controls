@@ -110,7 +110,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                event: event
             };
             if (self._options.emptyText && self._listModel.getSelectedKeys()[0] === null) {
-               result.data = self._listModel.getEmptyItem();
+               result.data = [self._listModel.getEmptyItem().item];
             } else {
                let selectedItems = [];
                chain.factory(self._listModel.getSelectedKeys()).each(function (key) {
@@ -140,7 +140,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                headConfig.icon = headConfig.icon || options.icon || '';
                headConfig.menuStyle = headConfig.menuStyle || 'defaultHead';
 
-               let rootKey = options.parentProperty ? options.rootKey : options.parentProperty,
+               let rootKey = options.parentProperty ? _private.getRootKey(options.rootKey) : options.parentProperty,
                    iconSizes = ['small', 'medium', 'large'],
                    iconSize;
 
@@ -149,7 +149,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                      if (headConfig.icon.indexOf('icon-' + size) !== -1) {
                         iconSize = size;
                      }
-                  })
+                  });
                }
                if (!iconSize && options.iconPadding && options.iconPadding[rootKey]) {
                   headConfig.icon += ' ' + options.iconPadding[rootKey];
@@ -211,7 +211,6 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                _private.setPopupOptions(this);
                _private.prepareHeaderConfig(this, newOptions);
             }
-            this._mousemoveHandler = this._mousemoveHandler.bind(this);
             this._openSubDropdown = debounce(this._openSubDropdown.bind(this), SUB_DROPDOWN_OPEN_DELAY);
          },
 
@@ -353,13 +352,6 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
          _closeClick: function() {
             this._notify('close');
          },
-         _mousemoveHandler: function(emitterEvent, event) {
-            //todo https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-            var container = this._container.get ? this._container.get(0) : this._container;
-            if (!event.target.closest('.controls-DropdownList__popup') && container.closest('.controls-DropdownList__subMenu')) {
-               this._notify('close');
-            }
-         },
          _toggleExpanded: function() {
             let self = this;
             this._listModel.toggleExpanded(this._expanded);
@@ -378,7 +370,6 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                this._listModel.destroy();
                this._listModel = null;
             }
-            this._mousemoveHandler = null;
             this._openSubDropdown = null;
             this._headConfig = null;
          },

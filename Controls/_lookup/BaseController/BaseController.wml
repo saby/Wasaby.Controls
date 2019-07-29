@@ -7,6 +7,8 @@
                on:valueChanged="_notifyHandler('valueChanged')"
                on:itemClick="_notifyHandler('itemClick')"
                on:inputCompleted="_notifyHandler('inputCompleted')"
+               on:tagClick="_notifyHandler('tagClick')"
+               on:tagHover="_notifyHandler('tagHover')"
                on:openInfoBox="_notifyHandler('openInfoBox')"
                on:closeInfoBox="_notifyHandler('closeInfoBox')"/>
 

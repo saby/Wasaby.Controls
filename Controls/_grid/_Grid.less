@@ -36,6 +36,7 @@
    background-color: @background-color_Grid-header;
    display: inline-flex;
    flex-direction: column;
+   min-height: @min-height_Grid-multy-header;
 }
 
 .controls-Grid_columnScroll .controls-Grid__header-cell,
@@ -62,6 +63,11 @@
 .controls-Grid__row-header__content_baseline:before {
    content: '\200b';
    font-size: @font-size_Grid-header-cell-baseline;
+}
+
+.controls-Grid__row-multy-header__content_baseline:before {
+   content: '\200b';
+   font-size: @font-size_Grid-multy-header-cell-baseline;
 }
 
 .controls-Grid__header-cell_valign_bottom {
@@ -113,11 +119,10 @@
    background-color: @background-color_Grid-row-sticky;
 }
 
-// In IE z-index on positioned elements and transform by itself create new "stacking contexts" on elements:
-// https://stackoverflow.com/questions/20851452/z-index-is-canceled-by-setting-transformrotate
-// Add style "transform" for fixed column to make context-level equals context-level of transform column.
+// In IE z-index on positioned elements and transform by itself create new "stacking contexts" on elements.
+// Setting relative position for fixed column makes context-level higher then context-level of transformed column.
 .ws-is-ie .controls-Grid__cell_fixed {
-   transform: translateX(0);
+   position: relative;
 }
 
 .controls-Grid__cell_ellipsis {

@@ -227,6 +227,7 @@ import 'Controls/breadcrumbs';
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_interface/ISorting
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_treeGrid/interface/ITreeControl
     * @mixes Controls/_explorer/interface/IExplorer
@@ -377,6 +378,10 @@ import 'Controls/breadcrumbs';
       // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
       toggleExpanded: function(id) {
          this._children.treeControl.toggleExpanded(id);
+      },
+      _onArrowClick: function(e) {
+         let item = this._children.treeControl._children.baseControl.getViewModel().getMarkedItem().getContents();
+         this._notifyHandler(e, 'arrowClick', item);
       },
       _notifyHandler: tmplNotify,
       _applyHighlighter: applyHighlighter

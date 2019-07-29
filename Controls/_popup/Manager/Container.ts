@@ -78,8 +78,11 @@ import 'css!theme?Controls/popup';
          },
 
          _getPopupZIndex: function(item, index) {
-            let customZIndex = item.controller.getCustomZIndex(this._popupItems, item);
-            return item.popupOptions.zIndex || customZIndex || (index + 1) * POPUP_ZINDEX_STEP;
+            // TODO: По работе с простановкой zindex окнам этот код должен уехать в manager
+            const customZIndex = item.controller.getCustomZIndex(this._popupItems, item);
+            const zIndex = item.popupOptions.zIndex || customZIndex || (index + 1) * POPUP_ZINDEX_STEP;
+            item.currentZIndex = zIndex;
+            return zIndex;
          }
       });
 

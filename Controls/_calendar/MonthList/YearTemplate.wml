@@ -14,13 +14,14 @@
          </ws:else>
       </div>
 
-      <div  class="controls-MonthList__year-months">
+      <div class="controls-MonthList__year-months" data-date="{{_dateToDataString(date)}}">
          <ws:if data="{{bodyTemplate}}">
             <ws:partial
-               template="{{headerTemplate}}"
+               template="{{bodyTemplate}}"
                date="{{date}}"
                extData="{{extData}}"
                _options="{{_options}}"
+               _dateToDataString="{{_dateToDataString}}"
             />
          </ws:if>
          <ws:else>
@@ -28,11 +29,12 @@
                <ws:partial
                   template="{{_options.monthTemplate}}"
                   date="{{_getMonth(date.getFullYear(), month)}}"
+                  dateId="{{dateId}}"
                   extData="{{extData[month]}}"
                   _formatMonth="{{_formatMonth}}"
                   _options="{{_options}}"
-                  _getMonth="{{_getMonth}}"
                   dayTemplate="{{dayTemplate}}"
+                  _dateToDataString="{{_dateToDataString}}"
                />
             </ws:for>
          </ws:else>

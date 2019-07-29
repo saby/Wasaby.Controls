@@ -1,0 +1,5 @@
+<div class="controlsDemo-Uncontrolled">
+   <Controls.input:Text placeholder="login"/>
+   <Controls.input:Password placeholder="password" autoComplete="off"/>
+   <Controls.input:Phone placeholder="phone"/>
+</div>

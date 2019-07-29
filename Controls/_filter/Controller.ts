@@ -231,8 +231,6 @@ import 'Controls/context';
 
          setFilterButtonItems: function(filterButtonItems, fastFilterItems) {
             function prepareFastFilterItem(index) {
-               setPropValue(filterButtonItems[index], 'textValue', '');
-
                // Fast filters could not be reset from the filter button. We set flag for filters duplicated in the fast filter.
                filterButtonItems[index].isFast = true;
             }
@@ -378,7 +376,7 @@ import 'Controls/context';
        * Контрол-контроллер, который позволяет фильтровать данные в {@link Controls/list:View}, используя {@link Filter/Button} или {@link Filter/Fast}.
        * Контроллер позволяет сохранять историю фильтра и восстанавливать страницу после перезагрузки с последним примененным фильтром.
        *
-       * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
+       * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/'>здесь</a>.
        *
        * @class Controls/_filter/Controller
        * @extends Core/Control

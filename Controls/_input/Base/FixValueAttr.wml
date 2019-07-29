@@ -1,0 +1,5 @@
+<!--
+AutoFilled field should not be cleared on mount.
+To do this, it must not have a empty value attribute.
+-->
+<ws:partial template="{{content}}" attr:value="{{value ? value : undefined}}"/>

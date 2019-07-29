@@ -1,7 +1,6 @@
 import {detection} from 'Env/Env';
 import {date as formatDate} from 'Types/formatter';
 import isEmpty = require('Core/helpers/Object/isEmpty');
-import scrollToElement = require('Controls/Utils/scrollToElement');
 
 export default {
     /**
@@ -20,7 +19,8 @@ export default {
      */
     isMonthStateEnabled: function (options) {
         var quantum = options.quantum;
-        return !quantum || ((isEmpty(quantum) && options.minQuantum === 'day') || 'days' in quantum || 'weeks' in quantum);
+        return (quantum && ('days' in quantum || 'weeks' in quantum)) ||
+            ((!quantum || isEmpty(quantum)) && options.minRange === 'day');
     },
 
     /**
@@ -29,24 +29,6 @@ export default {
      */
     isStateButtonDisplayed: function (options) {
         return this.isYearStateEnabled(options) && this.isMonthStateEnabled(options);
-    },
-
-    scrollToDate: function(container, selector, date): boolean {
-        var containerToScroll = this.getElementByDate(container, selector, date);
-
-        if (containerToScroll) {
-            scrollToElement(containerToScroll);
-            return true;
-        }
-        return false;
-    },
-
-    getElementByDate: function(container, selector, date) {
-        return container.querySelector(selector + '[data-date="' + this.dateToDataString(date) + '"]');
-    },
-
-    getAllElementsByDate: function(container, selector, date) {
-        return container.querySelectorAll(selector + '[data-date="' + this.dateToDataString(date) + '"]');
     },
 
     dateToDataString: function(date) {

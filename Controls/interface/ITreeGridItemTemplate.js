@@ -50,9 +50,9 @@ define('Controls/interface/ITreeGridItemTemplate', [
     * Using custom template for item rendering:
     * <pre>
     *    <Controls.treeGrid:View>
-    *       <itemTemplate>
+    *       <ws:itemTemplate>
     *          <ws:partial template="Controls/treeGrid:ItemTemplate" levelIndentSize="null" expanderSize="l" expanderIcon="node" />
-    *       </itemTemplate>
+    *       </ws:itemTemplate>
     *    </Controls.treeGrid:View>
     * </pre>
     */

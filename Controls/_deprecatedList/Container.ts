@@ -313,6 +313,8 @@ var List = Control.extend({
    },
 
    _beforeUpdate: function(newOptions, context) {
+      let oldReverseList = this._options.reverseList;
+
       if (this._options.source !== newOptions.source || !isEqual(this._options.navigation, newOptions.navigation) || this._options.searchDelay !== newOptions.searchDelay) {
          var currentFilter = this._searchController ? this._searchController.getFilter() : _private.getFilterFromContext(this, this._context);
          var source = this._source;
@@ -329,7 +331,8 @@ var List = Control.extend({
          /* create searchController with new options */
          this._searchController = null;
          _private.getSearchController(this).setFilter(currentFilter);
-      } else if (this._options.reverseList !== newOptions.reverseList) {
+      }
+      if (oldReverseList !== newOptions.reverseList) {
          _private.reverseSourceData(this);
       }
       _private.checkContextValues(this, context);

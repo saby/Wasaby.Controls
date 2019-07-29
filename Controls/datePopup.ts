@@ -160,7 +160,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
     _yearRangeSelectionType: null,
 
     _beforeMount: function (options) {
-        this._displayedDate = dateUtils.getStartOfMonth(options.startValue);
+        this._displayedDate = dateUtils.getStartOfMonth(
+            dateUtils.isValidDate(options.startValue) ? options.startValue : new Date());
 
         this._rangeModel = new DateRangeModel();
         this._rangeModel.update(options);
@@ -243,8 +244,15 @@ var Component = BaseControl.extend([EventProxyMixin], {
         );
     },
 
-    _yearsSelectionChanged: function (e, start, end) {
-        _private.selectionChanged(this, start, end ? dateUtils.getEndOfYear(end) : null);
+    _yearsSelectionChanged: function (e, start, end, selectionDirection) {
+        const endYear = end ? dateUtils.getEndOfYear(end) : null;
+        _private.selectionChanged(this, start, endYear);
+        this._rangeModel.startValue = start;
+        this._rangeModel.endValue = endYear;
+    },
+
+    _onYearsSelectionHoveredValueChanged: function(e, value) {
+        this._displayedDate = value;
     },
 
     _yearsSelectionStarted: function (e, start, end) {
@@ -329,7 +337,9 @@ Component.getDefaultOptions = function () {
          * @variant link
          * @variant input
          */
-        headerType: HEADER_TYPES.link
+        headerType: HEADER_TYPES.link,
+
+        minRange: 'day'
 
     }, IRangeSelectable.getDefaultOptions());
 };
