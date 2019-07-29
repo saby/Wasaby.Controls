@@ -15,4 +15,27 @@ describe('Controls/_datePopup/Utils', function() {
             });
         });
     });
+
+    describe('isMonthStateEnabled', () => {
+        [{
+            options: { minRange: 'day' },
+            isEnabled: true
+        }, {
+            options: { quantum: {}, minRange: 'day' },
+            isEnabled: true
+        }, {
+            options: { quantum: { days: [1] } },
+            isEnabled: true
+        }, {
+            options: { quantum: { weeks: [1] } },
+            isEnabled: true
+        }, {
+            options: { minRange: 'month' },
+            isEnabled: false
+        }].forEach((test) => {
+            it(`should return ${test.isEnabled} if ${test.options} passed.`, () => {
+                assert.equal(datePopupUtils.isMonthStateEnabled(test.options), test.isEnabled);
+            });
+        });
+    });
 });

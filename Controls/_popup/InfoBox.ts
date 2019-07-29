@@ -201,7 +201,7 @@ import entity = require('Types/entity');
        * @variant success
        * @variant primary
        */
-
+      const CALM_DELAY = 100; // During what time should not move the mouse to start opening the popup.
 
       var _private = {
          getCfg: function(self) {
@@ -237,7 +237,7 @@ import entity = require('Types/entity');
          _isNewEnvironment: InfoBoxOpener.isNewEnvironment,
 
          _openId: null,
-
+         _waitTimer: null,
          _closeId: null,
 
          _beforeMount: function(options) {
@@ -257,6 +257,7 @@ import entity = require('Types/entity');
           * Если компонент обрабатывающий openInfoBox и closeInfoBox, то данный код будет удален по ошибке выше.
           */
          _beforeUnmount: function() {
+            this._clearWaitTimer();
             if (this._opened) {
                this._close();
             }
@@ -301,14 +302,24 @@ import entity = require('Types/entity');
             }
          },
 
-         _contentMouseenterHandler: function() {
+         _contentMousemoveHandler(): void {
             if (this._options.trigger === 'hover' || this._options.trigger === 'hover|touch') {
-               /**
-                * On touch devices there is no real hover, although the events are triggered. Therefore, the opening is not necessary.
-                */
-               if (!this._context.isTouch.isTouch) {
-                  this._startOpeningPopup();
-               }
+               // wait, until user stop mouse on target.
+               // Don't open popup, if mouse moves through the target
+               // On touch devices there is no real hover, although the events are triggered. Therefore, the opening is not necessary.
+               this._clearWaitTimer();
+               this._waitTimer = setTimeout(() => {
+                  this._waitTimer = null;
+                  if (!this._opened && !this._context.isTouch.isTouch) {
+                     this._startOpeningPopup();
+                  }
+               }, CALM_DELAY);
+            }
+         },
+
+         _clearWaitTimer(): void {
+            if (this._waitTimer) {
+               clearTimeout(this._waitTimer);
             }
          },
 
@@ -331,6 +342,7 @@ import entity = require('Types/entity');
 
          _contentMouseleaveHandler: function() {
             if (this._options.trigger === 'hover' || this._options.trigger === 'hover|touch') {
+               this._clearWaitTimer();
                clearTimeout(this._openId);
                this._closeId = setTimeout(() => {
                   this._close();

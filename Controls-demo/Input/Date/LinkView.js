@@ -1,6 +1,7 @@
 define('Controls-demo/Input/Date/LinkView', [
    'Core/Control',
-   'wml!Controls-demo/Input/Date/LinkView'
+   'wml!Controls-demo/Input/Date/LinkView',
+   'css!Controls-demo/Input/Date/LinkView'
 ], function(
    BaseControl,
    template

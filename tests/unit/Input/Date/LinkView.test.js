@@ -23,7 +23,7 @@ define([
          });
 
          describe('Styles', function() {
-            [{
+            const tests = [{
                viewMode: 'selector',
                styleMode: 'secondary',
                styleClass: 'controls-DateLinkView__style-secondary'
@@ -43,12 +43,25 @@ define([
                viewMode: 'label',
                styleMode: '',
                styleClass: null
-            }].forEach(function(test, testNumber) {
-               const component = calendarTestUtils.createComponent(
-                  dateRange.LinkView, {});
-               component._beforeUpdate({ viewMode: test.viewMode, styleMode: test.styleMode})
-               assert.equal(component._styleClass, test.styleClass);
-            })
+            }];
+
+            tests.forEach(function(test, testNumber) {
+               it(`should initialize correct styles ${testNumber}.`, function() {
+                  const component = calendarTestUtils.createComponent(
+                     dateRange.LinkView,
+                     { viewMode: test.viewMode, styleMode: test.styleMode }
+                  );
+                  assert.equal(component._styleClass, test.styleClass);
+               });
+            });
+
+            tests.forEach(function(test, testNumber) {
+               it(`should update correct styles ${testNumber}.`, function() {
+                  const component = calendarTestUtils.createComponent(dateRange.LinkView, {});
+                  component._beforeUpdate({ viewMode: test.viewMode, styleMode: test.styleMode });
+                  assert.equal(component._styleClass, test.styleClass);
+               });
+            });
          });
 
       });

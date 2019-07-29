@@ -23,6 +23,7 @@
                                     on:checkboxClick="_notifyHandler('checkboxClick')"
                                     on:itemSwipe="_notifyHandler('itemSwipe')"
                                     on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
+                                    on:drawItems="_notifyHandler('drawItems')"
                                     on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
                                     on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
                                     on:afterEndEdit="_notifyHandler('afterEndEdit')"

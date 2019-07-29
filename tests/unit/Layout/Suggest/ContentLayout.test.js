@@ -1,6 +1,6 @@
-define(['Controls/_suggest/Layer/__ContentLayer'], function(__ContentLayer) {
+define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer) {
 
-   describe('Controls._suggest.Layer.__ContentLayer', function() {
+   describe('Controls._suggestPopup.Layer.__ContentLayer', function() {
 
 
       var getComponentObject = function() {

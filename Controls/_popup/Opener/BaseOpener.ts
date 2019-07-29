@@ -289,20 +289,28 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
             deps.push(libInfo.name);
         }
 
-        requirejs(deps, function (compatiblePopup, Action, Tpl) {
+        requirejs(deps, (compatiblePopup, Action, Tpl) => {
             try {
+                let templateFunction = Tpl;
                 if (opener && opener._options.closeOnTargetScroll) {
                     cfg.closeOnTargetScroll = true;
                 }
 
+                // get module from library
                 if (libInfo && libInfo.path.length !== 0) {
                     cfg.template = Tpl;
-                    libInfo.path.forEach(function (key) {
+                    libInfo.path.forEach((key) => {
                         cfg.template = cfg.template[key];
+                        templateFunction = cfg.template;
                     });
                 }
 
-                var newCfg = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(cfg, (Tpl && Tpl.default) || Tpl || cfg.template);
+                // get module from default export
+                if (templateFunction && templateFunction.default) {
+                    templateFunction = templateFunction.default;
+                }
+
+                var newCfg = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(cfg, templateFunction || cfg.template);
 
                 // Прокинем значение опции theme опенера, если другое не было передано в templateOptions.
                 // Нужно для открытия окон на старых страницах'.
