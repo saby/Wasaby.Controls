@@ -371,3 +371,15 @@
  * @variant top Show results above the list.
  * @variant bottom Show results below the list.
  */
+
+/**
+ * @name Controls/_grid/interface/IGridControl#showEditArrow
+ * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке
+ * <a href="/materials/demo-ws4-edit-arrow">Example</a>
+ */
+
+/*
+ * @name Controls/_grid/interface/IGridControl#showEditArrow
+ * @cfg {Boolean} Allows showing button in first column on hover.
+ * <a href="/materials/demo-ws4-edit-arrow">Example</a>
+ */
