@@ -19,6 +19,20 @@ define('Controls/Application',
    ],
 
    /**
+    * Корневой контрол для Wasaby-приложений. Служит для создания базовых html-страниц.
+    * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/controls-application/'>здесь</a>.
+    *
+    * @class Controls/Application
+    * @extends Core/Control
+    *
+    * @mixes Controls/Application/BlockLayout/Styles
+    *
+    * @control
+    * @public
+    * @author Белотелов Н.В.
+    */
+
+   /*
     * Root component for WS applications. Creates basic html page.
     *
     * @class Controls/Application
@@ -28,10 +42,16 @@ define('Controls/Application',
     *
     * @control
     * @public
-    * @author Зуев Д.В.
-    */
+    * @author Белотелов Н.В.
+    */    
 
    /**
+    * @name Controls/Application#staticDomains
+    * @cfg {Number} Список, содержащий набор доменов для загрузки статики.
+    * Список доменов решает задачу загрузки статических ресурсов с нескольких документов. Эти домены будут использоваться для создания путей для статических ресурсов и распределения загрузки для нескольких статических доменов.
+    */
+
+   /*
     * @name Controls/Application#staticDomains
     * @cfg {Number} The list of domains for distributing static resources. These domains will be used to create paths
     * for static resources and distribute downloading for several static domains.
@@ -41,35 +61,94 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#head
+    * @deprecated Используйте {@link headJson}.
+    * @cfg {Content} Дополнительное содержимое тега HEAD. Может принимать более одного корневого узла.
+    */
+
+   /*
+    * @name Controls/Application#head
+    * @deprecated Используйте {@link headJson}.
     * @cfg {Content} Additional content of HEAD tag. Can accept more than one root node
     */
 
    /**
+    * @name Controls/Application#headJson
+    * @cfg {Content} Разметка, которая будет встроена в содержимое тега head. 
+    * Используйте эту опцию, чтобы подключить на страницу внешние библиотеки (скрипты), стили или шрифты.
+    * @remark
+    * Список разрешённых тегов: link, style, script, meta, title.
+    * Список разрешённых атрибутов: rel, as, name, sizes, crossorigin, type, href, property, http-equiv, content, id, class. 
+    */
+
+   /**
+    * @name Controls/Application#content
+    * @cfg {Content} Разметка, которая будет встроена в содержимое тега body.
+    */
+
+   /*
     * @name Controls/Application#content
     * @cfg {Content} Content of BODY tag
     */
 
    /**
     * @name Controls/Application#scripts
+    * @cfg {Content} Список JS-файлов, которые должны быть подключены на страницу. Скрипты встраиваются перед закрытием. Могут принимать более одного корневого узла.
+    */
+
+   /*
+    * @name Controls/Application#scripts
     * @cfg {Content} Scripts, that will be pasted after content. Can accept more than one root node
     */
 
    /**
+    * @name Controls/Application#appRoot
+    * @cfg {String} Адрес к директории сервиса. Например, "/".
+    * @remark
+    * Значение опции задаётся относительно URL-адреса сервиса.
+    * URL-адрес сервиса устанавливается через <a href="https://wi.sbis.ru/doc/platform/developmentapl/middleware/cloud-control/">Сервис управления облаком</a> в разделе "Структура облака".
+    * Данная настройка попадает в свойство appRoot объекта window.wsConfig.
+    */
+
+   /*
     * @name Controls/Application#appRoot
     * @cfg {String} Path to application root url
     */
 
    /**
     * @name Controls/Application#resourceRoot
+    * @cfg {String} Адрес к директории с ресурсами сервиса. Например, "/resources/".
+    * @remark
+    * Значение опции задаётся относительно URL-адреса сервиса.
+    * URL-адрес сервиса устанавливается через <a href="https://wi.sbis.ru/doc/platform/developmentapl/middleware/cloud-control/">Сервис управления облаком</a> в разделе "Структура облака".
+    * Данная настройка попадает в свойство resourceRoot объекта window.wsConfig.
+    */
+
+   /*
+    * @name Controls/Application#resourceRoot
     * @cfg {String} Path to resource root url
     */
 
    /**
     * @name Controls/Application#wsRoot
+    * @cfg {String} Путь к корню интерфейсного модуля WS.Core. Например, "/resources/WS.Core/".
+    * @remark
+    * Значение опции задаётся относительно URL-адреса сервиса.
+    * URL-адрес сервиса устанавливается через <a href="https://wi.sbis.ru/doc/platform/developmentapl/middleware/cloud-control/">Сервис управления облаком</a> в разделе "Структура облака".
+    * Данная настройка попадает в свойство wsRoot объекта window.wsConfig.
+    */
+
+   /*
+    * @name Controls/Application#wsRoot
     * @cfg {String} Path to ws root url
     */
 
    /**
+    * @name Controls/Application#beforeScripts
+    * @cfg {Boolean} В значении true скрипты из опции {@link scripts} будут вставлены до других скриптов, созданных приложением. 
+    * @default false
+    */
+
+   /*
     * @name Controls/Application#beforeScripts
     * @cfg {Boolean} If it's true, scripts from options scripts will be pasted before other scripts generated by application
     * otherwise it will be pasted after.
@@ -77,40 +156,85 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#viewport
+    * @cfg {String} Атрибут содержимого мета-тега с именем "viewport".
+    */
+
+   /*
+    * @name Controls/Application#viewport
     * @cfg {String} Content attribute of meta tag with name "viewport"
     */
 
    /**
+    * @name Controls/Application#bodyClass
+    * @cfg {String} Дополнительный CSS-класс, который будет задан для тега body.
+    */
+
+   /*
     * @name Controls/Application#bodyClass
     * @cfg {String} String with classes, that will be pasted in body's class attribute
     */
 
    /**
     * @name Controls/Application#title
+    * @cfg {String} Значение опции встраивается в содержимое тега title, который определяет заголовок веб-страницы и подпись на вкладке веб-браузера.
+    */
+
+   /*
+    * @name Controls/Application#title
     * @cfg {String} title of the tab
     */
 
    /**
+    * @name Controls/Application#templateConfig
+    * @cfg {Object} Все поля из этого объекта будут переданы в опции контента.
+    */
+
+   /*
     * @name Controls/Application#templateConfig
     * @cfg {Object} All fields from this object will be passed to content's options
     */
 
    /**
     * @name Controls/Application#compat
+    * @cfg {Boolean} В значении true создаётся "слой совместимости" для работы с контролами из пространства имён SBIS3.CONTROLS/* и Lib/*.
+    */
+
+   /*
+    * @name Controls/Application#compat
     * @cfg {Boolean} If it's true, compatible layer will be loaded
     */
 
    /**
+    * @name Controls/Application#builder
+    * @cfg {Boolean} В значении true разрешено создание статической html-страницы через <a href="https://wi.sbis.ru/doc/platform/developmentapl/development-tools/builder/#html_1">билдер</a>.
+    * Необходимое условие создание таких страниц описано <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/controls-application/#static-html">здесь</a>.
+    * @default false
+    */
+
+   /*
     * @name Controls/Application#builder
     * @cfg {Boolean} Allows to create static html with builder
     */
 
    /**
     * @name Controls/Application#builderCompatible
+    * @cfg {Boolean} В значении true на странице загружается слой совместимости для работы с контролами из пространства имён SBIS3.CONTROLS/* и Lib/*.
+    * Использование опции актуально, когда опция {@link builder} установлена в значение true.
+    */
+
+   /*
+    * @name Controls/Application#builderCompatible
     * @cfg {Boolean} Will load compatible layer. Works only if builder option is true.
     */
 
    /**
+    * @name Controls/Application#width
+    * @cfg {String} Используется контролом Controls/popup:Manager.
+    *
+    * @css @font-size_App__body Font size of page body. This size inherits to other elements in page.
+    */
+
+   /*
     * @name Controls/Application#width
     * @cfg {String} Used by Controls.popup:Manager
     *
