@@ -29,7 +29,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#chooseMonths
-             * @cfg {Boolean} В значение false недоступен выбор месяца.
+             * @cfg {Boolean} В значении false недоступен выбор месяца.
              */
 
             /*
@@ -40,7 +40,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#chooseQuarters
-             * @cfg {Boolean} В значение false недоступен выбор квартала.
+             * @cfg {Boolean} В значении false недоступен выбор квартала.
              */
 
             /*
@@ -51,7 +51,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#chooseHalfyears
-             * @cfg {Boolean} В значение false недоступен выбор полугодия.
+             * @cfg {Boolean} В значении false недоступен выбор полугодия.
              */
 
             /*
@@ -62,7 +62,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#chooseYears
-             * @cfg {Boolean} В значение false недоступен выбор года.
+             * @cfg {Boolean} В значении false недоступен выбор года.
              */
 
             /*
@@ -167,7 +167,7 @@ export default {
              * @remark
              * Аргументы функции:
              * <ol>
-             *    <li>periods - Массив, содержащий массивы начала и окончания периода.</li>
+             *    <li>periods — Массив, содержащий массивы начала и окончания периода.</li>
              * </ol>
              * Функция должна возвращать массив логических элементов или объект, содержащий информацию об отображаемой иконке или Deffered'е, который запускает такой объект.
              * Если функция возвращает true, будет отображена иконка, соответствующая параметрам {@Link checkedIconCssClass} и {@Link checkedIconTitle}. 
@@ -188,7 +188,7 @@ export default {
              * @remark
              * Function Arguments:
              * <ol>
-             *    <li>periods - An array containing arrays from the beginning and end of the period</li>
+             *    <li>periods — An array containing arrays from the beginning and end of the period</li>
              * </ol>
              * The function must return an array of Boolean elements or an object containing information about
              * the displayed icon {@link Icon} or Deferred, which fires such an object.
@@ -209,7 +209,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#itemTemplate
-             * @cfg {String} Шаблон отображения года. Может принимать параметр monthCaptionTemplate - шаблон названия месяца. 
+             * @cfg {String} Шаблон отображения года. Может принимать параметр monthCaptionTemplate — шаблон названия месяца. 
              * Дата первого дня месяца и функция форматирования даты передаются в шаблон {@link Types/formatter:date}.
              * @example
              * <ws:itemTemplate>
@@ -228,7 +228,7 @@ export default {
 
             /*
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#itemTemplate
-             * @cfg {String} Template of the year. Can accept the option monthCaptionTemplate - template header
+             * @cfg {String} Template of the year. Can accept the option monthCaptionTemplate — template header
              * of the month. The date of the first day of the month and date formatting function are passed
              * to the template of the month {@link Types/formatter:date}.
              * @example
@@ -255,9 +255,9 @@ export default {
              * @cfg {Function} Функция форматирования заголовка.
              * Аргументы функции:
              * <ol>
-             *    <li>startValue - Начальное значение периода.</li>
-             *    <li>endValue - Конечное значение периода.</li>
-             *    <li>emptyCaption - Отображаемый текст, когда в контроле не выбран период.</li>
+             *    <li>startValue — Начальное значение периода.</li>
+             *    <li>endValue — Конечное значение периода.</li>
+             *    <li>emptyCaption — Отображаемый текст, когда в контроле не выбран период.</li>
              * </ol> 
              * @returns {String}
              * @example
