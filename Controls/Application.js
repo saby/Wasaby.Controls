@@ -206,7 +206,9 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#builder
-    * @cfg {Boolean} Позволяет создавать статический html.
+    * @cfg {Boolean} В значении true разрешено создание статической html-страницы через <a href="https://wi.sbis.ru/doc/platform/developmentapl/development-tools/builder/#html_1">билдер</a>.
+    * Необходимое условие создание таких страниц описано <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/controls-application/#static-html">здесь</a>.
+    * @default false
     */
 
    /*
