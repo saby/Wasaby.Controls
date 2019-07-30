@@ -8,7 +8,6 @@ import {
    IFontColorStyleOptions, IFontSize, IFontSizeOptions
 } from 'Controls/interface';
 
-import * as notifyHandler from 'Controls/Utils/tmplNotify';
 import * as template from 'wml!Controls/_input/Render/Render';
 
 type State = 'valid' | 'valid-active' | 'invalid' | 'invalid-active' | 'readonly' | 'readonly-multiline';
@@ -41,7 +40,6 @@ interface IRenderOptions extends IControlOptions, IHeightOptions, IFontColorStyl
 class Render extends Control<IRenderOptions, void> implements IHeight, IFontColorStyle, IFontSize {
    private _tag: SVGElement | null = null;
    private _contentActive: boolean = false;
-   private _notifyHandler = notifyHandler;
 
    protected _state: string;
    protected _fontSize: string;
@@ -80,25 +78,20 @@ class Render extends Control<IRenderOptions, void> implements IHeight, IFontColo
 
       return this._validationStatus;
    }
+   private _tagClickHandler(event: SyntheticEvent<MouseEvent>) {
+      this._notify('tagClick', [this._children.tag]);
+   }
+   private _tagHoverHandler(event: SyntheticEvent<MouseEvent>) {
+      this._notify('tagHover', [this._children.tag]);
+   }
 
    protected _beforeMount(options: IRenderOptions): void {
       this.updateState(options);
    }
-   protected _afterMount(): void {
-      /**
-       * The "tagClick" and "tagHover" event notification is in the template.
-       * Their argument is the tag element. Save it to the state for access in the template.
-       * Сannot use _children in the template, because _children is not yet populated at the time of construction.
-       */
-      this._tag = this._children.tag;
-   }
    protected _beforeUpdate(options: IRenderOptions): void {
       this.updateState(options);
    }
-   protected _afterUpdate(): void {
-      this._tag = this._children.tag;
-   }
-   protected _setContentActive(event: SyntheticEvent, newContentActive: boolean): void {
+   protected _setContentActive(event: SyntheticEvent<FocusEvent>, newContentActive: boolean): void {
       this._contentActive = newContentActive;
 
       this.updateState(this._options);
