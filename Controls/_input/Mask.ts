@@ -153,7 +153,7 @@ import entity = require('Types/entity');
        *
        *       this._formatMaskChars = formatMaskChars;
        * </pre>
-       * tmpl:
+       * wml:
        * <pre>
        *    <Controls.input:Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
        * </pre>
@@ -174,7 +174,7 @@ import entity = require('Types/entity');
        *
        *       this._formatMaskChars = formatMaskChars;
        * </pre>
-       * tmpl:
+       * wml:
        * <pre>
        *    <Controls.input:Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
        * </pre>
