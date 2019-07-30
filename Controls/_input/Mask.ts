@@ -44,10 +44,10 @@ import entity = require('Types/entity');
        *
        * Маска может использовать следующие символы:
        * <ol>
-       *    <li>d - цифра.</li>
-       *    <li>L - прописная буква.</li>
-       *    <li>l - строчная буква.</li>
-       *    <li>x - буква или цифра.</li>
+       *    <li>d — цифра.</li>
+       *    <li>L — прописная буква.</li>
+       *    <li>l — строчная буква.</li>
+       *    <li>x — буква или цифра.</li>
        * </ol>
        * разделители и логические символы +, *, ?, {n[, m]}.
        * Логические символы могут быть записаны перед символом \\.
@@ -81,10 +81,10 @@ import entity = require('Types/entity');
        *
        * Mask can use the following keys:
        * <ol>
-       *    <li>d - digit.</li>
-       *    <li>L - uppercase letter.</li>
-       *    <li>l - lowercase letter.</li>
-       *    <li>x - letter or digit.</li>
+       *    <li>d — digit.</li>
+       *    <li>L — uppercase letter.</li>
+       *    <li>l — lowercase letter.</li>
+       *    <li>x — letter or digit.</li>
        * </ol>
        * delimeters and quantifiers +, *, ?, {n[, m]}.
        * Quantifiers should be preceded with \\.
@@ -140,7 +140,7 @@ import entity = require('Types/entity');
 
       /**
        * @name Controls/_input/Mask#formatMaskChars
-       * @cfg {Object} Объект, где ключи - символы маски, а значения - регулярные выражения, которые будут использоваться для фильтрации вводимых символов для соответствующих ключей.
+       * @cfg {Object} Объект, где ключи — символы маски, а значения — регулярные выражения, которые будут использоваться для фильтрации вводимых символов для соответствующих ключей.
        *
        * @example
        * js:
