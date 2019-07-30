@@ -12,16 +12,11 @@ type CssRule = {
 };
 
 function isFullGridSupport(): boolean {
-    return !detection.isWinXP && (!detection.isNotFullGridSupport || detection.safari);
+    return !detection.isNotFullGridSupport || detection.safari;
 }
 
 function isPartialGridSupport(): boolean {
-    let
-        isOldIE = detection.isIE && !detection.isModernIE,
-        noGridSupport = detection.isWinXP || isOldIE,
-        fullGridSupport = detection.safari;
-
-    return (detection.isNotFullGridSupport && !(noGridSupport || fullGridSupport);
+    return (detection.isNotFullGridSupport && !(detection.isWinXP || (detection.isIE && !detection.isModernIE) || detection.safari));
 }
 
 function isNoGridSupport(): boolean {
