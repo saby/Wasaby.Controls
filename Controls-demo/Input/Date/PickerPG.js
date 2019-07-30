@@ -28,6 +28,13 @@ define('Controls-demo/Input/Date/PickerPG',
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 0
+               },
+               inlineHeight: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
                }
             };
             this._componentOptions = {
