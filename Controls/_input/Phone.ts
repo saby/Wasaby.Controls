@@ -2,7 +2,7 @@ import Base = require('Controls/_input/Base');
 import ViewModel = require('Controls/_input/Phone/ViewModel');
 
       /**
-       * Поле ввода мобильного/станционарного телефонного номера. В зависимости от введенных символов формат номера телефона изменяется.
+       * Поле ввода телефона. В зависимости от введенных символов формат номера телефона изменяется.
        * {@link http://axure.tensor.ru/standarts/v7/%D0%BF%D0%BE%D0%BB%D0%B5_%D0%B2%D0%B2%D0%BE%D0%B4%D0%B0__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html Стандарт}.
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        * @remark

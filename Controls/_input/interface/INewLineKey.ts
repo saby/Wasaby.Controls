@@ -17,7 +17,7 @@ interface INewLineKey {
          * @name Controls/_input/interface/INewLineKey#newLineKey
          * @cfg {Enum} Поведение при создании новой строки.
          * @variant enter Пользователь нажимает клавишу "Enter".
-         * @variant ctrlEnter Пользователь нажимает сочетание клавиш "Ctrl + Enter".
+         * @variant ctrlEnter Пользователь нажимает комбинацию клавиш "Ctrl + Enter".
          * @default enter
          */
 

@@ -20,9 +20,9 @@ function proxyModelEvents(component, model, eventNames) {
  * Контрол для ввода даты и времени.
  * В зависимости от маски может использоваться для ввода:
  * <ol>
- *    <li>даты,</li>
- *    <li>времени,</li>
- *    <li>даты и времени.</li>
+ *    <li>даты</li>
+ *    <li>времени</li>
+ *    <li>даты и времени</li>
  * </ol>
  * <a href="/materials/demo-ws4-input-datetime">Демо-пример</a>.
  *

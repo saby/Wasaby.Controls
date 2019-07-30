@@ -57,19 +57,19 @@ import entity = require('Types/entity');
        * @example
        * Маска времени:
        * <pre class="brush:xml">
-       *    <Controls._input.Mask mask="dd.dd"/>
+       *    <Controls.input:Mask mask="dd.dd"/>
        * </pre>
        * Маска даты:
        * <pre class="brush:xml">
-       *    <Controls._input.Mask mask="dd.dd.dddd"/>
+       *    <Controls.input:Mask mask="dd.dd.dddd"/>
        * </pre>
        * Маска, в которой сначала вводятся 1-3 цифры, а после них 1-3 буквы.
        * <pre class="brush:xml">
-       *    <Controls._input.Mask mask="d\{1,3}l\{1,3}"/>
+       *    <Controls.input:Mask mask="d\{1,3}l\{1,3}"/>
        * </pre>
        * Маска для ввода бесконечного количества цифр.
        * <pre class="brush:xml">
-       *    <Controls._input.Mask mask="d\*"/>
+       *    <Controls.input:Mask mask="d\*"/>
        * </pre>
        *
        * @see formatMaskChars
@@ -94,19 +94,19 @@ import entity = require('Types/entity');
        * @example
        * The input mask time:
        * <pre class="brush:xml">
-       *    <Controls._input.Mask mask="dd.dd"/>
+       *    <Controls.input:Mask mask="dd.dd"/>
        * </pre>
        * The input mask date:
        * <pre class="brush:xml">
-       *    <Controls._input.Mask mask="dd.dd.dddd"/>
+       *    <Controls.input:Mask mask="dd.dd.dddd"/>
        * </pre>
        * The input mask from 1-3 digits followed by 1-3 letters.
        * <pre class="brush:xml">
-       *    <Controls._input.Mask mask="d\{1,3}l\{1,3}"/>
+       *    <Controls.input:Mask mask="d\{1,3}l\{1,3}"/>
        * </pre>
        * The input mask infinity number of digits:
        * <pre class="brush:xml">
-       *    <Controls._input.Mask mask="d\*"/>
+       *    <Controls.input:Mask mask="d\*"/>
        * </pre>
        *
        * @see formatMaskChars
@@ -119,7 +119,7 @@ import entity = require('Types/entity');
        * @remark Если в маске используются логические символы, replacer установить невозможно.       
        * @example
        * <pre>
-       *    <Controls._input.Mask mask="dd.dd", replacer=" ", value="12.34"/>
+       *    <Controls.input:Mask mask="dd.dd" replacer=" " value="12.34"/>
        *    Если вы удалите всё из поля ввода, поле изменится с '12.34' на '  .  '.
        * </pre>
        */
@@ -133,7 +133,7 @@ import entity = require('Types/entity');
        *
        * @example
        * <pre>
-       *    <Controls._input.Mask mask="dd.dd", replacer=" ", value="12.34"/>
+       *    <Controls.input:Mask mask="dd.dd" replacer=" " value="12.34"/>
        *    If you erase everything from input, the field will change from '12.34' to '  .  '.
        * </pre>
        */
@@ -155,7 +155,7 @@ import entity = require('Types/entity');
        * </pre>
        * tmpl:
        * <pre>
-       *    <Controls._input.Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
+       *    <Controls.input:Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
        * </pre>
        */
 
@@ -176,7 +176,7 @@ import entity = require('Types/entity');
        * </pre>
        * tmpl:
        * <pre>
-       *    <Controls._input.Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
+       *    <Controls.input:Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
        * </pre>
        */
 

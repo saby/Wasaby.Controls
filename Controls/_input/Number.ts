@@ -49,7 +49,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * @example
  * В этом примере _inputValue будет хранить число с дробной частью, равной 2 знакам.
  * <pre>
- *    <Controls._input.Number bind:value="_inputValue" precision="{{2}}"/>
+ *    <Controls.input:Number bind:value="_inputValue" precision="{{2}}"/>
  * </pre>
  */
 
@@ -62,7 +62,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * @example
  * In this example you the _inputValue state of the control will store a number with a fractional part of equal 2 signs.
  * <pre>
- *    <Controls._input.Number bind:value="_inputValue" precision="{{2}}"/>
+ *    <Controls.input:Number bind:value="_inputValue" precision="{{2}}"/>
  * </pre>
  */
 
@@ -74,7 +74,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * @example
  * В этом примере _inputValue будет хранить число с дробной частью не более 10 знаков.
  * <pre>
- *    <Controls._input.Number bind:value="_inputValue" integersLength="{{10}}"/>
+ *    <Controls.input:Number bind:value="_inputValue" integersLength="{{10}}"/>
  * </pre>
  */
 
@@ -86,7 +86,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * @example
  * In this example you the _inputValue in the control state will store a number with a integer part of no more than 10 signs.
  * <pre>
- *    <Controls._input.Number bind:value="_inputValue" integersLength="{{10}}"/>
+ *    <Controls.input:Number bind:value="_inputValue" integersLength="{{10}}"/>
  * </pre>
  */
 

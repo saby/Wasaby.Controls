@@ -38,7 +38,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
 
       /**
        * @name Controls/_input/Password#revealable
-       * @cfg {Boolean} Определяет, следует ли включить кнопку-переключатель, при клике на которую будет отображаться пароль в виде открытого текста.
+       * @cfg {Boolean} В значении true в поле ввода присутствует кнопка-переключатель видимости введённых символов.
        * @default true
        * @remark
        *

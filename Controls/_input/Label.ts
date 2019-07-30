@@ -11,7 +11,7 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
 }
 
 /**
- * Текстовая метка для контрола.
+ * Текстовая метка для поля ввода.
  *
  * @class Controls/_input/Label
  * @extends Core/Control
@@ -40,7 +40,7 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
 
 /**
  * @name Controls/_input/Label#required
- * @cfg {Boolean} Определяет, может ли метка отображаться, когда необходимо.
+ * @cfg {Boolean} В значении true справа от метки отображается символ "*" (поле обязательно к заполнению).
  */
 
 /*
@@ -50,7 +50,7 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
 
 /**
  * @name Controls/_input/Label#underline
- * @cfg {String} Отображает стиль подчеркивания метки.
+ * @cfg {String} Стиль декоративной линии, отображаемой для текста метки.
  * @variant hovered
  * @variant fixed
  * @variant none
@@ -66,7 +66,7 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
 
 /**
  * @name Controls/_input/Label#href
- * @cfg {String} Содержит URL или фрагмент URL, на который указывает гиперссылка.
+ * @cfg {String} При клике по метке пользователь переходит по ссылке, URL которой задан в опции.
  */
 
 /*
