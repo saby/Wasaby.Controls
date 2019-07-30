@@ -185,7 +185,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             if (dragItems.indexOf(itemsModelCurrent.key) !== -1) {
                 itemsModelCurrent.isVisible = dragItems[0] === itemsModelCurrent.key ? !this._dragTargetPosition : false;
             }
-            if (this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
+            if (this._draggingItemData && this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
                 itemsModelCurrent.dragTargetPosition = this._dragTargetPosition.position;
                 itemsModelCurrent.draggingItemData = this._draggingItemData;
             }

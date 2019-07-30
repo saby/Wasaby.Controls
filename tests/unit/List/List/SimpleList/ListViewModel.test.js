@@ -697,6 +697,15 @@ define([
                assert.equal(current.draggingItemData, undefined);
             });
 
+            it('without dragItemData', function() {
+               lvm.setDragEntity(dragEntity);
+               lvm.setDragTargetPosition(lvm.calculateDragTargetPosition(lvm.getItemDataByItem(lvm.at(0))));
+
+               current = lvm.getItemDataByItem(lvm.at(0));
+               assert.isUndefined(current.dragTargetPosition);
+               assert.isUndefined(current.draggingItemData);
+            });
+
             it('without dragTarget', function() {
                lvm.setDragItemData(lvm.getItemDataByItem(lvm.at(1)));
                lvm.setDragEntity(dragEntity);
