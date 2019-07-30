@@ -26,6 +26,7 @@ import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import {focus} from 'UI/Focus';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
+import {debounce} from 'Types/function';
 import {throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 
@@ -245,9 +246,12 @@ var _private = {
              * This event should bubble, because there can be anything between Scroll/Container and the list,
              * and we can't force everyone to manually bubble it.
              */
-            const size = self._saveAndRestoreScrollPosition === 'up' ?
-               self._virtualScroll.getItemsHeight(self._virtualScroll.ItemsIndexes.stop, self._savedStopIndex) :
-               self._virtualScroll.getItemsHeight(self._savedStartIndex, self._virtualScroll.ItemsIndexes.start);
+            let size = 0;
+            if (self._virtualScroll) {
+                size = self._saveAndRestoreScrollPosition === 'up' ?
+                   self._virtualScroll.getItemsHeight(self._virtualScroll.ItemsIndexes.stop, self._savedStopIndex) :
+                   self._virtualScroll.getItemsHeight(self._savedStartIndex, self._virtualScroll.ItemsIndexes.start);
+            }
             self._notify('restoreScrollPosition', [ size, self._saveAndRestoreScrollPosition ], { bubbling: true });
             self._saveAndRestoreScrollPosition = false;
             return;
