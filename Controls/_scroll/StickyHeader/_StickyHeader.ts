@@ -33,12 +33,17 @@ import 'css!theme?Controls/scroll';
 
 var _private = {
    getComputedStyle: function(self) {
-      const container = self._container;
+      let container = _private._getNormalizedContainer(self);
       if (self._cssClassName !== container.className) {
          self._cssClassName = container.className;
          self._cachedStyles = getComputedStyle(container);
       }
       return self._cachedStyles;
+   },
+
+   _getNormalizedContainer: function(self) {
+      //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+      return self._container.get ? self._container.get(0) : self._container;
    }
 };
 
@@ -195,6 +200,7 @@ var StickyHeader = Control.extend({
 
    _getStyle: function() {
       var
+         container,
          top,
          bottom,
          offset,
@@ -247,19 +253,21 @@ var StickyHeader = Control.extend({
       fixedPosition = this._model ? this._model.fixedPosition : undefined;
       if (fixedPosition) {
          if (offset) {
+            container = _private._getNormalizedContainer(this);
+
             styles = _private.getComputedStyle(this);
             minHeight = parseInt(styles.minHeight, 10);
             // Increasing the minimum height, otherwise if the content is less than the established minimum height,
             // the height is not compensated by padding and the header is shifted. If the minimum height is already
             // set by the style attribute, then do not touch it.
-            if (styles.boxSizing === 'border-box' && minHeight && !this._container.style.minHeight) {
+            if (styles.boxSizing === 'border-box' && minHeight && !container.style.minHeight) {
                this._minHeight = minHeight + offset;
             }
             if (this._minHeight) {
                style += 'min-height:' + this._minHeight + 'px;';
             }
             // Increase padding by offset. If the padding is already set by the style attribute, then do not touch it.
-            if (!this._container.style.paddingTop) {
+            if (!container.style.paddingTop) {
                this._padding = parseInt(styles.paddingTop, 10) + offset;
             }
             style += 'padding-' + fixedPosition + ': ' + this._padding + 'px;';
