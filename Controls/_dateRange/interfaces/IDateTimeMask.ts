@@ -52,14 +52,14 @@ export default {
              * @remark
              * Разрешенные символы маски:
              * <ol>
-             *    <li>D - день.</li>
-             *    <li>M - месяц.</li>
-             *    <li>Y - год.</li>
-             *    <li>H - час.</li>
-             *    <li>m - минута.</li>
-             *    <li>s - секунда.</li>
-             *    <li>U - миллисекунда.</li>
-             *    <li>".", "-", ":", "/", " " - разделители.</li>
+             *    <li>D — день.</li>
+             *    <li>M — месяц.</li>
+             *    <li>Y — год.</li>
+             *    <li>H — час.</li>
+             *    <li>m — минута.</li>
+             *    <li>s — секунда.</li>
+             *    <li>U — миллисекунда.</li>
+             *    <li>".", "-", ":", "/", " " — разделители.</li>
              * </ol>
              * @example
              * В этом примере маска задана таким образом, что в поле ввода можно ввести только время.
@@ -115,14 +115,14 @@ export default {
              * @remark
              * Allowed mask chars:
              * <ol>
-             *    <li>D - day.</li>
-             *    <li>M - month.</li>
-             *    <li>Y - year.</li>
-             *    <li>H - hour.</li>
-             *    <li>m - minute.</li>
-             *    <li>s - second.</li>
-             *    <li>U - millisecond.</li>
-             *    <li>".", "-", ":", "/", " " - delimiters.</li>
+             *    <li>D — day.</li>
+             *    <li>M — month.</li>
+             *    <li>Y — year.</li>
+             *    <li>H — hour.</li>
+             *    <li>m — minute.</li>
+             *    <li>s — second.</li>
+             *    <li>U — millisecond.</li>
+             *    <li>".", "-", ":", "/", " " — delimiters.</li>
              * </ol>
              * @example
              * In this example, the mask is set so that only the time can be entered in the input field.
