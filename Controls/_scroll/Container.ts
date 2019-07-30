@@ -415,6 +415,14 @@ var
             return true;
          }
 
+         // On ipad with inertial scrolling due to the asynchronous triggering of scrolling and caption fixing  events,
+         // sometimes it turns out that when the first event is triggered, the shadow must be displayed,
+         // and immediately after the second event it is not necessary.
+         // These conditions appear during scrollTop < 0. Just do not display the shadow when scrollTop < 0.
+         if (Env.detection.isMobileIOS && position === 'top' && _private.getScrollTop(this, this._children.content) < 0) {
+            return false;
+         }
+
          return this._displayState.shadowPosition.indexOf(position) !== -1 && !this._children.stickyController.hasFixed(position);
       },
 
@@ -461,14 +469,14 @@ var
       },
 
       _scrollHandler: function(ev) {
-
+         const scrollTop = _private.getScrollTop(this, this._children.content);
          // Проверяем, изменился ли scrollTop, чтобы предотвратить ложные срабатывания события.
          // Например, при пересчете размеров перед увеличением, плитка может растянуть контейнер между перерисовок,
          // и вернуться к исходному размеру.
          // После этого  scrollTop остается прежним, но срабатывает незапланированный нативный scroll
-         if (this._scrollTop !== _private.getScrollTop(this, this._children.content)) {
+         if (this._scrollTop !== scrollTop) {
             if (!this._dragging) {
-               this._scrollTop = _private.getScrollTop(this, this._children.content);
+               this._scrollTop = scrollTop;
                this._notify('scroll', [this._scrollTop]);
             }
             this._children.scrollDetect.start(ev);
