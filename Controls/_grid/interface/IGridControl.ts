@@ -376,10 +376,16 @@
  * @name Controls/_grid/interface/IGridControl#showEditArrow
  * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке
  * <a href="/materials/demo-ws4-edit-arrow">Example</a>
+ * @remark Чтобы расположить кнопку в произвольном месте прикладного шаблона колонки, следует встроить шаблон editArrowTemplate
+ * @example
+ * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
  */
 
 /*
  * @name Controls/_grid/interface/IGridControl#showEditArrow
  * @cfg {Boolean} Allows showing button in first column on hover.
  * <a href="/materials/demo-ws4-edit-arrow">Example</a>
+ * @remark To place the button in any place of the column template, you should use the editArrowTemplate
+ * @example
+ * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
  */
