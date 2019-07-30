@@ -184,7 +184,7 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#compat
-    * @cfg {Boolean} В значении true создаётся "слой совместимости" с контролами из пространства имён SBIS3.CONTROLS/* и Lib/*.
+    * @cfg {Boolean} В значении true создаётся "слой совместимости" для работы с контролами из пространства имён SBIS3.CONTROLS/* и Lib/*.
     */
 
    /*
@@ -204,7 +204,7 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#builderCompatible
-    * @cfg {Boolean} Загружает слой совместимости. Работает только в случае, когда опция {@link builder} имеет значение true.
+    * @cfg {Boolean} Загружает слой совместимости. Работает только в случае, когда опция {@link builder} в значении true.
     */
 
    /*
@@ -214,7 +214,7 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#width
-    * @cfg {String} Используется контролом Controls.popup:Manager.
+    * @cfg {String} Используется контролом Controls/popup:Manager.
     *
     * @css @font-size_App__body Font size of page body. This size inherits to other elements in page.
     */
