@@ -4,7 +4,9 @@ import ViewModel = require('Controls/_input/Mask/ViewModel');
 
 class ModuleClass extends ViewModel {
     private handleInput(splitValue, inputType) {
-        let _stringValueConverter = new StringValueConverter({replacer: this._replacer}), date;
+        let _stringValueConverter = new StringValueConverter({replacer: this.options.replacer}),
+            date,
+            textLength;
         if (splitValue.insert.length > 1) {
             date = _stringValueConverter.getValueByString(splitValue.insert);
         }
@@ -15,8 +17,9 @@ class ModuleClass extends ViewModel {
 
             this._displayValue = displayValue;
             this._value = this._convertToValue(displayValue);
-            this._selection.start = 0;
-            this._selection.end = 0;
+            textLength = displayValue.length;
+            this._selection.start = textLength;
+            this._selection.end = textLength;
 
             this._shouldBeChanged = true;
 
