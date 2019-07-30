@@ -104,6 +104,11 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  *     }
  * <pre>
  */
+
+/*
+ * @event Controls/_search/Input/Search#searchClick Occurs when search button is clicked.
+ * @event Controls/Input/resetClick#resetClick Occurs when reset button is clicked.
+ */ 
 var _private = {
    isVisibleResetButton: function() {
       return !!this._options.value && !this._options.readOnly;

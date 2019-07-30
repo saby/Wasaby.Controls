@@ -474,8 +474,8 @@ Component.getDefaultOptions = function () {
         /**
          * @name Controls/datePopup#headerType
          * @cfg {String} Тип заголовка.
-         * @variant link
-         * @variant input
+         * @variant link Заголовок отображает выбранный период. При клике по заголовку он преобразуется в поле ввода периода.
+         * @variant input Заголовок по умолчанию отображается в виде поля ввода периода.
          */
 
         /*

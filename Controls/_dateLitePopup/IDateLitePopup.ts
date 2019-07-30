@@ -29,7 +29,7 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#chooseMonths
-             * @cfg {Boolean} Устанавливает возможность выбора месяца.
+             * @cfg {Boolean} В значении true доступен выбор месяца.
              */
 
             /*
@@ -40,7 +40,7 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#chooseQuarters
-             * @cfg {Boolean} Устанавливает возможность выбора квартала.
+             * @cfg {Boolean} В значении true доступен выбор квартала.
              */
 
             /*
@@ -51,7 +51,7 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#chooseHalfyears
-             * @cfg {Boolean} Устанавливает возможность выбора полугодия.
+             * @cfg {Boolean} В значении true доступен выбор полугодия.
              */
             chooseHalfyears: true,
 

@@ -20,7 +20,7 @@
  * В любое время жизненного цикла контрола, _startValue будет содержать текущее начальное значение периода.
  * <pre>
  *    <Controls.datePopup bind:startValue="_startValue" />
- *    <Controls.Button on:click="_sendButtonClick()" />
+ *    <Controls.buttons:Button on:click="_sendButtonClick()" />
  * </pre>
  * <pre>
  *    Control.extend({
