@@ -146,6 +146,85 @@ define([
          });
       });
 
+      describe('wrapUrl', function() {
+         it('with domain - 1', function() {
+            var originHtml = '<p>https://ya.ru</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('with domain - 2', function() {
+            var originHtml = '<p>http://localhost:1025</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://localhost:1025" target="_blank">http://localhost:1025</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('with domain - 3', function() {
+            var originHtml = '<p>https://</p>';
+            var goodResultHtml = '<p>https://</p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('without domain - 1', function() {
+            var originHtml = '<p>usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup" target="_blank">usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('without domain - 2', function() {
+            var originHtml = '<p>vk.com</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://vk.com" target="_blank">vk.com</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('without domain - 3', function() {
+            var originHtml = '<p>market.yandex.ru</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://market.yandex.ru" target="_blank">market.yandex.ru</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('without domain - 4', function() {
+            var originHtml = '<p>my&nbsp;page&nbsp;on&nbsp;vk.com&nbsp;is&nbsp;vk.com/id0</p>';
+            var goodResultHtml = '<p>my&nbsp;page&nbsp;on&nbsp;<a class="asLink" rel="noreferrer" href="http://vk.com" target="_blank">vk.com</a>&nbsp;is&nbsp;<a class="asLink" rel="noreferrer" href="http://vk.com/id0" target="_blank">vk.com/id0</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('without domain - 5', function() {
+            var originHtml = '<p>yandex.ru.</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://yandex.ru" target="_blank">yandex.ru</a>.</p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('without domain - 6', function() {
+            var originHtml = '<p>www.google.com</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://www.google.com" target="_blank">www.google.com</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('inside link', function() {
+            var originHtml = '<p><a>https://ya.ru</a><a>yandex.ru</a><a>rn.kondakov@tensor.ru</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(originHtml, checkResultHtml);
+         });
+         it('inside attributes', function() {
+            var originHtml = '<p><div class="www.google.com">text</div><iframe style="min-width: 350px; min-height: 214px;" src="https://www.youtube.com/embed/LY2I4IXN1zQ" width="430" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(originHtml, checkResultHtml);
+         });
+         it('email - 1', function() {
+            var originHtml = '<p>rn.kondakov@tensor.ru</p>';
+            var goodResultHtml = '<p><a href="mailto:rn.kondakov@tensor.ru">rn.kondakov@tensor.ru</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('email - 2', function() {
+            var originHtml = '<p>rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru</p>';
+            var goodResultHtml = '<p><a href="mailto:rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru">rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+      });
+
       describe('htmlToJson', function() {
          beforeEach(function() {
             if (typeof document === 'undefined') {
