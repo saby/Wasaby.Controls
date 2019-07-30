@@ -26,6 +26,7 @@ import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import {Focus} from 'Vdom/Vdom';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
+import {debounce} from 'Types/function';
 import {throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 
