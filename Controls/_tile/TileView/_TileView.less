@@ -63,6 +63,12 @@
          box-shadow: @box-shadow-size_TileView-item @box-shadow-color_TileView-item_hover;
       }
    }
+
+   .controls-TileView__item_hovered, .controls-TileView__item_active {
+      .controls-TileView__title_invisible {
+         display: block;
+      }
+   }
 }
 
 .controls-TileView__item_hovered, .controls-TileView__item_active, .controls-TileView__item_swiped {
@@ -72,10 +78,6 @@
       background-color: @background-color_TileView-title;
       white-space: normal;
       word-break: break-all;
-   }
-
-   .controls-TileView__title_invisible {
-      display: block;
    }
 }
 
