@@ -33,8 +33,8 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
       _template: template,
       _selectedKeysCount: 0,
 
-      _selectedTypeChangedHandler: function(event, typeName) {
-         this._children.registrator.start(typeName);
+      _selectedTypeChangedHandler: function(event, typeName, limit) {
+         this._children.registrator.start(typeName, limit);
       },
 
       _selectedKeysCountChanged: function(e, count) {
