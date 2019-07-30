@@ -26,10 +26,10 @@
  *    Control.extend({
  *       ...
  *       _startValue: new Date(),
- *      _sendButtonClick() {
- *         this._sendData(this._startValue);
- *      }
- *      ...
+ *       _sendButtonClick() {
+ *          this._sendData(this._startValue);
+ *       }
+ *       ...
  *   });
  * </pre>
  */
@@ -48,10 +48,10 @@
  *    Control.extend({
  *       ...
  *       _startValue: new Date(),
- *      _sendButtonClick() {
- *         this._sendData(this._startValue);
- *      }
- *      ...
+ *       _sendButtonClick() {
+ *          this._sendData(this._startValue);
+ *       }
+ *       ...
  *   });
  * </pre>
  */
@@ -70,10 +70,10 @@
  *    Control.extend({
  *       ...
  *       _endValue: new Date(),
- *      _sendButtonClick() {
- *         this._sendData(this._endValue);
- *      }
- *      ...
+ *       _sendButtonClick() {
+ *          this._sendData(this._endValue);
+ *       }
+ *       ...
  *   });
  * </pre>
  */
@@ -92,10 +92,10 @@
  *    Control.extend({
  *       ...
  *       _endValue: new Date(),
- *      _sendButtonClick() {
- *         this._sendData(this._endValue);
- *      }
- *      ...
+ *       _sendButtonClick() {
+ *          this._sendData(this._endValue);
+ *       }
+ *       ...
  *   });
  * </pre>
  */
