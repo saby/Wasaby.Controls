@@ -155,6 +155,7 @@ define(['Controls/grid'], function(gridMod) {
       });
 
       it('getColumnsWidthForEditingRow', function () {
+
          let
              gridView = new gridMod.GridView({});
          gridView = {

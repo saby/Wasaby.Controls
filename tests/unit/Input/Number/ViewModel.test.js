@@ -237,6 +237,22 @@ define(
                assert.equal(model.displayValue, '12.34');
                assert.deepEqual(model.selection, getSelection(5));
             });
+
+            it('Test1', function() {
+               model.value = '123';
+
+               assert.equal(model._convertToValue('123 456'), '123456');
+            });
+            it('Test2', function() {
+               model.value = null;
+
+               assert.equal(model._convertToValue('123 456'), 123456);
+            });
+            it('Test3', function() {
+               model.value = 123;
+
+               assert.equal(model._convertToValue('123 456'), 123456);
+            });
          });
 
          describe('_convertToDisplayValue', function() {

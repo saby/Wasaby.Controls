@@ -115,7 +115,7 @@ NumberInput.getDefaultOptions = function () {
 NumberInput.getOptionTypes = function () {
     const optionTypes = Base.getOptionTypes();
 
-    optionTypes.value = entity.descriptor(Number, null);
+    optionTypes.value = entity.descriptor(Number, String, null);
     optionTypes.precision = entity.descriptor(Number, null);
     optionTypes.integersLength = entity.descriptor(Number, null);
     optionTypes.useGrouping = entity.descriptor(Boolean);

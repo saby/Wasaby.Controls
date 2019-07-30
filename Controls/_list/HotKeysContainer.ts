@@ -1,5 +1,6 @@
 import {Control, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_list/HotKeysContainer');
+import {constants} from 'Env/Env';
 
 /**
  * Control makes Controls.list:Container to handle up, down keys by default
@@ -10,7 +11,7 @@ import template = require('wml!Controls/_list/HotKeysContainer');
  */
 class HotKeysContainer extends Control<IControlOptions> {
     protected _template: Function = template;
-    protected _defaultActions = [{keyCode: 38}, {keyCode: 40}];
+    protected _defaultActions = [{keyCode: constants.key.up}, {keyCode: constants.key.down}, {keyCode: constants.key.enter}];
 }
 
 export default HotKeysContainer;

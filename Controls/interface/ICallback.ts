@@ -18,7 +18,7 @@
  */
 
 /**
- * @name Controls/interface/ICallback#InputCallback
+ * @name Controls/interface/ICallback#inputCallback
  * @function
  * @description The callback function is called after the main input processing process.
  * @param {IFieldData & IValue} data

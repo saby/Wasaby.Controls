@@ -1222,6 +1222,11 @@ define([
          bc._onViewPortResize(bc, 600);
          assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200, isNull: false});
 
+         //Если контрол в состоянии ошибки, то не нужно ничего делать
+         bc.__error = true;
+         bc._setLoadOffset(100, 100, false);
+         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200, isNull: false});
+
       });
 
       it('scrollHide/scrollShow base control state', function() {
@@ -1611,24 +1616,25 @@ define([
             });
          })
       });
-      describe('_canUpdateItemsActions', function() {
+
+      it('mouseEnter handler', function () {
          var lnSource = new sourceLib.Memory({
-               idProperty: 'id',
-               data: data
-            }),
-            lnCfg = {
-               viewName: 'Controls/List/ListView',
-               source: lnSource,
-               keyProperty: 'id',
-               itemActions: [
-                  {
-                     id: 1,
-                     title: '123'
-                  }
-               ],
-               viewModelConstructor: lists.ListViewModel
-            },
-            lnBaseControl = new lists.BaseControl(lnCfg);
+                idProperty: 'id',
+                data: data
+             }),
+             lnCfg = {
+                viewName: 'Controls/List/ListView',
+                source: lnSource,
+                keyProperty: 'id',
+                itemActions: [
+                   {
+                      id: 1,
+                      title: '123'
+                   }
+                ],
+                viewModelConstructor: lists.ListViewModel
+             },
+             lnBaseControl = new lists.BaseControl(lnCfg);
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
@@ -1637,58 +1643,16 @@ define([
                isTouch: false
             }
          };
-         it('afterMount', function() {
-            lnBaseControl._afterMount(lnCfg);
-            assert.isTrue(lnBaseControl._canUpdateItemsActions);
-            lnBaseControl._afterUpdate(lnCfg);
-            assert.isFalse(lnBaseControl._canUpdateItemsActions);
-         });
-         it('itemsChanged', async function() {
-            lnBaseControl._itemsChanged = true;
-            await lnBaseControl._beforeUpdate(lnCfg);
-            assert.isTrue(lnBaseControl._canUpdateItemsActions);
-            lnBaseControl._afterUpdate(lnCfg);
-         });
-         it('hoveredItemChanged', function() {
-            lnBaseControl._onHoveredItemChanged({}, {});
-            assert.isTrue(lnBaseControl._canUpdateItemsActions);
-            lnBaseControl._afterUpdate(lnCfg);
-            assert.isFalse(lnBaseControl._canUpdateItemsActions);
-            lnBaseControl._context.isTouch.isTouch = true;
-            lnBaseControl._onHoveredItemChanged({}, {});
-            assert.isFalse(lnBaseControl._canUpdateItemsActions);
-            lnBaseControl._context.isTouch.isTouch = false;
-            lnBaseControl._afterUpdate(lnCfg);
-         });
-         it('locking by scroll', async function () {
-            lists.BaseControl._private.handleListScrollSync(lnBaseControl);
-            lnBaseControl._onHoveredItemChanged({}, {});
-            assert.isFalse(lnBaseControl._canUpdateItemsActions);
-            await setTimeout(function() {
-               lists.BaseControl._private.handleListScrollSync(lnBaseControl);
-               assert.isFalse(lnBaseControl._canUpdateItemsActions);
-               setTimeout(function() {
-                  assert.isFalse(lnBaseControl._canUpdateItemsActions);
-                  setTimeout(function() {
-                     assert.isTrue(lnBaseControl._canUpdateItemsActions);
-                  }, 100);
-               }, 100);
-            }, 100)
-            lnBaseControl._afterUpdate(lnCfg);
-         });
-         it('locking by DnD', async function () {
-            lnBaseControl._listViewModel.getItemDataByItem = function() {};
-            lnBaseControl._listViewModel.setDragItemData = function() {};
-            lnBaseControl._itemDragData = {
-               dispItem: {}
-            };
-            lnBaseControl._dragStart({}, {});
-            lnBaseControl._onHoveredItemChanged({}, {});
-            assert.isFalse(lnBaseControl._canUpdateItemsActions);
-            lnBaseControl._dragEnd({}, {});
-            assert.isTrue(lnBaseControl._canUpdateItemsActions);
-            lnBaseControl._afterUpdate(lnCfg);
-         });
+
+         assert.isFalse(lnBaseControl._canUpdateItemsActions);
+         lnBaseControl._itemMouseEnter({});
+         assert.isTrue(lnBaseControl._canUpdateItemsActions);
+         lnBaseControl._afterUpdate(lnCfg);
+         assert.isFalse(lnBaseControl._canUpdateItemsActions);
+
+         lnBaseControl._context.isTouch.isTouch = true;
+         lnBaseControl._itemMouseEnter({});
+         assert.isFalse(lnBaseControl._canUpdateItemsActions);
       });
 
       it('List navigation by keys and after reload', function(done) {
