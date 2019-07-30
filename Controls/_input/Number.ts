@@ -42,7 +42,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
 
 /**
  * @name Controls/_input/Number#precision
- * @cfg {Number} Количество знаков в десятичной части.
+ * @cfg {Number} Количество знаков в дробной части.
  * @remark
  * Если дробная часть заполнена не полностью, недостающие знаки будут заменены на 0.
  * Если значение не задано, количество знаков не ограничено.
