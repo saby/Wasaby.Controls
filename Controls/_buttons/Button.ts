@@ -158,9 +158,6 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @cfg {Enum} Устанавливает параметры стиля для кнопки. Это цвет фона или цвет границы для различных значений режима отображения (viewMode).
  * @variant primary
  * @variant secondary
- * @variant success
- * @variant warning
- * @variant danger
  * @default secondary
  * @example
  * Кнопка со стилем "Primary" с иконкой по умолчанию.
