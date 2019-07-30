@@ -37,8 +37,8 @@
            xmlns="http://www.w3.org/2000/svg"
            class="controls-Render__tagStyle_theme-{{_options.theme}}
                   controls-Render__tagStyle_style-{{_options.tagStyle}}_theme-{{_options.theme}}"
-           on:click="_notifyHandler('tagClick', _children.tag)"
-           on:mouseenter="_notifyHandler('tagHover', _children.tag)">
+           on:click="_tagClickHandler()"
+           on:mouseenter="_tagHoverHandler()">
          <polygon points="0,0 1,1 1,0"/>
       </svg>
    </ws:if>
