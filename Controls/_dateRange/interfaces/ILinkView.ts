@@ -18,12 +18,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#style
-             * @cfg {String} Display style of control.
-             * @variant default Control display as default style.
-             * @variant linkMain Control display as main link style.
-             * @variant linkMain2 Control display as first nonaccent link style.
-             * @variant linkAdditional Control display as third nonaccent link style.
-             * @deprecated Вместо этого используйте опции {@link viewMode} и {@link styleMode}.
+             * @deprecated Используйте {@link viewMode} и {@link styleMode}.
              */
 
             /*
@@ -56,9 +51,10 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#styleMode
-             * @cfg {String} Стиль отображения контрола. Различные режимы просмотра поддерживают различные стили. 
-             * @variant secondary Стиль по умолчанию для режима просмотра селектора и ссылки. Стиль отображения "secondary".
-             * @variant info Стиль по умолчанию для режима просмотра селектора и ссылки. Стиль отображения "info".
+             * @cfg {String} Стиль отображения контрола.  
+             * @variant secondary Стиль отображения "secondary" (см.{@link http://axure.tensor.ru/standarts/v7/%D1%88%D1%80%D0%B8%D1%84%D1%82%D1%8B__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html Axure}).
+             * Используется по умолчанию, когда опция {@link viewMode} установлена в значения selector и link.
+             * @variant info Стиль отображения "info" (см.{@link http://axure.tensor.ru/standarts/v7/%D1%88%D1%80%D0%B8%D1%84%D1%82%D1%8B__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html Axure}).
              */
 
             /*
@@ -73,8 +69,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#showNextArrow
-             * @cfg {Boolean} Display the control arrow to switch to the next period
-             * @deprecated Вместо этого используйте опцию {@link nextArrowVisibility}.
+             * @deprecated Используйте {@link nextArrowVisibility}.
              */
 
             /*
@@ -86,8 +81,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#showPrevArrow
-             * @cfg {Boolean} Display the control arrow to switch to the previous period
-             * @deprecated Вместо этого используйте опцию {@link prevArrowVisibility}.
+             * @deprecated Используйте {@link prevArrowVisibility}.
              */
 
             /*
@@ -121,7 +115,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#showDeleteButton
-             * @cfg {Boolean} Включает/отключает отображение кнопки очистки периода. 
+             * @cfg {Boolean} Включает/отключает отображение кнопки "очистить период". 
              */
 
             /*
@@ -132,7 +126,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#emptyCaption
-             * @cfg {String} Текст, который используется, если период не выбран.
+             * @cfg {String} Отображаемый текст, когда в контроле не выбран период.
              */
 
             /*

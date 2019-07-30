@@ -25,7 +25,7 @@ var getDayRange = function(startDate, endDate, quantum) {
 var Utils = {
 
    /**
-    * Возвращает список дней недели.
+    * Возвращает список названий дней недели.
     * @returns {Array}
     */
 

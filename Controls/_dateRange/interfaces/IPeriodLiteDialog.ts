@@ -29,7 +29,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#chooseMonths
-             * @cfg {Boolean} Задаёт параметр для выбора месяца.
+             * @cfg {Boolean} В значение false недоступен выбор месяца.
              */
 
             /*
@@ -40,7 +40,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#chooseQuarters
-             * @cfg {Boolean} Задаёт параметр для выбора квартала.
+             * @cfg {Boolean} В значение false недоступен выбор квартала.
              */
 
             /*
@@ -51,7 +51,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#chooseHalfyears
-             * @cfg {Boolean} Задаёт параметр для выбора полугодия.
+             * @cfg {Boolean} В значение false недоступен выбор полугодия.
              */
 
             /*
@@ -62,7 +62,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#chooseYears
-             * @cfg {Boolean} Задаёт параметр для выбора года.
+             * @cfg {Boolean} В значение false недоступен выбор года.
              */
 
             /*
@@ -73,7 +73,7 @@ export default {
 
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#emptyCaption
-             * @cfg {String} Текст, который отображается, если период не выбран.
+             * @cfg {String} Отображаемый текст, когда в контроле не выбран период.
              */
 
             /*
@@ -165,7 +165,7 @@ export default {
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#iconsHandler
              * @cfg {Function} Устанавливает функцию, которая будет вызвана во время перерисовки компонента.
              * @remark
-             * Function Arguments:
+             * Аргументы функции:
              * <ol>
              *    <li>periods - Массив, содержащий массивы начала и окончания периода.</li>
              * </ol>
@@ -253,6 +253,24 @@ export default {
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#captionFormatter
              * @cfg {Function} Функция форматирования заголовка.
+             * Аргументы функции:
+             * <ol>
+             *    <li>startValue - Начальное значение периода.</li>
+             *    <li>endValue - Конечное значение периода.</li>
+             *    <li>emptyCaption - Отображаемый текст, когда в контроле не выбран период.</li>
+             * </ol> 
+             * @returns {String}
+             * @example
+             * WML:
+             * <pre>
+             * <Controls.dateRange:Selector captionFormatter="{{_captionFormatter}}" />
+             * </pre>
+             * JS:
+             * <pre>
+             * _captionFormatter: function(startValue, endValue, emptyCaption) {
+             *    return 'Custom range format';
+             * }
+             * </pre>
              */
 
             /*

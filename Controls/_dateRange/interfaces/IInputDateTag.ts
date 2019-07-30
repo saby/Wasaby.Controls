@@ -16,21 +16,22 @@
 
 /**
  * @name Controls/_dateRange/interfaces/IInputDateTag#startTagStyle
- * @cfg {String} Стиль тега в стартовом поле (цветной индикатор в правом верхнем углу поля).
+ * @cfg {String} Стиль индикатора в стартовом поле.
+ * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
  * @variant secondary
  * @variant success
  * @variant primary
  * @variant danger
  * @variant info
  * @remark
- * Тег используется для отображения информации о поле (например, если поле является обязательным). 
+ * Тег может использоваться для отображения информации о поле (например, если поле является обязательным). 
  * Часто всплывающая подсказка отображается при клике или наведении курсора мыши на тег.
  * @example
  * В этом примере поле будет отображаться со стилем "danger", чтобы показать, что его заполнение необходимо.
  * Когда вы кликните по тегу, появится всплывающая подсказка с сообщением "This field is required".
  * <pre>
  *    <Controls.dateRange:Input startTagStyle="danger" on:startTagClick="tagClickHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
@@ -66,7 +67,7 @@
  * In this example, the field will be rendered with "danger" to show that it is required. When you click on tag, the Infobox with message "This field is required" will be shown.
  * <pre>
  *    <Controls.dateRange:Input startTagStyle="danger" on:startTagClick="tagClickHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
@@ -89,7 +90,7 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IInputDateTag#startTagClick Происходит при клике на тег в стартовом поле.
+ * @event Controls/_dateRange/interfaces/IInputDateTag#startTagClick Происходит при клике на индикатор в стартовом поле.
  * @param {Object} event Нативное событие. 
  * Может использоваться для получения таргета (DOM-узла тега), чтобы показать всплывающую подсказку.
  * @remark Событие никогда не запустится, если вы не укажете опцию tagStyle в поле.
@@ -97,7 +98,7 @@
  * В этом примере при клике по тегу будет отображаться всплывающая подсказка с сообщением "This field is required".
  * <pre>
  *    <Controls.dateRange:Input startTagStyle="danger" on:startTagClick="tagClickHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
@@ -127,7 +128,7 @@
  * In this example, when you click on tag, the Infobox with message "This field is required" will be shown.
  * <pre>
  *    <Controls.dateRange:Input startTagStyle="danger" on:startTagClick="tagClickHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
@@ -150,7 +151,7 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IInputDateTag#startTagHover Происходит при наведении курсора на тег в стартовом поле.
+ * @event Controls/_dateRange/interfaces/IInputDateTag#startTagHover Происходит при наведении курсора на индикатор в стартовом поле.
  * @param {Object} event Нативное событие. 
  * Может использоваться для получения таргета (DOM-узла тега), чтобы показать всплывающую подсказку.
  * @remark Событие никогда не запустится, если вы не укажете опцию tagStyle в поле.
@@ -158,7 +159,7 @@
  * В этом примере при наведении курсора на тег будет отображаться всплывающая подсказка с сообщением "This field is required".
  * <pre>
  *    <Controls.dateRange:Input startTagStyle="danger" on:startTagHover="_tagHoverHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
@@ -188,7 +189,7 @@
  * In this example, when you hover on tag, the Infobox with message "This field is required" will be shown.
  * <pre>
  *    <Controls.dateRange:Input startTagStyle="danger" on:startTagHover="_tagHoverHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
@@ -212,7 +213,8 @@
 
 /**
  * @name Controls/_dateRange/interfaces/IInputDateTag#endTagStyle
- * @cfg {String} Стиль тега в конечном поле (цветной индикатор, показанный в правом верхнем углу поля).
+ * @cfg {String} Стиль индикатора в конечном поле (цветной индикатор, показанный в правом верхнем углу поля).
+ * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
  * @variant secondary
  * @variant success
  * @variant primary
@@ -225,8 +227,8 @@
  * В этом примере поле будет отображаться со стилем "danger", чтобы показать, что его заполнение необходимо.
  * Когда вы кликните по тегу, появится всплывающая подсказка с сообщением "This field is required".
  * <pre>
- *    <Controls.dateRange:Input endTagStyle="danger" on:endTagClick="tagClickHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.dateRange:Input endTagStyle="danger" on:endTagClick="_tagClickHandler()"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
@@ -261,8 +263,8 @@
  * @example
  * In this example, the field will be rendered with "danger" to show that it is required. When you click on tag, the Infobox with message "This field is required" will be shown.
  * <pre>
- *    <Controls.dateRange:Input endTagStyle="danger" on:endTagClick="tagClickHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.dateRange:Input endTagStyle="danger" on:endTagClick="_tagClickHandler()"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
@@ -285,15 +287,16 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IInputDateTag#endTagClick Происходит при клике по тегу в конечном поле.
+ * @event Controls/_dateRange/interfaces/IInputDateTag#endTagClick Происходит при клике по индикатору в конечном поле.
+ * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
  * @param {Object} event Нативное событие. 
  * Может использоваться для получения таргета (DOM-узла тега), чтобы показать всплывающую подсказку.
  * @remark Событие никогда не запустится, если вы не укажете опцию tagStyle в поле.
  * @example
  * В этом примере при клике по тегу будет отображаться всплывающая подсказка с сообщением "This field is required".
  * <pre>
- *    <Controls.dateRange:Input endTagStyle="danger" on:endTagClick="tagClickHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.dateRange:Input endTagStyle="danger" on:endTagClick="_tagClickHandler()"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
@@ -322,8 +325,8 @@
  * @example
  * In this example, when you click on tag, the Infobox with message "This field is required" will be shown.
  * <pre>
- *    <Controls.dateRange:Input endTagStyle="danger" on:endTagClick="tagClickHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.dateRange:Input endTagStyle="danger" on:endTagClick="_tagClickHandler()"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
@@ -346,7 +349,8 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IInputDateTag#endTagHover Происходит при наведении курсора на тег в конечном поле.
+ * @event Controls/_dateRange/interfaces/IInputDateTag#endTagHover Происходит при наведении курсора на индикатор в конечном поле.
+ * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
  * @param {Object} event Нативное событие.
  * Может использоваться для получения таргета (DOM-узла тега), чтобы показать всплывающую подсказку.
  * @remark Событие никогда не запустится, если вы не укажете опцию tagStyle в поле.
@@ -354,7 +358,7 @@
  * В этом примере при наведении курсора на тег будет отображаться всплывающая подсказка с сообщением "This field is required".
  * <pre>
  *    <Controls.dateRange:Input endTagStyle="danger" on:endTagHover="_tagHoverHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
@@ -384,7 +388,7 @@
  * In this example, when you hover on tag, the Infobox with message "This field is required" will be shown.
  * <pre>
  *    <Controls.dateRange:Input endTagStyle="danger" on:endTagHover="_tagHoverHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>

@@ -19,8 +19,8 @@
  * В этом примере значение _startValue в состоянии контрола привязывается к значению поля ввода.
  * В любое время жизненного цикла контрола, _startValue будет содержать текущее начальное значение поля ввода.
  * <pre>
- *    <Controls.Input.DateRande bind:startValue="_startValue" />
- *    <Controls.Button on:click="_sendButtonClick()" />
+ *    <Controls.dateRange:Input bind:startValue="_startValue" />
+ *    <Controls.buttons:Button on:click="_sendButtonClick()" />
  * </pre>
  * <pre>
  *    Control.extend({
@@ -41,8 +41,8 @@
  * In this example you bind _startValue in control's state to the value of input field.
  * At any time of control's lifecycle, _startValue will contain the current start value of the input field.
  * <pre>
- *    <Controls.Input.DateRande bind:startValue="_startValue" />
- *    <Controls.Button on:click="_sendButtonClick()" />
+ *    <Controls.dateRange:Input bind:startValue="_startValue" />
+ *    <Controls.buttons:Button on:click="_sendButtonClick()" />
  * </pre>
  * <pre>
  *    Control.extend({
@@ -64,7 +64,7 @@
  * В любое время жизненного цикла контрола, _endValue будет содержать текущее конечное значение поля ввода.
  * <pre>
  *    <Controls.Input.DateRange bind:endValue="_endValue" />
- *    <Controls.Button on:click="_sendButtonClick()" />
+ *    <Controls.buttons:Button on:click="_sendButtonClick()" />
  * </pre>
  * <pre>
  *    Control.extend({
@@ -86,7 +86,7 @@
  * At any time of control's lifecycle, _endValue will contain the current ens value of the input field.
  * <pre>
  *    <Controls.Input.DateRange bind:endValue="_endValue" />
- *    <Controls.Button on:click="_sendButtonClick()" />
+ *    <Controls.buttons:Button on:click="_sendButtonClick()" />
  * </pre>
  * <pre>
  *    Control.extend({
@@ -102,6 +102,7 @@
 
 /**
  * @event Controls/_dateRange/interfaces/IInput#startValueChanged Происходит при изменении начального значения поля.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Date} value Новое значение поля.
  * @param {String} displayValue Текстовое значение поля.
  * @remark
@@ -158,6 +159,7 @@
 
 /**
  * @event Controls/_dateRange/interfaces/IInput#endValueChanged Происходит при изменении конечного значения поля.
+ * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Date} value Новое значение поля.
  * @param {String} displayValue Текстовое значение поля.
  * @remark
@@ -214,6 +216,7 @@
 
 /**
  * @event Controls/_dateRange/interfaces/IInput#inputCompleted Происходит при завершении ввода (поле потеряло фокус или пользователь нажал "enter").
+ * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {Date} startValue Начальное значение поля.
  * @param {Date} endValue Конечно значение поля.
  * @param {String} displayedStartValue Начальное текстовое значение поля.
