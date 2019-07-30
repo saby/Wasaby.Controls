@@ -9,6 +9,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             stickyColumnsCount: 1
          },
          columnScroll = new ColumnScroll(cfg);
+
       columnScroll._children = {
          contentStyle: {
             innerHTML: ''
@@ -349,6 +350,51 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             'controls-ColumnScroll__shadow controls-ColumnScroll__shadow-end controls-ColumnScroll__shadow_invisible');
          assert.equal(columnScroll._children.contentStyle.innerHTML, '.controls-ColumnScroll__transform-1234567890' +
             ' .controls-Grid__cell_transform { transform: translateX(-250px); }');
+      });
+
+      it('setOffsetForHScroll', function () {
+
+         columnScroll._children = {
+           content: {
+              getElementsByClassName: function (className) {
+                 if (className === 'controls-Grid__header') {
+                    return [
+                       {
+                          childNodes: [
+                             {
+                                offsetHeight: 50,
+                             },
+                             {
+                                offsetHeight: 50,
+                             },
+                          ]
+                       }
+                    ];
+                 } else if (className === 'controls-Grid__results') {
+                    return [
+                       {
+                          childNodes: [
+                             {
+                                offsetHeight: 50,
+                             },
+                             {
+                                offsetHeight: 50,
+                             },
+                          ]
+                       }
+                    ];
+                 }
+              }
+           }
+         };
+         columnScroll._setOffsetForHScroll();
+         assert.equal(columnScroll._leftOffsetForHScroll, 100);
+         assert.equal(columnScroll._offsetForHScroll, 50);
+
+         columnScroll._options.resultsPosition = 'top';
+         columnScroll._setOffsetForHScroll();
+
+         assert.equal(columnScroll._offsetForHScroll, 100);
       });
    });
 });
