@@ -218,7 +218,8 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#builderCompatible
-    * @cfg {Boolean} Загружает слой совместимости. Работает только в случае, когда опция {@link builder} в значении true.
+    * @cfg {Boolean} В значении true на странице загружается слой совместимости для работы с контролами из пространства имён SBIS3.CONTROLS/* и Lib/*.
+    * Использование опции актуально, когда опция {@link builder} установлена в значение true.
     */
 
    /*
