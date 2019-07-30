@@ -46,8 +46,7 @@ import 'Controls/decorator';
       /**
        * @name Controls/_input/Area#minLines
        * @cfg {Number} Минимальное количество строк.
-       * @remark
-       * Поддерживается значение от 1 до 10.
+       * @remark Поддерживается значение от 1 до 10.
        * @default 1
        */
       
@@ -62,8 +61,7 @@ import 'Controls/decorator';
       /**
        * @name Controls/_input/Area#maxLines
        * @cfg {Number} Максимальное количество строк.
-       * @remark
-       * Поддерживается значение от 1 до 10.
+       * @remark Поддерживается значение от 1 до 10.
        */
 
       /*
