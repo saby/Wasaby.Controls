@@ -1,5 +1,6 @@
 /**
  * Библиотека контролов, позволяющих организовать работу событий сверху вниз.
+ * Механизм является устаревшим и его не рекомендуется использовать, поскольку это неконтролируемый поток распространения данных.
  * @library Controls/event
  * @includes Register Controls/_event/Register
  * @includes Listener Controls/_event/Listener
