@@ -71,6 +71,10 @@ define('Controls-demo/Combobox/historySourceCombobox',
             def.callback(srcData);
             return def;
          };
+         // Заглушка, чтобы демка не ломилась не сервис истории
+         hs.historySource.update = function() {
+            return {};
+         };
          hs.query(query);
          hs.historySource.query();
          return hs;

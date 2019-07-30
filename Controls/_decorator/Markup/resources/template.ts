@@ -3,6 +3,7 @@
  */
 import thelpers = require('View/Executor/TClosure');
 import validHtml = require('Core/validHtml');
+import {IoC} from 'Env/Env';
 
    var markupGenerator,
       defCollection,
@@ -65,19 +66,25 @@ import validHtml = require('Core/validHtml');
       return linkAttributesMap[attributeName] && !goodLinkAttributeRegExp.test(attributeValue);
    }
 
-   function validAttributesInsertion(to, from) {
-      var validAttributes = currentValidHtml.validAttributes;
-      for (var key in from) {
-         if (!from.hasOwnProperty(key) || typeof from[key] !== 'string') {
+   function validAttributesInsertion(targetAttributes: Object, sourceAttributes: Object) {
+      const validAttributes: Object = currentValidHtml.validAttributes;
+      for (let attributeName in sourceAttributes) {
+         if (!sourceAttributes.hasOwnProperty(attributeName)) {
             continue;
          }
-         if (!validAttributes[key] && !dataAttributeRegExp.test(key)) {
+         const sourceAttributeValue = sourceAttributes[attributeName];
+         if (!isString(sourceAttributeValue)) {
+            IoC.resolve('ILogger')
+               .error(control._moduleName, `Невалидное значение атрибута ${attributeName}, ожидается строковый тип.`);
             continue;
          }
-         if (isLinkAttributeWithJavascript(key, from[key])) {
+         if (!validAttributes[attributeName] && !dataAttributeRegExp.test(attributeName)) {
             continue;
          }
-         to[key] = markupGenerator.escape(from[key]);
+         if (isLinkAttributeWithJavascript(attributeName, sourceAttributeValue)) {
+            continue;
+         }
+         targetAttributes[attributeName] = markupGenerator.escape(sourceAttributeValue);
       }
    }
 
@@ -92,6 +99,11 @@ import validHtml = require('Core/validHtml');
          return markupGenerator.createText(valueToBuild, key);
       }
       if (!valueToBuild) {
+         return [];
+      }
+      if (!Array.isArray(valueToBuild)) {
+         IoC.resolve('ILogger')
+            .error(control._moduleName, `Узел в JsonML должен быть строкой или массивом.`);
          return [];
       }
       wasResolved = value !== valueToBuild;

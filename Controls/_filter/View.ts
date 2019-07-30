@@ -164,7 +164,38 @@ var _private = {
         return !isEqual(object.getPropertyValue(item, 'value'), object.getPropertyValue(item, 'resetValue'));
     },
 
-    loadItemsFromSource: function(instance, source, keyProperty, filter, navigation, dataLoadCallback) {
+    getLoadKeys: function(config, value) {
+        let selectedKeys = value instanceof Array ? value : [value];
+        return factory(selectedKeys).filter((key) => {
+            if (key !== undefined && !config.items.getRecordById(key) && !(key === null && config.emptyText)) {
+                return key;
+            }
+        }).value();
+    },
+
+    loadSelectedItems: function(items, configs) {
+        let pDef = new ParallelDeferred();
+        factory(items).each(function(item) {
+            if (_private.isFrequentItem(item)) {
+                const config = configs[item.name];
+                let keys = _private.getLoadKeys(config, item.value);
+                if (keys.length) {
+                    let editorOpts = {source: config.source};
+                    editorOpts.filter = config.filter || {};
+
+                    const keyProperty = config.keyProperty;
+                    editorOpts.filter[keyProperty] = keys;
+                    let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
+                        configs[item.name].items.prepend(newItems);
+                    });
+                    pDef.push(result);
+                }
+            }
+        });
+        return pDef.done().getResult();
+    },
+
+    loadItemsFromSource: function(instance, source, filter, navigation?, dataLoadCallback?) {
         // As the data source can be history source, then you need to merge the filter
         instance._filter = historyUtils.getSourceFilter(filter, source);
         return _private.getSourceController(instance, source, navigation).load(instance._filter).addCallback(function(items) {
@@ -172,6 +203,7 @@ var _private = {
             if (dataLoadCallback) {
                 dataLoadCallback(items);
             }
+            return items;
         });
     },
 
@@ -182,7 +214,7 @@ var _private = {
         self._configs[item.name].emptyText = item.emptyText;
 
         if (options.source) {
-            return _private.loadItemsFromSource(self._configs[item.name], options.source, options.keyProperty, options.filter, options.navigation, options.dataLoadCallback);
+            return _private.loadItemsFromSource(self._configs[item.name], options.source, options.filter, options.navigation, options.dataLoadCallback);
         } else {
             return Deferred.success();
         }
@@ -214,10 +246,12 @@ var _private = {
 
         // At first, we will load all the lists in order not to cause blinking of the interface and many redraws.
         return pDef.done().getResult().addCallback(function() {
-            _private.updateText(self, self._source, self._configs);
-            return {
-                configs: self._configs
-            };
+            return _private.loadSelectedItems(self._source, self._configs).addCallback(() => {
+                _private.updateText(self, self._source, self._configs);
+                return {
+                    configs: self._configs
+                };
+            });
         });
     },
 

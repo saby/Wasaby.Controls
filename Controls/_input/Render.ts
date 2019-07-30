@@ -8,7 +8,6 @@ import {
    IFontColorStyleOptions, IFontSize, IFontSizeOptions
 } from 'Controls/interface';
 
-import * as notifyHandler from 'Controls/Utils/tmplNotify';
 import * as template from 'wml!Controls/_input/Render/Render';
 
 type State = 'valid' | 'valid-active' | 'invalid' | 'invalid-active' | 'readonly' | 'readonly-multiline';
@@ -39,14 +38,14 @@ interface IRenderOptions extends IControlOptions, IHeightOptions, IFontColorStyl
  * @author Krasilnikov A.S.
  */
 class Render extends Control<IRenderOptions, void> implements IHeight, IFontColorStyle, IFontSize {
-   private contentActive: boolean = false;
+   private _tag: SVGElement | null = null;
+   private _contentActive: boolean = false;
 
    protected _state: string;
    protected _fontSize: string;
    protected _inlineHeight: string;
    protected _fontColorStyle: string;
    protected _validationStatus: string;
-   protected _notifyHandler: notifyHandler;
    protected _template: TemplateFunction = template;
    protected _theme: string[] = ['Controls/input', 'Controls/Classes'];
 
@@ -73,11 +72,17 @@ class Render extends Control<IRenderOptions, void> implements IHeight, IFontColo
       /**
        * Only for ie and edge. Other browsers can work with :focus-within pseudo selector.
        */
-      if (this.contentActive && detection.isIE) {
+      if (this._contentActive && detection.isIE) {
          return this._validationStatus + '-active';
       }
 
       return this._validationStatus;
+   }
+   private _tagClickHandler(event: SyntheticEvent<MouseEvent>) {
+      this._notify('tagClick', [this._children.tag]);
+   }
+   private _tagHoverHandler(event: SyntheticEvent<MouseEvent>) {
+      this._notify('tagHover', [this._children.tag]);
    }
 
    protected _beforeMount(options: IRenderOptions): void {
@@ -86,8 +91,8 @@ class Render extends Control<IRenderOptions, void> implements IHeight, IFontColo
    protected _beforeUpdate(options: IRenderOptions): void {
       this.updateState(options);
    }
-   protected _setContentActive(event: SyntheticEvent, newContentActive: boolean): void {
-      this.contentActive = newContentActive;
+   protected _setContentActive(event: SyntheticEvent<FocusEvent>, newContentActive: boolean): void {
+      this._contentActive = newContentActive;
 
       this.updateState(this._options);
    }

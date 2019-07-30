@@ -148,14 +148,12 @@ class VirtualScroll {
     // + нужно работать с проекцией, т.к. группировка, хлебные крошки только в ней учитываются.
     // когда данный метод планируется вызывать:
     // когда загрузили новую страницу
-    public recalcItemsIndexes(direction: string, scrollParams, triggerOffset: number): void {
+    public recalcItemsIndexes(direction: string, triggerOffset: number): void {
 
         // допустим показывали при первой загрузке с 0 по 27 элемент, а virtualPageSize = 40.
         // докрутили до триггера загрузки итемов, загрузили ещё 20 элементов,
         // показываем с 20 по 47 индексы
         // а надо показывать с 7 по 47 индексы.
-        const topTriggerDistance = this._calcDistanceBetweenTriggerAndViewport('top', scrollParams, this._startIndex, this._stopIndex, triggerOffset);
-        const bottomTriggerDistance = this._calcDistanceBetweenTriggerAndViewport('bottom', scrollParams, this._startIndex, this._stopIndex, triggerOffset);
         let newStartIndex = this._startIndex;
         let newStopIndex = this._stopIndex;
 
@@ -178,13 +176,8 @@ class VirtualScroll {
                 // если всё ещё мало записей - можно попробовать уменьшать startIndex ВОТ В ЭТОМ МЕСТЕ.
             }
         }
-        if (direction === 'up') {
-            if (newStopIndex < this._stopIndex) {
-               newStopIndex = Math.min(newStopIndex + this._calcIndexCompensationByTriggerDistance(bottomTriggerDistance, 'up', newStopIndex, this._stopIndex), this._itemsCount);
-            }
-        } else {
-            newStartIndex = Math.max(newStartIndex - this._calcIndexCompensationByTriggerDistance(topTriggerDistance, 'down', this._startIndex, newStartIndex), 0);
-        }
+        this._oldStartIndex = this._startIndex;
+        this._oldStopIndex = this._stopIndex;
         this._startIndex = newStartIndex;
         this._stopIndex = newStopIndex;
     }
@@ -194,9 +187,7 @@ class VirtualScroll {
     // + нужно работать с проекцией, т.к. группировка, хлебные крошки только в ней учитываются.
     // когда данный метод планируется вызывать:
     // скролл вверх/вниз
-    public recalcToDirection(direction: string, scrollParams, triggerOffset: number): void {
-        const topTriggerDistance = this._calcDistanceBetweenTriggerAndViewport('top', scrollParams, this._startIndex, this._stopIndex, triggerOffset);
-        const bottomTriggerDistance = this._calcDistanceBetweenTriggerAndViewport('bottom', scrollParams, this._startIndex, this._stopIndex, triggerOffset);
+    public recalcToDirection(direction: string, triggerOffset: number): void {
         let newStartIndex = this._startIndex;
         let newStopIndex = this._stopIndex;
 
@@ -230,13 +221,8 @@ class VirtualScroll {
             }
         }
         newStartIndex = Math.max(newStopIndex - this._virtualPageSize, 0);
-        if (direction === 'up') {
-            if (newStopIndex < this._stopIndex) {
-               newStopIndex = Math.min(newStopIndex + this._calcIndexCompensationByTriggerDistance(bottomTriggerDistance, 'up', newStopIndex, this._stopIndex), this._itemsCount);
-            }
-        } else {
-            newStartIndex = Math.max(newStartIndex - this._calcIndexCompensationByTriggerDistance(topTriggerDistance, 'down', this._startIndex, newStartIndex), 0);
-        }
+        this._oldStartIndex = this._startIndex;
+        this._oldStopIndex = this._stopIndex;
         this._startIndex = newStartIndex;
         this._stopIndex = newStopIndex;
     }
@@ -276,11 +262,11 @@ class VirtualScroll {
        }
     }
 
-    recalcToDirectionByScrollTop(direction: string, scrollParams, triggerOffset: number): void {
+    recalcToDirectionByScrollTop(scrollParams, triggerOffset: number): void {
         const scrollTop = scrollParams.scrollTop;
         let newStartIndex = 0;
         let tempPlaceholderSize = 0;
-        while (tempPlaceholderSize + this._itemsHeights[newStartIndex] <= scrollTop) {
+        while (tempPlaceholderSize + this._itemsHeights[newStartIndex] <= scrollTop - triggerOffset) {
             tempPlaceholderSize += this._itemsHeights[newStartIndex];
             newStartIndex++;
         }
@@ -288,13 +274,8 @@ class VirtualScroll {
         this._stopIndex = Math.min(this._startIndex + this._virtualPageSize, this._itemsCount);
         this._topPlaceholderSize = 0;
         this._bottomPlaceholderSize = 0;
-        this.recalcItemsIndexes(direction, scrollParams, triggerOffset);
-        for (let i = 0; i < this._startIndex; i++) {
-            this._topPlaceholderSize += this._itemsHeights[i];
-        }
-        for (let i = this._stopIndex; i < this._itemsHeights.length; i++) {
-            this._bottomPlaceholderSize += this._itemsHeights[i];
-        }
+        this.recalcItemsIndexes('down', triggerOffset);
+        this._updatePlaceholdersSizes();
     }
 
     public insertItemsHeights(itemIndex: number, itemsHeightsCount: number): void {
@@ -319,6 +300,10 @@ class VirtualScroll {
         } else {
             return this._itemsCount >= this._stopIndex + this._virtualSegmentSize;
         }
+    }
+
+    public getItemsHeight(start: number, stop: number): number {
+        return this._getItemsHeight(start, stop);
     }
 
     private _isEnd(): boolean {

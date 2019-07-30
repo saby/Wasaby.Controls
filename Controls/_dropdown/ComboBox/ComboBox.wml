@@ -7,6 +7,7 @@
         selectedKeys="{{[_options.selectedKey]}}"
         emptyText="{{_options.emptyText}}"
         historyId="{{_options.historyId}}"
+        dataLoadCallback="{{_options.dataLoadCallback}}"
         corner="{{_corner}}"
         width="{{_width}}"
         marker="{{false}}"

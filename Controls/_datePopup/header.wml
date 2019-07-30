@@ -1,7 +1,7 @@
 <div class="controls-PeriodDialog__header">
    <!--<div class="controls-PeriodDialog__stateButton-wrapper">-->
       <Controls.buttons:Button
-         if="{{_yearStateEnabled}}"
+         if="{{_yearStateEnabled && _monthStateEnabled}}"
          attr:class="controls-PeriodDialog__stateButton"
          fontColorStyle="link"
          viewMode="link"

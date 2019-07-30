@@ -12,6 +12,7 @@ import Vdom = require('Vdom/Vdom');
 import Deferred = require('Core/Deferred');
 import {IoC, constants} from 'Env/Env';
 import {StackStrategy} from 'Controls/popupTemplate';
+import {load} from 'Core/library';
 import 'css!theme?Controls/compatiblePopup';
 
 /**
@@ -70,7 +71,10 @@ var moduleClass = CompoundControl.extend({
 
          this._modifyInnerOptionsByHandlers();
 
-         require([this._options.template, 'Vdom/Vdom'], function() {
+         Promise.all([
+             this._loadTemplate(this._options.template),
+             import('Vdom/Vdom')
+         ]).then(function() {
             // Пока грузили шаблон, компонент могли задестроить
             if (self.isDestroyed()) {
                return;
@@ -98,6 +102,13 @@ var moduleClass = CompoundControl.extend({
 
          return def;
       });
+   },
+
+   _loadTemplate(tpl: string|Function): Promise<Function> {
+      if (typeof tpl === 'string') {
+         return load(tpl);
+      }
+      return Promise.resolve(tpl);
    },
 
    _keydownHandler: function(e) {
@@ -359,7 +370,7 @@ var moduleClass = CompoundControl.extend({
 
    _modifyOptions: function(cfg) {
       var cfg = moduleClass.superclass._modifyOptions.apply(this, arguments);
-      require([cfg.template]);
+      load(cfg.template);
       return cfg;
    },
 

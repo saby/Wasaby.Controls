@@ -53,7 +53,7 @@ class PageNavigation {
          }
       };
 
-      if (navigationResult.each) {
+      if (navigationResult && navigationResult.each) {
          navigationResult.each((navResult) => {
             validate(navResult.get('nav_result'));
          });

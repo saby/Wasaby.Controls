@@ -354,6 +354,7 @@ define(
             config.className = 'testClass';
             config.closeOnOutsideClick = false;
             config.fittingMode = 'fixed';
+            config.autofocus = false;
             let newConfig = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(config);
             assert.isFalse(newConfig.dialogOptions.flipWindow);
             assert.equal(newConfig.dialogOptions.width, 100);
@@ -366,6 +367,7 @@ define(
             assert.equal(newConfig.target, config.target);
             assert.isTrue(newConfig.dialogOptions.modal);
             assert.equal(newConfig.dialogOptions.handlers, config.handlers);
+            assert.equal(newConfig.dialogOptions.catchFocus, config.autofocus);
             assert.equal(newConfig.dialogOptions.autoHide, config.closeOnOutsideClick);
             assert.equal(newConfig.dialogOptions.closeOnOverlayClick, config.closeOnOutsideClick);
             assert.equal(newConfig.dialogOptions.className, config.className);
