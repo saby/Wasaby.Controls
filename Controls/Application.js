@@ -102,7 +102,11 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#appRoot
-    * @cfg {String} Путь к корневому url-адресу приложения.
+    * @cfg {String} Адрес к директории сервиса. Например, "/".
+    * @remark
+    * Значение опции задаётся относительно URL-адреса сервиса.
+    * URL-адрес сервиса устанавливается через <a href="https://wi.sbis.ru/doc/platform/developmentapl/middleware/cloud-control/">Сервис управления облаком</a> в разделе "Структура облака".
+    * Данная настройка попадает в глобальный объект конфигурации windows.wsConfig в одноимённое свойство appRoot.
     */
 
    /*
@@ -112,7 +116,11 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#resourceRoot
-    * @cfg {String} Путь к корневому url-адресу ресурса.
+    * @cfg {String} Адрес к директории с ресурсами сервиса. Например, "/resources/".
+    * @remark
+    * Значение опции задаётся относительно URL-адреса сервиса.
+    * URL-адрес сервиса устанавливается через <a href="https://wi.sbis.ru/doc/platform/developmentapl/middleware/cloud-control/">Сервис управления облаком</a> в разделе "Структура облака".
+    * Данная настройка попадает в глобальный объект конфигурации windows.wsConfig в одноимённое свойство resourceRoot.
     */
 
    /*
@@ -122,7 +130,11 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#wsRoot
-    * @cfg {String} Путь к корневому url-адресу ws.
+    * @cfg {String} Путь к корню интерфейсного модуля WS.Core. Например, "/resources/WS.Core/".
+    * @remark
+    * Значение опции задаётся относительно URL-адреса сервиса.
+    * URL-адрес сервиса устанавливается через <a href="https://wi.sbis.ru/doc/platform/developmentapl/middleware/cloud-control/">Сервис управления облаком</a> в разделе "Структура облака".
+    * Данная настройка попадает в глобальный объект конфигурации windows.wsConfig в одноимённое свойство wsRoot.
     */
 
    /*
@@ -132,8 +144,8 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#beforeScripts
-    * @cfg {Boolean} Если значение опции true, скрипты из опции {@link scripts} будут вставлены до других скриптов, созданных приложением. 
-    * Если значение опции false, скрипты будут вставлены после.  
+    * @cfg {Boolean} В значении true скрипты из опции {@link scripts} будут вставлены до других скриптов, созданных приложением. 
+    * @default false
     */
 
    /*
