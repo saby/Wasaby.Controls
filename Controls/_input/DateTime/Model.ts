@@ -5,7 +5,17 @@ import dateUtils = require('Controls/Utils/Date');
    
 
    /**
-    * Model for 'Controls/_input/DateTime' control.
+    * Модель для контрола 'Controls/input:Date'.
+    *
+    * @class Controls/_input/DateTime/Model
+    *
+    * @author Красильников А.С.
+    * @public
+    * @noShow
+    */
+
+   /*
+    * Model for 'Controls/input:Date' control.
     *
     * @class Controls/_input/DateTime/Model
     *

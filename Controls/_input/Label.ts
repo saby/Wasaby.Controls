@@ -11,6 +11,20 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
 }
 
 /**
+ * Текстовая метка для поля ввода.
+ *
+ * @class Controls/_input/Label
+ * @extends Core/Control
+ *
+ * @mixes Controls/_interface/ICaption
+ *
+ * @public
+ * @demo Controls-demo/Label/Label
+ *
+ * @author Красильников А.С.
+ */
+
+/*
  * Represents the text label for a control.
  *
  * @class Controls/_input/Label
@@ -26,10 +40,23 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
 
 /**
  * @name Controls/_input/Label#required
+ * @cfg {Boolean} В значении true справа от метки отображается символ "*" (поле обязательно к заполнению).
+ */
+
+/*
+ * @name Controls/_input/Label#required
  * @cfg {Boolean} Determines whether the label can be displayed as required.
  */
 
 /**
+ * @name Controls/_input/Label#underline
+ * @cfg {String} Стиль декоративной линии, отображаемой для текста метки.
+ * @variant hovered
+ * @variant fixed
+ * @variant none
+ */
+
+/*
  * @name Controls/_input/Label#underline
  * @cfg {String} Display underline style of the label.
  * @variant hovered
@@ -38,6 +65,11 @@ export interface ILabelOptions extends IControlOptions, ICaptionOptions {
  */
 
 /**
+ * @name Controls/_input/Label#href
+ * @cfg {String} При клике по метке пользователь переходит по ссылке, URL которой задан в опции.
+ */
+
+/*
  * @name Controls/_input/Label#href
  * @cfg {String} Contains a URL or a URL fragment that the hyperlink points to.
  */
