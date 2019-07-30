@@ -106,7 +106,7 @@ define('Controls/Application',
     * @remark
     * Значение опции задаётся относительно URL-адреса сервиса.
     * URL-адрес сервиса устанавливается через <a href="https://wi.sbis.ru/doc/platform/developmentapl/middleware/cloud-control/">Сервис управления облаком</a> в разделе "Структура облака".
-    * Данная настройка попадает в глобальный объект конфигурации windows.wsConfig в одноимённое свойство appRoot.
+    * Данная настройка попадает в свойство appRoot объекта window.wsConfig.
     */
 
    /*
@@ -120,7 +120,7 @@ define('Controls/Application',
     * @remark
     * Значение опции задаётся относительно URL-адреса сервиса.
     * URL-адрес сервиса устанавливается через <a href="https://wi.sbis.ru/doc/platform/developmentapl/middleware/cloud-control/">Сервис управления облаком</a> в разделе "Структура облака".
-    * Данная настройка попадает в глобальный объект конфигурации windows.wsConfig в одноимённое свойство resourceRoot.
+    * Данная настройка попадает в свойство resourceRoot объекта window.wsConfig.
     */
 
    /*
@@ -134,7 +134,7 @@ define('Controls/Application',
     * @remark
     * Значение опции задаётся относительно URL-адреса сервиса.
     * URL-адрес сервиса устанавливается через <a href="https://wi.sbis.ru/doc/platform/developmentapl/middleware/cloud-control/">Сервис управления облаком</a> в разделе "Структура облака".
-    * Данная настройка попадает в глобальный объект конфигурации windows.wsConfig в одноимённое свойство wsRoot.
+    * Данная настройка попадает в свойство wsRoot объекта window.wsConfig.
     */
 
    /*
