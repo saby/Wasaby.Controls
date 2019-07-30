@@ -1558,6 +1558,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _setLoadOffset: function(top, bottom, isNull) {
+        if (this.__error) {
+            return;
+        }
         if (!this._loadOffset) {
             this._loadOffset = {};
         }
