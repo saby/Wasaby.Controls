@@ -19,7 +19,8 @@ define('Controls/Application',
    ],
 
    /**
-    * Корневой контрол для WS-приложений. Служит для создания простых html-страниц.
+    * Корневой контрол для Wasaby-приложений. Служит для создания базовых html-страниц.
+    * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/controls-application/'>здесь</a>.
     *
     * @class Controls/Application
     * @extends Core/Control
@@ -28,7 +29,7 @@ define('Controls/Application',
     *
     * @control
     * @public
-    * @author Зуев Д.В.
+    * @author Белотелов Н.В.
     */
 
    /*
@@ -46,8 +47,8 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#staticDomains
-    * @cfg {Number} Список доменов для распределения статических ресурсов. 
-    * Эти домены будут использоваться для создания путей для статических ресурсов и распределения загрузки для нескольких статических доменов.
+    * @cfg {Number} Список, содержащий набор доменов для загрузки статики.
+    * Список доменов решает задачу загрузки статических ресурсов с нескольких документов. Эти домены будут использоваться для создания путей для статических ресурсов и распределения загрузки для нескольких статических доменов.
     */
 
    /*
@@ -60,17 +61,25 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#head
+    * @deprecated
     * @cfg {Content} Дополнительное содержимое тега HEAD. Может принимать более одного корневого узла.
     */
 
    /*
     * @name Controls/Application#head
+    * @deprecated
     * @cfg {Content} Additional content of HEAD tag. Can accept more than one root node
     */
 
    /**
+    * @name Controls/Application#headJson
+    * @cfg {Content} Разметка, которая будет встроена в содержимое тега head. 
+    * Используйте эту опцию, чтобы подключить на страницу внешние библиотеки (скрипты), стили или шрифты. 
+    */
+
+   /**
     * @name Controls/Application#content
-    * @cfg {Content} Содержимое тега BODY.
+    * @cfg {Content} Разметка, которая будет встроена в содержимое тега body.
     */
 
    /*
@@ -80,7 +89,7 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#scripts
-    * @cfg {Content} Скрипты, которые будут размещены после контента. Могут принимать более одного корневого узла.
+    * @cfg {Content} Список JS-скрипт файлов, который должны быть подключены на страницу. Скрипты встраиваются перед закрытием. Могут принимать более одного корневого узла.
     */
 
    /*
@@ -152,7 +161,7 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#title
-    * @cfg {String} Название вкладки.
+    * @cfg {String} Значение опции встраивается в содержимое тега title, который определяет заголовок веб-страницы и подпись на вкладке веб-браузера.
     */
 
    /*
@@ -172,7 +181,7 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#compat
-    * @cfg {Boolean} Если значение опции true, будет загружен слой совместимости.
+    * @cfg {Boolean} В значении true создаётся "слой совместимости" с контролами из пространства имён SBIS3.CONTROLS/* и Lib/*.
     */
 
    /*
