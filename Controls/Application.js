@@ -42,7 +42,7 @@ define('Controls/Application',
     *
     * @control
     * @public
-    * @author Зуев Д.В.
+    * @author Белотелов Н.В.
     */    
 
    /**
