@@ -74,7 +74,10 @@ define('Controls/Application',
    /**
     * @name Controls/Application#headJson
     * @cfg {Content} Разметка, которая будет встроена в содержимое тега head. 
-    * Используйте эту опцию, чтобы подключить на страницу внешние библиотеки (скрипты), стили или шрифты. 
+    * Используйте эту опцию, чтобы подключить на страницу внешние библиотеки (скрипты), стили или шрифты.
+    * @remark
+    * Список разрешённых тегов: link, style, script, meta, title.
+    * Список разрешённых атрибутов: rel, as, name, sizes, crossorigin, type, href, property, http-equiv, content, id, class. 
     */
 
    /**
