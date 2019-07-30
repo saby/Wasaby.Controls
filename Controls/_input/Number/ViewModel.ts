@@ -111,14 +111,20 @@ var ViewModel = BaseViewModel.extend({
      * @protected
      */
     _convertToValue: function (displayValue) {
-        /**
-         * The displayed value can be separated by spaces into triads.
-         * You need to remove these gaps to parseFloat processed value completely.
-         * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseFloat
-         */
-        var value = parseFloat(_private.joinGroups(displayValue));
+        let value = _private.joinGroups(displayValue);
 
-        return Number.isNaN(value) ? null : value;
+        if (typeof this.value !== 'string') {
+            /**
+             * The displayed value can be separated by spaces into triads.
+             * You need to remove these gaps to parseFloat processed value completely.
+             * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseFloat
+             */
+            value = parseFloat(value);
+
+            return Number.isNaN(value) ? null : value;
+        }
+
+        return value;
     },
 
     /**
