@@ -22,7 +22,7 @@
                   template="{{swipeTemplate}}"
                   itemData="{{itemData}}"
                   itemActionsTemplate="{{itemActionsTemplate}}"/>
-      <ws:partial if="{{!itemData.isSwiped && itemData.drawActions}}"
+      <ws:partial if="{{!itemData.isSwiped && itemData.drawActions && itemData.itemActionsPosition !== 'custom'}}"
                   template="{{itemActionsTemplate}}"
                   highlightOnHover="{{highlightOnHover}}"
                   itemData="{{itemData}}"

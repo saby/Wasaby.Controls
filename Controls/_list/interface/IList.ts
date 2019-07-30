@@ -168,6 +168,7 @@
  * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
  * @variant inside Панель действий над записью будет располагаться внутри строки.
  * @variant outside Панель действий над записью будет располагаться под строкой.
+ * @variant custom Панель действий должна быть размещена в прикладном шаблоне itemTemplate.
  */
 
 /*
@@ -532,7 +533,7 @@
 /*
  * @event  Controls/_list/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Env/Event:Object} eventObject The event descriptor. 
+ * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Number} key Key of the selected item.
  */
 
