@@ -52,6 +52,41 @@ define(
             }
          });
 
+         describe('_shadowVisible ipad', function() {
+            beforeEach(function() {
+               if (typeof window === 'undefined') {
+                  Env.detection['test::isMobileIOS'] = true;
+               } else {
+                  Env.detection.isMobileIOS = true;
+               }
+            });
+            afterEach(function() {
+               if (typeof window === 'undefined') {
+                  Env.detection['test::isMobileIOS'] = undefined;
+               } else {
+                  Env.detection.isMobileIOS = false;
+               }
+            });
+
+            it('should display top shadow if scrollTop > 0.', function() {
+               scroll._displayState.shadowPosition = 'top';
+               scroll._children.stickyController = {
+                  hasFixed: function() {
+                     return false;
+                  }
+               };
+
+               assert.isTrue(scroll._shadowVisible('top'));
+            });
+
+            it('should not display top shadow if scrollTop < 0.', function() {
+               scroll._displayState.shadowPosition = 'top';
+               scroll._children.content.scrollTop = -10;
+
+               assert.isFalse(scroll._shadowVisible('top'));
+            });
+         });
+
          describe('_resizeHandler. Paging buttons.', function() {
             it('Content at the top', function() {
                scroll._pagingState = {};
