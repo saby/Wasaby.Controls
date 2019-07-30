@@ -15,7 +15,7 @@ import dateUtils = require('Controls/Utils/Date');
     */
 
    /*
-    * Model for 'Controls/_input/DateTime' control.
+    * Model for 'Controls/input/Date' control.
     *
     * @class Controls/_input/DateTime/Model
     *
