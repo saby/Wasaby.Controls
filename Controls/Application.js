@@ -61,13 +61,13 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#head
-    * @deprecated
+    * @deprecated Используйте {@link headJson}.
     * @cfg {Content} Дополнительное содержимое тега HEAD. Может принимать более одного корневого узла.
     */
 
    /*
     * @name Controls/Application#head
-    * @deprecated
+    * @deprecated Используйте {@link headJson}.
     * @cfg {Content} Additional content of HEAD tag. Can accept more than one root node
     */
 
