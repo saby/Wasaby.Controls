@@ -8,6 +8,7 @@ define('Controls/Application',
       'Core/Deferred',
       'Core/BodyClasses',
       'Env/Env',
+      'UI/Base',
       'Controls/scroll',
       'Core/LinkResolver/LinkResolver',
       'Core/helpers/getResourceUrl',
@@ -121,6 +122,7 @@ define('Controls/Application',
       Deferred,
       BodyClasses,
       Env,
+      UIBase,
       scroll,
       LinkResolver,
       getResourceUrl,
@@ -277,6 +279,11 @@ define('Controls/Application',
             this._scrollData = new scroll._scrollContext({pagingVisible: cfg.pagingVisible});
             this.headJson = cfg.headJson;
             this.headValidHtml = generateHeadValidHtml();
+
+            var appData = UIBase.AppData.getAppData();
+            this.RUMEnabled = cfg.RUMEnabled || appData.RUMEnabled || false;
+            this.pageName = cfg.pageName || appData.pageName || '';
+            this.resourceRoot = cfg.resourceRoot || Env.constants.resourceRoot;
 
             if (typeof window !== 'undefined') {
                if (document.getElementsByClassName('head-custom-block').length > 0) {
