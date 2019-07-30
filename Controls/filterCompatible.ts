@@ -1,5 +1,6 @@
 /**
  * Библиотека контрола filterCompatible.
+ * Используется в контролое Controls/filter:Button для работы со слоем совместимости.
  * @library Controls/filterCompatible
  * @public
  * @author Крайнов Д.О.
