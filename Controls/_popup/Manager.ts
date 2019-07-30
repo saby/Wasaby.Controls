@@ -430,7 +430,9 @@ const Manager = Control.extend({
         }
     },
     _afterUpdate() {
-        //Theme of the popup header can be changed dynamically in Presto
+        // Theme of the popup header can be changed dynamically.
+        // The option is not inherited, so in order for change option in 1 synchronization cycle, we have to make an event model on ManagerController.
+        // Now there are no cases where the theme changes when the popup are open, so now just change the theme to afterUpdate.
         ManagerController.setPopupHeaderTheme(this._options.popupHeaderTheme);
     },
 
