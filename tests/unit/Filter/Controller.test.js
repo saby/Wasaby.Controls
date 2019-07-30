@@ -278,12 +278,18 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             resetValue: '',
             visibility: false
          },
-            {
-               id: 'testId3',
-               value: 'testValue2',
-               textValue: 'textTextValue',
-               resetValue: ''
-            }];
+         {
+            id: 'testId3',
+            value: 'testValue2',
+            textValue: 'textTextValue',
+            resetValue: ''
+         },
+         {
+            id: 'testId4',
+            value: 'testValue2',
+            resetValue: '',
+            visibility: true
+         }];
 
          var history = [{
             id: 'testId',
@@ -296,6 +302,12 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             resetValue: '',
             textValue: '',
             visibility: true
+         }, {
+            id: 'testId4',
+            value: 'testValue1',
+            resetValue: '',
+            textValue: '',
+            visibility: undefined
          }];
 
          var result = [{
@@ -310,12 +322,18 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             resetValue: '',
             visibility: true
          },
-            {
-               id: 'testId3',
-               value: 'testValue2',
-               textValue: 'textTextValue',
-               resetValue: ''
-            }];
+         {
+            id: 'testId3',
+            value: 'testValue2',
+            textValue: 'textTextValue',
+            resetValue: ''
+         },
+         {
+            id: 'testId4',
+            value: 'testValue1',
+            resetValue: '',
+            visibility: undefined
+         }];
 
          Filter._private.mergeFilterItems(items, history);
          assert.deepEqual(result, items);
