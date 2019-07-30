@@ -158,7 +158,7 @@ import 'css!theme?Controls/scroll';
                   shouldForceUpdatePosition = false,
                   shouldUpdatePosition = !this._dragging && oldOptions.position !== this._options.position;
 
-               if (oldOptions.contentSize !== this._options.contentSize) {
+               if (oldOptions.contentSize !== this._options.contentSize || oldOptions.leftOffset !== this._options.leftOffset) {
                   shouldForceUpdate = shouldForceUpdate || this._setSizes(this._options.contentSize);
                   shouldUpdatePosition = true;
                }
@@ -208,6 +208,7 @@ import 'css!theme?Controls/scroll';
             _setSizes: function(contentSize) {
                var
                   verticalDirection = this._options.direction === 'vertical',
+                  horizontalDirection = this._options.direction === 'horizontal',
                   scrollbar = this._children.scrollbar,
                   scrollbarSize = scrollbar[verticalDirection ? 'offsetHeight' : 'offsetWidth'],
                   scrollbarAvailableSize = scrollbar[verticalDirection ? 'clientHeight' : 'clientWidth'],
@@ -216,10 +217,15 @@ import 'css!theme?Controls/scroll';
                thumbSize = _private.calcThumbSize(
                   this._children.thumb,
                   scrollbarAvailableSize,
-                  _private.calcViewportRatio(scrollbarSize, contentSize),
+                  _private.calcViewportRatio(scrollbarSize, horizontalDirection ? contentSize - this._options.leftOffset : contentSize),
                   this._options.direction
                );
-               scrollRatio = _private.calcScrollRatio(scrollbarSize, scrollbarAvailableSize, thumbSize, contentSize);
+               scrollRatio = _private.calcScrollRatio(
+                   scrollbarSize,
+                   scrollbarAvailableSize,
+                   thumbSize,
+                   horizontalDirection ? contentSize - this._options.leftOffset : contentSize
+               );
 
                if (this._thumbSize === thumbSize && this._scrollRatio === scrollRatio) {
                   return false;
