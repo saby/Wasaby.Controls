@@ -492,7 +492,7 @@ var _private = {
             }
         };
 
-        if (detection.isMobileIOS && self._virtualScroll.PlaceholdersSizes.top === 0) {
+        if (detection.isMobileIOS) {
             _private.getIntertialScrolling(self).callAfterScrollStopped(updateIndexes);
         } else {
             updateIndexes();
