@@ -265,8 +265,8 @@ var _private = {
     moveMarker: function(self, newMarkedKey) {
         // activate list when marker is moving. It let us press enter and open current row
         // must check mounted to avoid fails on unit tests
-        if (this._mounted) {
-            this.activate();
+        if (self._mounted) {
+            self.activate();
         }
         _private.setMarkedKey(self, newMarkedKey);
     },
