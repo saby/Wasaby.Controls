@@ -178,13 +178,6 @@ var Input = Control.extend({
    }
 });
 
-// tslint:disable-next-line:typedef
-Input.getDefaultOptions = function getDefaultOptions() {
-   return {
-      autofocus: true
-   };
-};
-
 Input._theme = ['Controls/dropdown'];
 
 export = Input;
