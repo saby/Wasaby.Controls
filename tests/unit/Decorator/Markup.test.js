@@ -6,12 +6,14 @@ define([
    'Controls/_decorator/Markup/resources/template',
    'Controls/_decorator/Markup/resources/linkDecorateUtils',
    'Controls/Application',
+   'UI/Base',
    'Env/Env'
 ], function(
    decorator,
    template,
    linkDecorateUtils,
    Application,
+   Base,
    Env
 ) {
    'use strict';
@@ -1149,17 +1151,23 @@ define([
    describe('Controls.Application headJson options', function() {
       var realBuildnumber;
       var realResourceRoot;
+      var realGetAppData;
 
-      beforeEach(function() {
+      before(function() {
          realBuildnumber = global.contents.buildnumber;
          global.contents.buildnumber = '0';
          realResourceRoot = global.wsConfig.resourceRoot;
          global.wsConfig.resourceRoot = '/test/';
+         realGetAppData = Base.AppData.getAppData;
+         Base.AppData.getAppData = function() {
+            return {};
+         };
       });
 
-      afterEach(function() {
+      after(function() {
          global.contents.buildnumber = realBuildnumber;
          global.wsConfig.resourceRoot = realResourceRoot;
+         Base.AppData.getAppData = realGetAppData;
       });
 
       it('script with module scr', function() {
