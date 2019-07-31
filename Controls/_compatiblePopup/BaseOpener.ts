@@ -551,7 +551,7 @@ const BaseOpener = {
          newCfg.dialogOptions.offset = cfg.offset;
       }
 
-      if (cfg.closeOnTargetScroll) {
+      if (cfg.closeOnTargetScroll || cfg.actionOnScroll === 'close') {
          newCfg.dialogOptions.closeOnTargetScroll = true;
       }
 
