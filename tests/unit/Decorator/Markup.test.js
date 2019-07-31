@@ -1131,6 +1131,36 @@ define([
                assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
             }
          });
+
+         it('clear fake needDecorate attribute - 1', function() {
+            var firstAttributesObject = { href: 'https://ya.ru' };
+            var secondAttributesObject = { href: 'https://ya.ru' };
+            var parentNode = ['p',
+               ['a', firstAttributesObject, 'https://ya.ru'],
+               ['a', secondAttributesObject, 'https://ya.ru']
+            ];
+            var firstNeedDecorate = linkDecorateUtils.needDecorate(parentNode[1], parentNode);
+            var secondNeedDecorate = linkDecorateUtils.needDecorate(parentNode[2], parentNode);
+            assert.ok(firstNeedDecorate);
+            assert.ok(secondNeedDecorate);
+            assert.notOk(firstAttributesObject.hasOwnProperty('__needDecorate'));
+            assert.notOk(secondAttributesObject.hasOwnProperty('__needDecorate'));
+         });
+
+         it('clear fake needDecorate attribute - 2', function() {
+            var firstAttributesObject = { href: 'https://ya.ru' };
+            var secondAttributesObject = { href: 'https://ya.ru' };
+            var parentNode = ['p',
+               ['a', firstAttributesObject, 'Some text, not a href'],
+               ['a', secondAttributesObject, 'Some text, not a href']
+            ];
+            var firstNeedDecorate = linkDecorateUtils.needDecorate(parentNode[1], parentNode);
+            var secondNeedDecorate = linkDecorateUtils.needDecorate(parentNode[2], parentNode);
+            assert.notOk(firstNeedDecorate);
+            assert.notOk(secondNeedDecorate);
+            assert.notOk(firstAttributesObject.hasOwnProperty('__needDecorate'));
+            assert.notOk(secondAttributesObject.hasOwnProperty('__needDecorate'));
+         });
       });
       describe('decorateLink', function() {
          beforeEach(function() {
