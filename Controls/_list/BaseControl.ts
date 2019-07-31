@@ -1825,6 +1825,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             getItemsBySelection(selection, this._options.source, this._listViewModel.getItems(), this._options.filter).addCallback(function(items) {
                 dragStartResult = self._notify('dragStart', [items]);
                 if (dragStartResult) {
+                    if (self._options.dragControlId) {
+                        dragStartResult.dragControlId = self._options.dragControlId;
+                    }
                     self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
                     self._itemDragData = itemData;
                 }
