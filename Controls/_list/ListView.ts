@@ -220,7 +220,7 @@ var ListView = BaseControl.extend(
             return this._listModel.getHoveredItem();
         },
         _onEditArrowClick: function(e, item) {
-            this._notify('editArrowClick', [item], {bubbling: true});
+            this._notify('editArrowClick', [item]);
         }
     });
 

@@ -41,6 +41,7 @@
                                     on:itemCollapsed="_notifyHandler('itemCollapsed')"
                                     on:expandedItemsChanged="_notifyHandler('expandedItemsChanged')"
                                     on:collapsedItemsChanged="_notifyHandler('collapsedItemsChanged')"
+                                    on:editArrowClick="_notifyHandler('editArrowClick')"
                                     itemsReadyCallback="{{_itemsReadyCallback}}"
                                     dataLoadCallback="{{_dataLoadCallback}}"/>
       </Controls._explorer.PathController>
