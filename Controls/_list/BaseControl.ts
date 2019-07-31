@@ -314,7 +314,13 @@ var _private = {
     prepareFooter: function(self, navigation, sourceController) {
         var
             loadedDataCount, allDataCount;
-        self._shouldDrawFooter = !!(navigation && navigation.view === 'demand' && sourceController.hasMoreData('down'));
+
+        if (navigation && navigation.view === 'demand' && sourceController.hasMoreData('down')) {
+            self._shouldDrawFooter = self._options.groupingKeyCallback ? !self._listViewModel.isAllGroupsCollapsed() : true;
+        } else {
+            self._shouldDrawFooter = false;
+        }
+
         if (self._shouldDrawFooter) {
             loadedDataCount = sourceController.getLoadedDataCount();
             allDataCount = sourceController.getAllDataCount();
@@ -970,6 +976,7 @@ var _private = {
     groupsExpandChangeHandler: function(self, changes) {
         self._notify(changes.changeType === 'expand' ? 'groupExpanded' : 'groupCollapsed', [changes.group], { bubbling: true });
         self._notify('collapsedGroupsChanged', [changes.collapsedGroups]);
+        _private.prepareFooter(self, self._options.navigation, self._sourceController);
         if (self._options.historyIdCollapsedGroups || self._options.groupHistoryId) {
             GroupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups || self._options.groupHistoryId);
         }
