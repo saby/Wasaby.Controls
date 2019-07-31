@@ -19,12 +19,16 @@ define('Controls/interface/IGroupedGrid', [
     * Чтобы отнести элемент к скрытой группе, из функции groupingKeyCallback верните константу view.hiddenGroup , которая принадлежит библиотеке {@link Controls/Constants}.
     * @example
     * <pre>
+    * define(..., [... , 'Controls/Constants'], function(..., Constants){
+    *    ...
     *    _groupByBrand: function(item) {
     *       if (item.get('brand') === 'apple') {
-    *          return ControlsConstants.view.hiddenGroup;
+    *          return Constants.view.hiddenGroup;
     *       }
     *       return item.get('brand');
     *    }
+    *    ...
+    * });
     * </pre>
     * <pre>
     *    groupingKeyCallback ="{{_groupByBrand}}",
