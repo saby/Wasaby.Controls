@@ -29,21 +29,3 @@
         </div>
     </ws:contentTemplate>
 </ws:partial>
-
-
-* <ws:partial template="Controls/list:ItemTemplate"
-*            itemData="{{itemData}}"
-*            swipeTemplate="{{swipeTemplate}}"
-*            itemActionsTemplate="{{itemActionsTemplate}}"
-*            highlightOnHover="{{highlightOnHover}}">
-*    <ws:contentTemplate>
-*        <div>{{itemData.item.title}}</div>
-*        <ws:if data="{{!itemData.isSwiped}}">
-*                    <ws:partial template="{{itemActionsTemplate}}"
-*                                attr:class="itemActions-demo_itemActions"
-*                                itemData="{{itemData}}"
-*                                highlightOnHover="{{highlightOnHover}}"/>
-*                </ws:if>
-*        <div>{{itemData.item.description}}</div>
-*    </ws:contentTemplate>
-*</ws:partial>
