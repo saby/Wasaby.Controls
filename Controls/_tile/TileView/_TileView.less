@@ -63,7 +63,10 @@
          box-shadow: @box-shadow-size_TileView-item @box-shadow-color_TileView-item_hover;
       }
    }
-
+    
+   // On ios the tile is positioned absolutely, without increasing. Increases only the caption. It may not fit,
+   // if the parent container limits through overflow: hidden.
+   // Turn on the display of the caption only for the desktop, so tile does not change the size by swipe on ios .
    .controls-TileView__item_hovered, .controls-TileView__item_active {
       .controls-TileView__title_invisible {
          display: block;
