@@ -14,7 +14,6 @@ var _private = {
     initializeConstants: function (theme) {
         if (!SHOW_SELECTOR_WIDTH) {
             // The template runs in isolation from the application, so the theme will not be inherited from Application.
-            // So we pass the topic ourselves to class and correctly calculate the width of the icon.
             SHOW_SELECTOR_WIDTH = getWidthUtil.getWidth(showSelectorTemplate({theme: theme}));
             OUTER_INDENT_INPUT = getWidthUtil.getWidth(inputRender());
         }
