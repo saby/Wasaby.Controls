@@ -94,12 +94,12 @@ var
          return container.offsetHeight;
       },
 
-      getScrollTop: function(container) {
-         return container.scrollTop;
+      getScrollTop: function(self, container) {
+         return container.scrollTop + self._topPlaceholderSize;
       },
 
       setScrollTop: function(self, scrollTop) {
-         self._children.content.scrollTop = scrollTop;
+         self._children.scrollWatcher.setScrollTop(scrollTop);
          self._scrollTop = scrollTop;
          self._notify('scroll', [scrollTop]);
       },
@@ -121,12 +121,13 @@ var
       },
 
       getContentHeight: function(self) {
-         return _private.getScrollHeight(self._children.content) - self._headersHeight.top - self._headersHeight.bottom;
+         return _private.getScrollHeight(self._children.content) - self._headersHeight.top -
+            self._headersHeight.bottom + self._topPlaceholderSize + self._bottomPlaceholderSize;
       },
 
       getShadowPosition: function(self) {
          var
-            scrollTop = _private.getScrollTop(self._children.content),
+            scrollTop = _private.getScrollTop(self, self._children.content),
             scrollHeight = _private.getScrollHeight(self._children.content),
             containerHeight = _private.getContainerHeight(self._children.content);
 
@@ -215,6 +216,9 @@ var
 
       _headersHeight: null,
       _scrollbarStyles: '',
+
+      _topPlaceholderSize: 0,
+      _bottomPlaceholderSize: 0,
 
       constructor: function(cfg) {
          Scroll.superclass.constructor.call(this, cfg);
@@ -420,9 +424,9 @@ var
          // Например, при пересчете размеров перед увеличением, плитка может растянуть контейнер между перерисовок,
          // и вернуться к исходному размеру.
          // После этого  scrollTop остается прежним, но срабатывает незапланированный нативный scroll
-         if (this._scrollTop !== _private.getScrollTop(this._children.content)) {
+         if (this._scrollTop !== _private.getScrollTop(this, this._children.content)) {
             if (!this._dragging) {
-               this._scrollTop = _private.getScrollTop(this._children.content);
+               this._scrollTop = _private.getScrollTop(this, this._children.content);
                this._notify('scroll', [this._scrollTop]);
             }
             this._children.scrollDetect.start(ev);
@@ -636,6 +640,12 @@ var
          }
       },
 
+      _updatePlaceholdersSize: function(e, placeholdersSizes) {
+         this._topPlaceholderSize = placeholdersSizes.top;
+         this._bottomPlaceholderSize = placeholdersSizes.bottom;
+         this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
+      },
+
       _saveScrollPosition: function(e) {
          /**
           * Only closest scroll container should react to this event, so we have to stop propagation here.
@@ -658,16 +668,21 @@ var
          if (Env.detection.isMobileIOS) {
             this.setOverflowScrolling('auto');
          }
-         this._savedScrollPosition = this._children.content.scrollHeight - getScrollTop(this._children.content);
+         this._savedScrollTop = getScrollTop(this._children.content);
+         this._savedScrollPosition = this._children.content.scrollHeight - this._savedScrollTop;
       },
 
-      _restoreScrollPosition: function(e) {
+      _restoreScrollPosition: function(e, removedHeight, direction) {
          /**
           * Only closest scroll container should react to this event, so we have to stop propagation here.
           * Otherwise we can accidentally scroll a wrong element.
           */
          e.stopPropagation();
-         this._children.content.scrollTop = this._children.content.scrollHeight - this._savedScrollPosition;
+         if (direction === 'up') {
+            this._children.content.scrollTop = this._children.content.scrollHeight - this._savedScrollPosition + removedHeight;
+         } else {
+            this._children.content.scrollTop = this._savedScrollTop - removedHeight;
+         }
          // todo KINGO. Костыль с родословной из старых списков. Инерционный скролл приводит к дерганью: мы уже
          // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
          // дерганья и лишняя загрузка данных.
