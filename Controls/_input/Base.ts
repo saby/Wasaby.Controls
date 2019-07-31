@@ -71,15 +71,6 @@ interface IFieldTemplate {
                   self._viewModel.displayValue = field.value;
                   _private.notifyValueChanged(self);
                }
-
-               /**
-                * When a filled field in chrome, its carriage is placed at the beginning of the text.
-                * The carriage needs to have a position in accordance with the model. So we change it.
-                */
-               if (Env.detection.chrome || Env.detection.firefox) {
-                  const selection = self._viewModel.selection;
-                  field.setSelectionRange(selection.start, selection.end);
-               }
             });
          },
 
@@ -103,12 +94,21 @@ interface IFieldTemplate {
           * @param {String} value The value to be set in the field.
           * @param {Controls/_input/Base/Types/Selection.typedef} selection The selection to be set in the field.
           */
-         updateField: function(self, value, selection) {
-            var field = self._getField();
+         updateField: function(self, value: string, selection) {
+            _private.updateValue(self, value);
+            _private.updateSelection(self, selection);
+         },
+
+         updateValue: function(self, value) {
+            const field = self._getField();
 
             if (field.value !== value) {
                field.value = value;
             }
+         },
+
+         updateSelection: function (self, selection) {
+            const field = self._getField();
 
             /**
              * In IE, change the selection leads to the automatic focusing of the field.
@@ -862,6 +862,12 @@ interface IFieldTemplate {
             _private.notifyChangeOfFocusState(this, true);
 
             this._displayValueAfterFocusIn = this._viewModel.displayValue;
+
+            /**
+             * When a filled field, its carriage is placed at the beginning of the text. For example, in chrome, firefox,
+             * IE10-11, can still where. The carriage needs to have a position in accordance with the model. So we change it.
+             */
+            _private.updateSelection(this, this._viewModel.selection);
          },
 
          /**
