@@ -147,7 +147,7 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#itemTemplate
-             * @cfg {String} Шаблон отображения года. Может принмать опцию monthCaptionTemplate как шаблон заголовка месяца.
+             * @cfg {String} Шаблон отображения года. Может принимать опцию monthCaptionTemplate как шаблон заголовка месяца.
              * Дата первого дня месяца и функция форматирования даты передаются в шаблон месяца {@link Types/formatter:date}.
              * @example
              * <ws:itemTemplate>
