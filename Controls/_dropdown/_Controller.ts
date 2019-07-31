@@ -294,7 +294,6 @@ var _Controller = Control.extend({
             target: self._container,
             targetPoint: self._options.corner,
             opener: self,
-            autofocus: false,
             closeOnOutsideClick: true
          };
          _private.requireTemplates(self, self._options).addCallback(() => {

@@ -6,7 +6,8 @@
                              on:open="_onOpen()"
                              on:close="_onClose()"
                              on:result="_onResult()"
-                             className="{{_options.popupClassName}}">
+                             className="{{_options.popupClassName}}"
+                             autofocus="{{_options.dropdownAutofocus}}">
       <ws:templateOptions
               keyProperty="{{_options.keyProperty}}"
               displayProperty="{{_options.displayProperty}}"
