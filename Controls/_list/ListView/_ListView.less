@@ -139,7 +139,10 @@
 
 .controls-ListView__item_editing {
    background-color: @background-color_ListView-item_editing;
-   .controls-itemActionsV {
+   > .controls-itemActionsV {
+      display: inline-block;
+   }
+   .controls-itemActionsV_custom {
       display: inline-block;
    }
 }
@@ -151,7 +154,10 @@
 .ws-is-no-touch {
    .controls-ListView__item_showActions {
       &:hover {
-         .controls-itemActionsV {
+         > .controls-itemActionsV {
+            display: inline-block;
+         }
+         .controls-itemActionsV_custom {
             display: inline-block;
          }
       }

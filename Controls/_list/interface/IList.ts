@@ -169,6 +169,37 @@
  * @variant inside Панель действий над записью будет располагаться внутри строки.
  * @variant outside Панель действий над записью будет располагаться под строкой.
  * @variant custom Панель действий должна быть размещена в прикладном шаблоне itemTemplate.
+ * <a href="/materials/demo-ws4-list-item-actions-custom">Example</a>.
+ * @example
+ * Размещаем опции записи в прикладном шаблоне с использованием itemActionsTemplate:
+ *<pre>
+ * <Controls.list:View
+ *    itemTemplate="{{_cutomItemTemplate}}"
+ *    itemActionsPosition="custom"
+ *    itemActions="{{_itemActions}}">
+ * </Controls.list:View>
+ *</pre>
+ *
+ * _cutomItemTemplate:
+ * <pre>
+ * <ws:partial template="Controls/list:ItemTemplate"
+ *            itemData="{{itemData}}"
+ *            swipeTemplate="{{swipeTemplate}}"
+ *            itemActionsTemplate="{{itemActionsTemplate}}"
+ *            highlightOnHover="{{highlightOnHover}}">
+ *    <ws:contentTemplate>
+ *        <div>{{itemData.item.title}}</div>
+ *        <ws:if data="{{!itemData.isSwiped}}">
+ *                    <ws:partial template="{{itemActionsTemplate}}"
+ *                                attr:class="some-custom-class-for-itemActions"
+ *                                itemData="{{itemData}}"
+ *                                highlightOnHover="{{highlightOnHover}}"/>
+ *                </ws:if>
+ *        <div>{{itemData.item.description}}</div>
+ *    </ws:contentTemplate>
+ *</ws:partial>
+ * </pre>
+ *
  */
 
 /*
@@ -177,6 +208,38 @@
  * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
  * @variant inside Item actions will be positioned inside the item's row.
  * @variant outside Item actions will be positioned under the item's row.
+ * @variant custom Item actions must be positioned in the itemTemplate.
+ * <a href="/materials/demo-ws4-list-item-actions-custom">Example</a>.
+ * @example
+ * Placing Item Actions in custom item template using itemActionsTemplate
+ *<pre>
+ * <Controls.list:View
+ *    itemTemplate="{{_cutomItemTemplate}}"
+ *    itemActionsPosition="custom"
+ *    itemActions="{{_itemActions}}">
+ * </Controls.list:View>
+ *</pre>
+ *
+ * _cutomItemTemplate:
+ * <pre>
+ * <ws:partial template="Controls/list:ItemTemplate"
+ *            itemData="{{itemData}}"
+ *            swipeTemplate="{{swipeTemplate}}"
+ *            itemActionsTemplate="{{itemActionsTemplate}}"
+ *            highlightOnHover="{{highlightOnHover}}">
+ *    <ws:contentTemplate>
+ *        <div>{{itemData.item.title}}</div>
+ *        <ws:if data="{{!itemData.isSwiped}}">
+ *                    <ws:partial template="{{itemActionsTemplate}}"
+ *                                attr:class="some-custom-class-for-itemActions"
+ *                                itemData="{{itemData}}"
+ *                                highlightOnHover="{{highlightOnHover}}"/>
+ *                </ws:if>
+ *        <div>{{itemData.item.description}}</div>
+ *    </ws:contentTemplate>
+ *</ws:partial>
+ * </pre>
+ *
  */
 
 /**
