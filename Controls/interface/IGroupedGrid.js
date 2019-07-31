@@ -16,7 +16,7 @@ define('Controls/interface/IGroupedGrid', [
     * @remark
     * Среди групп списка существует "скрытая группа".
     * Для такой группы не создаётся заголовок, а её элементы визуально размещены в начале списка.
-    * Чтобы отнести элемент к скрытой группе, из функции groupingKeyCallback верните константу view.hiddenGroup, которая принадлежит библиотеке Controls/Constants.
+    * Чтобы отнести элемент к скрытой группе, из функции groupingKeyCallback верните константу view.hiddenGroup , которая принадлежит библиотеке {@link Controls/Constants}.
     * @example
     * <pre>
     *    _groupByBrand: function(item) {
