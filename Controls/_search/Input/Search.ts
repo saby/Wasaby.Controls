@@ -73,11 +73,7 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  *       return this._value.length < 3;
  *     }
  * <pre>
- */ 
-
-/**
- * @event Controls/_search/Input/Search#searchClick Происходит при клике на кнопку поиска.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @default true
  */
 
 /**
