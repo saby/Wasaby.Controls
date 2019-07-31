@@ -21,6 +21,7 @@
                            scope="{{_options}}"
                            attr:class="controls-Scroll__userContent"
                            on:saveScrollPosition="_saveScrollPosition()"
+                           on:updatePlaceholdersSize="_updatePlaceholdersSize()"
                            on:restoreScrollPosition="_restoreScrollPosition()"
                            on:selectedKeysChanged="selectedKeysChanged()"
                            on:excludedKeysChanged="excludedKeysChanged()"

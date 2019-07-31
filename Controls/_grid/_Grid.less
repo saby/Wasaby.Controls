@@ -36,6 +36,7 @@
    background-color: @background-color_Grid-header;
    display: inline-flex;
    flex-direction: column;
+   min-height: @min-height_Grid-multy-header;
 }
 
 .controls-Grid_columnScroll .controls-Grid__header-cell,
@@ -64,6 +65,11 @@
    font-size: @font-size_Grid-header-cell-baseline;
 }
 
+.controls-Grid__row-multy-header__content_baseline:before {
+   content: '\200b';
+   font-size: @font-size_Grid-multy-header-cell-baseline;
+}
+
 .controls-Grid__header-cell_valign_bottom {
    justify-content: flex-end;
 }
@@ -75,6 +81,7 @@
 .controls-Grid__header-cell_valign_middle {
    justify-content: center;
 }
+
 
 .controls-Grid__results {
    display: contents;
@@ -526,4 +533,17 @@
    flex-shrink: 1;
    min-width: 0px;
    width: @spacing_Grid-editArrow_left + @width_Grid-editArrow;
+}
+
+.controls-Grid__cell_valign_top {
+   align-items: flex-start;
+}
+
+.controls-Grid__cell_valign_bottom {
+   align-items: flex-end;
+}
+
+.controls-Grid__cell_valign_middle {
+   align-items: center;
+
 }

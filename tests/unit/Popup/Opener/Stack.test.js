@@ -12,6 +12,7 @@ define(
 
       describe('Controls/_popup/Opener/Stack', () => {
          StackStrategy.getMaxPanelWidth = () => 1000;
+         popupTemplate.StackController._private.getContainerWidth = function(items) {return items.templateWidth};
          let item = {
             popupOptions: {
                minWidth: 600,
@@ -65,7 +66,6 @@ define(
             popupTemplate.StackController._stack.add({ containerWidth: 1100, popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._stack.add({ containerWidth: 850, popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._stack.add({ containerWidth: 950, popupOptions: { stackClassName: '' } });
-            popupTemplate.StackController._private.getContainerWidth = function(items) {return items.templateWidth};
             popupTemplate.StackController._stack.add({ position: {}, templateWidth: 711, containerWidth: '', popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._update();
             popupTemplate.StackController._update();

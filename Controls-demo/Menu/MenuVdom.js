@@ -181,6 +181,10 @@ define('Controls-demo/Menu/MenuVdom', [
                parentProperty: 'parent',
                nodeProperty: '@parent'
             });
+            // Заглушка, чтобы демка не ломилась не сервис истории
+            hs.historySource.update = function() {
+               return {};
+            };
             var query = new source.Query().where({
                $_history: true
             });

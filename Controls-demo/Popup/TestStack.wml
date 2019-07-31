@@ -14,7 +14,8 @@
          <Controls.popup:Dialog name="modalDialog" modal="{{true}}" template="Controls-demo/Popup/TestDialog">
             <ws:templateOptions type="dialog"/>
          </Controls.popup:Dialog>
-         <Controls.buttons:Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"/>
+         <Controls.buttons:Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"
+                          attr:class="ControlsDemo-TestStack__stack"/>
          <br/>
          <Controls.buttons:Button caption="Открыть через OpenEditDialog (TestStack, dialog)"
                           on:click="_openOldPanel('Controls-demo/Popup/TestStack', 'dialog')"/>

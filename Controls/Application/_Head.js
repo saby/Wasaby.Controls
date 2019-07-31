@@ -26,6 +26,7 @@ define('Controls/Application/_Head',
             validAttributes: {
                rel: true,
                as: true,
+               src: true,
                name: true,
                sizes: true,
                crossorigin: true,

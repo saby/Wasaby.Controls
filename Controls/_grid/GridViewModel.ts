@@ -134,7 +134,7 @@ var
                 preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase();
             }
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
-            if (columnIndex === 0 && !multiSelectVisibility) {
+            if (columnIndex === 0 && !multiSelectVisibility && rowIndex === 0) {
                 preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (itemPadding.left || 'default').toLowerCase();
             }
 
@@ -652,7 +652,6 @@ var
         resetHeaderRows: function() {
             this._curHeaderRowIndex = 0;
         },
-
         goToNextHeaderRow: function() {
             this._curHeaderRowIndex++;
         },
@@ -692,8 +691,7 @@ var
         },
 
         isStickyHeader: function() {
-           // todo https://online.sbis.ru/opendoc.html?guid=e481560f-ce95-4718-a7c1-c34eb8439c5b
-           return this._options.stickyHeader && !this.isNotFullGridSupport();
+           return this._options.stickyHeader && GridLayoutUtil.isFullGridSupport();
         },
 
         getCurrentHeaderColumn: function(rowIndex, columnIndex) {
@@ -766,9 +764,6 @@ var
             let offsetTop = 0;
             let shadowVisibility = 'visible';
 
-            if (this._headerRows.length > 1) {
-                cellContentClasses += ' controls-Grid__header-cell_align_items_center';
-            }
             if (cell.startRow) {
                 if (this.isNoGridSupport()) {
                     headerColumn.rowSpan = endRow - startRow;
@@ -784,6 +779,7 @@ var
                     cellStyles += gridStyles;
 
                 }
+                cellClasses += endRow - startRow > 1 ? ' controls-Grid__header-cell_justify_content_center' : '';
                 cellContentClasses += rowIndex !== this._headerRows.length - 1 && endRow - startRow === 1 ? ' controls-Grid__cell_header-content_border-bottom' : '';
                 cellContentClasses += endRow - startRow === 1 ? ' control-Grid__cell_header-nowrap' : '';
             } else if (GridLayoutUtil.isPartialGridSupport()) {
@@ -818,10 +814,13 @@ var
         // -----------------------------------------------------------
 
         getResultsPosition: function(): string {
-            if (this._options.results) {
-                return this._options.results.position;
+            const items = this.getItems();
+            if (items && items.getCount() > 1) {
+                if (this._options.results) {
+                    return this._options.results.position;
+                }
+                return this._options.resultsPosition;
             }
-            return this._options.resultsPosition;
         },
 
         setResultsPosition: function(position) {
@@ -1123,12 +1122,32 @@ var
             this._model.setMenuState(state);
         },
 
+        isCachedItemData: function(itemKey) {
+            return this._model.isCachedItemData(itemKey);
+        },
+        getCachedItemData: function(itemKey) {
+            return this._model.getCachedItemData(itemKey);
+        },
+        setCachedItemData: function(itemKey, cache) {
+            this._model.setCachedItemData(itemKey, cache);
+        },
+        resetCachedItemData: function(itemKey?) {
+            this._model.resetCachedItemData(itemKey);
+        },
+
         getItemDataByItem: function(dispItem) {
             var
                 self = this,
-                stickyColumn = _private.getStickyColumn(this._options),
                 current = this._model.getItemDataByItem(dispItem),
-                isStickedColumn;
+                stickyColumn, isStickedColumn;
+
+            if (current._gridViewModelCached) {
+                return current;
+            } else {
+                current._gridViewModelCached = true;
+            }
+
+            stickyColumn = _private.getStickyColumn(this._options)
 
             //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             current.rowSpacing = this._options.rowSpacing;
@@ -1149,7 +1168,7 @@ var
                 current.columns = this._columns;
             }
 
-            current.isHovered = current.item === self._model.getHoveredItem();
+            current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
             if (stickyColumn && !Env.detection.isNotFullGridSupport) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;

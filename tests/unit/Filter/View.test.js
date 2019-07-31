@@ -188,7 +188,7 @@ define(
             view._children = {
                DropdownOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} }
             };
-            view._container = {};
+            view._container = ['filter_container'];
             view._options.panelTemplateName = 'panelTemplateName.wml';
             view._source = defaultConfig.source;
             view._configs = {
@@ -206,6 +206,13 @@ define(
 
             assert.strictEqual(popupOptions.template, 'panelTemplateName.wml');
             assert.strictEqual(popupOptions.templateOptions.items.getCount(), 2);
+
+            view._children['second_filter'] = 'div_second_filter';
+            view._openPanel('click', 'second_filter');
+            assert.strictEqual(popupOptions.target, 'div_second_filter');
+
+            view._openPanel('click');
+            assert.deepStrictEqual(popupOptions.target, 'filter_container');
          });
 
          it('_open', function() {
@@ -331,35 +338,74 @@ define(
             assert.deepStrictEqual(view._source[5].value, [new Date(2019, 5, 1), new Date(2019, 5, 31)]);
          });
 
-         it('_startTimer', function() {
-            let opened, resultConfig;
-            let view = getView(defaultConfig);
-            view._options.panelTemplateName = 'panelTemplateName.wml';
-            view._children = {
-               DropdownOpener: { open: (config) => {
+         describe('View::timer', function() {
+            let view;
+            beforeEach(function() {
+               view = getView(defaultConfig);
+               view._options.panelTemplateName = 'panelTemplateName.wml';
+               view._children = {
+                  fast: 'target'
+               };
+               view._source = Clone(defaultConfig.source);
+               view._configs = {
+                  document: {
+                     items: Clone(defaultItems[0]),
+                     displayProperty: 'title',
+                     keyProperty: 'id'},
+                  state: {
+                     items: Clone(defaultItems[1]),
+                     displayProperty: 'title',
+                     keyProperty: 'id',
+                     multiSelect: true}
+               };
+               view._container = {};
+            });
+
+            it('_startTimer', function() {
+               let opened, resultConfig;
+               view._children.DropdownOpener = { open: (config) => {
                   resultConfig = config;
                   opened = true;
-               }},
-               fast: 'target'
-            };
-            view._source = Clone(defaultConfig.source);
-            view._configs = {
-               document: {
-                  items: Clone(defaultItems[0]),
-                  displayProperty: 'title',
-                  keyProperty: 'id'},
-               state: {
-                  items: Clone(defaultItems[1]),
-                  displayProperty: 'title',
-                  keyProperty: 'id',
-                  multiSelect: true}
-            };
-            view._container = {};
-            view._startTimer('mouseenter', {name: 'fast', title: 'My department'});
-            setTimeout(() => {
-               assert.isTrue(opened);
-               assert.strictEqual(resultConfig.target, 'target');
-            }, 110);
+               }};
+               view._startTimer('mouseenter', 'fast');
+               setTimeout(() => {
+                  assert.isTrue(opened);
+                  assert.strictEqual(resultConfig.target, 'target');
+               }, 110);
+            });
+
+            it('_restartTimer', function() {
+               let opened, resultConfig;
+               view._children.DropdownOpener = { open: (config) => {
+                     resultConfig = config;
+                     opened = true;
+               }};
+               view._startTimer('mouseenter', 'fast');
+               setTimeout(() => {
+                  view._restartTimer('mousemove', 'fast');
+                  setTimeout(() => {
+                     assert.isTrue(opened);
+                     assert.strictEqual(resultConfig.target, 'target');
+                  }, 110);
+               }, 10);
+            });
+
+            it('_resetTimer', function() {
+               let opened = false, resultConfig = null;
+               view._children.DropdownOpener = { open: (config) => {
+                     resultConfig = config;
+                     opened = true;
+               }};
+               view._startTimer('mouseenter', 'fast');
+               setTimeout(() => {
+                  view._resetTimer();
+                  assert.isNull(view._delayOpenTimeout);
+                  setTimeout(() => {
+                     assert.isFalse(opened);
+                     assert.isNull(resultConfig);
+                  }, 110);
+               }, 10);
+            });
          });
 
          it('_rangeChangedHandler', () => {
@@ -422,6 +468,36 @@ define(
             let self = {};
             filter.View._private.updateText(self, source, {});
             assert.strictEqual(self._filterText, 'Author: Ivanov K.K., test_extended');
+         });
+
+         it('_private:loadSelectedItems', function(done) {
+            let source = [...defaultSource];
+            source[1].value = [1];
+            let configs = {
+               document: {
+                  items: new collection.RecordSet({
+                     rawData: defaultItems[0],
+                     idProperty: 'id'
+                  }),
+                  source: source[0].editorOptions.source,
+                  displayProperty: 'title',
+                  keyProperty: 'id'},
+               state: {
+                  items: new collection.RecordSet({
+                     rawData: defaultItems[1].slice(1),
+                     idProperty: 'id'
+                  }),
+                  source: source[1].editorOptions.source,
+                  displayProperty: 'title',
+                  keyProperty: 'id',
+                  multiSelect: true}
+            };
+            assert.strictEqual(configs['state'].items.getCount(), 6);
+            filter.View._private.loadSelectedItems(source, configs).addCallback(() => {
+               assert.strictEqual(configs['state'].items.getCount(), 7);
+               assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
+               done();
+            });
          });
 
          describe('View::resultHandler', function() {

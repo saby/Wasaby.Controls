@@ -151,31 +151,37 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _onMonthTitleMouseLeave: function (e, date) {
-        if (!this._options.selectionProcessing) {
+        if (!this._options.selectionProcessing && this._options.monthClickable) {
             this._notify('itemMouseLeave', [date]);
         }
     },
 
     _onMonthBodyClick: function (e, date) {
         if (!this._options.selectionProcessing) {
-            this._notify('monthClick', [date]);
+            if (this._options.monthClickable) {
+                this._notify('monthClick', [date]);
+            } else if (this._monthsSelectionEnabled) {
+                this._selectionViewType = SELECTION_VEIW_TYPES.months;
+                this._notify('selectionViewTypeChanged', [this._selectionViewType]);
+                this._notify('itemClick', [date]);
+            }
         }
     },
 
     _onMonthClick: function (e, date) {
-        if (this._options.selectionProcessing) {
+        if (this._options.selectionProcessing || !this._options.monthClickable) {
             this._notify('itemClick', [date]);
         }
     },
 
     _onMonthMouseEnter: function (e, date) {
-        if (this._options.selectionProcessing) {
+        if (this._options.selectionProcessing || !this._options.monthClickable) {
             this._notify('itemMouseEnter', [date]);
         }
     },
 
     _onMonthMouseLeave: function (e, date) {
-        if (this._options.selectionProcessing) {
+        if (this._options.selectionProcessing || !this._options.monthClickable) {
             this._notify('itemMouseLeave', [date]);
         }
     },

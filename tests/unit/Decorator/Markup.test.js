@@ -134,6 +134,85 @@ define([
          });
       });
 
+      describe('wrapUrl', function() {
+         it('with domain - 1', function() {
+            var originHtml = '<p>https://ya.ru</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('with domain - 2', function() {
+            var originHtml = '<p>http://localhost:1025</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://localhost:1025" target="_blank">http://localhost:1025</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('with domain - 3', function() {
+            var originHtml = '<p>https://</p>';
+            var goodResultHtml = '<p>https://</p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('without domain - 1', function() {
+            var originHtml = '<p>usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup" target="_blank">usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('without domain - 2', function() {
+            var originHtml = '<p>vk.com</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://vk.com" target="_blank">vk.com</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('without domain - 3', function() {
+            var originHtml = '<p>market.yandex.ru</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://market.yandex.ru" target="_blank">market.yandex.ru</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('without domain - 4', function() {
+            var originHtml = '<p>my&nbsp;page&nbsp;on&nbsp;vk.com&nbsp;is&nbsp;vk.com/id0</p>';
+            var goodResultHtml = '<p>my&nbsp;page&nbsp;on&nbsp;<a class="asLink" rel="noreferrer" href="http://vk.com" target="_blank">vk.com</a>&nbsp;is&nbsp;<a class="asLink" rel="noreferrer" href="http://vk.com/id0" target="_blank">vk.com/id0</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('without domain - 5', function() {
+            var originHtml = '<p>yandex.ru.</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://yandex.ru" target="_blank">yandex.ru</a>.</p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('without domain - 6', function() {
+            var originHtml = '<p>www.google.com</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://www.google.com" target="_blank">www.google.com</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('inside link', function() {
+            var originHtml = '<p><a>https://ya.ru</a><a>yandex.ru</a><a>rn.kondakov@tensor.ru</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(originHtml, checkResultHtml);
+         });
+         it('inside attributes', function() {
+            var originHtml = '<p><div class="www.google.com">text</div><iframe style="min-width: 350px; min-height: 214px;" src="https://www.youtube.com/embed/LY2I4IXN1zQ" width="430" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(originHtml, checkResultHtml);
+         });
+         it('email - 1', function() {
+            var originHtml = '<p>rn.kondakov@tensor.ru</p>';
+            var goodResultHtml = '<p><a href="mailto:rn.kondakov@tensor.ru">rn.kondakov@tensor.ru</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('email - 2', function() {
+            var originHtml = '<p>rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru</p>';
+            var goodResultHtml = '<p><a href="mailto:rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru">rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+      });
+
       describe('htmlToJson', function() {
          beforeEach(function() {
             if (typeof document === 'undefined') {
@@ -263,12 +342,29 @@ define([
       });
 
       describe('jsonToHtml', function() {
+         var ILogger;
+         var errorFunction;
+         var errorArray;
+         before(function() {
+            ILogger = Env.IoC.resolve('ILogger');
+            errorFunction = ILogger.error;
+            ILogger.error = function() {
+               errorArray.push(arguments);
+            };
+            errorArray = [];
+         });
+         after(function() {
+            Env.IoC.resolve('ILogger').error = errorFunction;
+         });
          beforeEach(function() {
             decoratedLinkService = Env.constants.decoratedLinkService;
             Env.constants.decoratedLinkService = '/test/';
          });
          afterEach(function() {
             Env.constants.decoratedLinkService = decoratedLinkService;
+            while (errorArray.length) {
+               errorFunction.apply(ILogger, errorArray.shift());
+            }
          });
          it('empty', function() {
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml([]), ''));
@@ -332,6 +428,43 @@ define([
                checkHtml = decorator.Converter.jsonToHtml(json);
             assert.isTrue(equalsHtml(checkHtml, goodHtml));
          });
+
+         it('not string attribute', function() {
+            var json = [
+               ['p',
+                  {
+                     'class': true
+                  },
+                  'some test'
+               ]
+            ];
+            var goodHtml = '<div><p>some test</p></div>';
+            var goodError = 'Невалидное значение атрибута class, ожидается строковый тип.';
+            var checkHtml = decorator.Converter.jsonToHtml(json);
+            var chechError = errorArray.shift()[1];
+            assert.ok(equalsHtml(goodHtml, checkHtml));
+            assert.equal(goodError, chechError);
+         });
+
+         it('invalid JsonML', function() {
+            var json = [
+               ['p',
+                  {
+                     'class': 'myClass'
+                  },
+                  {
+                     'text': 'some text'
+                  }
+               ]
+            ];
+            var goodHtml = '<div><p class="myClass"></p></div>';
+            var goodError = 'Узел в JsonML должен быть строкой или массивом.';
+            var checkHtml = decorator.Converter.jsonToHtml(json);
+            var chechError = errorArray.shift()[1];
+            assert.ok(equalsHtml(goodHtml, checkHtml));
+            assert.equal(goodError, chechError);
+         });
+
          it('all valid tags and attributes', function() {
             var json = [
                ['p',

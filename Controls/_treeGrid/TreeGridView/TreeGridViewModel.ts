@@ -127,6 +127,12 @@ var
                 current = TreeGridViewModel.superclass.getItemDataByItem.apply(this, arguments),
                 superGetCurrentColumn = current.getCurrentColumn;
 
+            if (current._treeGridViewModelCached) {
+                return current;
+            } else {
+                current._treeGridViewModelCached = true;
+            }
+
             current.isLastColumn = isLastColumn;
 
             // For browsers with partial grid support need to calc real rows' index and set explicit rows' style

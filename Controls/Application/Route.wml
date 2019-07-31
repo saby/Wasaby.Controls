@@ -3,6 +3,7 @@
    application="{{application}}"
    scope="{{_options}}"
    attr:application  ="{{application}}"
+   attr:component="{{application}}"
    attr:rootapp="UI/Base:Document"
    attr:key="_"
    cssLinks="{{ cssLinks }}"

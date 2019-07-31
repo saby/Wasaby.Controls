@@ -70,7 +70,12 @@ var _private = {
             nodeKey = item.getId(),
             expanded = !listViewModel.isExpanded(dispItem);
         self._notify(expanded ? 'itemExpand' : 'itemCollapse', [item]);
-        if (!_private.isExpandAll(self._options.expandedItems) && !self._nodesSourceControllers[nodeKey] && !dispItem.isRoot()) {
+        if (
+            !_private.isExpandAll(self._options.expandedItems) &&
+            !self._nodesSourceControllers[nodeKey] &&
+            !dispItem.isRoot() &&
+            _private.shouldLoadChildren(self, item)
+        ) {
             self._nodesSourceControllers[nodeKey] = _private.createSourceController(self._options.source, self._options.navigation);
 
             filter[self._options.parentProperty] = nodeKey;
@@ -89,6 +94,16 @@ var _private = {
         } else {
             _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
         }
+    },
+    shouldLoadChildren: function(self, node): boolean {
+        if (self._options.hasChildrenProperty) {
+            const
+                listViewModel = self._children.baseControl.getViewModel(),
+                hasChildren = node.get(self._options.hasChildrenProperty),
+                children = hasChildren && listViewModel.getChildren(node.getId());
+            return hasChildren && (!children || children.length === 0);
+        }
+        return true;
     },
     prepareHasMoreStorage: function(sourceControllers) {
         var
@@ -181,27 +196,25 @@ var _private = {
             if (viewModelRoot !== root) {
                 viewModel.setRoot(root);
             }
-        }
+            if (self._deepReload && viewModel.getExpandedItems().length) {
+                const sourceController = baseControl.getSourceController();
+                const hasMore = {};
+                let hasMoreData: unknown;
 
-        if (self._deepReload && viewModel.getExpandedItems().length) {
-            const sourceController = baseControl.getSourceController();
-            const hasMore = {};
-            let hasMoreData: unknown;
+                viewModel.getExpandedItems().forEach((key) => {
+                    hasMoreData = sourceController.hasMoreData('down', key);
 
-            viewModel.getExpandedItems().forEach((key) => {
-                hasMoreData = sourceController.hasMoreData('down', key);
+                    if (hasMoreData !== undefined) {
+                        hasMore[key] = hasMoreData;
+                    }
+                });
 
-                if (hasMoreData !== undefined) {
-                    hasMore[key] = hasMoreData;
+                // if method does not support multi navigation hasMore object will be empty
+                if (!isEqual({}, hasMore)) {
+                    viewModel.setHasMoreStorage(hasMore);
                 }
-            });
-
-            // if method does not support multi navigation hasMore object will be empty
-            if (!isEqual({}, hasMore)) {
-                viewModel.setHasMoreStorage(hasMore);
             }
         }
-
         // reset deepReload after loading data (see reload method or constructor)
         self._deepReload = false;
     },

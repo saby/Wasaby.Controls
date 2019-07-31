@@ -1,0 +1,35 @@
+@max-width_Markup_img_decorator: 538px;
+@LinkDecorator__gradient-startColor: rgba(249, 249, 249, 0);
+@LinkDecorator__gradient-endColor: rgba(249, 249, 249, 1);
+
+.LinkDecorator__wrap {
+   display: block;
+   overflow: hidden;
+   max-width: 100%;
+   padding-right: @spacing_default_xxs;
+}
+
+.LinkDecorator__linkWrap {
+   display: inline-block;
+   line-height: 0;
+   position: relative;
+   box-shadow: 0 @spacing_default_xxs @spacing_default_xxs @color_shadow_popup;
+   max-width: 100%;
+   overflow: hidden;
+
+   &::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 30px;
+      background: linear-gradient(to right, @LinkDecorator__gradient-startColor 0, @LinkDecorator__gradient-endColor 100%);
+   }
+}
+
+.LinkDecorator__image {
+   max-width: @max-width_Markup_img_decorator;
+   pointer-events: none;
+   margin: 0;
+}
