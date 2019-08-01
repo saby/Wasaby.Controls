@@ -38,7 +38,7 @@ var
               style += currentColumn.styleForLadder;
            }
            if (colspan) {
-                style += _private.getColspan(
+                style += _private.getColspanStyles(
                    itemData.multiSelectVisibility,
                    currentColumn.columnIndex,
                    itemData.columns.length
@@ -46,7 +46,13 @@ var
            }
            return style;
         },
-        getColspan(
+        getColspan(itemData, isColspaned: boolean = false): number {
+            if (!isColspaned) {
+                return 1;
+            }
+            return itemData.columns.length - (itemData.multiSelectVisibility === 'hidden' ? 0 : 1);
+        },
+        getColspanStyles(
            multiSelectVisibility: 'hidden' | 'visible' | 'onhover',
            columnIndex: number,
            columnsLength: number,
@@ -743,7 +749,7 @@ var
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             if (headerColumn.column.isBreadCrumbs) {
-               headerColumn.style = _private.getColspan(
+               headerColumn.style = _private.getColspanStyles(
                   this._options.multiSelectVisibility,
                   columnIndex,
                   this._headerRows[0].length,
@@ -828,7 +834,7 @@ var
         },
 
         getStyleForCustomResultsTemplate: function() {
-            return _private.getColspan(
+            return _private.getColspanStyles(
                this._options.multiSelectVisibility,
                0,
                this._columns.length
@@ -1218,6 +1224,7 @@ var
             };
             current.isDrawActions = _private.isDrawActions;
             current.getCellStyle = _private.getCellStyle;
+            current.getColspan = _private.getColspan;
 
             current.getCurrentColumnKey = function() {
                 return self._columnsVersion + '_' +
