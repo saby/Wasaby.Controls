@@ -69,22 +69,11 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
          var items = [{
             id: 'testKey',
             value: 'testValue',
-            resetValue: '',
-            textValue: ''
+            resetValue: ''
          }];
-         var historyItems = [{
-            id: 'testKey',
-            value: 'testValueFromHistory',
-            textValue: 'textValueFromHistory'
-         }];
-
          filterLayout._beforeUpdate({ filterButtonSource: items });
          assert.deepEqual(filterLayout._filterButtonItems, items);
          assert.deepEqual(filterLayout._filter, {testKey: 'testValue'});
-
-         filterLayout._beforeUpdate({ filterButtonSource: items, historyItems: historyItems });
-         assert.equal(filterLayout._filterButtonItems[0].value, 'testValueFromHistory');
-         assert.equal(filterLayout._filterButtonItems[0].textValue, 'textValueFromHistory');
       });
 
       it('_beforeUpdate new filterButtonItems and fastFilterItems', function () {
@@ -757,6 +746,22 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
          }
          assert.isTrue(errorCathed);
 
+      });
+
+      it('getCalculatedFilter', function() {
+         let filterButtonItems = [{id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: ''}];
+         let historyItems = [{id: 'testId', value: 'testValueFromHistory', textValue: 'testTextValueFromHistory'}];
+
+         return new Promise(function(resolve) {
+            Filter.getCalculatedFilter({
+               filterButtonSource: filterButtonItems,
+               historyItems: historyItems
+            }).addCallback(function(result) {
+               assert.equal(result.filterButtonItems[0].value, 'testValueFromHistory');
+               assert.equal(result.filterButtonItems[0].textValue, 'testTextValueFromHistory');
+               resolve();
+            });
+         });
       });
    });
 
