@@ -358,8 +358,7 @@ var _Controller = Control.extend({
 _Controller.getDefaultOptions = function getDefaultOptions() {
    return {
       filter: defaultFilter,
-      selectedKeys: defaultSelectedKeys,
-      dropdownAutofocus: true
+      selectedKeys: defaultSelectedKeys
    };
 };
 
