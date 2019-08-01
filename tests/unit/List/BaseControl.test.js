@@ -2337,6 +2337,59 @@ define([
          assert.isUndefined(ctrl._itemDragData);
       });
 
+      it('itemMouseDown prevents native drag synchronously', function() {
+         let isDefaultPrevented = false;
+
+         const
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [null],
+                  excludedKeys: []
+               },
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     hasMore: false
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               },
+               items: rs,
+               selectedKeys: [null],
+               excludedKeys: [],
+               readOnly: false,
+               itemsDragNDrop: true
+            },
+            ctrl = new lists.BaseControl(),
+            fakeMouseDown = {
+               target: {
+                  closest: () => false
+               },
+               preventDefault: () => isDefaultPrevented = true
+            };
+
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+
+         ctrl._itemMouseDown({}, { key: 1 }, fakeMouseDown);
+
+         // getItemsBySelection будет асинхронный, preventDefault все равно должен
+         // быть вызван синхронно
+         assert.isTrue(isDefaultPrevented);
+      });
+
       it('_documentDragEnd', function() {
          var
             dragEnded,
