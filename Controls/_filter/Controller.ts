@@ -339,6 +339,14 @@ import 'Controls/context';
             }
             return clone(items);
          },
+
+         prepareFilterByOptions: function(self, options) {
+            return _private.resolveItems(self, options.historyId, options.filterButtonSource, options.fastFilterSource, options.historyItems).addCallback((items) => {
+               _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
+               _private.applyItemsToFilter(self, options.filter, self._filterButtonItems, self._fastFilterItems);
+               return items;
+            });
+         }
       };
 
       function getCalculatedFilter(cfg) {
@@ -598,20 +606,13 @@ import 'Controls/context';
                _private.resolveFilterButtonItems(this._filterButtonItems, this._fastFilterItems);
                _private.applyItemsToFilter(this, options.filter, this._filterButtonItems, this._fastFilterItems);
             } else {
-               var self = this;
-               return _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource, options.historyItems).addCallback(function(items) {
-                  _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
-                  _private.applyItemsToFilter(self, options.filter, self._filterButtonItems, self._fastFilterItems);
-                  return items;
-               });
+               return _private.prepareFilterByOptions(this, options);
             }
          },
 
          _beforeUpdate: function(newOptions) {
             if (this._options.filterButtonSource !== newOptions.filterButtonSource || this._options.fastFilterSource !== newOptions.fastFilterSource) {
-               _private.setFilterItems(this, newOptions.filterButtonSource, newOptions.fastFilterSource);
-               _private.resolveFilterButtonItems(this._filterButtonItems, this._fastFilterItems);
-               _private.applyItemsToFilter(this, this._filter, this._filterButtonItems, this._fastFilterItems);
+               _private.prepareFilterByOptions(this, newOptions);
             }
             if (!isEqual(this._options.filter, newOptions.filter)) {
                _private.applyItemsToFilter(this, newOptions.filter, this._filterButtonItems, this._fastFilterItems);
