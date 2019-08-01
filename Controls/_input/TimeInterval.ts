@@ -24,6 +24,8 @@ type IOptions = IModelOptions;
 /*
  * Controls that allows user to enter some amount of time with the accuracy from day to seconds.
  * <a href="/materials/demo-ws4-input">Demo examples.</a>.
+ * @remark
+ * If container with width: auto, then the width is determined based on the content.
  *
  * @class Controls/_input/TimeInterval
  * @extends Controls/_input/Base
