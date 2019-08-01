@@ -1275,7 +1275,7 @@ define([
             return {
                1: {
                   destroy: () => {},
-                  hasMoreDate() => {}
+                  hasMoreData: () => {}
                }
             };
          };
