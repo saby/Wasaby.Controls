@@ -508,6 +508,38 @@ define(
             });
          });
 
+         it('_beforeUpdate loadSelectedItems', function(done) {
+            let filterView = getView(defaultConfig);
+            let source = [...defaultSource];
+            source[1].value = [1];
+            let configs = {
+               document: {
+                  items: new collection.RecordSet({
+                     rawData: defaultItems[0],
+                     idProperty: 'id'
+                  }),
+                  source: source[0].editorOptions.source,
+                  displayProperty: 'title',
+                  keyProperty: 'id'},
+               state: {
+                  items: new collection.RecordSet({
+                     rawData: defaultItems[1].slice(1),
+                     idProperty: 'id'
+                  }),
+                  source: source[1].editorOptions.source,
+                  displayProperty: 'title',
+                  keyProperty: 'id',
+                  multiSelect: true}
+            };
+            filterView._configs = configs;
+            filterView._displayText = {};
+            filterView._beforeUpdate({source: source}).addCallback(() => {
+               assert.strictEqual(configs['state'].items.getCount(), 7);
+               assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
+               done();
+            });
+         });
+
          describe('View::resultHandler', function() {
             let view;
             beforeEach(function() {
