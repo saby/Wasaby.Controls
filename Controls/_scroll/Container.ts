@@ -691,9 +691,15 @@ var
       },
 
       _updatePlaceholdersSize: function(e, placeholdersSizes) {
-         this._topPlaceholderSize = placeholdersSizes.top;
-         this._bottomPlaceholderSize = placeholdersSizes.bottom;
-         this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
+         if (this._topPlaceholderSize !== placeholdersSizes.top ||
+            this._bottomPlaceholderSize !== placeholdersSizes.bottom) {
+            this._topPlaceholderSize = placeholdersSizes.top;
+            this._bottomPlaceholderSize = placeholdersSizes.bottom;
+            this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
+            if (this._children.scrollBar) {
+               this._children.scrollBar.setFix1177446501(true);
+            }
+         }
       },
 
       _saveScrollPosition: function(e) {
