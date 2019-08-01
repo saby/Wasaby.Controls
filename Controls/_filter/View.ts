@@ -60,7 +60,8 @@ var _private = {
     },
 
     prepareItems: function(self, items) {
-        self._source = object.clone(items);
+        // When serializing the Date, "_serializeMode" field is deleted, so object.clone can't be used
+        self._source = CoreClone(items);
     },
 
     calculateStateSourceControllers: function(configs, source) {
