@@ -140,11 +140,12 @@ define(
                   keyCode: 28
                }
             };
-            //Тестируем нажатие не esc
+
+            // Тестируем нажатие не esc
             dropdownController._keyUp(event);
             assert.isFalse(closed);
 
-            //Тестируем нажатие esc
+            // Тестируем нажатие esc
             event.nativeEvent.keyCode = 27;
             dropdownController._keyUp(event);
             assert.isTrue(closed);
