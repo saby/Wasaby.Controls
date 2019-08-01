@@ -174,30 +174,28 @@
  * Размещаем опции записи в прикладном шаблоне с использованием itemActionsTemplate:
  *<pre>
  * <Controls.list:View
- *    itemTemplate="{{_cutomItemTemplate}}"
  *    itemActionsPosition="custom"
  *    itemActions="{{_itemActions}}">
+ *    <ws:itemTemplate>
+ *      <ws:partial template="Controls/list:ItemTemplate">
+ *        <ws:contentTemplate>
+ *          <ws:partial template="wml!customTemplateName"/>
+ *        </ws:contentTemplate>
+ *      </ws:partial>
+ *    </ws:itemTemplate>
  * </Controls.list:View>
  *</pre>
  *
- * _cutomItemTemplate:
+ * customTemplateName.wml:
  * <pre>
- * <ws:partial template="Controls/list:ItemTemplate"
- *            itemData="{{itemData}}"
- *            swipeTemplate="{{swipeTemplate}}"
- *            itemActionsTemplate="{{itemActionsTemplate}}"
- *            highlightOnHover="{{highlightOnHover}}">
- *    <ws:contentTemplate>
- *        <div>{{itemData.item.title}}</div>
- *        <ws:if data="{{!itemData.isSwiped}}">
- *                    <ws:partial template="{{itemActionsTemplate}}"
- *                                attr:class="some-custom-class-for-itemActions"
- *                                itemData="{{itemData}}"
- *                                highlightOnHover="{{highlightOnHover}}"/>
- *                </ws:if>
- *        <div>{{itemData.item.description}}</div>
- *    </ws:contentTemplate>
- *</ws:partial>
+ *  <div>{{itemData.item.title}}</div>
+ *    <ws:if data="{{!itemData.isSwiped}}">
+ *      <ws:partial template="{{itemActionsTemplate}}"
+ *                  attr:class="some-custom-class-for-itemActions"
+ *                  itemData="{{itemData}}"
+ *                  highlightOnHover="{{highlightOnHover}}"/>
+ *    </ws:if>
+ *  <div>{{itemData.item.description}}</div>
  * </pre>
  *
  */
@@ -214,30 +212,28 @@
  * Placing Item Actions in custom item template using itemActionsTemplate
  *<pre>
  * <Controls.list:View
- *    itemTemplate="{{_cutomItemTemplate}}"
  *    itemActionsPosition="custom"
  *    itemActions="{{_itemActions}}">
+ *    <ws:itemTemplate>
+ *      <ws:partial template="Controls/list:ItemTemplate">
+ *        <ws:contentTemplate>
+ *          <ws:partial template="wml!customTemplateName"/>
+ *        </ws:contentTemplate>
+ *      </ws:partial>
+ *    </ws:itemTemplate>
  * </Controls.list:View>
  *</pre>
  *
- * _cutomItemTemplate:
+ * customTemplateName.wml:
  * <pre>
- * <ws:partial template="Controls/list:ItemTemplate"
- *            itemData="{{itemData}}"
- *            swipeTemplate="{{swipeTemplate}}"
- *            itemActionsTemplate="{{itemActionsTemplate}}"
- *            highlightOnHover="{{highlightOnHover}}">
- *    <ws:contentTemplate>
- *        <div>{{itemData.item.title}}</div>
- *        <ws:if data="{{!itemData.isSwiped}}">
- *                    <ws:partial template="{{itemActionsTemplate}}"
- *                                attr:class="some-custom-class-for-itemActions"
- *                                itemData="{{itemData}}"
- *                                highlightOnHover="{{highlightOnHover}}"/>
- *                </ws:if>
- *        <div>{{itemData.item.description}}</div>
- *    </ws:contentTemplate>
- *</ws:partial>
+ *  <div>{{itemData.item.title}}</div>
+ *    <ws:if data="{{!itemData.isSwiped}}">
+ *      <ws:partial template="{{itemActionsTemplate}}"
+ *                  attr:class="some-custom-class-for-itemActions"
+ *                  itemData="{{itemData}}"
+ *                  highlightOnHover="{{highlightOnHover}}"/>
+ *    </ws:if>
+ *  <div>{{itemData.item.description}}</div>
  * </pre>
  *
  */
