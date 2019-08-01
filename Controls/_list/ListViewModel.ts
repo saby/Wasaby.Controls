@@ -138,12 +138,16 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent._listViewModelCached = true;
         }
 
+        let dispItemContents = itemsModelCurrent.dispItem.getContents();
+        dispItemContents = dispItemContents instanceof Array ? dispItemContents[dispItemContents.length - 1] : dispItemContents;
+
+
         itemsModelCurrent.isMenuShown = this._menuState === 'shown';
         itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === _private.getItemByMarkedKey(this, this._markedKey);
         itemsModelCurrent.itemActions = this.getItemActions(itemsModelCurrent.item);
-        itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
-        itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
-        itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
+        itemsModelCurrent.isActive = this._activeItem && dispItemContents === this.getActiveItem();
+        itemsModelCurrent.isSwiped = this._swipeItem && dispItemContents === this.getSwipeItem();
+        itemsModelCurrent.isRightSwiped = this._rightSwipedItem && dispItemContents === this.getRightSwipedItem();
         itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
         itemsModelCurrent.searchValue = this._options.searchValue;
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
@@ -309,7 +313,12 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     getSwipeItem: function() {
-        return this._swipeItem.item;
+        let item = ItemsUtil.checkBreadCrumbsAndGetItem(this._swipeItem);
+        return item;
+    },
+    getRightSwipedItem: function() {
+        let item = ItemsUtil.checkBreadCrumbsAndGetItem(this._rightSwipedItem);
+        return item;
     },
 
     setActiveItem: function(itemData) {
@@ -531,7 +540,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     getActiveItem: function() {
-        return this._activeItem;
+        let item = ItemsUtil.checkBreadCrumbsAndGetItem(this._activeItem);
+        return item;
     },
 
     setItemTemplateProperty: function(itemTemplateProperty) {

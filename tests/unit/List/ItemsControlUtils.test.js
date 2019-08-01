@@ -36,7 +36,7 @@ define(['Controls/list', 'Types/collection', 'Types/source', 'Core/core-instance
                groupingKeyCallback: groupFnc
             };
          });
-         
+
          describe('ItemsUtil', function () {
             var proj;
             it('Flat display Array', function () {
@@ -71,6 +71,19 @@ define(['Controls/list', 'Types/collection', 'Types/source', 'Core/core-instance
 
                value = list.ItemsUtil.getPropertyValue('Первый', 'title');
                assert.equal('Первый', value, 'getPropertyValue doesn\'t return value of the flag/enum item');
+            });
+
+            it('checkBreadCrumbsAndGetItem', function() {
+               let itemData = {
+                  item: {id: 1}
+               };
+               assert.deepEqual({id: 1}, list.ItemsUtil.checkBreadCrumbsAndGetItem(itemData));
+               itemData = {
+                  breadCrumbs: true,
+                  item: [{id: 1},
+                         {id: 2}]
+               };
+               assert.deepEqual({id: 2}, list.ItemsUtil.checkBreadCrumbsAndGetItem(itemData));
             });
 
             it('getDisplayItemById', function () {

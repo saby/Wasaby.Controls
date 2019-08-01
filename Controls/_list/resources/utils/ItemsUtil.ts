@@ -74,6 +74,10 @@ var ItemsUtil = {
         }
     },
 
+    checkBreadCrumbsAndGetItem: function(itemData) {
+        return itemData.breadCrumbs ? itemData.item[itemData.item.length - 1] : itemData.item;
+    },
+
     getDisplayItemKey: function(dispItem) {
         let contents = dispItem.getContents();
 

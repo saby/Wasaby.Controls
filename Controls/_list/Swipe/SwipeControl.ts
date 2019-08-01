@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import * as template from 'wml!Controls/_list/Swipe/SwipeControl';
 import {TouchContextField} from 'Controls/context';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
+import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import 'css!theme?Controls/list';
 import { IMeasurer } from './interface/IMeasurer';
 import { IItemAction } from './interface/IItemAction';
@@ -141,7 +142,8 @@ export default class SwipeControl extends Control {
                 this._options.actionCaptionPosition
             );
          }
-         listModel.setItemActions(itemData.item, this._swipeConfig.itemActions);
+         let item = ItemsUtil.checkBreadCrumbsAndGetItem(itemData);
+         listModel.setItemActions(item, this._swipeConfig.itemActions);
          if (this._swipeConfig.twoColumns) {
             this._swipeConfig.itemActions.showed = this._prepareTwoColunms(this._swipeConfig.itemActions.showed);
          }
