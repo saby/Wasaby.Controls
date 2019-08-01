@@ -1,12 +1,12 @@
 <div>
    <ws:partial template="{{_options.content}}"
-               on:click="_clickHandler()"/>
+               on:click="_clickHandler()"
+               on:keyup="_keyUp()"/>
 
    <Controls._dropdown.Opener name="DropdownOpener"
                              on:open="_onOpen()"
                              on:close="_onClose()"
                              on:result="_onResult()"
-                             on:keyup="_keyUp()"
                              className="{{_options.popupClassName}}">
       <ws:templateOptions
               keyProperty="{{_options.keyProperty}}"

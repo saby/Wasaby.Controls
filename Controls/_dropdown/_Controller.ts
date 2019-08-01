@@ -180,12 +180,6 @@ var _private = {
       }
       return self._depsDeferred;
    }
-
-   keyUp: function(event) {
-      if (event.nativeEvent.keyCode === Env.constants.key.esc) {
-         this._close();
-      }
-   }
 };
 
 /**
@@ -281,6 +275,12 @@ var _Controller = Control.extend({
       }
    },
 
+   _keyUp: function(event) {
+      if (event.nativeEvent.keyCode === Env.constants.key.esc) {
+         this._children.DropdownOpener.close();
+      }
+   },
+
    _open: function (event) {
       // Проверям что нажата левая кнопка мыши
       if (this._options.readOnly || event && event.nativeEvent.button !== 0) {
@@ -301,6 +301,7 @@ var _Controller = Control.extend({
             target: self._container,
             targetPoint: self._options.corner,
             opener: self,
+            autofocus: false,
             closeOnOutsideClick: true
          };
          _private.requireTemplates(self, self._options).addCallback(() => {

@@ -127,6 +127,29 @@ define(
             });
          });
 
+         it('_keyUp', function() {
+            let dropdownController = getDropdownController(config),
+               closed = false;
+            dropdownController._children = {
+               DropdownOpener: {
+                  close: () => {closed = true; }
+               }
+            };
+            let event = {
+               nativeEvent: {
+                  keyCode: 28
+               }
+            };
+            //Тестируем нажатие не esc
+            dropdownController._keyUp(event);
+            assert.isFalse(closed);
+
+            //Тестируем нажатие esc
+            event.nativeEvent.keyCode = 27;
+            dropdownController._keyUp(event);
+            assert.isTrue(closed);
+         });
+
          it('before mount filter', (done) => {
             let filterConfig = Clone(config);
             filterConfig.filter = {id: ['3', '4']};
