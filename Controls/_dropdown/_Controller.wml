@@ -6,6 +6,7 @@
                              on:open="_onOpen()"
                              on:close="_onClose()"
                              on:result="_onResult()"
+                             on:keyup="_keyUp()"
                              className="{{_options.popupClassName}}">
       <ws:templateOptions
               keyProperty="{{_options.keyProperty}}"

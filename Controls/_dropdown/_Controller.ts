@@ -6,6 +6,7 @@ import {isEqual} from 'Types/object';
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
 import * as mStubs from 'Core/moduleStubs';
+import Env = require('Env/Env');
 
 // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 var
@@ -179,6 +180,12 @@ var _private = {
       }
       return self._depsDeferred;
    }
+
+   keyUp: function(event) {
+      if (event.nativeEvent.keyCode === Env.constants.key.esc) {
+         this._close();
+      }
+   }
 };
 
 /**
@@ -294,7 +301,6 @@ var _Controller = Control.extend({
             target: self._container,
             targetPoint: self._options.corner,
             opener: self,
-            autofocus: false,
             closeOnOutsideClick: true
          };
          _private.requireTemplates(self, self._options).addCallback(() => {
