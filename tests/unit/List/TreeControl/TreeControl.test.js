@@ -1271,7 +1271,14 @@ define([
          let emptyCfg = getDefaultCfg();
          emptyCfg.expandedItems = ['1', '2'];
          let emptyTreeGridViewModel = new treeGrid.ViewModel(emptyCfg);
-
+         let getNodesSourceControllers = () => {
+            return {
+               1: {
+                  destroy: () => {},
+                  hasMoreDate() => {}
+               }
+            };
+         };
          let self = {
             _deepReload: true,
             _children: {},
@@ -1310,13 +1317,17 @@ define([
          assert.equal(filter['Раздел'], self._root);
 
          filter = {};
+         selfWithBaseControl._nodesSourceControllers = getNodesSourceControllers();
          treeGrid.TreeControl._private.beforeReloadCallback(selfWithBaseControl, filter, null, null, cfg);
          assert.equal(filter['Раздел'], self._root);
+         assert.isFalse(!!selfWithBaseControl._nodesSourceControllers[1]);
 
          treeGridViewModel.setExpandedItems([1, 2]);
          filter = {};
+         selfWithBaseControl._nodesSourceControllers = getNodesSourceControllers();
          treeGrid.TreeControl._private.beforeReloadCallback(selfWithBaseControl, filter, null, null, cfg);
          assert.deepEqual(filter['Раздел'], ['root', 1, 2]);
+         assert.isTrue(!!selfWithBaseControl._nodesSourceControllers[1]);
 
          filter = {};
          treeGrid.TreeControl._private.beforeReloadCallback(selfWithBaseControlAndEmptyModel, filter, null, null, emptyCfg);
