@@ -672,8 +672,9 @@ var _private = {
                 self._loadingIndicatorTimer = null;
                 if (self._loadingState) {
                     self._loadingIndicatorState = self._loadingState;
+                    _private.saveScrollOnToggleLoadingIndicator(self);
                     self._showLoadingIndicatorImage = true;
-                    self._forceUpdate();
+
                 }
             }, 2000);
         }
@@ -687,8 +688,16 @@ var _private = {
             self._loadingIndicatorTimer = null;
         }
         if (self._loadingIndicatorState !== null) {
+            _private.saveScrollOnToggleLoadingIndicator(self);
             self._loadingIndicatorState = self._loadingState;
-            self._forceUpdate();
+        }
+    },
+
+    saveScrollOnToggleLoadingIndicator(self: BaseControl): void {
+        if (self._loadingIndicatorState !== 'all') {
+            self._shouldRestoreScrollPosition = true;
+            self._saveAndRestoreScrollPosition = self._loadingIndicatorState;
+            self._notify('controlResize');
         }
     },
 
@@ -1154,10 +1163,9 @@ var _private = {
     isBlockedForLoading(loadingIndicatorState): boolean {
         return loadingIndicatorState === 'all';
     },
-    getLoadingIndicatorClasses(loadingIndicatorState, itemsCount): string {
+    getLoadingIndicatorClasses(loadingIndicatorState): string {
         return CssClassList.add('controls-BaseControl__loadingIndicator')
             .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
-            .add('controls-BaseControl-emptyView__loadingIndicator', itemsCount === 0)
             .compile();
     }
 
@@ -1974,7 +1982,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _getLoadingIndicatorClasses(): string {
-        return _private.getLoadingIndicatorClasses(this._loadingIndicatorState, this._listViewModel.getCount());
+        return _private.getLoadingIndicatorClasses(this._loadingIndicatorState);
     }
 
 

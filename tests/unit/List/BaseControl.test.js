@@ -1501,7 +1501,7 @@ define([
       it('_processError', function() {
          var self = {
             _loadingState: 'all',
-            _forceUpdate: () => {},
+            _notify: () => {},
             __errorController: {
                process: () => {
                   return new Promise(() => {});
@@ -3361,7 +3361,7 @@ define([
          var baseControlMock = {
             _needScrollCalculation: true,
             _sourceController: {hasMoreData: () => {return true;}},
-            _forceUpdate: () => {}
+            _notify: () => {},
          };
          var emptyList = new collection.List();
          var list = new collection.List({items: [{test: 'testValue'}]});
@@ -3580,17 +3580,67 @@ define([
 
       it('_getLoadingIndicatorClasses', function () {
 
-         function testCaseWithArgs(indicatorState, itemsCount) {
-            return lists.BaseControl._private.getLoadingIndicatorClasses(indicatorState, itemsCount);
+         function testCaseWithArgs(indicatorState) {
+            return lists.BaseControl._private.getLoadingIndicatorClasses(indicatorState);
          }
 
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all controls-BaseControl-emptyView__loadingIndicator', testCaseWithArgs('all', 0));
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up controls-BaseControl-emptyView__loadingIndicator', testCaseWithArgs('up', 0));
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down controls-BaseControl-emptyView__loadingIndicator', testCaseWithArgs('down', 0));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all', testCaseWithArgs('all'));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up', testCaseWithArgs('up'));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down', testCaseWithArgs('down'));
 
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all', testCaseWithArgs('all', 1));
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up', testCaseWithArgs('up', 1));
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down', testCaseWithArgs('down', 1));
+      });
+
+      it('saveScrollOnToggleLoadingIndicator', async function () {
+         let
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                sorting: [],
+                viewModelConfig: {
+                   items: [],
+                   keyProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id',
+                source: source
+             },
+             isResized = false,
+             instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         instance._notify = function (eName) {
+            if (eName === 'controlResize') {
+               isResized = true;
+            }
+         };
+
+         instance._shouldRestoreScrollPosition = false;
+         instance._loadingIndicatorState = 'all';
+
+         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
+         assert.isFalse(instance._shouldRestoreScrollPosition);
+         assert.isUndefined(instance._saveAndRestoreScrollPosition);
+         assert.isFalse(isResized);
+
+
+         isResized = false;
+         instance._shouldRestoreScrollPosition = false;
+         instance._loadingIndicatorState = 'up';
+
+         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
+         assert.isTrue(instance._shouldRestoreScrollPosition);
+         assert.equal('up', instance._saveAndRestoreScrollPosition);
+         assert.isTrue(isResized);
+
+
+         isResized = false;
+         instance._shouldRestoreScrollPosition = false;
+         instance._loadingIndicatorState = 'down';
+
+         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
+         assert.isTrue(instance._shouldRestoreScrollPosition);
+         assert.equal('down', instance._saveAndRestoreScrollPosition);
+         assert.isTrue(isResized);
 
       });
 
