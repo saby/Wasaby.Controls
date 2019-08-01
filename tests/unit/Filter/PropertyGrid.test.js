@@ -143,6 +143,32 @@ define(
             assert.equal(pGrid._isItemVisible(config.items[2]), false);
          });
 
+         it('_valueChangedHandler', function() {
+            let pGrid = getPropertyGrid(config);
+            let result;
+            pGrid._notify = (event, data) => {
+               if (event === 'itemsChanged') {
+                  result = data[0];
+               }
+            };
+            pGrid._valueChangedHandler('_valueChangedHandler', 2, true);
+            assert.strictEqual(pGrid._items[2].value, true);
+            assert.deepStrictEqual(result[2], {
+               id: 'bool',
+               value: true,
+               resetValue: false,
+               visibility: false
+            });
+            pGrid._valueChangedHandler('_valueChangedHandler', 2, false);
+            assert.strictEqual(pGrid._items[2].value, false);
+            assert.deepStrictEqual(result[2], {
+               id: 'bool',
+               value: false,
+               resetValue: false,
+               visibility: false
+            });
+         });
+
          it('_visibilityChangedHandler', function() {
             let pGrid = getPropertyGrid(config);
             let result;
@@ -152,6 +178,7 @@ define(
                }
             };
             pGrid._visibilityChangedHandler('visibilityChanged', 2, true);
+            assert.strictEqual(pGrid._items[2].visibility, true);
             assert.deepStrictEqual(result[2], {
                id: 'bool',
                value: true,
@@ -159,6 +186,7 @@ define(
                visibility: true
             });
             pGrid._visibilityChangedHandler('visibilityChanged', 2, false);
+            assert.strictEqual(pGrid._items[2].visibility, false);
             assert.deepStrictEqual(result[2], {
                id: 'bool',
                value: false,
