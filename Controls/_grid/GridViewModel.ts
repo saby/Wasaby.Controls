@@ -812,9 +812,18 @@ var
         // ---------------------- resultColumns ----------------------
         // -----------------------------------------------------------
 
-        getResultsPosition: function(): string {
-            const items = this.getItems();
-            if (items && items.getCount() > 1) {
+        getResultsPosition: function () {
+            var items;
+            var isShowResults;
+
+            if (this._model.getHierarchyRelation) {
+                items = this._model.getHierarchyRelation().getChildren(this.getDisplay().getRoot().getContents(), this.getItems());
+                isShowResults = items && items.length > 1;
+            } else {
+                items = this.getItems();
+                isShowResults = items && items.getCount() > 1;
+            }
+            if (isShowResults) {
                 if (this._options.results) {
                     return this._options.results.position;
                 }
