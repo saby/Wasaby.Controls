@@ -10,6 +10,32 @@ define('Controls/interface/IGroupedGrid', [
     */
 
    /**
+    * @name Controls/interface/IGrouped#groupingKeyCallback
+    * @cfg {Function} Функция обратного вызова для получения идентификатора группы элемента списка.
+    * <a href="/materials/demo-ws4-list-group">Example</a>.
+    * @remark
+    * Среди групп списка существует "скрытая группа".
+    * Для такой группы не создаётся заголовок, а её элементы визуально размещены в начале списка.
+    * Чтобы отнести элемент к скрытой группе, из функции groupingKeyCallback верните константу view.hiddenGroup, которая принадлежит библиотеке {@link Controls/Constants}.
+    * @example
+    * <pre>
+    * define(..., [... , 'Controls/Constants'], function(..., Constants) {
+    *    ...
+    *    _groupByBrand: function(item) {
+    *       if (item.get('brand') === 'apple') {
+    *          return Constants.view.hiddenGroup;
+    *       }
+    *       return item.get('brand');
+    *    }
+    *    ...
+    * });
+    * </pre>
+    * <pre>
+    *    groupingKeyCallback ="{{_groupByBrand}}",
+    * </pre>
+    */
+
+   /**
     * @name Controls/interface/IGroupedList#groupTemplate
     * @cfg {Function} groupTemplate шаблон группировки списка.
     * <a href="/materials/demo-ws4-grid-group">Example</a>.
@@ -32,5 +58,28 @@ define('Controls/interface/IGroupedGrid', [
     *    </Controls.grid:View>
     * </pre>
     */
+
+   /**
+    * @name Controls/interface/IGrouped#collapsedGroups
+    * @cfg {Array} Список идентификаторов свернутых групп. Идентификаторы групп получаются в результате вызова {@link groupingKeyCallback}.
+    * <a href="/materials/demo-ws4-list-group">Example</a>.
+    */
+
+   /**
+    * @name Controls/interface/IGrouped#groupHistoryId
+    * @cfg {String} Идентификатор для сохранения в истории списка идентификаторов свернутых групп.
+    */
+
+   /**
+    * @event Controls/interface/IGrouped#groupExpanded Происходит при развертывании группы.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+    * <a href="/materials/demo-ws4-list-group">Example</a>.
+    */
+
+   /**
+    * @event Controls/interface/IGrouped#groupCollapsed Происходит при сворачивании группы.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+    * <a href="/materials/demo-ws4-list-group">Example</a>.
+    */    
 
 });
