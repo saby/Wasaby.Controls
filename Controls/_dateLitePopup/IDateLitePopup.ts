@@ -18,18 +18,18 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#year
-             * @cfg {Date} Displayed period
+             * @cfg {Date} Отображаемый год.
              */
 
             /*
              * @name Controls/_dateLitePopup/IDateLitePopup#year
-             * @cfg {Date} Отображает период.
+             * @cfg {Date} Displayed period
              */
             year: undefined,
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#chooseMonths
-             * @cfg {Boolean} В значении true доступен выбор месяца.
+             * @cfg {Boolean} Устанавливает возможность выбора месяца.
              * @default true
              */
 
@@ -42,7 +42,7 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#chooseQuarters
-             * @cfg {Boolean} В значении true доступен выбор квартала.
+             * @cfg {Boolean} Устанавливает возможность выбора квартала.
              * @default true
              */
 
@@ -55,7 +55,7 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#chooseHalfyears
-             * @cfg {Boolean} В значении true доступен выбор полугодия.
+             * @cfg {Boolean} Устанавливает возможность выбора полугодия.
              * @default true
              */
             chooseHalfyears: true,
@@ -69,7 +69,7 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
             /**
              * @name Controls/dateLitePopup/IDateLitePopup#emptyCaption
-             * @cfg {String} Отображаемый текст, когда в контроле не выбран период.
+             * @cfg {String} Текст, который отображается, если период не выбран.
              */
         
             /*
