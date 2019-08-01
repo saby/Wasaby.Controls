@@ -470,6 +470,14 @@ define(
             assert.strictEqual(self._filterText, 'Author: Ivanov K.K., test_extended');
          });
 
+         it('_private:prepareItems', function() {
+            let date = new Date();
+            date.setSQLSerializationMode(Date.SQL_SERIALIZE_MODE_TIME);
+            let self = {};
+            filter.View._private.prepareItems(self, date);
+            assert.strictEqual(self._source.getSQLSerializationMode(), date.getSQLSerializationMode());
+         });
+
          it('_private:loadSelectedItems', function(done) {
             let source = [...defaultSource];
             source[1].value = [1];
