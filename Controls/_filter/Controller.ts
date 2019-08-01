@@ -275,19 +275,19 @@ import 'Controls/context';
                      var visibility = getPropValue(historyItem, 'visibility');
                      var viewMode = getPropValue(historyItem, 'viewMode');
 
-                     if (value !== undefined) {
+                     if (item.hasOwnProperty('value')) {
                         setPropValue(item, 'value', value);
                      }
 
-                     if (textValue !== undefined && item.hasOwnProperty('textValue')) {
+                     if (item.hasOwnProperty('textValue')) {
                         setPropValue(item, 'textValue', textValue);
                      }
 
-                     if (visibility !== undefined && item.hasOwnProperty('visibility')) {
+                     if (item.hasOwnProperty('visibility')) {
                         setPropValue(item, 'visibility', visibility);
                      }
 
-                     if (viewMode !== undefined && item.hasOwnProperty('viewMode')) {
+                     if (item.hasOwnProperty('viewMode')) {
                         setPropValue(item, 'viewMode', viewMode);
                      }
                   }
