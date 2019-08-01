@@ -131,12 +131,13 @@ define(
 
             popupOptions.width = 550;
             position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
-            assert.equal(position.width, 550);
+            assert.equal(position.width, 500);
             assert.equal(position.height, 500);
-            popupOptions.height = 300;
+            popupOptions.height = 500;
+            popupOptions.maxHeight = 400;
             position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
-            assert.equal(position.width, 550);
-            assert.equal(position.height, 300);
+            assert.equal(position.width, 500);
+            assert.equal(position.height, 400);
          });
 
          it('dialog container sizes after update', () => {
