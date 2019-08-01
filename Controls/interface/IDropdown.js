@@ -1,12 +1,20 @@
 define('Controls/interface/IDropdown', [], function() {
 
    /**
-    * Interface for dropdown lists.
+    * Интерфейс для выпадающих списков.
     *
     * @interface Controls/interface/IDropdown
     * @public
     * @author Золотова Э.Е.
     */
+
+   /*
+    * Interface for dropdown lists.
+    *
+    * @interface Controls/interface/IDropdown
+    * @public
+    * @author Золотова Э.Е.
+    */    
 
    /**
     * @name Controls/interface/IDropdown#itemTemplate
