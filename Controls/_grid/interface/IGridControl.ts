@@ -308,12 +308,34 @@
  * @name Controls/_grid/interface/IGridControl#columnScroll
  * @cfg {Boolean} Включает скроллирование столбцов.
  * @default false
+ * @see Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @see Controls/_grid/interface/IGridControl#stickyColumnsCount
  */
 
 /*
  * @name Controls/_grid/interface/IGridControl#columnScroll
  * @cfg {Boolean} Enable column scroll.
  * @default false
+ * @see Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @see Controls/_grid/interface/IGridControl#stickyColumnsCount
+ */
+
+/**
+ * @name Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @cfg {String} Определяет начальное положение горизонтальной прокрутки столбцов, если она включена.
+ * @variant start Устанавливает горизонтальную прокрутку в начальное (крайнее левое) положение.
+ * @variant end Устанавливает горизонтальную прокрутку в конечное (крайнее правое) положение.
+ * @default start
+ * @see Controls/_grid/interface/IGridControl#columnScroll
+ */
+
+/*
+ * @name Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @cfg {String} Determines the starting columns scroll position if it is enabled.
+ * @variant start Puts horizontal scroll into the leftmost position.
+ * @variant end Puts horizontal scroll into the rightmost position.
+ * @default start
+ * @see Controls/_grid/interface/IGridControl#columnScroll
  */
 
 /**
