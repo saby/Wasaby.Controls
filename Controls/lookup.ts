@@ -7,12 +7,13 @@
  * @includes Collection Controls/_lookup/SelectedCollection
  * @includes ItemTemplate wml!Controls/_lookup/SelectedCollection/ItemTemplate
  * @includes Opener Controls/_lookup/Opener
- * @includes LookupStyles Controls/_lookup/Lookup/LookupStyles
+ * @includes LookupStyles Controls/_lookup/BaseLookupView/LookupStyles
  * @includes SelectorButtonStyles Controls/_lookup/Button/SelectorButtonStyles
  * @includes LookupLinkStyles Controls/_lookup/Lookup/Link/LookupLinkStyles
  * @includes SelectedCollectionStyles Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @includes ButtonItemTemplate wml!Controls/_lookup/Button/itemTemplate
  * @includes Link Controls/_lookup/Lookup/Link
+ * @includes PlaceholderChooser Controls/_lookup/PlaceholderChooser
  * @public
  * @author Крайнов Д.О.
  */
@@ -26,13 +27,13 @@
  * @includes Collection Controls/_lookup/SelectedCollection
  * @includes ItemTemplate wml!Controls/_lookup/SelectedCollection/ItemTemplate
  * @includes Opener Controls/_lookup/Opener
- * @includes BaseLookupView Controls/_lookup/BaseLookupView
  * @includes LookupStyles Controls/_lookup/BaseLookupView/LookupStyles
  * @includes SelectorButtonStyles Controls/_lookup/Button/SelectorButtonStyles
  * @includes LookupLinkStyles Controls/_lookup/Lookup/Link/LookupLinkStyles
  * @includes SelectedCollectionStyles Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @includes ButtonItemTemplate wml!Controls/_lookup/Button/itemTemplate
  * @includes Link Controls/_lookup/Lookup/Link
+ * @includes PlaceholderChooser Controls/_lookup/PlaceholderChooser
  * @public
  * @author Крайнов Д.О.
  */

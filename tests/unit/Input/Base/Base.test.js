@@ -11,8 +11,6 @@ define(
       'Vdom/Vdom'
    ],
    function(EnvEvent, Env, instance, makeInstanceCompatible, inputMod, ProxyCall, InputUtility, TemplateUtil, Vdom) {
-      'use strict';
-
       describe('Controls/_input/Base', function() {
          var calls;
          var ctrl = new inputMod.Base();
@@ -379,27 +377,6 @@ define(
             afterEach(function() {
                EnvEvent.Bus.globalChannel().notify = savedNotify;
             });
-            it('Notification to the global channel about the occurrence of the focus in event. The environment is mobile IOS.', function() {
-               ctrl._isMobileIOS = true;
-
-               ctrl._touchStartHandler();
-               ctrl._focusInHandler();
-               ctrl._clickHandler();
-
-               assert.deepEqual(calls, [{
-                  name: 'notify',
-                  arguments: ['MobileInputFocus']
-               }]);
-            });
-            it('Not occur notification to the global channel about the occurrence of the focus in event. The environment is not mobile IOS.', function() {
-               ctrl._isMobileIOS = false;
-
-               ctrl._mouseDownHandler();
-               ctrl._focusInHandler();
-               ctrl._clickHandler();
-
-               assert.deepEqual(calls.length, 0);
-            });
             it('Focus the field by tab.', function() {
                ctrl._beforeUpdate({
                   value: 'test'
@@ -430,27 +407,6 @@ define(
                ctrl._focusOutHandler();
 
                assert.equal(ctrl._getField().scrollLeft, 0);
-            });
-            it('Notification to the global channel about the occurrence of the focus out event. The environment is mobile IOS.', function() {
-               ctrl._isMobileIOS = true;
-
-               ctrl._touchStartHandler();
-               ctrl._focusOutHandler();
-
-               assert.deepEqual(calls, [{
-                  name: 'notify',
-                  arguments: ['MobileInputFocusOut']
-               }]);
-            });
-            it('Notification to the global channel about the occurrence of the focus out event. The environment is mobile IOS.', function() {
-               ctrl._isMobileIOS = true;
-
-               ctrl._focusOutHandler();
-
-               assert.deepEqual(calls, [{
-                  name: 'notify',
-                  arguments: ['MobileInputFocusOut']
-               }]);
             });
             it('Not occur notification to the global channel about the occurrence of the focus out event. The environment is not mobile IOS.', function() {
                ctrl._isMobileIOS = false;

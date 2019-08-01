@@ -1,5 +1,5 @@
 /**
- * Интерфейс полей ввода.
+ * Интерфейс управления значением текстового контрола ввода.
  *
  * @interface Controls/interface/IInputField
  * @public
@@ -17,30 +17,84 @@ interface IInputField {
     readonly _options: {
         /**
          * @name Controls/interface/IInputField#value
-         * @cfg {String|null} Текст в поле ввода.
+         * @cfg {String|null} Значение контрола ввода.
          * @default '' (empty string)
          * @remark
-         * Если вы не обновите параметр 'value', вы не сможете ничего ввести в поле. Необходимо подписаться на событие _valueChanged и обновить значение, передаваемое контролу. 
-         * Чтобы сделать его проще, вы можете использовать биндинг.
-         * Не рекомендуется использовать эту опцию для изменения поведения обработки входных данных. Такой подход увеличивает время перерисовки. Используйте опцию inputCallback.
+         * Установливая опцию value в контроле ввода, отображаемое значение всегда будет соответствовать её значению. В этом случае родительский контрол управляет отображаемым значением. Например, вы можете менять значение по событию {@link valueChanged}:
+         * <pre>
+         *     <Controls:input:Text value="{{_value}}" on:valueChanged="_handleValueChange()"/>
+         *
+         *     export class Form extends Control<IControlOptions, void> {
+         *         private _value: string = '';
+         *
+         *         private _handleValueChange(event: SyntheticEvent<Event>, value) {
+         *             this._value = value;
+         *         }
+         *     }
+         * </pre>
+         * Пример можно упростить воспользовавшись синтаксисом шаблонизатора {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/options/#two-way-binding bind}:
+         * <pre>
+         *     <Controls:input:Text bind:value="_value"/>
+         * </pre>
+         * Альтернатива - не задавать опцию value. Значение контрола будет кешироваться в контроле ввода:
+         * <pre>
+         *     <Controls.input:Text/>
+         * </pre>
+         * Не рекомендуем использовать опцию для изменения поведения обработки ввода. Такой подход увеличит время перерисовки.
+         * Плохо:
+         * <pre>
+         *     <Controls:input:Text value="{{_value}}" on:valueChanged="_handleValueChange()"/>
+         *
+         *     export class Form extends Control<IControlOptions, void> {
+         *         private _value: string = '';
+         *
+         *         private _handleValueChange(event: SyntheticEvent<Event>, value) {
+         *             this._value = value.toUpperCase();
+         *         }
+         *     }
+         * </pre>
+         * Лучшим подходом будет воспользоваться опцией {@link Controls/interface/ICallback#inputCallback}.
+         * Хорошо:
+         * <pre>
+         *     <Controls:input:Text bind:value="{{_value}}" inputCallback="{{_toUpperCase}}"/>
+         *
+         *     class Form extends Control<IControlOptions, void> {
+         *         private _value: string = '';
+         *
+         *         private _toUpperCase(data) {
+         *             return {
+         *                 position: data.position,
+         *                 value: data.value.toUpperCase()
+         *             }
+         *         }
+         *     }
+         * </pre>
          * @example
-         * В этом примере _inputValue в контроле привязывается к значению поля ввода. В любое время жизненного цикла контрола значение _inputValue будет содержать текущее значение поля ввода.
+         * Сохраняем данные о пользователе и текущее время при отправке формы.
          * <pre>
-         *    <Input.Text bind:value="_inputValue" />
-         *    <Controls.Button on:click="_sendButtonClick()" />
+         *     <form action="Auth.php" name="form">
+         *         <Controls.input:Text bind:value="_login"/>
+         *         <Controls.input:Password bind:value="_password"/>
+         *         <Controls.Button on:click="_saveUser()" caption="Отправить"/>
+         *     </form>
+         *
+         *     export class Form extends Control<IControlOptions, void> {
+         *         private _login: string = '';
+         *         private _password: string = '';
+         *         private _server: Server = new Server();
+         *
+         *         private _saveUser() {
+         *             this._server.saveData({
+         *                 date: new Date(),
+         *                 login: this._login,
+         *                 password: this._password
+         *             });
+         *
+         *             this._children.form.submit();
+         *         }
+         *     }
          * </pre>
          *
-         * <pre>
-         *    Control.extend({
-         *       ...
-         *       _inputValue: '',
-         *
-         *       _sendButtonClick() {
-         *          this._sendData(this._inputValue);
-         *       }
-         *
-         *    });
-         * </pre>
          * @see valueChanged
          * @see inputCompleted
          */
@@ -74,41 +128,48 @@ interface IInputField {
          * @see inputCompleted
          */
         value: string | null;
-    }
+    };
 }
 
-
 /**
- * @event valueChanged Происходит при изменении значения отображения поля.
+ * @event valueChanged Происходит при изменении отображаемого значения контрола ввода.
  * @name Controls/interface/IInputField#valueChanged
- * @param {String} value Значение поля.
- * @param {String} displayValue Отображение значения в поле.
+ * @param {String} value Значение контрола ввода.
+ * @param {String} displayValue Отображаемое значение контрола ввода.
  * @remark
- * Это событие должно использоваться для реагирования на изменения, вносимые пользователем в поле. 
- * Значение, возвращаемое в событии, не вставляется в контрол, если не передать его обратно в поле в качестве опции.
- * Однако, чаще в таких случаях используют биндинг. Пример ниже иллюстрирует разницу между двумя вариантами.
+ * Событие используется в качестве реакции на изменения, вносимые пользователем.
  * @example
- * В этом примере мы покажем, как можно привязать значение контрола к полю. В первом поле мы делаем это вручную, используя событие valueChanged.
- * Во втором поле используется привязка (биндинг). Оба поля в этом примере будут иметь одинаковое поведение.
+ * Контрол ввода пароля с информационной подсказкой. Подсказка содержит информацию о его безопасности.
  * <pre>
- *    <Controls.input:Text value="{{_fieldValue}}" on:valueChanged="_valueChangedHandler()" />
+ *     <Controls.input:Password name="password" on:valueChanged="_validatePassword()"/>
  *
- *    <Controls.input:Text bind:value="_anotherFieldValue" />
+ *     export class InfoPassword extends Control<IControlOptions, void> {
+ *         private _validatePassword(event, value) {
+ *             let lengthPassword: number = value.length;
+ *             let cfg = {
+ *                 target: this._children.password,
+ *                 targetSide: 'top',
+ *                 alignment: 'end',
+ *                 message: null
+ *             }
+ *
+ *             if (lengthPassword < 6) {
+ *                 cfg.message = 'Сложность пароля низкая';
+ *             }
+ *             if (lengthPassword >= 6 && lengthPassword < 10) {
+ *                 cfg.message = 'Сложность пароля средняя';
+ *             }
+ *             if (lengthPassword >= 10) {
+ *                 cfg.message = 'Сложность пароля высокая';
+ *             }
+ *
+ *             this._notify('openInfoBox', [cfg], {
+ *                 bubbling: true
+ *             });
+ *         }
+ *     }
  * </pre>
  *
- * <pre>
- *    Control.extend({
- *       ...
- *       _fieldValue: '',
- *
- *       _valueChangedHandler(value) {
- *          this._fieldValue = value;
- *       },
- *
- *       _anotherFieldValue: ''
- *
- *    });
- * </pre>
  * @see value
  */
 
@@ -144,24 +205,24 @@ interface IInputField {
  */
 
 /**
- * @event inputCompleted Происходит при завершении ввода (поле потеряло фокус или пользователь нажал "enter").
+ * @event inputCompleted Происходит при завершении ввода. Завершение ввода - это контрол потерял фокус, или пользователь нажал "enter".
  * @name Controls/interface/IInputField#inputCompleted
- * @param {String} value Значение поля.
+ * @param {String} value Значение контрола ввода.
+ * @param {String} displayValue Отображаемое значение контрола ввода.
  * @remark
- * Это событие можно использовать в качестве триггера для проверки поля или отправки введенных данных в какой-либо другой контрол.
+ * Событие используется в качестве реакции на завершение ввода пользователем. Например, проверка на валидность введенных данных или отправка данных в другой контрол.
  * @example
- * В этом примере мы подписываемся на событие InputCompleted и сохраняем значение поля в базе данных.
+ * Подписываемся на событие inputCompleted и сохраняем значение поля в базе данных.
  * <pre>
- *    <Controls.input:Text on:inputCompleted="_inputCompletedHandler()" />
- * </pre
- * <pre>
- *    Control.extend({
- *       ...
- *       _inputCompletedHandler(value) {
- *          this._saveEnteredValueToDatabase(value);
- *       }
- *       ...
- *    });
+ *    <Controls.input:Text on:inputCompleted="_inputCompletedHandler()"/>
+ *
+ *    export class Form extends Control<IControlOptions, void> {
+ *        ...
+ *        private _inputCompletedHandler(event, value) {
+ *            this._saveEnteredValueToDatabase(value);
+ *        }
+ *        ...
+ *    }
  * </pre>
  * @see value
  */

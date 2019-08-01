@@ -40,6 +40,7 @@ const
             self._shadowState =
                _private.calculateShadowState(self._scrollPosition, self._contentContainerSize, self._contentSize);
             _private.updateFixedColumnWidth(self);
+            self._setOffsetForHScroll();
             self._forceUpdate();
          }
          if (newContentContainerSize + self._scrollPosition > newContentSize) {
@@ -96,6 +97,25 @@ const
          self._children.contentStyle.innerHTML =
             '.' + self._transformSelector +
             ' .controls-Grid__cell_transform { transform: translateX(-' + position + 'px); }';
+      },
+      setOffsetForHScroll(self) {
+         const container = self._children.content;
+         const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0].childNodes;
+         if (HeaderGroup && !!HeaderGroup.length) {
+            if (self._fixedColumnsWidth) {
+               self._leftOffsetForHScroll = self._fixedColumnsWidth;
+            } else if (self._options.multiSelectVisibility !== 'hidden') {
+               self._leftOffsetForHScroll = HeaderGroup[0].offsetWidth + HeaderGroup[1].offsetWidth;
+            } else {
+               self._leftOffsetForHScroll = HeaderGroup[0].offsetWidth;
+            }
+            self._offsetForHScroll = HeaderGroup[0].offsetHeight;
+         }
+
+         if (self._options.resultsPosition === 'top') {
+            const ResultsGroup = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
+            self._offsetForHScroll += ResultsGroup[0].offsetHeight;
+         }
       }
    },
    ColumnScroll = Control.extend({
@@ -108,6 +128,8 @@ const
       _shadowState: '',
       _fixedColumnsWidth: 0,
       _transformSelector: '',
+      _offsetForHScroll: 0,
+      _leftOffsetForHScroll: 0,
 
       _beforeMount() {
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
@@ -127,6 +149,7 @@ const
          }
          if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
             _private.updateFixedColumnWidth(this);
+            this._setOffsetForHScroll();
          }
       },
 
@@ -146,6 +169,10 @@ const
          return _private.calculateShadowStyles(this, position);
       },
 
+      _setOffsetForHScroll() {
+        _private.setOffsetForHScroll(this);
+      },
+
       _positionChangedHandler(event, position) {
          const
             newScrollPosition = Math.round(position);
@@ -159,6 +186,6 @@ const
       },
       getContentContainerSize() {
          return this._contentContainerSize;
-      }
+      },
    });
 export = ColumnScroll;

@@ -651,7 +651,6 @@ var
         resetHeaderRows: function() {
             this._curHeaderRowIndex = 0;
         },
-
         goToNextHeaderRow: function() {
             this._curHeaderRowIndex++;
         },

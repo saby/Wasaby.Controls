@@ -640,6 +640,55 @@ define([
          lists.BaseControl._private.scrollToItem = originalScrollToItem;
       });
 
+      it('moveMarker activates the control', async function() {
+         const
+            cfg = {
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'key',
+               source: new sourceLib.Memory({
+                  idProperty: 'key',
+                  data: [{
+                     key: 1
+                  }, {
+                     key: 2
+                  }, {
+                     key: 3
+                  }]
+               }),
+               markedKey: 2
+            },
+            baseControl = new lists.BaseControl(cfg),
+            originalScrollToItem = lists.BaseControl._private.scrollToItem;
+
+         lists.BaseControl._private.scrollToItem = function() {};
+
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+
+         let isActivated = false;
+         baseControl.activate = () => {
+            isActivated = true;
+         };
+
+         baseControl._mounted = true; // fake mounted for activation
+
+         baseControl._onViewKeyDown({
+            target: {
+               closest: function() {
+                  return false;
+               }
+            },
+            stopImmediatePropagation: function() {},
+            nativeEvent: {
+               keyCode: Env.constants.key.down
+            },
+            preventDefault: function() {},
+         });
+
+         assert.isTrue(isActivated, 'BaseControl should be activated when marker is moved');
+         lists.BaseControl._private.scrollToItem = originalScrollToItem;
+      });
+
       it('moveMarkerToNext && moveMarkerToPrevious with markerVisibility = "hidden"', async function() {
          var
              cfg = {
@@ -1220,6 +1269,11 @@ define([
          bc._loadOffset = {top: 100, bottom: 100, isNull: false};
          bc._children = triggers;
          bc._onViewPortResize(bc, 600);
+         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200, isNull: false});
+
+         //Если контрол в состоянии ошибки, то не нужно ничего делать
+         bc.__error = true;
+         bc._setLoadOffset(100, 100, false);
          assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200, isNull: false});
 
       });

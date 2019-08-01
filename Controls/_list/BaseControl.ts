@@ -265,8 +265,8 @@ var _private = {
     moveMarker: function(self, newMarkedKey) {
         // activate list when marker is moving. It let us press enter and open current row
         // must check mounted to avoid fails on unit tests
-        if (this._mounted) {
-            this.activate();
+        if (self._mounted) {
+            self.activate();
         }
         _private.setMarkedKey(self, newMarkedKey);
     },
@@ -441,7 +441,7 @@ var _private = {
     },
 
     updateVirtualWindow: function(self, direction) {
-        self._virtualScroll.recalcToDirection(direction, self._loadOffset.top);
+        self._virtualScroll.recalcToDirection(direction, self._scrollParams, self._loadOffset.top);
         _private.applyVirtualScrollIndexes(self, direction);
     },
 
@@ -449,12 +449,15 @@ var _private = {
         self._virtualScroll.recalcToDirectionByScrollTop(params, self._loadOffset.top);
         if (_private.applyVirtualScrollIndexesToListModel(self)) {
             _private.applyPlaceholdersSizes(self);
+        } else {
+            self._applyScrollTopCallback = null;
         }
     }, 150, true),
 
     virtualScrollMove: function(self, params) {
         if (self._virtualScroll) {
             self._applyScrollTopCallback = params.applyScrollTopCallback;
+            self._scrollParams = params;
             _private.throttledUpdateIndexesByVirtualScrollMove(self, params);
         }
     },
@@ -480,10 +483,17 @@ var _private = {
     },
 
     // Вызывает обновление индексов виртуального окна при срабатывании триггера вверх|вниз и запоминает, что тригер в настоящий момент видимый
-    updateVirtualWindowStart(self, direction: 'up' | 'down', params): void {
+    updateVirtualWindowStart(self, direction: 'up' | 'down', params: object): void {
         if (self._virtualScroll) {
             self._virtualScrollTriggerVisibility[direction] = true;
-            _private.checkVirtualScrollCapability(self);
+            if (!self._applyScrollTopCallback) {
+                self._scrollParams = {
+                    scrollTop: params.scrollTop,
+                    scrollHeight: params.scrollHeight,
+                    clientHeight: params.clientHeight
+                };
+                _private.updateVirtualWindow(self, direction);
+            }
         }
     },
 
@@ -500,12 +510,11 @@ var _private = {
             if (_private.applyVirtualScrollIndexesToListModel(self)) {
                 self._saveAndRestoreScrollPosition = direction;
                 self._shouldRestoreScrollPosition = true;
-                self._virtualScroll.updatePlaceholdersSizes();
                 _private.applyPlaceholdersSizes(self);
             }
         };
 
-        if (detection.isMobileIOS && self._virtualScroll.PlaceholdersSizes.top === 0) {
+        if (detection.isMobileIOS) {
             _private.getIntertialScrolling(self).callAfterScrollStopped(updateIndexes);
         } else {
             updateIndexes();
@@ -716,15 +725,21 @@ var _private = {
         self._savedCanUpdateItemsActions = false;
     }, 200),
 
-    handleListScrollSync(self) {
+    handleListScrollSync(self, params) {
         if (self._options.itemActions){
             self._savedCanUpdateItemsActions = self._canUpdateItemsActions || self._savedCanUpdateItemsActions;
         }
         self._lockItemActionsByScroll = true;
         _private.unlockItemActions(self);
-
         if (detection.isMobileIOS) {
             _private.getIntertialScrolling(self).scrollStarted();
+        }
+        if (self._virtualScroll) {
+            self._scrollParams = {
+                scrollTop: params.scrollTop,
+                scrollHeight: params.scrollHeight,
+                clientHeight: params.clientHeight
+            };
         }
     },
 
@@ -777,10 +792,10 @@ var _private = {
                             // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
                             if (self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
                                self._virtualScrollTriggerVisibility.down && !self._itemsFromLoadToDirection) {
-                               self._virtualScroll.recalcToDirection(direction, self._loadOffset.top);
+                               self._virtualScroll.recalcToDirection(direction, self._scrollParams, self._loadOffset.top);
                             } else {
                                 // если данные добавились сверху - просто обновляем индексы видимых записей
-                                self._virtualScroll.recalcItemsIndexes(direction, self._loadOffset.top);
+                                self._virtualScroll.recalcItemsIndexes(direction, self._scrollParams, self._loadOffset.top);
                             }
                         } else {
                             if (self._itemsFromLoadToDirection) {
@@ -791,12 +806,12 @@ var _private = {
                                 self._savedStopIndex += newItems.length;
                                 self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + newItems.length;
                             }
-                            self._virtualScroll.recalcItemsIndexes(direction, self._loadOffset.top);
+                            self._virtualScroll.recalcItemsIndexes(direction, self._scrollParams, self._loadOffset.top);
                         }
                     }
                     if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
                         self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
-                        self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down', self._loadOffset.top);
+                        self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down', self._scrollParams, self._loadOffset.top);
                     }
                     _private.applyVirtualScrollIndexesToListModel(self);
                 }
@@ -1517,6 +1532,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._virtualScroll && this._applyScrollTopCallback) {
             this._applyScrollTopCallback();
             this._applyScrollTopCallback = null;
+            setTimeout(function() {
+                _private.checkLoadToDirectionCapability(this);
+            }.bind(this));
         }
 
         // todo KINGO.
@@ -1580,6 +1598,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _setLoadOffset: function(top, bottom, isNull) {
+        if (this.__error) {
+            return;
+        }
         if (!this._loadOffset) {
             this._loadOffset = {};
         }
@@ -1616,7 +1637,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'virtualPageBottomStop': _private.updateVirtualWindowStop(self, 'down'); break;
 
             // TODO KINGO. Проверяем именно синхронный скролл, т.к. стандартный scrollMove стреляет с debounce 100 мс.
-            case 'scrollMoveSync': _private.handleListScrollSync(self); break;
+            case 'scrollMoveSync': _private.handleListScrollSync(self, params); break;
             case 'scrollMove': _private.handleListScroll(self, params); break;
             case 'virtualScrollMove': _private.virtualScrollMove(self, params); break;
             case 'canScroll': _private.onScrollShow(self); break;
@@ -1748,6 +1769,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (this._children.fakeFocusElem) {
                 Focus.focus(this._children.fakeFocusElem);
             }
+            this._focusTimeout = null;
         }, 0);
     },
 
