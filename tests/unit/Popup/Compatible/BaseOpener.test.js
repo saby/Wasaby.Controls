@@ -421,6 +421,9 @@ define(
             };
             newTestConfig = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(testconfig);
             assert.equal(newTestConfig.dialogOptions.direction, '');
+            testconfig.actionOnScroll = 'close';
+            newTestConfig = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(testconfig);
+            assert.equal(newTestConfig.dialogOptions.closeOnTargetScroll, true);
          });
 
          it('_getDimensions', function() {

@@ -18,8 +18,8 @@ define(
                assert.equal(result, '123456789');
             });
             it('Test_03', function() {
-               result = RegExpUtil.escapeSpecialChars('\\1(2)3{4}5+6.7*8[9]|0');
-               assert.equal(result, '\\\\1\\(2\\)3\\{4\\}5\\+6\\.7\\*8\\[9\\]\\|0');
+               result = RegExpUtil.escapeSpecialChars('\\1(2)3{4}5+6.7*8[9]|0$^1');
+               assert.equal(result, '\\\\1\\(2\\)3\\{4\\}5\\+6\\.7\\*8\\[9\\]\\|0\\$\\^1');
             });
          });
          describe('partOfNumber', function() {
