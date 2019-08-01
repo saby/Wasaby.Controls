@@ -116,6 +116,26 @@ const
             const ResultsGroup = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
             self._offsetForHScroll += ResultsGroup[0].offsetHeight;
          }
+      },
+      setOffsetForHScrollPartialSup: function(self) {
+         var container = self._children.content;
+         var HeaderFirstCell = container.getElementsByClassName('controls-Grid__header-cell')[0];
+         var maxHeight = 0;
+         if (HeaderFirstCell) {
+            maxHeight = HeaderFirstCell.offsetHeight;
+            if (self._fixedColumnsWidth) {
+               self._leftOffsetForHScroll = self._fixedColumnsWidth;
+            } else if (self._options.multiSelectVisibility !== 'hidden') {
+               self._leftOffsetForHScroll = HeaderFirstCell.offsetWidth + container.getElementsByClassName('controls-Grid__header-cell')[1].offsetWidth;
+            } else {
+               self._leftOffsetForHScroll = HeaderFirstCell.offsetWidth;
+            }
+         }
+         self._offsetForHScroll = maxHeight;
+         if (self._options.resultsPosition === 'top') {
+            const ResultsFirstCell = container.getElementsByClassName('controls-Grid__results-cell')[0];
+            self._offsetForHScroll += ResultsFirstCell.offsetHeight;
+         }
       }
    },
    ColumnScroll = Control.extend({
@@ -170,7 +190,11 @@ const
       },
 
       _setOffsetForHScroll() {
-        _private.setOffsetForHScroll(this);
+         if (this._options.listModel.isPartialGridSupport()) {
+            _private.setOffsetForHScrollPartialSup(this);
+         } else {
+            _private.setOffsetForHScroll(this);
+         }
       },
 
       _positionChangedHandler(event, position) {
