@@ -1596,7 +1596,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._children.bottomLoadTrigger.style.bottom = Math.floor(this._loadOffset.bottom * 1.3) + 'px';
     },
     _onViewPortResize: function(self, viewPortSize) {
-        if (self._needScrollCalculation && !self._loadOffset.isNull) {
+        if (self._needScrollCalculation) {
             let offset = Math.floor(viewPortSize / 3);
             self._setLoadOffset(offset, offset, false);
         }
