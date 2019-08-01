@@ -239,9 +239,12 @@ class VirtualScroll {
         } else {
             newStartIndex = Math.max(newStartIndex - this._calcIndexCompensationByTriggerDistance(topTriggerDistance, 'down', this._startIndex, newStartIndex), 0);
         }
-        this._startIndex = newStartIndex;
-        this._stopIndex = newStopIndex;
-        this._updatePlaceholdersSizes();
+        if (direction === 'up' && newStartIndex !== this._startIndex ||
+            direction === 'down' && newStopIndex !== this._stopIndex) {
+            this._startIndex = newStartIndex;
+            this._stopIndex = newStopIndex;
+            this._updatePlaceholdersSizes();
+        }
     }
 
     private _calcIndexCompensation(triggerDistance: number,
