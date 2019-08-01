@@ -320,6 +320,11 @@ define(
             });
          });
 
+         it('loadItems with setted text', function() {
+            filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0);
+            assert.strictEqual(fastData._configs[0].text, 'Россия');
+         });
+
          it('get filter', function(done) {
             filterMod.Fast._private.reload(fastData).addCallback(function() {
                filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
