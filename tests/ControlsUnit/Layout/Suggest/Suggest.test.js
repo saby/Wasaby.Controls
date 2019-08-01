@@ -1,5 +1,7 @@
 define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Controls/history', 'Core/Deferred'], function(suggestMod, collection, entity, Env, history, Deferred) {
 
+   'use strict';
+
    describe('Controls.Container.Suggest.Layout', function() {
       var IDENTIFICATORS = [1, 2, 3];
 
@@ -311,10 +313,21 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
       });
 
       it('Suggest::showAllClick', function() {
-         var suggest = new suggestMod._InputController();
-         var stackOpened = false;
+         let suggest = new suggestMod._InputController();
+         let stackOpened = false;
+         let popupOptions;
 
-         suggest._notify = () => {return false};
+         suggest._options.searchParam = 'СтрокаПоиска';
+         suggest._filter = {
+            'Раздел': null,
+            'СтрокаПоиска': 'ооо'
+         };
+         suggest._notify = (eventName, data) => {
+            if (eventName === 'showSelector') {
+               popupOptions = data[0];
+               return false;
+            }
+         };
          suggest._showContent = true;
          suggest._children = {
             stackOpener: {
@@ -328,6 +341,10 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
 
          assert.isFalse(stackOpened);
          assert.isFalse(suggest._showContent);
+         assert.deepEqual(popupOptions.templateOptions.filter, {
+            'Раздел': null,
+            'СтрокаПоиска': ''
+         });
       });
 
       it('Suggest::_inputActivated/inputClicked with autoDropDown', function() {
