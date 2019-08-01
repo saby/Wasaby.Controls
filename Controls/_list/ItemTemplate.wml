@@ -25,9 +25,7 @@
         <div attr:class="{{itemData.spacingClassList}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}">
             <ws:partial template="{{contentTemplate}}"
                         itemData="{{itemData}}"
-                        swipeTemplate="{{swipeTemplate}}"
                         itemActionsTemplate="{{itemActionsTemplate}}"
-                        highlightOnHover="{{highlightOnHover}}"
             />
         </div>
     </ws:if>
