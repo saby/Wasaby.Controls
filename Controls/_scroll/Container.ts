@@ -669,7 +669,7 @@ var
        * @function Controls/_scroll/Container#scrollToBottom
        */
       scrollToBottom: function() {
-         _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
+         _private.setScrollTop(this, _private.getScrollHeight(this._children.content) + this._topPlaceholderSize);
       },
 
       // TODO: система событий неправильно прокидывает аргументы из шаблонов, будет исправлено тут:
