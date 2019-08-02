@@ -117,8 +117,11 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
 
 /**
  * @name Controls/_buttons/Button#contrastBackground
- * @cfg {Boolean} В значении true кнопке задаётся непрозрачный фон, а в значении false — прозрачный.
+ * @cfg {Boolean} Определяет прозрачность фона кнопки.
  * @default false
+ * @remark
+ * * true - непрозрачный фон. 
+ * * false - прозрачный фон.
  * @example
  * Кнопка имеет прозрачный фон.
  * <pre>
