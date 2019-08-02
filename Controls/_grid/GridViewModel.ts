@@ -185,11 +185,17 @@ var
         },
 
         isFixedCell: function(params) {
-           const
-              hasMultiSelect = params.multiSelectVisibility !== 'hidden',
-              columnOffset = hasMultiSelect ? 1 : 0;
-           return params.columnIndex < (params.stickyColumnsCount + columnOffset);
+            const { multiSelectVisibility, stickyColumnsCount, columnIndex, rowIndex, isMultyHeader } = params;
+            const
+                hasMultiSelect = multiSelectVisibility !== 'hidden',
+                columnOffset = hasMultiSelect ? 1 : 0;
+            const isCellIndexLessTheFixedIndex = columnIndex < (stickyColumnsCount + columnOffset);
+            if (isMultyHeader !== undefined) {
+                return isCellIndexLessTheFixedIndex && rowIndex === 0;
+            }
+            return isCellIndexLessTheFixedIndex;
         },
+
 
         getHeaderZIndex: function(params) {
            return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
@@ -711,6 +717,8 @@ var
             if (this.isStickyHeader()) {
                headerColumn.zIndex = _private.getHeaderZIndex({
                   columnIndex: columnIndex,
+                  rowIndex,
+                  isMultyHeader: this._isMultyHeader,
                   multiSelectVisibility: this._options.multiSelectVisibility,
                   stickyColumnsCount: this._options.stickyColumnsCount
                });
@@ -723,6 +731,8 @@ var
             if (this._options.columnScroll) {
                 cellClasses += _private.getColumnScrollCellClasses({
                     columnIndex: columnIndex,
+                    rowIndex,
+                    isMultyHeader: this._isMultyHeader,
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
                 });

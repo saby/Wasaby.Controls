@@ -1631,6 +1631,22 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   );
                });
             });
+            var firstRow = gridMod.GridViewModel._private.isFixedCell({
+               multiSelectVisibility: false,
+               stickyColumnsCount: 1,
+               columnIndex: 0,
+               rowIndex: 0,
+               isMultyHeader: true
+            })
+            assert.isTrue(firstRow);
+            var secondRow = gridMod.GridViewModel._private.isFixedCell({
+               multiSelectVisibility: false,
+               stickyColumnsCount: 1,
+               columnIndex: 0,
+               rowIndex: 1,
+               isMultyHeader: true
+            })
+            assert.isFalse(secondRow);
          });
       });
 
