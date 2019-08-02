@@ -193,7 +193,7 @@
  *      <ws:partial template="{{itemActionsTemplate}}"
  *                  attr:class="some-custom-class-for-itemActions"
  *                  itemData="{{itemData}}"
- *                  highlightOnHover="{{highlightOnHover}}"/>
+ *                  scope="{{_options}}"/>
  *    </ws:if>
  *  <div>{{itemData.item.description}}</div>
  * </pre>
@@ -231,7 +231,7 @@
  *      <ws:partial template="{{itemActionsTemplate}}"
  *                  attr:class="some-custom-class-for-itemActions"
  *                  itemData="{{itemData}}"
- *                  highlightOnHover="{{highlightOnHover}}"/>
+ *                  scope="{{_options}}"/>
  *    </ws:if>
  *  <div>{{itemData.item.description}}</div>
  * </pre>
