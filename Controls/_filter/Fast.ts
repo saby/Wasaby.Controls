@@ -109,7 +109,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
          loadItems: function(self, item, index) {
             var properties = getPropValue(item, 'properties');
 
-            self._configs[index] = _private.getItemPopupConfig(properties);
+            self._configs[index] = Merge(self._configs[index] || {}, _private.getItemPopupConfig(properties));
 
             if (properties.items) {
                _private.prepareItems(self._configs[index], properties.items);

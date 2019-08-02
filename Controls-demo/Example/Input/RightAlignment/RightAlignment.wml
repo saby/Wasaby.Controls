@@ -1,4 +1,4 @@
-<div class="example-RightAlignment">
+<div class="example-RightAlignment example-Base_full">
    <Controls-demo.Example.resource.BaseDemoInput title="RightAlignment" attr:class="ControlsDemo-ExampleInput__tooltip">
       <ws:contents>
          <ws:Array>

@@ -47,8 +47,8 @@ function getHistorySource(historyId) {
    return HISTORY_SOURCE[historyId];
 }
 
-function loadHistoryItems(self, historyId) {
-   var source = getHistorySource(self, historyId);
+function loadHistoryItems(historyId) {
+   var source = getHistorySource(historyId);
    var sourceController = new SourceController({
       source: source
    });
@@ -67,4 +67,3 @@ export = {
    getHistorySource: getHistorySource,
    destroyHistorySource: destroyHistorySource
 };
-
