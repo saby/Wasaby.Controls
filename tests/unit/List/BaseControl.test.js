@@ -1271,10 +1271,6 @@ define([
          bc._onViewPortResize(bc, 600);
          assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200, isNull: false});
 
-         bc._loadOffset = {top: 100, bottom: 100, isNull: true};
-         bc._onViewPortResize(bc, 600);
-         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200, isNull: false});
-
          //Если контрол в состоянии ошибки, то не нужно ничего делать
          bc.__error = true;
          bc._setLoadOffset(100, 100, false);
