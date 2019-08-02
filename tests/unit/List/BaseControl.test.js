@@ -2345,7 +2345,7 @@ define([
          };
 
          let
-            notifiedEvent = null
+            notifiedEvent = null,
             notifiedEntity = null;
 
          ctrl._notify = function(eventName, dragEntity) {
