@@ -98,6 +98,20 @@ define([
             assert.isFalse(Util.isPartialGridSupport());
             assert.isTrue(Util.isNoGridSupport());
          });
+         it('mozila xp in no grid support', () => {
+            Env.detection = {
+               isNotFullGridSupport: false,
+               isWinXP: true,
+               isIE: false,
+               isModernIE: false,
+               safari: false,
+               isNoGridSupport: false,
+               firefox: true
+            };
+            assert.isFalse(Util.isFullGridSupport());
+            assert.isFalse(Util.isPartialGridSupport());
+            assert.isTrue(Util.isNoGridSupport());
+         });
 
       });
    });

@@ -13,7 +13,9 @@ define('Controls-demo/Date/MonthListSource', [
          _dataSetTotalProperty: 'total'
       },
 
-      _$idProperty: 'id',
+      _$keyProperty: 'id',
+
+      _isRed: true,
 
       // call: function(methodName, params) {
       //    var def = new Deferred()
@@ -55,7 +57,10 @@ define('Controls-demo/Date/MonthListSource', [
                extData = [];
                daysInMonth = dateUtils.getDaysInMonth(month);
                for (var d = 0; d < daysInMonth; d++) {
-                  extData.push({ isEven: d % 2 });
+                  extData.push({
+                     isMarked: d % 2,
+                     color: this._isRed ? 'red' : 'blue'
+                  });
                }
                items.push({
                   id: formatter.dateToSql(month, formatter.TO_SQL_MODE.DATE),
@@ -77,7 +82,7 @@ define('Controls-demo/Date/MonthListSource', [
 
             setTimeout(function() {
                deferred.callback(items);
-            }, 1000);
+            }, 300);
 
             return deferred;
          }).bind(this);
@@ -87,6 +92,10 @@ define('Controls-demo/Date/MonthListSource', [
          } else {
             return Deferred.success(executor());
          }
+      },
+
+      changeData: function() {
+         this._isRed = !this._isRed;
       }
    });
 

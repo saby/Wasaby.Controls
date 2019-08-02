@@ -29,6 +29,7 @@ define([
             component._registerHandler(null, instId, element, data);
             assert.deepEqual(component._items, { id: { instId: instId, element: element, data: data } });
             sinon.assert.calledWith(component._observer.observe, element);
+            sandbox.restore();
          });
       });
       describe('_unregisterHandler', function() {
@@ -51,5 +52,30 @@ define([
             sinon.assert.calledWith(component._observer.unobserve, element);
          });
       });
+
+      describe('_intersectionObserverHandler', function() {
+         it('should generate "intersect" event', function() {
+            const
+               sandbox = sinon.createSandbox(),
+               component = calendarTestUtils.createComponent(scroll.IntersectionObserverController, options),
+               instId = 'id',
+               element = 'element',
+               data = { someField: 'fieldValue' },
+               entry = { target: element, entryData: 'data' };
+
+            sandbox.stub(component, '_createObserver').returns({
+               observe: sinon.fake()
+            });
+            sandbox.stub(component, '_notify');
+            component._registerHandler(null, instId, element, data);
+            component._intersectionObserverHandler([entry]);
+            sinon.assert.calledWith(
+               component._notify,
+               'intersect'
+            );
+            sandbox.restore();
+         });
+      });
+
    });
 });

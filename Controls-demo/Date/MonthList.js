@@ -19,6 +19,7 @@ define('Controls-demo/Date/MonthList', [
       _dayTemplate: dayTemplate,
       _startValue: new Date(1900, 0, 1),
       _endValue: new Date(1900, 0, 31),
+      _year: new Date(2018, 0, 1),
       _month: new Date(2018, 0, 1),
       _selectionProcessing: false,
       _selectionHoveredValue: null,
@@ -32,7 +33,7 @@ define('Controls-demo/Date/MonthList', [
 
       _beforeMount: function() {
          this._source = new MonthListSource();
-         this._updateYearHeader(this._month);
+         this._updateYearHeader(this._year);
          this._updateMonthHeader(this._month);
       },
 
@@ -50,6 +51,12 @@ define('Controls-demo/Date/MonthList', [
 
       _updateMonthHeader: function(date) {
          this._monthHeader = this._formatMonth(date);
+      },
+
+      _updateYear: function() {
+         this._source.changeData();
+         this._children.yearsMonthList.invalidatePeriod(new Date(2019, 0, 1), new Date(2019, 11, 1));
+         this._children.monthsMonthList.invalidatePeriod(new Date(2019, 0, 1), new Date(2019, 11, 1));
       },
 
       _formatMonth: function(date) {

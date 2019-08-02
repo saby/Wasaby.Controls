@@ -21,11 +21,11 @@ import _stickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
 import _stickyHeaderController from 'Controls/_scroll/StickyHeader/Controller';
 import IntersectionObserverController from 'Controls/_scroll/IntersectionObserver/Controller';
 import IntersectionObserverContainer from 'Controls/_scroll/IntersectionObserver/Container';
+import IntersectionObserverSyntheticEntry from 'Controls/_scroll/IntersectionObserver/SyntheticEntry';
 
 import Group = require('Controls/_scroll/StickyHeader/Group');
 import Utils = require('Controls/_scroll/StickyHeader/Utils');
 import HotKeysContainer from 'Controls/_scroll/HotKeysContainer';
-
 
 export {
    Container,
@@ -39,5 +39,6 @@ export {
    Utils,
    HotKeysContainer,
    IntersectionObserverController,
-   IntersectionObserverContainer
+   IntersectionObserverContainer,
+   IntersectionObserverSyntheticEntry
 }
