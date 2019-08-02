@@ -8,6 +8,7 @@
          attr:class="controls-Popup__template"
          template="{{_options.content}}"
          scope="{{_options}}"
+         opener="{{null}}"
          on:sendResult="_sendResult()"
          on:close="_close()"
          on:popupDragStart="_popupDragStart()"
