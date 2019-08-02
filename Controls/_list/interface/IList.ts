@@ -485,14 +485,14 @@
  */
 
 /**
- * @typedef {String} reloadType
+ * @typedef {String} ReloadType
  * @variant query Элемент будет перезагружен с помощью метода "Поисковый запрос".
  * @variant read Элемент будет перезагружен с помощью метода "Прочитать".
  * @default read
  */
 
 /*
- * @typedef {String} reloadType
+ * @typedef {String} ReloadType
  * @variant query Item will be reloaded with query method
  * @variant read Item will be reloaded with read method
  * @default read
@@ -506,7 +506,7 @@
  * @param {Boolean} replaceItem Определяет, как загруженный элемент будет применяться к коллекции.
  * Если параметр имеет значение true, элемент коллекции будет заменен загруженным элементом.
  * Если параметр имеет значение false (по умолчанию), загруженные элементы будут объединены в элемент коллекции.
- * @param {reloadType} Определяет, как будет загружен элемент.
+ * @param {ReloadType} reloadType Определяет, как будет загружен элемент.
  * @example
  *  <pre>
  *      _itemUpdated: function(id) {
