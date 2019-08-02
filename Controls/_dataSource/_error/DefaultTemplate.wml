@@ -1,9 +1,13 @@
-<Controls.popupTemplate:ConfirmationDialog
-    type="ok"
-    style="danger"
-    message="{{ _options.message || message }}"
-    closeHandler="{{ _closeHandler }}"
-/>
+<Controls.Container.Async
+    templateName="Controls.popupTemplate:ConfirmationDialog"
+>
+    <ws:templateOptions
+        type="ok"
+        style="danger"
+        message="{{ _options.message || message }}"
+        closeHandler="{{ _closeHandler }}"
+    />
+</Controls.Container.Async>
 <!--
 в detail сейчас в многих местах редактирования по месту приходит текст из запроса
 Не будем его отображать

@@ -368,12 +368,6 @@ var moduleClass = CompoundControl.extend({
       delete container.$V;
    },
 
-   _modifyOptions: function(cfg) {
-      var cfg = moduleClass.superclass._modifyOptions.apply(this, arguments);
-      load(cfg.template);
-      return cfg;
-   },
-
    _forceUpdate: function() {
       // Заглушка для ForceUpdate которого на compoundControl нет
    },

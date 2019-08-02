@@ -1838,7 +1838,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             dragStartResult;
 
         if (!this._options.readOnly && this._options.itemsDragNDrop && !domEvent.target.closest('.controls-DragNDrop__notDraggable')) {
-
+            // preventDefault нужно делать здесь, потому что getItemsBySelection может отрабатывать асинхронно
+            // (например при массовом выборе всех записей), тогда preventDefault в startDragNDrop сработает
+            // слишком поздно, браузер уже включит нативное перетаскивание
+            domEvent.preventDefault();
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
             selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
@@ -1881,7 +1884,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             dragEnterResult,
             draggingItemProjection;
 
-        if (!this._listViewModel.getDragEntity()) {
+        if (
+            !this._listViewModel.getDragEntity() &&
+            cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
+        ) {
             dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
