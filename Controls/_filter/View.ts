@@ -101,6 +101,7 @@ var _private = {
                 var popupItem = configs[item.name];
                 popupItem.id = item.name;
                 popupItem.selectedKeys = configs[item.name].multiSelect ? item.value : [item.value];
+                popupItem.resetValue = (item.resetValue instanceof Array) ? item.resetValue : [item.resetValue];
                 if (item.editorOptions.source) {
                     popupItem.hasMoreButton = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation).hasMoreData('down');
                     popupItem.selectorOpener = self._children.selectorOpener;
