@@ -1300,6 +1300,21 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                resultsPosition: 'top'
             })
             assert.deepEqual('top', newGridModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
+
+            // mock HierarchyRelation
+            newGridModel.getDisplay = () => ({
+               getRoot: () => ({
+                  getContents: () => newGridModel.getItems().getRawData().length
+               })
+            })
+            newGridModel._model.getHierarchyRelation = () => ({
+               getChildren: () => [1,2,3]
+            })
+            assert.equal('top', newGridModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
+            newGridModel._model.getHierarchyRelation = () => ({
+               getChildren: () => [1]
+            })
+            assert.equal(undefined, newGridModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
          });
 
          it('is multiheader', function() {
