@@ -69,7 +69,7 @@ export = {
         };
     },
     _calculateValue: function (popupOptions, containerValue, windowValue, popupValue, maxValue) {
-        const availableSize = Math.min(windowValue, maxValue);
+        const availableSize = maxValue ? Math.min(windowValue, maxValue) : windowValue;
         if (popupOptions.maximize) {
             return windowValue;
         }
