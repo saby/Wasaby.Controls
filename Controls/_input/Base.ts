@@ -416,6 +416,8 @@ import 'wml!Controls/_input/Base/FixValueAttr';
           */
          _viewModel: null,
 
+         _wasActionUser: true,
+
          /**
           * @type {Controls/Utils/tmplNotify}
           * @protected
