@@ -45,7 +45,7 @@ define('Controls/interface/IEditableArea', [
 
    /**
     * @event Controls/interface/IEditableArea#beforeBeginEdit Происходит до начала редактирования.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Record} editObject Редактируемая запись.
     * @returns {BeforeBeginEditResult}
     * @example
@@ -59,7 +59,8 @@ define('Controls/interface/IEditableArea', [
     *    define('ModuleName', ['Controls/Constants'], function(constants) {
     *       ...
     *       beforeBeginEditHandler: function(e, record) {
-    *          if (this._editable === false) { //Let's say that we want to allow editing only in certain situations.
+    *          if (this._editable === false) { 
+    *             //Let's say that we want to allow editing only in certain situations.
     *             return constants.editing.CANCEL;
     *          }
     *       }
@@ -72,7 +73,7 @@ define('Controls/interface/IEditableArea', [
 
    /*
     * @event Controls/interface/IEditableArea#beforeBeginEdit Happens before start of editing.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} editObject Editing record.
     * @returns {BeforeBeginEditResult}
     * @example
@@ -86,7 +87,8 @@ define('Controls/interface/IEditableArea', [
     *    define('ModuleName', ['Controls/Constants'], function(constants) {
     *       ...
     *       beforeBeginEditHandler: function(e, record) {
-    *          if (this._editable === false) { //Let's say that we want to allow editing only in certain situations.
+    *          if (this._editable === false) { 
+    *             //Let's say that we want to allow editing only in certain situations.
     *             return constants.editing.CANCEL;
     *          }
     *       }
@@ -99,7 +101,7 @@ define('Controls/interface/IEditableArea', [
 
    /**
     * @event Controls/interface/IEditableArea#beforeEndEdit Происходит до окончания редактирования.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Record} editObject Редактируемая запись.
     * @param {Boolean} commit Если значение опции true, редактирование закончится сохранением.
     * @returns {BeforeEndEditResult}
@@ -143,7 +145,7 @@ define('Controls/interface/IEditableArea', [
 
    /*
     * @event Controls/interface/IEditableArea#beforeEndEdit Happens before the end of editing.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} editObject Editing record.
     * @param {Boolean} commit If it is true editing ends with saving.
     * @returns {BeforeEndEditResult}
@@ -187,7 +189,7 @@ define('Controls/interface/IEditableArea', [
 
    /**
     * @event Controls/interface/IEditableArea#afterEndEdit Происходит после окончания редактирования.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Record} editObject Редактируемая запись.
     * @example
     * В следующем примере показано, как скрыть и показать изображение в зависимости от состояния редактирования.
@@ -214,7 +216,7 @@ define('Controls/interface/IEditableArea', [
 
    /*
     * @event Controls/interface/IEditableArea#afterEndEdit Happens after the end of editing.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} editObject Editing record.
     * @example
     * The following example shows how to hide and show an image based on the state of editing.
@@ -340,7 +342,7 @@ define('Controls/interface/IEditableArea', [
     * Если вы хотите, чтобы содержимое выглядело так же, как {@link Controls.input:Text Controls/input:Text}, используйте {@link Controls/editableArea:Base Controls/editableArea:Base}.
     * Если по какой-то причине это не подходит, то вы можете использовать свой собственный шаблон.
     * @example
-    * Использование Controls.editableArea:Base:
+    * Использование {@link Controls/editableArea:Base}:
     * <pre>
     *     <Controls.editableArea:View editObject="{{_editObject}}">
     *        <Controls.editableArea:Base bind:value="content.editObject.text">
@@ -375,7 +377,7 @@ define('Controls/interface/IEditableArea', [
     * @remark
     * If you want content to look exactly as {@link Controls.input:Text Controls/input:Text} then you should use {@link Controls/editableArea:Base Controls/editableArea:Base}. If for some reason it doesn't suit you then you can use your own template.
     * @example
-    * Using Controls.editableArea:Base:
+    * Using {@link Controls/editableArea:Base}:
     * <pre>
     *     <Controls.editableArea:View editObject="{{_editObject}}">
     *        <Controls.editableArea:Base bind:value="content.editObject.text">
