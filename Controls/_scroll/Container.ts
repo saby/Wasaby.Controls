@@ -554,6 +554,7 @@ var
                this._pagingState.stateUp = 'normal';
                this._pagingState.stateDown = 'normal';
             }
+            this._forceUpdate();
          }
       },
 
