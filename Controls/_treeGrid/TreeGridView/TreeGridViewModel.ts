@@ -122,6 +122,9 @@ var
         resetExpandedItems: function () {
             this._model.resetExpandedItems();
         },
+        getRootItemsForResultsPosition() {
+            return this._model.getHierarchyRelation().getChildren(this.getDisplay().getRoot().getContents(), this.getItems());
+        },
         getItemDataByItem: function(dispItem) {
             var
                 current = TreeGridViewModel.superclass.getItemDataByItem.apply(this, arguments),

@@ -815,8 +815,8 @@ var
         getResultsPosition: function () {
             var items;
             var isShowResults;
-            if (this._model.getHierarchyRelation) {
-                items = this._model.getHierarchyRelation().getChildren(this.getDisplay().getRoot().getContents(), this.getItems());
+            if (this.getRootItemsForResultsPosition) {
+                items = this.getRootItemsForResultsPosition();
                 isShowResults = items && items.length > 1;
             } else {
                 items = this.getItems();
