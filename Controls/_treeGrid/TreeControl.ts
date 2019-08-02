@@ -520,3 +520,9 @@ TreeControl.getDefaultOptions = function() {
 TreeControl._private = _private;
 
 export = TreeControl;
+
+/**
+ * @event Controls/_treeGrid/TreeControl#expandedItemsChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Array.<Number|String>} expandedItems Массив с идентификаторами развернутых элементов.
+ */
