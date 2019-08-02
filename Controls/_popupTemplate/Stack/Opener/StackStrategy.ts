@@ -29,7 +29,9 @@ const _private = {
             } else {
                 panelWidth = Math.min(maxWidth, maxPanelWidthWithOffset);
             }
-        } else if (minWidth > maxPanelWidthWithOffset) { // If the minimum width does not fit into the screen - positioned on the right edge of the window
+            return panelWidth;
+        }
+        if (minWidth > maxPanelWidthWithOffset) { // If the minimum width does not fit into the screen - positioned on the right edge of the window
             if (_private.isMaximizedPanel(item)) {
                 minWidth = item.popupOptions.minimizedWidth;
             }
