@@ -40,7 +40,7 @@
                   highlightOnHover="{{highlightOnHover}}"
                   itemData="{{itemData}}"
                   itemActionsClass="controls-TileView__itemActions controls-TileView__itemActions_bottomRight"/>
-      <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
+      <ws:partial if="{{itemData.isSwiped && itemData.drawActions && itemData.itemActionsPosition !== 'custom'}}"
                   template="{{swipeTemplate}}"
                   itemData="{{itemData}}"
                   itemActionsTemplate="{{itemActionsTemplate}}"/>

@@ -6,7 +6,7 @@
                   itemActionsContainerStyles="{{itemActionsContainerStyles}}"
                   highlightOnHover="{{highlightOnHover}}"/>
    </ws:if>
-   <ws:else >
+   <ws:else data="{{itemData.itemActionsPosition !== 'custom'}}">
       <ws:partial template="{{itemActionsTemplate}}"
                   itemActionsClass="{{itemActionsClass}}"
                   itemData="{{itemData}}"

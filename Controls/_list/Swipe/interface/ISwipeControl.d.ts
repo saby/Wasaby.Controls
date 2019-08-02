@@ -1,7 +1,7 @@
 import { IItemAction } from './IItemAction';
 import { IListModel } from 'Controls/_list/interface/IListViewModel';
 
-export type ItemActionsPosition = 'inside' | 'outside';
+export type ItemActionsPosition = 'inside' | 'outside' | 'custom';
 
 export interface ISwipeEvent extends Event {
    target: HTMLElement;
