@@ -22,13 +22,13 @@ define('Controls/interface/IDropdown', [], function() {
     * @default "Controls/dropdown:ItemTemplate"
     * @remark
     * Для определения шаблона следует вызвать базовый шаблон "Controls/dropdown:ItemTemplate".
-    * Шаблон должен быть помещен в контроле с помощью тега <ws:partial> с атрибутом шаблона.
+    * Шаблон должен быть помещен в контрол с помощью тега <ws:partial> с атрибутом "template".
     * По умолчанию, базовый шаблон Controls/dropdown:ItemTemplate отображает только поле "title".
-    * Чтобы изменить отображение записей, нужно установить значения следующим полям:
-    *    -  displayProperty - имя поля, значение которого будет отображаться,
-    *    -  marker - определяет, отображается ли маркер у выбранного значения,
-    *    -  multiLine - определяет, может ли запись отображаться в несколько строк.
-    * Чтобы переопределить отображаемый контент, используйте опцию contentTemplate.
+    * Чтобы настроить отображение записей, нужно установить значения следующим полям:
+    *    -  displayProperty — имя поля, значение которого будет отображаться,
+    *    -  marker — определяет, отображается ли маркер у выбранного значения,
+    *    -  multiLine — определяет, может ли запись отображаться в несколько строк.
+    * Чтобы переопределить отображаемый контент, используйте опцию {@link contentTemplate}.
     * @example
     * Меню с комментариями к записям в списке.
     * TMPL:
@@ -131,15 +131,15 @@ define('Controls/interface/IDropdown', [], function() {
 
    /**
     * @name Controls/interface/IDropdown#itemTemplateProperty
-    * @cfg {Function} Имя поля, которое содердит шаблон отображения элемента в выпадающем списке.
+    * @cfg {Function} Имя поля, которое содержит шаблон отображения элемента в выпадающем списке.
     * @remark
     * Для определения шаблона следует вызвать базовый шаблон "Controls/dropdown:ItemTemplate".
-    * Шаблон должен быть помещен в контроле с помощью тега <ws:partial> с атрибутом шаблона.
+    * Шаблон должен быть помещен в контроле с помощью тега <ws:partial> с атрибутом "template".
     * По умолчанию, базовый шаблон Controls/dropdown:ItemTemplate отображает только поле "title".
     * Чтобы изменить отображение записей, нужно установить значения следующим полям:
-    *    -  displayProperty - имя поля, значение которого будет отображаться,
-    *    -  marker - определяет, отображается ли маркер у выбранного значения,
-    *    -  multiLine - определяет, может ли запись отображаться в несколько строк.
+    *    -  displayProperty — имя поля, значение которого будет отображаться,
+    *    -  marker — определяет, отображается ли маркер у выбранного значения,
+    *    -  multiLine — определяет, может ли запись отображаться в несколько строк.
     * Чтобы переопределить отображаемый контент, используйте опцию contentTemplate.
     * @example
     * Меню с комментарием только для второй записи.
@@ -441,7 +441,7 @@ define('Controls/interface/IDropdown', [], function() {
     */
 
    /**
-    * @event Controls/interface/IDropdown#dropDownOpen Происходит при открытии выпдающего списка.
+    * @event Controls/interface/IDropdown#dropDownOpen Происходит при открытии выпадающего списка.
     * @example
     * wml:
     * <pre>
@@ -482,8 +482,50 @@ define('Controls/interface/IDropdown', [], function() {
     * </pre>
     */
 
+   /**
+    * @event Controls/interface/IDropdown#dropDownOpen Происходит при открытии выпадающего списка.
+    * @example
+    * wml:
+    * <pre>
+    *    <Controls.dropDown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose"/>
+    *    <div>dropDownOpened: {{_dropDownOpened}}</div>
+    * </pre>
+    *
+    * JS:
+    * <pre>
+    *    _dropDownOpen() {
+    *       this._dropDownOpened = true;
+    *    }
+    *
+    *    _dropDownClose() {
+    *       this._dropDownOpened = false;
+    *    }
+    * </pre>
+    */
+
    /*
     * @event Controls/interface/IDropdown#dropDownOpen Occurs when dropDown opened.
+    * @example
+    * wml:
+    * <pre>
+    *    <Controls.dropDown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose"/>
+    *    <div>dropDownOpened: {{_dropDownOpened}}</div>
+    * </pre>
+    *
+    * JS:
+    * <pre>
+    *    _dropDownOpen() {
+    *       this._dropDownOpened = true;
+    *    }
+    *
+    *    _dropDownClose() {
+    *       this._dropDownOpened = false;
+    *    }
+    * </pre>
+    */    
+
+   /**
+    * @event Controls/interface/IDropdown#dropDownClose Происходит при закрытии выпадающего списка.
     * @example
     * wml:
     * <pre>
@@ -522,6 +564,6 @@ define('Controls/interface/IDropdown', [], function() {
     *       this._dropDownOpened = false;
     *    }
     * </pre>
-    */
+    */    
 
 });

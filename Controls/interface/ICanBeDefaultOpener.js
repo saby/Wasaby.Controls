@@ -1,8 +1,8 @@
 define('Controls/interface/ICanBeDefaultOpener', [], function() {
 
    /**
-    * Интерфейс для контролов, которые могут служить опенерами по умолчанию.
-    * Контрол-опенер инициирует открытие текущего контрола. Это необходимо для работы с фокусами.
+    * Интерфейс для контролов, которые инициируют открытие других контролов.
+    * Необходим для работы с фокусами.
     * Подробнее читайте в статье <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/'>"Работа с фокусами"</a>.
     *
     * @interface Controls/interface/ICanBeDefaultOpener
@@ -23,8 +23,6 @@ define('Controls/interface/ICanBeDefaultOpener', [], function() {
    /**
     * @name Controls/interface/ICanBeDefaultOpener#isDefaultOpener
     * @cfg {Boolean} В значении true контрол работает как опенер по умолчанию.
-    * Если isDefaultOpener имеет значение true для текущего контрола, дочерний контрол, расширенный интерфейсом IHasOpener и
-    * имеет 
     */
 
    /*
