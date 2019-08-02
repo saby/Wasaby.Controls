@@ -4,6 +4,7 @@ import ISuggest from "Controls/interface/ISuggest";
  * Интерфейс для Input.Suggest.
  *
  * @interface Controls/_suggest/ISuggest
+ * mixes Controls/interface/ISuggest
  * @public
  * @author Герасимов А.М.
  */

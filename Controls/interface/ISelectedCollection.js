@@ -40,14 +40,10 @@ define('Controls/interface/ISelectedCollection', [
    
    /**
     * @name Controls/interface/ISelectedCollection#multiSelect
-    * @cfg {Boolean} Определяет режим выбора.
-    * @remark
-    * Дефолтное значени: false
-    * Варианты:
-    * <ul>
-    *    <li>true - Можно выбрать сколько угодно много значений.</li>
-    *    <li>false - После выбора первого значения, поле ввода пропадает. При выборе нового значения из справочника, оно перетирает старое.</li>
-    * </ul>
+    * @cfg {Boolean} Включает режим множественного выбора значений.
+    * @default false
+    * @variant true Можно выбрать сколько угодно много значений.
+    * @variant false После выбора первого значения, поле ввода пропадает. При выборе нового значения из справочника, оно перетирает старое.
     *
     * @example
     * WML:
@@ -60,14 +56,10 @@ define('Controls/interface/ISelectedCollection', [
     */
    /*
     * @name Controls/interface/ISelectedCollection#multiSelect
-    * @cfg {Boolean} Specifies the selection mode.
-    * @remark
-    * Default: false
-    * Variants:
-    * <ul>
-    *    <li>true - You can select as many values ​​as you want.</li>
-    *    <li>false - After selecting the first value, the input field disappears. When you select a new value from the directory, it grinds the old.</li>
-    * </ul>
+    * @cfg {Boolean} Enables multiple value selection mode.
+    * @default false
+    * @variant true You can select as many values ​​as you want.
+    * @variant false After selecting the first value, the input field disappears. When you select a new value from the directory, it grinds the old.
     *
     * @example
     * WML:
@@ -82,8 +74,8 @@ define('Controls/interface/ISelectedCollection', [
    /**
     * @name Controls/interface/ISelectedCollection#maxVisibleItems
     * @cfg {Integer} Максимальное количество элементов для отображения, остальные будут скрыты под счетчиком.
+    * @default 7
     * @remark
-    * Дефолтное значение: 7
     * Актуально только в многострочном режиме
     * @see Controls/interface/ISelectedCollection#multiSelect
     *
@@ -100,8 +92,8 @@ define('Controls/interface/ISelectedCollection', [
    /*
     * @name Controls/interface/ISelectedCollection#maxVisibleItems
     * @cfg {Integer} The maximum number of items to display, the rest will be hidden under the counter.
+    * @default 7
     * @remark
-    * Default: 7
     * Only relevant in multi line mode.
     * @see Controls/interface/ISelectedCollection#multiSelect
     *
@@ -159,7 +151,7 @@ define('Controls/interface/ISelectedCollection', [
     *          source="{{_source}}"
     *          keyProperty="id">
     *       <ws:itemTemplate>
-    *          <ws:partial template="wml!Controls.lookup:ButtonItemTemplate"
+    *          <ws:partial template="Controls.lookup:ButtonItemTemplate"
     *                      style="primary"
     *                      size="xl"
     *                      displayProperty="title"
@@ -211,7 +203,7 @@ define('Controls/interface/ISelectedCollection', [
     *          source="{{_source}}"
     *          keyProperty="id">
     *       <ws:itemTemplate>
-    *          <ws:partial template="wml!Controls.lookup:ButtonItemTemplate"
+    *          <ws:partial template="Controls.lookup:ButtonItemTemplate"
     *                      style="primary"
     *                      size="xl"
     *                      displayProperty="title"
@@ -269,7 +261,7 @@ define('Controls/interface/ISelectedCollection', [
    /**
     * @event Controls/interface/ISelectedCollection#itemsChanged Происходит при изменении набора выбранной коллекции.
     * @param {Env/Event:Object} eventObject Дескриптор события.
-    * @param {RecordSet} items Список выбранных записей.
+    * @param {RecordSet|List} items Список выбранных записей.
     *
     * @example
     * В следующем примере создается Controls/lookup:Selector и демонстрируется сценарий использования.
@@ -291,7 +283,7 @@ define('Controls/interface/ISelectedCollection', [
    /*
     * @event Controls/interface/ISelectedCollection#itemsChanged Occurs when changing the set of the selected collection.
     * @param {Env/Event:Object} eventObject The event descriptor.
-    * @param {RecordSet} items List of selected entries.
+    * @param {RecordSet|List} items List of selected entries.
     *
     * @example
     * The following example creates Controls/lookup:Selector and shows how to handle the event.

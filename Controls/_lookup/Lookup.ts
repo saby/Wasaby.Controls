@@ -3,7 +3,7 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
 
 
 /**
- * Контрол «lookup:Input» это поле ввода с автодополнением и выбором значения из справочника.
+ * «lookup:Input» - это поле ввода с автодополнением и возможностью выбора значения из справочника.
  * Может отображаться в однострочном и многострочном режиме.
  * Поддерживает одиночный и множественный выбор.
  * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-lookup">демонстрационный пример</a>.
@@ -32,7 +32,7 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
  */
 /*
- * The “lookup:Input” control is an input field with auto-completion and selection of a value from the directory.
+ * “Lookup:Input” is an input field with auto-completion and the ability to select a value from the directory.
  * Сan be displayed in single-line and multi-line mode.
  * Supports single and multiple selection.
  * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
@@ -64,9 +64,9 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
 /**
  * @name Controls/_lookup/Lookup#multiLine
  * @cfg {Boolean} Определяет, отображать ли Lookup в многострочном режиме.
+ * @default false
  * @remark
- * Дефолтное значение: false
- * Многострочный режим работает по автовысоте в зависимости от выбранных записей, количество отоброжаемых записей задается опцией "maxVisibleItems", остальные скрываются за счетчиком.
+ * Когда поле связи находится в многострочном режиме, то высота определяется автоматически по выбранным записям. Количество отображаемых записей устанавливается опцией {@link Controls/interface/ISelectedCollection#maxVisibleItems}.
  * Актуально только при multiSelect: true.
  *
  * @example
@@ -87,9 +87,10 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
 /*
  * @name Controls/_lookup/Lookup#multiLine
  * @cfg {Boolean} Determines then Lookup can be displayed in multi line mode.
+ * @default false
  * @remark
- * Default: false
- * The multi-line mode works at auto-height depending on the selected records, the number of displayed records is set by the "maxVisibleItems" option, the rest are hidden behind the counter.
+ *
+ When the communication field is in multi-line mode, the height is automatically determined by the selected records. The number of records displayed is set by the {@link Controls/interface/ISelectedCollection#maxVisibleItems} option.
  * Only relevant with multiSelect: true.
  *
  * @example

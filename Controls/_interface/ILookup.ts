@@ -163,7 +163,7 @@ export default interface ILookup {
  * @param {RecordSet} initialItems Список выбранных элементов, перед открытием справочника.
  * @param {RecordSet} newItems Список выбранных элементов, после выбора из справочника.
  * @remark
- * Ожидает, что обработчик вернет выбранную коллекцию, иначе возьмет newItems.
+ * Список выбранных элементов можно заменить, если из обработчика вернуть новую коллекцию.
  *
  * @example
  * В следующем примере создается Controls/lookup:Input и демонстрируется сценарий использования.
@@ -187,6 +187,7 @@ export default interface ILookup {
  *          resultRS.add(newItems.at(0));
  *       }
  *
+ *       // Вернем новую коллекцию
  *       return resultRS;
  *    }
  * </pre>
@@ -197,7 +198,7 @@ export default interface ILookup {
  * @param {RecordSet} initialItems List of selected items before opening the directory.
  * @param {RecordSet} newItemsThe list of selected items, after selecting from the directory.
  * @remark
- * Expects the handler to return the selected collection, otherwise it will take newItems.
+ * The list of selected items can be replaced if a new collection is returned from the handler.
  *
  * @example
  * The following example creates Controls/lookup:Input and shows how to handle the event.
@@ -221,6 +222,7 @@ export default interface ILookup {
  *          resultRS.add(newItems.at(0));
  *       }
  *
+ *       // We will return a new collection
  *       return resultRS;
  *    }
  * </pre>
