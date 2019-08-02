@@ -798,7 +798,7 @@ var
                 cellContentClasses += ' controls-Grid__header-cell_align_items_' + headerColumn.column.valign;
             }
 
-            if (GridLayoutUtil.isPartialGridSupport()) {
+            if (GridLayoutUtil.isOldIE()) {
                 cellContentClasses += ' IE-header_cell_content';
             }
 

@@ -23,6 +23,11 @@ function isNoGridSupport(): boolean {
     return !isFullGridSupport() && !isPartialGridSupport();
 }
 
+function isOldIE(): boolean {
+    return detection.isIE && detection.IEVersion <= 11;
+}
+
+
 function getCellStyles(rowIndex: number, columnIndex: number, rowSpan: number = 1, colSpan: number = 1): string {
     let rules: Array<CssRule> = [
         {
@@ -165,6 +170,7 @@ export {
     isFullGridSupport,
     isPartialGridSupport,
     isNoGridSupport,
+    isOldIE,
 
     getCellStyles,
     getTemplateColumnsStyle,
