@@ -21,6 +21,13 @@ define('Controls-demo/Input/DateTime/DateTimePG',
             this._dataObject = {
                value: {
                   readOnly: true
+               },
+               inlineHeight: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
                }
             };
             this._componentOptions = {

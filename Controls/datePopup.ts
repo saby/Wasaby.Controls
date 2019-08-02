@@ -7,6 +7,7 @@ import EventProxyMixin from './_datePopup/Mixin/EventProxy';
 import MonthsRange from './_datePopup/MonthsRange';
 import periodDialogUtils from './_datePopup/Utils';
 import dateUtils = require('Controls/Utils/Date');
+import dateRangeUtil = require('Controls/Utils/DateRangeUtil');
 import componentTmpl = require('wml!Controls/_datePopup/DatePopup');
 import headerTmpl = require('wml!Controls/_datePopup/header');
 import 'css!theme?Controls/datePopup';
@@ -120,6 +121,20 @@ var _private = {
                 [start || self._rangeModel.startValue, end || self._rangeModel.endValue],
                 {bubbling: true}
             );
+        },
+        getViewState: function(options, monthStateEnabled, yearStateEnabled) {
+            if (monthStateEnabled) {
+                if (yearStateEnabled) {
+                    if (((dateUtils.isValidDate(options.startValue) && dateUtils.isValidDate(options.endValue)) &&
+                        (!dateUtils.isStartOfMonth(options.startValue) || !dateUtils.isEndOfMonth(options.endValue)) &&
+                        dateRangeUtil.gePeriodLengthInDays(options.startValue, options.endValue) <= MONTH_STATE_SELECTION_DAYS) {
+                        return STATES.month;
+                    }
+                } else {
+                    return STATES.month;
+                }
+            }
+            return STATES.year;
         }
     },
     HEADER_TYPES = {
@@ -129,7 +144,8 @@ var _private = {
     STATES = {
         year: 'year',
         month: 'month'
-    };
+    },
+    MONTH_STATE_SELECTION_DAYS = 30;
 
 var Component = BaseControl.extend([EventProxyMixin], {
     _template: componentTmpl,
@@ -160,7 +176,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
     _yearRangeSelectionType: null,
 
     _beforeMount: function (options) {
-        this._displayedDate = dateUtils.getStartOfMonth(options.startValue);
+        this._displayedDate = dateUtils.getStartOfMonth(
+            dateUtils.isValidDate(options.startValue) ? options.startValue : new Date());
 
         this._rangeModel = new DateRangeModel();
         this._rangeModel.update(options);
@@ -173,9 +190,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._monthStateEnabled = periodDialogUtils.isMonthStateEnabled(options);
         this._yearStateEnabled = periodDialogUtils.isYearStateEnabled(options);
 
-        if (!this._yearStateEnabled && this._monthStateEnabled) {
-            this._state = STATES.month;
-        }
+        this._state = _private.getViewState(options, this._monthStateEnabled, this._yearStateEnabled);
 
         this._yearRangeSelectionType = options.selectionType;
         this._yearRangeQuantum = {};

@@ -33,6 +33,7 @@
    </ws:if>
    <ws:else>
       <ws:partial template="{{currentColumn.template}}"
+                  editArrowTemplate="{{currentColumn.editArrowTemplate}}"
                   attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}"
                   ladderWrapper="{{currentColumn.ladderWrapper}}"
                   expanderTemplate="{{itemData.expanderTemplate}}"
@@ -95,6 +96,7 @@
                             {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                             {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0)?' controls-Grid__row-cell_selected__first'}}
                             controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
+    attr:colspan="{{itemData.getColspan(colspan || colspanCurrentNode)}}"
     attr:style="{{itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode)}}">
    <div class="controls-TreeGridView__row-cell_innerWrapper">
       <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>

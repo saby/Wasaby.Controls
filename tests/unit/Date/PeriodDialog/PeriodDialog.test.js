@@ -20,13 +20,30 @@ define([
       describe('Initialisation', function() {
 
          it('should create the correct range model when empty range passed.', function() {
-            const component = calendarTestUtils.createComponent(PeriodDialog, {});
+            const
+               now = new Date(2019, 6, 1),
+               clock = sinon.useFakeTimers(now.getTime(), 'Date'),
+               component = calendarTestUtils.createComponent(PeriodDialog, {});
 
             assert.isTrue(component._monthStateEnabled);
             assert.isTrue(component._yearStateEnabled);
             assert.strictEqual(component._state, component._STATES.year);
             assert.strictEqual(component._yearRangeSelectionType, 'range');
             assert.strictEqual(component._headerType, 'link');
+            assert(dateUtils.isDatesEqual(component._displayedDate, now));
+
+            clock.restore();
+         });
+
+         it('should initialize if invalid start and end dates passed.', function() {
+            const
+               now = new Date(2019, 6, 1),
+               clock = sinon.useFakeTimers(now.getTime(), 'Date'),
+               component = calendarTestUtils.createComponent(PeriodDialog, {});
+
+            assert(dateUtils.isDatesEqual(component._displayedDate, now));
+
+            clock.restore();
          });
 
          it('should create the correct range models when empty range passed.', function() {
@@ -80,6 +97,30 @@ define([
                const component = calendarTestUtils.createComponent(PeriodDialog, options);
                assert.isFalse(component._monthStateEnabled);
                assert.isTrue(component._yearStateEnabled);
+            });
+         });
+
+         [{
+            state: 'year',
+            tests: [
+               { },
+               { startValue: new Date(2019, 0, 1), endValue: new Date(2019, 1, 0) },
+               { startValue: new Date(2019, 0, 3), endValue: new Date(2019, 1, 10) }
+            ]
+         }, {
+            state: 'month',
+            tests: [
+               { startValue: new Date(2019, 0, 1), endValue: new Date(2019, 0, 1) },
+               { selectionType: PeriodDialog.SELECTION_TYPES.single },
+               { selectionType: PeriodDialog.SELECTION_TYPES.quantum, quantum: { days: [1] } },
+               { selectionType: PeriodDialog.SELECTION_TYPES.quantum, quantum: { weeks: [1] } }
+            ]
+         }].forEach(function(testGroup) {
+            testGroup.tests.forEach(function(options) {
+               it(`should set ${testGroup.state} state if options are equals ${JSON.stringify(options)}.`, function() {
+                  const component = calendarTestUtils.createComponent(PeriodDialog, options);
+                  assert.equal(component._state, testGroup.state);
+               });
             });
          });
 

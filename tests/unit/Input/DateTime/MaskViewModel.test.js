@@ -30,7 +30,7 @@ define([
             { mask: "DD.MM.YYYY", before: "", after: "", insert: "05.11.21", delete: "", displayValue: "05.11.2021", value: "05112021"},
             { mask: "DD.MM.YY", before: "01.0", after: "1.17", insert: "01.04.2021", delete: "", displayValue: "01.04.21", value: "010421"},
             { mask: "DD.MM.YY", before: "", after: "  .  .  ", insert: "1.4.2021", delete: "", displayValue: "01.04.21", value: "010421"},
-            { mask: "DD.MM.YY", before: "01.0", after: "1.17", insert: "2", delete: "", displayValue: "01.02.17", value: "010217"},
+            { mask: "DD.MM.YY", before: "01.0", after: "1.17", insert: "2", delete: "", displayValue: "01.02.17", value: "010217", selection: 6 },
             { mask: "DD.MM", before: "01.0", after: "1", insert: "05.11.21", delete: "", displayValue: "05.11", value: "0511"},
             { mask: "YYYY", before: "20", after: "07", insert: "05.11.21", delete: "", displayValue: "2021", value: "2021"},
 
@@ -43,7 +43,10 @@ define([
          ].forEach(function(test) {
             it(`should return ${test.displayValue} if inserted '${test.insert}'
                between before('${test.before}') and after('${test.after}') is passed`, function() {
-               let model = new MaskViewModel.default(cMerge({ mask: test.mask }, options, { preferSource: true }), options.value);
+               let
+                  model = new MaskViewModel.default(cMerge({ mask: test.mask }, options, { preferSource: true }), options.value),
+                  selection;
+
                model.handleInput({
                   before: test.before,
                   after: test.after,
@@ -53,6 +56,10 @@ define([
 
                assert.strictEqual(model.displayValue, test.displayValue);
                assert.strictEqual(model.value, test.value);
+
+               selection = test.selection !== undefined ? test.selection : model.displayValue.length;
+               assert.strictEqual(model._selection.start, selection);
+               assert.strictEqual(model._selection.end, selection);
             });
          });
       });

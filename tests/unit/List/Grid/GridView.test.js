@@ -17,6 +17,53 @@ define(['Controls/grid'], function(gridMod) {
             width: '1fr'
          }
       ],
+      gridHeader = [
+         {
+            title: '',
+            style: 'default',
+            startRow: 1,
+            endRow: 3,
+            startColumn: 1,
+            endColumn: 2
+         },
+         {
+            title: 'Цена',
+            align: 'right',
+            style: 'default',
+            sortingProperty: 'price',
+            startRow: 1,
+            endRow: 2,
+            startColumn: 2,
+            endColumn: 3
+         },
+         {
+            title: 'Остаток',
+            align: 'right',
+            style: 'default',
+            startRow: 1,
+            endRow: 2,
+            startColumn: 3,
+            endColumn: 4
+         },
+         {
+            title: 'Что-то',
+            align: 'right',
+            style: 'default',
+            startRow: 2,
+            endRow: 3,
+            startColumn: 2,
+            endColumn: 3
+         },
+         {
+            title: 'еще',
+            align: 'right',
+            style: 'default',
+            startRow: 2,
+            endRow: 3,
+            startColumn: 3,
+            endColumn: 4
+         }
+      ],
       preparedColumnsWithMultiselect = 'grid-template-columns: max-content 1fr auto 100px 1fr;',
       preparedColumnsWithoutMiltiselect = 'grid-template-columns: 1fr auto 100px 1fr;';
 
@@ -108,6 +155,7 @@ define(['Controls/grid'], function(gridMod) {
       });
 
       it('getColumnsWidthForEditingRow', function () {
+
          let
              gridView = new gridMod.GridView({});
          gridView = {
@@ -193,6 +241,111 @@ define(['Controls/grid'], function(gridMod) {
          gridView._listModel.getCount = () => 0;
          gridView._listModel.getHeader = () => null;
          assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['1fr', 'auto', '1fr']);
+      });
+
+      it('_setHeaderWithHeight', function () {
+         let
+            cfg = {
+               columns: [
+                  { displayProperty: 'field1', template: 'column1' },
+                  { displayProperty: 'field2', template: 'column2' }
+               ],
+               header: gridHeader,
+               multiSelectVisibility: 'hidden',
+            },
+            gridView = new gridMod.GridView(cfg);
+            gridView.saveOptions(cfg);
+
+         gridView. _listModel = {
+            getResultsPosition: function() {
+               return null
+            }
+         };
+         let i = 0;
+         const queryCells = function() {
+            const cur = gridHeader[i];
+            return {
+               offsetTop: (cur.startRow - 1) * 20,
+               offsetHeight: (cur.endRow - cur.startRow) * 20
+            }
+         }
+         gridView._container = {
+            querySelector: function() {
+               const obj = queryCells();
+               i++;
+               return obj;
+            },
+            getElementsByClassName: function (className) {
+               if (className === 'controls-Grid__header') {
+                  return [
+                     {
+                        childNodes: [
+                           {
+                              offsetHeight: 40,
+                           },
+                           {
+                              offsetHeight: 20,
+                           },
+                           {
+                              offsetHeight: 20,
+                           },
+                           {
+                              offsetHeight: 20,
+                           },
+                           {
+                              offsetHeight: 20,
+                           },
+                        ]
+                     }
+                  ];
+               } else if (className === 'controls-Grid__results') {
+                  return [
+                     {
+                        childNodes: [
+                           {
+                              offsetTop: 40,
+                           },
+                           {
+                              offsetTop: 40,
+                           },
+                           {
+                              offsetTop: 40,
+                           },
+                           {
+                              offsetTop: 40,
+                           },
+                           {
+                              offsetTop: 40,
+                           },
+                        ]
+                     }
+                  ];
+               }
+            }
+         };
+
+         const expectedResult = [
+            {endColumn: 2, endRow: 3, height: 40, offsetTop: 0, startColumn: 1, startRow: 1, style: "default", title: ""},
+            {align: "right", endColumn: 3, endRow: 2, height: 20, offsetTop: 0, sortingProperty: "price", startColumn: 2, startRow: 1, style: "default", title: "Цена"},
+            {align: "right", endColumn: 4, endRow: 2, height: 20, offsetTop: 0, startColumn: 3, startRow: 1, style: "default", title: "Остаток"},
+            {align: "right", endColumn: 3, endRow: 3, height: 20, offsetTop: 20, startColumn: 2, startRow: 2, style: "default", title: "Что-то"},
+            {align: "right", endColumn: 4, endRow: 3, height: 20, offsetTop: 20, startColumn: 3, startRow: 2, style: "default", title: "еще"}
+         ];
+
+         assert.deepEqual(gridView._setHeaderWithHeight(), [
+            expectedResult,
+            0
+         ]);
+         i = 0;
+         gridView. _listModel = {
+            getResultsPosition: function() {
+               return 'top';
+            }
+         };
+         assert.deepEqual(gridView._setHeaderWithHeight(), [
+            expectedResult,
+            40
+         ]);
       });
    });
 });

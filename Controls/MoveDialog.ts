@@ -4,7 +4,7 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
 
    /**
     * Стандартный шаблон диалогового окна выбора таргета для перемещения элементов.
-    * <a href="/materials/demo-ws4-operations-panel">Demo examples.</a>.
+    * <a href="/materials/demo-ws4-operations-panel">Демо-пример</a>.
     * @class Controls/MoveDialog
     * @extends Core/Control
     * @mixes Controls/_interface/IHierarchy

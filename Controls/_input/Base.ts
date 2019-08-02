@@ -15,6 +15,7 @@ import fieldTemplate = require('wml!Controls/_input/Base/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
 
 import {split, getInputType, getAdaptiveInputType, IInputType, INativeInputType, ISplitValue} from 'Controls/_input/Base/InputUtil';
+import MobileFocusController from 'Controls/_input/Base/MobileFocusController';
 
 import 'wml!Controls/_input/Base/Stretcher';
 import 'wml!Controls/_input/Base/FixValueAttr';
@@ -183,29 +184,6 @@ interface IFieldTemplate {
           */
          notifyInputCompleted: function(self) {
             self._notify('inputCompleted', [self._viewModel.value, self._viewModel.displayValue]);
-         },
-
-         /**
-          * Notify to global channel about receiving or losing focus in field.
-          * @remark
-          * When the field gets focus, the keyboard on the touch devices is shown.
-          * This changes the size of the workspace and may require repositioning controls on the page, such as popup.
-          * But on some devices, the size of the workspace does not change and controls do not react.
-          * To enable them to respond, this method is used.
-          * @param {Controls/_input/Base} self Control instance.
-          * @param {Boolean} hasFocus Does the field have focus.
-          */
-         notifyChangeOfFocusState: function(self, hasFocus) {
-            /**
-             * After showing the keyboard only on ios, the workspace size does not change.
-             * The keyboard is shown only if the field has received focus as a result of a user touch.
-             */
-            if (self._isMobileIOS && (!hasFocus || self._fromTouch)) {
-               var eventName = hasFocus ? 'MobileInputFocus' : 'MobileInputFocusOut';
-
-               self._fromTouch = hasFocus;
-               EnvEvent.Bus.globalChannel().notify(eventName);
-            }
          },
 
          /**
@@ -390,6 +368,20 @@ interface IFieldTemplate {
       };
 
       /**
+       * Базовый класс для текстовых полей ввода.
+       *
+       * @class Controls/_input/Base
+       * @extends UI/_base/Control
+       *
+       * @mixes Controls/interface/IInputBase
+       *
+       * @public
+       * @demo Controls-demo/Input/Base/Base
+       *
+       * @author Красильников А.С.
+       */
+
+      /*
        * Base controls that allows user to enter text.
        *
        * @class Controls/_input/Base
@@ -508,12 +500,6 @@ interface IFieldTemplate {
           * @private
           */
          _hasHorizontalScroll: hasHorizontalScroll,
-
-         /**
-          * @type {Boolean} Determines whether was a touch to the field.
-          * @private
-          */
-         _fromTouch: false,
 
          /**
           * @type {Number|null} The version of IE browser in which the control is build.
@@ -806,8 +792,20 @@ interface IFieldTemplate {
             }
 
             _private.handleInput(this, splitValue, inputType);
-            _private.updateField(this, model.displayValue, model.selection);
-            model.changesHaveBeenApplied();
+
+            /**
+             * На Android работа с данными поля во время ввода приводит к ошибке
+             * https://online.sbis.ru/opendoc.html?guid=34bc55ac-807f-4d98-88b8-37b7ba0520de
+             * Последующие значения атрибута value не обновляются после пользовательского ввода.
+             * Из-за невалидного value нарушается логика работы контрола. Поэтому работать с value нужно во
+             * время цикла синхронизации. Модель синхронизируется с полем во время цикла синхронизации, если изменения
+             * не были применены(у модели не был вызван метод changesHaveBeenApplied). Такой подход увеличит время перерисоки,
+             * но на Android визуально не заметно.
+             */
+            if (!this._isMobileAndroid) {
+               _private.updateField(this, model.displayValue, model.selection);
+               model.changesHaveBeenApplied();
+            }
          },
 
          /**
@@ -840,23 +838,22 @@ interface IFieldTemplate {
             }
          },
 
-         _focusInHandler: function() {
+         _focusInHandler: function(event) {
             if (this._focusByMouseDown) {
                this._firstClick = true;
             }
 
             this._focusByMouseDown = false;
 
-            _private.notifyChangeOfFocusState(this, true);
-
             this._displayValueAfterFocusIn = this._viewModel.displayValue;
+            MobileFocusController.focusHandler(event);
          },
 
          /**
           * Event handler focus out in native field.
           * @protected
           */
-         _focusOutHandler: function() {
+         _focusOutHandler: function(event) {
             /**
              * TODO: KINGO
              * Когда меняется режим редактирования на чтения происходит перерисовка. Поле удаляется и
@@ -872,13 +869,12 @@ interface IFieldTemplate {
                this._getField().scrollLeft = 0;
             }
 
-            _private.notifyChangeOfFocusState(this, false);
-
+            MobileFocusController.blurHandler(event);
             _private.callChangeHandler(this);
          },
 
-         _touchStartHandler: function() {
-            this._fromTouch = true;
+         _touchStartHandler: function(event) {
+            MobileFocusController.touchStartHandler(event);
          },
 
          _mouseDownHandler: function() {

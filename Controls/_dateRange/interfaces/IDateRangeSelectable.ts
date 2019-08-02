@@ -15,20 +15,27 @@ export = {
 
       /**
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#ranges
-       * @cfg {Object} Кванты. Если заданы кванты, то нельзя выделить вроизвольный период, можно только выделить заданные периоды.
+       * @cfg {Object} Кванты. Если заданы кванты, то нельзя выделить произвольный период, можно только выделить заданные периоды.
        */
       options.ranges = [];
 
       /**
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#selectionType
-       * @cfg {String} Определяет режим выделения диапазона
-       * @variant 'range' режим выделения произвольного диапазона
-       * @variant 'single' режим выделения одного элемента
-       * @variant 'disable' режим выбора отключен
-       * @variant 'quantum' режим выделения квантами, кванты задаются через опцию quantum
+       * @cfg {String} Определяет режим выделения диапазона.
+       * @variant range Режим выделения произвольного диапазона.
+       * @variant single Режим выделения одного элемента.
+       * @variant disable Режим выбора отключен.
+       * @variant quantum Режим выделения квантами, кванты задаются через опцию quantum.
        */
 
       /**
+       * @name Controls/_dateRange/interfaces/IDateRangeSelectable#minRange
+       * @cfg {String} Задает режим выбора диапазона дат.
+       * @variant day Режим выбора периода из нескольких дней.
+       * @variant month Режим выбора периода из нескольких месяцев.
+       */
+
+      /*
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#minRange
        * @cfg {String} Specifies the range selection mode
        * @variant 'day' selection mode period multiple days

@@ -1,6 +1,7 @@
 import {ListViewModel, BaseViewModel, GridLayoutUtil, ItemsUtil} from 'Controls/list';
 import {Utils as stickyUtil} from 'Controls/scroll';
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
+import editArrowTemplate = require('wml!Controls/_grid/_editArrowTemplate');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import {isEqual} from 'Types/object';
@@ -37,7 +38,7 @@ var
               style += currentColumn.styleForLadder;
            }
            if (colspan) {
-                style += _private.getColspan(
+                style += _private.getColspanStyles(
                    itemData.multiSelectVisibility,
                    currentColumn.columnIndex,
                    itemData.columns.length
@@ -45,7 +46,13 @@ var
            }
            return style;
         },
-        getColspan(
+        getColspan(itemData, isColspaned: boolean = false): number {
+            if (!isColspaned) {
+                return 1;
+            }
+            return itemData.columns.length - (itemData.multiSelectVisibility === 'hidden' ? 0 : 1);
+        },
+        getColspanStyles(
            multiSelectVisibility: 'hidden' | 'visible' | 'onhover',
            columnIndex: number,
            columnsLength: number,
@@ -133,7 +140,7 @@ var
                 preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase();
             }
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
-            if (columnIndex === 0 && !multiSelectVisibility) {
+            if (columnIndex === 0 && !multiSelectVisibility && rowIndex === 0) {
                 preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (itemPadding.left || 'default').toLowerCase();
             }
 
@@ -651,7 +658,6 @@ var
         resetHeaderRows: function() {
             this._curHeaderRowIndex = 0;
         },
-
         goToNextHeaderRow: function() {
             this._curHeaderRowIndex++;
         },
@@ -743,7 +749,7 @@ var
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             if (headerColumn.column.isBreadCrumbs) {
-               headerColumn.style = _private.getColspan(
+               headerColumn.style = _private.getColspanStyles(
                   this._options.multiSelectVisibility,
                   columnIndex,
                   this._headerRows[0].length,
@@ -764,9 +770,6 @@ var
             let offsetTop = 0;
             let shadowVisibility = 'visible';
 
-            if (this._headerRows.length > 1) {
-                cellContentClasses += ' controls-Grid__header-cell_align_items_center';
-            }
             if (cell.startRow) {
                 if (this.isNoGridSupport()) {
                     headerColumn.rowSpan = endRow - startRow;
@@ -782,6 +785,7 @@ var
                     cellStyles += gridStyles;
 
                 }
+                cellClasses += endRow - startRow > 1 ? ' controls-Grid__header-cell_justify_content_center' : '';
                 cellContentClasses += rowIndex !== this._headerRows.length - 1 && endRow - startRow === 1 ? ' controls-Grid__cell_header-content_border-bottom' : '';
                 cellContentClasses += endRow - startRow === 1 ? ' control-Grid__cell_header-nowrap' : '';
             } else if (GridLayoutUtil.isPartialGridSupport()) {
@@ -830,7 +834,7 @@ var
         },
 
         getStyleForCustomResultsTemplate: function() {
-            return _private.getColspan(
+            return _private.getColspanStyles(
                this._options.multiSelectVisibility,
                0,
                this._columns.length
@@ -1220,6 +1224,7 @@ var
             };
             current.isDrawActions = _private.isDrawActions;
             current.getCellStyle = _private.getCellStyle;
+            current.getColspan = _private.getColspan;
 
             current.getCurrentColumnKey = function() {
                 return self._columnsVersion + '_' +
@@ -1241,6 +1246,8 @@ var
                         getPropValue: current.getPropValue,
                         isEditing: current.isEditing,
                         isActive: current.isActive,
+                        showEditArrow: current.showEditArrow,
+                        editArrowTemplate: editArrowTemplate,
                         getVersion: function() {
                            return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex, current.index);
                         },

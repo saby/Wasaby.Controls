@@ -55,6 +55,7 @@
          <Controls.dropdown:Button
                  keyProperty="id"
                  icon="icon-AddButtonNew"
+                 iconSize="m"
                  iconStyle="primary"
                  itemTemplateProperty="myTemplate"
                  style="primary"
@@ -86,6 +87,7 @@
          <Controls.dropdown:Button
                  keyProperty="id"
                  icon="icon-AddButtonNew"
+                 iconSize="m"
                  style="secondary"
                  viewMode="button"
                  source="{{_createMemory(_simpleAdd)}}"
@@ -96,6 +98,7 @@
          <Controls.dropdown:Button
                  keyProperty="id"
                  icon="icon-AddButtonNew"
+                 iconSize="m"
                  style="secondary"
                  viewMode="button"
                  source="{{_createMemory(_simpleAdd2)}}"
@@ -108,6 +111,7 @@
          <Controls.dropdown:Button
                  keyProperty="id"
                  icon="icon-AddButtonNew"
+                 iconSize="m"
                  style="secondary"
                  viewMode="button"
                  source="{{_createMemory(_simpleAdd3)}}"
@@ -135,6 +139,7 @@
                  icon="icon-AddButtonNew"
                  viewMode="toolButton"
                  style="secondary"
+                 iconSize="m"
                  size="m"
                  source="{{_createMemory(_iconAddMedium)}}"
                  attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconHeaderBig"
@@ -151,6 +156,7 @@
                  iconStyle="primary"
                  style="primary"
                  viewMode="button"
+                 iconSize="m"
                  iconStyle="primary"
                  parentProperty="parent"
                  nodeProperty="@parent"
@@ -182,6 +188,7 @@
          <Controls.dropdown:Button
                  keyProperty="id"
                  style="secondary"
+                 iconSize="m"
                  viewMode="link"
                  icon="icon-Save"
                  source="{{_createMemory(_iconButtonItems)}}"
@@ -241,6 +248,7 @@
                  keyProperty="id"
                  viewMode="link"
                  icon="icon-Linked"
+                 iconSize="m"
                  source="{{_createMemory(_groupTextItems)}}"
                  groupingKeyCallback="{{_groupingKeyCallback}}"
                  attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups2"
@@ -297,6 +305,7 @@
                  style="secondary"
                  viewMode="link"
                  icon="icon-Linked"
+                 iconSize="m"
                  source="{{_createMemory(_additionalItems)}}">
             <ws:headerTemplate>
                <invisible-node />
@@ -336,6 +345,7 @@
                  viewMode="link"
                  caption="Subtask"
                  icon="icon-Check"
+                 iconSize="m"
                  dropdownClassName="ControlsDemo-ButtonsMenu__scroll"
                  source="{{_createMemory(_scrollItems)}}"
                  attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__scrollBig"

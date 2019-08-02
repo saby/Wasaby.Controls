@@ -2,19 +2,22 @@
    <Controls.scroll:Container
       name="scroll"
       attr:class="MonthList-ScrollContainer"
-      scrollbarVisible="{{false}}">
-      <Controls._calendar.MonthList.List
+      scrollbarVisible="{{false}}"
+      on:scroll="_enrichItemsDebounced()">
+      <Controls.list:View
          source="{{_viewSource}}"
          sourceExt="{{_options.source}}"
          viewMode="{{_options.viewMode}}"
          name="months"
          keyProperty="id"
          markerVisibility="hidden"
+         virtualScrolling="{{true}}"
+         virtualPageSize="{{4}}"
          on:drawItems="_drawItemsHandler()"
          >
          <ws:itemPadding left="null" right="null" bottom="null" top="null"/>
          <ws:navigation source="position" view="infinity">
-            <ws:sourceConfig limit="{{2}}" position="{{_startPositionId}}" direction="both" field="id"></ws:sourceConfig>
+            <ws:sourceConfig limit="{{4}}" position="{{_startPositionId}}" direction="both" field="id"></ws:sourceConfig>
          </ws:navigation>
 
          <ws:itemTemplate>
@@ -25,7 +28,8 @@
                   <ws:partial
                      template="{{_itemTemplate}}"
                      date="{{itemTemplate.itemData.item.date}}"
-                     extData="{{itemTemplate.itemData.item.extData}}"
+                     extData="{{ _extData.getData(itemTemplate.itemData.item.id) }}"
+                     _extDataVersion="{{_extData._version}}"
                      monthTemplate="{{_options.monthTemplate}}"
                      dayTemplate="{{_options.dayTemplate}}"
                      _formatMonth="{{_formatMonth}}"
@@ -36,6 +40,6 @@
                </ws:contentTemplate>
             </ws:partial>
          </ws:itemTemplate>
-      </Controls._calendar.MonthList.List>
+      </Controls.list:View>
    </Controls.scroll:Container>
 </Controls.scroll:IntersectionObserverController>

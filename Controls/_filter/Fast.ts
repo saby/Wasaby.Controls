@@ -109,7 +109,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
          loadItems: function(self, item, index) {
             var properties = getPropValue(item, 'properties');
 
-            self._configs[index] = _private.getItemPopupConfig(properties);
+            self._configs[index] = Merge(self._configs[index] || {}, _private.getItemPopupConfig(properties));
 
             if (properties.items) {
                _private.prepareItems(self._configs[index], properties.items);
@@ -260,6 +260,15 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
          // Remove after execution: https://online.sbis.ru/opendoc.html?guid=96f11250-4bbd-419f-87dc-3a446ffa20ed
          calculateStateSourceControllers: function(configs, items) {
             chain.factory(configs).each(function(config, index) {
+
+               // History/Source does not support serialization.
+               // If there is no source in the receivedState, load the data before opening to initialize the history.
+               // TODO: DropdownList can not work with source.
+               // Remove after execution: https://online.sbis.ru/opendoc.html?guid=96f11250-4bbd-419f-87dc-3a446ffa20ed
+               if (!config._source) {
+                  config._needQuery = true;
+               }
+
                _private.getSourceController(config, getPropValue(items.at(index), 'properties')).addCallback((sourceController) => {
                     sourceController.calculateState(config._items);
                });
@@ -377,6 +386,11 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             if (this._options.readOnly) {
                return;
             }
+
+            const open = (config) => {
+               this._children.DropdownOpener.open(config, this);
+            };
+
             var selectedKeys = getPropValue(this._items.at(index), 'value');
             var templateOptions = {
                items: this._configs[index]._items,
@@ -397,7 +411,15 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 
             // Save the index of the last open list. To get the list in method selectItem
             this.lastOpenIndex = index;
-            this._children.DropdownOpener.open(config, this);
+
+            if (this._configs[index]._needQuery) {
+               this._configs[index]._needQuery = false;
+               _private.loadItemsFromSource(this._configs[index], getPropValue(this._items.at(index), 'properties')).addCallback(() => {
+                  open(config);
+               });
+            } else {
+               open(config);
+            }
          },
 
          _onSelectorTemplateResult: function(event, items) {

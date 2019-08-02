@@ -12,7 +12,7 @@ class MemoryAndNoNavigation extends Control {
     private _listName: string = 'myList';
     private _viewSource: Memory;
     private _itemsCount: number = 1000;
-    private _virtualPageSize: number = 40;
+    private _virtualPageSize: number = 15;
     private _navigation = {
         source: 'page',
         view: 'infinity',

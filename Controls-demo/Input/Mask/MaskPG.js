@@ -61,6 +61,13 @@ define('Controls-demo/Input/Mask/MaskPG',
                      value: 'title',
                      comment: 'example'
                   }
+               },
+               inlineHeight: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
                }
             };
             this._componentOptions = {

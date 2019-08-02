@@ -36,6 +36,7 @@ var Selection = cExtend.extend({
    _selectedKeys: null,
    _excludedKeys: null,
    _items: null,
+   _limit: 0,
 
    constructor: function(options) {
       this._options = options;
@@ -54,7 +55,9 @@ var Selection = cExtend.extend({
    select: function(keys) {
       this._selectedKeys = this._selectedKeys.slice();
       this._excludedKeys = this._excludedKeys.slice();
-
+      if (this._limit && keys.length === 1 && !this._excludedKeys.includes(keys[0])) {
+         this._increaseLimit(keys);
+      }
       if (this._isAllSelection(this._getParams())) {
          ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
       } else {
@@ -95,7 +98,12 @@ var Selection = cExtend.extend({
     */
    selectAll: function() {
       this._selectedKeys = ALLSELECTION_VALUE;
-      this._excludedKeys = [];
+
+      // При выборе "Отметить все" лимит не передается, а предыдущий установленный сбрасывается раньше вызова selectAll,
+      // в этом случае массив с исключениями всегда будут очищаться.
+      if (!this._limit) {
+         this._excludedKeys = [];
+      }
    },
 
    /**
@@ -121,6 +129,42 @@ var Selection = cExtend.extend({
          this.selectAll();
          this.unselect(swap);
       }
+   },
+
+   /**
+    * Sets limit.
+    * @param {Number} value
+    */
+   setLimit: function(value: Number): void {
+      this._limit = value;
+   },
+
+   /**
+    * Increases the limit on the number of selected items, placing all other unselected in excluded list
+    * Увеличивает лимит на количество выбранных записей, все предыдущие невыбранные записи при этом попадают в исключение
+    * @param {Array} keys
+    * @private
+    */
+   _increaseLimit: function(keys: any[]): void {
+      const self = this;
+      const limit = self._limit ? self._limit - this._excludedKeys.length : 0;
+      let count = 0;
+      const slicedKeys: any[] = keys.slice();
+      this._items.forEach((item) => {
+         const status = self._getSelectionStatus(item);
+         const key = item.get(self._options.keyProperty);
+         if (status !== false && count < limit) {
+            count++;
+         } else if (count >= limit && slicedKeys.length) {
+            count++;
+            self._limit++;
+            if (slicedKeys.includes(key)) {
+               slicedKeys.splice(slicedKeys.indexOf(key), 1)
+            } else {
+               self._excludedKeys.push(key);
+            }
+         }
+      });
    },
 
    /**
@@ -152,7 +196,9 @@ var Selection = cExtend.extend({
          excludedKeys: this._excludedKeys,
          items: this._items
       })) {
-         return this._items.getCount() - this._excludedKeys.length;
+         var itemsCount = this._limit && this._items.getCount() > this._limit ?
+            this._limit : this._items.getCount();
+         return itemsCount - this._excludedKeys.length;
       }
       return this._selectedKeys.length;
    },
@@ -162,14 +208,16 @@ var Selection = cExtend.extend({
     * @returns {Object}
     */
    getSelectedKeysForRender: function() {
-      var
-         res = {},
-         self = this,
-         status;
+      const res = {};
+      const self = this;
+      const limit = self._limit ? self._limit - this._excludedKeys.length : 0;
+      let status;
+      let count = 0;
 
-      this._items.forEach(function(item) {
+      this._items.forEach((item) => {
          status = self._getSelectionStatus(item);
-         if (status !== false) {
+         if (status !== false && (!limit || count < limit)) {
+            count++;
             res[item.get(self._options.keyProperty)] = status;
          }
       });

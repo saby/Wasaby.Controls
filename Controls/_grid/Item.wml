@@ -26,6 +26,7 @@
       </ws:if>
       <ws:else>
          <ws:partial template="{{currentColumn.template}}"
+                     editArrowTemplate="{{currentColumn.editArrowTemplate}}"
                      ladderWrapper="{{currentColumn.ladderWrapper}}"
                      attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
                      {{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}
@@ -94,6 +95,7 @@
          <td attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer
                          {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0)?' controls-Grid__row-cell_selected__first'}}"
              attr:key="{{itemData.getCurrentColumnKey()}}"
+             attr:colspan="{{itemData.getColspan(colspan)}}"
              attr:style="{{itemData.getCellStyle(itemData, itemData.getCurrentColumn(), colspan)}}">
             <ws:partial template="columnContent" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="{{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
          </td>

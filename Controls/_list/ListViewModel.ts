@@ -154,6 +154,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ? _private.getMultiSelectClassList(itemsModelCurrent) : '';
+        itemsModelCurrent.showEditArrow = this._options.showEditArrow;
 
         if (itemsModelCurrent.itemActions) {
            drawnActions = itemsModelCurrent.itemActions.showed;
@@ -185,7 +186,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             if (dragItems.indexOf(itemsModelCurrent.key) !== -1) {
                 itemsModelCurrent.isVisible = dragItems[0] === itemsModelCurrent.key ? !this._dragTargetPosition : false;
             }
-            if (this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
+            if (this._draggingItemData && this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
                 itemsModelCurrent.dragTargetPosition = this._dragTargetPosition.position;
                 itemsModelCurrent.draggingItemData = this._draggingItemData;
             }

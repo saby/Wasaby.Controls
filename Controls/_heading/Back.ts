@@ -126,8 +126,11 @@ import 'css!theme?Controls/heading';
 
    var BackButton = Control.extend({
       _template: template,
+      _isOldIe: false,
+
       _beforeMount: function(options) {
          _private.convertOldStyleToNew(options, this);
+         this._isOldIe = Env.detection.isIE && Env.detection.IEVersion < 11;
       },
       _beforeUpdate: function(newOptions) {
          _private.convertOldStyleToNew(newOptions, this);

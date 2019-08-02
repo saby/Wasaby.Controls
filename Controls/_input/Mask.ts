@@ -4,13 +4,33 @@ import Base = require('Controls/_input/Base');
 import ViewModel = require('Controls/_input/Mask/ViewModel');
 import entity = require('Types/entity');
 
+import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
+
       
 
       /**
+       * Поле ввода с маской.
+       * Символы, которые еще не введены в поле, могут быть заменены символом из опции {@link replacer}.
+       * Если вводимый символ не соответствует формату, то символ не будет добавлен.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+       *
+       * @class Controls/_input/Mask
+       * @extends Controls/_input/Base
+       *
+       * @mixes Controls/interface/IInputBase
+       * @mixes Controls/interface/IInputMaskValue
+       * @public
+       * @author Красильников А.С.
+       * @demo Controls-demo/Input/Mask/MaskPG
+       */
+
+      /*
        * A component for entering text in a {@link mask specific format}.
        * Characters that are not yet entered in the field can be replaced by another {@link replacer character}.
        * If the input character does not fit the format, then character won't be added.
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+       * @remark
+       * If the {@link replacer} is not empty and container with width: auto, then the width is determined based on the content.
        *
        * @class Controls/_input/Mask
        * @extends Controls/_input/Base
@@ -24,14 +44,51 @@ import entity = require('Types/entity');
 
       /**
        * @name Controls/_input/Mask#mask
+       * @cfg {String} Устанавливает маску в поле ввода.
+       *
+       * Маска может использовать следующие символы:
+       * <ol>
+       *    <li>d — цифра.</li>
+       *    <li>L — прописная буква.</li>
+       *    <li>l — строчная буква.</li>
+       *    <li>x — буква или цифра.</li>
+       * </ol>
+       * разделители и логические символы +, *, ?, {n[, m]}.
+       * Логические символы могут быть записаны перед символом \\.
+       * Логические символы могут применяться к ключам.
+       * Формат записи данных схож с регулярными выражениями.
+       *
+       * @example
+       * Маска времени:
+       * <pre class="brush:xml">
+       *    <Controls.input:Mask mask="dd.dd"/>
+       * </pre>
+       * Маска даты:
+       * <pre class="brush:xml">
+       *    <Controls.input:Mask mask="dd.dd.dddd"/>
+       * </pre>
+       * Маска, в которой сначала вводятся 1-3 цифры, а после них 1-3 буквы.
+       * <pre class="brush:xml">
+       *    <Controls.input:Mask mask="d\{1,3}l\{1,3}"/>
+       * </pre>
+       * Маска для ввода бесконечного количества цифр.
+       * <pre class="brush:xml">
+       *    <Controls.input:Mask mask="d\*"/>
+       * </pre>
+       *
+       * @see formatMaskChars
+       */
+
+      /*
+       * @name Controls/_input/Mask#mask
        * @cfg {String} Input mask.
        *
        * Mask can use the following keys:
        * <ol>
-       *    <li>d - digit.</li>
-       *    <li>L - uppercase letter.</li>
-       *    <li>l - lowercase letter.</li>
-       *    <li>x - letter or digit.</li>
+       *    <li>d — digit.</li>
+       *    <li>L — uppercase letter.</li>
+       *    <li>l — lowercase letter.</li>
+       *    <li>x — letter or digit.</li>
        * </ol>
        * delimeters and quantifiers +, *, ?, {n[, m]}.
        * Quantifiers should be preceded with \\.
@@ -41,25 +98,37 @@ import entity = require('Types/entity');
        * @example
        * The input mask time:
        * <pre class="brush:xml">
-       *    <Controls._input.Mask mask="dd.dd"/>
+       *    <Controls.input:Mask mask="dd.dd"/>
        * </pre>
        * The input mask date:
        * <pre class="brush:xml">
-       *    <Controls._input.Mask mask="dd.dd.dddd"/>
+       *    <Controls.input:Mask mask="dd.dd.dddd"/>
        * </pre>
        * The input mask from 1-3 digits followed by 1-3 letters.
        * <pre class="brush:xml">
-       *    <Controls._input.Mask mask="d\{1,3}l\{1,3}"/>
+       *    <Controls.input:Mask mask="d\{1,3}l\{1,3}"/>
        * </pre>
        * The input mask infinity number of digits:
        * <pre class="brush:xml">
-       *    <Controls._input.Mask mask="d\*"/>
+       *    <Controls.input:Mask mask="d\*"/>
        * </pre>
        *
        * @see formatMaskChars
        */
 
       /**
+       * @name Controls/_input/Mask#replacer
+       * @cfg {String} Символ, который будет отображаться, если ничего не введено.
+       *
+       * @remark Если в маске используются логические символы, replacer установить невозможно.       
+       * @example
+       * <pre>
+       *    <Controls.input:Mask mask="dd.dd" replacer=" " value="12.34"/>
+       *    Если вы удалите всё из поля ввода, поле изменится с '12.34' на '  .  '.
+       * </pre>
+       */
+
+      /*
        * @name Controls/_input/Mask#replacer
        * @cfg {String} Symbol that will be shown when character is not entered.
        *
@@ -68,12 +137,33 @@ import entity = require('Types/entity');
        *
        * @example
        * <pre>
-       *    <Controls._input.Mask mask="dd.dd", replacer=" ", value="12.34"/>
+       *    <Controls.input:Mask mask="dd.dd" replacer=" " value="12.34"/>
        *    If you erase everything from input, the field will change from '12.34' to '  .  '.
        * </pre>
        */
 
       /**
+       * @name Controls/_input/Mask#formatMaskChars
+       * @cfg {Object} Объект, где ключи — символы маски, а значения — регулярные выражения, которые будут использоваться для фильтрации вводимых символов для соответствующих ключей.
+       *
+       * @example
+       * js:
+       * <pre>
+       *    _beforeMount: function() {
+       *       var formatMaskChars = {
+       *          '+': '[+]',
+       *          'd': '[0-9]'
+       *       }
+       *
+       *       this._formatMaskChars = formatMaskChars;
+       * </pre>
+       * wml:
+       * <pre>
+       *    <Controls.input:Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
+       * </pre>
+       */
+
+      /*
        * @name Controls/_input/Mask#formatMaskChars
        * @cfg {Object} Object, where keys are mask characters, and values are regular expressions that will be used to filter input characters for corresponding keys.
        *
@@ -88,9 +178,9 @@ import entity = require('Types/entity');
        *
        *       this._formatMaskChars = formatMaskChars;
        * </pre>
-       * tmpl:
+       * wml:
        * <pre>
-       *    <Controls._input.Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
+       *    <Controls.input:Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
        * </pre>
        */
 
@@ -111,7 +201,13 @@ import entity = require('Types/entity');
                return validation;
             },
             calcReplacer: function(replacer, mask) {
-               return _private.validateReplacer(replacer, mask) ? replacer : '';
+               const value = _private.validateReplacer(replacer, mask) ? replacer : '';
+
+                /**
+                 * The width of the usual space is less than the width of letters and numbers.
+                 * Therefore, the width of the field after entering will increase. Increase the width of the space.
+                 */
+                return spaceToLongSpace(value);
             }
          },
          Mask = Base.extend({

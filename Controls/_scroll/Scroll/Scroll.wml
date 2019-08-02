@@ -30,7 +30,8 @@
                            on:collapsedItemsChanged="_tmplNotify('collapsedItemsChanged')"
                            on:checkboxClick="_tmplNotify('checkboxClick')"
                            on:itemClick="_tmplNotify('itemClick')"
-                           on:actionClick="_tmplNotify('actionClick')"/>
+                           on:actionClick="_tmplNotify('actionClick')"
+                           on:editArrowClick="_notifyHandler('editArrowClick')"/>
             </div>
          </Controls._scroll.StickyHeader.Controller>
       </Controls.event:Register>
@@ -46,6 +47,7 @@
    <ws:if data="{{_scrollbarVisibility()}}">
       <Controls._scroll.Scroll.Scrollbar
          position="{{_scrollTop}}"
+         name="scrollBar"
          contentSize="{{_displayState.contentHeight}}"
          attr:class="controls-Scroll__scrollbar {{!_dragging ? 'controls-Scroll__scrollbar_hidden'}}"
          on:positionChanged="_positionChangedHandler()"

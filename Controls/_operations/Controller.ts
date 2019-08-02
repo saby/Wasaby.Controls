@@ -4,6 +4,19 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 
 
    /**
+    * Контроллер для работы с множественным выбором. 
+    * Передает состояние массового выделения дочерним контролам.
+    * Подробное описание и инструкцию по настройке читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/operations/'>здесь</a>.
+    *
+    * @class Controls/_operations/Controller
+    * @extends Core/Control
+    * @mixes Controls/interface/IPromisedSelectable
+    * @control
+    * @author Авраменко А.С.
+    * @public
+    */
+
+   /*
     * Container for content that can work with multiselection.
     * Puts selection in child context.
     * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
@@ -20,8 +33,8 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
       _template: template,
       _selectedKeysCount: 0,
 
-      _selectedTypeChangedHandler: function(event, typeName) {
-         this._children.registrator.start(typeName);
+      _selectedTypeChangedHandler: function(event, typeName, limit) {
+         this._children.registrator.start(typeName, limit);
       },
 
       _selectedKeysCountChanged: function(e, count) {
