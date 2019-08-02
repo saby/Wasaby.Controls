@@ -3,11 +3,13 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
 
 
 /**
- * Контрол «Lookup» позволяет выбрать значение из справочника или предложить список возможных значений в автодополнении.
+ * Контрол «lookup:Input» это поле ввода с автодополнением и выбором значения из справочника.
  * Может отображаться в однострочном и многострочном режиме.
  * Поддерживает одиночный и множественный выбор.
  * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-lookup">демонстрационный пример</a>.
- * Смотрите так же {@link Controls/lookup:Link метка для Lookup} и {@link Controls/lookup:PlaceholderChooser}.
+ * Если вы используете внутри подсказки поля ввода ссылку на открытие справочника - вам понадобиться {@link Controls/lookup:Link}.
+ * Если вы хотите сделать динамичную подсказку поля ввода, которая будет меняться в зависимости от выбранной коллекции, используйте {@link Controls/lookup:PlaceholderChooser}.
+ * Если вам нужен выбор из нескольких справочников, по одному значению из каждого, то вам подойдет {@link Controls/lookup:MultipleInput}.
  *
  * @class Controls/_lookup/Lookup
  * @extends Core/Control
@@ -30,11 +32,13 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
  */
 /*
- * The Lookup control allows you to select a value from a dialog or suggest containing a list of possible values.
+ * The “lookup:Input” control is an input field with auto-completion and selection of a value from the directory.
  * Сan be displayed in single-line and multi-line mode.
  * Supports single and multiple selection.
  * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
- * See also {@link Controls/lookup:Link label for Lookup} and {@link Controls/lookup:PlaceholderChooser}.
+ * If you use the link to open the directory inside the tooltip of the input field, you will need {@link Controls/lookup:Link}.
+ * If you want to make a dynamic placeholder of the input field, which will vary depending on the selected collection, use {@link Controls/lookup:PlaceholderChooser}.
+ * If you need a choice of several directories, one value from each, then {@link Controls / lookup: MultipleInput} is suitable for you.
  *
  * @class Controls/_lookup/Lookup
  * @extends Core/Control
@@ -60,17 +64,55 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
 /**
  * @name Controls/_lookup/Lookup#multiLine
  * @cfg {Boolean} Определяет, отображать ли Lookup в многострочном режиме.
+ * @remark
+ * Дефолтное значение: false
+ * Многострочный режим работает по автовысоте в зависимости от выбранных записей, количество отоброжаемых записей задается опцией "maxVisibleItems", остальные скрываются за счетчиком.
+ * Актуально только при multiSelect: true.
+ *
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Input
+ *       source="{{_source}}"
+ *       keyProperty="id"
+ *       searchParam="title"
+ *       multiSelect="{{true}}"
+ *       multiLine="{{true}}">
+ *    </Controls.lookup:Input>
+ * </pre>
+ *
+ * @see Controls/interface/ISelectedCollection#maxVisibleItems
+ * @see Controls/interface/ISelectedCollection#multiSelect
  */
 /*
  * @name Controls/_lookup/Lookup#multiLine
  * @cfg {Boolean} Determines then Lookup can be displayed in multi line mode.
+ * @remark
+ * Default: false
+ * The multi-line mode works at auto-height depending on the selected records, the number of displayed records is set by the "maxVisibleItems" option, the rest are hidden behind the counter.
+ * Only relevant with multiSelect: true.
+ *
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Input
+ *       source="{{_source}}"
+ *       keyProperty="id"
+ *       searchParam="title"
+ *       multiSelect="{{true}}"
+ *       multiLine="{{true}}">
+ *    </Controls.lookup:Input>
+ * </pre>
+ *
+ * @see Controls/interface/ISelectedCollection#maxVisibleItems
+ * @see Controls/interface/ISelectedCollection#multiSelect
  */
 
 /**
  * @name Controls/_lookup/Lookup#comment
  * @cfg {String} Текст, который отображается в пустом поле комментария.
  * @remark
- * Актуально только в режиме еденичного выбора.
+ * Актуально только в режиме единичного выбора.
  * Если значение не задано, то поле с комментарием отображено не будет.
  */
 /*

@@ -8,7 +8,8 @@ import 'css!theme?Controls/filterPopup';
 /**
  * Метка с полем связи. Пока коллекция пуста - поле связи скрыто.
  * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-lookup">демо пример</a>.
- * Смотрите так же {@link Controls/lookup:Link метка для Lookup} и {@link Controls/lookup:PlaceholderChooser}.
+ * Если вы используете внутри подсказки поля ввода ссылку на открытие справочника - вам понадобиться {@link Controls/lookup:Link}.
+ * Если вы хотите сделать динамичную подсказку поля ввода, которая будет меняться в зависимости от выбранной коллекции, используйте {@link Controls/lookup:PlaceholderChooser}.
  *
  * @class Controls/_filterPopup/Panel/Lookup
  * @extends Core/Control
@@ -32,7 +33,8 @@ import 'css!theme?Controls/filterPopup';
 /*
  * Label with a Lookup. While the collection is empty - the Lookup is hidden.
  * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
- * See also {@link Controls/lookup:Link label for Lookup} and {@link Controls/lookup:PlaceholderChooser}.
+ * If you use the link to open the directory inside the tooltip of the input field, you will need {@link Controls/lookup:Link}.
+ * If you want to make a dynamic placeholder of the input field, which will vary depending on the selected collection, use {@link Controls/lookup:PlaceholderChooser}.
  *
  * @class Controls/_filterPopup/Panel/Lookup
  * @extends Core/Control

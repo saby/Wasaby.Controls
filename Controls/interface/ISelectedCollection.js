@@ -16,32 +16,104 @@ define('Controls/interface/ISelectedCollection', [
    /**
     * @name Controls/interface/ISelectedCollection#displayProperty
     * @cfg {String} Имя свойства элемента, содержимое которого будет отображаться.
+    * @example
+    * WML:
+    * <pre>
+    *    <Controls.lookup:Selector
+    *          source="{{_source}}"
+    *          displayProperty="title">
+    *    </Controls.lookup:Selector>
+    * </pre>
     */
    /*
     * @name Controls/interface/ISelectedCollection#displayProperty
     * @cfg {String} Name of the item property which content will be displayed.
+    * @example
+    * WML:
+    * <pre>
+    *    <Controls.lookup:Selector
+    *          source="{{_source}}"
+    *          displayProperty="title">
+    *    </Controls.lookup:Selector>
+    * </pre>
     */
    
    /**
     * @name Controls/interface/ISelectedCollection#multiSelect
-    * @cfg {Boolean} Определяет режим выбора. Если значение false, можно выбрать только один элемент.
+    * @cfg {Boolean} Определяет режим выбора.
+    * @remark
+    * Дефолтное значени: false
+    * Варианты:
+    * <ul>
+    *    <li>true - Можно выбрать сколько угодно много значений.</li>
+    *    <li>false - После выбора первого значения, поле ввода пропадает. При выборе нового значения из справочника, оно перетирает старое.</li>
+    * </ul>
+    *
+    * @example
+    * WML:
+    * <pre>
+    *    <Controls.lookup:Selector
+    *          source="{{_source}}"
+    *          multiSelect="{{true}}">
+    *    </Controls.lookup:Selector>
+    * </pre>
     */
    /*
     * @name Controls/interface/ISelectedCollection#multiSelect
-    * @cfg {Boolean} Specifies the selection mode. If false, only one item can be selected.
+    * @cfg {Boolean} Specifies the selection mode.
+    * @remark
+    * Default: false
+    * Variants:
+    * <ul>
+    *    <li>true - You can select as many values ​​as you want.</li>
+    *    <li>false - After selecting the first value, the input field disappears. When you select a new value from the directory, it grinds the old.</li>
+    * </ul>
+    *
+    * @example
+    * WML:
+    * <pre>
+    *    <Controls.lookup:Selector
+    *          source="{{_source}}"
+    *          multiSelect="{{true}}">
+    *    </Controls.lookup:Selector>
+    * </pre>
     */
 
    /**
     * @name Controls/interface/ISelectedCollection#maxVisibleItems
     * @cfg {Integer} Максимальное количество элементов для отображения, остальные будут скрыты под счетчиком.
     * @remark
+    * Дефолтное значение: 7
     * Актуально только в многострочном режиме
+    * @see Controls/interface/ISelectedCollection#multiSelect
+    *
+    * @example
+    * WML:
+    * <pre>
+    *    <Controls.lookup:Selector
+    *          source="{{_source}}"
+    *          multiSelect="{{true}}"
+    *          maxVisibleItems="{{3}}">
+    *    </Controls.lookup:Selector>
+    * </pre>
     */
    /*
     * @name Controls/interface/ISelectedCollection#maxVisibleItems
     * @cfg {Integer} The maximum number of items to display, the rest will be hidden under the counter.
     * @remark
-    * only relevant in multi line mode
+    * Default: 7
+    * Only relevant in multi line mode.
+    * @see Controls/interface/ISelectedCollection#multiSelect
+    *
+    * @example
+    * WML:
+    * <pre>
+    *    <Controls.lookup:Selector
+    *          source="{{_source}}"
+    *          multiSelect="{{true}}"
+    *          maxVisibleItems="{{3}}">
+    *    </Controls.lookup:Selector>
+    * </pre>
     */
 
    /**
@@ -153,6 +225,7 @@ define('Controls/interface/ISelectedCollection', [
     * @event Controls/interface/ISelectedCollection#textValueChanged Происходит при изменении набора выбранной коллекции.
     * @param {Env/Event:Object} eventObject Декскриптор события.
     * @param {String} textValue Строка, сформированная из выбранных записей.
+    *
     * @example
     * В следующем примере создается Controls/lookup:Selector и демонстрируется сценарий использования.
     * WML:
@@ -160,7 +233,7 @@ define('Controls/interface/ISelectedCollection', [
     *    <Controls.lookup:Selector
     *       source="{{_source}}"
     *       keyProperty="id"
-    *       on:textValueChanged="onTextValueChanged()"
+    *       on:textValueChanged="onTextValueChanged()">
     *    </Controls.lookup:Selector>
     * </pre>
     * JS:
@@ -174,6 +247,7 @@ define('Controls/interface/ISelectedCollection', [
     * @event Controls/interface/ISelectedCollection#textValueChanged Occurs when changing the set of the selected collection.
     * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {String} textValue String formed from selected entries.
+    *
     * @example
     * The following example creates Controls/lookup:Selector and shows how to handle the event.
     * WML:
@@ -181,7 +255,7 @@ define('Controls/interface/ISelectedCollection', [
     *    <Controls.lookup:Selector
     *       source="{{_source}}"
     *       keyProperty="id"
-    *       on:textValueChanged="onTextValueChanged()"
+    *       on:textValueChanged="onTextValueChanged()">
     *    </Controls.lookup:Selector>
     * </pre>
     * JS:
@@ -196,6 +270,7 @@ define('Controls/interface/ISelectedCollection', [
     * @event Controls/interface/ISelectedCollection#itemsChanged Происходит при изменении набора выбранной коллекции.
     * @param {Env/Event:Object} eventObject Дескриптор события.
     * @param {RecordSet} items Список выбранных записей.
+    *
     * @example
     * В следующем примере создается Controls/lookup:Selector и демонстрируется сценарий использования.
     * WML:
@@ -203,7 +278,7 @@ define('Controls/interface/ISelectedCollection', [
     *    <Controls.lookup:Selector
     *       source="{{_source}}"
     *       keyProperty="id"
-    *       on:itemsChanged="onItemsChanged()"
+    *       on:itemsChanged="onItemsChanged()">
     *    </Controls.lookup:Selector>
     * </pre>
     * JS:
@@ -217,6 +292,7 @@ define('Controls/interface/ISelectedCollection', [
     * @event Controls/interface/ISelectedCollection#itemsChanged Occurs when changing the set of the selected collection.
     * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {RecordSet} items List of selected entries.
+    *
     * @example
     * The following example creates Controls/lookup:Selector and shows how to handle the event.
     * WML:
@@ -224,7 +300,7 @@ define('Controls/interface/ISelectedCollection', [
     *    <Controls.lookup:Selector
     *       source="{{_source}}"
     *       keyProperty="id"
-    *       on:itemsChanged="onItemsChanged()"
+    *       on:itemsChanged="onItemsChanged()">
     *    </Controls.lookup:Selector>
     * </pre>
     * JS:
@@ -239,17 +315,60 @@ define('Controls/interface/ISelectedCollection', [
     * @event Controls/interface/ISelectedCollection#itemClick Происходит при нажатии на элемент коллекции.
     * @param {Env/Event:Object} eventObject Дескриптор события.
     * @param {RecordSet} item Элемент выбраной коллекции.
+    *
+    * @example
+    * В следующем примере создается Controls/lookup:Selector и демонстрируется сценарий использования.
+    * WML:
+    * <pre>
+    *    <Controls.lookup:Selector
+    *       source="{{_source}}"
+    *       keyProperty="id"
+    *       on:itemClick="onItemClick()">
+    *    </Controls.lookup:Selector>
+    * </pre>
+    * JS:
+    * <pre>
+    *    openCard: function() {
+    *       ...
+    *    },
+    *
+    *    onItemClick: function(e, item) {
+    *       this.openCard(item);
+    *    }
+    * </pre>
     */
    /*
     * @event Controls/interface/ISelectedCollection#itemClick Occurs when clicking on a collection item.
     * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {RecordSet} item Item selected collection.
+    *
+    * @example
+    * The following example creates Controls/lookup:Selector and shows how to handle the event.
+    * WML:
+    * <pre>
+    *    <Controls.lookup:Selector
+    *       source="{{_source}}"
+    *       keyProperty="id"
+    *       on:itemClick="onItemClick()">
+    *    </Controls.lookup:Selector>
+    * </pre>
+    * JS:
+    * <pre>
+    *    openCard: function() {
+    *       ...
+    *    },
+    *
+    *    onItemClick: function(e, item) {
+    *       this.openCard(item);
+    *    }
+    * </pre>
     */
 
    /**
     * @event Controls/interface/ISelectedCollection#openInfoBox Происходит перед открытием всплывающего окна со всеми выбранными записями.
     * @param {Env/Event:Object} eventObject Дескриптор события.
     * @param {Object} config Конфиг, по которому будет построено всплывающее окно.
+    *
     * @example
     * В следующем примере создается Controls/lookup:Input и демонстрируется сценарий использования.
     * WML:
@@ -258,7 +377,7 @@ define('Controls/interface/ISelectedCollection', [
     *       source="{{_source}}"
     *       keyProperty="id"
     *       searchParam="title"
-    *       on:openInfoBox="_openInfoBox()"
+    *       on:openInfoBox="_openInfoBox()">
     *    </Controls.lookup:Input>
     * </pre>
     * JS:
@@ -272,11 +391,14 @@ define('Controls/interface/ISelectedCollection', [
     *       })
     *    }
     * </pre>
+    *
+    * @see Controls/interface/ISelectedCollection#closeInfoBox
     */
    /*
     * @event Controls/interface/ISelectedCollection#openInfoBox Occurs before opening a pop-up with all selected entries
     * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {Object} config Config on which popup will be built.
+    *
     * @example
     * The following example creates Controls/lookup:Input and shows how to handle the event.
     * WML:
@@ -285,7 +407,7 @@ define('Controls/interface/ISelectedCollection', [
     *       source="{{_source}}"
     *       keyProperty="id"
     *       searchParam="title"
-    *       on:openInfoBox="_openInfoBox()"
+    *       on:openInfoBox="_openInfoBox()">
     *    </Controls.lookup:Input>
     * </pre>
     * JS:
@@ -299,14 +421,56 @@ define('Controls/interface/ISelectedCollection', [
     *       })
     *    }
     * </pre>
+    *
+    * @see Controls/interface/ISelectedCollection#closeInfoBox
     */
 
    /**
     * @event Controls/interface/ISelectedCollection#closeInfoBox Происходит при закрытии всплывающего окна со всеми выбранными записями.
     * @param {Env/Event:Object} eventObject Дескриптор события.
+    *
+    * @example
+    * В следующем примере создается Controls/lookup:Input и демонстрируется сценарий использования.
+    * WML:
+    * <pre>
+    *    <Controls.lookup:Input
+    *       source="{{_source}}"
+    *       keyProperty="id"
+    *       searchParam="title"
+    *       on:closeInfoBox="_closeInfoBox()">
+    *    </Controls.lookup:Input>
+    * </pre>
+    * JS:
+    * <pre>
+    *    _closeInfoBox: function() {
+    *       this._isOpenInfoBox = false;
+    *    }
+    * </pre>
+    *
+    * @see Controls/interface/ISelectedCollection#openInfoBox
     */
    /*
     * @event Controls/interface/ISelectedCollection#closeInfoBox Occurs when closing a pop-up with all selected entries.
     * @param {Env/Event:Object} eventObject The event descriptor.
+    *
+    * @example
+    * The following example creates Controls/lookup:Input and shows how to handle the event.
+    * WML:
+    * <pre>
+    *    <Controls.lookup:Input
+    *       source="{{_source}}"
+    *       keyProperty="id"
+    *       searchParam="title"
+    *       on:closeInfoBox="_closeInfoBox()">
+    *    </Controls.lookup:Input>
+    * </pre>
+    * JS:
+    * <pre>
+    *    _closeInfoBox: function() {
+    *       this._isOpenInfoBox = false;
+    *    }
+    * </pre>
+    *
+    * @see Controls/interface/ISelectedCollection#openInfoBox
     */
 });

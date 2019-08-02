@@ -47,7 +47,7 @@ export interface ISuggestFooterTemplate {
 }
 
 /**
- * Интерфейс для Input.Suggest.
+ * Интерфейс для автодополнения.
  *
  * @interface Controls/interface/ISuggest
  * @public
@@ -55,7 +55,7 @@ export interface ISuggestFooterTemplate {
  */
 
 /*
- * Interface for Input.Suggest.
+ * Interface for auto-completion.
  *
  * @interface Controls/interface/ISuggest
  * @public
@@ -273,83 +273,6 @@ interface ISuggest {
        * </pre>
        */
       autoDropDown: boolean;
-
-      /**
-       * @name Controls/interface/ISuggest#displayProperty
-       * @cfg {String} Имя свойства элемента, значение которого отобразится в поле ввода поле выбора записи.
-       * @remark
-       * @example
-       * myModule.js
-       * <pre>
-       *    define('myModule', ['Core/Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
-       *       return Control.extend({
-       *          _template: template,
-       *          _suggestValue: null,
-       *          _source: null,
-       *
-       *          _beforeMount: function() {
-       *             this._source = new Memory({
-       *                rawData: [
-       *                   {id: 0, city: 'Yaroslavl'},
-       *                   {id: 1, city: 'Moscow'}
-       *                ]
-       *                idProperty: 'id'
-       *             });
-       *          },
-       *
-       *          _choose: function(event, value) {
-       *             this._suggestValue = value;
-       *          }
-       *       });
-       *    });
-       * </pre>
-       * myModule.wml
-       * <pre>
-       *    <div>
-       *       <Controls.suggest:Input displayProperty="city" on:choose="_choose()"/>
-       *    </div>
-       *    ChosenValue: {{_suggestValue || 'Nothing were chosen'}}
-       * </pre>
-       */
-
-      /*
-       * @name Controls/interface/ISuggest#displayProperty
-       * @cfg {String} Name of the item property which content will be displayed.
-       * @remark
-       * @example
-       * myModule.js
-       * <pre>
-       *    define('myModule', ['Core/Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
-       *       return Control.extend({
-       *          _template: template,
-       *          _suggestValue: null,
-       *          _source: null,
-       *
-       *          _beforeMount: function() {
-       *             this._source = new Memory({
-       *                rawData: [
-       *                   {id: 0, city: 'Yaroslavl'},
-       *                   {id: 1, city: 'Moscow'}
-       *                ]
-       *                idProperty: 'id'
-       *             });
-       *          },
-       *
-       *          _choose: function(event, value) {
-       *             this._suggestValue = value;
-       *          }
-       *       });
-       *    });
-       * </pre>
-       * myModule.wml
-       * <pre>
-       *    <div>
-       *       <Controls.suggest:Input displayProperty="city" on:choose="_choose()"/>
-       *    </div>
-       *    ChosenValue: {{_suggestValue || 'Nothing were chosen'}}
-       * </pre>
-       */
-      displayProperty: string;
 
       /**
        * @event Происходит, когда пользователь выбирает элемент из автодополнения.

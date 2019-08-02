@@ -30,7 +30,7 @@ interface IInputPlaceholder {
          * <pre>
          *    <Controls.input:Text>
          *        <ws:placeholder>
-         *           <span>Enter your name or <Controls.Button class="example__button" caption="choose from the list" on:click="openListHandler()"/></span>
+         *           <span>Enter your name or <Controls.buttons:Button class="example__button" caption="choose from the list" on:click="openListHandler()"/></span>
          *        </ws:placeholder>
          *    </Controls.input:Text>
          * </pre>
@@ -57,7 +57,7 @@ interface IInputPlaceholder {
          * <pre>
          *    <Controls.input:Text>
          *        <ws:placeholder>
-         *           <span>Enter your name or <Controls.Button class="example__button" caption="choose from the list" on:click="openListHandler()"/></span>
+         *           <span>Enter your name or <Controls.buttons:Button class="example__button" caption="choose from the list" on:click="openListHandler()"/></span>
          *        </ws:placeholder>
          *    </Controls.input:Text>
          * </pre>
