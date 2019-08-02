@@ -325,8 +325,9 @@ define(
 
             item.popupOptions.width = 1200;
             position = StackStrategy.getPosition({ top: 0, right: 400 }, item);
-            assert.equal(position.stackMaxWidth, 600); //В тесте getMaxPanelWidth === 1000
+            assert.equal(position.stackMaxWidth, 1000); //В тесте getMaxPanelWidth === 1000
             assert.equal(position.stackWidth, 1000);
+            assert.equal(position.right, 0);
          });
 
          it('stack max width', () => {
@@ -334,15 +335,21 @@ define(
             let tCoords = {
                right: 100
             };
-            let maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, null, tCoords);
+            let popupOptions = {};
+            let maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, popupOptions, tCoords);
             assert.equal(maxWidth, 1000);
 
-            maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, 400, tCoords);
+            popupOptions.maxWidth = 400;
+            maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, popupOptions, tCoords);
             assert.equal(maxWidth, 400);
 
-            maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, 2000, tCoords);
+            popupOptions.maxWidth = 2000;
+            maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, popupOptions, tCoords);
             assert.equal(maxWidth, 900);
 
+            popupOptions.minWidth = 1000;
+            maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, popupOptions, tCoords);
+            assert.equal(maxWidth, 1000);
          });
 
          it('stack optimize open', () => {
