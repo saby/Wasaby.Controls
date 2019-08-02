@@ -9,6 +9,31 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_dateRange/Input/Input');
 
 /**
+ * Поле ввода периода дат.
+ * <a href="/materials/demo-ws4-input-daterange">Демо-пример</a>.
+ * @class Controls/_dateRange/Input
+ * @extends Core/Control
+ * @mixes Controls/interface/IInputBase
+ * @mixes Controls/_dateRange/interfaces/IInput
+ * @mixes Controls/_dateRange/interfaces/IInputDateTag
+ * @mixes Controls/interface/IDateMask
+ *
+ * @css @width_DateRange-dash Width of dash between input fields.
+ * @css @spacing_DateRange-between-dash-date Spacing between dash and input fields.
+ * @css @thickness_DateRange-dash Thickness of dash between input fields.
+ * @css @color_DateRange-dash Color of dash between input fields.
+ * @css @spacing_DateRange-between-input-button Spacing between input field and button.
+ * @css @size_DateRange-icon Size of calendar icon.
+ * @css @font-family_DateRange Font-family of calendar icon.
+ *
+ * @control
+ * @public
+ * @demo Controls-demo/Input/Date/RangePG
+ * @category Input
+ * @author Красильников А.С.
+ */
+
+/*
  * Control for entering date range.
  * <a href="/materials/demo-ws4-input-daterange">Demo examples.</a>.
  * @class Controls/_dateRange/Input
@@ -31,7 +56,7 @@ import template = require('wml!Controls/_dateRange/Input/Input');
  * @demo Controls-demo/Input/Date/RangePG
  * @category Input
  * @author Красильников А.С.
- */
+ */ 
 
 var Component = Control.extend([], {
     _template: template,

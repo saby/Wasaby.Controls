@@ -6,6 +6,22 @@ import {IOptions as IModelOptions, ViewModel} from 'Controls/_input/TimeInterval
 type IOptions = IModelOptions;
 
 /**
+ * Поле ввода временного интервала. Позволяет вводить время с точностью от суток до секунд.
+ * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+ *
+ * @class Controls/_input/TimeInterval
+ * @extends Controls/_input/Base
+ *
+ * @mixes Controls/interface/IInputBase
+ * @mixes Controls/interface/ITimeInterval
+ *
+ * @public
+ * @demo Controls-demo/Input/TimeInterval/TimeIntervalPG
+ *
+ * @author Красильников А.С.
+ */
+
+/*
  * Controls that allows user to enter some amount of time with the accuracy from day to seconds.
  * <a href="/materials/demo-ws4-input">Demo examples.</a>.
  * @remark

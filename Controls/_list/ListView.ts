@@ -228,6 +228,9 @@ var ListView = BaseControl.extend(
 
         getHoveredItem: function () {
             return this._listModel.getHoveredItem();
+        },
+        _onEditArrowClick: function(e, item) {
+            this._notify('editArrowClick', [item]);
         }
     });
 

@@ -17,6 +17,7 @@
                              header="{{_gridHeader}}"
                              resultsPosition="top"
                              columnScroll="{{true}}"
+                             columnScrollStartPosition="end"
                              stickyColumnsCount="{{_stickyColumnsCount > 0 ? _stickyColumnsCount : 1}}">
                      </Controls.grid:View>
                   </Controls.operations:Container>

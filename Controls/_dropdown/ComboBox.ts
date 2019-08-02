@@ -18,6 +18,28 @@ var _private = {
 };
 
 /**
+ * Контрол, позволяющий выбрать значение из списка.
+ * Полный список параметров отображается при нажатии на контрол.
+ * <a href="/materials/demo-ws4-input-combobox">Демо-пример</a>.
+ * @class Controls/_dropdown/ComboBox
+ * @extends Core/Control
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IItemTemplate
+ * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/ISingleSelectable
+ * @mixes Controls/interface/IDropdownEmptyText
+ * @mixes Controls/interface/IInputPlaceholder
+ * @mixes Controls/interface/IDropdown
+ * @css @margin-top_ComboBox-popup Сдвиг сверху для всплывающего окна.
+ * @css @spacing_ComboBox-between-arrow-rightBorder Расстояние между стрелкой и правой границей поля.
+ * @control
+ * @public
+ * @category Input
+ * @author Золотова Э.Е.
+ * @demo Controls-demo/Input/ComboBox/ComboBoxPG
+ */
+
+/*
  * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
  * The full list of options is displayed when you click on the control.
  * <a href="/materials/demo-ws4-input-combobox">Demo-example</a>.

@@ -90,10 +90,21 @@ app.get('/:moduleName/*', function(req, res){
 
    const tpl = require('wml!Controls/Application/Route');
 
-   const pathRoot = req.originalUrl.split('/');
-   let cmp = pathRoot ? pathRoot[1] : 'Index';
-   cmp += '/Index';
-
+   let pathRoot = req.originalUrl.split('/');
+   let cmp;
+   if(!pathRoot) {
+      console.error('Incorrect url. Couldn\'t resolve path to root component');
+   } else {
+      cmp = '';
+   }
+   pathRoot = pathRoot.filter(function(el) {
+      return el.length > 0;
+   });
+   if(~pathRoot.indexOf('app')) {
+      cmp = pathRoot[0] + '/Index';
+   } else {
+      cmp = pathRoot.join('/') + '/Index';
+   }
    try {
       require(cmp);
    } catch(error){

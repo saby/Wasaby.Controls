@@ -145,15 +145,15 @@ var
 
             current.getCurrentColumn = function () {
                 let
-                    currentColumn = superGetCurrentColumn(),
-                    nodeType = current.item.get && current.item.get(current.nodeProperty);
+                    currentColumn = superGetCurrentColumn();
+                currentColumn.nodeType = current.item.get && current.item.get(current.nodeProperty);
 
                 currentColumn.isExpanded = current.isExpanded;
                 currentColumn.cellClasses += ' controls-TreeGrid__row-cell';
 
-                if (nodeType) {
+                if (currentColumn.nodeType) {
                     currentColumn.cellClasses += ' controls-TreeGrid__row-cell__node';
-                } else if (nodeType === false) {
+                } else if (currentColumn.nodeType === false) {
                     currentColumn.cellClasses += ' controls-TreeGrid__row-cell__hiddenNode';
                 } else {
                     currentColumn.cellClasses += ' controls-TreeGrid__row-cell__item';

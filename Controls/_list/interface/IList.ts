@@ -168,6 +168,36 @@
  * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
  * @variant inside Панель действий над записью будет располагаться внутри строки.
  * @variant outside Панель действий над записью будет располагаться под строкой.
+ * @variant custom Панель действий должна быть размещена в прикладном шаблоне itemTemplate.
+ * <a href="/materials/demo-ws4-list-item-actions-custom">Example</a>.
+ * @example
+ * Размещаем опции записи в прикладном шаблоне с использованием itemActionsTemplate:
+ *<pre>
+ * <Controls.list:View
+ *    itemActionsPosition="custom"
+ *    itemActions="{{_itemActions}}">
+ *    <ws:itemTemplate>
+ *      <ws:partial template="Controls/list:ItemTemplate">
+ *        <ws:contentTemplate>
+ *          <ws:partial template="wml!customTemplateName"/>
+ *        </ws:contentTemplate>
+ *      </ws:partial>
+ *    </ws:itemTemplate>
+ * </Controls.list:View>
+ *</pre>
+ *
+ * customTemplateName.wml:
+ * <pre>
+ *  <div>{{itemData.item.title}}</div>
+ *    <ws:if data="{{!itemData.isSwiped}}">
+ *      <ws:partial template="{{itemActionsTemplate}}"
+ *                  attr:class="some-custom-class-for-itemActions"
+ *                  itemData="{{itemData}}"
+ *                  scope="{{_options}}"/>
+ *    </ws:if>
+ *  <div>{{itemData.item.description}}</div>
+ * </pre>
+ *
  */
 
 /*
@@ -176,6 +206,36 @@
  * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
  * @variant inside Item actions will be positioned inside the item's row.
  * @variant outside Item actions will be positioned under the item's row.
+ * @variant custom Item actions must be positioned in the itemTemplate.
+ * <a href="/materials/demo-ws4-list-item-actions-custom">Example</a>.
+ * @example
+ * Placing Item Actions in custom item template using itemActionsTemplate
+ *<pre>
+ * <Controls.list:View
+ *    itemActionsPosition="custom"
+ *    itemActions="{{_itemActions}}">
+ *    <ws:itemTemplate>
+ *      <ws:partial template="Controls/list:ItemTemplate">
+ *        <ws:contentTemplate>
+ *          <ws:partial template="wml!customTemplateName"/>
+ *        </ws:contentTemplate>
+ *      </ws:partial>
+ *    </ws:itemTemplate>
+ * </Controls.list:View>
+ *</pre>
+ *
+ * customTemplateName.wml:
+ * <pre>
+ *  <div>{{itemData.item.title}}</div>
+ *    <ws:if data="{{!itemData.isSwiped}}">
+ *      <ws:partial template="{{itemActionsTemplate}}"
+ *                  attr:class="some-custom-class-for-itemActions"
+ *                  itemData="{{itemData}}"
+ *                  scope="{{_options}}"/>
+ *    </ws:if>
+ *  <div>{{itemData.item.description}}</div>
+ * </pre>
+ *
  */
 
 /**
@@ -425,14 +485,14 @@
  */
 
 /**
- * @typedef {String} reloadType
+ * @typedef {String} ReloadType
  * @variant query Элемент будет перезагружен с помощью метода "Поисковый запрос".
  * @variant read Элемент будет перезагружен с помощью метода "Прочитать".
  * @default read
  */
 
 /*
- * @typedef {String} reloadType
+ * @typedef {String} ReloadType
  * @variant query Item will be reloaded with query method
  * @variant read Item will be reloaded with read method
  * @default read
@@ -446,7 +506,7 @@
  * @param {Boolean} replaceItem Определяет, как загруженный элемент будет применяться к коллекции.
  * Если параметр имеет значение true, элемент коллекции будет заменен загруженным элементом.
  * Если параметр имеет значение false (по умолчанию), загруженные элементы будут объединены в элемент коллекции.
- * @param {reloadType} Определяет, как будет загружен элемент.
+ * @param {ReloadType} reloadType Определяет, как будет загружен элемент.
  * @example
  *  <pre>
  *      _itemUpdated: function(id) {
@@ -532,7 +592,7 @@
 /*
  * @event  Controls/_list/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Env/Event:Object} eventObject The event descriptor. 
+ * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {Number} key Key of the selected item.
  */
 

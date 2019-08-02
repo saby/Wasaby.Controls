@@ -7,7 +7,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * Окно блокирует работу пользователя с родительским приложением.
  * Позиционируется в центре экрана.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/ Подробнее}
- * <a href="/materials/demo-ws4-confirmation">Demo-example</a>.
+ * <a href="/materials/demo-ws4-confirmation">Демо-пример</a>.
  *
  * @class Controls/_popup/Opener/Confirmation
  * @control
@@ -42,6 +42,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * @variant ok (Результат: undefined)
  * @variant yesno (Результат: true/false)
  * @variant yesnocancel (Результат: true/false/undefined)
+ * @default yesno
  */
 
 /*
@@ -50,6 +51,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * @variant ok (undefined)
  * @variant yesno  ( true/false)
  * @variant yesnocancel  (true/false/undefined)
+ * @default yesno
  */
 
 /**
@@ -58,6 +60,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * @variant default
  * @variant success
  * @variant danger
+ * @default default
  */
 
 /*
@@ -66,6 +69,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * @variant default
  * @variant success
  * @variant danger
+ * @default default
  */
 
 /**
@@ -74,6 +78,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * 100 символов или длина дополнительного текста превышает 160 символов.
  * @variant m (ширина 350px)
  * @variant l (ширина 440px)
+ * @default m
  */
 
 /*
@@ -81,6 +86,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * @cfg {String} Confirmation size
  * @variant m
  * @variant l
+ * @default m
  */
 
 /**
@@ -106,31 +112,37 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 /**
  * @name Controls/_popup/Opener/Confirmation#yesCaption
  * @cfg {String} Текст кнопки подтверждения.
+ * @default Да
  */
 
 /*
  * @name Controls/_popup/Opener/Confirmation#yesCaption
  * @cfg {String} Сonfirmation button text
+ * @default Yes
  */
 
 /**
  * @name Controls/_popup/Opener/Confirmation#noCaption
  * @cfg {String} Текст кнопки отрицания
+ * @default Нет
  */
 
 /*
  * @name Controls/_popup/Opener/Confirmation#noCaption
  * @cfg {String} Negation button text
+ * @default No
  */
 
 /**
  * @name Controls/_popup/Opener/Confirmation#cancelCaption
  * @cfg {String} Текс кнопки отмены
+ * @default Отмена
  */
 
 /*
  * @name Controls/_popup/Opener/Confirmation#cancelCaption
- * @cfg {String}    Cancel button text
+ * @cfg {String} Cancel button text
+ * @default Cancel
  */
 
 /**
@@ -138,6 +150,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * @cfg {String} Определяет, какая кнопка будет активирована по нажатию ctrl+enter
  * @variant yes
  * @variant no
+ * @default yes
  */
 
 /*
@@ -145,16 +158,19 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * @cfg {String} Determines which button is activated when ctrl+enter is pressed
  * @variant yes
  * @variant no
+ * @default yes
  */
 
 /**
  * @name Controls/_popup/Opener/Confirmation#okCaption
  * @cfg {String} Текст кнопки "принять"
+ * @default ОК
 */
 
 /*
  * @name Controls/_popup/Opener/Confirmation#okCaption
  * @cfg {String} Accept button text
+ * @default OK
  */
 
 const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';

@@ -1,0 +1,21 @@
+<div class="itemActionsDemo">
+    <h2>itemActionsPosition="custom"</h2>
+    <Controls.list:View
+            source = "{{_viewSource3}}"
+            markedKey="{{2}}"
+            allowEmptySelection="{{false}}"
+            keyProperty="id"
+            itemActionsPosition="custom"
+            actionAlignment="vertical"
+            on:actionClick="_onActionClick()"
+            itemActions="{{_itemActions}}"
+            class="itemActionsDemo__list itemAcionsDemo-newsList">
+        <ws:itemTemplate>
+            <ws:partial template="Controls/list:ItemTemplate">
+                <ws:contentTemplate>
+                    <ws:partial template="wml!Controls-demo/List/ItemActions/newsTmpl"/>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:itemTemplate>
+    </Controls.list:View>
+</div>

@@ -1,4 +1,4 @@
-<div class="controls-PropertyGrid controls-PropertyGrid_theme_{{_options.theme}}">
+<div class="controls-PropertyGrid controls-PropertyGrid_theme-{{_options.theme}}">
     <ws:partial template="wml!Controls/_propertyGrid/for"
                 itemsViewModel="{{itemsViewModel}}"
                 theme="{{_options.theme}}"

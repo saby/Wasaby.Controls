@@ -206,7 +206,10 @@
 
 /**
  * @typedef {Object} Column
- * @property {String} [width] Ширина столбца. Поддерживается значение, указанное в пикселях (например, 4px) или процентах (например, 50%) или долях (например, 1fr) и значение "auto".
+ * @property {String} [width] Ширина столбца.
+ * В качестве значения опции можно указать пиксели (px), проценты (%), доли (1fr), "auto" или "minmax".
+ * В значении "auto" ширина столбца устанавливается исходя из типа и содержимого элемента.
+ * В значении "minmax(<min>,<max>)" устанавливается минимальная и максимальная ширина столбца, например "minmax(600px, 1fr)".
  * @property {String} [displayProperty] Имя поля, которое будет отображаться в столбце по умолчанию.
  * @property {String} [template] Шаблон рендеринга ячеек.
  * @property {String} [resultTemplate] Шаблон рендеринга ячеек в строке итогов. CSS-класс controls-Grid__header-cell_spacing_money задает правый отступ для заголовка ячейки для выравнивания по целым числам в денежных полях.
@@ -308,12 +311,34 @@
  * @name Controls/_grid/interface/IGridControl#columnScroll
  * @cfg {Boolean} Включает скроллирование столбцов.
  * @default false
+ * @see Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @see Controls/_grid/interface/IGridControl#stickyColumnsCount
  */
 
 /*
  * @name Controls/_grid/interface/IGridControl#columnScroll
  * @cfg {Boolean} Enable column scroll.
  * @default false
+ * @see Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @see Controls/_grid/interface/IGridControl#stickyColumnsCount
+ */
+
+/**
+ * @name Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @cfg {String} Определяет начальное положение горизонтальной прокрутки столбцов, если она включена.
+ * @variant start Устанавливает горизонтальную прокрутку в начальное (крайнее левое) положение.
+ * @variant end Устанавливает горизонтальную прокрутку в конечное (крайнее правое) положение.
+ * @default start
+ * @see Controls/_grid/interface/IGridControl#columnScroll
+ */
+
+/*
+ * @name Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @cfg {String} Determines the starting columns scroll position if it is enabled.
+ * @variant start Puts horizontal scroll into the leftmost position.
+ * @variant end Puts horizontal scroll into the rightmost position.
+ * @default start
+ * @see Controls/_grid/interface/IGridControl#columnScroll
  */
 
 /**
@@ -370,4 +395,22 @@
  * @cfg {String} Results row position.
  * @variant top Show results above the list.
  * @variant bottom Show results below the list.
+ */
+
+/**
+ * @name Controls/_grid/interface/IGridControl#showEditArrow
+ * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке
+ * <a href="/materials/demo-ws4-edit-arrow">Example</a>
+ * @remark Чтобы расположить кнопку в произвольном месте прикладного шаблона колонки, следует встроить шаблон editArrowTemplate
+ * @example
+ * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
+ */
+
+/*
+ * @name Controls/_grid/interface/IGridControl#showEditArrow
+ * @cfg {Boolean} Allows showing button in first column on hover.
+ * <a href="/materials/demo-ws4-edit-arrow">Example</a>
+ * @remark To place the button in any place of the column template, you should use the editArrowTemplate
+ * @example
+ * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
  */

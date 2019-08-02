@@ -32,6 +32,7 @@
  * @includes LookupLinkStyles Controls/_lookup/Lookup/Link/LookupLinkStyles
  * @includes SelectedCollectionStyles Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @includes ButtonItemTemplate wml!Controls/_lookup/Button/itemTemplate
+ * @includes PlaceholderChooser Controls/_lookup/PlaceholderChooser
  * @includes Link Controls/_lookup/Lookup/Link
  * @includes PlaceholderChooser Controls/_lookup/PlaceholderChooser
  * @public

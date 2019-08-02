@@ -5,6 +5,22 @@ import {descriptor} from 'Types/entity';
 import ViewModel from 'Controls/_input/Money/ViewModel';
 
 /**
+ * Поле ввода денег.
+ * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+ *
+ * @class Controls/_input/Money
+ * @extends Controls/_input/Base
+ *
+ * @mixes Controls/interface/IInputBase
+ * @mixes Controls/interface/IOnlyPositive
+ *
+ * @public
+ * @demo Controls-demo/Input/Money/Money
+ *
+ * @author Красильников А.С.
+ */
+
+/*
  * Input for entering currency.
  * <a href="/materials/demo-ws4-input">Demo examples.</a>.
  *

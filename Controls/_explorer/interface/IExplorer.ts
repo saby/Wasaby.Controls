@@ -17,14 +17,14 @@
 /**
  * @typedef {String} explorerViewMode
  * @variant table Таблица.
- * @variant list Список.
+ * @variant search Режим поиска.
  * @variant tile Плитка.
  */
 
 /*
  * @typedef {String} explorerViewMode
- * @variant grid Table.
- * @variant list List.
+ * @variant table Table.
+ * @variant search Search.
  * @variant tile Tiles.
  */
 

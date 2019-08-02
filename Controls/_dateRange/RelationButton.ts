@@ -3,6 +3,23 @@ import {descriptor} from 'Types/entity';
 import template = require('wml!Controls/_dateRange/RelationButton/RelationButton');
 
 /**
+ * Кнопка для связывания периодов. Контрол, который может использоваться с {@link Controls/_dateRange/RelationController RelationController}.
+ *
+ * @class Controls/_dateRange/RelationButton
+ * @extends Core/Control
+ *
+ * @css @color_DateRangeRelationButton-normal_hovered Color of the button in normal hovered state.
+ * @css @color_DateRangeRelationButton-byCapacity_hovered Color of the button in by capacity hovered state.
+ *
+ * @control
+ * @public
+ * @category Input
+ * @author Красильников А.С.
+ * @demo Controls-demo/dateRange/RelationController
+ *
+ */
+
+/*
  * Button for linking periods. The control that can be used with {@link Controls/_dateRange/RelationController RelationController}.
  *
  * @class Controls/_dateRange/RelationButton

@@ -6,7 +6,7 @@
                   itemActionsContainerStyles="{{itemActionsContainerStyles}}"
                   highlightOnHover="{{highlightOnHover}}"/>
    </ws:if>
-   <ws:else >
+   <ws:else data="{{itemData.itemActionsPosition !== 'custom'}}">
       <ws:partial template="{{itemActionsTemplate}}"
                   itemActionsClass="{{itemActionsClass}}"
                   itemData="{{itemData}}"
@@ -26,6 +26,7 @@
       </ws:if>
       <ws:else>
          <ws:partial template="{{currentColumn.template}}"
+                     editArrowTemplate="{{currentColumn.editArrowTemplate}}"
                      ladderWrapper="{{currentColumn.ladderWrapper}}"
                      attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
                      {{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}

@@ -139,6 +139,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         itemsModelCurrent.isMenuShown = this._menuState === 'shown';
+        itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
         itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === _private.getItemByMarkedKey(this, this._markedKey);
         itemsModelCurrent.itemActions = this.getItemActions(itemsModelCurrent.item);
         itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
@@ -154,6 +155,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ? _private.getMultiSelectClassList(itemsModelCurrent) : '';
+        itemsModelCurrent.showEditArrow = this._options.showEditArrow;
 
         if (itemsModelCurrent.itemActions) {
            drawnActions = itemsModelCurrent.itemActions.showed;

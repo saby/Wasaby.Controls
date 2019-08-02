@@ -1,6 +1,7 @@
 import {ListViewModel, BaseViewModel, GridLayoutUtil, ItemsUtil} from 'Controls/list';
 import {Utils as stickyUtil} from 'Controls/scroll';
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
+import editArrowTemplate = require('wml!Controls/_grid/_editArrowTemplate');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import {isEqual} from 'Types/object';
@@ -1245,6 +1246,8 @@ var
                         getPropValue: current.getPropValue,
                         isEditing: current.isEditing,
                         isActive: current.isActive,
+                        showEditArrow: current.showEditArrow,
+                        editArrowTemplate: editArrowTemplate,
                         getVersion: function() {
                            return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex, current.index);
                         },

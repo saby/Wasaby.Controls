@@ -22,6 +22,22 @@ var _private = {
 };
 
 /**
+ * Календарь, который отображает 1 месяц и позволяет переключаться на следующий и предыдущий месяцы с помощью кнопок.
+ * Предназначен для выбора даты или периода в пределах нескольких месяцев или лет.
+ *
+ * @class Controls/_calendar/MonthSlider
+ * @extends Core/Control
+ * @mixes Controls/_calendar/interface/IMonth
+ * @mixes Controls/Date/interface/IRangeSelectable
+ * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
+ * @control
+ * @public
+ * @author Красильников А.С.
+ * @demo Controls-demo/Calendar/MonthSlider
+ *
+ */
+
+/*
  * A calendar that displays 1 month and allows you to switch to the next and previous months using the buttons.
  * Designed to select a date or period within a few months or years.
  *

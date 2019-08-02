@@ -6,19 +6,17 @@ define('Controls/interface/ISelectedCollection', [
     * @public
     * @author Капустин И.А.
     */
-
    /*
-    * Interface to select items from the list
+    * Interface to select items from the list.
     * @interface Controls/interface/ISelectedCollection
     * @public
-    * @author Капустин И.А.
+    * @author Kapustin I.A.
     */
 
    /**
     * @name Controls/interface/ISelectedCollection#displayProperty
-    * @cfg {String} Название поля, значение которого отображается при выборе элемента из справочника.
+    * @cfg {String} Имя свойства элемента, содержимое которого будет отображаться.
     */
-
    /*
     * @name Controls/interface/ISelectedCollection#displayProperty
     * @cfg {String} Name of the item property which content will be displayed.
@@ -26,37 +24,39 @@ define('Controls/interface/ISelectedCollection', [
    
    /**
     * @name Controls/interface/ISelectedCollection#multiSelect
-    * @cfg {Boolean} Режим выбора, когда при значении false можно выбрать только один элемент.
+    * @cfg {Boolean} Определяет режим выбора. Если значение false, можно выбрать только один элемент.
     */
-
    /*
     * @name Controls/interface/ISelectedCollection#multiSelect
-    * @cfg {Boolean} Selection mode, if value false you can choose only one item.
+    * @cfg {Boolean} Specifies the selection mode. If false, only one item can be selected.
     */
 
    /**
     * @name Controls/interface/ISelectedCollection#maxVisibleItems
     * @cfg {Integer} Максимальное количество элементов для отображения, остальные будут скрыты под счетчиком.
+    * @remark
+    * Актуально только в многострочном режиме
     */
-
    /*
     * @name Controls/interface/ISelectedCollection#maxVisibleItems
     * @cfg {Integer} The maximum number of items to display, the rest will be hidden under the counter.
+    * @remark
+    * only relevant in multi line mode
     */
 
    /**
     * @name Controls/interface/ISelectedCollection#itemTemplate
-    * @cfg {Function|String} Шаблон для отображения выбранных записей.
+    * @cfg {Function|String} Шаблон выбранного элемента.
     * @remark
-    * Базовый шаблон для Controls/lookup:Input: "wml!Controls.lookup:ItemTemplate".
-    * Базовый шаблон для Controls.lookup:Selector: "wml!Controls.lookup:ButtonItemTemplate".
-    * Базовый шаблон для поддерживает параметры:
+    * Базовый шаблон для Controls/lookup:Input: "Controls.lookup:ItemTemplate".
+    * Базовый шаблон для Controls.lookup:Selector: "Controls.lookup:ButtonItemTemplate".
+    * Базовый шаблон поддерживают такие параметры как:
     * <ul>
-    *    <li>contentTemplate {Function|String} - Шаблон для отображения контента.</li>
-    *    <li>crossTemplate {Function|String} - Шаблон крестика.</li>
-    *    <li>displayProperty {String} - Имя свойства элемента, содержимое которого будет отображаться.</li>
-    *    <li>clickable {Boolean} - Указывает, доступен ли клик по элементу, добавляет подчеркивание при наведении курсора, допустимо только в том случае, если для contentTemplate используется значение по умолчанию.</li>
-    *    <li>size {Enum} - Размер текста для содержимого элемента допустим только в том случае, если для шаблона содержимого используется значение по умолчанию.</li>
+    *    <li>contentTemplate {Function|String} - Шаблон содержимого элемента.</li>
+    *    <li>crossTemplate {Function|String} - Шаблон крестика удаления элемента.</li>
+    *    <li>displayProperty {String} - Имя поля, значение которого будет отображаться.</li>
+    *    <li>clickable {Boolean} - Определяет, показывать ли подчеркивание при наведении, допустим только в случае использования contentTemplate по умолчанию.</li>
+    *    <li>size {Enum} - Размер текста для содержимого элемента, допустим только в случае использования contentTemplate по умолчанию.</li>
     *    <ul>
     *       <li>m</li>
     *       <li>l</li>
@@ -64,7 +64,7 @@ define('Controls/interface/ISelectedCollection', [
     *       <li>2xl</li>
     *       <li>3xl</li>
     *    </ul>
-    *    <li>style {Enum} - Стиль текста для содержимого элемента допустим только в том случае, если для шаблона содержимого используется значение по умолчанию.</li>
+    *    <li>style {Enum} - Стиль текста для содержимого элемента, допустим только в случае использования contentTemplate по умолчанию.</li>
     *    <ul>
     *       <li>default</li>
     *       <li>bold</li>
@@ -73,8 +73,8 @@ define('Controls/interface/ISelectedCollection', [
     *    </ul>
     * </ul>
     *
-    * Если вы переопределите шаблон contentTemplate/crossTemplate, вы не будете уведомлены о событиях клика по элемента/клика по крестику.
-    * Для правильной работы необходимо отметить содержимое классами:
+    * Если вы переопределите contentTemplate/crossTemplate, вы не будете уведомлены о событиях itemClick/crossClick.
+    * Для правильной работы необходимо пометить свой контент классами:
     * <ul>
     *    <li>js-controls-SelectedCollection__item__caption</li>
     *    <li>js-controls-SelectedCollection__item__cross</li>
@@ -96,13 +96,12 @@ define('Controls/interface/ISelectedCollection', [
     *    </Controls.lookup:Selector>
     * </pre>
     */
-
    /*
     * @name Controls/interface/ISelectedCollection#itemTemplate
     * @cfg {Function|String} Selected item template.
     * @remark
-    * Base itemTemplate for Controls/lookup:Input: "wml!Controls.lookup:ItemTemplate".
-    * Base itemTemplate for Controls.lookup:Selector: "wml!Controls.lookup:ButtonItemTemplate".
+    * Base itemTemplate for Controls/lookup:Input: "Controls.lookup:ItemTemplate".
+    * Base itemTemplate for Controls.lookup:Selector: "Controls.lookup:ButtonItemTemplate".
     * Base itemTemplate supports these parameters:
     * <ul>
     *    <li>contentTemplate {Function|String} - Template for render item content.</li>
@@ -155,7 +154,7 @@ define('Controls/interface/ISelectedCollection', [
     * @param {Env/Event:Object} eventObject Декскриптор события.
     * @param {String} textValue Строка, сформированная из выбранных записей.
     * @example
-    * В следующем примере создается Selecttor/Button и показано, как обрабатывать событие.
+    * В следующем примере создается Controls/lookup:Selector и демонстрируется сценарий использования.
     * WML:
     * <pre>
     *    <Controls.lookup:Selector
@@ -171,13 +170,12 @@ define('Controls/interface/ISelectedCollection', [
     *    }
     * </pre>
     */
-
    /*
     * @event Controls/interface/ISelectedCollection#textValueChanged Occurs when changing the set of the selected collection.
     * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {String} textValue String formed from selected entries.
     * @example
-    * The following example creates Selector/Button and shows how to handle the event.
+    * The following example creates Controls/lookup:Selector and shows how to handle the event.
     * WML:
     * <pre>
     *    <Controls.lookup:Selector
@@ -199,7 +197,7 @@ define('Controls/interface/ISelectedCollection', [
     * @param {Env/Event:Object} eventObject Дескриптор события.
     * @param {RecordSet} items Список выбранных записей.
     * @example
-    * В следующем примере создается Selecttor/Button и показано, как обрабатывать событие.
+    * В следующем примере создается Controls/lookup:Selector и демонстрируется сценарий использования.
     * WML:
     * <pre>
     *    <Controls.lookup:Selector
@@ -215,13 +213,12 @@ define('Controls/interface/ISelectedCollection', [
     *    }
     * </pre>
     */
-
    /*
     * @event Controls/interface/ISelectedCollection#itemsChanged Occurs when changing the set of the selected collection.
     * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {RecordSet} items List of selected entries.
     * @example
-    * The following example creates Selector/Button and shows how to handle the event.
+    * The following example creates Controls/lookup:Selector and shows how to handle the event.
     * WML:
     * <pre>
     *    <Controls.lookup:Selector
@@ -239,11 +236,10 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#itemClick Происходит при клике по элементу коллекции.
+    * @event Controls/interface/ISelectedCollection#itemClick Происходит при нажатии на элемент коллекции.
     * @param {Env/Event:Object} eventObject Дескриптор события.
-    * @param {RecordSet} item Выбранный элемент коллекции.
+    * @param {RecordSet} item Элемент выбраной коллекции.
     */
-
    /*
     * @event Controls/interface/ISelectedCollection#itemClick Occurs when clicking on a collection item.
     * @param {Env/Event:Object} eventObject The event descriptor.
@@ -251,11 +247,11 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#openInfoBox Происходит перед открытием всплывающей подсказки со всеми выбранными записями.
+    * @event Controls/interface/ISelectedCollection#openInfoBox Происходит перед открытием всплывающего окна со всеми выбранными записями.
     * @param {Env/Event:Object} eventObject Дескриптор события.
-    * @param {Object} config Конфиг, на основе которого будет построена всплывающая подсказка.
+    * @param {Object} config Конфиг, по которому будет построено всплывающее окно.
     * @example
-    * В следующем примере создается Controls/lookup:Input и показано, как обрабатывать событие.
+    * В следующем примере создается Controls/lookup:Input и демонстрируется сценарий использования.
     * WML:
     * <pre>
     *    <Controls.lookup:Input
@@ -277,7 +273,6 @@ define('Controls/interface/ISelectedCollection', [
     *    }
     * </pre>
     */
-
    /*
     * @event Controls/interface/ISelectedCollection#openInfoBox Occurs before opening a pop-up with all selected entries
     * @param {Env/Event:Object} eventObject The event descriptor.
@@ -307,10 +302,9 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Controls/interface/ISelectedCollection#closeInfoBox Происходит при закрытии всплывающей подсказки со всеми выбранными записями.
+    * @event Controls/interface/ISelectedCollection#closeInfoBox Происходит при закрытии всплывающего окна со всеми выбранными записями.
     * @param {Env/Event:Object} eventObject Дескриптор события.
     */
-
    /*
     * @event Controls/interface/ISelectedCollection#closeInfoBox Occurs when closing a pop-up with all selected entries.
     * @param {Env/Event:Object} eventObject The event descriptor.

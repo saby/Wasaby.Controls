@@ -7,7 +7,7 @@ import 'css!theme?Controls/scroll';
 
 
       /**
-       * Thin scrollbar.
+       * Тонкий скрол.
        *
        * @class Controls/_scroll/resources/Scrollbar
        * @extends Core/Control

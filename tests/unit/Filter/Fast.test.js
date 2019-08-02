@@ -196,6 +196,11 @@ define(
             fastFilter._beforeMount(optionsItems, {}, receivedStateSelector);
             assert.isTrue(fastFilter._hasSelectorTemplate);
 
+            let receivedStateHistory = Clone(receivedState);
+            receivedStateSelector.configs[0]._source = null;
+            fastFilter._beforeMount(optionsItems, {}, receivedStateHistory);
+            assert.isTrue(fastFilter._configs[0]._needQuery);
+
             receivedStateSelector = Clone(receivedState);
             let optionsSource = {source: new sourceLib.Memory({
                   idProperty: 'id',
@@ -534,6 +539,29 @@ define(
             assert.strictEqual(expectedConfig.fittingMode, 'overflow');
             assert.deepStrictEqual(expectedConfig.templateOptions.items, fastFilter._configs[0]._items);
             assert.strictEqual(expectedConfig.templateOptions.selectedKeys[0], 'Россия');
+         });
+
+         it('open dropdown _needQuery', function() {
+            let fastFilter = new filterMod.Fast(config);
+            let opened = false;
+            fastFilter._children = {
+               DropdownOpener: { open: () => {opened = true;} }
+            };
+            fastFilter._container = {children: []};
+            fastFilter._configs = [{_items: new collection.RecordSet({
+                  idProperty: 'key',
+                  rawData: items[0]
+               }),
+               _sourceController: { hasMoreData: () => {} },
+               _needQuery: true
+            }];
+            fastFilter._items = new collection.RecordSet({
+               rawData: configItems.items,
+               idProperty: 'title'
+            });
+            fastFilter._open('itemClick', fastFilter._configs[0]._items, 0);
+            assert.isFalse(opened);
+
          });
 
          it('_private::itemsPropertiesChanged', function() {

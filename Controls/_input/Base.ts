@@ -368,6 +368,20 @@ interface IFieldTemplate {
       };
 
       /**
+       * Базовый класс для текстовых полей ввода.
+       *
+       * @class Controls/_input/Base
+       * @extends UI/_base/Control
+       *
+       * @mixes Controls/interface/IInputBase
+       *
+       * @public
+       * @demo Controls-demo/Input/Base/Base
+       *
+       * @author Красильников А.С.
+       */
+
+      /*
        * Base controls that allows user to enter text.
        *
        * @class Controls/_input/Base

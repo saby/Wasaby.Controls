@@ -8,6 +8,27 @@ import template = require('wml!Controls/_input/Date/Picker/Picker');
 import 'css!theme?Controls/input';
 
    /**
+    * Контрол для ввода даты. Поддерживает выбор даты из всплывающего календаря.
+    * <a href="/materials/demo-ws4-input-datepicker">Демо-пример</a>.
+    *
+    * @class Controls/_input/Date/Picker
+    * @extends Core/Control
+    * @mixes Controls/interface/IInputDateTime
+    * @mixes Controls/interface/IDateMask
+    * @mixes Controls/interface/IInputTag
+    * @mixes Controls/interface/IInputBase
+    * @mixes Controls/interface/IInputPlaceholder
+    *
+    * @css @spacing_DatePicker-between-input-button Расстояние между полем ввода и кнопкой календаря.
+    *
+    * @control
+    * @public
+    * @demo Controls-demo/Input/Date/PickerPG
+    * @category Input
+    * @author Красильников А.С.
+    */
+
+   /*
     * Control for entering date. Also, the control allows you to select a date with the mouse using the drop-down box.
     * <a href="/materials/demo-ws4-input-datepicker">Demo examples.</a>.
     *

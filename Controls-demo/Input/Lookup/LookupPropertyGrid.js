@@ -42,6 +42,7 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
             readOnly: false,
             searchParam: 'title',
             placeholder: 'Input text',
+            comment: '',
             minSearchLength: '3',
             maxVisibleItems: '7',
             source: this._sourceNames,

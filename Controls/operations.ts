@@ -1,4 +1,15 @@
 /**
+ * Библиотека операций над записями.
+ * @library Controls/operations
+ * @includes Panel Controls/_operations/Panel
+ * @includes Button Controls/_operations/Button
+ * @includes Controller Controls/_operations/Controller
+ * @includes Container Controls/_operations/Container
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+/*
  * operations library
  * @library Controls/operations
  * @includes Panel Controls/_operations/Panel

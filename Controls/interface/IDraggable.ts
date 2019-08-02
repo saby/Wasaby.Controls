@@ -245,7 +245,7 @@
 /**
  * @event Controls/interface/IDraggable#dragEnd Происходит при завершении перемещения элемента в списке.
  * @param {Env/Event:Object} eventObject Дескриптор события.
- * @param {Controls/_dragnDrop/Entity/Items} entity Сущность перемещения.
+ * @param {Controls/_dragnDrop/Entity/Items} entity Объект перемещения.
  * @param {Types/entity:Record} target Объект перемещения.
  * @param {MovePosition} position Положение перемещения.
  * @example
@@ -321,7 +321,7 @@
 /**
  * @event Controls/interface/IDraggable#dragEnter Происходит при перемещении элемента из другого контрола.
  * @param {Env/Event:Object} eventObject Дескриптор события.
- * @param {Controls/_dragnDrop/Entity/Items} entity Сущность перемещения.
+ * @param {Controls/_dragnDrop/Entity/Items} entity Объект перемещения.
  * @returns {DragEnterResult}
  * @remark Событие позволяет перемещать элементы в текущий список из другого списка. Событие срабатывает у контейнера, в который была перемещена запись.
  * Отличается от события {@link https://wi.sbis.ru/docs/js/Controls/tile/IDraggable/events/dragStart/?v=19.500 dragStart}, которое срабатывает у контейнера, из которого началось перемещение записи.
@@ -412,7 +412,7 @@
 /**
  * @event Controls/interface/IDraggable#changeDragTarget Происходит перед изменением позиции, в которую будет перемещен элемент.
  * @param {Env/Event:Object} eventObject Дескриптор события.
- * @param {Controls/_dragnDrop/Entity/Items} entity Сущность перемещения.
+ * @param {Controls/_dragnDrop/Entity/Items} entity Объект перемещения.
  * @param {Types/entity:Record} target Элемент перемещения.
  * @param {MovePosition} position Позиция перемещения.
  * @returns {Boolean}

@@ -3,7 +3,7 @@ import Env = require('Env/Env');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import getZIndex = require('Controls/Utils/getZIndex');
-import {DefaultOpenerFinder} from "Vdom/Vdom";
+import {DefaultOpenerFinder} from "UI/Focus";
 
 /**
  * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ see more}.

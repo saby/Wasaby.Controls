@@ -9,7 +9,6 @@ export interface ILookupOptions {
  * @public
  * @author Капустин И.А.
  */
-
 /*
  * Interface for fields and selection buttons.
  *
@@ -54,12 +53,12 @@ export default interface ILookup {
  */
 
 /**
- * Открыть стековое окно.
+ * Открыть справочник.
  * @function Controls/_interface/ILookup#showSelector
  * @returns {Promise}
- * @param {PopupOptions[]} popupOptions Параметры стекового окна.
+ * @param {Object} popupOptions {@link Controls/_popup/Opener/Stack/PopupOptions.typedef Опции всплывающего окна.}
  * @example
- * Стековое окно с установленной конфигурацией:
+ * Откроем окно с заданными параметрами.
  * wml
  * <pre>
  *     <Controls.lookup:Input
@@ -100,7 +99,7 @@ export default interface ILookup {
  * Open stack popup.
  * @function Controls/_interface/ILookup#showSelector
  * @returns {Promise}
- * @param {PopupOptions[]} popupOptions Stack popup options.
+ * @param {Object} popupOptions {@link Controls/_popup/Opener/Stack/PopupOptions.typedef Stack popup options.}
  * @example
  * Open stack with specified configuration.
  * wml
@@ -141,24 +140,24 @@ export default interface ILookup {
  */
 
 /**
- * @event Controls/_interface/ILookup#selectorCallback Происходит при выборе элементов с помощью селектора.
+ * @event Controls/_interface/ILookup#selectorCallback Происходит при выборе элементов из справочника.
  * @param {Env/Event:Object} eventObject Дескриптор события.
- * @param {RecordSet} currentItems Текущий список элементов в окне выбора из справочника.
- * @param {RecordSet} newItems Список элементов, выбранных из селектора.
+ * @param {RecordSet} initialItems Список выбранных элементов, перед открытием справочника.
+ * @param {RecordSet} newItems Список выбранных элементов, после выбора из справочника.
  */
 /*
  * @event Controls/_interface/ILookup#selectorCallback Occurs when selected items with selector.
  * @param {Env/Event:Object} eventObject The event descriptor.
- * @param {RecordSet} currentItems Current list of items in Lookup.
- * @param {RecordSet} newItems List of items selected from selector.
+ * @param {RecordSet} initialItems List of selected items before opening the directory.
+ * @param {RecordSet} newItemsThe list of selected items, after selecting from the directory.
  */
 
 /**
  * @event Controls/_interface/ILookup#showSelector Происходит перед открытием справочника через интерфейс.
  * @param {Env/Event:Object} eventObject Дескриптор события.
- * @param {PopupOptions[]} popupOptions Параметры стекового окна.
+ * @param {Object} popupOptions {@link Controls/_popup/Opener/Stack/PopupOptions.typedef Опции всплывающего окна.}
  * @example
- * В следующем примере создается Controls/lookup:Input и показано, как обрабатывать событие.
+ * В следующем примере создается Controls/lookup:Input и демонстрируется сценарий использования.
  * WML:
  * <pre>
  *    <Controls.lookup:Input
@@ -171,25 +170,25 @@ export default interface ILookup {
  * JS:
  * <pre>
  *    _loadParams: function() {
-    *       ...
-    *    },
+ *       ...
+ *    },
  *
  *    _showSelectorHandler: function(e, popupOptions) {
-    *       var self = this;
-    *
-    *       this._loadParams(popupOptions).addCallback(function(newPopupOptions) {
-    *          self.showSelector(newPopupOptions);
-    *       });
-    *
-    *       // cancel the opening of the selector
-    *       return false;
-    *    }
+ *       var self = this;
+ *
+ *       this._loadParams(popupOptions).addCallback(function(newPopupOptions) {
+ *          self.showSelector(newPopupOptions);
+ *       });
+ *
+ *       // отменить открытие справочника
+ *       return false;
+ *    }
  * </pre>
  */
 /*
  * @event Controls/_interface/ILookup#showSelector Occurs before opening the selector through the interface.
  * @param {Env/Event:Object} eventObject The event descriptor.
- * @param {PopupOptions[]} popupOptions Stack popup options.
+ * @param {Object} popupOptions {@link Controls/_popup/Opener/Stack/PopupOptions.typedef Stack popup options.}
  * @example
  * The following example creates Controls/lookup:Input and shows how to handle the event.
  * WML:
@@ -218,31 +217,4 @@ export default interface ILookup {
  *       return false;
  *    }
  * </pre>
- */
-
-/**
- * @typedef {Object} PopupOptions
- * @description Параметры стекового окна.
- * @property {Boolean} autofocus Определяет, на какой элемент необходимо установить фокус сразу после загрузки страницы.
- * @property {Boolean} modal Определяет, является ли окно модальным.
- * @property {String} className Имена классов всплывающих окон.
- * @property {Boolean} closeOnOutsideClick Определяет, возможно ли закрытие всплывающего окна при щелчке за пределами этого окна.
- * @property {function|String} template Шаблон внутри всплывающего окна.
- * @property {function|String} templateOptions Параметры шаблона внутри всплывающего окна.
- * @property {Number} minWidth Минимальная ширина всплывающего окна.
- * @property {Number} maxWidth Максимальная ширина всплывающего окна
- * @property {Number} width Ширина всплывающего окна.
- */
-/*
- * @typedef {Object} PopupOptions
- * @description Stack popup options.
- * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
- * @property {Boolean} modal Determines whether the window is modal.
- * @property {String} className Class names of popup.
- * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
- * @property {function|String} template Template inside popup.
- * @property {function|String} templateOptions Template options inside popup.
- * @property {Number} minWidth The minimum width of popup.
- * @property {Number} maxWidth The maximum width of popup.
- * @property {Number} width Width of popup.
  */
