@@ -159,7 +159,6 @@ var
         _headerContentTemplate: HeaderContentTpl,
         _getGridTemplateColumns: _private.getGridTemplateColumns,
         _itemsContainerForPartialSupport: null,
-        _isHeaderWasChanged: false,
 
         _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
@@ -193,7 +192,6 @@ var
                 }
             }
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
-                this._isHeaderWasChanged = true;
                 this._listModel.setHeader(newCfg.header);
                 if (!Env.detection.isNotFullGridSupport) {
                     _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
@@ -258,10 +256,9 @@ var
         },
 
         _beforePaint: function() {
-            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._isHeaderWasChanged) {
+            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader()) {
                 const newHeader = this._setHeaderWithHeight();
                 this._listModel.setHeaderCellMinHeight(newHeader);
-                this._isHeaderWasChanged = false;
             }
         },
         _setHeaderWithHeight: function() {
@@ -307,7 +304,6 @@ var
 
         _afterMount: function() {
             GridView.superclass._afterMount.apply(this, arguments);
-            this._isHeaderWasChanged = true;
             if (!Env.detection.isNotFullGridSupport) {
                 _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
             }
