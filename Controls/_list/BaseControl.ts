@@ -584,7 +584,7 @@ var _private = {
         // ToDo option "loadOffset" is crutch for contacts.
         // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
         if (self._needScrollCalculation) {
-            self._setLoadOffset(self._loadOffsetTop, self._loadOffsetBottom, false);
+            self._setLoadOffset(self._loadOffsetTop, self._loadOffsetBottom);
         }
         self._isScrollShown = true;
         if (!self._scrollPagingCtr) {
@@ -601,9 +601,9 @@ var _private = {
 
     onScrollHide: function(self) {
         var needUpdate = false;
-        if (!self._loadOffset || !self._loadOffset.isNull) {
+        if (!self._loadOffset && self._isScrollShown) {
             if (self._needScrollCalculation) {
-                self._setLoadOffset(0, 0, true);
+                self._setLoadOffset(0, 0);
             }
             needUpdate = true;
         }
@@ -1325,7 +1325,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _afterMount: function() {
         if (this._needScrollCalculation) {
-            this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom, false);
+            this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom);
             _private.startScrollEmitter(this);
         }
 
@@ -1576,7 +1576,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _setLoadOffset: function(top, bottom, isNull) {
+    _setLoadOffset: function(top, bottom) {
         if (this.__error) {
             return;
         }
@@ -1589,16 +1589,18 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._loadOffsetTop = top || this._loadOffsetTop;
         this._loadOffsetBottom = bottom || this._loadOffsetBottom;
 
-        this._loadOffset.isNull = isNull;
         this._children.topVirtualScrollTrigger.style.top = Math.floor(this._loadOffset.top) + 'px';
         this._children.topLoadTrigger.style.top = Math.floor(this._loadOffset.top * 1.3) + 'px';
         this._children.bottomVirtualScrollTrigger.style.bottom = Math.floor(this._loadOffset.bottom) + 'px';
         this._children.bottomLoadTrigger.style.bottom = Math.floor(this._loadOffset.bottom * 1.3) + 'px';
     },
-    _onViewPortResize: function(self, viewPortSize) {
-        if (self._needScrollCalculation && !self._loadOffset.isNull) {
+    _onViewPortResize: function(self, viewPortSize ) {
+        if (self._needScrollCalculation) {
             let offset = Math.floor(viewPortSize / 3);
-            self._setLoadOffset(offset, offset, false);
+            self._setLoadOffset(offset, offset);
+        }
+        if (!self._isScrollShown) {
+            self._setLoadOffset(0, 0);
         }
     },
 
@@ -1884,10 +1886,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             dragEnterResult,
             draggingItemProjection;
 
-        if (
-            !this._listViewModel.getDragEntity() &&
-            cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
-        ) {
+        if (!this._listViewModel.getDragEntity()) {
             dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
