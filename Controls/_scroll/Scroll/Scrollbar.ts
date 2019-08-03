@@ -277,7 +277,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
      * @param {SyntheticEvent} event дескриптор события.
      */
     private _wheelHandler(event: SyntheticEvent<Event>): void {
-        const newPosition = this._position + Scrollbar._calcWheelDelta(event.nativeEvent.deltaY);
+        const newPosition = this._position + Scrollbar._calcWheelDelta(Env.detection.firefox, event.nativeEvent.deltaY);
         this._setPosition(newPosition, true);
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
             this._thumbSize, newPosition);
@@ -356,8 +356,8 @@ class Scrollbar extends Control<IScrollBarOptions> {
      * свойстве detail, но на него нельзя подписаться.
      * https://online.sbis.ru/opendoc.html?guid=3e532f22-65a9-421b-ab0c-001e69d382c8
      */
-    private static _calcWheelDelta(delta: number): number {
-        if (Env.detection.firefox) {
+    private static _calcWheelDelta(firefox: boolean, delta: number): number {
+        if (firefox) {
             return Math.sign(delta) * 100;
         }
         return delta;
