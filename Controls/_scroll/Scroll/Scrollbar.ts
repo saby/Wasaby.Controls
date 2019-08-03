@@ -1,329 +1,374 @@
-import Control = require('Core/Control');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import Env = require('Env/Env');
-import template = require('wml!Controls/_scroll/Scroll/Scrollbar/Scrollbar');
+import * as ScrollBarTemplate from 'wml!Controls/_scroll/Scroll/Scrollbar/Scrollbar';
 import 'Controls/event';
 import 'css!theme?Controls/scroll';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
+type TDirection = 'vertical' | 'horizontal';
 
+interface IScrollBarCoords {
+    size: number;
+    offset: number;
+}
 
-      /**
-       * Thin scrollbar.
-       *
-       * @class Controls/_scroll/resources/Scrollbar
-       * @extends Core/Control
-       *
-       * @event scrollbarBeginDrag Начала перемещения ползунка мышью.
-       * @param {SyntheticEvent} eventObject Дескриптор события.
-       *
-       * @event scrollbarEndDrag Конец перемещения ползунка мышью.
-       * @param {SyntheticEvent} eventObject Дескриптор события.
-       *
-       * @name Controls/_scroll/resources/Scrollbar#position
-       * @cfg {Number} Позиция ползунка спроецированная на контент.
-       *
-       * @name Controls/Container/resources/Scrollbar#contentSize
-       * @cfg {Number} Размер контента на который проецируется тонкий скролл.
-       * @remark Не может быть меньше размера контейнера или 0
-       *
-       * @name Controls/Container/resources/Scrollbar#direction
-       * @cfg {String} Direction of the scroll bar
-       * @variant vertical Vertical scroll bar.
-       * @variant horizontal Horizontal scroll bar.
-       * @default vertical
-       *
-       * @name Controls/_scroll/resources/Scrollbar#style
-       * @cfg {String} Цветовая схема контейнера. Влияет на цвет тени и полоски скролла. Используется для того чтобы контейнер корректно отображался как на светлом так и на темном фоне.
-       * @variant normal стандартная схема
-       * @variant inverted противоположная схема
-       *
-       * @public
-       * @control
-       * @author Красильников А.С.
-       */
-      var
-         _private = {
-            /**
-             * Посчитать позицию ползунка учитывая граници за которые он не может выйти.
-             * @param {number} position текущая позиция ползунка в контейнере ползунка.
-             * @param {number} minPosition минимально допустимая позиция контейнера ползунка.
-             * @param {number} maxPosition максимально допустимая позиция контейнера ползунка.
-             * @return {number} позиция ползунка
-             */
-            calcPosition: function(position, minPosition, maxPosition) {
-               return Math.min(Math.max(minPosition, position), maxPosition);
-            },
+export interface IScrollBarOptions extends IControlOptions {
+    position?: number;
+    contentSize: number;
+    leftOffset: number;
+    direction: TDirection;
+}
+/**
+ * Thin scrollbar.
+ *
+ * @class Controls/_scroll/resources/Scrollbar
+ * @extends Core/Control
+ *
+ * @event scrollbarBeginDrag Начала перемещения ползунка мышью.
+ * @param {SyntheticEvent} eventObject Дескриптор события.
+ *
+ * @event scrollbarEndDrag Конец перемещения ползунка мышью.
+ * @param {SyntheticEvent} eventObject Дескриптор события.
+ *
+ * @name Controls/_scroll/resources/Scrollbar#position
+ * @cfg {Number} Позиция ползунка спроецированная на контент.
+ *
+ * @name Controls/Container/resources/Scrollbar#contentSize
+ * @cfg {Number} Размер контента на который проецируется тонкий скролл.
+ * @remark Не может быть меньше размера контейнера или 0
+ *
+ * @name Controls/Container/resources/Scrollbar#direction
+ * @cfg {String} Direction of the scroll bar
+ * @variant vertical Vertical scroll bar.
+ * @variant horizontal Horizontal scroll bar.
+ * @default vertical
+ *
+ * @name Controls/_scroll/resources/Scrollbar#style
+ * @cfg {String} Цветовая схема контейнера. Влияет на цвет тени и полоски скролла. Используется для того чтобы контейнер корректно отображался как на светлом так и на темном фоне.
+ * @variant normal стандартная схема
+ * @variant inverted противоположная схема
+ *
+ * @public
+ * @control
+ * @author Красильников А.С.
+ */
 
-            /**
-             * Посчитать отношение размеров контейнера ползунка к контенту.
-             * @param {number} scrollbarSize размер контейнера ползунка.
-             * @param {number} contentSize размер контента.
-             * @return {number} отношение размеров контейнера ползунка к контенту.
-             */
-            calcViewportRatio: function(scrollbarSize, contentSize) {
-               return scrollbarSize / contentSize;
-            },
+class Scrollbar extends Control<IScrollBarOptions> {
+    protected _template: TemplateFunction = ScrollBarTemplate;
+    /**
+     * Перемещается ли ползунок.
+     * @type {boolean}
+     */
+    private _dragging: boolean = false;
 
-            /**
-             * Получить отношение размера контейнера ползунка к размеру контейнера, по которому может перемещаться ползунок.
-             * @param {number} scrollbarSize размер контейнера ползунка.
-             * @param {number} scrollbarAvailableSize размер контейнера по которому может перемещаться ползунок.
-             * @param {number} thumbSize размер ползунка.
-             * @param {number} contentSize размер контента.
-             * @return {number} отношение размера контейнера ползунка к размеру контейнера, по которому может перемещаться ползунок.
-             */
-            calcScrollRatio: function(scrollbarSize, scrollbarAvailableSize, thumbSize, contentSize) {
-               /**
-                * If the content size is equal to the scrollbar size, then scrollRatio is not defined.
-                * Thats why, we consider it equal 1.
-                */
-               return (scrollbarAvailableSize - thumbSize) / (contentSize - scrollbarSize) || 1;
-            },
+    /**
+     * Позиция ползунка спроецированная на контент в границах трека.
+     * @type {number}
+     */
+    private _position: number = 0;
+    private _thumbPosition: number = 0;
+    private _thumbSize: number;
+    private _scrollBarSize: number;
+    // Запоминаемые на момент перетаскиваеия ползунка координаты самого скроллбара
+    private _currentCoords: IScrollBarCoords | null = null;
+    // Координата точки на ползунке, за которую начинаем тащить
+    private _dragPointOffset: number | null = null;
 
-            /**
-             * Посчитать размер ползунка.
-             * @param thumb ползунок.
-             * @param {number} scrollbarAvailableSize размер контейнера по которому может перемещаться ползунок.
-             * @param {number} viewportRatio отношение размера контейнера ползунка к контенту.
-             * @return {number} размер ползунка.
-             */
-            calcThumbSize: function(thumb, scrollbarAvailableSize, viewportRatio, direction) {
-               var
-                  thumbSize = scrollbarAvailableSize * viewportRatio,
-                  minSize = parseFloat(getComputedStyle(thumb)[direction === 'vertical' ? 'min-height' : 'min-width']);
+    protected _afterMount(): void {
+        this._resizeHandler();
+        this._forceUpdate();
+    }
 
-               return Math.max(minSize, thumbSize);
-            },
-            calcWheelDelta: function(firefox, delta) {
-               /**
-                * Определяем смещение ползунка.
-                * В firefox в дескрипторе события в свойстве deltaY лежит маленькое значение,
-                * поэтому установим его сами.
-                * TODO: Нормальное значение есть в дескрипторе события MozMousePixelScroll в
-                * свойстве detail, но на него нельзя подписаться.
-                * https://online.sbis.ru/opendoc.html?guid=3e532f22-65a9-421b-ab0c-001e69d382c8
-                */
-               if (firefox) {
-                  return Math.sign(delta) * 100;
-               }
+    protected _afterUpdate(oldOptions: IScrollBarOptions): void {
 
-               return delta;
-            },
-            calcScrollbarDelta: function(start, end, thumbSize) {
-               return end - start - thumbSize / 2;
-            },
+        let shouldUpdatePosition = !this._dragging && this._position !== this._options.position;
+        if (oldOptions.contentSize !== this._options.contentSize || oldOptions.leftOffset !== this._options.leftOffset) {
+            this._setSizes(this._options.contentSize);
+            shouldUpdatePosition = true;
+        }
+        if (shouldUpdatePosition) {
+            this._setPosition(this._options.position);
+            this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
+                                                                this._thumbSize, this._options.position);
+        }
+    }
 
-            getPageOffset(nativeEvent: Event, direction: 'vertical' | 'horizontal'): number {
-                let
-                    offset: number,
-                    offsetAxis = direction === 'vertical' ? 'pageY' : 'pageX';
+    private _getThumbCoordByScroll(scrollbarSize: number, thumbSize: number, scrollPosition: number): number {
+        let thumbCoord: number;
+        let availableScale: number;
+        let availableScroll: number;
 
-                if (nativeEvent instanceof MouseEvent) {
-                    offset = nativeEvent[offsetAxis];
-                } else {
-                    offset = (<TouchEvent>nativeEvent).touches[0][offsetAxis];
-                }
+        // ползунок перемещается на расстояние равное высоте скроллбара - высота ползунка
+        availableScale = scrollbarSize - thumbSize;
 
-                return offset;
-            },
-         },
-         Scrollbar = Control.extend({
-            _template: template,
+        // скроллить можно на высоту контента, за вычетом высоты контейнера = высоте скроллбара
+        availableScroll = this._options.contentSize - scrollbarSize;
 
-            /**
-             * Перемещается ли ползунок.
-             * @type {boolean}
-             */
-            _dragging: false,
+        // решаем пропорцию, известна координата ползунка, высота его перемещения и величину скроллящегося контента
+        thumbCoord = (scrollPosition * availableScale) / availableScroll;
 
-            /**
-             * Позиция ползунка спроецированная на контент в границах трека.
-             * @type {number}
-             */
-            _position: 0,
+        return thumbCoord;
+    }
 
-            /**
-             * Позиция курсора относительно страницы, в начале перемещения.
-             */
-            _currentPageOffset: null,
+    private _getCurrentCoords(direction: TDirection): IScrollBarCoords {
+        let offsetValue: number;
+        let sizeValue: number;
 
-            _afterMount: function() {
-               this._resizeHandler();
+        const scrollBarClientRect = this._children.scrollbar.getBoundingClientRect();
+        if (direction === 'vertical') {
+            offsetValue = scrollBarClientRect.top;
+            sizeValue = scrollBarClientRect.height;
+        } else {
+            offsetValue = scrollBarClientRect.left;
+            sizeValue = scrollBarClientRect.width;
+        }
+        return {
+            offset: offsetValue,
+            size: sizeValue
+        };
+    }
 
-               this._forceUpdate();
-            },
+    private _getScrollCoordByThumb(scrollbarSize: number, thumbSize: number, thumbPosition: number): number {
+        let scrollCoord: number;
+        let availableScale: number;
+        let availableScroll: number;
+        // ползунок перемещается на расстояние равное высоте скроллбара - высота ползунка
+        availableScale = scrollbarSize - thumbSize;
 
-            _afterUpdate: function(oldOptions) {
-               var
-                  shouldForceUpdate = false,
-                  shouldForceUpdatePosition = false,
-                  shouldUpdatePosition = !this._dragging && oldOptions.position !== this._options.position;
+        // скроллить можно на высоту контента, за вычетом высоты контейнера = высоте скроллбара
+        availableScroll = this._options.contentSize - scrollbarSize;
 
-               if (oldOptions.contentSize !== this._options.contentSize || oldOptions.leftOffset !== this._options.leftOffset) {
-                  shouldForceUpdate = shouldForceUpdate || this._setSizes(this._options.contentSize);
-                  shouldUpdatePosition = true;
-               }
-               if (shouldUpdatePosition) {
-                  shouldForceUpdatePosition = this._setPosition(this._options.position);
-                  shouldForceUpdate = shouldForceUpdate || shouldForceUpdatePosition;
-               }
-               if (shouldForceUpdate) {
-                  this._forceUpdate();
-               }
-            },
+        // решаем пропорцию, известна координата ползунка, высота его перемещения и величину скроллящегося контента
+        scrollCoord = (thumbPosition * availableScroll) / availableScale;
 
-            /**
-             * Изменить позицию ползунка.
-             * @param {number} position новая позиция.
-             * @param {boolean} notify стрелять ли событием при изменении позиции.
-             * @return {boolean} изменилась ли позиция.
-             */
-            _setPosition: function(position, notify) {
-               var
-                  scrollbarSize = this._children.scrollbar[this._options.direction === 'vertical' ? 'clientHeight' : 'clientWidth'],
+        return scrollCoord;
+    }
 
-                  // todo тут можно убрать деление, в шаблоне Scrollbar.wml можно убрать умножение
-                  // и переписать событие "positionChanged" (тогда логика станет понятной)
-                  maxPosition = (scrollbarSize - this._thumbSize) / this._scrollRatio;
+    /**
+     * Изменить позицию ползунка.
+     * @param {number} position новая позиция.
+     * @param {boolean} notify стрелять ли событием при изменении позиции.
+     * @return {boolean} изменилась ли позиция.
+     */
+    private _setPosition(position: number, notify: boolean = false): boolean {
+        if (this._position === position) {
+            return false;
+        } else {
+            this._position = position;
 
-               position = _private.calcPosition(position, 0, maxPosition);
-
-               if (this._position === position) {
-                  return false;
-               } else {
-                  this._position = position;
-
-                  if (notify) {
-                     this._notify('positionChanged', [position]);
-                  }
-
-                  return true;
-               }
-            },
-
-            /**
-             * Изменить свойства контрола отвечающего за размеры.
-             * @param contentSize размер контента.
-             * @return {boolean} изменились ли размеры.
-             */
-            _setSizes: function(contentSize) {
-               var
-                  verticalDirection = this._options.direction === 'vertical',
-                  horizontalDirection = this._options.direction === 'horizontal',
-                  scrollbar = this._children.scrollbar,
-                  scrollbarSize = scrollbar[verticalDirection ? 'offsetHeight' : 'offsetWidth'],
-                  scrollbarAvailableSize = scrollbar[verticalDirection ? 'clientHeight' : 'clientWidth'],
-                  thumbSize, scrollRatio;
-
-               thumbSize = _private.calcThumbSize(
-                  this._children.thumb,
-                  scrollbarAvailableSize,
-                  _private.calcViewportRatio(scrollbarSize, horizontalDirection ? contentSize - this._options.leftOffset : contentSize),
-                  this._options.direction
-               );
-               scrollRatio = _private.calcScrollRatio(
-                   scrollbarSize,
-                   scrollbarAvailableSize,
-                   thumbSize,
-                   horizontalDirection ? contentSize - this._options.leftOffset : contentSize
-               );
-
-               if (this._thumbSize === thumbSize && this._scrollRatio === scrollRatio) {
-                  return false;
-               } else {
-                  this._thumbSize = thumbSize;
-                  this._scrollRatio = scrollRatio;
-
-                  return true;
-               }
-            },
-
-            _scrollbarMouseDownHandler: function (event) {
-                this._scrollbarBeginDragHandler(event);
-            },
-
-            _scrollbarTouchStartHandler: function (event) {
-                if (this._options.direction === 'horizontal') {
-                    this._scrollbarBeginDragHandler(event);
-                }
-            },
-
-            /**
-             * Обработчик начала перемещения ползунка мышью.
-             * @param {SyntheticEvent} event дескриптор события.
-             */
-            _scrollbarBeginDragHandler: function(event) {
-               var
-                  verticalDirection = this._options.direction === 'vertical',
-                  pageOffset = _private.getPageOffset(event.nativeEvent, this._options.direction),
-                  thumbOffset = this._children.thumb.getBoundingClientRect()[verticalDirection ? 'top' : 'left'],
-                  delta;
-
-               this._currentPageOffset = pageOffset;
-
-               if (event.target.getAttribute('name') === 'scrollbar') {
-                  delta = _private.calcScrollbarDelta(thumbOffset, pageOffset, this._thumbSize);
-                  this._setPosition(this._position + delta / this._scrollRatio, true);
-               } else {
-                  this._children.dragNDrop.startDragNDrop(null, event);
-               }
-            },
-
-            _scrollbarStartDragHandler: function() {
-               this._dragging = true;
-               this._notify('draggingChanged', [this._dragging]);
-            },
-
-            /**
-             * Обработчик перемещения ползунка мышью.
-             * @param {Event} event дескриптор события.
-             */
-            _scrollbarOnDragHandler: function(e, event) {
-               var
-                  pageOffset = _private.getPageOffset(event.domEvent, this._options.direction),
-                  delta = pageOffset - this._currentPageOffset;
-
-               if (this._setPosition(this._position + delta / this._scrollRatio, true)) {
-                  this._currentPageOffset = pageOffset;
-               }
-            },
-
-            /**
-             * Обработчик конца перемещения ползунка мышью.
-             */
-            _scrollbarEndDragHandler: function() {
-               if (this._dragging) {
-                  this._dragging = false;
-                  this._notify('draggingChanged', [this._dragging]);
-               }
-            },
-
-            /**
-             * Обработчик прокрутки колесиком мыши.
-             * @param {SyntheticEvent} event дескриптор события.
-             */
-            _wheelHandler: function(event) {
-               this._setPosition(this._position + _private.calcWheelDelta(Env.detection.firefox, event.nativeEvent.deltaY), true);
-
-               event.preventDefault();
-            },
-
-            /**
-             * Обработчик изменения размеров скролла.
-             */
-            _resizeHandler: function() {
-               this._setSizes(this._options.contentSize);
-               this._setPosition(this._options.position);
+            if (notify) {
+                this._notify('positionChanged', [position]);
             }
-         });
+            return true;
+        }
+    }
 
-      Scrollbar.getDefaultOptions = function() {
-         return {
-            position: 0,
-            direction: 'vertical'
-         };
-      };
+    /**
+     * Изменить свойства контрола отвечающего за размеры.
+     * @param contentSize размер контента.
+     * @return {boolean} изменились ли размеры.
+     */
+    private _setSizes(contentSize: number): boolean {
+        const verticalDirection = this._options.direction === 'vertical';
+        const horizontalDirection = this._options.direction === 'horizontal';
+        const scrollbar = this._children.scrollbar;
+        this._scrollBarSize = scrollbar[verticalDirection ? 'offsetHeight' : 'offsetWidth'];
+        const scrollbarAvailableSize = scrollbar[verticalDirection ? 'clientHeight' : 'clientWidth'];
+        let thumbSize: number;
 
-      Scrollbar._private = _private;
+        let viewportRatio: number;
+        viewportRatio = Scrollbar._calcViewportRatio(this._scrollBarSize,
+            horizontalDirection ? contentSize - this._options.leftOffset : contentSize);
 
-      export = Scrollbar;
+        thumbSize = Scrollbar._calcThumbSize(
+            this._children.thumb,
+            scrollbarAvailableSize,
+            viewportRatio,
+            this._options.direction
+        );
 
+        if (this._thumbSize === thumbSize) {
+            return false;
+        } else {
+            this._thumbSize = thumbSize;
+            return true;
+        }
+    }
+
+    private _scrollbarMouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
+        const currentCoords = this._getCurrentCoords(this._options.direction);
+        const mouseCoord = Scrollbar._getMouseCoord(event.nativeEvent, this._options.direction);
+
+        this._thumbPosition = Scrollbar._getThumbPosition(
+            currentCoords.size,
+            currentCoords.offset,
+            mouseCoord,
+            this._thumbSize, this._thumbSize / 2);
+
+        const position = this._getScrollCoordByThumb(currentCoords.size, this._thumbSize, this._thumbPosition);
+        this._setPosition(position, true);
+    }
+
+    private _thumbMouseDownHandler(event): void {
+        event.stopPropagation();
+        this._scrollbarBeginDragHandler(event);
+    }
+
+    private _scrollbarTouchStartHandler(event): void {
+        if (this._options.direction === 'horizontal') {
+            this._scrollbarBeginDragHandler(event);
+        }
+    }
+
+    private _thumbTouchStartHandler(event): void {
+        event.stopPropagation();
+        this._scrollbarBeginDragHandler(event);
+    }
+
+    /**
+     * Обработчик начала перемещения ползунка мышью.
+     * @param {SyntheticEvent} event дескриптор события.
+     */
+    private _scrollbarBeginDragHandler(event): void {
+        const verticalDirection = this._options.direction === 'vertical';
+        const thumbOffset = this._children.thumb.getBoundingClientRect()[verticalDirection ? 'top' : 'left'];
+        const mouseCoord = Scrollbar._getMouseCoord(event.nativeEvent, this._options.direction);
+
+        this._currentCoords = this._getCurrentCoords(this._options.direction);
+        this._dragPointOffset = mouseCoord - thumbOffset;
+        this._children.dragNDrop.startDragNDrop(null, event);
+    }
+
+    private _scrollbarStartDragHandler(): void {
+        this._dragging = true;
+        this._notify('draggingChanged', [this._dragging]);
+    }
+
+    /**
+     * Обработчик перемещения ползунка мышью.
+     * @param {Event} event дескриптор события Vdom
+     * @param {Event} nativeEvent дескриптор события мыши.
+     */
+    private _scrollbarOnDragHandler(event: SyntheticEvent<Event>, dragObject): void {
+        const mouseCoord = Scrollbar._getMouseCoord(dragObject.domEvent, this._options.direction);
+
+        this._thumbPosition = Scrollbar._getThumbPosition(
+            this._currentCoords.size,
+            this._currentCoords.offset,
+            mouseCoord,
+            this._thumbSize, this._dragPointOffset);
+
+        const position = this._getScrollCoordByThumb(this._currentCoords.size, this._thumbSize, this._thumbPosition);
+        this._setPosition(position, true);
+    }
+
+    /**
+     * Обработчик конца перемещения ползунка мышью.
+     */
+    private _scrollbarEndDragHandler(): void {
+        if (this._dragging) {
+            this._dragging = false;
+            this._notify('draggingChanged', [this._dragging]);
+        }
+    },
+
+    /**
+     * Обработчик прокрутки колесиком мыши.
+     * @param {SyntheticEvent} event дескриптор события.
+     */
+    private _wheelHandler(event: SyntheticEvent<Event>): void {
+        const newPosition = this._position + Scrollbar._calcWheelDelta(event.nativeEvent.deltaY);
+        this._setPosition(newPosition, true);
+        this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
+            this._thumbSize, newPosition);
+        event.preventDefault();
+    }
+
+    /**
+     * Обработчик изменения размеров скролла.
+     */
+    private _resizeHandler(): void {
+        this._setSizes(this._options.contentSize);
+        this._setPosition(this._options.position);
+    }
+
+    private static _getMouseCoord(nativeEvent: Event, direction: TDirection): number {
+        let offset: number;
+        const offsetAxis = direction === 'vertical' ? 'pageY' : 'pageX';
+
+        if (nativeEvent instanceof MouseEvent) {
+            offset = nativeEvent[offsetAxis];
+        } else {
+            offset = (nativeEvent as TouchEvent).touches[0][offsetAxis];
+        }
+
+        return offset;
+    }
+
+    private static _getThumbPosition(scrollbarSize: number,
+                                     scrollbarOffset: number,
+                                     mouseCoord: number,
+                                     thumbSize: number,
+                                     thumbSizeCompensation: number): number {
+
+        let thumbPosition: number;
+
+        // ползунок должен оказываться относительно текущей позииции смещенным
+        // при клике на половину своей высоты
+        // при перетаскивании на то, расстояние, которое было до курсора в момент начала перетаскивания
+        thumbPosition = mouseCoord - scrollbarOffset - thumbSizeCompensation;
+
+        thumbPosition = Math.max(0, thumbPosition);
+        thumbPosition = Math.min(thumbPosition, scrollbarSize - thumbSize);
+
+        return thumbPosition;
+    }
+    /**
+     * Посчитать размер ползунка.
+     * @param thumb ползунок.
+     * @param {number} scrollbarAvailableSize размер контейнера по которому может перемещаться ползунок.
+     * @param {number} viewportRatio отношение размера контейнера ползунка к контенту.
+     * @param {string} direction направление скроллбара.
+     * @return {number} размер ползунка.
+     */
+    private static _calcThumbSize(thumb: HTMLElement, scrollbarAvailableSize: number,
+                                  viewportRatio: number, direction: TDirection): number {
+        const thumbSize = scrollbarAvailableSize * viewportRatio;
+        const minSize = parseFloat(getComputedStyle(thumb)[direction === 'vertical' ? 'min-height' : 'min-width']);
+
+        return Math.max(minSize, thumbSize);
+    }
+
+    /**
+     * Посчитать отношение размеров контейнера ползунка к контенту.
+     * @param {number} scrollbarSize размер контейнера ползунка.
+     * @param {number} contentSize размер контента.
+     * @return {number} отношение размеров контейнера ползунка к контенту.
+     */
+    private static _calcViewportRatio(scrollbarSize: number, contentSize: number): number {
+        return scrollbarSize / contentSize;
+    }
+    /**
+     * Определяем смещение ползунка.
+     * В firefox в дескрипторе события в свойстве deltaY лежит маленькое значение,
+     * поэтому установим его сами.
+     * TODO: Нормальное значение есть в дескрипторе события MozMousePixelScroll в
+     * свойстве detail, но на него нельзя подписаться.
+     * https://online.sbis.ru/opendoc.html?guid=3e532f22-65a9-421b-ab0c-001e69d382c8
+     */
+    private static _calcWheelDelta(delta: number): number {
+        if (Env.detection.firefox) {
+            return Math.sign(delta) * 100;
+        }
+        return delta;
+    }
+}
+
+Scrollbar.getDefaultOptions = function () {
+    return {
+        position: 0,
+        direction: 'vertical'
+    };
+};
+
+export default Scrollbar;
