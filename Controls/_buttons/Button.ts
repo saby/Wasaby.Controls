@@ -219,8 +219,8 @@ class Button extends Control<IButtonOptions> implements
       this._stringCaption = typeof options.caption === 'string';
 
       this._icon = options.icon;
-      this._iconSize = ActualApi.iconSize(options);
-      this._iconStyle = ActualApi.iconStyle(options);
+      this._iconSize = options.icon ? ActualApi.iconSize(options) : '';
+      this._iconStyle = options.icon ? ActualApi.iconStyle(options) : '';
    }
 
    protected _beforeMount(options: IButtonOptions): void {
