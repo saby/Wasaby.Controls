@@ -80,6 +80,8 @@ var _private = {
 var Search = Base.extend({
    _roundBorder: true,
 
+   _wasActionUser: false,
+
    get _renderStyle() {
       return 'search-';
    },
@@ -151,6 +153,18 @@ var Search = Base.extend({
       }
 
       Search.superclass._keyUpHandler.apply(this, arguments);
+   },
+
+   _inputHandler: function() {
+      Search.superclass._inputHandler.apply(this, arguments);
+
+      this._wasActionUser = true;
+   },
+
+   _clickHandler: function() {
+      Search.superclass._clickHandler.apply(this, arguments);
+
+      this._wasActionUser = true;
    }
 });
 

@@ -640,6 +640,55 @@ define([
          lists.BaseControl._private.scrollToItem = originalScrollToItem;
       });
 
+      it('moveMarker activates the control', async function() {
+         const
+            cfg = {
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'key',
+               source: new sourceLib.Memory({
+                  idProperty: 'key',
+                  data: [{
+                     key: 1
+                  }, {
+                     key: 2
+                  }, {
+                     key: 3
+                  }]
+               }),
+               markedKey: 2
+            },
+            baseControl = new lists.BaseControl(cfg),
+            originalScrollToItem = lists.BaseControl._private.scrollToItem;
+
+         lists.BaseControl._private.scrollToItem = function() {};
+
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+
+         let isActivated = false;
+         baseControl.activate = () => {
+            isActivated = true;
+         };
+
+         baseControl._mounted = true; // fake mounted for activation
+
+         baseControl._onViewKeyDown({
+            target: {
+               closest: function() {
+                  return false;
+               }
+            },
+            stopImmediatePropagation: function() {},
+            nativeEvent: {
+               keyCode: Env.constants.key.down
+            },
+            preventDefault: function() {},
+         });
+
+         assert.isTrue(isActivated, 'BaseControl should be activated when marker is moved');
+         lists.BaseControl._private.scrollToItem = originalScrollToItem;
+      });
+
       it('moveMarkerToNext && moveMarkerToPrevious with markerVisibility = "hidden"', async function() {
          var
              cfg = {
@@ -1616,25 +1665,24 @@ define([
             });
          })
       });
-
-      it('mouseEnter handler', function () {
+      describe('_canUpdateItemsActions', function() {
          var lnSource = new sourceLib.Memory({
-                idProperty: 'id',
-                data: data
-             }),
-             lnCfg = {
-                viewName: 'Controls/List/ListView',
-                source: lnSource,
-                keyProperty: 'id',
-                itemActions: [
-                   {
-                      id: 1,
-                      title: '123'
-                   }
-                ],
-                viewModelConstructor: lists.ListViewModel
-             },
-             lnBaseControl = new lists.BaseControl(lnCfg);
+               idProperty: 'id',
+               data: data
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               itemActions: [
+                  {
+                     id: 1,
+                     title: '123'
+                  }
+               ],
+               viewModelConstructor: lists.ListViewModel
+            },
+            lnBaseControl = new lists.BaseControl(lnCfg);
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
@@ -1643,16 +1691,59 @@ define([
                isTouch: false
             }
          };
+         it('afterMount', function() {
+            lnBaseControl._afterMount(lnCfg);
+            assert.isTrue(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._afterUpdate(lnCfg);
+            assert.isFalse(lnBaseControl._canUpdateItemsActions);
+         });
+         it('itemsChanged', async function() {
+            lnBaseControl._itemsChanged = true;
+            await lnBaseControl._beforeUpdate(lnCfg);
+            assert.isTrue(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._afterUpdate(lnCfg);
+         });
+         it('hoveredItemChanged', function() {
+            lnBaseControl._onHoveredItemChanged({}, {});
+            assert.isTrue(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._afterUpdate(lnCfg);
+            assert.isFalse(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._context.isTouch.isTouch = true;
+            lnBaseControl._onHoveredItemChanged({}, {});
+            assert.isFalse(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._context.isTouch.isTouch = false;
+            lnBaseControl._afterUpdate(lnCfg);
+         });
+         it('locking by scroll', async function () {
+            lists.BaseControl._private.handleListScrollSync(lnBaseControl);
+            lnBaseControl._onHoveredItemChanged({}, {});
+            assert.isFalse(lnBaseControl._canUpdateItemsActions);
+            await setTimeout(function() {
+               lists.BaseControl._private.handleListScrollSync(lnBaseControl);
+               assert.isFalse(lnBaseControl._canUpdateItemsActions);
+               setTimeout(function() {
+                  assert.isFalse(lnBaseControl._canUpdateItemsActions);
+                  setTimeout(function() {
+                     assert.isTrue(lnBaseControl._canUpdateItemsActions);
+                  }, 100);
+               }, 100);
+            }, 100)
+            lnBaseControl._afterUpdate(lnCfg);
+         });
+         it('locking by DnD', async function () {
+            lnBaseControl._listViewModel.getItemDataByItem = function() {};
+            lnBaseControl._listViewModel.setDragItemData = function() {};
+            lnBaseControl._itemDragData = {
+               dispItem: {}
+            };
+            lnBaseControl._dragStart({}, {});
+            lnBaseControl._onHoveredItemChanged({}, {});
+            assert.isFalse(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._dragEnd({}, {});
+            assert.isTrue(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._afterUpdate(lnCfg);
+         });
 
-         assert.isFalse(lnBaseControl._canUpdateItemsActions);
-         lnBaseControl._itemMouseEnter({});
-         assert.isTrue(lnBaseControl._canUpdateItemsActions);
-         lnBaseControl._afterUpdate(lnCfg);
-         assert.isFalse(lnBaseControl._canUpdateItemsActions);
-
-         lnBaseControl._context.isTouch.isTouch = true;
-         lnBaseControl._itemMouseEnter({});
-         assert.isFalse(lnBaseControl._canUpdateItemsActions);
       });
 
       it('List navigation by keys and after reload', function(done) {
@@ -2286,6 +2377,89 @@ define([
          ctrl.itemsDragNDrop = true;
          ctrl._itemMouseDown({}, {key: 1}, {});
          assert.isUndefined(ctrl._itemDragData);
+      });
+
+      it('_dragEnter only works with ItemsEntity', function() {
+         const ctrl = new lists.BaseControl({});
+
+         ctrl._listViewModel = {
+            getDragEntity: () => null
+         };
+
+         let
+            notifiedEvent = null,
+            notifiedEntity = null;
+
+         ctrl._notify = function(eventName, dragEntity) {
+            notifiedEvent = eventName;
+            notifiedEntity = dragEntity && dragEntity[0];
+         };
+
+         const badDragObject = { entity: {} };
+         ctrl._dragEnter({}, badDragObject);
+         assert.isNull(notifiedEvent);
+
+         const goodDragObject = {
+            entity: {
+               '[Controls/dragnDrop:ItemsEntity]': true
+            }
+         };
+         ctrl._dragEnter({}, goodDragObject);
+         assert.strictEqual(notifiedEvent, 'dragEnter');
+         assert.strictEqual(notifiedEntity, goodDragObject.entity);
+      });
+      
+      it('itemMouseDown prevents native drag synchronously', function() {
+         let isDefaultPrevented = false;
+
+         const
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [null],
+                  excludedKeys: []
+               },
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     hasMore: false
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               },
+               items: rs,
+               selectedKeys: [null],
+               excludedKeys: [],
+               readOnly: false,
+               itemsDragNDrop: true
+            },
+            ctrl = new lists.BaseControl(),
+            fakeMouseDown = {
+               target: {
+                  closest: () => false
+               },
+               preventDefault: () => isDefaultPrevented = true
+            };
+
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+
+         ctrl._itemMouseDown({}, { key: 1 }, fakeMouseDown);
+
+         // getItemsBySelection будет асинхронный, preventDefault все равно должен
+         // быть вызван синхронно
+         assert.isTrue(isDefaultPrevented);
       });
 
       it('_documentDragEnd', function() {

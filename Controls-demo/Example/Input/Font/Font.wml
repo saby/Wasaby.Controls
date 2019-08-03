@@ -1,4 +1,4 @@
-<div class="example-Font">
+<div class="example-Font example-Base_full">
    <Controls-demo.Example.resource.BaseDemoInput title="Font" attr:class="ControlsDemo-ExampleInput__fontTooltip">
       <ws:contents>
          <ws:Array>

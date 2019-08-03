@@ -4,11 +4,11 @@
       <div class="demo-MonthList__content-row">
          <div class="demo-MonthList__content-block">
             <div class="demo-MonthList__content-block-header">Base, viewMode: year</div>
-            <Controls.calendar:MonthList startPosition="{{_month}}"/>
+            <Controls.calendar:MonthList/>
          </div>
          <div class="demo-MonthList__content-block">
             <div class="demo-MonthList__content-block-header">Base, viewMode: month</div>
-            <Controls.calendar:MonthList startPosition="{{_month}}" viewMode="month"/>
+            <Controls.calendar:MonthList viewMode="month"/>
          </div>
       </div>
       <div class="demo-MonthList__content-row">
@@ -16,7 +16,8 @@
             <div class="demo-MonthList__content-block-header">Custom templates and source, viewMode: year</div>
             <div class="demo-MonthList__monthList-header">{{_yearHeader}}</div>
             <Controls.calendar:MonthList
-               startPosition="{{_month}}"
+               name="yearsMonthList"
+               bind:position="_year"
                source="{{_source}}"
                on:positionChanged="_yearPositionChangedHandler()">
                <ws:yearTemplate>
@@ -39,7 +40,8 @@
             <div class="demo-MonthList__content-block-header">Custom templates and source, viewMode: month</div>
             <div class="demo-MonthList__monthList-header">{{_monthHeader}}</div>
             <Controls.calendar:MonthList
-               startPosition="{{_month}}"
+               name="monthsMonthList"
+               bind:position="_month"
                source="{{_source}}"
                viewMode="month"
                on:positionChanged="_monthPositionChangedHandler()">
@@ -59,6 +61,9 @@
                </ws:monthTemplate>
             </Controls.calendar:MonthList>
          </div>
+      </div>
+      <div class="demo-MonthList__content-row">
+         <Controls.buttons:Button caption="Обновить 2019 год" on:click="_updateYear()"/>
       </div>
    </div>
 

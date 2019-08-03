@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Core/vdom/Synchronizer/resources/SyntheticEvent';
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
+import SyntheticEntry from 'Controls/_scroll/IntersectionObserver/SyntheticEntry';
 import template = require('wml!Controls/_scroll/IntersectionObserver/Controller');
 import {descriptor} from "Types/entity";
 
@@ -72,17 +73,7 @@ class  ModuleComponent extends Control<IIntersectionObserverControllerOptions> {
       let itemId;
       for (const entry of entries) {
          itemId = Object.keys(this._items).find((key) => this._items[key].element === entry.target);
-         items.push({
-            boundingClientRect: entry.boundingClientRect,
-            intersectionRatio: entry.intersectionRatio,
-            intersectionRect: entry.intersectionRect,
-            isIntersecting: entry.isIntersecting,
-            isVisible: entry.isVisible,
-            rootBounds: entry.rootBounds,
-            target: entry.target,
-            time: entry.time,
-            data: this._items[itemId].data
-         });
+         items.push(new SyntheticEntry(entry, this._items[itemId].data));
       }
       this._notify('intersect', [items]);
    }

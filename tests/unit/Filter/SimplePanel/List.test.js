@@ -21,6 +21,7 @@ define(
             displayProperty: 'title',
             keyProperty: 'id',
             emptyText: '',
+            resetValue: '2',
             id: 'text',
             items: defaultItems.clone(),
             selectedKeys: [],
@@ -86,12 +87,17 @@ define(
             let newConfig = {...defaultConfig, selectedKeys: ['2']};
             list._beforeUpdate(newConfig);
             list._itemClickHandler(event, defaultItems.at(0));
-            assert.deepStrictEqual(checkBoxClickResult, ['2', '1']);
+            assert.deepStrictEqual(checkBoxClickResult, ['1']);
 
             //checkbox click
             isCheckBoxClick = true;
             list._itemClickHandler(event, defaultItems.at(4));
-            assert.deepStrictEqual(checkBoxClickResult, ['2', '1', '5']);
+            assert.deepStrictEqual(checkBoxClickResult, ['1', '5']);
+
+            //checkbox click
+            isCheckBoxClick = true;
+            list._itemClickHandler(event, defaultItems.at(1));
+            assert.deepStrictEqual(itemClickResult, ['2']);
          });
 
          it('_moreButtonClick', function() {

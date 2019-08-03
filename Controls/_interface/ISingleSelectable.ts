@@ -25,7 +25,7 @@ export default interface ISingleSelectable {
  * </pre>
  * <pre>
  *    _beforeMount: function() {
-    *       this._selectedKeys = '1';
+    *       this._SelectedKey = '1';
     *    }
  * </pre>
  * @see selectedKeyChanged
@@ -47,7 +47,7 @@ export default interface ISingleSelectable {
  *    _beforeMount: function() {
     *       this._selectedKey = undefined;
     *    },
- *    onSelectedKeysChanged: function(e, selectedKey) {
+ *    onSelectedKeyChanged: function(e, selectedKey) {
     *       //Note that we simultaneously have event handler and bind for the same option, so we don't have to update state manually.
     *       this._panelSource = this._getPanelSource(selectedKey);
     *    }

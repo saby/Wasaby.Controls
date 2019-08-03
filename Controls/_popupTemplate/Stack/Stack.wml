@@ -3,6 +3,7 @@
         <ws:partial template="wml!Controls/_popupTemplate/Stack/resources/Header" scope="{{_options}}"
                     close="{{close}}"
                     theme="{{_headerTheme}}"
+                    stackOptions="{{_options}}"
                     _maximizeButtonTitle="{{_maximizeButtonTitle}}"
                     changeMaximizedState="{{changeMaximizedState}}"
                     _maximizeButtonVisibility="{{_maximizeButtonVisibility}}" />

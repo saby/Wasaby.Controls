@@ -4,6 +4,8 @@ import Base = require('Controls/_input/Base');
 import ViewModel = require('Controls/_input/Mask/ViewModel');
 import entity = require('Types/entity');
 
+import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
+
       
 
       /**
@@ -11,6 +13,8 @@ import entity = require('Types/entity');
        * Characters that are not yet entered in the field can be replaced by another {@link replacer character}.
        * If the input character does not fit the format, then character won't be added.
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+       * @remark
+       * If the {@link replacer} is not empty and container with width: auto, then the width is determined based on the content.
        *
        * @class Controls/_input/Mask
        * @extends Controls/_input/Base
@@ -111,7 +115,13 @@ import entity = require('Types/entity');
                return validation;
             },
             calcReplacer: function(replacer, mask) {
-               return _private.validateReplacer(replacer, mask) ? replacer : '';
+               const value = _private.validateReplacer(replacer, mask) ? replacer : '';
+
+                /**
+                 * The width of the usual space is less than the width of letters and numbers.
+                 * Therefore, the width of the field after entering will increase. Increase the width of the space.
+                 */
+                return spaceToLongSpace(value);
             }
          },
          Mask = Base.extend({
