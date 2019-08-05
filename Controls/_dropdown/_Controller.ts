@@ -337,9 +337,10 @@ var _Controller = Control.extend({
       }
    },
 
-   _keyUp: function(event) {
-      if (event.nativeEvent.keyCode === Env.constants.key.esc) {
+   _keyDown: function(event) {
+      if (event.nativeEvent.keyCode === Env.constants.key.esc && this._children.DropdownOpener.isOpened()) {
          this._children.DropdownOpener.close();
+         event.stopPropagation();
       }
    },
 
