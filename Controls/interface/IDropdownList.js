@@ -57,7 +57,7 @@ define('Controls/interface/IDropdownList', [], function() {
    /**
     * @typedef {String|Boolean} EmptyText
     * @remark
-    * true - Добавляет пустой эелемент с текстом 'Не выбрано'.
+    * true - Добавляет пустой элемент с текстом 'Не выбрано'.
     */
 
    /*
@@ -67,7 +67,7 @@ define('Controls/interface/IDropdownList', [], function() {
     */    
 
    /**
-    * @typedef {Object} templateOptions
+    * @typedef {Object} TemplateOptions
     * @property {HeadConfig} headConfig Конфигурация для рендеринга папок.
     * @property {String} keyProperty Имя параметра, однозначно идентифицирующего элемент коллекции.
     * @property {String} parentProperty Имя поля, содержащего родительский идентификатор элемента.
@@ -87,7 +87,7 @@ define('Controls/interface/IDropdownList', [], function() {
     */
 
    /*
-    * @typedef {Object} templateOptions
+    * @typedef {Object} TemplateOptions
     * @property {HeadConfig} headConfig Configuration for folder render
     * @property {String} keyProperty Name of the item property that uniquely identifies collection item
     * @property {String} parentProperty Name of the field that contains item's parent identifier

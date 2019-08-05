@@ -440,52 +440,12 @@ define('Controls/interface/IDropdown', [], function() {
     * @cfg {String} Unique id for save history.
     */
 
-   /**
-    * @event Controls/interface/IDropdown#dropDownOpen Происходит при открытии выпадающего списка.
-    * @example
-    * wml:
-    * <pre>
-    *    <Controls.dropDown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose"/>
-    *    <div>dropDownOpened: {{_dropDownOpened}}</div>
-    * </pre>
-    *
-    * JS:
-    * <pre>
-    *    _dropDownOpen() {
-    *       this._dropDownOpened = true;
-    *    }
-    *
-    *    _dropDownClose() {
-    *       this._dropDownOpened = false;
-    *    }
-    * </pre>
-    */
-
-   /**
-    * @event Controls/interface/IDropdown#dropDownClose Происходит при скрытии выпадающего списка.
-    * @example
-    * wml:
-    * <pre>
-    *    <Controls.dropDown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose"/>
-    *    <div>dropDownOpened: {{_dropDownOpened}}</div>
-    * </pre>
-    *
-    * JS:
-    * <pre>
-    *    _dropDownOpen() {
-    *       this._dropDownOpened = true;
-    *    }
-    *
-    *    _dropDownClose() {
-    *       this._dropDownOpened = false;
-    *    }
-    * </pre>
-    */
 
    /**
     * @event Controls/interface/IDropdown#dropDownOpen Происходит при открытии выпадающего списка.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @example
-    * wml:
+    * WML:
     * <pre>
     *    <Controls.dropDown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose"/>
     *    <div>dropDownOpened: {{_dropDownOpened}}</div>
@@ -495,8 +455,7 @@ define('Controls/interface/IDropdown', [], function() {
     * <pre>
     *    _dropDownOpen() {
     *       this._dropDownOpened = true;
-    *    }
-    *
+    *    },
     *    _dropDownClose() {
     *       this._dropDownOpened = false;
     *    }
@@ -505,8 +464,9 @@ define('Controls/interface/IDropdown', [], function() {
 
    /*
     * @event Controls/interface/IDropdown#dropDownOpen Occurs when dropDown opened.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @example
-    * wml:
+    * WML:
     * <pre>
     *    <Controls.dropDown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose"/>
     *    <div>dropDownOpened: {{_dropDownOpened}}</div>
@@ -516,8 +476,7 @@ define('Controls/interface/IDropdown', [], function() {
     * <pre>
     *    _dropDownOpen() {
     *       this._dropDownOpened = true;
-    *    }
-    *
+    *    },
     *    _dropDownClose() {
     *       this._dropDownOpened = false;
     *    }
@@ -526,8 +485,9 @@ define('Controls/interface/IDropdown', [], function() {
 
    /**
     * @event Controls/interface/IDropdown#dropDownClose Происходит при закрытии выпадающего списка.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @example
-    * wml:
+    * WML:
     * <pre>
     *    <Controls.dropDown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose"/>
     *    <div>dropDownOpened: {{_dropDownOpened}}</div>
@@ -537,8 +497,7 @@ define('Controls/interface/IDropdown', [], function() {
     * <pre>
     *    _dropDownOpen() {
     *       this._dropDownOpened = true;
-    *    }
-    *
+    *    },
     *    _dropDownClose() {
     *       this._dropDownOpened = false;
     *    }
@@ -547,8 +506,9 @@ define('Controls/interface/IDropdown', [], function() {
 
    /*
     * @event Controls/interface/IDropdown#dropDownClose Occurs when dropDown closed.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @example
-    * wml:
+    * WML:
     * <pre>
     *    <Controls.dropDown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose"/>
     *    <div>dropDownOpened: {{_dropDownOpened}}</div>
@@ -558,8 +518,7 @@ define('Controls/interface/IDropdown', [], function() {
     * <pre>
     *    _dropDownOpen() {
     *       this._dropDownOpened = true;
-    *    }
-    *
+    *    },
     *    _dropDownClose() {
     *       this._dropDownOpened = false;
     *    }
