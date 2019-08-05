@@ -179,10 +179,14 @@ import 'Controls/breadcrumbs';
       };
 
    /**
-    * Иерархический список, узел которого можно развернуть и перейти в него.
-    * <a href="/materials/demo-ws4-explorer">Демо-пример</a>.
-    * <a href="/materials/demo-ws4-explorer-with-search">Демо-пример с поиском</a>.
-    * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>здесь</a>.
+    * Иерархический проводник отображает данные иерархического списка, узел которого можно развернуть и перейти в него.
+    * Позволяет переключать отображение элементов в режимы "таблица", "список" и "плитка".
+    * Для настройки контрола перейдите в <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>руководство разработчика</a>.
+    * Демо-примеры:
+    * <ul>
+    *    <li><a href="/materials/demo-ws4-explorer">Иерархический проводник в режимах "список" и "плитка"</a>.</li>
+    *    <li><a href="/materials/demo-ws4-explorer-with-search">Иерархический проводник в режиме "список" и строкой поиска</a>.</li>
+    * </ul>
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
@@ -214,7 +218,7 @@ import 'Controls/breadcrumbs';
     * Hierarchical list that can expand and go inside the folders. Can load data from data source.
     * <a href="/materials/demo-ws4-explorer">Demo example</a>.
     * <a href="/materials/demo-ws4-explorer-with-search">Demo example with search</a>.
-    * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>here</a>.
+    * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>here</a>.
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
