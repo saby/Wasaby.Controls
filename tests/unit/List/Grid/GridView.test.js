@@ -74,8 +74,8 @@ define(['Controls/grid'], function(gridMod) {
             gridView.saveOptions(cfg);
             gridView._options.header = [{}, {}, {}]
             let setHeightWasCalled = false
-            gridView._isHeaderWasChanged = false;
-            gridView._afterMount = () => {gridView._isHeaderWasChanged = true}
+            gridView._isHeaderChanged = false;
+            gridView._afterMount = () => {gridView._isHeaderChanged = true}
 
             gridView._listModel = {
                _isMultyHeader: true,
@@ -87,9 +87,9 @@ define(['Controls/grid'], function(gridMod) {
                return [{}, {}, {}, {}]
             }
             gridView._afterMount();
-            assert.isTrue(gridView._isHeaderWasChanged)
+            assert.isTrue(gridView._isHeaderChanged)
             gridView._beforePaint()
-            assert.isFalse(gridView._isHeaderWasChanged)
+            assert.isFalse(gridView._isHeaderChanged)
       });
       it('resultPosition update', function(){
          let gridView = new gridMod.GridView({resultsPosition: 'top'});
