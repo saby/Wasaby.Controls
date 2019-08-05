@@ -25,7 +25,7 @@ export default interface ISingleSelectable {
  * </pre>
  * <pre>
  *    _beforeMount: function() {
-    *       this._SelectedKey = '1';
+    *       this._selectedKey = '1';
     *    }
  * </pre>
  * @see selectedKeyChanged
