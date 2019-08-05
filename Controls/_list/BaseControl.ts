@@ -1886,7 +1886,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             dragEnterResult,
             draggingItemProjection;
 
-        if (!this._listViewModel.getDragEntity()) {
+        if (
+            !this._listViewModel.getDragEntity() &&
+            cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
+        ) {
             dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
