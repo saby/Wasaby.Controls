@@ -41,8 +41,7 @@ var MoreButton = Control.extend([], {
                 onAfterClose: function () {
                     self.activate();
                 }
-            },
-            opener: this
+            }
         }, selectorTemplate.popupOptions || {}));
         this._notify('close', [], {bubbling: true});
     }
