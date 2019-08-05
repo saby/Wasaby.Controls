@@ -411,6 +411,16 @@ var ItemsViewModel = BaseViewModel.extend({
     _isGroup: function(item) {
         return item === ControlsConstants.view.hiddenGroup || !item.get
     },
+
+    isAllGroupsCollapsed(): boolean {
+        for (let i = 0; i < this._display.getItems().length; i++) {
+            if (!this._collapsedGroups[this._display.getGroupByIndex(i)]) {
+                return false;
+            }
+        }
+
+        return true;
+    },
     setItems: function(items) {
         if (_private.isEqualItems(this._items, items)) {
             this._items.setMetaData(items.getMetaData());
