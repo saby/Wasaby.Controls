@@ -22,9 +22,38 @@ define('Controls/interface/IEditableArea', [
     */
 
    /**
+    * @event Controls/interface/IEditableArea#beforeBeginEdit Происходит перед стартом редактирования.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+    * @param {Object} options Объект, в котором лежит item - редактируемая строка.
+    * @param {Boolean} isAdd Флаг, который позволяет различать редактирование и добавление.
+    * @returns {BeforeBeginEditResult}
+    * @example
+    * В следующем примере показано, как обрабатывать событие.
+    * WML:
+    * <pre>
+    *    <Controls.editableArea:View on:beforeBeginEdit="beforeBeginEditHandler()" editObject="{{_editObject}}" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    define('ModuleName', ['Controls/Constants'], function(constants) {
+    *       ...
+    *       beforeBeginEditHandler: function(e, options, isAdd) {
+    *          if (!isAdd) { // Редактирование разрешено только в определенных ситуациях.
+    *             return constants.editing.CANCEL;
+    *          }
+    *       }
+    *    });
+    * </pre>
+    * @see beforeEndEdit
+    * @see afterEndEdit
+    * @see editObject
+    */
+
+   /*
     * @event Controls/interface/IEditableArea#beforeBeginEdit Happens before start of editing.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} editObject Editing record.
+    * @param {Boolean} isAdd A flag that allows you to distinguish between editing and adding.
     * @returns {BeforeBeginEditResult}
     * @example
     * The following example creates EditableArea and shows how to handle the event.
