@@ -25,7 +25,15 @@ export default interface ILookup {
  * @remark
  * dataLoadCallback принимает в качестве первого аргумента коллекцию загруженных элементов.
  * dataLoadCallback может использоваться для установки метаданных или настройки загруженных элементов.
+ *
  * @example
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Selector
+ *          source="{{_source}}"
+ *          dataLoadCallback="{{_myDataLoadCallback}}">
+ *    </Controls.lookup:Selector>
+ * </pre>
  * JS:
  * <pre>
  * _myDataLoadCallback = function(items) {
@@ -41,7 +49,15 @@ export default interface ILookup {
  * @remark
  * dataLoadCallback takes to first argument the collection of loaded items.
  * dataLoadCallback can be used for setting metadata or adjusting loaded items.
+ *
  * @example
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Selector
+ *          source="{{_source}}"
+ *          dataLoadCallback="{{_myDataLoadCallback}}">
+ *    </Controls.lookup:Selector>
+ * </pre>
  * JS:
  * <pre>
  * _myDataLoadCallback = function(items) {
@@ -57,6 +73,7 @@ export default interface ILookup {
  * @function Controls/_interface/ILookup#showSelector
  * @returns {Promise}
  * @param {Object} popupOptions {@link Controls/_popup/Opener/Stack/PopupOptions.typedef Опции всплывающего окна.}
+ *
  * @example
  * Откроем окно с заданными параметрами.
  * wml
@@ -100,6 +117,7 @@ export default interface ILookup {
  * @function Controls/_interface/ILookup#showSelector
  * @returns {Promise}
  * @param {Object} popupOptions {@link Controls/_popup/Opener/Stack/PopupOptions.typedef Stack popup options.}
+ *
  * @example
  * Open stack with specified configuration.
  * wml
@@ -144,12 +162,70 @@ export default interface ILookup {
  * @param {Env/Event:Object} eventObject Дескриптор события.
  * @param {RecordSet} initialItems Список выбранных элементов, перед открытием справочника.
  * @param {RecordSet} newItems Список выбранных элементов, после выбора из справочника.
+ * @remark
+ * Список выбранных элементов можно заменить, если из обработчика вернуть новую коллекцию.
+ *
+ * @example
+ * В следующем примере создается Controls/lookup:Input и демонстрируется сценарий использования.
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Input
+ *       source="{{_source}}"
+ *       keyProperty="id"
+ *       searchParam="title"
+ *       on:selectorCallback="_selectorCallback()">
+ *    </Controls.lookup:Input>
+ * </pre>
+ * JS:
+ * <pre>
+ *    _selectorCallback: function(initialItems, newItems) {
+ *       let resultRS = newItems.clone();
+ *       let countItems = resultRS.getCount();
+ *
+ *       if (countItems > 1) {
+ *          resultRS.clear();
+ *          resultRS.add(newItems.at(0));
+ *       }
+ *
+ *       // Вернем новую коллекцию
+ *       return resultRS;
+ *    }
+ * </pre>
  */
 /*
  * @event Controls/_interface/ILookup#selectorCallback Occurs when selected items with selector.
  * @param {Env/Event:Object} eventObject The event descriptor.
  * @param {RecordSet} initialItems List of selected items before opening the directory.
  * @param {RecordSet} newItemsThe list of selected items, after selecting from the directory.
+ * @remark
+ * The list of selected items can be replaced if a new collection is returned from the handler.
+ *
+ * @example
+ * The following example creates Controls/lookup:Input and shows how to handle the event.
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Input
+ *       source="{{_source}}"
+ *       keyProperty="id"
+ *       searchParam="title"
+ *       on:selectorCallback="_selectorCallback()">
+ *    </Controls.lookup:Input>
+ * </pre>
+ * JS:
+ * <pre>
+ *    _selectorCallback: function(initialItems, newItems) {
+ *       let resultRS = newItems.clone();
+ *       let countItems = resultRS.getCount();
+ *
+ *       if (countItems > 1) {
+ *          resultRS.clear();
+ *          resultRS.add(newItems.at(0));
+ *       }
+ *
+ *       // We will return a new collection
+ *       return resultRS;
+ *    }
+ * </pre>
  */
 
 /**
@@ -164,7 +240,7 @@ export default interface ILookup {
  *       source="{{_source}}"
  *       keyProperty="id"
  *       searchParam="title"
- *       on:showSelector="_showSelectorHandler()"
+ *       on:showSelector="_showSelectorHandler()">
  *    </Controls.lookup:Input>
  * </pre>
  * JS:
@@ -197,7 +273,7 @@ export default interface ILookup {
  *       source="{{_source}}"
  *       keyProperty="id"
  *       searchParam="title"
- *       on:showSelector="_showSelectorHandler()"
+ *       on:showSelector="_showSelectorHandler()">
  *    </Controls.lookup:Input>
  * </pre>
  * JS:

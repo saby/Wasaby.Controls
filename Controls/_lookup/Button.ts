@@ -53,24 +53,12 @@ export = Button;
 /**
  * @name Controls/_lookup/Button#style
  * @cfg {Enum} Стиль отображения кнопки.
- * @variant primary
- * @variant success
- * @variant warning
- * @variant danger
- * @variant info
- * @variant secondary
- * @variant default
- * @default secondary
+ * @remark
+ * {@link Controls/_interface/IButton#style Возможные значения.}
  */
 /*
  * @name Controls/_lookup/Button#style
  * @cfg {Enum} Button display style.
- * @variant primary
- * @variant success
- * @variant warning
- * @variant danger
- * @variant info
- * @variant secondary
- * @variant default
- * @default secondary
+ * @remark
+ * {@link Controls/_interface/IButton#style Possible Values.}
  */

@@ -285,7 +285,7 @@ var _private = {
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
- * @mixes Controls/interface/ISuggest
+ * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
  * @public
@@ -299,7 +299,7 @@ var _private = {
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
- * @mixes Controls/interface/ISuggest
+ * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
  * @public
