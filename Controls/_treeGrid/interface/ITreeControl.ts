@@ -28,6 +28,24 @@
  */
 
 /**
+ * @name Controls/_treeGrid/interface/ITreeControl#expandByItemClick
+ * @cfg {Boolean} Определят режим разворота узла в дереве.
+ * @variant true Разворачивание и сворачивание узла осуществляется по клику на него.
+ * @variant false Разворачивание и сворачивание узла осуществляется только по клику на экспандер.
+ * @default false
+ * <a href="/materials/demo-ws4-tree-grid-base">Example</a>.
+ */
+
+/*
+ * @name Controls/_treeGrid/interface/ITreeControl#expandByItemClick
+ * @cfg {Boolean} Defines the mode of node expanding.
+ * @variant true Toggle node by click on it's whole area.
+ * @variant false Toggle node by click on only it's expander.
+ * @default false
+ * <a href="/materials/demo-ws4-tree-grid-base">Example</a>.
+ */
+
+/**
  * @name Controls/_treeGrid/interface/ITreeControl#expandedItems
  * @cfg {{Array.<String>}} Массив идентификаторов развернутых узлов дерева.
  * <b>Note:</b>
