@@ -57,20 +57,6 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
  * @demo Controls-demo/Buttons/Menu/MenuPG
  */
 
-/**
- * @event Controls/_dropdown/Button#menuItemActivate Происходит при выборе элемента из списка.
- * @param {Env/Event:Object} eventObject Дескриптор события.
- * @param {Types/entity:Model} item Выбранный элемент.
- * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, выпадающий список не закроется.
- * По умолчанию, когда выбран пункт с иерархией, выпадающий список закрывается.
- */
-
-/*
- * @event Controls/_dropdown/Button#menuItemActivate Occurs when an item is selected from the list.
- * @remark If the menu has items with hierarchy and item with hierarchy was selected, you can return processing result from event handler,
- * if result will equals false, dropdown will not close. By default dropdown will close, when item with hierarchy was selected.
- */
-
 var Button = Control.extend({
    _template: template,
    _tmplNotify: tmplNotify,
@@ -109,3 +95,18 @@ Button.getDefaultOptions = function () {
 Button._theme = ['Controls/dropdown'];
 
 export = Button;
+
+/**
+ * @event Controls/_dropdown/Button#menuItemActivate Происходит при выборе элемента из списка.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Выбранный элемент.
+ * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, выпадающий список не закроется.
+ * По умолчанию, когда выбран пункт с иерархией, выпадающий список закрывается.
+ */
+
+/*
+ * @event Controls/_dropdown/Button#menuItemActivate Occurs when an item is selected from the list.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Event object.
+ * @remark If the menu has items with hierarchy and item with hierarchy was selected, you can return processing result from event handler,
+ * if result will equals false, dropdown will not close. By default dropdown will close, when item with hierarchy was selected.
+ */
