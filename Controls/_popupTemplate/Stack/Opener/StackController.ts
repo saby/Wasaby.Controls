@@ -4,7 +4,7 @@ import collection = require('Types/collection');
 import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import Deferred = require('Core/Deferred');
 import {parse as parserLib} from 'Core/library';
-import StackContent = require('wml!Controls/_popupTemplate/Stack/Opener/StackContent');
+import StackContent = require('Controls/_popupTemplate/Stack/Opener/StackContent');
 import 'css!theme?Controls/popupTemplate';
 
 const STACK_CLASS = 'controls-Stack';
@@ -234,11 +234,15 @@ const StackController = BaseController.extend({
     popupResize(): boolean {
         return false;
     },
-
     elementDestroyed(item) {
         this._stack.remove(item);
         this._update();
         return (new Deferred()).callback();
+    },
+
+    popupResizingLine(item, offset) {
+        item.popupOptions.stackWidth += offset;
+        _private.updatePopupOptions(item);
     },
 
     _update() {

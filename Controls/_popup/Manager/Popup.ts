@@ -121,6 +121,10 @@ let Popup = Control.extend({
         this._notify('popupMouseLeave', [this._options.id, popupEvent], {bubbling: true});
     },
 
+    _popupResizingLine: function(event, offset) {
+        this._notify('popupResizingLine', [this._options.id, offset], { bubbling: true });
+    },
+
     _animated(ev) {
         this._children.resizeDetect.start(ev);
         this._notify('popupAnimated', [this._options.id], {bubbling: true});

@@ -152,6 +152,14 @@ const _private = {
         }
         return false;
     },
+    popupResizingLine(id, offset) {
+        const element = _private.find(id);
+        if (element) {
+            element.controller.popupResizingLine(element, offset);
+            return true;
+        }
+        return false;
+    },
 
     popupUpdated(id) {
         const element = _private.find(id);

@@ -4,10 +4,9 @@ define(
       'Controls/popup',
       'Controls/popupTemplate',
       'Controls-demo/Popup/TestMaximizedStack',
-      'Controls/_popupTemplate/BaseController',
-      'wml!Controls/_popupTemplate/Stack/Opener/StackContent'
+      'Controls/_popupTemplate/BaseController'
    ],
-   (StackStrategy, popupMod, popupTemplate, TestMaximizedStack, BaseController, StackContent) => {
+   (StackStrategy, popupMod, popupTemplate, TestMaximizedStack, BaseController) => {
       'use strict';
 
       describe('Controls/_popup/Opener/Stack', () => {
@@ -108,7 +107,7 @@ define(
             assert.equal(itemConfig.position.right, 0);
             assert.equal(itemConfig.position.stackWidth, 800);
             assert.equal(itemConfig.position.bottom, 0);
-            assert.equal(itemConfig.popupOptions.content, StackContent);
+            assert.equal(itemConfig.popupOptions.content, popupTemplate.StackContent);
 
             let itemCount = 0;
             let items = popupTemplate.StackController._stack;
@@ -418,6 +417,36 @@ define(
 
             popupTemplate.StackController.elementCreated(item);
             assert.equal(item.position.stackWidth, undefined);
+         });
+         it('stack resizing', () => {
+            let item = {
+               popupOptions: {
+                  template: {},
+                  stackMinWidth: 500,
+                  stackMaxWidth: 1200,
+                  stackWidth: 700
+               }
+            };
+            let offset1 = 100, offset2 = -300;
+            popupTemplate.StackController.popupResizingLine(item, offset1);
+            assert.equal(item.popupOptions.stackWidth, 800);
+            popupTemplate.StackController.popupResizingLine(item, offset2);
+            assert.equal(item.popupOptions.stackWidth, 500);
+         });
+         it('stack resizing', () => {
+            let stackContentInstance = new popupTemplate.StackContent.default({});
+            let item = {
+               stackMinWidth: 500,
+               stackMaxWidth: 1200,
+               stackWidth: 700
+            };
+            stackContentInstance._beforeMount(item);
+            assert.equal(stackContentInstance._minOffset, 200);
+            assert.equal(stackContentInstance._maxOffset, 500);
+            item.stackWidth += 200;
+            stackContentInstance._beforeUpdate(item);
+            assert.equal(stackContentInstance._minOffset, 400);
+            assert.equal(stackContentInstance._maxOffset, 300);
          });
       });
    }
