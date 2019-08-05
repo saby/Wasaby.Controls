@@ -182,7 +182,7 @@ import 'Controls/breadcrumbs';
     * Контрол "Иерархический проводник".
     * Отображает данные иерархического списка, узел которого можно развернуть и перейти в него.
     * Позволяет переключать отображение элементов в режимы "таблица", "список" и "плитка".
-    * Конфигурация контрола и примеры использования доступны в <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>руководстве разработчика</a>.
+    * Инструкции по настройке контрола доступны в <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>руководстве разработчика</a>.
     * Демо-примеры:
     * <ul>
     *    <li><a href="/materials/demo-ws4-explorer">Иерархический проводник в режимах "список" и "плитка"</a></li>
