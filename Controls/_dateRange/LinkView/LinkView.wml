@@ -19,7 +19,7 @@
               <Controls.input:Label name="Link" caption="{{ _caption }}" underline="hovered" on:click="_onClick()"/>
            </ws:else>
         </span>
-        <ws:if data="{{ _options.clearButtonVisibility && _options.startValue }}">
+        <ws:if data="{{ _clearButtonVisible }}">
               <span class="controls-DateLinkView__clear" on:click="_clearDate()"></span>
         </ws:if>
         <ws:if data="{{ (_options.nextArrowVisibility || _options.showNextArrow) && _viewMode == 'selector' }}">
