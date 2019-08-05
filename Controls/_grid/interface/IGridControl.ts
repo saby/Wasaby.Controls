@@ -140,13 +140,28 @@
  * <ul>
  *    <li>controls-Grid__header-cell_spacing_money - используется для добавления отступа в заголовке столбца при рендере денежных данных в самом столбце.</li>
  * </ul>
+ *
+ * @example
+ * Пример добавления кастомного шаблона:
+ * <pre>
+ *    <Controls.grid:View>
+ *       <header>
+ *           <template>
+ *             <Controls.buttons:Button>Description</Controls.buttons:Button>
+ *           </template>
+ *       </header>
+ *    </Controls.grid:View>
+ * </pre>
+ *
  * @example
  * Пример добавления интервала между текстами заголовков для столбцов с денежными полями:
  * <pre>
  *    <Controls.grid:View>
- *       <headerTemplate>
- *          <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
- *       </headerTemplate>
+ *       <header>
+ *           <template>
+ *              <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
+ *           </template>
+ *       </header>
  *    </Controls.grid:View>
  * </pre>
  * @example
