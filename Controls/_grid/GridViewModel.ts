@@ -812,22 +812,18 @@ var
         // ---------------------- resultColumns ----------------------
         // -----------------------------------------------------------
 
-        getResultsPosition: function () {
-            var items;
-            var isShowResults;
-            if (this.getRootItemsForResultsPosition) {
-                items = this.getRootItemsForResultsPosition();
-                isShowResults = items && items.length > 1;
-            } else {
-                items = this.getItems();
-                isShowResults = items && items.getCount() > 1;
-            }
-            if (isShowResults) {
+        getResultsPosition: function() {
+            if (this.isDrawResults()) {
                 if (this._options.results) {
                     return this._options.results.position;
                 }
                 return this._options.resultsPosition;
             }
+        },
+
+        isDrawResults: function() {
+            const items = this.getItems();
+            return items && items.getCount() > 1;
         },
 
         setResultsPosition: function(position) {

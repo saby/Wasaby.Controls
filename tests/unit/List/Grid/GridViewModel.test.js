@@ -1300,12 +1300,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                resultsPosition: 'top'
             })
             assert.deepEqual('top', newGridModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
-
-            // mock HierarchyRelation
-            newGridModel.getRootItemsForResultsPosition = () => [1,2,3];
-            assert.equal('top', newGridModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
-            newGridModel.getRootItemsForResultsPosition = () => [1];
-            assert.equal(undefined, newGridModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
+            assert.isTrue(newGridModel.isDrawResults())
+            newGridModel.getItems = () => ({
+               getCount: () => [1]
+            })
+            assert.isFalse(newGridModel.isDrawResults())
          });
 
          it('is multiheader', function() {
