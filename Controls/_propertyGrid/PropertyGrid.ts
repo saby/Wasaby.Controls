@@ -139,7 +139,7 @@ class PropertyGrid extends Control  {
         editingObjectClone[name] = value;
         itemClone.set(PROPERTY_VALUE_FIELD, value);
 
-        this.items.getRecordById(name).merge(item);
+        this.items.getRecordById(name).set(PROPERTY_VALUE_FIELD, value);
 
         event.stopPropagation();
         this._notify('editingObjectChanged', [editingObjectClone]);

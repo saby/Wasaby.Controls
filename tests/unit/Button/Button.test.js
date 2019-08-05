@@ -196,6 +196,10 @@ define(['Controls/buttons'], function(buttons) {
             let cfg = actualAPI.iconSize({ icon: 'icon-large icon-Author' });
             assert.equal('l', cfg, 'wrong cfg');
          });
+         it('empty', function() {
+            let cfg = actualAPI.iconSize({ icon: 'icon-Author' });
+            assert.equal('m', cfg, 'wrong cfg');
+         });
       });
 
       describe('iconStyle', function() {

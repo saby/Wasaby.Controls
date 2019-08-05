@@ -1,5 +1,6 @@
 define([
    'Core/core-merge',
+   'Types/collection',
    'Controls/calendar',
    'SBIS3.CONTROLS/Utils/DateUtil',
    'unit/Calendar/Utils',
@@ -7,6 +8,7 @@ define([
    'wml!Controls/_calendar/MonthList/YearTemplate'
 ], function(
    coreMerge,
+   collection,
    calendar,
    DateUtil,
    calendarTestUtils,
@@ -41,6 +43,21 @@ define([
             assert.equal(ml._scrollToPosition, position);
             assert.equal(ml._displayedPosition, position);
             assert.equal(ml._startPositionId, '2018-01-01');
+         });
+      });
+
+      describe('_afterMount', function() {
+         it('should set setShadowMode', function() {
+            let
+               control = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
+
+            control._children = {
+               scroll: {
+                  setShadowMode: sinon.fake()
+               }
+            };
+            control._afterMount();
+            sinon.assert.called(control._children.scroll.setShadowMode);
          });
       });
 
@@ -109,8 +126,10 @@ define([
          [{
             title: 'Should generate an event when the element appeared on top and half visible',
             entries: [{
-               boundingClientRect: { top: 10, bottom: 30 },
-               rootBounds: { top: 20 },
+               nativeEntry: {
+                  boundingClientRect: { top: 10, bottom: 30 },
+                  rootBounds: { top: 20 }
+               },
                data: new Date(2019, 0)
             }],
             options: {},
@@ -118,20 +137,24 @@ define([
          }, {
             title: 'Should generate an event when the element appeared on top and the next one is half visible. viewMode: "year"',
             entries: [{
-               boundingClientRect: { top: 50, bottom: 30 },
-               rootBounds: { top: 60 },
-               data: new Date(2019, 0),
-               target: { offsetHeight: 50 }
+               nativeEntry: {
+                  boundingClientRect: { top: 50, bottom: 30 },
+                  rootBounds: { top: 60 },
+                  target: { offsetHeight: 50 }
+               },
+               data: new Date(2019, 0)
             }],
             options: {},
             date: new Date(2020, 0)
          }, {
             title: 'Should generate an event when the element appeared on top and the next one is half visible. viewMode: "month"',
             entries: [{
-               boundingClientRect: { top: 50, bottom: 30 },
-               rootBounds: { top: 60 },
-               data: new Date(2019, 0),
-               target: { offsetHeight: 50 }
+               nativeEntry: {
+                  boundingClientRect: { top: 50, bottom: 30 },
+                  rootBounds: { top: 60 },
+                  target: { offsetHeight: 50 }
+               },
+               data: new Date(2019, 0)
             }],
             options: { viewMode: 'month' },
             date: new Date(2019, 1)
@@ -147,6 +170,47 @@ define([
                component._intersectHandler(null, test.entries);
                sinon.assert.calledWith(component._notify, 'positionChanged', [test.date]);
                sandbox.restore();
+            });
+         });
+
+         [{
+            title: 'Should add date to displayed dates.',
+            entries: [{
+               nativeEntry: {
+                  boundingClientRect: { top: 10, bottom: 30 },
+                  rootBounds: { top: 20 },
+                  isIntersecting: true
+               },
+               data: new Date(2019, 0)
+            }],
+            displayedDates: [],
+            options: { source: {} },
+            resultDisplayedDates: [(new Date(2019, 0)).getTime()],
+            date: new Date(2019, 0)
+         }, {
+            title: 'Should remove date from displayed dates.',
+            entries: [{
+               nativeEntry: {
+                  boundingClientRect: { top: 10, bottom: 30 },
+                  rootBounds: { top: 20 },
+                  isIntersecting: false
+               },
+               data: new Date(2019, 0)
+            }],
+            displayedDates: [(new Date(2019, 0)).getTime(), 123],
+            options: { source: {} },
+            resultDisplayedDates: [123],
+            date: new Date(2019, 0)
+         }].forEach(function(test) {
+            it(test.title, function() {
+               const
+                  component = calendarTestUtils.createComponent(
+                     calendar.MonthList, coreMerge(test.options, config, { preferSource: true })
+                  );
+
+               component._displayedDates = test.displayedDates;
+               component._intersectHandler(null, test.entries);
+               assert.deepEqual(component._displayedDates, test.resultDisplayedDates);
             });
          });
       });

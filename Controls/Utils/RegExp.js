@@ -18,7 +18,7 @@ define('Controls/Utils/RegExp', [], function() {
        * @return {String} Escaped value.
        */
       escapeSpecialChars: function(value) {
-         return value.replace(/[\(\)\{\}\[\]\?\+\*\.\\\|]/g, '\\$&');
+         return value.replace(/[$^*+?.(){}[\]\\|]/g, '\\$&');
       }
    };
 });

@@ -415,6 +415,8 @@ interface IFieldTemplate {
           */
          _viewModel: null,
 
+         _wasActionUser: true,
+
          /**
           * @type {Controls/Utils/tmplNotify}
           * @protected

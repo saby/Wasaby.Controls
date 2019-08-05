@@ -1,6 +1,17 @@
+<ws:template name="caption">
+   <span attr:class="controls-Back__caption controls-Back__caption_size-{{_options.size}} controls-Back__caption_style-{{_style}}">{{_options.caption}}</span>
+</ws:template>
+
 <span attr:title="{{_options.tooltip}}" class="controls-Back">
    <span class="controls-Back__wrapper controls-Back__wrapper_{{_options.size}}">
       <div class="controls-Back_style-{{_style}} controls-Back_style-{{_style}}_size-{{_options.size}} controls-Back_size-{{_options.size}}"></div>
-      <span attr:class="controls-Back__caption controls-Back__caption_size-{{_options.size}} controls-Back__caption_style-{{_style}}">{{_options.caption}}</span>
+      <ws:if data="{{_isOldIe}}">
+         <div class="controls-Back__caption__wrapper">
+            <ws:partial template="caption"/>
+         </div>
+      </ws:if>
+      <ws:else>
+         <ws:partial template="caption"/>
+      </ws:else>
    </span>
 </span>
