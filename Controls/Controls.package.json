@@ -1,7 +1,8 @@
 [{
   "include": [
     "Controls/Application",
-    "Controls/Application/*"
+    "Controls/Application/*",
+    "Core/Themes/ThemesControllerNew"
   ],
   "exclude": [
     "wml!Controls/Application/CompatibleScripts",
@@ -41,5 +42,9 @@
     "Controls/Utils/isVDOMTemplate"
   ],
   "output": "controls-utils.package.js"
-}
-]
+}, {
+  "includePackages": [
+    "Controls/controls-utils.package.js"
+  ],
+  "extendsTo": "vdom-superbundle.package.js"
+}]
