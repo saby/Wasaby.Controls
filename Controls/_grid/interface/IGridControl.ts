@@ -136,10 +136,18 @@
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @remark
  * Базовый шаблон заголовка таблицы для Controls/grid:View: "Controls/grid:HeaderContent".
+ * Базовый шаблон поддерживает следующие css-модификаторы:
+ * <ul>
+ *    <li>controls-Grid__header-cell_spacing_money - используется для добавления отступа в заголовке столбца при рендере денежных данных в самом столбце.</li>
+ * </ul>
  * @example
  * Пример добавления интервала между текстами заголовков для столбцов с денежными полями:
  * <pre>
- *    <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
+ *    <Controls.grid:View>
+ *       <headerTemplate>
+ *          <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
+ *       </headerTemplate>
+ *    </Controls.grid:View>
  * </pre>
  * @example
  * Пример массива колонок многоуровнего заголовка
