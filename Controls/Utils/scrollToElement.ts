@@ -60,6 +60,9 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
  *
  * <h3>element: HTMLElement - The dom element to be made visible</h3>
  * <h3>toBottom: boolean - Determines if bottom edge should be visible</h3>
+ * <h3>force: boolean - If true, then it will scroll the element to the top or to the bottom
+ * of the scrolled area unconditionally. If false, it will scroll only if the element
+ * is completely or partially hidden outside the scrolled area.</h3>
  *
  * <h3>Usage example</h3>
  * <pre>
@@ -81,7 +84,7 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
  * @public
  * @author Красильников А.С.
  */
-function scrollToElement(element: HTMLElement, toBottom?: Boolean) {
+function scrollToElement(element: HTMLElement, toBottom?: Boolean, force?: Boolean) {
    getScrollableParents(element).forEach(parent => {
       const
          elemToScroll = parent === document.documentElement ? document.body : parent,
@@ -89,14 +92,14 @@ function scrollToElement(element: HTMLElement, toBottom?: Boolean) {
          elemOffset = getOffset(element), //Offset of the element changes after each scroll, so we can't just cache it
          stickyHeaderHeight = getStickyHeaderHeight(parent);
 
-      if (parentOffset.bottom < elemOffset.bottom) {
+      if (force || parentOffset.bottom < elemOffset.bottom) {
          if (toBottom) {
             elemToScroll.scrollTop += elemOffset.bottom - parentOffset.bottom + stickyHeaderHeight.bottom;
          } else {
             elemToScroll.scrollTop += elemOffset.top - parentOffset.top - stickyHeaderHeight.top;
          }
       } else {
-         if (parentOffset.top + parentOffset.top > elemOffset.top) {
+         if (parentOffset.top + stickyHeaderHeight.top > elemOffset.top) {
             if (toBottom) {
                elemToScroll.scrollTop -= Math.max(parentOffset.bottom - elemOffset.bottom + stickyHeaderHeight.bottom, 0);
             } else {

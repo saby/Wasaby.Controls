@@ -68,6 +68,34 @@ define([
             assert.equal(element.parentElement.scrollTop, 5);
          });
 
+         it('to top force', function() {
+            mockDOM();
+            var element = {
+               parentElement: {
+                  overflowY: 'scroll',
+                  scrollHeight: 110,
+                  clientHeight: 100,
+                  top: 10,
+                  getBoundingClientRect: function() {
+                     return {
+                        top: this.top,
+                        height: this.clientHeight
+                     };
+                  },
+                  scrollTop: 0,
+                  className: ''
+               },
+               getBoundingClientRect: function() {
+                  return {
+                     top: 15,
+                     height: 150
+                  };
+               }
+            };
+            scrollToElement(element, false, true);
+            assert.equal(element.parentElement.scrollTop, 5);
+         });
+
          it('to bottom', function() {
             mockDOM();
             var element = {
@@ -157,6 +185,34 @@ define([
                }
             };
             scrollToElement(element);
+            assert.equal(element.parentElement.scrollTop, -5);
+         });
+
+         it('to top force', function() {
+            mockDOM();
+            var element = {
+               parentElement: {
+                  overflowY: 'scroll',
+                  scrollHeight: 160,
+                  clientHeight: 150,
+                  top: 15,
+                  className: '',
+                  getBoundingClientRect: function() {
+                     return {
+                        top: this.top,
+                        height: this.clientHeight
+                     };
+                  },
+                  scrollTop: 0
+               },
+               getBoundingClientRect: function() {
+                  return {
+                     top: 10,
+                     height: 100
+                  };
+               }
+            };
+            scrollToElement(element, false, true);
             assert.equal(element.parentElement.scrollTop, -5);
          });
 
