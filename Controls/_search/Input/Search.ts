@@ -60,6 +60,10 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
 /**
  * @name Controls/_search/Input/Search#searchButtonVisible
  * @cfg {Boolean} Определяет, показывать ли значок поиска.
+ * @default true
+ * @remark
+ * - true — показывать;
+ * - false — скрывать.
  */
 
 /*
@@ -69,12 +73,21 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
 
 /**
  * @event Controls/_search/Input/Search#searchClick Происходит при нажатии кнопки поиска.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ */
+ 
+/**
  * @event Controls/Input/resetClick#resetClick Происходит при нажатии кнопки reset.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
 /*
  * @event Controls/_search/Input/Search#searchClick Occurs when search button is clicked.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Event descriptor.
+ */
+/*
  * @event Controls/Input/resetClick#resetClick Occurs when reset button is clicked.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Event descriptor.
  */
 
 var _private = {
