@@ -1176,8 +1176,8 @@ var
             current.multiSelectClassList += current.hasMultiSelect ? ' controls-GridView__checkbox' : '';
 
             let superShouldDrawMarker = current.shouldDrawMarker;
-            current.shouldDrawMarker = (marker, columnIndex) => {
-                return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
+            current.shouldDrawMarker = (markerVisibility, columnIndex) => {
+                return columnIndex === 0 && superShouldDrawMarker.apply(this, [markerVisibility]);
             };
 
             if (current.multiSelectVisibility !== 'hidden') {

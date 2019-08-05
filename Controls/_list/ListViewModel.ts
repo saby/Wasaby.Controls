@@ -54,11 +54,10 @@ var _private = {
         if (markedKey === null) {
             return;
         }
-        const displayItem = self.getItemById(markedKey, self._options.keyProperty);
-        if (displayItem || !(self._editingItemData && self._editingItemData.isAdd)) {
-            return displayItem;
+        if (self._editingItemData && self._editingItemData.isAdd) {
+            return self._editingItemData.item;
         } else {
-            return self._editingItemData && self._editingItemData.key === markedKey ? self._editingItemData.item : null;
+            return self.getItemById(markedKey, self._options.keyProperty);
         }
     },
     isSelected(self: ListViewModel, current: IListItemData): boolean {
@@ -168,8 +167,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ? _private.getMultiSelectClassList(itemsModelCurrent) : '';
 
-        itemsModelCurrent.shouldDrawMarker = function (isNeedMarker: boolean) {
-            const canDrawMarker = isNeedMarker !== false && itemsModelCurrent.markerVisibility !== 'hidden';
+        itemsModelCurrent.shouldDrawMarker = function (markerVisibility: boolean) {
+            const canDrawMarker = markerVisibility !== false && itemsModelCurrent.markerVisibility !== 'hidden';
             return canDrawMarker && (itemsModelCurrent.isAdd ? true : _private.isSelected(self, itemsModelCurrent));
         };
 
