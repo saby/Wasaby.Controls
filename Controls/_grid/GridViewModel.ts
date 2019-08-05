@@ -999,6 +999,10 @@ var
             this._model.setRowSpacing(rowSpacing);
         },
 
+        isAllGroupsCollapsed(): boolean {
+            return this._model.isAllGroupsCollapsed();
+        },
+
         getColumns: function() {
             return this._columns;
         },
