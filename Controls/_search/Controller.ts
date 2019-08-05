@@ -91,8 +91,12 @@ var _private = {
       if (self._options.parentProperty && self._viewMode !== 'search') {
          _private.assignServiceFilters(filter);
       }
-      if (self._root !== undefined && self._options.parentProperty && self._options.startingWith === 'current') {
-         filter[self._options.parentProperty] = self._root;
+      if (self._root !== undefined && self._options.parentProperty) {
+         if (self._options.startingWith === 'current') {
+            filter[self._options.parentProperty] = self._root;
+         } else {
+            delete filter[self._options.parentProperty];
+         }
       }
       self._loading = true;
    },
