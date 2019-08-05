@@ -129,12 +129,25 @@
  * @property {String} id Идентификатор операции.
  * @property {String} title Название операции.
  * @property {String} icon Иконка операции.
- * @property {Number} showType Местоположение операции. В свойство передается константа с соответствующим значением (0 - menu | 1 - toolbar and menu | 2 - toolbar). Если свойство не указано, то itemActions отображаются только в меню.
- * @property {String} style Режим визуального отображения операции. (secondary | warning | danger | success).
- * @property {String} iconStyle Режим визуального отображения иконки операции. (secondary | warning | danger | success).
+ * См. <a href="/docs/js/icons/">список иконок</a>.
+ * @property {Number} [showType=0] Местоположение операции.
+ * В свойство передается константа с соответствующим значением.
+ * В значении "0" (по умолчанию) операция отображается в контекстном меню.
+ * В значении "1" операция отображается в строке и в контекстном меню.
+ * В значении "2" операция отображается в строке.
+ * Когда в свойстве не передано значение, операция отображаются только в меню.
+ * @property {String} style Стиль отображения операции над записью.
+ * В свойству задают имя прикладного класса, которое в результате преобразуется в класс вида "controls-itemActionsV__action_style_имя_прикладного_класса".
+ * Он будет установлен для html-контейнера самой операции над записью, а его свойства будут применены как к тексту (свойство title), так и к иконке (свойство icon).
+ * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/#config-style">руководство разработчика</a>.
+ * @property {String} [iconStyle=default] Стиль иконки. 
+ * Возможные значения: default, attention, error и done.
+ * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/#config-style">руководство разработчика</a>.
  * @property {Function} handler Обработчик операции.
+ * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/#item-actions-position">пример обработчика</a>.
  * @property {String} parent Ключ родителя операции.
  * @property {boolean|null} parent@ Поле, описывающее тип узла (список, узел, скрытый узел).
+ * Подробнее о различиях между типами узлов можно прочитать <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">здесь</a>.
  */
 
 /*
@@ -290,7 +303,7 @@
 
 /**
  * @name Controls/_list/interface/IList#itemActionVisibilityCallback
- * @cfg {function} Функция обратного вызова для определения видимости элементов в панели действий над записью.
+ * @cfg {Function} Функция обратного вызова для определения видимости элементов в панели действий над записью.
  * @param {ItemAction} action Объект с конфигурацией конкретной операции.
  * @param {Types/entity:Model} item Модель, содержащая данные записи.
  * @returns {Boolean} Следует ли отображать действие.
@@ -321,7 +334,7 @@
 
 /*
  * @name Controls/_list/interface/IList#itemActionVisibilityCallback
- * @cfg {function} item operation visibility filter function
+ * @cfg {Function} item operation visibility filter function
  * @param {ItemAction} action Object with configuration of an action.
  * @param {Types/entity:Model} item Instance of the item whose action is being processed.
  * @returns {Boolean} Determines whether the action should be rendered.
