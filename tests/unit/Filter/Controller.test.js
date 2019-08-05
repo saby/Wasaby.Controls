@@ -462,7 +462,6 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
          }, {
             id: 'testId2',
             value: 'testValue',
-            textValue: undefined,
             visibility: false
          }, {
             id: 'testId3',
@@ -476,8 +475,6 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             visibility: true
          }, {
             id: 'testId5',
-            value: 'resetValue',
-            textValue: undefined,
             visibility: false
          }]);
       });
@@ -548,8 +545,6 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             visibility: undefined
          }, {
             id: 'testId3',
-            value: '',
-            textValue: undefined,
             visibility: undefined
          }]);
          historyItems = Filter._private.prepareHistoryItems(fbItems, fastFilterItems);
@@ -560,8 +555,6 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             visibility: undefined
          }, {
             id: 'testId3',
-            value: '',
-            textValue: undefined,
             visibility: undefined
          }]);
       });
@@ -655,7 +648,6 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
          assert.deepEqual(Filter._private.getHistoryData(filterButtonItems2), [{
             id: 'testId2',
             value: 'testValue',
-            textValue: undefined,
             visibility: undefined
          }]);
       });
@@ -738,6 +730,19 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             value: 'testValue4',
             textValue: 'textTextValue',
             visibility: true,
+            viewMode: 'basic'
+         };
+         assert.deepStrictEqual(Filter._private.minimizeItem(filterButtonItem), expectedMinItem);
+
+         filterButtonItem = {
+            name: 'testId4',
+            value: 'testValue4',
+            visibility: true,
+            viewMode: 'basic'
+         };
+         expectedMinItem = {
+            name: 'testId4',
+            visibility: false,
             viewMode: 'basic'
          };
          assert.deepStrictEqual(Filter._private.minimizeItem(filterButtonItem), expectedMinItem);
