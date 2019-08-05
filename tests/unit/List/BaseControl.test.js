@@ -1665,6 +1665,13 @@ define([
             });
          })
       });
+      it('hasItemActions', function() {
+         let itemAct = [1, 2, 3];
+         let itemActionsProp = 'itemActions';
+         assert.isTrue(lists.BaseControl._private.hasItemActions(itemAct));
+         assert.isTrue(lists.BaseControl._private.hasItemActions(undefined, itemActionsProp));
+         assert.isFalse(lists.BaseControl._private.hasItemActions(undefined, undefined));
+      });
       describe('_canUpdateItemsActions', function() {
          var lnSource = new sourceLib.Memory({
                idProperty: 'id',
@@ -2408,7 +2415,7 @@ define([
          assert.strictEqual(notifiedEvent, 'dragEnter');
          assert.strictEqual(notifiedEntity, goodDragObject.entity);
       });
-      
+
       it('itemMouseDown prevents native drag synchronously', function() {
          let isDefaultPrevented = false;
 
