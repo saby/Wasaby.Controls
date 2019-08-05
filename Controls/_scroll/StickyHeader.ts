@@ -105,13 +105,13 @@ import 'Controls/_scroll/StickyHeader/_StickyHeader';
 
       /**
        * @event Controls/_scroll/StickyHeader#fixed Происходит при изменении состояния фиксации.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} event Дескриптор события.
+       * @param {Vdom/Vdom:SyntheticEvent} event Дескриптор события.
        * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Информация о событии фиксации.
        */
 
       /*
        * @event Controls/_scroll/StickyHeader#fixed Change the fixation state.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} event Event descriptor.
+       * @param {Vdom/Vdom:SyntheticEvent} event Event descriptor.
        * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
        */
 

@@ -63,7 +63,7 @@ class Component extends Control {
     }
 
     /**
-     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} event
+     * @param {Vdom/Vdom:SyntheticEvent} event
      * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} fixedHeaderData
      * @private
      */

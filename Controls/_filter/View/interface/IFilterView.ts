@@ -383,7 +383,7 @@
 
 /*
  * @event Controls/_filter/interface/IFilterView#filterChanged Happens when filter changed.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Object} filter New filter.
  */
 

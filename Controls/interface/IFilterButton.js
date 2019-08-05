@@ -279,7 +279,7 @@ define('Controls/interface/IFilterButton', [
 
    /*
     * @event Controls/interface/IFilterButton#filterChanged Happens when filter changed.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Object} filter New filter.
     */
 
@@ -291,7 +291,7 @@ define('Controls/interface/IFilterButton', [
 
    /*
     * @event Controls/interface/IFilterButton#itemsChanged Happens when items changed.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Object} items New items.
     */
 

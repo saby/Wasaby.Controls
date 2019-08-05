@@ -23,7 +23,7 @@ define('Controls/interface/IEditableArea', [
 
    /**
     * @event Controls/interface/IEditableArea#beforeBeginEdit Happens before start of editing.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} editObject Editing record.
     * @returns {BeforeBeginEditResult}
     * @example
@@ -50,7 +50,7 @@ define('Controls/interface/IEditableArea', [
 
    /**
     * @event Controls/interface/IEditableArea#beforeEndEdit Happens before the end of editing.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} editObject Editing record.
     * @param {Boolean} commit If it is true editing ends with saving.
     * @returns {BeforeEndEditResult}
@@ -94,7 +94,7 @@ define('Controls/interface/IEditableArea', [
 
    /**
     * @event Controls/interface/IEditableArea#afterEndEdit Happens after the end of editing.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} editObject Editing record.
     * @example
     * The following example shows how to hide and show an image based on the state of editing.

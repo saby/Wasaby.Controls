@@ -32,7 +32,7 @@ import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
 /**
  * @event Controls/_calendar/MonthList#positionChanged Происходит когда меняется год или месяц. Т.е. когда
  * год или месяц пересекают верхнюю границу.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {date} Date отображаемый в самом верху год или месяц.
  * @example
  * Обновляем заголовок в зависимости от отображаемого года.

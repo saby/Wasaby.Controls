@@ -140,7 +140,7 @@ define('Controls/interface/IPromisedSelectable', [
    /**
     * @event Controls/interface/IPromisedSelectable#selectedKeysChanged Происходит при изменении набора выбранных элементов списка.
     * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Array.<Number|String>} keys Массив ключей выбранных элементов.
     * @param {Array.<Number|String>} added Массив ключей, добавленных в selectedKeys.
     * @param {Array.<Number|String>} deleted Массив ключей, удаленных из selectedKeys.
@@ -170,7 +170,7 @@ define('Controls/interface/IPromisedSelectable', [
    /*
     * @event Controls/interface/IPromisedSelectable#selectedKeysChanged Occurs when selection was changed.
     * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Array.<Number|String>} keys Array of selected items' keys.
     * @param {Array.<Number|String>} added Array of keys added to selectedKeys.
     * @param {Array.<Number|String>} deleted Array of keys deleted from selectedKeys.
@@ -200,7 +200,7 @@ define('Controls/interface/IPromisedSelectable', [
    /**
     * @event Controls/interface/IPromisedSelectable#excludedKeysChanged Происходит при изменении набора исключенных из выбора элементов списка.
     * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Array.<Number|String>} keys Набор ключей элементов, которые должны быть исключены из выборки.
     * @param {Array.<Number|String>} added Массив ключей, добавленных в excludedKeys.
     * @param {Array.<Number|String>} deleted Массив ключей, удаленных из excludedKeys.
@@ -230,7 +230,7 @@ define('Controls/interface/IPromisedSelectable', [
    /*
     * @event Controls/interface/IPromisedSelectable#excludedKeysChanged Occurs when selection was changed.
     * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Array.<Number|String>} keys Array of keys of items that should be excluded from the selection.
     * @param {Array.<Number|String>} added Array of keys added to excludedKeys.
     * @param {Array.<Number|String>} deleted Array of keys deleted from excludedKeys.
