@@ -1266,15 +1266,16 @@ define([
       it('_onViewPortResize, setLoadOffset', function() {
          let bc = new lists.BaseControl();
          bc._needScrollCalculation = true;
-         bc._loadOffset = {top: 100, bottom: 100, isNull: false};
-         bc._children = triggers;
-         bc._onViewPortResize(bc, 600);
-         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200, isNull: false});
+         bc._loadOffset = {top: 100, bottom: 100};
+         bc._children = triggers;;
+         lists.BaseControl._private.onScrollShow(bc);
+         bc._onViewPortResize(bc, 600)
+         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200});
 
          //Если контрол в состоянии ошибки, то не нужно ничего делать
          bc.__error = true;
-         bc._setLoadOffset(100, 100, false);
-         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200, isNull: false});
+         bc._setLoadOffset(100, 100);
+         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200});
 
       });
 
@@ -1297,14 +1298,14 @@ define([
          baseControl._children = triggers;
          baseControl.saveOptions(cfg);
          baseControl._needScrollCalculation = true;
-         baseControl._loadOffset = {top: 0, bottom: 0, isNull: false};
+         baseControl._loadOffset = {top: 0, bottom: 0};
 
          lists.BaseControl._private.onScrollHide(baseControl);
-         assert.deepEqual({top: 0, bottom: 0, isNull: true}, baseControl._loadOffset);
+         assert.deepEqual({top: 0, bottom: 0}, baseControl._loadOffset);
          assert.isFalse(baseControl._isScrollShown);
 
          lists.BaseControl._private.onScrollShow(baseControl);
-         assert.deepEqual({top: 100, bottom: 100, isNull: false}, baseControl._loadOffset);
+         assert.deepEqual({top: 100, bottom: 100}, baseControl._loadOffset);
          assert.isTrue(baseControl._isScrollShown);
 
       });
@@ -2335,6 +2336,89 @@ define([
          ctrl.itemsDragNDrop = true;
          ctrl._itemMouseDown({}, {key: 1}, {});
          assert.isUndefined(ctrl._itemDragData);
+      });
+
+      it('_dragEnter only works with ItemsEntity', function() {
+         const ctrl = new lists.BaseControl({});
+
+         ctrl._listViewModel = {
+            getDragEntity: () => null
+         };
+
+         let
+            notifiedEvent = null,
+            notifiedEntity = null;
+
+         ctrl._notify = function(eventName, dragEntity) {
+            notifiedEvent = eventName;
+            notifiedEntity = dragEntity && dragEntity[0];
+         };
+
+         const badDragObject = { entity: {} };
+         ctrl._dragEnter({}, badDragObject);
+         assert.isNull(notifiedEvent);
+
+         const goodDragObject = {
+            entity: {
+               '[Controls/dragnDrop:ItemsEntity]': true
+            }
+         };
+         ctrl._dragEnter({}, goodDragObject);
+         assert.strictEqual(notifiedEvent, 'dragEnter');
+         assert.strictEqual(notifiedEntity, goodDragObject.entity);
+      });
+
+      it('itemMouseDown prevents native drag synchronously', function() {
+         let isDefaultPrevented = false;
+
+         const
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [null],
+                  excludedKeys: []
+               },
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     hasMore: false
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               },
+               items: rs,
+               selectedKeys: [null],
+               excludedKeys: [],
+               readOnly: false,
+               itemsDragNDrop: true
+            },
+            ctrl = new lists.BaseControl(),
+            fakeMouseDown = {
+               target: {
+                  closest: () => false
+               },
+               preventDefault: () => isDefaultPrevented = true
+            };
+
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+
+         ctrl._itemMouseDown({}, { key: 1 }, fakeMouseDown);
+
+         // getItemsBySelection будет асинхронный, preventDefault все равно должен
+         // быть вызван синхронно
+         assert.isTrue(isDefaultPrevented);
       });
 
       it('_documentDragEnd', function() {

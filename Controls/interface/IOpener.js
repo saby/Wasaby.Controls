@@ -101,7 +101,7 @@ define('Controls/interface/IOpener', [], function() {
 
    /**
     * @name Controls/interface/IOpener#templateOptions
-    * @cfg {String|Function} Опции для котнрола, переданного в {@link template}
+    * @cfg {String|Function} Опции для контрола, переданного в {@link template}
     */
 
    /*

@@ -259,13 +259,28 @@ import 'css!theme?Controls/scroll';
                   delta;
 
                this._currentPageOffset = pageOffset;
-
-               if (event.target.getAttribute('name') === 'scrollbar') {
+               if (this._fix1177446501) {
+                  this._startPageOffset = pageOffset;
                   delta = _private.calcScrollbarDelta(thumbOffset, pageOffset, this._thumbSize);
-                  this._setPosition(this._position + delta / this._scrollRatio, true);
+                  this._startPosition = this._position + delta / this._scrollRatio;
+
+                  if (event.target.getAttribute('name') === 'scrollbar') {
+                     this._setPosition(this._startPosition, true);
+                  } else {
+                     this._children.dragNDrop.startDragNDrop(null, event);
+                  }
                } else {
-                  this._children.dragNDrop.startDragNDrop(null, event);
+                  if (event.target.getAttribute('name') === 'scrollbar') {
+                     delta = _private.calcScrollbarDelta(thumbOffset, pageOffset, this._thumbSize);
+                     this._setPosition(this._position + delta / this._scrollRatio, true);
+                  } else {
+                     this._children.dragNDrop.startDragNDrop(null, event);
+                  }
                }
+            },
+
+            setFix1177446501: function(val) {
+               this._fix1177446501 = val;
             },
 
             _scrollbarStartDragHandler: function() {
@@ -280,9 +295,15 @@ import 'css!theme?Controls/scroll';
             _scrollbarOnDragHandler: function(e, event) {
                var
                   pageOffset = _private.getPageOffset(event.domEvent, this._options.direction),
+                  delta, newPosition;
+               if (this._fix1177446501) {
+                  delta = pageOffset - this._startPageOffset;
+                  newPosition = this._startPosition + delta / this._scrollRatio;
+               } else {
                   delta = pageOffset - this._currentPageOffset;
-
-               if (this._setPosition(this._position + delta / this._scrollRatio, true)) {
+                  newPosition = this._position + delta / this._scrollRatio;
+               }
+               if (this._setPosition(newPosition, true)) {
                   this._currentPageOffset = pageOffset;
                }
             },

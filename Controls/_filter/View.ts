@@ -60,7 +60,8 @@ var _private = {
     },
 
     prepareItems: function(self, items) {
-        self._source = object.clone(items);
+        // When serializing the Date, "_serializeMode" field is deleted, so object.clone can't be used
+        self._source = CoreClone(items);
     },
 
     calculateStateSourceControllers: function(configs, source) {
@@ -180,7 +181,7 @@ var _private = {
                 const config = configs[item.name];
                 let keys = _private.getLoadKeys(config, item.value);
                 if (keys.length) {
-                    let editorOpts = {source: config.source};
+                    let editorOpts = {source: item.editorOptions.source};
                     editorOpts.filter = config.filter || {};
 
                     const keyProperty = config.keyProperty;
@@ -375,15 +376,19 @@ var Filter = Control.extend({
 
     _beforeUpdate: function(newOptions) {
         if (newOptions.source && newOptions.source !== this._options.source) {
+            const self = this;
+            let resultDef;
             _private.prepareItems(this, newOptions.source);
             if (_private.isNeedReload(this._options.source, newOptions.source)) {
-                const self = this;
-                return _private.reload(this).addCallback(() => {
+                resultDef = _private.reload(this).addCallback(() => {
                     self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
                 });
             } else {
-                _private.updateText(this, this._source, this._configs);
+                resultDef = _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
+                    _private.updateText(self, self._source, self._configs);
+                });
             }
+            return resultDef;
         }
     },
 

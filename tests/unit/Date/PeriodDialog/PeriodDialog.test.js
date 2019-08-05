@@ -100,6 +100,30 @@ define([
             });
          });
 
+         [{
+            state: 'year',
+            tests: [
+               { },
+               { startValue: new Date(2019, 0, 1), endValue: new Date(2019, 1, 0) },
+               { startValue: new Date(2019, 0, 3), endValue: new Date(2019, 1, 10) }
+            ]
+         }, {
+            state: 'month',
+            tests: [
+               { startValue: new Date(2019, 0, 1), endValue: new Date(2019, 0, 1) },
+               { selectionType: PeriodDialog.SELECTION_TYPES.single },
+               { selectionType: PeriodDialog.SELECTION_TYPES.quantum, quantum: { days: [1] } },
+               { selectionType: PeriodDialog.SELECTION_TYPES.quantum, quantum: { weeks: [1] } }
+            ]
+         }].forEach(function(testGroup) {
+            testGroup.tests.forEach(function(options) {
+               it(`should set ${testGroup.state} state if options are equals ${JSON.stringify(options)}.`, function() {
+                  const component = calendarTestUtils.createComponent(PeriodDialog, options);
+                  assert.equal(component._state, testGroup.state);
+               });
+            });
+         });
+
          it('should set correct header type.', function() {
             const component = calendarTestUtils.createComponent(
                PeriodDialog,
