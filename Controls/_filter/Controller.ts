@@ -287,7 +287,7 @@ import 'Controls/context';
                         setPropValue(item, 'visibility', visibility);
                      }
 
-                     if (item.hasOwnProperty('viewMode')) {
+                     if (viewMode !== undefined && item.hasOwnProperty('viewMode')) {
                         setPropValue(item, 'viewMode', viewMode);
                      }
                   }
