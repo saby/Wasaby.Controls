@@ -130,22 +130,22 @@
 
 /**
  * @event Controls/_treeGrid/interface/ITreeControl#itemExpanded Происходит при развертывании узла.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
 /*
  * @event Controls/_treeGrid/interface/ITreeControl#itemExpanded Occurs after node expansion.
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  */
 
 /**
  * @event Controls/_treeGrid/interface/ITreeControl#itemCollapsed Происходит при сворачивании узла.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
 /*
  * @event Controls/_treeGrid/interface/ITreeControl#itemCollapsed Occurs after node collapse.
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  */
 
 /**

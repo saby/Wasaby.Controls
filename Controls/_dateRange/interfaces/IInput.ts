@@ -102,7 +102,7 @@
 
 /**
  * @event Controls/_dateRange/interfaces/IInput#startValueChanged Происходит при изменении начального значения поля.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} value Новое значение поля.
  * @param {String} displayValue Текстовое значение поля.
  * @remark
@@ -159,7 +159,7 @@
 
 /**
  * @event Controls/_dateRange/interfaces/IInput#endValueChanged Происходит при изменении конечного значения поля.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} value Новое значение поля.
  * @param {String} displayValue Текстовое значение поля.
  * @remark
@@ -216,7 +216,7 @@
 
 /**
  * @event Controls/_dateRange/interfaces/IInput#inputCompleted Происходит при завершении ввода (поле потеряло фокус или пользователь нажал "enter").
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} startValue Начальное значение поля.
  * @param {Date} endValue Конечно значение поля.
  * @param {String} displayedStartValue Начальное текстовое значение поля.

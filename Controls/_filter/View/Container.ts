@@ -33,13 +33,13 @@ import * as template from 'wml!Controls/_filter/View/Container';
 
 /**
  * @event Controls/_filter/View/Container#filterItemsChanged Происходит при изменении элементов.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object} items Новые элементы.
  */
 
 /*
  * @event Controls/_filter/View/Container#filterItemsChanged Happens when items changed.
- * @param {Env/Event:Object} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Object} items New items.
  */
 

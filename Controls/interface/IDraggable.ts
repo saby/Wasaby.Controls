@@ -154,7 +154,7 @@
 
 /**
  * @event Controls/interface/IDraggable#dragStart Происходит при начале перемещения элемента.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array.<String>} items Массив идентификаторов перемещаемых элементов.
  * @remark Чтобы начать перемещение drag'n'drop из события, необходимо вернуть объект перемещения. Событие срабатывает у контейнера, в котором началось перемещение.
  * Отличается от события {@link https://wi.sbis.ru/docs/js/Controls/tile/IDraggable/events/dragEnter/?v=19.500 dragEnter}, которое срабатывает у контейнера, в который была перемещена запись.
@@ -192,7 +192,7 @@
 
 /*
  * @event Controls/interface/IDraggable#dragStart Occurs before the user starts dragging an element in the list.
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Array.<String>} items An array of identifiers for items to be moved.
  * @returns {Controls/_dragnDrop/Entity/Items)
  * @remark To start a drag'n'drop move from an event, you must return the move entity.
@@ -244,7 +244,7 @@
 
 /**
  * @event Controls/interface/IDraggable#dragEnd Происходит при завершении перемещения элемента в списке.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Controls/_dragnDrop/Entity/Items} entity Объект перемещения.
  * @param {Types/entity:Record} target Объект перемещения.
  * @param {MovePosition} position Положение перемещения.
@@ -276,7 +276,7 @@
 
 /*
  * @event Controls/interface/IDraggable#dragEnd Occurs after the user has finished dragging an item in the list.
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @param {Types/entity:Record} target Target item to move.
  * @param {MovePosition} position Position to move.
@@ -320,7 +320,7 @@
 
 /**
  * @event Controls/interface/IDraggable#dragEnter Происходит при перемещении элемента из другого контрола.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Controls/_dragnDrop/Entity/Items} entity Объект перемещения.
  * @returns {DragEnterResult}
  * @remark Событие позволяет перемещать элементы в текущий список из другого списка. Событие срабатывает у контейнера, в который была перемещена запись.
@@ -366,7 +366,7 @@
 
 /*
  * @event Controls/interface/IDraggable#dragEnter Occurs before moving items from another list to the current list.
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @returns {DragEnterResult}
  * @remark You can use the event to allow dragging items to the current list from another list.
@@ -411,7 +411,7 @@
 
 /**
  * @event Controls/interface/IDraggable#changeDragTarget Происходит перед изменением позиции, в которую будет перемещен элемент.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Controls/_dragnDrop/Entity/Items} entity Объект перемещения.
  * @param {Types/entity:Record} target Элемент перемещения.
  * @param {MovePosition} position Позиция перемещения.
@@ -444,7 +444,7 @@
 
 /*
  * @event Controls/interface/IDraggable#changeDragTarget Occurs before the change of the position of the drag.
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @param {Types/entity:Record} target Target item to move.
  * @param {MovePosition} position Position to move.

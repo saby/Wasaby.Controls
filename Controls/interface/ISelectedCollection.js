@@ -215,7 +215,7 @@ define('Controls/interface/ISelectedCollection', [
 
    /**
     * @event Controls/interface/ISelectedCollection#textValueChanged Происходит при изменении набора выбранной коллекции.
-    * @param {Env/Event:Object} eventObject Декскриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Декскриптор события.
     * @param {String} textValue Строка, сформированная из выбранных записей.
     *
     * @example
@@ -237,7 +237,7 @@ define('Controls/interface/ISelectedCollection', [
     */
    /*
     * @event Controls/interface/ISelectedCollection#textValueChanged Occurs when changing the set of the selected collection.
-    * @param {Env/Event:Object} eventObject The event descriptor.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {String} textValue String formed from selected entries.
     *
     * @example
@@ -260,7 +260,7 @@ define('Controls/interface/ISelectedCollection', [
 
    /**
     * @event Controls/interface/ISelectedCollection#itemsChanged Происходит при изменении набора выбранной коллекции.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {RecordSet|List} items Список выбранных записей.
     *
     * @example
@@ -282,7 +282,7 @@ define('Controls/interface/ISelectedCollection', [
     */
    /*
     * @event Controls/interface/ISelectedCollection#itemsChanged Occurs when changing the set of the selected collection.
-    * @param {Env/Event:Object} eventObject The event descriptor.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {RecordSet|List} items List of selected entries.
     *
     * @example
@@ -305,7 +305,7 @@ define('Controls/interface/ISelectedCollection', [
 
    /**
     * @event Controls/interface/ISelectedCollection#itemClick Происходит при нажатии на элемент коллекции.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {RecordSet} item Элемент выбраной коллекции.
     *
     * @example
@@ -331,7 +331,7 @@ define('Controls/interface/ISelectedCollection', [
     */
    /*
     * @event Controls/interface/ISelectedCollection#itemClick Occurs when clicking on a collection item.
-    * @param {Env/Event:Object} eventObject The event descriptor.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {RecordSet} item Item selected collection.
     *
     * @example
@@ -358,7 +358,7 @@ define('Controls/interface/ISelectedCollection', [
 
    /**
     * @event Controls/interface/ISelectedCollection#openInfoBox Происходит перед открытием всплывающего окна со всеми выбранными записями.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Object} config Конфиг, по которому будет построено всплывающее окно.
     *
     * @example
@@ -388,7 +388,7 @@ define('Controls/interface/ISelectedCollection', [
     */
    /*
     * @event Controls/interface/ISelectedCollection#openInfoBox Occurs before opening a pop-up with all selected entries
-    * @param {Env/Event:Object} eventObject The event descriptor.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {Object} config Config on which popup will be built.
     *
     * @example
@@ -419,7 +419,7 @@ define('Controls/interface/ISelectedCollection', [
 
    /**
     * @event Controls/interface/ISelectedCollection#closeInfoBox Происходит при закрытии всплывающего окна со всеми выбранными записями.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     *
     * @example
     * В следующем примере создается Controls/lookup:Input и демонстрируется сценарий использования.
@@ -443,7 +443,7 @@ define('Controls/interface/ISelectedCollection', [
     */
    /*
     * @event Controls/interface/ISelectedCollection#closeInfoBox Occurs when closing a pop-up with all selected entries.
-    * @param {Env/Event:Object} eventObject The event descriptor.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     *
     * @example
     * The following example creates Controls/lookup:Input and shows how to handle the event.

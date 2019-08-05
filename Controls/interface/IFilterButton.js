@@ -273,7 +273,7 @@ define('Controls/interface/IFilterButton', [
 
    /**
     * @event Controls/interface/IFilterButton#filterChanged Происходит при изменении фильтра.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Object} filter Новый фильтр.
     */
 
@@ -285,7 +285,7 @@ define('Controls/interface/IFilterButton', [
 
    /**
     * @event Controls/_filter/interface/IFilterView#itemsChanged Происходит при изменении элементов.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Object} items Новый элемент.
     */
 

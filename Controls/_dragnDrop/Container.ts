@@ -98,14 +98,14 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /**
        * @typedef {Object} dragObject
-       * @property {Env/Event:Object} domEvent Дескриптор события.
+       * @property {Vdom/Vdom:SyntheticEvent} domEvent Дескриптор события.
        * @property {Object} position Координаты указателя.
        * @property {Object} offset Смещение от начальной позиции посредством drag'n'drop.
        */
 
       /*
        * @typedef {Object} dragObject
-       * @property {Env/Event:Object} domEvent The event descriptor.
+       * @property {Vdom/Vdom:SyntheticEvent} domEvent The event descriptor.
        * @property {Object} position The coordinates of the pointer.
        * @property {Object} offset The offset from the starting position drag'n'drop.
        */
@@ -174,7 +174,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * Метод для запуска процесса перемещения.
        * @function Controls/_dragnDrop/Container#startDragNDrop
        * @param {Controls/_dragnDrop/Entity} entity Объект перемещения.
-       * @param {Env/Event:Object} event Дескриптор события.
+       * @param {Vdom/Vdom:SyntheticEvent} event Дескриптор события.
        * @example
        * В следующем примере показано, как запустить dragNDrop.
        * <pre>
@@ -210,7 +210,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * Method to initialize the start of drag'n'drop.
        * @function Controls/_dragnDrop/Container#startDragNDrop
        * @param {Controls/_dragnDrop/Entity} entity Moved entity.
-       * @param {Env/Event:Object} event The event that occurred to the handler the mouseDown(touchStart).
+       * @param {Vdom/Vdom:SyntheticEvent} event The event that occurred to the handler the mouseDown(touchStart).
        * @example
        * The following example shows how to start dragNDrop.
        * <pre>
@@ -244,7 +244,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /**
        * @event Controls/_dragnDrop/Container#documentDragStart Происходит при начале перемещения объекта на странице.
-       * @param {Env/Event:Object} eventObject Дескриптор события.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
        * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
        * @remark Событие срабатывает на всех контроллерах на странице, включая контроллер, в котором началось перемещение.
        * @example
@@ -290,7 +290,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /*
        * @event Controls/_dragnDrop/Container#documentDragStart Occurs after the user starts dragging an element in the page.
-       * @param {Env/Event:Object} eventObject The event descriptor.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
        * @param {dragObject} dragObject Object with meta information.
        * @remark The event fires at all controllers on the page, including the controller in which the move began.
        * @example
@@ -336,7 +336,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /**
        * @event Controls/_dragnDrop/Container#documentDragEnd Происходит при завершении перемещения объекта на странице.
-       * @param {Env/Event:Object} eventObject Дескриптор события.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
        * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
        * @remark Событие срабатывает на всех контроллерах на странице, включая контроллер, на котором закончилось перемещение.
        * @example
@@ -385,7 +385,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /*
        * @event Controls/_dragnDrop/Container#documentDragEnd Occurs after the user has finished dragging an element in the page.
-       * @param {Env/Event:Object} eventObject The event descriptor.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
        * @param {dragObject} dragObject Object with meta information.
        * @remark The event fires on all controllers on the page, including the controller where the move ended.
        * @example
@@ -434,7 +434,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /**
        * @event Controls/_dragnDrop/Container#dragStart Происходит, когда пользователь начинает перемещение объект в текущем контроллере.
-       * @param {Env/Event:Object} eventObject Дескриптор события.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
        * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
        * @remark Событие срабатывает только на контроллере, где началось перемещение.
        * @example
@@ -479,7 +479,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /*
        * @event Controls/_dragnDrop/Container#dragStart Occurs after the user starts dragging an element in the current controller.
-       * @param {Env/Event:Object} eventObject The event descriptor.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
        * @param {dragObject} dragObject Object with meta information.
        * @remark The event fires only on the controller where the move has started.
        * @example
@@ -524,7 +524,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /**
        * @event Controls/_dragnDrop/Container#dragEnd Происходит после того, как пользователь закончил перемещение объекта в текущем контроллере.
-       * @param {Env/Event:Object} eventObject Дескриптор события.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
        * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
        * @remark Событие срабатывает только на контроллере, где завершилось перетаскивание.
        * @example
@@ -568,7 +568,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /*
        * @event Controls/_dragnDrop/Container#dragEnd Occurs after the user has finished dragging an item in the current controller.
-       * @param {Env/Event:Object} eventObject The event descriptor.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
        * @param {dragObject} dragObject Object with meta information.
        * @remark The event fires only on the controller where the move ended.
        * @example
@@ -612,7 +612,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /**
        * @event Controls/_dragnDrop/Container#dragEnter Происходит после перемещения объекта внутри контроллера.
-       * @param {Env/Event:Object} eventObject Дескриптор события.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
        * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
        * @example
        * В следующем примере показано, как изменить визуальное состояние контрола при наведении на него курсора.
@@ -659,7 +659,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /*
        * @event Controls/_dragnDrop/Container#dragEnter Occurs after an item is moved inside the controller.
-       * @param {Env/Event:Object} eventObject The event descriptor.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
        * @param {dragObject} dragObject Object with meta information.
        * @example
        * The following example shows how to change the visual state of a control when you move the cursor over it.
@@ -706,7 +706,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /**
        * @event Controls/_dragnDrop/Container#dragLeave Происходит после перемещения объекта за пределы контроллера.
-       * @param {Env/Event:Object} eventObject Дескриптор события.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
        * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
        * @example
        * В следующем примере показано, как изменить визуальное состояние контрола при наведении на него курсора.
@@ -753,7 +753,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /*
        * @event Controls/_dragnDrop/Container#dragLeave Occurs after an item is moved outside the controller.
-       * @param {Env/Event:Object} eventObject The event descriptor.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
        * @param {dragObject} dragObject Object with meta information.
        * @example
        * The following example shows how to change the visual state of a control when you move the cursor over it.
@@ -800,7 +800,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /**
        * @event Controls/_dragnDrop/Container#dragMove Происходит при перемещении объекта на странице.
-       * @param {Env/Event:Object} eventObject Дескриптор события.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
        * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
        * @remark Событие срабатывает только на контроллере, где началось перемещение. Событие срабатывает каждый раз, когда на странице происходит событие mousemove(touchmove).
        * @example
@@ -843,7 +843,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
 
       /*
        * @event Controls/_dragnDrop/Container#dragMove Occurs when you move an item on a page.
-       * @param {Env/Event:Object} eventObject The event descriptor.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
        * @param {dragObject} dragObject Object with meta information.
        * @remark The event fires only on the controller where the move has started. The event fires every time a mousemove(touchmove) event occurs on the page.
        * @example
