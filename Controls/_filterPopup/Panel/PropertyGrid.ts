@@ -2,7 +2,6 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/PropertyGrid/PropertyGrid');
 import Utils = require('Types/util');
 import {isEqual} from 'Types/object';
-import Clone = require('Core/core-clone');
 import chain = require('Types/chain');
 import 'css!theme?Controls/filterPopup';
 
