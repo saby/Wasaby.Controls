@@ -1,5 +1,12 @@
 /**
  * Библиотека плоских списков.
+ * Работа с шаблонами библиотеки описана в руководстве разработчика:
+ * <ul>
+ *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/">ItemTemplate (шаблон отображения элемента)</a><li>
+ *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/list/templates/grouping/">GroupTemplate (шаблон группировки)</a><li>
+ *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/list/templates/empty/">EmptyTemplate (шаблон пустого списка)</a><li>
+ *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/list/edit/">EditingTemplate (шаблон редактирования элемента)</a><li>
+ * </ul>
  * @library Controls/list
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
