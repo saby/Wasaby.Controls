@@ -1028,6 +1028,14 @@ var
             return this._model.getItemById(id, keyProperty);
         },
 
+        markAddingItem() {
+            this._model.markAddingItem();
+        },
+
+        restoreMarker() {
+            this._model.restoreMarker();
+        },
+
         setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
         },
@@ -1181,6 +1189,11 @@ var
 
             current.style = this._options.style;
             current.multiSelectClassList += current.hasMultiSelect ? ' controls-GridView__checkbox' : '';
+
+            let superShouldDrawMarker = current.shouldDrawMarker;
+            current.shouldDrawMarker = (markerVisibility, columnIndex) => {
+                return columnIndex === 0 && superShouldDrawMarker.apply(this, [markerVisibility]);
+            };
 
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
