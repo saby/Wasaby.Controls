@@ -13,7 +13,8 @@
             itemsLayout="twoColumns"
             on:crossClick="_crossClick()"
             on:itemClick="_itemClick()"
-            attr:style="width: {{_options.width}}px">
+            attr:style="width: {{_options.width}}px"
+            attr:class="controls-SelectedCollection__in_popup">
       </Controls.lookup:Collection>
    </Controls.scroll:Container>
 </Controls.popupTemplate:InfoBox>

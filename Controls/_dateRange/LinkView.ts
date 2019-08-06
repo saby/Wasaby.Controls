@@ -54,6 +54,11 @@ var _private = {
       );
    },
 
+   _updateClearButton: function(self, options) {
+      self._clearButtonVisible = (options.clearButtonVisibility || options.clearButtonVisible) &&
+          (self._rangeModel.startValue || self._rangeModel.endValue);
+   },
+
    _updateStyles: function(self, options, newOption) {
       var changed = false;
 
@@ -96,6 +101,8 @@ var Component = BaseControl.extend({
    _viewMode: null,
    _styleMode: null,
 
+   _clearButtonVisible: null,
+
    constructor: function() {
       Component.superclass.constructor.apply(this, arguments);
       this._rangeModel = new DateRangeModel();
@@ -106,6 +113,7 @@ var Component = BaseControl.extend({
       this._rangeModel.update(options);
       _private._updateCaption(this, options);
       _private._updateStyles(this, {}, options);
+      _private._updateClearButton(this, options);
 
       // TODO: remove style option https://online.sbis.ru/opendoc.html?guid=882c43d4-8f3c-4998-8660-bfa08fcef227
       if (options.style) {
@@ -128,6 +136,7 @@ var Component = BaseControl.extend({
          _private._updateCaption(this, options);
       }
       _private._updateStyles(this, this._options, options);
+      _private._updateClearButton(this, options);
    },
 
    shiftBack: function() {

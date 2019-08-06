@@ -669,7 +669,7 @@ var
        * @function Controls/_scroll/Container#scrollToBottom
        */
       scrollToBottom: function() {
-         _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
+         _private.setScrollTop(this, _private.getScrollHeight(this._children.content) + this._topPlaceholderSize);
       },
 
       // TODO: система событий неправильно прокидывает аргументы из шаблонов, будет исправлено тут:
@@ -691,9 +691,15 @@ var
       },
 
       _updatePlaceholdersSize: function(e, placeholdersSizes) {
-         this._topPlaceholderSize = placeholdersSizes.top;
-         this._bottomPlaceholderSize = placeholdersSizes.bottom;
-         this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
+         if (this._topPlaceholderSize !== placeholdersSizes.top ||
+            this._bottomPlaceholderSize !== placeholdersSizes.bottom) {
+            this._topPlaceholderSize = placeholdersSizes.top;
+            this._bottomPlaceholderSize = placeholdersSizes.bottom;
+            this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
+            if (this._children.scrollBar) {
+               this._children.scrollBar.setFix1177446501(true);
+            }
+         }
       },
 
       _saveScrollPosition: function(e) {

@@ -59,7 +59,7 @@ define(
          it('calcReplacer', function() {
             var calcReplacer = input.Mask._private.calcReplacer;
 
-            assert.equal(calcReplacer(' ', 'dd.dd'), ' ');
+            assert.equal(calcReplacer(' ', 'dd.dd'), ' ');
             assert.equal(calcReplacer(' ', 'd\\*'), '');
          });
 

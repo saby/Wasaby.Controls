@@ -116,7 +116,12 @@ define([
          });
       });
 
+      it('afterReloadCallback before mounting should not cause errors', function() {
 
+         //по сценарию https://online.sbis.ru/opendoc.html?guid=8237131f-3294-4704-92a5-fe448e40bf50
+         let tree =  new treeGrid.TreeControl({viewModelConstructor: treeGrid.ViewModel});
+         treeGrid.TreeControl._private.afterReloadCallback(tree);
+      });
       it('TreeControl._private.toggleExpanded', function() {
          var
             nodeLoadCallbackCalled = false,
@@ -1271,7 +1276,14 @@ define([
          let emptyCfg = getDefaultCfg();
          emptyCfg.expandedItems = ['1', '2'];
          let emptyTreeGridViewModel = new treeGrid.ViewModel(emptyCfg);
-
+         let getNodesSourceControllers = () => {
+            return {
+               1: {
+                  destroy: () => {},
+                  hasMoreData: () => {}
+               }
+            };
+         };
          let self = {
             _deepReload: true,
             _children: {},
@@ -1310,13 +1322,17 @@ define([
          assert.equal(filter['Раздел'], self._root);
 
          filter = {};
+         selfWithBaseControl._nodesSourceControllers = getNodesSourceControllers();
          treeGrid.TreeControl._private.beforeReloadCallback(selfWithBaseControl, filter, null, null, cfg);
          assert.equal(filter['Раздел'], self._root);
+         assert.isFalse(!!selfWithBaseControl._nodesSourceControllers[1]);
 
          treeGridViewModel.setExpandedItems([1, 2]);
          filter = {};
+         selfWithBaseControl._nodesSourceControllers = getNodesSourceControllers();
          treeGrid.TreeControl._private.beforeReloadCallback(selfWithBaseControl, filter, null, null, cfg);
          assert.deepEqual(filter['Раздел'], ['root', 1, 2]);
+         assert.isTrue(!!selfWithBaseControl._nodesSourceControllers[1]);
 
          filter = {};
          treeGrid.TreeControl._private.beforeReloadCallback(selfWithBaseControlAndEmptyModel, filter, null, null, emptyCfg);

@@ -26,6 +26,7 @@
 <ws:template name="itemTemplate">
    <ws:if data="{{currentItem.beforeItemTemplate}}">
       <ws:partial template="{{currentItem.beforeItemTemplate}}"
+                  scope="{{currentItem.beforeItemTemplateOptions}}"
                   itemTemplate="{{itemTemplate}}"
                   listModel="{{listModel}}"/>
    </ws:if>

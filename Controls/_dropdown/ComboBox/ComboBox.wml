@@ -20,8 +20,8 @@
         selectedItemsChangedCallback="{{_setText}}"
         theme="{{_options.theme}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
-        class="controls-ComboBox">
-
+        attr:class="controls-ComboBox {{_isOpen ? 'controls-ComboBox__opened'}}">
+   <ws:content>
       <Controls._dropdown.ComboBox.InputRender
               size="{{_options.size}}"
               style="{{_options.style}}"
@@ -33,8 +33,11 @@
               placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"
               attr:class="controls-ComboBox-InputRender theme_{{_options.theme}} {{_isOpen ? 'controls-Popup__isolatedFocusingContext'}}">
          <ws:afterFieldWrapper>
-            <Controls.toggle:Separator attr:class="controls-ComboBox-button-separator" if="{{!_options.readOnly}}" value="{{_isOpen}}"/>
+            <span if="{{!_options.readOnly}}" class="controls-ComboBox__arrow-wrapper">
+               <span attr:class="controls-ComboBox__iconArrow icon-{{_isOpen ? 'CollapseLight' : 'ExpandLight'}}"></span>
+            </span>
          </ws:afterFieldWrapper>
 
       </Controls._dropdown.ComboBox.InputRender>
+   </ws:content>
 </Controls._dropdown._Controller>

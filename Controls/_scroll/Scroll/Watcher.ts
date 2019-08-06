@@ -351,7 +351,6 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
          updatePlaceholdersSize(placeholdersSizes: object): void {
             this._topPlaceholderSize = placeholdersSizes.top;
             this._bottomPlaceholderSize = placeholdersSizes.bottom;
-
          },
 
          setScrollTop(scrollTop: number): void {
@@ -360,16 +359,24 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             if (self._isVirtualPlaceholderMode()) {
                const cachedScrollTop = scrollTop;
                const sizeCache = _private.getSizeCache(self, container);
-               const hasChanges = _private.sendByRegistrar(self, 'virtualScrollMove', {
-                  scrollTop,
-                  scrollHeight: sizeCache.scrollHeight,
-                  clientHeight: sizeCache.clientHeight,
-                  applyScrollTopCallback: () => {
-                     container.scrollTop = cachedScrollTop - self._topPlaceholderSize;
+               const realScrollTop = scrollTop - this._topPlaceholderSize;
+               const triggerOffset = sizeCache.clientHeight / 3;
+               if (realScrollTop >= triggerOffset &&
+                  (sizeCache.scrollHeight === realScrollTop ||
+                  sizeCache.scrollHeight - realScrollTop - sizeCache.clientHeight > triggerOffset)) {
+                  container.scrollTop = scrollTop - self._topPlaceholderSize;
+               } else {
+                  const hasChanges = _private.sendByRegistrar(self, 'virtualScrollMove', {
+                     scrollTop,
+                     scrollHeight: sizeCache.scrollHeight,
+                     clientHeight: sizeCache.clientHeight,
+                     applyScrollTopCallback: () => {
+                        container.scrollTop = cachedScrollTop - self._topPlaceholderSize;
+                     }
+                  });
+                  if (!hasChanges) {
+                     container.scrollTop = scrollTop - self._topPlaceholderSize;
                   }
-               });
-               if (!hasChanges) {
-                  container.scrollTop = scrollTop;
                }
             } else {
                container.scrollTop = scrollTop;
