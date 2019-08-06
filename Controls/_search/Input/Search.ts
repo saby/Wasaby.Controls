@@ -59,12 +59,35 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
 
 /**
  * @name Controls/_search/Input/Search#searchButtonVisible
+ * @cfg {Boolean} Определяет, показывать ли значок поиска.
+ * @default true
+ * @remark
+ * - true — показывать;
+ * - false — скрывать.
+ */
+
+/*
+ * @name Controls/_search/Input/Search#searchButtonVisible
  * @cfg {Boolean} Determines whether to show the search icon.
  */
 
 /**
+ * @event Controls/_search/Input/Search#searchClick Происходит при нажатии кнопки поиска.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ */
+ 
+/**
+ * @event Controls/Input/resetClick#resetClick Происходит при нажатии кнопки reset.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ */
+
+/*
  * @event Controls/_search/Input/Search#searchClick Occurs when search button is clicked.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Event descriptor.
+ */
+/*
  * @event Controls/Input/resetClick#resetClick Occurs when reset button is clicked.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Event descriptor.
  */
 
 var _private = {
@@ -79,6 +102,8 @@ var _private = {
 
 var Search = Base.extend({
    _roundBorder: true,
+
+   _wasActionUser: false,
 
    get _renderStyle() {
       return 'search-';
@@ -151,6 +176,18 @@ var Search = Base.extend({
       }
 
       Search.superclass._keyUpHandler.apply(this, arguments);
+   },
+
+   _inputHandler: function() {
+      Search.superclass._inputHandler.apply(this, arguments);
+
+      this._wasActionUser = true;
+   },
+
+   _clickHandler: function() {
+      Search.superclass._clickHandler.apply(this, arguments);
+
+      this._wasActionUser = true;
    }
 });
 

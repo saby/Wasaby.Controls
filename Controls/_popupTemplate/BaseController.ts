@@ -126,6 +126,9 @@ let _fakeDiv;
          elementMaximized: function(element, state) {
 
          },
+         popupResizingLine: function(item, offset){
+
+         },
 
          _elementAfterUpdated: function(item, container) {
             if (this._checkContainer(item, container, 'elementAfterUpdated')) {

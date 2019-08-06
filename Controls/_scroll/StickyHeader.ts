@@ -6,6 +6,18 @@ import 'Controls/_scroll/StickyHeader/_StickyHeader';
 
 
       /**
+       * Обеспечивает прилипание контента к верхней или нижней части родительского контейнера при прокрутке.
+       * Прилипание происходит в момент пересечения верхней или нижней части контента и родительского контейнера.
+       * @remark
+       * Фиксация заголовка в браузере IE версии ниже 16 не поддерживается.
+       *
+       * @public
+       * @extends Core/Control
+       * @class Controls/_scroll/StickyHeader
+       * @author Красильников А.С.
+       */
+
+      /*
        * Ensures that content sticks to the top or bottom of the parent container when scrolling.
        * Occurs at the moment of intersection of the upper or lower part of the content and the parent container.
        * @remark
@@ -19,17 +31,37 @@ import 'Controls/_scroll/StickyHeader/_StickyHeader';
 
       /**
        * @name Controls/_scroll/StickyHeader#content
+       * @cfg {Function} Содержимое заголовка, которое будет зафиксировано.
+       */
+
+      /*
+       * @name Controls/_scroll/StickyHeader#content
        * @cfg {Function} Sticky header content.
        */
 
       /**
        * @name Controls/_scroll/StickyHeader#mode
+       * @cfg {String} Режим прилипания заголовка.
+       * @variant replaceable Заменяемый заголовок. Следующий заголовок заменяет текущий.
+       * @variant stackable Составной заголовок. Следующий заголовок прилипает к нижней части текущего.
+       */
+
+      /*
+       * @name Controls/_scroll/StickyHeader#mode
        * @cfg {String} Sticky header mode.
        * @variant replaceable Replaceable header. The next header replaces the current one.
        * @variant stackable Stackable header.  The next header is stick to the bottom of the current one.
-       */
+       */      
 
       /**
+       * @name Controls/_scroll/StickyHeader#shadowVisibility
+       * @cfg {String} Устанавливает видимость тени. 
+       * @variant visible Показать тень.
+       * @variant hidden Не показывать.
+       * @default visible
+       */
+
+      /*
        * @name Controls/_scroll/StickyHeader#shadowVisibility
        * @cfg {String} Shadow visibility.
        * @variant visible Show.
@@ -37,15 +69,32 @@ import 'Controls/_scroll/StickyHeader/_StickyHeader';
        * @default visible
        */
 
-        /**
-         * @name Controls/_scroll/StickyHeader#backgroundVisible
-         * @cfg {Boolean} Background visibility.
-         * @variant true Show.
-         * @variant false Do not show.
-         * @default true
-         */
+      /**
+       * @name Controls/_scroll/StickyHeader#backgroundVisible
+       * @cfg {Boolean} Устанавливает видимость фона.
+       * @variant true Показать фон.
+       * @variant false Не показывать.
+       * @default true
+       */
+
+      /*
+       * @name Controls/_scroll/StickyHeader#backgroundVisible
+       * @cfg {Boolean} Background visibility.
+       * @variant true Show.
+       * @variant false Do not show.
+       * @default true
+       */
 
       /**
+       * @name Controls/_scroll/StickyHeader#position
+       * @cfg {String} Определяет позицию прилипания.
+       * @variant top Прилипание к верхнему краю.
+       * @variant bottom Прилипание к нижнему краю.
+       * @variant topbottom Прилипание к верхнему и нижнему краю.
+       * @default top
+       */
+
+      /*
        * @name Controls/_scroll/StickyHeader#position
        * @cfg {String} Determines which side the control can sticky.
        * @variant top Top side.
@@ -55,8 +104,14 @@ import 'Controls/_scroll/StickyHeader/_StickyHeader';
        */
 
       /**
+       * @event Controls/_scroll/StickyHeader#fixed Происходит при изменении состояния фиксации.
+       * @param {Vdom/Vdom:SyntheticEvent} event Дескриптор события.
+       * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Информация о событии фиксации.
+       */
+
+      /*
        * @event Controls/_scroll/StickyHeader#fixed Change the fixation state.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} event Event descriptor.
+       * @param {Vdom/Vdom:SyntheticEvent} event Event descriptor.
        * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
        */
 

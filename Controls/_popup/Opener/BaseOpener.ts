@@ -80,38 +80,47 @@ var Base = Control.extend({
         }));
     },
 
+    // Сейчас ядро не умеет обновлять контрол, если другой контрол находится в ожидании построения
+    // (на beforeMount вернул Promise). Поэтому сделан этот костыль, который открывает старый индикатор по опции.
+    // Иначе при долгом построении индикатора загрузики вообще не будет
+    // После того как ядро полечит проблему, костыль нужно удалить
+    // TODO: https://online.sbis.ru/opendoc.html?guid=13e4d473-5b91-485b-8d9d-fcd2f1f80f72
+    _compatibleCreatingDef(config, isCreating: boolean): void {
+        if (isCreating) {
+            if (config.showOldIndicator) {
+                config.creatingDef = new Deferred();
+                config.creatingDef.addCallback(() => {
+                    this._toggleIndicator(false);
+                });
+            }
+        }
+    },
+
     _openPopup: function (cfg, controller): Promise<string | undefined> {
         return new Promise((resolve => {
-            var self = this;
             this._requireModules(cfg, controller).addCallback((result) => {
                 _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
-                const popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
+                const popupId = this._options.displayMode === 'single' ? this._getCurrentPopupId() : null;
 
-                cfg._vdomOnOldPage = self._options._vdomOnOldPage;
-                Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback((result) => {
-                    const {popupId, creatingDef} = result;
-                    if(creatingDef) {
-                        creatingDef.addCallback(function () {
-                            self._toggleIndicator(false);
-                        });
-                    } else {
-                        self._toggleIndicator(false);
+                cfg._vdomOnOldPage = this._options._vdomOnOldPage;
+                this._compatibleCreatingDef(cfg, !popupId);
+                Base.showDialog(result.template, cfg, result.controller, popupId, this).addCallback((popupId) => {
+                    if (!cfg.creatingDef) {
+                        this._toggleIndicator(false);
                     }
-                    if (self._useVDOM()) {
-                        if (self._popupIds.indexOf(popupId) === -1) {
-                            self._popupIds.push(popupId);
+                    if (this._useVDOM()) {
+                        if (this._popupIds.indexOf(popupId) === -1) {
+                            this._popupIds.push(popupId);
                         }
-
                         // Call redraw to create emitter on scroll after popup opening
-                        self._forceUpdate();
-                        resolve(popupId);
+                        this._forceUpdate();
                     } else {
-                        self._action = result;
-                        resolve(result);
+                        this._action = popupId;
                     }
+                    resolve(popupId);
                 });
             }).addErrback(() => {
-                self._toggleIndicator(false);
+                this._toggleIndicator(false);
                 resolve();
             });
         }));
@@ -289,20 +298,28 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
             deps.push(libInfo.name);
         }
 
-        requirejs(deps, function (compatiblePopup, Action, Tpl) {
+        requirejs(deps, (compatiblePopup, Action, Tpl) => {
             try {
+                let templateFunction = Tpl;
                 if (opener && opener._options.closeOnTargetScroll) {
                     cfg.closeOnTargetScroll = true;
                 }
 
+                // get module from library
                 if (libInfo && libInfo.path.length !== 0) {
                     cfg.template = Tpl;
-                    libInfo.path.forEach(function (key) {
+                    libInfo.path.forEach((key) => {
                         cfg.template = cfg.template[key];
+                        templateFunction = cfg.template;
                     });
                 }
 
-                var newCfg = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(cfg, (Tpl && Tpl.default) || Tpl || cfg.template);
+                // get module from default export
+                if (templateFunction && templateFunction.default) {
+                    templateFunction = templateFunction.default;
+                }
+
+                var newCfg = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(cfg, templateFunction || cfg.template);
 
                 // Прокинем значение опции theme опенера, если другое не было передано в templateOptions.
                 // Нужно для открытия окон на старых страницах'.
@@ -510,13 +527,10 @@ Base._openPopup = function (popupId, cfg, controller, def) {
         } else {
             popupId = ManagerController.update(popupId, cfg);
         }
-        def.callback({popupId: popupId, creatingDef: null});
+        def.callback(popupId);
     } else {
-        if (cfg.showOldIndicator) {
-            cfg.creatingDef = new Deferred();
-        }
         popupId = ManagerController.show(cfg, controller);
-        def.callback({popupId: popupId, creatingDef: cfg.creatingDef});
+        def.callback(popupId);
     }
 };
 

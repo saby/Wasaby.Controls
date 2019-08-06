@@ -1,23 +1,45 @@
-/**
- * Created by as.krasilnikov on 21.03.2018.
- */
+interface ILimitingSizes {
+    minWidth: number;
+    maxWidth: number;
+    minHeight: number;
+    maxHeight: number;
+}
 
-   export = {
+type Position = ILimitingSizes & {
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+};
 
-      /**
-       * Returns popup position
-       * @function Controls/_popupTemplate/Dialog/Opener/DialogStrategy#getPosition
-       * @param windowData The parameters of the browser window
-       * @param containerSizes Popup container sizes
-       * @param item Popup configuration
-       */
-      getPosition: function(windowData, containerSizes, item) {
-         var width, height, left, top, dif;
+export = {
 
-         if (item.dragged) {
+    /**
+     * Returns popup position
+     * @function Controls/_popupTemplate/Dialog/Opener/DialogStrategy#getPosition
+     * @param windowData The parameters of the browser window
+     * @param containerSizes Popup container sizes
+     * @param item Popup configuration
+     */
+    getPosition: function (windowData, containerSizes, item): Position {
+        const popupOptions = item.popupOptions;
+        const {
+            minWidth, maxWidth,
+            minHeight, maxHeight
+        }: ILimitingSizes = this._calculateLimitOfSizes(popupOptions, windowData);
+
+        let width;
+        let height;
+        let left;
+        let top;
+
+        if (item.dragged) {
+            width = item.position.width;
+            height = item.position.height;
             left = Math.max(0, item.position.left);
             top = Math.max(0, item.position.top);
 
+            let dif;
             // check overflowX
             dif = (item.position.left + containerSizes.width) - windowData.width;
             left -= Math.max(0, dif);
@@ -25,45 +47,43 @@
             // check overflowY
             dif = (item.position.top + containerSizes.height) - windowData.height;
             top -= Math.max(0, dif);
-            return {
-               left: left,
-               top: top,
-               width: item.position.width,
-               height: item.position.height
-            };
-         }
+        } else {
+            width = this._calculateValue(popupOptions, containerSizes.width, windowData.width, popupOptions.width, popupOptions.maxWidth);
+            height = this._calculateValue(popupOptions, containerSizes.height, windowData.height, popupOptions.height, popupOptions.maxHeight);
+            left = this._getLeftCoord(windowData.width, width || containerSizes.width) + (windowData.scrollLeft || 0);
+            top = this._getTopCoord(windowData, height || containerSizes.height) + (windowData.scrollTop || 0);
+        }
 
-         var popupOptions = item.popupOptions;
-
-         width = this._calculateValue(popupOptions, containerSizes.width, windowData.width, popupOptions.width);
-         height = this._calculateValue(popupOptions, containerSizes.height, windowData.height, popupOptions.height);
-         left = this._getLeftCoord(windowData.width, width || containerSizes.width);
-         top = this._getTopCoord(windowData, height || containerSizes.height);
-
-         return {
-            width,
-            height,
-            maxHeight: Math.min(popupOptions.maxHeight || windowData.height, windowData.height),
-            minHeight: popupOptions.minHeight,
-            maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width),
+        return {
+            left, top,
+            width, minWidth, maxWidth,
+            height, minHeight, maxHeight
+        };
+    },
+    _calculateLimitOfSizes: function (popupOptions, windowData): ILimitingSizes {
+        return {
             minWidth: popupOptions.minWidth,
-            left: left + (windowData.scrollLeft || 0),
-            top: top + (windowData.scrollTop || 0)
-         };
-      },
-      _calculateValue: function(popupOptions, containerValue, windowValue, popupValue) {
-         if (popupValue) {
-            return popupValue;
-         } else if (popupOptions.maximize || containerValue >= windowValue) {
+            minHeight: popupOptions.minHeight,
+            maxHeight: Math.min(popupOptions.maxHeight || windowData.height, windowData.height),
+            maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width)
+        };
+    },
+    _calculateValue: function (popupOptions, containerValue, windowValue, popupValue, maxValue) {
+        const availableSize = maxValue ? Math.min(windowValue, maxValue) : windowValue;
+        if (popupOptions.maximize) {
             return windowValue;
-         }
-      },
-      _getLeftCoord: function(wWidth, width) {
-         return Math.max(Math.round((wWidth - width) / 2), 0);
-      },
+        }
+        if (containerValue >= availableSize || popupValue >= availableSize) {
+            return availableSize;
+        }
+        return popupValue;
+    },
+    _getLeftCoord: function (wWidth, width) {
+        return Math.max(Math.round((wWidth - width) / 2), 0);
+    },
 
-      _getTopCoord: function(windowData, height) {
-         return Math.round((windowData.height - height) / 2);
-      }
-   };
+    _getTopCoord: function (windowData, height) {
+        return Math.round((windowData.height - height) / 2);
+    }
+};
 

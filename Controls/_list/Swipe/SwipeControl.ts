@@ -154,7 +154,7 @@ export default class SwipeControl extends Control {
       action: IItemAction,
       itemData: IItemData
    ): void {
-      aUtil.itemActionsClick(this, event, action, itemData, this._options.listModel, true);
+      aUtil.itemActionsClick(this, event, action, itemData, this._options.listModel, false);
    }
 
    private _listClick(): void {
@@ -225,7 +225,7 @@ export default class SwipeControl extends Control {
           * Make SwipeControl async after this: https://online.sbis.ru/opendoc.html?guid=515423be-194b-4655-aba9-bba005c2e5c6
           */
          itemActions: descriptor(Array),
-         itemActionsPosition: descriptor(String).oneOf(['inside', 'outside']),
+         itemActionsPosition: descriptor(String).oneOf(['inside', 'outside', 'custom']),
          actionAlignment: descriptor(String).oneOf(['horizontal', 'vertical']),
          actionCaptionPosition: descriptor(String).oneOf(['right', 'bottom', 'none'])
       };

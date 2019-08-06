@@ -3,9 +3,8 @@ import FormatBuilder = require('Controls/_input/Mask/FormatBuilder');
 import InputProcessor = require('Controls/_input/Mask/InputProcessor');
 import Formatter = require('Controls/_input/Mask/Formatter');
 
-
-
 import {TimeInterval} from 'Types/entity';
+import {Spaces} from 'Controls/_input/Mask/Space';
 
 interface IFormatMaskChars {
     H: string;
@@ -162,7 +161,7 @@ export class ViewModel extends BaseViewModel {
         S: '[0-9]'
     };
 
-    private static _replacer: string = ' ';
+    private static _replacer: string = Spaces.longSpace;
 
     private static _zeroFormat: string = 'P0DT0H0M0S';
 

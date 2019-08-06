@@ -23,6 +23,15 @@
                   </div>
                </ws:template>
             </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <Controls.input:Area placeholder="Helpful tooltip" class="ControlsDemo-ExampleInput_fixedHeightArea"
+                                       minLines="{{4}}"
+                                       maxLines="{{4}}"
+                                       bind:value="_value3"/>
+               </ws:template>
+               <ws:label position="left" value="Label"/>
+            </ws:Object>
          </ws:Array>
       </ws:contents>
    </Controls-demo.Example.resource.BaseDemoInput>

@@ -159,7 +159,10 @@ var _private = {
                 });
             }
             _private.nodesSourceControllersIterator(nodeSourceControllers, function(node) {
-                if (expandedItemsKeys.indexOf(node) === -1) {
+                // _nodesSourceControllers is an Object and the field type of the object will be lost,
+                // so need to check both types (sting and number)
+                // https://online.sbis.ru/opendoc.html?guid=b4657be2-8fa5-41e1-8629-83465a4ef9d8
+                if (expandedItemsKeys.indexOf(String(node)) === -1 && expandedItemsKeys.indexOf(Number(node)) === -1) {
                     _private.clearNodeSourceController(nodeSourceControllers, node);
                 }
             });
@@ -494,6 +497,13 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         }
     },
 
+    _onItemClick: function(e, item, originalEvent) {
+        if (this._options.expandByItemClick && item.get(this._options.nodeProperty) !== null) {
+            let display = this._children.baseControl.getViewModel().getDisplay();
+            _private.toggleExpanded(this, display.getItemBySourceItem(item));
+        }
+    },
+
     _onTreeViewKeyDown: function(event) {
         keysHandler(event, HOT_KEYS, _private, this);
     },
@@ -509,6 +519,7 @@ TreeControl.getDefaultOptions = function() {
         uniqueKeys: true,
         filter: {},
         markItemByExpanderClick: true,
+        expandByItemClick: false,
         root: null,
         columns: DEFAULT_COLUMNS_VALUE
     };
@@ -517,3 +528,9 @@ TreeControl.getDefaultOptions = function() {
 TreeControl._private = _private;
 
 export = TreeControl;
+
+/**
+ * @event Controls/_treeGrid/TreeControl#expandedItemsChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Array.<Number|String>} expandedItems Массив с идентификаторами развернутых элементов.
+ */

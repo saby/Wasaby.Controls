@@ -3,6 +3,23 @@ import entity = require('Types/entity');
 import ViewModel = require('Controls/_input/Password/ViewModel');
 import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/PasswordVisibilityButton');
       /**
+       *  Поле ввода пароля. Контрол скрывает введенные символы и вместо них отображает символы-заменители.
+       *  Видимость введенного текста можно переключить, нажав на иконку 'eye'.
+       *  <a href="/materials/demo-ws4-input">Демо-пример</a>.
+       *
+       * @class Controls/_input/Password
+       * @extends Controls/_input/Base
+       *
+       * @mixes Controls/interface/IInputBase
+       * @mixes Controls/_input/Password/PasswordStyles
+       *
+       * @public
+       * @demo Controls-demo/Input/Password/PasswordPG
+       *
+       * @author Красильников А.С.
+       */
+
+      /*
        *  Control that hides all entered characters and shows replacer-symbols in place of them.
        *  Visibility of entered text can be toggled by clicking on 'eye' icon.
        *  <a href="/materials/demo-ws4-input">Configured Inputs Demo.</a>.
@@ -21,13 +38,21 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
 
       /**
        * @name Controls/_input/Password#revealable
+       * @cfg {Boolean} В значении true в поле ввода присутствует кнопка-переключатель видимости введённых символов.
+       * @default true
+       * @remark
+       *
+       * Кнопка не отображается в {@link readOnly режиме чтения} и в незаполненном поле.
+       */
+
+      /*
+       * @name Controls/_input/Password#revealable
        * @cfg {Boolean} Determines whether to enables the reveal toggle button that will show the password in clear text.
        * @default true
        * @remark
        *
        * The button does not appear in {@link readOnly read mode} or in an empty field.
-       */
-
+       */       
       
 
       var _private = {

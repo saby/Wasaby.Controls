@@ -7,7 +7,7 @@ import 'Controls/search';
 'use strict';
 
 /**
- * Строка поиска с автодополнением.
+ * Строка поиска с автодополнением, позволяет пользователю вводить однострочный текст.
  * Подробное описание и инструкцию по настройке смотрите <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>здесь</a>.
  *
  * @class Controls/_suggest/Input/Search/Suggest
@@ -15,7 +15,7 @@ import 'Controls/search';
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
- * @mixes Controls/interface/ISuggest
+ * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG
  * @control
@@ -32,7 +32,7 @@ import 'Controls/search';
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
- * @mixes Controls/interface/ISuggest
+ * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG
  * @control

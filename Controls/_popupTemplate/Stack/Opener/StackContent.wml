@@ -1,3 +1,16 @@
-<div class="controls-Stack__content-wrapper {{stackClassName}}" style="width: {{stackWidth}}px;min-width: {{stackMinWidth}}px;max-width: {{stackMaxWidth}}px;">
-   <ws:partial template="{{template}}" scope="{{templateOptions}}" attr:class="controls-Stack__content" stackMinimizedWidth="{{stackMinimizedWidth}}" stackWidth="{{stackWidth}}" stackMinWidth="{{stackMinWidth}}" stackMaxWidth="{{stackMaxWidth}}"/>
+<div class="controls-Stack__content-wrapper controls-Stack__shadow {{_options.stackClassName}}" style="width: {{_options.stackWidth}}px;min-width: {{_options.stackMinWidth}}px;max-width: {{_options.stackMaxWidth}}px;">
+   <ws:if data="{{_options.resizable}}">
+      <Controls.dragnDrop:ResizingLine attr:style="position:absolute; left: 0; height: 100%; z-index: 2;"
+                                       direction="reverse"
+                                       minOffset="{{_minOffset}}"
+                                       maxOffset="{{_maxOffset}}"
+                                       on:offset="_tmplNotify('popupResizingLine')"/>
+   </ws:if>
+   <ws:partial template="{{_options.template}}"
+               scope="{{_options.templateOptions}}"
+               attr:class="controls-Stack__content"
+               stackMinimizedWidth="{{_options.stackMinimizedWidth}}"
+               stackWidth="{{_options.stackWidth}}"
+               stackMinWidth="{{_options.stackMinWidth}}"
+               stackMaxWidth="{{_options.stackMaxWidth}}"/>
 </div>

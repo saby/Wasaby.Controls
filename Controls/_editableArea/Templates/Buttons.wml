@@ -1,0 +1,9 @@
+<div class="controls-EditableArea__Toolbar">
+    <div class="controls-EditableArea__applyButton controls-EditableArea__Toolbar__Button" on:click="_tmplNotify('applyButtonClick')">
+        <div class="controls-EditableArea__applyButton-icon
+                           controls-icon_style-success_theme-{{_options.theme}} icon-Yes"></div>
+    </div>
+    <div class="controls-EditableArea__closeButton controls-EditableArea__Toolbar__Button" on:click="_tmplNotify('closeButtonClick')">
+        <div class="controls-EditableArea__closeButton-icon"></div>
+    </div>
+</div>

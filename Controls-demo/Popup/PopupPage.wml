@@ -35,7 +35,7 @@
                                 closeOnOutsideClick="{{true}}">
    </Controls.popup:Stack>
 
-   <Controls.popup:Stack name="maximizedStack" template="Controls-demo/Popup/TestMaximizedStack" closeOnOutsideClick="{{true}}">
+   <Controls.popup:Stack name="maximizedStack" template="Controls-demo/Popup/TestMaximizedStack" closeOnOutsideClick="{{true}}" resizable="{{true}}">
       <ws:templateOptions type="stack"/>
    </Controls.popup:Stack>
 

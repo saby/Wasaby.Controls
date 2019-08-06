@@ -806,6 +806,19 @@
             "title": "Имя контрола",
             "type": "String",
             "default": ""
+          },
+          "inlineHeight": {
+            "type": "enum",
+            "title": "Control.",
+            "enum": {
+              "default": "default",
+              "xs": "xs",
+              "s": "s",
+              "m": "m",
+              "l": "l",
+              "xl": "xl",
+              "2xl": "2xl"
+            }
           }
         }
       }
@@ -873,6 +886,19 @@
               "primary": "primary",
               "warning": "warning",
               "invalid": "invalid"
+            }
+          },
+          "inlineHeight": {
+            "type": "enum",
+            "title": "Control.",
+            "enum": {
+              "default": "default",
+              "xs": "xs",
+              "s": "s",
+              "m": "m",
+              "l": "l",
+              "xl": "xl",
+              "2xl": "2xl"
             }
           }
         }
@@ -962,6 +988,19 @@
             "title": "Имя контрола",
             "type": "String",
             "default": ""
+          },
+          "inlineHeight": {
+            "type": "enum",
+            "title": "Control.",
+            "enum": {
+              "default": "default",
+              "xs": "xs",
+              "s": "s",
+              "m": "m",
+              "l": "l",
+              "xl": "xl",
+              "2xl": "2xl"
+            }
           }
         }
       }
@@ -1148,6 +1187,19 @@
           "replacer": {
             "type": "String",
             "title": "Symbol that will be shown when character is not entered."
+          },
+          "inlineHeight": {
+            "type": "enum",
+            "title": "Control.",
+            "enum": {
+              "default": "default",
+              "xs": "xs",
+              "s": "s",
+              "m": "m",
+              "l": "l",
+              "xl": "xl",
+              "2xl": "2xl"
+            }
           }
         }
       }

@@ -1,5 +1,5 @@
 /**
- * context library
+ * Библиотека для работы с контекстом.
  * @library Controls/context
  * @includes ContextOptions Controls/_context/ContextOptions
  * @includes FilterContextField Controls/_context/FilterContextField

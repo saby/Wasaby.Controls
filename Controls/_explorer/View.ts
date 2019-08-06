@@ -8,6 +8,7 @@ import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
 import {constants} from 'Env/Env';
 import keysHandler = require('Controls/Utils/keysHandler');
+import randomId = require('Core/helpers/Number/randomId');
 import 'css!theme?Controls/explorer';
 import 'Types/entity';
 import 'Controls/breadcrumbs';
@@ -178,10 +179,15 @@ import 'Controls/breadcrumbs';
       };
 
    /**
-    * Иерархический список, узел которого можно развернуть и перейти в него.
-    * <a href="/materials/demo-ws4-explorer">Демо-пример</a>.
-    * <a href="/materials/demo-ws4-explorer-with-search">Демо-пример с поиском</a>.
-    * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>здесь</a>.
+    * Контрол "Иерархический проводник".
+    * Отображает данные иерархического списка, узел которого можно развернуть и перейти в него.
+    * Позволяет переключать отображение элементов в режимы "таблица", "список" и "плитка".
+    * Инструкции по настройке контрола доступны в <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>руководстве разработчика</a>.
+    * Демо-примеры:
+    * <ul>
+    *    <li><a href="/materials/demo-ws4-explorer">Иерархический проводник в режимах "список" и "плитка"</a></li>
+    *    <li><a href="/materials/demo-ws4-explorer-with-search">Иерархический проводник в режиме "список" и строкой поиска</a></li>
+    * </ul>
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
@@ -213,7 +219,7 @@ import 'Controls/breadcrumbs';
     * Hierarchical list that can expand and go inside the folders. Can load data from data source.
     * <a href="/materials/demo-ws4-explorer">Demo example</a>.
     * <a href="/materials/demo-ws4-explorer-with-search">Demo example with search</a>.
-    * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>here</a>.
+    * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>here</a>.
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
@@ -278,6 +284,7 @@ import 'Controls/breadcrumbs';
       _dragOnBreadCrumbs: false,
       _hoveredBreadCrumb: undefined,
       _virtualScrolling: false,
+      _dragControlId: null,
 
       _beforeMount: function(cfg) {
          this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
@@ -297,6 +304,8 @@ import 'Controls/breadcrumbs';
                markedKey: null
             }
          };
+
+         this._dragControlId = randomId();
       },
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
@@ -324,8 +333,12 @@ import 'Controls/breadcrumbs';
          //TODO: Sometimes at the end of dnd, the parameter is not reset. Will be fixed by: https://online.sbis.ru/opendoc.html?guid=85cea965-2aa6-4f1b-b2a3-1f0d65477687
          this._hoveredBreadCrumb = undefined;
 
-         if (this._options.itemsDragNDrop && this._options.parentProperty && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')) {
-
+         if (
+            this._options.itemsDragNDrop &&
+            this._options.parentProperty &&
+            cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity') &&
+            dragObject.entity.dragControlId === this._dragControlId
+         ) {
             //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
             this._dragOnBreadCrumbs = _private.getRoot(this, this._options.root) !== _private.getDataRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
          }
@@ -406,4 +419,3 @@ import 'Controls/breadcrumbs';
    };
 
    export = Explorer;
-

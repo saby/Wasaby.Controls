@@ -1,8 +1,10 @@
+<!-- TODO remove ternary operator "_options.parentProperty !== undefined" by task https://online.sbis.ru/opendoc.html?guid=42946b92-381f-442d-ac44-b38b1663eefd -->
 <Controls.list:BaseControl on:itemMouseMove="_itemMouseMove()"
                            scope="{{_options}}"
                            name="baseControl"
                            on:keyDown="_onTreeViewKeyDown()"
-                           beforeReloadCallback="{{_beforeReloadCallback}}"
+                           on:itemClick="_onItemClick()"
+                           beforeReloadCallback="{{_options.parentProperty !== undefined ? _beforeReloadCallback}}"
                            beforeLoadToDirectionCallback="{{_beforeLoadToDirectionCallback}}"
                            afterReloadCallback="{{_afterReloadCallback}}">
    <ws:expanderTemplate>

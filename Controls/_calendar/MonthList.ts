@@ -1,12 +1,16 @@
-import {Base as BaseSource} from 'Types/source';
 import {date as formatDate} from 'Types/formatter';
+import {debounce} from 'Types/function';
+import {Base as BaseSource} from 'Types/source';
 import {IoC} from 'Env/Env';
-import {Control} from 'UI/Base';
-import coreMerge = require('Core/core-merge');
-import {SyntheticEvent} from 'Core/vdom/Synchronizer/resources/SyntheticEvent';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import {IMonthListSource, IMonthListSourceOptions} from './interfaces/IMonthListSource';
+import {IMonthList, IMonthListOptions} from './interfaces/IMonthList';
+import ExtDataModel from './MonthList/ExtDataModel';
 import YearsSource from './MonthList/YearsSource';
 import MonthsSource from './MonthList/MonthsSource';
 import monthListUtils from './MonthList/Utils';
+import {IntersectionObserverSyntheticEntry} from 'Controls/scroll';
 import dateUtils = require('Controls/Utils/Date');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import template = require('wml!Controls/_calendar/MonthList/MonthList');
@@ -28,7 +32,7 @@ import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
 /**
  * @event Controls/_calendar/MonthList#positionChanged Происходит когда меняется год или месяц. Т.е. когда
  * год или месяц пересекают верхнюю границу.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {date} Date отображаемый в самом верху год или месяц.
  * @example
  * Обновляем заголовок в зависимости от отображаемого года.
@@ -46,8 +50,11 @@ import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
  * </pre>
  */
 
+interface IModuleComponentOptions extends IControlOptions, IMonthListSourceOptions, IMonthListOptions {
+}
+
 const
-    sourceMap = {
+    sourceMap: object = {
         year: YearsSource,
         month: MonthsSource
     },
@@ -56,8 +63,12 @@ const
         month: '.controls-MonthList__month-body'
     };
 
-class  ModuleComponent extends Control {
-    private _template: Function = template;
+class  ModuleComponent extends Control<IModuleComponentOptions> implements IMonthListSource, IMonthList {
+    readonly '[Controls/_calendar/interface/IMonthListSource]': true;
+    readonly '[Controls/_calendar/interface/IMonthList]': true;
+
+    protected _template: TemplateFunction = template;
+
     private _viewSource: BaseSource;
     private _startPositionId: string;
     private _scrollToPosition: Date;
@@ -67,11 +78,19 @@ class  ModuleComponent extends Control {
 
     private _lastNotifiedPositionChangedDate: Date;
 
-    protected _beforeMount(options) {
-        const position = options.startPosition || options.position;
+    private _displayedDates: number[] = [];
+    private _extData: ExtDataModel;
+
+    _enrichItemsDebounced: Function;
+
+    protected _beforeMount(options: IModuleComponentOptions): void {
+        const position = options.startPosition || options.position || new Date();
         if (options.startPosition) {
             IoC.resolve('ILogger').warn('MonthList', 'Используется устаревшая опция startPosition, используйте опцию position');
         }
+
+        this._enrichItemsDebounced = debounce(this._enrichItems, 300);
+
         this._updateItemTemplate(options);
         this._updateSource(options);
         this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
@@ -80,37 +99,21 @@ class  ModuleComponent extends Control {
     }
 
     protected _afterMount(): void {
-        this._updateScrollAfterViewModification();
-    }
-
-    protected _afterMount() {
         // TODO: We need another api to control the shadow visibility
         // https://online.sbis.ru/opendoc.html?guid=1737a12a-9dd1-45fa-a70c-bc0c9aa40a3d
         this._children.scroll.setShadowMode({ top: 'visible', bottom: 'visible' });
     }
 
-    protected _beforeUpdate(options) {
+    protected _beforeUpdate(options: IModuleComponentOptions): void {
         this._updateItemTemplate(options);
         this._updateSource(options);
-        if (!dateUtils.isMonthsEqual(options.position, this._displayedPosition)) {
+        if (options.position !== this._displayedPosition) {
             this._updatePosition(options.position, this._options.position);
         }
     }
 
-    protected _afterUpdate(options) {
+    protected _afterUpdate(options: IModuleComponentOptions): void {
         this._updateScrollAfterViewModification();
-    }
-
-    startValueChangedHandler(event: SyntheticEvent, value: Date): void {
-        this._notify('startValueChanged', [value]);
-    }
-
-    endValueChangedHandler(event: SyntheticEvent, value: Date): void {
-        this._notify('endValueChanged', [value]);
-    }
-
-    selectionChangedHandler(event: SyntheticEvent, start: Date, end: Date): void {
-        this._notify('selectionChanged', [start, end]);
     }
 
     protected _getMonth(year: number, month: number): Date {
@@ -121,14 +124,20 @@ class  ModuleComponent extends Control {
         this._updateScrollAfterViewModification();
     }
 
-    private _updateItemTemplate(options: object): void {
+    private _updateItemTemplate(options: IModuleComponentOptions): void {
         this._itemTemplate = options.viewMode === 'year' ?
             options.yearTemplate : this._itemTemplate = options.monthTemplate;
 
     }
-    private _updateSource(options: object): void {
+    private _updateSource(options: IModuleComponentOptions): void {
         if (options.viewMode !== this._options.viewMode) {
             this._viewSource = new sourceMap[options.viewMode]();
+        }
+        if (options.viewMode !== this._options.viewMode || options.source !== this._options.source) {
+            this._extData = new ExtDataModel({
+                viewMode: options.viewMode,
+                source: options.source
+            });
         }
     }
     private _updatePosition(position: Date): void {
@@ -151,34 +160,71 @@ class  ModuleComponent extends Control {
             dateUtils.getStartOfYear(date) : dateUtils.getStartOfMonth(date);
     }
 
-    private _intersectHandler(event: SyntheticEvent, entries: object): void {
-        let date;
+    private _intersectHandler(event: SyntheticEvent, entries: IntersectionObserverSyntheticEntry[]): void {
         for (const entry of entries) {
-            if (entry.boundingClientRect.top - entry.rootBounds.top <= 0) {
-                if (entry.boundingClientRect.bottom - entry.rootBounds.top >= 0) {
-                    date = entry.data;
-                } else if (entry.rootBounds.top - entry.boundingClientRect.bottom < entry.target.offsetHeight) {
-                    if (this._options.viewMode === 'year') {
-                        date = new Date(entry.data.getFullYear() + 1, entry.data.getMonth());
-                    } else {
-                        date = new Date(entry.data.getFullYear(), entry.data.getMonth() + 1);
-                    }
-                }
-            }
-            if (date && !dateUtils.isMonthsEqual(date, this._lastNotifiedPositionChangedDate)) {
-                this._lastNotifiedPositionChangedDate = date;
-                this._displayedPosition = date;
-                this._notify('positionChanged', [date]);
-            }
+            this._updateDisplayedPosition(entry);
+            this._updateDisplayedItems(entry);
         }
     }
 
-    protected _getItem(data: object): object {
-        return {
-            date: monthListUtils.idToDate(data.getId()),
-            extData: data.get('extData')
-        };
+    private _updateDisplayedPosition(entry: IntersectionObserverSyntheticEntry): void {
+        let date;
+        if (entry.nativeEntry.boundingClientRect.top - entry.nativeEntry.rootBounds.top <= 0) {
+            if (entry.nativeEntry.boundingClientRect.bottom - entry.nativeEntry.rootBounds.top >= 0) {
+                date = entry.data;
+            } else if (entry.nativeEntry.rootBounds.top - entry.nativeEntry.boundingClientRect.bottom < entry.nativeEntry.target.offsetHeight) {
+                if (this._options.viewMode === 'year') {
+                    date = new Date(entry.data.getFullYear() + 1, entry.data.getMonth());
+                } else {
+                    date = new Date(entry.data.getFullYear(), entry.data.getMonth() + 1);
+                }
+            }
+        }
+        if (date && !dateUtils.isMonthsEqual(date, this._lastNotifiedPositionChangedDate)) {
+            this._lastNotifiedPositionChangedDate = date;
+            this._displayedPosition = date;
+            this._notify('positionChanged', [date]);
+        }
     }
+
+    private _updateDisplayedItems(entry: IntersectionObserverSyntheticEntry): void {
+        if (!this._options.source) {
+            return;
+        }
+
+        const
+            time = entry.data.getTime(),
+            index = this._displayedDates.indexOf(time),
+            isDisplayed = index !== -1;
+
+        if (entry.nativeEntry.isIntersecting && !isDisplayed) {
+            this._displayedDates.push(time);
+        } else if (!entry.nativeEntry.isIntersecting && isDisplayed) {
+            this._displayedDates.splice(index, 1);
+        }
+    }
+
+    /**
+     * Перезагружает данные для периода. Если переданный период не пересекается с отбражаемым периодом,
+     * то данные не будут обновляться сразу же, а обновятся при подскроле к ним.
+     * @function Controls/_calendar/MonthList#invalidatePeriod
+     * @param {Date} start Начало периода
+     * @param {Date} end Конец периода
+     * @see Controls/_calendar/interface/IMonthListSource#source
+     */
+    private invalidatePeriod(start: Date, end: Date): void {
+        if (this._extData) {
+            this._extData.invalidatePeriod(start, end);
+            this._extData.enrichItems(this._displayedDates);
+        }
+    }
+
+    private _enrichItems(): void {
+        if (this._extData) {
+            this._extData.enrichItems(this._displayedDates);
+        }
+    }
+
     protected  _formatMonth(date: Date): string {
         return date ? formatDate(date, formatDate.FULL_MONTH) : '';
     }
@@ -195,7 +241,7 @@ class  ModuleComponent extends Control {
         const containerToScroll: HTMLElement = this._findElementByDate(date);
 
         if (containerToScroll) {
-            scrollToElement(containerToScroll);
+            scrollToElement(containerToScroll, false, true);
             return true;
         }
         return false;
@@ -204,9 +250,11 @@ class  ModuleComponent extends Control {
     private _findElementByDate(date: Date): HTMLElement {
         let element: HTMLElement;
 
-        element = this._getElementByDate(
-            ITEM_BODY_SELECTOR.month,
-            monthListUtils.dateToId(dateUtils.getStartOfMonth(date)));
+        if (this._options.viewMode === 'month' || date.getMonth() !== 0) {
+            element = this._getElementByDate(
+                ITEM_BODY_SELECTOR.month,
+                monthListUtils.dateToId(dateUtils.getStartOfMonth(date)));
+        }
 
         if (!element) {
             element = this._getElementByDate(
@@ -223,20 +271,14 @@ class  ModuleComponent extends Control {
     protected _dateToDataString(date: Date): string {
         return monthListUtils.dateToId(date);
     }
+
+    static getDefaultOptions(): object {
+        return {
+            viewMode: 'year',
+            yearTemplate,
+            monthTemplate
+        };
+    }
 }
-
-ModuleComponent.getDefaultOptions = function () {
-    return coreMerge({
-        viewMode: 'year',
-        yearTemplate: yearTemplate,
-        monthTemplate: monthTemplate
-    }, {});
-};
-
-// ModuleComponent.getOptionTypes = function() {
-//    return coreMerge({
-//       // itemTemplate: types(String)
-//    }, {});
-// };
 
 export default ModuleComponent;

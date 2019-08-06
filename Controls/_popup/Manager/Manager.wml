@@ -7,6 +7,7 @@
             on:popupDeactivated="_eventHandler('popupDeactivated')"
             on:popupActivated="_eventHandler('popupActivated')"
             on:popupClose="_eventHandler('popupClose')"
+            on:popupResizingLine="_eventHandler('popupResizingLine')"
             on:popupDragStart="_eventHandler('popupDragStart')"
             on:popupDragEnd="_eventHandler('popupDragEnd')"
             on:popupMouseEnter="_eventHandler('popupMouseEnter')"

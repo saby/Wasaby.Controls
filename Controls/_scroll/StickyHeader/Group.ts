@@ -21,7 +21,7 @@ import template = require('wml!Controls/_scroll/StickyHeader/Group');
 
       /**
        * @event Controls/_scroll/StickyHeader/Group#fixed Change the fixation state.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} event Event descriptor.
+       * @param {Vdom/Vdom:SyntheticEvent} event Event descriptor.
        * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
        */
 

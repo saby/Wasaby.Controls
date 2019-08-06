@@ -25,7 +25,7 @@ export default interface ISingleSelectable {
  * </pre>
  * <pre>
  *    _beforeMount: function() {
-    *       this._selectedKeys = '1';
+    *       this._SelectedKey = '1';
     *    }
  * </pre>
  * @see selectedKeyChanged
@@ -34,7 +34,7 @@ export default interface ISingleSelectable {
 
 /**
  * @event Controls/_interface/ISingleSelectable#selectedKeyChanged Occurs when selection was changed.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Number|String} key Selected item key.
  * @example
  * The following example creates RadioGroup with empty selection. Subsequent changes made to selectedKey will be synchronized through binding mechanism. Source of the operations panel will be updated every time selectedKey change.
@@ -47,7 +47,7 @@ export default interface ISingleSelectable {
  *    _beforeMount: function() {
     *       this._selectedKey = undefined;
     *    },
- *    onSelectedKeysChanged: function(e, selectedKey) {
+ *    onSelectedKeyChanged: function(e, selectedKey) {
     *       //Note that we simultaneously have event handler and bind for the same option, so we don't have to update state manually.
     *       this._panelSource = this._getPanelSource(selectedKey);
     *    }

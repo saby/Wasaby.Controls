@@ -17,6 +17,32 @@ import IDateRangeSelectable = require('Controls/_dateRange/interfaces/IDateRange
 export {IDateRangeSelectable};
 
 /**
+ * Библиотека диапазона дат.
+ * @library Controls/dateRange
+ * @includes Input Controls/_dateRange/Input
+ * @includes Selector Controls/_dateRange/Selector
+ * @includes LiteSelector Controls/_dateRange/LiteSelector
+ * @includes RelationController Controls/_dateRange/RelationController
+ * @includes RelationWrapper Controls/_dateRange/RelationWrapper
+ * @includes RelationButton Controls/_dateRange/RelationButton
+ * @includes IDateTimeMask Controls/_dateRange/interfaces/IDateTimeMask
+ * @includes IInput Controls/_dateRange/interfaces/IInput
+ * @includes IInputDateTag Controls/_dateRange/interfaces/IInputDateTag
+ * @includes ILinkView Controls/_dateRange/interfaces/ILinkView
+ * @includes IPeriodLiteDialog Controls/_dateRange/interfaces/IPeriodLiteDialog
+ * @includes IDateRangeSelectable Controls/_dateRange/interfaces/IDateRangeSelectable
+ * @includes Utils Controls/_dateRange/Utils
+ * @includes Link Controls/_dateRange/Link
+ * @includes LinkView Controls/_dateRange/LinkView
+ * @includes RangeSelectionController Controls/_dateRange/Controllers/RangeSelectionController
+ * @includes DateRangeSelectionController Controls/_dateRange/Controllers/DateRangeSelectionController
+ * @includes DateRangeModel Controls/_dateRange/DateRangeModel
+ *
+ * @public
+ * @author Красильников А.С.
+ */
+
+/*
  * Date range library
  * @library Controls/dateRange
  * @includes Input Controls/_dateRange/Input
@@ -41,3 +67,4 @@ export {IDateRangeSelectable};
  * @public
  * @author Красильников А.С.
  */
+

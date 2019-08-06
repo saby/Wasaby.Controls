@@ -273,25 +273,25 @@ define('Controls/interface/IFilterButton', [
 
    /**
     * @event Controls/interface/IFilterButton#filterChanged Происходит при изменении фильтра.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Object} filter Новый фильтр.
     */
 
    /*
     * @event Controls/interface/IFilterButton#filterChanged Happens when filter changed.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Object} filter New filter.
     */
 
    /**
     * @event Controls/_filter/interface/IFilterView#itemsChanged Происходит при изменении элементов.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Object} items Новый элемент.
     */
 
    /*
     * @event Controls/interface/IFilterButton#itemsChanged Happens when items changed.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Object} items New items.
     */
 

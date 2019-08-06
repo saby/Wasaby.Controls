@@ -63,7 +63,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
 
 /**
  * @event Controls/_progress/StateIndicator#itemEnter Occurs when mouse enters sectors of indicator
- * @param {Env/Event:Object} eventObject event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject event descriptor.
  *
  */
 class StateIndicator extends Control<IStateIndicatorOptions>{

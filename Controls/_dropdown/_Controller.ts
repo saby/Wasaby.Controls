@@ -6,6 +6,7 @@ import {isEqual} from 'Types/object';
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
 import * as mStubs from 'Core/moduleStubs';
+import Env = require('Env/Env');
 
 // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 var
@@ -243,7 +244,7 @@ var _private = {
 
 /**
  * @event Controls/_dropdown/_Controller#selectedItemsChanged Происходит при изменении набора выбранных элементов.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/collection:RecordSet} items Выбранные элементы.
  */
 
@@ -333,6 +334,13 @@ var _Controller = Control.extend({
                }
             });
          }
+      }
+   },
+
+   _keyDown: function(event) {
+      if (event.nativeEvent.keyCode === Env.constants.key.esc && this._children.DropdownOpener.isOpened()) {
+         this._children.DropdownOpener.close();
+         event.stopPropagation();
       }
    },
 

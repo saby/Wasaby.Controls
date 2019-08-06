@@ -3,6 +3,18 @@ import Model from './RelationController/Model';
 import template = require('wml!Controls/_dateRange/RelationController/RelationController');
 
 /**
+ * Контроллер, который позволяет связать несколько контролов для ввода периода.
+ *
+ * @class Controls/_dateRange/RelationController
+ * @extends Core/Control
+ *
+ * @control
+ * @public
+ * @demo Controls-demo/dateRange/RelationController
+ * @author Красильников А.С.
+ */
+
+/*
  * Controller allows you to link several controls for entering periods.
  *
  * @class Controls/_dateRange/RelationController
@@ -15,6 +27,37 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  */
 
 /**
+ * @name Controls/_dateRange/RelationController#startValue0
+ * @cfg {Date} Начальное значение первого периода.
+ * @remark
+ * Вы можете привязать параметры startValue0, startValue1, startValue2 в количестве, равном количеству контролов, которые необходимо связать.
+ * @example
+ * В этом примере показано, как связать 2 диапазона контролов ввода.
+ * <pre>
+ *    <Controls.dateRange:RelationController
+ *            bind:startValue0="_startValue0"
+ *             bind:endValue0="_endValue0"
+ *             bind:startValue1="_startValue1"
+ *             bind:endValue1="_endValue1">
+ *        <Controls.dateRange:RelationWrapper number="{{0}}" ranges="{{content.ranges}}">
+ *            <Controls.dateRange:LiteSelector/>
+ *        </Controls.dateRange:RelationWrapper>
+ *        <Controls.dateRange:RelationWrapper number="{{1}}" ranges="{{content.ranges}}">
+ *            <Controls.dateRange:LiteSelector/>
+ *        </Controls.dateRange:RelationWrapper>
+ *    </Controls.dateRange:RelationController>
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       _startValue0: new Date(2019, 0, 0),
+ *       _endValue0: new Date(2019, 0, 31),
+ *       _startValue1: new Date(2019, 1, 0),
+ *       _endValue1: new Date(2019, 1, 31),
+ *    });
+ * </pre>
+ */
+
+/*
  * @name Controls/_dateRange/RelationController#startValue0
  * @cfg {Date} Start value of the first period.
  * @remark
@@ -47,6 +90,37 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
 
 /**
  * @name Controls/_dateRange/RelationController#endValue0
+ * @cfg {Date} Конечное значение первого периода.
+ * @remark
+ * Вы можете привязать параметры endValue0, endValue1, endValue2 в количестве, равном количеству контролов, которые необходимо связать.
+ * @example
+ * В этом примере показано, как связать 2 диапазона контролов ввода.
+ * <pre>
+ *    <Controls.dateRange:RelationController
+ *            bind:startValue0="_startValue0"
+ *             bind:endValue0="_endValue0"
+ *             bind:startValue1="_startValue1"
+ *             bind:endValue1="_endValue1">
+ *        <Controls.dateRange:RelationWrapper number="{{0}}" ranges="{{content.ranges}}">
+ *            <Controls.dateRange:LiteSelector/>
+ *        </Controls.dateRange:RelationWrapper>
+ *        <Controls.dateRange:RelationWrapper number="{{1}}" ranges="{{content.ranges}}">
+ *            <Controls.dateRange:LiteSelector/>
+ *        </Controls.dateRange:RelationWrapper>
+ *    </Controls.dateRange:RelationController>
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       _startValue0: new Date(2019, 0, 0),
+ *       _endValue0: new Date(2019, 0, 31),
+ *       _startValue1: new Date(2019, 1, 0),
+ *       _endValue1: new Date(2019, 1, 31),
+ *    });
+ * </pre>
+ */
+
+/*
+ * @name Controls/_dateRange/RelationController#endValue0
  * @cfg {Date} End value of the first period.
  * @remark
  * You can bind the options endValue0, endValue1, endValue2 in an amount equal to the number of controls you need to associate.
@@ -78,9 +152,28 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
 
 /**
  * @name Controls/_dateRange/RelationController#bindType
+ * @cfg {String} Тип привязки.
+ * @variant normal В этом режиме изменение одного периода всегда приводит к пересчету остальных периодов.
+ * @variant byCapacity В этом режиме при изменении одного из периодов другие изменяются только в том случае, если изменился тип периода.
+ * @example
+ * В этом примере показано, как задать тип привязки.
+ * <pre>
+ *    <Controls.dateRange:RelationController bindType="{{_bindType}}">
+ *        <Controls.dateRange:RelationButton value="{{content.bindType}}"/>
+ *    </Controls.dateRange:RelationController>
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       _bindType: 'normal'
+ *    });
+ * </pre>
+ */
+
+/*
+ * @name Controls/_dateRange/RelationController#bindType
  * @cfg {String} Bind type
- * @variant 'normal' In this mode, changing one period always results to recalculation of the remaining periods.
- * @variant 'byCapacity' In this mode, when one of the periods changes, the others change only if the type of the period has changed.
+ * @variant normal In this mode, changing one period always results to recalculation of the remaining periods.
+ * @variant byCapacity In this mode, when one of the periods changes, the others change only if the type of the period has changed.
  * @example
  * This example shows how to set the bind type.
  * <pre>
@@ -96,6 +189,37 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  */
 
 /**
+ * @name Controls/_dateRange/RelationController#content
+ * @cfg {Content} Содержимое контрола. Контроллер устанавливает периоды и тип параметров связи в шаблоне.
+ * Шаблон может содержать контролы выбора периода. 
+ * Каждый контрол выбора периода должен быть обернут в {@link Controls/_dateRange/RelationWrapper}. Также шаблон может содержать {@link Controls/_dateRange/RelationButton}.
+ * @example
+ * <pre>
+ *    <Controls.dateRange:RelationController
+ *            bind:startValue0="_startValue0"
+ *             bind:endValue0="_endValue0"
+ *             bind:startValue1="_startValue1"
+ *             bind:endValue1="_endValue1">
+ *        <Controls.dateRange:RelationWrapper number="{{0}}" ranges="{{content.ranges}}">
+ *            <Controls.dateRange:LiteSelector/>
+ *        </Controls.dateRange:RelationWrapper>
+ *        <Controls.dateRange:RelationWrapper number="{{1}}" ranges="{{content.ranges}}">
+ *            <Controls.dateRange:LiteSelector/>
+ *        </Controls.dateRange:RelationWrapper>
+ *        <Controls.dateRange:RelationButton value="{{content.bindType}}"/>
+ *    </Controls.dateRange:RelationController>
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       _startValue0: new Date(2019, 0, 0),
+ *       _endValue0: new Date(2019, 0, 31),
+ *       _startValue1: new Date(2019, 1, 0),
+ *       _endValue1: new Date(2019, 1, 31),
+ *    });
+ * </pre>
+ */
+
+/*
  * @name Controls/_dateRange/RelationController#content
  * @cfg {Content} Control contents. The controller set the periods and type of relation options on the template.
  * An internal template can contain period selection controls. Each of the period selection control
@@ -127,6 +251,28 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  */
 
 /**
+ * @event Controls/_dateRange/RelationController#bindTypeChanged Возникает при изменении типа привязки.
+ * @param {String} bindType Новое значение типа привязки.
+ * @example
+ * <pre>
+ *    <Controls.dateRange:RelationController on:bindTypeChanged="_bindTypeChangedHandler()"/>
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       ...
+ *       _bindTypeChangedHandler(bindType) {
+ *          if (bindType === 'normal') {
+ *              this._buttonStyle = 'primary'
+ *          } else if (bindType === 'byCapacity') {
+ *              this._buttonStyle = 'default';
+ *          }
+ *       },
+ *       ...
+ *    });
+ * </pre>
+ */
+
+/*
  * @event Controls/_dateRange/RelationController#bindTypeChanged Occurs when bind type was changed.
  * @param {String} bindType New bind type value.
  * @example
@@ -149,6 +295,24 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  */
 
 /**
+ * @event Controls/_dateRange/RelationController#periodsChanged Происходит при изменении хотя бы одного из периодов.
+ * @param {Array} value Массив с периодами.
+ * @example
+ * <pre>
+ *    <Controls.dateRange:RelationController on:periodsChanged="_periodsChangedHandler()"/>
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       ...
+ *       _periodsChangedHandler(periods) {
+ *          this._saveToDatabase(periods);
+ *       },
+ *       ...
+ *    });
+ * </pre>
+ */
+
+/*
  * @event Controls/_dateRange/RelationController#periodsChanged Occurs when at least one of the periods has changed.
  * @param {Array} value Array with periods.
  * @example
@@ -167,6 +331,16 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  */
 
 /**
+ * Сдвигает периоды вперед.
+ * @function Controls/_dateRange/RelationController#shiftForward
+ * @example
+ * <pre>
+ *    <Controls.dateRange:RelationController name="dateRelation"/>
+ *    <Controls.buttons:Button on:click="dateRelation.shiftForward()"/>
+ * </pre>
+ */
+
+/*
  * Shifts periods forward
  * @function Controls/_dateRange/RelationController#shiftForward
  * @example
@@ -177,6 +351,16 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  */
 
 /**
+ * Сдвигает периоды назад.
+ * @function Controls/_dateRange/RelationController#shiftBackward
+ * @example
+ * <pre>
+ *    <Controls.dateRange:RelationController name="dateRelation"/>
+ *    <Controls.buttons:Button on:click="dateRelation.shiftBackward()"/>
+ * </pre>
+ */
+
+/*
  * Shifts periods backward
  * @function Controls/_dateRange/RelationController#shiftBackward
  * @example

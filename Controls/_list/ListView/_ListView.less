@@ -17,12 +17,12 @@
    margin-top: @spacing_ListView-item-between-checkbox-borderTop;
 }
 
-.controls-ListView__itemV .controls-ListView__checkbox-onhover {
-  display: none;
+.ws-is-desktop-platform .controls-ListView__checkbox-onhover {
+   display: none;
 }
 
-.ws-is-no-touch .controls-ListView__itemV:hover .controls-ListView__checkbox-onhover {
-  display: inline-block;
+.ws-is-desktop-platform .controls-ListView__itemV:hover .controls-ListView__checkbox-onhover {
+   display: inline-block;
 }
 
 .controls-ListView__footer__paddingLeft_withCheckboxes {
@@ -142,6 +142,9 @@
    > .controls-itemActionsV {
       display: inline-block;
    }
+   .controls-itemActionsV_custom {
+      display: inline-block;
+   }
 }
 
 .controls-ListView__item_dragging {
@@ -152,6 +155,9 @@
    .controls-ListView__item_showActions {
       &:hover {
          > .controls-itemActionsV {
+            display: inline-block;
+         }
+         .controls-itemActionsV_custom {
             display: inline-block;
          }
       }

@@ -17,7 +17,7 @@ import 'css!theme?Controls/scroll';
 
 /**
  * Контейнер с тонким скроллом.
- * For the component, a {@link Controls/_scroll/Scroll/Context context} is required.
+ * Для контрола требуется {@link Controls/_scroll/Scroll/Context context}.
  *
  * @class Controls/_scroll/Container
  * @extends Core/Control
@@ -136,12 +136,12 @@ var
          return container.offsetHeight;
       },
 
-      getScrollTop: function(container) {
-         return container.scrollTop;
+      getScrollTop: function(self, container) {
+         return container.scrollTop + self._topPlaceholderSize;
       },
 
       setScrollTop: function(self, scrollTop) {
-         self._children.content.scrollTop = scrollTop;
+         self._children.scrollWatcher.setScrollTop(scrollTop);
          self._scrollTop = scrollTop;
          self._notify('scroll', [scrollTop]);
       },
@@ -163,12 +163,13 @@ var
       },
 
       getContentHeight: function(self) {
-         return _private.getScrollHeight(self._children.content) - self._headersHeight.top - self._headersHeight.bottom;
+         return _private.getScrollHeight(self._children.content) - self._headersHeight.top -
+            self._headersHeight.bottom + self._topPlaceholderSize + self._bottomPlaceholderSize;
       },
 
       getShadowPosition: function(self) {
          var
-            scrollTop = _private.getScrollTop(self._children.content),
+            scrollTop = _private.getScrollTop(self, self._children.content),
             scrollHeight = _private.getScrollHeight(self._children.content),
             containerHeight = _private.getContainerHeight(self._children.content);
 
@@ -257,6 +258,9 @@ var
 
       _headersHeight: null,
       _scrollbarStyles: '',
+
+      _topPlaceholderSize: 0,
+      _bottomPlaceholderSize: 0,
 
       constructor: function(cfg) {
          Scroll.superclass.constructor.call(this, cfg);
@@ -411,6 +415,14 @@ var
             return true;
          }
 
+         // On ipad with inertial scrolling due to the asynchronous triggering of scrolling and caption fixing  events,
+         // sometimes it turns out that when the first event is triggered, the shadow must be displayed,
+         // and immediately after the second event it is not necessary.
+         // These conditions appear during scrollTop < 0. Just do not display the shadow when scrollTop < 0.
+         if (Env.detection.isMobileIOS && position === 'top' && _private.getScrollTop(this, this._children.content) < 0) {
+            return false;
+         }
+
          return this._displayState.shadowPosition.indexOf(position) !== -1 && !this._children.stickyController.hasFixed(position);
       },
 
@@ -457,14 +469,14 @@ var
       },
 
       _scrollHandler: function(ev) {
-
+         const scrollTop = _private.getScrollTop(this, this._children.content);
          // Проверяем, изменился ли scrollTop, чтобы предотвратить ложные срабатывания события.
          // Например, при пересчете размеров перед увеличением, плитка может растянуть контейнер между перерисовок,
          // и вернуться к исходному размеру.
          // После этого  scrollTop остается прежним, но срабатывает незапланированный нативный scroll
-         if (this._scrollTop !== _private.getScrollTop(this._children.content)) {
+         if (this._scrollTop !== scrollTop) {
             if (!this._dragging) {
-               this._scrollTop = _private.getScrollTop(this._children.content);
+               this._scrollTop = scrollTop;
                this._notify('scroll', [this._scrollTop]);
             }
             this._children.scrollDetect.start(ev);
@@ -542,6 +554,7 @@ var
                this._pagingState.stateUp = 'normal';
                this._pagingState.stateDown = 'normal';
             }
+            this._forceUpdate();
          }
       },
 
@@ -657,7 +670,7 @@ var
        * @function Controls/_scroll/Container#scrollToBottom
        */
       scrollToBottom: function() {
-         _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
+         _private.setScrollTop(this, _private.getScrollHeight(this._children.content) + this._topPlaceholderSize);
       },
 
       // TODO: система событий неправильно прокидывает аргументы из шаблонов, будет исправлено тут:
@@ -675,6 +688,18 @@ var
          if (!event.propagating()) {
             var args = Array.prototype.slice.call(arguments, 1);
             this._notify('excludedKeysChanged', args);
+         }
+      },
+
+      _updatePlaceholdersSize: function(e, placeholdersSizes) {
+         if (this._topPlaceholderSize !== placeholdersSizes.top ||
+            this._bottomPlaceholderSize !== placeholdersSizes.bottom) {
+            this._topPlaceholderSize = placeholdersSizes.top;
+            this._bottomPlaceholderSize = placeholdersSizes.bottom;
+            this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
+            if (this._children.scrollBar) {
+               this._children.scrollBar.setFix1177446501(true);
+            }
          }
       },
 
@@ -700,16 +725,21 @@ var
          if (Env.detection.isMobileIOS) {
             this.setOverflowScrolling('auto');
          }
-         this._savedScrollPosition = this._children.content.scrollHeight - getScrollTop(this._children.content);
+         this._savedScrollTop = getScrollTop(this._children.content);
+         this._savedScrollPosition = this._children.content.scrollHeight - this._savedScrollTop;
       },
 
-      _restoreScrollPosition: function(e) {
+      _restoreScrollPosition: function(e, removedHeight, direction) {
          /**
           * Only closest scroll container should react to this event, so we have to stop propagation here.
           * Otherwise we can accidentally scroll a wrong element.
           */
          e.stopPropagation();
-         this._children.content.scrollTop = this._children.content.scrollHeight - this._savedScrollPosition;
+         if (direction === 'up') {
+            this._children.content.scrollTop = this._children.content.scrollHeight - this._savedScrollPosition + removedHeight;
+         } else {
+            this._children.content.scrollTop = this._savedScrollTop - removedHeight;
+         }
          // todo KINGO. Костыль с родословной из старых списков. Инерционный скролл приводит к дерганью: мы уже
          // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
          // дерганья и лишняя загрузка данных.

@@ -17,22 +17,22 @@ define('Controls/interface/IGridItemTemplate', [
 
    /**
     * @name Controls/interface/IGridItemTemplate#itemTemplate
-    * @cfg {Function} Шаблон элемента списка.
+    * @cfg {Function} Шаблон отображения элемента таблицы.
     * <a href="/materials/demo-ws4-grid-item-template">Example</a>.
     * @remark
-    * Базовый шаблон itemTemplate для Controls.grid:View: "Controls/grid:ItemTemplate".
-    * В области шаблона доступен объект itemData, который позволяет получить доступ к данным рендеринга (например, элемент, ключ и т.д.).
+    * Для контрола {@link Controls/grid:View} в качестве базового шаблона применяется "Controls/grid:ItemTemplate".
+    * В его области видимости доступен объект itemData, через который можно получить доступ к данным рендеринга (например, элемент, ключ и т.д.).
     * Базовый шаблон itemTemplate поддерживает следующие параметры:
     * <ul>
-    *    <li>highlightOnHover {Boolean} - Включить выделение элемента при наведении курсора.</li>
+    *    <li>highlightOnHover {Boolean} — включить выделение элемента при наведении курсора.</li>
     * </ul>
     * @example
     * Использование пользовательского шаблона для рендеринга:
     * <pre>
     *    <Controls.grid:View>
-    *       <itemTemplate>
+    *       <ws:itemTemplate>
     *          <ws:partial template="Controls/grid:ItemTemplate" highlightOnHover="{{false}}"/>
-    *       </itemTemplate>
+    *       </ws:itemTemplate>
     *    </Controls.grid:View>
     * </pre>
     */
@@ -52,9 +52,9 @@ define('Controls/interface/IGridItemTemplate', [
     * Using custom template for item rendering:
     * <pre>
     *    <Controls.grid:View>
-    *       <itemTemplate>
+    *       <ws:itemTemplate>
     *          <ws:partial template="Controls/grid:ItemTemplate" highlightOnHover="{{false}}"/>
-    *       </itemTemplate>
+    *       </ws:itemTemplate>
     *    </Controls.grid:View>
     * </pre>
     */

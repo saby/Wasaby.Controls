@@ -2,7 +2,6 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/PropertyGrid/PropertyGrid');
 import Utils = require('Types/util');
 import {isEqual} from 'Types/object';
-import Clone = require('Core/core-clone');
 import chain = require('Types/chain');
 import 'css!theme?Controls/filterPopup';
 
@@ -112,26 +111,26 @@ import 'css!theme?Controls/filterPopup';
       },
 
       _valueChangedHandler: function(event, index, value) {
-         this._options.items[index].value = value;
-         this._notify('itemsChanged', [this._options.items]);
+         this._items[index].value = value;
+         this._notify('itemsChanged', [this._items]);
       },
 
       _rangeChangedHandler: function(event, index, start, end) {
-         this._options.items[index].value = [start, end];
-         this._notify('itemsChanged', [this._options.items]);
+         this._items[index].value = [start, end];
+         this._notify('itemsChanged', [this._items]);
       },
 
       _textValueChangedHandler: function(event, index, textValue) {
-         this._options.items[index].textValue = textValue;
-         this._notify('itemsChanged', [this._options.items]);
+         this._items[index].textValue = textValue;
+         this._notify('itemsChanged', [this._items]);
       },
 
       _visibilityChangedHandler: function(event, index, visibility) {
          if (!visibility) {
-            this._options.items[index].value = this._options.items[index].resetValue;
+            this._items[index].value = this._items[index].resetValue;
          }
-         this._options.items[index].visibility = visibility;
-         this._notify('itemsChanged', [this._options.items]);
+         this._items[index].visibility = visibility;
+         this._notify('itemsChanged', [this._items]);
       }
    });
 

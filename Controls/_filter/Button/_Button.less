@@ -70,10 +70,22 @@
 	order: -3;
 }
 
+.controls-FilterButton__textLine-wrapper {
+	.inline-flexbox();
+	.align-items(baseline);
+	min-width: 0;
+	flex-shrink: 1;
+}
+
+.controls-FilterButton__textLine-wrapper:before {
+	content: '\200b';
+	line-height: @height_FilterButton;
+}
+
 .controls-FilterButton__text-wrapper {
 	.inline-flexbox();
 	flex-shrink: 1;
-	.align-items(center);
+	.align-items(baseline);
 	min-width: 0;
 }
 
@@ -145,6 +157,7 @@
 
 .controls-FilterButton__arrow {
 	.icon-size-without-important(@font-size_FilterButton_arrow, @font-family_FilterButton_arrow);
+	align-self: center;
 }
 
 .controls-FilterButton__clear {

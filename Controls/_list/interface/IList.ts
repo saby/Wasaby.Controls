@@ -129,12 +129,25 @@
  * @property {String} id Идентификатор операции.
  * @property {String} title Название операции.
  * @property {String} icon Иконка операции.
- * @property {Number} showType Местоположение операции. В свойство передается константа с соответствующим значением (0 - menu | 1 - toolbar and menu | 2 - toolbar). Если свойство не указано, то itemActions отображаются только в меню.
- * @property {String} style Режим визуального отображения операции. (secondary | warning | danger | success).
- * @property {String} iconStyle Режим визуального отображения иконки операции. (secondary | warning | danger | success).
+ * См. <a href="/docs/js/icons/">список иконок</a>.
+ * @property {Number} [showType=0] Местоположение операции.
+ * В свойство передается константа с соответствующим значением.
+ * В значении "0" (по умолчанию) операция отображается в контекстном меню.
+ * В значении "1" операция отображается в строке и в контекстном меню.
+ * В значении "2" операция отображается в строке.
+ * Когда в свойстве не передано значение, операция отображаются только в меню.
+ * @property {String} style Стиль отображения операции над записью.
+ * В свойству задают имя прикладного класса, которое в результате преобразуется в класс вида "controls-itemActionsV__action_style_имя_прикладного_класса".
+ * Он будет установлен для html-контейнера самой операции над записью, а его свойства будут применены как к тексту (свойство title), так и к иконке (свойство icon).
+ * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/#config-style">руководство разработчика</a>.
+ * @property {String} [iconStyle=default] Стиль иконки. 
+ * Возможные значения: default, attention, error и done.
+ * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/#config-style">руководство разработчика</a>.
  * @property {Function} handler Обработчик операции.
+ * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/#item-actions-position">пример обработчика</a>.
  * @property {String} parent Ключ родителя операции.
  * @property {boolean|null} parent@ Поле, описывающее тип узла (список, узел, скрытый узел).
+ * Подробнее о различиях между типами узлов можно прочитать <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">здесь</a>.
  */
 
 /*
@@ -168,6 +181,36 @@
  * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
  * @variant inside Панель действий над записью будет располагаться внутри строки.
  * @variant outside Панель действий над записью будет располагаться под строкой.
+ * @variant custom Панель действий должна быть размещена в прикладном шаблоне itemTemplate.
+ * <a href="/materials/demo-ws4-list-item-actions-custom">Example</a>.
+ * @example
+ * Размещаем опции записи в прикладном шаблоне с использованием itemActionsTemplate:
+ *<pre>
+ * <Controls.list:View
+ *    itemActionsPosition="custom"
+ *    itemActions="{{_itemActions}}">
+ *    <ws:itemTemplate>
+ *      <ws:partial template="Controls/list:ItemTemplate">
+ *        <ws:contentTemplate>
+ *          <ws:partial template="wml!customTemplateName"/>
+ *        </ws:contentTemplate>
+ *      </ws:partial>
+ *    </ws:itemTemplate>
+ * </Controls.list:View>
+ *</pre>
+ *
+ * customTemplateName.wml:
+ * <pre>
+ *  <div>{{itemData.item.title}}</div>
+ *    <ws:if data="{{!itemData.isSwiped}}">
+ *      <ws:partial template="{{itemActionsTemplate}}"
+ *                  attr:class="some-custom-class-for-itemActions"
+ *                  itemData="{{itemData}}"
+ *                  scope="{{_options}}"/>
+ *    </ws:if>
+ *  <div>{{itemData.item.description}}</div>
+ * </pre>
+ *
  */
 
 /*
@@ -176,11 +219,41 @@
  * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
  * @variant inside Item actions will be positioned inside the item's row.
  * @variant outside Item actions will be positioned under the item's row.
+ * @variant custom Item actions must be positioned in the itemTemplate.
+ * <a href="/materials/demo-ws4-list-item-actions-custom">Example</a>.
+ * @example
+ * Placing Item Actions in custom item template using itemActionsTemplate
+ *<pre>
+ * <Controls.list:View
+ *    itemActionsPosition="custom"
+ *    itemActions="{{_itemActions}}">
+ *    <ws:itemTemplate>
+ *      <ws:partial template="Controls/list:ItemTemplate">
+ *        <ws:contentTemplate>
+ *          <ws:partial template="wml!customTemplateName"/>
+ *        </ws:contentTemplate>
+ *      </ws:partial>
+ *    </ws:itemTemplate>
+ * </Controls.list:View>
+ *</pre>
+ *
+ * customTemplateName.wml:
+ * <pre>
+ *  <div>{{itemData.item.title}}</div>
+ *    <ws:if data="{{!itemData.isSwiped}}">
+ *      <ws:partial template="{{itemActionsTemplate}}"
+ *                  attr:class="some-custom-class-for-itemActions"
+ *                  itemData="{{itemData}}"
+ *                  scope="{{_options}}"/>
+ *    </ws:if>
+ *  <div>{{itemData.item.description}}</div>
+ * </pre>
+ *
  */
 
 /**
  * @event Controls/_list/interface/IList#actionClick Происходит при клике на элемент панели действий над записью.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {ItemAction} action Запись, по которой был выполнен клик.
  * @param {Types/entity:Model} item Экземпляр записи, по которой был выполнен клик.
  * @param {HTMLElement} itemContainer Контейнер записи, по которой был выполнен клик.
@@ -188,7 +261,7 @@
 
 /*
  * @event Controls/_list/interface/IList#actionClick Occurs when itemAction button is clicked.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {ItemAction} action Object with configuration of the clicked action.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
  * @param {HTMLElement} itemContainer Container of the item whose action was clicked.
@@ -230,7 +303,7 @@
 
 /**
  * @name Controls/_list/interface/IList#itemActionVisibilityCallback
- * @cfg {function} Функция обратного вызова для определения видимости элементов в панели действий над записью.
+ * @cfg {Function} Функция обратного вызова для определения видимости элементов в панели действий над записью.
  * @param {ItemAction} action Объект с конфигурацией конкретной операции.
  * @param {Types/entity:Model} item Модель, содержащая данные записи.
  * @returns {Boolean} Следует ли отображать действие.
@@ -261,7 +334,7 @@
 
 /*
  * @name Controls/_list/interface/IList#itemActionVisibilityCallback
- * @cfg {function} item operation visibility filter function
+ * @cfg {Function} item operation visibility filter function
  * @param {ItemAction} action Object with configuration of an action.
  * @param {Types/entity:Model} item Instance of the item whose action is being processed.
  * @returns {Boolean} Determines whether the action should be rendered.
@@ -425,14 +498,14 @@
  */
 
 /**
- * @typedef {String} reloadType
+ * @typedef {String} ReloadType
  * @variant query Элемент будет перезагружен с помощью метода "Поисковый запрос".
  * @variant read Элемент будет перезагружен с помощью метода "Прочитать".
  * @default read
  */
 
 /*
- * @typedef {String} reloadType
+ * @typedef {String} ReloadType
  * @variant query Item will be reloaded with query method
  * @variant read Item will be reloaded with read method
  * @default read
@@ -446,7 +519,7 @@
  * @param {Boolean} replaceItem Определяет, как загруженный элемент будет применяться к коллекции.
  * Если параметр имеет значение true, элемент коллекции будет заменен загруженным элементом.
  * Если параметр имеет значение false (по умолчанию), загруженные элементы будут объединены в элемент коллекции.
- * @param {reloadType} Определяет, как будет загружен элемент.
+ * @param {ReloadType} reloadType Определяет, как будет загружен элемент.
  * @example
  *  <pre>
  *      _itemUpdated: function(id) {
@@ -477,31 +550,31 @@
 /**
  * @event Controls/_list/interface/IList#itemClick Происходит при клике на элемент списка.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {eventObject} event Объект события.
+ * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
  * @param {Types/entity:Record} item Элемент, по которому производим клик.
  */
 
  /*
  * @event Controls/_list/interface/IList#itemClick Occurs when list item is clicked.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {eventObject} event Event object.
+ * @param {Vdom/Vdom:SyntheticEvent} event Event object.
  * @param {Types/entity:Record} item Clicked item.
  */
 
 /**
  * @event Controls/_list/interface/IList#itemSwipe Происходит при жесте "swipe" на элементе списка.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Экземпляр элемента списка, по которому производим swipe.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} originalEvent Дескриптор исходного события.
+ * @param {Vdom/Vdom:SyntheticEvent} originalEvent Дескриптор исходного события.
  * @remark
  * Событие срабатывает, только если со списком ничего не происходит при жесте "swipe" (например, если список поддерживает выбор, он будет только устанавливать флаг). Это поведение схоже с {@link Controls/_list/interface/IList#itemClick itemClick}.
  */
 
 /*
  * @event Controls/_list/interface/IList#itemSwipe Occurs when list item is swiped.
- * @param {Env/Event:Object} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the swiped item.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} originalEvent Descriptor of the original event. It is useful if you want to get direction or target.
+ * @param {Vdom/Vdom:SyntheticEvent} originalEvent Descriptor of the original event. It is useful if you want to get direction or target.
  * @remark
  * This event fires only if the list doesn't do anything on swipe (e.g., if the list supports selection - it will toggle checkbox and that's it). This behavior is in line with the {@link Controls/_list/interface/IList#itemClick itemClick}.
  */
@@ -509,7 +582,7 @@
 /**
  * @event Controls/_list/interface/IList#hoveredItemChanged Происходит при наведении курсора мыши на элемент списка.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Экземпляр элемента, на который наводим курсор.
  * @param {HTMLElement} itemContainer Контейнер элемента.
  */
@@ -517,7 +590,7 @@
 /*
  * @event Controls/_list/interface/IList#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Env/Event:Object} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
  * @param {HTMLElement} itemContainer Container of the item.
  */
@@ -525,27 +598,27 @@
 /**
  * @event  Controls/_list/interface/IList#markedKeyChanged Происходит при выделении пользователем элемента списка.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Number} key Ключ выбранного элемента.
  */
 
 /*
  * @event  Controls/_list/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Env/Event:Object} eventObject The event descriptor. 
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Number} key Key of the selected item.
  */
 
 /**
  * @event  Controls/_list/interface/IList#drawItems Происходит при отрисовке очередного набора данных.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
 /*
  * @event  Controls/_list/interface/IList#drawItems Occurs when the next batch of data is drawn.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  */
 
 /**

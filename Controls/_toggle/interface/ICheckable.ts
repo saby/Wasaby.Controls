@@ -32,12 +32,12 @@ export interface ICheckable {
 
 /**
  * @event Controls/_toggle/interface/ICheckable#valueChanged Происходит при изменении значения.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {boolean} value Новое значение.
  */
 
 /*
  * @event Controls/_toggle/interface/ICheckable#valueChanged Occurs when value changes.
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {boolean} value New value.
  */

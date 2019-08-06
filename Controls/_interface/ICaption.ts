@@ -26,19 +26,25 @@ export default interface ICaption {
  * @cfg {String} Определяет текст заголовка контрола.
  * @remark Вы можете передать разметку в заголовок.
  * @example
- * Контрол с заголовком 'Dialog'.
+ * **Пример 1.** Кнопка с заголовком.
  * <pre>
- *    <ControlsDirectory.Control caption="Dialog"/>
+ *    <Controls.buttons:Button caption="Hello Wasaby"/>
  * </pre>
- * Контрол имеет заголовок с разметкой.
+ * **Пример 2.** В заголовок кнопки встроена разметка.
+ * Разметка изменяет цвет текста.
+ * В качестве текста выводится число, разделённое на триады.
  * <pre>
- *    <ControlsDirectory.Control caption="captionTemplate"/>
+ *    <Controls.buttons:Button>
+ *        <ws:caption>
+ *            <span style="color: red"> 
+ *                <Controls.decorator:Number number="{{ 150350.050 }}" />
+ *            </span>
+ *        </ws:caption>
+ *    </Controls.buttons:Button>
  * </pre>
- * captionTemplate
+ * **Пример 3.** В заголовок кнопки передан шаблон.
  * <pre>
- *    <span class='customDialog'>
- *       Dialog
- *    </span>
+ *    <Controls.buttons:Button caption="wml!MyControl/Template"/>
  * </pre>
  */
 

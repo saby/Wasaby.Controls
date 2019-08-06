@@ -86,52 +86,52 @@ define('Controls/interface/IFormController', [
 
    /**
     * @event Controls/interface/IFormController#createSuccessed Happens when record create successful
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Model} Editable record
     */
    /**
     * @event Controls/interface/IFormController#createFailed Happens when record create failed
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Error} Error
     */
 
    /**
     * @event Controls/interface/IFormController#readSuccessed Happens when record read successful
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Model} Editable record
     */
    /**
     * @event Controls/interface/IFormController#readFailed Happens when record read failed
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Error} Error
     */
 
    /**
     * @event Controls/interface/IFormController#updateSuccessed Happens when record update successful
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Model} Editable record
     * @param {String} Editable record key
     */
    /**
     * @event Controls/interface/IFormController#updateFailed Happens when record update failed
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Error} Error
     */
 
    /**
     * @event Controls/interface/IFormController#deleteSuccessed Happens when record delete successful
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Model} Editable record
     */
    /**
     * @event Controls/interface/IFormController#deleteFailed Happens when record delete failed
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Error} Error
     */
 
    /**
     * @event Controls/interface/IFormController#isNewRecordChanged Happens when the record is initialized in the data source
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Boolean} isNewRecord
     */
 });

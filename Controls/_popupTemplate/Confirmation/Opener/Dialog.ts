@@ -75,7 +75,7 @@ import 'css!theme?Controls/popupTemplate';
 
    /**
        * @event Controls/_popupTemplate/Confirmation/Opener/Dialog#sendResult Происходит при нажатии на кнопку диалога
-       * @param {Env/Event:Object} eventObject Дескриптор события
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события
        * @param {Result} Результат
        */
 

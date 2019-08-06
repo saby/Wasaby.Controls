@@ -15,7 +15,7 @@
             placeholder="{{hidePlaceholderUsingCSS ? emptySymbol}}"
             autocomplete="{{autoComplete}}"
             class="controls-InputBase__nativeField_theme_{{options.theme}}
-             controls-{{controlName}}__nativeField_theme_{{options.theme}}_caret{{value ? 'Filled' : 'Empty'}}
+             controls-{{controlName}}__nativeField_theme_{{options.theme}}_caret{{wasActionUser ? 'Filled' : 'Empty'}}
              {{isEdge ? 'controls-InputBase__nativeField_edge'}}
              {{autoWidth ? 'controls-InputBase__nativeField_stretcher'}}
              {{hidePlaceholderUsingCSS ? 'controls-InputBase__nativeField_hideCustomPlaceholder'}}"
@@ -32,11 +32,14 @@
          />
       </ws:partial>
    </ws:partial>
-   <ws:if data="{{!hidePlaceholder && !value}}">
-      <div class="controls-InputBase__placeholder">
-         <ws:partial template="{{placeholderTemplate}}" on:click="_placeholderClickHandler()"/>
-      </div>
-   </ws:if>
+   <!--
+   Deleting the DOM element during input will cause saving the current value to the browser history.
+   The standard rollback of the value(ctrl + z) by history is broken. https://jsfiddle.net/ow0zjghn/
+   Placeholder must be hide instead of deleting.
+   -->
+   <div class="controls-InputBase__placeholder {{hidePlaceholder || value ? 'ws-hidden'}}">
+      <ws:partial template="{{placeholderTemplate}}" on:click="_placeholderClickHandler()"/>
+   </div>
    <ws:if data="{{isFieldFocused()}}">
       <div name="forCalc" class="controls-InputBase__forCalc"></div>
    </ws:if>

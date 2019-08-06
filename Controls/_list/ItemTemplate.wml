@@ -17,13 +17,16 @@
         </ws:partial>
     </ws:if>
 
-   <ws:if data="{{itemData.isSelected && marker !== false && itemData.markerVisibility !== 'hidden'}}">
+   <ws:if data="{{itemData.shouldDrawMarker(marker)}}">
       <div class="controls-ListView__itemV_marker"></div>
    </ws:if>
 
     <ws:if data="{{contentTemplate}}">
         <div attr:class="{{itemData.spacingClassList}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}">
-            <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
+            <ws:partial template="{{contentTemplate}}"
+                        itemData="{{itemData}}"
+                        itemActionsTemplate="{{itemActionsTemplate}}"
+            />
         </div>
     </ws:if>
     <ws:else>
@@ -36,7 +39,7 @@
                         itemActionsTemplate="{{itemActionsTemplate}}"
                         highlightOnHover="{{highlightOnHover}}"/>
         </ws:if>
-        <ws:else >
+        <ws:else data="{{itemData.itemActionsPosition !== 'custom'}}">
             <ws:partial template="{{itemActionsTemplate}}"
                         itemActionsClass="{{itemActionsClass}}"
                         itemData="{{itemData}}"

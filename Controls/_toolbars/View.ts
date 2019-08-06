@@ -120,7 +120,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
 
 /**
  * @event Controls/_toolbars/View#itemClick Occurs when item was clicked.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Record} item Clicked item.
  * @example
  * TMPL:

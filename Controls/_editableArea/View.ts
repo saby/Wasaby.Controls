@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import Deferred = require('Core/Deferred');
 import Constants = require('Controls/Constants');
 import template = require('wml!Controls/_editableArea/View');
+import buttonsTemplate = require('Controls/_editableArea/Templates/Buttons');
 import 'css!theme?Controls/editableArea';
 import 'css!theme?Controls/list';
 
@@ -97,6 +98,7 @@ var
 
 var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    _template: template,
+   _buttonsTemplate: buttonsTemplate,
    _isEditing: false,
 
    _beforeMount: function (newOptions) {

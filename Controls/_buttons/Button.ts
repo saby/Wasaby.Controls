@@ -117,19 +117,19 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
 
 /**
  * @name Controls/_buttons/Button#contrastBackground
- * @cfg {Boolean} Определяет, имеет ли кнопка контрастный фон.
- * @default true
+ * @cfg {Boolean} Определяет прозрачность фона кнопки.
+ * @default false
  * @remark
- * true - У кнопки контрастный фон.
- * false - У кнопки гармоничный фон.
+ * * true - непрозрачный фон. 
+ * * false - прозрачный фон.
  * @example
  * Кнопка имеет прозрачный фон.
  * <pre>
- *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" contrastBackground="{{false}}" size="l"/>
+ *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" size="l"/>
  * </pre>
  * У кнопки непрозрачный фон.
  * <pre>
- *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" />
+ *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" contrastBackground="{{true}}" />
  * </pre>
  * @see style
  */
@@ -158,9 +158,6 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @cfg {Enum} Устанавливает параметры стиля для кнопки. Это цвет фона или цвет границы для различных значений режима отображения (viewMode).
  * @variant primary
  * @variant secondary
- * @variant success
- * @variant warning
- * @variant danger
  * @default secondary
  * @example
  * Кнопка со стилем "Primary" с иконкой по умолчанию.
@@ -222,8 +219,8 @@ class Button extends Control<IButtonOptions> implements
       this._stringCaption = typeof options.caption === 'string';
 
       this._icon = options.icon;
-      this._iconSize = ActualApi.iconSize(options);
-      this._iconStyle = ActualApi.iconStyle(options);
+      this._iconSize = options.icon ? ActualApi.iconSize(options) : '';
+      this._iconStyle = options.icon ? ActualApi.iconStyle(options) : '';
    }
 
    protected _beforeMount(options: IButtonOptions): void {

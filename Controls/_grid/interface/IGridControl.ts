@@ -119,6 +119,7 @@
  * @property {Number} [endRow] Порядковый номер строки на которой заканчивается ячейка.
  * @property {Number} [startColumn] Порядковый номер колонки на которой начинается ячейка.
  * @property {Number} [endColumn] Порядковый номер колонки на которой заканчивается ячейка.
+ * @property {Object} [templateOptions] Опции, передаваемые в шаблон ячейки заголовка.
  */
 
 /*
@@ -140,10 +141,33 @@
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @remark
  * Базовый шаблон заголовка таблицы для Controls/grid:View: "Controls/grid:HeaderContent".
+ * Базовый шаблон поддерживает следующие css-модификаторы:
+ * <ul>
+ *    <li>controls-Grid__header-cell_spacing_money - используется для добавления отступа в заголовке столбца при рендере денежных данных в самом столбце.</li>
+ * </ul>
+ *
+ * @example
+ * Пример добавления кастомного шаблона:
+ * <pre>
+ *    <Controls.grid:View>
+ *       <header>
+ *           <template>
+ *             <Controls.buttons:Button>Description</Controls.buttons:Button>
+ *           </template>
+ *       </header>
+ *    </Controls.grid:View>
+ * </pre>
+ *
  * @example
  * Пример добавления интервала между текстами заголовков для столбцов с денежными полями:
  * <pre>
- *    <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
+ *    <Controls.grid:View>
+ *       <header>
+ *           <template>
+ *              <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
+ *           </template>
+ *       </header>
+ *    </Controls.grid:View>
  * </pre>
  * @example
  * Пример массива колонок многоуровнего заголовка
@@ -213,10 +237,13 @@
  * @property {String} [width] Ширина столбца.
  * В качестве значения опции можно указать пиксели (px), проценты (%), доли (1fr), "auto" или "minmax".
  * В значении "auto" ширина столбца устанавливается исходя из типа и содержимого элемента.
- * В значении "minmax(<min>,<max>)" устанавливается минимальная и максимальная ширина столбца, например "minmax(600px, 1fr)".
+ * В значении "minmax(,)" устанавливается минимальная и максимальная ширина столбца, например "minmax(600px, 1fr)".
  * @property {String} [displayProperty] Имя поля, которое будет отображаться в столбце по умолчанию.
  * @property {String} [template] Шаблон рендеринга ячеек.
- * @property {String} [resultTemplate] Шаблон рендеринга ячеек в строке итогов. CSS-класс controls-Grid__header-cell_spacing_money задает правый отступ для заголовка ячейки для выравнивания по целым числам в денежных полях.
+ * В качестве базового шаблона используется {@link Controls/grid:ColumnTemplate}.
+ * На его основе можно сконфигурировать собственный шаблон, о чём подробнее сказано в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководстве разработчика</a>.
+ * @property {String} [resultTemplate] Шаблон рендеринга ячеек в строке итогов.
+ * CSS-класс controls-Grid__header-cell_spacing_money задает правый отступ для заголовка ячейки для выравнивания по целым числам в денежных полях.
  * @property {GridCellAlign} [align] Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} [valign] Выравнивание содержимого ячейки по вертикали.
  * @property {String} [stickyProperty] Имя поля, которое используется для настройки прилипания данных столбца к верхней границе таблицы.
@@ -315,12 +342,34 @@
  * @name Controls/_grid/interface/IGridControl#columnScroll
  * @cfg {Boolean} Включает скроллирование столбцов.
  * @default false
+ * @see Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @see Controls/_grid/interface/IGridControl#stickyColumnsCount
  */
 
 /*
  * @name Controls/_grid/interface/IGridControl#columnScroll
  * @cfg {Boolean} Enable column scroll.
  * @default false
+ * @see Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @see Controls/_grid/interface/IGridControl#stickyColumnsCount
+ */
+
+/**
+ * @name Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @cfg {String} Определяет начальное положение горизонтальной прокрутки столбцов, если она включена.
+ * @variant start Устанавливает горизонтальную прокрутку в начальное (крайнее левое) положение.
+ * @variant end Устанавливает горизонтальную прокрутку в конечное (крайнее правое) положение.
+ * @default start
+ * @see Controls/_grid/interface/IGridControl#columnScroll
+ */
+
+/*
+ * @name Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @cfg {String} Determines the starting columns scroll position if it is enabled.
+ * @variant start Puts horizontal scroll into the leftmost position.
+ * @variant end Puts horizontal scroll into the rightmost position.
+ * @default start
+ * @see Controls/_grid/interface/IGridControl#columnScroll
  */
 
 /**
@@ -377,4 +426,22 @@
  * @cfg {String} Results row position.
  * @variant top Show results above the list.
  * @variant bottom Show results below the list.
+ */
+
+/**
+ * @name Controls/_grid/interface/IGridControl#showEditArrow
+ * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке
+ * <a href="/materials/demo-ws4-edit-arrow">Example</a>
+ * @remark Чтобы расположить кнопку в произвольном месте прикладного шаблона колонки, следует встроить шаблон editArrowTemplate
+ * @example
+ * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
+ */
+
+/*
+ * @name Controls/_grid/interface/IGridControl#showEditArrow
+ * @cfg {Boolean} Allows showing button in first column on hover.
+ * <a href="/materials/demo-ws4-edit-arrow">Example</a>
+ * @remark To place the button in any place of the column template, you should use the editArrowTemplate
+ * @example
+ * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
  */

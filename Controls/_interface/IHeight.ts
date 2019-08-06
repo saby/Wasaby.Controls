@@ -31,8 +31,10 @@ export default interface IHeight {
  * @example
  * Кнопка большого размера (l).
  * <pre>
- *    <Controls.buttons:Button icon="icon-Add" height="l" viewMode="button"/>
+ *    <Controls.buttons:Button icon="icon-Add" inlineHeight="l" viewMode="button"/>
  * </pre>
+ * @remark
+ * Строковым значениям опции inlineHeight соответствуют числовые (px), которые различны для каждой темы оформления.
  * @see Icon
  */
 
@@ -49,7 +51,7 @@ export default interface IHeight {
  * @example
  * Button with large height.
  * <pre>
- *    <Controls.buttons:Button icon="icon-Add" height="l" viewMode="button"/>
+ *    <Controls.buttons:Button icon="icon-Add" inlineHeight="l" viewMode="button"/>
  * </pre>
  * @see Icon
  */

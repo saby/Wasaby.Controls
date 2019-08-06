@@ -120,7 +120,9 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             }
 
             _private.sendByRegistrar(self, 'scrollMoveSync', {
-               scrollTop: self._scrollTopCache
+               scrollTop: self._scrollTopCache,
+               clientHeight: sizeCache.clientHeight,
+               scrollHeight: sizeCache.scrollHeight
             });
 
             if (self._scrollPositionCache !== curPosition) {
@@ -199,7 +201,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                      if (eventName) {
                         const sizes = _private.getSizeCache(self, _private.getDOMContainer(self._container));
                         self._registrar.startOnceTarget(component, eventName, {
-                           scrollTop: self._scrollTopCache,
+                           scrollTop: _private.getDOMContainer(self._container).scrollTop,
                            clientHeight: sizes.clientHeight,
                            scrollHeight: sizes.scrollHeight
                         });
@@ -307,7 +309,6 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             this._notify('register', ['controlResize', this, this._resizeHandlerOuter], {bubbling: true});
          },
 
-
          _scrollHandler: function(e) {
             _private.onScrollContainer(this, _private.getDOMContainer(this._container), this._canObserver);
          },
@@ -341,6 +342,45 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 
          doScroll: function(scrollParam) {
             _private.doScroll(this, scrollParam, _private.getDOMContainer(this._container));
+         },
+
+         _isVirtualPlaceholderMode(): boolean {
+            return this._topPlaceholderSize || this._bottomPlaceholderSize;
+         },
+
+         updatePlaceholdersSize(placeholdersSizes: object): void {
+            this._topPlaceholderSize = placeholdersSizes.top;
+            this._bottomPlaceholderSize = placeholdersSizes.bottom;
+         },
+
+         setScrollTop(scrollTop: number): void {
+            var self = this;
+            const container = _private.getDOMContainer(self._container);
+            if (self._isVirtualPlaceholderMode()) {
+               const cachedScrollTop = scrollTop;
+               const sizeCache = _private.getSizeCache(self, container);
+               const realScrollTop = scrollTop - this._topPlaceholderSize;
+               const triggerOffset = sizeCache.clientHeight / 3;
+               if (realScrollTop >= triggerOffset &&
+                  (sizeCache.scrollHeight === realScrollTop ||
+                  sizeCache.scrollHeight - realScrollTop - sizeCache.clientHeight > triggerOffset)) {
+                  container.scrollTop = scrollTop - self._topPlaceholderSize;
+               } else {
+                  const hasChanges = _private.sendByRegistrar(self, 'virtualScrollMove', {
+                     scrollTop,
+                     scrollHeight: sizeCache.scrollHeight,
+                     clientHeight: sizeCache.clientHeight,
+                     applyScrollTopCallback: () => {
+                        container.scrollTop = cachedScrollTop - self._topPlaceholderSize;
+                     }
+                  });
+                  if (!hasChanges) {
+                     container.scrollTop = scrollTop - self._topPlaceholderSize;
+                  }
+               }
+            } else {
+               container.scrollTop = scrollTop;
+            }
          },
 
          _unRegisterIt: function(event, registerType, component) {

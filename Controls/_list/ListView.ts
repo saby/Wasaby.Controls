@@ -165,8 +165,15 @@ var ListView = BaseControl.extend(
         },
 
         _onItemClick: function(e, dispItem) {
-            var item = dispItem.getContents();
-            this._notify('itemClick', [item, e], {bubbling: true});
+            // Флаг preventItemEvent выставлен, если нужно предотвратить возникновение
+            // событий itemClick, itemMouseDown по нативному клику, но по какой-то причине
+            // невозможно остановить всплытие события через stopPropagation
+            // TODO: Убрать, preventItemEvent когда это больше не понадобится
+            // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
+            if (!e.preventItemEvent) {
+                var item = dispItem.getContents();
+                this._notify('itemClick', [item, e], {bubbling: true});
+            }
         },
 
         _onGroupClick: function(e, dispItem) {
@@ -197,7 +204,12 @@ var ListView = BaseControl.extend(
                // Выпилить после решения задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
                return;
             }
-            this._notify('itemMouseDown', [itemData, event]);
+
+            // TODO: Убрать, preventItemEvent когда это больше не понадобится
+            // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
+            if (!event.preventItemEvent) {
+                this._notify('itemMouseDown', [itemData, event]);
+            }
         },
 
         _onItemMouseEnter: function(event, itemData) {
@@ -228,6 +240,9 @@ var ListView = BaseControl.extend(
 
         getHoveredItem: function () {
             return this._listModel.getHoveredItem();
+        },
+        _onEditArrowClick: function(e, item) {
+            this._notify('editArrowClick', [item]);
         }
     });
 

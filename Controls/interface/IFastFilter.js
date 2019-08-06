@@ -137,13 +137,13 @@ define('Controls/interface/IFastFilter', [
 
    /**
     * @event Controls/interface/IFilterButton#filterChanged Происходит при изменении фильтра.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Object} filter Новый фильтр.
     */
 
    /*
     * @event Controls/interface/IFastFilter#filterChanged Happens when filter changed.
-    * @param {Env/Event:Object} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Object} filter New filter.
     */
 

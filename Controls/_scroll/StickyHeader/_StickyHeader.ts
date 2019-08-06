@@ -27,20 +27,31 @@ import 'css!theme?Controls/scroll';
 
 /**
  * @event Controls/_scroll/StickyHeader#fixed Change the fixation state.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} event Event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} event Event descriptor.
  * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
  */
 
 var _private = {
    getComputedStyle: function(self) {
-      const container = self._container;
+      let container = _private._getNormalizedContainer(self);
       if (self._cssClassName !== container.className) {
          self._cssClassName = container.className;
          self._cachedStyles = getComputedStyle(container);
       }
       return self._cachedStyles;
+   },
+
+   _getNormalizedContainer: function(self) {
+      //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+      return self._container.get ? self._container.get(0) : self._container;
    }
 };
+
+// For android, use a large patch, because 1 pixel is not enough. For all platforms we use the minimum values since
+// there may be layout problems if the headers will have paddings, margins, etc.
+const
+    ANDROID_GAP_FIX_OFFSET = 2,
+    MOBILE_GAP_FIX_OFFSET = 1;
 
 var StickyHeader = Control.extend({
 
@@ -61,6 +72,7 @@ var StickyHeader = Control.extend({
     * @private
     */
    _isMobilePlatform: Env.detection.isMobilePlatform,
+   _isMobileAndroid: Env.detection.isMobileAndroid,
 
    _shadowVisible: true,
    _stickyHeadersHeight: null,
@@ -195,9 +207,10 @@ var StickyHeader = Control.extend({
 
    _getStyle: function() {
       var
+         offset = 0,
+         container,
          top,
          bottom,
-         offset,
          fixedPosition,
          styles,
          style = '',
@@ -213,7 +226,11 @@ var StickyHeader = Control.extend({
        * In this way, the content of the header does not change visually, and the free space disappears.
        * The offset must be at least as large as the free space. Take the nearest integer equal to one.
        */
-      offset = this._isMobilePlatform ? 1 : 0;
+      if (this._isMobileAndroid) {
+         offset = ANDROID_GAP_FIX_OFFSET;
+      } else if (this._isMobilePlatform) {
+         offset = MOBILE_GAP_FIX_OFFSET;
+      }
 
       if (this._options.position.indexOf('top') !== -1) {
          // todo Сейчас stickyHeader не умеет работать с многоуровневыми Grid-заголовками, это единственный вариант их фиксировать
@@ -247,19 +264,21 @@ var StickyHeader = Control.extend({
       fixedPosition = this._model ? this._model.fixedPosition : undefined;
       if (fixedPosition) {
          if (offset) {
+            container = _private._getNormalizedContainer(this);
+
             styles = _private.getComputedStyle(this);
             minHeight = parseInt(styles.minHeight, 10);
             // Increasing the minimum height, otherwise if the content is less than the established minimum height,
             // the height is not compensated by padding and the header is shifted. If the minimum height is already
             // set by the style attribute, then do not touch it.
-            if (styles.boxSizing === 'border-box' && minHeight && !this._container.style.minHeight) {
+            if (styles.boxSizing === 'border-box' && minHeight && !container.style.minHeight) {
                this._minHeight = minHeight + offset;
             }
             if (this._minHeight) {
                style += 'min-height:' + this._minHeight + 'px;';
             }
             // Increase padding by offset. If the padding is already set by the style attribute, then do not touch it.
-            if (!this._container.style.paddingTop) {
+            if (!container.style.paddingTop) {
                this._padding = parseInt(styles.paddingTop, 10) + offset;
             }
             style += 'padding-' + fixedPosition + ': ' + this._padding + 'px;';

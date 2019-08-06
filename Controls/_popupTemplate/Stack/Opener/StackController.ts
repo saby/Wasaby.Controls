@@ -4,7 +4,7 @@ import collection = require('Types/collection');
 import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import Deferred = require('Core/Deferred');
 import {parse as parserLib} from 'Core/library';
-import StackContent = require('wml!Controls/_popupTemplate/Stack/Opener/StackContent');
+import StackContent = require('Controls/_popupTemplate/Stack/Opener/StackContent');
 import 'css!theme?Controls/popupTemplate';
 
 const STACK_CLASS = 'controls-Stack';
@@ -106,14 +106,14 @@ const _private = {
         return item.position;
     },
 
-    addShadowClass(item) {
-        _private.removeShadowClass(item);
-        item.popupOptions.stackClassName += ' controls-Stack__shadow';
+    removeHiddenClass(item) {
+        item.popupOptions.stackClassName = (item.popupOptions.stackClassName || '').replace(/ws-hidden/ig, '').trim();
     },
 
-    removeShadowClass(item) {
-        item.popupOptions.stackClassName = (item.popupOptions.stackClassName || '').replace(/controls-Stack__shadow/ig, '').trim();
-    },
+    addHiddenClass(item) {
+        _private.removeHiddenClass(item);
+        item.popupOptions.stackClassName = (item.popupOptions.stackClassName || '') + ' ws-hidden';
+},
 
     prepareUpdateClassses(item) {
         _private.addStackClasses(item.popupOptions);
@@ -241,26 +241,45 @@ const StackController = BaseController.extend({
         return (new Deferred()).callback();
     },
 
-    _update() {
+    popupResizingLine(item, offset): void {
+        item.popupOptions.stackWidth += offset;
+        _private.updatePopupOptions(item);
+    },
+
+    _update(): void {
         const maxPanelWidth = StackStrategy.getMaxPanelWidth();
-        const cache = [];
-        const self = this;
-        this._stack.each(function(item) {
+        let cache = [];
+        this._stack.each((item) => {
             if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
-                item.position = _private.getItemPosition(item, self);
-                _private.updatePopupWidth(item, self);
+                item.position = _private.getItemPosition(item, this);
+                _private.updatePopupWidth(item, this);
                 const currentWidth = item.containerWidth || item.position.stackWidth;
+                let forRemove;
                 if (currentWidth) {
-                    if (cache.indexOf(currentWidth) === -1) {
-                        cache.push(currentWidth);
-                        _private.addShadowClass(item);
-                    } else {
-                        _private.removeShadowClass(item);
+                    const cacheItem = cache.find((el) => {
+                        const itemWidth = el.containerWidth || el.position.stackWidth;
+                        return itemWidth === currentWidth;
+                    });
+
+                    if (cacheItem) {
+                        forRemove = cacheItem;
+                        _private.addHiddenClass(cacheItem);
                     }
+                    _private.removeHiddenClass(item);
+                    cache.push(item);
                 }
 
-                cache = cache.filter((itemWidth) => {
-                    return itemWidth >= currentWidth;
+                cache = cache.filter((el) => {
+                    if (el === forRemove) {
+                        forRemove = null;
+                        return false;
+                    }
+                    const itemWidth = el.containerWidth || el.position.stackWidth;
+                    const isVisiblePopup = itemWidth >= (currentWidth || 0);
+                    if (!isVisiblePopup) {
+                        _private.addHiddenClass(el);
+                    }
+                    return isVisiblePopup;
                 });
 
                 if (StackStrategy.isMaximizedPanel(item)) {
@@ -306,7 +325,7 @@ const StackController = BaseController.extend({
                 this._update();
             } else {
                 item.position = _private.getItemPosition(item, this);
-                _private.addShadowClass(item);
+                _private.removeHiddenClass(item);
                 if (StackStrategy.isMaximizedPanel(item)) {
                     _private.prepareMaximizedState(StackStrategy.getMaxPanelWidth(), item);
                 }

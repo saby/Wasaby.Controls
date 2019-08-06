@@ -9,6 +9,21 @@ import CalendarControlsUtils from './Utils';
 import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
 
 /**
+ * Контрол, который позволяет пользователю выбрать дату с начальным и конечным значениями в календаре.
+ *
+ * @class Controls/_dateRange/Selector
+ * @extends Core/Control
+ * @mixes Controls/_dateRange/interfaces/ILinkView
+ * @mixes Controls/_dateRange/interfaces/ISelector
+ * @control
+ * @public
+ * @category Input
+ * @author Красильников А.С.
+ * @demo Controls-demo/Input/Date/RangeLink
+ *
+ */
+
+/*
  * Controls that allows user to select date with start and end values in calendar.
  *
  * @class Controls/_dateRange/Selector
@@ -75,6 +90,7 @@ var Component = BaseControl.extend({
                 endValue: this._rangeModel.endValue,
                 headerType: 'link',
                 captionFormatter: this._options.captionFormatter,
+                emptyCaption: this._options.emptyCaption,
                 closeButtonEnabled: true,
                 selectionType: this._options.selectionType,
                 quantum: this._options.ranges,

@@ -1,4 +1,22 @@
 /**
+ * Библиотека для работы с датой.
+ * @library Controls/calendar
+ * @includes Month Controls/_calendar/Month
+ * @includes MonthList Controls/_calendar/MonthList
+ * @includes MonthSlider Controls/_calendar/MonthSlider
+ * @includes MonthModel Controls/_calendar/Month/Model
+ * @includes MonthViewDayTemplate wml!Controls/_calendar/MonthView/dayTemplate
+ * @includes MonthViewTemplate wml!Controls/_calendar/MonthView/MonthView
+ * @includes MonthViewTableBodyTemplate wml!Controls/_calendar/MonthView/MonthViewTableBody
+ * @includes MonthViewModel Controls/_calendar/MonthView/MonthViewModel
+ * @includes MonthView Controls/_calendar/MonthView
+ * @includes IMonthListCustomDays Controls/_calendar/interface/IMonthListCustomDays
+ * @includes IMonth Controls/_calendar/interface/IMonth
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+/*
  * calendar library
  * @library Controls/calendar
  * @includes Month Controls/_calendar/Month

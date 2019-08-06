@@ -40,7 +40,9 @@
    border-top: @border-width_TreeGridView-item_dragging solid @border-color_TreeGridView-item_dragging;
    border-bottom: @border-width_TreeGridView-item_dragging solid @border-color_TreeGridView-item_dragging;
    position: absolute;
-   top: 0;
+
+   //компенсация бордера https://online.sbis.ru/opendoc.html?guid=51a2fb14-efb9-422c-9d30-309b7bcd3215
+   top: -@height_Grid-row-separator;
    left: 0;
    right: 0;
    bottom: 0;
