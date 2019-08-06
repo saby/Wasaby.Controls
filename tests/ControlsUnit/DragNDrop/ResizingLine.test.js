@@ -25,7 +25,7 @@ define([
 
          coords = rlInstance._calculateCoordinates(-5, 200, 0, 5, 300, 'direct');
          assert.strictEqual(-0, coords.cOffset, 'Wrong coords');
-         assert.strictEqual('800px', coords.cLeft, 'Wrong coords');
+         assert.strictEqual('805px', coords.cLeft, 'Wrong coords');
          assert.strictEqual('0px', coords.cWidth, 'Wrong coords');
          assert.strictEqual('auto', coords.cRight, 'Wrong coords');
          assert.strictEqual('400px', coords.cTop, 'Wrong coords');
@@ -43,7 +43,7 @@ define([
 
          coords = rlInstance._calculateCoordinates(-100, 200, -200, 5, 300, 'direct');
          assert.strictEqual(-100, coords.cOffset, 'Wrong coords');
-         assert.strictEqual('700px', coords.cLeft, 'Wrong coords');
+         assert.strictEqual('705px', coords.cLeft, 'Wrong coords');
          assert.strictEqual('100px', coords.cWidth, 'Wrong coords');
          assert.strictEqual('auto', coords.cRight, 'Wrong coords');
          assert.strictEqual('400px', coords.cTop, 'Wrong coords');
@@ -52,7 +52,7 @@ define([
 
          coords = rlInstance._calculateCoordinates(-300, 200, -150, 5, 300, 'direct');
          assert.strictEqual(-150, coords.cOffset, 'Wrong coords');
-         assert.strictEqual('650px', coords.cLeft, 'Wrong coords');
+         assert.strictEqual('655px', coords.cLeft, 'Wrong coords');
          assert.strictEqual('150px', coords.cWidth, 'Wrong coords');
          assert.strictEqual('auto', coords.cRight, 'Wrong coords');
          assert.strictEqual('400px', coords.cTop, 'Wrong coords');
@@ -109,7 +109,7 @@ define([
          rlInstance._onEndDragHandler({}, {entity: new dragnDrop.Entity({})});
          assert.strictEqual(calls.length, 0);
          rlInstance._onEndDragHandler({}, {entity: new dragnDrop.Entity({itemId: 'testId'})});
-         assert.deepSrictEqual(calls, [{
+         assert.deepStrictEqual(calls, [{
             name: 'notify',
             arguments: ['offset', [100]]
          }]);
