@@ -2420,7 +2420,7 @@ define([
          assert.strictEqual(notifiedEntity, goodDragObject.entity);
       });
 
-      it('itemMouseDown prevents native drag synchronously', function() {
+      it('native drag prevent only by native "dragstart" event', function() {
          let isDefaultPrevented = false;
 
          const
@@ -2461,15 +2461,20 @@ define([
                   closest: () => false
                },
                preventDefault: () => isDefaultPrevented = true
+            },
+            fakeDragStart = {
+               preventDefault: () => isDefaultPrevented = true
             };
 
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
+         // по mouseDown нельзя вызывать preventDefault, иначе сломается фокусировка
          ctrl._itemMouseDown({}, { key: 1 }, fakeMouseDown);
+         assert.isFalse(isDefaultPrevented);
 
-         // getItemsBySelection будет асинхронный, preventDefault все равно должен
-         // быть вызван синхронно
+          // По dragStart нужно вызывать preventDefault
+         ctrl._nativeDragStart(fakeDragStart);
          assert.isTrue(isDefaultPrevented);
       });
 
