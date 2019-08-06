@@ -7,6 +7,22 @@ define([
 ) {
    'use strict';
    describe('Controls.operations:HierarchySelection', function() {
+      function getListModel(rootId) {
+         return {
+            getRoot: function() {
+               return {
+                  getContents: function() {
+                     return rootId || null;
+                  }
+               }
+            },
+
+            getExpandedItems: function() {
+               return [1, 2, 3, 4, 5, 6, 7];
+            }
+         }
+      }
+
       var
          cfg,
          selection,
@@ -85,7 +101,8 @@ define([
             selectedKeys: [],
             excludedKeys: [],
             items: allData,
-            keyProperty: 'id'
+            keyProperty: 'id',
+            listModel: getListModel()
          };
          selectionInstance = new operations.HierarchySelection(cfg);
          selection = selectionInstance.getSelection();
@@ -101,7 +118,8 @@ define([
                   selectedKeys: [],
                   excludedKeys: [],
                   items: allData,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -120,7 +138,8 @@ define([
                   selectedKeys: [1],
                   excludedKeys: [2],
                   items: allData,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -141,7 +160,8 @@ define([
                   selectedKeys: [],
                   excludedKeys: [],
                   items: allData,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -165,7 +185,8 @@ define([
                   selectedKeys: [],
                   excludedKeys: [],
                   items: allData,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -194,7 +215,8 @@ define([
                   selectedKeys: [],
                   excludedKeys: [],
                   items: allData,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -204,7 +226,7 @@ define([
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.equal(7, selectionInstance.getCount());
+               assert.equal(null, selectionInstance.getCount());
                assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
             });
 
@@ -213,26 +235,27 @@ define([
                   selectedKeys: [null],
                   excludedKeys: [2, 5],
                   items: allData,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([2, 5], selection.excluded);
                assert.deepEqual({1: null, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
-               assert.equal(3, selectionInstance.getCount());
+               assert.equal(null, selectionInstance.getCount());
                selectionInstance.select([2]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([5], selection.excluded);
                assert.deepEqual({1: null, 2: true, 3: true, 4: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
-               assert.equal(6, selectionInstance.getCount());
+               assert.equal(null, selectionInstance.getCount());
                selectionInstance.select([5]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([], selection.excluded);
                assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
-               assert.equal(7, selectionInstance.getCount());
+               assert.equal(null, selectionInstance.getCount());
             });
 
             it('select hidden node', function() {
@@ -240,7 +263,8 @@ define([
                   selectedKeys: [],
                   excludedKeys: [],
                   items: hiddenNodeWithChildren,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -259,7 +283,8 @@ define([
                   selectedKeys: [],
                   excludedKeys: [],
                   items: hiddenNodeWithChildren,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -282,7 +307,8 @@ define([
                   selectedKeys: [1],
                   excludedKeys: [],
                   items: allData,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -303,7 +329,8 @@ define([
                   selectedKeys: [2],
                   excludedKeys: [],
                   items: allData,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -324,7 +351,8 @@ define([
                   selectedKeys: [1],
                   excludedKeys: [3],
                   items: allData,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -345,14 +373,15 @@ define([
                   selectedKeys: [null],
                   excludedKeys: [3],
                   items: allData,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([3], selection.excluded);
                assert.deepEqual({1: null, 2: null, 4: true, 5: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
-               assert.equal(6, selectionInstance.getCount());
+               assert.equal(null, selectionInstance.getCount());
                selectionInstance.unselect([null]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([], selection.selected);
@@ -366,7 +395,8 @@ define([
                   selectedKeys: [1],
                   excludedKeys: [],
                   items: allData,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -393,56 +423,57 @@ define([
                   selectedKeys: [null],
                   excludedKeys: [],
                   items: allData,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([], selection.excluded);
                assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
-               assert.equal(7, selectionInstance.getCount());
+               assert.equal(null, selectionInstance.getCount());
                selectionInstance.unselect([7]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([7], selection.excluded);
                assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true}, selectionInstance.getSelectedKeysForRender());
-               assert.equal(6, selectionInstance.getCount());
+               assert.equal(null, selectionInstance.getCount());
                selectionInstance.unselect([6]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([7, 6], selection.excluded);
                assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true}, selectionInstance.getSelectedKeysForRender());
-               assert.equal(5, selectionInstance.getCount());
+               assert.equal(null, selectionInstance.getCount());
                selectionInstance.unselect([5]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([7, 6, 5], selection.excluded);
                assert.deepEqual({1: null, 2: true, 3: true, 4: true}, selectionInstance.getSelectedKeysForRender());
-               assert.equal(4, selectionInstance.getCount());
+               assert.equal(null, selectionInstance.getCount());
                selectionInstance.unselect([4]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([7, 6, 5, 4], selection.excluded);
                assert.deepEqual({1: null, 2: null, 3: true}, selectionInstance.getSelectedKeysForRender());
-               assert.equal(3, selectionInstance.getCount());
+               assert.equal(null, selectionInstance.getCount());
                selectionInstance.unselect([3]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([7, 6, 5, 4, 3], selection.excluded);
                assert.deepEqual({1: null, 2: null}, selectionInstance.getSelectedKeysForRender());
-               assert.equal(2, selectionInstance.getCount());
+               assert.equal(null, selectionInstance.getCount());
                selectionInstance.unselect([2]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([7, 6, 5, 2], selection.excluded);
                assert.deepEqual({1: null}, selectionInstance.getSelectedKeysForRender());
-               assert.equal(1, selectionInstance.getCount());
+               assert.equal(null, selectionInstance.getCount());
                selectionInstance.unselect([1]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([7, 6, 1], selection.excluded);
                assert.deepEqual({}, selectionInstance.getSelectedKeysForRender());
-               assert.equal(0, selectionInstance.getCount());
+               assert.equal(null, selectionInstance.getCount());
             });
 
             it('unselect removed item', function() {
@@ -450,7 +481,8 @@ define([
                   selectedKeys: [1],
                   excludedKeys: [],
                   items: allData,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  listModel: getListModel()
                };
                selectionInstance = new operations.HierarchySelection(cfg);
                selection = selectionInstance.getSelection();
@@ -505,26 +537,15 @@ define([
                }],
                idProperty: 'id'
             }),
-            keyProperty: 'id'
+            keyProperty: 'id',
+            listModel: getListModel()
          };
          selectionInstance = new operations.HierarchySelection(cfg);
          assert.deepEqual({ 2: true }, selectionInstance.getSelectedKeysForRender());
-         assert.equal(1, selectionInstance.getCount());
+         assert.equal(null, selectionInstance.getCount());
       });
 
       describe('toggleAll', function() {
-         function getListModel(rootId) {
-            return {
-               getRoot: function() {
-                  return {
-                     getContents: function() {
-                        return rootId || null;
-                     }
-                  }
-               }
-            }
-         }
-
          it('selectedKeys with key, that is not from collection + toggleAll', function() {
             cfg = {
                selectedKeys: [1, 2, 4, 5, 6, 7],
@@ -588,7 +609,7 @@ define([
 
             assert.deepEqual([1], selection.selected);
             assert.deepEqual([1], selection.excluded);
-            assert.equal(4, selectionInstance.getCount());
+            assert.equal(null, selectionInstance.getCount());
 
             selectionInstance.unselectAll();
             selection = selectionInstance.getSelection();
@@ -625,10 +646,11 @@ define([
             selectedKeys: [8], //item with this key doesn't exist in recordset
             excludedKeys: [],
             items: allData,
-            keyProperty: 'id'
+            keyProperty: 'id',
+            listModel: getListModel()
          };
          selectionInstance = new operations.HierarchySelection(cfg);
-         assert.equal(1, selectionInstance.getCount());
+         assert.equal(null, selectionInstance.getCount());
       });
    });
 });
