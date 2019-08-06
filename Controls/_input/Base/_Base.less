@@ -139,11 +139,19 @@
 
 /**
  * Элемент <input> с шириной по stretcher`у может быть прокручен по горизонтали.
- * Проблема наблюдается в IE. Увеличение ширины на 2px(подобрано тестовым методом) решает проблему.
- * https://jsfiddle.net/63f8nb4j/3/
+ * Предположительно, <input> имеет болшую ширину из-за курсора в поле. Расстояние от текста до курсора равно
+ * 1px, и ширина самого курсора тоже 1px. В качестве решения нужно увеличить ширину на 2px. Так как поле визуально
+ * увеличится, то нужно уменьшить отступ от текста до границы поля на это же значение.
+ * https://jsfiddle.net/kz0awcu6/
  */
-.ws-is-ie .controls-InputBase__stretcher-block {
-   padding-right: 2px;
+& {
+   @expansion: 2px;
+   .controls-InputBase__field_autoWidth.controls-InputBase__field_theme_@{themeName}_margin {
+      margin: 0 @padding-horizontal_inputText - @expansion 0 @padding-horizontal_inputText;
+   }
+   .controls-InputBase__stretcher-block {
+      padding-right: @expansion;
+   }
 }
 
 /**
