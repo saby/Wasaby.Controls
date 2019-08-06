@@ -1300,6 +1300,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                resultsPosition: 'top'
             })
             assert.deepEqual('top', newGridModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
+            assert.isTrue(newGridModel.isDrawResults())
+            newGridModel.getItems = () => ({
+               getCount: () => [1]
+            })
+            assert.isFalse(newGridModel.isDrawResults())
          });
 
          it('is multiheader', function() {
