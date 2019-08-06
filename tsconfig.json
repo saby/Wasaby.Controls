@@ -6,7 +6,8 @@
     "types": [
       "typedef",
       "wasaby-app"
-    ]
+    ],
+    "experimentalDecorators": true
   },
   "include": [
     "Controls/**/*.ts",

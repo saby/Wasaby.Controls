@@ -14,6 +14,7 @@ const classes = {
    link: 'LinkDecorator__linkWrap',
    image: 'LinkDecorator__image'
 };
+const fakeNeedDecorateAttribute = '__needDecorate';
 
 function isAttributes(value) {
    return typeof value === 'object' && !Array.isArray(value);
@@ -150,7 +151,7 @@ function isDecoratedLink(tagName, firstChildNode) {
 }
 
 /**
- * Превращает декорированную ссылку в обычную. Вызывается после функции "isDecoratedLink", linkNode здесь - это firstChildNode там. 
+ * Превращает декорированную ссылку в обычную. Вызывается после функции "isDecoratedLink", linkNode здесь - это firstChildNode там.
  * @function Controls/_decorator/Markup/resources/linkDecorateUtils#getUndecoratedLink
  * @param linkNode {jsonML}
  * @returns {jsonML}
@@ -204,9 +205,9 @@ function needDecorate(jsonNode, parentNode) {
 
    // Link have already been checked, just return result.
    const attributes = getAttributes(jsonNode);
-   if (attributes['__needDecorate']) {
-      const result = attributes['__needDecorate'];
-      delete attributes['__needDecorate'];
+   if (attributes.hasOwnProperty(fakeNeedDecorateAttribute)) {
+      const result = attributes[fakeNeedDecorateAttribute];
+      delete attributes[fakeNeedDecorateAttribute];
       return result;
    }
 
@@ -225,7 +226,7 @@ function needDecorate(jsonNode, parentNode) {
       if (tagName === 'a') {
          const attributes = getAttributes(nodeToCheck);
          canBeDecorated = canBeDecorated && isLinkGoodForDecorating(nodeToCheck);
-         attributes['__needDecorate'] = canBeDecorated;
+         attributes[fakeNeedDecorateAttribute] = canBeDecorated;
       } else {
          // Tag br is the end of paragraph.
          canBeDecorated = tagName === 'br';

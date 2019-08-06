@@ -470,6 +470,14 @@ define(
             assert.strictEqual(self._filterText, 'Author: Ivanov K.K., test_extended');
          });
 
+         it('_private:prepareItems', function() {
+            let date = new Date();
+            date.setSQLSerializationMode(Date.SQL_SERIALIZE_MODE_TIME);
+            let self = {};
+            filter.View._private.prepareItems(self, date);
+            assert.strictEqual(self._source.getSQLSerializationMode(), date.getSQLSerializationMode());
+         });
+
          it('_private:loadSelectedItems', function(done) {
             let source = [...defaultSource];
             source[1].value = [1];
@@ -494,6 +502,38 @@ define(
             };
             assert.strictEqual(configs['state'].items.getCount(), 6);
             filter.View._private.loadSelectedItems(source, configs).addCallback(() => {
+               assert.strictEqual(configs['state'].items.getCount(), 7);
+               assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
+               done();
+            });
+         });
+
+         it('_beforeUpdate loadSelectedItems', function(done) {
+            let filterView = getView(defaultConfig);
+            let source = [...defaultSource];
+            source[1].value = [1];
+            let configs = {
+               document: {
+                  items: new collection.RecordSet({
+                     rawData: defaultItems[0],
+                     idProperty: 'id'
+                  }),
+                  source: source[0].editorOptions.source,
+                  displayProperty: 'title',
+                  keyProperty: 'id'},
+               state: {
+                  items: new collection.RecordSet({
+                     rawData: defaultItems[1].slice(1),
+                     idProperty: 'id'
+                  }),
+                  source: source[1].editorOptions.source,
+                  displayProperty: 'title',
+                  keyProperty: 'id',
+                  multiSelect: true}
+            };
+            filterView._configs = configs;
+            filterView._displayText = {};
+            filterView._beforeUpdate({source: source}).addCallback(() => {
                assert.strictEqual(configs['state'].items.getCount(), 7);
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
                done();

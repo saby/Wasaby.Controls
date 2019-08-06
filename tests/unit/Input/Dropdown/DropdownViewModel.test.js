@@ -185,6 +185,16 @@ define(
             viewModelSelection._options.selectedKeys = ['1'];
             viewModelSelection.updateSelection(rs.at(0));
             assert.deepEqual(viewModelSelection.getSelectedKeys(), expectedKeys);
+
+            expectedKeys = ['reset_key'];
+            viewModelSelection._options.selectedKeys = ['1'];
+            viewModelSelection.updateSelection(rs.at(0), 'reset_key');
+            assert.deepEqual(viewModelSelection.getSelectedKeys(), expectedKeys);
+
+            expectedKeys = ['reset_key'];
+            viewModelSelection._options.selectedKeys = ['1'];
+            viewModelSelection.updateSelection(rs.at(0), 'reset_key');
+            assert.deepEqual(viewModelSelection.getSelectedKeys(), expectedKeys);
          });
          describe('Groups and separator', function() {
                let newConfig = {

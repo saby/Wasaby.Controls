@@ -86,17 +86,17 @@ import {factory} from 'Types/chain';
             this._itemsModel.setFilter(filter);
          },
 
-         updateSelection: function(item) {
+         updateSelection: function(item, resetKey = null) {
             var key = item.get(this._options.keyProperty);
             if (this._options.selectedKeys.indexOf(key) !== -1) {
                var index = this._options.selectedKeys.indexOf(key);
                this._options.selectedKeys.splice(index, 1);
                // In the dropdown list with a multiselect, emptyText (item with key null) is required.
                if (!this._options.selectedKeys.length) {
-                  this._options.selectedKeys.push(null);
+                  this._options.selectedKeys.push(resetKey);
                }
             } else {
-               if (this._options.selectedKeys[0] === null) {
+               if (this._options.selectedKeys[0] === resetKey) {
                   this._options.selectedKeys = [];
                }
                this._options.selectedKeys.push(key);

@@ -47,6 +47,12 @@ var _private = {
    }
 };
 
+// For android, use a large patch, because 1 pixel is not enough. For all platforms we use the minimum values since
+// there may be layout problems if the headers will have paddings, margins, etc.
+const
+    ANDROID_GAP_FIX_OFFSET = 2,
+    MOBILE_GAP_FIX_OFFSET = 1;
+
 var StickyHeader = Control.extend({
 
    /**
@@ -66,6 +72,7 @@ var StickyHeader = Control.extend({
     * @private
     */
    _isMobilePlatform: Env.detection.isMobilePlatform,
+   _isMobileAndroid: Env.detection.isMobileAndroid,
 
    _shadowVisible: true,
    _stickyHeadersHeight: null,
@@ -200,10 +207,10 @@ var StickyHeader = Control.extend({
 
    _getStyle: function() {
       var
+         offset = 0,
          container,
          top,
          bottom,
-         offset,
          fixedPosition,
          styles,
          style = '',
@@ -219,7 +226,11 @@ var StickyHeader = Control.extend({
        * In this way, the content of the header does not change visually, and the free space disappears.
        * The offset must be at least as large as the free space. Take the nearest integer equal to one.
        */
-      offset = this._isMobilePlatform ? 1 : 0;
+      if (this._isMobileAndroid) {
+         offset = ANDROID_GAP_FIX_OFFSET;
+      } else if (this._isMobilePlatform) {
+         offset = MOBILE_GAP_FIX_OFFSET;
+      }
 
       if (this._options.position.indexOf('top') !== -1) {
          // todo Сейчас stickyHeader не умеет работать с многоуровневыми Grid-заголовками, это единственный вариант их фиксировать

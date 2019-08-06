@@ -3,7 +3,6 @@ define('Controls-demo/Popup/PopupPage',
       'Core/Control',
       'wml!Controls-demo/Popup/PopupPage',
       'Controls/popup',
-      'Controls-demo/Popup/TestDialog',
       'css!Controls-demo/Popup/PopupPage'
    ],
    function (Control, template, popupLib) {

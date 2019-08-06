@@ -131,12 +131,13 @@ define(
 
             popupOptions.width = 550;
             position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
-            assert.equal(position.width, 550);
+            assert.equal(position.width, 500);
             assert.equal(position.height, 500);
-            popupOptions.height = 300;
+            popupOptions.height = 500;
+            popupOptions.maxHeight = 400;
             position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
-            assert.equal(position.width, 550);
-            assert.equal(position.height, 300);
+            assert.equal(position.width, 500);
+            assert.equal(position.height, 400);
          });
 
          it('dialog container sizes after update', () => {
@@ -268,10 +269,20 @@ define(
             };
             let position = DialogStrategy.getPosition(windowData, sizes, {
                position: itemPosition,
-               dragged: true
+               dragged: true,
+               popupOptions: {
+                  maxWidth: 100,
+                  maxHeight: 100,
+                  minWidth: 10,
+                  minHeight: 10
+               }
             });
             assert.equal(position.left, itemPosition.left);
             assert.equal(position.top, itemPosition.top);
+            assert.equal(position.maxWidth, 100);
+            assert.equal(position.minWidth, 10);
+            assert.equal(position.minHeight, 10);
+            assert.equal(position.maxHeight, 100);
 
             itemPosition = {
                left: 700, top: 500, width: sizes.width, height: sizes.height
@@ -283,12 +294,22 @@ define(
             };
             position = DialogStrategy.getPosition(windowData, sizes, {
                position: itemPosition,
-               dragged: true
+               dragged: true,
+               popupOptions: {
+                  maxWidth: 100,
+                  maxHeight: 100,
+                  minWidth: 10,
+                  minHeight: 10
+               }
             });
             assert.equal(position.left, 600);
             assert.equal(position.top, 300);
             assert.equal(position.width, sizes.width); // размеры не изменились
             assert.equal(position.height, sizes.height);
+            assert.equal(position.maxWidth, 100);
+            assert.equal(position.minWidth, 10);
+            assert.equal(position.minHeight, 10);
+            assert.equal(position.maxHeight, 100);
          });
       });
    }

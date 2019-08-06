@@ -95,7 +95,7 @@ define([
          });
 
          instance._onItemActionsClick({}, 1, {});
-         assert.isTrue(stub.calledOnceWithExactly(instance, {}, 1, {}, {}, true));
+         assert.isTrue(stub.calledOnceWithExactly(instance, {}, 1, {}, {}, false));
       });
 
       describe('_listDeactivated', function() {

@@ -136,10 +136,33 @@
  * <a href="/materials/demo-ws4-grid-base">Example</a>
  * @remark
  * Базовый шаблон заголовка таблицы для Controls/grid:View: "Controls/grid:HeaderContent".
+ * Базовый шаблон поддерживает следующие css-модификаторы:
+ * <ul>
+ *    <li>controls-Grid__header-cell_spacing_money - используется для добавления отступа в заголовке столбца при рендере денежных данных в самом столбце.</li>
+ * </ul>
+ *
+ * @example
+ * Пример добавления кастомного шаблона:
+ * <pre>
+ *    <Controls.grid:View>
+ *       <header>
+ *           <template>
+ *             <Controls.buttons:Button>Description</Controls.buttons:Button>
+ *           </template>
+ *       </header>
+ *    </Controls.grid:View>
+ * </pre>
+ *
  * @example
  * Пример добавления интервала между текстами заголовков для столбцов с денежными полями:
  * <pre>
- *    <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
+ *    <Controls.grid:View>
+ *       <header>
+ *           <template>
+ *              <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
+ *           </template>
+ *       </header>
+ *    </Controls.grid:View>
  * </pre>
  * @example
  * Пример массива колонок многоуровнего заголовка
@@ -308,12 +331,34 @@
  * @name Controls/_grid/interface/IGridControl#columnScroll
  * @cfg {Boolean} Включает скроллирование столбцов.
  * @default false
+ * @see Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @see Controls/_grid/interface/IGridControl#stickyColumnsCount
  */
 
 /*
  * @name Controls/_grid/interface/IGridControl#columnScroll
  * @cfg {Boolean} Enable column scroll.
  * @default false
+ * @see Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @see Controls/_grid/interface/IGridControl#stickyColumnsCount
+ */
+
+/**
+ * @name Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @cfg {String} Определяет начальное положение горизонтальной прокрутки столбцов, если она включена.
+ * @variant start Устанавливает горизонтальную прокрутку в начальное (крайнее левое) положение.
+ * @variant end Устанавливает горизонтальную прокрутку в конечное (крайнее правое) положение.
+ * @default start
+ * @see Controls/_grid/interface/IGridControl#columnScroll
+ */
+
+/*
+ * @name Controls/_grid/interface/IGridControl#columnScrollStartPosition
+ * @cfg {String} Determines the starting columns scroll position if it is enabled.
+ * @variant start Puts horizontal scroll into the leftmost position.
+ * @variant end Puts horizontal scroll into the rightmost position.
+ * @default start
+ * @see Controls/_grid/interface/IGridControl#columnScroll
  */
 
 /**

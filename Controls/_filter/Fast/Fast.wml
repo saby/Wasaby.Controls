@@ -12,7 +12,7 @@
             </div>
             <ws:if data="{{_needShowCross(item)}}">
                <!-- reset button should not take focus, otherwise IE will notify 'blur' event on control after click, because reset button will hidden, and focus will moved on body -->
-               <span class="controls-FastFilter__iconReset_theme_{{_options.theme}} icon-Close" ws-no-focus="{{true}}" on:click="_reset(item, index)"></span>
+               <span class="controls-FastFilter__iconReset_theme_{{_options.theme}} icon-CloseNew" ws-no-focus="{{true}}" on:click="_reset(item, index)"></span>
             </ws:if>
          </div>
       </ws:if>

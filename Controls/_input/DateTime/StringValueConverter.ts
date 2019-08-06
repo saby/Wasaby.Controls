@@ -125,7 +125,7 @@ var _private = {
       if (valueModel.month.str === null) {
          valueModel.month.value = baseValue.getMonth();
       }
-      if (valueModel.date.str === null && !self._mask === 'MM/YYYY') {
+      if (valueModel.date.str === null && self._mask !== 'MM/YYYY') {
          // Для контрола с маской MM/YYYY не имеет смысла сохранять дату между вводом дат т.к. это приводит
          // к неожиданным результатам. Например, была программно установлена дата 31.12.2018.
          // меняем месяц на 11. 31.11 несуществует. Можно скорректировать на 30.11.2018. Теперь пользователь

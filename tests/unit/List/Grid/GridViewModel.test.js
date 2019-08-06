@@ -1533,36 +1533,36 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel.resetColgroupColumns();
             assert.equal(0, gridViewModel._curColgroupColumnIndex, 'Incorrect value "_curColgroupColumnIndex" after "resetColgroupColumns()".');
          });
-         it('getColspan', function() {
+         it('getColspanStyles', function() {
             assert.equal(
-               gridMod.GridViewModel._private.getColspan('hidden', 0, 2),
+               gridMod.GridViewModel._private.getColspanStyles('hidden', 0, 2),
                ' grid-column: 1 / 3;'
             );
 
             assert.equal(
-               gridMod.GridViewModel._private.getColspan('hidden', 1, 2),
+               gridMod.GridViewModel._private.getColspanStyles('hidden', 1, 2),
                undefined
             );
 
             // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             assert.equal(
-               gridMod.GridViewModel._private.getColspan('hidden', 0, 2, true),
+               gridMod.GridViewModel._private.getColspanStyles('hidden', 0, 2, true),
                ' grid-column: 1 / 2;'
             );
 
             assert.equal(
-               gridMod.GridViewModel._private.getColspan('visible', 0, 2),
+               gridMod.GridViewModel._private.getColspanStyles('visible', 0, 2),
                undefined
             );
 
             assert.equal(
-               gridMod.GridViewModel._private.getColspan('visible', 1, 2),
+               gridMod.GridViewModel._private.getColspanStyles('visible', 1, 2),
                ' grid-column: 2 / 3;'
             );
 
             // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             assert.equal(
-               gridMod.GridViewModel._private.getColspan('visible', 1, 2, true),
+               gridMod.GridViewModel._private.getColspanStyles('visible', 1, 2, true),
                ' grid-column: 1 / 3;'
             );
          });
@@ -1631,6 +1631,22 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   );
                });
             });
+            var firstRow = gridMod.GridViewModel._private.isFixedCell({
+               multiSelectVisibility: false,
+               stickyColumnsCount: 1,
+               columnIndex: 0,
+               rowIndex: 0,
+               isMultyHeader: true
+            })
+            assert.isTrue(firstRow);
+            var secondRow = gridMod.GridViewModel._private.isFixedCell({
+               multiSelectVisibility: false,
+               stickyColumnsCount: 1,
+               columnIndex: 0,
+               rowIndex: 1,
+               isMultyHeader: true
+            })
+            assert.isFalse(secondRow);
          });
       });
 
@@ -1869,6 +1885,45 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal('', model._calcItemVersion(notHoveredItem, notHoveredItem.key));
          });
 
+      });
+      describe('no grid support', () => {
+         let
+             nativeIsPartialGridSupport,
+             nativeIsNoGridSupport,
+             model;
+
+         before(() => {
+            nativeIsPartialGridSupport = GridLayoutUtil.isPartialGridSupport;
+            nativeIsNoGridSupport = GridLayoutUtil.isPartialGridSupport;
+            GridLayoutUtil.isPartialGridSupport = () => false;
+            GridLayoutUtil.isNoGridSupport = () => true;
+         });
+         after(() => {
+            GridLayoutUtil.isPartialGridSupport = nativeIsPartialGridSupport;
+            GridLayoutUtil.isNoGridSupport = nativeIsNoGridSupport;
+         });
+
+         beforeEach(() => {
+            model = new gridMod.GridViewModel(cfg);
+         });
+         afterEach(() => {
+            model.destroy();
+            model = null;
+         });
+
+         it('getColspan', function () {
+            let itemData = {
+               columns: {
+                  length: 5
+               },
+               multiSelectVisibility: 'hidden'
+            };
+            assert.equal(1, gridMod.GridViewModel._private.getColspan(itemData));
+            assert.equal(1, gridMod.GridViewModel._private.getColspan(itemData, false));
+            assert.equal(5, gridMod.GridViewModel._private.getColspan(itemData, true));
+            itemData.multiSelectVisibility = 'visible';
+            assert.equal(4, gridMod.GridViewModel._private.getColspan(itemData, true));
+         });
       });
 
    });
