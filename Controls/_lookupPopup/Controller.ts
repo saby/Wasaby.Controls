@@ -8,6 +8,23 @@ import chain = require('Types/chain');
 
 /**
  *
+ * Контроллер, который позволяет выбирать данные из одного или нескольких списков (например, из {@link https://wi.sbis.ru/docs/js/Controls/grid/View/ Controls/list:View} или {@link https://wi.sbis.ru/docs/js/Controls/grid/View/ Controls/grid:View}).
+ * Используется вместе с Controls/lookupPopup:Container.
+ * Можно использовать как плоский, так и иерархический список.
+ *
+ * Подробное описание и инструкцию по настройке смотрите в <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>статье</a>.
+ *
+ * <a href="/materials/demo/demo-ws4-engine-selector-browser">Пример</a> использования контрола.
+ *
+ * @class Controls/_lookupPopup/Controller
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Герасимов Александр Максимович
+ */
+
+/*
+ *
  * Controller, which allows you to select data from several or one list (like {@link https://wi.sbis.ru/docs/js/Controls/grid/View/ Controls/list:View} or {@link https://wi.sbis.ru/docs/js/Controls/grid/View/ Controls/grid:View}).
  * Used with containers:
  * You can use flat and hierarchical list.
@@ -23,7 +40,49 @@ import chain = require('Types/chain');
  * @author Герасимов Александр Максимович
  */
 
+
 /**
+ * @name Controls/_lookupPopup/Controller#selectedItems
+ * @cfg {null|Types/collection:RecordSet} Выбранные элементы.
+ * @default null
+ * @example
+ * В этом примере будет открыта стековая панель с двумя выбранными записями.
+ *
+ * JS
+ * <pre>
+ *    import {RecordSet} from "Types/collection";
+ *
+ *    _openSelector: function() {
+ *       var selectedItems = new RecordSet({
+ *            rawData: [
+ *               {id: 'Yaroslavl', title: 'Ярославль'},
+ *               {id: 'Moscow', title: 'Москва'}
+ *            ],
+ *            idProperty: 'id'
+ *       });
+ *       this._children.stackOpener.open({
+ *          templateOptions: {
+ *                selectedItems: selectedItems
+ *            }
+ *        });
+ *    }
+ * </pre>
+ *
+ * WML
+ * <pre>
+ *     <Controls.buttons:Button caption="Open selector" on:click='_openSelector'/>
+ *     <Controls.popup:Stack name="stackOpener" template="mySelectorTemplate"/>
+ * </pre>
+ *
+ * mySelectorTemplate.wml
+ * <pre>
+ *    <Controls.lookupPopup:Controller selectedItems="{{_options.selectedItems}}">
+ *       ...
+ *    </Controls.lookupPopup:Controller>
+ * </pre>
+ */
+
+/*
  * @name Controls/_lookupPopup/Controller#selectedItems
  * @cfg {null|Types/collection:RecordSet} The items that are selected.
  * @default null

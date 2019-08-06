@@ -4,6 +4,24 @@ import {showType} from 'Controls/Utils/Toolbar';
 
 /**
  *
+ * Контейнер для списков, который отслеживает нажатия на его элементы и уведомляет с помощью события «selectComplete», когда выбор завершен.
+ * Также добавляет действие «Выбрать» в иерархические списки.
+ * Используется внутри Controls/lookupPopup:Controller и Controls/lookupPopup:Container.
+ *
+ * Подробное описание и инструкцию по настройке смотрите в <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>статье</a>.
+ *
+ * <a href="/materials/demo/demo-ws4-engine-selector-browser">Пример</a> использования контрола.
+ *
+ * @class Controls/_lookupPopup/List/Container
+ * @extends Core/Control
+ * @mixes Controls/_interface/IMultiSelectable
+ * @control
+ * @public
+ * @author Герасимов Александр Максимович
+ */
+
+/*
+ *
  * Container for list controls, that tracks click on list items and notifying "selectComplete" event, when selection is completed.
  * Also adding "select" item action to a hierarchical lists.
  * Used inside Controls/lookupPopup:Controller and Controls/lookupPopup:Container.
@@ -20,7 +38,21 @@ import {showType} from 'Controls/Utils/Toolbar';
  * @author Герасимов Александр Максимович
  */
 
+
 /**
+ * @typedef {Object} ItemAction
+ * @property {String} id Идентификатор операции над записью.
+ * @property {String} title Название операции операции над записью.
+ * @property {String} icon Иконка операции операции над записью.
+ * @property {Number} showType Расположение операции операции над записью.
+ * @property {String} style Стиль операции операции над записью.
+ * @property {String} iconStyle Стиль иконки операции операции над записью. (secondary | warning | danger | success).
+ * @property {Function} handler Обработчик события клика по операции операции над записью.
+ * @property {String} parent Ключ родителя операции операции над записью.
+ * @property {boolean|null} parent@ Поле, определяющее иерархический тип операции над записью (list, node, hidden node).
+ */
+
+/*
  * @typedef {Object} ItemAction
  * @property {String} id Identifier of operation.
  * @property {String} title Operation name.
@@ -33,13 +65,43 @@ import {showType} from 'Controls/Utils/Toolbar';
  * @property {boolean|null} parent@ Field that describes the type of the node (list, node, hidden node).
  */
 
+
 /**
+ * @name Controls/_lookupPopup/List/Container#itemActions
+ * @cfg {Array.<ItemAction>} Массив конфигурационных объектов для кнопок, которые будут отображаться, когда пользователь наводит курсор на элемент.
+ * <a href="/materials/demo-ws4-list-item-actions">Пример</a>.
+ */
+
+/*
  * @name Controls/_lookupPopup/List/Container#itemActions
  * @cfg {Array.<ItemAction>} Array of configuration objects for buttons which will be shown when the user hovers over an item.
  * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
  */
 
+
 /**
+ * @name Controls/_lookupPopup/List/Container#itemActionVisibilityCallback
+ * @cfg {function} Функция управления видимостью операций над записью.
+ * @param {ItemAction} action Объект с настройкой действия.
+ * @param {Types/entity:Model} item Экземпляр записи, действие над которой обрабатывается.
+ * @returns {Boolean} Определяет, должна ли операция отображаться.
+ * @example
+ *
+ * JS:
+ * <pre>
+ *     _actionVisibilityCallback: function(action, item) {
+ *         let actionVisibility = true;
+ *
+ *         if (action.id === 'delete' && !item.get('isDeletable')) {
+ *             actionVisibility = false;
+ *         }
+ *
+ *         return actionVisibility;
+ *     }
+ * </pre>
+ */
+
+/*
  * @name Controls/_lookupPopup/List/Container#itemActionVisibilityCallback
  * @cfg {function} item operation visibility filter function
  * @param {ItemAction} action Object with configuration of an action.
@@ -61,7 +123,24 @@ import {showType} from 'Controls/Utils/Toolbar';
  * </pre>
  */
 
+
 /**
+ * @name Controls/_lookupPopup/List/Container#selectionType
+ * @cfg {String} Тип записей, которые можно выбрать.
+ * @variant node только узлы доступны для выбора
+ * @variant leaf only только листья доступны для выбора
+ * @variant all все типы записей доступны для выбора
+ * @variant allBySelectAction все типы записей доступны для выбора. Действие «Выбрать» будет отображаться для всех типов записей.
+ * @example
+ * В этом примере для выбора доступны только листья.
+ * <pre>
+ *    <Controls.lookupPopup:ListContainer selectionType="leaf">
+ *        ...
+ *    </Controls.lookupPopup:ListContainer>
+ * </pre>
+ */
+
+/*
  * @name Controls/_lookupPopup/List/Container#selectionType
  * @cfg {String} Type of records that can be selected.
  * @variant node only nodes are available for selection
@@ -77,7 +156,19 @@ import {showType} from 'Controls/Utils/Toolbar';
  * </pre>
  */
 
+
 /**
+ * @name Controls/_lookupPopup/List/Container#multiSelect
+ * @cfg {Boolean} Определяет, установлен ли множественный выбор.
+ * @example
+ * <pre>
+ *    <Controls.lookupPopup:ListContainer multiSelect="{{true}}">
+ *        ...
+ *    </Controls.lookupPopup:ListContainer>
+ * </pre>
+ */
+
+/*
  * @name Controls/_lookupPopup/List/Container#multiSelect
  * @cfg {Boolean} Determines whether multiple selection is set.
  * @example
