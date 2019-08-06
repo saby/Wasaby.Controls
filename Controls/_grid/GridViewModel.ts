@@ -828,14 +828,18 @@ var
         // ---------------------- resultColumns ----------------------
         // -----------------------------------------------------------
 
-        getResultsPosition: function(): string {
-            const items = this.getItems();
-            if (items && items.getCount() > 1) {
+        getResultsPosition: function() {
+            if (this.isDrawResults()) {
                 if (this._options.results) {
                     return this._options.results.position;
                 }
                 return this._options.resultsPosition;
             }
+        },
+
+        isDrawResults: function() {
+            const items = this.getItems();
+            return items && items.getCount() > 1;
         },
 
         setResultsPosition: function(position) {
