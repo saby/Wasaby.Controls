@@ -44,12 +44,13 @@ define('Controls/interface/IEditableArea', [
     */    
 
    /**
-    * @event Controls/interface/IEditableArea#beforeBeginEdit Происходит до начала редактирования.
-    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Types/entity:Record} editObject Редактируемая запись.
+    * @event Controls/interface/IEditableArea#beforeBeginEdit Происходит перед стартом редактирования.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+    * @param {Object} options Объект, в котором лежит item - редактируемая строка.
+    * @param {Boolean} isAdd Флаг, который позволяет различать редактирование и добавление.
     * @returns {BeforeBeginEditResult}
     * @example
-    * В следующем примере создается EditableArea и показано, как обрабатывать событие.
+    * В следующем примере показано, как обрабатывать событие.
     * WML:
     * <pre>
     *    <Controls.editableArea:View on:beforeBeginEdit="beforeBeginEditHandler()" editObject="{{_editObject}}" />
@@ -58,9 +59,8 @@ define('Controls/interface/IEditableArea', [
     * <pre>
     *    define('ModuleName', ['Controls/Constants'], function(constants) {
     *       ...
-    *       beforeBeginEditHandler: function(e, record) {
-    *          if (this._editable === false) { 
-    *             //Let's say that we want to allow editing only in certain situations.
+    *       beforeBeginEditHandler: function(e, options, isAdd) {
+    *          if (!isAdd) { // Редактирование разрешено только в определенных ситуациях.
     *             return constants.editing.CANCEL;
     *          }
     *       }
@@ -75,6 +75,7 @@ define('Controls/interface/IEditableArea', [
     * @event Controls/interface/IEditableArea#beforeBeginEdit Happens before start of editing.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} editObject Editing record.
+    * @param {Boolean} isAdd A flag that allows you to distinguish between editing and adding.
     * @returns {BeforeBeginEditResult}
     * @example
     * The following example creates EditableArea and shows how to handle the event.
