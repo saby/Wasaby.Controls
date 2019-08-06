@@ -176,11 +176,12 @@ define(
             };
             let expectedResult = {
                action: 'moreButtonClick',
-               id: 'first'
+               id: 'first',
+               selectedItems: []
             };
             panel._beforeMount(defaultConfig);
 
-            panel._moreButtonClick('moreButtonClick', defaultItemsConfig[0]);
+            panel._moreButtonClick('moreButtonClick', defaultItemsConfig[0], []);
             assert.deepStrictEqual(actualResult, expectedResult);
          });
 

@@ -330,6 +330,7 @@ var _private = {
 
     moreButtonClick: function(result) {
         this._idOpenSelector = result.id;
+        this._configs[result.id].initSelectorItems = result.selectedItems;
     },
 
     isNeedReload: function(oldItems, newItems) {
@@ -463,7 +464,7 @@ var Filter = Control.extend({
             },
             target: this._container[0] || this._container
         };
-        this._children.DropdownOpener.open(Merge(popupOptions, panelPopupOptions), this);
+        this._children.StickyOpener.open(Merge(popupOptions, panelPopupOptions), this);
     },
 
     _rangeChangedHandler: function(event, start, end) {
@@ -484,12 +485,14 @@ var Filter = Control.extend({
         }
         if (result.action !== 'moreButtonClick') {
             _private.notifyChanges(this, this._source);
-            this._children.DropdownOpener.close();
+            this._children.StickyOpener.close();
         }
     },
 
     _onSelectorTemplateResult: function(event, items) {
-        this._resultHandler(event, {action: 'selectorResult', id: this._idOpenSelector, data: items});
+        let resultSelectedItems = this._notify('selectorCallback', [this._configs[this._idOpenSelector].initSelectorItems, items, this._idOpenSelector]) || items;
+        this._resultHandler(event, {action: 'selectorResult', id: this._idOpenSelector, data: resultSelectedItems});
+        this._children.StickyOpener.close();
     },
 
     _isFastReseted: function() {
@@ -503,8 +506,8 @@ var Filter = Control.extend({
     },
 
     _reset: function(event, item) {
-        if (this._children.DropdownOpener.isOpened()) {
-            this._children.DropdownOpener.close();
+        if (this._children.StickyOpener.isOpened()) {
+            this._children.StickyOpener.close();
         }
         var newValue = object.getPropertyValue(item, 'resetValue');
         object.setPropertyValue(item, 'value', newValue);
@@ -513,8 +516,8 @@ var Filter = Control.extend({
     },
 
     _resetFilterText: function() {
-        if (this._children.DropdownOpener.isOpened()) {
-            this._children.DropdownOpener.close();
+        if (this._children.StickyOpener.isOpened()) {
+            this._children.StickyOpener.close();
         }
         factory(this._source).each(function(item) {
             // Fast filters could not be reset from the filter button.
