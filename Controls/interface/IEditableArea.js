@@ -47,7 +47,7 @@ define('Controls/interface/IEditableArea', [
     * @event Controls/interface/IEditableArea#beforeBeginEdit Происходит перед стартом редактирования.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Object} options Объект, в котором лежит item — редактируемая строка.
-    * @param {Boolean} isAdd Флаг, который позволяет различать редактирование и добавление.
+    * @param {Boolean} isAdd Флаг, который позволяет различать редактирование (false) и добавление (true).
     * @returns {BeforeBeginEditResult}
     * @example
     * В следующем примере показано, как обрабатывать событие.
