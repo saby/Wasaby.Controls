@@ -75,6 +75,7 @@ var Component = BaseControl.extend({
                 endValue: this._rangeModel.endValue,
                 headerType: 'link',
                 captionFormatter: this._options.captionFormatter,
+                emptyCaption: this._options.emptyCaption,
                 closeButtonEnabled: true,
                 selectionType: this._options.selectionType,
                 quantum: this._options.ranges,

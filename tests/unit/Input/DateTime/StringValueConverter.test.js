@@ -124,13 +124,15 @@ define([
             { mask: 'HH:mm', stringValue: '80:80', value: new Date(1900, 0, 1, 23, 59, 0) },
             { mask: 'HH:mm', stringValue: '10:80', value: new Date(1900, 0, 1, 10, 59, 0) },
             { mask: 'HH:mm', stringValue: '24:60', value: new Date(1900, 0, 1, 23, 59, 0) },
-            { mask: 'HH:mm', stringValue: '80:10', value: new Date(1900, 0, 1, 23, 10, 0) }
+            { mask: 'HH:mm', stringValue: '80:10', value: new Date(1900, 0, 1, 23, 10, 0) },
+
+            { mask: 'HH:mm', stringValue: '10:20', value: new Date(2000, 1, 2, 10, 20, 0), baseDate: new Date(2000, 1, 2, 3, 4, 0) }
          ].forEach(function(test) {
             it(`should return ${test.value} if "${test.stringValue}" is passed`, function() {
                let converter = new input.StringValueConverter(),
                   rDate;
                converter.update(cMerge({ mask: test.mask }, options, { preferSource: true }));
-               rDate = converter.getValueByString(test.stringValue, null, test.autocomplete || true);
+               rDate = converter.getValueByString(test.stringValue, test.baseDate, test.autocomplete || true);
                assert(dateUtils.isDatesEqual(rDate, test.value), `${rDate} is not equal ${test.value}`);
             });
          });

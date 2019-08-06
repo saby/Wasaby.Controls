@@ -40,6 +40,7 @@ define([
                extOptions = {
                   ranges: { days: [1] },
                   minRange: 'month',
+                  emptyCaption: 'caption',
                   captionFormatter: function(){}
                },
                component = calendarTestUtils.createComponent(dateRange.Selector, cMerge(cClone(extOptions), options));
@@ -52,7 +53,8 @@ define([
                templateOptions: {
                   quantum: extOptions.ranges,
                   minRange: extOptions.minRange,
-                  captionFormatter: extOptions.captionFormatter
+                  captionFormatter: extOptions.captionFormatter,
+                  emptyCaption: extOptions.emptyCaption
                }
             }));
          });
