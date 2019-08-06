@@ -20,10 +20,10 @@ var
       },
       getActionsItem(item) {
           if (!!item.forEach) {
-              return SearchViewModel.superclass.getActionsItem.call(item[item.length - 1]);
+              return item[item.length - 1];
           }
-          return SearchViewModel.superclass.getActionsItem.call(item);
-      }
+          return item;
+      },
       getItemActions(item) {
          if (!!item.forEach) {
             return SearchViewModel.superclass.getItemActions.call(this, item[item.length - 1]);

@@ -66,8 +66,9 @@ var _private = {
             for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                 var
                     itemData = options.listModel.getCurrent(),
+                    item = itemData.actionsItem;
                 if (item !== ControlsConstants.view.hiddenGroup && item.get) {
-                    _private.updateItemActions(self, itemData.actionsItem, options);
+                    _private.updateItemActions(self, item, options);
                 }
             }
             self._isActual = true;
