@@ -185,6 +185,16 @@ define(
             viewModelSelection._options.selectedKeys = ['1'];
             viewModelSelection.updateSelection(rs.at(0));
             assert.deepEqual(viewModelSelection.getSelectedKeys(), expectedKeys);
+
+            expectedKeys = ['reset_key'];
+            viewModelSelection._options.selectedKeys = ['1'];
+            viewModelSelection.updateSelection(rs.at(0), 'reset_key');
+            assert.deepEqual(viewModelSelection.getSelectedKeys(), expectedKeys);
+
+            expectedKeys = ['reset_key'];
+            viewModelSelection._options.selectedKeys = ['1'];
+            viewModelSelection.updateSelection(rs.at(0), 'reset_key');
+            assert.deepEqual(viewModelSelection.getSelectedKeys(), expectedKeys);
          });
          describe('Groups and separator', function() {
                let newConfig = {
@@ -263,6 +273,32 @@ define(
                };
                assert.isTrue(DropdownViewModel._private.needHideGroup(self, 'notEmpty'));
             });
+         });
+
+         it('isGroupNext', function() {
+            let newConfig = {
+               keyProperty: 'id',
+               items: new collectionLib.RecordSet({
+                  idProperty: 'id',
+                  rawData: [
+                     { id: 'first', title: 'Запись 1', group: '1' },
+                     { id: 'second', title: 'Запись 2', group: '1' },
+                     { id: 'third', title: 'Запись 3', group: '2' },
+                     { id: 'fourth', title: 'Запись 4', group: '2' }
+                  ]
+               })
+            };
+            newConfig.groupingKeyCallback = (item) => {
+               return item.get('group');
+            };
+            let viewModel = new DropdownViewModel(newConfig);
+            assert.isFalse(viewModel.isGroupNext());
+            viewModel.goToNext();
+            assert.isFalse(viewModel.isGroupNext());
+            viewModel.goToNext();
+            assert.isTrue(viewModel.isGroupNext());
+            viewModel.goToNext();
+            assert.isFalse(viewModel.isGroupNext());
          });
 
          it('_private.isHistoryItem', () => {

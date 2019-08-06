@@ -15,6 +15,14 @@ define([
    entityLib,
    sourceLib
 ) {
+   function dragEntity(items, dragControlId) {
+      var entity = new dragnDrop.ItemsEntity({
+         items: items
+      });
+      entity.dragControlId = dragControlId;
+      return entity;
+   }
+
    describe('Controls.Explorer', function() {
       it('_private block', function() {
          var
@@ -769,6 +777,9 @@ define([
             assert.equal(explorer._dragHighlighter(2, true), 'controls-BreadCrumbsView__dropTarget_withArrow');
          });
          it('_documentDragStart', function() {
+            var dcid = 'test-id';
+            explorer._dragControlId = dcid;
+
             explorer._documentDragStart({}, {
                entity: 'notDragEntity'
             });
@@ -777,26 +788,20 @@ define([
             //drag in the root
             explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
-               entity: new dragnDrop.ItemsEntity({
-                  items: [1]
-               })
+               entity: dragEntity([1], dcid)
             });
             assert.isFalse(explorer._dragOnBreadCrumbs);
 
             explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
-               entity: new dragnDrop.ItemsEntity({
-                  items: [2]
-               })
+               entity: dragEntity([2], dcid)
             });
             assert.isTrue(explorer._dragOnBreadCrumbs);
 
             explorer._dragOnBreadCrumbs = false;
             explorer._options.itemsDragNDrop = false;
             explorer._documentDragStart({}, {
-               entity: new dragnDrop.ItemsEntity({
-                  items: [2]
-               })
+               entity: dragEntity([2], dcid)
             });
             assert.isFalse(explorer._dragOnBreadCrumbs);
             explorer._options.itemsDragNDrop = true;
@@ -806,27 +811,27 @@ define([
 
             explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
-               entity: new dragnDrop.ItemsEntity({
-                  items: [1]
-               })
+               entity: dragEntity([1], dcid)
             });
             assert.isTrue(explorer._dragOnBreadCrumbs);
 
             explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
-               entity: new dragnDrop.ItemsEntity({
-                  items: [2]
-               })
+               entity: dragEntity([2], dcid)
             });
             assert.isTrue(explorer._dragOnBreadCrumbs);
 
+            // ignore drag entities with wrong dragControlId
             explorer._dragOnBreadCrumbs = false;
+            explorer._documentDragStart({}, {
+               entity: dragEntity([2], 'wrong-id')
+            });
+            assert.isFalse(explorer._dragOnBreadCrumbs);
+
             explorerCfg.parentProperty = undefined;
             explorer.saveOptions(explorerCfg);
             explorer._documentDragStart({}, {
-               entity: new dragnDrop.ItemsEntity({
-                  items: [2]
-               })
+               entity: dragEntity([2], dcid)
             });
             assert.isFalse(explorer._dragOnBreadCrumbs);
          });

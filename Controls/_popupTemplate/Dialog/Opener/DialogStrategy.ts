@@ -48,8 +48,8 @@ export = {
             dif = (item.position.top + containerSizes.height) - windowData.height;
             top -= Math.max(0, dif);
         } else {
-            width = this._calculateValue(popupOptions, containerSizes.width, windowData.width, popupOptions.width);
-            height = this._calculateValue(popupOptions, containerSizes.height, windowData.height, popupOptions.height);
+            width = this._calculateValue(popupOptions, containerSizes.width, windowData.width, popupOptions.width, popupOptions.maxWidth);
+            height = this._calculateValue(popupOptions, containerSizes.height, windowData.height, popupOptions.height, popupOptions.maxHeight);
             left = this._getLeftCoord(windowData.width, width || containerSizes.width) + (windowData.scrollLeft || 0);
             top = this._getTopCoord(windowData, height || containerSizes.height) + (windowData.scrollTop || 0);
         }
@@ -68,12 +68,15 @@ export = {
             maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width)
         };
     },
-    _calculateValue: function (popupOptions, containerValue, windowValue, popupValue) {
-        if (popupValue) {
-            return popupValue;
-        } else if (popupOptions.maximize || containerValue >= windowValue) {
+    _calculateValue: function (popupOptions, containerValue, windowValue, popupValue, maxValue) {
+        const availableSize = maxValue ? Math.min(windowValue, maxValue) : windowValue;
+        if (popupOptions.maximize) {
             return windowValue;
         }
+        if (containerValue >= availableSize || popupValue >= availableSize) {
+            return availableSize;
+        }
+        return popupValue;
     },
     _getLeftCoord: function (wWidth, width) {
         return Math.max(Math.round((wWidth - width) / 2), 0);

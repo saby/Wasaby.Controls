@@ -198,3 +198,10 @@
 .controls-ButtonBack__caption {
    .text-overflow();
 }
+
+//fix for ie10 or ie11 in compatibility mode
+//https://stackoverflow.com/questions/22008135/internet-explorer-10-does-not-apply-flexbox-on-inline-elements
+.controls-Back__caption__wrapper {
+   max-width: 100%;
+   .text-overflow();
+}

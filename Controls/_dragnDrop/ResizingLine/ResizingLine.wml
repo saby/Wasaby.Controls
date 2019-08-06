@@ -7,6 +7,8 @@
                  on:mousedown="_beginDragHandler()"></div></Controls._dragnDrop.Container>
    <ws:if data="{{_dragging}}">
       <div class="controls-ResizingLine__area_theme_{{_options.theme}}"
-           style="{{_styleArea}}"></div>
+           style="{{_styleArea}}">
+         <div class="controls-ResizingLine__areaOverlay"></div>
+      </div>
    </ws:if>
 </div>

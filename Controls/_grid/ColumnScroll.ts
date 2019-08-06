@@ -137,6 +137,9 @@ const
 
       _afterMount() {
          _private.updateSizes(this);
+         if (this._options.columnScrollStartPosition === 'end' && this._isColumnScrollVisible()) {
+            this._positionChangedHandler(null, this._contentSize - this._contentContainerSize);
+         }
       },
 
       _afterUpdate(oldOptions) {

@@ -15,24 +15,9 @@
          isEditing="{{_isEditing}}"
       />
       <ws:if data="{{_options.toolbarVisibility && _isEditing}}">
-         <div class="controls-EditableArea__Toolbar">
-            <Controls.buttons:Button
-               on:click="commitEdit()"
-               attr:class="controls-EditableArea__Toolbar__Button"
-               viewMode="toolButton"
-               iconStyle="success"
-               icon="icon-Yes"
-               iconSize="s"
-               inlineHeight="m"
-               style="secondary"
-            />
-            <Controls.popupTemplate:CloseButton
-               on:click="cancelEdit()"
-               attr:class="controls-EditableArea__Toolbar__Button"
-               viewMode="toolButton"
-               size="m"
-            />
-         </div>
+          <ws:partial template="{{_buttonsTemplate}}"
+                        on:applyButtonClick="commitEdit()"
+                        on:closeButtonClick="cancelEdit()" />
       </ws:if>
    </div>
 </Controls.validate:Controller>

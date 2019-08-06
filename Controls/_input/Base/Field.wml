@@ -1,4 +1,5 @@
 <div class="controls-InputBase__field
+            {{autoWidth ? 'controls-InputBase__field_autoWidth'}}
             controls-{{controlName}}__field_theme_{{options.theme}}_margin
             {{!!ieVersion && autoWidth ? 'controls-InputBase__field_fixStretcherIE'}}
             {{!!ieVersion && value ? 'controls-InputBase__field_ie'}}">
@@ -15,7 +16,7 @@
             placeholder="{{hidePlaceholderUsingCSS ? emptySymbol}}"
             autocomplete="{{autoComplete}}"
             class="controls-InputBase__nativeField_theme_{{options.theme}}
-             controls-{{controlName}}__nativeField_theme_{{options.theme}}_caret{{value ? 'Filled' : 'Empty'}}
+             controls-{{controlName}}__nativeField_theme_{{options.theme}}_caret{{wasActionUser ? 'Filled' : 'Empty'}}
              {{isEdge ? 'controls-InputBase__nativeField_edge'}}
              {{autoWidth ? 'controls-InputBase__nativeField_stretcher'}}
              {{hidePlaceholderUsingCSS ? 'controls-InputBase__nativeField_hideCustomPlaceholder'}}"

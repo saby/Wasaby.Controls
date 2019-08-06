@@ -1,41 +1,38 @@
 import {factory} from 'Types/chain';
+import CoreClone = require('Core/core-clone');
 
 var differentFields = ['name', 'id', 'visibility'];
 
 function convertToFilterSource(detailPanelItems) {
-    var filterSource = [];
-    factory(detailPanelItems).each(function(item) {
-        var filterSourceItem = {};
-        for (var property in item) {
-            if (item.hasOwnProperty(property)) {
-                if (differentFields.indexOf(property) === -1) {
-                    filterSourceItem[property] = item[property];
+    let filterSource = CoreClone(detailPanelItems);
+    factory(filterSource).each(function(filterSourceItem, index) {
+        for (var property in filterSourceItem) {
+            if (filterSourceItem.hasOwnProperty(property)) {
+                if (differentFields.indexOf(property) !== -1) {
+                    delete filterSourceItem[property];
                 }
             }
         }
-        filterSourceItem.name = item.id ? item.id : item.name; // items from history have a field 'name' instead of 'id'
-        if (item.visibility !== undefined) {
-            filterSourceItem.visibility = item.visibility;
+        filterSourceItem.name = detailPanelItems[index].id ? detailPanelItems[index].id : detailPanelItems[index].name; // items from history have a field 'name' instead of 'id'
+        if (detailPanelItems[index].visibility !== undefined) {
+            filterSourceItem.visibility = detailPanelItems[index].visibility;
         }
-        filterSource.push(filterSourceItem);
     });
     return filterSource;
 }
 
 function convertToDetailPanelItems(filterSource) {
-    var detailPanelItems = [];
-    factory(filterSource).each(function(item) {
-        var detailPanelItem = {};
-        for (var property in item) {
-            if (item.hasOwnProperty(property)) {
-                if (differentFields.indexOf(property) === -1) {
-                    detailPanelItem[property] = item[property];
+    let detailPanelItems = CoreClone(filterSource);
+    factory(detailPanelItems).each(function(detailPanelItem, index) {
+        for (var property in detailPanelItem) {
+            if (detailPanelItem.hasOwnProperty(property)) {
+                if (differentFields.indexOf(property) !== -1) {
+                    delete detailPanelItem[property];
                 }
             }
         }
-        detailPanelItem.id = item.name;
-        detailPanelItem.visibility = item.viewMode === 'extended' ? item.visibility : undefined;
-        detailPanelItems.push(detailPanelItem);
+        detailPanelItem.id = filterSource[index].name;
+        detailPanelItem.visibility = filterSource[index].viewMode === 'extended' ? filterSource[index].visibility : undefined;
     });
     return detailPanelItems;
 }

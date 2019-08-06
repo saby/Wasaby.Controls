@@ -60,6 +60,20 @@ define(
             popupTemplate.StackController._stack.add({ containerWidth: 720, popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._stack.add({ containerWidth: 200, popupState: 'destroying', popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._stack.add({ containerWidth: 200, popupOptions: { stackClassName: '' } });
+
+            popupTemplate.StackController._update();
+            assert.isTrue(popupTemplate.StackController._stack.at(0).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(1).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(2).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(3).popupOptions.stackClassName.indexOf('ws-hidden') < 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(4).popupOptions.stackClassName.indexOf('ws-hidden') < 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(5).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(6).popupOptions.stackClassName.indexOf('ws-hidden') < 0);
+            // 7 индекс не интересен, потому что popupState: 'destroying'. Проверяем, что не повлиял на 8 индекс
+            //assert.isTrue(popupTemplate.StackController._stack.at(7).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(8).popupOptions.stackClassName.indexOf('ws-hidden') < 0);
+
+
             popupTemplate.StackController._stack.add({ containerWidth: 1100, popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._stack.add({ containerWidth: 850, popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._stack.add({ containerWidth: 950, popupOptions: { stackClassName: '' } });
@@ -67,27 +81,28 @@ define(
             popupTemplate.StackController._stack.add({ containerWidth: 850, popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._stack.add({ containerWidth: 950, popupOptions: { stackClassName: '' } });
             popupTemplate.StackController._stack.add({ position: {}, templateWidth: 711, containerWidth: '', popupOptions: { stackClassName: '' } });
-            popupTemplate.StackController._update();
-            popupTemplate.StackController._update();
-            popupTemplate.StackController._update();
-            assert.isTrue(popupTemplate.StackController._stack.at(0).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(1).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(2).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(3).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(4).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(5).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(6).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(7).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(8).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(9).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(10).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(11).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(12).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(13).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(14).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(15).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
 
+            popupTemplate.StackController._update();
+            popupTemplate.StackController._update();
             popupTemplate.StackController._private.getItemPosition = baseGetItemPosition;
+
+            assert.isTrue(popupTemplate.StackController._stack.at(0).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(1).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(2).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(3).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(4).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(5).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(6).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            // 7 индекс не интересен, потому что popupState: 'destroying'. Проверяем, что не повлиял на 8 индекс
+            //assert.isTrue(popupTemplate.StackController._stack.at(7).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(8).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(9).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(10).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(11).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(12).popupOptions.stackClassName.indexOf('ws-hidden') < 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(13).popupOptions.stackClassName.indexOf('ws-hidden') >= 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(14).popupOptions.stackClassName.indexOf('ws-hidden') < 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(15).popupOptions.stackClassName.indexOf('ws-hidden') < 0);
          });
 
 
@@ -325,8 +340,9 @@ define(
 
             item.popupOptions.width = 1200;
             position = StackStrategy.getPosition({ top: 0, right: 400 }, item);
-            assert.equal(position.stackMaxWidth, 600); //В тесте getMaxPanelWidth === 1000
+            assert.equal(position.stackMaxWidth, 1000); //В тесте getMaxPanelWidth === 1000
             assert.equal(position.stackWidth, 1000);
+            assert.equal(position.right, 0);
          });
 
          it('stack max width', () => {
@@ -334,15 +350,21 @@ define(
             let tCoords = {
                right: 100
             };
-            let maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, null, tCoords);
+            let popupOptions = {};
+            let maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, popupOptions, tCoords);
             assert.equal(maxWidth, 1000);
 
-            maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, 400, tCoords);
+            popupOptions.maxWidth = 400;
+            maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, popupOptions, tCoords);
             assert.equal(maxWidth, 400);
 
-            maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, 2000, tCoords);
+            popupOptions.maxWidth = 2000;
+            maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, popupOptions, tCoords);
             assert.equal(maxWidth, 900);
 
+            popupOptions.minWidth = 1000;
+            maxWidth = StackStrategy._private.calculateMaxWidth(StackStrategy, popupOptions, tCoords);
+            assert.equal(maxWidth, 1000);
          });
 
          it('stack optimize open', () => {

@@ -431,10 +431,13 @@ define([
 
       it('prepareFooter', function() {
          var
+             baseControl = {
+                _options: {}
+             },
             tests = [
                {
                   data: [
-                     {},
+                     baseControl,
                      undefined,
                      {}
                   ],
@@ -444,7 +447,7 @@ define([
                },
                {
                   data: [
-                     {},
+                     baseControl,
                      {},
                      {}
                   ],
@@ -454,7 +457,7 @@ define([
                },
                {
                   data: [
-                     {},
+                     baseControl,
                      { view: 'page' },
                      {}
                   ],
@@ -464,7 +467,7 @@ define([
                },
                {
                   data: [
-                     {},
+                     baseControl,
                      { view: 'demand' },
                      {
                         hasMoreData: function() {
@@ -478,7 +481,7 @@ define([
                },
                {
                   data: [
-                     {},
+                     baseControl,
                      { view: 'demand' },
                      {
                         hasMoreData: function() {
@@ -498,7 +501,7 @@ define([
                },
                {
                   data: [
-                     {},
+                     baseControl,
                      { view: 'demand' },
                      {
                         hasMoreData: function() {
@@ -519,7 +522,7 @@ define([
                },
                {
                   data: [
-                     {},
+                     baseControl,
                      { view: 'demand' },
                      {
                         hasMoreData: function() {
@@ -540,8 +543,15 @@ define([
                }
             ];
          tests.forEach(function(test, index) {
+            baseControl._options.groupingKeyCallback = undefined;
             lists.BaseControl._private.prepareFooter.apply(null, test.data);
-            assert.deepEqual(test.data[0], test.result, 'Invalid prepare footer on step #' + index);
+            assert.equal(test.data[0]._shouldDrawFooter, test.result._shouldDrawFooter, 'Invalid prepare footer on step #' + index);
+            assert.equal(test.data[0]._loadMoreCaption, test.result._loadMoreCaption, 'Invalid prepare footer on step #' + index);
+
+            baseControl._options.groupingKeyCallback = () => 123;
+            baseControl._listViewModel = {isAllGroupsCollapsed: () => true};
+            lists.BaseControl._private.prepareFooter.apply(null, test.data);
+            assert.isFalse(test.data[0]._shouldDrawFooter, 'Invalid prepare footer on step #' + index + ' with all collapsed groups');
          });
       });
 
@@ -1666,25 +1676,24 @@ define([
             });
          })
       });
-
-      it('mouseEnter handler', function () {
+      describe('_canUpdateItemsActions', function() {
          var lnSource = new sourceLib.Memory({
-                idProperty: 'id',
-                data: data
-             }),
-             lnCfg = {
-                viewName: 'Controls/List/ListView',
-                source: lnSource,
-                keyProperty: 'id',
-                itemActions: [
-                   {
-                      id: 1,
-                      title: '123'
-                   }
-                ],
-                viewModelConstructor: lists.ListViewModel
-             },
-             lnBaseControl = new lists.BaseControl(lnCfg);
+               idProperty: 'id',
+               data: data
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               itemActions: [
+                  {
+                     id: 1,
+                     title: '123'
+                  }
+               ],
+               viewModelConstructor: lists.ListViewModel
+            },
+            lnBaseControl = new lists.BaseControl(lnCfg);
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
@@ -1693,16 +1702,59 @@ define([
                isTouch: false
             }
          };
+         it('afterMount', function() {
+            lnBaseControl._afterMount(lnCfg);
+            assert.isTrue(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._afterUpdate(lnCfg);
+            assert.isFalse(lnBaseControl._canUpdateItemsActions);
+         });
+         it('itemsChanged', async function() {
+            lnBaseControl._itemsChanged = true;
+            await lnBaseControl._beforeUpdate(lnCfg);
+            assert.isTrue(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._afterUpdate(lnCfg);
+         });
+         it('hoveredItemChanged', function() {
+            lnBaseControl._onHoveredItemChanged({}, {});
+            assert.isTrue(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._afterUpdate(lnCfg);
+            assert.isFalse(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._context.isTouch.isTouch = true;
+            lnBaseControl._onHoveredItemChanged({}, {});
+            assert.isFalse(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._context.isTouch.isTouch = false;
+            lnBaseControl._afterUpdate(lnCfg);
+         });
+         it('locking by scroll', async function () {
+            lists.BaseControl._private.handleListScrollSync(lnBaseControl);
+            lnBaseControl._onHoveredItemChanged({}, {});
+            assert.isFalse(lnBaseControl._canUpdateItemsActions);
+            await setTimeout(function() {
+               lists.BaseControl._private.handleListScrollSync(lnBaseControl);
+               assert.isFalse(lnBaseControl._canUpdateItemsActions);
+               setTimeout(function() {
+                  assert.isFalse(lnBaseControl._canUpdateItemsActions);
+                  setTimeout(function() {
+                     assert.isTrue(lnBaseControl._canUpdateItemsActions);
+                  }, 100);
+               }, 100);
+            }, 100)
+            lnBaseControl._afterUpdate(lnCfg);
+         });
+         it('locking by DnD', async function () {
+            lnBaseControl._listViewModel.getItemDataByItem = function() {};
+            lnBaseControl._listViewModel.setDragItemData = function() {};
+            lnBaseControl._itemDragData = {
+               dispItem: {}
+            };
+            lnBaseControl._dragStart({}, {});
+            lnBaseControl._onHoveredItemChanged({}, {});
+            assert.isFalse(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._dragEnd({}, {});
+            assert.isTrue(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._afterUpdate(lnCfg);
+         });
 
-         assert.isFalse(lnBaseControl._canUpdateItemsActions);
-         lnBaseControl._itemMouseEnter({});
-         assert.isTrue(lnBaseControl._canUpdateItemsActions);
-         lnBaseControl._afterUpdate(lnCfg);
-         assert.isFalse(lnBaseControl._canUpdateItemsActions);
-
-         lnBaseControl._context.isTouch.isTouch = true;
-         lnBaseControl._itemMouseEnter({});
-         assert.isFalse(lnBaseControl._canUpdateItemsActions);
       });
 
       it('List navigation by keys and after reload', function(done) {
@@ -2368,7 +2420,7 @@ define([
          assert.strictEqual(notifiedEntity, goodDragObject.entity);
       });
 
-      it('itemMouseDown prevents native drag synchronously', function() {
+      it('native drag prevent only by native "dragstart" event', function() {
          let isDefaultPrevented = false;
 
          const
@@ -2409,15 +2461,20 @@ define([
                   closest: () => false
                },
                preventDefault: () => isDefaultPrevented = true
+            },
+            fakeDragStart = {
+               preventDefault: () => isDefaultPrevented = true
             };
 
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
+         // по mouseDown нельзя вызывать preventDefault, иначе сломается фокусировка
          ctrl._itemMouseDown({}, { key: 1 }, fakeMouseDown);
+         assert.isFalse(isDefaultPrevented);
 
-         // getItemsBySelection будет асинхронный, preventDefault все равно должен
-         // быть вызван синхронно
+          // По dragStart нужно вызывать preventDefault
+         ctrl._nativeDragStart(fakeDragStart);
          assert.isTrue(isDefaultPrevented);
       });
 
