@@ -1,5 +1,6 @@
 import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
+import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import {parse as load} from 'Core/library';
 
 /**
@@ -43,8 +44,13 @@ const BASE_OPTIONS = {
 };
 
 const _private = {
+    clearPopupIds(self) {
+        if (!self.isOpened() && self._options.displayMode === 'single') {
+            self._popupId = null;
+        }
+    },
     compatibleOpen(self, popupOptions) {
-        const config =  BaseOpener.getConfig({}, {}, popupOptions);
+        const config = BaseOpener.getConfig({}, {}, popupOptions);
         return Promise.all([
             BaseOpener.requireModule('Controls/compatiblePopup:BaseOpener'),
             BaseOpener.requireModule('SBIS3.CONTROLS/Utils/InformationPopupManager'),
@@ -88,7 +94,7 @@ const _private = {
 };
 
 const Notification = BaseOpener.extend({
-
+    _popupId: null,
     /**
      * Метод открытия нотификационного окна.
      * Повторный вызов этого метода вызовет переририсовку контрола.
@@ -128,6 +134,10 @@ const Notification = BaseOpener.extend({
      * @see closePopup
      */
 
+    isOpened(): boolean {
+        return !!ManagerController.find(this._popupId);
+    },
+
     /*
      * Open dialog popup.
      * @function Controls/_popup/Opener/Notification#open
@@ -135,11 +145,15 @@ const Notification = BaseOpener.extend({
      */
 
     open(popupOptions) {
-        let config = {...this._options, ...popupOptions};
-        return Notification.openPopup(config);
+        const config = {...this._options, ...popupOptions};
+        _private.clearPopupIds(this);
+        return Notification.openPopup(config, this._popupId).then((popupId) => {
+            this._popupId = popupId;
+            return popupId;
+        });
     },
     close() {
-        Notification.superclass.close.apply(this, arguments);
+        Notification.closePopup(this._popupId);
         _private.compatibleClose(this);
     }
 });
@@ -182,7 +196,7 @@ const Notification = BaseOpener.extend({
  * @return {Promise<string>} Returns id of popup. This id used for closing popup.
 */
 
-Notification.openPopup = (config: object): Promise<string> => {
+Notification.openPopup = (config: object, id: string): Promise<string> => {
     return new Promise((resolve) => {
         if (isNewEnvironment()) {
             if (!config.hasOwnProperty('opener')) {
@@ -190,7 +204,7 @@ Notification.openPopup = (config: object): Promise<string> => {
             }
             const newConfig = BaseOpener.getConfig({}, BASE_OPTIONS, config);
             BaseOpener.requireModules(config, POPUP_CONTROLLER).then((result) => {
-                BaseOpener.showDialog(result[0], newConfig, result[1]).then((popupId: string) => {
+                BaseOpener.showDialog(result[0], newConfig, result[1], id).then((popupId: string) => {
                     resolve(popupId);
                 });
             });
