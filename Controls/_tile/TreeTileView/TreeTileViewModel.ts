@@ -122,6 +122,11 @@ var TreeTileViewModel = TreeViewModel.extend({
         TreeTileViewModel.superclass.setRoot.apply(this, arguments);
     },
 
+    setNodesHeight: function(nodesHeight) {
+        this._options.nodesHeight = nodesHeight;
+        this._nextModelVersion();
+    },
+
     destroy: function () {
         this._tileModel.unsubscribe('onListChange', this._onListChangeFn);
         this._tileModel.destroy();

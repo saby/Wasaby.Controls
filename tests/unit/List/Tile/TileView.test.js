@@ -18,7 +18,7 @@ define(['Controls/_tile/TileView/TileView',
          var
             treeTileViewModel = new TreeTileViewModel({
                tileMode: 'static',
-               itemsHeight: 300,
+               tileHeight: 300,
                imageProperty: 'image',
                keyProperty: 'id',
                parentProperty: 'parent',
@@ -442,7 +442,7 @@ define(['Controls/_tile/TileView/TileView',
       it('_beforeUpdate', function() {
          tileView._beforeUpdate({
             tileMode: 'dynamic',
-            itemsHeight: 200
+            tileHeight: 200
          });
          assert.equal(tileView._listModel.getTileMode(), 'dynamic');
          assert.equal(tileView._listModel.getItemsHeight(), 200);

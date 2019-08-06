@@ -5,6 +5,12 @@ import 'css!theme?Controls/tile';
 
 var TreeTileView = TileView.extend({
     _defaultItemTemplate: defaultItemTpl,
+    _beforeUpdate: function (newOptions) {
+        if (this._options.nodesHeight !== newOptions.nodesHeight) {
+            this._listModel.setNodesHeight(newOptions.nodesHeight);
+        }
+        TreeTileView.superclass._beforeUpdate.apply(this, arguments);
+    },
     _onTileViewKeyDown: function (event) {
         // Pressing the left or right key allows you to expand / collapse an element.
         // In tileView mode, expand/collapse is not allowed.
