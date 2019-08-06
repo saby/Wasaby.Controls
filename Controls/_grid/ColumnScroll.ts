@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import ColumnScrollTpl = require('wml!Controls/_grid/ColumnScroll');
 import 'css!theme?Controls/grid';
-import Env = require('Env/Env');
+import { detection } from 'Env/Env';
 import Entity = require('Types/entity');
 import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
 
@@ -117,26 +117,6 @@ const
             self._offsetForHScroll += ResultsGroup[0].offsetHeight;
          }
       },
-      setOffsetForHScrollPartialSup: function(self) {
-         var container = self._children.content;
-         var HeaderFirstCell = container.getElementsByClassName('controls-Grid__header-cell')[0];
-         var maxHeight = 0;
-         if (HeaderFirstCell) {
-            maxHeight = HeaderFirstCell.offsetHeight;
-            if (self._fixedColumnsWidth) {
-               self._leftOffsetForHScroll = self._fixedColumnsWidth;
-            } else if (self._options.multiSelectVisibility !== 'hidden') {
-               self._leftOffsetForHScroll = HeaderFirstCell.offsetWidth + container.getElementsByClassName('controls-Grid__header-cell')[1].offsetWidth;
-            } else {
-               self._leftOffsetForHScroll = HeaderFirstCell.offsetWidth;
-            }
-         }
-         self._offsetForHScroll = maxHeight;
-         if (self._options.resultsPosition === 'top') {
-            const ResultsFirstCell = container.getElementsByClassName('controls-Grid__results-cell')[0];
-            self._offsetForHScroll += ResultsFirstCell.offsetHeight;
-         }
-      }
    },
    ColumnScroll = Control.extend({
       _template: ColumnScrollTpl,
@@ -150,9 +130,11 @@ const
       _transformSelector: '',
       _offsetForHScroll: 0,
       _leftOffsetForHScroll: 0,
+      _isOldIe: false,
 
       _beforeMount() {
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
+         this._isOldIe = detection.isIE ? true : false;
       },
 
       _afterMount() {
@@ -190,9 +172,7 @@ const
       },
 
       _setOffsetForHScroll() {
-         if (this._options.listModel.isPartialGridSupport()) {
-            _private.setOffsetForHScrollPartialSup(this);
-         } else {
+         if (!this._isOldIe) {
             _private.setOffsetForHScroll(this);
          }
       },
