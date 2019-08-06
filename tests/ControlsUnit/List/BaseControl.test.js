@@ -1276,15 +1276,16 @@ define([
       it('_onViewPortResize, setLoadOffset', function() {
          let bc = new lists.BaseControl();
          bc._needScrollCalculation = true;
-         bc._loadOffset = {top: 100, bottom: 100, isNull: false};
-         bc._children = triggers;
-         bc._onViewPortResize(bc, 600);
-         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200, isNull: false});
+         bc._loadOffset = {top: 100, bottom: 100};
+         bc._children = triggers;;
+         lists.BaseControl._private.onScrollShow(bc);
+         bc._onViewPortResize(bc, 600)
+         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200});
 
          //Если контрол в состоянии ошибки, то не нужно ничего делать
          bc.__error = true;
-         bc._setLoadOffset(100, 100, false);
-         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200, isNull: false});
+         bc._setLoadOffset(100, 100);
+         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200});
 
       });
 
@@ -1307,14 +1308,14 @@ define([
          baseControl._children = triggers;
          baseControl.saveOptions(cfg);
          baseControl._needScrollCalculation = true;
-         baseControl._loadOffset = {top: 0, bottom: 0, isNull: false};
+         baseControl._loadOffset = {top: 0, bottom: 0};
 
          lists.BaseControl._private.onScrollHide(baseControl);
-         assert.deepEqual({top: 0, bottom: 0, isNull: true}, baseControl._loadOffset);
+         assert.deepEqual({top: 0, bottom: 0}, baseControl._loadOffset);
          assert.isFalse(baseControl._isScrollShown);
 
          lists.BaseControl._private.onScrollShow(baseControl);
-         assert.deepEqual({top: 100, bottom: 100, isNull: false}, baseControl._loadOffset);
+         assert.deepEqual({top: 100, bottom: 100}, baseControl._loadOffset);
          assert.isTrue(baseControl._isScrollShown);
 
       });
@@ -2418,7 +2419,7 @@ define([
          assert.strictEqual(notifiedEvent, 'dragEnter');
          assert.strictEqual(notifiedEntity, goodDragObject.entity);
       });
-      
+
       it('itemMouseDown prevents native drag synchronously', function() {
          let isDefaultPrevented = false;
 
