@@ -163,6 +163,42 @@ define(
 
             assert.equal(suggestList._items, items);
          });
+
+         it('_private:checkContext', function() {
+            let suggestList = new suggestPopup.ListContainer();
+            let contextObject = {
+               suggestOptionsField: {
+                  options: {
+                     dialogMode: true
+                  }
+               }
+            };
+
+            suggestPopup.ListContainer._private.checkContext(suggestList, contextObject);
+            assert.isTrue(suggestList._navigation === undefined);
+
+            contextObject.suggestOptionsField.options.navigation = {
+               source: 'page',
+               view: 'page',
+               sourceConfig: {
+                  pageSize: 2,
+                  page: 0
+               }
+            };
+            let expectedNavigation = {
+               source: 'page',
+               view: 'infinity',
+               viewConfig: {
+                  pagingMode: true
+               },
+               sourceConfig: {
+                  pageSize: 25,
+                  page: 0
+               }
+            };
+            suggestPopup.ListContainer._private.checkContext(suggestList, contextObject);
+            assert.deepStrictEqual(suggestList._navigation, expectedNavigation);
+         });
       });
    }
 );
