@@ -78,8 +78,8 @@
       "path": "./pages/sandbox"
     },
     {
-      "name": "tests",
-      "path": "./tests/unit"
+      "name": "ControlsUnit",
+      "path": "./tests/ControlsUnit"
     },
     {
       "name": "Application",
