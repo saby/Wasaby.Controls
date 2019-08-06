@@ -50,7 +50,8 @@ import {IData, IDecorator} from "Types/source";
 
 /**
  * @name Controls/_lookupPopup/Container#selectionFilter
- * @cfg {Function} Функция, которая фильтрует selectedItems переданные из Controls/lookupPopup:Controller для конкретного списка.
+ * @cfg {Function} Функция обратного вызова, с помощью которой происходит фильтрация выбранных записей для конкретного списка.
+ * Функция должна вернуть true если запись относится к данному списку или false, если не относится.
  * @remark По умолчанию опция selectionFilter установлена как функция, которая всегда возвращает true.
  * @example
  *

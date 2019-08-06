@@ -81,7 +81,7 @@ import {showType} from 'Controls/Utils/Toolbar';
 
 /**
  * @name Controls/_lookupPopup/List/Container#itemActionVisibilityCallback
- * @cfg {function} Функция обратного вызова, с помощью которой происходит фильтрация выбранных записей для конкретного списка. Функция должна вернуть true если запись относится к данному списку или false, если не относится.
+ * @cfg {function} Функция управления видимостью операций над записью.
  * @param {ItemAction} action Объект с настройкой действия.
  * @param {Types/entity:Model} item Экземпляр записи, действие над которой обрабатывается.
  * @returns {Boolean} Определяет, должна ли операция отображаться.
