@@ -42,8 +42,8 @@ define('Controls/interface/ISelectedCollection', [
     * @name Controls/interface/ISelectedCollection#multiSelect
     * @cfg {Boolean} Включает режим множественного выбора значений.
     * @default false
-    * @variant true Можно выбрать сколько угодно много значений.
-    * @variant false После выбора первого значения, поле ввода пропадает. При выборе нового значения из справочника, оно перетирает старое.
+    * @variant true Разрешён множественный выбор значений.
+    * @variant false Можно выбрать только одно занчение. При выборе нового значения из справочника, оно перетирает старое.
     *
     * @example
     * WML:

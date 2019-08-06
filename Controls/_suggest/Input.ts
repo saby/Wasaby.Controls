@@ -5,7 +5,9 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import 'css!theme?Controls/suggest';
 
 /**
- * Поле ввода с автодополнением.
+ * Поле ввода с автодополнением это одострочное поле ввода,
+ * которое помогает пользователю ввести текст,
+ * предлагая подходящие варианты по первым набранным символам.
  *
  * <a href="/materials/demo-ws4-input">Демо-пример</a>.
  *
