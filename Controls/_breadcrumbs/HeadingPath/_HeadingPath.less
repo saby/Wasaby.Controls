@@ -39,8 +39,10 @@
 
 .controls-BreadCrumbsPath__backButtonArrow {
    .icon(@font-size_Path-backButtonArrow);
+   height: 100%;
    position: absolute;
    align-self: center;
+   align-items: center;
    background-color: @background-color_Path-backButtonArrow;
    right: 0;
    display: none;
@@ -77,7 +79,7 @@
 .controls-BreadCrumbsPath__homeContainer_withoutBackButton {
    margin-left: @spacing_Path-between-home-and-backButton;
    &:before {
-      font-size:@font-size_BreadCrumbs-homeContainer;
+      font-size:@font-size_BreadCrumbs-baseline;
    }
 }
 
@@ -105,10 +107,10 @@
 .ws-is-no-touch {
    .controls-BreadCrumbsPath__backButtonArrow:hover {
       color: @color_Path-backButtonArrow_hovered;
-      display: inline-block;
+      display: inline-flex;
    }
    .controls-BreadCrumbsPath__backButton__wrapper:hover .controls-BreadCrumbsPath__backButtonArrow {
-      display: inline-block;
+      display: inline-flex;
    }
 
    .controls-BreadCrumbsPath__home:hover {
