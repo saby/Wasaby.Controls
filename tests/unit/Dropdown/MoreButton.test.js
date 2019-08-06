@@ -48,6 +48,7 @@ define(
             assert.strictEqual(actualOptions.templateOptions.option1, '1');
             assert.strictEqual(actualOptions.templateOptions.option2, '2');
             assert.isOk(actualOptions.templateOptions.handlers.onSelectComplete);
+            assert.isFalse(actualOptions.hasOwnProperty('opener'));
 
             actualOptions.templateOptions.handlers.onSelectComplete();
             assert.isTrue(selectCompleted);

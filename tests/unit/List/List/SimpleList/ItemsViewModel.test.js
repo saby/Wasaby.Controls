@@ -474,5 +474,31 @@ define([
             assert.strictEqual(afterNextVersion, itemData, changesType + ' change should not reset getItemDataByItem cache');
          });
       });
+
+      it('isAllGroupsCollapsed', function () {
+         const
+             cfg = {
+                items: [
+                   {
+                      id: 1,
+                      group: '1'
+                   },
+                   {
+                      id: 2,
+                      group: '2'
+                   }
+                ],
+                keyProperty: 'id',
+                groupingKeyCallback: (item) => {
+                   return item.group;
+                },
+                collapsedGroups: ['1', '2']
+             },
+             model = new list.ItemsViewModel(cfg);
+
+         assert.isTrue(model.isAllGroupsCollapsed());
+         model.setCollapsedGroups(['1']);
+         assert.isFalse(model.isAllGroupsCollapsed());
+      });
    })
 });

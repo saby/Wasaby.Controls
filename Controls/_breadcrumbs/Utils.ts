@@ -17,7 +17,7 @@ var _private = {
         if (initialized) {
             return;
         }
-        ARROW_WIDTH = getWidthUtil.getWidth('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward"></span>');
+        ARROW_WIDTH = getWidthUtil.getWidth('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForwardBsLine"></span>');
         BREAD_CRUMB_MIN_WIDTH = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title_min"></div>') + ARROW_WIDTH;
         DOTS_WIDTH = getWidthUtil.getWidth(itemTemplate({
             itemData: {

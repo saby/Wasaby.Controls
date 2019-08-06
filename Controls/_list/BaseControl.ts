@@ -314,7 +314,13 @@ var _private = {
     prepareFooter: function(self, navigation, sourceController) {
         var
             loadedDataCount, allDataCount;
-        self._shouldDrawFooter = !!(navigation && navigation.view === 'demand' && sourceController.hasMoreData('down'));
+
+        if (navigation && navigation.view === 'demand' && sourceController.hasMoreData('down')) {
+            self._shouldDrawFooter = self._options.groupingKeyCallback ? !self._listViewModel.isAllGroupsCollapsed() : true;
+        } else {
+            self._shouldDrawFooter = false;
+        }
+
         if (self._shouldDrawFooter) {
             loadedDataCount = sourceController.getLoadedDataCount();
             allDataCount = sourceController.getAllDataCount();
@@ -980,6 +986,7 @@ var _private = {
     groupsExpandChangeHandler: function(self, changes) {
         self._notify(changes.changeType === 'expand' ? 'groupExpanded' : 'groupCollapsed', [changes.group], { bubbling: true });
         self._notify('collapsedGroupsChanged', [changes.collapsedGroups]);
+        _private.prepareFooter(self, self._options.navigation, self._sourceController);
         if (self._options.historyIdCollapsedGroups || self._options.groupHistoryId) {
             GroupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups || self._options.groupHistoryId);
         }
@@ -1347,6 +1354,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._hasItemActions) {
             this._canUpdateItemsActions = true;
         }
+        if (this._options.itemsDragNDrop) {
+            this._container.addEventListener('dragstart', this._nativeDragStart);
+        }
         if (this._virtualScroll) {
             this._setScrollItemContainer();
         }
@@ -1500,6 +1510,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _beforeUnmount: function() {
         if (this._focusTimeout) {
             clearTimeout(this._focusTimeout);
+        }
+        if (this._options.itemsDragNDrop) {
+            this._container.removeEventListener('dragstart', this._nativeDragStart);
         }
         if (this._sourceController) {
             this._sourceController.destroy();
@@ -1864,10 +1877,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             dragStartResult;
 
         if (!this._options.readOnly && this._options.itemsDragNDrop && !domEvent.target.closest('.controls-DragNDrop__notDraggable')) {
-            // preventDefault нужно делать здесь, потому что getItemsBySelection может отрабатывать асинхронно
-            // (например при массовом выборе всех записей), тогда preventDefault в startDragNDrop сработает
-            // слишком поздно, браузер уже включит нативное перетаскивание
-            domEvent.preventDefault();
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
             selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
@@ -1888,7 +1897,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.loadToDirectionIfNeed(this, 'down');
     },
 
-    _dragStart: function(event, dragObject) {
+    _nativeDragStart: function(event) {
+        // preventDefault нужно делать именно на нативный dragStart:
+        // 1. getItemsBySelection может отрабатывать асинхронно (например при массовом выборе всех записей), тогда
+        //    preventDefault в startDragNDrop сработает слишком поздно, браузер уже включит нативное перетаскивание
+        // 2. На mouseDown ставится фокус, если на нём сделать preventDefault - фокус не будет устанавливаться
+        event.preventDefault();
+    },
+
+    _dragStart: function(event, dragObject, domEvent) {
         this._savedCanUpdateItemsActions = this._canUpdateItemsActions || this._savedCanUpdateItemsActions;
         this._listViewModel.setDragEntity(dragObject.entity);
         this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._itemDragData.dispItem));

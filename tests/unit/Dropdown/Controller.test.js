@@ -128,28 +128,43 @@ define(
             });
          });
 
-         it('_keyUp', function() {
+         it('_keyDown', function() {
             let dropdownController = getDropdownController(config),
-               closed = false;
+               closed = false, isOpened = true, isStopped = false;
             dropdownController._children = {
                DropdownOpener: {
+                  isOpened: () => {return isOpened;},
                   close: () => {closed = true; }
                }
             };
             let event = {
                nativeEvent: {
                   keyCode: 28
-               }
+               },
+               stopPropagation: () => {isStopped = true;}
             };
 
             // Тестируем нажатие не esc
-            dropdownController._keyUp(event);
+            dropdownController._keyDown(event);
             assert.isFalse(closed);
+            assert.isFalse(isStopped);
 
-            // Тестируем нажатие esc
+            // Тестируем нажатие esc, когда выпадающий список открыт
+            isStopped = false;
             event.nativeEvent.keyCode = 27;
-            dropdownController._keyUp(event);
+            dropdownController._keyDown(event);
             assert.isTrue(closed);
+            assert.isTrue(isStopped);
+
+            // Тестируем нажатие esc, когда выпадающий список закрыт
+            isOpened = false;
+
+            isStopped = false;
+            closed = false;
+            event.nativeEvent.keyCode = 27;
+            dropdownController._keyDown(event);
+            assert.isFalse(closed);
+            assert.isFalse(isStopped);
          });
 
          it('before mount filter', (done) => {
