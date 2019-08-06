@@ -116,7 +116,7 @@ class ResizingLine extends Control<IContainerOptions, void> {
             width = Math.abs(offset) + 'px';
          } else {
             offset = -Math.min(Math.abs(offsetX), Math.abs(minOffset));
-            left = this._clientRect.left + offset + 'px';
+            left = this._clientRect.left + offset + controlWidth + 'px';
             width = Math.abs(offset) + 'px';
          }
       }
