@@ -53,21 +53,21 @@ export default interface ISource {
  *             idProperty: 'key',
  *             data: [
  *                {
- *                   id: '1',
+ *                   key: '1',
  *                   title: 'Ярославль',
  *                   icon: 'icon-small icon-Yar icon-done',
  *                   parent: null,
  *                   '@parent': true
  *                },
  *                {
- *                   id: '2',
+ *                   key: '2',
  *                   title: 'Рыбинск',
  *                   icon: 'icon-small icon-Ryb icon-done',
  *                   parent: 1,
  *                   '@parent': false
  *                },
  *                {
- *                   id: '3',
+ *                   key: '3',
  *                   title: 'St-Petersburg',
  *                   icon: 'icon-small icon-SPB icon-done',
  *                   parent: null,
