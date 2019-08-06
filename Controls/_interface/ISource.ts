@@ -54,15 +54,24 @@ export default interface ISource {
  *             data: [
  *                {
  *                   key: '1',
- *                   title: 'Yaroslavl'
+ *                   title: 'Ярославль',
+ *                   icon: 'icon-small icon-Yar icon-done',
+ *                   parent: null,
+ *                   '@parent': true
  *                },
  *                {
  *                   key: '2',
- *                   title: 'Moscow'
+ *                   title: 'Рыбинск',
+ *                   icon: 'icon-small icon-Ryb icon-done',
+ *                   parent: 1,
+ *                   '@parent': false
  *                },
  *                {
  *                   key: '3',
- *                   title: 'St-Petersburg'
+ *                   title: 'St-Petersburg',
+ *                   icon: 'icon-small icon-SPB icon-done',
+ *                   parent: null,
+ *                   '@parent': true
  *                }
  *             ]
  *          })
