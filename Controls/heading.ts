@@ -1,5 +1,7 @@
 /**
  * Библиотека заголовков.
+ * Заголовки поддерживают различные стили отображения и могут состоять из нескольких частей.
+ * Типы заголовков и примеры их конфигурации доступны в <a href='/doc/platform/developmentapl/interface-development/controls/heading/'>руководстве разработчика</a>.
  * @library Controls/heading
  * @includes Title Controls/_heading/Heading
  * @includes Back Controls/_heading/Back
