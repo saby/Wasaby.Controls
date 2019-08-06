@@ -2,7 +2,6 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_list/ItemActions/ItemActionsControl');
 import {showType} from 'Controls/Utils/Toolbar';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
-import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import ControlsConstants = require('Controls/Constants');
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
@@ -67,9 +66,8 @@ var _private = {
             for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                 var
                     itemData = options.listModel.getCurrent(),
-                    item = ItemsUtil.checkBreadCrumbsAndGetItem(itemData);
                 if (item !== ControlsConstants.view.hiddenGroup && item.get) {
-                    _private.updateItemActions(self, item, options);
+                    _private.updateItemActions(self, itemData.actionsItem, options);
                 }
             }
             self._isActual = true;
@@ -159,8 +157,7 @@ var ItemActionsControl = Control.extend({
 
     _onItemActionsClick: function(event, action, itemData) {
         aUtil.itemActionsClick(this, event, action, itemData, this._options.listModel);
-        let item = ItemsUtil.checkBreadCrumbsAndGetItem(itemData);
-        this.updateItemActions(item);
+        this.updateItemActions(itemData.actionsItem);
         this._options.listModel.setMarkedKey(itemData.key);
     },
 

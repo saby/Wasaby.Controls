@@ -18,6 +18,12 @@ var
          }
          return filter;
       },
+      getActionsItem(item) {
+          if (!!item.forEach) {
+              return SearchViewModel.superclass.getActionsItem.call(item[item.length - 1]);
+          }
+          return SearchViewModel.superclass.getActionsItem.call(item);
+      }
       getItemActions(item) {
          if (!!item.forEach) {
             return SearchViewModel.superclass.getItemActions.call(this, item[item.length - 1]);
@@ -40,6 +46,7 @@ var
 
          // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
          data.breadCrumbs = !!data.item.forEach;
+         data.actionsItem = this.getActionsItem(data.item);
          data.resolveItemTemplate = function(itemData) {
             if (!itemData.breadCrumbs && self._options.itemTemplate) {
                return self._options.itemTemplate;

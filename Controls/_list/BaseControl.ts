@@ -1678,15 +1678,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newKey);
             this._listViewModel.setActiveItem(itemData);
         }
-        let item = ItemsUtil.checkBreadCrumbsAndGetItem(itemData);
+        let actionsItem = this.getViewModel().getActionsItem(item)
         if (direction === 'left' && (this._options.itemActions || this._options.itemActionsProperty)) {
-            this._children.itemActions.updateItemActions(item);
+            this._children.itemActions.updateItemActions(actionItem);
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
-            itemData.itemActions = this.getViewModel().getItemActions(item);
+            itemData.itemActions = this.getViewModel().getItemActions(actionItem);
         }
         if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
-            this._notify('itemSwipe', [item, childEvent]);
+            this._notify('itemSwipe', [actionsItem, childEvent]);
         }
     },
 

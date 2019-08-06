@@ -138,16 +138,13 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent._listViewModelCached = true;
         }
 
-        let dispItemContents = itemsModelCurrent.dispItem.getContents();
-        dispItemContents = dispItemContents instanceof Array ? dispItemContents[dispItemContents.length - 1] : dispItemContents;
-
-
         itemsModelCurrent.isMenuShown = this._menuState === 'shown';
+        itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
         itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === _private.getItemByMarkedKey(this, this._markedKey);
         itemsModelCurrent.itemActions = this.getItemActions(itemsModelCurrent.item);
-        itemsModelCurrent.isActive = this._activeItem && dispItemContents === this.getActiveItem();
-        itemsModelCurrent.isSwiped = this._swipeItem && dispItemContents === this.getSwipeItem();
-        itemsModelCurrent.isRightSwiped = this._rightSwipedItem && dispItemContents === this.getRightSwipedItem();
+        itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
+        itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
+        itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
         itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
         itemsModelCurrent.searchValue = this._options.searchValue;
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
@@ -313,12 +310,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     getSwipeItem: function() {
-        let item = ItemsUtil.checkBreadCrumbsAndGetItem(this._swipeItem);
-        return item;
-    },
-    getRightSwipedItem: function() {
-        let item = ItemsUtil.checkBreadCrumbsAndGetItem(this._rightSwipedItem);
-        return item;
+        return this._swipeItem.item;
     },
 
     setActiveItem: function(itemData) {
@@ -528,7 +520,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _prepareDisplayItemForAdd: function(item) {
         return ItemsUtil.getDefaultDisplayItem(this._display, item);
     },
-
+    getActionsItem: function(item) {
+      return item;
+    },
     getItemActions: function(item) {
         const id = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
         return this._actions[id];
@@ -540,8 +534,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     getActiveItem: function() {
-        let item = ItemsUtil.checkBreadCrumbsAndGetItem(this._activeItem);
-        return item;
+        return this._activeItem;
     },
 
     setItemTemplateProperty: function(itemTemplateProperty) {

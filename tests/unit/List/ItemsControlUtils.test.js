@@ -73,19 +73,6 @@ define(['Controls/list', 'Types/collection', 'Types/source', 'Core/core-instance
                assert.equal('Первый', value, 'getPropertyValue doesn\'t return value of the flag/enum item');
             });
 
-            it('checkBreadCrumbsAndGetItem', function() {
-               let itemData = {
-                  item: {id: 1}
-               };
-               assert.deepEqual({id: 1}, list.ItemsUtil.checkBreadCrumbsAndGetItem(itemData));
-               itemData = {
-                  breadCrumbs: true,
-                  item: [{id: 1},
-                         {id: 2}]
-               };
-               assert.deepEqual({id: 2}, list.ItemsUtil.checkBreadCrumbsAndGetItem(itemData));
-            });
-
             it('getDisplayItemById', function () {
                var rs = new collection.RecordSet({
                   rawData: data,
