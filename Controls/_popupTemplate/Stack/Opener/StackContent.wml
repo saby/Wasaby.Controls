@@ -1,4 +1,4 @@
-<div class="controls-Stack__content-wrapper {{_options.stackClassName}}" style="width: {{_options.stackWidth}}px;min-width: {{_options.stackMinWidth}}px;max-width: {{_options.stackMaxWidth}}px;">
+<div class="controls-Stack__content-wrapper controls-Stack__shadow {{_options.stackClassName}}" style="width: {{_options.stackWidth}}px;min-width: {{_options.stackMinWidth}}px;max-width: {{_options.stackMaxWidth}}px;">
    <ws:if data="{{_options.resizable}}">
       <Controls.dragnDrop:ResizingLine attr:style="position:absolute; left: 0; height: 100%; z-index: 2;"
                                        direction="reverse"
