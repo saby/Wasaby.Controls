@@ -37,7 +37,7 @@ var
               style += currentColumn.styleForLadder;
            }
            if (colspan) {
-                style += _private.getColspan(
+                style += _private.getColspanStyles(
                    itemData.multiSelectVisibility,
                    currentColumn.columnIndex,
                    itemData.columns.length
@@ -45,7 +45,13 @@ var
            }
            return style;
         },
-        getColspan(
+        getColspan(itemData, isColspaned: boolean = false): number {
+            if (!isColspaned) {
+                return 1;
+            }
+            return itemData.columns.length - (itemData.multiSelectVisibility === 'hidden' ? 0 : 1);
+        },
+        getColspanStyles(
            multiSelectVisibility: 'hidden' | 'visible' | 'onhover',
            columnIndex: number,
            columnsLength: number,
@@ -179,11 +185,17 @@ var
         },
 
         isFixedCell: function(params) {
-           const
-              hasMultiSelect = params.multiSelectVisibility !== 'hidden',
-              columnOffset = hasMultiSelect ? 1 : 0;
-           return params.columnIndex < (params.stickyColumnsCount + columnOffset);
+            const { multiSelectVisibility, stickyColumnsCount, columnIndex, rowIndex, isMultyHeader } = params;
+            const
+                hasMultiSelect = multiSelectVisibility !== 'hidden',
+                columnOffset = hasMultiSelect ? 1 : 0;
+            const isCellIndexLessTheFixedIndex = columnIndex < (stickyColumnsCount + columnOffset);
+            if (isMultyHeader !== undefined) {
+                return isCellIndexLessTheFixedIndex && rowIndex === 0;
+            }
+            return isCellIndexLessTheFixedIndex;
         },
+
 
         getHeaderZIndex: function(params) {
            return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
@@ -705,6 +717,8 @@ var
             if (this.isStickyHeader()) {
                headerColumn.zIndex = _private.getHeaderZIndex({
                   columnIndex: columnIndex,
+                  rowIndex,
+                  isMultyHeader: this._isMultyHeader,
                   multiSelectVisibility: this._options.multiSelectVisibility,
                   stickyColumnsCount: this._options.stickyColumnsCount
                });
@@ -717,6 +731,8 @@ var
             if (this._options.columnScroll) {
                 cellClasses += _private.getColumnScrollCellClasses({
                     columnIndex: columnIndex,
+                    rowIndex,
+                    isMultyHeader: this._isMultyHeader,
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
                 });
@@ -742,7 +758,7 @@ var
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             if (headerColumn.column.isBreadCrumbs) {
-               headerColumn.style = _private.getColspan(
+               headerColumn.style = _private.getColspanStyles(
                   this._options.multiSelectVisibility,
                   columnIndex,
                   this._headerRows[0].length,
@@ -827,7 +843,7 @@ var
         },
 
         getStyleForCustomResultsTemplate: function() {
-            return _private.getColspan(
+            return _private.getColspanStyles(
                this._options.multiSelectVisibility,
                0,
                this._columns.length
@@ -980,6 +996,10 @@ var
         setRowSpacing: function(rowSpacing) {
             //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             this._model.setRowSpacing(rowSpacing);
+        },
+
+        isAllGroupsCollapsed(): boolean {
+            return this._model.isAllGroupsCollapsed();
         },
 
         getColumns: function() {
@@ -1217,6 +1237,7 @@ var
             };
             current.isDrawActions = _private.isDrawActions;
             current.getCellStyle = _private.getCellStyle;
+            current.getColspan = _private.getColspan;
 
             current.getCurrentColumnKey = function() {
                 return self._columnsVersion + '_' +

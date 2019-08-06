@@ -88,6 +88,34 @@ define([
 
             sandbox.restore();
          });
+
+         it('should return correct styles for Android.', function() {
+            const
+               sandbox = sinon.createSandbox(),
+               component = createComponent(StickyHeader, { fixedZIndex: 2, position: 'top' });
+            let style;
+            sandbox.replace(StickyHeader._private, 'getComputedStyle', function() {
+               return { boxSizing: 'border-box', minHeight: '30px', paddingTop: '1px' };
+            });
+            component._context = {
+               stickyHeader: { top: 5 }
+            };
+            component._stickyHeadersHeight = {
+               top: 10
+            };
+            component._isMobileAndroid = true;
+
+            component._model = { fixedPosition: 'top' };
+            component._container = { style: { paddingTop: '' } };
+
+            style = component._getStyle();
+            assert.include(style, 'min-height:32px;');
+            assert.include(style, 'top: 13px;');
+            assert.include(style, 'margin-top: -2px;');
+            assert.include(style, 'padding-top: 3px;');
+
+            sandbox.restore();
+         });
       });
 
       describe('set top', function() {

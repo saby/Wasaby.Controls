@@ -34,6 +34,7 @@ define('Controls-demo/Decorator/Highlight',
                }
             };
             this._componentOptions = {
+               name: 'highlight',
                highlight: 'hello',
                text: 'Hello world!!!',
                searchMode: 'substring',

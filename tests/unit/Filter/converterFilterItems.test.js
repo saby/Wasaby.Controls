@@ -107,8 +107,10 @@ define(
                   viewMode: 'frequent'
                }
             ];
+            filterItems.clone = true;
             let actualFilterItems = Converter.convertToFilterSource(filterItems);
             assert.deepStrictEqual(actualFilterItems, filterItems);
+            assert.isTrue(actualFilterItems.clone);
          });
 
       });

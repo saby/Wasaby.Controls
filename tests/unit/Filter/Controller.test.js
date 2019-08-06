@@ -337,6 +337,32 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
 
          Filter._private.mergeFilterItems(items, history);
          assert.deepEqual(result, items);
+
+         items = [{
+            name: 'testId',
+            value: '',
+            textValue: '',
+            resetValue: '',
+            viewMode: 'frequent'
+         }];
+
+         history = [{
+            name: 'testId',
+            value: 'testValue',
+            resetValue: '',
+            textValue: 'textTextValue'
+         }];
+
+         result = [{
+            name: 'testId',
+            value: 'testValue',
+            textValue: 'textTextValue',
+            resetValue: '',
+            viewMode: 'frequent'
+         }];
+
+         Filter._private.mergeFilterItems(items, history);
+         assert.deepEqual(result, items);
       });
 
       it('_filterChanged', function() {
@@ -764,6 +790,22 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
          }
          assert.isTrue(errorCathed);
 
+      });
+
+      it('getCalculatedFilter', function() {
+         let filterButtonItems = [{id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: ''}];
+         let historyItems = [{id: 'testId', value: 'testValueFromHistory', textValue: 'testTextValueFromHistory'}];
+
+         return new Promise(function(resolve) {
+            Filter.getCalculatedFilter({
+               filterButtonSource: filterButtonItems,
+               historyItems: historyItems
+            }).addCallback(function(result) {
+               assert.equal(result.filterButtonItems[0].value, 'testValueFromHistory');
+               assert.equal(result.filterButtonItems[0].textValue, 'testTextValueFromHistory');
+               resolve();
+            });
+         });
       });
    });
 

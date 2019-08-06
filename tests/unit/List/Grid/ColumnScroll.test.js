@@ -119,6 +119,56 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          sccColumnScroll._afterUpdate(noMultiselectCfg);
          assert.strictEqual(sccColumnScroll._fixedColumnsWidth, 250);
       });
+
+      it('_afterMount with columnScrollStartPosition===end', function() {
+         const
+            cfg = {
+               multiSelectVisibility: 'visible',
+               stickyColumnsCount: 1,
+               columnScrollStartPosition: 'end'
+            },
+            endColumnScroll = new ColumnScroll(cfg);
+
+         endColumnScroll._children = {
+            contentStyle: {
+               innerHTML: ''
+            },
+            content: {
+               getElementsByClassName: () => {
+                  return [{
+                     scrollWidth: 500,
+                     offsetWidth: 250,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 20
+                        }
+                     },
+                     querySelector: function() {
+                        return {
+                           getBoundingClientRect: () => {
+                              return {
+                                 left: 44
+                              }
+                           },
+                           offsetWidth: 76
+                        };
+                     }
+                  }]
+               }
+            }
+         };
+
+         endColumnScroll.saveOptions(cfg);
+         endColumnScroll._afterMount(cfg);
+         assert.strictEqual(endColumnScroll._contentSize, 500);
+         assert.strictEqual(endColumnScroll._contentContainerSize, 250);
+         assert.strictEqual(endColumnScroll._fixedColumnsWidth, 100);
+
+         assert.strictEqual(endColumnScroll._scrollPosition, 250);
+         // no end shadow - columns are scrolled to the end
+         assert.strictEqual(endColumnScroll._shadowState, 'start');
+      });
+
       it('_afterUpdate: should update sizes if columns has been changed', function () {
          let clearColumnScroll = new ColumnScroll(cfg);
 

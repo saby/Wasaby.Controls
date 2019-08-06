@@ -287,7 +287,7 @@ import 'Controls/context';
                         setPropValue(item, 'visibility', visibility);
                      }
 
-                     if (item.hasOwnProperty('viewMode')) {
+                     if (viewMode !== undefined && item.hasOwnProperty('viewMode')) {
                         setPropValue(item, 'viewMode', viewMode);
                      }
                   }
@@ -354,7 +354,9 @@ import 'Controls/context';
             }
             def.callback({
                filter: calculatedFilter,
-               historyItems: items
+               historyItems: items,
+               filterButtonItems: tmpStorage._filterButtonItems,
+               fastFilterItems: tmpStorage._fastFilterItems
             });
             return items;
          }).addErrback(function(err) {

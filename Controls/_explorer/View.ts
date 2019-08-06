@@ -8,6 +8,7 @@ import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
 import {constants} from 'Env/Env';
 import keysHandler = require('Controls/Utils/keysHandler');
+import randomId = require('Core/helpers/Number/randomId');
 import 'css!theme?Controls/explorer';
 import 'Types/entity';
 import 'Controls/breadcrumbs';
@@ -278,6 +279,7 @@ import 'Controls/breadcrumbs';
       _dragOnBreadCrumbs: false,
       _hoveredBreadCrumb: undefined,
       _virtualScrolling: false,
+      _dragControlId: null,
 
       _beforeMount: function(cfg) {
          this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
@@ -297,6 +299,8 @@ import 'Controls/breadcrumbs';
                markedKey: null
             }
          };
+
+         this._dragControlId = randomId();
       },
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
@@ -324,8 +328,12 @@ import 'Controls/breadcrumbs';
          //TODO: Sometimes at the end of dnd, the parameter is not reset. Will be fixed by: https://online.sbis.ru/opendoc.html?guid=85cea965-2aa6-4f1b-b2a3-1f0d65477687
          this._hoveredBreadCrumb = undefined;
 
-         if (this._options.itemsDragNDrop && this._options.parentProperty && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')) {
-
+         if (
+            this._options.itemsDragNDrop &&
+            this._options.parentProperty &&
+            cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity') &&
+            dragObject.entity.dragControlId === this._dragControlId
+         ) {
             //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
             this._dragOnBreadCrumbs = _private.getRoot(this, this._options.root) !== _private.getDataRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
          }
@@ -406,4 +414,3 @@ import 'Controls/breadcrumbs';
    };
 
    export = Explorer;
-
