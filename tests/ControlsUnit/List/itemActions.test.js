@@ -307,8 +307,10 @@ define([
          };
          var instance = new lists.ItemActionsControl(cfg);
          instance.saveOptions(cfg);
+         var item = {};
          var fakeItemData = {
-            item: {},
+            actionsItem: item,
+            item: item,
             index: 0,
             key: 2
          };
@@ -355,6 +357,7 @@ define([
                 get: () => 1
              },
              fakeItemData = {
+                actionsItem: fakeItem,
                 item: fakeItem,
                 index: 0,
                 key: 2
