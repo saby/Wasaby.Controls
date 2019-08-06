@@ -4,6 +4,19 @@ import 'css!theme?Controls/popup';
 
 /**
  *
+ * Показывает коллекцию элементов в две колонки в всплывающем окне.
+ * Используется в Controls/lookup:Input, Controls/lookup:Button
+ *
+ * @class Controls/_lookupPopup/SelectedCollection/Popup
+ * @extends Core/Control
+ * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
+ * @control
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+/*
+ *
  * Shows a collection of items with delete button in two columns.
  * Used in Controls/lookup:Input, Controls/lookup:Button
  *
