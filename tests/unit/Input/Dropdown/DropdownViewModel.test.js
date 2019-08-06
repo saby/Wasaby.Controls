@@ -275,6 +275,32 @@ define(
             });
          });
 
+         it('isGroupNext', function() {
+            let newConfig = {
+               keyProperty: 'id',
+               items: new collectionLib.RecordSet({
+                  idProperty: 'id',
+                  rawData: [
+                     { id: 'first', title: 'Запись 1', group: '1' },
+                     { id: 'second', title: 'Запись 2', group: '1' },
+                     { id: 'third', title: 'Запись 3', group: '2' },
+                     { id: 'fourth', title: 'Запись 4', group: '2' }
+                  ]
+               })
+            };
+            newConfig.groupingKeyCallback = (item) => {
+               return item.get('group');
+            };
+            let viewModel = new DropdownViewModel(newConfig);
+            assert.isFalse(viewModel.isGroupNext());
+            viewModel.goToNext();
+            assert.isFalse(viewModel.isGroupNext());
+            viewModel.goToNext();
+            assert.isTrue(viewModel.isGroupNext());
+            viewModel.goToNext();
+            assert.isFalse(viewModel.isGroupNext());
+         });
+
          it('_private.isHistoryItem', () => {
             var historyItem = new entity.Model({rawData: {
                pinned: true
