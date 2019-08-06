@@ -15,7 +15,7 @@ define('Controls/interface/ISelectorDialog', [
 
    /**
     * @name Controls/interface/ISelectorDialog#selectorTemplate
-    * @cfg {SelectorTemplate[]} Конфиг справочника.
+    * @cfg {SelectorTemplate} Настройки окна выбора.
     * @example
     * В следующем примере создадем Controls.lookup:Input, ему указываем selectorTemplate, templateOptions и popupOptions.
     * WML:

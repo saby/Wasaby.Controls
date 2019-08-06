@@ -10,6 +10,93 @@ import collection = require('Types/collection');
  * @public
  * @author Капустин И.А.
  */
+
+/**
+ * @name Controls/_lookup/PlaceholderChooser#placeholders
+ * @cfg {Object} Подсказки для поля, которые выбираются с помощью {@link placeholderKeyCallback}
+ * Задаются, как обьект вида ключ - подсказка.
+ * @example
+ * WML:
+ * <Controls.lookup:PlaceholderChooser placeholderKeyCallback="{{_placeholderKeyCallback}}">
+ *     <ws:placeholders>
+ *         <ws:tasks>
+ *             Выберите <Controls.lookup:Link caption="производителя" on:click="_showSelectorCustomPlaceholder('tasks')"/>
+ *         </ws:tasks>
+ *         <ws:employees>
+ *             Выберите <Controls.lookup:Link caption="сотрудника" on:click="showSelectorCustomPlaceholder('employees')"/>
+ *         </ws:employees>
+ *     </ws:placeholders>
+ *     <ws:content>
+ *         <Controls.lookup:Input name='lookup'>
+ *             ...
+ *         </Controls.lookup:Input>
+ *     <ws:content>
+ * </Controls.lookup:PlaceholderChooser>
+ *
+ * TS:
+ * protected _beforeMount():void {
+ *    this._placeholderKeyCallback = this._placeholderKeyCallback.bind(this);
+ * }
+ *
+ * private _placeholderKeyCallback(items):string {
+ *      let placeholderKey;
+ *
+ *      if (items.at(0).get('isTask')) {
+ *          placeholderKey = 'tasks';
+ *      } else {
+ *          placeholderKey = 'employees';
+ *      }
+ *
+ *      return placeholderKey;
+ * }
+ *
+ * private _showSelectorCustomPlaceholder(event):void {
+ *     this._children.lookup.showSelector()
+ * }
+ */
+
+/**
+ * @name Controls/_lookup/PlaceholderChooser#placeholderKeyCallback
+ * @cfg {Function} Функция обратного вызова для получения идентификатора подскази.
+ * @example
+ * WML:
+ * <Controls.lookup:PlaceholderChooser placeholderKeyCallback="{{_placeholderKeyCallback}}">
+ *     <ws:placeholders>
+ *         <ws:tasks>
+ *             Выберите <Controls.lookup:Link caption="производителя" on:click="_showSelectorCustomPlaceholder('tasks')"/>
+ *         </ws:tasks>
+ *         <ws:employees>
+ *             Выберите <Controls.lookup:Link caption="сотрудника" on:click="showSelectorCustomPlaceholder('employees')"/>
+ *         </ws:employees>
+ *     </ws:placeholders>
+ *     <ws:content>
+ *         <Controls.lookup:Input name='lookup'>
+ *             ...
+ *         </Controls.lookup:Input>
+ *     <ws:content>
+ * </Controls.lookup:PlaceholderChooser>
+ *
+ * TS:
+ * protected _beforeMount():void {
+ *    this._placeholderKeyCallback = this._placeholderKeyCallback.bind(this);
+ * }
+ *
+ * private _placeholderKeyCallback(items):string {
+ *      let placeholderKey;
+ *
+ *      if (items.at(0).get('isTask')) {
+ *          placeholderKey = 'tasks';
+ *      } else {
+ *          placeholderKey = 'employees';
+ *      }
+ *
+ *      return placeholderKey;
+ * }
+ *
+ * private _showSelectorCustomPlaceholder(event):void {
+ *     this._children.lookup.showSelector()
+ * }
+ */
 /*
  * A wrapper over the "Lookup" that monitors changes to the selected entries, and on the basis of them gives one of the possible pre-formed "placeholders".
  * @class Controls/_lookup/PlaceholderChooser
