@@ -198,11 +198,11 @@ const Notification = BaseOpener.extend({
 
 Notification.openPopup = (config: object, id: string): Promise<string> => {
     return new Promise((resolve) => {
+        const newConfig = BaseOpener.getConfig({}, BASE_OPTIONS, config);
         if (isNewEnvironment()) {
-            if (!config.hasOwnProperty('opener')) {
-                config.opener = null;
+            if (!newConfig.hasOwnProperty('opener')) {
+                newConfig.opener = null;
             }
-            const newConfig = BaseOpener.getConfig({}, BASE_OPTIONS, config);
             BaseOpener.requireModules(config, POPUP_CONTROLLER).then((result) => {
                 BaseOpener.showDialog(result[0], newConfig, result[1], id).then((popupId: string) => {
                     resolve(popupId);
@@ -210,7 +210,7 @@ Notification.openPopup = (config: object, id: string): Promise<string> => {
             });
 
         } else {
-            _private.compatibleOpen(this, config);
+            _private.compatibleOpen(this, newConfig);
             resolve();
         }
 
