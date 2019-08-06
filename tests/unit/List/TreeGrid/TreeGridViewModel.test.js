@@ -324,5 +324,62 @@ define(['Controls/treeGrid',
          assert.deepEqual({}, treeGridViewModel._model._expandedItems);
 
       });
+      it('isDrawResults()', function() {
+
+         let initialColumns = [{
+            width: '1fr',
+            displayProperty: 'title'
+         }];
+
+         let
+            ladderViewModel = new treeGrid.ViewModel({
+            items: new collection.RecordSet({
+               idProperty: 'id',
+               rawData: [
+                  { id: 0, title: 'i0', date: '01 янв', parent: null, type: true },
+                  { id: 1, title: 'i1', date: '03 янв', parent: 0, type: null },
+                  { id: 2, title: 'i2', date: '03 янв', parent: 0, type: null },
+                  { id: 3, title: 'i3', date: '03 янв', parent: 0, type: null },
+                  { id: 4, title: 'i4', date: '01 янв', parent: null, type: true },
+               ]
+            }),
+            keyProperty: 'id',
+            nodeProperty: 'type',
+            parentProperty: 'parent',
+            columns: initialColumns,
+            ladderProperties: ['date']
+         });
+
+
+         ladderViewModel.getItems = () => ladderViewModel._model.getItems();
+         ladderViewModel.getDisplay = () => ({
+            getRoot: () => ({
+               getContents: () => null
+            })
+         })
+         assert.isTrue(ladderViewModel.isDrawResults())
+         ladderViewModel.getItems().removeAt(4);
+         assert.isFalse(ladderViewModel.isDrawResults())
+      });
    });
+   function MockedDisplayItem(cfg) {
+      var
+         self = this;
+      this._id = cfg.id;
+      this._isNode = cfg.isNode;
+      this.isNode = function() {
+         return this._isNode;
+      };
+      this.getContents = function() {
+         return {
+            getId: function() {
+               return self._id;
+            },
+            get: function() {
+               return self._isNode;
+            }
+         };
+      };
+   }
+
 });

@@ -9,7 +9,7 @@
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
             <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master">
-               <Controls.masterDetail:List selectedField="sourceType">
+               <Controls.masterDetail:List selectedField="sourceType" attr:class="controls-demo_MasterDetail_master_list">
                   <Controls.grid:View
                      source="{{_masterSource}}"
                      keyProperty="id"
@@ -58,7 +58,7 @@
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
             <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master">
-               <Controls.masterDetail:List selectedField="sourceType">
+               <Controls.masterDetail:List selectedField="sourceType" attr:class="controls-demo_MasterDetail_master_list">
                   <Controls.list:View
                      style="master"
                      keyProperty="id"
@@ -111,7 +111,7 @@
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
             <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master">
-               <Controls.masterDetail:List selectedField="sourceType">
+               <Controls.masterDetail:List selectedField="sourceType" attr:class="controls-demo_MasterDetail_master_list">
                   <Controls.treeGrid:View
                      source="{{_masterSource}}"
                      keyProperty="id"

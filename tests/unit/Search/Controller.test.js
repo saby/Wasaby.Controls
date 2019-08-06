@@ -196,6 +196,16 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          searchMod.Controller._private.searchStartCallback(controller, filter);
          assert.isTrue(controller._loading);
          assert.deepEqual(filter, { 'Разворот': 'С разворотом', 'usePages': 'full', 'test': 'testRootNode' });
+
+         //case 4. With root and startingWith='root'
+         controller._options.startingWith = 'root';
+         controller._root = 'testRootNode';
+         controller._loading = false;
+         filter = {
+            test: 'testRootNode'
+         };
+         searchMod.Controller._private.searchStartCallback(controller, filter);
+         assert.deepEqual(filter, { 'Разворот': 'С разворотом', 'usePages': 'full' });
       });
 
       it('_private.needUpdateSearchController', function() {

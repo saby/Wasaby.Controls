@@ -74,6 +74,10 @@ define([
          };
          lv._onItemClick({}, dispItem);
          assert.equal(notifyResult, dispItem.getContents(), 'Incorrect selected item before updating');
+
+         notifyResult = null;
+         lv._onItemClick({ preventItemEvent: true }, dispItem);
+         assert.isNull(notifyResult, '_onItemClick should ignore preventItemEvent events');
       });
 
       it('_beforeUpdate', function() {
@@ -242,6 +246,32 @@ define([
             done();
          }, 150); //150 === DEBOUNCE_HOVERED_ITEM_CHANGED
       });
+
+      it('_onItemMouseDown', function() {
+         const
+            model = new lists.ListViewModel({
+               items: data,
+               keyProperty: 'id',
+               markedKey: null
+            }),
+            cfg = {
+               listModel: model,
+               keyProperty: 'id',
+               markedKey: 2
+            },
+            lv = new lists.ListView(cfg);
+         lv.saveOptions(cfg);
+         lv._beforeMount(cfg);
+
+         const dispItem = lv._listModel._display.at(2);
+         let notifyResult = null;
+         lv._notify = function(e, args) {
+            notifyResult = args[0];
+         };
+         lv._onItemMouseDown({ preventItemEvent: true }, dispItem);
+         assert.isNull(notifyResult, '_onItemMouseDown should ignore preventItemEvent events');
+      });
+
       describe('_onItemContextMenu', function() {
          it('contextMenuVisibility: true', function() {
             var
