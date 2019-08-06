@@ -58,7 +58,7 @@ import collection = require('Types/collection');
 /**
  * @name Controls/_lookup/PlaceholderChooser#placeholderKeyCallback
  * @cfg {Function} Функция обратного вызова для получения идентификатора подскази.
- *  * @example
+ * @example
  * WML:
  * <Controls.lookup:PlaceholderChooser placeholderKeyCallback="{{_placeholderKeyCallback}}">
  *     <ws:placeholders>
