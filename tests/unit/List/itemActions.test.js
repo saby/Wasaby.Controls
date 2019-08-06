@@ -309,7 +309,7 @@ define([
          instance.saveOptions(cfg);
          var item = {};
          var fakeItemData = {
-            actionsItem = item,
+            actionsItem: item,
             item: item,
             index: 0,
             key: 2
