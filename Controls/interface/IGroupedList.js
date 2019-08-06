@@ -68,13 +68,13 @@ define('Controls/interface/IGrouped', [
 
    /**
     * @event Controls/interface/IGrouped#groupExpanded Происходит при развертывании группы.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
     */
 
    /**
     * @event Controls/interface/IGrouped#groupCollapsed Происходит при сворачивании группы.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
     */
 

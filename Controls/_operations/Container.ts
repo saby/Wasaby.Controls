@@ -25,7 +25,7 @@ import template = require('wml!Controls/_operations/Container/Container');
 
 /**
  * @event Controls/_operations/Container#listSelectedKeysChanged Происходит при изменении набора выбранных ключей.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array} selectedKeys Массив ключей выбранных элементов.
  * @param {Array} added Массив ключей, добавленных в выборку.
  * @param {Array} deleted Массив удаленных из выборки ключей.
@@ -33,7 +33,7 @@ import template = require('wml!Controls/_operations/Container/Container');
 
 /*
  * @event Controls/_operations/Container#listSelectedKeysChanged Occurs when selected keys were changed.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Array} selectedKeys Array of selected items' keys.
  * @param {Array} added Array of added keys in selection.
  * @param {Array} deleted Array of deleted keys in selection.
@@ -41,7 +41,7 @@ import template = require('wml!Controls/_operations/Container/Container');
 
 /**
  * @event Controls/_operations/Container#listExcludedKeysChanged Происходит при изменении набора ключей, исключенных из выборки.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор событий.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор событий.
  * @param {Array} selectedKeys Массив ключей выбранных элементов.
  * @param {Array} added Массив ключей, добавленных в выборку.
  * @param {Array} deleted Массив удаленных из выборки ключей.
@@ -49,7 +49,7 @@ import template = require('wml!Controls/_operations/Container/Container');
 
 /*
  * @event Controls/_operations/Container#listExcludedKeysChanged Occurs when excluded keys were changed.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Array} selectedKeys Array of selected items' keys.
  * @param {Array} added Array of added keys in selection.
  * @param {Array} deleted Array of deleted keys in selection.

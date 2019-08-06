@@ -377,24 +377,24 @@
 
 /**
  * @event Controls/_filter/interface/IFilterView#filterChanged Происходит при изменении фильтра.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object} filter Новый фильтр.
  */
 
 /*
  * @event Controls/_filter/interface/IFilterView#filterChanged Happens when filter changed.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Object} filter New filter.
  */
 
 /**
  * @event Controls/_filter/interface/IFilterView#itemsChanged Происходит при изменении опции items.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object} items Новый элемент.
  */
 
 /*
  * @event Controls/_filter/interface/IFilterView#itemsChanged Happens when items changed.
- * @param {Env/Event:Object} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Object} items New items.
  */

@@ -159,7 +159,7 @@ export default interface ILookup {
 
 /**
  * @event Controls/_interface/ILookup#selectorCallback Происходит при выборе элементов из справочника.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {RecordSet} initialItems Список выбранных элементов, перед открытием справочника.
  * @param {RecordSet} newItems Список выбранных элементов, после выбора из справочника.
  * @remark
@@ -194,7 +194,7 @@ export default interface ILookup {
  */
 /*
  * @event Controls/_interface/ILookup#selectorCallback Occurs when selected items with selector.
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {RecordSet} initialItems List of selected items before opening the directory.
  * @param {RecordSet} newItemsThe list of selected items, after selecting from the directory.
  * @remark
@@ -230,7 +230,7 @@ export default interface ILookup {
 
 /**
  * @event Controls/_interface/ILookup#showSelector Происходит перед открытием справочника через интерфейс.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object} popupOptions {@link Controls/_popup/Opener/Stack/PopupOptions.typedef Опции всплывающего окна.}
  * @example
  * В следующем примере создается Controls/lookup:Input и демонстрируется сценарий использования.
@@ -263,7 +263,7 @@ export default interface ILookup {
  */
 /*
  * @event Controls/_interface/ILookup#showSelector Occurs before opening the selector through the interface.
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Object} popupOptions {@link Controls/_popup/Opener/Stack/PopupOptions.typedef Stack popup options.}
  * @example
  * The following example creates Controls/lookup:Input and shows how to handle the event.

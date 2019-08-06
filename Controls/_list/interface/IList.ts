@@ -240,7 +240,7 @@
 
 /**
  * @event Controls/_list/interface/IList#actionClick Происходит при клике на элемент панели действий над записью.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {ItemAction} action Запись, по которой был выполнен клик.
  * @param {Types/entity:Model} item Экземпляр записи, по которой был выполнен клик.
  * @param {HTMLElement} itemContainer Контейнер записи, по которой был выполнен клик.
@@ -248,7 +248,7 @@
 
 /*
  * @event Controls/_list/interface/IList#actionClick Occurs when itemAction button is clicked.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {ItemAction} action Object with configuration of the clicked action.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
  * @param {HTMLElement} itemContainer Container of the item whose action was clicked.
@@ -537,31 +537,31 @@
 /**
  * @event Controls/_list/interface/IList#itemClick Происходит при клике на элемент списка.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {eventObject} event Объект события.
+ * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
  * @param {Types/entity:Record} item Элемент, по которому производим клик.
  */
 
  /*
  * @event Controls/_list/interface/IList#itemClick Occurs when list item is clicked.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {eventObject} event Event object.
+ * @param {Vdom/Vdom:SyntheticEvent} event Event object.
  * @param {Types/entity:Record} item Clicked item.
  */
 
 /**
  * @event Controls/_list/interface/IList#itemSwipe Происходит при жесте "swipe" на элементе списка.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Экземпляр элемента списка, по которому производим swipe.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} originalEvent Дескриптор исходного события.
+ * @param {Vdom/Vdom:SyntheticEvent} originalEvent Дескриптор исходного события.
  * @remark
  * Событие срабатывает, только если со списком ничего не происходит при жесте "swipe" (например, если список поддерживает выбор, он будет только устанавливать флаг). Это поведение схоже с {@link Controls/_list/interface/IList#itemClick itemClick}.
  */
 
 /*
  * @event Controls/_list/interface/IList#itemSwipe Occurs when list item is swiped.
- * @param {Env/Event:Object} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the swiped item.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} originalEvent Descriptor of the original event. It is useful if you want to get direction or target.
+ * @param {Vdom/Vdom:SyntheticEvent} originalEvent Descriptor of the original event. It is useful if you want to get direction or target.
  * @remark
  * This event fires only if the list doesn't do anything on swipe (e.g., if the list supports selection - it will toggle checkbox and that's it). This behavior is in line with the {@link Controls/_list/interface/IList#itemClick itemClick}.
  */
@@ -569,7 +569,7 @@
 /**
  * @event Controls/_list/interface/IList#hoveredItemChanged Происходит при наведении курсора мыши на элемент списка.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Экземпляр элемента, на который наводим курсор.
  * @param {HTMLElement} itemContainer Контейнер элемента.
  */
@@ -577,7 +577,7 @@
 /*
  * @event Controls/_list/interface/IList#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Env/Event:Object} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
  * @param {HTMLElement} itemContainer Container of the item.
  */
@@ -585,27 +585,27 @@
 /**
  * @event  Controls/_list/interface/IList#markedKeyChanged Происходит при выделении пользователем элемента списка.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Number} key Ключ выбранного элемента.
  */
 
 /*
  * @event  Controls/_list/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Number} key Key of the selected item.
  */
 
 /**
  * @event  Controls/_list/interface/IList#drawItems Происходит при отрисовке очередного набора данных.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
 /*
  * @event  Controls/_list/interface/IList#drawItems Occurs when the next batch of data is drawn.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  */
 
 /**

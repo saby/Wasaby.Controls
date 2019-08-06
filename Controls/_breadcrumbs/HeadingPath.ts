@@ -159,12 +159,12 @@ var _private = {
 
 /**
  * @event Controls/_breadcrumbs/HeadingPath#arrowActivated Происходит при клике на кнопку "Просмотр записи".
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
 /*
  * @event Controls/_breadcrumbs/HeadingPath#arrowActivated Happens after clicking the button "View Model".
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  */
 
 /**

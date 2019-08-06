@@ -61,13 +61,13 @@ define('Controls/interface/IBreadCrumbs', [
 
    /**
     * @event Controls/interface/IBreadCrumbs#itemClick Происходит после клика по хлебным крошкам.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {String} itemId Ключ элемента, по которому произвели клик.
     */
 
    /*
     * @event Controls/interface/IBreadCrumbs#itemClick Happens after clicking on breadcrumb.
-    * @param {Env/Event:Object} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {String} itemId Key of the clicked item.
     */
 

@@ -34,7 +34,7 @@ export default interface ISingleSelectable {
 
 /**
  * @event Controls/_interface/ISingleSelectable#selectedKeyChanged Occurs when selection was changed.
- * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Number|String} key Selected item key.
  * @example
  * The following example creates RadioGroup with empty selection. Subsequent changes made to selectedKey will be synchronized through binding mechanism. Source of the operations panel will be updated every time selectedKey change.

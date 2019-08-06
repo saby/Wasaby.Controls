@@ -50,22 +50,22 @@
 
 /**
  * @event Controls/_explorer/interface/IExplorer#itemOpen Происходит при проваливании в узел.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
 /*
  * @event Controls/_explorer/interface/IExplorer#itemOpen Occurs before opening a folder.
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  */
 
 /**
  * @event Controls/_explorer/interface/IExplorer#itemOpened Происходит после проваливания в узел.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
 /*
  * @event Controls/_explorer/interface/IExplorer#itemOpened Occurs after the folder was opened.
- * @param {Env/Event:Object} eventObject The event descriptor.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  */
 
 /**

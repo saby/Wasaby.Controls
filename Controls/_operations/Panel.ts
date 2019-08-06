@@ -112,7 +112,7 @@ import buttons = require('Controls/buttons');
 
    /**
     * @event Controls/_operations/Panel#itemClick Происходит при клике на элемент.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Record} item Элемент, по которому произвели клик.
     * @example
     * TMPL:
@@ -136,7 +136,7 @@ import buttons = require('Controls/buttons');
 
    /*
     * @event Controls/_operations/Panel#itemClick Occurs when an item was clicked.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} item Clicked item.
     * @example
     * TMPL:

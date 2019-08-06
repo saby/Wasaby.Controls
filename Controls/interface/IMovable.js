@@ -150,7 +150,7 @@ define('Controls/interface/IMovable', [
 
    /**
     * @event Controls/interface/IMovable#beforeItemsMove Происходит до перемещения элементов.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Array.<String>|Array.<Number>} movedItems Массив элементов перемещения.
     * @param {Types/entity:Record|String|Number} target Целевой элемент перемещения.
     * @param {MovePosition} position Положение перемещения.
@@ -176,7 +176,7 @@ define('Controls/interface/IMovable', [
 
    /*
     * @event Controls/interface/IMovable#beforeItemsMove Occurs before the items are moved.
-    * @param {Env/Event:Object} eventObject The event descriptor.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
     * @param {Types/entity:Record|String|Number} target Target item to move.
     * @param {MovePosition} position Position to move.
@@ -202,7 +202,7 @@ define('Controls/interface/IMovable', [
 
    /**
     * @event Controls/interface/IMovable#afterItemsMove Происходит после перемещения элементов.
-    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Array.<String>|Array.<Number>} movedItems Массив элементов перемещения.
     * @param {Types/entity:Record|String|Number} target Целевой элемент перемещения.
     * @param {MovePosition} position Положение перемещения.
@@ -233,7 +233,7 @@ define('Controls/interface/IMovable', [
 
    /*
     * @event Controls/interface/IMovable#afterItemsMove Occurs after moving items.
-    * @param {Env/Event:Object} eventObject The event descriptor.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
     * @param {Types/entity:Record|String|Number} target Target item to move.
     * @param {MovePosition} position Position to move.

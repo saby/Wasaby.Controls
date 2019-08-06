@@ -65,7 +65,7 @@ export default interface IMultiSelectable {
 
 /**
  * @event Controls/_interface/IMultiSelectable#selectedKeysChanged Происходит при изменении выбранных элементов.
- * @param {Env/Event:Object} eventObject Дескриптор события.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array.<Number|String>} keys Массив ключей выбранных элементов.
  * @param {Array.<Number|String>} added Массив ключей элементов, добавленных к выборке.
  * @param {Array.<Number|String>} deleted Массив ключей элементов, удаленных из выборки.
@@ -98,7 +98,7 @@ export default interface IMultiSelectable {
 
 /*
  * @event Controls/_interface/IMultiSelectable#selectedKeysChanged Occurs when selected keys were changed.
- * @param {Env/Event:Object} eventObject Descriptor of the event.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Array.<Number|String>} keys Array of selected items' keys.
  * @param {Array.<Number|String>} added Array of keys added to selection.
  * @param {Array.<Number|String>} deleted Array of keys deleted from selection.
