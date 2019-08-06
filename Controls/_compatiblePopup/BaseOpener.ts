@@ -281,6 +281,10 @@ const BaseOpener = {
          cfg.closeOnOutsideClick = false;
       }
 
+      if (cfg._type === 'dialog' || (cfg._type === 'stack' && cfg.isStack)) {
+         cfg.isDefaultOpener = true; // Если не указан опенер, то поиск дефолтного опенера остановится на этом окне.
+      }
+
       if (cfg.horizontalAlign) {
          if (cfg.horizontalAlign.side === undefined) {
             delete cfg.horizontalAlign.side;
