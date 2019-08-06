@@ -46,13 +46,19 @@ let _private = {
                 // Аналог self._notify('openInfoBox', [cfg], { bubbling: true });, только обработчик
                 // Вызывается напрямую, так как события через compoundControl не летят
                 cfg.zIndex = getZIndex(self);
-                let GlobalPopup = _private.getGlobalPopup();
-                if (GlobalPopup) {
-                    let event = {
-                        target: self._container
-                    };
-                    GlobalPopup._openInfoBoxHandler(event, cfg);
-                }
+                // Если окружение старое, создаем ManagerWrapper, в котором рисуются dom окна в старом окружении
+                // В том числе инфобоксы.
+                requirejs(['Controls/popup'], (popup) => {
+                    popup.BaseOpener.getManager().then(() => {
+                        let GlobalPopup = _private.getGlobalPopup();
+                        if (GlobalPopup) {
+                            let event = {
+                                target: self._container
+                            };
+                            GlobalPopup._openInfoBoxHandler(event, cfg);
+                        }
+                    });
+                });
             }
         }
     },

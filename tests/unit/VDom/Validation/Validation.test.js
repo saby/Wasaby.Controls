@@ -1,8 +1,9 @@
 define([
+   'Env/Env',
    'Controls/validate',
    'Core/Deferred',
    'unit/resources/ProxyCall',
-], function(validateMod, Deferred, ProxyCall) {
+], function(Env, validateMod, Deferred, ProxyCall) {
    'use strict';
 
    function getValidator(validateResult, readOnly) {
@@ -36,6 +37,11 @@ define([
       var calls = [];
       var validCtrl = new validateMod.Container();
       validCtrl._notify = ProxyCall.apply(validCtrl._notify, 'notify', calls, true);
+      beforeEach(function() {
+         if (!Env.constants.isBrowserPlatform) {
+            this.skip();
+         }
+      });
       it('valueChangedNotify', () => {
          validCtrl._valueChangedHandler(null, 'test');
          assert.deepEqual(calls, [{
