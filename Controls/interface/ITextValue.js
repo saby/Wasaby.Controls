@@ -18,11 +18,13 @@ define('Controls/interface/ITextValue', [], function() {
 
    /**
     * @event Controls/interface/ITextValue#textValueChanged Происходит при изменении текстового значения в поле.
-    * @param {String} textValue New field textValue.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события
+    * @param {String} textValue Новое значение.
     */
 
    /*
     * @event Controls/interface/ITextValue#textValueChanged Occurs when field textValue was changed.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Event descriptor.
     * @param {String} textValue New field textValue.
     */
 
