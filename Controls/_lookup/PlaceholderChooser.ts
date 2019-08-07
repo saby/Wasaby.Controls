@@ -17,6 +17,7 @@ import collection = require('Types/collection');
  * Задаются, как обьект вида ключ - подсказка.
  * @example
  * WML:
+ * <pre>
  * <Controls.lookup:PlaceholderChooser placeholderKeyCallback="{{_placeholderKeyCallback}}">
  *     <ws:placeholders>
  *         <ws:tasks>
@@ -32,8 +33,10 @@ import collection = require('Types/collection');
  *         </Controls.lookup:Input>
  *     <ws:content>
  * </Controls.lookup:PlaceholderChooser>
+ * </pre>
  *
  * TS:
+ * <pre>
  * protected _beforeMount():void {
  *    this._placeholderKeyCallback = this._placeholderKeyCallback.bind(this);
  * }
@@ -53,6 +56,7 @@ import collection = require('Types/collection');
  * private _showSelectorCustomPlaceholder(event):void {
  *     this._children.lookup.showSelector()
  * }
+ * </pre>
  */
 
 /**
@@ -60,6 +64,7 @@ import collection = require('Types/collection');
  * @cfg {Function} Функция обратного вызова для получения идентификатора подскази.
  * @example
  * WML:
+ * <pre>
  * <Controls.lookup:PlaceholderChooser placeholderKeyCallback="{{_placeholderKeyCallback}}">
  *     <ws:placeholders>
  *         <ws:tasks>
@@ -75,8 +80,10 @@ import collection = require('Types/collection');
  *         </Controls.lookup:Input>
  *     <ws:content>
  * </Controls.lookup:PlaceholderChooser>
+ * </pre>
  *
  * TS:
+ * <pre>
  * protected _beforeMount():void {
  *    this._placeholderKeyCallback = this._placeholderKeyCallback.bind(this);
  * }
@@ -96,6 +103,7 @@ import collection = require('Types/collection');
  * private _showSelectorCustomPlaceholder(event):void {
  *     this._children.lookup.showSelector()
  * }
+ * </pre>
  */
 /*
  * A wrapper over the "Lookup" that monitors changes to the selected entries, and on the basis of them gives one of the possible pre-formed "placeholders".
