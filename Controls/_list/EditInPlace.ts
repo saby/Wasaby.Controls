@@ -30,8 +30,8 @@ var
 
         afterBeginEdit: function (self, options, isAdd) {
             self._editingItem = options.item.clone();
-            self._notify('afterBeginEdit', [self._editingItem, isAdd]);
             self._setEditingItemData(self._editingItem, self._options.listModel, self._options);
+            self._notify('afterBeginEdit', [self._editingItem, isAdd]);
 
             /**
              * This code exists because there's no way to declaratively change editing item, so the users are forced to write something like this:
