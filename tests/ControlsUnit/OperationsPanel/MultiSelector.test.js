@@ -11,14 +11,14 @@ define([
             selectedKeys = [null],
             excludedKeys = [],
             selectedKeysCount = 0;
-         instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount);
+         instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
          assert.isTrue(instance._multiSelectStatus);
          selectedKeys = [];
-         instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount);
+         instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
          assert.isFalse(instance._multiSelectStatus);
          selectedKeys = [1, 2];
          selectedKeysCount = 2;
-         instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount);
+         instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
          assert.isNull(instance._multiSelectStatus);
       });
       it('_onCheckBoxClick', function() {
@@ -40,7 +40,8 @@ define([
          var newOptions = {
             selectedKeys: [null],
             excludedKeys: [],
-            selectedKeysCount: 0
+            selectedKeysCount: 0,
+            root: null
          };
          instance._beforeMount(newOptions);
          assert.isTrue(instance._multiSelectStatus);
@@ -57,7 +58,8 @@ define([
          var newOptions = {
             selectedKeys: [null],
             excludedKeys: [],
-            selectedKeysCount: 0
+            selectedKeysCount: 0,
+            root: null
          };
          instance._beforeUpdate(newOptions);
          assert.isTrue(instance._multiSelectStatus);

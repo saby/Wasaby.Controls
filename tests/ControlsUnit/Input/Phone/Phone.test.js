@@ -15,6 +15,16 @@ define([
       cmp = new Component(cfg);
       cmp.saveOptions(cfg);
       cmp._beforeMount(cfg);
+      cmp._children[cmp._fieldName] = {
+         selectionStart: 0,
+         selectionEnd: 0,
+         value: '',
+         focus: function() {},
+         setSelectionRange: function(start, end) {
+            this.selectionStart = start;
+            this.selectionEnd = end;
+         }
+      };
       return cmp;
    };
 
