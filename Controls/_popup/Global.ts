@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/Global/Global');
 import GlobalOpeners from './Global/Openers';
-import Vdom = require('Vdom/Vdom');
+import { goUpByControlTree } from 'UI/Focus';
 
 /**
  * @class Controls/_popup/Global
@@ -11,7 +11,7 @@ var _private = {
     getPopupConfig: function(config) {
         // Find opener for Infobox
         if (!config.opener) {
-            config.opener = Vdom.goUpByControlTree(config.target)[0];
+            config.opener = goUpByControlTree(config.target)[0];
         }
         return config;
     }
