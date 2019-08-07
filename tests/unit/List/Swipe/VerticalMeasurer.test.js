@@ -279,6 +279,64 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
                );
 
             });
+            it('two columns with more button', function() {
+               var fourActions = [
+                  {
+                     id: 1,
+                     icon: 'icon-PhoneNull'
+                  },
+                  {
+                     id: 2,
+                     icon: 'icon-Erase'
+                  },
+                  {
+                     id: 3,
+                     icon: 'icon-EmptyMessage'
+                  },
+                  {
+                     id: 4,
+                     icon: 'icon-EmptyMessage'
+                  },
+                  {
+                     id: 5,
+                     icon: 'icon-EmptyMessage'
+                  },
+
+               ];
+               var result = {
+                  itemActionsSize: 'm',
+                  itemActions: {
+                     all: fourActions,
+                     showed: [
+                        {
+                           id: 1,
+                           icon: 'icon-PhoneNull'
+                        },
+                        {
+                           id: 2,
+                           icon: 'icon-Erase'
+                        },
+                        {
+                           id: 3,
+                           icon: 'icon-EmptyMessage'
+                        },
+                        {
+                           icon: 'icon-SwipeMenu',
+                           title: i18n.rk('Ещё'),
+                           _isMenu: true,
+                           showType: 2
+                        }
+                     ]
+                  },
+                  paddingSize: 's',
+                  twoColumns: true
+               };
+               assert.deepEqual(
+                  result,
+                  VerticalMeasurer.default.getSwipeConfig(fourActions, 93, 'bottom')
+               );
+
+            });
             it('small row, only menu should be drawn', function() {
                var result = {
                   itemActionsSize: 'm',
