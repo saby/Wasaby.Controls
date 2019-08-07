@@ -29,7 +29,7 @@
     *          source="{{_source}}">
     *       <ws:footerTemplate>
     *          <div class="ControlsDemo-InputDropdown-footerTpl">
-    *             <Controls.Button caption="+ New template" size="l" viewMode="link"/>
+    *             <Controls.buttons:Button caption="+ New template" size="l" viewMode="link"/>
     *          </div>
     *       </ws:footerTemplate>
     *    </Controls.dropdown:Button>
@@ -57,7 +57,7 @@
     *          source="{{_source}}">
     *       <ws:footerTemplate>
     *          <div class="ControlsDemo-InputDropdown-footerTpl">
-    *             <Controls.Button caption="+ New template" size="l" viewMode="link"/>
+    *             <Controls.buttons:Button caption="+ New template" size="l" viewMode="link"/>
     *          </div>
     *       </ws:footerTemplate>
     *    </Controls.dropdown:Button>
@@ -89,7 +89,7 @@
     *          source="{{_source}}">
     *       <ws:nodeFooterTemplate>
     *          <div class="ControlsDemo-InputDropdown-footerTpl">
-    *             <Controls.Button caption="+ New template" size="l" viewMode="link" on:click="_clickHandler(itemData.key)"/>
+    *             <Controls.buttons:Button caption="+ New template" size="l" viewMode="link" on:click="_clickHandler(itemData.key)"/>
     *          </div>
     *       </ws:footerTemplate>
     *    </Controls.dropdown:Button>

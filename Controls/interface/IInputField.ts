@@ -75,7 +75,7 @@ interface IInputField {
          *     <form action="Auth.php" name="form">
          *         <Controls.input:Text bind:value="_login"/>
          *         <Controls.input:Password bind:value="_password"/>
-         *         <Controls.Button on:click="_saveUser()" caption="Отправить"/>
+         *         <Controls.buttons:Button on:click="_saveUser()" caption="Отправить"/>
          *     </form>
          *
          *     export class Form extends Control<IControlOptions, void> {
@@ -110,7 +110,7 @@ interface IInputField {
          * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
          * <pre>
          *    <Input.Text bind:value="_inputValue" />
-         *    <Controls.Button on:click="_sendButtonClick()" />
+         *    <Controls.buttons:Button on:click="_sendButtonClick()" />
          * </pre>
          *
          * <pre>

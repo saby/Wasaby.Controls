@@ -25,7 +25,7 @@ interface IPaste {
      * В этом примере мы кликаем по кнопке, чтобы добавить смайлик в поле ввода.
      * <pre>
      *    <Controls.input:Text name="message" bind:value="_inputValue"/>
-     *    <Controls.Button on:click="_pasteButtonClick(smile)"/>
+     *    <Controls.buttons:Button on:click="_pasteButtonClick(smile)"/>
      * </pre>
      *
      * <pre>
@@ -52,7 +52,7 @@ interface IPaste {
      * In this example, we click on the button to add a smile to the field.
      * <pre>
      *    <Controls.input:Text name="message" bind:value="_inputValue"/>
-     *    <Controls.Button on:click="_pasteButtonClick(smile)"/>
+     *    <Controls.buttons:Button on:click="_pasteButtonClick(smile)"/>
      * </pre>
      *
      * <pre>

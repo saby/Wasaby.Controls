@@ -409,15 +409,15 @@ import 'Controls/context';
        * @example
        * TMPL:
        * <pre>
-       *    <Controls._filter.Controller
+       *    <Controls.filter:Controller
        *       historyId="myHistoryId"
        *       filterButtonSource="{{_filterButtonData}}">
        *          ...
-       *          <Controls._filter.Button.Container>
-       *             <Controls._filter.Button />
-       *          </Controls._filter.Button.Container>
+       *          <Controls.filter:Button.Container>
+       *             <Controls.filter:Button />
+       *          </Controls.filter:Button.Container>
        *          ...
-       *    </Controls._filter.Controller>
+       *    </Controls.filter:Controller>
        * </pre>
        * JS:
        * <pre>
@@ -444,15 +444,15 @@ import 'Controls/context';
        * @example
        * TMPL:
        * <pre>
-       *    <Controls._filter.Controller
+       *    <Controls.filter:Controller
        *       historyId="myHistoryId"
        *       filterButtonSource="{{_filterButtonData}}">
        *          ...
-       *          <Controls._filter.Button.Container>
-       *             <Controls._filter.Button />
-       *          </Controls._filter.Button.Container>
+       *          <Controls.filter:Button.Container>
+       *             <Controls.filter:Button />
+       *          </Controls.filter:Button.Container>
        *          ...
-       *    </Controls._filter.Controller>
+       *    </Controls.filter:Controller>
        * </pre>
        * JS:
        * <pre>
@@ -479,17 +479,17 @@ import 'Controls/context';
        * @example
        * TMPL:
        * <pre>
-       *    <Controls._filter.Controller
+       *    <Controls.filter:Controller
        *       historyId="myHistoryId"
        *       fastFilterSource="{{_fastFilterSource}}">
        *       <Controls.list:DataContainer>
        *          ...
-       *          <Controls._filter.Fast.Container>
-       *             <Controls._filter.Fast />
-       *          </Controls._filter.Fast.Container>
+       *          <Controls.filter:Fast.Container>
+       *             <Controls.filter:Fast />
+       *          </Controls.filter:Fast.Container>
        *          ...
        *       </Controls.list:DataContainer>
-       *    </Controls._filter.Controller>
+       *    </Controls.filter:Controller>
        * </pre>
        * JS:
        * <pre>
@@ -525,17 +525,17 @@ import 'Controls/context';
        * @example
        * TMPL:
        * <pre>
-       *    <Controls._filter.Controller
+       *    <Controls.filter:Controller
        *       historyId="myHistoryId"
        *       fastFilterSource="{{_fastFilterSource}}">
        *       <Controls.list:DataContainer>
        *          ...
-       *          <Controls._filter.Fast.Container>
-       *             <Controls._filter.Fast />
-       *          </Controls._filter.Fast.Container>
+       *          <Controls.filter:Fast.Container>
+       *             <Controls.filter:Fast />
+       *          </Controls.filter:Fast.Container>
        *          ...
        *       </Controls.list:DataContainer>
-       *    </Controls._filter.Controller>
+       *    </Controls.filter:Controller>
        * </pre>
        * JS:
        * <pre>

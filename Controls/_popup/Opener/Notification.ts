@@ -110,7 +110,7 @@ const Notification = BaseOpener.extend({
      *       </ws:popupOptions>
      *    </Controls.popup:Notification>
      *
-     *    <Controls.Button name="openNotificationButton" caption="open notification" on:click="_open()"/>
+     *    <Controls.buttons:Button name="openNotificationButton" caption="open notification" on:click="_open()"/>
      * </pre>
      * js
      * <pre>

@@ -148,11 +148,11 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @example
  * Button has transparent background.
  * <pre>
- *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" contrastBackground="{{false}}" size="l"/>
+ *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" contrastBackground="{{false}}" size="l"/>
  * </pre>
  * Button hasn't transparent background.
  * <pre>
- *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" />
+ *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" />
  * </pre>
  * @see style
  */

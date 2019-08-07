@@ -50,11 +50,11 @@ import 'css!theme?Controls/heading';
     * @example
     * Заголовок-кнопка со стилем по умолчанию.
     * <pre>
-    *    <Controls._heading.Back/>
+    *    <Controls.heading:Back/>
     * </pre>
     * Заголовок-кнопка со стилем "secondary".
     * <pre>
-    *    <Controls._heading.Back style="secondary"/>
+    *    <Controls.heading:Back style="secondary"/>
     * </pre>
     */
 
@@ -67,11 +67,11 @@ import 'css!theme?Controls/heading';
     * @example
     * Back heading has default style.
     * <pre>
-    *    <Controls._heading.Back/>
+    *    <Controls.heading:Back/>
     * </pre>
     * Back heading has 'secondary' style.
     * <pre>
-    *    <Controls._heading.Back style="secondary"/>
+    *    <Controls.heading:Back style="secondary"/>
     * </pre>
     */
 
@@ -85,11 +85,11 @@ import 'css!theme?Controls/heading';
     * @example
     * Back heading has default size.
     * <pre>
-    *    <Controls._heading.Back/>
+    *    <Controls.heading:Back/>
     * </pre>
     * Back heading has 'l' size.
     * <pre>
-    *    <Controls._heading.Back size="l"/>
+    *    <Controls.heading:Back size="l"/>
     * </pre>
     */
 
@@ -103,11 +103,11 @@ import 'css!theme?Controls/heading';
     * @example
     * Back heading has default size.
     * <pre>
-    *    <Controls._heading.Back/>
+    *    <Controls.heading:Back/>
     * </pre>
     * Back heading has 'l' size.
     * <pre>
-    *    <Controls._heading.Back size="l"/>
+    *    <Controls.heading:Back size="l"/>
     * </pre>
     */
 

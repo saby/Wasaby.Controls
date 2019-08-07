@@ -235,7 +235,7 @@ const Confirmation = BaseOpener.extend({
      *    <Controls.popup:Confirmation name="confirmationOpener">
      *    </Controls.popup:Confirmation>
      *
-     *    <Controls.Button caption="open confirmation" on:click="_open()"/>
+     *    <Controls.buttons:Button caption="open confirmation" on:click="_open()"/>
      * </pre>
      * js
      * <pre>

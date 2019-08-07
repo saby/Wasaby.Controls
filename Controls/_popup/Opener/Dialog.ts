@@ -63,8 +63,8 @@ const Dialog = BaseOpener.extend({
      *          <ws:templateOptions key="111"/>
      *    </Controls.popup:Dialog>
      *
-     *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
-     *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
+     *    <Controls.buttons:Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
+     *    <Controls.buttons:Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
      * </pre>
      * js
      * <pre>
@@ -227,8 +227,8 @@ export default Dialog;
  *          <ws:templateOptions key="111"/>
  *    </Controls.popup:Dialog>
  *
- *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
- *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
+ *    <Controls.buttons:Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
+ *    <Controls.buttons:Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
  * </pre>
  * js
  * <pre>

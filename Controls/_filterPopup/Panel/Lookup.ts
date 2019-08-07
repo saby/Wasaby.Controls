@@ -76,7 +76,7 @@ import 'css!theme?Controls/filterPopup';
  * @default Controls/_lookup/Lookup
  * @example
  * <pre>
- *   <Controls._filterPopup.Panel.Lookup lookupTempalteName="namePace/Lookup"/>
+ *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup"/>
  * </pre>
  */
 
