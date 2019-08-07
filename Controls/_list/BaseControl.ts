@@ -1350,7 +1350,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._canUpdateItemsActions = true;
         }
         if (this._options.itemsDragNDrop) {
-            this._container.addEventListener('dragstart', this._nativeDragStart);
+            let container = this._container[0] || this._container;
+            container.addEventListener('dragstart', this._nativeDragStart);
         }
         if (this._virtualScroll) {
             this._setScrollItemContainer();
@@ -1507,7 +1508,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             clearTimeout(this._focusTimeout);
         }
         if (this._options.itemsDragNDrop) {
-            this._container.removeEventListener('dragstart', this._nativeDragStart);
+            let container = this._container[0] || this._container;
+            container.removeEventListener('dragstart', this._nativeDragStart);
         }
         if (this._sourceController) {
             this._sourceController.destroy();
