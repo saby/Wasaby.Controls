@@ -25,8 +25,8 @@ interface IInputMaskValue {
          * @example
          * В этом примере вы осуществляете привязку _inputValue в состоянии контрола к значению поля ввода. В любое время жизненного цикла контрола _inputValue будет содержать текущее значение поля ввода.
          * <pre>
-         *    <Controls._input.Mask bind:value="_inputValue" />
-         *    <Controls.Button on:click="_sendButtonClick()" />
+         *    <Controls.input:Mask bind:value="_inputValue" />
+         *    <Controls.buttons:Button on:click="_sendButtonClick()" />
          * </pre>
          *
          * <pre>
@@ -34,7 +34,7 @@ interface IInputMaskValue {
          *       ...
          *       _inputValue: '',
          *
-         *       _sendButtonClick() {
+         *       _sendButtonClick(event) {
          *          this._sendData(this._inputValue);
          *       }
          *
@@ -78,18 +78,22 @@ interface IInputMaskValue {
 /**
  * @event Происходит при изменении значения поля ввода.
  * @name Controls/interface/IInputMaskValue#valueChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события
  * @param {String} value Значение поля без разделителей.
  * @param {String} displayValue Значение поля с разделителями.
  * @remark
- * Это событие должно использоваться для реагирования на изменения, вносимые пользователем в поле. Значение, возвращаемое в событии, не вставляется в контрол, если вы не передадите его обратно в поле в качестве опции. 
+ * Это событие должно использоваться для реагирования на изменения, вносимые пользователем в поле.
+ * Значение, возвращаемое в событии, не вставляется в контрол, если вы не передадите его обратно в поле в качестве опции. 
  * Обычно используется синтаксис биндинга. Пример ниже показывает разницу.
  * @example
- * В этом примере рассмотрим, как осуществить привязку значения контрола к полю. В первом поле мы делаем это вручную, используя событие valueChanged. Во втором поле используем синтаксис биндинга. 
+ * В этом примере рассмотрим, как осуществить привязку значения контрола к полю.
+ * В первом поле мы делаем это вручную, используя событие valueChanged.
+ * Во втором поле используем синтаксис биндинга. 
  * Оба поля в этом примере будут иметь одинаковое поведение.
  * <pre>
- *    <Controls._input.Mask value="_fieldValue" on:valueChanged="_valueChangedHandler()" />
+ *    <Controls.input:Mask value="_fieldValue" on:valueChanged="_valueChangedHandler()" />
  *
- *    <Controls._input.Text bind:value="_anotherFieldValue" />
+ *    <Controls.input:Text bind:value="_anotherFieldValue" />
  * </pre>
  *
  * <pre>
@@ -97,7 +101,7 @@ interface IInputMaskValue {
  *       ...
  *       _fieldValue: '',
  *
- *       _valueChangedHandler(value, displayValue) {
+ *       _valueChangedHandler(event, value, displayValue) {
  *          this._fieldValue = value;
  *          this._fieldValueWithDelimiters = displayValue;
  *       },
@@ -112,6 +116,7 @@ interface IInputMaskValue {
 /*
  * @event Occurs when field value was changed.
  * @name Controls/interface/IInputMaskValue#valueChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Event Descriptor.
  * @param {String} value Value of the field without delimiters.
  * @param {String} displayValue Value of the field with delimiters.
  * @remark
@@ -119,9 +124,9 @@ interface IInputMaskValue {
  * @example
  * In this example, we show how you can 'bind' control's value to the field. In the first field, we do it manually using valueChanged event. In the second field we use bind notation. Both fields in this examples will have identical behavior.
  * <pre>
- *    <Controls._input.Mask value="_fieldValue" on:valueChanged="_valueChangedHandler()" />
+ *    <Controls.input:Mask value="_fieldValue" on:valueChanged="_valueChangedHandler()" />
  *
- *    <Controls._input.Text bind:value="_anotherFieldValue" />
+ *    <Controls.input:Text bind:value="_anotherFieldValue" />
  * </pre>
  *
  * <pre>
@@ -129,7 +134,7 @@ interface IInputMaskValue {
  *       ...
  *       _fieldValue: '',
  *
- *       _valueChangedHandler(value, displayValue) {
+ *       _valueChangedHandler(event, value, displayValue) {
  *          this._fieldValue = value;
  *          this._fieldValueWithDelimiters = displayValue;
  *       },
@@ -142,8 +147,9 @@ interface IInputMaskValue {
  */ 
 
 /**
- * @event Происходит при завершении ввода в поле (поле потеряло фокус или пользователь нажал клавишу "enter").
+ * @event Происходит при завершении ввода в поле (потеря фокуса или пользователь нажал клавишу "Enter").
  * @name Controls/interface/IInputMaskValue#inputCompleted
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события
  * @param {String} value Значение поля.
  * @param {String} displayValue Текстовое значение поля.
  * @remark
@@ -151,13 +157,13 @@ interface IInputMaskValue {
  * @example
  * В этом примере мы подписываемся на событие inputCompleted и сохраняем значение поля в базе данных.
  * <pre>
- *    <Controls._input.Text on:inputCompleted="_inputCompletedHandler()" />
+ *    <Controls.input:Text on:inputCompleted="_inputCompletedHandler()" />
  * </pre>
  *
  * <pre>
  *    Control.extend({
  *       ...
- *       _inputCompletedHandler(value) {
+ *       _inputCompletedHandler(event, value) {
  *          this._saveEnteredValueToDatabase(value);
  *       }
  *       ...
@@ -169,6 +175,7 @@ interface IInputMaskValue {
 /*
  * @event Occurs when input is completed (field lost focus or user pressed ‘enter’).
  * @name Controls/interface/IInputMaskValue#inputCompleted
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Event descriptor.
  * @param {String} value Value of the field.
  * @param {String} displayValue Value of the field with delimiters.
  * @remark
@@ -176,13 +183,13 @@ interface IInputMaskValue {
  * @example
  * In this example, we subscribe to inputCompleted event and save field's value to the database.
  * <pre>
- *    <Controls._input.Text on:inputCompleted="_inputCompletedHandler()" />
+ *    <Controls.input:Text on:inputCompleted="_inputCompletedHandler()" />
  * </pre>
  *
  * <pre>
  *    Control.extend({
  *       ...
- *       _inputCompletedHandler(value) {
+ *       _inputCompletedHandler(event, value) {
  *          this._saveEnteredValueToDatabase(value);
  *       }
  *       ...
