@@ -503,7 +503,8 @@ define([
                markerVisibility: 'visible',
                markedKey: null
             },
-            listModel = new lists.ListViewModel(cfg);
+            listModel = new lists.ListViewModel(cfg),
+            editingItem = {key: 'test'};
 
          listModel.setItemActions(new entity.Record({
             rawData: {
@@ -516,6 +517,19 @@ define([
             showed: []
          });
          assert.equal(0, Object.keys(listModel._actions).length);
+
+         listModel._editingItemData = editingItem;
+         listModel.setItemActions(new entity.Record({
+            rawData: {
+               id: 'test',
+               title: 'test'
+            },
+            idProperty: 'id'
+         }), {
+            all: [],
+            showed: []
+         });
+         assert.isOk(editingItem, "shoud set itemActions for editing item");
       });
 
       it('Clear itemActions for removed items', function() {
