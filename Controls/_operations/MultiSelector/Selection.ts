@@ -191,16 +191,17 @@ var Selection = cExtend.extend({
     * @returns {number}
     */
    getCount: function() {
-      if (this._isAllSelection({
-         selectedKeys: this._selectedKeys,
-         excludedKeys: this._excludedKeys,
-         items: this._items
-      })) {
-         var itemsCount = this._limit && this._items.getCount() > this._limit ?
-            this._limit : this._items.getCount();
-         return itemsCount - this._excludedKeys.length;
+      let itemsCount = null;
+
+      if (this._isAllSelection(this._getParams())) {
+         if (this._isAllItemsLoaded() && (!this._limit || this._items.getCount() <= this._limit)) {
+            itemsCount = this._items.getCount() - this._excludedKeys.length;
+         }
+      } else {
+         itemsCount = this._selectedKeys.length;
       }
-      return this._selectedKeys.length;
+
+      return itemsCount;
    },
 
    /**
@@ -248,6 +249,15 @@ var Selection = cExtend.extend({
          selectedKeys = options.selectedKeys;
 
       return selectedKeys[0] === null;
+   },
+
+   _isAllItemsLoaded: function() {
+      let
+         itemsCount = this._items.getCount(),
+         more = this._items.getMetaData().more,
+         hasMore = typeof more === 'number' ? more > itemsCount : more;
+
+      return !hasMore || (this._limit && itemsCount >= this._limit);
    }
 });
 

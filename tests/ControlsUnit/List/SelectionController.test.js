@@ -62,7 +62,17 @@ define([
             nodeProperty: 'Раздел@',
             keyProperty: 'id',
             listModel: {
-               updateSelection: sandbox.stub()
+               updateSelection: sandbox.stub(),
+               getRoot: function() {
+                  return {
+                     getContents: function() {
+                        return null;
+                     }
+                  }
+               },
+               getExpandedItems: function() {
+                  return [1, 2, 3, 4, 5, 6, 7];
+               }
             }
          };
          instance = new SelectionController();
