@@ -1,13 +1,50 @@
 /**
- * Interface for text inputs.
+ * Интерфейс для ввода текста в поле с маской.
  *
  * @interface Controls/interface/IInputMaskValue
  * @public
  * @author Красильников А.С.
  */
+
+/*
+ * Interface for text inputs.
+ *
+ * @interface Controls/interface/IInputMaskValue
+ * @public
+ * @author Красильников А.С.
+ */ 
 interface IInputMaskValue {
     readonly _options: {
         /**
+         * @name Controls/interface/IInputMaskValue#value
+         * @cfg {String} Текст в поле ввода без разделителей.
+         * @default '' (empty string)
+         * @remark Если вы не обновите параметр "value", то не сможете ничего ввести в поле. Необходимо подписаться на событие _valueChanged и обновить "value", которое передается контролу. 
+         * Вы можете использовать синтаксис биндинга. Передаваемый параметр "value" должен быть необработанным без разделителей. 
+         * Если необходимо получить значение с разделителями, то вы можете сделать это с помощью события {@link Controls/interface/IInputMaskValue#valueChanged}.
+         * @example
+         * В этом примере вы осуществляете привязку _inputValue в состоянии контрола к значению поля ввода. В любое время жизненного цикла контрола _inputValue будет содержать текущее значение поля ввода.
+         * <pre>
+         *    <Controls._input.Mask bind:value="_inputValue" />
+         *    <Controls.Button on:click="_sendButtonClick()" />
+         * </pre>
+         *
+         * <pre>
+         *    Control.extend({
+         *       ...
+         *       _inputValue: '',
+         *
+         *       _sendButtonClick() {
+         *          this._sendData(this._inputValue);
+         *       }
+         *
+         *    });
+         * </pre>
+         * @see valueChanged
+         * @see inputCompleted
+         */
+
+        /*
          * @name Controls/interface/IInputMaskValue#value
          * @cfg {String} Text in the field without delimiters.
          * @default '' (empty string)
@@ -33,12 +70,46 @@ interface IInputMaskValue {
          * </pre>
          * @see valueChanged
          * @see inputCompleted
-         */
+         */         
         value: string;
     }
 }
 
 /**
+ * @event Происходит при изменении значения поля ввода.
+ * @name Controls/interface/IInputMaskValue#valueChanged
+ * @param {String} value Значение поля без разделителей.
+ * @param {String} displayValue Значение поля с разделителями.
+ * @remark
+ * Это событие должно использоваться для реагирования на изменения, вносимые пользователем в поле. Значение, возвращаемое в событии, не вставляется в контрол, если вы не передадите его обратно в поле в качестве опции. 
+ * Обычно используется синтаксис биндинга. Пример ниже показывает разницу.
+ * @example
+ * В этом примере рассмотрим, как осуществить привязку значения контрола к полю. В первом поле мы делаем это вручную, используя событие valueChanged. Во втором поле используем синтаксис биндинга. 
+ * Оба поля в этом примере будут иметь одинаковое поведение.
+ * <pre>
+ *    <Controls._input.Mask value="_fieldValue" on:valueChanged="_valueChangedHandler()" />
+ *
+ *    <Controls._input.Text bind:value="_anotherFieldValue" />
+ * </pre>
+ *
+ * <pre>
+ *    Control.extend({
+ *       ...
+ *       _fieldValue: '',
+ *
+ *       _valueChangedHandler(value, displayValue) {
+ *          this._fieldValue = value;
+ *          this._fieldValueWithDelimiters = displayValue;
+ *       },
+ *
+ *       _anotherFieldValue: ''
+ *
+ *    });
+ * </pre>
+ * @see value
+ */
+
+/*
  * @event Occurs when field value was changed.
  * @name Controls/interface/IInputMaskValue#valueChanged
  * @param {String} value Value of the field without delimiters.
@@ -68,9 +139,34 @@ interface IInputMaskValue {
  *    });
  * </pre>
  * @see value
- */
+ */ 
 
 /**
+ * @event Происходит при завершении ввода в поле (поле потеряло фокус или пользователь нажал клавишу "enter").
+ * @name Controls/interface/IInputMaskValue#inputCompleted
+ * @param {String} value Значение поля.
+ * @param {String} displayValue Текстовое значение поля.
+ * @remark
+ * Это событие можно использовать в качестве триггера для проверки поля или отправки введенных данных в другой контрол.
+ * @example
+ * В этом примере мы подписываемся на событие inputCompleted и сохраняем значение поля в базе данных.
+ * <pre>
+ *    <Controls._input.Text on:inputCompleted="_inputCompletedHandler()" />
+ * </pre>
+ *
+ * <pre>
+ *    Control.extend({
+ *       ...
+ *       _inputCompletedHandler(value) {
+ *          this._saveEnteredValueToDatabase(value);
+ *       }
+ *       ...
+ *    });
+ * </pre>
+ * @see value
+ */
+
+/*
  * @event Occurs when input is completed (field lost focus or user pressed ‘enter’).
  * @name Controls/interface/IInputMaskValue#inputCompleted
  * @param {String} value Value of the field.
@@ -93,6 +189,6 @@ interface IInputMaskValue {
  *    });
  * </pre>
  * @see value
- */
+ */ 
 
 export default IInputMaskValue;
