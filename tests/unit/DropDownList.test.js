@@ -291,7 +291,8 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                groupMethod: undefined,
                groupTemplate: undefined,
                groupingKeyCallback: undefined,
-               itemTemplateProperty: undefined
+               itemTemplateProperty: undefined,
+               hasClose: undefined
             };
             let actualConfig = Clone(expectedConfig);
             let dropDownList = getDropDownListWithConfig(expectedConfig);

@@ -3,7 +3,8 @@ define('Controls-demo/FastFilter/fastPG',
       'Core/Control',
       'wml!Controls-demo/FastFilter/fastPG',
       'json!Controls-demo/PropertyGrid/pgtext',
-      'Types/source'
+      'Types/source',
+      'wml!Controls-demo/FastFilter/customItemTemplate'
    ],
 
    function(Control, template, config, sourceLib) {
@@ -47,9 +48,10 @@ define('Controls-demo/FastFilter/fastPG',
                      properties: {
                         keyProperty: 'key',
                         displayProperty: 'text',
+                        itemTemplateProperty: 'itemTpl',
                         source: new sourceLib.Memory({
                            data: [
-                              { key: 0, text: 'All status' },
+                              { key: 0, text: 'All status', itemTpl: 'wml!Controls-demo/FastFilter/customItemTemplate' },
                               { key: 1, text: 'Planning' },
                               { key: 2, text: 'In progress' },
                               { key: 3, text: 'Done' },
