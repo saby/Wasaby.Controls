@@ -799,7 +799,7 @@ var
             }
 
             if (GridLayoutUtil.isOldIE()) {
-                cellContentClasses += ' IE-header_cell_content';
+                cellContentClasses += ' controls-Grid__header-cell-content-block';
             }
 
             headerColumn.shadowVisibility = shadowVisibility;
