@@ -1648,6 +1648,50 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             })
             assert.isFalse(secondRow);
          });
+         it('getColumnAlignGroupStyles', function () {
+
+            let itemData = {
+               hasMultiSelect: false,
+               columns: [{}, {}, {}]
+            };
+
+            assert.deepEqual(
+                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, undefined),
+                {
+                   left: `grid-column: 1 / 4; -ms-grid-column: 1; -ms-grid-column-span: 3;`,
+                   right: ''
+                }
+            );
+
+            assert.deepEqual(
+                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, 2),
+                {
+                   left: 'grid-column: 1 / 3; -ms-grid-column: 1; -ms-grid-column-span: 2;',
+                   right: 'grid-column: 3 / 4; -ms-grid-column: 3; -ms-grid-column-span: 1;'
+                }
+            );
+
+            itemData.hasMultiSelect = true;
+            itemData.columns = [{}, {}, {}, {}];
+
+            assert.deepEqual(
+                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, undefined),
+                {
+                   left: `grid-column: 1 / 5; -ms-grid-column: 1; -ms-grid-column-span: 4;`,
+                   right: ''
+                }
+            );
+
+            assert.deepEqual(
+                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, 2),
+                {
+                   left: 'grid-column: 1 / 4; -ms-grid-column: 1; -ms-grid-column-span: 3;',
+                   right: 'grid-column: 4 / 5; -ms-grid-column: 4; -ms-grid-column-span: 1;'
+                }
+            );
+
+
+         });
       });
 
       describe('partial grid support', () => {
