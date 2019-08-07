@@ -116,8 +116,8 @@ var TileView = ListView.extend({
         if (this._options.tileMode !== newOptions.tileMode) {
             this._listModel.setTileMode(newOptions.tileMode);
         }
-        if (this._options.itemsHeight !== newOptions.itemsHeight) {
-            this._listModel.setItemsHeight(newOptions.itemsHeight);
+        if (this._options.tileHeight !== newOptions.tileHeight) {
+            this._listModel.setItemsHeight(newOptions.tileHeight);
         }
         TileView.superclass._beforeUpdate.apply(this, arguments);
     },
