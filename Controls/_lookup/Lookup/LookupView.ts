@@ -5,7 +5,6 @@ import getWidthUtil = require('Controls/Utils/getWidth');
 import Collection = require('Controls/_lookup/SelectedCollection');
 import itemsTemplate = require('wml!Controls/_lookup/SelectedCollection/SelectedCollection');
 import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Utils');
-import Env = require('Env/Env');
 import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
 import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTemplate');
 import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
@@ -121,23 +120,17 @@ var _private = {
          maxVisibleItems = newOptions.multiLine ? newOptions.maxVisibleItems : items.length,
          visibleItems = _private.getLastSelectedItems(newOptions.items, maxVisibleItems);
 
-      /* toDO !KONGO Шаблонизатор для кавычки в шаблоне возвращает строковое представление в виде "&amp;quot;", т.е. &quot (ковычка) представляется как &amp;quot;
-       * при вставке в innerHTML на выходе мы получим "&quot;", для того что бы получить  кавычку и правильно посчитать ширину элементов сами &amp заменяем на &*/
-      measurer.innerHTML = itemsTemplate({
-         _options: _private.getCollectionOptions({
-            itemTemplate: newOptions.itemTemplate,
-            readOnly: newOptions.readOnly,
-            displayProperty: newOptions.displayProperty,
-            maxVisibleItems: maxVisibleItems,
-            _counterWidth: counterWidth
-         }),
-         _items: items,
-         _visibleItems: visibleItems,
-         _getItemMaxWidth: selectedCollectionUtils.getItemMaxWidth,
-         _contentTemplate: ContentTemplate,
-         _crossTemplate: CrossTemplate,
-         _counterTemplate: CounterTemplate
-      }).replace(/&amp;/g, '&');
+         /* toDO !KONGO Шаблонизатор для кавычки в шаблоне возвращает строковое представление в виде "&amp;quot;", т.е. &quot (ковычка) представляется как &amp;quot;
+          * при вставке в innerHTML на выходе мы получим "&quot;", для того что бы получить  кавычку и правильно посчитать ширину элементов сами &amp заменяем на &*/
+         measurer.innerHTML = itemsTemplate({
+            _options: merge(Collection.getDefaultOptions(), _private.getCollectionOptions(newOptions, maxVisibleItems, counterWidth)),
+            _items: items,
+            _visibleItems: visibleItems,
+            _getItemMaxWidth: selectedCollectionUtils.getItemMaxWidth,
+            _contentTemplate: ContentTemplate,
+            _crossTemplate: CrossTemplate,
+            _counterTemplate: CounterTemplate
+         }).replace(/&amp;/g, '&');
 
       if (newOptions.multiLine) {
          measurer.style.width = fieldWrapperWidth - SHOW_SELECTOR_WIDTH + 'px';
@@ -166,11 +159,16 @@ var _private = {
       }, 0);
    },
 
-   getCollectionOptions: function(config) {
-      return merge(config, Collection.getDefaultOptions(), {
-         preferSource: true
-      });
-   },
+      getCollectionOptions: function(options, maxVisibleItems, counterWidth) {
+         return {
+            itemTemplate: options.itemTemplate,
+            readOnly: options.readOnly,
+            displayProperty: options.displayProperty,
+            itemsLayout: options.multiLine ? 'default' : 'oneRow',
+            maxVisibleItems,
+            _counterWidth: counterWidth
+         };
+      },
 
    getLastSelectedItems: function(items, itemsCount) {
       return chain.factory(items).last(itemsCount).value();
