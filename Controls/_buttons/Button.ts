@@ -42,7 +42,10 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @public
  * @author Красильников А.С.
  * @category Button
- * @demo Controls-demo/Buttons/ButtonDemoPG
+ * @demo Controls-demo/Buttons/ViewModes/Index
+ * @demo Controls-demo/Buttons/SizesAndHeights/Index
+ * @demo Controls-demo/Buttons/FontStyles/Index
+ * @demo Controls-demo/Buttons/IconStyles/Index
  */
 
 /*
