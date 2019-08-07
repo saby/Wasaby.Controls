@@ -21,7 +21,7 @@ import source = require('Types/source');
 
       _beforeMount: function(newOptions) {
          this._menuSource = this._getMenuSource();
-         this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount);
+         this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount, newOptions.root);
       },
 
       _getMenuSource: function() {
@@ -33,7 +33,7 @@ import source = require('Types/source');
 
       _beforeUpdate: function(newOptions) {
          if (this._options.selectedKeys !== newOptions.selectedKeys || this._options.excludedKeys !== newOptions.excludedKeys || this._options.selectedKeysCount !== newOptions.selectedKeysCount) {
-            this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount);
+            this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount, newOptions.root);
          }
       },
 
@@ -44,11 +44,13 @@ import source = require('Types/source');
          }
       },
 
-      _updateSelection: function(selectedKeys, excludedKeys, count) {
-         if (selectedKeys[0] === null && !excludedKeys.length) {
-            this._menuCaption = rk('Отмечено всё');
-         } else if (count > 0) {
+      _updateSelection: function(selectedKeys, excludedKeys, count, root) {
+         if (count > 0) {
             this._menuCaption = rk('Отмечено') + ': ' + count;
+         } else if (selectedKeys[0] === root && (!excludedKeys.length || excludedKeys[0] === root && excludedKeys.length === 1)) {
+            this._menuCaption = rk('Отмечено всё');
+         } else if (count === null) {
+            this._menuCaption = rk('Отмечено');
          } else {
             this._menuCaption = rk('Отметить');
          }
@@ -61,6 +63,12 @@ import source = require('Types/source');
          });
       }
    });
+
+   MultiSelector.getDefaultOptions = function() {
+      return {
+         root: null
+      }
+   };
 
    export = MultiSelector;
 
