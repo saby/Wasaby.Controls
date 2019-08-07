@@ -6,7 +6,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
       var
          cfg = {
             multiSelectVisibility: 'visible',
-            stickyColumnsCount: 1
+            stickyColumnsCount: 1,
+            listModel: {
+               getResultsPosition: () => undefined
+            }
          },
          columnScroll = new ColumnScroll(cfg);
 
@@ -38,6 +41,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             }
          }
       };
+
       it('_beforeMount', function() {
          var
             baseCreateGuid = Entity.Guid.create;
@@ -125,7 +129,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             cfg = {
                multiSelectVisibility: 'visible',
                stickyColumnsCount: 1,
-               columnScrollStartPosition: 'end'
+               columnScrollStartPosition: 'end',
+               listModel: {
+                  getResultsPosition: () => undefined
+               }
             },
             endColumnScroll = new ColumnScroll(cfg);
 
@@ -441,7 +448,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(columnScroll._leftOffsetForHScroll, 100);
          assert.equal(columnScroll._offsetForHScroll, 50);
 
-         columnScroll._options.resultsPosition = 'top';
+         columnScroll._options.listModel.getResultsPosition = () => 'top';
          columnScroll._setOffsetForHScroll();
 
          assert.equal(columnScroll._offsetForHScroll, 100);
