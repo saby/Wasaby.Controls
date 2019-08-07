@@ -5,7 +5,6 @@
               name="columnScrollbar"
               position="{{_scrollPosition}}"
               direction="horizontal"
-              isIe="{{_isIe}}"
               contentSize="{{_contentSize}}"
               leftOffset="{{_leftOffsetForHScroll}}"
               attr:class="controls-ColumnScroll"

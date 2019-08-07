@@ -145,6 +145,7 @@ import 'css!theme?Controls/scroll';
              * Позиция курсора относительно страницы, в начале перемещения.
              */
             _currentPageOffset: null,
+            _isIe: Env.detection.isIE,
 
             _afterMount: function() {
                this._resizeHandler();
@@ -313,7 +314,7 @@ import 'css!theme?Controls/scroll';
             _resizeHandler: function() {
                this._setSizes(this._options.contentSize);
                this._setPosition(this._options.position);
-            }
+            },
          });
 
       Scrollbar.getDefaultOptions = function() {

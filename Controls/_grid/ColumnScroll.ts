@@ -130,11 +130,9 @@ const
       _transformSelector: '',
       _offsetForHScroll: 0,
       _leftOffsetForHScroll: 0,
-      _isIe: false,
 
       _beforeMount() {
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
-         this._isIe = detection.isIE ? true : false;
       },
 
       _afterMount() {
@@ -172,7 +170,7 @@ const
       },
 
       _setOffsetForHScroll() {
-         if (!this._isIe) {
+         if (!detection.isIE) {
             _private.setOffsetForHScroll(this);
          }
       },
