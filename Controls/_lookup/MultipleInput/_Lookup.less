@@ -1,4 +1,9 @@
-.controls-MultipleInput__SelectedCollection_item {
+/* toDO !KINGO
+    В поле связи с множественным выбором выбранные записи отображаются в одну строку, если запись не влезает, то она просто не будет отображена.
+    MultipleInput - это особое поле связи с множественным выбором, где необходимо отобразить все выбранные записи, даже если они не влезают,
+    они будут обрезаны по определённым правилам, поэтому мы перебиваем flex-shrink, чтобы запись обрезалась троеточием. 
+*/
+.controls-MultipleInput .controls-MultipleInput__SelectedCollection_item {
     flex-shrink: 1;
     min-width: 0;
 }

@@ -732,7 +732,7 @@ var _private = {
     }, 200),
 
     handleListScrollSync(self, params) {
-        if (self._options.itemActions){
+        if (self._hasItemActions){
             self._savedCanUpdateItemsActions = self._canUpdateItemsActions || self._savedCanUpdateItemsActions;
         }
         self._lockItemActionsByScroll = true;
@@ -1176,6 +1176,9 @@ var _private = {
             .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
             .add('controls-BaseControl-emptyView__loadingIndicator', itemsCount === 0)
             .compile();
+    },
+    hasItemActions: function(itemActions, itemActionsProperty) {
+        return !!(itemActions || itemActionsProperty);
     }
 
 };
@@ -1280,6 +1283,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden';
 
+        this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
+
         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
             var
                 viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), { collapsedGroups: collapsedGroups }) : cClone(newOptions);
@@ -1346,7 +1351,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom);
             _private.startScrollEmitter(this);
         }
-        if (this._options.itemActions) {
+        if (this._hasItemActions) {
             this._canUpdateItemsActions = true;
         }
         if (this._options.itemsDragNDrop) {
@@ -1432,7 +1437,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
-            if (this._options.itemActions){
+            if (this._hasItemActions){
                 if(!this._lockItemActionsByScroll) {
                     this._canUpdateItemsActions = true;
                     this._savedCanUpdateItemsActions = false;
@@ -1577,7 +1582,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._needScrollCalculation) {
             _private.startScrollEmitter(this);
         }
-        if (this._options.itemActions) {
+        if (this._hasItemActions) {
             this._canUpdateItemsActions = false;
         }
         if (this._shouldNotifyOnDrawItems) {
@@ -1714,7 +1719,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newKey);
             this._listViewModel.setActiveItem(itemData);
         }
-        if (direction === 'left' && (this._options.itemActions || this._options.itemActionsProperty)) {
+        if (direction === 'left' && this._hasItemActions) {
             this._children.itemActions.updateItemActions(itemData.item);
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
@@ -2021,7 +2026,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return _private.getLoadingIndicatorClasses(this._loadingIndicatorState, this._listViewModel.getCount());
     },
     _onHoveredItemChanged: function(e, item, container) {
-        if (this._options.itemActions){
+        if (this._hasItemActions){
             let isDragging = !!this._listViewModel.getDragEntity();
 
             // itemMouseEnter иногда срабатывает между _beforeUpdate и _afterUpdate.

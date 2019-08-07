@@ -271,5 +271,25 @@ define([
             assert.equal(config.offset.horizontal, 0);
          }
       });
+
+      it('_private.getCollectionOptions', function() {
+         var standardOptions = {
+            itemTemplate: 'testItemTemplate',
+            readOnly: 'testReadOnly',
+            displayProperty: 'testReadOnly',
+            itemsLayout: 'oneRow',
+            maxVisibleItems: 10,
+            _counterWidth: '10px'
+         };
+
+         var controlOptions = {
+            itemTemplate: 'testItemTemplate',
+            readOnly: 'testReadOnly',
+            displayProperty: 'testReadOnly',
+            multiLine: false,
+         };
+
+         assert.deepEqual(Lookup._private.getCollectionOptions(controlOptions, 10, '10px'), standardOptions);
+      });
    });
 });

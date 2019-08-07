@@ -29,14 +29,13 @@
 .controls-VScrollbar__thumb_horizontal {
    min-width: @min-height_Scrollbar-thumb;
    height: 100%;
-   background-color: @bg_Scrollbar-horizontal_thumb_normal;
 }
 
 .controls-VScrollbar__thumb {
    border-radius: @border-radius_Scrollbar-thumb;
 }
 
-.controls-VScrollbar__thumb:not(.controls-VScrollbar__thumb_horizontal) {
+.controls-VScrollbar__thumb {
    background-color: @bg_Scrollbar-thumb_normal;
 }
 
@@ -59,7 +58,7 @@
    border-radius: @border-radius_Scrollbar-thumb_animation;
 }
 
-.controls-VScrollbar__thumb:not(.controls-VScrollbar__thumb_horizontal):hover,
+.controls-VScrollbar__thumb:hover,
 .controls-VScrollbar__thumb_dragging_normal {
    background-color: @bg_Scrollbar-thumb_active_normal;
 }
@@ -67,4 +66,11 @@
 .controls-VScrollbar__thumb_inverted:hover,
 .controls-VScrollbar__thumb_dragging_inverted {
    background-color: @bg_Scrollbar-thumb_active_inverted;
+}
+
+.controls-VScrollbar__thumb_horizontal {
+   background-color: @bg_Scrollbar-horizontal_thumb_normal;
+}
+.controls-VScrollbar__thumb_horizontal:hover {
+   background-color: @bg_Scrollbar-horizontal_thumb_normal;
 }
