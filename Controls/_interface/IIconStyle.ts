@@ -29,6 +29,7 @@ export default interface IIconStyle {
  * @variant info
  * @variant default
  * @default secondary
+ * @demo Controls-demo/Buttons/IconStyles/Index
  * @example
  * Кнопка с иконкой по умолчанию.
  * <pre>

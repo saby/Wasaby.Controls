@@ -42,7 +42,10 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @public
  * @author Красильников А.С.
  * @category Button
- * @demo Controls-demo/Buttons/ButtonDemoPG
+ * @demo Controls-demo/Buttons/ViewModes/Index
+ * @demo Controls-demo/Buttons/SizesAndHeights/Index
+ * @demo Controls-demo/Buttons/FontStyles/Index
+ * @demo Controls-demo/Buttons/IconStyles/Index
  */
 
 /*
@@ -76,6 +79,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @variant button Кнопка по умолчанию.
  * @variant toolButton Кнопка панели инструментов.
  * @default button
+ * @demo Controls-demo/Buttons/ViewModes/Index
  * @example
  * Кнопка в режиме отображения 'link'.
  * <pre>
@@ -159,6 +163,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @variant primary
  * @variant secondary
  * @default secondary
+ * @demo Controls-demo/Buttons/ViewModes/Index
  * @example
  * Кнопка со стилем "Primary" с иконкой по умолчанию.
  * <pre>
