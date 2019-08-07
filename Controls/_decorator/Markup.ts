@@ -4,6 +4,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import template = require('./Markup/resources/template');
+import * as linkDecorateUtils from './Markup/resources/linkDecorateUtils'
+import {delay} from 'Types/function';
 
 
    /**
@@ -87,11 +89,27 @@ import template = require('./Markup/resources/template');
    class MarkupDecorator extends Control<IControlOptions> {
       _template: TemplateFunction = template;
 
-      private _contextMenuHandler(event: SyntheticEvent): void {
+      _contextMenuHandler(event: SyntheticEvent<MouseEvent>): void {
          if (event.target.tagName.toLowerCase() === 'a') {
             // Для ссылок требуется браузерное контекстное меню.
             event.stopImmediatePropagation();
          }
+      }
+
+      _copyHandler(event: SyntheticEvent<ClipboardEvent>): void {
+         const decoratedLinkNodes = event.currentTarget.getElementsByClassName(linkDecorateUtils.getClasses().link);
+         Array.prototype.forEach.call(decoratedLinkNodes, (decoratedLink) => {
+            const decoratedLinkImage = decoratedLink.getElementsByTagName('img')[0];
+            const span = document.createElement('span');
+            span.innerHTML = decoratedLink.href;
+
+            // Если заменить картинки на спан с текстом ссылки во время перехвата и вернуть обратно асинхронно,
+            // то в ворд вставятся ссылки, не меняя при этом страницу внешне.
+            decoratedLink.replaceChild(span, decoratedLinkImage);
+            delay(() => {
+               decoratedLink.replaceChild(decoratedLinkImage, span);
+            });
+         });
       }
    }
 

@@ -153,6 +153,7 @@ import {IoC} from 'Env/Env';
       const events = attr.events || {};
       if (typeof window !== 'undefined') {
          addEventListener(events, 'on:contextmenu', '_contextMenuHandler');
+         addEventListener(events, 'on:copy', '_copyHandler');
       }
       var elements = [],
          key = (attr && attr.key) || '_',
