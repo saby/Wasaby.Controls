@@ -79,6 +79,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @variant button Кнопка по умолчанию.
  * @variant toolButton Кнопка панели инструментов.
  * @default button
+ * @demo Controls-demo/Buttons/ViewModes/Index
  * @example
  * Кнопка в режиме отображения 'link'.
  * <pre>
@@ -162,6 +163,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @variant primary
  * @variant secondary
  * @default secondary
+ * @demo Controls-demo/Buttons/ViewModes/Index
  * @example
  * Кнопка со стилем "Primary" с иконкой по умолчанию.
  * <pre>

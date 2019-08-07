@@ -30,6 +30,7 @@ export default interface IFontSize {
  * @variant 3xl
  * @variant 4xl
  * @variant 5xl
+ * @demo Controls-demo/Buttons/SizesAndHeights/Index
  * @example
  * Кнопка с размером шрифта xl.
  * <pre>

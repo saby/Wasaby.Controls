@@ -28,6 +28,7 @@ export default interface IHeight {
  * @variant xl
  * @variant 2xl
  * @variant default
+ * @demo Controls-demo/Buttons/SizesAndHeights/Index
  * @example
  * Кнопка большого размера (l).
  * <pre>

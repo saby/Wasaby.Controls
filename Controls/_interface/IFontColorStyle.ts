@@ -30,6 +30,7 @@ export default interface IFontColorStyle {
  * @variant link
  * @variant label
  * @variant default
+ * @demo Controls-demo/Buttons/FontStyles/Index
  * @example
  * Кнопка со стилем шрифта по умолчанию.
  * <pre>
@@ -64,4 +65,4 @@ export default interface IFontColorStyle {
  *    <Controls.buttons:Button icon="icon-Add" fontColorStyle="success" viewMode="button"/>
  * </pre>
  * @see Icon
- */ 
+ */
