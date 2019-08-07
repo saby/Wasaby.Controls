@@ -1,12 +1,11 @@
 <div class="ControlsDemo-EditableArea">
    <div class="ControlsDemo-EditableArea__title">Пример 1 - на подложке</div>
+   <div class="ControlsDemo-EditableArea__firstExample">
    <Controls.editableArea:View
       name="edit"
       editObject="{{_record}}"
       style="withBackground"
-      toolbarVisibility="{{true}}"
-      attr:class="ControlsDemo-EditableArea__firstExample"
-   >
+      toolbarVisibility="{{true}}">
       <div class="ControlsDemo-EditableArea__firstExampleWrapper">
          <span class="ControlsDemo-EditableArea__label">Шаблон:</span>
          <Controls.editableArea:Base
@@ -19,6 +18,7 @@
          </Controls.editableArea:Base>
       </div>
    </Controls.editableArea:View>
+   </div>
    <div class="ControlsDemo-EditableArea__title">Пример 2 - редактирование во вкладке</div>
    <ws:partial template="Controls/popupTemplate:Stack"
                showMaximizedButton="{{true}}"

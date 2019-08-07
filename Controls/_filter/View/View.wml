@@ -13,7 +13,7 @@
 
 <ws:template name="cross">
    <ws:if data="{{!_options.readOnly}}">
-      <span class="controls-FilterView__iconReset_theme_{{_options.theme}} icon-Close" ws-no-focus="{{true}}"></span>
+      <span class="controls-FilterView__iconReset_theme_{{_options.theme}} icon-CloseNew" ws-no-focus="{{true}}"></span>
    </ws:if>
 </ws:template>
 

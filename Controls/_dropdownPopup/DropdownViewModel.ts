@@ -154,6 +154,10 @@ import {factory} from 'Types/chain';
             return this._itemsModel.isLast();
          },
 
+         isGroupNext: function() {
+            return !!this._itemsModel.getItemDataByItem(this._itemsModel.getNext().dispItem).isGroup;
+         },
+
          getCurrent: function() {
             var itemsModelCurrent = this._itemsModel.getCurrent();
 

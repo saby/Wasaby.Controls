@@ -142,6 +142,25 @@ define(
             }, cfg);
             assert.equal(cfg.notHide, true);
          });
+
+         it('Notification opener open/close', (done) => {
+            let closeId = null;
+            Notification.openPopup = () => {
+               return Promise.resolve('123');
+            };
+
+            Notification.closePopup = (id) => {
+               closeId = id;
+            };
+
+            const opener = new Notification({});
+            opener.open().then((id) => {
+               assert.equal(id, '123');
+               opener.close();
+               assert.equal(closeId, '123');
+               done();
+            });
+         });
       });
    }
 );

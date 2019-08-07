@@ -90,7 +90,10 @@ define([
 
       it('getCurrent', function() {
          var cfg = {
-            items: data,
+            items: new collection.RecordSet({
+               rawData: data,
+               idProperty: 'id'
+            }),
             keyProperty: 'id',
             displayProperty: 'title',
             markedKey: 1,
@@ -104,9 +107,95 @@ define([
          assert.equal('id', cur.keyProperty, 'Incorrect field set on getCurrent()');
          assert.equal('title', cur.displayProperty, 'Incorrect field set on getCurrent()');
          assert.equal(0, cur.index, 'Incorrect field set on getCurrent()');
-         assert.deepEqual(data[0], cur.item, 'Incorrect field set on getCurrent()');
+         assert.deepEqual(cfg.items.at(0), cur.item, 'Incorrect field set on getCurrent()');
          assert.isTrue(cur.isSelected, 'Incorrect field set on getCurrent()');
          assert.isTrue(cur.multiSelectStatus, 'Incorrect field set on getCurrent()');
+      });
+
+      it('isSelected', function () {
+         const
+             cfg = {
+                items: new collection.RecordSet({
+                   rawData: data,
+                   idProperty: 'id'
+                }),
+                keyProperty: 'id',
+                displayProperty: 'title',
+                markedKey: 1,
+                markerVisibility: 'visible',
+                selectedKeys: {1: true}
+             },
+             iv = new lists.ListViewModel(cfg);
+
+         assert.isTrue(lists.ListViewModel._private.isSelected(iv, iv.getCurrent()));
+         iv.goToNext();
+         assert.isFalse(lists.ListViewModel._private.isSelected(iv, iv.getCurrent()));
+      });
+
+      it('getItemByMarkedKey', function () {
+         const
+             cfg = {
+                items: new collection.RecordSet({
+                   rawData: data,
+                   idProperty: 'id'
+                }),
+                keyProperty: 'id',
+                displayProperty: 'title',
+                markedKey: 1,
+                markerVisibility: 'visible',
+                selectedKeys: {1: true}
+             },
+             iv = new lists.ListViewModel(cfg);
+
+         let edditingItem = {
+            key: 21,
+            item: {
+               qwe: 123,
+               asd: 456
+            }
+         };
+
+         assert.deepEqual(cfg.items.at(0), lists.ListViewModel._private.getItemByMarkedKey(iv, 1).getContents());
+         iv._setEditingItemData(edditingItem);
+         assert.deepEqual(cfg.items.at(0), lists.ListViewModel._private.getItemByMarkedKey(iv, 1).getContents());
+         assert.isUndefined(lists.ListViewModel._private.getItemByMarkedKey(iv, 21));
+         edditingItem.isAdd = true;
+         iv._markedKey = 21;
+         assert.deepEqual(edditingItem.item, lists.ListViewModel._private.getItemByMarkedKey(iv, 21));
+      });
+
+      it('markAddingItem && restoreMarker', function () {
+         const
+             cfg = {
+                items: new collection.RecordSet({
+                   rawData: data,
+                   idProperty: 'id'
+                }),
+                markedKey: 1,
+                keyProperty: 'id',
+                displayProperty: 'title',
+                markerVisibility: 'onactivated',
+             },
+             iv = new lists.ListViewModel(cfg);
+
+         let modelVersion = 0;
+
+         iv._nextModelVersion = () => {
+            modelVersion++;
+         };
+
+         assert.isUndefined(iv._savedMarkedKey);
+         assert.equal(1, iv._markedKey);
+
+         iv._editingItemData = {key: 123};
+         iv.markAddingItem();
+         assert.equal(1, iv._savedMarkedKey);
+         assert.equal(123, iv._markedKey);
+
+
+         iv.restoreMarker();
+         assert.isUndefined(iv._savedMarkedKey);
+         assert.equal(1, iv._markedKey);
       });
 
       it('updateIndexes', function() {

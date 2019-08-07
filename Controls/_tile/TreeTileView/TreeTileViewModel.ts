@@ -39,6 +39,9 @@ var TreeTileViewModel = TreeViewModel.extend({
         //before grouping and when moving from folders to records, you need to draw invisible items
         if (current.isGroup || prevItem && prevItem.isNode && prevItem.isNode() && !current.dispItem.isNode()) {
             current.beforeItemTemplate = InvisibleFor;
+            current.beforeItemTemplateOptions = {
+                type: prevItem && prevItem.isNode && prevItem.isNode() ? 'folder' : 'leaf'
+            }
         }
 
         if (hoveredItem && hoveredItem.key === current.key) {
@@ -117,6 +120,11 @@ var TreeTileViewModel = TreeViewModel.extend({
     setRoot: function () {
         this._tileModel.setHoveredItem(null);
         TreeTileViewModel.superclass.setRoot.apply(this, arguments);
+    },
+
+    setNodesHeight: function(nodesHeight) {
+        this._options.nodesHeight = nodesHeight;
+        this._nextModelVersion();
     },
 
     destroy: function () {
