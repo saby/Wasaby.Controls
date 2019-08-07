@@ -115,11 +115,11 @@
  * @property {GridCellVAlign} [valign] Выравнивание содержимого ячейки по вертикали.
  * @property {String} [template] Шаблон заголовка ячейки. CSS-класс устанавливает правый отступ для заголовка ячейки для выравнивания по целым числам в полях ввода денег.
  * @property {String} [sortingProperty] Свойство, по которому выполняется сортировка.
- * @property {Number} [startRow] Номер горизонтальной css grid границы, с который начинается строка.
- * @property {Number} [endRow] Номер горизонтальной css grid границы, на который заканчивается строка.
- * @property {Number} [startColumn] Номер верикальной css grid границы, на который начинается строка.
- * @property {Number} [endColumn] Номер Вертикальной css grid границы, на который заканчивается строка.
- * @property {Object} [templateOptions] Опции, передаваемые в шаблон ячейки заголовка. 
+ * @property {Number} [startRow] Порядковый номер строки на которой начинается ячейка.
+ * @property {Number} [endRow] Порядковый номер строки на которой заканчивается ячейка.
+ * @property {Number} [startColumn] Порядковый номер колонки на которой начинается ячейка.
+ * @property {Number} [endColumn] Порядковый номер колонки на которой заканчивается ячейка.
+ * @property {Object} [templateOptions] Опции, передаваемые в шаблон ячейки заголовка.
  */
 
 /*
@@ -129,6 +129,10 @@
  * @property {GridCellVAlign} [valign] Vertical cell content align.
  * @property {String} [template] Template for the header cell. CSS class controls-Grid__header-cell_spacing_money sets the right indent for the content of the header cell to align by integers in money fields.
  * @property {String} [sortingProperty] Property by which doing sorting.
+ * @property {Number} [startRow] The sequence number of the line on which the cell begins.
+ * @property {Number} [endRow] The sequence number of the line on which the cell ends.
+ * @property {Number} [startColumn] The serial number of the column on which the cell begins.
+ * @property {Number} [endColumn] The serial number of the column on which the cell ends.
  */
 
 /**
