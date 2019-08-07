@@ -111,10 +111,11 @@ const
             }
             self._offsetForHScroll = HeaderGroup[0].offsetHeight;
          }
-
          if (self._options.resultsPosition === 'top') {
-            const ResultsGroup = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
-            self._offsetForHScroll += ResultsGroup[0].offsetHeight;
+            const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0];
+            if (ResultsContainer) {
+               self._offsetForHScroll += ResultsContainer.childNodes[0].offsetHeight;
+            }
          }
       }
    },
