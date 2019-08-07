@@ -787,7 +787,6 @@ var
                );
             }
 
-
             if (headerColumn.column.sortingProperty) {
                 headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
             }
@@ -836,6 +835,10 @@ var
                 cellContentClasses += ' controls-Grid__header-cell_align_items_' + headerColumn.column.valign;
             }
 
+            if (GridLayoutUtil.isOldIE()) {
+                cellContentClasses += ' controls-Grid__header-cell-content-block';
+            }
+
             headerColumn.shadowVisibility = shadowVisibility;
             headerColumn.offsetTop = offsetTop;
             headerColumn.cellStyles = cellStyles;
@@ -849,14 +852,18 @@ var
         // ---------------------- resultColumns ----------------------
         // -----------------------------------------------------------
 
-        getResultsPosition: function(): string {
-            const items = this.getItems();
-            if (items && items.getCount() > 1) {
+        getResultsPosition: function() {
+            if (this.isDrawResults()) {
                 if (this._options.results) {
                     return this._options.results.position;
                 }
                 return this._options.resultsPosition;
             }
+        },
+
+        isDrawResults: function() {
+            const items = this.getItems();
+            return items && items.getCount() > 1;
         },
 
         setResultsPosition: function(position) {
@@ -1048,6 +1055,14 @@ var
             return this._model.getItemById(id, keyProperty);
         },
 
+        markAddingItem() {
+            this._model.markAddingItem();
+        },
+
+        restoreMarker() {
+            this._model.restoreMarker();
+        },
+
         setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
         },
@@ -1203,6 +1218,11 @@ var
             current.multiSelectClassList += current.hasMultiSelect ? ' controls-GridView__checkbox' : '';
 
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => _private.getColumnAlignGroupStyles(current, columnAlignGroup);
+
+            let superShouldDrawMarker = current.shouldDrawMarker;
+            current.shouldDrawMarker = (markerVisibility, columnIndex) => {
+                return columnIndex === 0 && superShouldDrawMarker.apply(this, [markerVisibility]);
+            };
 
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);

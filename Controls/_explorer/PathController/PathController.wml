@@ -10,7 +10,7 @@
                                      on:arrowClick="_notifyHandler('arrowClick')"/>
 </ws:template>
 <div>
-<ws:if data="{{(_options.items || _options.rootVisible) && _needCrumbs}}">
+<ws:if data="{{_needCrumbs}}">
    <ws:if data="{{_options.stickyHeader}}">
       <Controls.scroll:StickyHeader mode="stackable" shadowVisibility="hidden" fixedZIndex="{{5}}">
          <ws:partial template="headingPath" />

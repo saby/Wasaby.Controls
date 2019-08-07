@@ -19,9 +19,9 @@ define([
 
       function stubWidthUtil() {
          const stub = sandbox.stub(getWidthUtil, 'getWidth');
-         stub.withArgs('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward"></span>').returns(ARROW_WIDTH);
+         stub.withArgs('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForwardBsLine"></span>').returns(ARROW_WIDTH);
          stub.withArgs('<div class="controls-BreadCrumbsView__title_min"></div>').returns(BREAD_CRUMB_MIN_WIDTH);
-         stub.withArgs('<div class="controls-BreadCrumbsView__crumb"><span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward controls-BreadCrumbsView__arrow_enabled"></span><div class="controls-BreadCrumbsView__titleWrapper"><div class="controls-BreadCrumbsView__title controls-BreadCrumbsView__title_enabled">...</div></div></div>').returns(DOTS_WIDTH);
+         stub.withArgs('<div class="controls-BreadCrumbsView__crumb"><span class="controls-BreadCrumbsView__arrow icon-size icon-DayForwardBsLine controls-BreadCrumbsView__arrow_enabled"></span><div class="controls-BreadCrumbsView__titleWrapper"><div class="controls-BreadCrumbsView__title controls-BreadCrumbsView__title_enabled">...</div></div></div>').returns(DOTS_WIDTH);
       }
 
       beforeEach(function() {

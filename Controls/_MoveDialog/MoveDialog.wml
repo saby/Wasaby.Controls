@@ -16,7 +16,7 @@
                                            caption="{[В корень]}"
                                            on:click="_onItemActionsClick('move', _options.root)"
                                            icon="icon-Undo2"
-                                           iconSize="s" iconStyle="secodary"/>
+                                           iconSize="s" iconStyle="secondary"/>
                </ws:if>
                <Controls.scroll:Container attr:class="controls-MoveDialog__scroll">
                   <Controls.list:Container>
@@ -36,6 +36,7 @@
                         bind:root="_root"
                         itemsFilterMethod="{{_itemsFilterMethod}}"
                         expanderDisplayMode="adaptive"
+                        emptyTemplate="{{_options.emptyTemplate}}"
                         columns="{{_columns}}"/>
                   </Controls.list:Container>
                </Controls.scroll:Container>

@@ -1675,6 +1675,13 @@ define([
             });
          })
       });
+      it('hasItemActions', function() {
+         let itemAct = [1, 2, 3];
+         let itemActionsProp = 'itemActions';
+         assert.isTrue(lists.BaseControl._private.hasItemActions(itemAct));
+         assert.isTrue(lists.BaseControl._private.hasItemActions(undefined, itemActionsProp));
+         assert.isFalse(lists.BaseControl._private.hasItemActions(undefined, undefined));
+      });
       describe('_canUpdateItemsActions', function() {
          var lnSource = new sourceLib.Memory({
                idProperty: 'id',
@@ -2418,8 +2425,7 @@ define([
          assert.strictEqual(notifiedEvent, 'dragEnter');
          assert.strictEqual(notifiedEntity, goodDragObject.entity);
       });
-      
-      it('itemMouseDown prevents native drag synchronously', function() {
+      it('native drag prevent only by native "dragstart" event', function() {
          let isDefaultPrevented = false;
 
          const
@@ -2460,15 +2466,20 @@ define([
                   closest: () => false
                },
                preventDefault: () => isDefaultPrevented = true
+            },
+            fakeDragStart = {
+               preventDefault: () => isDefaultPrevented = true
             };
 
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
+         // по mouseDown нельзя вызывать preventDefault, иначе сломается фокусировка
          ctrl._itemMouseDown({}, { key: 1 }, fakeMouseDown);
+         assert.isFalse(isDefaultPrevented);
 
-         // getItemsBySelection будет асинхронный, preventDefault все равно должен
-         // быть вызван синхронно
+          // По dragStart нужно вызывать preventDefault
+         ctrl._nativeDragStart(fakeDragStart);
          assert.isTrue(isDefaultPrevented);
       });
 

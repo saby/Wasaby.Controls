@@ -22,6 +22,7 @@ var TreeTileViewModel = TreeViewModel.extend({
             prevItem, hoveredItem,
             current = TreeTileViewModel.superclass.getItemDataByItem.apply(this, arguments);
 
+        current.scalingMode = this._options.tileScalingMode;
         if (current._treeTileViewModelCached) {
             return current;
         } else {
@@ -120,6 +121,11 @@ var TreeTileViewModel = TreeViewModel.extend({
     setRoot: function () {
         this._tileModel.setHoveredItem(null);
         TreeTileViewModel.superclass.setRoot.apply(this, arguments);
+    },
+
+    setNodesHeight: function(nodesHeight) {
+        this._options.nodesHeight = nodesHeight;
+        this._nextModelVersion();
     },
 
     destroy: function () {

@@ -19,18 +19,20 @@ var _private = {
          self._suggestListOptions = context.suggestOptionsField.options;
 
          if (self._suggestListOptions.dialogMode) {
-            var navigation = clone(self._suggestListOptions.navigation);
+            if (self._suggestListOptions.navigation) {
+               var navigation = clone(self._suggestListOptions.navigation);
 
-            /* to turn on infinityScroll */
-            navigation.view = 'infinity';
-            if (!navigation.viewConfig) {
-               navigation.viewConfig = {};
+               /* to turn on infinityScroll */
+               navigation.view = 'infinity';
+               if (!navigation.viewConfig) {
+                  navigation.viewConfig = {};
+               }
+
+               /* to show paging */
+               navigation.viewConfig.pagingMode = true;
+               navigation.sourceConfig.pageSize = DIALOG_PAGE_SIZE;
+               self._navigation = navigation;
             }
-
-            /* to show paging */
-            navigation.viewConfig.pagingMode = true;
-            navigation.sourceConfig.pageSize = DIALOG_PAGE_SIZE;
-            self._navigation = navigation;
          } else {
             let stickyPosition = self._suggestListOptions.stickyPosition;
 

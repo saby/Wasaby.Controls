@@ -28,8 +28,8 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
          return newHeader;
       },
 
-      needCrumbs: function(header, items) {
-         return !!items && ((!header && items.length > 0) || items.length > 1);
+      needCrumbs: function(header, items, rootVisible) {
+         return !!items && ((!header && items.length > 0) || items.length > 1) || !!rootVisible;
       }
    };
 
@@ -44,9 +44,9 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
       },
 
       _beforeUpdate: function(newOptions) {
-         if (this._options.items !== newOptions.items || !GridIsEqualUtil.isEqualWithSkip(this._options.header, newOptions.header, { template: true })) {
+         if (this._options.rootVisible !== newOptions.rootVisible || this._options.items !== newOptions.items || !GridIsEqualUtil.isEqualWithSkip(this._options.header, newOptions.header, { template: true })) {
             this._header = _private.getHeader(this, newOptions);
-            this._needCrumbs = _private.needCrumbs(this._header, newOptions.items);
+            this._needCrumbs = _private.needCrumbs(this._header, newOptions.items, newOptions.rootVisible);
          }
       },
 
