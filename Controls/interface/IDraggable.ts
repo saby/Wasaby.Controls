@@ -286,7 +286,7 @@
  *                       itemsDragNDrop="allow">
  *        </Controls.list:View>
  *        <Controls.list:Mover name="listMover" />
- *     </Controls.list:DataContainer
+ *     </Controls.list:DataContainer>
  * </pre>
  *
  * <pre>
@@ -330,7 +330,7 @@
  *        <Controls.list:View on:dragStart="_dragStart()"
  *                       itemsDragNDrop="allow">
  *        </Controls.list:View>
- *     </Controls.list:DataContainer
+ *     </Controls.list:DataContainer>
  *     <Controls.list:DataContainer source="{{_secondSource}}" keyProperty="id">
  *        <Controls.list:View on:dragEnter="_dragEnter()"
  *                       itemsDragNDrop="allow">
@@ -422,7 +422,7 @@
  *       <Controls.list:View on:changeDragTarget="_changeDragTarget()"
  *                      itemsDragNDrop="allow">
  *       </Controls.list:View>
- *    </Controls.list:DataContainer
+ *    </Controls.list:DataContainer>
  * </pre>
  *
  * <pre>
@@ -455,7 +455,7 @@
  *       <Controls.list:View on:changeDragTarget="_changeDragTarget()"
  *                      itemsDragNDrop="allow">
  *       </Controls.list:View>
- *    </Controls.list:DataContainer
+ *    </Controls.list:DataContainer>
  * </pre>
  *
  * <pre>

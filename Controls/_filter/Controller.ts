@@ -484,9 +484,9 @@ import 'Controls/context';
        *       fastFilterSource="{{_fastFilterSource}}">
        *       <Controls.list:DataContainer>
        *          ...
-       *          <Controls.filter:Fast.Container>
+       *          <Controls.filter:FastContainer>
        *             <Controls.filter:Fast />
-       *          </Controls.filter:Fast.Container>
+       *          </Controls.filter:FastContainer>
        *          ...
        *       </Controls.list:DataContainer>
        *    </Controls.filter:Controller>
@@ -530,9 +530,9 @@ import 'Controls/context';
        *       fastFilterSource="{{_fastFilterSource}}">
        *       <Controls.list:DataContainer>
        *          ...
-       *          <Controls.filter:Fast.Container>
+       *          <Controls.filter:FastContainer>
        *             <Controls.filter:Fast />
-       *          </Controls.filter:Fast.Container>
+       *          </Controls.filter:FastContainer>
        *          ...
        *       </Controls.list:DataContainer>
        *    </Controls.filter:Controller>
