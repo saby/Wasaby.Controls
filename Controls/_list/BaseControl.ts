@@ -456,6 +456,8 @@ var _private = {
         if (_private.applyVirtualScrollIndexesToListModel(self)) {
             _private.applyPlaceholdersSizes(self);
         } else {
+            // если индексы не поменялись, то зовем коллбэк, если поменялись он позовется в beforePaint
+            self._applyScrollTopCallback();
             self._applyScrollTopCallback = null;
         }
     }, 150, true),

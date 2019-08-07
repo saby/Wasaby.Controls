@@ -363,7 +363,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                   sizeCache.scrollHeight - realScrollTop - sizeCache.clientHeight > triggerOffset)) {
                   container.scrollTop = scrollTop - self._topPlaceholderSize;
                } else {
-                  const hasChanges = _private.sendByRegistrar(self, 'virtualScrollMove', {
+                  _private.sendByRegistrar(self, 'virtualScrollMove', {
                      scrollTop,
                      scrollHeight: sizeCache.scrollHeight,
                      clientHeight: sizeCache.clientHeight,
@@ -371,9 +371,6 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                         container.scrollTop = cachedScrollTop - self._topPlaceholderSize;
                      }
                   });
-                  if (!hasChanges) {
-                     container.scrollTop = scrollTop - self._topPlaceholderSize;
-                  }
                }
             } else {
                container.scrollTop = scrollTop;
