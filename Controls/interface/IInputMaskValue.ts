@@ -78,7 +78,7 @@ interface IInputMaskValue {
 /**
  * @event Происходит при изменении значения поля ввода.
  * @name Controls/interface/IInputMaskValue#valueChanged
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {String} value Значение поля без разделителей.
  * @param {String} displayValue Значение поля с разделителями.
  * @remark
@@ -149,7 +149,7 @@ interface IInputMaskValue {
 /**
  * @event Происходит при завершении ввода в поле (потеря фокуса или пользователь нажал клавишу "Enter").
  * @name Controls/interface/IInputMaskValue#inputCompleted
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {String} value Значение поля.
  * @param {String} displayValue Текстовое значение поля.
  * @remark
