@@ -7,17 +7,17 @@ import template = require('wml!Controls/_operations/MultiSelector/MultiSelector'
       _multiSelectStatus: undefined,
 
       _beforeMount: function(newOptions) {
-         this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount);
+         this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount, newOptions.root);
       },
 
       _beforeUpdate: function(newOptions) {
-         this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount);
+         this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount, newOptions.root);
       },
 
-      _updateSelection: function(selectedKeys, excludedKeys, count) {
-         if (selectedKeys[0] === null && !excludedKeys.length) {
+      _updateSelection: function(selectedKeys, excludedKeys, count, root) {
+         if (selectedKeys[0] === root && (!excludedKeys.length || excludedKeys[0] === root && excludedKeys.length === 1)) {
             this._multiSelectStatus = true;
-         } else if (count > 0) {
+         } else if (count > 0 || count === null) {
             this._multiSelectStatus = null;
          } else {
             this._multiSelectStatus = false;
@@ -32,5 +32,11 @@ import template = require('wml!Controls/_operations/MultiSelector/MultiSelector'
    });
 
    MultiSelector._theme = ['Controls/operations'];
+   MultiSelector.getDefaultOptions = function() {
+      return {
+         root: null
+      }
+   };
+
    export = MultiSelector;
 
