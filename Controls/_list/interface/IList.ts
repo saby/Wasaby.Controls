@@ -304,22 +304,29 @@
 /**
  * @name Controls/_list/interface/IList#itemActionVisibilityCallback
  * @cfg {Function} Функция обратного вызова для определения видимости элементов в панели действий над записью.
- * @param {ItemAction} action Объект с конфигурацией конкретной операции.
- * @param {Types/entity:Model} item Модель, содержащая данные записи.
- * @returns {Boolean} Следует ли отображать действие.
+ * @remark
+ * Функция принимает два аргумента:
+ * <ol>
+ *    <li>action — объект с конфигурацией конкретной операции. Свойства объекта описаны <a href="/docs/js/Controls/list/IList/typedefs/ItemAction/">здесь</a>.</li>
+ *    <li>item — модель (см. {@link Types/entity:Model}), содержащая данные записи. </li>
+ * </ol>
+ * Для видимости элемента, из функции следует верунть true.
  * @example
  * Режим "Чтение" недоступен, если запись имеет свойство isNew === false.
+ * WML:
  * <pre>
- *    <Controls.list:View attr:class="demo-News"
- *                        itemActions="{{_itemActions}}"
- *                        source="{{_source}}"
- *                        actionAlignment="vertical"
- *                        actionCaptionPosition="bottom"
- *                        markerVisibility="hidden"
- *                        itemActionVisibilityCallback="{{_visibilityCallback}}"
- *                        ...
- *   </Controls.list:View>
+ * <Controls.list:View
+ *     attr:class="demo-News"
+ *     itemActions="{{_itemActions}}"
+ *     source="{{_source}}"
+ *     actionAlignment="vertical"
+ *     actionCaptionPosition="bottom"
+ *     markerVisibility="hidden"
+ *     itemActionVisibilityCallback="{{_visibilityCallback}}"
+ *     ...
+ * </Controls.list:View>
  * </pre>
+ * TS:
  * <pre>
  *  ...
  *  private _visibilityCallback(action: IItemAction, item: Model): boolean {
