@@ -34,7 +34,6 @@ define([
 
          assert.equal(Lookup._private.getAvailableCollectionWidth(self, afterFieldWrapperWidth, false, false), 80);
          assert.equal(Lookup._private.getAvailableCollectionWidth(self, afterFieldWrapperWidth, false, true), 50);
-         assert.equal(Lookup._private.getAvailableCollectionWidth(self, afterFieldWrapperWidth, false, false, true), 50);
 
          self._fieldWrapperMinHeight = 5;
          assert.equal(Lookup._private.getAvailableCollectionWidth(self, afterFieldWrapperWidth, false, true), 60);
@@ -100,16 +99,10 @@ define([
             multiSelect: true,
             readOnly: false
          }));
-         assert.isFalse(!!lookup._isNeedCalculatingSizes({
+         assert.isFalse(lookup._isNeedCalculatingSizes({
             items: getItems(1),
             multiSelect: false,
             readOnly: false
-         }));
-         assert.isTrue(lookup._isNeedCalculatingSizes({
-            items: getItems(1),
-            multiSelect: false,
-            readOnly: false,
-            comment: 'notEmpty'
          }));
          assert.isFalse(lookup._isNeedCalculatingSizes({
             items: getItems(1),
@@ -138,14 +131,8 @@ define([
             }
          ));
 
-         assert.isFalse(!!lookup._isInputVisible({
+         assert.isFalse(lookup._isInputVisible({
             multiSelect: false,
-            items: getItems(1)
-         }));
-
-         assert.isTrue(!!lookup._isInputVisible({
-            multiSelect: false,
-            comment: 'notEmpty',
             items: getItems(1)
          }));
 
@@ -170,32 +157,6 @@ define([
          assert.isTrue(lookup._isInputVisible({
             multiSelect: false,
             items: getItems(0),
-            readOnly: true
-         }));
-      });
-
-      it('_isInputActive', function() {
-         let lookup = new Lookup();
-
-         assert.isTrue(lookup._isInputActive({
-               multiSelect: false,
-               items: getItems(0)
-            }
-         ));
-
-         assert.isFalse(lookup._isInputActive({
-            multiSelect: false,
-            items: getItems(1)
-         }));
-
-         assert.isTrue(lookup._isInputActive({
-            multiSelect: true,
-            items: getItems(1)
-         }));
-
-         assert.isFalse(lookup._isInputActive({
-            multiSelect: true,
-            items: getItems(1),
             readOnly: true
          }));
       });

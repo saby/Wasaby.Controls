@@ -501,18 +501,6 @@ define(
             assert.isTrue(isCreateNotified);
             assert.isTrue(isPopupOpenedEventTriggered);
          });
-         it('managerPopupResingLine', function() {
-            let popupOptions = {
-               width: 500,
-               maxWidth: 800,
-               minWidth: 300
-            };
-            let Manager = getManager();
-            let offset = 100;
-            let id0 = Manager.show(popupOptions, new BaseController());
-            let element = Manager._private.popupResizingLine(id0, offset);
-            assert.isTrue(element);
-         });
       });
    }
 );

@@ -331,26 +331,5 @@ define([
          assert.isFalse(lookup._isInputActive({readOnly: false}));
          assert.isFalse(lookup._isInputActive({readOnly: true}));
       });
-
-      it('_isShowCollection', function() {
-         let lookup = new Lookup();
-
-         lookup._maxVisibleItems = 1;
-         lookup._options = {
-            items: getItems(1),
-            readOnly: false
-         };
-
-         assert.isTrue(!!lookup._isShowCollection());
-
-         lookup._maxVisibleItems = null;
-         assert.isFalse(!!lookup._isShowCollection());
-
-         lookup._options.readOnly = true;
-         assert.isTrue(!!lookup._isShowCollection());
-
-         lookup._options.items = getItems(0);
-         assert.isFalse(!!lookup._isShowCollection());
-      });
    });
 });

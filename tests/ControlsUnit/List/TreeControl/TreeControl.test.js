@@ -1049,7 +1049,6 @@ define([
       });
       it('markItemByExpanderClick true', function() {
          var
-            savedMethod = treeGrid.TreeControl._private.toggleExpanded,
             baseControlFocused = false,
             rawData = [
                { id: 1, type: true, parent: null },
@@ -1102,13 +1101,11 @@ define([
          assert.deepEqual(2, treeGridViewModel._model._markedKey);
          assert.isTrue(baseControlFocused);
 
-         treeGrid.TreeControl._private.toggleExpanded = savedMethod;
       });
 
       it('markItemByExpanderClick false', function() {
 
          var
-            savedMethod = treeGrid.TreeControl._private.toggleExpanded,
             baseControlFocused = false,
             rawData = [
                { id: 1, type: true, parent: null },
@@ -1160,8 +1157,6 @@ define([
          treeControl._onExpanderClick(e, treeGridViewModel.at(1));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
          assert.isTrue(baseControlFocused);
-
-         treeGrid.TreeControl._private.toggleExpanded = savedMethod;
       });
 
       it('reloadItem', function(done) {
@@ -1215,102 +1210,6 @@ define([
             );
             done();
          });
-      });
-
-      it('toggle node by click', async function() {
-         let
-             savedMethod = treeGrid.TreeControl._private.createSourceController,
-             data = [
-                {id: 0, 'Раздел@': true, "Раздел": null},
-                {id: 1, 'Раздел@': false, "Раздел": null},
-                {id: 2, 'Раздел@': null, "Раздел": null}
-             ],
-             source = new sourceLib.Memory({
-                rawData: data,
-                idProperty: 'id',
-             }),
-             cfg = {
-                source: source,
-                columns: [],
-                keyProperty: 'id',
-                parentProperty: 'Раздел',
-                nodeProperty: 'Раздел@',
-                filter: {},
-                expandByItemClick: true
-             },
-             treeGridViewModel = new treeGrid.ViewModel(cfg),
-             treeControl;
-
-         treeGridViewModel.setItems(new collection.RecordSet({
-            rawData: data,
-            idProperty: 'id'
-         }));
-
-         treeControl = new treeGrid.TreeControl(cfg);
-         treeControl.saveOptions(cfg);
-         treeControl._children = {
-            baseControl: {
-               getViewModel: function() {
-                  return treeGridViewModel;
-               }
-            }
-         };
-
-         // Mock source controller four synchronous unit.
-         treeGrid.TreeControl._private.createSourceController = function () {
-            return {
-               hasMoreData: () => false,
-               load: function() {
-                  return {
-                     addCallback: (func) => {
-                        func(new collection.RecordSet({
-                           rawData: [],
-                           idProperty: 'id'
-                        }));
-                     }
-                  }
-               }
-            }
-         };
-
-         // Initial
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
-
-
-         // Expanding. Child items has not loaded
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(0).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0]);
-
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(1).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
-
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(2).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
-
-
-         // Closing. Child items loaded
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(0).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [1]);
-
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(1).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
-
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(2).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
-
-
-         // Expanding. Child items loaded
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(0).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0]);
-
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(1).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
-
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(2).getContents(), {});
-         assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
-
-
-         treeGrid.TreeControl._private.createSourceController = savedMethod;
       });
 
       it('check deepReload after load', function() {
