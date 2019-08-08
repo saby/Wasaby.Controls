@@ -128,15 +128,15 @@ define([
       linkHtml = '<a class="asLink" rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>',
       decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer" href="https://ya.ru" target="_blank"><img class="LinkDecorator__image" alt="https://ya.ru" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1" /></a></span>';
 
-   function sortAttrs(html) {
-      return html.replace(openTagRegExp, function(match, begin, attrs, end) {
-         return begin + (attrs + ' ').split('" ').sort().join('" ') + end;
-      });
-   }
+      function sortAttrs(html) {
+         return html.replace(openTagRegExp, function(match, begin, attrs, end) {
+            return begin + (attrs + ' ').split('" ').sort().join('" ') + end;
+         });
+      }
 
-   function equalsHtml(html1, html2) {
-      return sortAttrs(html1) === sortAttrs(html2);
-   }
+      function equalsHtml(html1, html2) {
+         return sortAttrs(html1) === sortAttrs(html2);
+      }
 
    describe('Controls.Decorator.Markup.Converter', function() {
       describe('deepCopyJson', function() {
