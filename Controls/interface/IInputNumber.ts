@@ -77,7 +77,7 @@ interface IInputNumber {
          *         <Controls.input:Text bind:value="_login"/>
          *         <Controls.input:Password bind:value="_password"/>
          *         <Controls.input:Number precision="{{0}}" integerLength="{{3}}" bind:value="_age"/>
-         *         <Controls.Button on:click="_saveUser()" caption="Отправить"/>
+         *         <Controls.buttons:Button on:click="_saveUser()" caption="Отправить"/>
          *     </form>
          *
          *     export class Form extends Control<IControlOptions, void> {
@@ -190,7 +190,7 @@ interface IInputNumber {
  * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
  * <pre>
  *    <Controls.input:Number bind:value="_inputValue" />
- *    <Controls.Button on:click="_sendButtonClick()" />
+ *    <Controls.buttons:Button on:click="_sendButtonClick()" />
  * </pre>
  *
  * <pre>

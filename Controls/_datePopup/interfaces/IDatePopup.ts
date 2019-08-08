@@ -13,7 +13,7 @@
  * At any time of control's lifecycle, _startValue will contain the current start value of the period.
  * <pre>
  *    <Controls.datePopup bind:startValue="_startValue" />
- *    <Controls.Button on:click="_sendButtonClick()" />
+ *    <Controls.buttons:Button on:click="_sendButtonClick()" />
  * </pre>
  * <pre>
  *    Control.extend({
@@ -35,7 +35,7 @@
  * At any time of control's lifecycle, _endValue will contain the current ens value of the period.
  * <pre>
  *    <Controls.datePopup bind:endValue="_endValue" />
- *    <Controls.Button on:click="_sendButtonClick()" />
+ *    <Controls.buttons:Button on:click="_sendButtonClick()" />
  * </pre>
  * <pre>
  *    Control.extend({

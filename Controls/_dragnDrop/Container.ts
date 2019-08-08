@@ -117,7 +117,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * В следующем примере показано, как настроить шаблон перемещения.
        * <pre>
-       *    <Controls._dragnDrop.Controller>
+       *    <Controls.dragnDrop:Controller>
        *       <ws:draggingTemplate>
        *          <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *       </ws:draggingTemplate>
@@ -128,7 +128,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *             </ws:for>
        *          </div>
        *       </ws:content>
-       *    </Controls._dragnDrop.Controller>
+       *    </Controls.dragnDrop:Controller>
        * </pre>
        *
        * <pre>
@@ -147,7 +147,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * The following example shows how to set your dragging template.
        * <pre>
-       *    <Controls._dragnDrop.Controller>
+       *    <Controls.dragnDrop:Controller>
        *       <ws:draggingTemplate>
        *          <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *       </ws:draggingTemplate>
@@ -158,7 +158,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *             </ws:for>
        *          </div>
        *       </ws:content>
-       *    </Controls._dragnDrop.Controller>
+       *    </Controls.dragnDrop:Controller>
        * </pre>
        *
        * <pre>
@@ -178,7 +178,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * В следующем примере показано, как запустить dragNDrop.
        * <pre>
-       *    <Controls._dragnDrop.Container name="dragNDropController">
+       *    <Controls.dragnDrop:Container name="dragNDropController">
        *       <ws:draggingTemplate>
        *          <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *       </ws:draggingTemplate>
@@ -189,7 +189,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *             </ws:for>
        *          </div>
        *       </ws:content>
-       *    </Controls._dragnDrop.Container>
+       *    </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -214,7 +214,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * The following example shows how to start dragNDrop.
        * <pre>
-       *    <Controls._dragnDrop.Container name="dragNDropController">
+       *    <Controls.dragnDrop:Container name="dragNDropController">
        *       <ws:draggingTemplate>
        *          <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *       </ws:draggingTemplate>
@@ -225,7 +225,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *             </ws:for>
        *          </div>
        *       </ws:content>
-       *    </Controls._dragnDrop.Container>
+       *    </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -250,7 +250,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * В следующем примере показано, как изменить визуальное состояние контрола при запуске перетаскивания в другом контроле.
        * <pre>
-       *     <Controls._dragnDrop.Container name="dragNDropController">
+       *     <Controls.dragnDrop:Container name="dragNDropController">
        *        <ws:draggingTemplate>
        *          <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -261,10 +261,10 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *             </ws:for>
        *          </div>
        *        </ws:content>
-       *     </Controls._dragnDrop.Container>
-       *     <Controls._dragnDrop.Container on:documentDragStart="_documentDragStart()">
+       *     </Controls.dragnDrop:Container>
+       *     <Controls.dragnDrop:Container on:documentDragStart="_documentDragStart()">
        *        <div class="demo-Basket {{_documentDrag ? 'demo-Basket_withDragStyle'}}"></div>
-       *     </Controls._dragnDrop.Container>
+       *     </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -296,7 +296,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * The following example shows how to change the visual state of a control when you start a dragNDrop in another control.
        * <pre>
-       *     <Controls._dragnDrop.Container name="dragNDropController">
+       *     <Controls.dragnDrop:Container name="dragNDropController">
        *        <ws:draggingTemplate>
        *          <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -307,10 +307,10 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *             </ws:for>
        *          </div>
        *        </ws:content>
-       *     </Controls._dragnDrop.Container>
-       *     <Controls._dragnDrop.Container on:documentDragStart="_documentDragStart()">
+       *     </Controls.dragnDrop:Container>
+       *     <Controls.dragnDrop:Container on:documentDragStart="_documentDragStart()">
        *        <div class="demo-Basket {{_documentDrag ? 'demo-Basket_withDragStyle'}}"></div>
-       *     </Controls._dragnDrop.Container>
+       *     </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -342,7 +342,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * В следующем примере показано, как изменить визуальное состояние контрола при завершении перетаскивания в другом контроле.
        * <pre>
-       *     <Controls._dragnDrop.Container name="dragNDropController">
+       *     <Controls.dragnDrop:Container name="dragNDropController">
        *        <ws:draggingTemplate>
        *          <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -353,10 +353,10 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls._dragnDrop.Container>
-       *     <Controls._dragnDrop.Container on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
+       *     </Controls.dragnDrop:Container>
+       *     <Controls.dragnDrop:Container on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
        *        <div class="demo-Basket {{_documentDrag ? 'demo-Basket_withDragStyle'}}"></div>
-       *     </Controls._dragnDrop.Container>
+       *     </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -391,7 +391,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * The following example shows how to change the visual state of a control when you end a dragNDrop in another control.
        * <pre>
-       *     <Controls._dragnDrop.Container name="dragNDropController">
+       *     <Controls.dragnDrop:Container name="dragNDropController">
        *        <ws:draggingTemplate>
        *          <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -402,10 +402,10 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls._dragnDrop.Container>
-       *     <Controls._dragnDrop.Container on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
+       *     </Controls.dragnDrop:Container>
+       *     <Controls.dragnDrop:Container on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
        *        <div class="demo-Basket {{_documentDrag ? 'demo-Basket_withDragStyle'}}"></div>
-       *     </Controls._dragnDrop.Container>
+       *     </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -440,7 +440,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * В следующем примере показано, как скрыть подвижный объект.
        * <pre>
-       *     <Controls._dragnDrop.Container name="dragNDropController" on:dragStart="_onDragStart()">
+       *     <Controls.dragnDrop:Container name="dragNDropController" on:dragStart="_onDragStart()">
        *        <ws:draggingTemplate>
        *           <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -453,7 +453,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls._dragnDrop.Container>
+       *     </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -485,7 +485,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * The following example shows how to hide a movable item.
        * <pre>
-       *     <Controls._dragnDrop.Container name="dragNDropController" on:dragStart="_onDragStart()">
+       *     <Controls.dragnDrop:Container name="dragNDropController" on:dragStart="_onDragStart()">
        *        <ws:draggingTemplate>
        *           <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -498,7 +498,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls._dragnDrop.Container>
+       *     </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -530,7 +530,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * В следующем примере показано, как обновить объект в источнике после завершения перемещения.
        * <pre>
-       *     <Controls._dragnDrop.Container name="dragNDropController" on:dragEnd="_onDragEnd()">
+       *     <Controls.dragnDrop:Container name="dragNDropController" on:dragEnd="_onDragEnd()">
        *        <ws:draggingTemplate>
        *            <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -541,7 +541,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *                </ws:for>
        *            </div>
        *        </ws:content>
-       *     </Controls._dragnDrop.Container>
+       *     </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -574,7 +574,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * The following example shows how to update an item at the source after the move is complete.
        * <pre>
-       *     <Controls._dragnDrop.Container name="dragNDropController" on:dragEnd="_onDragEnd()">
+       *     <Controls.dragnDrop:Container name="dragNDropController" on:dragEnd="_onDragEnd()">
        *        <ws:draggingTemplate>
        *            <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -585,7 +585,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *                </ws:for>
        *            </div>
        *        </ws:content>
-       *     </Controls._dragnDrop.Container>
+       *     </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -617,7 +617,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * В следующем примере показано, как изменить визуальное состояние контрола при наведении на него курсора.
        * <pre>
-       *     <Controls._dragnDrop.Container name="dragNDropController">
+       *     <Controls.dragnDrop:Container name="dragNDropController">
        *        <ws:draggingTemplate>
        *           <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -628,10 +628,10 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls._dragnDrop.Container>
-       *     <Controls._dragnDrop.Container on:dragEnter="_dragEnter()" on:dragLeave="_dragLeave()">
+       *     </Controls.dragnDrop:Container>
+       *     <Controls.dragnDrop:Container on:dragEnter="_dragEnter()" on:dragLeave="_dragLeave()">
        *        <div class="demo-Basket {{_dragInsideBasket ? 'demo-Basket_dragInside'}}"></div>
-       *     </Controls._dragnDrop.Container>
+       *     </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -664,7 +664,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * The following example shows how to change the visual state of a control when you move the cursor over it.
        * <pre>
-       *     <Controls._dragnDrop.Container name="dragNDropController">
+       *     <Controls.dragnDrop:Container name="dragNDropController">
        *        <ws:draggingTemplate>
        *           <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -675,10 +675,10 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls._dragnDrop.Container>
-       *     <Controls._dragnDrop.Container on:dragEnter="_dragEnter()" on:dragLeave="_dragLeave()">
+       *     </Controls.dragnDrop:Container>
+       *     <Controls.dragnDrop:Container on:dragEnter="_dragEnter()" on:dragLeave="_dragLeave()">
        *        <div class="demo-Basket {{_dragInsideBasket ? 'demo-Basket_dragInside'}}"></div>
-       *     </Controls._dragnDrop.Container>
+       *     </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -711,7 +711,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * В следующем примере показано, как изменить визуальное состояние контрола при наведении на него курсора.
        * <pre>
-       *     <Controls._dragnDrop.Container name="dragNDropController">
+       *     <Controls.dragnDrop:Container name="dragNDropController">
        *        <ws:draggingTemplate>
        *           <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -722,10 +722,10 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls._dragnDrop.Container>
-       *     <Controls._dragnDrop.Container on:dragEnter="_dragEnter()" on:dragLeave="_dragLeave()">
+       *     </Controls.dragnDrop:Container>
+       *     <Controls.dragnDrop:Container on:dragEnter="_dragEnter()" on:dragLeave="_dragLeave()">
        *        <div class="demo-Basket {{_dragInsideBasket ? 'demo-Basket_dragInside'}}"></div>
-       *     </Controls._dragnDrop.Container>
+       *     </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -758,7 +758,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * The following example shows how to change the visual state of a control when you move the cursor over it.
        * <pre>
-       *     <Controls._dragnDrop.Container name="dragNDropController">
+       *     <Controls.dragnDrop:Container name="dragNDropController">
        *        <ws:draggingTemplate>
        *           <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *        </ws:draggingTemplate>
@@ -769,10 +769,10 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls._dragnDrop.Container>
-       *     <Controls._dragnDrop.Container on:dragEnter="_dragEnter()" on:dragLeave="_dragLeave()">
+       *     </Controls.dragnDrop:Container>
+       *     <Controls.dragnDrop:Container on:dragEnter="_dragEnter()" on:dragLeave="_dragLeave()">
        *        <div class="demo-Basket {{_dragInsideBasket ? 'demo-Basket_dragInside'}}"></div>
-       *     </Controls._dragnDrop.Container>
+       *     </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -806,7 +806,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * В следующем примере показано, как изменить положение объекта на странице при перемещении.
        * <pre>
-       *     <Controls._dragnDrop.Container name="dragNDropController" on:dragMove="_dragMove()">
+       *     <Controls.dragnDrop:Container name="dragNDropController" on:dragMove="_dragMove()">
        *        <ws:content>
        *           <div>
        *              <ws:for data="item in _items">
@@ -814,7 +814,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls._dragnDrop.Container>
+       *     </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>
@@ -849,7 +849,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        * @example
        * The following example shows how to change the position of an item on a page during a move.
        * <pre>
-       *     <Controls._dragnDrop.Container name="dragNDropController" on:dragMove="_dragMove()">
+       *     <Controls.dragnDrop:Container name="dragNDropController" on:dragMove="_dragMove()">
        *        <ws:content>
        *           <div>
        *              <ws:for data="item in _items">
@@ -857,7 +857,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
        *              </ws:for>
        *           </div>
        *        </ws:content>
-       *     </Controls._dragnDrop.Container>
+       *     </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>

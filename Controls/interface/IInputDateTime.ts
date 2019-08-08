@@ -19,7 +19,7 @@ interface IInputDateTime {
          * At any time of control's lifecycle, _inputValue will contain the current value of the input field.
          * <pre>
          *    <Controls._input.DateTime bind:value="_inputValue" />
-         *    <Controls.Button on:click="_sendButtonClick()" />
+         *    <Controls.buttons:Button on:click="_sendButtonClick()" />
          * </pre>
          * <pre>
          *    Control.extend({

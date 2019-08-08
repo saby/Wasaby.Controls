@@ -69,7 +69,7 @@ const Stack = BaseOpener.extend({
      *             <ws:templateOptions key="111"/>
      *     </Controls.popup:Stack>
      *
-     *     <Controls.Button name="openStackButton" caption="open stack" on:click="_openStack()"/>
+     *     <Controls.buttons:Button name="openStackButton" caption="open stack" on:click="_openStack()"/>
      * </pre>
      * js
      * <pre>
@@ -242,7 +242,7 @@ export = Stack;
  *             <ws:templateOptions key="111"/>
  *     </Controls.popup:Stack>
  *
- *     <Controls.Button name="closeStackButton" caption="close stack" on:click="_closeStack()"/>
+ *     <Controls.buttons:Button name="closeStackButton" caption="close stack" on:click="_closeStack()"/>
  * </pre>
  * js
  * <pre>

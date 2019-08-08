@@ -17,7 +17,7 @@ interface IInputMaskValue {
          * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
          * <pre>
          *    <Controls._input.Mask bind:value="_inputValue" />
-         *    <Controls.Button on:click="_sendButtonClick()" />
+         *    <Controls.buttons:Button on:click="_sendButtonClick()" />
          * </pre>
          *
          * <pre>

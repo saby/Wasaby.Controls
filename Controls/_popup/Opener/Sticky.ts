@@ -90,8 +90,8 @@ const Sticky = BaseOpener.extend({
      *
      *   <div name="target">{{_text}}</div>
      *
-     *   <Controls.Button name="openStickyButton" caption="open sticky" on:click="_open()"/>
-     *   <Controls.Button name="closeStickyButton" caption="close sticky" on:click="_close()"/>
+     *   <Controls.buttons:Button name="openStickyButton" caption="open sticky" on:click="_open()"/>
+     *   <Controls.buttons:Button name="closeStickyButton" caption="close sticky" on:click="_close()"/>
      * </pre>
      * js
      * <pre>
@@ -238,8 +238,8 @@ export = Sticky;
  *
  *    <div name="target">{{_text}}</div>
  *
- *    <Controls.Button name="openStickyButton" caption="open sticky" on:click="_open()"/>
- *    <Controls.Button name="closeStickyButton" caption="close sticky" on:click="_close()"/>
+ *    <Controls.buttons:Button name="openStickyButton" caption="open sticky" on:click="_open()"/>
+ *    <Controls.buttons:Button name="closeStickyButton" caption="close sticky" on:click="_close()"/>
  * </pre>
  * js
  * <pre>

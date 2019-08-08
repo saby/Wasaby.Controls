@@ -137,9 +137,9 @@ import Env = require('Env/Env');
     * spaceTemplate:
     * <pre>
     *    <div class="additionalContent">
-    *       <Controls.Button .../>
-    *       <Controls.Button .../>
-    *       <Controls.Button .../>
+    *       <Controls.buttons:Button .../>
+    *       <Controls.buttons:Button .../>
+    *       <Controls.buttons:Button .../>
     *    </div>
     * </pre>
     */
@@ -163,9 +163,9 @@ import Env = require('Env/Env');
     * spaceTemplate:
     * <pre>
     *    <div class="additionalContent">
-    *       <Controls.Button .../>
-    *       <Controls.Button .../>
-    *       <Controls.Button .../>
+    *       <Controls.buttons:Button .../>
+    *       <Controls.buttons:Button .../>
+    *       <Controls.buttons:Button .../>
     *    </div>
     * </pre>
     */
