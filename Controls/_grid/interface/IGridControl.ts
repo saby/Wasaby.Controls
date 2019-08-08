@@ -119,6 +119,7 @@
  * @property {Number} [endRow] Номер горизонтальной css grid границы, на который заканчивается строка.
  * @property {Number} [startColumn] Номер верикальной css grid границы, на который начинается строка.
  * @property {Number} [endColumn] Номер Вертикальной css grid границы, на который заканчивается строка.
+ * @property {Object} [templateOptions] Опции, передаваемые в шаблон ячейки заголовка. 
  */
 
 /*

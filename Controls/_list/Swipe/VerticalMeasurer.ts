@@ -100,7 +100,7 @@ const VerticalMeasurer: IMeasurer = {
          }
       }
       if (columnsCount * countOfActions !== actions.length) {
-         itemActions = itemActions.slice(0, countOfActions - 1);
+         itemActions = itemActions.slice(0, columnsCount * countOfActions - 1);
          itemActions.push({
             icon: 'icon-SwipeMenu',
             title: rk('Ещё'),

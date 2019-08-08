@@ -1,10 +1,8 @@
 define([
-   'Env/Env',
    'Controls/validate',
    'Core/Deferred',
-   'unit/resources/ProxyCall',
-   'Controls/popup'
-], function(Env, validateMod, Deferred, ProxyCall, popup) {
+   'unit/resources/ProxyCall'
+], function(validateMod, Deferred, ProxyCall) {
    'use strict';
 
    function getValidator(validateResult, readOnly) {
@@ -35,9 +33,16 @@ define([
    }
 
    describe('Validate/Controller', () => {
+      var stubP;
       var calls = [];
       var validCtrl = new validateMod.Container();
       validCtrl._notify = ProxyCall.apply(validCtrl._notify, 'notify', calls, true);
+      beforeEach(function() {
+         stubP = sinon.stub(validCtrl._private, 'callInfoBox').callsFake(() => undefined);
+      });
+      afterEach(function() {
+         stubP.restore();
+      });
       it('valueChangedNotify', () => {
          validCtrl._valueChangedHandler(null, 'test');
          assert.deepEqual(calls, [{
@@ -66,13 +71,6 @@ define([
       });
    });
    describe('Validate/FormController', () => {
-      var stubP;
-      beforeEach(function() {
-         stubP = sinon.stub(popup.BaseOpener, 'getManager').callsFake(() => Promise.resolve());
-      });
-      afterEach(function() {
-         stubP.restore();
-      });
       it('add/remove validator', () => {
          let FC = new validateMod.Controller();
          let validator1 = getValidator();

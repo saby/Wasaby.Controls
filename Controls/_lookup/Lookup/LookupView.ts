@@ -5,13 +5,12 @@ import getWidthUtil = require('Controls/Utils/getWidth');
 import Collection = require('Controls/_lookup/SelectedCollection');
 import itemsTemplate = require('wml!Controls/_lookup/SelectedCollection/SelectedCollection');
 import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Utils');
-import Env = require('Env/Env');
 import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
 import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTemplate');
 import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
 
 
-   var
+var
       MAX_VISIBLE_ITEMS = 20,
       SHOW_SELECTOR_WIDTH = 0,
       CLEAR_RECORDS_WIDTH = 0,
@@ -125,13 +124,7 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
          /* toDO !KONGO Шаблонизатор для кавычки в шаблоне возвращает строковое представление в виде "&amp;quot;", т.е. &quot (ковычка) представляется как &amp;quot;
           * при вставке в innerHTML на выходе мы получим "&quot;", для того что бы получить  кавычку и правильно посчитать ширину элементов сами &amp заменяем на &*/
          measurer.innerHTML = itemsTemplate({
-            _options: _private.getCollectionOptions({
-               itemTemplate: newOptions.itemTemplate,
-               readOnly: newOptions.readOnly,
-               displayProperty: newOptions.displayProperty,
-               maxVisibleItems: maxVisibleItems,
-               _counterWidth: counterWidth
-            }),
+            _options: merge(Collection.getDefaultOptions(), _private.getCollectionOptions(newOptions, maxVisibleItems, counterWidth)),
             _items: items,
             _visibleItems: visibleItems,
             _getItemMaxWidth: selectedCollectionUtils.getItemMaxWidth,
@@ -167,10 +160,15 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
          }, 0);
       },
 
-      getCollectionOptions: function(config) {
-         return merge(config, Collection.getDefaultOptions(), {
-            preferSource: true
-         });
+      getCollectionOptions: function(options, maxVisibleItems, counterWidth) {
+         return {
+            itemTemplate: options.itemTemplate,
+            readOnly: options.readOnly,
+            displayProperty: options.displayProperty,
+            itemsLayout: options.multiLine ? 'default' : 'oneRow',
+            maxVisibleItems,
+            _counterWidth: counterWidth
+         };
       },
 
       getLastSelectedItems: function(items, itemsCount) {

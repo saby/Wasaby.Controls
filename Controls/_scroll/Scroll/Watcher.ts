@@ -242,21 +242,18 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 
          doScroll: function(self, scrollParam, container) {
             if (scrollParam === 'top') {
-               container.scrollTop = 0;
+               self.setScrollTop(0);
             } else {
-               var sizeCache = _private.getSizeCache(self, container);
-               var clientHeight = sizeCache.clientHeight, scrollHeight;
-               if (scrollParam === 'bottom') {
+               const
+                  sizeCache = _private.getSizeCache(self, container),
+                  clientHeight = sizeCache.clientHeight,
                   scrollHeight = sizeCache.scrollHeight;
-                  container.scrollTop = scrollHeight - clientHeight;
-               } else {
-                  if (scrollParam === 'pageUp') {
-                     container.scrollTop -= clientHeight;
-                  } else {
-                     if (scrollParam === 'pageDown') {
-                        container.scrollTop += clientHeight;
-                     }
-                  }
+               if (scrollParam === 'bottom') {
+                  self.setScrollTop(scrollHeight - clientHeight);
+               } else if (scrollParam === 'pageUp') {
+                  self.setScrollTop(container.scrollTop - clientHeight);
+               } else if (scrollParam === 'pageDown') {
+                  self.setScrollTop(container.scrollTop + clientHeight);
                }
             }
          },
@@ -418,4 +415,3 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
       Scroll._private = _private;
 
       export = Scroll;
-

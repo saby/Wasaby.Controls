@@ -54,7 +54,18 @@ var _private = {
         if (markedKey === null) {
             return;
         }
-        return self.getItemById(markedKey, self._options.keyProperty);
+        if (self._editingItemData && self._editingItemData.isAdd) {
+            return self._editingItemData.item;
+        } else {
+            return self.getItemById(markedKey, self._options.keyProperty);
+        }
+    },
+    isSelected(self: ListViewModel, current: IListItemData): boolean {
+        const markedItem = _private.getItemByMarkedKey(self, self._markedKey);
+        if (markedItem) {
+            const item = markedItem.getContents ? markedItem.getContents() : markedItem;
+            return item.getId ? item.getId() === current.key : false;
+        }
     },
     getMultiSelectClassList: function (current): string {
         let
@@ -128,6 +139,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
     getItemDataByItem: function() {
         var
+            self = this,
             itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments),
             dragItems,
             drawnActions;
@@ -139,7 +151,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         itemsModelCurrent.isMenuShown = this._menuState === 'shown';
-        itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === _private.getItemByMarkedKey(this, this._markedKey);
+        itemsModelCurrent.isSelected = _private.isSelected(this, itemsModelCurrent);
         itemsModelCurrent.itemActions = this.getItemActions(itemsModelCurrent.item);
         itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
         itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
@@ -154,6 +166,11 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ? _private.getMultiSelectClassList(itemsModelCurrent) : '';
+
+        itemsModelCurrent.shouldDrawMarker = function (markerVisibility: boolean) {
+            const canDrawMarker = markerVisibility !== false && itemsModelCurrent.markerVisibility !== 'hidden';
+            return canDrawMarker && (itemsModelCurrent.isAdd ? true : _private.isSelected(self, itemsModelCurrent));
+        };
 
         if (itemsModelCurrent.itemActions) {
            drawnActions = itemsModelCurrent.itemActions.showed;
@@ -217,11 +234,28 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return version;
     },
 
+    markAddingItem(): void {
+        this._savedMarkedKey = this._markedKey;
+        this._markedKey = this._editingItemData.key;
+        this._nextModelVersion(true, 'markedKeyChanged');
+        this._notify('onMarkedKeyChanged', this._markedKey);
+    },
+
+    restoreMarker(): void {
+        if (this._savedMarkedKey) {
+            this._markedKey = this._savedMarkedKey;
+            this._savedMarkedKey = undefined;
+            this._nextModelVersion(true, 'markedKeyChanged');
+            this._notify('onMarkedKeyChanged', this._markedKey);
+        }
+    },
+
     setMarkedKey: function(key) {
         if (key === this._markedKey) {
             return;
         }
         this._markedKey = key;
+        this._savedMarkedKey = undefined;
         this._updateMarker(key);
         this._nextModelVersion(true, 'markedKeyChanged');
         this._notify('onMarkedKeyChanged', this._markedKey);
@@ -512,6 +546,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             if (this.hasItemById(id, this._options.keyProperty)) {
                this._actions[id] = actions;
                this.resetCachedItemData(this._convertItemKeyToCacheKey(id));
+            } else if (this._editingItemData && this._editingItemData.key === id) {
+                this._editingItemData.itemActions = actions;
+                this._editingItemData.drawActions = !!actions;
             }
         }
     },

@@ -260,7 +260,6 @@ var HierarchySelection = Selection.extend({
       if (this._isAllSelection(this._getParams(rootId))) {
          this.unselect([rootId]);
          this.select(_private.getIntersection(childrensIdsRoot, excludedKeys));
-
       } else {
          this.select([rootId]);
          this.unselect(_private.getIntersection(childrensIdsRoot, selectedKeys));
@@ -268,20 +267,21 @@ var HierarchySelection = Selection.extend({
    },
 
    getCount: function() {
-      return (
-         _private.getSelectedCount(
+      let
+         countItems = null,
+         isAllSelection = this._isAllSelection(this._getParams(this._getRoot()));
+
+      if (!isAllSelection && this._selectedItemsIsLoaded(this._selectedKeys)) {
+         countItems = _private.getSelectedCount(
             this,
             this._hierarchyRelation,
             this._selectedKeys,
             this._excludedKeys,
             this._items
-         ) +
-         _private.getSelectedButNotLoadedItemsCount(
-            this._selectedKeys,
-            this._excludedKeys,
-            this._items
-         )
-      );
+         );
+      }
+
+      return countItems;
    },
 
    _getSelectionStatus: function(item) {
@@ -329,6 +329,25 @@ var HierarchySelection = Selection.extend({
 
    _getRoot: function() {
       return this._options.listModel.getRoot().getContents();
+   },
+
+   _selectedItemsIsLoaded: function(keys) {
+      let
+         self = this,
+         selectedItemsIsLoaded = true,
+         nodeProperty = this._hierarchyRelation.getNodeProperty(),
+         expandedItems = this._options.listModel.getExpandedItems();
+
+      keys.forEach(function(key) {
+         if (selectedItemsIsLoaded) {
+            let item = self._items.getRecordById(key);
+
+            selectedItemsIsLoaded = item && (item.get(nodeProperty) === null || expandedItems.indexOf(key) !== -1 &&
+               self._selectedItemsIsLoaded(_private.getChildrenIds(self._hierarchyRelation, key, self._items)));
+         }
+      });
+
+      return selectedItemsIsLoaded;
    }
 });
 
