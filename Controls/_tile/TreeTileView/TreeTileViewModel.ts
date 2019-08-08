@@ -28,7 +28,6 @@ var TreeTileViewModel = TreeViewModel.extend({
         } else {
             current._treeTileViewModelCached = true;
         }
-
         hoveredItem = this._tileModel.getHoveredItem();
 
         if (current.hasMultiSelect) {
@@ -60,6 +59,8 @@ var TreeTileViewModel = TreeViewModel.extend({
             current.itemsHeight = this._options.nodesHeight || current.itemsHeight;
         }
 
+        current.isScaled = this.isScaled(current);
+        
         var
             originalGetVersion = current.getVersion;
 
@@ -77,7 +78,10 @@ var TreeTileViewModel = TreeViewModel.extend({
 
         return current;
     },
-
+    isScaled: function(itemData) {
+        return (itemData.item.title || itemData.scalingMode !== 'none')
+            && (!!itemData.isActive || !!itemData.isSwiped || !!itemData.isHovered);
+    },
     getTileItemData: function () {
         var opts = this._tileModel.getTileItemData();
         opts.defaultFolderWidth = DEFAULT_FOLDER_WIDTH;
