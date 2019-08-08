@@ -478,6 +478,10 @@ const BaseOpener = {
          newCfg.dialogOptions.closeChildWindows = cfg.closeChildWindows;
       }
 
+      if (cfg.hasOwnProperty('creatingDef')) {
+         newCfg.dialogOptions.creatingDef = cfg.creatingDef;
+      }
+
       if (cfg.hasOwnProperty('nativeEvent')) {
          newCfg.dialogOptions.nativeEvent = cfg.nativeEvent;
       }
