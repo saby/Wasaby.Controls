@@ -281,7 +281,8 @@ var HierarchySelection = Selection.extend({
    getCount: function() {
       let
          countItems = null,
-         isAllSelection = this._isAllSelection(this._getParams(this._getRoot()));
+         isAllSelection = this._isAllSelection(this._getParams(this._getRoot())),
+         isSelectedItemsLoaded = this._selectedItemsIsLoaded(this._selectedKeys);
 
       // We can calc amount of items when,
       // all items from selectedKeys are loaded and items has no folder or children from folder are loaded.
@@ -348,16 +349,14 @@ var HierarchySelection = Selection.extend({
    _selectedItemsIsLoaded: function(keys) {
       let
          self = this,
-         selectedItemsIsLoaded = true,
-         nodeProperty = this._hierarchyRelation.getNodeProperty(),
-         expandedItems = this._options.listModel.getExpandedItems();
+         selectedItemsIsLoaded = true;
 
       keys.forEach(function(key) {
          if (selectedItemsIsLoaded) {
             let item = self._items.getRecordById(key);
 
-            selectedItemsIsLoaded = item && (item.get(nodeProperty) === null || expandedItems.indexOf(key) !== -1 &&
-               self._selectedItemsIsLoaded(_private.getChildrenIds(self._hierarchyRelation, key, self._items)));
+            // && (item.get(nodeProperty) === null || expandedItems.indexOf(key) !== -1 && self._selectedItemsIsLoaded(_private.getChildrenIds(self._hierarchyRelation, key, self._items)));
+            selectedItemsIsLoaded = !!item;
          }
       });
 
