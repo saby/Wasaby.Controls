@@ -188,13 +188,17 @@ const BaseOpener = {
    _prepareContext(cfg, parentContext) {
       let destroyDef = new Deferred(),
          destrFunc = function() {
-            destroyDef.callback();
-            destroyDef = null;
+            // Защита от двойного вызова обработчика
+            // TODO: https://online.sbis.ru/opendoc.html?guid=97f8b4ad-8247-4bc2-ba47-69cdd52fd308
+            if (destroyDef) {
+               destroyDef.callback();
+               destroyDef = null;
 
-            // CompoundArea должна отписаться от этого обработчика после onDestroy, на случай
-            // если кто-то кеширует конфигурацию панели, иначе этот обработчик будет добавлен дважды,
-            // что приведет к ошибке при закрытии/уничтожении панели
-            this.unsubscribe('onDestroy', destrFunc);
+               // CompoundArea должна отписаться от этого обработчика после onDestroy, на случай
+               // если кто-то кеширует конфигурацию панели, иначе этот обработчик будет добавлен дважды,
+               // что приведет к ошибке при закрытии/уничтожении панели
+               this.unsubscribe('onDestroy', destrFunc);
+            }
          };
 
       if (cfg.context) {
