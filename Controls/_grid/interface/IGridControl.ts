@@ -234,20 +234,47 @@
 
 /**
  * @typedef {Object} Column
- * @property {String} [width] Ширина столбца.
+ * @property {String} width Ширина столбца.
  * В качестве значения опции можно указать пиксели (px), проценты (%), доли (1fr), "auto" или "minmax".
  * В значении "auto" ширина столбца устанавливается исходя из типа и содержимого элемента.
- * В значении "minmax(,)" устанавливается минимальная и максимальная ширина столбца, например "minmax(600px, 1fr)".
- * @property {String} [displayProperty] Имя поля, которое будет отображаться в столбце по умолчанию.
- * @property {String} [template] Шаблон рендеринга ячеек.
- * В качестве базового шаблона используется {@link Controls/grid:ColumnTemplate}.
- * На его основе можно сконфигурировать собственный шаблон, о чём подробнее сказано в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководстве разработчика</a>.
+ * В значении "minmax(,)" устанавливаются минимальная и максимальная ширина столбца, например "minmax(600px, 1fr)".
+ * @property {String} displayProperty Имя поля, данные которое по умолчанию отображаются в столбце.
+ * @property {String} template Шаблон отображения ячейки.
+ * По умолчанию используется базовый шаблон {@link Controls/grid:ColumnTemplate}. На основе базового шаблона можно задать собственное отображение ячейки (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
+ * 
+ * При использовании базового шаблона установите на корневой элемент CSS-класс "controls-Grid__row-cell__content_baseline_L". Это обеспечит выравнивание контента ячейки по базовой линии.
+ * <pre>
+ * <Controls.grid:View>
+ *     <ws:columns>
+ *         <ws:Array>
+ *             <ws:Object displayProperty="Name" width="200px">
+ *                 <ws:template>
+ *                     <ws:partial template="Controls/grid:ColumnTemplate" attr:class="controls-Grid__row-cell__content_baseline_L">
+ *                         <ws:contentTemplate>
+ *                           <!-- контент шаблона -->
+ *                         </ws:contentTemplate>
+ *                     </ws:partial>
+ *                 </ws:template>
+ *             </ws:Object>
+ *         </ws:Array>
+ *     </ws:columns>
+ * </Controls.grid:View>
+ * </pre>
+ * 
+ * Базовый шаблон поддерживает контентную опцию <code>contentTemplate</code>. Поместите в неё вёрстку, которая описывает отображение ячейки.
+ * 
+ * В области видимости шаблона доступна переменная <code>itemData</code> (тип <code>Object</code>) со следующими свойствами:
+ * - <code>columnIndex</code> (тип Number) — порядковый номер колонки. Отсчет от 0.
+ * - <code>index</code> (тип Number) — порядковый номер строки. Отсчет от 0.
+ * - <code>isEditing</code> (тип Boolean) — признак редактирования по месту.
+ * - <code>item</code> (тип Object) — строка, данные которой отображаются в колонке. Свойство объекта — это имя поля, а значение свойства — значение поля.
+ * - <code>column</code> (тип Object) — конфигурация колонки.
  * @property {String} [resultTemplate] Шаблон рендеринга ячеек в строке итогов.
  * CSS-класс controls-Grid__header-cell_spacing_money задает правый отступ для заголовка ячейки для выравнивания по целым числам в денежных полях.
- * @property {GridCellAlign} [align] Выравнивание содержимого ячейки по горизонтали.
- * @property {GridCellVAlign} [valign] Выравнивание содержимого ячейки по вертикали.
- * @property {String} [stickyProperty] Имя поля, которое используется для настройки прилипания данных столбца к верхней границе таблицы.
- * @property {TextOverflow} [textOverflow] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
+ * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
+ * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
+ * @property {String} stickyProperty Имя поля, которое используется для настройки прилипания данных столбца к верхней границе таблицы.
+ * @property {TextOverflow} textOverflow Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
  */
 
 /*
