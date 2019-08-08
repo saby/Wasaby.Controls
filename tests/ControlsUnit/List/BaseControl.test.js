@@ -3292,7 +3292,7 @@ define([
                instance._beforeMount(cfg);
                instance._notify = function(eventName, eventArgs, eventOptions) {
                   assert.equal(eventName, 'itemSwipe');
-                  assert.deepEqual(eventArgs, [itemData.item, childEvent]);
+                  assert.deepEqual(eventArgs, [itemData.actionsItem, childEvent]);
                   notifyCalled = true;
                };
                instance._listSwipe({}, itemData, childEvent);

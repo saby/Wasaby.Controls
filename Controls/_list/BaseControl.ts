@@ -1721,14 +1721,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newKey);
             this._listViewModel.setActiveItem(itemData);
         }
+        let actionsItem = itemData.actionsItem
         if (direction === 'left' && this._hasItemActions) {
-            this._children.itemActions.updateItemActions(itemData.item);
+            this._children.itemActions.updateItemActions(actionsItem);
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
-            itemData.itemActions = this.getViewModel().getItemActions(itemData.item);
+            itemData.itemActions = this.getViewModel().getItemActions(actionsItem);
         }
         if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
-            this._notify('itemSwipe', [itemData.item, childEvent]);
+            this._notify('itemSwipe', [actionsItem, childEvent]);
         }
     },
 
