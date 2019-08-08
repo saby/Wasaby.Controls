@@ -38,10 +38,10 @@ let _private = {
                 }
             };
 
-            _private.callInfoBox(self);
+            _private.callInfoBox(self, cfg);
         }
     },
-    callInfoBox(self) {
+    callInfoBox(self, cfg) {
         // todo https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
         if (self._isNewEnvironment) {
             self._notify('openInfoBox', [cfg], {bubbling: true});
