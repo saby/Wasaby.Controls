@@ -258,17 +258,20 @@ define([
                idProperty: 'id',
                data: items
             });
-
+            let afterBeginEditNotified = false;
             eip.saveOptions({
                listModel: listModel,
                source: source
             });
-
+            eip._setEditingItemData = function() {
+               assert.isFalse(afterBeginEditNotified);
+            };
             eip._notify = function(event, args) {
                if (event === 'afterBeginEdit') {
                   assert.equal(eip._editingItem, args[0]);
                   assert.isNotOk(args[1]);
                   done();
+                  afterBeginEditNotified = true;
                }
             };
 

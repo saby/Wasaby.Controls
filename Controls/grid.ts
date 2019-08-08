@@ -2,12 +2,12 @@
  * Библиотека табличного представления.
  * Работа с шаблонами библиотеки описана в руководстве разработчика:
  * <ul>
- *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/">ItemTemplate (шаблон отображения элемента)</a><li>
- *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/">ResultsTemplate (шаблон итогов)</a><li>
- *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/grouping/">GroupTemplate (шаблон группировки)</a><li>
- *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">ColumnTemplate (шаблон отображения ячейки)</a><li>
- *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/edit/">RowEditor (шаблон редактирования строки)</a><li>
- *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/ladder/">LadderWrapper (шаблон отображения лесенки)</a><li>
+ *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/item/">ItemTemplate (шаблон отображения элемента)</a></li>
+ *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/">ResultsTemplate (шаблон итогов)</a></li>
+ *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/grouping/">GroupTemplate (шаблон группировки)</a></li>
+ *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">ColumnTemplate (шаблон отображения ячейки)</a></li>
+ *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/edit/">RowEditor (шаблон редактирования строки)</a></li>
+ *    <li><a href="/doc/platform/developmentapl/interface-development/controls/list/grid/ladder/">LadderWrapper (шаблон отображения лесенки)</a></li>
  * </ul>
  * @library Controls/grid
  * @includes View Controls/_grid/Grid

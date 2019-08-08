@@ -25,6 +25,7 @@ export default interface IIconSize {
  * @variant m
  * @variant l
  * @variant default
+ * @demo Controls-demo/Buttons/SizesAndHeights/Index
  * @example
  * Кнопка с размером иконки по умолчанию.
  * <pre>

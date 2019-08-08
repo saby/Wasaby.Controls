@@ -85,16 +85,19 @@ define([
          var pathController = new PathController();
          var needCrumbs = PathController._private.needCrumbs;
          it('BackButton is in header, items.length === 1', function() {
-            assert.equal(needCrumbs([{title:'back'}], ['first']), false);
+            assert.isFalse(needCrumbs([{title:'back'}], ['first'], false));
          });
          it('BackButton is not in header, items.length === 1', function() {
-            assert.equal(needCrumbs(undefined, ['first']), true);
+            assert.isTrue(needCrumbs(undefined, ['first'], false));
          });
          it('BackButton is in header, items.length === 2', function() {
-            assert.equal(needCrumbs([{title:'back'}], ['first','second']), true);
+            assert.isTrue(needCrumbs([{title:'back'}], ['first','second'], false));
          });
          it('items === null', function() {
-            assert.equal(needCrumbs(undefined, null), false);
+            assert.isFalse(needCrumbs(undefined, null, false));
+         });
+         it('items === null, rootVisible (when dragging from folder)', function() {
+            assert.isTrue(needCrumbs(undefined, null, true));
          });
       });
       describe('_beforeUpdate', function() {
