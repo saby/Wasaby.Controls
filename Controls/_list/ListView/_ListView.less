@@ -172,9 +172,9 @@
    height: @spacing_ListView-groupSeparator-between-content-borderTop;
    margin-bottom: @spacing_ListView-groupSeparator-between-content-borderBottom;
    border-bottom: @border-width_ListView-groupSeparator solid @border-color_ListView-groupSeparator;
-   min-width: 0;
+   min-width: 10%;
    width: 100%;
-   flex-shrink: 1;
+   flex-shrink: 2;
    font-size: @font-size_ListView-groupExpander;
 }
 
@@ -186,8 +186,10 @@
    font-size: @font-size_ListView-group-text;
    white-space: nowrap;
    text-align: center;
-   flex-shrink: 0;
+   flex-shrink: 1;
    user-select: none;
+   overflow: hidden;
+   text-overflow: ellipsis;
 }
 
 .controls-ListView__groupExpander {
