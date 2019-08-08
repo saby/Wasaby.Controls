@@ -1,0 +1,5 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <Controls.list:View keyProperty="id" source="{{_viewSource}}"/>
+    </div>
+</div>

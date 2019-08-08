@@ -1,0 +1,55 @@
+<div class="controlsDemo__wrapper">
+
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Шаблон элемента с выключенной подсветкой при наведении</div>
+        <Controls.list:View keyProperty="id" source="{{_viewSource}}">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/list:ItemTemplate" highlightOnHover="{{false}}"/>
+            </ws:itemTemplate>
+        </Controls.list:View>
+    </div>
+
+
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Переопределение стандартного поля для вывода данных</div>
+        <Controls.list:View keyProperty="id" source="{{_viewSource}}" displayProperty="description"/>
+    </div>
+
+
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Переопределение контента строки</div>
+        <Controls.list:View keyProperty="id" source="{{_viewSource}}">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/list:ItemTemplate">
+                    <ws:contentTemplate>
+                        <div>
+                            <div>{{itemTemplate.itemData.item.get('title')}}</div>
+                            <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.get('description')}}</div>
+                        </div>
+                    </ws:contentTemplate>
+                </ws:partial>
+            </ws:itemTemplate>
+        </Controls.list:View>
+    </div>
+
+
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Подключение шаблона из отдельного файла</div>
+        <Controls.list:View
+                keyProperty="id"
+                source="{{_viewSource}}"
+                itemTemplate="wml!Controls-demo/list_new/CustomItemTemplate/itemTemplate"
+        />
+    </div>
+
+
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Использование разных шаблонов элементов в одном списке</div>
+        <Controls.list:View
+                keyProperty="id"
+                source="{{_viewSource}}"
+                itemTemplateProperty="tplPath"
+        />
+    </div>
+
+</div>
