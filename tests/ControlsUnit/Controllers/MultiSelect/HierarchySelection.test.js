@@ -56,8 +56,37 @@ define([
             'Раздел': null,
             'Раздел@': false
          }],
+         flatItems = [{
+            'id': 1,
+            'Раздел': null,
+            'Раздел@': false
+         }, {
+            'id': 2,
+            'Раздел': 1,
+            'Раздел@': false
+         }, {
+            'id': 3,
+            'Раздел': 2,
+            'Раздел@': false
+         }, {
+            'id': 4,
+            'Раздел': 2,
+            'Раздел@': false
+         }, {
+            'id': 5,
+            'Раздел': 1,
+            'Раздел@': false
+         }, {
+            'id': 6,
+            'Раздел': null,
+            'Раздел@': false
+         }, {
+            'id': 7,
+            'Раздел': null,
+            'Раздел@': false
+         }],
          hiddenNodeWithChildren,
-         allData;
+         allData, flatData;
 
       /*
          1
@@ -71,6 +100,10 @@ define([
       beforeEach(function() {
          allData = new collection.RecordSet({
             rawData: items.slice(),
+            idProperty: 'id'
+         });
+         flatData = new collection.RecordSet({
+            rawData: flatItems.slice(),
             idProperty: 'id'
          });
          hiddenNodeWithChildren = new collection.RecordSet({
@@ -95,6 +128,7 @@ define([
          cfg = null;
          selection = null;
          allData = null;
+         flatData = null;
       });
       it('constructor', function() {
          cfg = {
@@ -228,6 +262,24 @@ define([
                assert.deepEqual([], selection.excluded);
                assert.equal(null, selectionInstance.getCount());
                assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
+            });
+
+            it('select root in flat list', function() {
+               cfg = {
+                  selectedKeys: [],
+                  excludedKeys: [],
+                  items: flatData,
+                  keyProperty: 'id',
+                  listModel: getListModel()
+               };
+               selectionInstance = new operations.HierarchySelection(cfg);
+               selectionInstance.select([null]);
+               flatData.setMetaData({ more: 7 });
+
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([null], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(7, selectionInstance.getCount());
             });
 
             it('select previously excluded child', function() {
