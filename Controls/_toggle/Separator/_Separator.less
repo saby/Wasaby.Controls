@@ -1,26 +1,29 @@
-.controls-Separator__icon_size {
+.controls-Separator__icon_size_theme-@{themeName} {
    .icon-size-without-important(@size-Separator__icon);
 }
 
-.controls-Separator__icon_style-secondary {
+.controls-Separator__icon_style-secondary_theme-@{themeName} {
    color: @color-Separator__icon_style-secondary;
 }
 
-.controls-Separator__icon_style-primary {
+.controls-Separator__icon_style-primary_theme-@{themeName} {
    color: @color-Separator__icon_style-primary;
 }
 
-.controls-Separator__icon_style-additional {
+.controls-Separator__icon_style-additional_theme-@{themeName} {
    color: @color-Separator__icon_style-additional;
 }
 
 .controls-Separator__wrapper {
-   width: @size-Separator;
-   height: @size-Separator;
    cursor: pointer;
    display: inline-flex;
    justify-content: center;
    align-items: center;
+}
+
+.controls-Separator__wrapper_theme-@{themeName} {
+   width: @size-Separator;
+   height: @size-Separator;
 }
 
 .controls-Separator__wrapper:before {
@@ -31,28 +34,28 @@
    display: inline-block;
 }
 
-.controls-Separator__icon_style-secondary:active {
+.controls-Separator__icon_style-secondary_theme-@{themeName}:active {
    color: @color-Separator__icon_style-secondary_hovered;
 }
 
-.controls-Separator__icon_style-primary:active {
+.controls-Separator__icon_style-primary_theme-@{themeName}:active {
    color: @color-Separator__icon_style-primary_hovered;
 }
 
-.controls-Separator__icon_style-additional:active{
+.controls-Separator__icon_style-additional_theme-@{themeName}:active{
    color: @color-Separator__icon_style-additional_hovered;
 }
 
 .ws-is-no-touch {
-   .controls-Separator__icon_style-secondary:hover {
+   .controls-Separator__icon_style-secondary_theme-@{themeName}:hover {
       color: @color-Separator__icon_style-secondary_hovered;
    }
 
-   .controls-Separator__icon_style-primary:hover {
+   .controls-Separator__icon_style-primary_theme-@{themeName}:hover {
       color: @color-Separator__icon_style-primary_hovered;
    }
 
-   .controls-Separator__icon_style-additional:hover {
+   .controls-Separator__icon_style-additional_theme-@{themeName}:hover {
       color: @color-Separator__icon_style-additional_hovered;
    }
 }

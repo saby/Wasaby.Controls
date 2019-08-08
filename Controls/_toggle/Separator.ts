@@ -2,11 +2,10 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import SeparatorTemplate = require('wml!Controls/_toggle/Separator/Separator');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
-import 'css!theme?Controls/toggle';
 
 export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
-   style?: string;
-   bold?: boolean;
+    style?: string;
+    bold?: boolean;
 }
 
 /**
@@ -72,51 +71,54 @@ export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
  */
 
 class Separator extends Control<ISeparatorOptions> implements ICheckable {
-   '[Controls/_toggle/interface/ICheckable]': true;
+    '[Controls/_toggle/interface/ICheckable]': true;
 
-   // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
-   protected _template: TemplateFunction = SeparatorTemplate;
+    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
+    protected _template: TemplateFunction = SeparatorTemplate;
 
-   protected _icon: String;
+    protected _icon: String;
 
-   private _clickHandler(): void {
-      this._notify('valueChanged', [!this._options.value]);
-   }
+    private _clickHandler(): void {
+        this._notify('valueChanged', [!this._options.value]);
+    }
 
-   private _iconChangedValue(options: ISeparatorOptions): void {
-      if (options.value) {
-         this._icon = 'icon-' + (options.bold ? 'MarkCollapseBold ' : 'CollapseLight ');
-      } else {
-         this._icon = 'icon-' + (options.bold ? 'MarkExpandBold ' : 'ExpandLight ');
-      }
-   }
+    private _iconChangedValue(options: ISeparatorOptions): void {
+        if (options.value) {
+            this._icon = 'icon-' + (options.bold ? 'MarkCollapseBold ' : 'CollapseLight ');
+        } else {
+            this._icon = 'icon-' + (options.bold ? 'MarkExpandBold ' : 'ExpandLight ');
+        }
+    }
 
-   protected _beforeMount(options: ISeparatorOptions): void {
-      this._iconChangedValue(options);
-   }
+    protected _beforeMount(options: ISeparatorOptions): void {
+        this._iconChangedValue(options);
+    }
 
-   protected _beforeUpdate(newOptions: ISeparatorOptions): void {
-      this._iconChangedValue(newOptions);
-   }
-   static _theme: string[] = ['Controls/toggle'];
-   static getDefaultOptions(): object {
-      return {
-         style: 'secondary',
-         value: false,
-         bold: false
-      };
-   }
-   static getOptionTypes(): object {
-      return {
-         bold: EntityDescriptor(Boolean),
-         style: EntityDescriptor(String).oneOf([
-            'secondary',
-            'additional',
-            'primary'
-         ]),
-         value: EntityDescriptor(Boolean)
-      };
-   }
+    protected _beforeUpdate(newOptions: ISeparatorOptions): void {
+        this._iconChangedValue(newOptions);
+    }
+
+    static _theme: string[] = ['Controls/toggle'];
+
+    static getDefaultOptions(): object {
+        return {
+            style: 'secondary',
+            value: false,
+            bold: false
+        };
+    }
+
+    static getOptionTypes(): object {
+        return {
+            bold: EntityDescriptor(Boolean),
+            style: EntityDescriptor(String).oneOf([
+                'secondary',
+                'additional',
+                'primary'
+            ]),
+            value: EntityDescriptor(Boolean)
+        };
+    }
 }
 
 export default Separator;
