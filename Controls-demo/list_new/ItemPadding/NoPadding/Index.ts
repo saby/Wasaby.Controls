@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/list_new/ItemPadding/ItemPadding"
+import * as Template from "wml!Controls-demo/list_new/ItemPadding/NoPadding/NoPadding"
 import {Memory} from "Types/source";
-import {FewCategories as Data} from "../DemoHelpers/DataCatalog";
+import {FewCategories as Data} from "../../DemoHelpers/DataCatalog";
 import 'css!Controls-demo/Controls-demo';
 
 

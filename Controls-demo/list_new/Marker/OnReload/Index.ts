@@ -1,9 +1,8 @@
 import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/list_new/ItemPadding/ItemPadding"
-import {Memory} from "Types/source";
-import {FewCategories as Data} from "../DemoHelpers/DataCatalog";
-import 'css!Controls-demo/Controls-demo';
-
+import * as Template from "wml!Controls-demo/list_new/Marker/OnReload/OnReload"
+import {Memory} from "Types/source"
+import {FewCategories as Data} from "../../DemoHelpers/DataCatalog"
+import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -14,5 +13,9 @@ export default class extends Control {
             keyProperty: 'id',
             data: Data
         });
+    }
+
+    private _reloadList(): void {
+        this._children.list.reload();
     }
 }

@@ -1,0 +1,37 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
+    <div class="controlsDemo__cell controlsDemo__mr4">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/ItemTemplate/NoHighlightOnHover/Index' }}">
+            <a href="{{content.href}}">Шаблон элемента с выключенной подсветкой при наведении</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.ItemTemplate.NoHighlightOnHover.Index/>
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr4">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/ItemTemplate/CustomContent/Index' }}">
+            <a href="{{content.href}}">Переопределение контента строки</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.ItemTemplate.CustomContent.Index/>
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr4">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/ItemTemplate/FromFile/Index' }}">
+            <a href="{{content.href}}">Подключение шаблона из отдельного файла</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.ItemTemplate.FromFile.Index/>
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr4">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/Index' }}">
+            <a href="{{content.href}}">Использование разных шаблонов элементов в одном списке</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.ItemTemplate.ItemTemplateProperty.Index/>
+    </div>
+</div>
