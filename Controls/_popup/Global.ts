@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/Global/Global');
 import GlobalOpeners from './Global/Openers';
-import Deferred = require('Core/Deferred');
+import Vdom = require('Vdom/Vdom');
 
 /**
  * @class Controls/_popup/Global
@@ -9,18 +9,11 @@ import Deferred = require('Core/Deferred');
 
 var _private = {
    getPopupConfig: function(config) {
-      var def = new Deferred();
-
       // Find opener for Infobox
       if (!config.opener) {
-         requirejs(['Vdom/Vdom'], function(Vdom) {
-            config.opener = Vdom.DefaultOpenerFinder.find(config.target);
-            def.callback(config);
-         });
-         return def;
+         config.opener = Vdom.goUpByControlTree(config.target)[0];
       }
-
-      return def.callback(config);
+      return config;
    }
 };
 
@@ -78,11 +71,10 @@ const Global = Control.extend({
    },
 
    _openInfoBoxHandler: function(event, config) {
-      var self = this;
       this._activeInfobox = event.target;
-      _private.getPopupConfig(config).addCallback(function(popupConfig) {
-         self.getInfoBox().open(popupConfig);
-      });
+      _private.getPopupConfig(config);
+      this.getInfoBox().open(config);
+
    },
 
    _closeInfoBoxHandler: function(event, delay) {
