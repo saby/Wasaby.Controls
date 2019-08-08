@@ -11,7 +11,7 @@ define('Controls/interface/IFilter', [
 
    /**
     * @name Controls/interface/IFilter#filter
-    * @cfg {Object} Конфигурация объекта фильтра.
+    * @cfg {Object} Конфигурация объекта фильтра. Фильтр отправляется в запрос к источнику для получения данных.
     * @example
     * В данном примере в списке будет отображаться 2 элемента.
     * TMPL:

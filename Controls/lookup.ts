@@ -1,12 +1,10 @@
 /**
- * Библиотека поля выбора из справочника.
+ * Библиотека контролов, предоставляющих функционал выбора из справочника.
  * @library Controls/lookup
  * @includes Selector Controls/_lookup/Button
  * @includes Input Controls/_lookup/Lookup
  * @includes MultipleInput Controls/_lookup/MultipleInput
- * @includes Collection Controls/_lookup/SelectedCollection
  * @includes ItemTemplate wml!Controls/_lookup/SelectedCollection/ItemTemplate
- * @includes Opener Controls/_lookup/Opener
  * @includes LookupStyles Controls/_lookup/BaseLookupView/LookupStyles
  * @includes SelectorButtonStyles Controls/_lookup/Button/SelectorButtonStyles
  * @includes LookupLinkStyles Controls/_lookup/Lookup/Link/LookupLinkStyles
@@ -24,9 +22,7 @@
  * @includes Selector Controls/_lookup/Button
  * @includes Input Controls/_lookup/Lookup
  * @includes MultipleInput Controls/_lookup/MultipleInput
- * @includes Collection Controls/_lookup/SelectedCollection
  * @includes ItemTemplate wml!Controls/_lookup/SelectedCollection/ItemTemplate
- * @includes Opener Controls/_lookup/Opener
  * @includes LookupStyles Controls/_lookup/BaseLookupView/LookupStyles
  * @includes SelectorButtonStyles Controls/_lookup/Button/SelectorButtonStyles
  * @includes LookupLinkStyles Controls/_lookup/Lookup/Link/LookupLinkStyles

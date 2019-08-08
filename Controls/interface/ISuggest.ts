@@ -136,8 +136,8 @@ interface ISuggest {
 
       /**
        * @name Controls/interface/ISuggest#emptyTemplate
-       * @cfg {IEmptyTemplateProp|null} Шаблон пустого автодополнения, когда результаты не были найдены.
-       * @remark Если параметр имеет значение null, пустое автодополнение не появится.
+       * @cfg {IEmptyTemplateProp|null} Шаблон, который будет отображаться в автодополнении, если поисковой запрос не вернул результатов.
+       * @remark Если опция имеет значение null, то автодополнение не отобразится, если поисковой запрос не вернул результатов.
        * @example
        * emptyTemplate.wml:
        * <pre>
@@ -177,7 +177,7 @@ interface ISuggest {
 
       /**
        * @name Controls/interface/ISuggest#footerTemplate
-       * @cfg {ISuggestFooterTemplate} Шаблон футера автодополнения.
+       * @cfg {ISuggestFooterTemplate} Шаблон подвала автодополнения.
        * @example
        * myFooter.wml
        * <pre>
@@ -234,7 +234,7 @@ interface ISuggest {
 
       /**
        * @name Controls/interface/ISuggest#historyId
-       * @cfg {String} Уникальный идентификатор для сохранения истории ввода.
+       * @cfg {String} Уникальный идентификатор для сохранения истории выбора записей из автодополнения.
        * @remark Если элементы были ранее выбраны, автодополнение с этими элементами будет отображаться после того, как на поле ввода перейдет фокус.
        * @example
        * <pre>

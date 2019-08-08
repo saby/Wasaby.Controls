@@ -10,7 +10,6 @@ import template = require('tmpl!Controls/_lookup/Opener');
  * @class Controls/_lookup/Opener
  * @control
  * @extends Controls/_popup/Opener/Stack
- * @public
  * @author Герасимов А.М.
  */
 /*
@@ -21,7 +20,6 @@ import template = require('tmpl!Controls/_lookup/Opener');
  * @class Controls/_lookup/Opener
  * @control
  * @extends Controls/_popup/Opener/Stack
- * @public
  * @author Gerasimov A.M.
  */
 
