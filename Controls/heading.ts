@@ -30,9 +30,9 @@
  * @author Крайнов Д.О.
  */
 
-import {default as Title} from 'Controls/_heading/Heading';
+import {default as Title} from './_heading/Heading';
 import Back = require('Controls/_heading/Back');
-import Separator = require('Controls/_heading/Separator');
+import {default as Separator} from './_heading/Separator';
 import Counter = require('Controls/_heading/Counter');
 
 export {
