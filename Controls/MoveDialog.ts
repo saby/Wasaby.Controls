@@ -75,10 +75,10 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
    /**
     * @event Controls/MoveDialog#sendResult Происходит при выборе раздела для перемещения записей.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Types/entity:Model} item Узел, куда перемещаются выбранные записи. Подробнее о типах записей читайте <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">здесь</a>.
+    * @param {Types/entity:Model} item Раздел, куда перемещаются выбранные записи.
     * @param {Types/collection:RecordSet} movedItems Перемещаемые записи.
     * @remark
-    * Выбор производится кликом по записи, кнопкам "Выбрать" и "В корень" (см. {@link showRoot}).
+    * Выбор раздела производится кликом по записи, кнопкам "Выбрать" и "В корень" (см. {@link showRoot}).
     * Клик по папке не производит выбора раздела для перемещения.
     * Событие всплываемое (см. <a href="/doc/platform/developmentapl/interface-development/ui-library/events/">Работа с событиями</a>).
     * Событие происходит непосредственно перед событием close.
