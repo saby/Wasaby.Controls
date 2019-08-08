@@ -56,14 +56,43 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
     */
 
    /**
-    * @name Controls/interface/ISearch#searchParam
-    * @cfg {String} Имя поля, в котором должен выполняться поиск. Значение поиска будет вставлено в фильтр по этому параметру.
+    * @name Controls/MoveDialog#searchParam
+    * @cfg {String} Имя поля, по данным которого происходит поиск.
+    * @remark
+    * Настройка нужна для правильной работы строки поиска.
+    * Значение опции передаётся в контроллер поиска {@link Controls/search:Controller}.
+    * Подробнее о работе поиска и фильтрации в Wasaby читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководстве разработчика</a>.
     */
 
-   /*
-    * @name Controls/interface/ISearch#searchParam
-    * @cfg {String} Name of the field that search should operate on. Search value will insert in filter by this parameter.
-    */
+   /**
+    * @name Controls/MoveDialog#showRoot
+    * @cfg {Boolean} Разрешить перемещение записей в корень иерархии.
+    * @remark
+    * - true Отображается кнопка "В корень" над списком. Клик по кнопке перемещает записи в корень иерархии (см. <a href="/materials/demo-ws4-operations-panel">демо-пример</a>).
+    * - false Кнопка скрыта.
+    */ 
+
+   /**
+    * @event Controls/MoveDialog#sendResult Происходит при выборе раздела для перемещения записей.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+    * @param {Types/entity:Model} item Узел, куда перемещаются выбранные записи. Подробнее о типах записей читайте <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">здесь</a>.
+    * @param {Types/collection:RecordSet} movedItems Перемещаемые записи.
+    * @remark
+    * Выбор производится кликом по записи, кнопкам "Выбрать" и "В корень" (см. {@link showRoot}).
+    * Клик по папке не производит выбора раздела для перемещения.
+    * Событие всплываемое (см. <a href="/doc/platform/developmentapl/interface-development/ui-library/events/">Работа с событиями</a>).
+    * Событие происходит непосредственно перед событием close.
+    * @see close
+    */ 
+
+   /**
+    * @event Controls/MoveDialog#close Происходит при закрытии диалога перемещения записей.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+    * @remark
+    * Событие всплываемое (см. <a href="/doc/platform/developmentapl/interface-development/ui-library/events/">Работа с событиями</a>).
+    * Событие происходит непосредственно после события sendResult.
+    * @see sendResult
+    */ 
 
 let MoveDialog = Control.extend({
       _template: template,
