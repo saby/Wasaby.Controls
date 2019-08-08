@@ -3,7 +3,7 @@
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/Multiselect/Visible/Index' }}">
-            <a href="{{content.href}}">Множественный выбор виден всегда</a>
+            <a href="{{content.href}}">Чекбоксы всегда показываются</a>
         </Router.router:Reference>
         <Controls-demo.list_new.Multiselect.Visible.Index/>
     </div>
@@ -12,8 +12,17 @@
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/Multiselect/Visible/Index' }}">
-            <a href="{{content.href}}">Множественный выбор при наведении</a>
+            <a href="{{content.href}}">Чекбоксы показываются при наведении</a>
         </Router.router:Reference>
         <Controls-demo.list_new.Multiselect.OnHover.Index/>
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr4">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Multiselect/AllSelected/Index' }}">
+            <a href="{{content.href}}">Выбор сразу всех записей</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Multiselect.AllSelected.Index/>
     </div>
 </div>

@@ -1,4 +1,5 @@
 <div class="controlsDemo__wrapper">
+
     <div class="controlsDemo__wrapper controlsDemo__flexRow">
         <div class="controlsDemo__cell controlsDemo__mr2">
             <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
@@ -18,6 +19,7 @@
             <Controls-demo.list_new.ItemPadding.DifferentPadding.Index/>
         </div>
     </div>
+
     <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">Вертикальные отступы</div>
         <div class="controlsDemo__wrapper controlsDemo__flexRow">
@@ -79,6 +81,5 @@
             </div>
         </div>
     </div>
-
 
 </div>
