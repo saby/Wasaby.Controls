@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from "UI/Base"
 import * as Template from "wml!Controls-demo/list_new/Marker/Hidden/Hidden"
 import {Memory} from "Types/source"
-import {FewCategories as Data} from "../../DemoHelpers/DataCatalog"
+import {getFewCategories as getData} from "../../DemoHelpers/DataCatalog"
 import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
@@ -11,7 +11,7 @@ export default class extends Control {
     protected _beforeMount() {
         this._viewSource = new Memory({
             keyProperty: 'id',
-            data: Data
+            data: getData()
         });
     }
 }

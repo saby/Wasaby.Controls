@@ -2,7 +2,7 @@ import {Control, TemplateFunction} from "UI/Base"
 import * as Template from "wml!Controls-demo/list_new/Grouped/HiddenGroup/HiddenGroup"
 import {Memory} from "Types/source"
 import {Model} from "Types/entity"
-import {GroupedCatalogWithHiddenGroup as Data} from "../../DemoHelpers/DataCatalog"
+import {getGroupedCatalogWithHiddenGroup as getData} from "../../DemoHelpers/DataCatalog"
 import CONSTANTS = require("Controls/Constants");
 import 'css!Controls-demo/Controls-demo'
 
@@ -13,7 +13,7 @@ export default class extends Control {
     protected _beforeMount() {
         this._viewSource = new Memory({
             keyProperty: 'id',
-            data: Data
+            data: getData()
         });
     }
 
