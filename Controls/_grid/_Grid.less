@@ -453,6 +453,12 @@
    right: 0;
 }
 
+// По ховеру нужен отдельный стек z-index, иначе при скролле колонок из-за transform неправильно обрабатывается ховер
+// https://online.sbis.ru/opendoc.html?guid=6059b335-dad3-4458-b022-0260680d5c27
+.controls-itemActionsV__container:hover {
+   z-index: 1;
+}
+
 .controls-Grid__cell_header-content_border-bottom {
    border-bottom: @height_Grid-row-separator solid @border-color_Grid-lastRow-separator;
 }
