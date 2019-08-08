@@ -1,0 +1,14 @@
+<div class="controlsDemo__wrapper">
+    <Controls.list:View keyProperty="id" source="{{_viewSource}}">
+        <ws:itemTemplate>
+            <ws:partial template="Controls/list:ItemTemplate">
+                <ws:contentTemplate>
+                    <div>
+                        <div>{{itemTemplate.itemData.item.get('title')}}</div>
+                        <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.get('description')}}</div>
+                    </div>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:itemTemplate>
+    </Controls.list:View>
+</div>

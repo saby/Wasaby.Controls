@@ -1,0 +1,73 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Стандартные отступы</div>
+        <Controls.list:View
+                keyProperty="id"
+                source="{{_viewSource}}">
+        </Controls.list:View>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Без отступов</div>
+        <Controls.list:View
+                keyProperty="id"
+                source="{{_viewSource}}">
+            <ws:itemPadding top="null" bottom="null" left="null" right="null"/>
+        </Controls.list:View>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Только вертикальные отступы</div>
+        <Controls.list:View
+                keyProperty="id"
+                source="{{_viewSource}}">
+            <ws:itemPadding top="s" bottom="s" left="null" right="null"/>
+        </Controls.list:View>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру XS</div>
+        <Controls.list:View
+                keyProperty="id"
+                source="{{_viewSource}}">
+            <ws:itemPadding left="XS" right="XS"/>
+        </Controls.list:View>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру S</div>
+        <Controls.list:View
+                keyProperty="id"
+                source="{{_viewSource}}">
+            <ws:itemPadding left="S" right="S"/>
+        </Controls.list:View>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру M</div>
+        <Controls.list:View
+                keyProperty="id"
+                source="{{_viewSource}}">
+            <ws:itemPadding left="M" right="M"/>
+        </Controls.list:View>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру L</div>
+        <Controls.list:View
+                keyProperty="id"
+                source="{{_viewSource}}">
+            <ws:itemPadding left="L" right="L"/>
+        </Controls.list:View>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру XL</div>
+        <Controls.list:View
+                keyProperty="id"
+                source="{{_viewSource}}">
+            <ws:itemPadding left="XL" right="XL"/>
+        </Controls.list:View>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру XXL</div>
+        <Controls.list:View
+                keyProperty="id"
+                source="{{_viewSource}}">
+            <ws:itemPadding left="XXL" right="XXL"/>
+        </Controls.list:View>
+    </div>
+</div>

@@ -1,7 +1,9 @@
 import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/list_new/Base/Base"
+import * as Template from "wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/ItemTemplateProperty"
 import {Memory} from "Types/source"
-import {FewCategories as Data} from "../DemoHelpers/DataCatalog"
+import {FewCategories as Data} from "../../DemoHelpers/DataCatalog"
+import 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateNoHighlight'
+import 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateWithDescription'
 import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
