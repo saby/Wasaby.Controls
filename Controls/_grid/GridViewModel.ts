@@ -766,7 +766,6 @@ var
                );
             }
 
-
             if (headerColumn.column.sortingProperty) {
                 headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
             }
@@ -813,6 +812,10 @@ var
             }
             if (headerColumn.column.valign) {
                 cellContentClasses += ' controls-Grid__header-cell_align_items_' + headerColumn.column.valign;
+            }
+
+            if (GridLayoutUtil.isOldIE()) {
+                cellContentClasses += ' controls-Grid__header-cell-content-block';
             }
 
             headerColumn.shadowVisibility = shadowVisibility;

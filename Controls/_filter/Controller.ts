@@ -71,17 +71,17 @@ import 'Controls/context';
             // if textValue is empty string (''), save filter in history
             // if textValue is null, do not save
             const isNeedSaveHistory = textValue !== undefined && textValue !== null;
-            const value = isNeedSaveHistory ? getPropValue(item, 'value') : getPropValue(item, 'resetValue');
             const visibility = !isNeedSaveHistory && getPropValue(item, 'visibility') ? false : getPropValue(item, 'visibility');
             let minItem = {
-               value: value,
                visibility: visibility
             };
 
+            if (isNeedSaveHistory) {
+               minItem.value = getPropValue(item, 'value');
+            }
+
             if (visibility !== false && textValue !== getPropValue(item, 'resetTextValue')) {
                minItem.textValue = getPropValue(item, 'textValue');
-            } else {
-               minItem.textValue = undefined;
             }
 
             if (getPropValue(item, 'id')) {
@@ -275,15 +275,15 @@ import 'Controls/context';
                      var visibility = getPropValue(historyItem, 'visibility');
                      var viewMode = getPropValue(historyItem, 'viewMode');
 
-                     if (item.hasOwnProperty('value')) {
+                     if (item.hasOwnProperty('value') && historyItem.hasOwnProperty('value')) {
                         setPropValue(item, 'value', value);
                      }
 
-                     if (item.hasOwnProperty('textValue')) {
+                     if (item.hasOwnProperty('textValue') && historyItem.hasOwnProperty('textValue')) {
                         setPropValue(item, 'textValue', textValue);
                      }
 
-                     if (item.hasOwnProperty('visibility')) {
+                     if (item.hasOwnProperty('visibility') && historyItem.hasOwnProperty('visibility')) {
                         setPropValue(item, 'visibility', visibility);
                      }
 

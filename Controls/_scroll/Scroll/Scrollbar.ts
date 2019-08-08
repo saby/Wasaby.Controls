@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import Env = require('Env/Env');
+import {detection} from 'Env/Env';
 import * as ScrollBarTemplate from 'wml!Controls/_scroll/Scroll/Scrollbar/Scrollbar';
 import 'Controls/event';
 import 'css!theme?Controls/scroll';
@@ -73,6 +73,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private _currentCoords: IScrollBarCoords | null = null;
     // Координата точки на ползунке, за которую начинаем тащить
     private _dragPointOffset: number | null = null;
+    private _isIe: boolean = detection.isIE;
 
     protected _afterMount(): void {
         this._resizeHandler();
@@ -277,7 +278,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
      * @param {SyntheticEvent} event дескриптор события.
      */
     private _wheelHandler(event: SyntheticEvent<Event>): void {
-        const newPosition = this._position + Scrollbar._calcWheelDelta(Env.detection.firefox, event.nativeEvent.deltaY);
+        const newPosition = this._position + Scrollbar._calcWheelDelta(detection.firefox, event.nativeEvent.deltaY);
         this._setPosition(newPosition, true);
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
             this._thumbSize, newPosition);

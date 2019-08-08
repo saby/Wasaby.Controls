@@ -27,6 +27,10 @@
 
 .controls-Render_multiline {
    height: auto;
+   /**
+    * The container in IE does not stretch the content without min-height.
+    */
+   min-height: 1px;
 }
 
 .controls-Render__wrapper {

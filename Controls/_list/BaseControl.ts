@@ -592,7 +592,7 @@ var _private = {
         // ToDo option "loadOffset" is crutch for contacts.
         // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
         if (self._needScrollCalculation) {
-            self._setLoadOffset(self._loadOffsetTop, self._loadOffsetBottom, false);
+            self._setLoadOffset(self._loadOffsetTop, self._loadOffsetBottom);
         }
         self._isScrollShown = true;
         if (!self._scrollPagingCtr) {
@@ -609,9 +609,9 @@ var _private = {
 
     onScrollHide: function(self) {
         var needUpdate = false;
-        if (!self._loadOffset || !self._loadOffset.isNull) {
+        if (!self._loadOffset && self._isScrollShown) {
             if (self._needScrollCalculation) {
-                self._setLoadOffset(0, 0, true);
+                self._setLoadOffset(0, 0);
             }
             needUpdate = true;
         }
@@ -1350,14 +1350,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _afterMount: function() {
         if (this._needScrollCalculation) {
-            this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom, false);
+            this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom);
             _private.startScrollEmitter(this);
         }
         if (this._hasItemActions) {
             this._canUpdateItemsActions = true;
         }
         if (this._options.itemsDragNDrop) {
-            this._container.addEventListener('dragstart', this._nativeDragStart);
+            let container = this._container[0] || this._container;
+            container.addEventListener('dragstart', this._nativeDragStart);
         }
         if (this._virtualScroll) {
             this._setScrollItemContainer();
@@ -1514,7 +1515,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             clearTimeout(this._focusTimeout);
         }
         if (this._options.itemsDragNDrop) {
-            this._container.removeEventListener('dragstart', this._nativeDragStart);
+            let container = this._container[0] || this._container;
+            container.removeEventListener('dragstart', this._nativeDragStart);
         }
         if (this._sourceController) {
             this._sourceController.destroy();
@@ -1617,7 +1619,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _setLoadOffset: function(top, bottom, isNull) {
+    _setLoadOffset: function(top, bottom) {
         if (this.__error) {
             return;
         }
@@ -1630,16 +1632,18 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._loadOffsetTop = top || this._loadOffsetTop;
         this._loadOffsetBottom = bottom || this._loadOffsetBottom;
 
-        this._loadOffset.isNull = isNull;
         this._children.topVirtualScrollTrigger.style.top = Math.floor(this._loadOffset.top) + 'px';
         this._children.topLoadTrigger.style.top = Math.floor(this._loadOffset.top * 1.3) + 'px';
         this._children.bottomVirtualScrollTrigger.style.bottom = Math.floor(this._loadOffset.bottom) + 'px';
         this._children.bottomLoadTrigger.style.bottom = Math.floor(this._loadOffset.bottom * 1.3) + 'px';
     },
-    _onViewPortResize: function(self, viewPortSize) {
-        if (self._needScrollCalculation && !self._loadOffset.isNull) {
+    _onViewPortResize: function(self, viewPortSize ) {
+        if (self._needScrollCalculation) {
             let offset = Math.floor(viewPortSize / 3);
-            self._setLoadOffset(offset, offset, false);
+            self._setLoadOffset(offset, offset);
+        }
+        if (!self._isScrollShown) {
+            self._setLoadOffset(0, 0);
         }
     },
 
@@ -1719,14 +1723,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setMarkedKey(newKey);
             this._listViewModel.setActiveItem(itemData);
         }
+        let actionsItem = itemData.actionsItem
         if (direction === 'left' && this._hasItemActions) {
-            this._children.itemActions.updateItemActions(itemData.item);
+            this._children.itemActions.updateItemActions(actionsItem);
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
-            itemData.itemActions = this.getViewModel().getItemActions(itemData.item);
+            itemData.itemActions = this.getViewModel().getItemActions(actionsItem);
         }
         if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
-            this._notify('itemSwipe', [itemData.item, childEvent]);
+            this._notify('itemSwipe', [actionsItem, childEvent]);
         }
     },
 
