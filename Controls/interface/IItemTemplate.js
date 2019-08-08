@@ -12,23 +12,24 @@ define('Controls/interface/IItemTemplate', [
    /**
     * @name Controls/interface/IItemTemplate#itemTemplate
     * @cfg {Function} Шаблон элемента списка.
-    * <a href="/materials/demo-ws4-list-item-template">Example</a>.
+    * <a href="/materials/demo-ws4-list-item-template">Демо-пример</a>.
     * @remark
-    * Базовый шаблон itemTemplate для Controls.list:View: "Controls/list:ItemTemplate".
-    * В области шаблона доступен объект itemData, позволяющий получить доступ к данным рендеринга (например, элемент, ключ и т.д.).
+    * По умолчанию используется шаблон "Controls/list:ItemTemplate".
+    * 
     * Базовый шаблон itemTemplate поддерживает следующие параметры:
-    * <ul>
-    *    <li>contentTemplate {Function} - Шаблон содержимого элемента</li>
-    *    <li>highlightOnHover {Boolean} - Выделять элемент при наведении на него курсора мыши.</li>
-    * </ul>
+    * - contentTemplate {Function} — Шаблон содержимого элемента;
+    * - highlightOnHover {Boolean} — Выделять элемент при наведении на него курсора мыши.
+    * 
+    * В области видимости шаблона доступен объект itemData, позволяющий получить доступ к данным рендеринга (например, элемент, ключ и т.д.).
+    * 
+    * Подробнее о работе с шаблоном читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/">руководстве разработчика</a>.
     * @example
-    * Пример использования пользовательского шаблона для рендеринга:
     * <pre>
     *    <Controls.list:View>
     *       <ws:itemTemplate>
     *          <ws:partial template="Controls/list:ItemTemplate">
     *             <ws:contentTemplate>
-    *                <span>{{contentTemplate.itemData.item.description}}</span>
+    *                <span>{{itemTemplate.itemData.item.description}}</span>
     *             </ws:contentTemplate>
     *          </ws:partial>
     *       </ws:itemTemplate>
