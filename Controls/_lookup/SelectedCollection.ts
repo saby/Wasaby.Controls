@@ -5,10 +5,10 @@ import chain = require('Types/chain');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Utils');
 import utils = require('Types/util');
-import 'css!theme?Controls/lookup';
 import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
 import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTemplate');
 import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
+import 'css!theme?Controls/lookup';
 
 /**
  * Контрол, отображающий коллекцию элементов.
@@ -17,7 +17,6 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
  * @extends Core/Control
  * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @control
- * @public
  * @author Капустин И.А.
  */
 /*
@@ -27,7 +26,6 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
  * @extends Core/Control
  * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @control
- * @public
  * @author Kapustin I.A.
  */
 

@@ -1,13 +1,13 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/_InputController/_InputController');
 import emptyTemplate = require('wml!Controls/_suggest/_InputController/empty');
-import {descriptor} from 'Types/entity';
 import mStubs = require('Core/moduleStubs');
 import clone = require('Core/core-clone');
-import {getSwitcherStrFromData} from 'Controls/search';
 import Deferred = require('Core/Deferred');
-import {isEqual} from 'Types/object';
 import Env = require('Env/Env');
+import {descriptor} from 'Types/entity';
+import {getSwitcherStrFromData} from 'Controls/search';
+import {isEqual} from 'Types/object';
 import LoadService from './LoadService';
 import 'css!theme?Controls/suggest';
 
@@ -288,7 +288,6 @@ var _private = {
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
- * @public
  */
 
 /*
@@ -302,7 +301,6 @@ var _private = {
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
- * @public
  */
 var SuggestLayout = Control.extend({
    _template: template,

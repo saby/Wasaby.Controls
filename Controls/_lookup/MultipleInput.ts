@@ -3,10 +3,11 @@ import template = require('wml!Controls/_lookup/MultipleInput/MultipleInput');
 import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
 
 /**
- * «lookup:MultipleInput» это поле ввода с автодополнением и возможностью выбора значения из справочника. Отличается от обычного lookup:input тем, что из каждого справочника можно выбрать лишь одно значение.
+ * Поле ввода с автодополнением и возможностью выбора значений из справочника.
+ * Отличается от {@link Controls/_lookup/Lookup поля связи} выводом выбранных значений.
+ * Ширина выбранных занчений будет пропорционально распределена по ширине контрола, чтобы все значения поместились.
+ * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/directory/lookup/'>здесь</a>
  * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-lookup">демонстрационный пример</a>
- * Если вы используете внутри подсказки поля ввода ссылку на открытие справочника - вам понадобиться {@link Controls/lookup:Link}.
- * Если вы хотите сделать динамичную подсказку поля ввода, которая будет меняться в зависимости от выбранной коллекции, используйте {@link Controls/lookup:PlaceholderChooser}.
  *
  * @class Controls/_lookup/MultipleInput
  * @extends Core/Control
@@ -17,6 +18,7 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/ITextValue
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISorting
@@ -40,6 +42,7 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ITextValue
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/INavigation

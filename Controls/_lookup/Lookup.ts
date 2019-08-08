@@ -1,15 +1,13 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookup/Lookup/Lookup');
 
-
 /**
- * «lookup:Input» - это поле ввода с автодополнением и возможностью выбора значения из справочника.
- * Может отображаться в однострочном и многострочном режиме.
- * Поддерживает одиночный и множественный выбор.
+ * Поле ввода с автодополнением и возможностью выбора значений из справочника.
+ * Выбранные значения отображаются в виде текста с кнопкой удаления внутри поля ввода.
+ * Поддерживает автовысоту в зависимости от выбранных значений {@link multiLine},
+ * одиночный и множественный выбор {@link multiSelect}.
+ * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/directory/lookup/'>здесь</a>
  * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-lookup">демонстрационный пример</a>.
- * Если вы используете внутри подсказки поля ввода ссылку на открытие справочника - вам понадобиться {@link Controls/lookup:Link}.
- * Если вы хотите сделать динамичную подсказку поля ввода, которая будет меняться в зависимости от выбранной коллекции, используйте {@link Controls/lookup:PlaceholderChooser}.
- * Если вам нужен выбор из нескольких справочников, по одному значению из каждого, то вам подойдет {@link Controls/lookup:MultipleInput}.
  *
  * @class Controls/_lookup/Lookup
  * @extends Core/Control
@@ -22,6 +20,7 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
+ * @mixes Controls/_interface/ITextValue
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IInputText
@@ -48,6 +47,7 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
+ * @mixes Controls/_interface/ITextValue
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
@@ -63,7 +63,8 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
 
 /**
  * @name Controls/_lookup/Lookup#multiLine
- * @cfg {Boolean} Определяет, отображать ли Lookup в многострочном режиме.
+ * @cfg {Boolean} Определяет, включать ли режим автовысоты при выборе записей,
+ * когда включён этот режим, поле связи может отображаться в несколько строк.
  * @default false
  * @remark
  * Когда поле связи находится в многострочном режиме, то высота определяется автоматически по выбранным записям. Количество отображаемых записей устанавливается опцией {@link Controls/interface/ISelectedCollection#maxVisibleItems}.
@@ -111,10 +112,43 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
 
 /**
  * @name Controls/_lookup/Lookup#comment
- * @cfg {String} Текст, который отображается в пустом поле комментария.
+ * @cfg {String} Текст, который отображается в {@link placeholder подсказке} поля ввода, если в поле связи выбрано значение.
  * @remark
+ * Если указана опция comment, то для поля связи будет включён режим,
+ * в котором после выбора записи, поле ввода будет продолжать отображаться.
  * Актуально только в режиме единичного выбора.
- * Если значение не задано, то поле с комментарием отображено не будет.
+ * Введённый комментарий можно получить из опции value поля связи.
+ * @example
+ * WML:
+ * <pre>
+ *     <Controls.lookup:Input
+ *             comment='Введите комментарий'
+ *             displayProperty='name'
+ *             keyProperty='id'
+ *             multiSelect='{{false}}'
+ *             source='{{_source}}'
+ *             bind:value='_value'
+ *             bind:selectedKeys='_selectedKeys'/>
+ * </pre>
+ *
+ * JS:
+ * <pre>
+ *     import {Memory} from 'Types/source';
+ *
+ *     protected _beforeMount() {
+ *        this._source = new Memory({
+ *            keyProperty: 'id'
+ *            data: [
+ *               { id: 1, name: 'Sasha' },
+ *               { id: 2, name: 'Mark' },
+ *               { id: 3, name: 'Jasmin' },
+ *               { id: 4, name: 'Doggy' }
+ *            ]
+ *        });
+ *        this._selectedKeys = [];
+ *     }
+ * </pre>
+ * @link placeholder
  */
 /*
  * @name Controls/_lookup/Lookup#comment

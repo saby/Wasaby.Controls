@@ -3,7 +3,10 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
 
 
 /**
- * Кнопка-ссылка с заданным текстом, при клике на которую открывается окно выбора.
+ * Кнопка-ссылка с возможностью выбора значений из справочника.
+ * Выбранные значения отображаются в виде текста с кнопкой удаления.
+ * Поддерживает одиночный и множественный выбор.
+ * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/directory/lookup/'>здесь</a>
  * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-button">демонстрационный пример</a>.
  *
  * @class Controls/_lookup/Button
@@ -16,6 +19,7 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_lookup/Button/SelectorButtonStyles
+ * @mixes Controls/_interface/ITextValue
  * @control
  * @public
  * @author Капустин И.А.
@@ -29,6 +33,7 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * @extends Core/Control
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/interface/ISelectedCollection
+ * @mixes Controls/_interface/ITextValue
  * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/interface/IFilter
  * @mixes Controls/_interface/IMultiSelectable

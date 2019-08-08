@@ -15,7 +15,7 @@ define('Controls/interface/ISelectedCollection', [
 
    /**
     * @name Controls/interface/ISelectedCollection#displayProperty
-    * @cfg {String} Имя свойства элемента, содержимое которого будет отображаться.
+    * @cfg {String} Имя поля элемента, значение которого будет отображаться.
     * @example
     * WML:
     * <pre>
@@ -73,12 +73,13 @@ define('Controls/interface/ISelectedCollection', [
 
    /**
     * @name Controls/interface/ISelectedCollection#maxVisibleItems
-    * @cfg {Integer} Максимальное количество элементов для отображения, остальные будут скрыты под счетчиком.
+    * @cfg {Number} Максимальное количество элементов для отображения в поле выбора с автовысотой {@link multiLine}.
     * @default 7
     * @remark
-    * Актуально только в многострочном режиме
+    * Если элементов выбрано больше, чем указано в опции maxVisibleItems,
+    * то эти элементы отображены не будут, их можно отобразить, если нажать на счётчик всех записей.
+    * Актуально только в многострочном режиме.
     * @see Controls/interface/ISelectedCollection#multiSelect
-    *
     * @example
     * WML:
     * <pre>
@@ -210,51 +211,6 @@ define('Controls/interface/ISelectedCollection', [
     *                      clickable="{{true}}"/>
     *       </ws:itemTemplate>
     *    </Controls.lookup:Selector>
-    * </pre>
-    */
-
-   /**
-    * @event Controls/interface/ISelectedCollection#textValueChanged Происходит при изменении набора выбранной коллекции.
-    * @param {Vdom/Vdom:SyntheticEvent} eventObject Декскриптор события.
-    * @param {String} textValue Строка, сформированная из выбранных записей.
-    *
-    * @example
-    * В следующем примере создается Controls/lookup:Selector и демонстрируется сценарий использования.
-    * WML:
-    * <pre>
-    *    <Controls.lookup:Selector
-    *       source="{{_source}}"
-    *       keyProperty="id"
-    *       on:textValueChanged="onTextValueChanged()">
-    *    </Controls.lookup:Selector>
-    * </pre>
-    * JS:
-    * <pre>
-    *    onTextValueChanged: function(e, textValue) {
-    *       UserConfig.setParam('selectedItems', textValue);
-    *    }
-    * </pre>
-    */
-   /*
-    * @event Controls/interface/ISelectedCollection#textValueChanged Occurs when changing the set of the selected collection.
-    * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
-    * @param {String} textValue String formed from selected entries.
-    *
-    * @example
-    * The following example creates Controls/lookup:Selector and shows how to handle the event.
-    * WML:
-    * <pre>
-    *    <Controls.lookup:Selector
-    *       source="{{_source}}"
-    *       keyProperty="id"
-    *       on:textValueChanged="onTextValueChanged()">
-    *    </Controls.lookup:Selector>
-    * </pre>
-    * JS:
-    * <pre>
-    *    onTextValueChanged: function(e, textValue) {
-    *       UserConfig.setParam('selectedItems', textValue);
-    *    }
     * </pre>
     */
 
