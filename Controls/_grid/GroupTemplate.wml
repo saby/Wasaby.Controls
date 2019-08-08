@@ -42,19 +42,20 @@
 <ws:else data="{{itemData.isPartialGridSupport()}}">
       <ws:partial template="groupContentTemplate"
                   attr:class="controls-ListView__itemV {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group'}}"
-                  attr:style="{{columnAlignGroup ? '-ms-grid-column: 1; -ms-grid-column-span: ' + (columnAlignGroup) + '; grid-column: 1 / ' + (columnAlignGroup+1) + ';' : '-ms-grid-column: 1; -ms-grid-column-span: ' + (itemData.columns.length + 1) + '; grid-column: 1 / ' + (itemData.columns.length + 2) + ';'}} {{itemData.gridGroupStyles}}"
+                  attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).left}} {{itemData.gridGroupStyles}}"
                   attr:key="group-{{itemData.item}}"/>
-      <ws:if data="{{columnAlignGroup !== undefined}}">
+      <ws:if data="{{columnAlignGroup !== undefined && columnAlignGroup !== undefined && columnAlignGroup < itemData.columns.length - (itemData.hasMultiSelect ? 1 : 0)}}">
          <ws:partial template="groupRightTemplate"
                      attr:class="controls-ListView__itemV {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group'}}"
-                     attr:style="{{'-ms-grid-column: ' + (columnAlignGroup + 1) + '; -ms-grid-column-span: ' + ((itemData.columns.length-columnAlignGroup)) + '; grid-column: ' + (columnAlignGroup + 1) + ' / ' + ((itemData.columns.length-columnAlignGroup)+2) + ';'}} {{itemData.gridGroupStyles}}"/>
+                     attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).right}} {{itemData.gridGroupStyles}}"/>
       </ws:if>
 </ws:else>
 <ws:else>
    <div attr:class="controls-ListView__itemV {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group'}}" attr:key="group-{{itemData.item}}">
-      <ws:partial template="groupContentTemplate" attr:style="{{columnAlignGroup ? 'grid-column: 1 / ' + (columnAlignGroup + 1) + ';' : 'grid-column: 1 / ' + (itemData.columns.length + 1) + ';'}}"/>
-      <ws:if data="{{columnAlignGroup !== undefined}}">
-         <ws:partial template="groupRightTemplate" attr:style="{{'grid-column: ' + (columnAlignGroup + 1) + ' / ' + (itemData.columns.length + 1) + ';'}}"/>
+      <ws:partial template="groupContentTemplate" attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).left}}"/>
+      <ws:if data="{{columnAlignGroup !== undefined && columnAlignGroup < itemData.columns.length - (itemData.hasMultiSelect ? 1 : 0)}}">
+         <ws:partial template="groupRightTemplate"
+                     attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).right}}"/>
       </ws:if>
    </div>
 </ws:else>
