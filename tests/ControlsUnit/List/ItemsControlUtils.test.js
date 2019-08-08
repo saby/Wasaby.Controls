@@ -36,7 +36,7 @@ define(['Controls/list', 'Types/collection', 'Types/source', 'Core/core-instance
                groupingKeyCallback: groupFnc
             };
          });
-         
+
          describe('ItemsUtil', function () {
             var proj;
             it('Flat display Array', function () {

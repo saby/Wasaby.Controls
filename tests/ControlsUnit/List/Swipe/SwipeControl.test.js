@@ -313,11 +313,13 @@ define([
          }
          var itemData;
          beforeEach(function() {
+            let item = {};
             itemData = {
                itemActions: {
                   all: [1, 2, 3, 4, 5]
                },
-               item: {}
+               item: item,
+               actionsItem: item
             };
          });
          it('direction: right, _animationState: open', function() {

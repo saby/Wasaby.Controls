@@ -66,7 +66,7 @@ var _private = {
             for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                 var
                     itemData = options.listModel.getCurrent(),
-                    item = itemData.breadCrumbs ? itemData.item[itemData.item.length - 1] : itemData.item;
+                    item = itemData.actionsItem;
                 if (item !== ControlsConstants.view.hiddenGroup && item.get) {
                     _private.updateItemActions(self, item, options);
                 }
@@ -158,7 +158,7 @@ var ItemActionsControl = Control.extend({
 
     _onItemActionsClick: function(event, action, itemData) {
         aUtil.itemActionsClick(this, event, action, itemData, this._options.listModel);
-        this.updateItemActions(itemData.item);
+        this.updateItemActions(itemData.actionsItem);
         this._options.listModel.setMarkedKey(itemData.key);
     },
 
