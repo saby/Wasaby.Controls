@@ -19,7 +19,7 @@
               selectorTemplate="{{_options.selectorTemplate}}"
               isCompoundTemplate="{{_options.isCompoundTemplate}}"
               selectorOpener="{{_options.selectorOpener}}"
-              on:mousedown="_moreButtonClick()"/>
+              afterOpenCallback="{{_afterOpenDialogCallback}}"/>
    </ws:if>
    <ws:if data="{{!_options.isLast && _options.showSeparator !== false}}">
       <div class="controls-SimplePanel__block_separator_theme_{{_options.theme}}"></div>
