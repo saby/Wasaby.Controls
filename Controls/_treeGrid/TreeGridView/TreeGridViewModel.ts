@@ -123,8 +123,11 @@ var
             this._model.resetExpandedItems();
         },
         isDrawResults: function() {
-            var items = this._model.getHierarchyRelation().getChildren(this.getDisplay().getRoot().getContents(), this.getItems());
-            return items && items.length > 1;
+            var items = this.getDisplay();
+            if (items) {
+                var items = this._model.getHierarchyRelation().getChildren(items.getRoot().getContents(), this.getItems());
+                return items && items.length > 1;
+            }
         },
         getItemDataByItem: function(dispItem) {
             var

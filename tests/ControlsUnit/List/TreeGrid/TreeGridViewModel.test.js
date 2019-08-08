@@ -360,6 +360,8 @@ define(['Controls/treeGrid',
          assert.isTrue(ladderViewModel.isDrawResults())
          ladderViewModel.getItems().removeAt(4);
          assert.isFalse(ladderViewModel.isDrawResults())
+         ladderViewModel.getDisplay = () => null;
+         assert.equal(undefined, ladderViewModel.isDrawResults())
       });
    });
    function MockedDisplayItem(cfg) {
