@@ -1,9 +1,11 @@
-<Controls.list:View
-        source="{{_viewSource}}"
-        keyProperty="id">
-    <ws:footerTemplate>
-        <div style="padding: 10px 0;">
-        <Controls.buttons:Button readOnly="{{false}}" icon="icon-small icon-ArrangeList" caption="Show all categories"/>
-        </div>
-    </ws:footerTemplate>
-</Controls.list:View>
+<div class="controlsDemo__wrapper">
+    <Controls.list:View source="{{_viewSource}}" keyProperty="id">
+        <ws:footerTemplate>
+            <Controls.buttons:Button
+                    attr:style="margin: 10px 0;"
+                    caption="Show all categories"
+                    readOnly="{{false}}"
+                    icon="icon-small icon-ArrangeList"/>
+        </ws:footerTemplate>
+    </Controls.list:View>
+</div>

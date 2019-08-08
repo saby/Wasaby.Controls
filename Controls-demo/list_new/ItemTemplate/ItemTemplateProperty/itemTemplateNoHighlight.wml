@@ -1,5 +1,8 @@
 <ws:partial template="Controls/list:ItemTemplate" highlightOnHover="{{false}}" itemData="{{itemData}}">
     <ws:contentTemplate>
-        <div>{{itemData.item.title}}<span style="font-size: 11px; color: grey"> Без подсветки при наведении</span></div>
+        <div>
+            {{itemData.item.title}}
+            <span style="font-size: 11px; color: grey"> Без подсветки при наведении</span>
+        </div>
     </ws:contentTemplate>
 </ws:partial>

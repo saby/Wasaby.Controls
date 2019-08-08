@@ -4,5 +4,10 @@
             keyProperty="id"
             source="{{_viewSource}}"
             markerVisibility="onactivated"/>
-    <Controls.buttons:Button readOnly="{{false}}" icon="icon-small icon-TurnL" caption="Reload list" on:click="_reloadList()"/>
+
+    <Controls.buttons:Button
+            readOnly="{{false}}"
+            icon="icon-small icon-TurnL"
+            caption="Reload list"
+            on:click="_reloadList()"/>
 </div>

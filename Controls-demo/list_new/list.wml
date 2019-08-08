@@ -3,7 +3,7 @@
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/Base/Index' }}">
-            <a href="{{content.href}}">Base</a>
+            <a href="{{content.href}}">Базовая настройка списка</a>
         </Router.router:Reference>
         <Controls-demo.list_new.Base.Index/>
     </div>
@@ -12,7 +12,7 @@
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/DisplayProperty/Index' }}">
-            <a href="{{content.href}}">DisplayProperty</a>
+            <a href="{{content.href}}">Переопределение стандартного поля для отображения</a>
         </Router.router:Reference>
         <Controls-demo.list_new.DisplayProperty.Index/>
     </div>
@@ -21,7 +21,7 @@
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/EmptyList/Index' }}">
-            <a href="{{content.href}}">EmptyList</a>
+            <a href="{{content.href}}">Шаблон отображения пустого списка</a>
         </Router.router:Reference>
         <Controls-demo.list_new.EmptyList.Index/>
     </div>
@@ -30,7 +30,7 @@
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/FooterTemplate/Index' }}">
-            <a href="{{content.href}}">FooterTemplate</a>
+            <a href="{{content.href}}">Шаблон подвала списка</a>
         </Router.router:Reference>
         <Controls-demo.list_new.FooterTemplate.Index/>
     </div>
@@ -39,7 +39,7 @@
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/ItemPadding/Index' }}">
-            <a href="{{content.href}}">ItemPadding</a>
+            <a href="{{content.href}}">Отступы в списке</a>
         </Router.router:Reference>
         <Controls-demo.list_new.ItemPadding.Index/>
     </div>
@@ -48,7 +48,7 @@
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/ItemTemplate/Index' }}">
-            <a href="{{content.href}}">ItemTemplate</a>
+            <a href="{{content.href}}">Шаблон строки</a>
         </Router.router:Reference>
         <Controls-demo.list_new.ItemTemplate.Index/>
     </div>
@@ -69,5 +69,14 @@
             <a href="{{content.href}}">Множественный выбор</a>
         </Router.router:Reference>
         <Controls-demo.list_new.Multiselect.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Grouped/Index' }}">
+            <a href="{{content.href}}">Группировка</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Grouped.Index/>
     </div>
 </div>

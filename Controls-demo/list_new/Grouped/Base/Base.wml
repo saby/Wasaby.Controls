@@ -2,5 +2,5 @@
     <Controls.list:View
             keyProperty="id"
             source="{{_viewSource}}"
-            displayProperty="description"/>
+            groupingKeyCallback="{{_groupingKeyCallback}}"/>
 </div>
