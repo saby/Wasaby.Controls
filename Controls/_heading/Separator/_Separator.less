@@ -1,4 +1,4 @@
-.controls-HeaderSeparator_size {
+.controls-HeaderSeparator_size_theme-@{themeName} {
    width: @width-HeaderSeparator;
    height: @height-HeaderSeparator;
    padding-left: @spacing-HeaderSeparator_between_headerSeparator_Header;
@@ -22,28 +22,28 @@
    cursor: pointer;
 }
 
-.controls-HeaderSeparator__icon_style-secondary {
+.controls-HeaderSeparator__icon_style-secondary_theme-@{themeName} {
    fill: @color_HeaderSeparator_secondary;
 }
 
-.controls-HeaderSeparator__icon_style-primary {
+.controls-HeaderSeparator__icon_style-primary_theme-@{themeName} {
    fill: @color_HeaderSeparator_primary;
 }
 
-.controls-HeaderSeparator__icon_style-secondary:active {
+.controls-HeaderSeparator__icon_style-secondary_theme-@{themeName}:active {
    fill: @color_HeaderSeparator_secondary_hovered;
 }
 
-.controls-HeaderSeparator__icon_style-primary:active {
+.controls-HeaderSeparator__icon_style-primary_theme-@{themeName}:active {
    fill: @color_HeaderSeparator_primary_hovered;
 }
 
 .ws-is-no-touch {
-   .controls-HeaderSeparator__icon_style-secondary:hover {
+   .controls-HeaderSeparator__icon_style-secondary_theme-@{themeName}:hover {
       fill: @color_HeaderSeparator_secondary_hovered;
    }
 
-   .controls-HeaderSeparator__icon_style-primary:hover {
+   .controls-HeaderSeparator__icon_style-primary_theme-@{themeName}:hover {
       fill: @color_HeaderSeparator_primary_hovered;
    }
 }
