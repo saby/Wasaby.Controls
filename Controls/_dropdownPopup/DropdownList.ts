@@ -204,7 +204,8 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                   multiSelect: newOptions.multiSelect,
                   groupTemplate: newOptions.groupTemplate,
                   groupingKeyCallback: newOptions.groupingKeyCallback,
-                  groupMethod: newOptions.groupMethod
+                  groupMethod: newOptions.groupMethod,
+                  hasClose: newOptions.showClose
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
                this._hasAdditional = this._listModel.hasAdditional();
