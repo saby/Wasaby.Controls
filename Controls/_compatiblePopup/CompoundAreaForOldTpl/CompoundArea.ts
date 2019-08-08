@@ -605,15 +605,23 @@ var CompoundArea = CompoundContainer.extend([
 
    // По таргету с события определяем, связан ли компонент, в котором лежит таргет, с текущей панелью по опенерам
    _isLinkedPanel: function(event) {
-      var target = $(event.nativeEvent.relatedTarget);
-      var compoundArea = target.closest('.controls-CompoundArea');
-      var opener;
+      const target = $(event.nativeEvent.relatedTarget);
+      const compoundArea = target.closest('.controls-CompoundArea');
+      let opener;
 
       if (compoundArea.length) {
          opener = compoundArea[0].controlNodes[0].control.getOpener();
       }
 
-      var popupMixin = target.closest('.controls-Menu, .controls-FloatArea');
+      const vdomPopupContaner = target.closest('.controls-Popup');
+      if (vdomPopupContaner.length) {
+         const vdomPopup = vdomPopupContaner[0].controlNodes[0].control;
+         if (vdomPopup) {
+            opener = vdomPopup._options.opener;
+         }
+      }
+
+      const popupMixin = target.closest('.controls-Menu, .controls-FloatArea');
       if (popupMixin.length) {
          opener = popupMixin.wsControl().getOpener();
       }
