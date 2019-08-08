@@ -186,6 +186,7 @@ import {factory} from 'Types/chain';
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
             itemsModelCurrent.spacingClassList = !this._options.multiSelect ? 'controls-DropdownList__item-leftPadding_default' : '';
             itemsModelCurrent.multiSelect = this._options.multiSelect;
+            itemsModelCurrent.hasClose = this._options.hasClose;
             return itemsModelCurrent;
          },
          _isItemSelected: function(item) {
