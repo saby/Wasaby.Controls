@@ -101,13 +101,14 @@ const
       setOffsetForHScroll(self) {
          const container = self._children.content;
          const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0].childNodes;
+         let leftOffsetForHScroll: number;
          if (HeaderGroup && !!HeaderGroup.length) {
             if (self._fixedColumnsWidth) {
-               self._leftOffsetForHScroll = self._fixedColumnsWidth;
+                self._leftOffsetForHScroll = self._fixedColumnsWidth;
             } else if (self._options.multiSelectVisibility !== 'hidden') {
-               self._leftOffsetForHScroll = HeaderGroup[0].offsetWidth + HeaderGroup[1].offsetWidth;
+                self._leftOffsetForHScroll = HeaderGroup[0].offsetWidth + HeaderGroup[1].offsetWidth;
             } else {
-               self._leftOffsetForHScroll = HeaderGroup[0].offsetWidth;
+                self._leftOffsetForHScroll = HeaderGroup[0].offsetWidth;
             }
             self._offsetForHScroll = HeaderGroup[0].offsetHeight;
          }
@@ -116,7 +117,9 @@ const
             const ResultsGroup = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
             self._offsetForHScroll += ResultsGroup[0].offsetHeight;
          }
-      },
+
+         self._contentSizeForHScroll = self._contentSize - self._leftOffsetForHScroll;
+      }
    },
    ColumnScroll = Control.extend({
       _template: ColumnScrollTpl,
@@ -130,6 +133,7 @@ const
       _transformSelector: '',
       _offsetForHScroll: 0,
       _leftOffsetForHScroll: 0,
+      _contentSizeForHScroll: 0,
 
       _beforeMount() {
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();

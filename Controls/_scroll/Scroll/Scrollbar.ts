@@ -15,7 +15,6 @@ interface IScrollBarCoords {
 export interface IScrollBarOptions extends IControlOptions {
     position?: number;
     contentSize: number;
-    leftOffset: number;
     direction: TDirection;
 }
 /**
@@ -78,12 +77,14 @@ class Scrollbar extends Control<IScrollBarOptions> {
     protected _afterMount(): void {
         this._resizeHandler();
         this._forceUpdate();
+        this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
+            this._thumbSize, this._options.position);
     }
 
     protected _afterUpdate(oldOptions: IScrollBarOptions): void {
 
         let shouldUpdatePosition = !this._dragging && this._position !== this._options.position;
-        if (oldOptions.contentSize !== this._options.contentSize || oldOptions.leftOffset !== this._options.leftOffset) {
+        if (oldOptions.contentSize !== this._options.contentSize) {
             this._setSizes(this._options.contentSize);
             shouldUpdatePosition = true;
         }
@@ -179,7 +180,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
 
         let viewportRatio: number;
         viewportRatio = Scrollbar._calcViewportRatio(this._scrollBarSize,
-            horizontalDirection ? contentSize - this._options.leftOffset : contentSize);
+            contentSize);
 
         thumbSize = Scrollbar._calcThumbSize(
             this._children.thumb,

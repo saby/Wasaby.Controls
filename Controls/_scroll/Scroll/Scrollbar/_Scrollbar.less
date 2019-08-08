@@ -12,7 +12,6 @@
 
 .controls-VScrollbar_horizontal {
    height: @width_Scrollbar + 2 * @margin_Scrollbar;
-   padding: @margin_Scrollbar 0;
    border-width: 0 @margin_Scrollbar;
    transition: transform @animation-duration_Scrollbar ease-in-out;
 }
@@ -34,6 +33,10 @@
 .controls-VScrollbar__thumbWrapper {
    padding: @margin_Scrollbar;
    box-sizing: border-box;
+}
+
+.controls-VScrollbar__thumbWrapper_horizontal {
+   height: 100%;
 }
 
 .controls-VScrollbar__thumb {
