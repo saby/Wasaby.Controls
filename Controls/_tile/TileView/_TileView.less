@@ -72,6 +72,13 @@
          display: block;
       }
    }
+   // The word break only on the desktop, read above.
+   .controls-TileView__item_hovered, .controls-TileView__item_active, .controls-TileView__item_swiped {
+      .controls-TileView__title {
+         white-space: normal;
+         word-break: break-all;
+      }
+   }
 }
 
 .controls-TileView__item_scaled {
@@ -80,8 +87,6 @@
 .controls-TileView__item_hovered, .controls-TileView__item_active, .controls-TileView__item_swiped {
    .controls-TileView__title {
       background-color: @background-color_TileView-title;
-      white-space: normal;
-      word-break: break-all;
    }
 }
 
