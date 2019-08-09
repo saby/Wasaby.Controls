@@ -3738,16 +3738,9 @@ define([
                 keyProperty: 'id',
                 source: source
              },
-             isResized = false,
              instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
-
-         instance._notify = function (eName) {
-            if (eName === 'controlResize') {
-               isResized = true;
-            }
-         };
 
          instance._shouldRestoreScrollPosition = false;
          instance._loadingIndicatorState = 'all';
@@ -3755,28 +3748,21 @@ define([
          lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
          assert.isFalse(instance._shouldRestoreScrollPosition);
          assert.isUndefined(instance._saveAndRestoreScrollPosition);
-         assert.isFalse(isResized);
 
-
-         isResized = false;
          instance._shouldRestoreScrollPosition = false;
          instance._loadingIndicatorState = 'up';
 
          lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
          assert.isTrue(instance._shouldRestoreScrollPosition);
          assert.equal('up', instance._saveAndRestoreScrollPosition);
-         assert.isTrue(isResized);
 
-
-         isResized = false;
          instance._shouldRestoreScrollPosition = false;
          instance._loadingIndicatorState = 'down';
+         instance._saveAndRestoreScrollPosition = undefined;
 
          lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
-         assert.isTrue(instance._shouldRestoreScrollPosition);
-         assert.equal('down', instance._saveAndRestoreScrollPosition);
-         assert.isTrue(isResized);
-
+         assert.isFalse(instance._shouldRestoreScrollPosition);
+         assert.isUndefined(instance._saveAndRestoreScrollPosition);
       });
 
       describe('navigation', function () {

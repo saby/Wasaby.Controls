@@ -680,6 +680,7 @@ var _private = {
                     self._loadingIndicatorState = self._loadingState;
                     _private.saveScrollOnToggleLoadingIndicator(self);
                     self._showLoadingIndicatorImage = true;
+                    self._notify('controlResize');
                 }
             }, 2000);
         }
@@ -695,14 +696,14 @@ var _private = {
         if (self._loadingIndicatorState !== null) {
             _private.saveScrollOnToggleLoadingIndicator(self);
             self._loadingIndicatorState = self._loadingState;
+            self._notify('controlResize');
         }
     },
 
     saveScrollOnToggleLoadingIndicator(self: BaseControl): void {
-        if (self._loadingIndicatorState !== 'all') {
+        if (self._loadingIndicatorState === 'up') {
             self._shouldRestoreScrollPosition = true;
             self._saveAndRestoreScrollPosition = self._loadingIndicatorState;
-            self._notify('controlResize');
         }
     },
 
