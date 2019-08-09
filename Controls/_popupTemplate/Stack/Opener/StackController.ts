@@ -106,14 +106,13 @@ const _private = {
         return item.position;
     },
 
-    removeHiddenClass(item) {
-        item.popupOptions.stackClassName = (item.popupOptions.stackClassName || '').replace(/ws-hidden/ig, '').trim();
+    showPopup(item) {
+        item.popupOptions.hidden = false;
     },
 
-    addHiddenClass(item) {
-        _private.removeHiddenClass(item);
-        item.popupOptions.stackClassName = (item.popupOptions.stackClassName || '') + ' ws-hidden';
-},
+    hidePopup(item) {
+        item.popupOptions.hidden = true;
+    },
 
     prepareUpdateClassses(item) {
         _private.addStackClasses(item.popupOptions);
@@ -258,9 +257,9 @@ const StackController = BaseController.extend({
 
                     if (cacheItem) {
                         forRemove = cacheItem;
-                        _private.addHiddenClass(cacheItem);
+                        _private.hidePopup(cacheItem);
                     }
-                    _private.removeHiddenClass(item);
+                    _private.showPopup(item);
                     cache.push(item);
                 }
 
@@ -272,7 +271,7 @@ const StackController = BaseController.extend({
                     const itemWidth = el.containerWidth || el.position.stackWidth;
                     const isVisiblePopup = itemWidth >= (currentWidth || 0);
                     if (!isVisiblePopup) {
-                        _private.addHiddenClass(el);
+                        _private.hidePopup(el);
                     }
                     return isVisiblePopup;
                 });
@@ -320,7 +319,7 @@ const StackController = BaseController.extend({
                 this._update();
             } else {
                 item.position = _private.getItemPosition(item, this);
-                _private.removeHiddenClass(item);
+                _private.showPopup(item);
                 if (StackStrategy.isMaximizedPanel(item)) {
                     _private.prepareMaximizedState(StackStrategy.getMaxPanelWidth(), item);
                 }
