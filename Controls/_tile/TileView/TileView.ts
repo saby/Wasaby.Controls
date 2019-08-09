@@ -125,7 +125,12 @@ var TileView = ListView.extend({
     _afterUpdate: function () {
         var hoveredItem = this._listModel.getHoveredItem();
 
-        if (hoveredItem && hoveredItem.endPosition && this._hasFixedItemInDOM()) {
+        if (
+            hoveredItem &&
+            hoveredItem.endPosition &&
+            hoveredItem.endPosition !== hoveredItem.position &&
+            this._hasFixedItemInDOM()
+        ) {
             this._listModel.setHoveredItem({
                 key: hoveredItem.key,
                 isAnimated: true,
