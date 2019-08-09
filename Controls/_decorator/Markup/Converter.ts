@@ -61,7 +61,7 @@ import { IoC } from 'Env/Env';
    }
 
    var tagPattern = '(?:</?([a-z]+)[^>]*[>])',
-      domainLinkPrefixPattern = '((?:https?|ftp|file|smb)://)',
+      domainLinkPrefixPattern = '((?:[hH][tT][tT][pP][sS]?|[fF][tT][pP]|[fF][iI][lL][eE]|[sS][mM][bB])://)',
       simpleLinkPrefixPattern = '([\\w\\-]+(?:\\.[a-zA-Z]+)*\\.[a-zA-Z]+(?::[0-9]+)?)',
       linkPrefixPattern = `(?:${domainLinkPrefixPattern}|${simpleLinkPrefixPattern})`,
       linkPattern = `(${linkPrefixPattern}(?:[^\\s\\x16<>]*))`,

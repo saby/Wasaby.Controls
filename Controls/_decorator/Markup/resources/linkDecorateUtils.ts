@@ -9,6 +9,7 @@ const hrefMaxLength = 1499;
 const onlySpacesRegExp = /^\s+$/;
 const paragraphTagNameRegExp = /^(p(re)?|div)$/;
 const charsToScreenRegExp = /([\\"])/g;
+const linkProtocolToDecorate = /^[hH][tT][tT][pP]/;
 const classes = {
    wrap: 'LinkDecorator__wrap',
    link: 'LinkDecorator__linkWrap',
@@ -70,7 +71,7 @@ function isLinkGoodForDecorating(linkNode) {
    // Decorate link only with text == href, and href length shouldn't be more than given maximum.
    // And decorate link that starts with "http://" or "https://".
    return attributes.href && attributes.href.length <= getHrefMaxLength() &&
-      isTextNode(firstChild) && attributes.href === firstChild && attributes.href.indexOf('http') === 0;
+      isTextNode(firstChild) && attributes.href === firstChild && linkProtocolToDecorate.test(attributes.href);
 }
 
 /**

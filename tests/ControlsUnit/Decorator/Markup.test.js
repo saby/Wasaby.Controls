@@ -153,6 +153,12 @@ define([
             var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
             assert.equal(goodResultHtml, checkResultHtml);
          });
+         it('with domain with capital letters', function() {
+            var originHtml = '<p>HtTpS://ya.ru</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="HtTpS://ya.ru" target="_blank">HtTpS://ya.ru</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
          it('without domain - 1', function() {
             var originHtml = '<p>usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup</p>';
             var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup" target="_blank">usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup</a></p>';
@@ -859,6 +865,18 @@ define([
             ]];
             assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
          });
+         it('link href starts from "file://" and has "http" inside', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'smb://test-perfleakps/leaks/http/30_03_19/21_06_58.zip',
+                  target: '_blank'
+               },
+               'smb://test-perfleakps/leaks/http/30_03_19/21_06_58.zip'
+            ]];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
          it('link is not in the end of paragraph', function() {
             var parentNode = ['p', ['a',
                {
@@ -952,6 +970,18 @@ define([
                   target: '_blank'
                },
                'http://ya.ru'
+            ]];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate with capital letters in protocol', function() {
+            var parentNode = ['div', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'HtTpS://ya.ru',
+                  target: '_blank'
+               },
+               'HtTpS://ya.ru'
             ]];
             assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
          });
