@@ -16,8 +16,9 @@
       />
       <ws:if data="{{_options.toolbarVisibility && _isEditing}}">
           <ws:partial template="{{_buttonsTemplate}}"
-                        on:applyButtonClick="commitEdit()"
-                        on:closeButtonClick="cancelEdit()" />
+                      attr:class="controls-EditableArea_isEditing_wrapper"
+                      on:applyButtonClick="commitEdit()"
+                      on:closeButtonClick="cancelEdit()" />
       </ws:if>
    </div>
 </Controls.validate:Controller>

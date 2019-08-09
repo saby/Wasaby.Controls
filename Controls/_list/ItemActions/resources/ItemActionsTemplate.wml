@@ -15,6 +15,7 @@
                     showedActions="{{itemData.itemActions.showed}}"/>
             <ws:if data ="{{itemData.isEditing && toolbarVisibility}}">
                 <ws:partial template="Controls/editableArea:Buttons"
+                            attr:class="controls-itemActionsV__editing"
                             on:applyButtonClick="_applyEdit()"
                             on:closeButtonClick="_cancelEdit()" />
             </ws:if>
