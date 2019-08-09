@@ -110,7 +110,7 @@ var _private = {
         }
     },
 
-    reload: function(self, cfg) {
+    reload: function(self, cfg, shouldNotifyControlResize: boolean) {
         var
             filter = cClone(cfg.filter),
             sorting = cClone(cfg.sorting),
@@ -121,7 +121,7 @@ var _private = {
             cfg.beforeReloadCallback(filter, sorting, navigation, cfg);
         }
         if (self._sourceController) {
-            _private.showIndicator(self);
+            _private.showIndicator(self, undefined, shouldNotifyControlResize);
             _private.hideError(self);
 
             // Need to create new Deffered, returned success result
@@ -170,7 +170,7 @@ var _private = {
                 }
 
                 _private.prepareFooter(self, navigation, self._sourceController);
-                _private.resolveIndicatorStateAfterReload(self, list);
+                _private.resolveIndicatorStateAfterReload(self, list, shouldNotifyControlResize);
 
                 resDeferred.callback({
                     data: list
@@ -204,7 +204,7 @@ var _private = {
         return resDeferred;
     },
 
-    resolveIndicatorStateAfterReload: function(self, list):void {
+    resolveIndicatorStateAfterReload: function(self, list, shouldNotifyControlResize):void {
         const hasMoreDataDown = self._sourceController.hasMoreData('down');
         const hasMoreDataUp = self._sourceController.hasMoreData('up');
 
@@ -212,12 +212,12 @@ var _private = {
             //because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
             //otherwise empty template will shown
             if ((hasMoreDataDown || hasMoreDataUp) && self._needScrollCalculation) {
-                _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
+                _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up', shouldNotifyControlResize);
             } else {
-                _private.hideIndicator(self);
+                _private.hideIndicator(self, shouldNotifyControlResize);
             }
         } else {
-            _private.hideIndicator(self);
+            _private.hideIndicator(self, shouldNotifyControlResize);
         }
     },
 
@@ -668,7 +668,7 @@ var _private = {
         };
     },
 
-    showIndicator: function(self, direction = 'all') {
+    showIndicator: function(self, direction = 'all', shouldNotifyControlResize = true) {
         self._loadingState = direction;
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
@@ -680,13 +680,15 @@ var _private = {
                     self._loadingIndicatorState = self._loadingState;
                     _private.saveScrollOnToggleLoadingIndicator(self);
                     self._showLoadingIndicatorImage = true;
-                    self._notify('controlResize');
+                    if (shouldNotifyControlResize) {
+                        self._notify('controlResize');
+                    }
                 }
             }, 2000);
         }
     },
 
-    hideIndicator: function(self) {
+    hideIndicator: function(self, shouldNotifyControlResize = true) {
         self._loadingState = null;
         self._showLoadingIndicatorImage = false;
         if (self._loadingIndicatorTimer) {
@@ -696,7 +698,9 @@ var _private = {
         if (self._loadingIndicatorState !== null) {
             _private.saveScrollOnToggleLoadingIndicator(self);
             self._loadingIndicatorState = self._loadingState;
-            self._notify('controlResize');
+            if (shouldNotifyControlResize) {
+                self._notify('controlResize');
+            }
         }
     },
 
@@ -1332,7 +1336,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (receivedError) {
                     return _private.showError(self, receivedError);
                 }
-                return _private.reload(self, newOptions).addCallback(getState);
+                return _private.reload(self, newOptions, false).addCallback(getState);
             }
         });
 
