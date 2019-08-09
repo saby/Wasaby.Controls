@@ -1569,6 +1569,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._shouldRestoreScrollPosition = false;
             this._forceUpdate();
         }
+
+        // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
+        // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
         setTimeout(function() {
             _private.checkLoadToDirectionCapability(this);
         }.bind(this));
