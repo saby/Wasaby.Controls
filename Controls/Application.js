@@ -5,16 +5,12 @@ define('Controls/Application',
    [
       'Core/Control',
       'wml!Controls/Application/Page',
-      'Core/Deferred',
       'Core/BodyClasses',
       'Env/Env',
       'UI/Base',
       'Controls/scroll',
-      'Core/LinkResolver/LinkResolver',
       'Core/helpers/getResourceUrl',
-      'Application/Env',
       'Controls/decorator',
-      'Core/Themes/ThemesController',
       'css!theme?Controls/Application/Application'
    ],
 
@@ -119,16 +115,12 @@ define('Controls/Application',
 
    function(Base,
       template,
-      Deferred,
       BodyClasses,
       Env,
       UIBase,
       scroll,
-      LinkResolver,
       getResourceUrl,
-      AppEnv,
-      decorator,
-      ThemesController) {
+      decorator) {
       'use strict';
 
       var _private;
