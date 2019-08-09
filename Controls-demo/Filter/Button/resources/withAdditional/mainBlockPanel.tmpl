@@ -92,6 +92,15 @@
         bind:selectedKeys="item.value"/>
 </ws:template>
 
+<ws:template name="income">
+<Controls.filterPopup:Dropdown
+        keyProperty="key"
+        source="{{item.source}}"
+        showCross="{{true}}"
+        bind:textValue="item.textValue"
+        bind:selectedKeys="item.value"/>
+</ws:template>
+
 <ws:template name="detailingPeriod">
 <Controls.filterPopup:Dropdown displayProperty="title"
                                        bind:selectedKeys="item.value"
