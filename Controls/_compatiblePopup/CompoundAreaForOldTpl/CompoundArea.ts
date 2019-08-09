@@ -384,7 +384,13 @@ var CompoundArea = CompoundContainer.extend([
             .subscribe('onVisible',
                function(event, visibility) {
                   if (!self.isDestroyed() && !visibility) {
-                     self.close();
+                     const parentVdomPopup = $(self._options.target).closest('.controls-Popup__template');
+                     // Вдомные стековые окна, если перекрыты другими окнами из стека, скрываются через ws-hidden.
+                     // PopupMixin реагирует на скритие таргета и закрывается.
+                     // Делаю фикс, чтобы в этом случае попап миксин не закрывался
+                     if (!parentVdomPopup.length || !parentVdomPopup.hasClass('ws-hidden')) {
+                        self.close();
+                     }
                   }
                });
       }
