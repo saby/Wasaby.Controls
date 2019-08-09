@@ -1,5 +1,5 @@
 /**
- * Библиотека всплывающего окна фильтра.
+ * Библиотека окон для фильтров.
  * @library Controls/filterPopup
  * @includes Panel Controls/_filterPopup/Panel
  * @includes DetailPanel Controls/_filterPopup/DetailPanel

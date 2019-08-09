@@ -2,9 +2,9 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/Dropdown/Dropdown');
 import 'css!theme?Controls/filterPopup';
    /**
-    * Строка-ссылка с возможностью выбора из выпадающего списка, которая используется в панели фильтрации.
-    *
-    * Для работы с единичным параметром selectedKeys можно использовать контрол с {@link Controls/source:SelectedKey}.
+    * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки и используется на панели фильтров.
+    * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию скрыто.
+    * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с Controls/source:SelectedKey.
     *
     * @class Controls/_filterPopup/Panel/Dropdown
     * @extends Controls/_dropdown/Input
@@ -27,7 +27,7 @@ import 'css!theme?Controls/filterPopup';
 
    /**
     * @name Controls/_filterPopup/Panel/Dropdown#showCross
-    * @cfg {Boolean} Показывает кнопку сброса рядом с выпадающим списком. Если кликнуть по этой кнопке, выпадающий список скроется.
+    * @cfg {Boolean} Показывает крестик сброса рядом с выпадающим списком. Используется для контрола в блоке "Отбираются". По клику на крестик выпадающий список переместиться в блок "Еще можно отобрать".
     * @default false
     * @example
     * <pre>

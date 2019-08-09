@@ -1,7 +1,7 @@
 define('Controls/interface/IFilterPanel', [], function() {
 
    /**
-    * Интерфейс панели фильтрации.
+    * Интерфейс панели фильтров.
     *
     * @interface Controls/interface/IFilterPanel
     * @public
@@ -252,7 +252,7 @@ define('Controls/interface/IFilterPanel', [], function() {
 
    /**
     * @name Controls/interface/IFilterPanel#additionalTemplate
-    * @cfg {additionalTpl} Шаблон отображения элемента в дополнительном блоке.
+    * @cfg {additionalTpl} Шаблон отображения элемента в блоке "Еще можно отобрать".
     * @remark
     * Для отображения фильтра в дополнительном блоке необходимо указать visibility: false.
     * При указании visibility = true фильтр будет отображаться в основном блоке, но при сбросе фильтра он будет отображаться в дополнительном блоке.
@@ -388,7 +388,7 @@ define('Controls/interface/IFilterPanel', [], function() {
 
    /**
     * @name Controls/interface/IFilterPanel#additionalTemplateProperty
-    * @cfg {String} Имя параметра, содержащего шаблон отображения элемента в дополнительном блоке. Если не установлен, вместо него используется additionalTemplate.
+    * @cfg {String} Имя свойства элемента, содержащего шаблон отображения элемента в блоке "Еще можно отобрать". Если параметр не задан, вместо него используется additionalTemplate.
     * @remark
     * Для отображения фильтра в дополнительном блоке необходимо указать visibility: false.
     * При указании visibility = true фильтр будет отображаться в основном блоке, но при сбросе фильтра он будет отображаться в дополнительном блоке.

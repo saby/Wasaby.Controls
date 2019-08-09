@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import Utils = require('Types/util');
 import template = require('wml!Controls/_filterPopup/Panel/Select/Select');
    /**
-    * Контрол, отображающий элементы через разделитель. 
+    * Контрол, отображающий заданный набор элементов через разделитель.
     *
     * Для работы с единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
     * @class Controls/_filterPopup/Panel/Select
@@ -26,7 +26,6 @@ import template = require('wml!Controls/_filterPopup/Panel/Select/Select');
    /**
     * @name Controls/_filterPopup/Panel/Select#items
     * @cfg {Array} Набор данных для отображения.
-    * Текст берется из поля title.
     */
 
    /*
@@ -48,11 +47,13 @@ import template = require('wml!Controls/_filterPopup/Panel/Select/Select');
    /**
     * @name Controls/_filterPopup/Panel/Select#displayProperty
     * @cfg {String} Имя поля, значение которого отображается.
+    * @default title
     */
 
    /*
     * @name Controls/_filterPopup/Panel/Select#displayProperty
     * @cfg {String} The name of the field whose value is displayed.
+    * @default title
     */
 
 

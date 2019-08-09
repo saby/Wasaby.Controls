@@ -5,7 +5,7 @@ import Env = require('Env/Env');
 import 'Controls/lookup';
 import 'css!theme?Controls/filterPopup';
    /**
-    * Кнопка-ссылка с возможностью поиска.
+    * Метка с полем связи. Пока коллекция пуста - поле связи скрыто.
     * <a href="/materials/demo-ws4-engine-selector-lookup">Демо-пример</a>.
     * @class Controls/_filterPopup/Panel/Lookup
     * @extends Core/Control
