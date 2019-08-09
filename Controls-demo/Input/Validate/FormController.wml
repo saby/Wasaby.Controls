@@ -2,16 +2,16 @@
    <Controls.validate:Controller name="formController">
       <ws:content>
          <div>
-            <div class="validateDemo_header">
+            <div class="validateDemo_header validateDemo">
                Форма с валидацией полей
             </div>
             <div class="validateDemo_header_description">
                 В данном примере показано:
                   <ul style="margin-left: 20px;">
-                     <li>как собрать несколько контролов с валидаторами на форме</li>
-                     <li>как сделать валидатор, который зависит от данных из нескольких полей ввода</li>
-                     <li>как задать несколько валидаторов контролу</li>
-                     <li>как запустить все валидаторы и обработать значение</li>
+                     <li>как собрать несколько контролов с валидаторами на форме;</li>
+                     <li>как сделать валидатор, который зависит от данных из нескольких полей ввода;</li>
+                     <li>как задать несколько валидаторов контролу;</li>
+                     <li>как запустить все валидаторы и обработать значение.</li>
                   </ul>
             </div>
             <div class="validateDemo_content">

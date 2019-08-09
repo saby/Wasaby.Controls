@@ -5,14 +5,14 @@
    <div class="validateDemo_header_description validateDemo">
       В данном примере показано:
       <ul style="margin-left: 20px;">
-         <li>как задать валидатор на поле ввода</li>
-         <li>как задать несколько валидаторов на поле ввода</li>
-         <li>как задать пользовательский шаблон для вывода ошибки</li>
+         <li>как задать валидатор на поле ввода;</li>
+         <li>как задать несколько валидаторов на поле ввода;</li>
+         <li>как задать пользовательский шаблон для вывода ошибки.</li>
       </ul>
    </div>
    <div class="validateDemo_content" style="padding: 0 20px;margin-top: 0">
       <div class="validate_item">
-         <div class="validate_item_text">Требуется ввести валидный email адрес:</div>
+         <div class="validate_item_text">Требуется ввести валидный Email адрес:</div>
          <Controls.validate:InputContainer name="InputValidate"
                                            attr:class="validate_item_input ControlsDemo-ValidateInfobox__inputValidate">
             <ws:validators>
@@ -28,7 +28,7 @@
       </div>
 
       <div class="validate_item">
-         <div class="validate_item_text">Поле обязательно для заполнения. Ожидается вадиный инн.</div>
+         <div class="validate_item_text">Поле обязательно для заполнения. Ожидается валидный ИНН.</div>
          <Controls.validate:InputContainer name="InputValidate2"
                                            attr:class="validate_item_input ControlsDemo-ValidateInfobox_inputValidate2">
             <ws:validators>
@@ -44,7 +44,7 @@
          </Controls.validate:InputContainer>
       </div>
       <div class="validate_item">
-         <div class="validate_item_text">Ожидается код больше 3 символов. Ошибка с пользовательским шаблоном</div>
+         <div class="validate_item_text">Ожидается код больше 3 символов. Ошибка с пользовательским шаблоном.</div>
          <Controls.validate:InputContainer name="InputValidate3"
                                            attr:class="validate_item_input ControlsDemo-ValidateInfobox_inputValidate3">
             <ws:validators>
