@@ -160,14 +160,20 @@ var _private = {
    },
 
       getCollectionOptions: function(options, maxVisibleItems, counterWidth) {
-         return {
-            itemTemplate: options.itemTemplate,
-            readOnly: options.readOnly,
-            displayProperty: options.displayProperty,
+         const collectionConfig = {
             itemsLayout: options.multiLine ? 'default' : 'oneRow',
             maxVisibleItems,
             _counterWidth: counterWidth
          };
+         const depOptions = ['itemTemplate', 'readOnly', 'displayProperty'];
+
+         depOptions.forEach((optName) => {
+            if (options.hasOwnProperty(optName)) {
+               collectionConfig[optName] = options[optName];
+            }
+         });
+
+         return collectionConfig;
       },
 
    getLastSelectedItems: function(items, itemsCount) {
