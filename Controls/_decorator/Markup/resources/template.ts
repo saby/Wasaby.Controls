@@ -91,7 +91,7 @@ import {IoC} from 'Env/Env';
             continue;
          }
 
-         // Разрешаем только безопасные начала для ссылочных атрибутов.
+         // Разрешаем только ссылочные атрибуты с безопасным началом, чтобы избежать XSS.
          if (isBadLinkAttribute(attributeName, sourceAttributeValue)) {
             continue;
          }
