@@ -79,6 +79,19 @@
                          source="{{item.source}}"/>
 </ws:template>
 
+<ws:template name="income">
+<Controls.filterPopup:Select
+        keyProperty="key"
+        bind:textValue="item.textValue">
+   <ws:items>
+      <ws:Array>
+         <ws:Object key="{{1}}" title="In the warehouse"/>
+         <ws:Object key="{{2}}" title="In expenses"/>
+      </ws:Array>
+   </ws:items>
+</Controls.filterPopup:Select>
+</ws:template>
+
 <ws:template name="detailingPeriod">
 <Controls.filterPopup:Link caption="On documents" />
 </ws:template>
