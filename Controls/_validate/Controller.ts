@@ -38,22 +38,31 @@ let _private = {
                 }
             };
 
-            // todo https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
-            if (self._isNewEnvironment) {
-                self._notify('openInfoBox', [cfg], {bubbling: true});
-            } else {
-                // To place zIndex in the old environment
-                // Аналог self._notify('openInfoBox', [cfg], { bubbling: true });, только обработчик
-                // Вызывается напрямую, так как события через compoundControl не летят
-                cfg.zIndex = getZIndex(self);
-                let GlobalPopup = _private.getGlobalPopup();
-                if (GlobalPopup) {
-                    let event = {
-                        target: self._container
-                    };
-                    GlobalPopup._openInfoBoxHandler(event, cfg);
-                }
-            }
+            _private.callInfoBox(self, cfg);
+        }
+    },
+    callInfoBox(self, cfg) {
+        // todo https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
+        if (self._isNewEnvironment) {
+            self._notify('openInfoBox', [cfg], {bubbling: true});
+        } else {
+            // To place zIndex in the old environment
+            // Аналог self._notify('openInfoBox', [cfg], { bubbling: true });, только обработчик
+            // Вызывается напрямую, так как события через compoundControl не летят
+            cfg.zIndex = getZIndex(self);
+            // Если окружение старое, создаем ManagerWrapper, в котором рисуются dom окна в старом окружении
+            // В том числе инфобоксы.
+            requirejs(['Controls/popup'], (popup) => {
+                popup.BaseOpener.getManager().then(() => {
+                    let GlobalPopup = _private.getGlobalPopup();
+                    if (GlobalPopup) {
+                        let event = {
+                            target: self._container
+                        };
+                        GlobalPopup._openInfoBoxHandler(event, cfg);
+                    }
+                });
+            });
         }
     },
     getGlobalPopup() {
