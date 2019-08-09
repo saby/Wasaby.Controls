@@ -27,7 +27,18 @@ import {IoC} from 'Env/Env';
          'src': true,
          'usemap': true
       },
-      goodLinkAttributeRegExp = /^((https?|ftp|file|smb):(\/\/|\\\\)|mailto:|www\.|\.?\/)/,
+      goodLinkStarts = [
+         'http:(//|\\\\)',
+         'https:(//|\\\\)',
+         'ftp:(//|\\\\)',
+         'file:(//|\\\\)',
+         'smb:(//|\\\\)',
+         'mailto:',
+         './',
+         '/'
+      ],
+      goodLinkAttributeRegExp = new RegExp(`^(${goodLinkStarts.join('|')})`
+         .replace(/[a-z]/g, (m) => `[${m + m.toUpperCase()}]`)),
       dataAttributeRegExp = /^data-(?!component$)([\w-]*[\w])+$/,
       escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
       additionalNotVdomEscapeRegExp = /(\u00a0)|(&#)/g;
@@ -60,9 +71,7 @@ import {IoC} from 'Env/Env';
       events[eventName].push(generateEventSubscribeObject(handlerName));
    }
 
-   // A link from an attribute (for example, href in an a tag or src in an iframe tag) can't begin with "javascript:".
-   // This is a way to call any javascript code after such a start.
-   function isLinkAttributeWithJavascript(attributeName, attributeValue) {
+   function isBadLinkAttribute(attributeName, attributeValue) {
       return linkAttributesMap[attributeName] && !goodLinkAttributeRegExp.test(attributeValue);
    }
 
@@ -81,7 +90,9 @@ import {IoC} from 'Env/Env';
          if (!validAttributes[attributeName] && !dataAttributeRegExp.test(attributeName)) {
             continue;
          }
-         if (isLinkAttributeWithJavascript(attributeName, sourceAttributeValue)) {
+
+         // Разрешаем только безопасные начала для ссылочных атрибутов.
+         if (isBadLinkAttribute(attributeName, sourceAttributeValue)) {
             continue;
          }
          targetAttributes[attributeName] = markupGenerator.escape(sourceAttributeValue);

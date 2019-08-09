@@ -9,7 +9,6 @@ const hrefMaxLength = 1499;
 const onlySpacesRegExp = /^\s+$/;
 const paragraphTagNameRegExp = /^(p(re)?|div)$/;
 const charsToScreenRegExp = /([\\"])/g;
-const linkProtocolToDecorate = /^[hH][tT][tT][pP]/;
 const classes = {
    wrap: 'LinkDecorator__wrap',
    link: 'LinkDecorator__linkWrap',
@@ -67,11 +66,13 @@ function getFirstChild(jsonNode) {
 function isLinkGoodForDecorating(linkNode) {
    const attributes = getAttributes(linkNode);
    const firstChild = getFirstChild(linkNode);
+   const linkHref = attributes.href && attributes.href.toLowerCase();
+   const linkText = typeof firstChild === 'string' && firstChild.toLowerCase();
 
    // Decorate link only with text == href, and href length shouldn't be more than given maximum.
    // And decorate link that starts with "http://" or "https://".
-   return attributes.href && attributes.href.length <= getHrefMaxLength() &&
-      isTextNode(firstChild) && attributes.href === firstChild && linkProtocolToDecorate.test(attributes.href);
+   return !!linkHref && linkHref.length <= getHrefMaxLength() &&
+      isTextNode(firstChild) && linkHref === linkText && linkHref.indexOf('http') === 0;
 }
 
 /**

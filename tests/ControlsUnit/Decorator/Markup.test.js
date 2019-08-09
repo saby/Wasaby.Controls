@@ -148,8 +148,20 @@ define([
             assert.equal(goodResultHtml, checkResultHtml);
          });
          it('with domain - 3', function() {
+            var originHtml = '<p>http:\\\\localhost:1025</p>';
+            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http:\\\\localhost:1025" target="_blank">http:\\\\localhost:1025</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('with domain - 4', function() {
             var originHtml = '<p>https://</p>';
             var goodResultHtml = '<p>https://</p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('with domain - 5', function() {
+            var originHtml = '<p>http:\\localhost:1025</p>';
+            var goodResultHtml = '<p>http:\\localhost:1025</p>';
             var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
             assert.equal(goodResultHtml, checkResultHtml);
          });
@@ -523,7 +535,7 @@ define([
                      'data-some-id': 'testDataThree',
                      hasmarkup: 'testHasmarkup',
                      height: 'testHeight',
-                     href: 'www.testHref.com',
+                     href: 'http://www.testHref.com',
                      id: 'testId',
                      name: 'testName',
                      rel: 'testRel',
@@ -571,9 +583,79 @@ define([
                '</body>' +
                '</html>' +
                '</p>' +
-               '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="www.testHref.com" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="./testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
+               '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="http://www.testHref.com" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="./testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
                '</div>';
             assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json), html));
+         });
+
+         it('valid href - 1', function() {
+            var
+               json = [
+                  ['a', { 'href': 'https://www.google.com/' }]
+               ],
+               checkHtml = decorator.Converter.jsonToHtml(json),
+               goodHtml = '<div><a href="https://www.google.com/"></a></div>';
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
+
+         it('valid href - 2', function() {
+            var
+               json = [
+                  ['a', { 'href': 'hTtPs://www.google.com/' }]
+               ],
+               checkHtml = decorator.Converter.jsonToHtml(json),
+               goodHtml = '<div><a href="hTtPs://www.google.com/"></a></div>';
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
+
+         it('valid href - 3', function() {
+            var
+               json = [
+                  ['a', { 'href': '/resources/some.html' }]
+               ],
+               checkHtml = decorator.Converter.jsonToHtml(json),
+               goodHtml = '<div><a href="/resources/some.html"></a></div>';
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
+
+         it('valid href - 4', function() {
+            var
+               json = [
+                  ['a', { 'href': './resources/some.html' }]
+               ],
+               checkHtml = decorator.Converter.jsonToHtml(json),
+               goodHtml = '<div><a href="./resources/some.html"></a></div>';
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
+
+         it('invalid href - 1', function() {
+            var
+               json = [
+                  ['a', { 'href': 'www.google.com' }]
+               ],
+               checkHtml = decorator.Converter.jsonToHtml(json),
+               goodHtml = '<div><a></a></div>';
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
+
+         it('invalid href - 2', function() {
+            var
+               json = [
+                  ['a', { 'href': 'javascript:alert(123)' }]
+               ],
+               checkHtml = decorator.Converter.jsonToHtml(json),
+               goodHtml = '<div><a></a></div>';
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+         });
+
+         it('invalid href - 3', function() {
+            var
+               json = [
+                  ['a', { 'href': 'www.http.log.ru' }]
+               ],
+               checkHtml = decorator.Converter.jsonToHtml(json),
+               goodHtml = '<div><a></a></div>';
+            assert.isTrue(equalsHtml(checkHtml, goodHtml));
          });
 
          it('validate data- attributes - 1', function() {
@@ -823,6 +905,17 @@ define([
                   target: '_blank'
                },
                'not https://ya.ru'
+            ]];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('link haven\'t href', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  target: '_blank'
+               },
+               'https://ya.ru'
             ]];
             assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
          });
