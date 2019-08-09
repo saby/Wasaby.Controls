@@ -26,13 +26,12 @@ interface IPosition {
     hidden: boolean;
 }
 
-interface ISelfOptions {
+interface IPopupOptions extends IControlOptions {
     hidden: boolean;
     position: IPosition;
 }
 
 type UpdateCallback = () => void;
-type IPopupOptions = IControlOptions & ISelfOptions;
 
 class Popup extends Control<IPopupOptions> {
 
@@ -141,7 +140,7 @@ class Popup extends Control<IPopupOptions> {
     }
 
     protected _animated(event: SyntheticEvent<AnimationEvent>): void {
-        this._children.resizeDetect.start(ev);
+        this._children.resizeDetect.start(event);
         this._notify('popupAnimated', [this._options.id], {bubbling: true});
     }
 
