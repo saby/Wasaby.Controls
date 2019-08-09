@@ -2,7 +2,11 @@
    <div class="controls-Dropdown__content-wrapper {{!readOnly ? 'controls-Dropdown__' + ((isEmptyItem && !multiSelect) ? 'emptyItem' : 'defaultItem') + '_style-' + (style || 'default') +
             ' controls-Dropdown__text_enabled'}} theme_{{_options.theme}}" name="popupTarget">
       <ws:if data="{{contentTemplate}}">
-         <ws:partial template="{{contentTemplate}}" text="{{text}}" icon="{{icon}}" item="{{item}}"/>
+         <ws:partial template="{{contentTemplate}}"
+                     text="{{text}}"
+                     hasMoreText="{{hasMoreText}}"
+                     icon="{{icon}}"
+                     item="{{item}}"/>
       </ws:if>
       <ws:else>
          <div if="{{icon}}" class="controls-Dropdown__icon_theme_{{_options.theme}} controls-Dropdown__icon_{{item.get('iconStyle') || 'secondary'}}_theme_{{_options.theme}}"
