@@ -4,7 +4,7 @@
  * @includes View Controls/_toolbars/View
  * @includes ItemTemplate wml!Controls/_toolbars/ItemTemplate
  * @public
- * @author Крайнов Д.О.
+ * @author Красильников А.С.
  */
 
 /*
@@ -13,7 +13,7 @@
  * @includes View Controls/_toolbars/View
  * @includes ItemTemplate wml!Controls/_toolbars/ItemTemplate
  * @public
- * @author Крайнов Д.О.
+ * @author Красильников А.С.
  */ 
 import ItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
 
