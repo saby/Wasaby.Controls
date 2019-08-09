@@ -290,6 +290,9 @@ define([
          };
 
          assert.deepEqual(Lookup._private.getCollectionOptions(controlOptions, 10, '10px'), standardOptions);
+
+         delete controlOptions.itemTemplate;
+         assert.isFalse(Lookup._private.getCollectionOptions(controlOptions, 10, '10px').hasOwnProperty('itemTemplate'));
       });
    });
 });
