@@ -88,7 +88,13 @@ define('Controls-demo/Filter/Button/PanelVDom',
                {id: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: ''},
                {id: 'responsible', value: '', resetValue: '', visibility: false},
                {id: 'tagging', value: false, resetValue: false, textValue: 'Marks', visibility: false},
-               {id: 'operation', value: '', resetValue: '', visibility: false},
+               {id: 'income', value: [1], resetValue: [1], textValue: '', visibility: false, source: new sourceLib.Memory({
+                     idProperty: 'key',
+                     data: [
+                        { key: 1, title: 'In the warehouse' },
+                        { key: 2, title: 'In expenses' }
+                     ]
+                  })},
                {id: 'group', value: [1], resetValue: '', visibility: false, source: new sourceLib.Memory({
                   idProperty: 'key',
                   data: [
@@ -106,14 +112,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
                })},
                {id: 'our organisation', value: '', resetValue: '', visibility: false},
                {id: 'document', value: '', resetValue: '', visibility: false},
-               {id: 'activity', value: [1], resetValue: [1], visibility: false, source: new sourceLib.Memory({
-                  idProperty: 'key',
-                  data: [
-                     { key: 1, title: 'Activity for the last month' },
-                     { key: 2, title: 'Activity for the last quarter' },
-                     { key: 3, title: 'Activity for the last year' }
-                  ]
-               })}
+               {id: 'operation', value: '', resetValue: '', visibility: false}
             ];
             this._itemsHistory = this._items;
          },
