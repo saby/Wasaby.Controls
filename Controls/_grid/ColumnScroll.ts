@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import ColumnScrollTpl = require('wml!Controls/_grid/ColumnScroll');
 import 'css!theme?Controls/grid';
-import Env = require('Env/Env');
+import { detection } from 'Env/Env';
 import Entity = require('Types/entity');
 import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
 
@@ -111,12 +111,11 @@ const
             }
             self._offsetForHScroll = HeaderGroup[0].offsetHeight;
          }
-
-         if (self._options.resultsPosition === 'top') {
-            const ResultsGroup = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
-            self._offsetForHScroll += ResultsGroup[0].offsetHeight;
+         if (self._options.listModel.getResultsPosition() === 'top') {
+            const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
+            self._offsetForHScroll += ResultsContainer[0].offsetHeight;
          }
-      }
+      },
    },
    ColumnScroll = Control.extend({
       _template: ColumnScrollTpl,
@@ -173,7 +172,9 @@ const
       },
 
       _setOffsetForHScroll() {
-        _private.setOffsetForHScroll(this);
+         if (!detection.isIE) {
+            _private.setOffsetForHScroll(this);
+         }
       },
 
       _positionChangedHandler(event, position) {

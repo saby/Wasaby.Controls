@@ -30,8 +30,8 @@ var
 
         afterBeginEdit: function (self, options, isAdd) {
             self._editingItem = options.item.clone();
-            self._notify('afterBeginEdit', [self._editingItem, isAdd]);
             self._setEditingItemData(self._editingItem, self._options.listModel, self._options);
+            self._notify('afterBeginEdit', [self._editingItem, isAdd]);
 
             /**
              * This code exists because there's no way to declaratively change editing item, so the users are forced to write something like this:
@@ -83,7 +83,7 @@ var
                     }
 
                     return Deferred.success(resultOfDeferred).addCallback(function(res) {
-                        _private.afterEndEdit(self);
+                        _private.afterEndEdit(self, commit);
                         return res;
                     });
                 });
@@ -93,15 +93,20 @@ var
                 }
                 return _private.updateModel(self, commit).addCallback(function() {
                     return Deferred.success().addCallback(function() {
-                        _private.afterEndEdit(self);
+                        _private.afterEndEdit(self, commit);
                     });
                 });
             }
         },
 
 
-        afterEndEdit: function (self) {
+        afterEndEdit: function (self, commit) {
             self._notify('afterEndEdit', [self._isAdd ? self._editingItem : self._originalItem, self._isAdd]);
+            if (self._isAdd && !commit) {
+                // TODO: Kingo.
+                // Если добавление было отменено, то отмчаем последнюю отмеченную запись до старта добавления.
+                self._options.listModel.restoreMarker();
+            }
             _private.resetVariables(self);
             self._setEditingItemData(null, self._options.listModel, self._options);
         },
@@ -504,10 +509,14 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         this._editingItemData.isEditing = true;
         this._editingItemData.item = this._editingItem;
         if (this._isAdd) {
+            this._editingItemData.isAdd = this._isAdd;
             this._editingItemData.index = _private.getEditingItemIndex(this, item, listModel);
             this._editingItemData.drawActions = options.editingConfig && options.editingConfig.toolbarVisibility;
         }
         listModel._setEditingItemData(this._editingItemData);
+        if (this._isAdd) {
+            listModel.markAddingItem();
+        }
         listModel.subscribe('onCollectionChange', this._updateIndex);
     },
 

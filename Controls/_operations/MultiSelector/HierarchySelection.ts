@@ -1,6 +1,6 @@
 import Selection from 'Controls/_operations/MultiSelector/Selection';
-import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import {relation} from 'Types/entity';
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 /**
  * @class Controls/_operations/MultiSelector/HierarchySelection
@@ -32,6 +32,18 @@ var
          if (item) {
             return item.get(parentProperty);
          }
+      },
+
+      hasFolder: function(hierarchyRelation, items) {
+         let hasFolder = false;
+
+         items.each((item) => {
+            if (!hasFolder) {
+               hasFolder = hierarchyRelation.isNode(item) === true;
+            }
+         });
+
+         return hasFolder;
       },
 
       getAllChildren: function(hierarchyRelation, rootId, items) {
@@ -260,7 +272,6 @@ var HierarchySelection = Selection.extend({
       if (this._isAllSelection(this._getParams(rootId))) {
          this.unselect([rootId]);
          this.select(_private.getIntersection(childrensIdsRoot, excludedKeys));
-
       } else {
          this.select([rootId]);
          this.unselect(_private.getIntersection(childrensIdsRoot, selectedKeys));
@@ -268,20 +279,24 @@ var HierarchySelection = Selection.extend({
    },
 
    getCount: function() {
-      return (
-         _private.getSelectedCount(
+      let
+         countItems = null,
+         isAllSelection = this._isAllSelection(this._getParams(this._getRoot())),
+         isSelectedItemsLoaded = this._selectedItemsIsLoaded(this._selectedKeys);
+
+      // We can calc amount of items when,
+      // all items from selectedKeys are loaded and items has no folder or children from folder are loaded.
+      if ((this._isAllItemsLoaded() && !_private.hasFolder(this._hierarchyRelation, this._items)) || (!isAllSelection && this._selectedItemsIsLoaded(this._selectedKeys))) {
+         countItems = _private.getSelectedCount(
             this,
             this._hierarchyRelation,
             this._selectedKeys,
             this._excludedKeys,
             this._items
-         ) +
-         _private.getSelectedButNotLoadedItemsCount(
-            this._selectedKeys,
-            this._excludedKeys,
-            this._items
-         )
-      );
+         );
+      }
+
+      return countItems;
    },
 
    _getSelectionStatus: function(item) {
@@ -329,6 +344,23 @@ var HierarchySelection = Selection.extend({
 
    _getRoot: function() {
       return this._options.listModel.getRoot().getContents();
+   },
+
+   _selectedItemsIsLoaded: function(keys) {
+      let
+         self = this,
+         selectedItemsIsLoaded = true;
+
+      keys.forEach(function(key) {
+         if (selectedItemsIsLoaded) {
+            let item = self._items.getRecordById(key);
+
+            // && (item.get(nodeProperty) === null || expandedItems.indexOf(key) !== -1 && self._selectedItemsIsLoaded(_private.getChildrenIds(self._hierarchyRelation, key, self._items)));
+            selectedItemsIsLoaded = !!item;
+         }
+      });
+
+      return selectedItemsIsLoaded;
    }
 });
 

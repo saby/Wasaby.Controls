@@ -312,6 +312,10 @@ var moduleClass = CompoundControl.extend({
       this._container[0].eventProperties = null;
       this.unsubscribe('activated', this._activatedHandler);
       this.unsubscribe('deactivated', this._deactivatedHandler);
+      if (this._closeTimerId) {
+         clearTimeout(this._closeTimerId);
+         this._closeTimerId = null;
+      }
 
       // Очищаем список лисенеров в контроллерах.
       for (var i = 0; i < this._listeners.length; i++) {

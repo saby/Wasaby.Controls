@@ -22,12 +22,12 @@ var TreeTileViewModel = TreeViewModel.extend({
             prevItem, hoveredItem,
             current = TreeTileViewModel.superclass.getItemDataByItem.apply(this, arguments);
 
+        current.scalingMode = this._options.tileScalingMode;
         if (current._treeTileViewModelCached) {
             return current;
         } else {
             current._treeTileViewModelCached = true;
         }
-
         hoveredItem = this._tileModel.getHoveredItem();
 
         if (current.hasMultiSelect) {
@@ -59,6 +59,8 @@ var TreeTileViewModel = TreeViewModel.extend({
             current.itemsHeight = this._options.nodesHeight || current.itemsHeight;
         }
 
+        current.isScaled = this.isScaled(current);
+        
         var
             originalGetVersion = current.getVersion;
 
@@ -76,7 +78,10 @@ var TreeTileViewModel = TreeViewModel.extend({
 
         return current;
     },
-
+    isScaled: function(itemData) {
+        return (itemData.item.title || itemData.scalingMode !== 'none')
+            && (!!itemData.isActive || !!itemData.isSwiped || !!itemData.isHovered);
+    },
     getTileItemData: function () {
         var opts = this._tileModel.getTileItemData();
         opts.defaultFolderWidth = DEFAULT_FOLDER_WIDTH;
@@ -120,6 +125,11 @@ var TreeTileViewModel = TreeViewModel.extend({
     setRoot: function () {
         this._tileModel.setHoveredItem(null);
         TreeTileViewModel.superclass.setRoot.apply(this, arguments);
+    },
+
+    setNodesHeight: function(nodesHeight) {
+        this._options.nodesHeight = nodesHeight;
+        this._nextModelVersion();
     },
 
     destroy: function () {

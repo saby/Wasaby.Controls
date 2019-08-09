@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import Deferred = require('Core/Deferred');
 import Env = require('Env/Env');
-import {isEqual} from 'Types/object';
 import ScrollData = require('Controls/_scroll/Scroll/Context');
 import StickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
 import stickyHeaderUtils = require('Controls/_scroll/StickyHeader/Utils');
@@ -9,6 +8,7 @@ import ScrollWidthUtil = require('Controls/_scroll/Scroll/ScrollWidthUtil');
 import ScrollHeightFixUtil = require('Controls/_scroll/Scroll/ScrollHeightFixUtil');
 import template = require('wml!Controls/_scroll/Scroll/Scroll');
 import tmplNotify = require('Controls/Utils/tmplNotify');
+import {isEqual} from 'Types/object';
 import 'Controls/_scroll/Scroll/Watcher';
 import 'Controls/event';
 import 'Controls/_scroll/Scroll/Scrollbar';
@@ -209,6 +209,13 @@ var
          self._displayState.heightFix = displayState.heightFix;
          self._displayState.contentHeight = displayState.contentHeight;
          self._displayState.shadowPosition = displayState.shadowPosition;
+      },
+
+      proxyEvent: function(self, event, eventName, args) {
+         // Forwarding bubbling events makes no sense.
+         if (!event.propagating()) {
+            self._notify(eventName, args);
+         }
       }
    },
    Scroll = Control.extend({
@@ -675,19 +682,15 @@ var
       // TODO: система событий неправильно прокидывает аргументы из шаблонов, будет исправлено тут:
       // https://online.sbis.ru/opendoc.html?guid=19d6ff31-3912-4d11-976f-40f7e205e90a
       selectedKeysChanged: function(event) {
-         // Forwarding bubbling events makes no sense.
-         if (!event.propagating()) {
-            var args = Array.prototype.slice.call(arguments, 1);
-            this._notify('selectedKeysChanged', args);
-         }
+         _private.proxyEvent(this, event, 'selectedKeysChanged', Array.prototype.slice.call(arguments, 1));
       },
 
       excludedKeysChanged: function(event) {
-         // Forwarding bubbling events makes no sense.
-         if (!event.propagating()) {
-            var args = Array.prototype.slice.call(arguments, 1);
-            this._notify('excludedKeysChanged', args);
-         }
+         _private.proxyEvent(this, event, 'excludedKeysChanged', Array.prototype.slice.call(arguments, 1));
+      },
+
+      itemClick: function(event) {
+         _private.proxyEvent(this, event, 'itemClick', Array.prototype.slice.call(arguments, 1));
       },
 
       _updatePlaceholdersSize: function(e, placeholdersSizes) {

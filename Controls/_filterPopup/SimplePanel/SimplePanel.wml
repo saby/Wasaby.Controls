@@ -19,6 +19,7 @@
                                   icon="icon-Yes"
                                   iconSize="m"
                                   iconStyle="success"
+                                  buttonStyle="success"
                                   on:click="_applySelection()"/>
       </div>
    </ws:if>

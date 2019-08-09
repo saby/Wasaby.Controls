@@ -284,6 +284,10 @@
    font-size: @font-size_Grid-header_xl;
 }
 
+.controls-Grid__header-cell-content-block:before {
+   display: block;
+}
+
 .controls-Grid__cell_spacingFirstCol_default, .controls-GridView__footer__paddingLeft_default {
    padding-left: @spacing_Grid-row-between-content-borderLeft_m;
 }
@@ -447,6 +451,12 @@
 .controls-itemActionsV__container {
    position: sticky;
    right: 0;
+}
+
+// По ховеру нужен отдельный стек z-index, иначе при скролле колонок из-за transform неправильно обрабатывается ховер
+// https://online.sbis.ru/opendoc.html?guid=6059b335-dad3-4458-b022-0260680d5c27
+.controls-itemActionsV__container:hover {
+   z-index: 1;
 }
 
 .controls-Grid__cell_header-content_border-bottom {

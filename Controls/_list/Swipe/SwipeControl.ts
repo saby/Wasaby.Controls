@@ -141,7 +141,7 @@ export default class SwipeControl extends Control {
                 this._options.actionCaptionPosition
             );
          }
-         listModel.setItemActions(itemData.item, this._swipeConfig.itemActions);
+         listModel.setItemActions(itemData.actionsItem, this._swipeConfig.itemActions);
          if (this._swipeConfig.twoColumns) {
             this._swipeConfig.itemActions.showed = this._prepareTwoColunms(this._swipeConfig.itemActions.showed);
          }

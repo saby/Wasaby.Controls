@@ -483,6 +483,27 @@ var
             }
 
             return version;
+        },
+
+        getColumnAlignGroupStyles(itemData: IGridItemData, columnAlignGroup: number = 0): {
+            left: string
+            right: string
+        } {
+
+            let
+                start = 1,
+                center = columnAlignGroup + (itemData.hasMultiSelect ? 1 : 0) + 1,
+                stop = itemData.columns.length + 1,
+                result = {right: '', left: ''};
+
+            if (columnAlignGroup) {
+                result.left = `grid-column: ${start} / ${center}; -ms-grid-column: ${start}; -ms-grid-column-span: ${center - 1};`;
+                result.right = `grid-column: ${center} / ${stop}; -ms-grid-column: ${center}; -ms-grid-column-span: ${stop - center};`;
+            } else {
+                result.left = `grid-column: ${start} / ${stop}; -ms-grid-column: ${start}; -ms-grid-column-span: ${stop - 1};`;
+            }
+
+            return result
         }
 
     },
@@ -766,7 +787,6 @@ var
                );
             }
 
-
             if (headerColumn.column.sortingProperty) {
                 headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
             }
@@ -815,6 +835,10 @@ var
                 cellContentClasses += ' controls-Grid__header-cell_align_items_' + headerColumn.column.valign;
             }
 
+            if (GridLayoutUtil.isOldIE()) {
+                cellContentClasses += ' controls-Grid__header-cell-content-block';
+            }
+
             headerColumn.shadowVisibility = shadowVisibility;
             headerColumn.offsetTop = offsetTop;
             headerColumn.cellStyles = cellStyles;
@@ -828,14 +852,18 @@ var
         // ---------------------- resultColumns ----------------------
         // -----------------------------------------------------------
 
-        getResultsPosition: function(): string {
-            const items = this.getItems();
-            if (items && items.getCount() > 1) {
+        getResultsPosition: function() {
+            if (this.isDrawResults()) {
                 if (this._options.results) {
                     return this._options.results.position;
                 }
                 return this._options.resultsPosition;
             }
+        },
+
+        isDrawResults: function() {
+            const items = this.getItems();
+            return items && items.getCount() > 1;
         },
 
         setResultsPosition: function(position) {
@@ -1027,6 +1055,14 @@ var
             return this._model.getItemById(id, keyProperty);
         },
 
+        markAddingItem() {
+            this._model.markAddingItem();
+        },
+
+        restoreMarker() {
+            this._model.restoreMarker();
+        },
+
         setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
         },
@@ -1180,6 +1216,13 @@ var
 
             current.style = this._options.style;
             current.multiSelectClassList += current.hasMultiSelect ? ' controls-GridView__checkbox' : '';
+
+            current.getColumnAlignGroupStyles = (columnAlignGroup: number) => _private.getColumnAlignGroupStyles(current, columnAlignGroup);
+
+            let superShouldDrawMarker = current.shouldDrawMarker;
+            current.shouldDrawMarker = (markerVisibility, columnIndex) => {
+                return columnIndex === 0 && superShouldDrawMarker.apply(this, [markerVisibility]);
+            };
 
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
