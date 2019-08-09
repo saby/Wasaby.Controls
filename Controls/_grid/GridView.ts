@@ -307,7 +307,10 @@ var
 
         _afterMount: function() {
             GridView.superclass._afterMount.apply(this, arguments);
-            this._isHeaderChanged = true;
+            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._isHeaderChanged) {
+                this._listModel.setHeaderCellMinHeight(this._setHeaderWithHeight());
+                this._isHeaderChanged = false;
+            }
             if (!Env.detection.isNotFullGridSupport) {
                 _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
             }
