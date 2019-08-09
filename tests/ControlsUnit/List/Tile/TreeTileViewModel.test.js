@@ -165,5 +165,28 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
             tileMode: 'dynamic'
          });
       });
+      it('isScaled', function() {
+         let itemData = {
+            item: {title: 'title'},
+            isHovered: true,
+         };
+         assert.isTrue(treeTileViewModel.isScaled(itemData));
+         itemData = {
+            item: {title: 'title'},
+         };
+         assert.isFalse(treeTileViewModel.isScaled(itemData));
+         itemData = {
+            item: {},
+            scalingMode: 'none',
+            isHovered: true,
+         };
+         assert.isFalse(treeTileViewModel.isScaled(itemData));
+         itemData = {
+            item: {},
+            scalingMode: 'inside',
+            isHovered: true,
+         };
+         assert.isTrue(treeTileViewModel.isScaled(itemData));
+      });
    });
 });
