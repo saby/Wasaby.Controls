@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/PropertyGrid/PropertyGrid');
 import Utils = require('Types/util');
 import {isEqual} from 'Types/object';
+import Clone = require('Core/core-clone');
 import chain = require('Types/chain');
 import 'css!theme?Controls/filterPopup';
 
@@ -30,7 +31,7 @@ import 'css!theme?Controls/filterPopup';
          if (items['[Types/_entity/CloneableMixin]']) {
             return items.clone();
          }
-         return Utils.object.clone(items);
+         return Clone(items);
       },
 
       getIndexChangedVisibility: function(newItems, oldItems) {
@@ -75,6 +76,11 @@ import 'css!theme?Controls/filterPopup';
                _private.observeProp(self, propName, item);
             });
          });
+      },
+
+      setItems: function(self, items) {
+         self._items = _private.cloneItems(items);
+         _private.observeItems(self, self._items);
       }
    };
 
@@ -92,8 +98,7 @@ import 'css!theme?Controls/filterPopup';
       _beforeUpdate: function(newOptions) {
          if (!isEqual(newOptions.items, this._items)) {
             this._changedIndex = _private.getIndexChangedVisibility(newOptions.items, this._items);
-            this._items = _private.cloneItems(newOptions.items);
-            _private.observeItems(this, this._items);
+            _private.setItems(this, newOptions.items);
          } else {
             this._changedIndex = -1;
          }
@@ -110,27 +115,29 @@ import 'css!theme?Controls/filterPopup';
             Utils.object.getPropertyValue(item, 'visibility');
       },
 
-      _valueChangedHandler: function(event, index, value) {
-         this._items[index].value = value;
+      _updateItem: function(index, field, value) {
+         this._items[index][field] = value;
+         _private.setItems(this, this._items);
          this._notify('itemsChanged', [this._items]);
+      },
+
+      _valueChangedHandler: function(event, index, value) {
+         this._updateItem(index, 'value', value);
       },
 
       _rangeChangedHandler: function(event, index, start, end) {
-         this._items[index].value = [start, end];
-         this._notify('itemsChanged', [this._items]);
+         this._updateItem(index, 'value', [start, end]);
       },
 
       _textValueChangedHandler: function(event, index, textValue) {
-         this._items[index].textValue = textValue;
-         this._notify('itemsChanged', [this._items]);
+         this._updateItem(index, 'textValue', textValue);
       },
 
       _visibilityChangedHandler: function(event, index, visibility) {
          if (!visibility) {
             this._items[index].value = this._items[index].resetValue;
          }
-         this._items[index].visibility = visibility;
-         this._notify('itemsChanged', [this._items]);
+         this._updateItem(index, 'visibility', visibility);
       }
    });
 
