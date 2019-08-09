@@ -5,7 +5,7 @@
  * @includes List Controls/_masterDetail/List
  * @includes ListStyles Controls/_masterDetail/List/Styles
  * @public
- * @author Крайнов Д.О.
+ * @author Авраменко А.С.
  */
 
 /*
@@ -15,7 +15,7 @@
  * @includes List Controls/_masterDetail/List
  * @includes ListStyles Controls/_masterDetail/List/Styles
  * @public
- * @author Крайнов Д.О.
+ * @author Авраменко А.С.
  */ 
 
 import Base = require('Controls/_masterDetail/Base');
