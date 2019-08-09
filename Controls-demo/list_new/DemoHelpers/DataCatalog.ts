@@ -2,6 +2,7 @@ function getFewCategories(): Array<{
     id: number,
     title: string,
     description: string,
+    byDemand?: string,
     tplPath?: string
 }> {
     return [
@@ -9,29 +10,34 @@ function getFewCategories(): Array<{
             id: 1,
             title: 'Notebooks',
             description: 'Trusted Reviews ranks all your top laptop and notebook options, whether you want a ...',
+            byDemand: 'Popular',
             tplPath: 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateNoHighlight'
         },
         {
             id: 2,
             title: 'Tablets',
+            byDemand: 'Unpopular',
             description: 'Tablets are great for playing games, reading, homework, keeping kids entertained in the back seat of the car'
         },
         {
             id: 3,
             title: 'Laptop computers',
             description: 'Explore PCs and laptops to discover the right device that powers all that you do',
+            byDemand: 'Unpopular',
             tplPath: 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateWithDescription'
         },
         {
             id: 4,
             title: 'Apple gadgets',
             description: 'Explore new Apple accessories for a range of Apple products',
+            byDemand: 'Average demand',
             tplPath: 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateNoHighlight'
         },
         {
             id: 5,
             title: 'Android gadgets',
             description: 'These 25 clever phone accessories and Android-compatible gadgets',
+            byDemand: 'Popular',
             tplPath: 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateWithDescription'
         }
     ]

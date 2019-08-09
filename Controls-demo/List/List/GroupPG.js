@@ -51,7 +51,7 @@ define('Controls-demo/List/List/GroupPG',
                   data: data.groupGadgets
                }),
                groupingKeyCallback: this._groupByBrand,
-               groupTemplate: 'Controls/list:GroupTemplate',
+               groupTemplate: 'wml!Controls-demo/List/List/resources/GroupPG/rightTextAlign',
                collapsedGroups: [],
                dataLoadCallback: this._dataLoadCallback
             };
