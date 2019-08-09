@@ -35,7 +35,7 @@ export default {
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#viewMode
              * @cfg {String} Режим отображения контрола.
-             * @variant selector Стиль отображения по умолчанию.
+             * @variant selector Режим отображения по умолчанию.
              * @variant link Отображение контрола в виде кнопки-ссылки.
              * @variant label Отображение контрола в виде метки.
              */

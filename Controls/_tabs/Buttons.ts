@@ -89,7 +89,7 @@ import Env = require('Env/Env');
    /**
     * Контрол предоставляет пользователю возможность выбрать между двумя или более вкладками.
     *
-    * <a href="/materials/demo-ws4-tabs">Demo-example</a>.
+    * <a href="/materials/demo-ws4-tabs">Демо-пример</a>.
     *
     * @class Controls/_tabs/Buttons
     * @extends Core/Control

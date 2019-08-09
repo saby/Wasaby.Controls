@@ -2,6 +2,21 @@ define('Controls/Constants', [], function() {
    'use strict';
    
    /**
+    * Константы
+    * <ul>
+    *    <li>
+    *       view.hiddenGropup - Константа для определения элемента hiddenGroup в {@link Controls/interface/IGrouped#groupingKeyCallback gropingKeyCallback};
+    *    </li>
+    *    <li>
+    *       editing.CANCEL - Константа, которую можно вернуть в {@link Controls/interface/IEditableList#beforeBeginEdit beforeBeginEdit} для отмены редактирования.
+    *    </li>
+    * </ul>
+    *
+    * @class Controls/Constants
+    * @public
+    */
+
+   /*
     * Constants
     * <ul>
     *    <li>
@@ -14,7 +29,7 @@ define('Controls/Constants', [], function() {
     *
     * @class Controls/Constants
     * @public
-    */
+    */    
 
    var
       constants = {
