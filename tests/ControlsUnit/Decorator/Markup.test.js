@@ -36,6 +36,7 @@ define([
             'text'],
          'text'
       ],
+      decoratedLinkService = linkDecorateUtils.getService(),
       decoratedLinkFirstChildNode = ['a',
          {
             'href': 'https://ya.ru',
@@ -106,7 +107,6 @@ define([
          },
          'smb://ya.ru'
       ],
-      decoratedLinkService = linkDecorateUtils.getService(),
       currentVersion = '2',
       nbsp = String.fromCharCode(160),
       openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
