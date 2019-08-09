@@ -1552,9 +1552,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._virtualScroll && this._applyScrollTopCallback) {
             this._applyScrollTopCallback();
             this._applyScrollTopCallback = null;
-            setTimeout(function() {
-                _private.checkLoadToDirectionCapability(this);
-            }.bind(this));
         }
 
         // todo KINGO.
@@ -1570,14 +1567,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._savedStopIndex = this._listViewModel.getStopIndex();
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
-            this._checkShouldLoadToDirection = true;
             this._forceUpdate();
-        } else if (this._checkShouldLoadToDirection) {
-           setTimeout(function() {
-              _private.checkLoadToDirectionCapability(this);
-           }.bind(this));
-            this._checkShouldLoadToDirection = false;
         }
+        setTimeout(function() {
+            _private.checkLoadToDirectionCapability(this);
+        }.bind(this));
     },
 
     _afterUpdate: function(oldOptions) {
