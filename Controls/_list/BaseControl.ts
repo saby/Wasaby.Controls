@@ -1253,6 +1253,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _emptyTemplateVisibility: true,
     _intertialScrolling: null,
 
+    _resetScrollAfterUpdate: false,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1432,6 +1434,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this);
 
+            // При полной перезагрузке данных нужно сбросить состояние скролла
+            // и вернуться к началу списка, иначе браузер будет пытаться восстановить
+            // scrollTop, догружая новые записи после сброса.
+            this._resetScrollAfterUpdate = true;
+
             //return result here is for unit tests
             return _private.reload(self, newOptions);
         }
@@ -1605,6 +1612,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             } else if (!this._sourceController.isLoading() && this._loadingState === 'all') {
                 _private.hideIndicator(this);
             }
+        }
+
+        if (this._resetScrollAfterUpdate) {
+            _private.scrollToEdge(this, 'up');
+            this._resetScrollAfterUpdate = false;
         }
     },
 
