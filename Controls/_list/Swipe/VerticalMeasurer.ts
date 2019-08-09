@@ -15,8 +15,8 @@ const breakpoints: Record<
       upperBound: 64
    },
    right: {
-      lowerBound: 30,
-      upperBound: 38
+      lowerBound: 36,
+      upperBound: 44
    },
    none: {
       lowerBound: 30,
