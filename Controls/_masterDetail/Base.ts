@@ -9,7 +9,7 @@ import 'css!theme?Controls/masterDetail';
     * @extends Core/Control
     * @mixes Controls/_masterDetail/List/Styles
     * @control
-    * @author Герасимов А.М.
+    * @author Авраменко А.С.
     * @public
     * @demo Controls-demo/MasterDetail/Demo
     */
@@ -21,7 +21,7 @@ import 'css!theme?Controls/masterDetail';
     * @extends Core/Control
     * @mixes Controls/_masterDetail/List/Styles
     * @control
-    * @author Герасимов А.М.
+    * @author Авраменко А.С.
     * @public
     * @demo Controls-demo/MasterDetail/Demo
     */    
