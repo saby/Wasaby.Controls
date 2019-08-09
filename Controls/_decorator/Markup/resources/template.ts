@@ -27,7 +27,7 @@ import {IoC} from 'Env/Env';
          'src': true,
          'usemap': true
       },
-      goodLinkStarts = [
+      startOfGoodLinks = [
          'http:(//|\\\\)',
          'https:(//|\\\\)',
          'ftp:(//|\\\\)',
@@ -37,7 +37,7 @@ import {IoC} from 'Env/Env';
          './',
          '/'
       ],
-      goodLinkAttributeRegExp = new RegExp(`^(${goodLinkStarts.join('|')})`
+      goodLinkAttributeRegExp = new RegExp(`^(${startOfGoodLinks.join('|')})`
          .replace(/[a-z]/g, (m) => `[${m + m.toUpperCase()}]`)),
       dataAttributeRegExp = /^data-(?!component$)([\w-]*[\w])+$/,
       escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
