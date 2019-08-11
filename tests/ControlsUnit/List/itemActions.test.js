@@ -488,6 +488,42 @@ define([
             showType: tUtil.showType.TOOLBAR
          }], listViewModel._actions[0].showed);
       });
+      it('needActionsMenu', function() {
+         let needActionsMenu = lists.ItemActionsControl._private.needActionsMenu;
+         let actions = [
+            {
+               id: 1
+            }
+         ];
+         assert.isTrue(needActionsMenu(actions, 'inside'));
+         assert.isFalse(needActionsMenu(actions, 'outside'));
+         actions = [
+            {
+               id: 1,
+               showType: tUtil.showType.TOOLBAR,
+            }
+         ];
+         assert.isFalse(needActionsMenu(actions, 'inside'));
+         actions = [
+            {
+               id: 1,
+               showType: tUtil.showType.MENU_TOOLBAR,
+            }
+         ];
+         assert.isTrue(needActionsMenu(actions, 'inside'));
+         actions = [
+            {
+               id: 1,
+               showType: tUtil.showType.TOOLBAR,
+            },
+            {
+               id: 2,
+               parent: 1,
+               showType: tUtil.showType.MENU,
+            }
+         ];
+         assert.isFalse(needActionsMenu(actions, 'inside'));
+      });
    });
 
    describe('Controls.List.Utils.Actions', function() {
