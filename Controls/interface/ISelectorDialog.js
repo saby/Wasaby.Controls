@@ -76,6 +76,19 @@ define('Controls/interface/ISelectorDialog', [
     */
 
    /**
+    * @event Controls/_interface/ISelectorDialog#selectorCallback Происходит при выборе элементов с помощью селектора.
+    * @param {Env/Event:Object} eventObject Дескриптор события.
+    * @param {RecordSet} currentItems Текущий список элементов в окне выбора из справочника.
+    * @param {RecordSet} newItems Список элементов, выбранных из селектора.
+    */
+   /*
+    * @event Controls/_interface/ISelectorDialog#selectorCallback Occurs when selected items with selector.
+    * @param {Env/Event:Object} eventObject The event descriptor.
+    * @param {RecordSet} currentItems Current list of items in Lookup.
+    * @param {RecordSet} newItems List of items selected from selector.
+    */
+
+   /**
     * @typedef {Object} ConfigSelector
     * @property {Function} templateName Шаблон панели выбора элементов.
     * @property {Object} templateOptions Параметры шаблона всплывающего окна.

@@ -403,10 +403,32 @@ define(
                   { key: 5, title: 'Франция' }
                ]
             });
+            fastData2._afterSelectorOpenCallback([]);
             fastData2._onResult(null, { data: selectedItems, action: 'selectorResult' });
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Франция']);
             assert.deepEqual(fastData2._configs[0]._items.getCount(), 5);
             assert.deepEqual(fastData2._configs[0]._items.at(0).getRawData(), { key: 5, title: 'Франция' });
+         });
+
+         it('onResult selectorResult selectorCallback', function() {
+            let fastData2 = getFastFilterWithItems(configItems);
+            fastData2._notify = (event, data) => {
+               if (event === 'selectorCallback') {
+                  data[1].at(0).set({key: 11, title: 'Китай'});
+               }
+            };
+            let selectedItems = new collection.RecordSet({
+               idProperty: 'key',
+               rawData: [
+                  { key: 1, title: 'Россия' },
+                  { key: 5, title: 'Франция' }
+               ]
+            });
+            fastData2._afterSelectorOpenCallback([]);
+            fastData2._onSelectorTemplateResult('selectorResult', selectedItems);
+            assert.deepEqual(fastData2._items.at(0).value, ['Китай', 'Франция']);
+            assert.deepEqual(fastData2._configs[0]._items.getCount(), 6);
+            assert.deepEqual(fastData2._configs[0]._items.at(0).getRawData(), { key: 11, title: 'Китай' });
          });
 
          it('_onSelectorTemplateResult', function() {
@@ -418,6 +440,7 @@ define(
                   { key: 5, title: 'Франция' }
                ]
             });
+            fastData2._afterSelectorOpenCallback([]);
             fastData2._onSelectorTemplateResult('event', selectedItems);
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Франция']);
             assert.deepEqual(fastData2._configs[0]._items.getCount(), 5);
