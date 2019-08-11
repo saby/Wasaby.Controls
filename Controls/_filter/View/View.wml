@@ -60,7 +60,7 @@
       </div>
    </ws:if>
    <Controls.popup:Sticky
-           name="DropdownOpener"
+           name="StickyOpener"
            className="controls-FilterView-popup"
            closeOnOutsideClick="{{true}}"
            _vdomOnOldPage="{{true}}"

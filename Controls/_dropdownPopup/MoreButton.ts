@@ -43,7 +43,10 @@ var MoreButton = Control.extend([], {
                 }
             }
         }, selectorTemplate.popupOptions || {}));
-        this._notify('close', [], {bubbling: true});
+
+        if (this._options.afterOpenCallback) {
+            this._options.afterOpenCallback(templateConfig.selectedItems);
+        }
     }
 });
 
