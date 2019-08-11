@@ -100,15 +100,16 @@ define(
             assert.deepStrictEqual(itemClickResult, ['2']);
          });
 
-         it('_moreButtonClick', function() {
+         it('_afterOpenDialogCallback', function() {
             let list = getList(defaultConfig);
+            list._beforeMount(defaultConfig);
             let isNotified;
             list._notify = (event) => {
                if (event === 'moreButtonClick') {
                   isNotified = true;
                }
             };
-            list._moreButtonClick('moreButtonClick');
+            list._afterOpenDialogCallback([1, 2, 3]);
             assert.isTrue(isNotified);
          });
 

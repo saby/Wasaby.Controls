@@ -107,8 +107,8 @@ var Panel = Control.extend({
         this._notify('sendResult', [result]);
     },
 
-    _moreButtonClick: function(event, item) {
-        this._notify('sendResult', [{action: 'moreButtonClick', id: item.id}]);
+    _moreButtonClick: function(event, item, selectedItems) {
+        this._notify('sendResult', [{action: 'moreButtonClick', id: item.id, selectedItems: selectedItems}]);
     }
 });
 

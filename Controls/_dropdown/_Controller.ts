@@ -315,7 +315,8 @@ var _Controller = Control.extend({
                width: self._options.width !== undefined ? (self._container[0] || self._container).offsetWidth : undefined,
                hasMoreButton: self._sourceController.hasMoreData('down'),
                selectorOpener: self._children.selectorOpener,
-               selectorDialogResult: self._onSelectorTemplateResult.bind(self)
+               selectorDialogResult: self._onSelectorTemplateResult.bind(self),
+               afterSelectorOpenCallback: self._afterSelectorOpenCallback.bind(self)
             },
             target: self._container,
             targetPoint: self._options.corner,
@@ -348,8 +349,14 @@ var _Controller = Control.extend({
       }
    },
 
-   _onSelectorTemplateResult: function(event, items) {
-      this._onResult(event, {action: 'selectorResult', data: items});
+   _onSelectorTemplateResult: function(event, selectedItems) {
+      let result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
+      this._onResult(event, {action: 'selectorResult', data: result});
+   },
+
+   _afterSelectorOpenCallback: function(selectedItems) {
+      this._initSelectorItems = selectedItems;
+      this._children.DropdownOpener.close();
    },
 
    _clickHandler: function(event) {
