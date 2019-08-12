@@ -52,7 +52,9 @@ let Popup = Control.extend({
     _openersUpdateCallback: [],
 
     _isEscDown: false,
-    _beforeMount(opts) {
+    _beforeMount() {
+       // TODO: костыль доброшен только в 500-е вехи, исправить в 600 иначе по ошибке:
+       // https://online.sbis.ru/opendoc.html?guid=9bd579a4-b17e-4e69-a21b-730cd1353084
        if(!(isNewEnvironment())) {
           makeInstanceCompatible(this);
        }
