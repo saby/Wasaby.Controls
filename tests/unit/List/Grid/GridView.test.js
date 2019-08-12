@@ -144,40 +144,7 @@ define(['Controls/grid'], function(gridMod) {
             gridView._beforePaint()
             assert.isFalse(gridView._isHeaderChanged)
       });
-      // it('afterMount with set offsets for multiheader', function() {
-      //    var
-      //       cfg = {
-      //          columns: [
-      //             { displayProperty: 'field1', template: 'column1' },
-      //             { displayProperty: 'field2', template: 'column2' }
-      //          ],
-      //          columnScroll: false,
-      //       },
-      //       gridView = new gridMod.GridView(cfg);
-      //
-      //    gridView.saveOptions(cfg);
-      //    gridView._options.header = [{}, {}, {}]
-      //    let setHeightWasCalled = false
-      //    gridView._isHeaderChanged = false;
-      //    // gridView._afterMount = () => {gridView._isHeaderChanged = true}
-      //
-      //    gridView._listModel = {
-      //       _isMultyHeader: true,
-      //       isStickyHeader: () => true,
-      //       setHeaderCellMinHeight: (header) => header.length,
-      //    }
-      //    gridView._setHeaderWithHeight = () => {
-      //       setHeightWasCalled = true;
-      //       return [{}, {}, {}, {}]
-      //    }
-      //    gridView._afterMount = () => {
-      //       if (gridView._options.header && gridView._listModel._isMultyHeader && gridView._listModel.isStickyHeader()) {
-      //          gridView._listModel.setHeaderCellMinHeight(this._setHeaderWithHeight());
-      //       }
-      //    }
-      //    gridView._afterMount();
-      //
-      // });
+
       it('resultPosition update', function(){
          let gridView = new gridMod.GridView({resultsPosition: 'top'});
          let setResultPosinionCalled = false;
