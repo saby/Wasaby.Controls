@@ -32,11 +32,26 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
+    * @typedef {String} AddPositionOption
+    * @variant top Редактирование по месту откроется в начале списка.
+    * @variant bottom Редактирование по месту откроется в конце списка.
+    * @default bottom
+    */
+
+   /*
+    * @typedef {String} AddPositionOption
+    * @variant top Editing in place will appear at the top of the list.
+    * @variant bottom Editing in place will appear at the bottom of the list.
+    * @default bottom
+    */
+
+   /**
     * @typedef {Object} EditingConfig
     * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
     * @property {Boolean} [autoAdd=false] Если передано значение "true", после окончания редактирования последнего элемента списка автоматически добавляется новый элемент и начинается его редактирование.
     * @property {Boolean} [sequentialEditing=true] Если передано значение "true", после окончания редактирования любого элемента списка, кроме последнего, автоматически запускается редактирование следующего элемента списка.
     * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
+    * @property {AddPositionOption} [addPosition] Позиция редактирования по месту.
     * @property {Types/entity:Record} [item=undefined] Позволяет начать редактирование элемента списка при первом рендеринге.
     */
 
@@ -46,6 +61,7 @@ define('Controls/interface/IEditableList', [
     * @property {Boolean} [autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
     * @property {Boolean} [sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
     * @property {Boolean} [toolbarVisibility=false] Determines whether buttons 'Save' and 'Cancel' should be displayed.
+    * @property {AddPosition} [addPosition] Editing in place position.
     * @property {Types/entity:Record} [item=undefined] If present, editing of this item will begin on first render.
     */
 
