@@ -1,7 +1,7 @@
 import cInstance = require('Core/core-instance');
 /**
  *
- * Валидатор. Проверяет наличие значения в контейнере.
+ * Функция проверяет наличие значения в контейнере.
  * @class
  * @name Controls/_validate/Validators/IsRequired
  * @public
