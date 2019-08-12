@@ -1,5 +1,6 @@
 import Control = require('Core/Control');
 import ViewModel from './ViewModel';
+import {IoC} from  'Env/Env';
 import template = require('wml!Controls/_switchableArea/View');
 import defaultItemTemplate from './ItemTpl';
 
@@ -19,7 +20,7 @@ import defaultItemTemplate from './ItemTpl';
 */
 /**
  * @typedef {Object} SwitchableAreaItem
- * @property {String|Number} id
+ * @property {String|Number} key
  * @property {Function} itemTemplate
  */
 
@@ -42,6 +43,9 @@ var View = Control.extend({
    _template: template,
 
    _beforeMount: function(options) {
+      if(options.items.id){
+         IoC.resolve('ILogger').warn('SwitchableArea', 'items.id will be deprecated and removed in 19.700. Use items.key');
+      }
       this._viewModel = new ViewModel(options.items, options.selectedKey);
    },
 
