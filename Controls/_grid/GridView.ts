@@ -159,7 +159,7 @@ var
         _headerContentTemplate: HeaderContentTpl,
         _getGridTemplateColumns: _private.getGridTemplateColumns,
         _itemsContainerForPartialSupport: null,
-        _isHeaderChanged: true,
+        _isHeaderChanged: false,
 
         _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
@@ -307,7 +307,9 @@ var
 
         _afterMount: function() {
             GridView.superclass._afterMount.apply(this, arguments);
-            this._isHeaderChanged = true;
+            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader()) {
+                this._listModel.setHeaderCellMinHeight(this._setHeaderWithHeight());
+            }
             if (!Env.detection.isNotFullGridSupport) {
                 _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
             }
