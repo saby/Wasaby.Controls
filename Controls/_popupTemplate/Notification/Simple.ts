@@ -37,7 +37,7 @@ import template = require('wml!Controls/_popupTemplate/Notification/Simple/Simpl
          return {
             style: 'primary',
             autoClose: true,
-            closeButtonVisibility: false
+            closeButtonVisibility: true
          };
       };
 
@@ -63,7 +63,7 @@ import template = require('wml!Controls/_popupTemplate/Notification/Simple/Simpl
 /**
  * @name Controls/_popupTemplate/Notification/Simple#closeButtonVisibility
  * @cfg {Boolean} Determines whether display of the close button.
- * @default false
+ * @default true
  */
 
 /**
