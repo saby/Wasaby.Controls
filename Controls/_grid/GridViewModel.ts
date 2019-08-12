@@ -1,5 +1,6 @@
 import {ListViewModel, BaseViewModel, GridLayoutUtil, ItemsUtil} from 'Controls/list';
 import {Utils as stickyUtil} from 'Controls/scroll';
+import coreMerge = require('Core/core-merge');
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
@@ -687,6 +688,19 @@ var
         goToNextHeaderRow: function() {
             this._curHeaderRowIndex++;
         },
+
+        isDrawHeaderWithEmtyList: function() {
+            if (!this.headerInEmptyListVisible && !this.isGridListNotEmpty()) {
+                return false;
+            }
+            return true;
+        },
+
+        isGridListNotEmpty: function() {
+            const items = this.getItems();
+            return items && items.getCount() > 0 ? true : false;
+        },
+
 
         getCurrentHeaderRow: function() {
             const self = this;
