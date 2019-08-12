@@ -222,7 +222,7 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
 
                assert.deepEqual(
                   result,
-                  VerticalMeasurer.default.getSwipeConfig(actions, 97, 'right')
+                  VerticalMeasurer.default.getSwipeConfig(actions, 120, 'right')
                );
             });
 
