@@ -3725,6 +3725,36 @@ define([
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
       });
 
+      it('_beforeMount with PrefetchProxy in source', function() {
+         let prefetchSource = new sourceLib.PrefetchProxy({
+            target: source,
+            data: {
+               query: data
+            }
+         });
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            sorting: [],
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            source: prefetchSource
+         };
+         let instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+
+         return new Promise(function(resolve) {
+            instance._beforeMount(cfg).addCallback(function(receivedState) {
+               assert.isTrue(!receivedState);
+               resolve();
+            });
+         });
+      });
+
+
       it('_getLoadingIndicatorClasses', function () {
 
          function testCaseWithArgs(indicatorState, itemsCount) {
