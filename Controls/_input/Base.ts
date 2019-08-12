@@ -823,7 +823,7 @@ interface IFieldTemplate {
              * Therefore, we ourselves will activate the field on click.
              * https://caniuse.com/#search=pointer-events
              */
-            if (this._ieVersion < 12) {
+            if (this._ieVersion && this._ieVersion < 12) {
                this._getField().focus();
             }
          },
