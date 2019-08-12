@@ -1,15 +1,14 @@
 import Control = require('Core/Control');
 import cInstance = require('Core/core-instance');
 import template = require('wml!Controls/_list/Data');
-import getPrefetchSource from './getPrefetchSource';
-import {ContextOptions} from 'Controls/context';
 import Deferred = require('Core/Deferred');
 import clone = require('Core/core-clone');
+import getPrefetchSource from './getPrefetchSource';
+import {ContextOptions} from 'Controls/context';
 import {isEqual} from "Types/object"
 
-import {PrefetchProxy, DataSet} from 'Types/source';
+import {ICrud, PrefetchProxy} from 'Types/source';
 import {RecordSet} from 'Types/collection';
-import {ICrud} from 'Types/source';
 
 type GetSourceResult = {
    data?: RecordSet;
@@ -152,7 +151,7 @@ type GetSourceResult = {
           * @param self control instance
           * @param result {prefetchSourceResult}
           */
-         createDataContextBySourceResult: function(self, result: GetSourceResult) {
+         createDataContextBySourceResult: function (self, result: { data: RecordSet<Model>; source: PrefetchProxy }) {
             _private.resolvePrefetchSourceResult(self, result);
             self._dataOptionsContext = _private.getDataContext(self);
          },
@@ -166,7 +165,7 @@ type GetSourceResult = {
 
          _template: template,
 
-         _beforeMount: function(options, context, receivedState:GetSourceResult|undefined):Deferred<GetSourceResult>|void {
+         _beforeMount: function(options, context, receivedState:RecordSet|undefined):Deferred<GetSourceResult>|void {
             let self = this;
             let source:ICrud;
 
@@ -179,7 +178,12 @@ type GetSourceResult = {
                // and source from receivedState will lose all subscriptions
                _private.createDataContextBySourceResult(this, {
                   data: receivedState,
-                  source: new PrefetchProxy({target: source})
+                  source: new PrefetchProxy({
+                     target: source,
+                     data: {
+                        query: receivedState
+                     }
+                  })
                });
             } else if (self._source) {
                return _private.createPrefetchSource(this, null, options.dataLoadErrback).addCallback(function(result) {
