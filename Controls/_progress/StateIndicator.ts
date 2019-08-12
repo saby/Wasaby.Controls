@@ -24,8 +24,9 @@ export interface IStateIndicatorOptions extends IControlOptions {
    data?: IIndicatorCategory[];
 }
 /**
- * Progress state indicator
- * <a href="/materials/demo-ws4-stateindicator">Demo-example</a>.
+ * Диаграмма состояния процесса.
+ * Позволяет получить наглядную информацию по состоянию выполнения некоторого процесса в разрезе нескольких категорий.
+ * <a href="/materials/demo-ws4-stateindicator">Демо-пример</a>.
  * @class Controls/_progress/StateIndicator
  * @extends Core/Control
  * @author Колесов В.А.
@@ -34,7 +35,30 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * @demo Controls-demo/StateIndicator/StateIndicatorDemo
  */
 
+/*
+ * Progress state indicator
+ * <a href="/materials/demo-ws4-stateindicator">Demo-example</a>.
+ * @class Controls/_progress/StateIndicator
+ * @extends Core/Control
+ * @author Колесов В.А.
+ *
+ * @public
+ * @demo Controls-demo/StateIndicator/StateIndicatorDemo
+ */ 
+
 /**
+ * @name Controls/_progress/StateIndicator#scale
+ * @cfg {Number} Определяет размер (процентное значение) одного сектора диаграммы.
+ * @remark
+ * Положительное число до 100.
+ * @example
+ * Шкала из 5 установит индикатор с 20-ю секторами.
+ * <pre class="brush:html">
+ *   <Controls.progress:StateIndicator scale="{{5}}"/>
+ * </pre>
+ */
+
+/*
  * @name Controls/_progress/StateIndicator#scale
  * @cfg {Number} Defines percent count shown by each sector.
  * @remark
@@ -44,28 +68,51 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * <pre class="brush:html">
  *   <Controls.progress:StateIndicator scale="{{5}}"/>
  * </pre>
- */
+ */ 
 
 /**
+ * @typedef {Object} IndicatorCategory
+ * @property {Number} value=0 Процент от соответствующей категории.
+ * @property {String} className='' Имя css-класса, который будет применяться к секторам этой категории. Если не указано, будет использоваться цвет по умолчанию.
+ * @property {String} title='' Название категории.
+ */
+
+/*
  * @typedef {Object} IndicatorCategory
  * @property {Number} value=0 Percents of the corresponding category
  * @property {String} className='' Name of css class, that will be applied to sectors of this category. If not specified, default color will be used
  * @property {String} title='' category note
- */
+ */ 
 
 /**
+ * @name Controls/_progress/StateIndicator#data
+ * @cfg {Array.<IndicatorCategory>} Массив категорий диаграммы.
+ * <pre class="brush:html">
+ *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
+ * </pre>
+ * @remark 
+ * Используется, если для диаграммы нужно установить несколько категорий. Количество элементов массива задает количество категорий диаграммы.
+ */
+
+/*
  * @name Controls/_progress/StateIndicator#data
  * @cfg {Array.<IndicatorCategory>} Array of indicator categories
  * <pre class="brush:html">
  *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
  * </pre>
- */
+ */ 
 
 /**
+ * @event Controls/_progress/StateIndicator#itemEnter Происходит при наведении курсора мыши на диаграмму.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ *
+ */
+
+/*
  * @event Controls/_progress/StateIndicator#itemEnter Occurs when mouse enters sectors of indicator
  * @param {Vdom/Vdom:SyntheticEvent} eventObject event descriptor.
  *
- */
+ */ 
 class StateIndicator extends Control<IStateIndicatorOptions>{
    protected _template: TemplateFunction = stateIndicatorTemplate;
    private _colorState: number[];

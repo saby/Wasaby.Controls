@@ -7,7 +7,8 @@ export interface IBarOptions extends IControlOptions {
    value?: number;
 }
 /**
- * Control that renders progress bar
+ * Базовый индикатор выполнения процесса. 
+ * Отображает полосу прогресса выполнения.
  * @class Controls/_progress/Bar
  * @extends Core/Control
  * @author Колесов В.А.
@@ -20,12 +21,35 @@ export interface IBarOptions extends IControlOptions {
  * @css @height-ProgressBar_bar Progress bar height
  * @css @color-ProgressBar__progress Progress bar fill color
  */
+
+/*
+ * Control that renders progress bar
+ * @class Controls/_progress/Bar
+ * @extends Core/Control
+ * @author Колесов В.А.
+ *
+ * @public
+ *
+ * @demo Controls-demo/Indicator/ProgressBar/ProgressBar
+ *
+ * @css @color-ProgressBar__bar Progress bar background color
+ * @css @height-ProgressBar_bar Progress bar height
+ * @css @color-ProgressBar__progress Progress bar fill color
+ */ 
+
 /**
+ * @name Controls/_progress/Bar#value
+ * @cfg {Number} Значение прогресса в процентах.
+ * @remark
+ * Целое число от 1 до 100.
+ */
+
+/*
  * @name Controls/_progress/Bar#value
  * @cfg {Number} Progress in percents (ratio of the filled part)
  * @remark
  * An integer from 1 to 100.
- */
+ */ 
 class Bar extends Control<IBarOptions> {
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = barTemplate;
