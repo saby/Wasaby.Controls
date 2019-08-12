@@ -32,14 +32,14 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @typedef {String} AddPositionOption
+    * @typedef {Enum} AddPositionOption
     * @variant top Редактирование по месту откроется в начале списка.
     * @variant bottom Редактирование по месту откроется в конце списка.
     * @default bottom
     */
 
    /*
-    * @typedef {String} AddPositionOption
+    * @typedef {Enum} AddPositionOption
     * @variant top Editing in place will appear at the top of the list.
     * @variant bottom Editing in place will appear at the bottom of the list.
     * @default bottom
