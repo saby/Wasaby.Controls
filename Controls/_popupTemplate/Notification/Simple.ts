@@ -63,7 +63,7 @@ import template = require('wml!Controls/_popupTemplate/Notification/Simple/Simpl
 /**
  * @name Controls/_popupTemplate/Notification/Simple#closeButtonVisibility
  * @cfg {Boolean} Determines whether display of the close button.
- * @default true
+ * @default false
  */
 
 /**
