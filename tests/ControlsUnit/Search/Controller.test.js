@@ -212,7 +212,6 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.isFalse(searchMod.Controller._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test'}}));
          assert.isFalse(searchMod.Controller._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test1'}}));
          assert.isTrue(searchMod.Controller._private.needUpdateSearchController({minSearchLength: 3}, {minSearchLength: 2}));
-         assert.isTrue(searchMod.Controller._private.needUpdateSearchController({minSearchLength: 3, sorting: [{}]}, {minSearchLength: 3, sorting: [{testField: "ASC"}]}));
       });
 
       it('_private.getSearchController', function() {
@@ -290,7 +289,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          it('default options', function() {
             searchMod.Controller._private.getSearchController(searchController);
-            searchController._beforeUpdate({searchValue: ''}, {dataOptions: defaultOptions});
+            searchController._beforeUpdate({searchValue: '', sorting: []}, {dataOptions: defaultOptions});
             assert.isNull(searchController._searchController);
          });
 
@@ -301,6 +300,15 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             searchMod.Controller._private.getSearchController(searchController);
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
             assert.deepEqual(searchController._searchController.getFilter(), {test: 'testValue'});
+         });
+
+         it('sorting is changed', function() {
+            var options = getDefaultOptions();
+
+            options.sorting = [{testValue: "ASC"}];
+            searchMod.Controller._private.getSearchController(searchController);
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+            assert.deepEqual(searchController._searchController._options.sorting, [{testValue: "ASC"}]);
          });
 
          it('search value is changed', function() {
