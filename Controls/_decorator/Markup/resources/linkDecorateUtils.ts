@@ -14,7 +14,6 @@ const classes = {
    link: 'LinkDecorator__linkWrap',
    image: 'LinkDecorator__image'
 };
-const decoratedLinkService = '/linkdecorator/service/';
 const fakeNeedDecorateAttribute = '__needDecorate';
 
 function isAttributes(value) {
@@ -103,14 +102,7 @@ function getClasses() {
  * @returns {String|undefined}
  */
 function getService() {
-   //return constants.decoratedLinkService;
-
-   // FIXME: брать сервис из констант не вариант на данный момент. В WaSaby приложениях её нет по умолчанию. На главной
-   // она инициализируется явно, раньше этого хватало. Нужно инициализировать в другом месте.
-   // Пока будем явно получать хранить константу здесь, в 510 сервис жив везде, где используют декорирование ссылок.
-   // Нужно принять решение в ошибке:
-   // https://online.sbis.ru/opendoc.html?guid=724c4e49-0807-4f5c-8bf1-0f5b84c01f62
-   return decoratedLinkService;
+   return constants.decoratedLinkService;
 }
 
 /**
