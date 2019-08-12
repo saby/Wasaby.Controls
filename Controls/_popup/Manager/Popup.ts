@@ -6,9 +6,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
 import {debounce} from 'Types/function';
 
-import makeInstanceCompatible = require('Core/helpers/Hcontrol/makeInstanceCompatible');
-import isNewEnvironment = require('Core/helpers/isNewEnvironment');
-
 const RESIZE_DELAY = 10;
 // on ios increase delay for scroll handler, because popup on frequent repositioning loop the scroll.
 const SCROLL_DELAY = Env.detection.isMobileIOS ? 100 : 10;
