@@ -1,7 +1,7 @@
 import cInstance = require('Core/core-instance');
 /**
  *
- * Функция, позволяющая проверить значение в контейнере на пустоту.
+ * Функция проверяет наличие значения в контейнере.
  * @class
  * @name Controls/_validate/Validators/IsRequired
  * @public
@@ -10,26 +10,24 @@ import cInstance = require('Core/core-instance');
  * @remark
  * <h2>Аргументы функции</h2>
  *
- * value - значение, которое будет проверяться на валидность.
- * doNotValidate:Boolean -  требуется ли валидация
+ * - value — проверяемое значение.
+ * - doNotValidate:Boolean — требуется ли валидация.
  *
- * <h2>Возвращаемые значения</h2>
+ * <h2>Типы возвращаемых значений</h2>
  *
- * <ul>
- *     <li><b>true</b> - значение прошло проверку на валидность </li>
- *     <li><b>String</b> - значение не прошло проверку на валидность, возвращается текст сообщения об ошибке </li>
- * </ul>
+ * - true — значение прошло проверку на валидность.
+ * - string — значение не прошло проверку на валидность, возвращается текст сообщения об ошибке.
  *
  * <h2>Пример использования функции:</h2>
  * <pre>
- *   <Controls.validate:InputContainer name="InputValidate">
+ * <Controls.validate:InputContainer name="InputValidate">
  *     <ws:validators>
- *      <ws:Function value="{{_valueIsRequired}}">Controls/validate:isRequired</ws:Function>
+ *         <ws:Function value="{{_valueIsRequired}}">Controls/validate:isRequired</ws:Function>
  *      </ws:validators>
  *      <ws:content>
- *        <Controls.input:Text bind:value="_valueIsRequired"/>
+ *         <Controls.input:Text bind:value="_valueIsRequired"/>
  *      </ws:content>
- *  </Controls.validate:InputContainer>
+ * </Controls.validate:InputContainer>
  * </pre>
  *
  */

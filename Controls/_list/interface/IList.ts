@@ -107,11 +107,13 @@
 /**
  * @name Controls/_list/interface/IList#multiSelectVisibility
  * @cfg {String} Режим отображения флагов множественного выбора.
- * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
- * @variant visible Отобразить.
- * @variant hidden Не отображать.
- * @variant onhover Отобразить при наведении.
+ * <a href="/materials/demo-ws4-list-multiselect">См. демо-пример</a>.
+ * @variant visible Показать.
+ * @variant hidden Скрыть.
+ * @variant onhover Показывать при наведении.
  * @default hidden
+ * @remark
+ * Чтобы включить в списочном контроле режим "Множественный выбор элементов", обратитесь к <a href="/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/mass-select/">руководству разработчика</a>.
  */
 
 /*
