@@ -1,4 +1,4 @@
-<ws:partial template='wml!Controls/_toggle/RadioGroup/resources/ItemTemplate'
+<ws:partial template='Controls/toggle:ItemTemplate'
             item="{{item}}"
             readOnly="{{readOnly}}"
             selected="{{selected}}"
