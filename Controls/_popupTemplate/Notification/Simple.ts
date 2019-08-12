@@ -37,7 +37,7 @@ import template = require('wml!Controls/_popupTemplate/Notification/Simple/Simpl
          return {
             style: 'primary',
             autoClose: true,
-            closeButtonVisibility: true
+            closeButtonVisibility: false
          };
       };
 
