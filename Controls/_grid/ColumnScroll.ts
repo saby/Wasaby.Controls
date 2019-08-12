@@ -98,18 +98,19 @@ const
             '.' + self._transformSelector +
             ' .controls-Grid__cell_transform { transform: translateX(-' + position + 'px); }';
       },
-      setOffsetForHScroll(self) {
+      setOffsetForHScroll (self) {
          const container = self._children.content;
          const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0].childNodes;
          if (HeaderGroup && !!HeaderGroup.length) {
+            const firstCell = HeaderGroup[0];
             if (self._fixedColumnsWidth) {
                self._leftOffsetForHScroll = self._fixedColumnsWidth;
             } else if (self._options.multiSelectVisibility !== 'hidden') {
-               self._leftOffsetForHScroll = HeaderGroup[0].offsetWidth + HeaderGroup[1].offsetWidth;
+               self._leftOffsetForHScroll = firstCell.offsetWidth + HeaderGroup[1].offsetWidth;
             } else {
-               self._leftOffsetForHScroll = HeaderGroup[0].offsetWidth;
+               self._leftOffsetForHScroll = firstCell.offsetWidth;
             }
-            self._offsetForHScroll = HeaderGroup[0].offsetHeight;
+            self._offsetForHScroll = firstCell.offsetHeight + firstCell.offsetTop;
          }
          if (self._options.listModel.getResultsPosition() === 'top') {
             const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
