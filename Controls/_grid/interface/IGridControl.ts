@@ -137,24 +137,25 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#header
- * @cfg {Array.<Array.<HeaderCell>>} Описывает заголовок таблицы.
- * <a href="/materials/demo-ws4-grid-base">Example</a>
+ * @cfg {Array.<HeaderCell>} Описывает шапку таблицы.
+ * - <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
+ * - <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
  * @remark
- * Базовый шаблон заголовка таблицы для Controls/grid:View: "Controls/grid:HeaderContent".
+ * По умолчанию используется базовый шаблон {@link Controls/grid:HeaderContent}.
  * Базовый шаблон поддерживает следующие css-модификаторы:
  * <ul>
  *    <li>controls-Grid__header-cell_spacing_money - используется для добавления отступа в заголовке столбца при рендере денежных данных в самом столбце.</li>
  * </ul>
  *
  * @example
- * Пример добавления кастомного шаблона:
+ * Пример добавления пользовательскогого шаблона:
  * <pre>
  *    <Controls.grid:View>
- *       <header>
- *           <template>
- *             <Controls.buttons:Button>Description</Controls.buttons:Button>
- *           </template>
- *       </header>
+ *       <ws:header>
+ *           <ws:template>
+ *             <Controls.buttons:Button caption="Description" />
+ *           </ws:template>
+ *       </ws:header>
  *    </Controls.grid:View>
  * </pre>
  *
@@ -162,46 +163,46 @@
  * Пример добавления интервала между текстами заголовков для столбцов с денежными полями:
  * <pre>
  *    <Controls.grid:View>
- *       <header>
- *           <template>
+ *       <ws:header>
+ *           <ws:template>
  *              <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
- *           </template>
- *       </header>
+ *           </ws:template>
+ *       </ws:header>
  *    </Controls.grid:View>
  * </pre>
  * @example
- * Пример массива колонок многоуровнего заголовка
+ * Пример массива колонок многоуровнего заголовка:
  * <pre>
- *     columns=[
- *      {
-  *     title: 'Name',
-  *     startRow: 1,
-  *     endRow: 3,
-  *     startColumn: 1,
-  *     endColumn: 2,
- *      },
- *      {
- *      title: 'Price',
- *      startRow: 1,
- *      endRow: 2,
- *      startColumn: 2,
- *      endColumn: 4,
- *      },
- *      {
- *      title: 'Cell',
- *      startRow: 2,
- *      endRow: 3,
- *      startColumn: 2,
- *      endColumn: 3,
- *      },
- *      {
- *      title: 'Residue',
- *      startRow: 2,
- *      endRow: 3,
- *      startColumn: 3,
- *      endColumn: 4,
- *      },
- *     ]
+ * columns=[
+ *    {
+ *       title: 'Name',
+ *       startRow: 1,
+ *       endRow: 3,
+ *       startColumn: 1,
+ *       endColumn: 2,
+ *    },
+ *    {
+ *       title: 'Price',
+ *       startRow: 1,
+ *       endRow: 2,
+ *       startColumn: 2,
+ *       endColumn: 4,
+ *    },
+ *    {
+ *       title: 'Cell',
+ *       startRow: 2,
+ *       endRow: 3,
+ *       startColumn: 2,
+ *       endColumn: 3,
+ *    },
+ *    {
+ *       title: 'Residue',
+ *       startRow: 2,
+ *       endRow: 3,
+ *       startColumn: 3,
+ *       endColumn: 4,
+ *    },
+ * ]
  * </pre>
  */
 
