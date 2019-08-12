@@ -58,6 +58,7 @@ interface IBaseTreeGridRowIndexOptions {
     hasHeader: boolean
     hasBottomPadding: boolean
     resultsPosition?: 'top' | 'bottom'
+    multyHeaderOffset: number
     hierarchyRelation: relation.Hierarchy
     hasMoreStorage: HasMoreStorage
     expandedItems: ExpandedItems
@@ -112,10 +113,10 @@ function getIndexByItem(cfg: TreeGridRowIndexOptions<DisplayItem>): number {
  * @return {Number} Номер строки в списке для элемента с указанным индексом в проекции.
  */
 function getIndexByDisplayIndex(cfg: TreeGridRowIndexOptions<DisplayItemIndex>): number {
-    
+
     let item = cfg.display.at(cfg.index).getContents(),
         id = item.getId ? item.getId() : item;
-    
+
     return getItemRealIndex({item, id, ...cfg});
 }
 
@@ -129,12 +130,12 @@ function getIndexByDisplayIndex(cfg: TreeGridRowIndexOptions<DisplayItemIndex>):
  */
 function getResultsIndex(cfg: TreeGridRowIndexOptions<HasEmptyTemplate>) {
     let index = cfg.hasHeader ? 1 : 0;
-    
+
     if (cfg.resultsPosition === "bottom") {
         let
             itemsCount = cfg.display.getCount(),
             hasEditingItem = typeof cfg.editingRowIndex === "number";
-        
+
         if (itemsCount) {
             // Чтобы ради подвала снова не считать индекс последнего элемента на экране,
             // который кстати сначала нужно найти, просто берем общее количество элементов
@@ -147,8 +148,9 @@ function getResultsIndex(cfg: TreeGridRowIndexOptions<HasEmptyTemplate>) {
 
         index += cfg.hasBottomPadding ? 1 : 0;
         index += hasEditingItem ? 1 : 0;
+        index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
     }
-    
+
     return index;
 }
 
@@ -168,6 +170,7 @@ function getBottomPaddingRowIndex(cfg: TreeGridRowIndexOptions): number {
     index += cfg.hasHeader ? 1 : 0;
     index += isResultsInTop ? 1 : 0;
     index += hasEditingItem ? 1 : 0;
+    index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
 
     return index;
 }
@@ -186,18 +189,19 @@ function getFooterIndex(cfg: TreeGridRowIndexOptions<HasEmptyTemplate>): number 
         itemsCount = cfg.display.getCount(),
         index = 0,
         hasEditingItem = typeof cfg.editingRowIndex === "number";
-    
+
     index += cfg.hasHeader ? 1 : 0;
     index += hasResults ? 1 : 0;
     index += hasEditingItem ? 1 : 0;
     index += cfg.hasBottomPadding ? 1 : 0;
+    index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
 
     if (itemsCount) {
         index += itemsCount * 2;
     } else {
         index += cfg.hasEmptyTemplate ? 1 : 0;
     }
-    
+
     return index;
 }
 
@@ -209,13 +213,14 @@ function getFooterIndex(cfg: TreeGridRowIndexOptions<HasEmptyTemplate>): number 
  * @param {TreeGridRowIndexOptions.resultsPosition} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
  * @return {Number} Отступ сверху для первой записи списка
  */
-function getTopOffset(hasHeader: TreeGridRowIndexOptions["hasHeader"], resultsPosition: TreeGridRowIndexOptions["resultsPosition"] = null): number {
+function getTopOffset(hasHeader: TreeGridRowIndexOptions["hasHeader"], resultsPosition: TreeGridRowIndexOptions["resultsPosition"] = null, multyHeaderOffset: number): number {
     let
         topOffset = 0;
-    
+
     topOffset += hasHeader ? 1 : 0;
     topOffset += resultsPosition === "top" ? 1 : 0;
-    
+    topOffset += multyHeaderOffset ? multyHeaderOffset : 0;
+
     return topOffset;
 }
 
@@ -225,10 +230,10 @@ export {
     DisplayItem,
     DisplayItemIndex,
     HasEmptyTemplate,
-    
+
     TreeGridRowIndexOptions,
     IBaseTreeGridRowIndexOptions,
-    
+
     getIndexById,
     getIndexByItem,
     getIndexByDisplayIndex,
@@ -250,16 +255,16 @@ export {
  * @return {Number} Отступ сверху для первой записи списка
  */
 function getItemRealIndex(cfg: TreeGridRowIndexOptions<DisplayItem & DisplayItemIndex & ItemId>): number {
-    
-    
-    let realIndex = cfg.index + getTopOffset(cfg.hasHeader, cfg.resultsPosition);
-    
+
+
+    let realIndex = cfg.index + getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multyHeaderOffset);
+
     if (cfg.display.getCount() === 1) {
         return realIndex;
     } else {
         realIndex += calcNodeFootersBeforeItem(cfg);
     }
-    
+
     return realIndex;
 }
 
@@ -278,8 +283,8 @@ function calcNodeFootersBeforeItem(cfg: TreeGridRowIndexOptions<ItemId & Display
         count = 0,
         needToCheckRealFooterIndex = Object.keys(cfg.hasMoreStorage).filter((id)=>cfg.hasMoreStorage[id] === true),
         idProperty: string = cfg.display.getIdProperty() || (<Collection<unknown>>cfg.display.getCollection()).getIdProperty();
-    
-    
+
+
     if(cfg.hasNodeFooterTemplate) {
         cfg.expandedItems.forEach((expandedItemId) => {
             if (needToCheckRealFooterIndex.indexOf(expandedItemId) === -1) {
@@ -287,20 +292,20 @@ function calcNodeFootersBeforeItem(cfg: TreeGridRowIndexOptions<ItemId & Display
             }
         });
     }
-    
+
     needToCheckRealFooterIndex.forEach((itemId)=>{
         if (itemId !== cfg.id) {
             let
                 expandedItem = ItemsUtil.getDisplayItemById(cfg.display, itemId, idProperty),
                 expandedItemIndex = cfg.display.getIndex(expandedItem);
-        
+
             if (expandedItemIndex < cfg.index) {
                 let childrenCount = getChildrenOnDisplayCount(itemId, cfg.display, cfg.hierarchyRelation, cfg.expandedItems);
                 count += (cfg.index > expandedItemIndex + childrenCount) ? 1 : 0;
             }
         }
     });
-    
+
 
     return count;
 }
