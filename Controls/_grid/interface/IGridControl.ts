@@ -110,16 +110,16 @@
 
 /**
  * @typedef {Object} HeaderCell Описывает ячейку заголовка строки.
- * @property {String} [caption] Текст заголовка ячейки.
- * @property {GridCellAlign} [align] Выравнивание содержимого ячейки по горизонтали.
- * @property {GridCellVAlign} [valign] Выравнивание содержимого ячейки по вертикали.
- * @property {String} [template] Шаблон заголовка ячейки. CSS-класс устанавливает правый отступ для заголовка ячейки для выравнивания по целым числам в полях ввода денег.
- * @property {String} [sortingProperty] Свойство, по которому выполняется сортировка.
- * @property {Number} [startRow] Порядковый номер строки на которой начинается ячейка.
- * @property {Number} [endRow] Порядковый номер строки на которой заканчивается ячейка.
- * @property {Number} [startColumn] Порядковый номер колонки на которой начинается ячейка.
- * @property {Number} [endColumn] Порядковый номер колонки на которой заканчивается ячейка.
- * @property {Object} [templateOptions] Опции, передаваемые в шаблон ячейки заголовка.
+ * @property {String} caption Текст заголовка ячейки.
+ * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
+ * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
+ * @property {String} template Шаблон заголовка ячейки. CSS-класс устанавливает правый отступ для заголовка ячейки для выравнивания по целым числам в полях ввода денег.
+ * @property {String} sortingProperty Свойство, по которому выполняется сортировка.
+ * @property {Number} startRow Порядковый номер строки на которой начинается ячейка.
+ * @property {Number} endRow Порядковый номер строки на которой заканчивается ячейка.
+ * @property {Number} startColumn Порядковый номер колонки на которой начинается ячейка.
+ * @property {Number} endColumn Порядковый номер колонки на которой заканчивается ячейка.
+ * @property {Object} templateOptions Опции, передаваемые в шаблон ячейки заголовка.
  */
 
 /*
@@ -128,11 +128,11 @@
  * @property {GridCellAlign} [align] Horizontal cell content align.
  * @property {GridCellVAlign} [valign] Vertical cell content align.
  * @property {String} [template] Template for the header cell. CSS class controls-Grid__header-cell_spacing_money sets the right indent for the content of the header cell to align by integers in money fields.
- * @property {String} [sortingProperty] Property by which doing sorting.
- * @property {Number} [startRow] The sequence number of the line on which the cell begins.
- * @property {Number} [endRow] The sequence number of the line on which the cell ends.
- * @property {Number} [startColumn] The serial number of the column on which the cell begins.
- * @property {Number} [endColumn] The serial number of the column on which the cell ends.
+ * @property {String} sortingProperty Property by which doing sorting.
+ * @property {Number} startRow The sequence number of the line on which the cell begins.
+ * @property {Number} endRow The sequence number of the line on which the cell ends.
+ * @property {Number} startColumn The serial number of the column on which the cell begins.
+ * @property {Number} endColumn The serial number of the column on which the cell ends.
  */
 
 /**
@@ -142,9 +142,7 @@
  * @remark
  * Базовый шаблон заголовка таблицы для Controls/grid:View: "Controls/grid:HeaderContent".
  * Базовый шаблон поддерживает следующие css-модификаторы:
- * <ul>
- *    <li>controls-Grid__header-cell_spacing_money - используется для добавления отступа в заголовке столбца при рендере денежных данных в самом столбце.</li>
- * </ul>
+ * - controls-Grid__header-cell_spacing_money — используется для добавления отступа в заголовке столбца при рендере денежных данных в самом столбце.
  *
  * @example
  * Пример добавления кастомного шаблона:
@@ -238,11 +236,11 @@
  * В качестве значения опции можно указать пиксели (px), проценты (%), доли (1fr), "auto" или "minmax".
  * В значении "auto" ширина столбца устанавливается исходя из типа и содержимого элемента.
  * В значении "minmax(,)" устанавливаются минимальная и максимальная ширина столбца, например "minmax(600px, 1fr)".
- * @property {String} displayProperty Имя поля, данные которое по умолчанию отображаются в столбце.
- * @property {String} template Шаблон отображения ячейки.
- * По умолчанию используется базовый шаблон {@link Controls/grid:ColumnTemplate}. На основе базового шаблона можно задать собственное отображение ячейки (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
+ * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в столбце.
+ * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
+ * По умолчанию используется базовый шаблон {@link Controls/grid:ColumnTemplate}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
  * 
- * При использовании базового шаблона установите на корневой элемент CSS-класс "controls-Grid__row-cell__content_baseline_L". Это обеспечит выравнивание контента ячейки по базовой линии.
+ * На корневой элемент пользовательского шаблона следует задать CSS-класс "controls-Grid__row-cell__content_baseline_L". Это обеспечит выравнивание контента ячейки по базовой линии.
  * <pre>
  * <Controls.grid:View>
  *     <ws:columns>
@@ -263,16 +261,17 @@
  * 
  * Базовый шаблон поддерживает контентную опцию <code>contentTemplate</code>. Поместите в неё вёрстку, которая описывает отображение ячейки.
  * 
- * В области видимости шаблона доступна переменная <code>itemData</code> (тип <code>Object</code>) со следующими свойствами:
+ * В области видимости базового шаблона доступна переменная <code>itemData</code> (тип <code>Object</code>) со следующими свойствами:
  * - <code>columnIndex</code> (тип Number) — порядковый номер колонки. Отсчет от 0.
  * - <code>index</code> (тип Number) — порядковый номер строки. Отсчет от 0.
  * - <code>isEditing</code> (тип Boolean) — признак редактирования по месту.
- * - <code>item</code> (тип Object) — строка, данные которой отображаются в колонке. Свойство объекта — это имя поля, а значение свойства — значение поля.
+ * - <code>item</code> (тип Object) — строка, данные которой отображаются в колонке.
  * - <code>column</code> (тип Object) — конфигурация колонки.
- * @property {String} [resultTemplate] Шаблон рендеринга ячеек в строке итогов.
- * CSS-класс controls-Grid__header-cell_spacing_money задает правый отступ для заголовка ячейки для выравнивания по целым числам в денежных полях.
- * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
- * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
+ * @property {String} resultTemplate Шаблон отображения ячейки в строке итогов.
+ * Подробнее о работе со строкой итогов читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/">руководство разработчика</a>.
+ * @property {GridCellAlign} [align=top] Выравнивание содержимого ячейки по горизонтали.
+ * @property {GridCellVAlign} [valign=baseline] Выравнивание содержимого ячейки по вертикали.
+ * По умолчанию содержимое выравнивается по базовой линии (см. {@link align-items https://developer.mozilla.org/ru/docs/Web/CSS/align-items}).
  * @property {String} stickyProperty Имя поля, которое используется для настройки прилипания данных столбца к верхней границе таблицы.
  * @property {TextOverflow} textOverflow Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
  */
