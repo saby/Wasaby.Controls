@@ -149,21 +149,29 @@
 /**
  * @event Controls/_treeGrid/interface/ITreeControl#itemExpanded Происходит при развертывании узла.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} node Развёрнутый узел.
+ * @remark
+ * Что такое "узел" читайте в {@link /doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
  */
 
 /*
  * @event Controls/_treeGrid/interface/ITreeControl#itemExpanded Occurs after node expansion.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
+ * @param {Types/entity:Model} node Expanded node.
  */
 
 /**
  * @event Controls/_treeGrid/interface/ITreeControl#itemCollapsed Происходит при сворачивании узла.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} node Свёрнутый узел.
+ * @remark
+ * Что такое "узел" читайте в {@link /doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
  */
 
 /*
  * @event Controls/_treeGrid/interface/ITreeControl#itemCollapsed Occurs after node collapse.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
+ * @param {Types/entity:Model} node Collapsed node.
  */
 
 /**
