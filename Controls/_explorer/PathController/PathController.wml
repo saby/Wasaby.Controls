@@ -12,7 +12,7 @@
 <div>
 <ws:if data="{{_needCrumbs}}">
    <ws:if data="{{_options.stickyHeader}}">
-      <Controls.scroll:StickyHeader mode="stackable" shadowVisibility="hidden" fixedZIndex="{{5}}">
+      <Controls.scroll:StickyHeader mode="stackable" shadowVisibility="{{_needShadow ? 'visible' : 'hidden'}}" fixedZIndex="{{5}}">
          <ws:partial template="headingPath" />
       </Controls.scroll:StickyHeader>
    </ws:if>
