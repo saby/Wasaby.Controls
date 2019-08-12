@@ -82,6 +82,7 @@ define(
             data._beforeMount({source: prefetchSource, idProperty: 'id'}, {}, sourceData);
             assert.isTrue(data._prefetchSource.getOriginal() === memory);
             assert.isTrue(data._prefetchSource !== prefetchSource);
+            assert.equal(data._prefetchSource._$data.query, sourceData);
          });
 
          it('update equal source', function(done) {
