@@ -668,6 +668,15 @@ var _private = {
         };
     },
 
+    /*
+    * TODO: Kingo
+    * Флаг shouldNotifyControlResize опреедляет, нужно ли кидать вверх событие о изменении размера списка.
+    * Система событий не позволяет стрелять событием до маунта контролла.
+    *
+    * Т.к. контейнер индикатора загрузки имеет релативное позиционирование, при его показе и скрытии список меняет размер и
+    * необходимо кинуть событие controlResize для корректной работы, например, виртуального скролла.
+    * Индикатор показывается при перезагрузке(reload) списка, которая происходит перед маунтом бэйз контролла.
+    * */
     showIndicator: function(self, direction = 'all', shouldNotifyControlResize = true) {
         self._loadingState = direction;
         if (direction === 'all') {
@@ -688,6 +697,15 @@ var _private = {
         }
     },
 
+    /*
+    * TODO: Kingo
+    * Флаг shouldNotifyControlResize опреедляет, нужно ли кидать вверх событие о изменении размера списка.
+    * Система событий не позволяет стрелять событием до маунта контролла.
+    *
+    * Т.к. контейнер индикатора загрузки имеет релативное позиционирование, при его показе и скрытии список меняет размер и
+    * необходимо кинуть событие controlResize для корректной работы, например, виртуального скролла.
+    * Индикатор показывается при перезагрузке(reload) списка, которая происходит перед маунтом бэйз контролла.
+    * */
     hideIndicator: function(self, shouldNotifyControlResize = true) {
         self._loadingState = null;
         self._showLoadingIndicatorImage = false;
@@ -1336,6 +1354,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (receivedError) {
                     return _private.showError(self, receivedError);
                 }
+
+                // TODO: KINGO. выставленный флаг shouldNotifyControlResize в false, означает,
+                // что событие controlResize не будет иниировано показом/скрытием индикатора загрузки
                 return _private.reload(self, newOptions, false).addCallback(getState);
             }
         });
