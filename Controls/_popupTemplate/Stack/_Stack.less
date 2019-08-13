@@ -66,7 +66,12 @@
 }
 
 .controls-StackTemplate__headerContentTemplate_theme_@{themeName} {
-   padding-right: @header-content_padding-right_stack;
+   margin-right: @header-content_padding-right_stack;
+}
+
+//for presto
+.controls-StackTemplate__headerContentTemplate_content_theme_@{themeName} when not (@header-template-content_padding-right_stack = 0) {
+   padding-right: @header-template-content_padding-right_stack;
 }
 
 .controls-StackTemplate__command_buttons_theme_@{themeName} {
