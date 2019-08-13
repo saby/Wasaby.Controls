@@ -419,10 +419,7 @@ var _private = {
     applyVirtualScrollIndexesToListModel(self): void {
         const newIndexes = self._virtualScroll.ItemsIndexes;
         const model = self._listViewModel;
-        if (newIndexes.start !== model.getStartIndex() || newIndexes.stop !== model.getStopIndex()) {
-            model.setIndexes(newIndexes.start, newIndexes.stop);
-            return true;
-        }
+        return model.setIndexes(newIndexes.start, newIndexes.stop);
     },
 
     // Обновляет высоту распорок при виртуальном скроле
