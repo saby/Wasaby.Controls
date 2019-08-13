@@ -69,12 +69,14 @@ define([
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
 
             sandbox.stub(ml, '_findElementByDate');
+            ml._children.months = { reload: sinon.fake() };
             ml._container = {};
 
             ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position }));
             assert.isTrue(DateUtil.isDatesEqual(ml._scrollToPosition, position));
             assert.isTrue(DateUtil.isDatesEqual(ml._displayedPosition, position));
             assert.equal(ml._startPositionId, '2018-01-01');
+            sinon.assert.called(ml._children.months.reload);
             sandbox.restore();
          });
 
@@ -85,12 +87,14 @@ define([
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
 
             sandbox.stub(ml, '_findElementByDate').returns([true]);
+            ml._children.months = { reload: sinon.fake() };
             ml._container = {};
 
             ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position }));
             assert.isTrue(DateUtil.isDatesEqual(ml._scrollToPosition, position));
             assert.isTrue(DateUtil.isDatesEqual(ml._displayedPosition, position));
             assert.equal(ml._startPositionId, '2017-01-01');
+            sinon.assert.notCalled(ml._children.months.reload);
             sandbox.restore();
          });
       });
