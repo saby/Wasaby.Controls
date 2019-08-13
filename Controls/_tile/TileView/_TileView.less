@@ -72,7 +72,9 @@
          display: block;
       }
    }
-   // The word break only on the desktop, read above.
+   // On ios, the caption should not be resized. The reason is described above.
+   // By hover, activation or swipe caption do not fit in one line are transferred to the next line.
+   // Because of this, its size changes. Do the word break on the desktop.
    .controls-TileView__item_hovered, .controls-TileView__item_active, .controls-TileView__item_swiped {
       .controls-TileView__title {
          white-space: normal;
