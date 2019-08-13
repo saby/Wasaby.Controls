@@ -280,13 +280,13 @@ import entity = require('Types/entity');
             this._forceUpdate();
          },
 
-         _close: function() {
+         _close: function(delay) {
             if (this._isNewEnvironment()) {
-               this._notify('closeInfoBox', [], { bubbling: true });
+               this._notify('closeInfoBox', [delay], { bubbling: true });
             } else {
                //todo: will be fixed by https://online.sbis.ru/opendoc.html?guid=e6be2dd9-a47f-424c-a86c-bd6b48b98602
                if(!this._destroyed) {
-                  this._children.infoBoxOpener.close()
+                  this._children.infoBoxOpener.close(delay)
                }
             }
             _private.resetTimeOut(this);
@@ -408,7 +408,7 @@ import entity = require('Types/entity');
          },
 
          _scrollHandler: function() {
-            this._close();
+            this._close(0);
          }
       });
 
