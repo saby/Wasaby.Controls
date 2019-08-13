@@ -180,6 +180,7 @@ define([
 
             assert.strictEqual(component._rangeModel.startValue, null);
             assert.strictEqual(component._rangeModel.endValue, null);
+            assert.equal(component._caption, 'Не указан');
             sandbox.restore();
          });
       });
