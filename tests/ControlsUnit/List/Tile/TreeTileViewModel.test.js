@@ -167,22 +167,42 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
       });
       it('isScaled', function() {
          let itemData = {
-            item: {title: 'title'},
+            displayProperty: 'title',
+            item: {
+               title: 'title',
+               get: function (prop) {
+                  return this.prop;
+               }
+            },
             isHovered: true,
          };
          assert.isTrue(treeTileViewModel.isScaled(itemData));
          itemData = {
-            item: {title: 'title'},
+            displayProperty: 'title',
+            item: {
+               title: 'title',
+               get: function (prop) {
+                  return this.prop;
+               }
+            },
          };
          assert.isFalse(treeTileViewModel.isScaled(itemData));
          itemData = {
-            item: {},
+            item: {
+               get: function (prop) {
+                  return this.prop;
+               }
+            },
             scalingMode: 'none',
             isHovered: true,
          };
          assert.isFalse(treeTileViewModel.isScaled(itemData));
          itemData = {
-            item: {},
+            item: {
+               get: function (prop) {
+                  return this.prop;
+               }
+            },
             scalingMode: 'inside',
             isHovered: true,
          };
