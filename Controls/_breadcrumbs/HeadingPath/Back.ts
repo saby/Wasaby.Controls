@@ -22,4 +22,5 @@ class Back extends Control {
    }
 }
 
+Back._theme = ['Controls/crumbs'];
 export default Back;
