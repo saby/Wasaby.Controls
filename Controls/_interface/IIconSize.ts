@@ -3,7 +3,7 @@ export interface IIconSizeOptions {
 }
 
 /**
- * Интерфейс для иконки кнопки.
+ * Интерфейс для контролов, которые поддерживают разные размеры иконок
  *
  * @interface Controls/_interface/IIconSize
  * @public
@@ -21,10 +21,12 @@ export default interface IIconSize {
 /**
  * @name Controls/_interface/IIconSize#iconSize
  * @cfg {Enum} Размер иконки.
- * @variant s
- * @variant m
- * @variant l
- * @variant default
+ * @variant s малый
+ * @variant m средний
+ * @variant l большой
+ * @variant default по-умолчанию
+ * @remark
+ * Размер иконки задается константой из стандартного набора размеров, который определен для текущей темы оформления.
  * @demo Controls-demo/Buttons/SizesAndHeights/Index
  * @example
  * Кнопка с размером иконки по умолчанию.
