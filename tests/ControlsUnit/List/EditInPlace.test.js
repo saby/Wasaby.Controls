@@ -181,6 +181,19 @@ define([
             assert.isTrue(eip._isAdd);
             assert.isTrue(eip._editingItemData.drawActions);
          });
+
+         it('Adding to the top of the list', function() {
+            eip._beforeMount({
+               listModel: listModel,
+               editingConfig: {
+                  item: newItem,
+                  addPosition: 'top'
+               }
+            });
+            assert.equal(newItem, eip._editingItem);
+            assert.isTrue(eip._isAdd);
+            assert.equal(0, eip._editingItemData.index);
+         });
       });
 
       describe('beginEdit', function() {
@@ -413,6 +426,57 @@ define([
                   assert.instanceOf(eip._editingItem, entity.Model);
                   assert.isTrue(eip._isAdd);
                   assert.equal(2, eip._editingItemData.level);
+                  done();
+               });
+            });
+         });
+
+         it('add item to the top of the list', function(done) {
+            var source = new sourceLib.Memory({
+               idProperty: 'id',
+               data: items
+            });
+
+            eip.saveOptions({
+               listModel: listModel,
+               source: source,
+               editingConfig: {
+                  addPosition: 'top'
+               }
+            });
+
+            eip.beginAdd().addCallback(function() {
+               assert.instanceOf(eip._editingItem, entity.Model);
+               assert.equal(eip._editingItemData.index, 0);
+               assert.isTrue(eip._isAdd);
+               done();
+            });
+         });
+
+         it('add item to a folder to the top of the list', function(done) {
+            var source = new sourceLib.Memory({
+               idProperty: 'id',
+               data: treeModel._items
+            });
+
+            eip.saveOptions({
+               listModel: treeModel,
+               source: source,
+               editingConfig: {
+                  addPosition: 'top'
+               }
+            });
+            treeModel.setExpandedItems([1]);
+
+            source.create().addCallback(function(model) {
+               model.set('parent', 1);
+               model.set('parent@', false);
+               eip.beginAdd({
+                  item: model
+               }).addCallback(function() {
+                  assert.instanceOf(eip._editingItem, entity.Model);
+                  assert.isTrue(eip._isAdd);
+                  assert.equal(1, eip._editingItemData.index);
                   done();
                });
             });
