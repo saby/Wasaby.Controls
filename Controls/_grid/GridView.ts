@@ -139,11 +139,11 @@ var
             cells = container.getElementsByClassName(hasHeader ? 'controls-Grid__header-cell' : 'controls-Grid__row-cell');
 
             self._options.columns.forEach((column, index: number) => {
-                let
-                    realIndex = index + (hasMultiselect ? 1 : 0),
-                    cWidth = column.width === 'auto' ? (cells[realIndex].getBoundingClientRect().width + 'px') : column.width;
+                const realIndex = index + (hasMultiselect ? 1 : 0);
+                const isDynamicWidth = column.width && !column.width.match(GridLayoutUtil.nonDynamicWidthRegExp);
+                const cWidth = isDynamicWidth ? (cells[realIndex].getBoundingClientRect().width + 'px') : (column.width || '1fr');
 
-                columnsWidths.push(cWidth || '1fr');
+                columnsWidths.push(cWidth);
             });
 
             return columnsWidths;

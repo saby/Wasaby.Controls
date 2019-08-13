@@ -1,5 +1,7 @@
 import {detection} from "Env/Env";
 
+const nonDynamicWidthRegExp = new RegExp('(px|%|fr)$');
+
 enum CssTemplatesEnum {
     GridIE = 'GridIE',
     GridChrome = 'GridChrome',
@@ -171,6 +173,7 @@ const _cssTemplatesStyles = {
 export {
     CssRule,
     CssTemplatesEnum,
+    nonDynamicWidthRegExp,
 
     isFullGridSupport,
     isPartialGridSupport,
