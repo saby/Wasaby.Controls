@@ -110,7 +110,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @category Container
  * @demo Controls-demo/LoadingIndicator/LoadingIndicatorPG
  */
-
+let ManagerController;
 const module = Control.extend(/** @lends Controls/Container/LoadingIndicator.prototype */{
     _template: tmpl,
     _isOverlayVisible: false,
@@ -137,7 +137,11 @@ const module = Control.extend(/** @lends Controls/Container/LoadingIndicator.pro
         const self = this;
         if (cfg.mainIndicator) {
             requirejs(['Controls/popup'], function(popup) {
-                popup.Controller.setIndicator(self);
+                // TODO: Индикатор сейчас напрямую зависит от Controls/popup и наоборот
+                // Надо либо пересмотреть формирование библиотек и включить LoadingIndicator в popup,
+                // Либо переписать индикатор так, чтобы зависимостей от Controls/popup не было.
+                ManagerController = popup.Controller;
+                ManagerController.setIndicator(self);
             });
         }
     },
@@ -169,8 +173,18 @@ const module = Control.extend(/** @lends Controls/Container/LoadingIndicator.pro
             }
         }
         this.delay = cfg.delay !== undefined ? cfg.delay : this._delay;
+
     },
 
+    // Indicator is opened above existing popups.
+    _updateZIndex(config) {
+        const popupItem = ManagerController && ManagerController.find((config || {}).popupId);
+        if (popupItem) {
+            this._zIndex = popupItem.currentZIndex;
+        } else {
+            this._zIndex = null;
+        }
+    },
     _showHandler(event, config, waitPromise) {
         event.stopPropagation();
         return this._show(config, waitPromise);
@@ -298,6 +312,7 @@ const module = Control.extend(/** @lends Controls/Container/LoadingIndicator.pro
 
     _toggleIndicator(visible, config, force) {
         clearTimeout(this.delayTimeout);
+        this._updateZIndex(config);
         if (visible) {
             this._toggleOverlay(true, config);
             if (force) {

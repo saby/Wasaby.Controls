@@ -428,6 +428,14 @@ define(
                });
                ctrl._getField().focus = ProxyCall.apply(ctrl._getField().focus, 'focus', calls, true);
             });
+            it('Not not focus the field through a script in not IE browser', function() {
+               ctrl._ieVersion = null;
+
+               ctrl._placeholderClickHandler();
+
+               assert.equal(calls.length, 0);
+            });
+
             it('Focus the field through a script in ie browser version 10.', function() {
                ctrl._ieVersion = 10;
 

@@ -30,6 +30,12 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
 
       needCrumbs: function(header, items, rootVisible) {
          return !!items && ((!header && items.length > 0) || items.length > 1) || !!rootVisible;
+      },
+
+      needShadow: function(header, headerCfg) {
+
+         //если есть заголовок, то тень будет под ним, и нам не нужно рисовать ее под хлебными крошками
+         return !(header || headerCfg);
       }
    };
 
@@ -37,16 +43,19 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
       _template: template,
       _header: null,
       _needCrumbs: false,
+      _needShadow: false,
 
       _beforeMount: function(options) {
          this._header = _private.getHeader(this, options);
          this._needCrumbs = _private.needCrumbs(this._header, options.items);
+         this._needShadow = _private.needShadow(this._header, options.header);
       },
 
       _beforeUpdate: function(newOptions) {
          if (this._options.rootVisible !== newOptions.rootVisible || this._options.items !== newOptions.items || !GridIsEqualUtil.isEqualWithSkip(this._options.header, newOptions.header, { template: true })) {
             this._header = _private.getHeader(this, newOptions);
             this._needCrumbs = _private.needCrumbs(this._header, newOptions.items, newOptions.rootVisible);
+            this._needShadow = _private.needShadow(this._header, newOptions.header);
          }
       },
 

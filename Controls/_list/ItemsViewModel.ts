@@ -140,17 +140,22 @@ var ItemsViewModel = BaseViewModel.extend({
         this._updateIndexesCallback = updateIndexesCallback;
     },
 
-    setIndexes: function(newStartIndex, stopIndex) {
-        var
-           newStopIndex = Math.min(stopIndex, this.getCount());
+    setIndexes: function(newStartIndex: number, stopIndex: number): boolean {
+        let
+            newStopIndex = Math.min(stopIndex, this.getCount()),
+            isUpdated = false;
+
         if (this._startIndex !== newStartIndex || this._stopIndex !== newStopIndex) {
             this._startIndex = newStartIndex;
             this._stopIndex = newStopIndex;
+            isUpdated = true;
             this._nextModelVersion(true, 'indexesChanged');
             if (this._updateIndexesCallback) {
                 this._updateIndexesCallback();
             }
         }
+
+        return isUpdated;
     },
 
     isLast: function() {

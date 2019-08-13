@@ -83,18 +83,16 @@ var _private = {
 
     needActionsMenu: function(actions, itemActionsPosition) {
         var
-            main = 0,
-            additional = 0;
+            hasActionInMenu = false;
+
         actions && actions.forEach(function(action) {
-            if (action.showType === showType.MENU_TOOLBAR) {
-                main++;
-            }
-            if (action.showType === showType.TOOLBAR) {
-                additional++;
+            if ((!action.showType || action.showType === showType.MENU_TOOLBAR || action.showType === showType.MENU)
+                && !action.parent) {
+                hasActionInMenu = true;
             }
         });
 
-        return actions && (additional + main !== actions.length) && itemActionsPosition !== 'outside';
+        return hasActionInMenu && itemActionsPosition !== 'outside';
     },
 
     getAllChildren(
@@ -233,5 +231,6 @@ ItemActionsControl.getDefaultOptions = function() {
         itemActions: []
     };
 };
+ItemActionsControl._private = _private;
 
 export = ItemActionsControl;

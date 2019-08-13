@@ -20,6 +20,8 @@ class Back extends Control {
          bubbling: true
       });
    }
+   
+   static _theme: string[] = ['Controls/crumbs'];
 }
 
 export default Back;

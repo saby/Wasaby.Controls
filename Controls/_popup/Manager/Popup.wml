@@ -5,7 +5,7 @@
      on:keydown="_keyDown()">
    <Controls.event:Register name="resizeDetect" register="controlResize">
       <ws:partial
-         attr:class="controls-Popup__template"
+         attr:class="controls-Popup__template{{_options.hidden ? ' ws-hidden'}}"
          template="{{_options.content}}"
          scope="{{_options}}"
          on:sendResult="_sendResult()"
@@ -18,7 +18,8 @@
          on:registerOpenerUpdateCallback="_registerOpenerUpdateCallback()"
          on:unregisterOpenerUpdateCallback="_unregisterOpenerUpdateCallback()"
          on:controlResize="_controlResize()"
-         on:swipe="_swipeHandler()">
+         on:swipe="_swipeHandler()"
+         on:showIndicator="_showIndicatorHandler()">
       </ws:partial>
    </Controls.event:Register>
    <Controls.event:Listener event="controlResize" on:controlResize="_update()"/>

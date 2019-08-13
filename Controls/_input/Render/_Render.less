@@ -27,10 +27,15 @@
 
 .controls-Render_multiline {
    height: auto;
-   /**
-    * The container in IE does not stretch the content without min-height.
-    */
-   min-height: 1px;
+}
+
+/**
+ * Problem: The container in IE does not stretch the content.
+ * Fix: Use overflow-y: auto.
+ * Remark: Not use min-height to avoid crossing, because the parent can redefine.
+ */
+.ws-is-ie .controls-Render_multiline {
+   overflow-y: auto;
 }
 
 .controls-Render__wrapper {
