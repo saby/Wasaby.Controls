@@ -174,6 +174,7 @@ var
                 };
             }
             this._resultsTemplate = cfg.results && cfg.results.template ? cfg.results.template : (cfg.resultsTemplate || DefaultResultsTemplate);
+            this._listModel.headerInEmptyListVisible = cfg.headerInEmptyListVisible;
         },
 
 
@@ -258,7 +259,7 @@ var
         },
 
         _beforePaint: function() {
-            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._isHeaderChanged) {
+            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._isHeaderChanged && this._listModel.isDrawHeaderWithEmtyList()) {
                 const newHeader = this._setHeaderWithHeight();
                 this._listModel.setHeaderCellMinHeight(newHeader);
                 this._isHeaderChanged = false;
@@ -307,7 +308,7 @@ var
 
         _afterMount: function() {
             GridView.superclass._afterMount.apply(this, arguments);
-            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader()) {
+            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._listModel.isDrawHeaderWithEmtyList()) {
                 this._listModel.setHeaderCellMinHeight(this._setHeaderWithHeight());
             }
             if (!Env.detection.isNotFullGridSupport) {
@@ -324,5 +325,6 @@ var
     });
 
 GridView._private = _private;
+
 
 export = GridView;
