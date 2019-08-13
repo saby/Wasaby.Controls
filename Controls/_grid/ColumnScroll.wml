@@ -5,8 +5,7 @@
               name="columnScrollbar"
               position="{{_scrollPosition}}"
               direction="horizontal"
-              contentSize="{{_contentSize}}"
-              leftOffset="{{_leftOffsetForHScroll}}"
+              contentSize="{{_contentSizeForHScroll}}"
               attr:class="controls-ColumnScroll"
               attr:style="top:{{_offsetForHScroll}}px;left:{{_leftOffsetForHScroll}}px;"
               on:positionChanged="_positionChangedHandler()"/>
