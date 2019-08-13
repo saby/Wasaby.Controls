@@ -28,7 +28,8 @@ import 'css!theme?Controls/popupTemplate';
       Notification.getDefaultOptions = function() {
          return {
             style: 'primary',
-            autoClose: true
+            autoClose: true,
+            closeButtonVisibility: true
          };
       };
 
@@ -52,6 +53,7 @@ import 'css!theme?Controls/popupTemplate';
 /**
  * @name Controls/_popupTemplate/Notification/Base#closeButtonVisibility
  * @cfg {Boolean} Determines whether display of the close button.
+ * @default true
  */
 
 /**
