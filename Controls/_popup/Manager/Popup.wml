@@ -18,7 +18,8 @@
          on:registerOpenerUpdateCallback="_registerOpenerUpdateCallback()"
          on:unregisterOpenerUpdateCallback="_unregisterOpenerUpdateCallback()"
          on:controlResize="_controlResize()"
-         on:swipe="_swipeHandler()">
+         on:swipe="_swipeHandler()"
+         on:showIndicator="_showIndicatorHandler()">
       </ws:partial>
    </Controls.event:Register>
    <Controls.event:Listener event="controlResize" on:controlResize="_update()"/>
