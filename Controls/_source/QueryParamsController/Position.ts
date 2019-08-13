@@ -1,9 +1,9 @@
 import {QueryNavigationType} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
-import Env = require('Env/Env');
 import {default as IAdditionalQueryParams, Direction, DirectionCfg} from './interface/IAdditionalQueryParams';
 import {default as More} from './More';
+import Env = require('Env/Env');
 
 interface IPositionHasMore {
    before: boolean;
@@ -245,14 +245,25 @@ class PositionNavigation {
       // TODO
    }
 
-   hasMoreData(loadDirection: Direction, rootKey: string|number): boolean {
+   hasMoreData(loadDirection: Direction, rootKey: string|number): boolean|undefined {
       let navDirection: DirectionCfg;
+      let moreData;
+      let navigationResult;
+
       if (loadDirection === 'up') {
          navDirection = 'before';
       } else if (loadDirection === 'down') {
          navDirection = 'after';
       }
-      return this._more.getMoreMeta(rootKey)[navDirection];
+
+      moreData = this._more.getMoreMeta(rootKey);
+
+      // moreData can be undefined for root with rootKey, if method does not support multi-navigation.
+      if (moreData) {
+         navigationResult = moreData[navDirection];
+      }
+
+      return  navigationResult;
    }
 
    setEdgeState(direction: Direction): void {
