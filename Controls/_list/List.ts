@@ -105,8 +105,8 @@ var ListControl = Control.extend(/** @lends Controls/_list/List.prototype */{
         return listControl.reloadItem.apply(listControl, arguments);
     },
 
-    scrollToItem(key: string|number): void {
-        this._children.listControl.scrollToItem(key);
+    scrollToItem(key: string|number, toBottom: boolean): void {
+        this._children.listControl.scrollToItem(key, toBottom);
     },
 
     beginEdit: function(options) {

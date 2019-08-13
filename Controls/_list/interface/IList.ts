@@ -460,6 +460,7 @@
  * Прокручивает список к указанному элементу.
  * @function Controls/_list/interface/IList#scrollToItem
  * @param {String|Number} key Идентификатор элемента коллекции, к которому осуществляется прокручивание.
+ * @param {Boolean} toBottom Определяет, будет ли виден нижний край элемента. По умолчанию нижний край элемента виден.
  * @example
  *  <pre>
  *      _buttonClick: function() {

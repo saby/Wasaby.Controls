@@ -220,7 +220,7 @@ var _private = {
         }
     },
 
-    scrollToItem: function(self, key) {
+    scrollToItem: function(self, key, toBottom: boolean = true) {
         // todo now is one safe variant to fix call stack: beforeUpdate->reload->afterUpdate
         // due to asynchronous reload and afterUpdate, a "race" is possible and afterUpdate is called after reload
         // changes in branch "19.110/bugfix/aas/basecontrol_reload_by_afterupdate"
@@ -235,7 +235,7 @@ var _private = {
         }
         const container = self._children.listView.getItemsContainer().children[idx];
         if (container) {
-            _private.scrollToElement(container, true);
+            _private.scrollToElement(container, toBottom);
         }
     },
     scrollToElement(container, toBottom) {
@@ -1220,7 +1220,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     iWantVDOM: true,
     _isActiveByClick: false,
     _markedKeyForRestoredScroll: null,
-    _restoredScrollKey: null,
+    _restoredScroll: null,
 
     _listViewModel: null,
     _viewModelConstructor: null,
@@ -1528,7 +1528,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         });
     },
 
-    scrollToItem(key: string|number): void {
+    scrollToItem(key: string|number, toBottom: boolean): void {
         const idx = this._listViewModel.getIndexByKey(key);
         if (idx === -1) {
             return;
@@ -1536,13 +1536,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._virtualScroll) {
             this._virtualScroll.recalcByIndex(idx);
             if (_private.applyVirtualScrollIndexesToListModel(this)) {
-                this._restoredScrollKey = key;
+                this._restoredScroll = {
+                    key: key,
+                    toBottom: toBottom
+                };
                 _private.applyPlaceholdersSizes(self);
             } else {
-                _private.scrollToItem(this, key);
+                _private.scrollToItem(this, key, toBottom);
             }
         } else {
-            _private.scrollToItem(this, key);
+            _private.scrollToItem(this, key, toBottom);
         }
     },
 
@@ -1608,9 +1611,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._forceUpdate();
         }
 
-        if (this._restoredScrollKey !== null) {
-            _private.scrollToItem(this, this._restoredScrollKey);
-            this._restoredScrollKey = null;
+        if (this._restoredScroll !== null) {
+            _private.scrollToItem(this, this._restoredScroll.key, this._restoredScroll.toBottom);
+            this._restoredScroll = null;
         }
 
         // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
