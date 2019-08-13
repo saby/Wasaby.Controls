@@ -1,16 +1,17 @@
 <div class="controls-PeriodDialog__header">
    <!--<div class="controls-PeriodDialog__stateButton-wrapper">-->
-      <Controls.buttons:Button
+      <Controls.toggle:Button
          if="{{_yearStateEnabled && _monthStateEnabled}}"
          attr:class="controls-PeriodDialog__stateButton"
+         value="{{_state === 'year'}}"
          fontColorStyle="link"
          viewMode="link"
-         tooltip="{[Смена режима календаря]}"
+         tooltip="{{_state === 'year' ? rk('Месячный режим') : rk('Годовой режим')}}"
+         icons="{{['icon-small icon-ArrangeList', 'icon-small icon-ArrangeSmallIconsPreview']}}"
          icon="icon-ArrangeList"
          iconStyle="secondary"
          iconSize="s"
-         checkedIcon="sprite:icon-size icon-ArrangeSmallIconsPreview icon-primary controls-DateRangeBigChoose__homeBtn-icon"
-         on:click="_toggleState()"
+         on:valueChanged="_toggleState()"
       />
    <!--</div>-->
    <div if="{{ _headerType === _HEADER_TYPES.link }}" class="controls-PeriodDialog__header-period">
