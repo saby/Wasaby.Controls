@@ -107,12 +107,5 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
             });
          });
       });
-
-      it('isSelectionChanged', function() {
-         assert.isTrue(lookupPopup.Controller._private.isSelectionChanged([0, 2, 3, 4, 5], getSelectedItems(), 'id'));
-         assert.isTrue(lookupPopup.Controller._private.isSelectionChanged([0], getSelectedItems(), 'id'));
-      });
-
    });
-
 });
