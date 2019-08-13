@@ -134,6 +134,7 @@ define(['Controls/grid'], function(gridMod) {
                isStickyHeader: () => true,
                setHeaderCellMinHeight: (header) => header.length,
                _isMultyHeader: true,
+               isDrawHeaderWithEmtyList: () => true
             }
             gridView._setHeaderWithHeight = () => {
                setHeightWasCalled = true;
