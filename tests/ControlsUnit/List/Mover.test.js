@@ -64,7 +64,7 @@ define([
          mover._children = {
             dialogOpener: {
                open: function(openArgs) {
-                  assert.equal(openArgs.templateOptions.movedItems, items);
+                  assert.deepEqual(openArgs.templateOptions.movedItems, items);
                   assert.equal(openArgs.templateOptions.source, mover._source);
                   assert.equal(openArgs.templateOptions.keyProperty, mover._keyProperty);
                   done();
@@ -74,6 +74,23 @@ define([
 
          mover.moveItemsWithDialog(items);
       });
+
+       it('moveItemsWithDialog for models', function(done) {
+           var movedItems = [1, 2, 3];
+
+           mover._children = {
+               dialogOpener: {
+                   open: function(openArgs) {
+                       assert.deepEqual(openArgs.templateOptions.movedItems, movedItems);
+                       assert.equal(openArgs.templateOptions.source, mover._source);
+                       assert.equal(openArgs.templateOptions.keyProperty, mover._keyProperty);
+                       done();
+                   }
+               }
+           };
+
+           mover.moveItemsWithDialog([items.at(0), items.at(1), items.at(2)]);
+       });
 
       it('beforeItemsMove notify event with params', function(done) {
          var

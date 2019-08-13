@@ -11,6 +11,7 @@ define('Controls-demo/Popup/TestStack',
 
       var TestDialog = Control.extend({
          _template: template,
+         _indicatorId: null,
 
          _close: function() {
             this._notify('close', [], { bubbling: true });
@@ -20,10 +21,14 @@ define('Controls-demo/Popup/TestStack',
             if (this._options.type === 'sticky') {
                this._notify('sendResult', [123], { bubbling: true });
             } else {
-               this._children.stack.open({
-                  maxWidth: 600
-               });
+               this._openStack();
             }
+         },
+
+         _openStack: function() {
+            this._children.stack.open({
+               maxWidth: 600
+            });
          },
 
          _openInfobox: function() {
@@ -38,6 +43,12 @@ define('Controls-demo/Popup/TestStack',
          },
          _openModalDialog: function() {
             this._children.modalDialog.open();
+         },
+         _openIndicator: function() {
+            this._notify('hideIndicator', [this._indicatorId], { bubbling: true });
+            // Это демка. сделал задержку 500, потому что мне так нравится
+            this._indicatorId = this._notify('showIndicator', [{ message: 'Индикатор загрузки', overlay: 'dark', delay: 500 }], { bubbling: true });
+            this._openStack();
          },
          _openOldPanel: function(event, tplName, mode, isStack) {
             require(['SBIS3.CONTROLS/Action/List/OpenEditDialog', tplName], function(OpenEditDialog) {

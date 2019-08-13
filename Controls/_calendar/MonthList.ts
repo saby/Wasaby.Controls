@@ -152,6 +152,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
 
         if (this._container && !this._findElementByDate(newPosition)) {
             this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
+            // After changing the navigation options, we must call the "reload" to redraw the control.
+            // Position option is the initial position from which control is initially drawn.
+            this._children.months.reload();
         }
     }
 

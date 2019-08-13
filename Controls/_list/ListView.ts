@@ -249,7 +249,8 @@ var ListView = BaseControl.extend(
 ListView.getDefaultOptions = function() {
     return {
         contextMenuVisibility: true,
-        markerVisibility: 'onactivated'
+        markerVisibility: 'onactivated',
+        headerInEmptyListVisible: true
     };
 };
 

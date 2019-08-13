@@ -3,7 +3,7 @@ export interface IHeightOptions {
 }
 
 /**
- * Интерфейс для контролов с различными значениями высоты.
+ * Интерфейс для контролов, которые поддерживают разные значения высоты.
  *
  * @interface Controls/_interface/IHeight
  * @public
@@ -29,6 +29,8 @@ export default interface IHeight {
  * @variant 2xl
  * @variant default
  * @demo Controls-demo/Buttons/SizesAndHeights/Index
+ * @remark
+ * Высота задается константой из стандартного набора размеров, который определен для текущей темы оформления.
  * @example
  * Кнопка большого размера (l).
  * <pre>

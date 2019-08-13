@@ -419,10 +419,7 @@ var _private = {
     applyVirtualScrollIndexesToListModel(self): void {
         const newIndexes = self._virtualScroll.ItemsIndexes;
         const model = self._listViewModel;
-        if (newIndexes.start !== model.getStartIndex() || newIndexes.stop !== model.getStopIndex()) {
-            model.setIndexes(newIndexes.start, newIndexes.stop);
-            return true;
-        }
+        return model.setIndexes(newIndexes.start, newIndexes.stop);
     },
 
     // Обновляет высоту распорок при виртуальном скроле
@@ -1252,6 +1249,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _needBottomPadding: false,
     _emptyTemplateVisibility: true,
     _intertialScrolling: null,
+    _checkLoadToDirectionTimeout: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1523,6 +1521,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._focusTimeout) {
             clearTimeout(this._focusTimeout);
         }
+        if (this._checkLoadToDirectionTimeout) {
+            clearTimeout(this._checkLoadToDirectionTimeout);
+        }
         if (this._options.itemsDragNDrop) {
             let container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
@@ -1583,9 +1584,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
         // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
-        setTimeout(function() {
+        this._checkLoadToDirectionTimeout = setTimeout(() => {
             _private.checkLoadToDirectionCapability(this);
-        }.bind(this));
+            this._checkLoadToDirectionTimeout = null;
+        });
     },
 
     _afterUpdate: function(oldOptions) {

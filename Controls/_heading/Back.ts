@@ -17,9 +17,7 @@ import 'css!theme?Controls/heading';
     * @control
     * @public
     * @author Красильников А.С.
-    *
-    *
-    * @demo Controls-demo/Buttons/BackButton/BackButtonDemoPG
+    * @demo Controls-demo/Heading/Back/SizesAndStyles/Index
     */
 
    /*
@@ -36,9 +34,7 @@ import 'css!theme?Controls/heading';
     * @control
     * @public
     * @author Красильников А.С.
-    *
-    *
-    * @demo Controls-demo/Buttons/BackButton/BackButtonDemoPG
+    * @demo Controls-demo/Heading/Back/SizesAndStyles/Index
     */
 
    /**
