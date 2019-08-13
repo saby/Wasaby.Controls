@@ -12,6 +12,7 @@
                         fontSize="{{_options.fontSize}}"
                         inlineHeight="{{_options.inlineHeight}}"
                         fontColorStyle="{{_options.fontColorStyle}}"
+                        validationStatus="{{_options.validationStatus}}"
                         on:mouseenter="_mouseEnterHandler()"
                         on:tagClick="_notifyHandler('tagClick')"
                         on:tagHover="_notifyHandler('tagHover')">
