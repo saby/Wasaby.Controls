@@ -905,6 +905,37 @@ define([
 
       });
 
+      it('dataLoadCallback should be called after data was appended into model', async function () {
+
+         var
+             callbackCalled = false,
+             cfg = {
+                viewModelConstructor: lists.ListViewModel,
+                markerVisibility: 'visible',
+                markedKey: 2,
+                dataLoadCallback: () => {
+                   callbackCalled = true;
+                   assert.equal(3, baseControl.getViewModel().getCount());
+                },
+                keyProperty: 'key',
+                source: new sourceLib.Memory({
+                   idProperty: 'key',
+                   data: [{
+                      key: 1
+                   }, {
+                      key: 2
+                   }, {
+                      key: 3
+                   }]
+                })
+             },
+
+             baseControl = new lists.BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         assert.isTrue(callbackCalled);
+      });
+
       it('loadToDirection up', function(done) {
          var source = new sourceLib.Memory({
             idProperty: 'id',
