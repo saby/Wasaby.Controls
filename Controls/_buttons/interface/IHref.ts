@@ -2,7 +2,7 @@ export interface IHrefOptions {
    href?: string;
 }
 /**
- * Интерфейс для кнопок со ссылками.
+ * Интерфейс для контролов, который могут работать в режиме гиперссылки.
  *
  * @interface Controls/_buttons/interface/IHref
  * @public
@@ -19,9 +19,9 @@ export interface IHref {
 }
 /**
  * @name Controls/_buttons/interface/IHref#href
- * @cfg {String} Задает адрес документа, на который следует перейти. 
+ * @cfg {String} Адрес документа, на который следует перейти.
  * @default Undefined
- * @remark Если необходимо открыть вложенный документ на новой вкладке, используйте attr:target="_blank".
+ * @remark При задании этой опции кнопка начинает работать как гиперссылка. Если необходимо открыть вложенный документ на новой вкладке, используйте attr:target="_blank".
  * @example
  * При клике по кнопке переходим на google.com
  * <pre>

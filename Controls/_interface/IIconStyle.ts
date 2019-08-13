@@ -3,7 +3,7 @@ export interface IIconStyleOptions {
 }
 
 /**
- * Интерфейс иконки кнопки.
+ * Интерфейс для контролов, которые поддерживают разные цвета иконок
  *
  * @interface Controls/_interface/IIconStyle
  * @public
@@ -29,6 +29,8 @@ export default interface IIconStyle {
  * @variant info
  * @variant default
  * @default secondary
+ * @remark
+ * Цвет иконки задается константой из стандартного набора цветов, который определен для текущей темы оформления.
  * @demo Controls-demo/Buttons/IconStyles/Index
  * @example
  * Кнопка с иконкой по умолчанию.

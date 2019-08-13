@@ -22,7 +22,9 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
 }
 
 /**
- * Графический контрол, который предоставляет пользователю возможность простого запуска события.
+ * Графический контрол, который предоставляет пользователю возможность простого запуска события при нажатии на него.
+ * Кнопки могут отображаться в нескольких режимах, отличающихся друга от друга внешне.
+ * Более подробное описание можно найти <a href='/doc/platform/developmentapl/interface-development/controls/buttons/'>здесь</a>
  *
  * <a href="/materials/demo-ws4-buttons">Демо-пример</a>.
  *
@@ -46,6 +48,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @demo Controls-demo/Buttons/SizesAndHeights/Index
  * @demo Controls-demo/Buttons/FontStyles/Index
  * @demo Controls-demo/Buttons/IconStyles/Index
+ * @demo Controls-demo/Buttons/ContrastBackground/Index
  */
 
 /*
@@ -75,9 +78,9 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
 /**
  * @name Controls/_buttons/Button#viewMode
  * @cfg {Enum} Режим отображения кнопки.
- * @variant link Декорированная гиперссылка.
- * @variant button Кнопка по умолчанию.
- * @variant toolButton Кнопка панели инструментов.
+ * @variant button В виде обычной кнопки по-умолчанию.
+ * @variant link В виде гиперссылки.
+ * @variant toolButton В виде кнопки для панели инструментов.
  * @default button
  * @demo Controls-demo/Buttons/ViewModes/Index
  * @example
@@ -121,17 +124,15 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
 
 /**
  * @name Controls/_buttons/Button#contrastBackground
- * @cfg {Boolean} Определяет прозрачность фона кнопки.
+ * @cfg {Boolean} Определяет контрастность фона кнопки по отношению к ее окружению.
  * @default false
  * @remark
- * * true - непрозрачный фон. 
- * * false - прозрачный фон.
+ * * true - контрастный фон.
+ * * false - фон, гармонично сочетающийся с окружением.
+ * Опция изспользуется для акцентирования внимания на кнопке, и ее визуального выделения относительно окружения.
+ * @demo Controls-demo/Buttons/ContrastBackground/Index
  * @example
- * Кнопка имеет прозрачный фон.
- * <pre>
- *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" size="l"/>
- * </pre>
- * У кнопки непрозрачный фон.
+ * У кнопки контрастный фон.
  * <pre>
  *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" contrastBackground="{{true}}" />
  * </pre>
@@ -159,10 +160,12 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
 
 /**
  * @name Controls/_buttons/Button#buttonStyle
- * @cfg {Enum} Устанавливает параметры стиля для кнопки. Это цвет фона или цвет границы для различных значений режима отображения (viewMode).
+ * @cfg {Enum} Стиль отображения кнопки.
  * @variant primary
  * @variant secondary
  * @default secondary
+ * @remark
+ * Стиль может влиять на цвет фона или цвет границы для различных значений режима отображения (viewMode).
  * @demo Controls-demo/Buttons/ViewModes/Index
  * @example
  * Кнопка со стилем "Primary" с иконкой по умолчанию.
