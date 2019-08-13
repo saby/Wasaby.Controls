@@ -130,7 +130,7 @@ function getIndexByDisplayIndex(cfg: TreeGridRowIndexOptions<DisplayItemIndex>):
  */
 function getResultsIndex(cfg: TreeGridRowIndexOptions<HasEmptyTemplate>) {
     let index = cfg.hasHeader ? 1 : 0;
-
+    index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
     if (cfg.resultsPosition === "bottom") {
         let
             itemsCount = cfg.display.getCount(),
@@ -148,7 +148,6 @@ function getResultsIndex(cfg: TreeGridRowIndexOptions<HasEmptyTemplate>) {
 
         index += cfg.hasBottomPadding ? 1 : 0;
         index += hasEditingItem ? 1 : 0;
-        index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
     }
 
     return index;
