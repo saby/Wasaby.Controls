@@ -102,35 +102,15 @@ var _private = {
                resultSelection = result[i].resultSelection;
                keyProperty = result[i].keyProperty;
 
-               if (multiSelect === false || _private.isSelectionChanged(initialSelection, resultSelection, keyProperty)) {
-                  chain.factory(initialSelection).each(function(itemId) {
-                     _private.removeFromSelected(itemId, selectedItems, keyProperty);
-                  });
-                  chain.factory(resultSelection).each(function(item) {
-                     _private.addItemToSelected(item, selectedItems, keyProperty);
-                  });
-               }
+               chain.factory(initialSelection).each(function(itemId) {
+                  _private.removeFromSelected(itemId, selectedItems, keyProperty);
+               });
+               chain.factory(resultSelection).each(function(item) {
+                  _private.addItemToSelected(item, selectedItems, keyProperty);
+               });
             }
          }
       }
-   },
-
-   isSelectionChanged: function(initialSelection, resultSelection, keyProperty) {
-      var isChanged = false;
-
-      if (initialSelection.length !== resultSelection.getCount()) {
-         isChanged = true;
-      }
-
-      if (!isChanged) {
-         resultSelection.each(function(item) {
-            if (!isChanged && initialSelection.indexOf(item.get(keyProperty)) === -1) {
-               isChanged = true;
-            }
-         });
-      }
-
-      return isChanged;
    }
 };
 
