@@ -100,6 +100,19 @@ define([
             assert.isTrue(needCrumbs(undefined, null, true));
          });
       });
+      describe('needShadow', function() {
+         var needShadow = PathController._private.needShadow;
+         it('there is no header, we need shadow', function() {
+            assert.isTrue(needShadow(undefined, undefined));
+         });
+         it('there is header, we do not need shadow', function() {
+            assert.isFalse(needShadow(undefined, [{title:"title"}]));
+         });
+         it('there is header, we do not need shadow', function() {
+            assert.isFalse(needShadow([{title:"backButton"}], [{title:""}]));
+         });
+
+      });
       describe('_beforeUpdate', function() {
          it('old items + update header', async function() {
             var
