@@ -161,6 +161,17 @@ class Popup extends Control<IPopupOptions> {
         }
     }
 
+    _showIndicatorHandler(event: SyntheticEvent<MouseEvent>): void {
+        const args = Array.prototype.slice.call(arguments, 1);
+        event.stopPropagation();
+        const config = args[0];
+        if (typeof config === 'object') {
+            config.popupId = this._options.id;
+        }
+        // catch showIndicator and add popupId property for Indicator.
+        return this._notify('showIndicator', args, {bubbling: true});
+    }
+
     protected _scrollHandler(): void {
         this._notify('pageScrolled', [this._options.id], {bubbling: true});
     }
