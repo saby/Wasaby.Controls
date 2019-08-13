@@ -21,7 +21,11 @@ import 'Controls/decorator';
        * @mixes Controls/_input/interface/INewLineKey
        *
        * @public
-       * @demo Controls-demo/Input/Area/AreaPG
+       * @demo Controls-demo/Input/SizesAndHeights/Index
+       * @demo Controls-demo/Input/FontStyles/Index
+       * @demo Controls-demo/Input/TextAlignments/Index
+       * @demo Controls-demo/Input/TagStyles/Index
+       * @demo Controls-demo/Input/ValidationStatuses/Index
        *
        * @author Красильников А.С.
        */

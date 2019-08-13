@@ -16,7 +16,11 @@ type IOptions = IModelOptions;
  * @mixes Controls/interface/ITimeInterval
  *
  * @public
- * @demo Controls-demo/Input/TimeInterval/TimeIntervalPG
+ * @demo Controls-demo/Input/SizesAndHeights/Index
+ * @demo Controls-demo/Input/FontStyles/Index
+ * @demo Controls-demo/Input/TextAlignments/Index
+ * @demo Controls-demo/Input/TagStyles/Index
+ * @demo Controls-demo/Input/ValidationStatuses/Index
  *
  * @author Красильников А.С.
  */
