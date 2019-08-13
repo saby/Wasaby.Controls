@@ -352,5 +352,22 @@ define([
          lookup._options.items = getItems(0);
          assert.isFalse(!!lookup._isShowCollection());
       });
+
+      it('_itemClick', function() {
+         let
+            isNotifyItemClick = false,
+            lookup = new Lookup();
+
+         lookup._suggestState = true;
+         lookup._notify = function(eventName) {
+            if (eventName === 'itemClick') {
+               isNotifyItemClick = true;
+            }
+         };
+
+         lookup._itemClick();
+         assert.isFalse(lookup._suggestState);
+         assert.isTrue(isNotifyItemClick);
+      });
    });
 });

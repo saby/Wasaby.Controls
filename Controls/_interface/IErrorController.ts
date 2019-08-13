@@ -4,12 +4,21 @@ export interface IErrorControllerOptions {
 }
 
 /**
+ * Интерфейс контролов, использующих источники данных и обрабатывающих ошибки от сервисов через {@link Controls/dataSource:error.Controller error-controller}.
+ *
+ * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/pattern-and-practice/handling-errors/'>здесь</a>.
+ * @interface Controls/_interface/IErrorController
+ * @public
+ * @author Заляев А.В
+ */
+
+/*
  * Interface for components that use data source and processing errors with {@link Controls/dataSource:error.Controller error-controller}.
  *
  * @interface Controls/_interface/IErrorController
  * @public
  * @author Заляев А.В
- */
+ */ 
 export default interface IErrorController {
    readonly '[Controls/_interface/IErrorController]': boolean;
 }
@@ -46,3 +55,4 @@ export default interface IErrorController {
  *     </Controls.list:View>
  * </pre>
  */
+

@@ -12,6 +12,10 @@ var _private = {
             clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox'),
             hasSelection = self._listModel.getSelectedKeys().length && !isEqual(self._listModel.getSelectedKeys(), self._options.resetValue);
         return self._options.multiSelect && !clickOnEmptyItem && (hasSelection || clickOnCheckBox);
+    },
+
+    afterOpenDialogCallback: function(selectedItems) {
+        this._notify('moreButtonClick', [selectedItems]);
     }
 };
 
@@ -30,6 +34,8 @@ var List = Control.extend({
             displayProperty: options.displayProperty,
             emptyText: options.emptyText
         });
+
+        this._afterOpenDialogCallback = _private.afterOpenDialogCallback.bind(this);
     },
 
     _beforeUpdate: function(newOptions) {
@@ -54,10 +60,6 @@ var List = Control.extend({
         if (event.nativeEvent.direction === 'left') {
             this._listModel.setSwipeItem(itemData);
         }
-    },
-
-    _moreButtonClick: function(event) {
-        this._notify('moreButtonClick');
     },
 
     _itemMouseEnter: function() {

@@ -3,8 +3,9 @@ import template = require('wml!Controls/_MoveDialog/MoveDialog');
 import 'css!theme?Controls/_MoveDialog/MoveDialog';
 
    /**
-    * Стандартный шаблон диалогового окна выбора таргета для перемещения элементов.
-    * <a href="/materials/demo-ws4-operations-panel">Демо-пример</a>.
+    * Базовый шаблон диалогового окна, используемый в списках при перемещении элементов для выбора целевой папки
+    * - <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/actions/mover-remover/">См. руководство разработчика</a>
+    * - <a href="/materials/demo-ws4-operations-panel">См. демо-пример</a>.
     * @class Controls/MoveDialog
     * @extends Core/Control
     * @mixes Controls/_interface/IHierarchy

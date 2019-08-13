@@ -49,24 +49,27 @@ const _private = {
             self._popupId = null;
         }
     },
-    compatibleOpen(self, popupOptions) {
+    compatibleOpen(self, popupOptions): Promise<string> {
         const config = BaseOpener.getConfig({}, {}, popupOptions);
-        return Promise.all([
-            BaseOpener.requireModule('Controls/compatiblePopup:BaseOpener'),
-            BaseOpener.requireModule('SBIS3.CONTROLS/Utils/InformationPopupManager'),
-            BaseOpener.requireModule('Controls/compatiblePopup:OldNotification'),
-            BaseOpener.requireModule(config.template)
-        ]).then(function(results) {
-            const BaseOpenerCompat = results[0], InformationPopupManager = results[1];
-            config.template = results[3];
-            const compatibleConfig = _private.getCompatibleConfig(BaseOpenerCompat, config);
-            const popupId = InformationPopupManager.showNotification(compatibleConfig, compatibleConfig.notHide);
-            if (self) {
-                if (!self._popup) {
-                    self._popup = [];
+        return new Promise((resolve) => {
+            Promise.all([
+                BaseOpener.requireModule('Controls/compatiblePopup:BaseOpener'),
+                BaseOpener.requireModule('SBIS3.CONTROLS/Utils/InformationPopupManager'),
+                BaseOpener.requireModule('Controls/compatiblePopup:OldNotification'),
+                BaseOpener.requireModule(config.template)
+            ]).then((results) => {
+                const BaseOpenerCompat = results[0], InformationPopupManager = results[1];
+                config.template = results[3];
+                const compatibleConfig = _private.getCompatibleConfig(BaseOpenerCompat, config);
+                const popupId = InformationPopupManager.showNotification(compatibleConfig, compatibleConfig.notHide);
+                if (self) {
+                    if (!self._popup) {
+                        self._popup = [];
+                    }
+                    self._popup.push(popupId);
                 }
-                self._popup.push(popupId);
-            }
+                resolve(popupId);
+            });
         });
     },
 
@@ -210,10 +213,10 @@ Notification.openPopup = (config: object, id: string): Promise<string> => {
             });
 
         } else {
-            _private.compatibleOpen(this, newConfig);
-            resolve();
+            _private.compatibleOpen(this, newConfig).then((popupId: string) => {
+                resolve(popupId);
+            });
         }
-
     });
 };
 

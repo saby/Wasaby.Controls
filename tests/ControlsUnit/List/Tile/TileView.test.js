@@ -416,7 +416,33 @@ define(['Controls/_tile/TileView/TileView',
 
          assert.equal(hoveredItem.position, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
          assert.equal(hoveredItem.key, 'itemKey1');
+         assert.isOk(hoveredItem.isAnimated, 'startPosition does not match endPosition, hoveredItem should be animated');
          assert.isFalse(controlResizeFired, 'Invalid fire "controlResize" event from afterUpdate.');
+
+         // Без анимации, когда
+         tileView._setHoveredItem(
+            {
+               key: 'itemKey2'
+            },
+            {
+               left: 20,
+               right: 20,
+               top: 20,
+               bottom: 20
+            },
+            {
+               left: 20,
+               right: 20,
+               top: 20,
+               bottom: 20
+            }
+         );
+         tileView._afterUpdate();
+         hoveredItem = tileView._listModel.getHoveredItem();
+
+         assert.equal(hoveredItem.position, 'left: 20px; right: 20px; top: 20px; bottom: 20px; ');
+         assert.equal(hoveredItem.key, 'itemKey2');
+         assert.isNotOk(hoveredItem.isAnimated, 'startPosition matches endPosition, hoveredItem should not be animated');
       });
 
       it('_afterMount', function() {

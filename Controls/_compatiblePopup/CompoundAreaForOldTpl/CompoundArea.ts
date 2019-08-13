@@ -7,7 +7,6 @@ import makeInstanceCompatible = require('Core/helpers/Hcontrol/makeInstanceCompa
 import {delay as runDelayed} from 'Types/function';
 import trackElement = require('Core/helpers/Hcontrol/trackElement');
 import doAutofocus = require('Core/helpers/Hcontrol/doAutofocus');
-import DialogRecord = require('optional!Deprecated/Controls/DialogRecord/DialogRecord');
 import Env = require('Env/Env');
 import EnvEvent = require('Env/Event');
 import {Controller} from 'Controls/popup';
@@ -32,6 +31,7 @@ var logger = Env.IoC.resolve('ILogger');
 var allProducedPendingOperations = [];
 var invisibleRe = /ws-invisible/ig;
 var hiddenRe = /ws-hidden/ig;
+let DialogRecord;
 
 /**
  * Слой совместимости для открытия старых шаблонов в новых попапах
@@ -94,7 +94,13 @@ var CompoundArea = CompoundContainer.extend([
          });
       }
       if (_options.popupComponent === 'recordFloatArea') {
-         this.subscribeOnBeforeUnload();
+         return new Promise((resolve) => {
+            requirejs(['optional!Deprecated/Controls/DialogRecord/DialogRecord'], (DeprecatedDialogRecord) => {
+               DialogRecord = DeprecatedDialogRecord;
+               this.subscribeOnBeforeUnload();
+               resolve();
+            }, () => resolve);
+         });
       }
    },
 
@@ -384,7 +390,13 @@ var CompoundArea = CompoundContainer.extend([
             .subscribe('onVisible',
                function(event, visibility) {
                   if (!self.isDestroyed() && !visibility) {
-                     self.close();
+                     const parentVdomPopup = $(self._options.target).closest('.controls-Popup__template');
+                     // Вдомные стековые окна, если перекрыты другими окнами из стека, скрываются через ws-hidden.
+                     // PopupMixin реагирует на скритие таргета и закрывается.
+                     // Делаю фикс, чтобы в этом случае попап миксин не закрывался
+                     if (!parentVdomPopup.length || !parentVdomPopup.hasClass('ws-hidden')) {
+                        self.close();
+                     }
                   }
                });
       }

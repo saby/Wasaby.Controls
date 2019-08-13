@@ -19,7 +19,7 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
     * @control
     * @public
     * @author Красильников А.С.
-    * @demo Controls-demo/Headers/headerDemo
+    * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
     *
     * @mixes Controls/_interface/ITooltip
     * @mixes Controls/_interface/ICaption
@@ -39,7 +39,7 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
     * @control
     * @public
     * @author Красильников А.С.
-    * @demo Controls-demo/Headers/headerDemo
+    * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
     *
     * @mixes Controls/_interface/ITooltip
     * @mixes Controls/_interface/ICaption

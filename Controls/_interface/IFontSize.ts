@@ -3,7 +3,7 @@ export interface IFontSizeOptions {
 }
 
 /**
- * Интерфейс для контролов с поддержкой разных размеров шрифта.
+ * Интерфейс для контролов, которые поддерживают разные размеры шрифта.
  *
  * @interface Controls/_interface/IFontSize
  * @public
@@ -31,6 +31,8 @@ export default interface IFontSize {
  * @variant 4xl
  * @variant 5xl
  * @demo Controls-demo/Buttons/SizesAndHeights/Index
+ * @remark
+ * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
  * @example
  * Кнопка с размером шрифта xl.
  * <pre>

@@ -159,6 +159,7 @@ define(
                resetValue: false,
                visibility: false
             });
+            let initItems = pGrid._items;
             pGrid._valueChangedHandler('_valueChangedHandler', 2, false);
             assert.strictEqual(pGrid._items[2].value, false);
             assert.deepStrictEqual(result[2], {
@@ -167,6 +168,7 @@ define(
                resetValue: false,
                visibility: false
             });
+            assert.isFalse(pGrid._items === initItems );
          });
 
          it('_visibilityChangedHandler', function() {

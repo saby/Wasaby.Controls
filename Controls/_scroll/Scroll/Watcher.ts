@@ -167,6 +167,13 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 
 
                curObserver = new IntersectionObserver(function (changes) {
+                  /**
+                   * Баг IntersectionObserver на Mac OS: сallback может вызываться после описки от слежения. Отписка происходит в
+                   * _beforeUnmount. Устанавливаем защиту.
+                   */
+                  if (self._observers === null) {
+                     return;
+                  }
                   for (var i = 0; i < changes.length; i++) {
                      switch (changes[i].target) {
                         case elements.topLoadTrigger:
@@ -363,7 +370,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                   sizeCache.scrollHeight - realScrollTop - sizeCache.clientHeight > triggerOffset)) {
                   container.scrollTop = scrollTop - self._topPlaceholderSize;
                } else {
-                  const hasChanges = _private.sendByRegistrar(self, 'virtualScrollMove', {
+                  _private.sendByRegistrar(self, 'virtualScrollMove', {
                      scrollTop,
                      scrollHeight: sizeCache.scrollHeight,
                      clientHeight: sizeCache.clientHeight,
@@ -371,9 +378,6 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                         container.scrollTop = cachedScrollTop - self._topPlaceholderSize;
                      }
                   });
-                  if (!hasChanges) {
-                     container.scrollTop = scrollTop - self._topPlaceholderSize;
-                  }
                }
             } else {
                container.scrollTop = scrollTop;

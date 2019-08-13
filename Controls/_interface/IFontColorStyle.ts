@@ -3,7 +3,7 @@ export interface IFontColorStyleOptions {
 }
 
 /**
- * Интерфейс для контролов, которые поддерживают разные цвета шрифта.
+ * Интерфейс для контролов, которые поддерживают разные цвета текста.
  *
  * @interface Controls/_interface/IFontColorStyle
  * @public
@@ -20,7 +20,7 @@ export default interface IFontColorStyle {
 }
 /**
  * @name Controls/_interface/IFontColorStyle#fontColorStyle
- * @cfg {Enum} Стиль цвета шрифта.
+ * @cfg {Enum} Стиль цвета текста контрола.
  * @variant primary
  * @variant secondary
  * @variant success
@@ -31,6 +31,8 @@ export default interface IFontColorStyle {
  * @variant label
  * @variant default
  * @demo Controls-demo/Buttons/FontStyles/Index
+ * @remark
+ * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
  * @example
  * Кнопка со стилем шрифта по умолчанию.
  * <pre>

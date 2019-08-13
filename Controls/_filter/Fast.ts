@@ -205,24 +205,25 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
              }
          },
 
-         onSelectorResult: function (self, selectedItems) {
-             var newItems = _private.getNewItems(self, selectedItems);
+         onSelectorResult: function (curConfig, selectedItems) {
+            var newItems = _private.getNewItems(curConfig, selectedItems);
 
-             // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
-             if (historyUtils.isHistorySource(self._source)) {
-                 if (newItems.length) {
-                     self._sourceController = null;
-                 }
-                 _private.updateHistory(self, chain.factory(selectedItems).toArray());
-             } else {
-                 self._items.prepend(newItems);
-             }
+            // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
+            if (historyUtils.isHistorySource(curConfig._source)) {
+               if (newItems.length) {
+                  curConfig._sourceController = null;
+               }
+               _private.updateHistory(curConfig, chain.factory(selectedItems).toArray());
+            } else {
+               curConfig._items.prepend(newItems);
+            }
          },
 
          onResult: function(event, result) {
             if (result.data) {
                if (result.action === 'selectorResult') {
-                  _private.onSelectorResult(this._configs[this.lastOpenIndex], result.data);
+                  this.lastOpenIndex = this._indexOpenedFilter;
+                  _private.onSelectorResult(this._configs[this._indexOpenedFilter], result.data);
                } else {
                   _private.updateHistory(this._configs[this.lastOpenIndex], result.data);
                }
@@ -367,7 +368,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
             var resultDef;
             if (newOptions.items && (newOptions.items !== this._options.items)) {
                _private.prepareItems(this, newOptions.items);
-               if (_private.isNeedReload(this._options.items, newOptions.items)) {
+               if (_private.isNeedReload(this._options.items, newOptions.items) || _private.isNeedHistoryReload(this._configs)) {
                   resultDef = _private.reload(this);
                } else {
                   resultDef = _private.loadNewItems(this, newOptions.items, this._configs);
@@ -398,7 +399,8 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
                hasMoreButton: this._configs[index]._sourceController.hasMoreData('down'),
                selectorOpener: this._children.selectorOpener,
-               selectorDialogResult: this._onSelectorTemplateResult.bind(this)
+               selectorDialogResult: this._onSelectorTemplateResult.bind(this),
+               afterSelectorOpenCallback: this._afterSelectorOpenCallback.bind(this)
             };
             var config = {
                templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),
@@ -423,7 +425,14 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
          },
 
          _onSelectorTemplateResult: function(event, items) {
-            this._onResult(event, {action: 'selectorResult', data: items});
+            let resultSelectedItems = this._notify('selectorCallback', [this._configs[this._indexOpenedFilter].initSelectorItems, items, this._indexOpenedFilter]) || items;
+            this._onResult(event, {action: 'selectorResult', data: resultSelectedItems});
+         },
+
+         _afterSelectorOpenCallback: function(selectedItems) {
+            this._indexOpenedFilter = this.lastOpenIndex;
+            this._configs[this._indexOpenedFilter].initSelectorItems = selectedItems;
+            this._children.DropdownOpener.close();
          },
 
          _setText: function() {

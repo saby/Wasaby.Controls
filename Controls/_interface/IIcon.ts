@@ -3,7 +3,7 @@ export interface IIconOptions {
 }
 
 /**
- * Интерфейс для кнопки с иконкой.
+ * Интерфейс для контролов, который имеют возможность отображения иконки.
  *
  * @interface Controls/_interface/IIcon
  * @public
@@ -20,16 +20,18 @@ export default interface IIcon {
 }
 /**
  * @name Controls/_interface/IIcon#icon
- * @cfg {String} Определяет иконку, которая будет отображена на кнопке.
+ * @cfg {String} Определяет иконку, которая будет отображена в контроле.
  * @default Undefined
- * @remark Иконки задаются классами иконок.
- * Все иконки - символы специального шрифта иконок. Список всех иконок можно увидеть <a href="https://wi.sbis.ru/docs/js/icons/">здесь</a>.
+ * @remark Все иконки - символы специального шрифта иконок.
+ * Список всех иконок можно увидеть <a href="https://wi.sbis.ru/docs/js/icons/">здесь</a>.
+ * Данная опция задает только символ шрифта иконки. Размер и цвет задаются другими соответствующими опциями iconSize iconStyle
  * @example
  * Кнопка со стилем buttonPrimary и иконкой Add.
  * <pre>
  *    <Controls.buttons:Button icon="icon-Add" style="primary" viewMode="button"/>
  * </pre>
- * @see iconStyle
+ * @see Controls/interface/IIconSize
+ * @see Controls/interface/IIconStyle
  */
 
 /*

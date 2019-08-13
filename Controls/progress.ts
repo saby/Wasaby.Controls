@@ -1,4 +1,13 @@
 /**
+ * Библиотека индикаторов выполнения процесса.
+ * @library Controls/progress
+ * @includes StateIndicator Controls/_progress/StateIndicator
+ * @includes Legend Controls/_progress/Legend
+ * @includes Bar Controls/_progress/Bar
+ * @author Колесов В.А.
+ */
+
+/*
  * Progress indicators library
  * @library Controls/progress
  * @includes StateIndicator Controls/_progress/StateIndicator

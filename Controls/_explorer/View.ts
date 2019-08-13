@@ -252,11 +252,9 @@ import 'Controls/breadcrumbs';
     * @name Controls/_exploer/View#displayProperty
     * @cfg {string} Имя свойства элемента, содержимое которого будет отображаться.
     * @example
-    * <pre class="brush:html">
-    * <Controls.explorers:View
-    *   ...
-    *   displayProperty="title">
-    *       ...
+    * <pre>
+    * <Controls.explorers:View displayProperty="title">
+    *     ...
     * </Controls.explorer:View>
     * </pre>
     */

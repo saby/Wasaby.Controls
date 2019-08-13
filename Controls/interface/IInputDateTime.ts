@@ -1,13 +1,48 @@
 /**
- * Interface for date/time inputs.
+ * Интерфейс для ввода даты/времени.
  *
  * @interface Controls/interface/IInputDateTime
  * @public
  * @author Красильников А.С.
  */
+
+/*
+ * Interface for date/time inputs.
+ *
+ * @interface Controls/interface/IInputDateTime
+ * @public
+ * @author Красильников А.С.
+ */ 
 interface IInputDateTime {
     readonly _options: {
         /**
+         * @name Controls/interface/IInputDateTime#value
+         * @cfg {Date} Дата, которую пользователь ввел в поле ввода.
+         * @default null
+         * @remark Если вы не обновите параметр "value", то не сможете ничего ввести в поле.
+         * Вам необходимо подписаться на событие "valueChanged" и обновить значение, которое передается в контрол.
+         * Для упрощения вы можете использовать синтаксис биндинга.
+         * @example
+         * В этом примере вы осуществляете привязку _inputValue в состоянии контрола к значению поля ввода.
+         * В любое время жизненного цикла контрола, _inputValue будет содержать текущее значение поля ввода.
+         * <pre>
+         *    <Controls._input.DateTime bind:value="_inputValue" />
+         *    <Controls.Button on:click="_sendButtonClick()" />
+         * </pre>
+         * <pre>
+         *    Control.extend({
+         *       ...
+         *       _inputValue: new Date(),
+         *
+         *       _sendButtonClick() {
+         *          this._sendData(this._inputValue);
+         *       }
+         *       ...
+         *  });
+         * </pre>
+         */
+
+        /*
          * @name Controls/interface/IInputDateTime#value
          * @cfg {Date} The date that the user entered in the input field.
          * @default null
@@ -32,13 +67,45 @@ interface IInputDateTime {
          *       ...
          *  });
          * </pre>
-         */
+         */         
         value: Date;
     }
 }
 
 
 /**
+ * @event Происходит при изменении значения поля ввода.
+ * @name Controls/interface/IInputDateTime#valueChanged
+ * @param {Date} value Новое значение поля ввода.
+ * @param {String} displayValue Текстовое значение поля ввода.
+ * @remark
+ * Это событие предназначено для реагирования на изменения, вносимые пользователем в поле ввода. 
+ * Значение, возвращаемое в событии, не вставляется в контрол, если вы не передадите его обратно в поле в качестве опции.
+ * Обычно, вместо этого используется синтаксис биндинга. Пример ниже иллюстрирует разницу.
+ * @example
+ * В этом примере покажем, как 'привязать' значение контрола к полю.
+ * В первом поле мы делаем это вручную, используя событие valueChanged. Во втором поле мы используем синтаксис биндинга.
+ * Оба поля в этом примере будут иметь одинаковое поведение.
+ * <pre>
+ *    <Controls._input.DateTime value="_fieldValue" on:valueChanged="_valueChangedHandler()"/>
+ *    <Controls._input.DateTime bind:value="_anotherFieldValue"/>
+ * </pre>
+ * <pre>
+ * Control.extend({
+ *    ....
+ *    _fieldValue: null,
+ *    _valueChangedHandler(value, displayValue) {
+ *       this._fieldValue = value;
+ *       this._saveToDatabase(displayValue);
+ *    },
+ *
+ *    _anotherFieldValue: null
+ *    ...
+ * });
+ * </pre>
+ */
+
+/*
  * @event Occurs when field value was changed.
  * @name Controls/interface/IInputDateTime#valueChanged
  * @param {Date} value New field value.
@@ -68,9 +135,33 @@ interface IInputDateTime {
  *    ...
  * });
  * </pre>
- */
+ */ 
 
 /**
+ * @event Происходит при завершении ввода в поле (поле потеряло фокус или пользователь нажал клавишу "enter").
+ * @name Controls/interface/IInputDateTime#inputCompleted
+ * @param {Date} value Значение поля.
+ * @param {String} displayValue Текстовое значение поля.
+ * @remark
+ * Это событие можно использовать в качестве триггера для проверки поля или отправки введенных данных в другой контрол.
+ * @example
+ * В этом примере мы подписываемся на событие inputCompleted и сохраняем значение поля в первой базе данных, а отображаемое значение поля во второй базе данных.
+ * <pre>
+ *    <Controls._input.Text on:inputCompleted="_inputCompletedHandler()" />
+ * </pre>
+ * <pre>
+ *    Control.extend({
+ *       ....
+ *       _inputCompletedHandler(value, displayValue) {
+ *          this._saveEnteredValueToDabase1(value);
+ *          this._saveEnteredValueToDabase2(displayValue);
+ *       }
+ *       ...
+ *    })
+ * </pre>
+ */
+
+/*
  * @event Occurs when input was completed (field lost focus or user pressed ‘enter’).
  * @name Controls/interface/IInputDateTime#inputCompleted
  * @param {Date} value Field value.
@@ -92,4 +183,4 @@ interface IInputDateTime {
  *       ...
  *    })
  * </pre>
- */
+ */ 
