@@ -1,4 +1,4 @@
-<Controls.dragnDrop:Controller attr:class="controls-CompoundArea__dragContainer">
+<Controls.dragnDrop:Compound attr:class="controls-CompoundArea__dragContainer">
    <Controls.popup:Global>
       <Controls.Pending name="PendingRegistrator" attr:class="controls-CompoundArea__pending">
          <div>
@@ -15,4 +15,4 @@
          </div>
       </Controls.Pending>
    </Controls.popup:Global>
-</Controls.dragnDrop:Controller>
+</Controls.dragnDrop:Compound>
