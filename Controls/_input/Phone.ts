@@ -15,7 +15,11 @@ import ViewModel = require('Controls/_input/Phone/ViewModel');
        * @mixes Controls/interface/IInputBase
        *
        * @public
-       * @demo Controls-demo/Input/Phone/PhonePG
+       * @demo Controls-demo/Input/SizesAndHeights/Index
+       * @demo Controls-demo/Input/FontStyles/Index
+       * @demo Controls-demo/Input/TextAlignments/Index
+       * @demo Controls-demo/Input/TagStyles/Index
+       * @demo Controls-demo/Input/ValidationStatuses/Index
        *
        * @author Красильников А.С.
        */

@@ -17,7 +17,11 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * @mixes Controls/_interface/INumberFormat
  *
  * @public
- * @demo Controls-demo/Input/Number/NumberPG
+ * @demo Controls-demo/Input/SizesAndHeights/Index
+ * @demo Controls-demo/Input/FontStyles/Index
+ * @demo Controls-demo/Input/TextAlignments/Index
+ * @demo Controls-demo/Input/TagStyles/Index
+ * @demo Controls-demo/Input/ValidationStatuses/Index
  *
  * @author Красильников А.С.
  */

@@ -26,11 +26,6 @@ import IInputField from "./IInputField";
  *
  * @mixes Controls/interface/ICallback
  *
- * @demo Controls-demo/Input/SizesAndHeights/Index
- * @demo Controls-demo/Input/FontStyles/Index
- * @demo Controls-demo/Input/TextAlignments/Index
- * @demo Controls-demo/Input/TagStyles/Index
- *
  * @public
  * @author Красильников А.С.
  */
