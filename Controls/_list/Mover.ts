@@ -215,7 +215,15 @@ var _private = {
         //Support moving with mass selection.
         //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
         return selection instanceof Array ? Deferred.success(selection) : getItemsBySelection(selection, this._source, this._items, this._filter);
-    }
+    },
+
+    prepareMovedItems(self, items) {
+        let result = [];
+        items.forEach(function(item) {
+            result.push(_private.getIdByItem(self, item));
+        });
+        return result;
+    },
 };
 
 /**
@@ -302,7 +310,7 @@ var Mover = Control.extend({
         _private.getItemsBySelection.call(this, items).addCallback(function (items) {
             self._children.dialogOpener.open({
                 templateOptions: {
-                    movedItems: items,
+                    movedItems: _private.prepareMovedItems(self, items),
                     source: self._source,
                     keyProperty: self._keyProperty
                 }
