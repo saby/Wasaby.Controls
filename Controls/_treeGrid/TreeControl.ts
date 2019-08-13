@@ -432,6 +432,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     setMarkedKey: function(key) {
         this._children.baseControl.getViewModel().setMarkedKey(key);
     },
+    scrollToItem(key: string|number): void {
+        this._children.baseControl.scrollToItem(key);
+    },
     reloadItem: function(key, readMeta, direction):Deferred {
         let baseControl = this._children.baseControl;
         let result;

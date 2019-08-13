@@ -363,6 +363,9 @@ import 'Controls/breadcrumbs';
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);
       },
+      scrollToItem(key: string|number): void {
+         this._children.treeControl.scrollToItem(key);
+      },
       reloadItem: function() {
          let treeControl = this._children.treeControl;
          return treeControl.reloadItem.apply(treeControl, arguments);

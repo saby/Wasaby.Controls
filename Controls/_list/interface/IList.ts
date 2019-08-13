@@ -456,6 +456,19 @@
  * </pre>
  */
 
+/**
+ * Прокручивает список к указанному элементу.
+ * @function Controls/_list/interface/IList#scrollToItem
+ * @param {String|Number} key Идентификатор элемента коллекции, к которому осуществляется прокручивание.
+ * @example
+ *  <pre>
+ *      _buttonClick: function() {
+ *          var list = this._children.myList;
+ *          list.scrollToItem(this._firstItemKey);
+ *      }
+ * </pre>
+ */
+
 /*
  * Loads model from data source, merges changes into the current data and renders the item.
  * @function Controls/_list/interface/IList#reloadItem

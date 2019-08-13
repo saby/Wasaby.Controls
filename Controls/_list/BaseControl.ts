@@ -227,11 +227,19 @@ var _private = {
         // https://git.sbis.ru/sbis/controls/merge_requests/65854
         // corrupting integration tests
         // fixed by error: https://online.sbis.ru/opendoc.html?guid=d348adda-5fee-4d1b-8cb7-9501026f4f3c
-        var
-            container = self._children.listView.getItemsContainer().children[self.getViewModel().getIndexByKey(key)];
-        if (container) {
-            scrollToElement(container, true);
+        let idx;
+        if (self._virtualScroll) {
+            idx = self.getViewModel().getIndexByKey(key) - (self._virtualScroll.ItemsIndexes.start);
+        } else {
+            idx = self.getViewModel().getIndexByKey(key);
         }
+        const container = self._children.listView.getItemsContainer().children[idx];
+        if (container) {
+            _private.scrollToElement(container, true);
+        }
+    },
+    scrollToElement(container, toBottom) {
+        scrollToElement(container, toBottom);
     },
     setMarkedKey: function(self, key) {
         if (key !== undefined) {
@@ -1212,6 +1220,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     iWantVDOM: true,
     _isActiveByClick: false,
     _markedKeyForRestoredScroll: null,
+    _restoredScrollKey: null,
 
     _listViewModel: null,
     _viewModelConstructor: null,
@@ -1519,6 +1528,24 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         });
     },
 
+    scrollToItem(key: string|number): void {
+        const idx = this._listViewModel.getIndexByKey(key);
+        if (idx === -1) {
+            return;
+        }
+        if (this._virtualScroll) {
+            this._virtualScroll.recalcByIndex(idx);
+            if (_private.applyVirtualScrollIndexesToListModel(this)) {
+                this._restoredScrollKey = key;
+                _private.applyPlaceholdersSizes(self);
+            } else {
+                _private.scrollToItem(this, key);
+            }
+        } else {
+            _private.scrollToItem(this, key);
+        }
+    },
+
     _beforeUnmount: function() {
         if (this._focusTimeout) {
             clearTimeout(this._focusTimeout);
@@ -1579,6 +1606,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
             this._forceUpdate();
+        }
+
+        if (this._restoredScrollKey !== null) {
+            _private.scrollToItem(this, this._restoredScrollKey);
+            this._restoredScrollKey = null;
         }
 
         // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
