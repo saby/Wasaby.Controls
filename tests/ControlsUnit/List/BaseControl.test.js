@@ -1308,7 +1308,8 @@ define([
          baseControl._children = triggers;
          baseControl.saveOptions(cfg);
          baseControl._needScrollCalculation = true;
-         baseControl._loadOffset = {top: 0, bottom: 0};
+         baseControl._isScrollShown = true;
+         baseControl._loadOffset = {top: 10, bottom: 10};
 
          lists.BaseControl._private.onScrollHide(baseControl);
          assert.deepEqual({top: 0, bottom: 0}, baseControl._loadOffset);
