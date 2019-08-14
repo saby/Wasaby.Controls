@@ -11,6 +11,24 @@
     <div class="controlsDemo__cell controlsDemo__mr2">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Grouped/HiddenGroup/Index' }}">
+            <a href="{{content.href}}">Скрытая группа</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Grouped.HiddenGroup.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Grouped/CaptionAlign/Index' }}">
+            <a href="{{content.href}}">Выравнивание заголовка группы</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Grouped.CaptionAlign.Index/>
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr2">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/Grouped/WithoutSeparator/Index' }}">
             <a href="{{content.href}}">Без разделителя групп</a>
         </Router.router:Reference>
@@ -26,30 +44,13 @@
         <Controls-demo.list_new.Grouped.WithoutExpander.Index/>
     </div>
 
-    <div class="controlsDemo__cell controlsDemo__mr2">
+    <div class="controlsDemo__cell" attr:style="max-width: 400px;">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/list_new/Grouped/HiddenGroup/Index' }}">
-            <a href="{{content.href}}">Скрытая группа в начале списка</a>
+                                 app="{{ 'Controls-demo/list_new/Grouped/LongGroupName/Index' }}">
+            <a href="{{content.href}}">Длинное название группы</a>
         </Router.router:Reference>
-        <Controls-demo.list_new.Grouped.HiddenGroup.Index/>
+        <Controls-demo.list_new.Grouped.LongGroupName.Index />
     </div>
 
-    <div class="controlsDemo__cell controlsDemo__mr2">
-        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
-                                 state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/list_new/Grouped/HiddenGroupBottom/Index' }}">
-            <a href="{{content.href}}">Скрытая группа в конце списка</a>
-        </Router.router:Reference>
-        <Controls-demo.list_new.Grouped.HiddenGroupBottom.Index/>
-    </div>
-
-    <div class="controlsDemo__cell">
-        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
-                                 state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/list_new/Grouped/CaptionAlign/Index' }}">
-            <a href="{{content.href}}">Выравнивание заголовка группы</a>
-        </Router.router:Reference>
-        <Controls-demo.list_new.Grouped.CaptionAlign.Index/>
-    </div>
 </div>

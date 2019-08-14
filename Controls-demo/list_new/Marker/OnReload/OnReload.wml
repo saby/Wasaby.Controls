@@ -5,9 +5,5 @@
             source="{{_viewSource}}"
             markerVisibility="onactivated"/>
 
-    <Controls.buttons:Button
-            readOnly="{{false}}"
-            icon="icon-small icon-TurnL"
-            caption="Reload list"
-            on:click="_reloadList()"/>
+    <button class="controlsDemo__button" on:click="_reloadList()">Reload list</button>
 </div>

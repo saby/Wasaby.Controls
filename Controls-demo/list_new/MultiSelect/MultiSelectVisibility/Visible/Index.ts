@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/list_new/Multiselect/Visible/Visible"
+import * as Template from "wml!Controls-demo/list_new/MultiSelect/MultiSelectVisibility/Visible/Visible"
 import {Memory} from "Types/source"
-import {getFewCategories as getData} from "../../DemoHelpers/DataCatalog"
+import {getFewCategories as getData} from "../../../DemoHelpers/DataCatalog"
 import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {

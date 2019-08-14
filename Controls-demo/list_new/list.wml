@@ -11,15 +11,6 @@
     <div class="controlsDemo__cell">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/list_new/DisplayProperty/Index' }}">
-            <a href="{{content.href}}">Переопределение стандартного поля для отображения</a>
-        </Router.router:Reference>
-        <Controls-demo.list_new.DisplayProperty.Index/>
-    </div>
-
-    <div class="controlsDemo__cell">
-        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
-                                 state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/EmptyList/Index' }}">
             <a href="{{content.href}}">Шаблон отображения пустого списка</a>
         </Router.router:Reference>
@@ -65,10 +56,10 @@
     <div class="controlsDemo__cell">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/list_new/Multiselect/Index' }}">
+                                 app="{{ 'Controls-demo/list_new/MultiSelect/Index' }}">
             <a href="{{content.href}}">Множественный выбор</a>
         </Router.router:Reference>
-        <Controls-demo.list_new.Multiselect.Index/>
+        <Controls-demo.list_new.MultiSelect.Index/>
     </div>
 
     <div class="controlsDemo__cell">
@@ -79,4 +70,14 @@
         </Router.router:Reference>
         <Controls-demo.list_new.Grouped.Index/>
     </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/EditInPlace/Index' }}">
+            <a href="{{content.href}}">Редактирование по месту</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.EditInPlace.Index/>
+    </div>
+
 </div>

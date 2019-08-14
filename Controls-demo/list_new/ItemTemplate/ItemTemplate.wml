@@ -11,6 +11,15 @@
     <div class="controlsDemo__cell controlsDemo__mr4">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/ItemTemplate/DisplayProperty/Index' }}">
+            <a href="{{content.href}}">Переопределение стандартного поля для отображения</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.ItemTemplate.DisplayProperty.Index/>
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr4">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/ItemTemplate/CustomContent/Index' }}">
             <a href="{{content.href}}">Переопределение контента строки</a>
         </Router.router:Reference>

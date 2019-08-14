@@ -1,0 +1,10 @@
+<div class="controlsDemo__wrapper">
+    <Controls.list:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            displayProperty="description">
+        <ws:itemTemplate>
+            <ws:partial template="Controls/list:ItemTemplate" displayProperty="description"/>
+        </ws:itemTemplate>
+    </Controls.list:View>
+</div>

@@ -47,6 +47,7 @@ function getGroupedCatalog(): Array<{
     id: number
     title: string
     brand: string
+    longBrandName?: string
 }> {
     return [
         {
@@ -87,7 +88,8 @@ function getGroupedCatalog(): Array<{
         {
             id: 8,
             title: 'ASUS Zenbook F-234',
-            brand: 'asus'
+            brand: 'asus',
+            longBrandName: 'AsusTek Computer Inc. stylised as ASUSTeK (Public TWSE: 2357 LSE: ASKD), based in Beitou District, Taipei, Taiwan'
         },
         {
             id: 9,
@@ -149,61 +151,8 @@ function getGroupedCatalogWithHiddenGroup(): Array<{
     ];
 }
 
-function getGroupedCatalogWithHiddenGroupInBottom(): Array<{
-    id: number
-    title: string
-    brand?: string
-}> {
-    return [
-        {
-            id: 1,
-            title: 'MacBook Pro',
-            brand: 'apple'
-        },
-        {
-            id: 2,
-            title: 'ASUS X751SA-TY124D',
-            brand: 'asus'
-        },
-        {
-            id: 3,
-            title: 'HP 250 G5 (W4N28EA)',
-            brand: 'hp'
-        },
-        {
-            id: 4,
-            title: 'Apple iPad Pro 2016',
-            brand: 'apple'
-        },
-        {
-            id: 5,
-            title: 'KeyBoard 5RTX-zxs',
-            brand: 'unknown'
-        },
-        {
-            id: 6,
-            title: 'MagicMouse 2',
-        },
-        {
-            id: 7,
-            title: 'WebCam X541SA-XO056D'
-        },
-        {
-            id: 8,
-            title: 'iPhone X Max',
-            brand: 'apple'
-        },
-        {
-            id: 8,
-            title: 'ASUS Zenbook F-234',
-            brand: 'asus'
-        }
-    ]
-}
-
 export {
     getFewCategories,
     getGroupedCatalog,
-    getGroupedCatalogWithHiddenGroup,
-    getGroupedCatalogWithHiddenGroupInBottom
+    getGroupedCatalogWithHiddenGroup
 }
