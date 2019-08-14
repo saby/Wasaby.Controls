@@ -29,6 +29,7 @@
             value="{{_options.value}}"
             tagStyle="{{_options.tagStyle}}"
             fontStyle="{{_options.fontStyle}}"
+            fontSize="{{_options.fontSize}}"
             style="{{_options.style}}"
             textAlign="{{_options.textAlign}}"
             placeholder="{{_options.placeholder}}"
