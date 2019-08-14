@@ -691,6 +691,7 @@ define(
                   fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
                      assert.equal(fastFilter._items.at(3).value, 'Великобритания');
                      assert.equal(fastFilter._configs[3]._items.getCount(), 1);
+                     assert.deepEqual(fastFilter._items.at(3).properties.filter, {key: 1});
                      done();
                   });
                });
@@ -766,6 +767,23 @@ define(
                   done();
                });
             });
+
+            it('_private::loadItemsFromSource withHistory', function(done) {
+               let actualFilter;
+               fastFilter._sourceController = { load: function(filter) {
+                  actualFilter = filter;
+                  return Deferred.success();
+               } };
+               filterMod.Fast._private.loadItemsFromSource(fastFilter, {filter: {}, source: historySource}).addCallback(function() {
+                  assert.deepEqual(actualFilter, {$_history: true});
+
+                  filterMod.Fast._private.loadItemsFromSource(fastFilter, {filter: {}, source: historySource}, false).addCallback(function() {
+                     assert.deepEqual(actualFilter, {});
+                     done();
+                  });
+               });
+            });
+
          });
 
          function setTrue(assert) {
