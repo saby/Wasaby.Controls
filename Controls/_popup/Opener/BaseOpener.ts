@@ -43,7 +43,6 @@ var Base = Control.extend({
 
     _beforeMount: function (options) {
         this._popupIds = [];
-        this._showOldIndicator = options.showOldIndicator;
         if (options.displayMode && options.displayMode !== 'single') {
             Env.IoC.resolve('ILogger').error(this._moduleName, 'Вместо опции displayMode используйте открытие окна через статический метод openPopup');
         }
@@ -87,7 +86,7 @@ var Base = Control.extend({
     // TODO: https://online.sbis.ru/opendoc.html?guid=13e4d473-5b91-485b-8d9d-fcd2f1f80f72
     _compatibleCreatingDef(config, isCreating: boolean): void {
         if (isCreating) {
-            if (config.showOldIndicator) {
+            if (this._showOldIndicator) {
                 config.creatingDef = new Deferred();
                 config.creatingDef.addCallback(() => {
                     this._toggleIndicator(false);
@@ -147,6 +146,7 @@ var Base = Control.extend({
         if (!baseConfig.hasOwnProperty('opener')) {
             baseConfig.opener = Vdom.DefaultOpenerFinder.find(this) || this;
         }
+        this._showOldIndicator = baseConfig.showOldIndicator;
         if (baseConfig.actionOnScroll) {
             this._actionOnScroll = baseConfig.actionOnScroll;
         }
