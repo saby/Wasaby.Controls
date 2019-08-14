@@ -44,7 +44,7 @@ export default {
              */
             styleMode: undefined,
 
-            linkClickable: true,
+            clickable: true,
 
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#showNextArrow
