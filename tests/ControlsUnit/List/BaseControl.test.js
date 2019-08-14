@@ -650,6 +650,66 @@ define([
          lists.BaseControl._private.scrollToItem = originalScrollToItem;
       });
 
+       it('scrollToItem', async function() {
+           var
+               source = new sourceLib.Memory({
+                   idProperty: 'key',
+                   data: function(){
+                       var result = [];
+                       for (var i = 1; i <= 20; i++) {
+                           result.push({
+                               key: i
+                           });
+                       }
+                       return result;
+                   }()
+               }),
+               cfg = {
+                   viewModelConstructor: lists.ListViewModel,
+                   keyProperty: 'key',
+                   source: source
+               },
+               baseControl = new lists.BaseControl(cfg),
+               callStack = [],
+               recalcByIndexCalled = false;
+           baseControl._children = {
+              listView: {
+                  getItemsContainer: function() {
+                     var childrenArr = [];
+                     for (var i = 1; i <= 20; i++) {
+                         childrenArr.push('item_' + i);
+                     }
+                     return {
+                        children: childrenArr
+                     };
+                  }
+              }
+           };
+           lists.BaseControl._private.scrollToElement = function(container) {
+              callStack.push(container)
+           };
+           baseControl.saveOptions(cfg);
+           await baseControl._beforeMount(cfg);
+           baseControl.scrollToItem(777);
+           baseControl.scrollToItem(15);
+           baseControl._virtualScroll = {
+               recalcByIndex: function() {
+                   recalcByIndexCalled = true;
+               },
+               updateItemsSizes: function() {},
+               PlaceholdersSizes: {},
+               ItemsIndexes: {
+                  start: 0,
+                  stop: 1
+               }
+           };
+           baseControl.scrollToItem(10);
+           baseControl._beforePaint();
+           assert.isTrue(recalcByIndexCalled);
+           baseControl.scrollToItem(5);
+           assert.deepEqual(callStack, ['item_15', 'item_10', 'item_5']);
+       });
+
       it('moveMarker activates the control', async function() {
          const
             cfg = {
