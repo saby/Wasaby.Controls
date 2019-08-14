@@ -226,6 +226,7 @@ var
                     hasHeader: !!this.getHeader(),
                     hasBottomPadding: this._options._needBottomPadding,
                     resultsPosition: this.getResultsPosition(),
+                    multyHeaderOffset: this.getMultyHeaderOffset(),
                     hierarchyRelation: self._model.getHierarchyRelation(),
                     hasMoreStorage: self._model.getHasMoreStorage() || {},
                     expandedItems: self._model.getExpandedItems() || [],

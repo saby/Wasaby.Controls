@@ -23,6 +23,7 @@
          showNextArrow="{{false}}"
          showPrevArrow="{{false}}"
          showUndefined="{{true}}"
+         clickable="{{_options.selectionType !== 'quantum'}}"
          on:linkClick="_headerLinkClick()"
       />
    </div>

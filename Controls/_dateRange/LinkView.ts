@@ -72,7 +72,7 @@ var _private = {
          self._styleMode = newOption.styleMode || _private.defaultStyleMap[newOption.viewMode];
          changed = true;
       }
-      if (options.readOnly !== newOption.readOnly) {
+      if (options.readOnly !== newOption.readOnly || options.clickable !== newOption.clickable) {
          changed = true;
       }
       if (changed) {
@@ -81,6 +81,8 @@ var _private = {
             self._styleClass += self._styleMode;
             if (newOption.readOnly) {
                self._styleClass +=  '_readOnly';
+            } else if (newOption.clickable) {
+               self._styleClass +=  '_clickable';
             }
          } else {
             self._styleClass = null;
@@ -152,10 +154,11 @@ var Component = BaseControl.extend({
    _clearDate: function() {
       this._rangeModel.startValue = null;
       this._rangeModel.endValue = null;
+      _private._updateCaption(this);
    },
 
    _onClick: function() {
-      if (!this._options.readOnly) {
+      if (!this._options.readOnly && this._options.clickable) {
          this._notify('linkClick');
       }
    },

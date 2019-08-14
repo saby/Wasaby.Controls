@@ -46,9 +46,10 @@ define([
             assert.isFalse(Util.isPartialGridSupport());
             assert.isFalse(Util.isNoGridSupport());
          });
-         it('safari is full grid support', () => {
+         it('safari ver >=12 is full grid support', () => {
             Env.detection = {
                isNotFullGridSupport: true,
+               IOSVersion: 12,
                isWinXP: false,
                isIE: false,
                isModernIE: false,
@@ -57,6 +58,20 @@ define([
             };
             assert.isTrue(Util.isFullGridSupport());
             assert.isFalse(Util.isPartialGridSupport());
+            assert.isFalse(Util.isNoGridSupport());
+         });
+         it('safari ver <12 is partial grid support', () => {
+            Env.detection = {
+               isNotFullGridSupport: true,
+               isWinXP: false,
+               isIE: false,
+               IOSVersion: 11,
+               isModernIE: false,
+               safari: true,
+               isNoGridSupport: true
+            };
+            assert.isFalse(Util.isFullGridSupport());
+            assert.isTrue(Util.isPartialGridSupport());
             assert.isFalse(Util.isNoGridSupport());
          });
          it('Edge is partial grid support', () => {

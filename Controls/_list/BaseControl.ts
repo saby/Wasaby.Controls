@@ -139,10 +139,6 @@ var _private = {
                     cfg.afterReloadCallback(cfg);
                 }
 
-                if (cfg.dataLoadCallback instanceof Function) {
-                    cfg.dataLoadCallback(list);
-                }
-
                 if (listModel) {
                     if (self._isActive) {
                         isActive = true;
@@ -160,6 +156,10 @@ var _private = {
                     if (isActive === true) {
                         self._children.listView.activate();
                     }
+                }
+
+                if (cfg.dataLoadCallback instanceof Function) {
+                    cfg.dataLoadCallback(list);
                 }
 
                 if (self._virtualScroll) {
@@ -608,7 +608,7 @@ var _private = {
 
     onScrollHide: function(self) {
         var needUpdate = false;
-        if (!self._loadOffset && self._isScrollShown) {
+        if (self._isScrollShown) {
             if (self._needScrollCalculation) {
                 self._setLoadOffset(0, 0);
             }
