@@ -247,8 +247,8 @@ class PositionNavigation {
 
    hasMoreData(loadDirection: Direction, rootKey: string|number): boolean|undefined {
       let navDirection: DirectionCfg;
-      let moreData;
-      let navigationResult;
+      let moreData: HasMore|unknown;
+      let navigationResult: boolean|undefined;
 
       if (loadDirection === 'up') {
          navDirection = 'before';
