@@ -1540,7 +1540,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     key: key,
                     toBottom: toBottom
                 };
-                _private.applyPlaceholdersSizes(self);
+                _private.applyPlaceholdersSizes(this);
             } else {
                 _private.scrollToItem(this, key, toBottom);
             }
