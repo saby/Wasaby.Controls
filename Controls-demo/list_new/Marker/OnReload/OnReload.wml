@@ -1,0 +1,9 @@
+<div class="controlsDemo__wrapper">
+    <Controls.list:View
+            name="list"
+            keyProperty="id"
+            source="{{_viewSource}}"
+            markerVisibility="onactivated"/>
+
+    <button class="controlsDemo__button" on:click="_reloadList()">Reload list</button>
+</div>
