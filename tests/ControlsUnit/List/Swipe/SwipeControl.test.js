@@ -98,6 +98,12 @@ define([
          assert.isTrue(stub.calledOnceWithExactly(instance, {}, 1, {}, {}, false));
       });
 
+      it('_prepareTwoColumns', function() {
+         let actions = [1, 2, 3, 4];
+         let twoColumns = instance._prepareTwoColumns(actions);
+         assert.deepEqual(twoColumns, [[1, 2], [3, 4]]);
+      });
+
       describe('_listDeactivated', function() {
          it('_animationState: open', function() {
             var swipeItem = {};
