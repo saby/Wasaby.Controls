@@ -23,7 +23,10 @@ var _private = {
          config._path = 'DialogController';
          config._type = 'dialog';
       }
-      config._popupComponent = 'floatArea';
+      // В номенклатуре написали свою recordFloatArea, отнаследовавшись от платформенной.
+      // В слое совместимости нам как-то нужно понимать, какое окно сейчас хотят открыть, чтобы грузить нужные зависимости
+      // Договорились понимать по опции _mode
+      config._popupComponent = config._mode || 'floatArea';
       dependencies.push(config.template);
       return dependencies;
    }
