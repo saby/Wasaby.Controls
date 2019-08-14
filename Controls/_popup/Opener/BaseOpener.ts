@@ -298,6 +298,11 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
             deps.push(libInfo.name);
         }
 
+        // Нужно чтобы managerWrapper был построен до совместимости в панели, т.к. в нем
+        // регистрируются Listener'ы, лежащие внутри шаблона. Не торможу построение ожиданием Deferred'a,
+        // т.к. после выполняется еще несколько асинхронных операций, ожидающих в том числе этих же зависимостией.
+        Base.getManager();
+
         requirejs(deps, (compatiblePopup, Action, Tpl) => {
             try {
                 let templateFunction = Tpl;
