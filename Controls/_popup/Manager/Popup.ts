@@ -7,6 +7,9 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popup/Manager/Popup';
 import * as PopupContent from 'wml!Controls/_popup/Manager/PopupContent';
 
+import makeInstanceCompatible = require('Core/helpers/Hcontrol/makeInstanceCompatible');
+import isNewEnvironment = require('Core/helpers/isNewEnvironment');
+
 const RESIZE_DELAY = 10;
 // on ios increase delay for scroll handler, because popup on frequent repositioning loop the scroll.
 const SCROLL_DELAY = Env.detection.isMobileIOS ? 100 : 10;
@@ -63,11 +66,20 @@ class Popup extends Control<IPopupOptions> {
     // After updating the position of the current popup, calls the repositioning of popup from child openers
     protected _openersUpdateCallback: UpdateCallback[] = [];
 
+
     protected _isEscDown: boolean = false;
 
     private _closeByESC(event: SyntheticEvent<KeyboardEvent>): void {
         if (event.nativeEvent.keyCode === Env.constants.key.esc) {
             this._close();
+        }
+    }
+    
+    _beforeMount() {
+        // TODO: костыль доброшен только в 500-е вехи, исправить в 600 иначе по ошибке:
+        // https://online.sbis.ru/opendoc.html?guid=9bd579a4-b17e-4e69-a21b-730cd1353084
+        if(!(isNewEnvironment())) {
+            makeInstanceCompatible(this);
         }
     }
 
@@ -86,6 +98,9 @@ class Popup extends Control<IPopupOptions> {
         } else {
             this._notify('popupCreated', [this._options.id], {bubbling: true});
             this._options.creatingDef && this._options.creatingDef.callback(this._options.id);
+            if (this._activate) {
+               this._activate(this);
+            }
             this.activatePopup();
         }
     }
