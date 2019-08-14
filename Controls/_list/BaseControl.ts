@@ -1617,6 +1617,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._virtualScroll && this._itemsChanged) {
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);
+            // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
+            // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
+            this._checkLoadToDirectionTimeout = setTimeout(() => {
+                _private.checkLoadToDirectionCapability(this);
+                this._checkLoadToDirectionTimeout = null;
+            });
         }
 
         if (this._virtualScroll && this._applyScrollTopCallback) {
@@ -1637,20 +1643,22 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._savedStopIndex = this._listViewModel.getStopIndex();
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
+            this._checkShouldLoadToDirection = true;
             this._forceUpdate();
+        } else if (this._checkShouldLoadToDirection) {
+            // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
+            // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
+            this._checkLoadToDirectionTimeout = setTimeout(() => {
+                _private.checkLoadToDirectionCapability(this);
+                this._checkLoadToDirectionTimeout = null;
+            });
+            this._checkShouldLoadToDirection = false;
         }
 
         if (this._restoredScroll !== null) {
             _private.scrollToItem(this, this._restoredScroll.key, this._restoredScroll.toBottom);
             this._restoredScroll = null;
         }
-
-        // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
-        // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
-        this._checkLoadToDirectionTimeout = setTimeout(() => {
-            _private.checkLoadToDirectionCapability(this);
-            this._checkLoadToDirectionTimeout = null;
-        });
     },
 
     _afterUpdate: function(oldOptions) {
