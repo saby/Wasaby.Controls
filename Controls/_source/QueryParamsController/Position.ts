@@ -1,9 +1,9 @@
 import {QueryNavigationType} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
-import Env = require('Env/Env');
 import {default as IAdditionalQueryParams, Direction, DirectionCfg} from './interface/IAdditionalQueryParams';
 import {default as More} from './More';
+import {IoC} from 'Env/Env';
 
 interface IPositionHasMore {
    before: boolean;
@@ -175,14 +175,14 @@ class PositionNavigation {
             newMore[navDirection] = more;
             this._more.setMoreMeta(newMore);
          } else {
-            Env.IoC.resolve('ILogger')
+            IoC.resolve('ILogger')
                .error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be object');
          }
       } else if (more instanceof Object) {
          if (!loadDirection &&  this._options.direction === 'both') {
             this._more.setMoreMeta({...more});
          } else {
-            Env.IoC.resolve('ILogger')
+            IoC.resolve('ILogger')
                 .error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');
          }
       }
@@ -201,7 +201,7 @@ class PositionNavigation {
                   this._positionByMeta = true;
                }
             } else {
-               Env.IoC.resolve('ILogger')
+               IoC.resolve('ILogger')
                   .error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be object');
             }
          } else {
@@ -212,13 +212,13 @@ class PositionNavigation {
                   this._afterPosition = metaNextPosition.after;
                   this._positionByMeta = true;
                } else {
-                  Env.IoC.resolve('ILogger')
+                  IoC.resolve('ILogger')
                      .error('QueryParamsController/Position',
                         'Wrong type of \"nextPosition\" value. Must be Object width `before` and `after` properties.' +
                         'Each properties must be Arrays');
                }
             } else {
-               Env.IoC.resolve('ILogger')
+               IoC.resolve('ILogger')
                   .error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be Array');
             }
          }
@@ -245,14 +245,25 @@ class PositionNavigation {
       // TODO
    }
 
-   hasMoreData(loadDirection: Direction, rootKey: string|number): boolean {
+   hasMoreData(loadDirection: Direction, rootKey: string|number): boolean|undefined {
       let navDirection: DirectionCfg;
+      let moreData: HasMore|unknown;
+      let navigationResult: boolean|undefined;
+
       if (loadDirection === 'up') {
          navDirection = 'before';
       } else if (loadDirection === 'down') {
          navDirection = 'after';
       }
-      return this._more.getMoreMeta(rootKey)[navDirection];
+
+      moreData = this._more.getMoreMeta(rootKey);
+
+      // moreData can be undefined for root with rootKey, if method does not support multi-navigation.
+      if (moreData) {
+         navigationResult = moreData[navDirection];
+      }
+
+      return navigationResult;
    }
 
    setEdgeState(direction: Direction): void {
