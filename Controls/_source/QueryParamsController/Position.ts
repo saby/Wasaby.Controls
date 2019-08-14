@@ -263,7 +263,7 @@ class PositionNavigation {
          navigationResult = moreData[navDirection];
       }
 
-      return  navigationResult;
+      return navigationResult;
    }
 
    setEdgeState(direction: Direction): void {
