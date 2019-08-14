@@ -62,12 +62,6 @@ const _private = {
                 config.template = results[3];
                 const compatibleConfig = _private.getCompatibleConfig(BaseOpenerCompat, config);
                 const popupId = InformationPopupManager.showNotification(compatibleConfig, compatibleConfig.notHide);
-                if (self) {
-                    if (!self._popup) {
-                        self._popup = [];
-                    }
-                    self._popup.push(popupId);
-                }
                 resolve(popupId);
             });
         });
@@ -86,12 +80,10 @@ const _private = {
     compatibleClose(self) {
         // Close popup on old page
         if (!isNewEnvironment()) {
-            if (self._popup) {
-                for (let i = 0; i < self._popup.length; i++) {
-                    self._popup[i].close();
-                }
-                self._popup = [];
+            if (self._popupId) {
+                self._popupId.close();
             }
+            self._popupId = null;
         }
     }
 };
