@@ -604,7 +604,7 @@ var _private = {
 
     onScrollHide: function(self) {
         var needUpdate = false;
-        if (!self._loadOffset && self._isScrollShown) {
+        if (self._isScrollShown) {
             if (self._needScrollCalculation) {
                 self._setLoadOffset(0, 0);
             }
