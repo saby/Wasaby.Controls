@@ -413,11 +413,11 @@ var
                 columns: Array<{ width: string }> = self._columns,
                 hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
                 columnsWidth = hasMultiselect ? ['max-content'] : [],
-                hasAutoWidth = !!columns.find((column) => {
-                    return column.width === 'auto';
+                hasDynamicWidth = !!columns.find((column) => {
+                    return column.width && !column.width.match(GridLayoutUtil.nonDynamicWidthRegExp);
                 });
 
-            if (!hasAutoWidth) {
+            if (!hasDynamicWidth) {
                 columnsWidth = columnsWidth.concat(columns.map((column) => column.width || '1fr'));
             } else {
                 columnsWidth = columnsWidth.concat(self.getColumnsWidthForEditingRow(itemData));
