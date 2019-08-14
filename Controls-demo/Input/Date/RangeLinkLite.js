@@ -14,8 +14,11 @@ define('Controls-demo/Input/Date/RangeLinkLite', [
       _endValueBind: new Date(2017, 0, 31),
       _startValue: new Date(2017, 0, 1),
       _endValue: new Date(2017, 0, 31),
+      _startValueQuarter: new Date(2017, 0, 1),
       _endValueQuarter: new Date(2017, 2, 31),
+      _startValueHalfYear: new Date(2017, 0, 1),
       _endValueHalfYear: new Date(2017, 5, 30),
+      _startValueYear: new Date(2017, 0, 1),
       _endValueYear: new Date(2017, 11, 31)
    });
    return ModuleClass;
