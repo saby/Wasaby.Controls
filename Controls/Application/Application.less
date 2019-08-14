@@ -104,70 +104,10 @@ input[type="reset"]::-moz-focus-inner {
    white-space: nowrap;
 }
 
-.ws-component {
-   & > option, & > options, & > opt, & > opts {
-      display: none;
-   }
-}
-
-component {
-   display: block;
-   position: static;
-
-   & > option, & > options, & > opt, & > opts {
-      display: none;
-   }
-}
-
 .ws-standartLink .asLink {
    text-decoration: underline !important;
 }
 
-.ws-Label{
-   >.ws-Label-content {
-      display: inline-block;
-   }
-
-   &.ws-Label-ws-control {
-      vertical-align: top;
-      > .ws-Label-title {
-         position: relative;
-         top: 3px;
-         vertical-align: top;
-      }
-   }
-   &.ws-Label-titleTop {
-      > .ws-Label-title {
-         display: block;
-         top: 0;
-         padding-bottom: 3px;
-      }
-   }
-
-   &.ws-Label-titleLeft {
-      > .ws-Label-title {
-         margin-right: 8px;
-      }
-   }
-
-   &.ws-Label-titleRight {
-      > .ws-Label-title {
-         margin-left: 8px;
-      }
-   }
-
-   > .ws-Label-title{
-      font-size: @font-size_App__body;
-      font-family: @font-family_text_default;
-      color: #999999;
-      font-style: normal;
-      font-weight: normal;
-
-      > .ws-Label-icon {
-         vertical-align: sub;
-      }
-   }
-}
 .clearfix {
    display: inline-block;
    &:after {
