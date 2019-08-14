@@ -247,6 +247,73 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(clearColumnScroll._contentContainerSize, 100);
          assert.deepEqual(clearColumnScroll._shadowState, 'end');
          assert.deepEqual(clearColumnScroll._fixedColumnsWidth,  74);
+
+         clearColumnScroll._children.content = {
+            getElementsByClassName: (className) => {
+               if (className === 'controls-Grid__header') {
+                  return [
+                     {
+                        childNodes: [
+                           {
+                              offsetHeight: 50,
+                              offsetTop: 0
+                           },
+                           {
+                              offsetHeight: 50,
+                              offsetTop: 0
+                           },
+                        ]
+                     }
+                  ];
+               } else if (className === 'controls-Grid__results') {
+                  return [
+                     {
+                        childNodes: [
+                           {
+                              offsetHeight: 50,
+                           },
+                           {
+                              offsetHeight: 50,
+                           },
+                        ]
+                     }
+                  ];
+               } else {
+                  return [{
+                     scrollWidth: 500,
+                     offsetWidth: 250,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 20
+                        }
+                     },
+                     querySelector:
+
+                         function () {
+                            return {
+                               getBoundingClientRect: () => {
+                                  return {
+                                     left: 44
+                                  }
+                               },
+                               offsetWidth: 76
+                            };
+                         }
+                  }]
+               }
+            },
+         }
+         clearColumnScroll._setOffsetForHScroll();
+
+         assert.equal(clearColumnScroll._offsetForHScroll, 50);
+         assert.equal(clearColumnScroll._leftOffsetForHScroll, 74);
+
+         clearColumnScroll._options.multiSelectVisibility = 'hidden';
+         clearColumnScroll._afterUpdate({...cfg, multiSelectVisibility: 'visible'});
+
+         assert.equal(clearColumnScroll._offsetForHScroll, 50);
+         assert.equal(clearColumnScroll._leftOffsetForHScroll, 100);
+
       });
 
       it('no sticky columns', function() {
