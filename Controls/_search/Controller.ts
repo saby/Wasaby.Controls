@@ -1,11 +1,10 @@
-
 import Control = require('Core/Control');
 import template = require('wml!Controls/_search/Controller');
-import {ContextOptions as DataOptions} from 'Controls/context';
 import clone = require('Core/core-clone');
+import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
+import {ContextOptions as DataOptions} from 'Controls/context';
 import _SearchController from './_SearchController';
 import {isEqual} from 'Types/object';
-import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 import {RecordSet} from 'Types/collection';
 
 const SERVICE_FILTERS = {
@@ -103,7 +102,6 @@ var _private = {
 
    needUpdateSearchController: function (options, newOptions) {
       return !isEqual(options.navigation, newOptions.navigation) ||
-         !isEqual(options.sorting, newOptions.sorting) ||
          options.searchDelay !== newOptions.searchDelay ||
          options.source !== newOptions.source ||
          options.searchParam !== newOptions.searchParam ||
@@ -218,8 +216,11 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          } else if (filter) {
             this._searchController.setFilter(clone(filter));
          }
-      }
 
+         if (!isEqual(this._options.sorting, newOptions.sorting)) {
+            this._searchController.setSorting(newOptions.sorting);
+         }
+      }
       if (this._options.searchValue !== newOptions.searchValue && newOptions.searchValue !== this._inputSearchValue) {
          this._search(null, newOptions.searchValue);
       }

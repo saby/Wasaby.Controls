@@ -154,6 +154,10 @@ var Search  = extend({
 
    isLoading: function() {
       return this._searchDeferred && !this._searchDeferred.isReady();
+   },
+
+   setSorting: function(sorting) {
+      this._sorting = sorting;
    }
 
 });
