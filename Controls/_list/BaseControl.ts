@@ -204,6 +204,10 @@ var _private = {
     },
 
     resolveIndicatorStateAfterReload: function(self, list):void {
+        if (!self._isMounted) {
+            return
+        }
+
         const hasMoreDataDown = self._sourceController.hasMoreData('down');
         const hasMoreDataUp = self._sourceController.hasMoreData('up');
 
@@ -680,6 +684,10 @@ var _private = {
     },
 
     showIndicator: function(self, direction = 'all') {
+        if (!self._isMounted) {
+            return
+        }
+
         self._loadingState = direction;
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
@@ -689,14 +697,18 @@ var _private = {
                 self._loadingIndicatorTimer = null;
                 if (self._loadingState) {
                     self._loadingIndicatorState = self._loadingState;
+                    _private.saveScrollOnToggleLoadingIndicator(self);
                     self._showLoadingIndicatorImage = true;
-                    self._forceUpdate();
+                    self._notify('controlResize');
                 }
             }, 2000);
         }
     },
 
     hideIndicator: function(self) {
+        if (!self._isMounted) {
+            return
+        }
         self._loadingState = null;
         self._showLoadingIndicatorImage = false;
         if (self._loadingIndicatorTimer) {
@@ -704,8 +716,16 @@ var _private = {
             self._loadingIndicatorTimer = null;
         }
         if (self._loadingIndicatorState !== null) {
+            _private.saveScrollOnToggleLoadingIndicator(self);
             self._loadingIndicatorState = self._loadingState;
-            self._forceUpdate();
+            self._notify('controlResize');
+        }
+    },
+
+    saveScrollOnToggleLoadingIndicator(self: BaseControl): void {
+        if (self._loadingIndicatorState === 'up') {
+            self._shouldRestoreScrollPosition = true;
+            self._saveAndRestoreScrollPosition = self._loadingIndicatorState;
         }
     },
 
@@ -1182,10 +1202,9 @@ var _private = {
     isBlockedForLoading(loadingIndicatorState): boolean {
         return loadingIndicatorState === 'all';
     },
-    getLoadingIndicatorClasses(loadingIndicatorState, itemsCount): string {
+    getLoadingIndicatorClasses(loadingIndicatorState): string {
         return CssClassList.add('controls-BaseControl__loadingIndicator')
             .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
-            .add('controls-BaseControl-emptyView__loadingIndicator', itemsCount === 0)
             .compile();
     },
     hasItemActions: function(itemActions, itemActionsProperty) {
@@ -1216,6 +1235,8 @@ var _private = {
  */
 
 var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
+    _isMounted: false,
+
     _savedStartIndex: 0,
     _savedStopIndex: 0,
 
@@ -1371,6 +1392,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterMount: function() {
+        this._isMounted = true;
         if (this._needScrollCalculation) {
             this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom);
             _private.startScrollEmitter(this);
@@ -2077,7 +2099,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _getLoadingIndicatorClasses(): string {
-        return _private.getLoadingIndicatorClasses(this._loadingIndicatorState, this._listViewModel.getCount());
+        return _private.getLoadingIndicatorClasses(this._loadingIndicatorState);
     },
     _onHoveredItemChanged: function(e, item, container) {
         if (this._hasItemActions){

@@ -372,7 +372,7 @@ define([
          assert.isTrue(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after mounting');
       });
 
-      it('loadToDirection down', function(done) {
+      it('loadToDirection down', async function() {
          var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
@@ -413,20 +413,16 @@ define([
 
 
          ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
+         await ctrl._beforeMount(cfg);
+         ctrl._afterMount(cfg);
 
-         setTimeout(function() {
-            lists.BaseControl._private.loadToDirection(ctrl, 'down');
-
-            assert.equal(ctrl._loadingState, 'down');
-            setTimeout(function() {
-               assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
-               assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
-               assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
-               assert.equal(ctrl._loadingState, null);
-               done();
-            }, 100);
-         }, 100);
+         const loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         assert.equal(ctrl._loadingState, 'down');
+         await loadPromise;
+         assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+         assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+         assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
+         assert.equal(ctrl._loadingState, null);
       });
 
       it('prepareFooter', function() {
@@ -996,13 +992,13 @@ define([
          assert.isTrue(callbackCalled);
       });
 
-      it('loadToDirection up', function(done) {
-         var source = new sourceLib.Memory({
+      it('loadToDirection up', async function() {
+         const source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
 
-         var cfg = {
+         const cfg = {
             viewName: 'Controls/List/ListView',
             source: source,
             viewConfig: {
@@ -1022,20 +1018,16 @@ define([
                }
             }
          };
-         var ctrl = new lists.BaseControl(cfg);
-         ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
+         const baseControl = new lists.BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         baseControl._afterMount(cfg);
 
-         setTimeout(function() {
-            lists.BaseControl._private.loadToDirection(ctrl, 'up');
-
-            assert.equal(ctrl._loadingState, 'up');
-            setTimeout(function() {
-               assert.equal(ctrl._loadingState, null);
-               assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
-               done();
-            }, 100);
-         }, 100);
+         const loadPromise = lists.BaseControl._private.loadToDirection(baseControl, 'up');
+         assert.equal(baseControl._loadingState, 'up');
+         await loadPromise;
+         assert.equal(baseControl._loadingState, null);
+         assert.equal(6, lists.BaseControl._private.getItemsCount(baseControl), 'Items wasn\'t load');
       });
 
       it('items should get loaded when a user scrolls to the bottom edge of the list', function(done) {
@@ -1180,6 +1172,12 @@ define([
       it('indicator', function() {
          var cfg = {};
          var ctrl = new lists.BaseControl(cfg);
+
+         lists.BaseControl._private.showIndicator(ctrl, 'down');
+         assert.isNull(ctrl._loadingState, 'Wrong loading state');
+         assert.isNull(ctrl._loadingIndicatorState, 'Wrong loading state');
+
+         ctrl._isMounted = true;
 
          lists.BaseControl._private.showIndicator(ctrl, 'down');
          assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
@@ -1664,12 +1662,13 @@ define([
       it('_processError', function() {
          var self = {
             _loadingState: 'all',
-            _forceUpdate: () => {},
+            _notify: () => {},
             __errorController: {
                process: () => {
                   return new Promise(() => {});
                }
-            }
+            },
+            _isMounted: true
          };
 
          lists.BaseControl._private.processError(self, {error: {}});
@@ -2640,6 +2639,7 @@ define([
          var
             dragEnded,
             ctrl = new lists.BaseControl();
+         ctrl._isMounted = true;
 
          //dragend without deferred
          dragEnded = false;
@@ -3660,7 +3660,8 @@ define([
          var baseControlMock = {
             _needScrollCalculation: true,
             _sourceController: {hasMoreData: () => {return true;}},
-            _forceUpdate: () => {}
+            _notify: () => {},
+            _isMounted: true
          };
          var emptyList = new collection.List();
          var list = new collection.List({items: [{test: 'testValue'}]});
@@ -3827,6 +3828,7 @@ define([
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
+         instance._afterMount(cfg);
 
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
@@ -3909,30 +3911,64 @@ define([
 
       it('_getLoadingIndicatorClasses', function () {
 
-         function testCaseWithArgs(indicatorState, itemsCount) {
-            return lists.BaseControl._private.getLoadingIndicatorClasses(indicatorState, itemsCount);
+         function testCaseWithArgs(indicatorState) {
+            return lists.BaseControl._private.getLoadingIndicatorClasses(indicatorState);
          }
 
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all controls-BaseControl-emptyView__loadingIndicator', testCaseWithArgs('all', 0));
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up controls-BaseControl-emptyView__loadingIndicator', testCaseWithArgs('up', 0));
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down controls-BaseControl-emptyView__loadingIndicator', testCaseWithArgs('down', 0));
-
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all', testCaseWithArgs('all', 1));
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up', testCaseWithArgs('up', 1));
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down', testCaseWithArgs('down', 1));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all', testCaseWithArgs('all'));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up', testCaseWithArgs('up'));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down', testCaseWithArgs('down'));
 
       });
 
+      it('saveScrollOnToggleLoadingIndicator', async function () {
+         let
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                sorting: [],
+                viewModelConfig: {
+                   items: [],
+                   keyProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id',
+                source: source
+             },
+             instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         instance._shouldRestoreScrollPosition = false;
+         instance._loadingIndicatorState = 'all';
+
+         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
+         assert.isFalse(instance._shouldRestoreScrollPosition);
+         assert.isUndefined(instance._saveAndRestoreScrollPosition);
+
+         instance._shouldRestoreScrollPosition = false;
+         instance._loadingIndicatorState = 'up';
+
+         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
+         assert.isTrue(instance._shouldRestoreScrollPosition);
+         assert.equal('up', instance._saveAndRestoreScrollPosition);
+
+         instance._shouldRestoreScrollPosition = false;
+         instance._loadingIndicatorState = 'down';
+         instance._saveAndRestoreScrollPosition = undefined;
+
+         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
+         assert.isFalse(instance._shouldRestoreScrollPosition);
+         assert.isUndefined(instance._saveAndRestoreScrollPosition);
+      });
+
       describe('navigation', function () {
-         it('Navigation demand', function(done) {
-            var source = new sourceLib.Memory({
+         it('Navigation demand', async function() {
+            const source = new sourceLib.Memory({
                idProperty: 'id',
                data: data
             });
 
-            var dataLoadFired = false;
-
-            var cfg = {
+            const cfg = {
                viewName: 'Controls/List/ListView',
                dataLoadCallback: function() {
                   dataLoadFired = true;
@@ -3956,28 +3992,25 @@ define([
                   }
                }
             };
+            let dataLoadFired = false;
 
-            var ctrl = new lists.BaseControl(cfg);
-
+            const ctrl = new lists.BaseControl(cfg);
 
             ctrl.saveOptions(cfg);
-            ctrl._beforeMount(cfg);
+            await ctrl._beforeMount(cfg);
+            ctrl._afterMount(cfg);
 
-            setTimeout(function() {
-               assert.isTrue(ctrl._shouldDrawFooter, 'Failed draw footer on first load.');
-               assert.equal(ctrl._loadMoreCaption, 3, 'Failed draw footer on first load.');
+            assert.isTrue(ctrl._shouldDrawFooter, 'Failed draw footer on first load.');
+            assert.equal(ctrl._loadMoreCaption, 3, 'Failed draw footer on first load.');
 
-               lists.BaseControl._private.loadToDirection(ctrl, 'down');
-               assert.equal(ctrl._loadingState, 'down');
-               setTimeout(function() {
-                  assert.isFalse(ctrl._shouldDrawFooter, 'Failed draw footer on second load.');
+            const loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
+            assert.equal(ctrl._loadingState, 'down');
 
-                  assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
-                  assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
-                  assert.equal(ctrl._loadingState, null);
-                  done();
-               }, 100);
-            }, 100);
+            await loadPromise;
+            assert.isFalse(ctrl._shouldDrawFooter, 'Failed draw footer on second load.');
+            assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+            assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+            assert.equal(ctrl._loadingState, null);
          });
          it('Navigation position', function() {
             return new Promise(function(resolve, reject) {
