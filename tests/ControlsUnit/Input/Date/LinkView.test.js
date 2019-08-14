@@ -24,24 +24,62 @@ define([
 
          describe('Styles', function() {
             const tests = [{
-               viewMode: 'selector',
-               styleMode: 'secondary',
+               options: {
+                  viewMode: 'selector',
+                  styleMode: 'secondary'
+               },
+               styleClass: 'controls-DateLinkView__style-secondary_clickable'
+            }, {
+               options: {
+                  viewMode: 'selector',
+                  styleMode: 'info'
+               },
+               styleClass: 'controls-DateLinkView__style-info_clickable'
+            }, {
+               options: {
+                  viewMode: 'selector',
+                  styleMode: 'secondary',
+                  clickable: false
+               },
                styleClass: 'controls-DateLinkView__style-secondary'
             }, {
-               viewMode: 'selector',
-               styleMode: 'info',
+               options: {
+                  viewMode: 'selector',
+                  styleMode: 'info',
+                  clickable: false
+               },
                styleClass: 'controls-DateLinkView__style-info'
             }, {
-               viewMode: 'link',
-               styleMode: 'secondary',
-               styleClass: 'controls-DateLinkView__style-secondary'
+               options: {
+                  viewMode: 'selector',
+                  styleMode: 'secondary',
+                  readOnly: true
+               },
+               styleClass: 'controls-DateLinkView__style-secondary_readOnly'
             }, {
-               viewMode: 'link',
-               styleMode: 'info',
-               styleClass: 'controls-DateLinkView__style-info'
+               options: {
+                  viewMode: 'selector',
+                  styleMode: 'info',
+                  readOnly: true
+               },
+               styleClass: 'controls-DateLinkView__style-info_readOnly'
             }, {
-               viewMode: 'label',
-               styleMode: '',
+               options: {
+                  viewMode: 'link',
+                  styleMode: 'secondary'
+               },
+               styleClass: 'controls-DateLinkView__style-secondary_clickable'
+            }, {
+               options: {
+                  viewMode: 'link',
+                  styleMode: 'info'
+               },
+               styleClass: 'controls-DateLinkView__style-info_clickable'
+            }, {
+               options: {
+                  viewMode: 'label',
+                  styleMode: ''
+               },
                styleClass: null
             }];
 
@@ -49,7 +87,7 @@ define([
                it(`should initialize correct styles ${testNumber}.`, function() {
                   const component = calendarTestUtils.createComponent(
                      dateRange.LinkView,
-                     { viewMode: test.viewMode, styleMode: test.styleMode }
+                     test.options
                   );
                   assert.equal(component._styleClass, test.styleClass);
                });
@@ -57,8 +95,10 @@ define([
 
             tests.forEach(function(test, testNumber) {
                it(`should update correct styles ${testNumber}.`, function() {
-                  const component = calendarTestUtils.createComponent(dateRange.LinkView, {});
-                  component._beforeUpdate({ viewMode: test.viewMode, styleMode: test.styleMode });
+                  const
+                     component = calendarTestUtils.createComponent(dateRange.LinkView, {}),
+                     options = calendarTestUtils.prepareOptions(dateRange.LinkView, test.options);
+                  component._beforeUpdate(options);
                   assert.equal(component._styleClass, test.styleClass);
                });
             });
@@ -159,15 +199,24 @@ define([
             sinon.assert.calledWith(component._notify, 'linkClick');
             sandbox.restore();
          });
-         it('should not generate "linkClick" event if control disabled', function() {
-            const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(dateRange.LinkView, { readOnly: true });
 
-            sandbox.stub(component, '_notify');
-            component._onClick();
+         [{
+            title: 'control disabled',
+            options: { readOnly: true }
+         }, {
+            title: 'clickable option is false',
+            options: { clickable: false }
+         }].forEach(function(test) {
+            it(`should not generate "linkClick" event if ${test.title}`, function() {
+               const sandbox = sinon.sandbox.create(),
+                  component = calendarTestUtils.createComponent(dateRange.LinkView, test.options);
 
-            sinon.assert.notCalled(component._notify);
-            sandbox.restore();
+               sandbox.stub(component, '_notify');
+               component._onClick();
+
+               sinon.assert.notCalled(component._notify);
+               sandbox.restore();
+            });
          });
       });
       describe('_clearDate', function() {
