@@ -176,6 +176,13 @@ var _private = {
                     data: list
                 });
 
+                if (self._isMounted && self._isScrollShown) {
+                    // При полной перезагрузке данных нужно сбросить состояние скролла
+                    // и вернуться к началу списка, иначе браузер будет пытаться восстановить
+                    // scrollTop, догружая новые записи после сброса.
+                    self._resetScrollAfterReload = true;
+                }
+
                 // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                 if (!list.getCount()) {
                     _private.checkLoadToDirectionCapability(self);
@@ -1253,7 +1260,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _emptyTemplateVisibility: true,
     _intertialScrolling: null,
 
-    _resetScrollAfterUpdate: false,
+    _resetScrollAfterReload: false,
+    _isMounted: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1349,6 +1357,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterMount: function() {
+        this._isMounted = true;
         if (this._needScrollCalculation) {
             this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom);
             _private.startScrollEmitter(this);
@@ -1433,11 +1442,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this);
-
-            // При полной перезагрузке данных нужно сбросить состояние скролла
-            // и вернуться к началу списка, иначе браузер будет пытаться восстановить
-            // scrollTop, догружая новые записи после сброса.
-            this._resetScrollAfterUpdate = true;
 
             //return result here is for unit tests
             return _private.reload(self, newOptions);
@@ -1594,6 +1598,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._hasItemActions) {
             this._canUpdateItemsActions = false;
         }
+        if (this._resetScrollAfterReload) {
+            this._notify('doScroll', ['top'], { bubbling: true });
+            this._resetScrollAfterReload = false;
+        }
         if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
@@ -1612,11 +1620,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             } else if (!this._sourceController.isLoading() && this._loadingState === 'all') {
                 _private.hideIndicator(this);
             }
-        }
-
-        if (this._resetScrollAfterUpdate) {
-            _private.scrollToEdge(this, 'up');
-            this._resetScrollAfterUpdate = false;
         }
     },
 
