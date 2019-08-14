@@ -20,9 +20,12 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/interface/IDropdown
- * @mixes Controls/_interface/IButton
  * @mixes Controls/_interface/IIcon
+ * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_interface/IIconStyle
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IHeight
  * @control
  * @public
  * @author Герасимов А.М.
