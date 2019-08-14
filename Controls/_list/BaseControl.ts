@@ -204,6 +204,10 @@ var _private = {
     },
 
     resolveIndicatorStateAfterReload: function(self, list):void {
+        if (!self._isMounted) {
+            return
+        }
+
         const hasMoreDataDown = self._sourceController.hasMoreData('down');
         const hasMoreDataUp = self._sourceController.hasMoreData('up');
 
@@ -675,6 +679,10 @@ var _private = {
     * Индикатор показывается при перезагрузке(reload) списка, которая происходит перед маунтом бэйз контролла.
     * */
     showIndicator: function(self, direction = 'all', shouldNotifyControlResize = true) {
+        if (!self._isMounted) {
+            return
+        }
+
         self._loadingState = direction;
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
@@ -704,6 +712,9 @@ var _private = {
     * Индикатор показывается при перезагрузке(reload) списка, которая происходит перед маунтом бэйз контролла.
     * */
     hideIndicator: function(self, shouldNotifyControlResize = true) {
+        if (!self._isMounted) {
+            return
+        }
         self._loadingState = null;
         self._showLoadingIndicatorImage = false;
         if (self._loadingIndicatorTimer) {
@@ -1232,6 +1243,8 @@ var _private = {
  */
 
 var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
+    _isMounted: false,
+
     _savedStartIndex: 0,
     _savedStopIndex: 0,
 
@@ -1386,6 +1399,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterMount: function() {
+        this._isMounted = true;
         if (this._needScrollCalculation) {
             this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom);
             _private.startScrollEmitter(this);
@@ -1594,6 +1608,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._virtualScroll && this._applyScrollTopCallback) {
             this._applyScrollTopCallback();
             this._applyScrollTopCallback = null;
+            setTimeout(function() {
+                _private.checkLoadToDirectionCapability(this);
+            }.bind(this));
         }
 
         // todo KINGO.
