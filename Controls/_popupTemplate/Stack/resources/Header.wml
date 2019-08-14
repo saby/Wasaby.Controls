@@ -12,7 +12,7 @@
       </ws:if>
       <ws:if data="{{headerContentTemplate}}">
          <div class="controls-StackTemplate__headerContentTemplate controls-StackTemplate__headerContentTemplate_theme_{{theme}}">
-            <ws:partial template="{{headerContentTemplate}}" scope="{{stackOptions}}" theme="{{theme}}" attr:class="controls-StackTemplate__headerContentTemplate_content_theme_{{theme}}"/>
+               <ws:partial template="{{headerContentTemplate}}" scope="{{stackOptions}}" theme="{{theme}}"/>
          </div>
       </ws:if>
       <div class="controls-StackTemplate__command_buttons controls-StackTemplate__command_buttons_theme_{{theme}}">
