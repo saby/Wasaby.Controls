@@ -107,7 +107,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
     protected _beforeUpdate(options: IModuleComponentOptions): void {
         this._updateItemTemplate(options);
         this._updateSource(options);
-        if (options.position !== this._displayedPosition) {
+        if (+options.position !== +this._displayedPosition) {
             this._updatePosition(options.position, this._options.position);
         }
     }
