@@ -102,6 +102,14 @@ var SearchController = extend({
       return this._options.filter;
    },
 
+   setSorting: function(sorting) {
+     this._options.sorting = sorting;
+
+     if (this._search) {
+        this._search.setSorting(sorting);
+     }
+   },
+
    abort: function(force) {
       _private.abort(this, force);
    }
