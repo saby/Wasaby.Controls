@@ -12,10 +12,11 @@
                prevArrowVisibility="{{true}}"
                nextArrowVisibility="{{true}}"
                showClearButton="{{true}}"
-               startValue="{{_startValue}}"
-               endValue="{{_endValueHalfYear}}"
-			   attr:test_name="show_arrow_range"
+               bind:startValue="_startValueHalfYear"
+               bind:endValue="_endValueHalfYear"
+			      attr:test_name="show_arrow_range"
                ranges="{{ {'days': [1,3], 'weeks': [1]} }}"
+               selectionType="quantum"
             />
          </div>
          <div class="controlsDemo-RageLink__componentWrap">
@@ -31,8 +32,8 @@
          </div>
          <div class="controlsDemo-RageLink__componentWrap">
             <Controls.dateRange:Selector
-               startValue="{{_startValue}}"
-               endValue="{{_endValueQuarter}}"
+               bind:startValue="_startValueQuarter"
+               bind:endValue="_endValueQuarter"
                chooseHalfyears="{{false}}"
                chooseMonths="{{false}}"
                viewMode="link"
@@ -50,8 +51,8 @@
          </div>
          <div class="controlsDemo-RageLink__componentWrap">
             <Controls.dateRange:Selector
-               startValue="{{_startValue}}"
-               endValue="{{_endValueYear}}"
+               bind:startValue="_startValueYear"
+               bind:endValue="_endValueYear"
                chooseHalfyears="{{false}}"
                chooseMonths="{{false}}"
                chooseQuarters="{{false}}"
