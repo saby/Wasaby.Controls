@@ -46,7 +46,11 @@ var ListControl = Control.extend(/** @lends Controls/_list/ListControl.prototype
     reloadItem: function():Deferred {
         let baseControl = this._children.baseControl;
         return baseControl.reloadItem.apply(baseControl, arguments);
-    }
+    },
+
+    scrollToItem(key: string|number, toBottom: boolean): void {
+        this._children.baseControl.scrollToItem(key, toBottom);
+    },
 });
 
 ListControl.getDefaultOptions = function () {
