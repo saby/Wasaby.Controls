@@ -34,6 +34,8 @@ import 'css!theme?Controls/datePopup';
  * @css @spacing_PeriodDialog-header-between-borderLeft-content Spacing between left border and header content.
  * @css @height_PeriodDialog-header Height of dialog header.
  * @css @spacing_PeriodDialog-header-between-stateButton-date Spacing between state button and date in header.
+ * @css @color_PeriodDialog-header-dash Color of dash between start and end input fields.
+ * @css @thickness_PeriodDialog-header-dash Thickness of dash between start and end input fields.
  * @css @width_PeriodDialog-header-dash Width of the dash between start and end input fields.
  * @css @spacing_PeriodDialog-header-between-dash-date Spacing between dash and input fields.
  * @css @spacing_PeriodDialog-header-between-applyButton-otherElements Spacing between apply button and other header elements.
