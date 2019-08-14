@@ -1,18 +1,17 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/View/View');
-
-import {isEqual} from 'Types/object';
 import CoreClone = require('Core/core-clone');
 import Merge = require('Core/core-merge');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
+import converterFilterItems = require('Controls/_filter/converterFilterItems');
+import getFormattedDateRange = require('Core/helpers/Date/getFormattedDateRange');
+import {isEqual} from 'Types/object';
 import {Controller as SourceController} from 'Controls/source';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
-import converterFilterItems = require('Controls/_filter/converterFilterItems');
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
-import getFormattedDateRange = require('Core/helpers/Date/getFormattedDateRange');
 
 /**
  * Контрол для фильтрации данных. Состоит из иконки-кнопки, строкового представления выбранного фильтра и параметров быстрого фильтра.
@@ -41,8 +40,6 @@ import getFormattedDateRange = require('Core/helpers/Date/getFormattedDateRange'
  * @public
  * @author Золотова Э.Е.
  */
-
-const DELAY_OPEN = 100;
 
 var _private = {
     getItemByName: function(items, name) {
@@ -354,7 +351,6 @@ var Filter = Control.extend({
     _configs: null,
     _source: null,
     _idOpenSelector: null,
-    _delayOpenTimeout: null,
     _dateRangeItem: null,
 
     _beforeMount: function(options, context, receivedState) {
@@ -392,24 +388,6 @@ var Filter = Control.extend({
             }
             return resultDef;
         }
-    },
-
-    _startTimer: function(event, name) {
-        if (!this._delayOpenTimeout) {
-            this._delayOpenTimeout = setTimeout(function () {
-                this._openPanel(event, name);
-            }.bind(this), DELAY_OPEN);
-        }
-    },
-
-    _restartTimer: function(event, name) {
-        this._resetTimer();
-        this._startTimer(event, name);
-    },
-
-    _resetTimer: function() {
-        clearTimeout(this._delayOpenTimeout);
-        this._delayOpenTimeout = null;
     },
 
     _openDetailPanel: function() {
