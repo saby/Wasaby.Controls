@@ -669,16 +669,7 @@ var _private = {
         };
     },
 
-    /*
-    * TODO: Kingo
-    * Флаг shouldNotifyControlResize опреедляет, нужно ли кидать вверх событие о изменении размера списка.
-    * Система событий не позволяет стрелять событием до маунта контролла.
-    *
-    * Т.к. контейнер индикатора загрузки имеет релативное позиционирование, при его показе и скрытии список меняет размер и
-    * необходимо кинуть событие controlResize для корректной работы, например, виртуального скролла.
-    * Индикатор показывается при перезагрузке(reload) списка, которая происходит перед маунтом бэйз контролла.
-    * */
-    showIndicator: function(self, direction = 'all', shouldNotifyControlResize = true) {
+    showIndicator: function(self, direction = 'all') {
         if (!self._isMounted) {
             return
         }
@@ -694,24 +685,13 @@ var _private = {
                     self._loadingIndicatorState = self._loadingState;
                     _private.saveScrollOnToggleLoadingIndicator(self);
                     self._showLoadingIndicatorImage = true;
-                    if (shouldNotifyControlResize) {
-                        self._notify('controlResize');
-                    }
+                    self._notify('controlResize');
                 }
             }, 2000);
         }
     },
 
-    /*
-    * TODO: Kingo
-    * Флаг shouldNotifyControlResize опреедляет, нужно ли кидать вверх событие о изменении размера списка.
-    * Система событий не позволяет стрелять событием до маунта контролла.
-    *
-    * Т.к. контейнер индикатора загрузки имеет релативное позиционирование, при его показе и скрытии список меняет размер и
-    * необходимо кинуть событие controlResize для корректной работы, например, виртуального скролла.
-    * Индикатор показывается при перезагрузке(reload) списка, которая происходит перед маунтом бэйз контролла.
-    * */
-    hideIndicator: function(self, shouldNotifyControlResize = true) {
+    hideIndicator: function(self) {
         if (!self._isMounted) {
             return
         }
@@ -724,9 +704,7 @@ var _private = {
         if (self._loadingIndicatorState !== null) {
             _private.saveScrollOnToggleLoadingIndicator(self);
             self._loadingIndicatorState = self._loadingState;
-            if (shouldNotifyControlResize) {
-                self._notify('controlResize');
-            }
+            self._notify('controlResize');
         }
     },
 
@@ -1608,9 +1586,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._virtualScroll && this._applyScrollTopCallback) {
             this._applyScrollTopCallback();
             this._applyScrollTopCallback = null;
-            setTimeout(function() {
-                _private.checkLoadToDirectionCapability(this);
-            }.bind(this));
         }
 
         // todo KINGO.
