@@ -173,7 +173,7 @@ var
             scrollHeight = _private.getScrollHeight(self._children.content),
             containerHeight = _private.getContainerHeight(self._children.content);
 
-         return _private.calcShadowPosition(scrollTop, containerHeight, scrollHeight);
+         return _private.calcShadowPosition(scrollTop, containerHeight, scrollHeight + self._topPlaceholderSize + self._bottomPlaceholderSize);
       },
 
       calcHeightFix: function(self) {
@@ -431,6 +431,10 @@ var
          }
 
          return this._displayState.shadowPosition.indexOf(position) !== -1 && !this._children.stickyController.hasFixed(position);
+      },
+
+      _updateShadowMode(event, shadowVisibleObject): void {
+         this.setShadowMode(shadowVisibleObject);
       },
 
       setShadowMode: function(shadowVisibleObject) {

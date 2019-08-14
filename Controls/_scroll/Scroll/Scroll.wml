@@ -23,6 +23,7 @@
                            on:saveScrollPosition="_saveScrollPosition()"
                            on:updatePlaceholdersSize="_updatePlaceholdersSize()"
                            on:restoreScrollPosition="_restoreScrollPosition()"
+                           on:updateShadowMode="_updateShadowMode()"
                            on:selectedKeysChanged="selectedKeysChanged()"
                            on:excludedKeysChanged="excludedKeysChanged()"
                            on:itemClick="itemClick()"

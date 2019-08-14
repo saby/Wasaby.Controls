@@ -416,7 +416,7 @@ var _private = {
     },
 
     // Применяем расчитанные и хранимые на virtualScroll стартовый и конечный индексы на модель.
-    applyVirtualScrollIndexesToListModel(self): void {
+    applyVirtualScrollIndexesToListModel(self): boolean {
         const newIndexes = self._virtualScroll.ItemsIndexes;
         const model = self._listViewModel;
         return model.setIndexes(newIndexes.start, newIndexes.stop);
@@ -428,6 +428,12 @@ var _private = {
             self._notify('updatePlaceholdersSize', [{
                 top: self._virtualScroll.PlaceholdersSizes.top,
                 bottom: self._virtualScroll.PlaceholdersSizes.bottom
+            }], { bubbling: true });
+            self._notify('updateShadowMode', [{
+                top: self._virtualScroll.PlaceholdersSizes.top ||
+                    self._sourceController && self._sourceController.hasMoreData('up') ? 'visible' : 'auto',
+                bottom: self._virtualScroll.PlaceholdersSizes.bottom ||
+                    self._sourceController && self._sourceController.hasMoreData('down') ? 'visible' : 'auto'
             }], { bubbling: true });
         }
     },

@@ -1147,6 +1147,66 @@ define([
          assert.isFalse(!!ctrl._loadingIndicatorTimer);
       });
 
+       it ('updateShadowMode', function() {
+           var
+               placeholdersSizes = {
+                   top: 0,
+                   bottom: 0
+               },
+               hasMoreData = {
+                   up: true,
+                   down: true
+               },
+               updateShadowModeParams,
+               mockedControl = {
+                   _virtualScroll: {
+                       PlaceholdersSizes: placeholdersSizes
+                   },
+                   _sourceController: {
+                       hasMoreData: function(direction) {
+                           return hasMoreData[direction];
+                       }
+                   },
+                   _notify: function(eventName, params) {
+                       if (eventName === 'updateShadowMode') {
+                           updateShadowModeParams = params[0];
+                       }
+                   }
+               };
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'visible', bottom: 'visible' });
+
+           placeholdersSizes.top = 100;
+           placeholdersSizes.bottom = 100;
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'visible', bottom: 'visible' });
+
+           hasMoreData.up = false;
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'visible', bottom: 'visible' });
+
+           placeholdersSizes.top = 0;
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'visible' });
+
+           hasMoreData.down = false;
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'visible' });
+
+           placeholdersSizes.bottom = 0;
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'auto' });
+
+           hasMoreData.up = true;
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'visible', bottom: 'auto' });
+
+           hasMoreData.up = false;
+           hasMoreData.down = true;
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'visible' });
+       });
+
       it('scrollToEdge_load', function(done) {
          var rs = new collection.RecordSet({
             idProperty: 'id',
