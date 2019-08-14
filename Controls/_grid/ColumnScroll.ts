@@ -147,7 +147,10 @@ const
          * TODO: Kingo
          * Смена колонок может не вызвать событие resize на обёртке грида(ColumnScroll), если общая ширина колонок до обновления и после одинакова.
          * */
-         if (!isEqualWithSkip(this._options.columns, oldOptions.columns, { template: true, resultTemplate: true })) {
+         if (
+             !isEqualWithSkip(this._options.columns, oldOptions.columns, { template: true, resultTemplate: true })
+             || this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility
+         ) {
             _private.updateSizes(this);
          }
          if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
