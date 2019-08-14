@@ -237,12 +237,10 @@ define('Controls/interface/IFilterButton', [
 
    /**
     * @name Controls/interface/IFilterButton#alignment
-    * @cfg {String}  Устанавливает выравнивание кнопки фильтров.
-    * @variant right Кнопка прикреплена к правому краю, всплывающая панель открывается влево.
-    * @variant left Кнопка прикреплена к левому краю, всплывающая панель открывается вправо.
+    * @cfg {String} Задаёт выравнивание кнопки фильтров.
+    * @variant right Кнопка прикреплена к правому краю. Всплывающая панель открывается влево. Строка выбранных фильтров отображается слева от кнопки.
+    * @variant left Кнопка прикреплена к левому краю. Всплывающая панель открывается вправо. Строка выбранных фильтров отображается справа от кнопки.
     * @default right
-    * @remark
-    * Строка, которая формируется по значениям textValue из опции items, также меняет своё выравнивание.
     * @example
     * Пример открытия панели фильтров справа:
     * <pre>
@@ -284,15 +282,15 @@ define('Controls/interface/IFilterButton', [
     */
 
    /**
-    * @event Controls/_filter/interface/IFilterView#itemsChanged Происходит при изменении элементов.
+    * @event Controls/interface/IFilterButton#itemsChanged Происходит при изменении структры фильтра.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Object} items Новый элемент.
+    * @param {Array.<FilterPanelItems>} items Новая структура фильтра.
     */
 
    /*
     * @event Controls/interface/IFilterButton#itemsChanged Happens when items changed.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
-    * @param {Object} items New items.
+    * @param {Array.<FilterPanelItems>} items New items.
     */
 
 });
