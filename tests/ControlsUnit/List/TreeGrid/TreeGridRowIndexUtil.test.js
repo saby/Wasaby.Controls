@@ -134,6 +134,8 @@ define([
                   assert.equal(model._getRowIndexHelper().getResultsIndex(), 1);
                   model._options._needBottomPadding = true;
                   assert.equal(model._getRowIndexHelper().getResultsIndex(), 1);
+                  model._multyHeaderOffset = 1;
+                  assert.equal(model._getRowIndexHelper().getResultsIndex(), 2);
                });
 
                it('getBottomPaddingRowIndex', function () {
@@ -141,6 +143,8 @@ define([
                   assert.isTrue(index > 11 * 2 + 1);
                   model._setEditingItemData({index: 0});
                   assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
+                  model._multyHeaderOffset = 1;
+                  assert.equal(index + 2, model._getRowIndexHelper().getBottomPaddingRowIndex());
                });
 
                it('getFooterIndex', function () {
@@ -148,6 +152,8 @@ define([
                   assert.isTrue(index > 11 * 2 + 1);
                   model._options._needBottomPadding = true;
                   assert.equal(index + 1, model._getRowIndexHelper().getFooterIndex());
+                  model._multyHeaderOffset = 1;
+                  assert.equal(index + 2, model._getRowIndexHelper().getFooterIndex());
                });
 
             });
