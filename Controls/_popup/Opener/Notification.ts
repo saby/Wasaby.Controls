@@ -80,7 +80,7 @@ const _private = {
     compatibleClose(self) {
         // Close popup on old page
         if (!isNewEnvironment()) {
-            if (self._popupId) {
+            if (self._popupId && self._popupId.close) {
                 self._popupId.close();
             }
             self._popupId = null;
