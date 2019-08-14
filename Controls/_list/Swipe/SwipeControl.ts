@@ -113,7 +113,7 @@ export default class SwipeControl extends Control {
       this._measurer = MEASURER_NAMES[actionAlignment];
    }
 
-   private _prepareTwoColunms(showedActions): Array {
+   private _prepareTwoColumns(showedActions): Array {
       return [[showedActions[0],showedActions[1]],
               [showedActions[2],showedActions[3]]];
    }
@@ -143,7 +143,7 @@ export default class SwipeControl extends Control {
          }
          listModel.setItemActions(itemData.actionsItem, this._swipeConfig.itemActions);
          if (this._swipeConfig.twoColumns) {
-            this._swipeConfig.itemActions.showed = this._prepareTwoColunms(this._swipeConfig.itemActions.showed);
+            this._swipeConfig.twoColumnsActions = this._prepareTwoColumns(this._swipeConfig.itemActions.showed);
          }
       }
       this._animationState = 'open';
