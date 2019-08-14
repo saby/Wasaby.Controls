@@ -108,7 +108,7 @@ define(['Controls/grid'], function(gridMod) {
          gridMod.GridView.superclass._beforeUpdate = superclassBeforeUpdate;
          assert.isTrue(superclassBeforeUpdateCalled, 'Superclass method not called in "_beforeUpdate".');
       });
-      it('beforePaint', function() {
+      it('afterMount and beforePaint', function() {
          var
             cfg = {
                columns: [
@@ -122,12 +122,19 @@ define(['Controls/grid'], function(gridMod) {
             gridView._options.header = [{}, {}, {}]
             let setHeightWasCalled = false
             gridView._isHeaderChanged = false;
-            gridView._afterMount = () => {gridView._isHeaderChanged = true}
+            gridView._afterMount = () => {
+               if (gridView._options.header && gridView._listModel._isMultyHeader && gridView._listModel.isStickyHeader()) {
+                  gridView._listModel.setHeaderCellMinHeight(gridView._setHeaderWithHeight());
+               }
+               gridView._isHeaderChanged = true
+            }
 
             gridView._listModel = {
                _isMultyHeader: true,
                isStickyHeader: () => true,
                setHeaderCellMinHeight: (header) => header.length,
+               _isMultyHeader: true,
+               isDrawHeaderWithEmtyList: () => true
             }
             gridView._setHeaderWithHeight = () => {
                setHeightWasCalled = true;
@@ -138,6 +145,7 @@ define(['Controls/grid'], function(gridMod) {
             gridView._beforePaint()
             assert.isFalse(gridView._isHeaderChanged)
       });
+
       it('resultPosition update', function(){
          let gridView = new gridMod.GridView({resultsPosition: 'top'});
          let setResultPosinionCalled = false;

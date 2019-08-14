@@ -167,7 +167,7 @@ define(
             let view = getView(defaultConfig),
                popupOptions;
             view._children = {
-               DropdownOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} }
+               StickyOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} }
             };
             view._container = {};
             view._options.detailPanelTemplateName = 'detailPanelTemplateName.wml';
@@ -186,7 +186,7 @@ define(
             let view = getView(defaultConfig),
                popupOptions;
             view._children = {
-               DropdownOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} }
+               StickyOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} }
             };
             view._container = ['filter_container'];
             view._options.panelTemplateName = 'panelTemplateName.wml';
@@ -220,7 +220,7 @@ define(
                popupOptions,
                isOpened = true;
             view._children = {
-               DropdownOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return isOpened;} }
+               StickyOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return isOpened;} }
             };
             view._container = {};
 
@@ -252,7 +252,7 @@ define(
                isOpened = true, closed,
                filterChanged, itemsChanged;
             view._children = {
-               DropdownOpener: { isOpened: () => {return isOpened;}, close: () => {closed = true;} }
+               StickyOpener: { isOpened: () => {return isOpened;}, close: () => {closed = true;} }
             };
             view._notify = (event, data) => {
               if (event === 'filterChanged') {
@@ -292,7 +292,7 @@ define(
                isOpened = true, closed,
                filterChanged, itemsChanged;
             view._children = {
-               DropdownOpener: { isOpened: () => {return isOpened;}, close: () => {closed = true;} }
+               StickyOpener: { isOpened: () => {return isOpened;}, close: () => {closed = true;} }
             };
             view._notify = (event, data) => {
                if (event === 'filterChanged') {
@@ -363,7 +363,7 @@ define(
 
             it('_startTimer', function() {
                let opened, resultConfig;
-               view._children.DropdownOpener = { open: (config) => {
+               view._children.StickyOpener = { open: (config) => {
                   resultConfig = config;
                   opened = true;
                }};
@@ -376,7 +376,7 @@ define(
 
             it('_restartTimer', function() {
                let opened, resultConfig;
-               view._children.DropdownOpener = { open: (config) => {
+               view._children.StickyOpener = { open: (config) => {
                      resultConfig = config;
                      opened = true;
                }};
@@ -392,7 +392,7 @@ define(
 
             it('_resetTimer', function() {
                let opened = false, resultConfig = null;
-               view._children.DropdownOpener = { open: (config) => {
+               view._children.StickyOpener = { open: (config) => {
                      resultConfig = config;
                      opened = true;
                }};
@@ -558,7 +558,7 @@ define(
                      multiSelect: true}
                };
                view._children = {
-                  DropdownOpener: { close: () => {} }
+                  StickyOpener: { close: () => {} }
                };
             });
 
@@ -627,6 +627,27 @@ define(
                assert.deepStrictEqual(view._source[1].value, [3, 20, 28]);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'new item', title: 'new item, new item 2, Completed', hasMoreText: ', еще 2'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});
+            });
+
+            it('selectorResult selectorCallback', function() {
+               let filterChanged;
+               view._notify = (event, data) => {
+                  if (event === 'selectorCallback') {
+                     data[1].at(0).set({id: 11, title: 'item 11'});
+                  }
+               };
+               view._configs.state.items = new collection.RecordSet({
+                  idProperty: 'id',
+                  rawData: defaultItems[1]
+               });
+               view._idOpenSelector = 'state';
+               let newItems = new collection.RecordSet({
+                  idProperty: 'id',
+                  rawData: [{id: 3, title: 'Completed'}, {id: 20, title: 'new item'}, {id: 28, title: 'new item 2'}]
+               });
+               view._onSelectorTemplateResult('event', newItems);
+               assert.deepStrictEqual(view._source[1].value, [11, 20, 28]);
+               assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'item 11', title: 'item 11, new item, new item 2', hasMoreText: ', еще 2'}});
             });
 
             it('_resultHandler filterDetailPanelResult', function() {

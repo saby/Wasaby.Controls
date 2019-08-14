@@ -72,16 +72,25 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             }
          },
 
-         calcSizeCache: function(self, container) {
-            var clientHeight, scrollHeight;
+          calcSizeCache: function (self, container) {
+              var clientHeight, scrollHeight;
 
-            clientHeight = container.clientHeight;
-            scrollHeight = container.scrollHeight;
-            self._sizeCache = {
-               scrollHeight: scrollHeight,
-               clientHeight: clientHeight
-            };
-         },
+              clientHeight = container.clientHeight;
+              scrollHeight = container.scrollHeight;
+
+              // todo kingo
+              // на невидимой вкладке может произойти перерисовка списка, требующая пересчетов возможностей скролла
+              // при этом высоты посчитаются по 0, т.к. так работает display: none
+              // по-хорошему нужна возможность заморозки контрола внутри вкладок https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
+              // пока же будем игнорировать такие пересчеты, если до этого уже считали
+
+              if ((clientHeight !== 0) && (scrollHeight !== 0) && self._sizeCache) {
+                  self._sizeCache = {
+                      scrollHeight: scrollHeight,
+                      clientHeight: clientHeight
+                  };
+              }
+          },
 
          getSizeCache: function(self, container) {
             if (isEmpty(self._sizeCache)) {
@@ -167,6 +176,13 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 
 
                curObserver = new IntersectionObserver(function (changes) {
+                  /**
+                   * Баг IntersectionObserver на Mac OS: сallback может вызываться после описки от слежения. Отписка происходит в
+                   * _beforeUnmount. Устанавливаем защиту.
+                   */
+                  if (self._observers === null) {
+                     return;
+                  }
                   for (var i = 0; i < changes.length; i++) {
                      switch (changes[i].target) {
                         case elements.topLoadTrigger:
@@ -363,7 +379,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                   sizeCache.scrollHeight - realScrollTop - sizeCache.clientHeight > triggerOffset)) {
                   container.scrollTop = scrollTop - self._topPlaceholderSize;
                } else {
-                  const hasChanges = _private.sendByRegistrar(self, 'virtualScrollMove', {
+                  _private.sendByRegistrar(self, 'virtualScrollMove', {
                      scrollTop,
                      scrollHeight: sizeCache.scrollHeight,
                      clientHeight: sizeCache.clientHeight,
@@ -371,9 +387,6 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                         container.scrollTop = cachedScrollTop - self._topPlaceholderSize;
                      }
                   });
-                  if (!hasChanges) {
-                     container.scrollTop = scrollTop - self._topPlaceholderSize;
-                  }
                }
             } else {
                container.scrollTop = scrollTop;

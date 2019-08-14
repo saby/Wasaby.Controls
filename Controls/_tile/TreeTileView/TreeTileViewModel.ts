@@ -60,7 +60,7 @@ var TreeTileViewModel = TreeViewModel.extend({
         }
 
         current.isScaled = this.isScaled(current);
-        
+
         var
             originalGetVersion = current.getVersion;
 
@@ -79,7 +79,7 @@ var TreeTileViewModel = TreeViewModel.extend({
         return current;
     },
     isScaled: function(itemData) {
-        return (itemData.item.title || itemData.scalingMode !== 'none')
+        return (itemData.item.get && itemData.item.get(itemData.displayProperty) || itemData.scalingMode !== 'none')
             && (!!itemData.isActive || !!itemData.isSwiped || !!itemData.isHovered);
     },
     getTileItemData: function () {

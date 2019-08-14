@@ -67,6 +67,22 @@ var _private = {
       if (itemsContainers.length) {
          scrollToElement(itemsContainers[indexLastItem], true);
       }
+   },
+
+   // Список и input находят в разных контейнерах, поэтому мы просто проксируем нажатие клавиш up, down, enter с input'a
+   // на контейнер списка, используя при этом API нативного Event'a. Будет переделано в 600 на HOC'и для горячих клавишь
+   // https://online.sbis.ru/opendoc.html?guid=eb58d82c-014f-4608-8c61-b9127730a637
+   getEvent: function(eventName): Event {
+      let event;
+
+      // ie does not support Event constructor
+      if (typeof(Event) === 'function') {
+         event = new Event(eventName);
+      } else {
+         event = document.createEvent('Event');
+         event.initEvent(eventName, true, true);
+      }
+      return event;
    }
 };
 
@@ -144,7 +160,7 @@ var List = Control.extend({
          let
             list = this._children.list,
             listContainer = list._container[0] || list._container,
-            customEvent = new Event('keydown');
+            customEvent = _private.getEvent('keydown');
 
          _private.dispatchEvent(listContainer, domEvent.nativeEvent, customEvent);
       }

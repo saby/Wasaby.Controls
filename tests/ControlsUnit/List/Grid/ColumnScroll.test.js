@@ -420,9 +420,11 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                           childNodes: [
                              {
                                 offsetHeight: 50,
+                                offsetTop: 0,
                              },
                              {
                                 offsetHeight: 50,
+                                offsetTop: 0,
                              },
                           ]
                        }

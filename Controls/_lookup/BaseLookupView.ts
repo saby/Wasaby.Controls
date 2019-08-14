@@ -217,6 +217,7 @@ var BaseLookupView = Control.extend({
     },
 
     _itemClick: function (event, item) {
+        this._suggestState = false;
         this._notify('itemClick', [item]);
     },
 

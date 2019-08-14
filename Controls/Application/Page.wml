@@ -60,9 +60,8 @@
 
                                                       <Controls.popup:Container attr:id="popup"
                                                                                 eventHandler="{{content._managerEventHandler}}"/>
-
-                                                      <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" pageName="{{ pageName }}" />
                                                    </ws:if>
+                                                   <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" pageName="{{ pageName }}" />
                                                 </div>
                                              </ws:bodyContent>
                                           </ws:partial>

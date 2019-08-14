@@ -50,8 +50,8 @@ export = {
         } else {
             width = this._calculateValue(popupOptions, containerSizes.width, windowData.width, popupOptions.width, popupOptions.maxWidth);
             height = this._calculateValue(popupOptions, containerSizes.height, windowData.height, popupOptions.height, popupOptions.maxHeight);
-            left = this._getLeftCoord(windowData.width, width || containerSizes.width) + (windowData.scrollLeft || 0);
-            top = this._getTopCoord(windowData, height || containerSizes.height) + (windowData.scrollTop || 0);
+            left = this._getLeftCoord(windowData.width, width || containerSizes.width, popupOptions) + (windowData.scrollLeft || 0);
+            top = this._getTopCoord(windowData, height || containerSizes.height, popupOptions) + (windowData.scrollTop || 0);
         }
 
         return {
@@ -78,11 +78,17 @@ export = {
         }
         return popupValue;
     },
-    _getLeftCoord: function (wWidth, width) {
+    _getLeftCoord: function (wWidth, width, popupOptions) {
+        if (popupOptions.maximize) {
+            return 0;
+        }
         return Math.max(Math.round((wWidth - width) / 2), 0);
     },
 
-    _getTopCoord: function (windowData, height) {
+    _getTopCoord: function (windowData, height, popupOptions) {
+        if (popupOptions.maximize) {
+            return 0;
+        }
         return Math.round((windowData.height - height) / 2);
     }
 };

@@ -5,29 +5,28 @@ import cInstance = require('Core/core-instance');
 import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import VirtualScroll = require('Controls/_list/Controllers/VirtualScroll');
-import {Controller as SourceController} from 'Controls/source';
-import {isEqual} from 'Types/object';
 import Deferred = require('Core/Deferred');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import collection = require('Types/collection');
-import {showType} from 'Controls/Utils/Toolbar';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import ScrollPagingController = require('Controls/_list/Controllers/ScrollPaging');
 import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
+import {Controller as SourceController} from 'Controls/source';
+import {isEqual} from 'Types/object';
+import {showType} from 'Controls/Utils/Toolbar';
 import 'wml!Controls/_list/BaseControl/Footer';
 import 'css!theme?Controls/list';
-import { error as dataSourceError } from 'Controls/dataSource';
-import { detection, constants, IoC } from 'Env/Env';
+import {error as dataSourceError} from 'Controls/dataSource';
+import {constants, detection, IoC} from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
 import {Focus} from 'Vdom/Vdom';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
-import {debounce} from 'Types/function';
-import {throttle} from 'Types/function';
+import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
@@ -110,7 +109,7 @@ var _private = {
         }
     },
 
-    reload: function(self, cfg, shouldNotifyControlResize: boolean) {
+    reload: function(self, cfg) {
         var
             filter = cClone(cfg.filter),
             sorting = cClone(cfg.sorting),
@@ -121,7 +120,7 @@ var _private = {
             cfg.beforeReloadCallback(filter, sorting, navigation, cfg);
         }
         if (self._sourceController) {
-            _private.showIndicator(self, undefined, shouldNotifyControlResize);
+            _private.showIndicator(self);
             _private.hideError(self);
 
             // Need to create new Deffered, returned success result
@@ -170,7 +169,7 @@ var _private = {
                 }
 
                 _private.prepareFooter(self, navigation, self._sourceController);
-                _private.resolveIndicatorStateAfterReload(self, list, shouldNotifyControlResize);
+                _private.resolveIndicatorStateAfterReload(self, list);
 
                 resDeferred.callback({
                     data: list
@@ -204,7 +203,7 @@ var _private = {
         return resDeferred;
     },
 
-    resolveIndicatorStateAfterReload: function(self, list, shouldNotifyControlResize):void {
+    resolveIndicatorStateAfterReload: function(self, list):void {
         const hasMoreDataDown = self._sourceController.hasMoreData('down');
         const hasMoreDataUp = self._sourceController.hasMoreData('up');
 
@@ -212,12 +211,12 @@ var _private = {
             //because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
             //otherwise empty template will shown
             if ((hasMoreDataDown || hasMoreDataUp) && self._needScrollCalculation) {
-                _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up', shouldNotifyControlResize);
+                _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
             } else {
-                _private.hideIndicator(self, shouldNotifyControlResize);
+                _private.hideIndicator(self);
             }
         } else {
-            _private.hideIndicator(self, shouldNotifyControlResize);
+            _private.hideIndicator(self);
         }
     },
 
@@ -420,10 +419,7 @@ var _private = {
     applyVirtualScrollIndexesToListModel(self): void {
         const newIndexes = self._virtualScroll.ItemsIndexes;
         const model = self._listViewModel;
-        if (newIndexes.start !== model.getStartIndex() || newIndexes.stop !== model.getStopIndex()) {
-            model.setIndexes(newIndexes.start, newIndexes.stop);
-            return true;
-        }
+        return model.setIndexes(newIndexes.start, newIndexes.stop);
     },
 
     // Обновляет высоту распорок при виртуальном скроле
@@ -456,6 +452,7 @@ var _private = {
         if (_private.applyVirtualScrollIndexesToListModel(self)) {
             _private.applyPlaceholdersSizes(self);
         } else {
+            self._applyScrollTopCallback();
             self._applyScrollTopCallback = null;
         }
     }, 150, true),
@@ -1282,6 +1279,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _needBottomPadding: false,
     _emptyTemplateVisibility: true,
     _intertialScrolling: null,
+    _checkLoadToDirectionTimeout: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1354,10 +1352,18 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (receivedError) {
                     return _private.showError(self, receivedError);
                 }
-
-                // TODO: KINGO. выставленный флаг shouldNotifyControlResize в false, означает,
-                // что событие controlResize не будет иниировано показом/скрытием индикатора загрузки
-                return _private.reload(self, newOptions, false).addCallback(getState);
+                return _private.reload(self, newOptions).addCallback((result) => {
+                    // TODO Kingo.
+                    // В случае, когда в опцию источника передают PrefetchProxy
+                    // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
+                    // когда список обёрнут в DataContainer.
+                    // Т.к. и список и DataContainer из _beforeMount возвращают рекордсет
+                    // то при построении на сервере и последующем оживлении на клиенте
+                    // при сериализации это будет два разных рекордсета.
+                    if (!cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy')) {
+                        return getState(result);
+                    }
+                });
             }
         });
 
@@ -1545,6 +1551,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._focusTimeout) {
             clearTimeout(this._focusTimeout);
         }
+        if (this._checkLoadToDirectionTimeout) {
+            clearTimeout(this._checkLoadToDirectionTimeout);
+        }
         if (this._options.itemsDragNDrop) {
             let container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
@@ -1585,9 +1594,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._virtualScroll && this._applyScrollTopCallback) {
             this._applyScrollTopCallback();
             this._applyScrollTopCallback = null;
-            setTimeout(function() {
-                _private.checkLoadToDirectionCapability(this);
-            }.bind(this));
         }
 
         // todo KINGO.
@@ -1603,14 +1609,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._savedStopIndex = this._listViewModel.getStopIndex();
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
-            this._checkShouldLoadToDirection = true;
             this._forceUpdate();
-        } else if (this._checkShouldLoadToDirection) {
-           setTimeout(function() {
-              _private.checkLoadToDirectionCapability(this);
-           }.bind(this));
-            this._checkShouldLoadToDirection = false;
         }
+
+        // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
+        // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
+        this._checkLoadToDirectionTimeout = setTimeout(() => {
+            _private.checkLoadToDirectionCapability(this);
+            this._checkLoadToDirectionTimeout = null;
+        });
     },
 
     _afterUpdate: function(oldOptions) {

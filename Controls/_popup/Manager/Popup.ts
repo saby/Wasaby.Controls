@@ -1,24 +1,39 @@
-import Control = require('Core/Control');
-import template = require('wml!Controls/_popup/Manager/Popup');
-import {delay as runDelayed} from 'Types/function';
-import Env = require('Env/Env');
-import {SyntheticEvent} from 'Vdom/Vdom';
-import PopupContent = require('wml!Controls/_popup/Manager/PopupContent');
+import * as Env from 'Env/Env';
 import {debounce} from 'Types/function';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {delay as runDelayed} from 'Types/function';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+
+import * as template from 'wml!Controls/_popup/Manager/Popup';
+import * as PopupContent from 'wml!Controls/_popup/Manager/PopupContent';
 
 const RESIZE_DELAY = 10;
 // on ios increase delay for scroll handler, because popup on frequent repositioning loop the scroll.
 const SCROLL_DELAY = Env.detection.isMobileIOS ? 100 : 10;
 
-let _private = {
-    keyUp(event) {
-        if (event.nativeEvent.keyCode === Env.constants.key.esc) {
-            this._close();
-        }
-    }
-};
+interface IPosition {
+    position: string;
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+    width: number;
+    height: number;
+    maxWidth: number;
+    minWidth: number;
+    maxHeight: number;
+    minHeight: number;
+    hidden: boolean;
+}
 
-let Popup = Control.extend({
+interface IPopupOptions extends IControlOptions {
+    hidden: boolean;
+    position: IPosition;
+}
+
+type UpdateCallback = () => void;
+
+class Popup extends Control<IPopupOptions> {
 
     /**
      * Control Popup
@@ -42,22 +57,28 @@ let Popup = Control.extend({
      * @cfg {Object} Template options
      */
 
-    _template: template,
+    protected _template: TemplateFunction = template;
 
     // Register the openers that initializing inside current popup
     // After updating the position of the current popup, calls the repositioning of popup from child openers
-    _openersUpdateCallback: [],
+    protected _openersUpdateCallback: UpdateCallback[] = [];
 
-    _isEscDown: false,
+    protected _isEscDown: boolean = false;
 
-    _afterMount() {
+    private _closeByESC(event: SyntheticEvent<KeyboardEvent>): void {
+        if (event.nativeEvent.keyCode === Env.constants.key.esc) {
+            this._close();
+        }
+    }
+
+    protected _afterMount(): void {
         /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
          * inside can be compoundArea and we have to wait for it, and there is an asynchronous phase. Look at the flag waitForPopupCreated */
         this._controlResize = debounce(this._controlResize.bind(this), RESIZE_DELAY);
         this._scrollHandler = debounce(this._scrollHandler.bind(this), SCROLL_DELAY);
 
         if (this.waitForPopupCreated) {
-            this.callbackCreated = (function() {
+            this.callbackCreated = (function () {
                 this.callbackCreated = null;
                 this._notify('popupCreated', [this._options.id], {bubbling: true});
                 this._options.creatingDef && this._options.creatingDef.callback(this._options.id);
@@ -67,14 +88,12 @@ let Popup = Control.extend({
             this._options.creatingDef && this._options.creatingDef.callback(this._options.id);
             this.activatePopup();
         }
-    },
+    }
 
-    _afterUpdate(oldOptions) {
+    protected _afterUpdate(oldOptions: IPopupOptions): void {
         this._notify('popupAfterUpdated', [this._options.id], {bubbling: true});
-        const oldPosition = oldOptions.position;
-        const newPosition = this._options.position;
-        if ((oldPosition.width && oldPosition.width !== newPosition.width) ||
-            (oldPosition.height && oldPosition.height !== newPosition.height)) {
+
+        if (Popup._isResized(oldOptions, this._options)) {
             const eventCfg = {
                 type: 'controlResize',
                 target: this,
@@ -82,109 +101,115 @@ let Popup = Control.extend({
             };
             this._children.resizeDetect.start(new SyntheticEvent(null, eventCfg));
         }
-    },
-    _beforeUnmount() {
-        this._notify('popupDestroyed', [this._options.id], {bubbling: true});
-    },
+    }
 
-    activatePopup() {
-        // TODO Compatible
-        if (this._options.autofocus && !this._options.isCompoundTemplate) {
-            this.activate();
-        }
-    },
+    protected _beforeUnmount(): void {
+        this._notify('popupDestroyed', [this._options.id], {bubbling: true});
+    }
 
     /**
      * Close popup
      * @function Controls/_popup/Manager/Popup#_close
      */
-    _close() {
+    protected _close(): void {
         this._notify('popupClose', [this._options.id], {bubbling: true});
-    },
-    _maximized(event, state) {
+    }
+
+    protected _maximized(event: SyntheticEvent<Event>, state: boolean): void {
         this._notify('popupMaximized', [this._options.id, state], {bubbling: true});
-    },
+    }
 
-    _popupDragStart(event, offset) {
+    protected _popupDragStart(event: SyntheticEvent<Event>, offset: number): void {
         this._notify('popupDragStart', [this._options.id, offset], {bubbling: true});
-    },
+    }
 
-    _popupDragEnd() {
+    protected _popupDragEnd(): void {
         this._notify('popupDragEnd', [this._options.id], {bubbling: true});
-    },
+    }
 
-    _popupMouseEnter(event, popupEvent) {
+    protected _popupMouseEnter(event: SyntheticEvent<MouseEvent>, popupEvent: SyntheticEvent<MouseEvent>): void {
         this._notify('popupMouseEnter', [this._options.id, popupEvent], {bubbling: true});
-    },
+    }
 
-    _popupMouseLeave(event, popupEvent) {
+    protected _popupMouseLeave(event: SyntheticEvent<MouseEvent>, popupEvent: SyntheticEvent<MouseEvent>): void {
         this._notify('popupMouseLeave', [this._options.id, popupEvent], {bubbling: true});
-    },
+    }
 
-    _animated(ev) {
-        this._children.resizeDetect.start(ev);
+    protected _animated(event: SyntheticEvent<AnimationEvent>): void {
+        this._children.resizeDetect.start(event);
         this._notify('popupAnimated', [this._options.id], {bubbling: true});
-    },
+    }
 
-    _registerOpenerUpdateCallback(event, callback) {
+    protected _registerOpenerUpdateCallback(event: SyntheticEvent<Event>, callback: UpdateCallback): void {
         this._openersUpdateCallback.push(callback);
-    },
+    }
 
-    _unregisterOpenerUpdateCallback(event, callback) {
-        let index = this._openersUpdateCallback.indexOf(callback);
+    protected _unregisterOpenerUpdateCallback(event: SyntheticEvent<Event>, callback: UpdateCallback): void {
+        const index = this._openersUpdateCallback.indexOf(callback);
         if (index > -1) {
             this._openersUpdateCallback.splice(index, 1);
         }
-    },
+    }
 
-    _callOpenersUpdate() {
+    protected _callOpenersUpdate(): void {
         for (let i = 0; i < this._openersUpdateCallback.length; i++) {
             this._openersUpdateCallback[i]();
         }
-    },
+    }
 
-    _scrollHandler(): void {
+    _showIndicatorHandler(event: SyntheticEvent<MouseEvent>): void {
+        const args = Array.prototype.slice.call(arguments, 1);
+        event.stopPropagation();
+        const config = args[0];
+        if (typeof config === 'object') {
+            config.popupId = this._options.id;
+        }
+        // catch showIndicator and add popupId property for Indicator.
+        return this._notify('showIndicator', args, {bubbling: true});
+    }
+
+    protected _scrollHandler(): void {
         this._notify('pageScrolled', [this._options.id], {bubbling: true});
-    },
+    }
 
     /**
      * Update popup
      * @function Controls/_popup/Manager/Popup#_close
      */
-    _update() {
+    protected _update(): void {
         this._notify('popupUpdated', [this._options.id], {bubbling: true});
 
         // After updating popup position we will updating the position of the popups open with it.
         runDelayed(this._callOpenersUpdate.bind(this));
-    },
+    }
 
-    _controlResize() {
+    protected _controlResize(): void {
         this._notify('popupControlResize', [this._options.id], {bubbling: true});
-    },
+    }
 
     /**
      * Proxy popup result
      * @function Controls/_popup/Manager/Popup#_sendResult
      */
-    _sendResult(event) {
-        let args = Array.prototype.slice.call(arguments, 1);
-        this._notify('popupResult', [this._options.id].concat(args), {bubbling: true});
-    },
+    protected _sendResult(event: SyntheticEvent<Event>, ...args: any[]): void {
+        const popupResultArgs = [this._options.id].concat(args);
+        this._notify('popupResult', popupResultArgs, {bubbling: true});
+    }
 
-    _swipeHandler(event) {
+    protected _swipeHandler(event: SyntheticEvent<TouchEvent>): void {
         // close popup by swipe only for vdom, cause ws3 controls use differ system of swipe,
         // we can't stop it on vdom controls.
         if (event.nativeEvent.direction === 'right' && !this._options.isCompoundTemplate) {
             this._close();
         }
-    },
+    }
 
     /**
      * key up handler
      * @function Controls/_popup/Manager/Popup#_keyUp
      * @param event
      */
-    _keyUp(event) {
+    protected _keyUp(event: SyntheticEvent<KeyboardEvent>): void {
         /**
          * Старая панель по событию keydown закрывается и блокирует всплытие события. Новая панель делает
          * тоже самое, но по событию keyup. Из-за этого возникает следующая ошибка.
@@ -195,25 +220,40 @@ let Popup = Control.extend({
          */
         if (this._isEscDown) {
             this._isEscDown = false;
-            _private.keyUp.call(this, event);
+            this._closeByESC(event);
         }
-    },
+    }
 
-    _keyDown(event) {
+    protected _keyDown(event: SyntheticEvent<KeyboardEvent>): void {
         if (event.nativeEvent.keyCode === Env.constants.key.esc) {
             this._isEscDown = true;
         }
     }
-});
 
-Popup.getDefaultOptions = function() {
+    activatePopup(): void {
+        // TODO Compatible
+        if (this._options.autofocus && !this._options.isCompoundTemplate) {
+            this.activate();
+        }
+    }
+
+    private static _isResized(oldOptions: IPopupOptions, newOptions: IPopupOptions): boolean {
+        const {position: oldPosition, hidden: oldHidden}: IPopupOptions = oldOptions;
+        const {position: newPosition, hidden: newHidden}: IPopupOptions = newOptions;
+        const hasWidthChanged: boolean = oldPosition.width && oldPosition.width !== newPosition.width;
+        const hasHeightChanged: boolean = oldPosition.height && oldPosition.height !== newPosition.height;
+        const hasHiddenChanged: boolean = oldHidden !== newHidden;
+
+        return hasWidthChanged || hasHeightChanged || (hasHiddenChanged && newHidden === false);
+    }
+}
+
+Popup.getDefaultOptions = function () {
     return {
         content: PopupContent,
         autofocus: true
     };
 };
-
-Popup.prototype._moduleName = 'Controls/_popup/Manager/Popup';
 
 export = Popup;
 

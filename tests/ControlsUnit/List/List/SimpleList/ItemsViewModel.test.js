@@ -113,6 +113,17 @@ define([
          var cur = iv.setIndexes(0, 1);
          assert.isTrue(setted);
       });
+      it('setIndexes should return true only if indexes have been updated', function () {
+         let iv = new list.ItemsViewModel({
+            items: data,
+            keyProperty: 'id'
+         });
+         iv.getCount = () => 20;
+         assert.isTrue(iv.setIndexes(10, 20));
+         assert.isFalse(iv.setIndexes(10, 30));
+         assert.isTrue(iv.setIndexes(10, 15));
+
+      });
       it('Other', function () {
          var cfg = {
             items: data,

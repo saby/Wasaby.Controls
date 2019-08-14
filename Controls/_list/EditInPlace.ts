@@ -251,9 +251,9 @@ var
             }
         },
 
-        getEditingItemIndex: function (self, editingItem, listModel) {
+        getEditingItemIndex: function (self, editingItem, listModel, defaultIndex) {
             var
-                index = listModel.getCount(),
+                index = defaultIndex !== undefined ? defaultIndex : listModel.getCount(),
                 originalItem = listModel.getItemById(editingItem.get(listModel._options.keyProperty), listModel._options.keyProperty),
                 parentId,
                 parentIndex;
@@ -263,7 +263,7 @@ var
             } else if (_private.hasParentInItems(editingItem, listModel)) {
                 parentId = editingItem.get(listModel._options.parentProperty);
                 parentIndex = listModel.getIndexBySourceItem(listModel.getItemById(parentId, listModel._options.keyProperty).getContents());
-                index = parentIndex + listModel.getChildren(parentId).length + 1;
+                index = parentIndex + (defaultIndex !== undefined ? defaultIndex : listModel.getChildren(parentId).length) + 1;
             }
 
             return index;
@@ -277,6 +277,11 @@ var
                 return newOptions.editingConfig.sequentialEditing;
             }
             return true;
+        },
+
+        getAddPosition: function(options) {
+            return options.editingConfig && options.editingConfig.addPosition === 'top' &&
+                   !options.editingConfig.autoAdd ? 0 : undefined;
         }
     };
 
@@ -510,7 +515,8 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         this._editingItemData.item = this._editingItem;
         if (this._isAdd) {
             this._editingItemData.isAdd = this._isAdd;
-            this._editingItemData.index = _private.getEditingItemIndex(this, item, listModel);
+            this._editingItemData.index = _private.getEditingItemIndex(this, item, listModel, _private.getAddPosition(options));
+            this._editingItemData.addPosition = options.editingConfig && options.editingConfig.addPosition;
             this._editingItemData.drawActions = options.editingConfig && options.editingConfig.toolbarVisibility;
         }
         listModel._setEditingItemData(this._editingItemData);
@@ -525,7 +531,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
           /**
            * If an item gets added to the list during editing we should update index of editing item to preserve its position.
            */
-          this._editingItemData.index = _private.getEditingItemIndex(this, this._editingItem, this._options.listModel);
+          this._editingItemData.index = _private.getEditingItemIndex(this, this._editingItem, this._options.listModel, _private.getAddPosition(this._options));
        }
     },
 
