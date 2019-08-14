@@ -341,7 +341,7 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
                     compoundArea = dialog && dialog._getTemplateComponent();
 
                 // Check, if opened VDOM template on oldPage (we have compatible layer), then try reload template.
-                if (compoundArea && compoundArea._moduleName === 'Controls/compatiblePopup:CompoundArea' && !isFormController && compoundArea._options.template === newCfg.template) {
+                if (compoundArea && compoundArea._moduleName === 'Controls/compatiblePopup:CompoundAreaNewTpl' && !isFormController && compoundArea._options.template === newCfg.template) {
                     // Redraw template with new options
                     compatiblePopup.BaseOpener._prepareConfigForNewTemplate(newCfg);
                     compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
