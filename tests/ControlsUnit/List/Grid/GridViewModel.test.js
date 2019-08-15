@@ -1718,6 +1718,39 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
 
          });
+
+         it('getColspanForColumnScroll', function () {
+            assert.deepEqual(
+                {
+                   fixedColumns: 'grid-column: 1 / 3; -ms-grid-column: 1; -ms-grid-column-span: 2;',
+                   scrollableColumns: 'grid-column: 3 / 11; -ms-grid-column: 3; -ms-grid-column-span: 8;'
+                },
+                gridMod.GridViewModel._private.getColspanForColumnScroll({
+                   _options: {
+                      multiSelectVisibility: 'hidden',
+                      columnScroll: true,
+                      stickyColumnsCount: 2,
+                   },
+                   _columns: {length: 10}
+                })
+            );
+
+            assert.deepEqual(
+                {
+                   fixedColumns: 'grid-column: 2 / 4; -ms-grid-column: 2; -ms-grid-column-span: 2;',
+                   scrollableColumns: 'grid-column: 4 / 12; -ms-grid-column: 4; -ms-grid-column-span: 8;'
+                },
+                gridMod.GridViewModel._private.getColspanForColumnScroll({
+                   _options: {
+                      multiSelectVisibility: 'visible',
+                      columnScroll: true,
+                      stickyColumnsCount: 2,
+                   },
+                   _columns: {length: 10}
+                })
+            );
+
+         });
       });
 
       describe('partial grid support', () => {
