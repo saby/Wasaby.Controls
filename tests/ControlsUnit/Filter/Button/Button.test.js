@@ -17,10 +17,10 @@ define(
          ];
 
          var filterItemsReseted = [
-            {id: 'FIO', value: '', resetValue: '', textValue: 'Petrov K.K.', visibility: false},
+            {id: 'FIO', value: '', resetValue: '', textValue: '', visibility: false},
             {id: 'firstName', value: '', resetValue: '', visibility: false},
             {id: 'Test1', value: [0], resetValue: [0], textValue: '', visibility: false},
-            {id: 'unread', value: false, resetValue: false, textValue: 'Unread', visibility: false},
+            {id: 'unread', value: false, resetValue: false, textValue: '', visibility: false},
             {id: 'id', value: [3], resetValue: [2], isFast: true, visibility: true}
          ];
 
@@ -73,12 +73,12 @@ define(
                {id: 'id', value: [3], resetValue: [2], isFast: true, visibility: true},
                {id: 'WithoutReset', value: [3], textValue: 'reseted', visibility: true}
             ], filterItemsReseted2 = [
-               {id: 'FIO', value: '', resetValue: '', textValue: 'Petrov K.K.', visibility: false},
+               {id: 'FIO', value: '', resetValue: '', textValue: '', visibility: false},
                {id: 'firstName', value: '', resetValue: '', visibility: false},
                {id: 'Test1', value: [0], resetValue: [0], textValue: '', visibility: false},
-               {id: 'unread', value: false, resetValue: false, textValue: 'Unread', visibility: false},
+               {id: 'unread', value: false, resetValue: false, textValue: '', visibility: false},
                {id: 'id', value: [3], resetValue: [2], isFast: true, visibility: true},
-               {id: 'WithoutReset', value: [3], textValue: 'reseted', visibility: false}
+               {id: 'WithoutReset', value: [3], textValue: '', visibility: false}
             ];
             filterMod.Selector._private.resetItems(button, filterItems2);
             assert.deepStrictEqual(filterItems2, filterItemsReseted2);
