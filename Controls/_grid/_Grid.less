@@ -185,7 +185,9 @@
 
 .controls-Grid__row-cell-background-editing {
    background-color: @background-color_Grid-item_editing;
-   > .controls-itemActionsV {
+   > .controls-itemActionsV,
+   +.controls-itemActionsV__container > .controls-itemActionsV
+   {
       display: inline-block;
    }
 }
