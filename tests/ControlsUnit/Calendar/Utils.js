@@ -12,6 +12,8 @@ define('ControlsUnit/Calendar/Utils', [
             cfg = this.prepareOptions(Component, cfg);
          }
          mv = new Component(cfg);
+         //в afterMount идут дейтсвия с контейнером
+         mv._container = mv._container || {};
          mv.saveOptions(cfg);
          mv._beforeMount(cfg);
          return mv;
