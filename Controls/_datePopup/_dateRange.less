@@ -62,13 +62,16 @@
 
 .controls-PeriodDialog-DateRangeItem {
    display: flex;
-   margin-bottom: @height_PeriodDialog-dateRange-months-yearButton !important; // TODO: спилить !important когда уберут маргины и падинги с айтемов ListView
+}
+
+.controls-PeriodDialog-DateRangeItem__separator {
+   height: @height_PeriodDialog-dateRange-months-yearButton;
    position: relative;
 
    &:after {
       content: '';
       position: absolute;
-      bottom: -@height_PeriodDialog-dateRange-months-yearButton/2;
+      bottom: @height_PeriodDialog-dateRange-months-yearButton/2;
       left: @width_PeriodDialog-dateRange-monthPanel + @width_MonthView/14;
       right: @width_MonthView/14;
       border-top: 1px solid @border-color_PeriodDialog-dateRange-months;
