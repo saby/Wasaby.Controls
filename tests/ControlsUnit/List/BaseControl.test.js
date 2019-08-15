@@ -1803,6 +1803,52 @@ define([
          assert.isTrue(lists.BaseControl._private.hasItemActions(undefined, itemActionsProp));
          assert.isFalse(lists.BaseControl._private.hasItemActions(undefined, undefined));
       });
+      describe('resetScrollAfterReload', function() {
+         var source = new sourceLib.Memory({
+               idProperty: 'id',
+               data: data
+            }),
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel
+            },
+            baseControl = new lists.BaseControl(cfg),
+            doScrollNotified = false;
+
+         baseControl._notify = function(eventName) {
+            if (eventName === 'doScroll') {
+               doScrollNotified = true;
+            }
+         }
+
+         baseControl.saveOptions(cfg);
+
+         it('before mounting', async function() {
+            await baseControl._beforeMount(cfg);
+            await lists.BaseControl._private.reload(baseControl, cfg);
+            assert.isFalse(baseControl._resetScrollAfterReload);
+            await baseControl._afterMount();
+            assert.isTrue(baseControl._isMounted);
+         });
+         it('without scroll', async function() {
+            baseControl._isScrollShown = false;
+            await lists.BaseControl._private.reload(baseControl, cfg);
+            assert.isFalse(baseControl._resetScrollAfterReload);
+            await baseControl._afterUpdate(cfg);
+            assert.isFalse(doScrollNotified);
+         });
+         it('with scroll', async function() {
+            baseControl._isScrollShown = true;
+            await lists.BaseControl._private.reload(baseControl, cfg);
+            assert.isTrue(baseControl._resetScrollAfterReload);
+            await baseControl._afterUpdate(cfg);
+            assert.isTrue(doScrollNotified);
+
+         });
+      });
+
       describe('_canUpdateItemsActions', function() {
          var lnSource = new sourceLib.Memory({
                idProperty: 'id',

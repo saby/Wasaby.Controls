@@ -175,6 +175,13 @@ var _private = {
                     data: list
                 });
 
+                if (self._isMounted && self._isScrollShown) {
+                    // При полной перезагрузке данных нужно сбросить состояние скролла
+                    // и вернуться к началу списка, иначе браузер будет пытаться восстановить
+                    // scrollTop, догружая новые записи после сброса.
+                    self._resetScrollAfterReload = true;
+                }
+
                 // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                 if (!list.getCount()) {
                     _private.checkLoadToDirectionCapability(self);
@@ -1287,6 +1294,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _intertialScrolling: null,
     _checkLoadToDirectionTimeout: null,
 
+    _resetScrollAfterReload: false,
+    _isMounted: false,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1667,6 +1677,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (this._hasItemActions) {
             this._canUpdateItemsActions = false;
+        }
+        if (this._resetScrollAfterReload) {
+            this._notify('doScroll', ['top'], { bubbling: true });
+            this._resetScrollAfterReload = false;
         }
         if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
