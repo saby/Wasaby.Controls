@@ -292,6 +292,33 @@ define([
                item: listModel.at(0).getContents()
             });
          });
+
+         it('beginEdit always returns Promise', function() {
+            eip._notify = function(e) {
+               if (e === 'beforeBeginEdit') {
+                  return {
+                     item: listModel.at(1).getContents()
+                  };
+               }
+            };
+
+            eip.saveOptions({
+               listModel: listModel
+            });
+
+            eip.beginEdit({
+               item: listModel.at(0).getContents()
+            });
+            assert.isTrue(listModel.at(1).getContents().isEqual(eip._editingItem));
+            assert.equal(listModel.at(0).getContents(), eip._originalItem);
+
+            // This item edit already editing, so begin edit canceled
+            const result = eip.beginEdit({
+               item: listModel.at(0).getContents()
+            });
+
+            assert.isTrue(result instanceof Promise);
+         });
       });
 
       describe('beginAdd', function() {
