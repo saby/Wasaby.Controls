@@ -99,16 +99,17 @@ var BaseLookupView = Control.extend({
     },
 
     _afterUpdate: function () {
+        let isInputActive = this._isInputActive(this._options);
+
         if (this._needSetFocusInInput) {
             this._needSetFocusInInput = false;
 
-            /* focus can be moved in choose event */
-            if (this._active) {
+            if (isInputActive) {
                 this.activate({enableScreenKeyboard: true});
             }
         }
 
-        if (!this._isInputActive(this._options)) {
+        if (!isInputActive) {
             this._suggestState = false;
         }
     },
@@ -124,9 +125,7 @@ var BaseLookupView = Control.extend({
         _private.resetInputValue(this);
 
         // move focus to input after select, because focus will be lost after closing popup
-        if (this._isInputActive(this._options)) {
-            this.activate({enableScreenKeyboard: true});
-        }
+        this._needSetFocusInInput = true;
     },
 
     _crossClick: function (event, item) {
