@@ -19,7 +19,7 @@
                     swipeTemplate="{{_options.swipeTemplate}}"/>
     </div>
     <ws:if data="{{_options._needBottomPadding}}">
-        <div  class="controls-itemActionsV_outside-spacing"></div>
+        <div  class="controls-itemActionsV_outside-spacing" attr:style="{{_listModel.getBottomPaddingStyles()}}"></div>
     </ws:if>
     <ws:if data="{{_options.emptyTemplate}}">
         <ws:if data="{{_options.columnScroll}}">
