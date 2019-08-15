@@ -48,6 +48,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          Entity.Guid.create = function() {
             return '1234567890';
          };
+         cfg.listModel.isNoGridSupport = () => false;
          columnScroll._beforeMount(cfg);
          Entity.Guid.create = baseCreateGuid;
          assert.equal(columnScroll._transformSelector, 'controls-ColumnScroll__transform-1234567890');
@@ -527,6 +528,15 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          columnScroll._children.content.offsetTop = 25;
          columnScroll._setOffsetForHScroll();
          assert.equal(columnScroll._offsetForHScroll, 125)
+
+         columnScroll._leftOffsetForHScroll = 0;
+         columnScroll._offsetForHScroll = 0;
+
+         columnScroll._isNotGridSupport = true;
+         columnScroll._setOffsetForHScroll();
+         assert.equal(columnScroll._leftOffsetForHScroll, 0);
+         assert.equal(columnScroll._offsetForHScroll, 0);
+
 
       });
    });
