@@ -54,6 +54,21 @@ define([
                isIE: false,
                isModernIE: false,
                safari: true,
+               isMacOSDesktop: false,
+               isNoGridSupport: true
+            };
+            assert.isTrue(Util.isFullGridSupport());
+            assert.isFalse(Util.isPartialGridSupport());
+            assert.isFalse(Util.isNoGridSupport());
+         });
+         it('safari desktop is full grid support', () => {
+            Env.detection = {
+               isNotFullGridSupport: true,
+               isWinXP: false,
+               isIE: false,
+               isModernIE: false,
+               safari: true,
+               isMacOSDesktop: true,
                isNoGridSupport: true
             };
             assert.isTrue(Util.isFullGridSupport());
@@ -68,6 +83,7 @@ define([
                IOSVersion: 11,
                isModernIE: false,
                safari: true,
+               isMacOSDesktop: false,
                isNoGridSupport: true
             };
             assert.isFalse(Util.isFullGridSupport());
@@ -132,6 +148,3 @@ define([
    });
 
 });
-
-
-

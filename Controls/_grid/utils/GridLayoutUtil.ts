@@ -13,15 +13,25 @@ type CssRule = {
     value: string | number | Array<string>
 };
 
+function _isFullGridSafari(): boolean {
+    return (
+        detection.safari &&
+        (
+            detection.IOSVersion >= 12 ||
+            detection.isMacOSDesktop
+        )
+    )
+}
+
 function isFullGridSupport(): boolean {
-    return !detection.isWinXP && (!detection.isNotFullGridSupport || (detection.safari && detection.IOSVersion >= 12));
+    return !detection.isWinXP && (!detection.isNotFullGridSupport || _isFullGridSafari());
 }
 
 function isPartialGridSupport(): boolean {
     let
         isOldIE = detection.isIE && !detection.isModernIE,
         noGridSupport = detection.isWinXP || isOldIE,
-        fullGridSupport = detection.safari && detection.IOSVersion >= 12;
+        fullGridSupport = _isFullGridSafari();
 
     return detection.isNotFullGridSupport && !(noGridSupport || fullGridSupport);
 }
