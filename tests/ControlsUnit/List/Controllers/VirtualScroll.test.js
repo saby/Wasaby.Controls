@@ -213,6 +213,31 @@ define([
          assert.deepEqual(itemsHeights, vsInstance.ItemsHeights);
       });
 
+       it('recalcByIndex', function () {
+           var
+               vsInstance = new list.VirtualScroll({
+                   virtualPageSize: 40
+               });
+           vsInstance.ItemsCount = 100;
+           vsInstance.recalcByIndex(99);
+           assert.deepEqual(vsInstance.ItemsIndexes, {
+               start: 60,
+               stop: 100
+           });
+
+           vsInstance.recalcByIndex(0);
+           assert.deepEqual(vsInstance.ItemsIndexes, {
+               start: 0,
+               stop: 40
+           });
+
+           vsInstance.recalcByIndex(19);
+           assert.deepEqual(vsInstance.ItemsIndexes, {
+               start: 0,
+               stop: 40
+           });
+       });
+
       it('_isScrollInPlaceholder', function () {
          var
             vsInstance = new list.VirtualScroll({
