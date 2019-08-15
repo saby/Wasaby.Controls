@@ -328,7 +328,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         this._sequentialEditing = _private.getSequentialEditing(newOptions);
     },
 
-    beginEdit: function (options) {
+    beginEdit(options): Promise<{ cancelled: true } | { item: entity.Record } | void> {
         var self = this;
 
         if (!this._editingItem || !this._editingItem.isEqual(options.item)) {
@@ -343,6 +343,8 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
                     return _private.afterBeginEdit(self, newOptions);
                 });
             });
+        } else {
+            return Promise.resolve();
         }
     },
 
