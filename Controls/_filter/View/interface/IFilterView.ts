@@ -45,7 +45,7 @@
  */
 
 /**
- * @name Controls/_filter/interface/IFilterView#source
+ * @name Controls/_filter/View/interface/IFilterView#source
  * @cfg {Array.<FilterItem>} Специальная структура для визуального представления фильтра.
  * @remark
  * Свойство "value" из каждого элемента будет вставлено в фильтр по имени этого элемента.
@@ -93,7 +93,7 @@
  */
 
 /*
- * @name Controls/_filter/interface/IFilterView#source
+ * @name Controls/_filter/View/interface/IFilterView#source
  * @cfg {Array.<FilterItem>} Special structure for the visual representation of the filter.
  * @remark
  * The "value" from every item will insert in filter by "name" of this item.
@@ -142,7 +142,7 @@
 
 
 /**
- * @name Controls/_filter/interface/IFilterView#detailPanelTemplateName
+ * @name Controls/_filter/View/interface/IFilterView#detailPanelTemplateName
  * @cfg {String} Шаблон всплывающей панели быстрых фильтров, которая открывается после клика по кнопке.
  * @remark
  * В качестве шаблона рекомендуется использовать контрол {@link Controls/filterPopup:DetailPanel}
@@ -179,7 +179,7 @@
  */
 
 /*
- * @name Controls/_filter/interface/IFilterView#detailPanelTemplateName
+ * @name Controls/_filter/View/interface/IFilterView#detailPanelTemplateName
  * @cfg {String} Template for the pop-up panel, that opens after clicking on the button.
  * @remark
  * As a template, it is recommended to use the control {@link Controls/filterPopup:DetailPanel}
@@ -216,7 +216,7 @@
  */
 
 /**
- * @name Controls/_filter/interface/IFilterView#panelTemplateName
+ * @name Controls/_filter/View/interface/IFilterView#panelTemplateName
  * @cfg {String} Шаблон всплывающей панели, которая открывается после клика.
  * @remark
  * В качестве шаблона ркомендуется использовать {@link Controls/filterPopup:SimplePanel}
@@ -258,7 +258,7 @@
  */
 
 /*
- * @name Controls/_filter/interface/IFilterView#panelTemplateName
+ * @name Controls/_filter/View/interface/IFilterView#panelTemplateName
  * @cfg {String} Template for the pop-up panel, that opens after clicking on fast filter parameters.
  * @remark
  * As a template, it is recommended to use the control {@link Controls/filterPopup:SimplePanel}
@@ -300,7 +300,7 @@
  */
 
 /**
- * @name Controls/_filter/interface/IFilterView#detailPanelTemplateOptions
+ * @name Controls/_filter/View/interface/IFilterView#detailPanelTemplateOptions
  * @cfg {Object} Опции для контрола, переданного в {@link detailPanelTemplateName}
  * @example
  * <pre>
@@ -321,7 +321,7 @@
  */
 
 /**
- * @name Controls/_filter/interface/IFilterView#panelTemplateOptions
+ * @name Controls/_filter/View/interface/IFilterView#panelTemplateOptions
  * @cfg {Object} Опция для контрола, переданного в {@link panelTemplateName}
  * @example
  * <pre>
@@ -340,7 +340,7 @@
  */
 
 /**
- * @name Controls/_filter/interface/IFilterView#alignment
+ * @name Controls/_filter/View/interface/IFilterView#alignment
  * @cfg {String} Устанавливает выравнивание кнопки фильтров.
  * @variant right Кнопка прикреплена к правому краю, всплывающая панель открывается слева.
  * @variant left Кнопка прикреплена к левому краю, всплывающая панель открывается справа.
@@ -358,7 +358,7 @@
  */
 
 /*
- * @name Controls/_filter/interface/IFilterView#alignment
+ * @name Controls/_filter/View/interface/IFilterView#alignment
  * @cfg {String} Sets the direction in which the popup panel will open.
  * @variant right The button is attached to the right edge, the pop-up panel opens to the left.
  * @variant left The button is attached to the left edge, the pop-up panel opens to the right.
@@ -376,25 +376,25 @@
  */
 
 /**
- * @event Controls/_filter/interface/IFilterView#filterChanged Происходит при изменении фильтра.
+ * @event Controls/_filter/View/interface/IFilterView#filterChanged Происходит при изменении фильтра.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object} filter Новый фильтр.
  */
 
 /*
- * @event Controls/_filter/interface/IFilterView#filterChanged Happens when filter changed.
+ * @event Controls/_filter/View/interface/IFilterView#filterChanged Happens when filter changed.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Object} filter New filter.
  */
 
 /**
- * @event Controls/_filter/interface/IFilterView#itemsChanged Происходит при изменении опции items.
+ * @event Controls/_filter/View/interface/IFilterView#itemsChanged Происходит при изменении опции items.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object} items Новый элемент.
  */
 
 /*
- * @event Controls/_filter/interface/IFilterView#itemsChanged Happens when items changed.
+ * @event Controls/_filter/View/interface/IFilterView#itemsChanged Happens when items changed.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Object} items New items.
  */
