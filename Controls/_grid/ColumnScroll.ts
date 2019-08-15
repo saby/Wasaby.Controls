@@ -40,12 +40,12 @@ const
             self._shadowState =
                _private.calculateShadowState(self._scrollPosition, self._contentContainerSize, self._contentSize);
             _private.updateFixedColumnWidth(self);
-            self._setOffsetForHScroll();
             self._forceUpdate();
          }
          if (newContentContainerSize + self._scrollPosition > newContentSize) {
             self._scrollPosition -= (newContentContainerSize + self._scrollPosition) - newContentSize;
          }
+         self._setOffsetForHScroll();
          _private.drawTransform(self, self._scrollPosition);
       },
       updateFixedColumnWidth(self) {
