@@ -1598,7 +1598,7 @@ var
         getBottomPaddingStyles(): string {
             let styles = '';
 
-            if (GridLayoutUtil.isPartialGridSupport()) {
+            if (!GridLayoutUtil.isNoGridSupport()) {
                 let
                     columnStart = this.getMultiSelectVisibility() === 'hidden' ? 0 : 1,
                     rowIndex = this._getRowIndexHelper().getBottomPaddingRowIndex();
