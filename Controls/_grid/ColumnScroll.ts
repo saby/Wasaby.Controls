@@ -110,7 +110,7 @@ const
             } else {
                self._leftOffsetForHScroll = firstCell.offsetWidth;
             }
-            self._offsetForHScroll = firstCell.offsetHeight + firstCell.offsetTop;
+            self._offsetForHScroll = firstCell.offsetHeight + container.offsetTop;
          }
          if (self._options.listModel.getResultsPosition() === 'top') {
             const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
