@@ -270,5 +270,10 @@ Popup.getDefaultOptions = function () {
     };
 };
 
+// _moduleName is assign in the callback of require.
+// Private modules are not visible for this mechanism, _moduleName must be specified manually for them.
+// It is necessary for checking relationship between popups.
+Popup.prototype._moduleName = 'Controls/_popup/Manager/Popup';
+
 export = Popup;
 
