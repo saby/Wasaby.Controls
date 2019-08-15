@@ -25,9 +25,15 @@ const
       },
       updateSizes(self) {
          _private.drawTransform(self, 0);
-         const
+         let
             newContentSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].scrollWidth,
+            newContentContainerSize = null;
+         if (self._isNotGridSupport) {
+            newContentContainerSize = self._children.content.offsetWidth;
+         } else {
             newContentContainerSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].offsetWidth;
+         }
+
          if (self._contentSize !== newContentSize || self._contentContainerSize !== newContentContainerSize) {
             self._contentSize = newContentSize;
             self._contentContainerSize = newContentContainerSize;
@@ -130,9 +136,11 @@ const
       _transformSelector: '',
       _offsetForHScroll: 0,
       _leftOffsetForHScroll: 0,
+      _isNotGridSupport: false,
 
-      _beforeMount() {
+      _beforeMount(opt) {
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
+         this._isNotGridSupport = opt.listModel.isNoGridSupport();
       },
 
       _afterMount() {
@@ -177,7 +185,9 @@ const
 
       _setOffsetForHScroll() {
          if (!detection.isIE) {
-            _private.setOffsetForHScroll(this);
+            if (!this._isNotGridSupport) {
+               _private.setOffsetForHScroll(this);
+            }
          }
       },
 
