@@ -94,6 +94,13 @@ var CompoundArea = CompoundContainer.extend([
          });
       }
       if (_options.popupComponent === 'recordFloatArea') {
+         if (typeof _options.readOnly !== 'undefined') {
+            this._isReadOnly = _options.readOnly;
+         } else {
+            // Старая RecordFloatArea по умолчанию имела значение
+            // опции readOnly === false
+            this._isReadOnly = false;
+         }
          return new Promise((resolve) => {
             requirejs(['optional!Deprecated/Controls/DialogRecord/DialogRecord'], (DeprecatedDialogRecord) => {
                DialogRecord = DeprecatedDialogRecord;
@@ -241,7 +248,17 @@ var CompoundArea = CompoundContainer.extend([
       } else {
          self._setCustomHeaderAsync();
          runDelayed(function() {
-            if (self._container.length && self._options.catchFocus) {
+            // Перед автофокусировкой нужно проверить, что фокус уже не находится внутри
+            // панели, т. к. этот callback вызывается уже после полного цикла создания
+            // старой области, и фокус могли проставить с прикладной стороны (в onInit,
+            // onAfterShow, onReady, ...).
+            // В таком случае, если мы позовем автофокус, мы можем сбить правильно поставленный
+            // фокус.
+            if (
+               self._options.catchFocus &&
+               self._container.length &&
+               !self._container[0].contains(document.activeElement)
+            ) {
                doAutofocus(self._container);
             }
          });
