@@ -88,7 +88,7 @@ var _private = {
             self._styleClass = null;
          }
 
-         self._valueEnabledClass = newOption.readOnly ? '' : 'controls-DateLinkView__value-enabled';
+         self._valueEnabledClass = newOption.clickable && !newOption.readOnly ? 'controls-DateLinkView__value-clickable' : '';
       }
    }
 };
