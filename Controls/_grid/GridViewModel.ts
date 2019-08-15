@@ -440,11 +440,13 @@ var
             if (!itemData.isGroup) {
 
                 itemData.getEditingRowStyles = function () {
-                    let editingRowStyles = '';
+                    let
+                        columnsLength = self._columns.length + (self._options.multiSelectVisibility === 'hidden' ? 0 : 1),
+                        editingRowStyles = '';
 
                     editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
                     editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
-                    editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, 1);
+                    editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, columnsLength);
 
                     return editingRowStyles;
                 }
@@ -503,6 +505,23 @@ var
             }
 
             return result
+        },
+
+        getColspanForColumnScroll(self): {
+            fixedColumns: string,
+            scrollableColumns: string
+        } {
+
+            const stickyColumnsCount = self._options.stickyColumnsCount || 1;
+            const scrollableColumnsCount = self._columns.length - self._options.stickyColumnsCount;
+            const start = (self._options.multiSelectVisibility !== 'hidden' ? 1 : 0) + 1;
+            const center = start + (self._options.stickyColumnsCount || 1);
+            const end = start + self._columns.length;
+
+            return {
+                fixedColumns: `grid-column: ${start} / ${center}; -ms-grid-column: ${start}; -ms-grid-column-span: ${stickyColumnsCount};`,
+                scrollableColumns: `grid-column: ${center} / ${end}; -ms-grid-column: ${center}; -ms-grid-column-span: ${scrollableColumnsCount};`,
+            };
         }
 
     },
@@ -1224,6 +1243,9 @@ var
             current.isNoGridSupport = GridLayoutUtil.isNoGridSupport;
 
             current.columnScroll = this._options.columnScroll;
+            current.getColspanForColumnScroll = function() {
+                return _private.getColspanForColumnScroll(self);
+            };
             current.stickyColumnsCount = this._options.stickyColumnsCount;
 
             current.style = this._options.style;

@@ -1451,7 +1451,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.equal(
                 editingItemData.getEditingRowStyles(),
-                'display: grid; display: -ms-grid; grid-template-columns: max-content 1fr 123px 321px; grid-column: 1 / 2; grid-row: 3;'
+                'display: grid; display: -ms-grid; grid-template-columns: max-content 1fr 123px 321px; grid-column: 1 / 5; grid-row: 3;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
          });
@@ -1707,6 +1707,39 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 }
             );
 
+
+         });
+
+         it('getColspanForColumnScroll', function () {
+            assert.deepEqual(
+                {
+                   fixedColumns: 'grid-column: 1 / 3; -ms-grid-column: 1; -ms-grid-column-span: 2;',
+                   scrollableColumns: 'grid-column: 3 / 11; -ms-grid-column: 3; -ms-grid-column-span: 8;'
+                },
+                gridMod.GridViewModel._private.getColspanForColumnScroll({
+                   _options: {
+                      multiSelectVisibility: 'hidden',
+                      columnScroll: true,
+                      stickyColumnsCount: 2,
+                   },
+                   _columns: {length: 10}
+                })
+            );
+
+            assert.deepEqual(
+                {
+                   fixedColumns: 'grid-column: 2 / 4; -ms-grid-column: 2; -ms-grid-column-span: 2;',
+                   scrollableColumns: 'grid-column: 4 / 12; -ms-grid-column: 4; -ms-grid-column-span: 8;'
+                },
+                gridMod.GridViewModel._private.getColspanForColumnScroll({
+                   _options: {
+                      multiSelectVisibility: 'visible',
+                      columnScroll: true,
+                      stickyColumnsCount: 2,
+                   },
+                   _columns: {length: 10}
+                })
+            );
 
          });
       });
