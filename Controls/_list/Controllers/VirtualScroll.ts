@@ -304,14 +304,14 @@ class VirtualScroll {
         let shift = Math.trunc(this._virtualPageSize / 2);
         if (index >= shift) {
             this._startIndex = index - shift;
-            const newStopIndex = this._startIndex + shift;
+            const newStopIndex = index + shift;
             this._stopIndex = Math.min(newStopIndex, this._itemsCount);
             if (this._stopIndex < newStopIndex) {
                 this._startIndex = Math.max(this._startIndex - (newStopIndex - this._itemsCount), 0);
             }
         } else {
+            this._stopIndex = Math.min(index + shift + (shift - index), this._itemsCount);
             this._startIndex = 0;
-            this._stopIndex = Math.min(this._startIndex + (this._virtualPageSize - (shift - index)), this._itemsCount);
         }
         this._updatePlaceholdersSizes();
     }
