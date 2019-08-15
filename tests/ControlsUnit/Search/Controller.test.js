@@ -77,12 +77,12 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             if (eventName === 'filterChanged') {
                filterChanged = true;
                filter = value[0];
-               isBubbling = eventArgs && eventArgs.bubbling
+               isBubbling = eventArgs && eventArgs.bubbling;
             }
 
             if (eventName === 'itemsChanged') {
                itemsChanged = true;
-               isBubbling = eventArgs && eventArgs.bubbling
+               isBubbling = eventArgs && eventArgs.bubbling;
             }
          };
 
@@ -122,6 +122,26 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(controller._misspellValue, 'testStr');
          assert.deepEqual(filter, {test: 'test'});
          assert.equal(controller._previousViewMode, 'tile');
+      });
+
+      it('_private.searchCallback with startingWith = "root"', () => {
+         var controller = getSearchController({
+            parentProperty: 'parent',
+            startingWith: 'root'
+         });
+         controller._searchContext = { updateConsumers: () => {} };
+         controller._notify = () => {};
+         controller._root = 'testRoot';
+         controller._path = new collection.RecordSet({
+            rawData: [{
+               parent: null,
+               id: 'testId'
+            }],
+            keyProperty: 'id'
+         });
+
+         searchMod.Controller._private.searchCallback(controller, { data: new collection.RecordSet() }, {});
+         assert.equal(controller._root, null);
       });
 
       it('_private.abortCallback', function() {
@@ -164,12 +184,26 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             }
          });
 
+         var rs = new collection.RecordSet({
+            rawData: [],
+            keyProperty: 'id'
+         });
+         rs.setMetaData({
+            path: new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: [{
+                  id: 'testRoot'
+               }]
+            })
+         });
+
          controller._viewMode = 'search';
          controller._previousViewMode = 'testViewMode';
-         controller._dataLoadCallback();
+         controller._dataLoadCallback(rs);
 
          assert.isTrue(dataLoadCallbackCalled);
          assert.equal(controller._viewMode, 'testViewMode');
+         assert.equal(controller._path.getCount(), 1);
       });
 
       it('_private.searchStartCallback', function() {

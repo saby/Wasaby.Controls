@@ -38,13 +38,17 @@ var _private = {
    },
 
    searchCallback: function (self, result, filter) {
-      var switcherStr = getSwitcherStrFromData(result.data);
+      const switcherStr = getSwitcherStrFromData(result.data);
 
       self._loading = false;
 
       if (self._viewMode !== 'search') {
          self._previousViewMode = self._viewMode;
          self._viewMode = 'search';
+
+         if (self._options.startingWith === 'root' && self._options.parentProperty) {
+            self._root = _private.getRoot(self._path, self._root, self._options.parentProperty);
+         }
       }
 
       self._searchValue = filter[self._options.searchParam] || '';
@@ -116,6 +120,8 @@ var _private = {
    },
 
    dataLoadCallback: function (self, data:RecordSet):void {
+      self._path = data.getMetaData().path;
+
       if (self._viewMode === 'search' && !self._searchValue) {
          self._viewMode = self._previousViewMode;
          self._previousViewMode = null;
@@ -130,6 +136,18 @@ var _private = {
          self._options.dataLoadErrback(error);
       }
       self._loading = false;
+   },
+
+   getRoot: function (path, currentRoot, parentProperty) {
+      let root;
+
+      if (path && path.getCount() > 0) {
+         root = path.at(0).get(parentProperty);
+      } else {
+         root = currentRoot;
+      }
+
+      return root;
    }
 };
 
@@ -168,7 +186,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    _viewMode: null,
    _searchValue: null,
    _misspellValue: null,
-   _root: undefined,
+   _root: null,
 
    constructor: function () {
       this._itemOpenHandler = _private.itemOpenHandler.bind(this);
