@@ -8,7 +8,7 @@
             </div>
         </ws:headerContentTemplate>
         <ws:bodyContentTemplate>
-            <div style="margin-left: 8px; margin-top: 8px;">
+            <div style="margin-left: 8px; margin-top: 8px; min-height: 1px;">
                 <Controls.input:Text />
                 <Controls.popup:Stack name="stack" template="Controls-demo/Popup/TestDialog">
                     <ws:templateOptions type="stack"/>
