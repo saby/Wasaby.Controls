@@ -62,8 +62,10 @@ class  ModuleComponent extends Control<IIntersectionObserverControllerOptions> {
    }
 
    private _createObserver(): IntersectionObserver {
+      //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+      const container = this._container.get ? this._container.get(0) : this._container;
       return new IntersectionObserver(this._intersectionObserverHandler.bind(this), {
-         root: this._container,
+         root: container,
          threshold: this._options.threshold
       });
    }
