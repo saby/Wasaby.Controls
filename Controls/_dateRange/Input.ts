@@ -42,7 +42,10 @@ var Component = Control.extend([], {
     _beforeMount: function (options) {
         this._rangeModel = new DateRangeModel();
         this._rangeModel.update(options);
-        CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged']);
+        CalendarControlsUtils.proxyModelEvents(
+            this, this._rangeModel,
+            ['startValueChanged', 'endValueChanged', 'rangeChanged', 'valueChanged']
+        );
     },
 
     _beforeUpdate: function (options) {
