@@ -38,7 +38,6 @@
    cursor: pointer;
    &:hover {
       color: @color_DateLinkView-secondaryStyle_hover;
-      text-decoration: underline;
    }
 }
 
@@ -54,6 +53,12 @@
 .controls-DateLinkView__style-secondary_readOnly,
 .controls-DateLinkView__style-info_readOnly {
    color: @color_DateLinkView_readOnly;
+}
+
+.controls-DateLinkView__value-clickable {
+   &:hover {
+      text-decoration: underline;
+   }
 }
 
 .controls-DateLinkView__value-wrapper {
