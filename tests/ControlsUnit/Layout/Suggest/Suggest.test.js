@@ -313,8 +313,10 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
       it('Suggest::showAllClick', function() {
          var suggest = new suggestMod._InputController();
          var stackOpened = false;
+         var eventResult = false;
+         var openCfg;
 
-         suggest._notify = () => {return false};
+         suggest._notify = (event, options) => { openCfg = options; return eventResult; };
          suggest._showContent = true;
          suggest._children = {
             stackOpener: {
@@ -328,6 +330,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
 
          assert.isFalse(stackOpened);
          assert.isFalse(suggest._showContent);
+         assert.isTrue(!!openCfg);
       });
 
       it('Suggest::_inputActivated/inputClicked with autoDropDown', function() {
