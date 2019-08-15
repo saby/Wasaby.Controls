@@ -1,13 +1,13 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/_InputController/_InputController');
 import emptyTemplate = require('wml!Controls/_suggest/_InputController/empty');
-import {descriptor} from 'Types/entity';
 import mStubs = require('Core/moduleStubs');
 import clone = require('Core/core-clone');
-import {getSwitcherStrFromData} from 'Controls/search';
 import Deferred = require('Core/Deferred');
-import {isEqual} from 'Types/object';
 import Env = require('Env/Env');
+import {descriptor} from 'Types/entity';
+import {getSwitcherStrFromData} from 'Controls/search';
+import {isEqual} from 'Types/object';
 import LoadService from './LoadService';
 import 'css!theme?Controls/suggest';
 
@@ -268,7 +268,7 @@ var _private = {
    },
 
    openSelector: function(self, popupOptions) {
-      if (self._notify('showSelector', []) !== false) {
+      if (self._notify('showSelector', [popupOptions]) !== false) {
          //loading showAll templates
          requirejs(['Controls/suggestPopup'], function () {
             self._children.stackOpener.open(popupOptions);
