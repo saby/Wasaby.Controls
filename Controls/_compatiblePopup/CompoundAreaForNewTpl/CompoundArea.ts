@@ -161,6 +161,13 @@ var moduleClass = CompoundControl.extend({
       }
    },
 
+   _finishPopupOpenedDeferred() {
+       // Сообщим окну о том, что шаблон построен
+      if (this.getParent()._finishPopupOpenedDeferred) {
+         this.getParent()._finishPopupOpenedDeferred();
+      }
+   },
+
    // Обсудили с Д.Зуевым, другого способа узнать что vdom компонент добавился в dom нет.
    _afterMountHandler: function() {
       var self = this;
@@ -172,6 +179,7 @@ var moduleClass = CompoundControl.extend({
             self._notifyOnSizeChanged(self, self);
             self._options._initCompoundArea(self);
          }
+         self._finishPopupOpenedDeferred();
          self._isVDomTemplateMounted = true;
          if (self._closeAfterMount) {
             self.sendCommand('close');
@@ -299,6 +307,7 @@ var moduleClass = CompoundControl.extend({
       this._container[0].eventProperties = null;
       this.unsubscribe('activated', this._activatedHandler);
       this.unsubscribe('deactivated', this._deactivatedHandler);
+      this._finishPopupOpenedDeferred();
       if (this._closeTimerId) {
          clearTimeout(this._closeTimerId);
          this._closeTimerId = null;
