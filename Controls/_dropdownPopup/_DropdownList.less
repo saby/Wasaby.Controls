@@ -300,6 +300,14 @@
    white-space: nowrap;
    text-align: center;
    flex-shrink: 0;
+   
+   &:last-child {
+      margin-right: @spacing_DropdownList-group-between-content-rightBorder;
+   }
+   
+   &:first-child {
+      margin-left: @spacing_DropdownList-group-between-content-leftBorder;
+   }
 }
 
 .controls-DropdownList__footer.theme_@{themeName} {
