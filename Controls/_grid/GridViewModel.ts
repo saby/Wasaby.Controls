@@ -1111,7 +1111,7 @@ var
         },
 
         setIndexes: function(startIndex, stopIndex) {
-            this._model.setIndexes(startIndex, stopIndex);
+            return this._model.setIndexes(startIndex, stopIndex);
         },
 
         getPreviousItemKey: function() {
