@@ -36,6 +36,6 @@
         <Controls.buttons:Button attr:class="demo-StackDemo__stickyClose" caption="Open Sticky(close on scroll)" name="stickyButton" on:click="openStickyScroll()"/>
     </div>
     <div >
-        <Controls.buttons:Button attr:class="demo-StackDemo__stickyTrack" caption="Open Sticky(track on scroll)" name="stickyButton" on:click="openSticky()"/>
+        <Controls.buttons:Button attr:class="demo-StackDemo__stickyTrack" caption="Open Sticky(track on scroll)" name="stickyButton2" on:click="openSticky()"/>
     </div>
 </div>
