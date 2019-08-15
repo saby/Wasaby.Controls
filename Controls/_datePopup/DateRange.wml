@@ -40,7 +40,7 @@
          <ws:yearTemplate>
             <ws:partial template="Controls/calendar:MonthListYearTemplate">
                <ws:headerTemplate>
-                  <div></div>
+                  <div class="controls-PeriodDialog-DateRangeItem__separator"></div>
                </ws:headerTemplate>
                <ws:bodyTemplate>
                   <ws:partial
