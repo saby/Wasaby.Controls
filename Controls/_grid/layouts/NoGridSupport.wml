@@ -1,4 +1,4 @@
-<table attr:class="controls-Grid controls-Grid_layout_fixed controls-Grid_{{_options.style}}">
+<table attr:class="controls-Grid controls-Grid_layout_fixed {{_options.columnScroll ? ' controls-Grid_layout_auto'}} controls-Grid_{{_options.style}}">
     <ws:partial template="wml!Controls/_grid/ColGroup" listModel="{{_listModel}}"/>
     <ws:if data="{{_listModel.getHeader() && _listModel.isDrawHeaderWithEmtyList()}}">
         <ws:partial template="wml!Controls/_grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
