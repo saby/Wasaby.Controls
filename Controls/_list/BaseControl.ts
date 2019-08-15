@@ -441,13 +441,17 @@ var _private = {
                 top: self._virtualScroll.PlaceholdersSizes.top,
                 bottom: self._virtualScroll.PlaceholdersSizes.bottom
             }], { bubbling: true });
-            self._notify('updateShadowMode', [{
-                top: self._virtualScroll.PlaceholdersSizes.top ||
-                    self._sourceController && self._sourceController.hasMoreData('up') ? 'visible' : 'auto',
-                bottom: self._virtualScroll.PlaceholdersSizes.bottom ||
-                    self._sourceController && self._sourceController.hasMoreData('down') ? 'visible' : 'auto'
-            }], { bubbling: true });
+            _private.updateShadowMode(self);
         }
+    },
+
+    updateShadowMode(self): void {
+        self._notify('updateShadowMode', [{
+            top: self._virtualScroll.PlaceholdersSizes.top ||
+            self._sourceController && self._sourceController.hasMoreData('up') ? 'visible' : 'auto',
+            bottom: self._virtualScroll.PlaceholdersSizes.bottom ||
+            self._sourceController && self._sourceController.hasMoreData('down') ? 'visible' : 'auto'
+        }], { bubbling: true });
     },
 
     checkVirtualScrollCapability: function(self) {
@@ -1406,6 +1410,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (this._virtualScroll) {
             this._setScrollItemContainer();
+            _private.updateShadowMode(this);
         }
     },
 
