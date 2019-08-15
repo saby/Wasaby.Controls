@@ -18,6 +18,7 @@ import InputContainer = require('Controls/_validate/Input');
 import isEmail = require('Controls/_validate/Validators/IsEmail');
 import isRequired = require('Controls/_validate/Validators/IsRequired');
 import isValidDate = require('Controls/_validate/Validators/IsValidDate');
+import isValidDateRange from 'Controls/_validate/Validators/IsValidDateRange';
 import Selection = require('Controls/_validate/Selection');
 
 export {
@@ -27,5 +28,6 @@ export {
     isEmail,
     isRequired,
     isValidDate,
+    isValidDateRange,
     Selection
 }

@@ -40,29 +40,41 @@ define([
             it(`should update ${field} if value changed`, function() {
                let model = new dateRange.DateRangeModel(),
                   value = new Date(2018, 0, 1),
-                  callback = sinon.spy();
+                  callback = sinon.spy(),
+                  rangeChangedCallback = sinon.spy(),
+                  valueChangedCallback = sinon.spy();
 
                model.subscribe(`${field}Changed`, callback);
+               model.subscribe('rangeChanged', rangeChangedCallback);
+               model.subscribe('valueChanged', valueChangedCallback);
                model[field] = value;
 
                assert.strictEqual(model[field], value);
                assert(callback.calledOnce, `${field}Changed callback called ${callback.callCount} times`);
+               assert(rangeChangedCallback.calledOnce, `rangeChangedCallback callback called ${callback.callCount} times`);
+               assert(valueChangedCallback.calledOnce, `valueChangedCallback callback called ${callback.callCount} times`);
             });
 
             it(`should not update ${field} if value did not changed`, function() {
                let model = new dateRange.DateRangeModel(),
                   value = new Date(2018, 0, 1),
                   callback = sinon.spy(),
+                  rangeChangedCallback = sinon.spy(),
+                  valueChangedCallback = sinon.spy(),
                   options = {};
 
                options[field] = value;
                model.update(options);
 
                model.subscribe(`${field}Changed`, callback);
+               model.subscribe('rangeChanged', rangeChangedCallback);
+               model.subscribe('valueChanged', valueChangedCallback);
                model[field] = value;
 
                assert.strictEqual(model[field], value);
                assert(callback.notCalled, `${field}Changed callback called ${callback.callCount} times`);
+               assert(rangeChangedCallback.notCalled, `rangeChangedCallback callback called ${callback.callCount} times`);
+               assert(valueChangedCallback.notCalled, `valueChangedCallback callback called ${callback.callCount} times`);
             });
          });
       });
