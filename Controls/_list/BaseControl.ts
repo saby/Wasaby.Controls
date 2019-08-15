@@ -126,7 +126,9 @@ var _private = {
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
-                self._loadedItems = list;
+                if (list.getCount()) {
+                    self._loadedItems = list;
+                }
                 if (self._pagingNavigation) {
                     var hasMoreDataDown = list.getMetaData().more;
                     self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, cfg.navigation.sourceConfig.pageSize);
@@ -352,7 +354,9 @@ var _private = {
 
     loadToDirection: function(self, direction, userCallback, userErrback) {
         const beforeAddItems = (addedItems) => {
-            self._loadedItems = addedItems;
+            if (addedItems.getCount()) {
+                self._loadedItems = addedItems;
+            }
             if (userCallback && userCallback instanceof Function) {
                 userCallback(addedItems, direction);
             }
