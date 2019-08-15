@@ -50,7 +50,6 @@ define('Controls-demo/Popup/Opener/StackDemo',
             this._children.sticky.open({
                target: this._children.stickyButton2._container,
                opener: this._children.stickyButton2,
-               height: 200,
                actionOnScroll: 'track',
                template: 'wml!Controls-demo/Popup/Opener/DialogTpl'
             });
@@ -59,7 +58,6 @@ define('Controls-demo/Popup/Opener/StackDemo',
             this._children.sticky.open({
                target: this._children.stickyButton._container,
                opener: this._children.stickyButton,
-               height: 200,
                actionOnScroll: 'close',
                template: 'wml!Controls-demo/Popup/Opener/DialogTpl'
             });
