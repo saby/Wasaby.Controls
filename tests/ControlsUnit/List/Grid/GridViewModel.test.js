@@ -1451,7 +1451,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.equal(
                 editingItemData.getEditingRowStyles(),
-                'display: grid; display: -ms-grid; grid-template-columns: max-content 1fr 123px 321px; grid-column: 1 / 5; grid-row: 3;'
+                'display: grid; display: -ms-grid; grid-template-columns: max-content 1fr 123px 321px; grid-column: 1 / 2; grid-row: 3;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
          });
