@@ -269,7 +269,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
     }
 
     private _getElementByDate(selector: string, dateId: string): HTMLElement {
-        return this._container.querySelector(selector + '[data-date="' + dateId + '"]');
+        //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+        const container = this._container.get ? this._container.get(0) : this._container;
+        return container.querySelector(selector + '[data-date="' + dateId + '"]');
     }
 
     protected _dateToDataString(date: Date): string {
