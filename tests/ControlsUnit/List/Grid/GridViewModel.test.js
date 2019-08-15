@@ -918,6 +918,15 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             });
             assert.deepEqual(callMethods, callStackMethods, 'Incorrect call stack methods.');
          });
+         it('setIndexes return superclass result', function() {
+            var gridViewModel = new gridMod.GridViewModel(cfg);
+            gridViewModel._model = {
+                setIndexes: function() {
+                    return 'test_return_value';
+                }
+            };
+            assert.equal(gridViewModel.setIndexes(), 'test_return_value');
+         });
       });
       describe('ladder and sticky column', function() {
 
