@@ -139,6 +139,10 @@ var _private = {
                     cfg.afterReloadCallback(cfg);
                 }
 
+                if (cfg.dataLoadCallback instanceof Function) {
+                    cfg.dataLoadCallback(list);
+                }
+
                 if (listModel) {
                     if (self._isActive) {
                         isActive = true;
@@ -156,10 +160,6 @@ var _private = {
                     if (isActive === true) {
                         self._children.listView.activate();
                     }
-                }
-
-                if (cfg.dataLoadCallback instanceof Function) {
-                    cfg.dataLoadCallback(list);
                 }
 
                 if (self._virtualScroll) {
