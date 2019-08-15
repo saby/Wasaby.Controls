@@ -48,6 +48,7 @@
             <Controls.validate:InputContainer>
             <ws:validators>
                <ws:Function value="{{_rangeModel.endValue}}">Controls/validate:isValidDate</ws:Function>
+               <ws:Function startValue="{{_rangeModel.startValue}}" endValue="{{_rangeModel.endValue}}">Controls/validate:isValidDateRange</ws:Function>
             </ws:validators>
             <ws:content>
                <Controls.input:DateBase

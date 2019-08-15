@@ -32,6 +32,12 @@ var _private = {
       self._endValue = value;
       self._nextVersion();
       return true;
+   },
+   notifyRangeChanged: function(self, start: Date, end: Date): void {
+      self._notify('rangeChanged', [start, end]);
+
+      // To compatible with validation container
+      self._notify('valueChanged', [[start, end]]);
    }
 };
 
@@ -63,7 +69,7 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
    set startValue(value) {
       if (_private.setStartValue(this, value)) {
          this._notify('startValueChanged', [value]);
-         this._notify('rangeChanged', [value]);
+         _private.notifyRangeChanged(this, value, this._endValue);
       }
    },
 
@@ -74,7 +80,7 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
    set endValue(value) {
       if (_private.setEndValue(this, value)) {
          this._notify('endValueChanged', [value]);
-         this._notify('rangeChanged', [value]);
+         _private.notifyRangeChanged(this, this._startValue, value);
       }
    },
 
@@ -89,7 +95,7 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
          changed = true;
       }
       if (changed) {
-         this._notify('rangeChanged', [startValue, endValue]);
+         _private.notifyRangeChanged(this, startValue, endValue);
       }
    },
 
