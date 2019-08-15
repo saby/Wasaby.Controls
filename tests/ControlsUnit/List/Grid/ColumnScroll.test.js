@@ -249,6 +249,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.deepEqual(clearColumnScroll._fixedColumnsWidth,  74);
 
          clearColumnScroll._children.content = {
+            offsetTop: 0,
             getElementsByClassName: (className) => {
                if (className === 'controls-Grid__header') {
                   return [
@@ -480,6 +481,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
          columnScroll._children = {
            content: {
+              offsetTop: 0,
               getElementsByClassName: function (className) {
                  if (className === 'controls-Grid__header') {
                     return [
@@ -521,6 +523,11 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          columnScroll._setOffsetForHScroll();
 
          assert.equal(columnScroll._offsetForHScroll, 100);
+
+         columnScroll._children.content.offsetTop = 25;
+         columnScroll._setOffsetForHScroll();
+         assert.equal(columnScroll._offsetForHScroll, 125)
+
       });
    });
 });
