@@ -268,7 +268,7 @@ var _private = {
    },
 
    openSelector: function(self, popupOptions) {
-      if (self._notify('showSelector', []) !== false) {
+      if (self._notify('showSelector', [popupOptions]) !== false) {
          //loading showAll templates
          requirejs(['Controls/suggestPopup'], function () {
             self._children.stackOpener.open(popupOptions);
