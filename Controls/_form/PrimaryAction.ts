@@ -3,8 +3,11 @@ import {constants} from 'Env/Env';
 import template = require('wml!Controls/_form/PrimaryAction/PrimaryAction');
 
 /**
- * @class Controls/_form/PrimaryAction
  * Primary action controller. Catches ctrl+enter (cmd+enter) press and fires 'triggered' event.
+ * @class Controls/_form/PrimaryAction
+ * @extends Core/Control
+ * @public
+ * @author Красильников А.С.
  */
 
 const PrimaryAction = Control.extend({
@@ -19,5 +22,10 @@ const PrimaryAction = Control.extend({
       }
    }
 });
+
+/**
+ * @event Controls/_form/PrimaryAction#triggered Происходит при нажатии комбинации клавиш Ctrl + Enter и Сmd + Enter.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ */
 
 export default PrimaryAction;
