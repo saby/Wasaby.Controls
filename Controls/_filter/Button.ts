@@ -6,8 +6,8 @@ import template = require('wml!Controls/_filter/Button/Button');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Deferred = require('Core/Deferred');
-import {isEqual} from 'Types/object';
 import libHelper = require('Core/library');
+import {isEqual} from 'Types/object';
 import 'css!theme?Controls/filter';
 /**
  * Контрол для поддержки фильтрации данных. Состоит из иконки-кнопки и строкового представления выбранного фильтра.
@@ -143,14 +143,23 @@ var _private = {
    },
 
    resetItems: function(self, items) {
+      let textValue;
+      let resetValue;
+      
       chain.factory(items).each(function(item) {
          // Fast filters could not be reset from the filter button.
          if (!Utils.object.getPropertyValue(item, 'isFast')) {
-            if (Utils.object.getPropertyValue(item, 'resetValue') !== undefined) {
-               Utils.object.setPropertyValue(item, 'value', Utils.object.getPropertyValue(item, 'resetValue'));
+            textValue = Utils.object.getPropertyValue(item, 'textValue');
+            resetValue = Utils.object.getPropertyValue(item, 'resetValue');
+
+            if (resetValue !== undefined) {
+               Utils.object.setPropertyValue(item, 'value', resetValue);
             }
             if (Utils.object.getPropertyValue(item, 'visibility') !== undefined) {
                Utils.object.setPropertyValue(item, 'visibility', false);
+            }
+            if (textValue !== undefined) {
+               Utils.object.setPropertyValue(item, 'textValue', textValue === null ? textValue : '');
             }
          }
       });
