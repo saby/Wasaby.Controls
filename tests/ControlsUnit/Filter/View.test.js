@@ -426,13 +426,14 @@ define(
                      idProperty: 'id'
                   }),
                   source: source[1].editorOptions.source,
+                  _sourceController: {hasMoreData: () => {return true;}},
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}
             };
             assert.strictEqual(configs['state'].items.getCount(), 6);
             filter.View._private.loadSelectedItems(source, configs).addCallback(() => {
-               assert.strictEqual(configs['state'].items.getCount(), 7);
+               assert.strictEqual(configs['state'].items.getCount(), 6);
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
                done();
             });
