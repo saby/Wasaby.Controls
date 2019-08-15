@@ -12,6 +12,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
+import {getItemsWithHistory, isHistorySource} from 'Controls/_filter/HistoryUtils';
 
 /**
  * Контрол для фильтрации данных. Состоит из иконки-кнопки, строкового представления выбранного фильтра и параметров быстрого фильтра.
@@ -185,7 +186,7 @@ var _private = {
                     const keyProperty = config.keyProperty;
                     editorOpts.filter[keyProperty] = keys;
                     let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
-                        configs[item.name].items.prepend(newItems);
+                        configs[item.name].items = getItemsWithHistory(configs[item.name].items, newItems, configs[item.name]._sourceController, configs[item.name].source);
                     });
                     pDef.push(result);
                 }
@@ -320,9 +321,17 @@ var _private = {
     selectorResult: function(result) {
         var curConfig = this._configs[result.id],
             newItems = _private.getNewItems(this, result.data, curConfig);
-        curConfig.items.prepend(newItems);
-        _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
-        _private.updateText(this, this._source, this._configs);
+        if (isHistorySource(curConfig.source)) {
+            if (newItems.length) {
+                curConfig._sourceController = null;
+            }
+            _private.updateHistory(curConfig, factory(result.data).toArray());
+            _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
+        } else {
+            curConfig.items.prepend(newItems);
+            _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
+            _private.updateText(this, this._source, this._configs);
+        }
     },
 
     moreButtonClick: function(result) {
@@ -342,6 +351,26 @@ var _private = {
            }
         });
         return result;
+    },
+
+    updateHistory: function(currentFilter, items) {
+        if (isHistorySource(currentFilter.source)) {
+            currentFilter.source.update(items, historyUtils.getMetaHistory());
+
+            if (currentFilter._sourceController && currentFilter.source.getItems) {
+                currentFilter.items = currentFilter.source.getItems();
+            }
+        }
+    },
+
+    isNeedHistoryReload: function(configs) {
+        let needReload = false;
+        factory(configs).each((config) => {
+            if (!config._sourceController) {
+                needReload = true;
+            }
+        });
+        return needReload;
     }
 };
 
@@ -377,10 +406,12 @@ var Filter = Control.extend({
             const self = this;
             let resultDef;
             _private.prepareItems(this, newOptions.source);
-            if (_private.isNeedReload(this._options.source, newOptions.source)) {
+            if (_private.isNeedReload(this._options.source, newOptions.source) || _private.isNeedHistoryReload(this._configs)) {
                 resultDef = _private.reload(this).addCallback(() => {
                     self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
                 });
+            } else if (_private.isNeedHistoryReload(this._configs)) {
+                resultDef = _private.reload(this);
             } else {
                 resultDef = _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
                     _private.updateText(self, self._source, self._configs);

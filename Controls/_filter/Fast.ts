@@ -11,6 +11,7 @@ import Utils = require('Types/util');
 import {isEqual} from 'Types/object';
 import Merge = require('Core/core-merge');
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
+import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
 
       /**
        * Контрол "Быстрый фильтр".
@@ -297,7 +298,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
                   properties.filter = itemProperties.filter || {};
                   properties.filter[itemProperties.keyProperty] = keys;
                   let result = _private.loadItemsFromSource({}, properties, false).addCallback(function(items) {
-                      configs[index]._items.prepend(items);
+                     configs[index]._items = getItemsWithHistory(configs[index]._items, items, configs[index]._sourceController, configs[index]._source);
                   });
                   pDef.push(result);
                } else {

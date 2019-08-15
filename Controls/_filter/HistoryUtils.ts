@@ -1,4 +1,5 @@
 import {Service as HistoryService, FilterSource as HistorySource, Constants} from 'Controls/history';
+import {factory} from 'Types/chain';
 
 import {Controller as SourceController} from 'Controls/source';
 import entity = require('Types/entity');
@@ -6,7 +7,7 @@ import collection = require('Types/collection');
 import sourceLib = require('Types/source');
 import Env = require('Env/Env');
 import Di = require('Types/di');
-
+import coreInstance = require('Core/core-instance');
 
 var HISTORY_SOURCE = {};
 
@@ -62,8 +63,35 @@ function loadHistoryItems(historyId) {
    });
 }
 
-export = {
-   loadHistoryItems: loadHistoryItems,
-   getHistorySource: getHistorySource,
-   destroyHistorySource: destroyHistorySource
+function isHistorySource(source) {
+   return coreInstance.instanceOfModule(source, 'Controls/history:Source');
+}
+
+function prependNewItems(oldItems, newItems, sourceController) {
+   if (sourceController.hasMoreData('down')) {
+      const allCount = oldItems.getCount();
+      const firstItems = factory(oldItems).first(allCount - newItems.getCount()).value();
+      newItems.append(firstItems);
+   } else {
+      newItems.append(oldItems);
+   }
+}
+
+function getItemsWithHistory(oldItems, newItems, sourceController, source) {
+   let itemsWithHistory;
+   prependNewItems(oldItems, newItems, sourceController);
+   if (isHistorySource(source)) {
+      itemsWithHistory = source.prepareItems(newItems);
+   } else {
+      itemsWithHistory = newItems;
+   }
+   return itemsWithHistory;
+}
+
+export {
+   loadHistoryItems,
+   getHistorySource,
+   destroyHistorySource,
+   isHistorySource,
+   getItemsWithHistory
 };
