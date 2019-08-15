@@ -1200,6 +1200,7 @@ define([
                        }
                    }
                };
+
            lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
            assert.deepEqual(updateShadowModeParams, { top: 'visible', bottom: 'visible' });
 
@@ -1232,6 +1233,32 @@ define([
            hasMoreData.down = true;
            lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
            assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'visible' });
+       });
+
+       it ('call updateShadowMode in afterMount', function() {
+           var
+               cfg = {
+                   virtualScrolling: true,
+                   navigation: {
+                      view: 'infinity'
+                   },
+                   source: new sourceLib.Memory({
+                       idProperty: 'id',
+                       data: data
+                   })
+               },
+               baseControl = new lists.BaseControl(cfg),
+               originalUpdateShadowMode = lists.BaseControl._private.updateShadowMode,
+               updateShadowModeCalled = false;
+           lists.BaseControl._private.updateShadowMode = function() {
+               updateShadowModeCalled = true;
+           };
+           baseControl._setLoadOffset = lists.BaseControl._private.startScrollEmitter = function(){};
+           baseControl._beforeMount(cfg);
+           assert.isFalse(updateShadowModeCalled);
+           baseControl._afterMount(cfg);
+           assert.isTrue(updateShadowModeCalled);
+           lists.BaseControl._private.updateShadowMode = originalUpdateShadowMode;
        });
 
       it('scrollToEdge_load', function(done) {
