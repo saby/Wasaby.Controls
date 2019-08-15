@@ -59,7 +59,7 @@
    display: flex;
    justify-content: flex-end;
    flex-grow: 1;
-   flex-shrink: 0;
+   flex-shrink: 1;
    width: auto;
    overflow: hidden;
    height: 100%;
@@ -105,12 +105,13 @@
 .controls-StackTemplate__caption {
    cursor: default;
    display: flex;
-   flex-shrink: 1;
+   flex-shrink: 10;
    overflow: hidden;
 }
 
 .controls-StackTemplate__caption_theme_@{themeName} {
    height: @header_min-height_stack;
+   min-width: @header_min-width_stack;
    margin-left: @header_padding-left_stack;
 }
 
