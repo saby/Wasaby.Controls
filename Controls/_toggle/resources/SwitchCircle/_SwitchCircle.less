@@ -1,17 +1,20 @@
-.controls-SwitchCircle__innerCircle_selected_enabled {
+.controls-SwitchCircle__innerCircle_selected_enabled_theme_@{themeName} {
    fill: @color_ToggleCircle_innerCircle__selected_enabled;
 }
 
-.controls-SwitchCircle__innerCircle_selected_disabled {
+.controls-SwitchCircle__innerCircle_selected_disabled_theme_@{themeName} {
    fill: @color_ToggleCircle_innerCircle__selected_disabled;
 }
 
-.controls-SwitchCircle__innerCircle_unselected {
+.controls-SwitchCircle__innerCircle_unselected_theme_@{themeName} {
    fill: @color_ToggleCircle_innerCircle__unselected;
 }
 
-.controls-SwitchCircle__borderCircle {
+.controls-SwitchCircle__borderCircle_theme_@{themeName} {
    stroke-width: @thickness_ToggleCircle-borderCircle-border;
+}
+
+.controls-SwitchCircle__borderCircle {
    fill: transparent;
 }
 
@@ -19,7 +22,7 @@
    stroke: @color_ToggleCircle_outerCircle__enabled;
 }
 
-.controls-SwitchCircle__borderCircle_disabled {
+.controls-SwitchCircle__borderCircle_disabled_theme_@{themeName} {
    stroke: @color_ToggleCircle_outerCircle__disabled;
 }
 
@@ -31,10 +34,13 @@
    }
 }
 
-.controls-SwitchCircle__svg {
-   z-index: 2;
+.controls-SwitchCircle__svg_theme_@{themeName} {
    width: @width_ToggleCircle;
    height: @height_ToggleCircle;
+}
+
+.controls-SwitchCircle__svg {
+   z-index: 2;
    display: inline-block;
    flex-shrink: 0;
    //в ie особая обработка кликов по svg: чтобы клик отработал, нужно соблюсти много условий

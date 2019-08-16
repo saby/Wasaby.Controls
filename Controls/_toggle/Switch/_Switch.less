@@ -1,5 +1,8 @@
 .controls-Switch {
    display: inline-block;
+}
+
+.controls-Switch_theme_@{themeName} {
    font-size: @font-size_Switch;
 }
 
@@ -8,14 +11,17 @@
    .align-items(center);
    .justify-content(center);
    .baseline-fix();
+   border-style: solid;
+   box-sizing: border-box;
+   user-select: none;
+}
+
+.controls-Switch__toggle__wrapper_theme_@{themeName} {
    width: @width_Switch;
    height: @height_Switch;
    border-width: @width_Switch__border;
    border-color: @color_Switch__border;
    border-radius: @size_Switch__border-radius;
-   border-style: solid;
-   box-sizing: border-box;
-   user-select: none;
 }
 
 .controls-Switch_enabled {
@@ -31,57 +37,60 @@
 
 .controls-Switch__line {
    display: inline-block;
-   height: @thickness_Switch-track;
-   width: @length_Switch-track - @size_Switch__ToggleCircle + @spacing-between-track-and-toggleCircle;
    position: relative;
 }
 
-.controls-Switch__line_right_toggle {
+.controls-Switch__line_theme_@{themeName} {
+   height: @thickness_Switch-track;
+   width: @length_Switch-track - @size_Switch__ToggleCircle + @spacing-between-track-and-toggleCircle;
+}
+
+.controls-Switch__line_right_toggle_theme_@{themeName} {
    left: @spacing-between-track-and-toggleCircle;
 }
 
-.controls-Switch__line_left_toggle {
+.controls-Switch__line_left_toggle_theme_@{themeName} {
    right: @spacing-between-track-and-toggleCircle;
 }
 
-.controls-Switch__line_enabled {
+.controls-Switch__line_enabled_theme_@{themeName} {
    background-color: @background-color_Switch-track__enabled;
 }
 
-.controls-Switch__line_disabled {
+.controls-Switch__line_disabled_theme_@{themeName} {
    background-color: @background-color_Switch-track__disabled;
 }
 
-.controls-Switch__text_rightCaption {
+.controls-Switch__text_rightCaption_theme_@{themeName} {
    margin-left: @spacing_Switch-between-toggle-text;
 }
 
-.controls-Switch__text_leftCaption {
+.controls-Switch__text_leftCaption_theme_@{themeName} {
    margin-right: @spacing_Switch-between-toggle-text;
 }
 
-.controls-Switch__text_enabled_unselected {
+.controls-Switch__text_enabled_unselected_theme_@{themeName} {
    color: @color_Switch-text__enabled_unselected;
 }
 
-.controls-Switch__text_enabled_selected {
+.controls-Switch__text_enabled_selected_theme_@{themeName} {
    color: @color_Switch-text__enabled_selected;
 }
 
-.controls-Switch__text_disabled_selected {
+.controls-Switch__text_disabled_selected_theme_@{themeName} {
    color: @color_Switch-text__disabled_selected;
 }
 
-.controls-Switch__text_enabled_selected, .controls-Switch__text_enabled_unselected {
+.controls-Switch__text_enabled_selected_theme_@{themeName}, .controls-Switch__text_enabled_unselected_theme_@{themeName} {
    cursor: pointer;
 }
 
-.controls-Switch__text_disabled_unselected {
+.controls-Switch__text_disabled_unselected_theme_@{themeName} {
    color: @color_Switch-text__disabled_unselected;
 }
 
 .controls-Switch:active {
-   .controls-SwitchCircle__borderCircle_enabled {
+   .controls-SwitchCircle__borderCircle_enabled_theme_@{themeName} {
       stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
    }
 }
@@ -95,14 +104,14 @@
 }
 
 .ws-is-no-touch {
-   .controls-Switch__text_enabled_unselected:hover {
+   .controls-Switch__text_enabled_unselected_theme_@{themeName}:hover {
       text-decoration: underline;
    }
-   .controls-Switch__text_enabled_selected:hover {
+   .controls-Switch__text_enabled_selected_theme_@{themeName}:hover {
       text-decoration: @text-decoration_Switch-text_enabled_hovered;
    }
    .controls-Switch:hover {
-      .controls-SwitchCircle__borderCircle_enabled {
+      .controls-SwitchCircle__borderCircle_enabled_theme_@{themeName} {
          stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
       }
    }
