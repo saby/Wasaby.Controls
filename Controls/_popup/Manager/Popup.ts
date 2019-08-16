@@ -237,9 +237,6 @@ class Popup extends Control<IPopupOptions> {
     activatePopup(): void {
         // TODO Compatible
         if (this._options.autofocus && !this._options.isCompoundTemplate) {
-            if (this._activate) {
-                this._activate(this);
-            }
             this.activate();
         }
     }
