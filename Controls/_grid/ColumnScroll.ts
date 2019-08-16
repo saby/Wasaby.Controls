@@ -172,8 +172,8 @@ const
       },
 
       _isColumnScrollVisible: function() {
-         var header = this._options.header;
-         return header && header.length && (this._contentSize > this._contentContainerSize) ? true : false;
+         const items = this._options.items;
+         return items && !!items.getCount() && (this._contentSize > this._contentContainerSize) ? true : false;
       },
 
       _calculateShadowClasses(position) {
