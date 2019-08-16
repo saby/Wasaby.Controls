@@ -1,8 +1,8 @@
 /* global define, describe, it, assert, beforeEach, afterEach */
 define([
-   'Types/_display/itemsStrategy/Search',
-   'Types/_display/BreadcrumbsItem',
-   'Types/_display/TreeItem'
+   'Controls/_display/itemsStrategy/Search',
+   'Controls/_display/BreadcrumbsItem',
+   'Controls/_display/TreeItem'
 ], function(
    Search,
    BreadcrumbsItem,
@@ -14,7 +14,7 @@ define([
    BreadcrumbsItem = BreadcrumbsItem.default;
    TreeItem = TreeItem.default;
 
-   describe('Types/_display/itemsStrategy/Search', function() {
+   describe('Controls/_display/itemsStrategy/Search', function() {
       var getSource = function(items) {
             return {
                options: {foo: 'bar'},

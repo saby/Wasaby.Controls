@@ -1,42 +1,34 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert */
 define([
-   'Types/_collection/IObservable',
-   'Types/_display/Abstract',
-   'Types/_display/Collection',
-   'Types/_display/GroupItem',
-   'Types/_collection/RecordSet',
-   'Types/_collection/ObservableList',
-   'Types/_collection/List',
-   'Types/_entity/functor/Compute',
-   'Types/_entity/Model',
+   'Controls/_display/Abstract',
+   'Controls/_display/Collection',
+   'Controls/_display/GroupItem',
+   'Types/collection',
+   'Types/entity',
    'Core/Serializer',
    'Core/core-instance'
 ], function(
-   IBindCollection,
    Display,
    CollectionDisplay,
    GroupItem,
-   RecordSet,
-   ObservableList,
-   List,
-   ComputeFunctor,
-   Model,
+   TypesCollection,
+   TypesEntity,
    Serializer,
    coreInstance
 ) {
    'use strict';
 
-   IBindCollection = IBindCollection.default;
+   const IBindCollection = TypesCollection.IObservable;
    Display = Display.default;
    CollectionDisplay = CollectionDisplay.default;
    GroupItem = GroupItem.default;
-   RecordSet = RecordSet.default;
-   ObservableList = ObservableList.default;
-   List = List. default;
-   ComputeFunctor = ComputeFunctor.default;
-   Model = Model.default;
+   const RecordSet = TypesCollection.RecordSet;
+   const ObservableList = TypesCollection.ObservableList;
+   const List = TypesCollection.List;
+   const ComputeFunctor = TypesEntity.functor.Compute;
+   const Model = TypesEntity.Model;
 
-   describe('Types/_display/Collection', function() {
+   describe('Controls/_display/Collection', function() {
       var getItems = function() {
             return [{
                id: 1,
@@ -209,7 +201,7 @@ define([
             var display = new CollectionDisplay({
                collection: new ObservableList()
             });
-            assert.isTrue(coreInstance.instanceOfModule(display.getEnumerator(), 'Types/_display/CollectionEnumerator'));
+            assert.isTrue(coreInstance.instanceOfModule(display.getEnumerator(), 'Controls/_display/CollectionEnumerator'));
          });
 
          context('if has repeatable ids', function() {
@@ -4143,7 +4135,7 @@ define([
             display.setFilter(function() {});
             display.setGroup(function() {});
             var json = display.toJSON();
-            assert.strictEqual(json.module, 'Types/display:Collection');
+            assert.strictEqual(json.module, 'Controls/display:Collection');
             assert.isNumber(json.id);
             assert.isTrue(json.id > 0);
             assert.deepEqual(json.state.$options, display._getOptions());

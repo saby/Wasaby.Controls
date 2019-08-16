@@ -1,6 +1,6 @@
 /* global define, describe, it, assert */
 define([
-   'Types/_display/GroupItem'
+   'Controls/_display/GroupItem'
 ], function(
    GroupItem
 ) {
@@ -8,7 +8,7 @@ define([
 
    GroupItem = GroupItem.default;
 
-   describe('Types/_display/GroupItem', function() {
+   describe('Controls/_display/GroupItem', function() {
       var getOwnerMock = function() {
          return {
             notifyItemChange: function(item, property) {

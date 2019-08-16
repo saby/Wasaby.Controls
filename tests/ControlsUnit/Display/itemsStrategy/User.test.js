@@ -1,7 +1,7 @@
 /* global define, describe, it, assert, beforeEach, afterEach */
 define([
-   'Types/_display/itemsStrategy/User',
-   'Types/_display/CollectionItem'
+   'Controls/_display/itemsStrategy/User',
+   'Controls/_display/CollectionItem'
 ], function(
    User,
    CollectionItem
@@ -11,7 +11,7 @@ define([
    User = User.default;
    CollectionItem = CollectionItem.default;
 
-   describe('Types/_display/itemsStrategy/User', function() {
+   describe('Controls/_display/itemsStrategy/User', function() {
       var wrapItem = function(item) {
             return new CollectionItem({
                contents: item

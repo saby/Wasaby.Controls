@@ -1,6 +1,6 @@
 /* global define, describe, it, assert, beforeEach, afterEach */
 define([
-   'Types/_display/itemsStrategy/Root'
+   'Controls/_display/itemsStrategy/Root'
 ], function(
    Root
 ) {
@@ -8,7 +8,7 @@ define([
 
    Root = Root.default;
 
-   describe('Types/_display/itemsStrategy/Root', function() {
+   describe('Controls/_display/itemsStrategy/Root', function() {
       var getSource = function(items) {
             return {
                options: {foo: 'bar'},

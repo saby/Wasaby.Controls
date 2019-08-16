@@ -1,28 +1,26 @@
 /* global define, describe, it, assert, beforeEach, afterEach */
 define([
-   'Types/_display/itemsStrategy/Direct',
-   'Types/_display/Collection',
-   'Types/_display/CollectionItem',
-   'Types/_display/GroupItem',
-   'Types/_collection/List',
-   'Types/_collection/Enum'
+   'Controls/_display/itemsStrategy/Direct',
+   'Controls/_display/Collection',
+   'Controls/_display/CollectionItem',
+   'Controls/_display/GroupItem',
+   'Types/collection'
 ], function(
    Direct,
    CollectionDisplay,
    CollectionItem,
    GroupItem,
-   List,
-   Enum
+   TypesCollection
 ) {
    'use strict';
 
    Direct = Direct.default;
    CollectionDisplay = CollectionDisplay.default;
    CollectionItem = CollectionItem.default;
-   List = List.default;
-   Enum = Enum.default;
+   const List = TypesCollection.List;
+   const Enum = TypesCollection.Enum;
 
-   describe('Types/_display/itemsStrategy/Direct', function() {
+   describe('Controls/_display/itemsStrategy/Direct', function() {
       var getStrategy = function(display) {
             return new Direct({
                display: display

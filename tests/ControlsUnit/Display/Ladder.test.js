@@ -1,29 +1,25 @@
 /* global define, beforeEach, afterEach, describe, it, assert */
 define([
-   'Types/_display/Ladder',
-   'Types/_display/Collection',
-   'Types/_collection/IObservable',
-   'Types/_collection/ObservableList',
-   'Types/_entity/Record',
-   'Types/_entity/Model'
+   'Controls/_display/Ladder',
+   'Controls/_display/Collection',
+   'Types/collection',
+   'Types/entity'
 ], function(
    Ladder,
    Collection,
-   IBindCollection,
-   ObservableList,
-   Record,
-   Model
+   TypesCollection,
+   TypesEntity
 ) {
    'use strict';
 
    Ladder = Ladder.default;
    Collection = Collection.default;
-   IBindCollection = IBindCollection.default;
-   ObservableList = ObservableList.default;
-   Record = Record.default;
-   Model = Model.default;
+   const IBindCollection = TypesCollection.IObservable;
+   const ObservableList = TypesCollection.ObservableList;
+   const Record = TypesEntity.Record;
+   const Model = TypesEntity.Model;
 
-   describe('Types/_display/Ladder', function() {
+   describe('Controls/_display/Ladder', function() {
       var getItems = function() {
             return [{
                id: 1,
