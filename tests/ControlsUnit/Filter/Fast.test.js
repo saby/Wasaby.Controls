@@ -544,16 +544,16 @@ define(
 
          it('open dropdown', function() {
             let fastFilter = new filterMod.Fast(config);
-            let expectedConfig;
+            let expectedConfig, isOpened, isLoading = false;
             fastFilter._children = {
-               DropdownOpener: { open: (openerConfig) => {expectedConfig = openerConfig;} }
+               DropdownOpener: { open: (openerConfig) => {expectedConfig = openerConfig; isOpened = true;} }
             };
             fastFilter._container = {children: []};
             fastFilter._configs = [{_items: new collection.RecordSet({
                   idProperty: 'key',
                   rawData: items[0]
                }),
-               _sourceController: { hasMoreData: () => {} }}];
+               _sourceController: { hasMoreData: () => {}, isLoading: () => {return isLoading} }}];
             fastFilter._items = new collection.RecordSet({
                rawData: configItems.items,
                idProperty: 'title'
@@ -562,6 +562,12 @@ define(
             assert.strictEqual(expectedConfig.fittingMode, 'overflow');
             assert.deepStrictEqual(expectedConfig.templateOptions.items, fastFilter._configs[0]._items);
             assert.strictEqual(expectedConfig.templateOptions.selectedKeys[0], 'Россия');
+            assert.isTrue(isOpened);
+
+            isOpened = false;
+            isLoading = true;
+            fastFilter._open('itemClick', fastFilter._configs[0]._items, 0);
+            assert.isFalse(isOpened);
          });
 
          it('open dropdown _needQuery', function() {
@@ -575,7 +581,7 @@ define(
                   idProperty: 'key',
                   rawData: items[0]
                }),
-               _sourceController: { hasMoreData: () => {} },
+               _sourceController: { hasMoreData: () => {}, isLoading: () => {} },
                _needQuery: true
             }];
             fastFilter._items = new collection.RecordSet({
