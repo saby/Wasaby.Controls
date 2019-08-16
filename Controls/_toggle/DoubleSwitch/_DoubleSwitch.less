@@ -18,19 +18,19 @@
    font-size: @font-size_DoubleSwitch;
 }
 
-.controls-DoubleSwitch__line_vertical_checked {
+.controls-DoubleSwitch__line_vertical_checked_theme_@{themeName} {
    bottom: @spacing-between-track-and-toggleCircle;
 }
 
-.controls-DoubleSwitch__line_vertical_notChecked {
+.controls-DoubleSwitch__line_vertical_notChecked_theme_@{themeName} {
    top: @spacing-between-track-and-toggleCircle;
 }
 
-.controls-DoubleSwitch__line_horizontal_notChecked {
+.controls-DoubleSwitch__line_horizontal_notChecked_theme_@{themeName} {
    left: @spacing-between-track-and-toggleCircle;
 }
 
-.controls-DoubleSwitch__line_horizontal_checked {
+.controls-DoubleSwitch__line_horizontal_checked_theme_@{themeName} {
    right: @spacing-between-track-and-toggleCircle;
 }
 
@@ -38,17 +38,20 @@
    cursor: pointer;
 }
 
-.controls-DoubleSwitch__toggle_horizontal {
+.controls-DoubleSwitch__toggle_horizontal_theme_@{themeName} {
    margin: 0 @spacing_Switch-between-toggle-text;
    width: @width_Switch;
    height: @height_Switch;
 }
 
 .controls-DoubleSwitch__toggle_vertical {
-   width: @height_Switch;
-   height: @width_Switch;
    .flex-direction(column);
    margin: 0;
+}
+
+.controls-DoubleSwitch__toggle_vertical_theme_@{themeName} {
+   width: @height_Switch;
+   height: @width_Switch;
    &:before {
       height: 0;
       line-height: @line-height_DoubleSwitch__vertical;
@@ -66,9 +69,12 @@
 }
 
 .controls-DoubleSwitch__line_horizontal {
+   position: relative;
+}
+
+.controls-DoubleSwitch__line_horizontal_theme_@{themeName} {
    height: @thickness_Switch-track;
    width: @length_Switch-track - @width_ToggleCircle + @spacing-between-track-and-toggleCircle;
-   position: relative;
 }
 
 .controls-DoubleSwitch__line_vertical {
@@ -85,12 +91,17 @@
 }
 
 .controls-DoubleSwitch__line_enabled {
-   background-color: @background-color_Switch-track__enabled;
    display: inline-block;
+}
+.controls-DoubleSwitch__line_enabled_theme_@{themeName} {
+   background-color: @background-color_Switch-track__enabled;
+}
+
+.controls-DoubleSwitch__line_disabled_theme_@{themeName} {
+   background-color: @background-color_Switch-track__disabled;
 }
 
 .controls-DoubleSwitch__line_disabled {
-   background-color: @background-color_Switch-track__disabled;
    display: inline-block;
 }
 
