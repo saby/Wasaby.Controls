@@ -2,10 +2,10 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_lookup/BaseLookupView/BaseLookupView');
 import DOMUtil = require('Controls/Utils/DOMUtil');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import {isEqual} from 'Types/object';
-import {constants, IoC} from 'Env/Env';
 import clearRecordsTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/clearRecordsTemplate');
 import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/showSelectorTemplate');
+import {isEqual} from 'Types/object';
+import {constants, IoC} from 'Env/Env';
 
 
 const KEY_CODE_F2 = 113;
@@ -98,7 +98,7 @@ var BaseLookupView = Control.extend({
         }
     },
 
-    _afterUpdate: function () {
+    _afterUpdate: function():void {
         if (this._needSetFocusInInput) {
             this._needSetFocusInInput = false;
 
@@ -124,9 +124,7 @@ var BaseLookupView = Control.extend({
         _private.resetInputValue(this);
 
         // move focus to input after select, because focus will be lost after closing popup
-        if (this._isInputActive(this._options)) {
-            this.activate({enableScreenKeyboard: true});
-        }
+        this._needSetFocusInInput = true;
     },
 
     _crossClick: function (event, item) {
