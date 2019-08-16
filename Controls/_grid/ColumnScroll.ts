@@ -55,7 +55,6 @@ const
          _private.drawTransform(self, self._scrollPosition);
       },
       updateFixedColumnWidth(self) {
-         // const items = self._options.items && !!self._options.items.getCount();
          self._fixedColumnsWidth = _private.calculateFixedColumnWidth(
             self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0],
             self._options.multiSelectVisibility,
