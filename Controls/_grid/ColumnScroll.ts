@@ -106,7 +106,7 @@ const
       },
       setOffsetForHScroll (self) {
          const container = self._children.content;
-         const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0].childNodes;
+         const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0] && container.getElementsByClassName('controls-Grid__header')[0].childNodes;
          if (HeaderGroup && !!HeaderGroup.length) {
             const firstCell = HeaderGroup[0];
             if (self._fixedColumnsWidth) {
