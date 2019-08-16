@@ -67,6 +67,11 @@ export default class CollectionItem<T> extends mixin<
     */
    protected _$selected: boolean;
 
+   /**
+    * Элемент отмечен маркером
+    */
+   protected _$marked: boolean;
+
    protected _instancePrefix: string;
 
    /**
@@ -173,6 +178,25 @@ export default class CollectionItem<T> extends mixin<
 
    // endregion
 
+   getDisplayProperty(): string {
+      return this.getOwner().getDisplayProperty();
+   }
+
+   isMarked(): boolean {
+      return this._$marked;
+   }
+
+   setMarked(marked: boolean, silent?: boolean): void {
+      if (this._$marked === marked) {
+         return;
+      }
+      this._$marked = marked;
+      this._nextVersion();
+      if (!silent) {
+         this._notifyItemChangeToOwner('marked');
+      }
+   }
+
    // region SerializableMixin
 
    _getSerializableState(state: IDefaultSerializableState): ISerializableState<T> {
@@ -249,6 +273,7 @@ Object.assign(CollectionItem.prototype, {
    _$owner: null,
    _$contents: null,
    _$selected: false,
+   _$marked: false,
    _instancePrefix: 'collection-item-',
    _contentsIndex: undefined,
    _version: 0

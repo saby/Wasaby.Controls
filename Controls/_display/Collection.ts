@@ -77,6 +77,7 @@ export interface IOptions<S, T> extends IAbstractOptions {
    group?: GroupFunction<S, T>;
    sort?: Array<SortFunction<S>>;
    idProperty?: string;
+   displayProperty?: string;
    unique?: boolean;
    importantItemProperties?: string[];
 }
@@ -470,6 +471,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * @name Controls/_display/Collection#idProperty
     */
    protected _$idProperty: string;
+
+   protected _$displayProperty: string;
 
    /**
     * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
@@ -1874,6 +1877,10 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    // endregion
 
+   getDisplayProperty(): string {
+      return this._$displayProperty;
+   }
+
    // region SerializableMixin
 
    _getSerializableState(state: IDefaultSerializableState): ISerializableState<S, CollectionItem<S>> {
@@ -2947,6 +2954,7 @@ Object.assign(Collection.prototype, {
    _$group: null,
    _$sort: null,
    _$idProperty: '',
+   _$displayProperty: '',
    _$unique: false,
    _$importantItemProperties: null,
    _localize: false,
