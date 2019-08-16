@@ -66,7 +66,9 @@ import 'css!theme?Controls/filterPopup';
 
             get() {
                return value;
-            }
+            },
+            // inputs notify valueChanged on afterMount, before "afterMount" hook of PG. Therefore observeItems will be called again.
+            configurable: true
          });
       },
 
