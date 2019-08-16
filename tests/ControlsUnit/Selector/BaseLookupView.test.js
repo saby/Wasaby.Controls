@@ -273,7 +273,9 @@ define([
             lookup = new Lookup();
 
          lookup._suggestState = true;
-         lookup._container = {offsetWidth: 100};
+         lookup._getContainer = function() {
+            return {offsetWidth: 100};
+         };
          lookup._notify = function(eventName) {
             if (eventName === 'openInfoBox') {
                isNotifyOpenPopup = true;
@@ -359,6 +361,20 @@ define([
          lookup._itemClick();
          assert.isFalse(lookup._suggestState);
          assert.isTrue(isNotifyItemClick);
+      });
+
+      it('_getContainer', function() {
+         let
+            container,
+            lookup = new Lookup();
+
+         if (window && window.jQuery) {
+            lookup._container = 'notJQuery';
+            assert.equal(lookup._getContainer(), 'notJQuery');
+
+            lookup._container = container = new window.jQuery('div');
+            assert.equal(lookup._getContainer(), container[0]);
+         }
       });
    });
 });

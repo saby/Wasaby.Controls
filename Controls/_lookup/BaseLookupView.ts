@@ -199,7 +199,7 @@ var BaseLookupView = Control.extend({
     },
 
     _openInfoBox: function (event, config) {
-        config.width = this._container.offsetWidth;
+        config.width = this._getContainer().offsetWidth;
         this._suggestState = false;
         this._infoboxOpened = true;
         this._notify('openInfoBox', [config]);
@@ -240,6 +240,16 @@ var BaseLookupView = Control.extend({
             //If press backspace, the input field is empty and there are selected entries -  remove last item
             this._notify('removeItem', [items.at(items.getCount() - 1)]);
         }
+    },
+
+    _getContainer: function() {
+        let container = this._container;
+
+        if (window.jQuery && container instanceof window.jQuery) {
+            container = container[0];
+        }
+
+        return container;
     }
 });
 
