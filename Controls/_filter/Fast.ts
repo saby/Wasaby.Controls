@@ -387,7 +387,9 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
          },
 
          _open: function(event, item, index) {
-            if (this._options.readOnly) {
+            const sourceController = this._configs[index]._sourceController;
+
+            if (this._options.readOnly || sourceController.isLoading()) {
                return;
             }
 
