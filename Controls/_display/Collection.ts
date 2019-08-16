@@ -26,6 +26,7 @@ import {create, resolve, register} from 'Types/di';
 import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
+import MarkerManager from './utils/MarkerManager';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -565,6 +566,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     */
    protected _oEventRaisingChange: Function;
 
+   protected _markerManager: MarkerManager;
+
    constructor(options: IOptions<S, T>) {
       super(options);
       SerializableMixin.call(this);
@@ -604,6 +607,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
          (this._$collection as ObservableMixin).subscribe('onEventRaisingChange', this._oEventRaisingChange);
       }
+
+      this._markerManager = new MarkerManager();
    }
 
    destroy(): void {
@@ -1881,6 +1886,11 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       return this._$displayProperty;
    }
 
+   setMarkedItem(item: CollectionItem<S>): void {
+      this._markerManager.markItem(item);
+      this._nextVersion();
+   }
+
    // region SerializableMixin
 
    _getSerializableState(state: IDefaultSerializableState): ISerializableState<S, CollectionItem<S>> {
@@ -2967,7 +2977,8 @@ Object.assign(Collection.prototype, {
    _utilityEnumerator: null,
    _onCollectionChange: null,
    _onCollectionItemChange: null,
-   _oEventRaisingChange: null
+   _oEventRaisingChange: null,
+   _markerManager: null
 });
 
 register('Controls/display:Collection', Collection);
