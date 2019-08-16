@@ -261,7 +261,9 @@ define([
             lookup = new Lookup();
 
          lookup._suggestState = true;
-         lookup._container = {offsetWidth: 100};
+         lookup._getContainer = function() {
+            return {offsetWidth: 100};
+         };
          lookup._notify = function(eventName) {
             if (eventName === 'openInfoBox') {
                isNotifyOpenPopup = true;
