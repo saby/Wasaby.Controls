@@ -186,7 +186,8 @@ var _private = {
                     const keyProperty = config.keyProperty;
                     editorOpts.filter[keyProperty] = keys;
                     let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
-                        configs[item.name].items = getItemsWithHistory(configs[item.name].items, newItems, configs[item.name]._sourceController, configs[item.name].source);
+                        configs[item.name].items = getItemsWithHistory(configs[item.name].items, newItems,
+                            configs[item.name]._sourceController, item.editorOptions.source, configs[item.name].multiSelect);
                     });
                     pDef.push(result);
                 }
@@ -320,12 +321,13 @@ var _private = {
 
     selectorResult: function(result) {
         var curConfig = this._configs[result.id],
+            curItem = _private.getItemByName(this._source, result.id),
             newItems = _private.getNewItems(this, result.data, curConfig);
-        if (isHistorySource(curConfig.source)) {
+        if (isHistorySource(curItem.editorOptions.source)) {
             if (newItems.length) {
                 curConfig._sourceController = null;
             }
-            _private.updateHistory(curConfig, factory(result.data).toArray());
+            _private.updateHistory(curConfig, factory(result.data).toArray(), curItem.editorOptions.source);
             _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
         } else {
             curConfig.items.prepend(newItems);
@@ -353,12 +355,12 @@ var _private = {
         return result;
     },
 
-    updateHistory: function(currentFilter, items) {
-        if (isHistorySource(currentFilter.source)) {
-            currentFilter.source.update(items, historyUtils.getMetaHistory());
+    updateHistory: function(currentFilter, items, source) {
+        if (isHistorySource(source)) {
+            source.update(items, historyUtils.getMetaHistory());
 
-            if (currentFilter._sourceController && currentFilter.source.getItems) {
-                currentFilter.items = currentFilter.source.getItems();
+            if (currentFilter._sourceController && source.getItems) {
+                currentFilter.items = source.getItems();
             }
         }
     },
