@@ -98,9 +98,6 @@ class Popup extends Control<IPopupOptions> {
         } else {
             this._notify('popupCreated', [this._options.id], {bubbling: true});
             this._options.creatingDef && this._options.creatingDef.callback(this._options.id);
-            if (this._activate) {
-               this._activate(this);
-            }
             this.activatePopup();
         }
     }
@@ -248,6 +245,9 @@ class Popup extends Control<IPopupOptions> {
     activatePopup(): void {
         // TODO Compatible
         if (this._options.autofocus && !this._options.isCompoundTemplate) {
+            if (this._activate) {
+                this._activate(this);
+            }
             this.activate();
         }
     }
