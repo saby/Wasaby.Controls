@@ -134,6 +134,12 @@ define(
             pGrid._items[0].value = 'test';
 
             assert.isTrue(itemsChanged);
+
+            // observeItems called second time
+            itemsChanged = false;
+            pGrid._afterMount();
+            pGrid._items[0].value = 'test 2';
+            assert.isTrue(itemsChanged);
          });
 
          it('_isItemVisible', function() {
