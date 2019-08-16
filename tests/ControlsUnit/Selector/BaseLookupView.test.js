@@ -39,18 +39,30 @@ define([
       });
 
       it('_afterUpdate', function() {
-         var activated = false;
-         var lookup = new Lookup();
+         let activated = false;
+         let lookup = new Lookup();
+         let isInputActive = false;
+
+         lookup._isInputActive = function() {
+            return isInputActive;
+         };
 
          lookup._needSetFocusInInput = true;
-         lookup._active = true;
          lookup._options.items = getItems(0);
          lookup.activate = function() {
             activated = true;
          };
 
          lookup._afterUpdate();
+         assert.isFalse(activated);
+         assert.isFalse(lookup._needSetFocusInInput);
+
+         isInputActive = true;
+         lookup._needSetFocusInInput = true;
+         lookup._active = true;
+         lookup._afterUpdate();
          assert.isTrue(activated);
+         assert.isFalse(lookup._needSetFocusInInput);
       });
 
       it('_beforeUpdate', function() {
@@ -107,31 +119,18 @@ define([
 
       it('_choose', function() {
          var itemAdded = false;
-         var isActivate = false;
          var lookup = new Lookup();
 
+         lookup._isInputVisible = false;
          lookup._notify = function() {
             itemAdded = true;
-         };
-
-         lookup.activate = function() {
-            isActivate = true;
          };
 
          lookup._beforeMount({multiLine: true});
 
          lookup._choose();
          assert.isTrue(itemAdded);
-         assert.isFalse(isActivate);
-
-         isActivate = false;
-         itemAdded = false;
-         lookup._isInputVisible = function() {
-            return true;
-         };
-         lookup._choose();
-         assert.isTrue(itemAdded);
-         assert.isTrue(isActivate);
+         assert.isTrue(lookup._needSetFocusInInput);
       });
 
       it('_deactivated', function() {
