@@ -5,6 +5,20 @@
          displayProperty="title"
          source="{{_viewSource}}"
 
-         on:itemClick="_onItemClick()"/>
+         on:itemClick="_onItemClick()"
+         on:countersChanged="_updateCounters()"/>
+   </div>
+   <div style="width: 500px;">
+      <div>Item counters:</div>
+      <ws:for data="c in _counterData">
+         <div attr:style="margin-left: 10px; margin-bottom: 10px;">
+            <div>id: {{ c.key }}, counters:</div>
+            <div attr:style="margin-left: 10px;">
+               <ws:for data="name, count in c.counters">
+                  <div>{{ name }} = {{ count }}</div>
+               </ws:for>
+            </div>
+         </div>
+      </ws:for>
    </div>
 </div>

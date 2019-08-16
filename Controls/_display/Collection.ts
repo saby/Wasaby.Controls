@@ -1,6 +1,6 @@
 import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
-import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
+import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
 import GroupItem from './GroupItem';
 import IItemsStrategy from './IItemsStrategy';
 import ItemsStrategyComposer from './itemsStrategy/Composer';
@@ -38,6 +38,11 @@ export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, 
 
 export interface ISplicedArray<T> extends Array<T> {
    start?: number;
+}
+
+export interface ICollectionCounters {
+   key: string|number;
+   counters: ICollectionItemCounters
 }
 
 type FilterFunction<S> = (
@@ -1889,6 +1894,18 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
    setMarkedItem(item: CollectionItem<S>): void {
       this._markerManager.markItem(item);
       this._nextVersion();
+   }
+
+   getItemCounters(): ICollectionCounters[] {
+      const result: ICollectionCounters[] = [];
+      this.each((item: unknown) => {
+         const i = item as CollectionItem<S>;
+         result.push({
+            key: i.getUid(),
+            counters: i.getCounters()
+         });
+      });
+      return result;
    }
 
    // region SerializableMixin
