@@ -297,6 +297,29 @@ define([
          assert.deepEqual(700, containerMock.scrollTop, 'Wrong scrollTop');
       });
 
+      it('doScroll with virtual placeholder', function() {
+         const
+            ins = new scrollMod.Watcher(),
+            containerMock = {
+               scrollTop: 20,
+               clientHeight: 300,
+               scrollHeight: 3000
+            };
+
+         ins._registrar = registrarMock;
+         ins._container = containerMock;
+         ins._scrollTopCache = containerMock.scrollTop;
+         scrollMod.Watcher._private.calcSizeCache(ins, containerMock);
+
+         ins._topPlaceholderSize = 30;
+         scrollMod.Watcher._private.doScroll(ins, 'pageDown', containerMock);
+         assert.deepEqual(320, containerMock.scrollTop);
+
+         containerMock.scrollTop = 1000;
+         scrollMod.Watcher._private.doScroll(ins, 'pageUp', containerMock);
+         assert.deepEqual(700, containerMock.scrollTop);
+      });
+
       it('observers', function () {
          let ins = new scrollMod.Watcher(), clientHeight, scrollHeight;
          ins._registrar = registrarMock;
