@@ -280,6 +280,13 @@ define([
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([], selection.excluded);
                assert.equal(7, selectionInstance.getCount());
+
+               selectionInstance.unselect([null]);
+               selectionInstance.select(['itemNotExist']);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual(['itemNotExist'], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.equal(null, selectionInstance.getCount());
             });
 
             it('select previously excluded child', function() {
