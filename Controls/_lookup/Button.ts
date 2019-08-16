@@ -18,6 +18,8 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * @mixes Controls/interface/IFilter
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IFontColorStyle
+ * @mixes Controls/interface/IFontSize
  * @mixes Controls/_lookup/Button/SelectorButtonStyles
  * @mixes Controls/_interface/ITextValue
  * @control
@@ -54,16 +56,3 @@ var Button = Control.extend({
 });
 
 export = Button;
-
-/**
- * @name Controls/_lookup/Button#style
- * @cfg {Enum} Стиль отображения кнопки.
- * @remark
- * {@link Controls/_interface/IButton#style Возможные значения.}
- */
-/*
- * @name Controls/_lookup/Button#style
- * @cfg {Enum} Button display style.
- * @remark
- * {@link Controls/_interface/IButton#style Possible Values.}
- */
