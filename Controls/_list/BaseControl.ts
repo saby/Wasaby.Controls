@@ -1303,7 +1303,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _checkLoadToDirectionTimeout: null,
 
     _resetScrollAfterReload: false,
-    _isMounted: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
