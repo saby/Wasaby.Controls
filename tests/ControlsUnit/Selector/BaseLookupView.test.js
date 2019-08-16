@@ -348,5 +348,19 @@ define([
          assert.isFalse(lookup._suggestState);
          assert.isTrue(isNotifyItemClick);
       });
+
+      it('_getContainer', function() {
+         let
+            container,
+            lookup = new Lookup();
+
+         lookup._container = 'notJQuery';
+         assert.equal(lookup._getContainer(), 'notJQuery');
+
+         if (window && window.jQuery) {
+            lookup._container = container = new window.jQuery('div');
+            assert.equal(lookup._getContainer(), container[0]);
+         }
+      });
    });
 });
