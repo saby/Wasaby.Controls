@@ -65,6 +65,9 @@
 .controls-DoubleSwitch__textBlock {
    .inline-flexbox();
    .flex-direction(column);
+}
+
+.controls-DoubleSwitch__textBlock_theme_@{themeName} {
    margin-left: @spacing_Switch-between-toggle-text;
 }
 
@@ -105,20 +108,26 @@
    display: inline-block;
 }
 
-.controls-DoubleSwitch__text_vertical {
-   display: block;
+.controls-DoubleSwitch__text_vertical_theme_@{themeName} {
    //If border is in height text block base line between text and toggle circle deviates to switch border height.
    //In vertical state width = height, height = width.
    height: @width_Switch / 2 - @width_Switch__border;
    line-height: @width_Switch / 2;
 }
 
-.controls-DoubleSwitch__text_enabled_unselected {
+.controls-DoubleSwitch__text_vertical {
+   display: block;
+}
+
+.controls-DoubleSwitch__text_enabled_unselected_theme_@{themeName} {
    color: @color_Switch-text__enabled_unselected;
+}
+
+.controls-DoubleSwitch__text_enabled_unselected {
    cursor: pointer;
 }
 
-.controls-DoubleSwitch__text_disabled_unselected {
+.controls-DoubleSwitch__text_disabled_unselected_theme_@{themeName} {
    color: @color_Switch-text__disabled_unselected;
 }
 
@@ -139,7 +148,7 @@
    // CSS cascade is needed because you can move mouse to any place of toggle, and internal part of it must be highlighted.
    // Two hover class because first hover class set in js.
    .controls-DoubleSwitcher__toggle_hover, .controls-DoubleSwitch__toggle:hover {
-      .controls-SwitchCircle__borderCircle_enabled {
+      .controls-SwitchCircle__borderCircle_enabled_theme_@{themeName} {
          stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
       }
    }
@@ -147,7 +156,7 @@
 
 //touch on switcher
 .controls-DoubleSwitch:active {
-   .controls-SwitchCircle__borderCircle_enabled {
+   .controls-SwitchCircle__borderCircle_enabled_theme_@{themeName} {
       stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
    }
 }

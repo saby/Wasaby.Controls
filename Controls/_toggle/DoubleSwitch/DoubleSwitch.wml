@@ -17,7 +17,7 @@
 
 <ws:template name="VerticalSwitcher">
    <ws:partial template="Toggle"/>
-   <span class="controls-DoubleSwitch__textBlock">
+   <span class="controls-DoubleSwitch__textBlock controls-DoubleSwitch__textBlock_theme_{{_options.theme}}">
       <ws:partial template="Text" _nextValue="{{true}}" _caption="{{_options.captions[0]}}" _value="{{_options.value}}"/>
       <ws:partial template="Text" _nextValue="{{false}}" _caption="{{_options.captions[1]}}" _value="{{!_options.value}}"/>
    </span>
