@@ -1,8 +1,8 @@
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
 import Collection, {ISourceCollection} from '../Collection';
-import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from '../../entity';
-import {IEnumerator} from '../../collection';
-import {mixin} from '../../util';
+import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from 'Types/entity';
+import {IEnumerator} from 'Types/collection';
+import {mixin} from 'Types/util';
 
 export interface IOptions<S, T> extends IItemsStrategyOptions<S, T> {
    display: Collection<S, T>;
@@ -15,8 +15,8 @@ export interface ISerializableState<T> extends IDefaultSerializableState {
 
 /**
  * Абстрактная стратегия получения элементов проекции
- * @class Types/_display/ItemsStrategy/Abstract
- * @implements Types/_display/IItemsStrategy
+ * @class Controls/_display/ItemsStrategy/Abstract
+ * @implements Controls/_display/IItemsStrategy
  * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
@@ -31,7 +31,7 @@ export default abstract class Abstract<S, T> extends mixin<
    /**
     * @typedef {Object} Options
     * @property {Boolean} localize Алиас зависимости или конструктора элементов проекции
-    * @property {Types/_display/Collection} display Проекция
+    * @property {Controls/_display/Collection} display Проекция
     */
 
    /**
@@ -56,7 +56,7 @@ export default abstract class Abstract<S, T> extends mixin<
 
    // region IItemsStrategy
 
-   readonly '[Types/_display/IItemsStrategy]': boolean = true;
+   readonly '[Controls/_display/IItemsStrategy]': boolean = true;
 
    get options(): IOptions<S, T> {
       return {...this._options};
@@ -194,8 +194,8 @@ export default abstract class Abstract<S, T> extends mixin<
 }
 
 Object.assign(Abstract.prototype, {
-   '[Types/_display/itemsStrategy/DestroyableMixin]': true,
-   _moduleName: 'Types/display:itemsStrategy.DestroyableMixin',
+   '[Controls/_display/itemsStrategy/DestroyableMixin]': true,
+   _moduleName: 'Controls/display:itemsStrategy.DestroyableMixin',
    _items: null,
    _sourceItems: null
 });

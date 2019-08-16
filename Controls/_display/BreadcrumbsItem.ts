@@ -1,7 +1,7 @@
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
 import TreeItem from './TreeItem';
 import Tree from './Tree';
-import {register} from '../di';
+import {register} from 'Types/di';
 
 export interface IOptions<T> extends ICollectionItemOptions<T> {
    owner: Tree<T>;
@@ -10,8 +10,8 @@ export interface IOptions<T> extends ICollectionItemOptions<T> {
 
 /**
  * Хлебная крошка
- * @class Types/_display/BreadcrumbsItem
- * @extends Types/_display/CollectionItem
+ * @class Controls/_display/BreadcrumbsItem
+ * @extends Controls/_display/CollectionItem
  * @public
  * @author Мальцев А.А.
  */
@@ -78,9 +78,9 @@ export default class BreadcrumbsItem<T> extends CollectionItem<T> {
 }
 
 Object.assign(BreadcrumbsItem.prototype, {
-   '[Types/_display/BreadcrumbsItem]': true,
-   _moduleName: 'Types/display:BreadcrumbsItem',
+   '[Controls/_display/BreadcrumbsItem]': true,
+   _moduleName: 'Controls/display:BreadcrumbsItem',
    _$last: null
 });
 
-register('Types/display:BreadcrumbsItem', BreadcrumbsItem);
+register('Controls/display:BreadcrumbsItem', BreadcrumbsItem);

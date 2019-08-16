@@ -1,13 +1,13 @@
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
-import {register} from '../di';
+import {register} from 'Types/di';
 
 interface IOptions<T> extends ICollectionItemOptions<T> {
 }
 
 /**
  * Элемент коллекции "Группа"
- * @class Types/_display/GroupItem
- * @extends Types/_display/CollectionItem
+ * @class Controls/_display/GroupItem
+ * @extends Controls/_display/CollectionItem
  * @public
  * @author Мальцев А.А.
  */
@@ -53,10 +53,10 @@ export default class GroupItem<T> extends CollectionItem<T> {
 }
 
 Object.assign(GroupItem.prototype, {
-   '[Types/_display/GroupItem]': true,
-   _moduleName: 'Types/display:GroupItem',
+   '[Controls/_display/GroupItem]': true,
+   _moduleName: 'Controls/display:GroupItem',
    _instancePrefix: 'group-item-',
    _$expanded: true
 });
 
-register('Types/display:GroupItem', GroupItem);
+register('Controls/display:GroupItem', GroupItem);

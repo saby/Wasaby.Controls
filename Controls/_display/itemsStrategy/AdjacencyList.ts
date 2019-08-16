@@ -3,10 +3,10 @@ import CollectionItem from '../CollectionItem';
 import TreeItem from '../TreeItem';
 import GroupItem from '../GroupItem';
 import Tree from '../Tree';
-import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from '../../entity';
-import {mixin, protect, object, logger} from '../../util';
-import {Map} from '../../shim';
-import {throttle} from '../../function';
+import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from 'Types/entity';
+import {mixin, protect, object, logger} from 'Types/util';
+import {Map} from 'Types/shim';
+import {throttle} from 'Types/function';
 
 interface IOptions<S, T> {
    idProperty: string;
@@ -111,9 +111,9 @@ function buildGroupsMap<T>(sourceItems: T[]): Map<T, number> {
 /**
  * Создает индекс следования элементов исходной коллекции в древовидной структуре.
  * @param options Опции
- * @param {Array.<Types/_display/CollectionItem>} options.sourceItems Массив элементов декорируемой стратегии
+ * @param {Array.<Controls/_display/CollectionItem>} options.sourceItems Массив элементов декорируемой стратегии
  * @param {Map.<Number>} options.childrenMap Cписок "родитель - дети".
- * @param {Array.<Types/_display/CollectionItem, Number>} options.groupsMap Cписок "элемент - индекс группы"
+ * @param {Array.<Controls/_display/CollectionItem, Number>} options.groupsMap Cписок "элемент - индекс группы"
  * @param {Array.<Number>} options.parentsMap Cписок "ребенок - родитель" (заполняется динамически).
  * @param {Array.<String>} options.path Путь до текущиего узла в дереве (заполняется динамически).
  * @param {String} options.idProperty Имя свойства, в котором хранится идентификатор элемента.
@@ -134,7 +134,7 @@ function buildTreeIndex(options: any, parentIndex?: number): number[] {
    // Check if that parentId is already behind
    if (path.indexOf(parentId) > -1 && path.indexOf(parentId) < path.length - 1) {
       logger.error(
-         'Types/display:itemsStrategy.AdjacencyList',
+         'Controls/display:itemsStrategy.AdjacencyList',
          `Wrong data hierarchy relation: recursive traversal detected: parent with id "${parentId}" is already in ` +
          `progress. Path: ${path.join(' -> ')}.`
       );
@@ -200,9 +200,9 @@ function buildTreeIndex(options: any, parentIndex?: number): number[] {
 
 /**
  * Стратегия-декоратор получения элементов проекции по списку смежных вершин
- * @class Types/_display/ItemsStrategy/AdjacencyList
+ * @class Controls/_display/ItemsStrategy/AdjacencyList
  * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_display/IItemsStrategy
+ * @implements Controls/_display/IItemsStrategy
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
@@ -215,7 +215,7 @@ export default class AdjacencyList<S, T> extends mixin<
 ) implements IItemsStrategy<S, T> {
    /**
     * @typedef {Object} Options
-    * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
+    * @property {Controls/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
     * @property {String} idProperty Имя свойства, хранящего первичный ключ
     * @property {String} parentProperty Имя свойства, хранящего первичный ключ родителя
     */
@@ -257,7 +257,7 @@ export default class AdjacencyList<S, T> extends mixin<
 
    // region IItemsStrategy
 
-   readonly '[Types/_display/IItemsStrategy]': boolean = true;
+   readonly '[Controls/_display/IItemsStrategy]': boolean = true;
 
    get options(): ISourceOptions<S, T> {
       return this.source.options as ISourceOptions<S, T>;
@@ -594,8 +594,8 @@ export default class AdjacencyList<S, T> extends mixin<
 }
 
 Object.assign(AdjacencyList.prototype, {
-   '[Types/_display/itemsStrategy/AdjacencyList]': true,
-   _moduleName: 'Types/display:itemsStrategy.AdjacencyList',
+   '[Controls/_display/itemsStrategy/AdjacencyList]': true,
+   _moduleName: 'Controls/display:itemsStrategy.AdjacencyList',
    _options: null,
    _items: null,
    _sourceItems: null,

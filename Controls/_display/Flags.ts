@@ -2,8 +2,8 @@ import Collection, {
    ISourceCollection as IGeneralSourceCollection
 } from './Collection';
 import FlagsItem from './FlagsItem';
-import {IFlags, IFlagsValue} from '../collection';
-import {register} from '../di';
+import {IFlags, IFlagsValue} from 'Types/collection';
+import {register} from 'Types/di';
 import {Object as EventObject} from 'Env/Event';
 
 interface IFlagsCollection<T> extends IGeneralSourceCollection<T>, IFlags<T> {
@@ -28,8 +28,8 @@ function onSourceChange(event: EventObject, name: string | IFlagsValue[]): void 
 
 /**
  * Проекция для типа "Флаги".
- * @class Types/_display/Flags
- * @extends Types/_display/Collection
+ * @class Controls/_display/Flags
+ * @extends Controls/_display/Collection
  * @public
  * @author Мальцев А.А.
  */
@@ -70,10 +70,10 @@ export default class Flags<S, T = FlagsItem<S>> extends Collection<S, T> {
 }
 
 Object.assign(Flags.prototype, {
-   '[Types/_display/Flags]': true,
-   _moduleName: 'Types/display:Flags',
-   _itemModule: 'Types/display:FlagsItem',
+   '[Controls/_display/Flags]': true,
+   _moduleName: 'Controls/display:Flags',
+   _itemModule: 'Controls/display:FlagsItem',
    _localize: true
 });
 
-register('Types/display:Flags', Flags);
+register('Controls/display:Flags', Flags);

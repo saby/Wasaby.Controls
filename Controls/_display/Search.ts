@@ -2,12 +2,12 @@ import Tree from './Tree';
 import CollectionItem from './CollectionItem';
 import SearchStrategy from './itemsStrategy/Search';
 import ItemsStrategyComposer from './itemsStrategy/Composer';
-import {register} from '../di';
+import {register} from 'Types/di';
 
 /**
  * Проекция для режима поиска. Объединяет развернутые узлы в один элемент с "хлебной крошкой" внутри.
- * @class Types/_display/Search
- * @extends Types/_display/Tree
+ * @class Controls/_display/Search
+ * @extends Controls/_display/Tree
  * @public
  * @author Мальцев А.А.
  */
@@ -21,8 +21,8 @@ export default class Search<S, T = CollectionItem<S>> extends Tree<S, T> {
 }
 
 Object.assign(Search.prototype, {
-   _moduleName: 'Types/display:Search',
-   '[Types/_display/Search]': true
+   _moduleName: 'Controls/display:Search',
+   '[Controls/_display/Search]': true
 });
 
-register('Types/display:Search', Search);
+register('Controls/display:Search', Search);

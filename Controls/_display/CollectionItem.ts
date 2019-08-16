@@ -4,12 +4,12 @@ import {
    InstantiableMixin,
    SerializableMixin,
    IInstantiable
-} from '../entity';
+} from 'Types/entity';
 import Collection, {ISourceCollection} from './Collection';
-import {ISerializableState as IDefaultSerializableState} from '../entity';
-import {IList} from '../collection';
-import {register} from '../di';
-import {mixin} from '../util';
+import {ISerializableState as IDefaultSerializableState} from 'Types/entity';
+import {IList} from 'Types/collection';
+import {register} from 'Types/di';
+import {mixin} from 'Types/util';
 
 export interface IOptions<T> {
    contents: T;
@@ -24,7 +24,7 @@ export interface ISerializableState<T> extends IDefaultSerializableState {
 
 /**
  * Элемент коллекции
- * @class Types/_display/CollectionItem
+ * @class Controls/_display/CollectionItem
  * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/OptionsMixin
  * @implements Types/_entity/IInstantiable
@@ -229,8 +229,8 @@ export default class CollectionItem<T> extends mixin<
 }
 
 Object.assign(CollectionItem.prototype, {
-   '[Types/_display/CollectionItem]': true,
-   _moduleName: 'Types/display:CollectionItem',
+   '[Controls/_display/CollectionItem]': true,
+   _moduleName: 'Controls/display:CollectionItem',
    _$owner: null,
    _$contents: null,
    _$selected: false,
@@ -238,4 +238,4 @@ Object.assign(CollectionItem.prototype, {
    _contentsIndex: undefined
 });
 
-register('Types/display:CollectionItem', CollectionItem);
+register('Controls/display:CollectionItem', CollectionItem);

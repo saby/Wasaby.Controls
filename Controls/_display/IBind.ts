@@ -1,28 +1,28 @@
 /**
  * Интерфейс привязки к проекции коллекции
- * @interface Types/_display/IBind
+ * @interface Controls/_display/IBind
  * @public
  * @author Мальцев А.А.
  */
 const IBind = {
-   '[Types/_display/IBind]': true
+   '[Controls/_display/IBind]': true
 
    /**
     * @event После изменения коллекции
-    * @name Types/_display/IBind#onCollectionChange
+    * @name Controls/_display/IBind#onCollectionChange
     * @param {Env/Event.Object} event Дескриптор события.
     * @param {Types/_collection/IObservable#ChangeAction} action Действие, приведшее к изменению.
-    * @param {Types/_display/CollectionItem[]} newItems Новые элементы коллекции.
+    * @param {Controls/_display/CollectionItem[]} newItems Новые элементы коллекции.
     * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
-    * @param {Types/_display/CollectionItem[]} oldItems Удаленные элементы коллекции.
+    * @param {Controls/_display/CollectionItem[]} oldItems Удаленные элементы коллекции.
     * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
     * @param {String} groupId Идентификатор группы, в которой произошли изменения
     * @example
     * <pre>
     *    define([
     *       'Types/_collection/ObservableList',
-    *       'Types/_display/Collection',
-    *       'Types/_display/IBindCollection'
+    *       'Controls/_display/Collection',
+    *       'Controls/_display/IBindCollection'
     *    ], function(
     *       ObservableList,
     *       CollectionDisplay,
