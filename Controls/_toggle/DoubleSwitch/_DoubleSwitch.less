@@ -3,14 +3,18 @@
    .align-items(center);
    .justify-content(center);
    .baseline-fix();
-   border-width: @width_Switch__border;
-   border-color:@color_Switch__border;
-   border-radius: @size_Switch__border-radius;
    border-style: solid;
    box-sizing: border-box;
    user-select: none;
 }
-.controls-DoubleSwitch {
+
+.controls-DoubleSwitch__toggle_theme_@{themeName} {
+   border-width: @width_Switch__border;
+   border-color: @color_Switch__border;
+   border-radius: @size_Switch__border-radius;
+}
+
+.controls-DoubleSwitch_theme_@{themeName} {
    font-size: @font-size_DoubleSwitch;
 }
 
@@ -68,9 +72,11 @@
 }
 
 .controls-DoubleSwitch__line_vertical {
+   position: relative;
+}
+.controls-DoubleSwitch__line_vertical_theme_@{themeName} {
    height: @length_Switch-track - @height_ToggleCircle + @spacing-between-track-and-toggleCircle;
    width: @thickness_Switch-track;
-   position: relative;
 }
 
 .controls-DoubleSwitch__line_vertical_checked {
