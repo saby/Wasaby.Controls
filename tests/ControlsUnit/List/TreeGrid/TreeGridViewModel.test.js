@@ -324,6 +324,31 @@ define(['Controls/treeGrid',
          assert.deepEqual({}, treeGridViewModel._model._expandedItems);
 
       });
+      it('_private.getExpandedItems should return keys of expanded nodes (alse if expanded)', function () {
+         const
+             model = new treeGrid.ViewModel({
+                items: new collection.RecordSet({
+                   idProperty: 'id',
+                   rawData: [
+                      {id: 0, title: 'i0', parent: null, type: true},
+                      {id: 1, title: 'i1', parent: null, type: false},
+                      {id: 2, title: 'i2', parent: null, type: null}
+                   ]
+                }),
+                keyProperty: 'id',
+                nodeProperty: 'type',
+                parentProperty: 'parent',
+                expandedItems: [null],
+                columns: [{}]
+             });
+
+         treeGrid.ViewModel._private.getExpandedItems(model.getDisplay(), model._model.getExpandedItems(), model._options.nodeProperty);
+
+         assert.deepEqual(
+             [0, 1],
+             treeGrid.ViewModel._private.getExpandedItems(model.getDisplay(), model._model.getExpandedItems(), model._options.nodeProperty)
+         );
+      });
       it('isDrawResults()', function() {
 
          let initialColumns = [{
