@@ -22,34 +22,38 @@ export default interface ISorting {
 
 /**
  * @name Controls/_interface/ISorting#sorting
- * @cfg {Array} Определяет сортировку контрола.
+ * @cfg {Array.<Object>} Определяет сортировку контрола. Допустимы значения ASD/DESC.
  * @example
  * В шапке столбца необходимо задать свойство sortingProperty:
  * <pre>
- * _header = [
- *      {
- *          title: ''
- *      },
- *      {
- *          title: 'Цена',
+ * _header = null,
+ * _columns = null,
+ * _beforeMount: function(options) {
+ *    this._header = [
+ *       {
+ *          caption: ''
+ *       },
+ *       {
+ *          caption: 'Цена',
  *          sortingProperty: 'price'
- *      },
- *      {
- *          title: 'Остаток',
+ *       },
+ *       {
+ *          caption: 'Остаток',
  *          sortingProperty: 'balance'
- *      }
- * ];
- * _columns = [
- *      {
+ *       }
+ *    ];
+ *    this._columns = [
+ *       {
  *          displayProperty: 'name'
- *      },
- *      {
+ *       },
+ *       {
  *          displayProperty: 'price'
- *      },
- *      {
+ *       },
+ *       {
  *          displayProperty: 'balance'
- *      }
- * ];
+ *       }
+ *    ];
+ * }
  * </pre>
  * И привязать опцию сортировки или подписаться на событие sortingChanged и изменить сортировку вручную:
  * <pre>
@@ -64,15 +68,15 @@ export default interface ISorting {
  * Настройка сортировки массива:
  * <pre>
  * [
- *    { price: 'desc' },
- *    { balance: 'asc' }
+ *    { price: 'DESC' },
+ *    { balance: 'ASC' }
  * ]
  * </pre>
  * Используйте политику сортировки null-значений, разместив их перед "непустыми" значениями или после:
  * <pre>
  * [
- *    ['price', 'desc', false],
- *    ['balance', 'asc', true]
+ *    ['price', 'DESC', false],
+ *    ['balance', 'ASC', true]
  * ]
  * </pre>
  * Дополнительную информацию смотрите в разделе <a href="/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/declr/#javascript">декларативный списочный метод</a>.
@@ -122,16 +126,16 @@ export default interface ISorting {
  * Configuration of sorting array:
  * <pre>
  * [
- *    { price: 'desc' },
- *    { balance: 'asc' }
+ *    { price: 'DESC' },
+ *    { balance: 'ASC' }
  * ]
  * </pre>
  * You can also define null-policy by set 3-members array for each field where the 3rd member of an array defines a null
  * policy. So you can choose between two of them: false - NULLS in the beginning, true - NULLS in the end:
  * <pre>
  * [
- *    ['price', 'desc', false],
- *    ['balance', 'asc', true]
+ *    ['price', 'DESC', false],
+ *    ['balance', 'ASC', true]
  * ]
  * </pre>
  * See topic about <a href="/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/declr/#javascript">declarative method signature</a> for details.
