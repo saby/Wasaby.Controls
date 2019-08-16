@@ -1,0 +1,10 @@
+<div
+      attr:class="controls-DisplayList__item controls-DisplayList__item-highlightOnHover"
+      on:click="_onItemClick(item)">
+   <ws:if data="{{ item.isMarked() }}">
+      <div attr:class="controls-DisplayList__itemMarker"></div>
+   </ws:if>
+   <ws:partial
+      template="wml!Controls-demo/List/Display/DisplayList/resources/itemTemplate"
+      item="{{ item }}" />
+</div>

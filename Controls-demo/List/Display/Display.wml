@@ -1,0 +1,10 @@
+<div style="display: flex; justify-content: space-around;">
+   <div style="width: 500px;">
+      <Controls-demo.List.Display.DisplayList
+         keyProperty="key"
+         displayProperty="title"
+         source="{{_viewSource}}"
+
+         on:itemClick="_onItemClick()"/>
+   </div>
+</div>
