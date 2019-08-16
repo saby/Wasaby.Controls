@@ -71,6 +71,18 @@ interface IFieldTemplate {
                if (_private.hasAutoFillField(field)) {
                   self._viewModel.displayValue = field.value;
                   _private.notifyValueChanged(self);
+
+                  /**
+                   * TODO: KINGO
+                   * На chrome в полях с автозаполненными значениями не рисуется каретка. Каретка появляется после
+                   * изменения значения. Проблема появилась в 510. Перед выпуском делаем костыль:
+                   * меняем значение программно на пустое и обратно. Разбираемся в проблеме по
+                   * https://online.sbis.ru/opendoc.html?guid=7b597f0d-aa82-41d1-8d3c-7f433f806038
+                   */
+                  if (Env.detection.chrome) {
+                     _private.updateValue(self, '');
+                     _private.updateValue(self, self._viewModel.displayValue);
+                  }
                }
             });
          },
