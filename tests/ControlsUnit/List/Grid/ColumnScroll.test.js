@@ -5,6 +5,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
    describe('Controls.ColumnScroll', function() {
       var
          cfg = {
+            header: [1,2,3],
             multiSelectVisibility: 'visible',
             stickyColumnsCount: 1,
             listModel: {
@@ -128,6 +129,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
       it('_afterMount with columnScrollStartPosition===end', function() {
          const
             cfg = {
+               header: [1,2,3],
                multiSelectVisibility: 'visible',
                stickyColumnsCount: 1,
                columnScrollStartPosition: 'end',
@@ -361,6 +363,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
       it('_isColumnScrollVisible', function() {
          assert.isTrue(columnScroll._isColumnScrollVisible());
+         columnScroll._options.header = [];
+         var s = columnScroll._isColumnScrollVisible()
+         assert.isFalse(columnScroll._isColumnScrollVisible());
       });
       it('_calculateShadowStyles', function() {
          let cont = columnScroll._container;

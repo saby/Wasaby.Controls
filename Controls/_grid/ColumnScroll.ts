@@ -55,6 +55,7 @@ const
          _private.drawTransform(self, self._scrollPosition);
       },
       updateFixedColumnWidth(self) {
+         // const items = self._options.items && !!self._options.items.getCount();
          self._fixedColumnsWidth = _private.calculateFixedColumnWidth(
             self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0],
             self._options.multiSelectVisibility,
@@ -171,8 +172,9 @@ const
          _private.updateSizes(this);
       },
 
-      _isColumnScrollVisible() {
-         return this._contentSize > this._contentContainerSize;
+      _isColumnScrollVisible: function() {
+         var header = this._options.header;
+         return header && header.length && (this._contentSize > this._contentContainerSize) ? true : false;
       },
 
       _calculateShadowClasses(position) {
