@@ -32,6 +32,7 @@
                                   caption="{{_options.caption}}"
                                   fontColorStyle="{{_options.fontColorStyle}}"
                                   fontSize="{{_options.fontSize}}"
+                                  style="{{_options.style}}"
                                   on:click="_open()"/>
       </ws:else>
    </ws:else>
