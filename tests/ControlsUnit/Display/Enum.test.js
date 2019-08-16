@@ -1,17 +1,17 @@
 /* global define, beforeEach, afterEach, describe, it, assert */
 define([
-   'Types/_display/Enum',
-   'Types/_collection/Enum'
+   'Controls/_display/Enum',
+   'Types/collection'
 ], function(
    EnumDisplay,
-   EnumType
+   TypesCollection
 ) {
    'use strict';
 
    EnumDisplay = EnumDisplay.default;
-   EnumType = EnumType.default;
+   const EnumType = TypesCollection.Enum;
 
-   describe('Types/_display/Enum', function() {
+   describe('Controls/_display/Enum', function() {
       var dict,
          localeDict,
          collection,

@@ -1,19 +1,19 @@
 /* global define, beforeEach, afterEach, describe, it, assert */
 define([
-   'Types/_display/Flags',
-   'Types/_collection/Flags',
+   'Controls/_display/Flags',
+   'Types/collection',
    'Core/core-instance'
 ], function(
    FlagsDisplay,
-   FlagsType,
+   TypesCollection,
    coreInstance
 ) {
    'use strict';
 
    FlagsDisplay = FlagsDisplay.default;
-   FlagsType = FlagsType.default;
+   const FlagsType = TypesCollection.Flags;
 
-   describe('Types/_display/Flags', function() {
+   describe('Controls/_display/Flags', function() {
       var dict, collection, display;
 
       beforeEach(function() {
@@ -78,7 +78,7 @@ define([
       describe('.each()', function() {
          it('should return FlagsItem', function() {
             display.each(function(item) {
-               assert.isTrue(coreInstance.instanceOfModule(item, 'Types/_display/FlagsItem'));
+               assert.isTrue(coreInstance.instanceOfModule(item, 'Controls/_display/FlagsItem'));
             });
          });
       });

@@ -1,33 +1,29 @@
 /* global define, beforeEach, afterEach, describe, it, assert */
 define([
-   'Types/_display/Abstract',
-   'Types/_display/Collection',
-   'Types/_collection/List',
-   'Types/_collection/Enum',
-   'Types/_display/Enum',
-   'Types/_collection/Flags',
-   'Types/_display/Flags',
-   'Types/display'
+   'Controls/_display/Abstract',
+   'Controls/_display/Collection',
+   'Controls/_display/Enum',
+   'Controls/_display/Flags',
+   'Types/collection',
+   'Controls/display'
 ], function(
    Display,
    Collection,
-   List,
-   EnumType,
    EnumDisplay,
-   FlagsType,
-   FlagsDisplay
+   FlagsDisplay,
+   TypesCollection
 ) {
    'use strict';
 
    Display = Display.default;
    Collection = Collection.default;
-   List = List.default;
-   EnumType = EnumType.default;
+   const List = TypesCollection.List;
+   const EnumType = TypesCollection.Enum;
    EnumDisplay = EnumDisplay.default;
-   FlagsType = FlagsType.default;
+   const FlagsType = TypesCollection.Flags;
    FlagsDisplay = FlagsDisplay.default;
 
-   describe('Types/_display/Abstract', function() {
+   describe('Controls/_display/Abstract', function() {
       describe('.getDefaultDisplay()', function() {
          it('should return a display', function() {
             var list = new List();

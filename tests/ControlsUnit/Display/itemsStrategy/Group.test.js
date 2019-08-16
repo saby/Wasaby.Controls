@@ -1,9 +1,9 @@
 /* global define, describe, it, assert, beforeEach, afterEach */
 define([
-   'Types/_display/itemsStrategy/Group',
-   'Types/_display/GroupItem',
-   'Types/_display/CollectionItem',
-   'Types/_display/TreeItem'
+   'Controls/_display/itemsStrategy/Group',
+   'Controls/_display/GroupItem',
+   'Controls/_display/CollectionItem',
+   'Controls/_display/TreeItem'
 ], function(
    Group,
    GroupItem,
@@ -17,7 +17,7 @@ define([
    CollectionItem = CollectionItem.default;
    TreeItem = TreeItem.default;
 
-   describe('Types/_display/itemsStrategy/Group', function() {
+   describe('Controls/_display/itemsStrategy/Group', function() {
       var getSource = function(items) {
             var wrapItem = function(item) {
                   return new TreeItem({

@@ -1,6 +1,6 @@
 /* global define, describe, it, assert */
 define([
-   'Types/_display/TreeItem'
+   'Controls/_display/TreeItem'
 ], function(
    TreeItem
 ) {
@@ -8,7 +8,7 @@ define([
 
    TreeItem = TreeItem.default;
 
-   describe('Types/_display/TreeItem', function() {
+   describe('Controls/_display/TreeItem', function() {
       var getOwnerMock = function() {
          return {
             notifyItemChange: function(item, property) {
@@ -235,7 +235,7 @@ define([
 
             delete options.owner;
 
-            assert.strictEqual(json.module, 'Types/display:TreeItem');
+            assert.strictEqual(json.module, 'Controls/display:TreeItem');
             assert.deepEqual(json.state.$options, options);
          });
       });

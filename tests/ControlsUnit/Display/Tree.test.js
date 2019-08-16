@@ -1,32 +1,26 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert */
 define([
-   'Types/_display/Tree',
-   'Types/_collection/List',
-   'Types/_collection/ObservableList',
-   'Types/_display/TreeItem',
-   'Types/_collection/IObservable',
-   'Types/_collection/RecordSet',
+   'Controls/_display/Tree',
+   'Controls/_display/TreeItem',
+   'Types/collection',
    'Core/Serializer',
-   'Types/display'
+   'Controls/display'
 ], function(
    Tree,
-   List,
-   ObservableList,
    TreeItem,
-   IBindCollectionDisplay,
-   RecordSet,
+   TypesCollection,
    Serializer
 ) {
    'use strict';
 
    Tree = Tree.default;
-   List = List.default;
-   ObservableList = ObservableList.default;
+   const List = TypesCollection.List;
+   const ObservableList = TypesCollection.ObservableList;
    TreeItem = TreeItem.default;
-   IBindCollectionDisplay = IBindCollectionDisplay.default;
-   RecordSet = RecordSet.default;
+   const IBindCollectionDisplay = TypesCollection.IObservable;
+   const RecordSet = TypesCollection.RecordSet;
 
-   describe('Types/_display/Tree', function() {
+   describe('Controls/_display/Tree', function() {
       var getData = function() {
             return [{
                id: 10,

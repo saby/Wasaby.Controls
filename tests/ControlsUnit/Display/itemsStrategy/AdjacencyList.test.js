@@ -1,9 +1,9 @@
 /* global define, describe, it, assert, beforeEach, afterEach */
 define([
-   'Types/_display/itemsStrategy/AdjacencyList',
-   'Types/_display/CollectionItem',
-   'Types/_display/TreeItem',
-   'Types/_display/GroupItem'
+   'Controls/_display/itemsStrategy/AdjacencyList',
+   'Controls/_display/CollectionItem',
+   'Controls/_display/TreeItem',
+   'Controls/_display/GroupItem'
 ], function(
    AdjacencyList,
    CollectionItem,
@@ -17,7 +17,7 @@ define([
    TreeItem = TreeItem.default;
    GroupItem = GroupItem.default;
 
-   describe('Types/_display/itemsStrategy/AdjacencyList', function() {
+   describe('Controls/_display/itemsStrategy/AdjacencyList', function() {
       var getDisplay = function(root) {
             return {
                getRoot: function() {

@@ -1,9 +1,9 @@
 /* global define, describe, it, assert, beforeEach, afterEach */
 define([
-   'Types/_display/itemsStrategy/MaterializedPath',
-   'Types/_display/Tree',
-   'Types/_display/TreeItem',
-   'Types/_collection/List'
+   'Controls/_display/itemsStrategy/MaterializedPath',
+   'Controls/_display/Tree',
+   'Controls/_display/TreeItem',
+   'Types/collection'
 ], function(
    MaterializedPath,
    TreeDisplay,
@@ -15,7 +15,7 @@ define([
    TreeDisplay = TreeDisplay.default;
    TreeItem = TreeItem.default;
 
-   describe('Types/_display/itemsStrategy/MaterializedPath', function() {
+   describe('Controls/_display/itemsStrategy/MaterializedPath', function() {
       var getOptions = function(display) {
             return {
                display: display,

@@ -1,20 +1,20 @@
 /* global define, beforeEach, afterEach, describe, it, assert */
 define([
-   'Types/_display/FlagsItem',
-   'Types/_display/Flags',
-   'Types/_collection/Flags'
+   'Controls/_display/FlagsItem',
+   'Controls/_display/Flags',
+   'Types/collection'
 ], function(
    FlagsItem,
    FlagsDisplay,
-   FlagsType
+   TypesCollection
 ) {
    'use strict';
 
    FlagsItem = FlagsItem.default;
    FlagsDisplay = FlagsDisplay.default;
-   FlagsType = FlagsType.default;
+   const FlagsType = TypesCollection.Flags;
 
-   describe('Types/_display/FlagsItem', function() {
+   describe('Controls/_display/FlagsItem', function() {
       var dict, collection, display;
 
       beforeEach(function() {

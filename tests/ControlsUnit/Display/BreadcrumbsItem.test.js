@@ -1,7 +1,7 @@
 /* global define, describe, it, assert */
 define([
-   'Types/_display/BreadcrumbsItem',
-   'Types/_display/TreeItem'
+   'Controls/_display/BreadcrumbsItem',
+   'Controls/_display/TreeItem'
 ], function(
    BreadcrumbsItem,
    TreeItem
@@ -11,7 +11,7 @@ define([
    BreadcrumbsItem = BreadcrumbsItem.default;
    TreeItem = TreeItem.default;
 
-   describe('Types/_display/BreadcrumbsItem', function() {
+   describe('Controls/_display/BreadcrumbsItem', function() {
       describe('.getContents()', function() {
          it('should return tree branch', function() {
             var items = [];

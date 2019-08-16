@@ -1,6 +1,6 @@
 /* global define, describe, it, assert, beforeEach, afterEach */
 define([
-   'Types/_display/itemsStrategy/Composer'
+   'Controls/_display/itemsStrategy/Composer'
 ], function(
    Composer
 ) {
@@ -8,7 +8,7 @@ define([
 
    Composer = Composer.default;
 
-   describe('Types/_display/itemsStrategy/Composer', function() {
+   describe('Controls/_display/itemsStrategy/Composer', function() {
       var getStrategy = function() {
          return function(options) {
             Object.assign(this, options || {});

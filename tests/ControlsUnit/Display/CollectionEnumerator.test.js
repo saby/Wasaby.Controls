@@ -1,6 +1,6 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert */
 define([
-   'Types/_display/CollectionEnumerator'
+   'Controls/_display/CollectionEnumerator'
 ], function(
    DisplayEnumerator
 ) {
@@ -8,7 +8,7 @@ define([
 
    DisplayEnumerator = DisplayEnumerator.default;
 
-   describe('Types/_display/CollectionEnumerator', function() {
+   describe('Controls/_display/CollectionEnumerator', function() {
       var items,
          filterMap,
          sortMap,

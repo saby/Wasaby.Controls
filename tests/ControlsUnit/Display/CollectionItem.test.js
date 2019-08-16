@@ -1,6 +1,6 @@
 /* global define, describe, it, assert */
 define([
-   'Types/_display/CollectionItem'
+   'Controls/_display/CollectionItem'
 ], function(
    CollectionItem
 ) {
@@ -8,7 +8,7 @@ define([
 
    CollectionItem = CollectionItem.default;
 
-   describe('Types/_display/CollectionItem', function() {
+   describe('Controls/_display/CollectionItem', function() {
       describe('.getOwner()', function() {
          it('should return null by default', function() {
             var item = new CollectionItem();
@@ -177,7 +177,7 @@ define([
 
             delete options.owner;
 
-            assert.strictEqual(json.module, 'Types/display:CollectionItem');
+            assert.strictEqual(json.module, 'Controls/display:CollectionItem');
             assert.isNumber(json.id);
             assert.isTrue(json.id > 0);
             assert.deepEqual(json.state.$options, options);

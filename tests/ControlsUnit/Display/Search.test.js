@@ -1,7 +1,7 @@
 /* global define, describe, it, assert */
 define([
-   'Types/_display/Search',
-   'Types/_display/BreadcrumbsItem'
+   'Controls/_display/Search',
+   'Controls/_display/BreadcrumbsItem'
 ], function(
    Search,
    BreadcrumbsItem
@@ -11,7 +11,7 @@ define([
    Search = Search.default;
    BreadcrumbsItem = BreadcrumbsItem.default;
 
-   describe('Types/_display/Search', function() {
+   describe('Controls/_display/Search', function() {
       describe('.each()', function() {
          it('should group breadcumbs in one item', function() {
             var items = [{
