@@ -5,7 +5,7 @@
             {{_value ? _orientation === 'vertical' ? 'controls-DoubleSwitch__toggle_vertical_checked' : 'controls-DoubleSwitch__toggle_horizontal_checked'}}"
       on:click="_clickToggleHandler()">
    <span class="{{_orientation === 'vertical' ? 'controls-DoubleSwitch__line_vertical controls-DoubleSwitch__line_vertical_theme_' + (_options.theme) :
-                     'controls-DoubleSwitch__line_horizontal_theme_' + (_options.theme)}}
+                     'controls-DoubleSwitch__line_horizontal controls-DoubleSwitch__line_horizontal_theme_' + (_options.theme)}}
                {{_value ? _orientation === 'vertical' ? 'controls-DoubleSwitch__line_vertical_checked controls-DoubleSwitch__line_vertical_checked_theme_' + (_options.theme) :
                'controls-DoubleSwitch__line_horizontal_checked_theme_' + (_options.theme) :
                _orientation === 'vertical' ? 'controls-DoubleSwitch__line_vertical_notChecked_theme_' + (_options.theme) :
