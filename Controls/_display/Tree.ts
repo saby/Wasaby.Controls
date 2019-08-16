@@ -16,8 +16,8 @@ import AdjacencyListStrategy from './itemsStrategy/AdjacencyList';
 import MaterializedPathStrategy from './itemsStrategy/MaterializedPath';
 import IItemsStrategy from './IItemsStrategy';
 import RootStrategy from './itemsStrategy/Root';
-import {register} from '../di';
-import {object} from '../util';
+import {register} from 'Types/di';
+import {object} from 'Types/util';
 import {Object as EventObject} from 'Env/Event';
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
@@ -114,8 +114,8 @@ function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
  * {@link https://en.wikipedia.org/wiki/Adjacency_list Adjacency List} или
  * {@link https://docs.mongodb.com/v3.2/tutorial/model-tree-structures-with-materialized-paths/ Materialized Path}.
  * Выбор алгоритма выполняется в зависимости от настроек.
- * @class Types/_display/Tree
- * @extends Types/_display/Collection
+ * @class Controls/_display/Tree
+ * @extends Controls/_display/Collection
  * @public
  * @author Мальцев А.А.
  */
@@ -123,13 +123,13 @@ export default class Tree<S, T = TreeItem<S>> extends Collection<S, T> {
    /**
     * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Дерево в этом случае строится
     * по алгоритму Adjacency List (список смежных вершин). Также требуется задать {@link idProperty}
-    * @name Types/_display/Tree#parentProperty
+    * @name Controls/_display/Tree#parentProperty
     */
    protected _$parentProperty: string;
 
    /**
     * @cfg {String} Название свойства, содержащего признак узла. Требуется для различения узлов и листьев.
-    * @name Types/_display/Tree#nodeProperty
+    * @name Controls/_display/Tree#nodeProperty
     */
    protected _$nodeProperty: string;
 
@@ -137,13 +137,13 @@ export default class Tree<S, T = TreeItem<S>> extends Collection<S, T> {
     * @cfg {String} Название свойства, содержащего дочерние элементы узла. Дерево в этом случае строится по алгоритму
     * Materialized Path (материализованный путь).
     * @remark Если задано, то опция {@link parentProperty} не используется.
-    * @name Types/_display/Tree#childrenProperty
+    * @name Controls/_display/Tree#childrenProperty
     */
    protected _$childrenProperty: string;
 
    /**
     * @cfg {String} Название свойства, содержащего признак наличия детей у узла
-    * @name Types/_display/Tree#hasChildrenProperty
+    * @name Controls/_display/Tree#hasChildrenProperty
     * @example
     * Зададим поле "Раздел$" отвечающим за признак загруженности:
     * <pre>
@@ -157,14 +157,14 @@ export default class Tree<S, T = TreeItem<S>> extends Collection<S, T> {
    protected _$hasChildrenProperty: string;
 
    /**
-    * @cfg {Types/_display/TreeItem|*} Корневой узел или его содержимое
-    * @name Types/_display/Tree#root
+    * @cfg {Controls/_display/TreeItem|*} Корневой узел или его содержимое
+    * @name Controls/_display/Tree#root
     */
    protected _$root: TreeItem<S> | any;
 
    /**
     * @cfg {Boolean} Включать корневой узел в список элементов
-    * @name Types/_display/Tree#rootEnumerable
+    * @name Controls/_display/Tree#rootEnumerable
     * @example
     * Получим корень как первый элемент проекции:
     * <pre>
@@ -550,7 +550,7 @@ export default class Tree<S, T = TreeItem<S>> extends Collection<S, T> {
    protected _checkItem(item: CollectionItem<S>): void {
       if (!item || !(item instanceof CollectionItem)) {
          throw new Error(
-            `${this._moduleName}::_checkItem(): item should be in instance of Types/_display/CollectionItem`
+            `${this._moduleName}::_checkItem(): item should be in instance of Controls/_display/CollectionItem`
          );
       }
    }
@@ -672,9 +672,9 @@ export default class Tree<S, T = TreeItem<S>> extends Collection<S, T> {
 }
 
 Object.assign(Tree.prototype, {
-   '[Types/_display/Tree]': true,
-   _moduleName: 'Types/display:Tree',
-   _itemModule: 'Types/display:TreeItem',
+   '[Controls/_display/Tree]': true,
+   _moduleName: 'Controls/display:Tree',
+   _itemModule: 'Controls/display:TreeItem',
    _$parentProperty: '',
    _$nodeProperty: '',
    _$childrenProperty: '',
@@ -684,4 +684,4 @@ Object.assign(Tree.prototype, {
    _root: null
 });
 
-register('Types/display:Tree', Tree);
+register('Controls/display:Tree', Tree);

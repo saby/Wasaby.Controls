@@ -13,17 +13,17 @@ import {
    SerializableMixin,
    ISerializableState as IDefaultSerializableState,
    functor
-} from '../entity';
+} from 'Types/entity';
 import {
    EnumeratorCallback,
    IList,
    IObservable,
    EventRaisingMixin,
    IEnumerableComparatorSession
-} from '../collection';
-import {create, resolve, register} from '../di';
-import {mixin, object} from '../util';
-import {Set, Map} from '../shim';
+} from 'Types/collection';
+import {create, resolve, register} from 'Types/di';
+import {mixin, object} from 'Types/util';
+import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 
 // tslint:disable-next-line:ban-comma-operator
@@ -263,8 +263,8 @@ function functorToImportantProperties(func: Function, add: boolean): void {
 /**
  * Проекция коллекции - предоставляет методы навигации, фильтрации и сортировки,
  * не меняя при этом оригинальную коллекцию.
- * @class Types/_display/Collection
- * @extends Types/_display/Abstract
+ * @class Controls/_display/Collection
+ * @extends Controls/_display/Abstract
  * @implements Types/_collection/IEnumerable
  * @implements Types/_collection/IList
  * @mixes Types/_entity/SerializableMixin
@@ -302,7 +302,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
    readonly '[Types/_collection/IList]': boolean = true;
    /**
     * @typedef {Object} UserSortItem
-    * @property {Types/_display/CollectionItem} item Элемент проекции
+    * @property {Controls/_display/CollectionItem} item Элемент проекции
     * @property {*} collectionItem Элемент коллекции
     * @property {Number} index Индекс элемента проекции
     * @property {Number} collectionIndex Индекс элемента коллекции
@@ -310,35 +310,35 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * @event Перед началом изменений коллекции
-    * @name Types/_display/Collection#onBeforeCollectionChange
+    * @name Controls/_display/Collection#onBeforeCollectionChange
     */
 
    /**
     * @event После окончания изменений коллекции
-    * @name Types/_display/Collection#onAfterCollectionChange
+    * @name Controls/_display/Collection#onAfterCollectionChange
     */
 
    /**
     * @cfg {Types/_collection/IEnumerable} Оригинальная коллекция
-    * @name Types/_display/Collection#collection
+    * @name Controls/_display/Collection#collection
     * @see getCollection
     */
    protected _$collection: ISourceCollection<S>;
 
    /**
     * @cfg {
-    * Array.<Function(*, Number, Types/_display/CollectionItem, Number): Boolean>|
-    * Function(*, Number, Types/_display/CollectionItem, Number): Boolean
+    * Array.<Function(*, Number, Controls/_display/CollectionItem, Number): Boolean>|
+    * Function(*, Number, Controls/_display/CollectionItem, Number): Boolean
     * } Пользовательские методы фильтрации элементов проекциию. Аргументы: элемент коллекции, позиция в коллекции,
     * элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям
     * фильтрации.
-    * @name Types/_display/Collection#filter
+    * @name Controls/_display/Collection#filter
     * @example
     * Отберем персонажей женского пола:
     * <pre>
     *    require([
     *       'Types/_collection/List'
-    *       'Types/_display/Collection'
+    *       'Controls/_display/Collection'
     *    ], function(List, CollectionDisplay) {
     *       var list = new List({
     *             items: [
@@ -371,16 +371,16 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * @cfg {
-    * Function(*, Number, Types/_display/CollectionItem): String|null
+    * Function(*, Number, Controls/_display/CollectionItem): String|null
     * } Метод группировки элементов проекции. Аргументы: элемент коллекции, позиция в коллекции, элемент проекции.
     * Должен вернуть идентификатор группы.
-    * @name Types/_display/Collection#group
+    * @name Controls/_display/Collection#group
     * @example
     * Сгруппируем персонажей по полу:
     * <pre>
     *    require([
     *       'Types/collection',
-    *       'Types/display'
+    *       'Controls/display'
     *    ], function(collection, display) {
     *       var list = new collection.List({
     *          items: [
@@ -422,13 +422,13 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * Function(UserSortItem, UserSortItem): Number
     * } Пользовательские методы сортировки элементов. Аргументы: 2 объекта типа {@link UserSortItem},
     * должен вернуть -1|0|1 (см. Array.prototype.sort())
-    * @name Types/_display/Collection#sort
+    * @name Controls/_display/Collection#sort
     * @example
     * Отсортируем коллекцию по возрастанию значения поля title:
     * <pre>
     *    require([
     *       'Types/collection',
-    *       'Types/display'
+    *       'Controls/display'
     *    ], function(collection, display) {
     *       var display = new display.Collection({
     *          collection: new collection.List({
@@ -457,20 +457,20 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * @cfg {String} Название свойства элемента коллекции, содержащего его уникальный идентификатор.
-    * @name Types/_display/Collection#idProperty
+    * @name Controls/_display/Collection#idProperty
     */
    protected _$idProperty: string;
 
    /**
     * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
     * игнорироваться). Работает только если задано {@link idProperty}.
-    * @name Types/_display/Collection#unique
+    * @name Controls/_display/Collection#unique
     */
    protected _$unique: boolean;
 
    /**
     * @cfg {Array.<String>} Названия свойств элемента коллекции, от которых зависят фильтрация, сортировка, группировка.
-    * @name Types/_display/Collection#importantItemProperties
+    * @name Controls/_display/Collection#importantItemProperties
     * @remark
     * Изменение любого из указанных свойств элемента коллекции приведет к перерасчету фильтрации, сортировки и
     * группировки.
@@ -621,7 +621,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
    /**
     * Возвращает элемент проекции с указанным идентификатором экземпляра.
     * @param {String} instanceId Идентификатор экземпляра.
-    * @return {Types/_display/CollectionItem}
+    * @return {Controls/_display/CollectionItem}
     * @state mutable
     */
    getByInstanceId(instanceId: string): CollectionItem<S> {
@@ -642,7 +642,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Возвращает энумератор для перебора элементов проекции
-    * @return {Types/_display/CollectionEnumerator}
+    * @return {Controls/_display/CollectionEnumerator}
     */
    getEnumerator(localize?: boolean): CollectionEnumerator<T> {
       return this._getEnumerator() as any;
@@ -650,7 +650,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Перебирает все элементы проекции, начиная с первого.
-    * @param {Function(Types/_display/CollectionItem, Number)} callback Ф-я обратного вызова для каждого элемента
+    * @param {Function(Controls/_display/CollectionItem, Number)} callback Ф-я обратного вызова для каждого элемента
     * коллекции (аргументами придут элемент коллекции и его порядковый номер)
     * @param {Object} [context] Контекст вызова callback
     * @example
@@ -658,7 +658,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * <pre>
     *    require([
     *       'Types/collection',
-    *       'Types/display'
+    *       'Controls/display'
     *    ], function(collection, display) {
     *       var list = new collection.List({
     *          items: [
@@ -808,7 +808,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки).
-    * @return {Array.<Types/_display/CollectionItem>}
+    * @return {Array.<Controls/_display/CollectionItem>}
     */
    getItems(): Array<CollectionItem<S>> {
       return this._getItems().slice();
@@ -817,7 +817,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
    /**
     * Создает элемент проекции
     * @param {Object} options Значения опций
-    * @return {Types/_display/CollectionItem}
+    * @return {Controls/_display/CollectionItem}
     */
    createItem(options: object): T {
       if (!this._itemsFactory) {
@@ -829,8 +829,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции
-    * {@link Types/_display/CollectionItem#contents}.
-    * @param {Types/_display/CollectionItem} item Элемент коллекции
+    * {@link Controls/_display/CollectionItem#contents}.
+    * @param {Controls/_display/CollectionItem} item Элемент коллекции
     * @return {String|undefined}
     */
    getItemUid(item: CollectionItem<S>): string {
@@ -853,7 +853,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Возвращает текущий элемент
-    * @return {Types/_display/CollectionItem}
+    * @return {Controls/_display/CollectionItem}
     */
    getCurrent(): CollectionItem<S> {
       return this._getCursorEnumerator().getCurrent();
@@ -861,7 +861,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Устанавливает текущий элемент
-    * @param {Types/_display/CollectionItem} item Новый текущий элемент
+    * @param {Controls/_display/CollectionItem} item Новый текущий элемент
     * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
     */
    setCurrent(item: CollectionItem<S>, silent?: boolean): void {
@@ -913,7 +913,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Возвращает первый элемент
-    * @return {Types/_display/CollectionItem}
+    * @return {Controls/_display/CollectionItem}
     */
    getFirst(): CollectionItem<S> {
       const enumerator = this._getUtilityEnumerator();
@@ -935,7 +935,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Возвращает последний элемент
-    * @return {Types/_display/CollectionItem}
+    * @return {Controls/_display/CollectionItem}
     */
    getLast(): CollectionItem<S> {
       const enumerator = this._getUtilityEnumerator();
@@ -958,8 +958,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Возвращает следующий элемент относительно item
-    * @param {Types/_display/CollectionItem} item элемент проекции
-    * @return {Types/_display/CollectionItem}
+    * @param {Controls/_display/CollectionItem} item элемент проекции
+    * @return {Controls/_display/CollectionItem}
     */
    getNext(item: CollectionItem<S>): CollectionItem<S> {
       return this._getNearbyItem(
@@ -972,8 +972,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Возвращает предыдущий элемент относительно item
-    * @param {Types/_display/CollectionItem} index элемент проекции
-    * @return {Types/_display/CollectionItem}
+    * @param {Controls/_display/CollectionItem} index элемент проекции
+    * @return {Controls/_display/CollectionItem}
     */
    getPrevious(item: CollectionItem<S>): CollectionItem<S> {
       return this._getNearbyItem(
@@ -1060,7 +1060,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Возвращает индекс элемента проекции в коллекции
-    * @param {Types/_display/CollectionItem} item Элемент проекции
+    * @param {Controls/_display/CollectionItem} item Элемент проекции
     * @return {Number} Индекс элемента проекции в коллекции
     */
    getSourceIndexByItem(item: CollectionItem<S>): number {
@@ -1106,7 +1106,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
    /**
     * Возвращает элемент проекции по индексу коллекции.
     * @param {Number} index Индекс элемента в коллекции
-    * @return {Types/_display/CollectionItem} Элемент проекции или undefined, если index не входит в проекцию
+    * @return {Controls/_display/CollectionItem} Элемент проекции или undefined, если index не входит в проекцию
     */
    getItemBySourceIndex(index: number): CollectionItem<S> {
       index = this.getIndexBySourceIndex(index);
@@ -1116,7 +1116,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
    /**
     * Возвращает элемент проекции для элемента коллекции.
     * @param {*} item Элемент коллекции
-    * @return {Types/_display/CollectionItem} Элемент проекции или undefined, если item не входит в проекцию
+    * @return {Controls/_display/CollectionItem} Элемент проекции или undefined, если item не входит в проекцию
     */
    getItemBySourceItem(item: S): CollectionItem<S> {
       const index = this.getIndexBySourceItem(item);
@@ -1129,7 +1129,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Возвращает пользовательские методы фильтрации элементов проекции
-    * @return {Array.<Function(*, Number, Types/_display/CollectionItem, Number): Boolean>}
+    * @return {Array.<Function(*, Number, Controls/_display/CollectionItem, Number): Boolean>}
     * @see filter
     * @see setFilter
     * @see addFilter
@@ -1142,7 +1142,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
    /**
     * Устанавливает пользовательские методы фильтрации элементов проекции. Вызов метода без аргументов приведет к
     * удалению всех пользовательских фильтров.
-    * @param {...Function(*, Number, Types/_display/CollectionItem, Number): Boolean} [filter] Методы фильтрации
+    * @param {...Function(*, Number, Controls/_display/CollectionItem, Number): Boolean} [filter] Методы фильтрации
     * элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции.
     * Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
     * @see filter
@@ -1154,7 +1154,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * <pre>
     *    require([
     *       'Types/collection'
-    *       'Types/display'
+    *       'Controls/display'
     *    ], function(collection, display) {
     *       var list = new collection.List({
     *             items: [
@@ -1211,7 +1211,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Добавляет пользовательский метод фильтрации элементов проекции, если такой еще не был задан.
-    * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов:
+    * @param {Function(*, Number, Controls/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов:
     * аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть
     * Boolean - признак, что элемент удовлетворяет условиям фильтрации.
     * @param {Number} [at] Порядковый номер метода (если не передан, добавляется в конец)
@@ -1224,7 +1224,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * <pre>
     *    require([
     *       'Types/collection',
-    *       'Types/display'
+    *       'Controls/display'
     *    ], function(collection, display) {
     *       var list = new collection.List({
     *             items: [
@@ -1267,7 +1267,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Удаляет пользовательский метод фильтрации элементов проекции.
-    * @param {Function(*, Number, Types/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов:
+    * @param {Function(*, Number, Controls/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов:
     * аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть
     * Boolean - признак, что элемент удовлетворяет условиям фильтрации.
     * @return {Boolean} Был ли установлен такой метод фильтрации
@@ -1280,7 +1280,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * <pre>
     *    require([
     *       'Types/collection'
-    *       'Types/display'
+    *       'Controls/display'
     *    ], function(collection, display) {
     *       var filter = function(collectionItem, index, item) {
     *             return collectionItem.gender === 'F';
@@ -1341,7 +1341,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
    /**
     * Устанавливает метод группировки элементов проекции. Для сброса ранее установленной группировки следует вызвать
     * этот метод без параметров.
-    * @param {Function(*, Number, Types/_display/CollectionItem): String|null} group Метод группировки элементов:
+    * @param {Function(*, Number, Controls/_display/CollectionItem): String|null} group Метод группировки элементов:
     * аргументами приходят элемент коллекции, его позиция, элемент проекции. Должен вернуть String|Number - группу,
     * в которую входит элемент.
     * @see group
@@ -1374,13 +1374,13 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
    /**
     * Возвращает элементы группы. Учитывается сортировка и фильтрация.
     * @param {String} groupId Идентификатор группы, элементы которой требуется получить
-    * @return {Array.<Types/_display/CollectionItem>}
+    * @return {Array.<Controls/_display/CollectionItem>}
     * @example
     * Получим персонажей мужского пола:
     * <pre>
     *    require([
     *       'Types/collection',
-    *       'Types/display'
+    *       'Controls/display'
     *    ], function(collection, display) {
     *       var list = new collection.List({
     *             items: [
@@ -1434,7 +1434,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * <pre>
     *    require([
     *       'Types/collection'
-    *       'Types/display'
+    *       'Controls/display'
     *    ], function(collection, display) {
     *       var list = new collection.List({
     *             items: [
@@ -1518,7 +1518,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * <pre>
     *    require([
     *       'Types/collection',
-    *       'Types/display'
+    *       'Controls/display'
     *    ], function(collection, display) {
     *       var display = new display.Collection({
     *          collection: new collection.List({
@@ -1543,7 +1543,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * <pre>
     *    require([
     *       'Types/collection',
-    *       'Types/display'
+    *       'Controls/display'
     *    ], function(collection, display) {
     *       var display = new display.Collection({
     *          collection: new collection.List({
@@ -1615,7 +1615,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * <pre>
     *    require([
     *       'Types/collection',
-    *       'Types/display'
+    *       'Controls/display'
     *    ], function(collection, display) {
     *       var display = new display.Collection({
     *          collection: new collection.List({
@@ -1671,7 +1671,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     * <pre>
     *    require([
     *       'Types/collection',
-    *       'Types/display'
+    *       'Controls/display'
     *    ], function(collection, display) {
     *       var handler = function(a, b) {
     *          return a.item.id - b.item.id
@@ -1751,7 +1751,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Уведомляет подписчиков об изменении элемента коллекции
-    * @param {Types/_display/CollectionItem} item Элемент проекции
+    * @param {Controls/_display/CollectionItem} item Элемент проекции
     * @param {Object} [properties] Изменившиеся свойства
     */
    notifyItemChange(item: CollectionItem<S>, properties?: object): void {
@@ -1795,7 +1795,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    /**
     * Возвращает массив выбранных элементов (без учета сортировки, фильтрации и группировки).
-    * @return {Array.<Types/_display/CollectionItem>}
+    * @return {Array.<Controls/_display/CollectionItem>}
     */
    getSelectedItems(): T[] {
       const items = this._getItems();
@@ -2930,8 +2930,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 }
 
 Object.assign(Collection.prototype, {
-   '[Types/_display/Collection]': true,
-   _moduleName: 'Types/display:Collection',
+   '[Controls/_display/Collection]': true,
+   _moduleName: 'Controls/display:Collection',
    _$collection: null,
    _$filter: null,
    _$group: null,
@@ -2940,7 +2940,7 @@ Object.assign(Collection.prototype, {
    _$unique: false,
    _$importantItemProperties: null,
    _localize: false,
-   _itemModule: 'Types/display:CollectionItem',
+   _itemModule: 'Controls/display:CollectionItem',
    _itemsFactory: null,
    _composer: null,
    _sourceCollectionSynchronized: true,
@@ -2952,4 +2952,4 @@ Object.assign(Collection.prototype, {
    _oEventRaisingChange: null
 });
 
-register('Types/display:Collection', Collection);
+register('Controls/display:Collection', Collection);

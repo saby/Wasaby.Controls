@@ -2,9 +2,9 @@ import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrate
 import Tree from '../Tree';
 import TreeItem from '../TreeItem';
 import BreadcrumbsItem from '../BreadcrumbsItem';
-import {DestroyableMixin, SerializableMixin, ISerializableState} from '../../entity';
-import {mixin} from '../../util';
-import {Map} from '../../shim';
+import {DestroyableMixin, SerializableMixin, ISerializableState} from 'Types/entity';
+import {mixin} from 'Types/util';
+import {Map} from 'Types/shim';
 
 interface IOptions<S, T> {
    source: IItemsStrategy<S, T>;
@@ -18,9 +18,9 @@ interface ISortOptions<S, T> {
 
 /**
  * Strategy-decorator which supposed to join expanded nodes into one element.
- * @class Types/_display/ItemsStrategy/Search
+ * @class Controls/_display/ItemsStrategy/Search
  * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_display/IItemsStrategy
+ * @implements Controls/_display/IItemsStrategy
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
@@ -59,7 +59,7 @@ export default class Search<S, T> extends mixin<
 
    // region IItemsStrategy
 
-   readonly '[Types/_display/IItemsStrategy]': boolean = true;
+   readonly '[Controls/_display/IItemsStrategy]': boolean = true;
 
    get options(): IItemsStrategyOptions<S, T> {
       return this.source.options;
@@ -242,8 +242,8 @@ export default class Search<S, T> extends mixin<
 }
 
 Object.assign(Search.prototype, {
-   '[Types/_display/itemsStrategy/Search]': true,
-   _moduleName: 'Types/display:itemsStrategy.Search',
+   '[Controls/_display/itemsStrategy/Search]': true,
+   _moduleName: 'Controls/display:itemsStrategy.Search',
    _originalBreadcrumbs: null,
    _originalParents: null
 });

@@ -3,9 +3,9 @@ import Collection, {
    ISourceCollection as IGeneralSourceCollection,
    IOptions as ICollectionOptions
 } from './Collection';
-import {IEnum} from '../collection';
-import {register} from '../di';
-import {DestroyableMixin, ObservableMixin} from '../entity';
+import {IEnum} from 'Types/collection';
+import {register} from 'Types/di';
+import {DestroyableMixin, ObservableMixin} from 'Types/entity';
 import {Object as EventObject} from 'Env/Event';
 
 interface IEnumCollection<T> extends IGeneralSourceCollection<T>, IEnum<T> {
@@ -21,8 +21,8 @@ function onSourceChange(event: EventObject, index: number): void {
 
 /**
  * Проекция для типа "Перечисляемое".
- * @class Types/_display/Enum
- * @extends Types/_display/Collection
+ * @class Controls/_display/Enum
+ * @extends Controls/_display/Collection
  * @public
  * @author Мальцев А.А.
  */
@@ -113,10 +113,10 @@ export default class Enum<S, T = CollectionItem<S>> extends Collection<S, T> {
 }
 
 Object.assign(Enum.prototype, {
-   '[Types/_display/Enum]': true,
-   _moduleName: 'Types/display:Enum',
+   '[Controls/_display/Enum]': true,
+   _moduleName: 'Controls/display:Enum',
    _localize: true,
    _onSourceChange: null
 });
 
-register('Types/display:Enum', Enum);
+register('Controls/display:Enum', Enum);

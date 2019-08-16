@@ -2,9 +2,9 @@ import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrate
 import {SortFunction} from '../Collection';
 import AbstractStrategy from './AbstractStrategy';
 import GroupItem from '../GroupItem';
-import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from '../../entity';
-import {CompareFunction} from '../../_declarations';
-import {mixin} from '../../util';
+import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from 'Types/entity';
+import {CompareFunction} from 'Types/_declarations';
+import {mixin} from 'Types/util';
 
 interface IOptions<S, T> {
    handlers: Array<SortFunction<S>>;
@@ -17,9 +17,9 @@ interface ISerializableState extends IDefaultSerializableState {
 
 /**
  * Стратегия-декоратор для пользовательского порядка элементов
- * @class Types/_display/ItemsStrategy/User
+ * @class Controls/_display/ItemsStrategy/User
  * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_display/IItemsStrategy
+ * @implements Controls/_display/IItemsStrategy
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
@@ -32,7 +32,7 @@ export default class User<S, T> extends mixin<
 ) implements IItemsStrategy<S, T> {
    /**
     * @typedef {Object} Options
-    * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
+    * @property {Controls/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
     * @property {Array.<Function>} handlers Пользовательские методы сортировки
     */
 
@@ -77,7 +77,7 @@ export default class User<S, T> extends mixin<
 
    // region IItemsStrategy
 
-   readonly '[Types/_display/IItemsStrategy]': boolean = true;
+   readonly '[Controls/_display/IItemsStrategy]': boolean = true;
 
    get options(): IItemsStrategyOptions<S, T> {
       return this.source.options;
@@ -242,7 +242,7 @@ export default class User<S, T> extends mixin<
 }
 
 Object.assign(User.prototype, {
-   '[Types/_display/itemsStrategy/User]': true,
-   _moduleName: 'Types/display:itemsStrategy.User',
+   '[Controls/_display/itemsStrategy/User]': true,
+   _moduleName: 'Controls/display:itemsStrategy.User',
    _itemsOrder: null
 });

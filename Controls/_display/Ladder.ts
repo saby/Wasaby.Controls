@@ -4,10 +4,10 @@ import {
    DestroyableMixin,
    SerializableMixin,
    ISerializableState as IDefaultSerializableState
-} from '../entity';
-import {IObservable} from '../collection';
-import {mixin, object} from '../util';
-import {Set, Map} from '../shim';
+} from 'Types/entity';
+import {IObservable} from 'Types/collection';
+import {mixin, object} from 'Types/util';
+import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 
 type Converter = (item: any) => string;
@@ -40,7 +40,7 @@ interface ISerializableState extends IDefaultSerializableState {
 
 /**
  * Лесенка - позволяет отслеживать повторяющиеся значения в колонках таблицы.
- * @class Types/_display/Ladder
+ * @class Controls/_display/Ladder
  * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/SerializableMixin
  * @public
@@ -139,7 +139,7 @@ export default class Ladder<S, T = CollectionItem<S>> extends mixin<
     */
    setCollection(collection: Collection<S, T>): void {
       if (collection !== null && !(collection instanceof Collection)) {
-         throw new TypeError('Argument "collection" should be an instance of Types/_display/Collection');
+         throw new TypeError('Argument "collection" should be an instance of Controls/_display/Collection');
       }
 
       // Reset for  the new collection
@@ -547,6 +547,6 @@ export default class Ladder<S, T = CollectionItem<S>> extends mixin<
 }
 
 Object.assign(Ladder.prototype, {
-   '[Types/_display/Ladder]': true,
-   _moduleName: 'Types/display:Ladder'
+   '[Controls/_display/Ladder]': true,
+   _moduleName: 'Controls/display:Ladder'
 });

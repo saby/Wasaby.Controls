@@ -1,6 +1,6 @@
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
-import {DestroyableMixin, SerializableMixin, ISerializableState} from '../../entity';
-import {mixin} from '../../util';
+import {DestroyableMixin, SerializableMixin, ISerializableState} from 'Types/entity';
+import {mixin} from 'Types/util';
 
 interface IOptions<S, T> {
    source: IItemsStrategy<S, T>;
@@ -9,9 +9,9 @@ interface IOptions<S, T> {
 
 /**
  * Стратегия-декоратор для формирования корня дерева
- * @class Types/_display/ItemsStrategy/Root
+ * @class Controls/_display/ItemsStrategy/Root
  * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_display/IItemsStrategy
+ * @implements Controls/_display/IItemsStrategy
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
@@ -24,8 +24,8 @@ export default class Root<S, T> extends mixin<
 ) implements IItemsStrategy<S, T> {
    /**
     * @typedef {Object} Options
-    * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
-    * @property {Function:Types/_display/TreeItem} root Функция, возвращающая корень дерева
+    * @property {Controls/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
+    * @property {Function:Controls/_display/TreeItem} root Функция, возвращающая корень дерева
     */
 
    /**
@@ -47,7 +47,7 @@ export default class Root<S, T> extends mixin<
 
    // region IItemsStrategy
 
-   readonly '[Types/_display/IItemsStrategy]': boolean = true;
+   readonly '[Controls/_display/IItemsStrategy]': boolean = true;
 
    get source(): IItemsStrategy<S, T> {
       return this._options.source;
@@ -120,6 +120,6 @@ export default class Root<S, T> extends mixin<
 }
 
 Object.assign(Root.prototype, {
-   '[Types/_display/itemsStrategy/Root]': true,
-   _moduleName: 'Types/display:itemsStrategy.Root'
+   '[Controls/_display/itemsStrategy/Root]': true,
+   _moduleName: 'Controls/display:itemsStrategy.Root'
 });

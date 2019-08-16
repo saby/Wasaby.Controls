@@ -1,7 +1,7 @@
 import AbstractStrategy, {IOptions as IAbstractOptions} from './AbstractStrategy';
 import CollectionItem from '../CollectionItem';
-import {IEnumerable, IList} from '../../collection';
-import {object} from '../../util';
+import {IEnumerable, IList} from 'Types/collection';
+import {object} from 'Types/util';
 
 interface IOptions<S, T> extends IAbstractOptions<S, T> {
    childrenProperty: string;
@@ -21,17 +21,17 @@ interface ISorter {
 
 /**
  * Стратегия получения элементов проекции по материализованному пути из порядковых номеров элементов в коллекции
- * @class Types/_display/ItemsStrategy/MaterializedPath
- * @extends Types/_display/ItemsStrategy/Abstract
+ * @class Controls/_display/ItemsStrategy/MaterializedPath
+ * @extends Controls/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
 export default class MaterializedPath<S, T> extends AbstractStrategy<S, T> {
    /**
     * @typedef {Object} Options
-    * @property {Types/_display/Collection} display Проекция
+    * @property {Controls/_display/Collection} display Проекция
     * @property {String} childrenProperty Имя свойства, хранящего вложенных детей узла
     * @property {String} nodeProperty Имя свойства, хранящего признак "узел/лист"
-    * @property {Types/_display/TreeItem} root Корень
+    * @property {Controls/_display/TreeItem} root Корень
     */
 
    protected _options: IOptions<S, T>;
@@ -347,6 +347,6 @@ export default class MaterializedPath<S, T> extends AbstractStrategy<S, T> {
 }
 
 Object.assign(MaterializedPath.prototype, {
-   '[Types/_display/itemsStrategy/MaterializedPath]': true,
-   _moduleName: 'Types/display:itemsStrategy.MaterializedPath'
+   '[Controls/_display/itemsStrategy/MaterializedPath]': true,
+   _moduleName: 'Controls/display:itemsStrategy.MaterializedPath'
 });

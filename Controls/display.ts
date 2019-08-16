@@ -1,13 +1,13 @@
 /**
  * Library that provides various views over collections
- * @library Types/display
- * @includes Abstract Types/_display/Abstract
- * @includes Collection Types/_display/Collection
- * @includes Enum Types/_display/Enum
- * @includes Flags Types/_display/Flags
- * @includes Ladder Types/_display/Ladder
- * @includes Search Types/_display/Search
- * @includes Tree Types/_display/Tree
+ * @library Controls/display
+ * @includes Abstract Controls/_display/Abstract
+ * @includes Collection Controls/_display/Collection
+ * @includes Enum Controls/_display/Enum
+ * @includes Flags Controls/_display/Flags
+ * @includes Ladder Controls/_display/Ladder
+ * @includes Search Controls/_display/Search
+ * @includes Tree Controls/_display/Tree
  * @public
  * @author Мальцев А.А.
  */

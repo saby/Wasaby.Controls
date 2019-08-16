@@ -1,7 +1,7 @@
-import {DestroyableMixin, OptionsToPropertyMixin, ObservableMixin} from '../entity';
-import {EnumeratorCallback, IEnumerable as IEnumerableCollection, IEnumerable, IEnumerator} from '../collection';
-import {create} from '../di';
-import {mixin} from '../util';
+import {DestroyableMixin, OptionsToPropertyMixin, ObservableMixin} from 'Types/entity';
+import {EnumeratorCallback, IEnumerable as IEnumerableCollection, IEnumerable, IEnumerator} from 'Types/collection';
+import {create} from 'Types/di';
+import {mixin} from 'Types/util';
 
 /**
  * Массив соответствия индексов проекций и коллекций
@@ -31,7 +31,7 @@ export interface IOptions {
  * Абстрактная проекция данных.
  * @remark
  * Это абстрактный класс, не предназначенный для создания самостоятельных экземпляров.
- * @class Types/_display/Abstract
+ * @class Controls/_display/Abstract
  * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/OptionsMixin
  * @mixes Types/_entity/ObservableMixin
@@ -82,13 +82,13 @@ export default abstract class Abstract<S, T> extends mixin<
          let instance;
 
          if (collection && collection['[Types/_collection/IEnum]']) {
-            instance = create('Types/display:Enum', options);
+            instance = create('Controls/display:Enum', options);
          } else if (collection && collection['[Types/_collection/IFlags]']) {
-            instance = create('Types/display:Flags', options);
+            instance = create('Controls/display:Flags', options);
          } else if (collection && collection['[Types/_collection/IEnumerable]']) {
-            instance = create('Types/display:Collection', options);
+            instance = create('Controls/display:Collection', options);
          } else if (collection instanceof Array) {
-            instance = create('Types/display:Collection', options);
+            instance = create('Controls/display:Collection', options);
          } else {
             throw new TypeError(`Argument "collection" should implement Types/_collection/IEnumerable or be an ' +
                'instance of Array, but "${collection}" given.`);
@@ -135,4 +135,4 @@ export default abstract class Abstract<S, T> extends mixin<
    // endregion
 }
 
-Abstract.prototype['[Types/_display/Abstract]'] = true;
+Abstract.prototype['[Controls/_display/Abstract]'] = true;

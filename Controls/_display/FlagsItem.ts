@@ -1,11 +1,11 @@
 import CollectionItem from './CollectionItem';
 import Flags from './Flags';
-import {register} from '../di';
+import {register} from 'Types/di';
 
 /**
  * Элемент коллекции флагов
- * @class Types/_display/FlagsItem
- * @extends Types/_display/CollectionItem
+ * @class Controls/_display/FlagsItem
+ * @extends Controls/_display/CollectionItem
  * @public
  * @author Мальцев А.А.
  */
@@ -29,8 +29,8 @@ export default class FlagsItem<T> extends CollectionItem<T> {
 }
 
 Object.assign(FlagsItem.prototype, {
-   '[Types/_display/FlagsItem]': true,
-   _moduleName: 'Types/display:FlagsItem'
+   '[Controls/_display/FlagsItem]': true,
+   _moduleName: 'Controls/display:FlagsItem'
 });
 
-register('Types/display:FlagsItem', FlagsItem);
+register('Controls/display:FlagsItem', FlagsItem);

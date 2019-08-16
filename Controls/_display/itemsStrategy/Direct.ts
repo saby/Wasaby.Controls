@@ -3,8 +3,8 @@ import AbstractStrategy, {
    ISerializableState as IDefaultSerializableState
 } from './AbstractStrategy';
 import CollectionItem from '../CollectionItem';
-import {object} from '../../util';
-import {Set} from '../../shim';
+import {object} from 'Types/util';
+import {Set} from 'Types/shim';
 
 interface IOptions<S, T> extends IAbstractOptions<S, T> {
    unique: boolean;
@@ -22,8 +22,8 @@ interface ISerializableState<T> extends IDefaultSerializableState<T> {
 
 /**
  * Стратегия получения элементов проекции напрямую по коллекции
- * @class Types/_display/ItemsStrategy/Direct
- * @extends Types/_display/ItemsStrategy/Abstract
+ * @class Controls/_display/ItemsStrategy/Direct
+ * @extends Controls/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
 export default class Direct<S, T> extends AbstractStrategy<S, T> {
@@ -36,7 +36,7 @@ export default class Direct<S, T> extends AbstractStrategy<S, T> {
 
    /**
     * @typedef {Object} Options
-    * @property {Types/_display/Collection} display Проекция
+    * @property {Controls/_display/Collection} display Проекция
     * @property {Boolean} unique Признак обеспечения униconstьности элементов
     * @property constring} idProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
     */
@@ -206,7 +206,7 @@ export default class Direct<S, T> extends AbstractStrategy<S, T> {
 }
 
 Object.assign(Direct.prototype, {
-   '[Types/_display/itemsStrategy/Direct]': true,
-   _moduleName: 'Types/display:itemsStrategy.Direct',
+   '[Controls/_display/itemsStrategy/Direct]': true,
+   _moduleName: 'Controls/display:itemsStrategy.Direct',
    _itemsOrder: null
 });

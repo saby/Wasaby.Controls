@@ -4,7 +4,7 @@ import CollectionItem, {
 } from './CollectionItem';
 import BreadcrumbsItem from './BreadcrumbsItem';
 import Tree from './Tree';
-import {register} from '../di';
+import {register} from 'Types/di';
 
 export interface IOptions<T> extends ICollectionItemOptions<T> {
    owner: Tree<T>;
@@ -21,8 +21,8 @@ interface ISerializableState<T> extends ICollectionItemSerializableState<T> {
 
 /**
  * Элемент древовидной коллеции
- * @class Types/_display/TreeItem
- * @extends Types/_display/CollectionItem
+ * @class Controls/_display/TreeItem
+ * @extends Controls/_display/CollectionItem
  * @public
  * @author Мальцев А.А.
  */
@@ -236,8 +236,8 @@ export default class TreeItem<T> extends CollectionItem<T> {
 }
 
 Object.assign(TreeItem.prototype, {
-   '[Types/_display/TreeItem]': true,
-   _moduleName: 'Types/display:TreeItem',
+   '[Controls/_display/TreeItem]': true,
+   _moduleName: 'Controls/display:TreeItem',
    _$parent: undefined,
    _$node: false,
    _$expanded: false,
@@ -246,4 +246,4 @@ Object.assign(TreeItem.prototype, {
    _instancePrefix: 'tree-item-'
 });
 
-register('Types/display:TreeItem', TreeItem);
+register('Controls/display:TreeItem', TreeItem);

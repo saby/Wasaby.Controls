@@ -1,6 +1,6 @@
 import IItemsStrategy from '../IItemsStrategy';
-import {DestroyableMixin, SerializableMixin, ISerializableState} from '../../entity';
-import {mixin} from '../../util';
+import {DestroyableMixin, SerializableMixin, ISerializableState} from 'Types/entity';
+import {mixin} from 'Types/util';
 
 interface IState<S, T> extends ISerializableState {
    _modules: Function[];
@@ -10,7 +10,7 @@ interface IState<S, T> extends ISerializableState {
 
 /**
  * Компоновщик стратегий; оборачивает стратегии одну в другую в заданном порядке
- * @class Types/_display/ItemsStrategy/Composer
+ * @class Controls/_display/ItemsStrategy/Composer
  * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
@@ -209,7 +209,7 @@ export default class Composer<S, T> extends mixin<
 }
 
 Object.assign(Composer.prototype, {
-   '[Types/_display/itemsStrategy/Composer]': true,
-   _moduleName: 'Types/display:itemsStrategy.Composer',
+   '[Controls/_display/itemsStrategy/Composer]': true,
+   _moduleName: 'Controls/display:itemsStrategy.Composer',
    _result: null
 });

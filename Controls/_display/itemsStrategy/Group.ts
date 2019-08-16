@@ -6,8 +6,8 @@ import {
    DestroyableMixin,
    SerializableMixin,
    ISerializableState as IDefaultSerializableState
-} from '../../entity';
-import {mixin} from '../../util';
+} from 'Types/entity';
+import {mixin} from 'Types/util';
 
 type GroupContents = string | number;
 
@@ -32,9 +32,9 @@ interface ISerializableState extends IDefaultSerializableState {
 
 /**
  * Стратегия-декоратор для формирования групп элементов
- * @class Types/_display/ItemsStrategy/Group
+ * @class Controls/_display/ItemsStrategy/Group
  * @mixes Types/_entity/DestroyableMixin
- * @implements Types/_display/IItemsStrategy
+ * @implements Controls/_display/IItemsStrategy
  * @mixes Types/_entity/SerializableMixin
  * @author Мальцев А.А.
  */
@@ -47,7 +47,7 @@ export default class Group<S, T> extends mixin<
 ) implements IItemsStrategy<S, T> {
    /**
     * @typedef {Object} Options
-    * @property {Types/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
+    * @property {Controls/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
     * @property {Function(Types/_collection/Item, Number, *)} handler Метод, возвращающий группу элемента
     */
 
@@ -80,7 +80,7 @@ export default class Group<S, T> extends mixin<
 
    // region IItemsStrategy
 
-   readonly '[Types/_display/IItemsStrategy]': boolean = true;
+   readonly '[Controls/_display/IItemsStrategy]': boolean = true;
 
    get options(): IItemsStrategyOptions<S, T> {
       return this.source.options;
@@ -300,8 +300,8 @@ export default class Group<S, T> extends mixin<
 }
 
 Object.assign(Group.prototype, {
-   '[Types/_display/itemsStrategy/Group]': true,
-   _moduleName: 'Types/display:itemsStrategy.Group',
+   '[Controls/_display/itemsStrategy/Group]': true,
+   _moduleName: 'Controls/display:itemsStrategy.Group',
    _groups: null,
    _itemsOrder: null
 });

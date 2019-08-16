@@ -6,12 +6,12 @@ export interface IOptions<S, T> {
 
 /**
  * Интерфейс стратегии получения элементов проекции.
- * @interface Types/_display/IItemsStrategy
+ * @interface Controls/_display/IItemsStrategy
  * @public
  * @author Мальцев А.А.
  */
 export default interface IItemsStrategy<S, T> {
-   readonly '[Types/_display/IItemsStrategy]': boolean;
+   readonly '[Controls/_display/IItemsStrategy]': boolean;
 
    /**
     * Возвращает опции конструктора
@@ -36,7 +36,7 @@ export default interface IItemsStrategy<S, T> {
    /**
     * Возвращает элемент по позиции
     * @param {Number} index Позиция
-    * @return {Types/_display/CollectionItem}
+    * @return {Controls/_display/CollectionItem}
     */
    at(index: number): T;
 
@@ -45,7 +45,7 @@ export default interface IItemsStrategy<S, T> {
     * @param {Number} start Позиция в коллекции
     * @param {Number} deleteCount Количество удаляемых элементов
     * @param {Array} [added] Добавляемые элементы
-    * @return {Types/_display/CollectionItem} Удаленные элементы
+    * @return {Controls/_display/CollectionItem} Удаленные элементы
     */
    splice(start: number, deleteCount: number, added?: S[]): T[];
 
