@@ -61,8 +61,19 @@ var _private = {
                 value: columnsCount - 1
             },
         ]);
-    }
+    },
     // endregion
+
+    getExpandedItems<T = unknown>(display, expandedItems: Array<T>, nodeProperty: string): Array<T> {
+        if (expandedItems.length === 1 && expandedItems[0] === null) {
+            const nodes = display.getItems().filter((item) => {
+                return item.getContents().get && item.getContents().get(nodeProperty) !== null
+            });
+            return nodes.map(node => node.getContents().getId());
+        } else {
+            return <Array<T>>expandedItems;
+        }
+    }
 
 };
 
@@ -219,6 +230,7 @@ var
         },
 
         _getRowIndexHelper() {
+
             let
                 self = this,
                 cfg: IBaseTreeGridRowIndexOptions = {
@@ -229,7 +241,7 @@ var
                     multyHeaderOffset: this.getMultyHeaderOffset(),
                     hierarchyRelation: self._model.getHierarchyRelation(),
                     hasMoreStorage: self._model.getHasMoreStorage() || {},
-                    expandedItems: self._model.getExpandedItems() || [],
+                    expandedItems: _private.getExpandedItems(self.getDisplay(), self._model.getExpandedItems() || [], self._options.nodeProperty),
                     hasNodeFooterTemplate: !!self._model.getNodeFooterTemplate()
                 },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
