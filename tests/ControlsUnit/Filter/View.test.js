@@ -3,9 +3,10 @@ define(
       'Controls/filter',
       'Core/core-clone',
       'Types/source',
-      'Types/collection'
+      'Types/collection',
+      'Controls/history'
    ],
-   function(filter, Clone, sourceLib, collection) {
+   function(filter, Clone, sourceLib, collection, history) {
       describe('Filter:View', function() {
 
          let defaultItems = [
@@ -406,6 +407,27 @@ define(
             let self = {};
             filter.View._private.prepareItems(self, date);
             assert.strictEqual(self._source.getSQLSerializationMode(), date.getSQLSerializationMode());
+         });
+
+         it('_private:updateHistory', function() {
+            let resultHistoryItems, resultMeta;
+            let source = new history.Source({
+               originSource: new sourceLib.Memory({
+                  keyProperty: 'key',
+                  data: []
+               }),
+               historySource: new history.Service({
+                  historyId: 'TEST_HISTORY_ID'
+               })
+            });
+            source.update = (historyItems, meta) => {
+               resultHistoryItems = historyItems;
+               resultMeta = meta;
+            };
+            let items = [{key: 1}];
+            filter.View._private.updateHistory({}, items, source);
+            assert.deepEqual(resultHistoryItems, items);
+            assert.deepEqual(resultMeta, {$_history: true});
          });
 
          it('_private:loadSelectedItems', function(done) {
