@@ -3,7 +3,8 @@ import {
    OptionsToPropertyMixin,
    InstantiableMixin,
    SerializableMixin,
-   IInstantiable
+   IInstantiable,
+   IVersionable
 } from 'Types/entity';
 import Collection, {ISourceCollection} from './Collection';
 import {ISerializableState as IDefaultSerializableState} from 'Types/entity';
@@ -73,6 +74,8 @@ export default class CollectionItem<T> extends mixin<
     */
    protected _contentsIndex: number;
 
+   protected _version: number;
+
    constructor(options: IOptions<T>) {
       super();
       OptionsToPropertyMixin.call(this, options);
@@ -126,6 +129,14 @@ export default class CollectionItem<T> extends mixin<
       if (!silent) {
          this._notifyItemChangeToOwner('contents');
       }
+   }
+
+   getVersion(): number {
+      const contents = this._$contents as unknown as IVersionable;
+      if (contents && typeof contents.getVersion === 'function') {
+         return this._version + contents.getVersion();
+      }
+      return this._version;
    }
 
    /**
@@ -226,6 +237,10 @@ export default class CollectionItem<T> extends mixin<
    }
 
    // endregion
+
+   protected _nextVersion(): void {
+      this._version++;
+   }
 }
 
 Object.assign(CollectionItem.prototype, {
@@ -235,7 +250,8 @@ Object.assign(CollectionItem.prototype, {
    _$contents: null,
    _$selected: false,
    _instancePrefix: 'collection-item-',
-   _contentsIndex: undefined
+   _contentsIndex: undefined,
+   _version: 0
 });
 
 register('Controls/display:CollectionItem', CollectionItem);

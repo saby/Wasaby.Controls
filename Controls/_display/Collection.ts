@@ -11,6 +11,7 @@ import {
    DestroyableMixin,
    ObservableMixin,
    SerializableMixin,
+   VersionableMixin,
    ISerializableState as IDefaultSerializableState,
    functor
 } from 'Types/entity';
@@ -189,6 +190,9 @@ function onCollectionChange<T>(
    }
 
    this._finishUpdateSession(session);
+
+   // Increase version after collection change
+   this._nextVersion();
 }
 
 /**
@@ -214,6 +218,9 @@ function onCollectionItemChange<T>(
       this._sourceCollectionDelayedCallbacks = this._sourceCollectionDelayedCallbacks || [];
       this._sourceCollectionDelayedCallbacks.push([this._notifySourceCollectionItemChange, arguments]);
    }
+
+   // Increase version after collection item change
+   this._nextVersion();
 }
 
 /**
@@ -268,6 +275,7 @@ function functorToImportantProperties(func: Function, add: boolean): void {
  * @implements Types/_collection/IEnumerable
  * @implements Types/_collection/IList
  * @mixes Types/_entity/SerializableMixin
+ * @mixes Types/_entity/VersionableMixin
  * @mixes Types/_collection/EventRaisingMixin
  * @ignoreMethods notifyItemChange
  * @public
@@ -276,11 +284,13 @@ function functorToImportantProperties(func: Function, add: boolean): void {
 export default class Collection<S, T = CollectionItem<S>> extends mixin<
    Abstract<any, any>,
    SerializableMixin,
-   EventRaisingMixin
+   EventRaisingMixin,
+   VersionableMixin
 >(
    Abstract,
    SerializableMixin,
-   EventRaisingMixin
+   EventRaisingMixin,
+   VersionableMixin
 ) implements IEnumerable<T>, IList<T> {
    /**
     * Возвращать локализованные значения
