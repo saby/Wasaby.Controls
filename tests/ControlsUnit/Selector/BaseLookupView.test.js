@@ -120,17 +120,30 @@ define([
       it('_choose', function() {
          var itemAdded = false;
          var lookup = new Lookup();
+         var isActivated = false;
 
+         lookup.saveOptions({});
          lookup._isInputVisible = false;
          lookup._notify = function() {
             itemAdded = true;
          };
+         lookup.activate = function() {
+            isActivated = true;
+         };
 
-         lookup._beforeMount({multiLine: true});
+         lookup._beforeMount({ multiLine: true });
 
+         lookup._options.multiSelect = false;
          lookup._choose();
          assert.isTrue(itemAdded);
          assert.isTrue(lookup._needSetFocusInInput);
+         assert.isFalse(isActivated);
+
+         lookup._needSetFocusInInput = false;
+         lookup._options.multiSelect = true;
+         lookup._choose();
+         assert.isFalse(lookup._needSetFocusInInput);
+         assert.isTrue(isActivated);
       });
 
       it('_deactivated', function() {
