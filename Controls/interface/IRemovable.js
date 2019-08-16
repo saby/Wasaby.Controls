@@ -37,7 +37,7 @@ define('Controls/interface/IRemovable', [], function() {
     * @example
     * В следующем примере показано, как отобразить диалоговое окно с вопросом перед удалением элементов.
     * <pre>
-    *    <Controls.list:View.Remover name="listRemover" on:beforeItemsRemove="_beforeItemsRemove()"/>
+    *    <Controls.list:Remover name="listRemover" on:beforeItemsRemove="_beforeItemsRemove()"/>
     *    <Controls.popup:Confirmation name="popupOpener"/>
     * </pre>
     *
@@ -65,7 +65,7 @@ define('Controls/interface/IRemovable', [], function() {
     * @example
     * The following example shows how to display a dialog with a question before deleting items.
     * <pre>
-    *    <Controls.list:View.Remover name="listRemover" on:beforeItemsRemove="_beforeItemsRemove()"/>
+    *    <Controls.list:Remover name="listRemover" on:beforeItemsRemove="_beforeItemsRemove()"/>
     *    <Controls.popup:Confirmation name="popupOpener"/>
     * </pre>
     *
@@ -93,7 +93,7 @@ define('Controls/interface/IRemovable', [], function() {
     * @example
     * В следующем примере показано, как удалить элементы из списка после клика по кнопке.
     * <pre>
-    *    <Controls.list:View.Remover name="listRemover" on:afterItemsRemove="_afterItemsRemove()"/>
+    *    <Controls.list:Remover name="listRemover" on:afterItemsRemove="_afterItemsRemove()"/>
     *    <Controls.popup:Confirmation name="popupOpener"/>
     * </pre>
     *
@@ -123,7 +123,7 @@ define('Controls/interface/IRemovable', [], function() {
     * @example
     * The following example shows how to remove items from list after click on the button.
     * <pre>
-    *    <Controls.list:View.Remover name="listRemover" on:afterItemsRemove="_afterItemsRemove()"/>
+    *    <Controls.list:Remover name="listRemover" on:afterItemsRemove="_afterItemsRemove()"/>
     *    <Controls.popup:Confirmation name="popupOpener"/>
     * </pre>
     *
@@ -152,8 +152,8 @@ define('Controls/interface/IRemovable', [], function() {
     * @example
     * В следующем примере показано, как удалить элементы из списка после клика по кнопке.
     * <pre>
-    *    <Controls.buttons:Path caption="RemoveItem" on:click="_onRemoveButtonClick()"/>
-    *    <Controls.list:View.Remover name="listRemover"/>
+    *    <Controls.breadcrumbs:Path caption="RemoveItem" on:click="_onRemoveButtonClick()"/>
+    *    <Controls.list:Remover name="listRemover"/>
     * </pre>
     *
     * <pre>
@@ -178,8 +178,8 @@ define('Controls/interface/IRemovable', [], function() {
     * @example
     * The following example shows how to remove items from list after click on the button.
     * <pre>
-    *    <Controls.buttons:Path caption="RemoveItem" on:click="_onRemoveButtonClick()"/>
-    *    <Controls.list:View.Remover name="listRemover"/>
+    *    <Controls.breadcrumbs:Path caption="RemoveItem" on:click="_onRemoveButtonClick()"/>
+    *    <Controls.list:Remover name="listRemover"/>
     * </pre>
     *
     * <pre>

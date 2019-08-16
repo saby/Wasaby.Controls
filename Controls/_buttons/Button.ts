@@ -86,15 +86,15 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @example
  * Кнопка в режиме отображения 'link'.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
  * </pre>
  * Кнопка в режиме отображения 'toolButton'.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="danger" viewMode="toolButton"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="danger" viewMode="toolButton"/>
  * </pre>
  * Кнопка в режиме отображения 'button'.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="success" viewMode="button"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="success" viewMode="button"/>
  * </pre>
  * @see Size
  */
@@ -109,15 +109,15 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @example
  * Button with 'link' viewMode.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
  * </pre>
  * Button with 'toolButton' viewMode.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="danger" viewMode="toolButton"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="danger" viewMode="toolButton"/>
  * </pre>
  * Button with 'button' viewMode.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="success" viewMode="button"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="success" viewMode="button"/>
  * </pre>
  * @see Size
  */
