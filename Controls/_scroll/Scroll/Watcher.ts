@@ -263,13 +263,14 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                const
                   sizeCache = _private.getSizeCache(self, container),
                   clientHeight = sizeCache.clientHeight,
-                  scrollHeight = sizeCache.scrollHeight;
+                  scrollHeight = sizeCache.scrollHeight,
+                  currentScrollTop = container.scrollTop + (self._isVirtualPlaceholderMode() ? self._topPlaceholderSize : 0);
                if (scrollParam === 'bottom') {
                   self.setScrollTop(scrollHeight - clientHeight);
                } else if (scrollParam === 'pageUp') {
-                  self.setScrollTop(container.scrollTop - clientHeight);
+                  self.setScrollTop(currentScrollTop - clientHeight);
                } else if (scrollParam === 'pageDown') {
-                  self.setScrollTop(container.scrollTop + clientHeight);
+                  self.setScrollTop(currentScrollTop + clientHeight);
                }
             }
          },

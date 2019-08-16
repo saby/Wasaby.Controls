@@ -418,8 +418,10 @@ var
          if (typeof this._displayState.shadowPosition !== 'string') {
             return false;
          }
-         if (this._shadowVisiblityMode[position] == 'visible') {
-            return true;
+
+         // Do not show shadows on the scroll container if there are fixed headers. They display their own shadows.
+         if (this._children.stickyController.hasFixed(position)) {
+            return false;
          }
 
          // On ipad with inertial scrolling due to the asynchronous triggering of scrolling and caption fixing  events,
@@ -430,7 +432,11 @@ var
             return false;
          }
 
-         return this._displayState.shadowPosition.indexOf(position) !== -1 && !this._children.stickyController.hasFixed(position);
+         if (this._shadowVisiblityMode[position] === 'visible') {
+            return true;
+         }
+
+         return this._displayState.shadowPosition.indexOf(position) !== -1;
       },
 
       _updateShadowMode(event, shadowVisibleObject): void {

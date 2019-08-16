@@ -352,6 +352,26 @@ define(
                historyItem = historyMod.Source._private.getRawHistoryItem(hSource, 123, 'history_id');
                assert.strictEqual(historyItem.getId(), '123');
             });
+
+            it('getKeyProperty', function() {
+               let initSource = new sourceLib.Memory({
+                  keyProperty: 'key',
+                  data: []
+               });
+               let self = {
+                  originSource: initSource
+               };
+               assert.equal(historyMod.Source._private.getKeyProperty(self), 'key');
+
+               self.originSource = new sourceLib.PrefetchProxy({
+                  target: initSource,
+                  data: {
+                     query: {}
+                  }
+               });
+               assert.equal(historyMod.Source._private.getKeyProperty(self), 'key');
+            });
+
             it('updateRecent', function() {
                let meta = {
                   $_history: true
