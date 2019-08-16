@@ -20,6 +20,10 @@ describe('Controls.Validate:isValidDateRange', () => {
         resp: true
     }, {
         startValue: new Date(2019, 0),
+        endValue: new Date(2019, 0),
+        resp: true
+    }, {
+        startValue: new Date(2019, 0),
         endValue: new Date(2020, 0),
         resp: true
     }, {
