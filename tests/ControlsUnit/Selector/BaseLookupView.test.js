@@ -356,10 +356,10 @@ define([
             container,
             lookup = new Lookup();
 
-         lookup._container = 'notJQuery';
-         assert.equal(lookup._getContainer(), 'notJQuery');
-
          if (window && window.jQuery) {
+            lookup._container = 'notJQuery';
+            assert.equal(lookup._getContainer(), 'notJQuery');
+
             lookup._container = container = new window.jQuery('div');
             assert.equal(lookup._getContainer(), container[0]);
          }
