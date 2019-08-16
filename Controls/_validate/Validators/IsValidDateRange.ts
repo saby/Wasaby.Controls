@@ -37,7 +37,7 @@ import dateUtils = require('Controls/Utils/Date');
 export default function isValidDateRange(args): boolean {
    if (args.doNotValidate || !args.startValue || !args.endValue ||
        !dateUtils.isValidDate(args.startValue) || !dateUtils.isValidDate(args.endValue) ||
-       args.startValue < args.endValue) {
+       args.startValue <= args.endValue) {
       return true;
    }
 
