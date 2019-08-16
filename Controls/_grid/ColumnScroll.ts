@@ -171,8 +171,9 @@ const
          _private.updateSizes(this);
       },
 
-      _isColumnScrollVisible() {
-         return this._contentSize > this._contentContainerSize;
+      _isColumnScrollVisible: function() {
+         const items = this._options.items;
+         return items && !!items.getCount() && (this._contentSize > this._contentContainerSize) ? true : false;
       },
 
       _calculateShadowClasses(position) {
