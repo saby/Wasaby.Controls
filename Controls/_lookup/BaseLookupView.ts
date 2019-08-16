@@ -2,10 +2,10 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_lookup/BaseLookupView/BaseLookupView');
 import DOMUtil = require('Controls/Utils/DOMUtil');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import {isEqual} from 'Types/object';
-import {constants, IoC} from 'Env/Env';
 import clearRecordsTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/clearRecordsTemplate');
 import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/showSelectorTemplate');
+import {isEqual} from 'Types/object';
+import {constants, IoC} from 'Env/Env';
 
 
 const KEY_CODE_F2 = 113;
@@ -98,18 +98,16 @@ var BaseLookupView = Control.extend({
         }
     },
 
-    _afterUpdate: function () {
-        let isInputActive = this._isInputActive(this._options);
-
+    _afterUpdate: function():void {
         if (this._needSetFocusInInput) {
             this._needSetFocusInInput = false;
 
-            if (isInputActive) {
+            if (this._active) {
                 this.activate({enableScreenKeyboard: true});
             }
         }
 
-        if (!isInputActive) {
+        if (!this._isInputActive(this._options)) {
             this._suggestState = false;
         }
     },

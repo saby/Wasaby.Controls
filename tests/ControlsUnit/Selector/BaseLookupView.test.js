@@ -59,6 +59,7 @@ define([
 
          isInputActive = true;
          lookup._needSetFocusInInput = true;
+         lookup._active = true;
          lookup._afterUpdate();
          assert.isTrue(activated);
          assert.isFalse(lookup._needSetFocusInInput);
