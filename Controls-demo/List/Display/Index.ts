@@ -34,8 +34,20 @@ export default class DisplayList extends Control {
         ]
     });
 
+    private _counterData: any[] = null;
+
+    constructor(options) {
+        super(options);
+
+        this._counterData = [];
+    }
+
     private _onItemClick(e: SyntheticEvent<MouseEvent>, item: Model): void {
         const title = item.get('title');
         item.set('title', `${title} clicked`);
+    }
+
+    private _updateCounters(e: SyntheticEvent<null>, counters: any): void {
+        this._counterData = counters;
     }
 }

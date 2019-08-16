@@ -35,6 +35,16 @@ export default class DisplayList<TItem> extends Control<IDisplayListOptions> {
         }
     }
 
+    // for demo
+    protected _afterMount(): void {
+        this._notify('countersChanged', [this._collection.getItemCounters()]);
+    }
+
+    // for demo
+    protected _afterUpdate(): void {
+        this._notify('countersChanged', [this._collection.getItemCounters()]);
+    }
+
     private _loadItems(): Promise<RecordSet<TItem>> {
         return this._sourceController.load();
     }

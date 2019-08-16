@@ -23,6 +23,10 @@ export interface ISerializableState<T> extends IDefaultSerializableState {
    iid: string;
 }
 
+export interface ICollectionItemCounters {
+   [key: string]: number;
+}
+
 /**
  * Элемент коллекции
  * @class Controls/_display/CollectionItem
@@ -81,10 +85,14 @@ export default class CollectionItem<T> extends mixin<
 
    protected _version: number;
 
+   protected _counters: ICollectionItemCounters;
+
    constructor(options: IOptions<T>) {
       super();
       OptionsToPropertyMixin.call(this, options);
       SerializableMixin.call(this);
+
+      this._counters = {};
    }
 
    // endregion
@@ -197,6 +205,17 @@ export default class CollectionItem<T> extends mixin<
       }
    }
 
+   increaseCounter(name: string): number {
+      if (typeof this._counters[name] === 'undefined') {
+         this._counters[name] = 0;
+      }
+      return ++this._counters[name];
+   }
+
+   getCounters(): ICollectionItemCounters {
+      return this._counters;
+   }
+
    // region SerializableMixin
 
    _getSerializableState(state: IDefaultSerializableState): ISerializableState<T> {
@@ -276,6 +295,7 @@ Object.assign(CollectionItem.prototype, {
    _$marked: false,
    _instancePrefix: 'collection-item-',
    _contentsIndex: undefined,
+   _counters: null,
    _version: 0
 });
 
