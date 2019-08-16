@@ -81,19 +81,19 @@ define('Controls/interface/IMovable', [
     * @name Controls/interface/IMovable#moveDialogTemplate
     * @cfg {Function} The template of the dialog for selecting the target record to move.
     * @example
-    * The following example shows how to using default template(Controls.list:View.Mover.MoveDialog).
+    * The following example shows how to using default template {@link Controls/MoveDialog}.
     * <pre>
-    *    <Controls.list:View.Mover>
+    *    <Controls.list:Mover>
     *       <ws:moveDialogTemplate>
-    *          <Controls.list:View.Mover.MoveDialog
+    *          <Controls.MoveDialog
     *                root="rootId"
     *                searchParam="folderTitle"
     *                parentProperty="parent"
     *                nodeProperty="parent@">
     *             <ws:filter moveDialog="{{true}}"/>
-    *          </Controls.list:View.Mover.MoveDialog>
+    *          </Controls.MoveDialog>
     *       </ws:moveDialogTemplate>
-    *    </Controls.list:View.Mover>
+    *    </Controls.list:Mover>
     * </pre>
     * @see moveItemsWithDialog
     * @see Controls.list:View/Mover/MoveDialog
@@ -109,17 +109,17 @@ define('Controls/interface/IMovable', [
     * @example
     * В следующем примере показано, как задать сортировку по убыванию.
     * <pre>
-    *    <Controls.list:View.Mover sortingOrder="desc">
+    *    <Controls.list:Mover sortingOrder="desc">
     *       <ws:moveDialogTemplate>
-    *          <Controls.list:View.Mover.MoveDialog
+    *          <Controls.MoveDialog
     *                root="rootId"
     *                searchParam="folderTitle"
     *                parentProperty="parent"
     *                nodeProperty="parent@">
     *             <ws:filter moveDialog="{{true}}"/>
-    *          </Controls.list:View.Mover.MoveDialog>
+    *          </Controls.MoveDialog>
     *       </ws:moveDialogTemplate>
-    *    </Controls.list:View.Mover>
+    *    </Controls.list:Mover>
     * </pre>
     */
 
@@ -134,17 +134,17 @@ define('Controls/interface/IMovable', [
     * @example
     * The following example shows how to set a descending sort.
     * <pre>
-    *    <Controls.list:View.Mover sortingOrder="desc">
+    *    <Controls.list:Mover sortingOrder="desc">
     *       <ws:moveDialogTemplate>
-    *          <Controls.list:View.Mover.MoveDialog
+    *          <Controls.MoveDialog
     *                root="rootId"
     *                searchParam="folderTitle"
     *                parentProperty="parent"
     *                nodeProperty="parent@">
     *             <ws:filter moveDialog="{{true}}"/>
-    *          </Controls.list:View.Mover.MoveDialog>
+    *          </Controls.MoveDialog>
     *       </ws:moveDialogTemplate>
-    *    </Controls.list:View.Mover>
+    *    </Controls.list:Mover>
     * </pre>
     */
 
@@ -158,7 +158,7 @@ define('Controls/interface/IMovable', [
     * @example
     * В следующем примере показано, как переопределить логику перемещения элементов по умолчанию.
     * <pre>
-    *    <Controls.list:View.Mover name="listMover" on:beforeItemsMove="_beforeItemsMove()"/>
+    *    <Controls.list:Mover name="listMover" on:beforeItemsMove="_beforeItemsMove()"/>
     * </pre>
     *
     * <pre>
@@ -184,7 +184,7 @@ define('Controls/interface/IMovable', [
     * @example
     * The following example shows how to override the default items move logic.
     * <pre>
-    *    <Controls.list:View.Mover name="listMover" on:beforeItemsMove="_beforeItemsMove()"/>
+    *    <Controls.list:Mover name="listMover" on:beforeItemsMove="_beforeItemsMove()"/>
     * </pre>
     *
     * <pre>
@@ -210,7 +210,7 @@ define('Controls/interface/IMovable', [
     * @example
     * В следующем примере показано, как отобразить диалоговое окно ошибки после неудачного перемещения товаров.
     * <pre>
-    *    <Controls.list:View.Mover name="listMover" on:afterItemsMove="_afterItemsMove()"/>
+    *    <Controls.list:Mover name="listMover" on:afterItemsMove="_afterItemsMove()"/>
     *    <Controls.popup:Confirmation name="popupOpener"/>
     * </pre>
     *
@@ -241,7 +241,7 @@ define('Controls/interface/IMovable', [
     * @example
     * The following example shows how to display the error dialog after a failed move of items.
     * <pre>
-    *    <Controls.list:View.Mover name="listMover" on:afterItemsMove="_afterItemsMove()"/>
+    *    <Controls.list:Mover name="listMover" on:afterItemsMove="_afterItemsMove()"/>
     *    <Controls.popup:Confirmation name="popupOpener"/>
     * </pre>
     *
@@ -271,7 +271,7 @@ define('Controls/interface/IMovable', [
     * В следующем примере показано, как переместить элемент вверх с помощью панели операций над записью.
     * <pre>
     *    <Controls.list:View itemActions="{{_itemActions}}"/>
-    *    <Controls.list:View.Mover name="listMover"/>
+    *    <Controls.list:Mover name="listMover"/>
     * </pre>
     *
     * <pre>
@@ -302,7 +302,7 @@ define('Controls/interface/IMovable', [
     * The following example shows how to move item up using the item actions.
     * <pre>
     *    <Controls.list:View itemActions="{{_itemActions}}"/>
-    *    <Controls.list:View.Mover name="listMover"/>
+    *    <Controls.list:Mover name="listMover"/>
     * </pre>
     *
     * <pre>
@@ -333,7 +333,7 @@ define('Controls/interface/IMovable', [
     * В следующем примере показано, как переместить элемент вниз с помощью панели операций над записью.
     * <pre>
     *    <Controls.list:View itemActions="{{_itemActions}}"/>
-    *    <Controls.list:View.Mover name="listMover"/>
+    *    <Controls.list:Mover name="listMover"/>
     * </pre>
     *
     * <pre>
@@ -364,7 +364,7 @@ define('Controls/interface/IMovable', [
     * The following example shows how to move item down using the item actions.
     * <pre>
     *    <Controls.list:View itemActions="{{_itemActions}}"/>
-    *    <Controls.list:View.Mover name="listMover"/>
+    *    <Controls.list:Mover name="listMover"/>
     * </pre>
     *
     * <pre>
@@ -398,8 +398,8 @@ define('Controls/interface/IMovable', [
     * @example
     * В следующем примере показано, как переместить элемент вниз с помощью панели операций над записью.
     * <pre>
-    *    <Controls.buttons:Path caption="Move items in root" on:click="_moveItems()"/>
-    *    <Controls.list:View.Mover name="listMover"/>
+    *    <Controls.breadcrumbs:Path caption="Move items in root" on:click="_moveItems()"/>
+    *    <Controls.list:Mover name="listMover"/>
     * </pre>
     *
     * <pre>
@@ -428,8 +428,8 @@ define('Controls/interface/IMovable', [
     * @example
     * The following example shows how to move item down using the item actions.
     * <pre>
-    *    <Controls.buttons:Path caption="Move items in root" on:click="_moveItems()"/>
-    *    <Controls.list:View.Mover name="listMover"/>
+    *    <Controls.breadcrumbs:Path caption="Move items in root" on:click="_moveItems()"/>
+    *    <Controls.list:Mover name="listMover"/>
     * </pre>
     *
     * <pre>
@@ -455,8 +455,8 @@ define('Controls/interface/IMovable', [
     * @example
     * В следующем примере показано, как переместить выбранные элементы кликом по кнопке.
     * <pre>
-    *    <Controls.buttons:Path caption="Move items in root" on:click="_moveItems()"/>
-    *    <Controls.list:View.Mover name="listMover"/>
+    *    <Controls.breadcrumbs:Path caption="Move items in root" on:click="_moveItems()"/>
+    *    <Controls.list:Mover name="listMover"/>
     * </pre>
     *
     * <pre>
@@ -483,8 +483,8 @@ define('Controls/interface/IMovable', [
     * @example
     * The following example shows how to move the selected items to the root by clicking the button.
     * <pre>
-    *    <Controls.buttons:Path caption="Move items in root" on:click="_moveItems()"/>
-    *    <Controls.list:View.Mover name="listMover"/>
+    *    <Controls.breadcrumbs:Path caption="Move items in root" on:click="_moveItems()"/>
+    *    <Controls.list:Mover name="listMover"/>
     * </pre>
     *
     * <pre>

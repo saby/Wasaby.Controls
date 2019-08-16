@@ -90,7 +90,7 @@ define('Controls/interface/IInfoboxOptions', [
     *         </ws:popupOptions>
     *      </Controls.popup:Stack>
     *
-    *      <Controls.buttons:Path name="openStackButton" caption="open stack" on:click="_openStack()"/>
+    *      <Controls.breadcrumbs:Path name="openStackButton" caption="open stack" on:click="_openStack()"/>
     * </pre>
     * userControl.js
     * <pre>
@@ -126,7 +126,7 @@ define('Controls/interface/IInfoboxOptions', [
     * TestStack.wml
     * <pre>
     *     ...
-    *     <Controls.buttons:Path name="sendDataButton" caption="sendData" on:click="_sendData()"/>
+    *     <Controls.breadcrumbs:Path name="sendDataButton" caption="sendData" on:click="_sendData()"/>
     *     ...
     * </pre>
     * TestStack.js
@@ -168,7 +168,7 @@ define('Controls/interface/IInfoboxOptions', [
     *         </ws:popupOptions>
     *      </Controls.popup:Stack>
     *
-    *      <Controls.buttons:Path name="openStackButton" caption="open stack" on:click="_openStack()"/>
+    *      <Controls.breadcrumbs:Path name="openStackButton" caption="open stack" on:click="_openStack()"/>
     * </pre>
     * userControl.js
     * <pre>
@@ -204,7 +204,7 @@ define('Controls/interface/IInfoboxOptions', [
     * TestStack.wml
     * <pre>
     *     ...
-    *     <Controls.buttons:Path name="sendDataButton" caption="sendData" on:click="_sendData()"/>
+    *     <Controls.breadcrumbs:Path name="sendDataButton" caption="sendData" on:click="_sendData()"/>
     *     ...
     * </pre>
     * TestStack.js
