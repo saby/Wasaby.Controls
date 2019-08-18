@@ -9,7 +9,7 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
    var _private = {
       getHeader: function(self, options) {
          var newHeader;
-         if (options.items && options.header && !options.header[0].title && !options.header[0].template) {
+         if (options.items && options.header && options.header.length && !options.header[0].title && !options.header[0].template) {
             newHeader = options.header.slice();
             newHeader[0] = {
                template: HeadingPathBack,
