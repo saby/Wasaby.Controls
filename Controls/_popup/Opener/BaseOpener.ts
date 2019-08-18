@@ -351,6 +351,11 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
                     compatiblePopup.BaseOpener._prepareConfigForNewTemplate(newCfg);
                     compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
                     dialog.setTarget && dialog.setTarget($(newCfg.target));
+
+                    // Обновляем опцию для старого окна и зовем завершение обработки, т.к. окно уже открыто и просто
+                    // перерисовывает шаблон
+                    dialog._options.creatingDef = newCfg.creatingDef;
+                    dialog._finishPopupOpenedDeferred && dialog._finishPopupOpenedDeferred();
                 } else {
                     action.closeDialog();
                     action._isExecuting = false;
