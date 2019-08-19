@@ -2,42 +2,45 @@
    cursor: pointer;
 }
 
-.controls-RadioGroup_defaultItem_horizontal {
+.controls-RadioGroup_defaultItem_horizontal_theme-@{themeName} {
    padding-left: @spacing-between-radioItems_horizontal;
 }
 
-.controls-RadioGroup_defaultItem_vertical {
+.controls-RadioGroup_defaultItem_vertical_theme-@{themeName} {
    padding-top: @spacing-between-radioItems_vertical;
 }
 
 .controls-RadioItem__wrapper {
-   min-height: @height_RadioItem;
    .inline-flexbox();
    .align-items(baseline);
+}
+
+.controls-RadioItem__wrapper_theme-@{themeName} {
+   min-height: @height_RadioItem;
 }
 
 .controls-RadioItem__wrapper:before {
    content: '\200b';
 }
 
-.controls-RadioItem__SwitchCircle {
+.controls-RadioItem__SwitchCircle_theme-@{themeName} {
     padding-right: @spacing-between-radioItem-icon-caption;
  }
 
-.controls-RadioItem__caption {
+.controls-RadioItem__caption_theme-@{themeName} {
    font-size: @font-size_RadioItem__caption;
 }
 
-.controls-RadioItem__caption_selected_disabled,
- .controls-RadioItem__caption_selected_enabled {
+.controls-RadioItem__caption_selected_disabled_theme-@{themeName},
+ .controls-RadioItem__caption_selected_enabled_theme-@{themeName} {
     color: @color_RadioItem__caption_selected;
  }
 
-.controls-RadioItem__caption_unselected_disabled {
+.controls-RadioItem__caption_unselected_disabled_theme-@{themeName} {
    color: @color_RadioItem__caption_unselected_disabled;
 }
 
-.controls-RadioItem__caption_unselected_enabled {
+.controls-RadioItem__caption_unselected_enabled_theme-@{themeName} {
    color: @color_RadioItem__caption_unselected_enabled;
 }
 
@@ -55,7 +58,7 @@
 
 .ws-is-no-touch {
    .controls-RadioItem__wrapper:hover {
-      .controls-SwitchCircle__borderCircle_enabled {
+      .controls-SwitchCircle__borderCircle_enabled_theme-@{themeName} {
          stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
       }
 
@@ -67,7 +70,7 @@
 
 //touch on radio
 .controls-RadioItem__wrapper:active {
-   .controls-SwitchCircle__borderCircle_enabled {
+   .controls-SwitchCircle__borderCircle_enabled_theme-@{themeName} {
       stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
    }
 
