@@ -477,6 +477,7 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'targetPoint',
         'targetTracking',
         'locationStrategy',
+        'fittingMode',
         'actionOnScroll'
     ];
 
