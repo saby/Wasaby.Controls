@@ -224,14 +224,14 @@
       <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
          {{itemData.resetColumnIndex();}}
          <ws:if data="{{itemData.hasMultiSelect}}">
-            <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+            <ws:partial template="colTpl" attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
             {{itemData.goToNextColumn();}}
          </ws:if>
-         <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
+         <ws:partial template="colTpl" attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
       </ws:if>
       <ws:else>
          <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-            <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+            <ws:partial template="colTpl" attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
          </ws:for>
       </ws:else>
    </div>
