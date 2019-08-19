@@ -1,7 +1,7 @@
 /**
  * Библиотека заголовков.
- * Заголовки поддерживают различные стили отображения, могут включить счетчик, разделить или состоять из всех перечисленных частей.
- * Последние называются "сложными" заголовками. Они формируются путём композиции контролов, входящих в состав библиотек {@link Controls/heading:Title}, {@link Controls/heading:Separator} и {@link Controls/heading:Counter}.
+ * Заголовки поддерживают различные стили отображения, могут включить счетчик или разделитель.
+ * Сложные заголовки включают весь перечисленный функционал. Они формируются путём композиции контролов, входящих в состав библиотек {@link Controls/heading:Title}, {@link Controls/heading:Separator} и {@link Controls/heading:Counter}.
  * Подробнее о работе с заголовками читайте в <a href='/doc/platform/developmentapl/interface-development/controls/heading/'>руководстве разработчика</a>.
  * @library Controls/heading
  * @includes Title Controls/_heading/Heading
