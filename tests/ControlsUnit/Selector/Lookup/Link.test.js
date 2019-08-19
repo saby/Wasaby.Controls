@@ -26,21 +26,26 @@ define(['Controls/lookup'], function(lookup) {
       });
 
       it('_clickHandler', function() {
-         var
-            isStopPropagation = false,
+         let
+            isNotifyClick = false,
             link = new lookup.Link(),
             event = {
-               stopPropagation: function() {
-                  isStopPropagation = true;
-               }
+               stopPropagation: function() {}
             };
 
-         link._clickHandler(event);
-         assert.isFalse(isStopPropagation);
+         link._notify = function(eventName) {
+            if (eventName === 'click') {
+               isNotifyClick = true;
+            }
+         }
 
+         link._clickHandler(event);
+         assert.isTrue(isNotifyClick);
+
+         isNotifyClick = false;
          link._options.readOnly = true;
          link._clickHandler(event);
-         assert.isTrue(isStopPropagation);
+         assert.isFalse(isNotifyClick);
       });
    });
 });
