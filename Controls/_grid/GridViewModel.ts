@@ -413,7 +413,7 @@ var
                 hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
                 columnsWidth = hasMultiselect ? ['max-content'] : [],
                 hasDynamicWidth = !!columns.find((column) => {
-                    return column.width && !column.width.match(GridLayoutUtil.nonDynamicWidthRegExp);
+                    return column.width && !GridLayoutUtil.isCompatibleWidth(column.width);
                 });
 
             if (!hasDynamicWidth) {
@@ -608,15 +608,14 @@ var
             this._model.nextModelVersion(notUpdatePrefixItemVersion);
         },
 
-        _prepareCrossBrowserColumn: function(column, isNoGridSupport) {
-            var
-                result = cClone(column);
-            if (isNoGridSupport) {
-                if (result.width === '1fr') {
-                    result.width = 'auto';
-                }
-                if (result.width === 'max-content') {
-                    result.width = 'auto';
+        _prepareCrossBrowserColumn: function(column) {
+            const result = cClone(column);
+
+            if (GridLayoutUtil.isNoGridSupport()) {
+                if (column.compatibleWidth) {
+                    result.width = column.compatibleWidth;
+                } else {
+                    result.width = GridLayoutUtil.isCompatibleWidth(column.width) ? column.width : 'auto';
                 }
             }
             return result;

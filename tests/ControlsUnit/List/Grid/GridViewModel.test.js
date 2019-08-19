@@ -1099,67 +1099,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel.setColumns(gridColumns);
             assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" before "setColumns(gridColumns)".');
          });
-         it('_prepareCrossBrowserColumn', function() {
-            var
-               noGridSupport = {
-                  initialColumns: [
-                     {
-                        title: 'first',
-                        width: ''
-                     },
-                     {
-                        title: 'second',
-                        width: '1fr'
-                     },
-                     {
-                        title: 'third',
-                        width: '100px'
-                     },
-                     {
-                        title: 'fourth',
-                        width: 'max-content'
-                     },
-                     {
-                        title: 'last',
-                        width: 'auto'
-                     }
-                  ],
-                  resultColumns: [
-                     {
-                        title: 'first',
-                        width: ''
-                     },
-                     {
-                        title: 'second',
-                        width: 'auto'
-                     },
-                     {
-                        title: 'third',
-                        width: '100px'
-                     },
-                     {
-                        title: 'fourth',
-                        width: 'auto'
-                     },
-                     {
-                        title: 'last',
-                        width: 'auto'
-                     }
-                  ]
-               },
-                partialOfFullGridSupport={};
-            partialOfFullGridSupport.initialColumns = noGridSupport.initialColumns;
-
-            for (var i = 0; i < noGridSupport.initialColumns.length; i++) {
-               assert.deepEqual(noGridSupport.resultColumns[i], gridViewModel._prepareCrossBrowserColumn(noGridSupport.initialColumns[i], true),
-                   'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".');
-            }
-
-            for (var i = 0; i < partialOfFullGridSupport.initialColumns.length; i++) {
-               assert.deepEqual(partialOfFullGridSupport.initialColumns[i], gridViewModel._prepareCrossBrowserColumn(partialOfFullGridSupport.initialColumns[i], false),
-                   'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".');
-            }
-         });
 
          it('should +1 on row index on rows after editting', function () {
 
@@ -1489,12 +1428,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             calledCallback = false;
             gridViewModel.setMultiSelectVisibility('hidden');
-            gridViewModel.setColumns([{width:'1fr'}]);
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['1fr']);
+            gridViewModel.setColumns([{width:'1px'}]);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['1px']);
             assert.isFalse(calledCallback);
 
             gridViewModel.setMultiSelectVisibility('visible');
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1fr']);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1px']);
             assert.isFalse(calledCallback);
 
             calledCallback = false;
@@ -2054,6 +1993,33 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             itemData.multiSelectVisibility = 'visible';
             assert.equal(4, gridMod.GridViewModel._private.getColspan(itemData, true));
          });
+
+         it('_prepareCrossBrowserColumn', function () {
+            const initialColumns = [
+               {title: 'first', width: ''},
+               {title: 'second', compatibleWidth: '100px', width: '1fr'},
+               {title: 'third', width: '100px'},
+               {title: 'fourth', width: 'max-content', compatibleWidth: '12%' },
+               {title: 'last', width: 'auto'}
+            ];
+            const resultColumns = [
+               {title: 'first', width: 'auto'},
+               {title: 'second', width: '100px', compatibleWidth: '100px'},
+               {title: 'third', width: '100px'},
+               {title: 'fourth', width: '12%', compatibleWidth: '12%'},
+               {title: 'last', width: 'auto'}
+            ];
+
+            for (let i = 0; i < initialColumns.length; i++) {
+               assert.deepEqual(
+                   resultColumns[i],
+                   model._prepareCrossBrowserColumn(initialColumns[i]),
+                   'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".'
+               );
+            }
+
+         });
+
       });
 
    });
