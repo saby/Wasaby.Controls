@@ -1,13 +1,13 @@
-.controls-ComboBox-InputRender.theme_@{themeName} {
+.controls-ComboBox-InputRender {
    width: 100%;
 }
 
-.controls-ComboBox-popup.theme_@{themeName} {
+.controls-ComboBox-popup_theme-@{themeName} {
    margin-top: @margin-top_ComboBox-popup;
 }
 
 .controls-ComboBox:hover, .controls-ComboBox__opened {
-   .controls-ComboBox__arrow-wrapper {
+   .controls-ComboBox__arrow-wrapper_theme-@{themeName} {
       color: @color-Separator__icon_style-secondary_hovered;
    }
 }
@@ -18,6 +18,8 @@
    align-self: center;
    cursor: pointer;
    height: 100%;
+}
+.controls-ComboBox__arrow-wrapper_theme-@{themeName} {
    color: @color-Separator__icon_style-secondary;
    padding-right: @spacing_ComboBox-between-arrow-rightBorder;
 }
@@ -26,6 +28,6 @@
    content: "\200b";
 }
 
-.controls-ComboBox__iconArrow {
+.controls-ComboBox__iconArrow_theme-@{themeName} {
    .icon-size-without-important(@size-Separator__icon);
 }
