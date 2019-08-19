@@ -1635,17 +1635,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._virtualScroll && this._itemsChanged) {
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);
+        }
+
+        if (this._virtualScroll && this._applyScrollTopCallback) {
+            this._applyScrollTopCallback();
+            this._applyScrollTopCallback = null;
             // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
             // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
             this._checkLoadToDirectionTimeout = setTimeout(() => {
                 _private.checkLoadToDirectionCapability(this);
                 this._checkLoadToDirectionTimeout = null;
             });
-        }
-
-        if (this._virtualScroll && this._applyScrollTopCallback) {
-            this._applyScrollTopCallback();
-            this._applyScrollTopCallback = null;
         }
 
         // todo KINGO.
