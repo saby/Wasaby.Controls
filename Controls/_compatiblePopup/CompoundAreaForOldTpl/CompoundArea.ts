@@ -327,15 +327,7 @@ var CompoundArea = CompoundContainer.extend([
       self._notifyVDOM = self._notify;
       self._notify = self._notifyCompound;
 
-      // Check for only 510. It will be removed in 520
-      if (!self._subscribeOnResize) {
-         // Событие об изменении размеров нужно пробросить наверх, чтобы окно перепозиционировалось
-         self.subscribe('onResize', function() {
-            this._notifyVDOM('controlResize', [], { bubbling: true });
-         });
-      } else {
-         self._subscribeOnResize();
-      }
+      self._subscribeOnResize();
 
       self._windowResize = self._windowResize.bind(self);
       if (window) {
