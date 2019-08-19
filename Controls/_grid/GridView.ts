@@ -221,12 +221,18 @@ var
         },
 
         _afterUpdate() {
-            if (GridLayoutUtil.isPartialGridSupport()) {
-                _private.fillItemsContainerForPartialSupport(this);
-            }
             if (this._options.columnScroll) {
                 this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
             }
+        },
+
+        _afterRender() {
+            if (GridLayoutUtil.isPartialGridSupport()) {
+                // Для IE нужно обновить itemsContainer здесь, потому что виртуальный
+                // скролл вычисляет высоту строк сразу после _afterRender
+                _private.fillItemsContainerForPartialSupport(this);
+            }
+            GridView.superclass._afterRender.apply(this, arguments);
         },
 
         _onItemMouseEnter: function (event, itemData) {
