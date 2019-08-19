@@ -446,8 +446,8 @@ import Env = require('Env/Env');
 
    var TabsButtons = Control.extend({
       _template: TabButtonsTpl,
-      _items: [],
-      _itemsOrder: [],
+      _items: null,
+      _itemsOrder: null,
       _beforeMount: function(options, context, receivedState) {
          if (receivedState) {
             this._items = receivedState.items;
@@ -494,4 +494,3 @@ import Env = require('Env/Env');
    //необходимо для тестов
    TabsButtons._private = _private;
    export = TabsButtons;
-
