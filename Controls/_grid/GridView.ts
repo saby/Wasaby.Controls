@@ -305,7 +305,12 @@ var
             }
             return [newColumns, resultOffset];
         },
-
+        protected resizeNotifyOnListChanged: function(){
+            GridView.superclass.resizeNotifyOnListChanged.apply(this, arguments);
+            if (this._children.columnScroll) {
+                this._children.columnScroll._resizeHandler();
+            }
+        },
         _afterMount: function() {
             GridView.superclass._afterMount.apply(this, arguments);
             if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._listModel.isDrawHeaderWithEmtyList()) {
