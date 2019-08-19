@@ -175,10 +175,10 @@ var
                     } else {
                         result += ' controls-Grid__row-cell_withRowSeparator';
                     }
-                    if (current.index === rowCount - 1) {
-                        result += ' controls-Grid__row-cell_lastRow';
-                        result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
-                    }
+                }
+                if (current.index === rowCount - 1) {
+                    result += ' controls-Grid__row-cell_lastRow';
+                    result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
                 }
             } else {
                 result += ' controls-Grid__row-cell_withoutRowSeparator';
@@ -1288,7 +1288,7 @@ var
 
             current.isFirstInGroup = !current.isGroup && this._isFirstInGroup(current.item);
 
-            if (current.isFirstInGroup) {
+            if (current.isFirstInGroup && current.item !== self.getLastItem()) {
                 current.rowSeparatorVisibility = false;
             } else {
                 current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
