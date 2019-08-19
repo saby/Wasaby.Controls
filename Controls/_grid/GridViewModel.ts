@@ -608,15 +608,14 @@ var
             this._model.nextModelVersion(notUpdatePrefixItemVersion);
         },
 
-        _prepareCrossBrowserColumn: function(column, isNoGridSupport) {
-            var
-                result = cClone(column);
-            if (isNoGridSupport) {
-                if (result.width === '1fr') {
-                    result.width = 'auto';
-                }
-                if (result.width === 'max-content') {
-                    result.width = 'auto';
+        _prepareCrossBrowserColumn: function(column) {
+            const result = cClone(column);
+
+            if (GridLayoutUtil.isNoGridSupport()) {
+                if (column.compatibleWidth) {
+                    result.width = column.compatibleWidth;
+                } else {
+                    result.width = GridLayoutUtil.isCompatibleWidth(column.width) ? column.width : 'auto';
                 }
             }
             return result;

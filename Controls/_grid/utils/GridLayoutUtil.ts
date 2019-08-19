@@ -1,6 +1,7 @@
 import {detection} from "Env/Env";
 
 const nonDynamicWidthRegExp = new RegExp('(px|%|fr)$');
+const compatibleWidthRegExp = new RegExp('(px|%)$');
 
 enum CssTemplatesEnum {
     GridIE = 'GridIE',
@@ -159,6 +160,10 @@ function toCssString(cssRules: Array<CssRule>): string {
     return cssString.trim();
 }
 
+function isCompatibleWidth(width: string|number): boolean {
+    return !!`${width}`.match(compatibleWidthRegExp);
+}
+
 const _cssTemplatesStyles = {
     GridChrome: [
         {
@@ -184,6 +189,8 @@ export {
     CssRule,
     CssTemplatesEnum,
     nonDynamicWidthRegExp,
+
+    isCompatibleWidth,
 
     isFullGridSupport,
     isPartialGridSupport,
