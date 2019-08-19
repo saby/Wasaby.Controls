@@ -385,5 +385,31 @@ define(['Controls/grid'], function(gridMod) {
             40
          ]);
       });
+      it('resize on list changed with column scroll', function() {
+         let cfg = {
+               columns: [
+                  { displayProperty: 'field1', template: 'column1' },
+                  { displayProperty: 'field2', template: 'column2' }
+               ]
+            },
+            gridView = new gridMod.GridView(cfg),
+            columnScrollResizeHandlerCalled = false,
+            controlResizeNotified = false;
+         gridView._children = {
+            columnScroll:{
+               _resizeHandler: function() {
+                  columnScrollResizeHandlerCalled = true;
+               }
+            }
+         };
+         gridView._notify = function(e) {
+            if (e === 'controlResize') {
+               controlResizeNotified = true;
+            }
+         };
+         gridView.resizeNotifyOnListChanged();
+         assert.isTrue(controlResizeNotified);
+         assert.isTrue(columnScrollResizeHandlerCalled);
+      });
    });
 });

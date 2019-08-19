@@ -129,6 +129,9 @@ define([
          };
          lookup.activate = function() {
             isActivated = true;
+
+            // activate input before add.
+            assert.isFalse(itemAdded);
          };
 
          lookup._beforeMount({ multiLine: true });
@@ -139,6 +142,8 @@ define([
          assert.isTrue(lookup._needSetFocusInInput);
          assert.isFalse(isActivated);
 
+         itemAdded = false;
+         isActivated = false;
          lookup._needSetFocusInInput = false;
          lookup._options.multiSelect = true;
          lookup._choose();

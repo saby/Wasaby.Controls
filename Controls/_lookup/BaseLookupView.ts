@@ -119,10 +119,6 @@ var BaseLookupView = Control.extend({
     },
 
     _choose: function (event, item) {
-        this._notify('addItem', [item]);
-
-        _private.resetInputValue(this);
-
         // move focus to input after select, because focus will be lost after closing popup
         if (this._options.multiSelect) {
             this.activate({enableScreenKeyboard: true});
@@ -133,6 +129,9 @@ var BaseLookupView = Control.extend({
             // for this case activate lookup in _afterUpdate hook.
             this._needSetFocusInInput = true;
         }
+
+        this._notify('addItem', [item]);
+        _private.resetInputValue(this);
     },
 
     _crossClick: function (event, item) {
