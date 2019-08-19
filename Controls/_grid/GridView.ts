@@ -228,6 +228,7 @@ var
 
         _afterRender() {
             if (GridLayoutUtil.isPartialGridSupport()) {
+                // TODO Kingo
                 // Для IE нужно обновить itemsContainer здесь, потому что виртуальный
                 // скролл вычисляет высоту строк сразу после _afterRender
                 _private.fillItemsContainerForPartialSupport(this);
