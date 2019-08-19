@@ -136,6 +136,10 @@ var ListView = BaseControl.extend(
            return options.itemTemplate || this._defaultItemTemplate;
         },
 
+        protected resizeNotifyOnListChanged: function() {
+            _private.resizeNotifyOnListChanged(this);
+        },
+
         _afterMount: function() {
             /* TODO это временное решение для ускорения списка с вложенными плитками
               суть - в том что когда у плитки случается afterMount - у внешнего списка уже все пересчитал с актуальными
@@ -146,7 +150,7 @@ var ListView = BaseControl.extend(
               TileView которое не стреляет событиями
             */
             if (!this._options._innerList) {
-                _private.resizeNotifyOnListChanged(this);
+                this.resizeNotifyOnListChanged();
             }
             if (this._options.markedKey === undefined && (this._options.markerVisibility === 'always' || this._options.markerVisibility === 'visible')) {
                 this._notify('markedKeyChanged', [this._listModel.getMarkedKey()]);
@@ -155,7 +159,7 @@ var ListView = BaseControl.extend(
 
         _afterRender: function() {
             if (this._pendingRedraw) {
-                _private.resizeNotifyOnListChanged(this);
+                this.resizeNotifyOnListChanged();
             }
             this._pendingRedraw = false;
         },
