@@ -112,7 +112,7 @@ const
          if (HeaderGroup && !!HeaderGroup.length) {
             const firstCell = HeaderGroup[0];
             if (self._fixedColumnsWidth) {
-               self._leftOffsetForHScroll = self._fixedColumnsWidth;
+                self._leftOffsetForHScroll = self._fixedColumnsWidth;
             } else if (self._options.multiSelectVisibility !== 'hidden') {
                self._leftOffsetForHScroll = firstCell.offsetWidth + HeaderGroup[1].offsetWidth;
             } else {
@@ -126,7 +126,9 @@ const
                self._offsetForHScroll += ResultsContainer[0].offsetHeight;
             }
          }
-      },
+
+         self._contentSizeForHScroll = self._contentSize - self._leftOffsetForHScroll;
+      }
    },
    ColumnScroll = Control.extend({
       _template: ColumnScrollTpl,
@@ -141,6 +143,7 @@ const
       _offsetForHScroll: 0,
       _leftOffsetForHScroll: 0,
       _isNotGridSupport: false,
+      _contentSizeForHScroll: 0,
 
       _beforeMount(opt) {
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
