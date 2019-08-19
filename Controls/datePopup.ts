@@ -137,6 +137,11 @@ var _private = {
                 }
             }
             return STATES.year;
+        },
+
+        toggleState: function(self, date?: Date): void {
+            self._displayedDate = date || self._options.startValue || self._options.endValue || new Date();
+            self._state = self._state === STATES.year ? STATES.month : STATES.year;
         }
     },
     HEADER_TYPES = {
@@ -223,8 +228,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._yearRangeModel.destroy();
     },
 
-    _toggleState: function () {
-        this._state = this._state === STATES.year ? STATES.month : STATES.year;
+    _toggleStateClick: function(): void {
+        _private.toggleState(this);
     },
 
     _homeButtonClick: function () {
@@ -295,8 +300,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _monthRangeMonthClick: function (e, date) {
-        this._displayedDate = date;
-        this._toggleState();
+        _private.toggleState(this, date);
     },
 
     _monthRangeFixedPeriodClick: function (e, start, end) {

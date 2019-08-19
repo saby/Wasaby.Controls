@@ -173,12 +173,14 @@ define([
          });
       });
 
-      describe('_toggleState', function() {
-         it('should toggle state.', function() {
-            const component = calendarTestUtils.createComponent(PeriodDialog, {});
+      describe('_toggleStateClick', function() {
+         it('should toggle state and set correct displayed date.', function() {
+            const component = calendarTestUtils.createComponent(
+               PeriodDialog, { startValue: new Date(2019, 3, 10), endValue: new Date(2019, 5, 0) });
             assert.strictEqual(component._state, component._STATES.year);
-            component._toggleState();
+            component._toggleStateClick();
             assert.strictEqual(component._state, component._STATES.month);
+            assert(dateUtils.isDatesEqual(component._displayedDate, new Date(2019, 3, 10)));
          });
       });
 
@@ -248,7 +250,7 @@ define([
                component = calendarTestUtils.createComponent(PeriodDialog, {}),
                newDate = dateUtils.getStartOfMonth(new Date());
             assert.strictEqual(component._state, component._STATES.year);
-            component._toggleState(null, newDate);
+            component._monthRangeMonthClick(null, newDate);
             assert.strictEqual(component._state, component._STATES.month);
             assert(dateUtils.isDatesEqual(component._displayedDate, newDate));
          });
