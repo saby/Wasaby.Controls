@@ -15,6 +15,8 @@ interface IDisplayListOptions extends IControlOptions {
     displayProperty: string;
 
     source?: ICrud;
+
+    _updateCounters?: boolean;
 }
 
 export default class DisplayList<TItem> extends Control<IDisplayListOptions> {
@@ -22,6 +24,7 @@ export default class DisplayList<TItem> extends Control<IDisplayListOptions> {
 
     private _sourceController: SourceController;
     private _collection: Collection<TItem>;
+    private _recordSet: RecordSet<TItem>;
 
     protected _beforeMount(options: IDisplayListOptions) {
         if (options.source) {
@@ -29,20 +32,29 @@ export default class DisplayList<TItem> extends Control<IDisplayListOptions> {
                 source: options.source,
                 keyProperty: options.keyProperty
             });
-            return this._loadItems().then((rs) => {
-                this._collection = this._prepareCollection(rs, options);
-            });
+            return this.reload();
         }
+    }
+
+    public reload(options?: IDisplayListOptions): Promise<void> {
+        return this._loadItems().then((rs) => {
+            this._recordSet = rs;
+            this._collection = this._prepareCollection(rs, options || this._options);
+        });
+    }
+
+    public appendItems(items: TItem[]): void {
+        this._recordSet.append(items);
     }
 
     // for demo
     protected _afterMount(): void {
-        this._notify('countersChanged', [this._collection.getItemCounters()]);
+        this._notifyCountersChanged();
     }
 
     // for demo
     protected _afterUpdate(): void {
-        this._notify('countersChanged', [this._collection.getItemCounters()]);
+        this._notifyCountersChanged();
     }
 
     private _loadItems(): Promise<RecordSet<TItem>> {
@@ -63,5 +75,14 @@ export default class DisplayList<TItem> extends Control<IDisplayListOptions> {
         // TODO remove, this is for demo
         this._collection.setMarkedItem(item);
         this._notify('itemClick', [item.getContents(), e], { bubbling: true });
+    }
+
+    private _notifyCountersChanged(): void {
+        if (this._options._updateCounters) {
+            this._notify(
+                'countersChanged',
+                [this._collection.getItemCounters()]
+            );
+        }
     }
 }
