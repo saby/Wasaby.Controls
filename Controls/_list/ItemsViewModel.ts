@@ -404,8 +404,10 @@ var ItemsViewModel = BaseViewModel.extend({
             return;
         } else if (Array.isArray(changedItems) && changedItems.length > 0) {
             changedItems.forEach((item) => {
-                const key = this._getDisplayItemCacheKey(item);
-                this.resetCachedItemData(key);
+                if (item) {
+                    const key = this._getDisplayItemCacheKey(item);
+                    this.resetCachedItemData(key);
+                }
             });
         } else {
             // Full cache reset
