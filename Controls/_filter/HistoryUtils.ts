@@ -75,6 +75,7 @@ function prependNewItems(oldItems, newItems, sourceController) {
    } else {
       newItems.append(oldItems);
    }
+   newItems.setMetaData(oldItems.getMetaData());
 }
 
 function getItemsWithHistory(oldItems, newItems, sourceController, source) {
