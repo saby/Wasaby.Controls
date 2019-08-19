@@ -69,11 +69,11 @@ function isHistorySource(source) {
 
 function prependNewItems(oldItems, newItems, sourceController) {
    if (sourceController.hasMoreData('down')) {
-       const allCount = oldItems.getCount();
-       const firstItems = factory(oldItems).first(allCount - newItems.getCount()).value();
-       newItems.append(firstItems);
+      const allCount = oldItems.getCount();
+      const firstItems = factory(oldItems).first(allCount - newItems.getCount()).value();
+      newItems.append(firstItems);
    } else {
-       newItems.append(oldItems);
+      newItems.append(oldItems);
    }
    newItems.setMetaData(oldItems.getMetaData());
 }
@@ -82,9 +82,9 @@ function getItemsWithHistory(oldItems, newItems, sourceController, source) {
    let itemsWithHistory;
    prependNewItems(oldItems, newItems, sourceController);
    if (isHistorySource(source)) {
-       itemsWithHistory = source.prepareItems(newItems);
+      itemsWithHistory = source.prepareItems(newItems);
    } else {
-       itemsWithHistory = newItems;
+      itemsWithHistory = newItems;
    }
    return itemsWithHistory;
 }
