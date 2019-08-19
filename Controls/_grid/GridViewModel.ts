@@ -441,13 +441,11 @@ var
             if (!itemData.isGroup) {
 
                 itemData.getEditingRowStyles = function () {
-                    let
-                        columnsLength = self._columns.length + (self._options.multiSelectVisibility === 'hidden' ? 0 : 1),
-                        editingRowStyles = '';
+                    let editingRowStyles = '';
 
                     editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
                     editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
-                    editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, columnsLength);
+                    editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, 1);
 
                     return editingRowStyles;
                 }
