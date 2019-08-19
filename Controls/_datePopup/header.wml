@@ -11,7 +11,7 @@
          icon="icon-ArrangeList"
          iconStyle="secondary"
          iconSize="s"
-         on:valueChanged="_toggleState()"
+         on:valueChanged="_toggleStateClick()"
       />
    <!--</div>-->
    <div if="{{ _headerType === _HEADER_TYPES.link }}" class="controls-PeriodDialog__header-period">
