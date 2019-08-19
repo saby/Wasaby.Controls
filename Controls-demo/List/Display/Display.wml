@@ -45,7 +45,7 @@
 
       <!-- Добавление дополнительных элементов в список -->
       <div>
-         <div>Добавление строк:</div>
+         <div>Добавление строк (число строк):</div>
          <Controls.input:Number
             bind:value="_addRowsCount"
             precision="{{ 0 }}"
@@ -53,6 +53,18 @@
          <Controls.buttons:Button
             caption="Добавить строки"
             on:click="_addRows()"/>
+      </div>
+
+      <!-- Удаление элементов из списка -->
+      <div>
+         <div>Удаление строки (ключ записи):</div>
+         <Controls.input:Number
+            bind:value="_removeRowId"
+            precision="{{ 0 }}"
+            onlyPositive="{{ true }}" />
+         <Controls.buttons:Button
+            caption="Удалить строки"
+            on:click="_removeRow()"/>
       </div>
    </div>
 </div>
