@@ -38,7 +38,8 @@ define(
             let hasMoreData = true;
             let items = new collection.RecordSet({
                   idProperty: 'key',
-                  rawData: initItems
+                  rawData: initItems,
+                  metaData: {test: true}
                }),
                sourceController = { hasMoreData: () => {return hasMoreData;} },
                source = new sourceLib.Memory({
@@ -54,6 +55,7 @@ define(
             let resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source);
             assert.equal(resultItems.getCount(), 4);
             assert.deepStrictEqual(resultItems.getRawData(), expectedItems);
+            assert.deepStrictEqual(resultItems.getMetaData(), {test: true});
          });
 
          it('isHistorySource', function() {
