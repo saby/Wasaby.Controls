@@ -10,6 +10,7 @@ import entity = require('Types/entity');
 import sourceLib = require('Types/source');
 import chain = require('Types/chain');
 import clone = require('Core/core-clone');
+import cInstance = require('Core/core-instance');
 
 /**
  * Source
@@ -89,20 +90,22 @@ var _private = {
    /* После изменения оригинального рекордсета, в истории могут остаться записи,
       которых уже нет в рекордсете, поэтому их надо удалить из истории */
    prepareHistoryBySourceItems: function (self, history, sourceItems) {
-      history.each(function (field, historyItems) {
-         var toDelete = [];
+      // TODO: Remove after execution https://online.sbis.ru/opendoc.html?guid=478ab308-2431-4517-9ccc-41e4af4e292a
+      if (cInstance.instanceOfModule(self.originSource, 'Types/source:Memory')) {
+         history.each(function (field, historyItems) {
+            var toDelete = [];
 
-         historyItems.each(function (rec) {
-            if (!sourceItems.getRecordById(rec.getId())) {
-               toDelete.push(rec);
-            }
+            historyItems.each(function (rec) {
+               if (!sourceItems.getRecordById(rec.getId())) {
+                  toDelete.push(rec);
+               }
+            });
+
+            toDelete.forEach(function (rec) {
+               historyItems.remove(rec);
+            });
          });
-
-         toDelete.forEach(function (rec) {
-            historyItems.remove(rec);
-         });
-      });
-
+      }
       return history;
    },
 
@@ -139,7 +142,7 @@ var _private = {
       frequent.forEach(function(element) {
          var id = element.getId();
          item = self._oldItems.getRecordById(id);
-         if (countFrequent < maxCountFrequent && !filteredPinned.includes(id) && !item.get(self._nodeProperty)) {
+         if (countFrequent < maxCountFrequent && !filteredPinned.includes(id) && item && !item.get(self._nodeProperty)) {
             frequentIds.push(id);
             countFrequent++;
          }
@@ -156,7 +159,7 @@ var _private = {
       recent.forEach(function (element) {
          id = element.getId();
          item = self._oldItems.getRecordById(id);
-         if (countRecent < maxCountRecent && !filteredPinned.includes(id) && !filteredFrequent.includes(id) && !item.get(self._nodeProperty)) {
+         if (countRecent < maxCountRecent && !filteredPinned.includes(id) && !filteredFrequent.includes(id) && item && !item.get(self._nodeProperty)) {
             recentIds.push(id);
             countRecent++;
          }
@@ -231,33 +234,35 @@ var _private = {
 
       history[historyType].forEach(function (id) {
          oldItem = oldItems.getRecordById(id);
-         historyItem = self._history[historyType].getRecordById(id);
-         historyId = historyItem.get('HistoryId');
+         if (oldItem) {
+            historyItem = self._history[historyType].getRecordById(id);
+            historyId = historyItem.get('HistoryId');
 
-         item = new entity.Model({
-            rawData: oldItem.getRawData(),
-            adapter: items.getAdapter(),
-            format: items.getFormat()
-         });
-         if (self._parentProperty) {
-            item.set(self._parentProperty, null);
-         }
+            item = new entity.Model({
+               rawData: oldItem.getRawData(),
+               adapter: items.getAdapter(),
+               format: items.getFormat()
+            });
+            if (self._parentProperty) {
+               item.set(self._parentProperty, null);
+            }
 
-         //removing group allows items to be shown in history items
-         if (historyType === 'pinned') {
-            item.set('pinned', true);
-            item.has('group') && item.set('group', null);
+            //removing group allows items to be shown in history items
+            if (historyType === 'pinned') {
+               item.set('pinned', true);
+               item.has('group') && item.set('group', null);
+            }
+            if (historyType === 'recent') {
+               item.set('recent', true);
+               item.has('group') && item.set('group', null);
+            }
+            if (historyType === 'frequent') {
+               item.set('frequent', true);
+               item.has('group') && item.set('group', null);
+            }
+            item.set('HistoryId', historyId);
+            items.add(item);
          }
-         if (historyType === 'recent') {
-            item.set('recent', true);
-            item.has('group') && item.set('group', null);
-         }
-         if (historyType === 'frequent') {
-            item.set('frequent', true);
-            item.has('group') && item.set('group', null);
-         }
-         item.set('HistoryId', historyId);
-         items.add(item);
       });
    },
 
@@ -313,17 +318,28 @@ var _private = {
       return _private.getSourceByMeta(self, meta).update(item, meta);
    },
 
+   getKeyProperty: function(self) {
+      let source;
+      if (cInstance.instanceOfModule(self.originSource, 'Types/_source/IDecorator')) {
+         source = self.originSource.getOriginal();
+      } else {
+         source = self.originSource;
+      }
+      return source.getKeyProperty();
+   },
+
    resolveRecent: function (self, data) {
       var recent = self._history && self._history.recent;
       if (recent) {
          var items = [];
          chain.factory(data).each(function (item) {
             if (!(self._nodeProperty && item.get(self._nodeProperty))) {
-               var hItem = recent.getRecordById(item.getId());
+               let id = item.get(_private.getKeyProperty(self));
+               var hItem = recent.getRecordById(id);
                if (hItem) {
                   recent.remove(hItem);
                }
-               items.push(_private.getRawHistoryItem(self, item.getId(), item.get('HistoryId') || self.historySource.getHistoryId()));
+               items.push(_private.getRawHistoryItem(self, id, item.get('HistoryId') || self.historySource.getHistoryId()));
             }
          });
          recent.prepend(items);
@@ -336,8 +352,8 @@ var _private = {
          historyData = {
             ids: []
          };
-         chain.factory(data).each(function (item) {
-            historyData.ids.push(item.getId());
+         chain.factory(data).each(function(item) {
+            historyData.ids.push(item.get(_private.getKeyProperty(self)));
          });
          _private.resolveRecent(self, data);
       } else {
@@ -462,6 +478,11 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
       } else {
          return this._oldItems;
       }
+   },
+
+   prepareItems: function(items) {
+      this._oldItems = clone(items);
+      return _private.getItemsWithHistory(this, this._history, this._oldItems);
    },
 
    resetHistoryFields: function(item, keyProperty) {

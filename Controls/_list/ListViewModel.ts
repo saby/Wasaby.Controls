@@ -431,8 +431,16 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setHoveredItem: function(item){
+        const changedItems = [];
+        if (this._hoveredItem && typeof this._hoveredItem.getId === 'function') {
+            changedItems.push(this.getItemById(this._hoveredItem.getId()));
+        }
+        if (item && typeof item.getId === 'function') {
+            changedItems.push(this.getItemById(item.getId()));
+        }
+
         this._hoveredItem = item;
-        this._nextModelVersion(true, 'hoveredItemChanged');
+        this._nextModelVersion(true, 'hoveredItemChanged', '', changedItems);
     },
 
     getHoveredItem: function () {

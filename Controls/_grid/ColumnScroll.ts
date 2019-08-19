@@ -25,9 +25,15 @@ const
       },
       updateSizes(self) {
          _private.drawTransform(self, 0);
-         const
+         let
             newContentSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].scrollWidth,
+            newContentContainerSize = null;
+         if (self._isNotGridSupport) {
+            newContentContainerSize = self._children.content.offsetWidth;
+         } else {
             newContentContainerSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].offsetWidth;
+         }
+
          if (self._contentSize !== newContentSize || self._contentContainerSize !== newContentContainerSize) {
             self._contentSize = newContentSize;
             self._contentContainerSize = newContentContainerSize;
@@ -40,12 +46,12 @@ const
             self._shadowState =
                _private.calculateShadowState(self._scrollPosition, self._contentContainerSize, self._contentSize);
             _private.updateFixedColumnWidth(self);
-            self._setOffsetForHScroll();
             self._forceUpdate();
          }
          if (newContentContainerSize + self._scrollPosition > newContentSize) {
             self._scrollPosition -= (newContentContainerSize + self._scrollPosition) - newContentSize;
          }
+         self._setOffsetForHScroll();
          _private.drawTransform(self, self._scrollPosition);
       },
       updateFixedColumnWidth(self) {
@@ -100,7 +106,7 @@ const
       },
       setOffsetForHScroll (self) {
          const container = self._children.content;
-         const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0].childNodes;
+         const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0] && container.getElementsByClassName('controls-Grid__header')[0].childNodes;
          if (HeaderGroup && !!HeaderGroup.length) {
             const firstCell = HeaderGroup[0];
             if (self._fixedColumnsWidth) {
@@ -110,7 +116,7 @@ const
             } else {
                self._leftOffsetForHScroll = firstCell.offsetWidth;
             }
-            self._offsetForHScroll = firstCell.offsetHeight + firstCell.offsetTop;
+            self._offsetForHScroll = firstCell.offsetHeight + container.offsetTop;
          }
          if (self._options.listModel.getResultsPosition() === 'top') {
             const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
@@ -132,10 +138,12 @@ const
       _transformSelector: '',
       _offsetForHScroll: 0,
       _leftOffsetForHScroll: 0,
-      _contentSizeForHScroll: 0,
+      _isNotGridSupport: false,
+      contentSizeForHScroll: 0,
 
-      _beforeMount() {
+      _beforeMount(opt) {
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
+         this._isNotGridSupport = opt.listModel.isNoGridSupport();
       },
 
       _afterMount() {
@@ -150,7 +158,10 @@ const
          * TODO: Kingo
          * Смена колонок может не вызвать событие resize на обёртке грида(ColumnScroll), если общая ширина колонок до обновления и после одинакова.
          * */
-         if (!isEqualWithSkip(this._options.columns, oldOptions.columns, { template: true, resultTemplate: true })) {
+         if (
+             !isEqualWithSkip(this._options.columns, oldOptions.columns, { template: true, resultTemplate: true })
+             || this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility
+         ) {
             _private.updateSizes(this);
          }
          if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
@@ -163,8 +174,9 @@ const
          _private.updateSizes(this);
       },
 
-      _isColumnScrollVisible() {
-         return this._contentSize > this._contentContainerSize;
+      _isColumnScrollVisible: function() {
+         const items = this._options.items;
+         return items && !!items.getCount() && (this._contentSize > this._contentContainerSize) ? true : false;
       },
 
       _calculateShadowClasses(position) {
@@ -177,7 +189,9 @@ const
 
       _setOffsetForHScroll() {
          if (!detection.isIE) {
-            _private.setOffsetForHScroll(this);
+            if (!this._isNotGridSupport) {
+               _private.setOffsetForHScroll(this);
+            }
          }
       },
 

@@ -19,6 +19,7 @@ import IInputField from "./IInputField";
  * @mixes Controls/interface/ISelectableInput
  * @mixes Controls/interface/IInputTooltip
  * @mixes Controls/interface/IInputStyle
+ * @mixes Controls/_input/interface/IValidationStatus
  *
  * @mixes Controls/_input/Base/Styles
  * @mixes Controls/_input/Render/Styles

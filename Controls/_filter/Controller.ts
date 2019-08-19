@@ -413,9 +413,9 @@ import 'Controls/context';
        *       historyId="myHistoryId"
        *       filterButtonSource="{{_filterButtonData}}">
        *          ...
-       *          <Controls.filter:Button.Container>
+       *          <Controls.filter:ViewContainer>
        *             <Controls.filter:Button />
-       *          </Controls.filter:Button.Container>
+       *          </Controls.filter:ViewContainer>
        *          ...
        *    </Controls.filter:Controller>
        * </pre>
@@ -448,9 +448,9 @@ import 'Controls/context';
        *       historyId="myHistoryId"
        *       filterButtonSource="{{_filterButtonData}}">
        *          ...
-       *          <Controls.filter:Button.Container>
+       *          <Controls.filter:ViewContainer>
        *             <Controls.filter:Button />
-       *          </Controls.filter:Button.Container>
+       *          </Controls.filter:ViewContainer>
        *          ...
        *    </Controls.filter:Controller>
        * </pre>

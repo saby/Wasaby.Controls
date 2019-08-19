@@ -59,11 +59,16 @@ define(
          it('check item click', () => {
             menu._notify = (e) => {
                assert.isTrue(e === 'menuItemActivate' || e === 'onMenuItemActivate');
+               if (e === 'onMenuItemActivate') {
+                  return false;
+               }
             };
-            menu._onItemClickHandler('itemClick', [{
+            let eventResult = menu._onItemClickHandler('itemClick', [{
                id: '1',
                title: 'Запись 1'
             }]);
+
+            assert.isFalse(eventResult);
          });
 
          it('_beforeMount', () => {

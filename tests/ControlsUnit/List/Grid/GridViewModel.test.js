@@ -918,6 +918,15 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             });
             assert.deepEqual(callMethods, callStackMethods, 'Incorrect call stack methods.');
          });
+         it('setIndexes return superclass result', function() {
+            var gridViewModel = new gridMod.GridViewModel(cfg);
+            gridViewModel._model = {
+                setIndexes: function() {
+                    return 'test_return_value';
+                }
+            };
+            assert.equal(gridViewModel.setIndexes(), 'test_return_value');
+         });
       });
       describe('ladder and sticky column', function() {
 
@@ -1488,6 +1497,18 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1fr']);
             assert.isFalse(calledCallback);
 
+            calledCallback = false;
+            gridViewModel.setMultiSelectVisibility('hidden');
+            gridViewModel.setColumns([{width:'minmax(100px, 1fr)'}]);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['1fr', '15px', '16px']);
+            assert.isTrue(calledCallback);
+
+            calledCallback = false;
+            gridViewModel.setMultiSelectVisibility('visible');
+            gridViewModel.setColumns([{width:'minmax(100px, 1fr)'}]);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1fr', '15px', '16px']);
+            assert.isTrue(calledCallback);
+
             gridViewModel.setColumns(savedColumns);
          });
 
@@ -1695,6 +1716,39 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 }
             );
 
+
+         });
+
+         it('getColspanForColumnScroll', function () {
+            assert.deepEqual(
+                {
+                   fixedColumns: 'grid-column: 1 / 3; -ms-grid-column: 1; -ms-grid-column-span: 2; z-index: 3;',
+                   scrollableColumns: 'grid-column: 3 / 11; -ms-grid-column: 3; -ms-grid-column-span: 8; z-index: auto;'
+                },
+                gridMod.GridViewModel._private.getColspanForColumnScroll({
+                   _options: {
+                      multiSelectVisibility: 'hidden',
+                      columnScroll: true,
+                      stickyColumnsCount: 2,
+                   },
+                   _columns: {length: 10}
+                })
+            );
+
+            assert.deepEqual(
+                {
+                   fixedColumns: 'grid-column: 2 / 4; -ms-grid-column: 2; -ms-grid-column-span: 2; z-index: 3;',
+                   scrollableColumns: 'grid-column: 4 / 12; -ms-grid-column: 4; -ms-grid-column-span: 8; z-index: auto;'
+                },
+                gridMod.GridViewModel._private.getColspanForColumnScroll({
+                   _options: {
+                      multiSelectVisibility: 'visible',
+                      columnScroll: true,
+                      stickyColumnsCount: 2,
+                   },
+                   _columns: {length: 10}
+                })
+            );
 
          });
       });

@@ -20,9 +20,12 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/interface/IDropdown
- * @mixes Controls/_interface/IButton
  * @mixes Controls/_interface/IIcon
+ * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_interface/IIconStyle
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IHeight
  * @control
  * @public
  * @author Герасимов А.М.
@@ -75,7 +78,18 @@ var Button = Control.extend({
 
    _onItemClickHandler: function (event, result) {
       //onMenuItemActivate will deleted by task https://online.sbis.ru/opendoc.html?guid=6175f8b3-4166-497e-aa51-1fdbcf496944
-      return this._notify('menuItemActivate', [result[0]]) || this._notify('onMenuItemActivate', [result[0]]);
+      const onMenuItemActivateResult = this._notify('onMenuItemActivate', [result[0]]);
+      const menuItemActivateResult = this._notify('menuItemActivate', [result[0]]);
+      let handlerResult;
+
+      // (false || undefined) === undefined
+      if (onMenuItemActivateResult !== undefined) {
+         handlerResult = onMenuItemActivateResult;
+      } else {
+         handlerResult = menuItemActivateResult;
+      }
+
+      return handlerResult;
    }
 
 });

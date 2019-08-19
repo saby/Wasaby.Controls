@@ -2,9 +2,11 @@ define(
    [
       'Controls/filter',
       'Controls/history',
-      'Env/Env'
+      'Env/Env',
+      'Types/collection',
+      'Types/source'
    ],
-   function(filter, history, Env) {
+   function(filter, history, Env, collection, sourceLib) {
       describe('Filter.Button.HistoryUtils', function() {
 
          var historyId = 'TEST_HISTORY_ID_UTILS';
@@ -23,6 +25,52 @@ define(
             var hSource2 = filter.HistoryUtils.getHistorySource(historyId);
             assert.isTrue(hSource !== hSource2);
             Env.constants.isBuildOnServer = isBuildOnServer;
+         });
+
+
+         it('prependNewItems', function() {
+            let initItems = [
+               { key: 0, title: 'все страны' },
+               { key: 1, title: 'Россия' },
+               { key: 2, title: 'США' },
+               { key: 3, title: 'Великобритания' }
+            ];
+            let hasMoreData = true;
+            let items = new collection.RecordSet({
+                  idProperty: 'key',
+                  rawData: initItems
+               }),
+               sourceController = { hasMoreData: () => {return hasMoreData;} },
+               source = new sourceLib.Memory({
+                  keyProperty: 'key',
+                  data: initItems
+               });
+            let newItems = new collection.RecordSet({
+               idProperty: 'key',
+               rawData: [{ key: 18, title: '18 record' }]
+            });
+            let expectedItems = [{ key: 18, title: '18 record' }].concat(initItems.slice(0, 3));
+
+            let resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source);
+            assert.equal(resultItems.getCount(), 4);
+            assert.deepStrictEqual(resultItems.getRawData(), expectedItems);
+         });
+
+         it('isHistorySource', function() {
+            let origSource = new sourceLib.Memory({
+               keyProperty: 'key',
+               data: []
+            });
+            let hSource = new history.Source({
+               originSource: origSource,
+               historySource: new history.Service({
+                  historyId: 'TEST'
+               })
+            });
+
+            assert.isTrue(filter.HistoryUtils.isHistorySource(hSource));
+            assert.isFalse(filter.HistoryUtils.isHistorySource(origSource));
+
          });
       });
    });

@@ -161,6 +161,17 @@ class Popup extends Control<IPopupOptions> {
         }
     }
 
+    _showIndicatorHandler(event: SyntheticEvent<MouseEvent>): void {
+        const args = Array.prototype.slice.call(arguments, 1);
+        event.stopPropagation();
+        const config = args[0];
+        if (typeof config === 'object') {
+            config.popupId = this._options.id;
+        }
+        // catch showIndicator and add popupId property for Indicator.
+        return this._notify('showIndicator', args, {bubbling: true});
+    }
+
     protected _scrollHandler(): void {
         this._notify('pageScrolled', [this._options.id], {bubbling: true});
     }
@@ -247,6 +258,11 @@ Popup.getDefaultOptions = function () {
         autofocus: true
     };
 };
+
+// _moduleName is assign in the callback of require.
+// Private modules are not visible for this mechanism, _moduleName must be specified manually for them.
+// It is necessary for checking relationship between popups.
+Popup.prototype._moduleName = 'Controls/_popup/Manager/Popup';
 
 export = Popup;
 

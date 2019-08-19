@@ -1,18 +1,18 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/View/View');
-
-import {isEqual} from 'Types/object';
 import CoreClone = require('Core/core-clone');
 import Merge = require('Core/core-merge');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
+import converterFilterItems = require('Controls/_filter/converterFilterItems');
+import getFormattedDateRange = require('Core/helpers/Date/getFormattedDateRange');
+import {isEqual} from 'Types/object';
 import {Controller as SourceController} from 'Controls/source';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
-import converterFilterItems = require('Controls/_filter/converterFilterItems');
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
-import getFormattedDateRange = require('Core/helpers/Date/getFormattedDateRange');
+import {getItemsWithHistory, isHistorySource} from 'Controls/_filter/HistoryUtils';
 
 /**
  * Контрол для фильтрации данных. Состоит из иконки-кнопки, строкового представления выбранного фильтра и параметров быстрого фильтра.
@@ -41,8 +41,6 @@ import getFormattedDateRange = require('Core/helpers/Date/getFormattedDateRange'
  * @public
  * @author Золотова Э.Е.
  */
-
-const DELAY_OPEN = 100;
 
 var _private = {
     getItemByName: function(items, name) {
@@ -188,7 +186,8 @@ var _private = {
                     const keyProperty = config.keyProperty;
                     editorOpts.filter[keyProperty] = keys;
                     let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
-                        configs[item.name].items.prepend(newItems);
+                        configs[item.name].items = getItemsWithHistory(configs[item.name].items, newItems,
+                            configs[item.name]._sourceController, item.editorOptions.source, configs[item.name].multiSelect);
                     });
                     pDef.push(result);
                 }
@@ -322,10 +321,19 @@ var _private = {
 
     selectorResult: function(result) {
         var curConfig = this._configs[result.id],
+            curItem = _private.getItemByName(this._source, result.id),
             newItems = _private.getNewItems(this, result.data, curConfig);
-        curConfig.items.prepend(newItems);
-        _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
-        _private.updateText(this, this._source, this._configs);
+        if (isHistorySource(curItem.editorOptions.source)) {
+            if (newItems.length) {
+                curConfig._sourceController = null;
+            }
+            _private.updateHistory(curConfig, factory(result.data).toArray(), curItem.editorOptions.source);
+            _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
+        } else {
+            curConfig.items.prepend(newItems);
+            _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
+            _private.updateText(this, this._source, this._configs);
+        }
     },
 
     moreButtonClick: function(result) {
@@ -345,6 +353,26 @@ var _private = {
            }
         });
         return result;
+    },
+
+    updateHistory: function(currentFilter, items, source) {
+        if (isHistorySource(source)) {
+            source.update(items, historyUtils.getMetaHistory());
+
+            if (currentFilter._sourceController && source.getItems) {
+                currentFilter.items = source.getItems();
+            }
+        }
+    },
+
+    isNeedHistoryReload: function(configs) {
+        let needReload = false;
+        factory(configs).each((config) => {
+            if (!config._sourceController) {
+                needReload = true;
+            }
+        });
+        return needReload;
     }
 };
 
@@ -354,7 +382,6 @@ var Filter = Control.extend({
     _configs: null,
     _source: null,
     _idOpenSelector: null,
-    _delayOpenTimeout: null,
     _dateRangeItem: null,
 
     _beforeMount: function(options, context, receivedState) {
@@ -381,10 +408,12 @@ var Filter = Control.extend({
             const self = this;
             let resultDef;
             _private.prepareItems(this, newOptions.source);
-            if (_private.isNeedReload(this._options.source, newOptions.source)) {
+            if (_private.isNeedReload(this._options.source, newOptions.source) || _private.isNeedHistoryReload(this._configs)) {
                 resultDef = _private.reload(this).addCallback(() => {
                     self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
                 });
+            } else if (_private.isNeedHistoryReload(this._configs)) {
+                resultDef = _private.reload(this);
             } else {
                 resultDef = _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
                     _private.updateText(self, self._source, self._configs);
@@ -392,24 +421,6 @@ var Filter = Control.extend({
             }
             return resultDef;
         }
-    },
-
-    _startTimer: function(event, name) {
-        if (!this._delayOpenTimeout) {
-            this._delayOpenTimeout = setTimeout(function () {
-                this._openPanel(event, name);
-            }.bind(this), DELAY_OPEN);
-        }
-    },
-
-    _restartTimer: function(event, name) {
-        this._resetTimer();
-        this._startTimer(event, name);
-    },
-
-    _resetTimer: function() {
-        clearTimeout(this._delayOpenTimeout);
-        this._delayOpenTimeout = null;
     },
 
     _openDetailPanel: function() {

@@ -189,6 +189,8 @@ const BaseOpener = {
       let destroyDef = new Deferred(),
          destrFunc = function() {
             // Защита от двойного вызова обработчика
+            // Обработчик зовется два раза:
+            // Сначала из _notifyCompound, а потом из eventBus
             // TODO: https://online.sbis.ru/opendoc.html?guid=97f8b4ad-8247-4bc2-ba47-69cdd52fd308
             if (destroyDef) {
                destroyDef.callback();

@@ -1,11 +1,10 @@
-
 import Control = require('Core/Control');
 import template = require('wml!Controls/_search/Controller');
-import {ContextOptions as DataOptions} from 'Controls/context';
 import clone = require('Core/core-clone');
+import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
+import {ContextOptions as DataOptions} from 'Controls/context';
 import _SearchController from './_SearchController';
 import {isEqual} from 'Types/object';
-import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 import {RecordSet} from 'Types/collection';
 
 const SERVICE_FILTERS = {
@@ -39,13 +38,17 @@ var _private = {
    },
 
    searchCallback: function (self, result, filter) {
-      var switcherStr = getSwitcherStrFromData(result.data);
+      const switcherStr = getSwitcherStrFromData(result.data);
 
       self._loading = false;
 
       if (self._viewMode !== 'search') {
          self._previousViewMode = self._viewMode;
          self._viewMode = 'search';
+
+         if (self._options.startingWith === 'root' && self._options.parentProperty) {
+            self._root = _private.getRoot(self._path, self._root, self._options.parentProperty);
+         }
       }
 
       self._searchValue = filter[self._options.searchParam] || '';
@@ -103,7 +106,6 @@ var _private = {
 
    needUpdateSearchController: function (options, newOptions) {
       return !isEqual(options.navigation, newOptions.navigation) ||
-         !isEqual(options.sorting, newOptions.sorting) ||
          options.searchDelay !== newOptions.searchDelay ||
          options.source !== newOptions.source ||
          options.searchParam !== newOptions.searchParam ||
@@ -118,6 +120,8 @@ var _private = {
    },
 
    dataLoadCallback: function (self, data:RecordSet):void {
+      self._path = data.getMetaData().path;
+
       if (self._viewMode === 'search' && !self._searchValue) {
          self._viewMode = self._previousViewMode;
          self._previousViewMode = null;
@@ -132,6 +136,18 @@ var _private = {
          self._options.dataLoadErrback(error);
       }
       self._loading = false;
+   },
+
+   getRoot: function (path, currentRoot, parentProperty) {
+      let root;
+
+      if (path && path.getCount() > 0) {
+         root = path.at(0).get(parentProperty);
+      } else {
+         root = currentRoot;
+      }
+
+      return root;
    }
 };
 
@@ -170,7 +186,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    _viewMode: null,
    _searchValue: null,
    _misspellValue: null,
-   _root: undefined,
+   _root: null,
 
    constructor: function () {
       this._itemOpenHandler = _private.itemOpenHandler.bind(this);
@@ -218,8 +234,11 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          } else if (filter) {
             this._searchController.setFilter(clone(filter));
          }
-      }
 
+         if (!isEqual(this._options.sorting, newOptions.sorting)) {
+            this._searchController.setSorting(newOptions.sorting);
+         }
+      }
       if (this._options.searchValue !== newOptions.searchValue && newOptions.searchValue !== this._inputSearchValue) {
          this._search(null, newOptions.searchValue);
       }

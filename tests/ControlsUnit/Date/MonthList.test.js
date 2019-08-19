@@ -49,6 +49,7 @@ define([
       describe('_afterMount', function() {
          it('should set setShadowMode', function() {
             let
+               sandbox = sinon.createSandbox(),
                control = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
 
             control._children = {
@@ -56,8 +57,12 @@ define([
                   setShadowMode: sinon.fake()
                }
             };
+            sandbox.stub(control, '_findElementByDate').returns([true]);
+            sandbox.stub(control, '_scrollToDate');
             control._afterMount();
             sinon.assert.called(control._children.scroll.setShadowMode);
+            sinon.assert.called(control._scrollToDate);
+            sandbox.restore();
          });
       });
 
@@ -99,9 +104,9 @@ define([
          });
       });
 
-      describe('_afterUpdate, _drawItemsHandler', function() {
+      describe('_beforePaint, _drawItemsHandler', function() {
          [
-            '_afterUpdate',
+            '_beforePaint',
             '_drawItemsHandler'
          ].forEach(function(test) {
             it('should scroll to item after position changed', function() {

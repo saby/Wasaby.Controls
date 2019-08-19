@@ -413,11 +413,11 @@ var
                 columns: Array<{ width: string }> = self._columns,
                 hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
                 columnsWidth = hasMultiselect ? ['max-content'] : [],
-                hasAutoWidth = !!columns.find((column) => {
-                    return column.width === 'auto';
+                hasDynamicWidth = !!columns.find((column) => {
+                    return column.width && !column.width.match(GridLayoutUtil.nonDynamicWidthRegExp);
                 });
 
-            if (!hasAutoWidth) {
+            if (!hasDynamicWidth) {
                 columnsWidth = columnsWidth.concat(columns.map((column) => column.width || '1fr'));
             } else {
                 columnsWidth = columnsWidth.concat(self.getColumnsWidthForEditingRow(itemData));
@@ -506,6 +506,23 @@ var
             }
 
             return result
+        },
+
+        getColspanForColumnScroll(self): {
+            fixedColumns: string,
+            scrollableColumns: string
+        } {
+
+            const stickyColumnsCount = self._options.stickyColumnsCount || 1;
+            const scrollableColumnsCount = self._columns.length - self._options.stickyColumnsCount;
+            const start = (self._options.multiSelectVisibility !== 'hidden' ? 1 : 0) + 1;
+            const center = start + (self._options.stickyColumnsCount || 1);
+            const end = start + self._columns.length;
+
+            return {
+                fixedColumns: `grid-column: ${start} / ${center}; -ms-grid-column: ${start}; -ms-grid-column-span: ${stickyColumnsCount}; z-index: 3;`,
+                scrollableColumns: `grid-column: ${center} / ${end}; -ms-grid-column: ${center}; -ms-grid-column-span: ${scrollableColumnsCount}; z-index: auto;`,
+            };
         }
 
     },
@@ -1111,7 +1128,7 @@ var
         },
 
         setIndexes: function(startIndex, stopIndex) {
-            this._model.setIndexes(startIndex, stopIndex);
+            return this._model.setIndexes(startIndex, stopIndex);
         },
 
         getPreviousItemKey: function() {
@@ -1227,6 +1244,9 @@ var
             current.isNoGridSupport = GridLayoutUtil.isNoGridSupport;
 
             current.columnScroll = this._options.columnScroll;
+            current.getColspanForColumnScroll = function() {
+                return _private.getColspanForColumnScroll(self);
+            };
             current.stickyColumnsCount = this._options.stickyColumnsCount;
 
             current.style = this._options.style;
@@ -1601,7 +1621,7 @@ var
         getBottomPaddingStyles(): string {
             let styles = '';
 
-            if (GridLayoutUtil.isPartialGridSupport()) {
+            if (!GridLayoutUtil.isNoGridSupport()) {
                 let
                     columnStart = this.getMultiSelectVisibility() === 'hidden' ? 0 : 1,
                     rowIndex = this._getRowIndexHelper().getBottomPaddingRowIndex();

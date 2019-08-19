@@ -72,16 +72,25 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             }
          },
 
-         calcSizeCache: function(self, container) {
-            var clientHeight, scrollHeight;
+          calcSizeCache: function (self, container) {
+              var clientHeight, scrollHeight;
 
-            clientHeight = container.clientHeight;
-            scrollHeight = container.scrollHeight;
-            self._sizeCache = {
-               scrollHeight: scrollHeight,
-               clientHeight: clientHeight
-            };
-         },
+              clientHeight = container.clientHeight;
+              scrollHeight = container.scrollHeight;
+
+              // todo kingo
+              // на невидимой вкладке может произойти перерисовка списка, требующая пересчетов возможностей скролла
+              // при этом высоты посчитаются по 0, т.к. так работает display: none
+              // по-хорошему нужна возможность заморозки контрола внутри вкладок https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
+              // пока же будем игнорировать такие пересчеты, если до этого уже считали
+
+              if ((clientHeight !== 0) && (scrollHeight !== 0) && self._sizeCache) {
+                  self._sizeCache = {
+                      scrollHeight: scrollHeight,
+                      clientHeight: clientHeight
+                  };
+              }
+          },
 
          getSizeCache: function(self, container) {
             if (isEmpty(self._sizeCache)) {
@@ -254,13 +263,14 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
                const
                   sizeCache = _private.getSizeCache(self, container),
                   clientHeight = sizeCache.clientHeight,
-                  scrollHeight = sizeCache.scrollHeight;
+                  scrollHeight = sizeCache.scrollHeight,
+                  currentScrollTop = container.scrollTop + (self._isVirtualPlaceholderMode() ? self._topPlaceholderSize : 0);
                if (scrollParam === 'bottom') {
                   self.setScrollTop(scrollHeight - clientHeight);
                } else if (scrollParam === 'pageUp') {
-                  self.setScrollTop(container.scrollTop - clientHeight);
+                  self.setScrollTop(currentScrollTop - clientHeight);
                } else if (scrollParam === 'pageDown') {
-                  self.setScrollTop(container.scrollTop + clientHeight);
+                  self.setScrollTop(currentScrollTop + clientHeight);
                }
             }
          },

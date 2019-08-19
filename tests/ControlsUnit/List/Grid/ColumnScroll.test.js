@@ -5,6 +5,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
    describe('Controls.ColumnScroll', function() {
       var
          cfg = {
+            items: {
+               getCount: () => 1
+            },
             multiSelectVisibility: 'visible',
             stickyColumnsCount: 1,
             listModel: {
@@ -48,6 +51,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          Entity.Guid.create = function() {
             return '1234567890';
          };
+         cfg.listModel.isNoGridSupport = () => false;
          columnScroll._beforeMount(cfg);
          Entity.Guid.create = baseCreateGuid;
          assert.equal(columnScroll._transformSelector, 'controls-ColumnScroll__transform-1234567890');
@@ -127,6 +131,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
       it('_afterMount with columnScrollStartPosition===end', function() {
          const
             cfg = {
+               items: {
+                  getCount: () => 1
+               },
                multiSelectVisibility: 'visible',
                stickyColumnsCount: 1,
                columnScrollStartPosition: 'end',
@@ -247,6 +254,74 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(clearColumnScroll._contentContainerSize, 100);
          assert.deepEqual(clearColumnScroll._shadowState, 'end');
          assert.deepEqual(clearColumnScroll._fixedColumnsWidth,  74);
+
+         clearColumnScroll._children.content = {
+            offsetTop: 0,
+            getElementsByClassName: (className) => {
+               if (className === 'controls-Grid__header') {
+                  return [
+                     {
+                        childNodes: [
+                           {
+                              offsetHeight: 50,
+                              offsetTop: 0
+                           },
+                           {
+                              offsetHeight: 50,
+                              offsetTop: 0
+                           },
+                        ]
+                     }
+                  ];
+               } else if (className === 'controls-Grid__results') {
+                  return [
+                     {
+                        childNodes: [
+                           {
+                              offsetHeight: 50,
+                           },
+                           {
+                              offsetHeight: 50,
+                           },
+                        ]
+                     }
+                  ];
+               } else {
+                  return [{
+                     scrollWidth: 500,
+                     offsetWidth: 250,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 20
+                        }
+                     },
+                     querySelector:
+
+                         function () {
+                            return {
+                               getBoundingClientRect: () => {
+                                  return {
+                                     left: 44
+                                  }
+                               },
+                               offsetWidth: 76
+                            };
+                         }
+                  }]
+               }
+            },
+         }
+         clearColumnScroll._setOffsetForHScroll();
+
+         assert.equal(clearColumnScroll._offsetForHScroll, 50);
+         assert.equal(clearColumnScroll._leftOffsetForHScroll, 74);
+
+         clearColumnScroll._options.multiSelectVisibility = 'hidden';
+         clearColumnScroll._afterUpdate({...cfg, multiSelectVisibility: 'visible'});
+
+         assert.equal(clearColumnScroll._offsetForHScroll, 50);
+         assert.equal(clearColumnScroll._leftOffsetForHScroll, 100);
+
       });
 
       it('no sticky columns', function() {
@@ -292,6 +367,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
       it('_isColumnScrollVisible', function() {
          assert.isTrue(columnScroll._isColumnScrollVisible());
+         columnScroll._options.items = {
+            getCount: () => 0
+         };
+         assert.isFalse(columnScroll._isColumnScrollVisible());
       });
       it('_calculateShadowStyles', function() {
          let cont = columnScroll._container;
@@ -413,6 +492,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
          columnScroll._children = {
            content: {
+              offsetTop: 0,
               getElementsByClassName: function (className) {
                  if (className === 'controls-Grid__header') {
                     return [
@@ -454,6 +534,20 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          columnScroll._setOffsetForHScroll();
 
          assert.equal(columnScroll._offsetForHScroll, 100);
+
+         columnScroll._children.content.offsetTop = 25;
+         columnScroll._setOffsetForHScroll();
+         assert.equal(columnScroll._offsetForHScroll, 125)
+
+         columnScroll._leftOffsetForHScroll = 0;
+         columnScroll._offsetForHScroll = 0;
+
+         columnScroll._isNotGridSupport = true;
+         columnScroll._setOffsetForHScroll();
+         assert.equal(columnScroll._leftOffsetForHScroll, 0);
+         assert.equal(columnScroll._offsetForHScroll, 0);
+
+
       });
    });
 });

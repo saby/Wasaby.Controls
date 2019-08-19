@@ -6,6 +6,7 @@
               position="{{_scrollPosition}}"
               direction="horizontal"
               contentSize="{{_contentSizeForHScroll}}"
+              isNotGridSupport="{{_isNotGridSupport}}"
               attr:class="controls-ColumnScroll"
               attr:style="top:{{_offsetForHScroll}}px;left:{{_leftOffsetForHScroll}}px;"
               on:positionChanged="_positionChangedHandler()"/>

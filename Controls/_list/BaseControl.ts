@@ -126,7 +126,9 @@ var _private = {
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
-                self._loadedItems = list;
+                if (list.getCount()) {
+                    self._loadedItems = list;
+                }
                 if (self._pagingNavigation) {
                     var hasMoreDataDown = list.getMetaData().more;
                     self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, cfg.navigation.sourceConfig.pageSize);
@@ -175,6 +177,13 @@ var _private = {
                     data: list
                 });
 
+                if (self._isMounted && self._isScrollShown) {
+                    // При полной перезагрузке данных нужно сбросить состояние скролла
+                    // и вернуться к началу списка, иначе браузер будет пытаться восстановить
+                    // scrollTop, догружая новые записи после сброса.
+                    self._resetScrollAfterReload = true;
+                }
+
                 // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                 if (!list.getCount()) {
                     _private.checkLoadToDirectionCapability(self);
@@ -204,6 +213,10 @@ var _private = {
     },
 
     resolveIndicatorStateAfterReload: function(self, list):void {
+        if (!self._isMounted) {
+            return
+        }
+
         const hasMoreDataDown = self._sourceController.hasMoreData('down');
         const hasMoreDataUp = self._sourceController.hasMoreData('up');
 
@@ -220,18 +233,26 @@ var _private = {
         }
     },
 
-    scrollToItem: function(self, key) {
+    scrollToItem: function(self, key, toBottom: boolean = true) {
         // todo now is one safe variant to fix call stack: beforeUpdate->reload->afterUpdate
         // due to asynchronous reload and afterUpdate, a "race" is possible and afterUpdate is called after reload
         // changes in branch "19.110/bugfix/aas/basecontrol_reload_by_afterupdate"
         // https://git.sbis.ru/sbis/controls/merge_requests/65854
         // corrupting integration tests
         // fixed by error: https://online.sbis.ru/opendoc.html?guid=d348adda-5fee-4d1b-8cb7-9501026f4f3c
-        var
-            container = self._children.listView.getItemsContainer().children[self.getViewModel().getIndexByKey(key)];
-        if (container) {
-            scrollToElement(container, true);
+        let idx;
+        if (self._virtualScroll) {
+            idx = self.getViewModel().getIndexByKey(key) - (self._virtualScroll.ItemsIndexes.start);
+        } else {
+            idx = self.getViewModel().getIndexByKey(key);
         }
+        const container = self._children.listView.getItemsContainer().children[idx];
+        if (container) {
+            _private.scrollToElement(container, toBottom);
+        }
+    },
+    scrollToElement(container, toBottom) {
+        scrollToElement(container, toBottom);
     },
     setMarkedKey: function(self, key) {
         if (key !== undefined) {
@@ -333,7 +354,9 @@ var _private = {
 
     loadToDirection: function(self, direction, userCallback, userErrback) {
         const beforeAddItems = (addedItems) => {
-            self._loadedItems = addedItems;
+            if (addedItems.getCount()) {
+                self._loadedItems = addedItems;
+            }
             if (userCallback && userCallback instanceof Function) {
                 userCallback(addedItems, direction);
             }
@@ -416,7 +439,7 @@ var _private = {
     },
 
     // Применяем расчитанные и хранимые на virtualScroll стартовый и конечный индексы на модель.
-    applyVirtualScrollIndexesToListModel(self): void {
+    applyVirtualScrollIndexesToListModel(self): boolean {
         const newIndexes = self._virtualScroll.ItemsIndexes;
         const model = self._listViewModel;
         return model.setIndexes(newIndexes.start, newIndexes.stop);
@@ -429,7 +452,17 @@ var _private = {
                 top: self._virtualScroll.PlaceholdersSizes.top,
                 bottom: self._virtualScroll.PlaceholdersSizes.bottom
             }], { bubbling: true });
+            _private.updateShadowMode(self);
         }
+    },
+
+    updateShadowMode(self): void {
+        self._notify('updateShadowMode', [{
+            top: self._virtualScroll.PlaceholdersSizes.top ||
+            self._sourceController && self._sourceController.hasMoreData('up') ? 'visible' : 'auto',
+            bottom: self._virtualScroll.PlaceholdersSizes.bottom ||
+            self._sourceController && self._sourceController.hasMoreData('down') ? 'visible' : 'auto'
+        }], { bubbling: true });
     },
 
     checkVirtualScrollCapability: function(self) {
@@ -605,7 +638,7 @@ var _private = {
 
     onScrollHide: function(self) {
         var needUpdate = false;
-        if (!self._loadOffset && self._isScrollShown) {
+        if (self._isScrollShown) {
             if (self._needScrollCalculation) {
                 self._setLoadOffset(0, 0);
             }
@@ -667,6 +700,10 @@ var _private = {
     },
 
     showIndicator: function(self, direction = 'all') {
+        if (!self._isMounted) {
+            return
+        }
+
         self._loadingState = direction;
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
@@ -676,14 +713,18 @@ var _private = {
                 self._loadingIndicatorTimer = null;
                 if (self._loadingState) {
                     self._loadingIndicatorState = self._loadingState;
+                    _private.saveScrollOnToggleLoadingIndicator(self);
                     self._showLoadingIndicatorImage = true;
-                    self._forceUpdate();
+                    self._notify('controlResize');
                 }
             }, 2000);
         }
     },
 
     hideIndicator: function(self) {
+        if (!self._isMounted) {
+            return
+        }
         self._loadingState = null;
         self._showLoadingIndicatorImage = false;
         if (self._loadingIndicatorTimer) {
@@ -691,8 +732,16 @@ var _private = {
             self._loadingIndicatorTimer = null;
         }
         if (self._loadingIndicatorState !== null) {
+            _private.saveScrollOnToggleLoadingIndicator(self);
             self._loadingIndicatorState = self._loadingState;
-            self._forceUpdate();
+            self._notify('controlResize');
+        }
+    },
+
+    saveScrollOnToggleLoadingIndicator(self: BaseControl): void {
+        if (self._loadingIndicatorState === 'up') {
+            self._shouldRestoreScrollPosition = true;
+            self._saveAndRestoreScrollPosition = self._loadingIndicatorState;
         }
     },
 
@@ -1169,10 +1218,9 @@ var _private = {
     isBlockedForLoading(loadingIndicatorState): boolean {
         return loadingIndicatorState === 'all';
     },
-    getLoadingIndicatorClasses(loadingIndicatorState, itemsCount): string {
+    getLoadingIndicatorClasses(loadingIndicatorState): string {
         return CssClassList.add('controls-BaseControl__loadingIndicator')
             .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
-            .add('controls-BaseControl-emptyView__loadingIndicator', itemsCount === 0)
             .compile();
     },
     hasItemActions: function(itemActions, itemActionsProperty) {
@@ -1203,6 +1251,8 @@ var _private = {
  */
 
 var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
+    _isMounted: false,
+
     _savedStartIndex: 0,
     _savedStopIndex: 0,
 
@@ -1210,6 +1260,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     iWantVDOM: true,
     _isActiveByClick: false,
     _markedKeyForRestoredScroll: null,
+    _restoredScroll: null,
 
     _listViewModel: null,
     _viewModelConstructor: null,
@@ -1251,6 +1302,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _emptyTemplateVisibility: true,
     _intertialScrolling: null,
     _checkLoadToDirectionTimeout: null,
+
+    _resetScrollAfterReload: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1357,6 +1410,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterMount: function() {
+        this._isMounted = true;
         if (this._needScrollCalculation) {
             this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom);
             _private.startScrollEmitter(this);
@@ -1370,6 +1424,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (this._virtualScroll) {
             this._setScrollItemContainer();
+            _private.updateShadowMode(this);
         }
     },
 
@@ -1518,6 +1573,27 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         });
     },
 
+    scrollToItem(key: string|number, toBottom: boolean): void {
+        const idx = this._listViewModel.getIndexByKey(key);
+        if (idx === -1) {
+            return;
+        }
+        if (this._virtualScroll) {
+            this._virtualScroll.recalcByIndex(idx);
+            if (_private.applyVirtualScrollIndexesToListModel(this)) {
+                this._restoredScroll = {
+                    key: key,
+                    toBottom: toBottom
+                };
+                _private.applyPlaceholdersSizes(this);
+            } else {
+                _private.scrollToItem(this, key, toBottom);
+            }
+        } else {
+            _private.scrollToItem(this, key, toBottom);
+        }
+    },
+
     _beforeUnmount: function() {
         if (this._focusTimeout) {
             clearTimeout(this._focusTimeout);
@@ -1560,6 +1636,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._virtualScroll && this._itemsChanged) {
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);
+            // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
+            // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
+            this._checkLoadToDirectionTimeout = setTimeout(() => {
+                _private.checkLoadToDirectionCapability(this);
+                this._checkLoadToDirectionTimeout = null;
+            });
         }
 
         if (this._virtualScroll && this._applyScrollTopCallback) {
@@ -1580,15 +1662,22 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._savedStopIndex = this._listViewModel.getStopIndex();
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
+            this._checkShouldLoadToDirection = true;
             this._forceUpdate();
+        } else if (this._checkShouldLoadToDirection) {
+            // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
+            // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
+            this._checkLoadToDirectionTimeout = setTimeout(() => {
+                _private.checkLoadToDirectionCapability(this);
+                this._checkLoadToDirectionTimeout = null;
+            });
+            this._checkShouldLoadToDirection = false;
         }
 
-        // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
-        // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
-        this._checkLoadToDirectionTimeout = setTimeout(() => {
-            _private.checkLoadToDirectionCapability(this);
-            this._checkLoadToDirectionTimeout = null;
-        });
+        if (this._restoredScroll !== null) {
+            _private.scrollToItem(this, this._restoredScroll.key, this._restoredScroll.toBottom);
+            this._restoredScroll = null;
+        }
     },
 
     _afterUpdate: function(oldOptions) {
@@ -1597,6 +1686,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (this._hasItemActions) {
             this._canUpdateItemsActions = false;
+        }
+        if (this._resetScrollAfterReload) {
+            this._notify('doScroll', ['top'], { bubbling: true });
+            this._resetScrollAfterReload = false;
         }
         if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
@@ -2037,7 +2130,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _getLoadingIndicatorClasses(): string {
-        return _private.getLoadingIndicatorClasses(this._loadingIndicatorState, this._listViewModel.getCount());
+        return _private.getLoadingIndicatorClasses(this._loadingIndicatorState);
     },
     _onHoveredItemChanged: function(e, item, container) {
         if (this._hasItemActions){

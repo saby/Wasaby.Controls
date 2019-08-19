@@ -43,7 +43,6 @@ var Base = Control.extend({
 
     _beforeMount: function (options) {
         this._popupIds = [];
-        this._showOldIndicator = options.showOldIndicator;
         if (options.displayMode && options.displayMode !== 'single') {
             Env.IoC.resolve('ILogger').error(this._moduleName, 'Вместо опции displayMode используйте открытие окна через статический метод openPopup');
         }
@@ -87,7 +86,7 @@ var Base = Control.extend({
     // TODO: https://online.sbis.ru/opendoc.html?guid=13e4d473-5b91-485b-8d9d-fcd2f1f80f72
     _compatibleCreatingDef(config, isCreating: boolean): void {
         if (isCreating) {
-            if (config.showOldIndicator) {
+            if (this._showOldIndicator) {
                 config.creatingDef = new Deferred();
                 config.creatingDef.addCallback(() => {
                     this._toggleIndicator(false);
@@ -147,6 +146,7 @@ var Base = Control.extend({
         if (!baseConfig.hasOwnProperty('opener')) {
             baseConfig.opener = DefaultOpenerFinder.find(this) || this;
         }
+        this._showOldIndicator = baseConfig.showOldIndicator;
         if (baseConfig.actionOnScroll) {
             this._actionOnScroll = baseConfig.actionOnScroll;
         }
@@ -298,6 +298,11 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
             deps.push(libInfo.name);
         }
 
+        // Нужно чтобы managerWrapper был построен до совместимости в панели, т.к. в нем
+        // регистрируются Listener'ы, лежащие внутри шаблона. Не торможу построение ожиданием Deferred'a,
+        // т.к. после выполняется еще несколько асинхронных операций, ожидающих в том числе этих же зависимостией.
+        Base.getManager();
+
         requirejs(deps, (compatiblePopup, Action, Tpl) => {
             try {
                 let templateFunction = Tpl;
@@ -341,11 +346,16 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
                     compoundArea = dialog && dialog._getTemplateComponent();
 
                 // Check, if opened VDOM template on oldPage (we have compatible layer), then try reload template.
-                if (compoundArea && compoundArea._moduleName === 'Controls/compatiblePopup:CompoundArea' && !isFormController && compoundArea._options.template === newCfg.template) {
+                if (compoundArea && compoundArea._moduleName === 'Controls/compatiblePopup:CompoundAreaNewTpl' && !isFormController && compoundArea._options.template === newCfg.template) {
                     // Redraw template with new options
                     compatiblePopup.BaseOpener._prepareConfigForNewTemplate(newCfg);
                     compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
                     dialog.setTarget && dialog.setTarget($(newCfg.target));
+
+                    // Обновляем опцию для старого окна и зовем завершение обработки, т.к. окно уже открыто и просто
+                    // перерисовывает шаблон
+                    dialog._options.creatingDef = newCfg.creatingDef;
+                    dialog._finishPopupOpenedDeferred && dialog._finishPopupOpenedDeferred();
                 } else {
                     action.closeDialog();
                     action._isExecuting = false;

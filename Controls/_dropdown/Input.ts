@@ -69,7 +69,7 @@ var _private = {
  * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/_dropdown/interface/IGrouped
- * @mixes Controls/interface/ITextValue
+ * @mixes Controls/_interface/ITextValue
  * @control
  * @public
  * @author Золотова Э.Е.
@@ -97,7 +97,7 @@ var _private = {
  * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/_dropdown/interface/IGrouped
- * @mixes Controls/interface/ITextValue
+ * @mixes Controls/_interface/ITextValue
  * @control
  * @public
  * @author Золотова Э.Е.
@@ -109,11 +109,11 @@ var _private = {
  * @name Controls/_dropdown/Input#contentTemplate
  * @cfg {Function} Шаблон, который будет отображать вызываемый элемент.
  * @remark
- * Для определения шаблона вызовите базовый шаблон - "wml!Controls/_dropdown/Input/resources/defaultContentTemplate".
+ * Для определения шаблона вызовите базовый шаблон - "Controls/dropdown:inputDefaultContentTemplate".
  * Шаблон должен быть помещен в контрол с помощью тега <ws:partial> с атрибутом "template".
  * Содержимое можно переопределить с помощью параметра "contentTemplate".
- * Базовый шаблон wml!Controls/_dropdown/Input/resources/defaultContentTemplate по умолчанию отображает только текст.
- * Для отображения иконки и текста используйте шаблон "wml!Controls/_dropdown/Input/resources/defaultContentTemplateWithIcon".
+ * Базовый шаблон Controls/dropdown:inputDefaultContentTemplate по умолчанию отображает только текст.
+ * Для отображения иконки и текста используйте шаблон "Controls/dropdown:defaultContentTemplateWithIcon".
  * @example
  * Отображение иконки и текста.
  *
@@ -124,7 +124,7 @@ var _private = {
  *       keyProperty="id"
  *       displayProperty="title"
  *       source="{{_source)}}"
- *       contentTemplate="wml!Controls/_dropdown/Input/resources/defaultContentTemplateWithIcon">
+ *       contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
  * </Controls.dropdown:Input>
  * </pre>
  * JS:
@@ -143,11 +143,11 @@ var _private = {
  * @name Controls/_dropdown/Input#contentTemplate
  * @cfg {Function} Template that will be render calling element.
  * @remark
- * To determine the template, you should call the base template "wml!Controls/_dropdown/Input/resources/defaultContentTemplate".
+ * To determine the template, you should call the base template "Controls/dropdown:inputDefaultContentTemplate".
  * The template should be placed in the component using the <ws:partial> tag with the template attribute.
  * You can redefine content using the contentTemplate option.
- * By default, the base template wml!Controls/_dropdown/Input/resources/defaultContentTemplate will display only text.
- * To display the icon and text, use the "wml!Controls/_dropdown/Input/resources/defaultContentTemplateWithIcon" template.
+ * By default, the base template Controls/dropdown:inputDefaultContentTemplate will display only text.
+ * To display the icon and text, use the "Controls/dropdown:defaultContentTemplateWithIcon" template.
  * @example
  * Display text and icon
  *
@@ -158,7 +158,7 @@ var _private = {
  *       keyProperty="id"
  *       displayProperty="title"
  *       source="{{_source)}}"
- *       contentTemplate="wml!Controls/_dropdown/Input/resources/defaultContentTemplateWithIcon">
+ *       contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
  * </Controls.dropdown:Input>
  * </pre>
  * JS:

@@ -65,6 +65,11 @@
 
       <h1>List</h1>
       <div>
+         <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/list_new/Index' }}">
+            <a href="{{content.href}}">list_new</a>
+         </Router.router:Reference>
+      </div>
+      <div>
          <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FBase'}}">List/Base</a>
       </div>
       <div>

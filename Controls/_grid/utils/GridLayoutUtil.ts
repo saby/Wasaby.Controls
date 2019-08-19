@@ -1,5 +1,7 @@
 import {detection} from "Env/Env";
 
+const nonDynamicWidthRegExp = new RegExp('(px|%|fr)$');
+
 enum CssTemplatesEnum {
     GridIE = 'GridIE',
     GridChrome = 'GridChrome',
@@ -11,15 +13,25 @@ type CssRule = {
     value: string | number | Array<string>
 };
 
+function _isFullGridSafari(): boolean {
+    return (
+        detection.safari &&
+        (
+            detection.IOSVersion >= 12 ||
+            detection.isMacOSDesktop
+        )
+    )
+}
+
 function isFullGridSupport(): boolean {
-    return !detection.isWinXP && (!detection.isNotFullGridSupport || detection.safari);
+    return !detection.isWinXP && (!detection.isNotFullGridSupport || _isFullGridSafari());
 }
 
 function isPartialGridSupport(): boolean {
     let
         isOldIE = detection.isIE && !detection.isModernIE,
         noGridSupport = detection.isWinXP || isOldIE,
-        fullGridSupport = detection.safari;
+        fullGridSupport = _isFullGridSafari();
 
     return detection.isNotFullGridSupport && !(noGridSupport || fullGridSupport);
 }
@@ -171,6 +183,7 @@ const _cssTemplatesStyles = {
 export {
     CssRule,
     CssTemplatesEnum,
+    nonDynamicWidthRegExp,
 
     isFullGridSupport,
     isPartialGridSupport,

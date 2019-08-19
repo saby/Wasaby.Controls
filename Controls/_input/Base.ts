@@ -97,7 +97,7 @@ interface IFieldTemplate {
           */
          updateField: function(self, value: string, selection) {
             _private.updateValue(self, value);
-            _private.updateSelection(self, selection);
+            _private.updateSelection(self, selection, true);
          },
 
          updateValue: function(self, value) {
@@ -108,7 +108,7 @@ interface IFieldTemplate {
             }
          },
 
-         updateSelection: function (self, selection) {
+         updateSelection: function (self, selection, skipSaveSelection) {
             const field = self._getField();
 
             /**
@@ -117,10 +117,13 @@ interface IFieldTemplate {
              */
             if (_private.hasSelectionChanged(field, selection) && _private.isFieldFocused(self)) {
                /**
-                * After calling setSelectionRange the select event is triggered and saved the selection in model.
-                * You do not need to do this because the model is now the actual selection.
+                * After calling setSelectionRange may by the select event is triggered and saved the selection in model.
+                * This behavior is for example when called in the input event handler, but not in the focus handler.
+                * Do not need to do this because the model is now the actual selection.
                 */
-               self._numberSkippedSaveSelection++;
+               if (skipSaveSelection) {
+                  self._numberSkippedSaveSelection++;
+               }
                field.setSelectionRange(selection.start, selection.end);
             }
          },
@@ -376,7 +379,11 @@ interface IFieldTemplate {
        * @mixes Controls/interface/IInputBase
        *
        * @public
-       * @demo Controls-demo/Input/Base/Base
+       * @demo Controls-demo/Input/SizesAndHeights/Index
+       * @demo Controls-demo/Input/FontStyles/Index
+       * @demo Controls-demo/Input/TextAlignments/Index
+       * @demo Controls-demo/Input/TagStyles/Index
+       * @demo Controls-demo/Input/ValidationStatuses/Index
        *
        * @author Красильников А.С.
        */
@@ -837,7 +844,7 @@ interface IFieldTemplate {
              * Therefore, we ourselves will activate the field on click.
              * https://caniuse.com/#search=pointer-events
              */
-            if (this._ieVersion < 12) {
+            if (this._ieVersion && this._ieVersion < 12) {
                this._getField().focus();
             }
          },
@@ -858,7 +865,7 @@ interface IFieldTemplate {
              */
             if (this._firstFocus) {
                this._firstFocus = false;
-               _private.updateSelection(this, this._viewModel.selection);
+               _private.updateSelection(this, this._viewModel.selection, false);
             }
          },
 

@@ -10,6 +10,7 @@
          _headerRangeModel="{{_headerRangeModel}}"
          _yearStateEnabled="{{_yearStateEnabled}}"
          _monthStateEnabled="{{_monthStateEnabled}}"
+         _state="{{_state}}"
       />
 
       <div if="{{ _state === _STATES.year }}" class="controls-PeriodDialog__months">

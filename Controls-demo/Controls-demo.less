@@ -1,3 +1,5 @@
+@spacing_demo_default: 12px;
+
 .controlsDemo__wrapper {
   padding: 12px;
 }
@@ -8,6 +10,56 @@
 
 .controlsDemo__cell {
   padding-bottom: 12px;
+}
+
+.controlsDemo__button {
+  background-color: transparent;
+  height: 24px;
+  border-radius: 12px;
+  border: 1px solid #587AB0;
+  cursor: pointer;
+  padding: 0 11px;
+  &:hover {
+    background-color: #F0F5FB;
+  }
+  &:active {
+    background-color: #E1ECF6;
+  }
+}
+
+.controlsDemo__flexRow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  &_noWrap {
+    flex-wrap: nowrap;
+  }
+}
+
+.controlsDemo__flexColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.controlsDemo__mr,
+.controlsDemo__mr1 {
+  margin-right: @spacing_demo_default;
+}
+
+.controlsDemo__mr2 {
+  margin-right: @spacing_demo_default * 2;
+}
+
+.controlsDemo__mr3 {
+  margin-right: @spacing_demo_default * 3;
+}
+
+.controlsDemo__mr4 {
+  margin-right: @spacing_demo_default * 4;
+}
+
+.controlsDemo__input {
+  width: 220px;
 }
 
 .controlsDemo__background {

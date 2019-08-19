@@ -14,7 +14,7 @@
                 <ws:partial
                         template="wml!Controls/_list/Swipe/resources/SwipeTwoColumns"
                         itemData="{{itemData}}"
-                        showedActions="{{itemData.itemActions.showed}}"
+                        showedActions="{{swipeConfig.twoColumnsActions}}"
                         swipeConfig="{{swipeConfig}}"
                         actionAlignment="{{actionAlignment}}"
                         actionCaptionPosition="{{actionCaptionPosition}}"

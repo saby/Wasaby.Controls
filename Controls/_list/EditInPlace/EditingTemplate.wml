@@ -11,9 +11,11 @@
                 {{itemData.isActive && !itemData.isMenuShown ? 'controls-EditingTemplateText_active'}}">
             <div class="controls-EditingTemplateText__inner">
                 <ws:if data="{{ itemData.searchValue }}">
-                    <Controls.decorator:Highlight
-                        highlight="{{ itemData.searchValue }}"
-                        text="{{ value }}" />
+                    <Controls.decorator:Highlight highlight="{{ itemData.searchValue }}">
+                        <ws:text>
+                            <ws:String>{{ value }}</ws:String>
+                        </ws:text>
+                    </Controls.decorator:Highlight>
                 </ws:if>
                 <ws:else>
                     {{value}}

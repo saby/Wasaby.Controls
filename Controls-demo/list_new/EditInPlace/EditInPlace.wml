@@ -1,0 +1,12 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
+
+    <div class="controlsDemo__cell controlsDemo__mr4">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/EditInPlace/AddItem/Index' }}">
+            <a href="{{content.href}}">Добавление записи</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.EditInPlace.AddItem.Index/>
+    </div>
+
+</div>

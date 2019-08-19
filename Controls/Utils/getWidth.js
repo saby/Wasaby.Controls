@@ -16,7 +16,9 @@ define('Controls/Utils/getWidth', [
             measurer.appendChild(element);
          }
          document.body.appendChild(measurer);
-         width = measurer.clientWidth;
+
+         // clientWidth width returns integer, but real width is fractional
+         width = measurer.getBoundingClientRect().width;
 
          //Откладываем удаление элемента, чтобы не пересчитвывать лишний раз DOM и быстрее отобразить страницу
          setTimeout(function() {

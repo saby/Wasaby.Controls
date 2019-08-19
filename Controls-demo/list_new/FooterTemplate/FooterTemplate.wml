@@ -1,0 +1,7 @@
+<div class="controlsDemo__wrapper">
+    <Controls.list:View source="{{_viewSource}}" keyProperty="id">
+        <ws:footerTemplate>
+            <Controls.list:AddButton caption="Add record"/>
+        </ws:footerTemplate>
+    </Controls.list:View>
+</div>

@@ -223,11 +223,13 @@ define(
                dataRs.setMetaData({more: true});
                pNav.calculateState(dataRs);
                assert.isTrue(pNav.hasMoreData('down'), 'Wrong hasMoreData result');
+               assert.isUndefined(pNav.hasMoreData('down', 'testId'), 'Wrong hasMoredata for root');
 
                //load down
                dataRsbyLoad.setMetaData({more: false});
                pNav.calculateState(dataRsbyLoad, 'down');
                assert.isFalse(pNav.hasMoreData('down'), 'Wrong hasMoreData result');
+               assert.isUndefined(pNav.hasMoreData('down', 'testId'), 'Wrong hasMoredata for root');
                assert.deepEqual({before: false, after: false}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
                assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
                assert.deepEqual([3], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
@@ -245,11 +247,13 @@ define(
                dataRs.setMetaData({more: {after: true, before: true}});
                pNav.calculateState(dataRs);
                assert.isTrue(pNav.hasMoreData('up'), 'Wrong hasMoreData result');
+               assert.isUndefined(pNav.hasMoreData('up', 'testId'), 'Wrong hasMoredata for root');
 
                //load up
                dataRsbyLoad.setMetaData({more: true});
                pNav.calculateState(dataRsbyLoad, 'up');
                assert.isTrue(pNav.hasMoreData('up'), 'Wrong hasMoreData result');
+               assert.isUndefined(pNav.hasMoreData('up', 'testId'), 'Wrong hasMoredata for root');
                assert.deepEqual({before: true, after: true}, pNav._more.getMoreMeta(), 'Calculate state: wrong _more value');
                assert.deepEqual([3, 5], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
                assert.deepEqual([2, 4], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');

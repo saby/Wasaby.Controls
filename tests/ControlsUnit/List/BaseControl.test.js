@@ -372,7 +372,7 @@ define([
          assert.isTrue(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after mounting');
       });
 
-      it('loadToDirection down', function(done) {
+      it('loadToDirection down', async function() {
          var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
@@ -413,20 +413,16 @@ define([
 
 
          ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
+         await ctrl._beforeMount(cfg);
+         ctrl._afterMount(cfg);
 
-         setTimeout(function() {
-            lists.BaseControl._private.loadToDirection(ctrl, 'down');
-
-            assert.equal(ctrl._loadingState, 'down');
-            setTimeout(function() {
-               assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
-               assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
-               assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
-               assert.equal(ctrl._loadingState, null);
-               done();
-            }, 100);
-         }, 100);
+         const loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         assert.equal(ctrl._loadingState, 'down');
+         await loadPromise;
+         assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+         assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+         assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
+         assert.equal(ctrl._loadingState, null);
       });
 
       it('prepareFooter', function() {
@@ -649,6 +645,66 @@ define([
          assert.equal(2, baseControl._listViewModel.getMarkedKey());
          lists.BaseControl._private.scrollToItem = originalScrollToItem;
       });
+
+       it('scrollToItem', async function() {
+           var
+               source = new sourceLib.Memory({
+                   idProperty: 'key',
+                   data: function(){
+                       var result = [];
+                       for (var i = 1; i <= 20; i++) {
+                           result.push({
+                               key: i
+                           });
+                       }
+                       return result;
+                   }()
+               }),
+               cfg = {
+                   viewModelConstructor: lists.ListViewModel,
+                   keyProperty: 'key',
+                   source: source
+               },
+               baseControl = new lists.BaseControl(cfg),
+               callStack = [],
+               recalcByIndexCalled = false;
+           baseControl._children = {
+              listView: {
+                  getItemsContainer: function() {
+                     var childrenArr = [];
+                     for (var i = 1; i <= 20; i++) {
+                         childrenArr.push('item_' + i);
+                     }
+                     return {
+                        children: childrenArr
+                     };
+                  }
+              }
+           };
+           lists.BaseControl._private.scrollToElement = function(container) {
+              callStack.push(container)
+           };
+           baseControl.saveOptions(cfg);
+           await baseControl._beforeMount(cfg);
+           baseControl.scrollToItem(777);
+           baseControl.scrollToItem(15);
+           baseControl._virtualScroll = {
+               recalcByIndex: function() {
+                   recalcByIndexCalled = true;
+               },
+               updateItemsSizes: function() {},
+               PlaceholdersSizes: {},
+               ItemsIndexes: {
+                  start: 0,
+                  stop: 1
+               }
+           };
+           baseControl.scrollToItem(10);
+           baseControl._beforePaint();
+           assert.isTrue(recalcByIndexCalled);
+           baseControl.scrollToItem(5);
+           assert.deepEqual(callStack, ['item_15', 'item_10', 'item_5']);
+       });
 
       it('moveMarker activates the control', async function() {
          const
@@ -905,13 +961,13 @@ define([
 
       });
 
-      it('loadToDirection up', function(done) {
-         var source = new sourceLib.Memory({
+      it('loadToDirection up', async function() {
+         const source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
 
-         var cfg = {
+         const cfg = {
             viewName: 'Controls/List/ListView',
             source: source,
             viewConfig: {
@@ -931,20 +987,16 @@ define([
                }
             }
          };
-         var ctrl = new lists.BaseControl(cfg);
-         ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
+         const baseControl = new lists.BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         baseControl._afterMount(cfg);
 
-         setTimeout(function() {
-            lists.BaseControl._private.loadToDirection(ctrl, 'up');
-
-            assert.equal(ctrl._loadingState, 'up');
-            setTimeout(function() {
-               assert.equal(ctrl._loadingState, null);
-               assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
-               done();
-            }, 100);
-         }, 100);
+         const loadPromise = lists.BaseControl._private.loadToDirection(baseControl, 'up');
+         assert.equal(baseControl._loadingState, 'up');
+         await loadPromise;
+         assert.equal(baseControl._loadingState, null);
+         assert.equal(6, lists.BaseControl._private.getItemsCount(baseControl), 'Items wasn\'t load');
       });
 
       it('items should get loaded when a user scrolls to the bottom edge of the list', function(done) {
@@ -1091,6 +1143,12 @@ define([
          var ctrl = new lists.BaseControl(cfg);
 
          lists.BaseControl._private.showIndicator(ctrl, 'down');
+         assert.isNull(ctrl._loadingState, 'Wrong loading state');
+         assert.isNull(ctrl._loadingIndicatorState, 'Wrong loading state');
+
+         ctrl._isMounted = true;
+
+         lists.BaseControl._private.showIndicator(ctrl, 'down');
          assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
 
@@ -1115,6 +1173,93 @@ define([
          assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
          assert.isFalse(!!ctrl._loadingIndicatorTimer);
       });
+
+       it ('updateShadowMode', function() {
+           var
+               placeholdersSizes = {
+                   top: 0,
+                   bottom: 0
+               },
+               hasMoreData = {
+                   up: true,
+                   down: true
+               },
+               updateShadowModeParams,
+               mockedControl = {
+                   _virtualScroll: {
+                       PlaceholdersSizes: placeholdersSizes
+                   },
+                   _sourceController: {
+                       hasMoreData: function(direction) {
+                           return hasMoreData[direction];
+                       }
+                   },
+                   _notify: function(eventName, params) {
+                       if (eventName === 'updateShadowMode') {
+                           updateShadowModeParams = params[0];
+                       }
+                   }
+               };
+
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'visible', bottom: 'visible' });
+
+           placeholdersSizes.top = 100;
+           placeholdersSizes.bottom = 100;
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'visible', bottom: 'visible' });
+
+           hasMoreData.up = false;
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'visible', bottom: 'visible' });
+
+           placeholdersSizes.top = 0;
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'visible' });
+
+           hasMoreData.down = false;
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'visible' });
+
+           placeholdersSizes.bottom = 0;
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'auto' });
+
+           hasMoreData.up = true;
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'visible', bottom: 'auto' });
+
+           hasMoreData.up = false;
+           hasMoreData.down = true;
+           lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'visible' });
+       });
+
+       it ('call updateShadowMode in afterMount', function() {
+           var
+               cfg = {
+                   virtualScrolling: true,
+                   navigation: {
+                      view: 'infinity'
+                   },
+                   source: new sourceLib.Memory({
+                       idProperty: 'id',
+                       data: data
+                   })
+               },
+               baseControl = new lists.BaseControl(cfg),
+               originalUpdateShadowMode = lists.BaseControl._private.updateShadowMode,
+               updateShadowModeCalled = false;
+           lists.BaseControl._private.updateShadowMode = function() {
+               updateShadowModeCalled = true;
+           };
+           baseControl._setLoadOffset = lists.BaseControl._private.startScrollEmitter = function(){};
+           baseControl._beforeMount(cfg);
+           assert.isFalse(updateShadowModeCalled);
+           baseControl._afterMount(cfg);
+           assert.isTrue(updateShadowModeCalled);
+           lists.BaseControl._private.updateShadowMode = originalUpdateShadowMode;
+       });
 
       it('scrollToEdge_load', function(done) {
          var rs = new collection.RecordSet({
@@ -1308,7 +1453,8 @@ define([
          baseControl._children = triggers;
          baseControl.saveOptions(cfg);
          baseControl._needScrollCalculation = true;
-         baseControl._loadOffset = {top: 0, bottom: 0};
+         baseControl._isScrollShown = true;
+         baseControl._loadOffset = {top: 10, bottom: 10};
 
          lists.BaseControl._private.onScrollHide(baseControl);
          assert.deepEqual({top: 0, bottom: 0}, baseControl._loadOffset);
@@ -1512,12 +1658,13 @@ define([
       it('_processError', function() {
          var self = {
             _loadingState: 'all',
-            _forceUpdate: () => {},
+            _notify: () => {},
             __errorController: {
                process: () => {
                   return new Promise(() => {});
                }
-            }
+            },
+            _isMounted: true
          };
 
          lists.BaseControl._private.processError(self, {error: {}});
@@ -1683,6 +1830,52 @@ define([
          assert.isTrue(lists.BaseControl._private.hasItemActions(undefined, itemActionsProp));
          assert.isFalse(lists.BaseControl._private.hasItemActions(undefined, undefined));
       });
+      describe('resetScrollAfterReload', function() {
+         var source = new sourceLib.Memory({
+               idProperty: 'id',
+               data: data
+            }),
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel
+            },
+            baseControl = new lists.BaseControl(cfg),
+            doScrollNotified = false;
+
+         baseControl._notify = function(eventName) {
+            if (eventName === 'doScroll') {
+               doScrollNotified = true;
+            }
+         }
+
+         baseControl.saveOptions(cfg);
+
+         it('before mounting', async function() {
+            await baseControl._beforeMount(cfg);
+            await lists.BaseControl._private.reload(baseControl, cfg);
+            assert.isFalse(baseControl._resetScrollAfterReload);
+            await baseControl._afterMount();
+            assert.isTrue(baseControl._isMounted);
+         });
+         it('without scroll', async function() {
+            baseControl._isScrollShown = false;
+            await lists.BaseControl._private.reload(baseControl, cfg);
+            assert.isFalse(baseControl._resetScrollAfterReload);
+            await baseControl._afterUpdate(cfg);
+            assert.isFalse(doScrollNotified);
+         });
+         it('with scroll', async function() {
+            baseControl._isScrollShown = true;
+            await lists.BaseControl._private.reload(baseControl, cfg);
+            assert.isTrue(baseControl._resetScrollAfterReload);
+            await baseControl._afterUpdate(cfg);
+            assert.isTrue(doScrollNotified);
+
+         });
+      });
+
       describe('_canUpdateItemsActions', function() {
          var lnSource = new sourceLib.Memory({
                idProperty: 'id',
@@ -2488,6 +2681,7 @@ define([
          var
             dragEnded,
             ctrl = new lists.BaseControl();
+         ctrl._isMounted = true;
 
          //dragend without deferred
          dragEnded = false;
@@ -3508,7 +3702,8 @@ define([
          var baseControlMock = {
             _needScrollCalculation: true,
             _sourceController: {hasMoreData: () => {return true;}},
-            _forceUpdate: () => {}
+            _notify: () => {},
+            _isMounted: true
          };
          var emptyList = new collection.List();
          var list = new collection.List({items: [{test: 'testValue'}]});
@@ -3675,6 +3870,7 @@ define([
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
+         instance._afterMount(cfg);
 
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
@@ -3757,30 +3953,64 @@ define([
 
       it('_getLoadingIndicatorClasses', function () {
 
-         function testCaseWithArgs(indicatorState, itemsCount) {
-            return lists.BaseControl._private.getLoadingIndicatorClasses(indicatorState, itemsCount);
+         function testCaseWithArgs(indicatorState) {
+            return lists.BaseControl._private.getLoadingIndicatorClasses(indicatorState);
          }
 
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all controls-BaseControl-emptyView__loadingIndicator', testCaseWithArgs('all', 0));
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up controls-BaseControl-emptyView__loadingIndicator', testCaseWithArgs('up', 0));
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down controls-BaseControl-emptyView__loadingIndicator', testCaseWithArgs('down', 0));
-
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all', testCaseWithArgs('all', 1));
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up', testCaseWithArgs('up', 1));
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down', testCaseWithArgs('down', 1));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all', testCaseWithArgs('all'));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up', testCaseWithArgs('up'));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down', testCaseWithArgs('down'));
 
       });
 
+      it('saveScrollOnToggleLoadingIndicator', async function () {
+         let
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                sorting: [],
+                viewModelConfig: {
+                   items: [],
+                   keyProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id',
+                source: source
+             },
+             instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         instance._shouldRestoreScrollPosition = false;
+         instance._loadingIndicatorState = 'all';
+
+         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
+         assert.isFalse(instance._shouldRestoreScrollPosition);
+         assert.isUndefined(instance._saveAndRestoreScrollPosition);
+
+         instance._shouldRestoreScrollPosition = false;
+         instance._loadingIndicatorState = 'up';
+
+         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
+         assert.isTrue(instance._shouldRestoreScrollPosition);
+         assert.equal('up', instance._saveAndRestoreScrollPosition);
+
+         instance._shouldRestoreScrollPosition = false;
+         instance._loadingIndicatorState = 'down';
+         instance._saveAndRestoreScrollPosition = undefined;
+
+         lists.BaseControl._private.saveScrollOnToggleLoadingIndicator(instance);
+         assert.isFalse(instance._shouldRestoreScrollPosition);
+         assert.isUndefined(instance._saveAndRestoreScrollPosition);
+      });
+
       describe('navigation', function () {
-         it('Navigation demand', function(done) {
-            var source = new sourceLib.Memory({
+         it('Navigation demand', async function() {
+            const source = new sourceLib.Memory({
                idProperty: 'id',
                data: data
             });
 
-            var dataLoadFired = false;
-
-            var cfg = {
+            const cfg = {
                viewName: 'Controls/List/ListView',
                dataLoadCallback: function() {
                   dataLoadFired = true;
@@ -3804,28 +4034,25 @@ define([
                   }
                }
             };
+            let dataLoadFired = false;
 
-            var ctrl = new lists.BaseControl(cfg);
-
+            const ctrl = new lists.BaseControl(cfg);
 
             ctrl.saveOptions(cfg);
-            ctrl._beforeMount(cfg);
+            await ctrl._beforeMount(cfg);
+            ctrl._afterMount(cfg);
 
-            setTimeout(function() {
-               assert.isTrue(ctrl._shouldDrawFooter, 'Failed draw footer on first load.');
-               assert.equal(ctrl._loadMoreCaption, 3, 'Failed draw footer on first load.');
+            assert.isTrue(ctrl._shouldDrawFooter, 'Failed draw footer on first load.');
+            assert.equal(ctrl._loadMoreCaption, 3, 'Failed draw footer on first load.');
 
-               lists.BaseControl._private.loadToDirection(ctrl, 'down');
-               assert.equal(ctrl._loadingState, 'down');
-               setTimeout(function() {
-                  assert.isFalse(ctrl._shouldDrawFooter, 'Failed draw footer on second load.');
+            const loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
+            assert.equal(ctrl._loadingState, 'down');
 
-                  assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
-                  assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
-                  assert.equal(ctrl._loadingState, null);
-                  done();
-               }, 100);
-            }, 100);
+            await loadPromise;
+            assert.isFalse(ctrl._shouldDrawFooter, 'Failed draw footer on second load.');
+            assert.equal(6, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+            assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+            assert.equal(ctrl._loadingState, null);
          });
          it('Navigation position', function() {
             return new Promise(function(resolve, reject) {

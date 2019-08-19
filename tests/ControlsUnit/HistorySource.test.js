@@ -352,6 +352,26 @@ define(
                historyItem = historyMod.Source._private.getRawHistoryItem(hSource, 123, 'history_id');
                assert.strictEqual(historyItem.getId(), '123');
             });
+
+            it('getKeyProperty', function() {
+               let initSource = new sourceLib.Memory({
+                  keyProperty: 'key',
+                  data: []
+               });
+               let self = {
+                  originSource: initSource
+               };
+               assert.equal(historyMod.Source._private.getKeyProperty(self), 'key');
+
+               self.originSource = new sourceLib.PrefetchProxy({
+                  target: initSource,
+                  data: {
+                     query: {}
+                  }
+               });
+               assert.equal(historyMod.Source._private.getKeyProperty(self), 'key');
+            });
+
             it('updateRecent', function() {
                let meta = {
                   $_history: true
@@ -398,7 +418,7 @@ define(
                });
                memorySource.query().addCallback(function(res) {
                   let sourceItems = res.getAll();
-                  let preparedHistory = historyMod.Source._private.prepareHistoryBySourceItems(null, newData.getRow(), sourceItems);
+                  let preparedHistory = historyMod.Source._private.prepareHistoryBySourceItems({}, newData.getRow(), sourceItems);
                   assert.equal(preparedHistory.get('frequent').getCount(), 2);
                   preparedHistory.get('frequent').forEach(function(historyItem) {
                      assert.isFalse(historyItem.getId() === '9');
@@ -471,6 +491,7 @@ define(
                memorySource.query().addCallback(function(res) {
                   let self = {
                      _pinned: ['1', '2'],
+                     originSource: memorySource,
                      historySource: {
                         getHistoryId: () => {
                            'TEST_ID';

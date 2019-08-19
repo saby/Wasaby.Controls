@@ -45,7 +45,9 @@ var ManagerWrapper = Control.extend({
    },
 
    startResizeEmitter(event: Event): void {
-      this._resizePage(event);
+      if (!this._destroyed) {
+          this._resizePage(event);
+      }
    },
 
    _eventRegistratorHandler: function(registratorName, event) {
@@ -70,23 +72,27 @@ var ManagerWrapper = Control.extend({
    },
 
    _listenersSubscribe: function(method, event, registerType, component, callback) {
-      // Вызываю обработчики всех регистраторов, регистратор сам поймет, нужно ли обрабатывать событие
-      var registrators = [
-         'scrollDetect',
-         'resizeDetect',
-         'mousemoveDetect',
-         'touchmoveDetect',
-         'touchendDetect',
-         'mousedownDetect',
-         'mouseupDetect'
-      ];
-      for (var i = 0; i < registrators.length; i++) {
-         this._children[registrators[i]][method](event, registerType, component, callback);
+      if (!this._destroyed) {
+         // Вызываю обработчики всех регистраторов, регистратор сам поймет, нужно ли обрабатывать событие
+         var registrators = [
+            'scrollDetect',
+            'resizeDetect',
+            'mousemoveDetect',
+            'touchmoveDetect',
+            'touchendDetect',
+            'mousedownDetect',
+            'mouseupDetect'
+         ];
+         for (var i = 0; i < registrators.length; i++) {
+            this._children[registrators[i]][method](event, registerType, component, callback);
+         }
       }
    },
 
    _scrollHandler: function() {
-      this.closePopups();
+      if (!this._destroyed) {
+         this.closePopups();
+      }
    },
 
    closePopups: function() {

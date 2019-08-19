@@ -185,7 +185,9 @@
 
 .controls-Grid__row-cell-background-editing {
    background-color: @background-color_Grid-item_editing;
-   > .controls-itemActionsV {
+   > .controls-itemActionsV,
+   +.controls-itemActionsV__container > .controls-itemActionsV
+   {
       display: inline-block;
    }
 }
@@ -451,11 +453,9 @@
 .controls-itemActionsV__container {
    position: sticky;
    right: 0;
-}
 
-// По ховеру нужен отдельный стек z-index, иначе при скролле колонок из-за transform неправильно обрабатывается ховер
-// https://online.sbis.ru/opendoc.html?guid=6059b335-dad3-4458-b022-0260680d5c27
-.controls-itemActionsV__container:hover {
+   // Нужен отдельный стек z-index, иначе при скролле колонок из-за transform опции оказываются ниже данных таблицы и неправильно обрабатывается ховер
+   // https://online.sbis.ru/opendoc.html?guid=6059b335-dad3-4458-b022-0260680d5c27
    z-index: 1;
 }
 
@@ -547,13 +547,19 @@
 
 .controls-Grid__cell_valign_top {
    align-items: flex-start;
+   height: 100%;
 }
 
 .controls-Grid__cell_valign_bottom {
    align-items: flex-end;
+   height: 100%;
 }
 
-.controls-Grid__cell_valign_middle {
+.controls-Grid__cell_valign_center {
    align-items: center;
+   height: 100%;
+}
 
+.controls-Grid__cell-content_full-height {
+   height: 100%;
 }

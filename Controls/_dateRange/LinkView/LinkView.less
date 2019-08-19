@@ -31,6 +31,10 @@
 
 .controls-DateLinkView__style-secondary {
    color: @color_DateLinkView-secondaryStyle;
+}
+
+.controls-DateLinkView__style-secondary_clickable {
+   color: @color_DateLinkView-secondaryStyle;
    cursor: pointer;
    &:hover {
       color: @color_DateLinkView-secondaryStyle_hover;
@@ -39,18 +43,22 @@
 
 .controls-DateLinkView__style-info {
    color: @color_DateLinkView-infoStyle;
-   cursor: pointer;
 }
 
-.controls-DateLinkView__value-enabled {
-   &:hover {
-      text-decoration: underline;
-   }
+.controls-DateLinkView__style-info_clickable {
+   color: @color_DateLinkView-infoStyle;
+   cursor: pointer;
 }
 
 .controls-DateLinkView__style-secondary_readOnly,
 .controls-DateLinkView__style-info_readOnly {
    color: @color_DateLinkView_readOnly;
+}
+
+.controls-DateLinkView__value-clickable {
+   &:hover {
+      text-decoration: underline;
+   }
 }
 
 .controls-DateLinkView__value-wrapper {

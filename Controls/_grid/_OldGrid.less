@@ -6,15 +6,6 @@
   .controls-Grid__header {
     display: inline-flex;
   }
-  .controls-itemActionsV_style_master {
-    //because of selected item border in Grid is realized by box-shadow, itemAction overlaps bottom shadow by z-index
-    //best solution is to increase bottom position of itemAction by border bottom width in old grid master
-    bottom: @border-width_List-masterList-item-bottom;
-    //for the same reason as the problem described above, if in itemActions spacing between content and border-right will
-    //realized by padding, itemActions will overlaps right shadow, with margin work fine
-    padding-right: 0;
-    margin-right: @spacing_ItemActions-between-content-border-right_position_inside;
-  }
   .controls-ListView__group {
     display: flex;
   }
@@ -44,6 +35,7 @@
     display: table-header-group;
   }
   .controls-Grid__header-cell {
+    position: relative;
     top: 0;
     display: table-cell;
     text-align: left;       //делаем left для старых таблиц для хрома, чтоб было поведение такое же как для гридов. Выравнивание контента ячейки задается на внутреннем диве.
@@ -113,5 +105,23 @@
 .ws-is-not-full-grid-support {
   .controls-Grid__row-cell-background-editing > .controls-Grid__row-cell__contentWrapper > .controls-itemActionsV {
     display: inline-block;
+  }
+}
+
+.controls-Grid_layout_auto {
+  table-layout: auto;
+}
+
+
+.ws-is-not-full-grid-support,
+.controls-Grid_partial-support {
+  .controls-itemActionsV_style_master {
+    //because of selected item border in Grid is realized by box-shadow, itemAction overlaps bottom shadow by z-index
+    //best solution is to increase bottom position of itemAction by border bottom width in old grid master
+    bottom: @border-width_List-masterList-item-bottom;
+    //for the same reason as the problem described above, if in itemActions spacing between content and border-right will
+    //realized by padding, itemActions will overlaps right shadow, with margin work fine
+    padding-right: 0;
+    margin-right: @spacing_ItemActions-between-content-border-right_position_inside;
   }
 }

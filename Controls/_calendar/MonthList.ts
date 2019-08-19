@@ -102,17 +102,18 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
         // TODO: We need another api to control the shadow visibility
         // https://online.sbis.ru/opendoc.html?guid=1737a12a-9dd1-45fa-a70c-bc0c9aa40a3d
         this._children.scroll.setShadowMode({ top: 'visible', bottom: 'visible' });
+        this._updateScrollAfterViewModification();
     }
 
     protected _beforeUpdate(options: IModuleComponentOptions): void {
         this._updateItemTemplate(options);
         this._updateSource(options);
-        if (options.position !== this._displayedPosition) {
+        if (+options.position !== +this._displayedPosition) {
             this._updatePosition(options.position, this._options.position);
         }
     }
 
-    protected _afterUpdate(options: IModuleComponentOptions): void {
+    protected _beforePaint(): void {
         this._updateScrollAfterViewModification();
     }
 
@@ -268,7 +269,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
     }
 
     private _getElementByDate(selector: string, dateId: string): HTMLElement {
-        return this._container.querySelector(selector + '[data-date="' + dateId + '"]');
+        //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+        const container = this._container.get ? this._container.get(0) : this._container;
+        return container.querySelector(selector + '[data-date="' + dateId + '"]');
     }
 
     protected _dateToDataString(date: Date): string {

@@ -447,7 +447,7 @@ define('Controls/interface/IDropdown', [], function() {
     * @example
     * WML:
     * <pre>
-    *    <Controls.dropDown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose"/>
+    *    <Controls.dropdown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose()"/>
     *    <div>dropDownOpened: {{_dropDownOpened}}</div>
     * </pre>
     *
@@ -468,7 +468,7 @@ define('Controls/interface/IDropdown', [], function() {
     * @example
     * WML:
     * <pre>
-    *    <Controls.dropDown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose"/>
+    *    <Controls.dropdown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose()"/>
     *    <div>dropDownOpened: {{_dropDownOpened}}</div>
     * </pre>
     *
@@ -489,7 +489,7 @@ define('Controls/interface/IDropdown', [], function() {
     * @example
     * WML:
     * <pre>
-    *    <Controls.dropDown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose"/>
+    *    <Controls.dropdown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose()"/>
     *    <div>dropDownOpened: {{_dropDownOpened}}</div>
     * </pre>
     *
@@ -510,7 +510,7 @@ define('Controls/interface/IDropdown', [], function() {
     * @example
     * WML:
     * <pre>
-    *    <Controls.dropDown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose"/>
+    *    <Controls.dropdown:Button on:dropDownOpen="_dropDownOpen()" on:dropDownClose="_dropDownClose()"/>
     *    <div>dropDownOpened: {{_dropDownOpened}}</div>
     * </pre>
     *

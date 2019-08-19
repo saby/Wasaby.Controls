@@ -3,9 +3,10 @@ define(
       'Controls/filter',
       'Core/core-clone',
       'Types/source',
-      'Types/collection'
+      'Types/collection',
+      'Controls/history'
    ],
-   function(filter, Clone, sourceLib, collection) {
+   function(filter, Clone, sourceLib, collection, history) {
       describe('Filter:View', function() {
 
          let defaultItems = [
@@ -338,76 +339,6 @@ define(
             assert.deepStrictEqual(view._source[5].value, [new Date(2019, 5, 1), new Date(2019, 5, 31)]);
          });
 
-         describe('View::timer', function() {
-            let view;
-            beforeEach(function() {
-               view = getView(defaultConfig);
-               view._options.panelTemplateName = 'panelTemplateName.wml';
-               view._children = {
-                  fast: 'target'
-               };
-               view._source = Clone(defaultConfig.source);
-               view._configs = {
-                  document: {
-                     items: Clone(defaultItems[0]),
-                     displayProperty: 'title',
-                     keyProperty: 'id'},
-                  state: {
-                     items: Clone(defaultItems[1]),
-                     displayProperty: 'title',
-                     keyProperty: 'id',
-                     multiSelect: true}
-               };
-               view._container = {};
-            });
-
-            it('_startTimer', function() {
-               let opened, resultConfig;
-               view._children.StickyOpener = { open: (config) => {
-                  resultConfig = config;
-                  opened = true;
-               }};
-               view._startTimer('mouseenter', 'fast');
-               setTimeout(() => {
-                  assert.isTrue(opened);
-                  assert.strictEqual(resultConfig.target, 'target');
-               }, 110);
-            });
-
-            it('_restartTimer', function() {
-               let opened, resultConfig;
-               view._children.StickyOpener = { open: (config) => {
-                     resultConfig = config;
-                     opened = true;
-               }};
-               view._startTimer('mouseenter', 'fast');
-               setTimeout(() => {
-                  view._restartTimer('mousemove', 'fast');
-                  setTimeout(() => {
-                     assert.isTrue(opened);
-                     assert.strictEqual(resultConfig.target, 'target');
-                  }, 110);
-               }, 10);
-            });
-
-            it('_resetTimer', function() {
-               let opened = false, resultConfig = null;
-               view._children.StickyOpener = { open: (config) => {
-                     resultConfig = config;
-                     opened = true;
-               }};
-               view._startTimer('mouseenter', 'fast');
-               setTimeout(() => {
-                  view._resetTimer();
-                  assert.isNull(view._delayOpenTimeout);
-                  setTimeout(() => {
-                     assert.isFalse(opened);
-                     assert.isNull(resultConfig);
-                  }, 110);
-               }, 10);
-            });
-         });
-
          it('_rangeChangedHandler', () => {
             let source = [...defaultSource];
             let dateItem = {
@@ -478,6 +409,27 @@ define(
             assert.strictEqual(self._source.getSQLSerializationMode(), date.getSQLSerializationMode());
          });
 
+         it('_private:updateHistory', function() {
+            let resultHistoryItems, resultMeta;
+            let source = new history.Source({
+               originSource: new sourceLib.Memory({
+                  keyProperty: 'key',
+                  data: []
+               }),
+               historySource: new history.Service({
+                  historyId: 'TEST_HISTORY_ID'
+               })
+            });
+            source.update = (historyItems, meta) => {
+               resultHistoryItems = historyItems;
+               resultMeta = meta;
+            };
+            let items = [{key: 1}];
+            filter.View._private.updateHistory({}, items, source);
+            assert.deepEqual(resultHistoryItems, items);
+            assert.deepEqual(resultMeta, {$_history: true});
+         });
+
          it('_private:loadSelectedItems', function(done) {
             let source = [...defaultSource];
             source[1].value = [1];
@@ -496,13 +448,14 @@ define(
                      idProperty: 'id'
                   }),
                   source: source[1].editorOptions.source,
+                  _sourceController: {hasMoreData: () => {return true;}},
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}
             };
             assert.strictEqual(configs['state'].items.getCount(), 6);
             filter.View._private.loadSelectedItems(source, configs).addCallback(() => {
-               assert.strictEqual(configs['state'].items.getCount(), 7);
+               assert.strictEqual(configs['state'].items.getCount(), 6);
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
                done();
             });

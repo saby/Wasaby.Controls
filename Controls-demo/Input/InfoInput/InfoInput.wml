@@ -1,7 +1,0 @@
-<div style="margin: 32px; display: flex; flex-direction: column; width: 18em;">
-   <div style="padding: 3em; background-color: rgba(38,59,74,0.22)">
-      <h2>Для информации</h2>
-      <Controls.input:Label caption="Информация"/>
-      <Controls.input:Text name="info" bind:value="_value" attr:test_name="info" />
-   </div>
-</div>
