@@ -124,12 +124,18 @@ define([
                   items: items,
                   header: [{}, {}]
                },
+               newCfg2 = {
+                  items: items,
+                  header: []
+               },
                instance = new PathController(cfg);
             instance.saveOptions(cfg);
             await instance._beforeMount(cfg);
             assert.equal(1, instance._header.length);
             instance._beforeUpdate(newCfg);
             assert.equal(2, instance._header.length);
+            instance._beforeUpdate(newCfg2);
+            assert.equal(instance._header, undefined);
          });
          it('new items', function() {
             var

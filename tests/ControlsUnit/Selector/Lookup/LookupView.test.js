@@ -257,7 +257,9 @@ define([
             config = {},
             lookup = new Lookup();
 
-         lookup._container = {};
+         lookup._getContainer = function() {
+            return {};
+         };
 
          if (window) {
             sinon.stub(window, 'getComputedStyle').returns({paddingLeft: '4px', borderLeftWidth: '1px'});

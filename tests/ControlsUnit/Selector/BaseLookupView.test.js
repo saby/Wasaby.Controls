@@ -120,17 +120,30 @@ define([
       it('_choose', function() {
          var itemAdded = false;
          var lookup = new Lookup();
+         var isActivated = false;
 
+         lookup.saveOptions({});
          lookup._isInputVisible = false;
          lookup._notify = function() {
             itemAdded = true;
          };
+         lookup.activate = function() {
+            isActivated = true;
+         };
 
-         lookup._beforeMount({multiLine: true});
+         lookup._beforeMount({ multiLine: true });
 
+         lookup._options.multiSelect = false;
          lookup._choose();
          assert.isTrue(itemAdded);
          assert.isTrue(lookup._needSetFocusInInput);
+         assert.isFalse(isActivated);
+
+         lookup._needSetFocusInInput = false;
+         lookup._options.multiSelect = true;
+         lookup._choose();
+         assert.isFalse(lookup._needSetFocusInInput);
+         assert.isTrue(isActivated);
       });
 
       it('_deactivated', function() {
@@ -260,7 +273,9 @@ define([
             lookup = new Lookup();
 
          lookup._suggestState = true;
-         lookup._container = {offsetWidth: 100};
+         lookup._getContainer = function() {
+            return {offsetWidth: 100};
+         };
          lookup._notify = function(eventName) {
             if (eventName === 'openInfoBox') {
                isNotifyOpenPopup = true;
@@ -346,6 +361,20 @@ define([
          lookup._itemClick();
          assert.isFalse(lookup._suggestState);
          assert.isTrue(isNotifyItemClick);
+      });
+
+      it('_getContainer', function() {
+         let
+            container,
+            lookup = new Lookup();
+
+         if (window && window.jQuery) {
+            lookup._container = 'notJQuery';
+            assert.equal(lookup._getContainer(), 'notJQuery');
+
+            lookup._container = container = new window.jQuery('div');
+            assert.equal(lookup._getContainer(), container[0]);
+         }
       });
    });
 });

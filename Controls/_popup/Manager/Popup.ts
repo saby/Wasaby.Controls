@@ -7,7 +7,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popup/Manager/Popup';
 import * as PopupContent from 'wml!Controls/_popup/Manager/PopupContent';
 
-import makeInstanceCompatible = require('Core/helpers/Hcontrol/makeInstanceCompatible');
+import * as Deferred from 'Core/Deferred';
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 
 const RESIZE_DELAY = 10;
@@ -79,7 +79,14 @@ class Popup extends Control<IPopupOptions> {
         // TODO: костыль доброшен только в 500-е вехи, исправить в 600 иначе по ошибке:
         // https://online.sbis.ru/opendoc.html?guid=9bd579a4-b17e-4e69-a21b-730cd1353084
         if(!(isNewEnvironment())) {
-            makeInstanceCompatible(this);
+            const def = new Deferred();
+            // https://online.sbis.ru/opendoc.html?guid=7b597f0d-aa82-41d1-8d3c-7f433f806038
+            require(['Core/helpers/Hcontrol/makeInstanceCompatible'], (makeInstanceCompatible) => {
+                makeInstanceCompatible(this);
+                def.callback();
+            });
+
+            return def;
         }
     }
 
@@ -98,9 +105,6 @@ class Popup extends Control<IPopupOptions> {
         } else {
             this._notify('popupCreated', [this._options.id], {bubbling: true});
             this._options.creatingDef && this._options.creatingDef.callback(this._options.id);
-            if (this._activate) {
-               this._activate(this);
-            }
             this.activatePopup();
         }
     }
@@ -248,6 +252,9 @@ class Popup extends Control<IPopupOptions> {
     activatePopup(): void {
         // TODO Compatible
         if (this._options.autofocus && !this._options.isCompoundTemplate) {
+            if (this._activate) {
+                this._activate(this);
+            }
             this.activate();
         }
     }
