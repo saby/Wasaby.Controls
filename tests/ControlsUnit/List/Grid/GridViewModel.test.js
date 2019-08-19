@@ -1599,6 +1599,33 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel.setItemActions(current.item, [{}, {}, {}]);
             assert.isTrue(gridViewModel.getCurrent().isHovered);
          });
+         it('getItemDataByItem: in list one item and it\'s in group. Should draw separator bottom', function () {
+            const groupedVM = new gridMod.GridViewModel({
+               ...cfg,
+               items: new collection.RecordSet({
+                  rawData: [
+                     {
+                        id: 1,
+                        group: 'once'
+                     }
+                  ],
+                  idProperty: 'id'
+               }),
+               groupingKeyCallback: (item) => {
+                  return item.get('group')
+               },
+               rowSeparatorVisibility: true
+            });
+
+            groupedVM.goToNext();
+            const soloItem = groupedVM.getCurrent();
+            assert.isTrue(soloItem.rowSeparatorVisibility);
+            assert.equal(
+                ' controls-Grid__row-cell_first-row-in-group controls-Grid__row-cell_lastRow controls-Grid__row-cell_withRowSeparator_lastRow',
+                gridMod.GridViewModel._private.prepareRowSeparatorClasses(soloItem)
+            );
+
+         });
          it('isFixedCell', function() {
             var testCases = [
                {
