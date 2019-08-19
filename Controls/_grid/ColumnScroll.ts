@@ -106,6 +106,8 @@ const
       },
       setOffsetForHScroll (self) {
          const container = self._children.content;
+         self._offsetForHScroll = 0;
+         self._leftOffsetForHScroll = 0;
          const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0] && container.getElementsByClassName('controls-Grid__header')[0].childNodes;
          if (HeaderGroup && !!HeaderGroup.length) {
             const firstCell = HeaderGroup[0];
@@ -116,11 +118,13 @@ const
             } else {
                self._leftOffsetForHScroll = firstCell.offsetWidth;
             }
-            self._offsetForHScroll = firstCell.offsetHeight + container.offsetTop;
+            self._offsetForHScroll += firstCell.offsetHeight + container.offsetTop;
          }
          if (self._options.listModel.getResultsPosition() === 'top') {
-            const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
-            self._offsetForHScroll += ResultsContainer[0].offsetHeight;
+            const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0] && container.getElementsByClassName('controls-Grid__results')[0].childNodes;
+            if (ResultsContainer && !!ResultsContainer.length) {
+               self._offsetForHScroll += ResultsContainer[0].offsetHeight;
+            }
          }
       },
    },
