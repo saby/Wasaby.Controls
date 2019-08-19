@@ -2,7 +2,7 @@
    display: inline-block;
 }
 
-.controls-Switch_theme_@{themeName} {
+.controls-Switch_theme-@{themeName} {
    font-size: @font-size_Switch;
 }
 
@@ -16,7 +16,7 @@
    user-select: none;
 }
 
-.controls-Switch__toggle__wrapper_theme_@{themeName} {
+.controls-Switch__toggle__wrapper_theme-@{themeName} {
    width: @width_Switch;
    height: @height_Switch;
    border-width: @width_Switch__border;
@@ -40,57 +40,57 @@
    position: relative;
 }
 
-.controls-Switch__line_theme_@{themeName} {
+.controls-Switch__line_theme-@{themeName} {
    height: @thickness_Switch-track;
    width: @length_Switch-track - @size_Switch__ToggleCircle + @spacing-between-track-and-toggleCircle;
 }
 
-.controls-Switch__line_right_toggle_theme_@{themeName} {
+.controls-Switch__line_right_toggle_theme-@{themeName} {
    left: @spacing-between-track-and-toggleCircle;
 }
 
-.controls-Switch__line_left_toggle_theme_@{themeName} {
+.controls-Switch__line_left_toggle_theme-@{themeName} {
    right: @spacing-between-track-and-toggleCircle;
 }
 
-.controls-Switch__line_enabled_theme_@{themeName} {
+.controls-Switch__line_enabled_theme-@{themeName} {
    background-color: @background-color_Switch-track__enabled;
 }
 
-.controls-Switch__line_disabled_theme_@{themeName} {
+.controls-Switch__line_disabled_theme-@{themeName} {
    background-color: @background-color_Switch-track__disabled;
 }
 
-.controls-Switch__text_rightCaption_theme_@{themeName} {
+.controls-Switch__text_rightCaption_theme-@{themeName} {
    margin-left: @spacing_Switch-between-toggle-text;
 }
 
-.controls-Switch__text_leftCaption_theme_@{themeName} {
+.controls-Switch__text_leftCaption_theme-@{themeName} {
    margin-right: @spacing_Switch-between-toggle-text;
 }
 
-.controls-Switch__text_enabled_unselected_theme_@{themeName} {
+.controls-Switch__text_enabled_unselected_theme-@{themeName} {
    color: @color_Switch-text__enabled_unselected;
 }
 
-.controls-Switch__text_enabled_selected_theme_@{themeName} {
+.controls-Switch__text_enabled_selected_theme-@{themeName} {
    color: @color_Switch-text__enabled_selected;
 }
 
-.controls-Switch__text_disabled_selected_theme_@{themeName} {
+.controls-Switch__text_disabled_selected_theme-@{themeName} {
    color: @color_Switch-text__disabled_selected;
 }
 
-.controls-Switch__text_enabled_selected_theme_@{themeName}, .controls-Switch__text_enabled_unselected_theme_@{themeName} {
+.controls-Switch__text_enabled_selected_theme-@{themeName}, .controls-Switch__text_enabled_unselected_theme-@{themeName} {
    cursor: pointer;
 }
 
-.controls-Switch__text_disabled_unselected_theme_@{themeName} {
+.controls-Switch__text_disabled_unselected_theme-@{themeName} {
    color: @color_Switch-text__disabled_unselected;
 }
 
 .controls-Switch:active {
-   .controls-SwitchCircle__borderCircle_enabled_theme_@{themeName} {
+   .controls-SwitchCircle__borderCircle_enabled_theme-@{themeName} {
       stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
    }
 }
@@ -104,14 +104,14 @@
 }
 
 .ws-is-no-touch {
-   .controls-Switch__text_enabled_unselected_theme_@{themeName}:hover {
+   .controls-Switch__text_enabled_unselected_theme-@{themeName}:hover {
       text-decoration: underline;
    }
-   .controls-Switch__text_enabled_selected_theme_@{themeName}:hover {
+   .controls-Switch__text_enabled_selected_theme-@{themeName}:hover {
       text-decoration: @text-decoration_Switch-text_enabled_hovered;
    }
    .controls-Switch:hover {
-      .controls-SwitchCircle__borderCircle_enabled_theme_@{themeName} {
+      .controls-SwitchCircle__borderCircle_enabled_theme-@{themeName} {
          stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
       }
    }

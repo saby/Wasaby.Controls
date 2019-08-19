@@ -8,29 +8,29 @@
    user-select: none;
 }
 
-.controls-DoubleSwitch__toggle_theme_@{themeName} {
+.controls-DoubleSwitch__toggle_theme-@{themeName} {
    border-width: @width_Switch__border;
    border-color: @color_Switch__border;
    border-radius: @size_Switch__border-radius;
 }
 
-.controls-DoubleSwitch_theme_@{themeName} {
+.controls-DoubleSwitch_theme-@{themeName} {
    font-size: @font-size_DoubleSwitch;
 }
 
-.controls-DoubleSwitch__line_vertical_checked_theme_@{themeName} {
+.controls-DoubleSwitch__line_vertical_checked_theme-@{themeName} {
    bottom: @spacing-between-track-and-toggleCircle;
 }
 
-.controls-DoubleSwitch__line_vertical_notChecked_theme_@{themeName} {
+.controls-DoubleSwitch__line_vertical_notChecked_theme-@{themeName} {
    top: @spacing-between-track-and-toggleCircle;
 }
 
-.controls-DoubleSwitch__line_horizontal_notChecked_theme_@{themeName} {
+.controls-DoubleSwitch__line_horizontal_notChecked_theme-@{themeName} {
    left: @spacing-between-track-and-toggleCircle;
 }
 
-.controls-DoubleSwitch__line_horizontal_checked_theme_@{themeName} {
+.controls-DoubleSwitch__line_horizontal_checked_theme-@{themeName} {
    right: @spacing-between-track-and-toggleCircle;
 }
 
@@ -38,7 +38,7 @@
    cursor: pointer;
 }
 
-.controls-DoubleSwitch__toggle_horizontal_theme_@{themeName} {
+.controls-DoubleSwitch__toggle_horizontal_theme-@{themeName} {
    margin: 0 @spacing_Switch-between-toggle-text;
    width: @width_Switch;
    height: @height_Switch;
@@ -49,7 +49,7 @@
    margin: 0;
 }
 
-.controls-DoubleSwitch__toggle_vertical_theme_@{themeName} {
+.controls-DoubleSwitch__toggle_vertical_theme-@{themeName} {
    width: @height_Switch;
    height: @width_Switch;
    &:before {
@@ -67,7 +67,7 @@
    .flex-direction(column);
 }
 
-.controls-DoubleSwitch__textBlock_theme_@{themeName} {
+.controls-DoubleSwitch__textBlock_theme-@{themeName} {
    margin-left: @spacing_Switch-between-toggle-text;
 }
 
@@ -75,7 +75,7 @@
    position: relative;
 }
 
-.controls-DoubleSwitch__line_horizontal_theme_@{themeName} {
+.controls-DoubleSwitch__line_horizontal_theme-@{themeName} {
    height: @thickness_Switch-track;
    width: @length_Switch-track - @width_ToggleCircle + @spacing-between-track-and-toggleCircle;
 }
@@ -83,7 +83,7 @@
 .controls-DoubleSwitch__line_vertical {
    position: relative;
 }
-.controls-DoubleSwitch__line_vertical_theme_@{themeName} {
+.controls-DoubleSwitch__line_vertical_theme-@{themeName} {
    height: @length_Switch-track - @height_ToggleCircle + @spacing-between-track-and-toggleCircle;
    width: @thickness_Switch-track;
 }
@@ -96,11 +96,11 @@
 .controls-DoubleSwitch__line_enabled {
    display: inline-block;
 }
-.controls-DoubleSwitch__line_enabled_theme_@{themeName} {
+.controls-DoubleSwitch__line_enabled_theme-@{themeName} {
    background-color: @background-color_Switch-track__enabled;
 }
 
-.controls-DoubleSwitch__line_disabled_theme_@{themeName} {
+.controls-DoubleSwitch__line_disabled_theme-@{themeName} {
    background-color: @background-color_Switch-track__disabled;
 }
 
@@ -108,7 +108,7 @@
    display: inline-block;
 }
 
-.controls-DoubleSwitch__text_vertical_theme_@{themeName} {
+.controls-DoubleSwitch__text_vertical_theme-@{themeName} {
    //If border is in height text block base line between text and toggle circle deviates to switch border height.
    //In vertical state width = height, height = width.
    height: @width_Switch / 2 - @width_Switch__border;
@@ -119,7 +119,7 @@
    display: block;
 }
 
-.controls-DoubleSwitch__text_enabled_unselected_theme_@{themeName} {
+.controls-DoubleSwitch__text_enabled_unselected_theme-@{themeName} {
    color: @color_Switch-text__enabled_unselected;
 }
 
@@ -127,29 +127,29 @@
    cursor: pointer;
 }
 
-.controls-DoubleSwitch__text_disabled_unselected_theme_@{themeName} {
+.controls-DoubleSwitch__text_disabled_unselected_theme-@{themeName} {
    color: @color_Switch-text__disabled_unselected;
 }
 .controls-DoubleSwitch__text_enabled_selected {
    cursor: pointer;
 }
-.controls-DoubleSwitch__text_enabled_selected_theme_@{themeName} {
+.controls-DoubleSwitch__text_enabled_selected_theme-@{themeName} {
    color: @color_DoubleSwitch-text_enabled_selected;
 }
 
-.controls-DoubleSwitch__text_disabled_selected_theme_@{themeName} {
+.controls-DoubleSwitch__text_disabled_selected_theme-@{themeName} {
    color: @color_DoubleSwitch-text_disabled_selected;
 }
 
 .ws-is-no-touch {
-   .controls-DoubleSwitch__text_enabled_unselected_theme_@{themeName}:hover {
+   .controls-DoubleSwitch__text_enabled_unselected_theme-@{themeName}:hover {
       text-decoration: underline;
    }
 
    // CSS cascade is needed because you can move mouse to any place of toggle, and internal part of it must be highlighted.
    // Two hover class because first hover class set in js.
    .controls-DoubleSwitcher__toggle_hover, .controls-DoubleSwitch__toggle:hover {
-      .controls-SwitchCircle__borderCircle_enabled_theme_@{themeName} {
+      .controls-SwitchCircle__borderCircle_enabled_theme-@{themeName} {
          stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
       }
    }
@@ -157,7 +157,7 @@
 
 //touch on switcher
 .controls-DoubleSwitch:active {
-   .controls-SwitchCircle__borderCircle_enabled_theme_@{themeName} {
+   .controls-SwitchCircle__borderCircle_enabled_theme-@{themeName} {
       stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
    }
 }
