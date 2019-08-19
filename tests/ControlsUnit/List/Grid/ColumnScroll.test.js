@@ -481,41 +481,53 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
       it('setOffsetForHScroll', function () {
 
          columnScroll._children = {
-           content: {
-              offsetTop: 0,
-              getElementsByClassName: function (className) {
-                 if (className === 'controls-Grid__header') {
-                    return [
-                       {
-                          childNodes: [
-                             {
-                                offsetHeight: 50,
-                                offsetTop: 0,
-                             },
-                             {
-                                offsetHeight: 50,
-                                offsetTop: 0,
-                             },
-                          ]
-                       }
-                    ];
-                 } else if (className === 'controls-Grid__results') {
-                    return [
-                       {
-                          childNodes: [
-                             {
-                                offsetHeight: 50,
-                             },
-                             {
-                                offsetHeight: 50,
-                             },
-                          ]
-                       }
-                    ];
-                 }
-              }
-           }
+            content: {
+               offsetTop: 0,
+               getElementsByClassName: function (className) {
+                  if (className === 'controls-Grid__header') {
+                     return [];
+                  } else if (className === 'controls-Grid__results') {
+                     return [];
+                  }
+               }
+            }
          };
+
+         columnScroll._setOffsetForHScroll();
+         assert.equal(columnScroll._leftOffsetForHScroll, 0);
+         assert.equal(columnScroll._offsetForHScroll, 0);
+
+         columnScroll._children.content.getElementsByClassName = function (className) {
+            if (className === 'controls-Grid__header') {
+               return [
+                  {
+                     childNodes: [
+                        {
+                           offsetHeight: 50,
+                           offsetTop: 0,
+                        },
+                        {
+                           offsetHeight: 50,
+                           offsetTop: 0,
+                        },
+                     ]
+                  }
+               ];
+            } else if (className === 'controls-Grid__results') {
+               return [
+                  {
+                     childNodes: [
+                        {
+                           offsetHeight: 50,
+                        },
+                        {
+                           offsetHeight: 50,
+                        },
+                     ]
+                  }
+               ];
+            }
+         }
          columnScroll._setOffsetForHScroll();
          assert.equal(columnScroll._leftOffsetForHScroll, 100);
          assert.equal(columnScroll._offsetForHScroll, 50);
