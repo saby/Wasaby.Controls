@@ -1,0 +1,14 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__cell">
+      <Controls.input:Text attr:class="controlsDemo__input" placeholder="Enter your name"/>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.input:Text attr:class="controlsDemo__input" bind:value="_value">
+         <ws:placeholder>
+            <span>Enter or <Controls.buttons:Button attr:class="controlsDemo-Placeholders__button" viewMode="link"
+                                                    caption="paste generated" fontColorStyle="label"
+                                                    on:click="_generatePassword()"/> password</span>
+         </ws:placeholder>
+      </Controls.input:Text>
+   </div>
+</div>

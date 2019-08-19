@@ -14,11 +14,11 @@ import IInputField from "./IInputField";
  * @mixes Controls/interface/IPaste
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputPlaceholder
  *
  * @mixes Controls/interface/ISelectableInput
  * @mixes Controls/interface/IInputTooltip
  * @mixes Controls/interface/IInputStyle
+ * @mixes Controls/_input/interface/IPlaceholder
  * @mixes Controls/_input/interface/IValidationStatus
  *
  * @mixes Controls/_input/Base/Styles

@@ -18,6 +18,7 @@
  * @includes Render Controls/_input/Render
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  * @includes IValidationStatus Controls/_input/interface/IValidationStatus
+ * @includes IPlaceholder Controls/_input/interface/IPlaceholder
  *
  * @includes BaseStyles Controls/_input/Base/Styles
  * @includes RenderStyles Controls/_input/Render/Styles
@@ -48,6 +49,7 @@
  * @includes Render Controls/_input/Render
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  * @includes IValidationStatus Controls/_input/interface/IValidationStatus
+ * @includes IPlaceholder Controls/_input/interface/IPlaceholder
  *
  * @includes BaseStyles Controls/_input/Base/Styles
  * @includes RenderStyles Controls/_input/Render/Styles
@@ -57,6 +59,9 @@
  * @public
  * @author Крайнов Д.О.
  */
+
+export {default as IValidationStatus, IValidationStatusOptions} from 'Controls/_input/interface/IValidationStatus';
+export {default as IPlaceholder, IPlaceholderOptions} from 'Controls/_input/interface/IPlaceholder';
 
 import Base = require('Controls/_input/Base');
 import Area = require('Controls/_input/Area');
@@ -82,7 +87,6 @@ import StringValueConverter = require('Controls/_input/DateTime/StringValueConve
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
 import INewLineKey from 'Controls/_input/interface/INewLineKey';
-import IValidationStatus from 'Controls/_input/interface/IValidationStatus';
 
 const InputCallback = {
     lengthConstraint
@@ -109,7 +113,6 @@ export {
     StringValueConverter,
     InputCallback,
     INewLineKey,
-    IValidationStatus,
     Render,
     ActualAPI
 };

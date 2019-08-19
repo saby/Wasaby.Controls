@@ -355,18 +355,6 @@ interface IFieldTemplate {
             }
 
             return autoComplete;
-         },
-
-         getValue: function(self, options) {
-            if (options.hasOwnProperty('value')) {
-               return options.value === undefined ? self._defaultValue : options.value;
-            }
-
-            if (self._viewModel) {
-               return self._viewModel.value;
-            }
-
-            return self._defaultValue;
          }
       };
 
@@ -384,6 +372,7 @@ interface IFieldTemplate {
        * @demo Controls-demo/Input/TextAlignments/Index
        * @demo Controls-demo/Input/TagStyles/Index
        * @demo Controls-demo/Input/ValidationStatuses/Index
+       * @demo Controls-demo/Input/Placeholders/Index
        *
        * @author Красильников А.С.
        */
@@ -490,6 +479,18 @@ interface IFieldTemplate {
           */
          _displayValueAfterFocusIn: '',
 
+         _getValue: function(options) {
+            if (options.hasOwnProperty('value')) {
+               return options.value === undefined ? this._defaultValue : options.value;
+            }
+
+            if (this._viewModel) {
+               return this._viewModel.value;
+            }
+
+            return this._defaultValue;
+         },
+
          /**
           * @type {Controls/Utils/getTextWidth}
           * @private
@@ -592,7 +593,7 @@ interface IFieldTemplate {
             const viewModelOptions = this._getViewModelOptions(options);
 
             this._initProperties(options);
-            _private.initViewModel(this, viewModelCtr, viewModelOptions, _private.getValue(this, options));
+            _private.initViewModel(this, viewModelCtr, viewModelOptions, this._getValue(options));
 
             if (this._autoComplete !== 'off') {
                /**
@@ -629,7 +630,7 @@ interface IFieldTemplate {
          _beforeUpdate: function(newOptions) {
             const newViewModelOptions = this._getViewModelOptions(newOptions);
 
-            _private.updateViewModel(this, newViewModelOptions, _private.getValue(this, newOptions));
+            _private.updateViewModel(this, newViewModelOptions, this._getValue(newOptions));
          },
 
          /**

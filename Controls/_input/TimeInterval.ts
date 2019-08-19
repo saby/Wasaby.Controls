@@ -21,6 +21,7 @@ type IOptions = IModelOptions;
  * @demo Controls-demo/Input/TextAlignments/Index
  * @demo Controls-demo/Input/TagStyles/Index
  * @demo Controls-demo/Input/ValidationStatuses/Index
+ * @demo Controls-demo/Input/Placeholders/Index
  *
  * @author Красильников А.С.
  */

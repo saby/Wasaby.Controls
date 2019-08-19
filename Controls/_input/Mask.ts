@@ -27,6 +27,8 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
        * @demo Controls-demo/Input/TextAlignments/Index
        * @demo Controls-demo/Input/TagStyles/Index
        * @demo Controls-demo/Input/ValidationStatuses/Index
+       * @demo Controls-demo/Input/Placeholders/Index
+       * @demo Controls-demo/Input/Masks/Index
        */
 
       /*
@@ -84,6 +86,8 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
        * <pre class="brush:xml">
        *    <Controls.input:Mask mask="d\*"/>
        * </pre>
+       *
+       * @demo Controls-demo/Input/Masks/Index
        *
        * @see formatMaskChars
        */
@@ -233,7 +237,7 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
             _beforeUpdate: function(newOptions) {
                let oldValue = this._viewModel.value;
                Mask.superclass._beforeUpdate.apply(this, arguments);
-               if (newOptions.value !== oldValue) {
+               if (this._getValue(newOptions) !== oldValue) {
                   this._viewModel.setCarriageDefaultPosition(0);
                }
                this._autoWidth = !!newOptions.replacer;
