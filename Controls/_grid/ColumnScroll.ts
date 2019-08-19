@@ -139,7 +139,7 @@ const
       _offsetForHScroll: 0,
       _leftOffsetForHScroll: 0,
       _isNotGridSupport: false,
-      contentSizeForHScroll: 0,
+      _contentSizeForHScroll: 0,
 
       _beforeMount(opt) {
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
