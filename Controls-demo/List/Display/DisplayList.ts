@@ -47,6 +47,13 @@ export default class DisplayList<TItem> extends Control<IDisplayListOptions> {
         this._recordSet.append(items);
     }
 
+    public removeItem(key: string|number): void {
+        const item = this._recordSet.getRecordById(key);
+        if (item) {
+            this._recordSet.remove(item);
+        }
+    }
+
     // for demo
     protected _afterMount(): void {
         this._notifyCountersChanged();

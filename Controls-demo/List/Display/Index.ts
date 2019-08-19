@@ -42,6 +42,9 @@ export default class DisplayListDemo extends Control {
     private _counterData: any[] = null;
     private _useNewList: boolean;
     private _addRowsCount: number = 1;
+    private _removeRowId: number = 1;
+
+    private _templateKeyPrefix: string;
 
     protected _beforeMount(options): void {
         // for demo
@@ -51,6 +54,8 @@ export default class DisplayListDemo extends Control {
             keyProperty: 'key',
             data: generateListElements(STARTING_LIST_SIZE)
         });
+
+        this._templateKeyPrefix = `display-list-${this.getInstanceId()}`;
 
         this._counterData = [];
 
@@ -86,5 +91,22 @@ export default class DisplayListDemo extends Control {
                     .getViewModel().appendItems(records);
             }
         });
+    }
+
+    private _removeRow(): void {
+        if (this._useNewList) {
+            // Удаление из нового списка
+            this._children.listView.removeItem(this._removeRowId);
+        } else {
+            // Удаление из старого списка (страшно, но для демки)
+            const items = this._children.listViewOld
+                ._children.listControl
+                ._children.baseControl
+                .getViewModel().getItems();
+            const row = items.getRecordById(this._removeRowId);
+            if (row) {
+                items.remove(row);
+            }
+        }
     }
 }
