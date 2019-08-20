@@ -50,36 +50,68 @@ define(
             },
             sorting = [{name: 'DESC'}];
 
-         it('.search', function(done) {
-            var searchStarted = false;
-            var search = new searchLib._Search({
-               source: source,
-               searchDelay: 50,
-               navigation: navigation,
-               searchStartCallback: function() {
-                  searchStarted = true;
-               }
-            });
-            var searchWithSorting = new searchLib._Search({
-               source: source,
-               searchDelay: 50,
-               navigation: navigation,
-               sorting: sorting
-            });
+         describe('.search', function() {
+            it('simple search', function() {
+               return new Promise(function(resolve) {
+                  var searchStarted = false;
+                  var search = new searchLib._Search({
+                     source: source,
+                     searchDelay: 50,
+                     navigation: navigation,
+                     searchStartCallback: function() {
+                        searchStarted = true;
+                     }
+                  });
 
-            search.search({name: 'Sasha'}).addCallback(function(result) {
-               assert.equal(result.data.getCount(), 1);
-               assert.equal(result.data.at(0).get('name'), 'Sasha');
-               assert.isTrue(searchStarted);
-
-               searchWithSorting.search().addCallback(function (result) {
-                  assert.equal(result.data.getCount(), 4);
-                  assert.equal(result.data.at(0).get('name'), 'Sasha');
-                  assert.equal(result.data.at(3).get('name'), 'Aleksey');
-                  done();
+                  search.search({name: 'Sasha'}).addCallback(function(result) {
+                     assert.equal(result.data.getCount(), 1);
+                     assert.equal(result.data.at(0).get('name'), 'Sasha');
+                     assert.isTrue(searchStarted);
+                     resolve();
+                     return result;
+                  });
                });
+            });
 
-               return result;
+            it('search with sorting', function() {
+               return new Promise(function(resolve) {
+                  var searchWithSorting = new searchLib._Search({
+                     source: source,
+                     searchDelay: 50,
+                     navigation: navigation,
+                     sorting: sorting
+                  });
+
+                  searchWithSorting.search().addCallback(function (result) {
+                     assert.equal(result.data.getCount(), 4);
+                     assert.equal(result.data.at(0).get('name'), 'Sasha');
+                     assert.equal(result.data.at(3).get('name'), 'Aleksey');
+                     resolve();
+                  });
+               });
+            });
+
+            it('search with prefetch source', function() {
+               return new Promise(function(resolve) {
+                  var prefetchProxy = new sourceLib.PrefetchProxy({
+                     target: source,
+                     data: {
+                        query: data
+                     }
+                  });
+                  var search = new searchLib._Search({
+                     source: prefetchProxy,
+                     searchDelay: 50,
+                     navigation: navigation
+                  });
+                  prefetchProxy.query();
+                  search.search({name: 'Sasha'}).addCallback(function(result) {
+                     assert.equal(result.data.getCount(), 1);
+                     assert.equal(result.data.at(0).get('name'), 'Sasha');
+                     resolve();
+                     return result;
+                  });
+               });
             });
          });
 
@@ -118,7 +150,7 @@ define(
                   searchDef = search.search({ name: 'Sasha' });
 
                   search.abort(true);
-                  assert.isTrue(search._searchDeferred.isReady());
+                  assert.isTrue(!search._searchDeferred);
                   assert.equal(search._searchDelayTimer, null, 'forced abort work asynchronously');
 
                   resolve();
