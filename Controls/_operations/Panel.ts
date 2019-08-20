@@ -12,7 +12,14 @@ import buttons = require('Controls/buttons');
             self._oldToolbarWidth = toolbarWidth;
             self._toolbarSource = new sourceLib.Memory({
                idProperty: self._options.keyProperty,
-               data: WidthUtils.fillItemsType(self._options.keyProperty, self._options.parentProperty, items, toolbarWidth, self._options.theme).getRawData()
+               data: WidthUtils.fillItemsType(
+                  self._options.keyProperty,
+                  self._options.parentProperty,
+                  items, toolbarWidth,
+                  self._options.theme,
+                  self._options.itemTemplate,
+                  self._options.itemTemplateProperty
+               ).getRawData()
             });
             self._forceUpdate();
          }
@@ -216,4 +223,3 @@ import buttons = require('Controls/buttons');
    Panel._theme = ['Controls/operations', 'Controls/toolbars'];
 
    export = Panel;
-

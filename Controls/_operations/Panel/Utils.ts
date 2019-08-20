@@ -12,18 +12,31 @@ import getWidthUtil = require('Controls/Utils/getWidth');
          }
       },
 
-      getItemsSizes: function(items, visibleKeys, theme) {
+      getContentTemplate: function(item, itemTemplate, itemTemplateProperty) {
+         let contentTemplate = null;
+         if (itemTemplateProperty && item) {
+            contentTemplate = item.get(itemTemplateProperty);
+         }
+         if (!contentTemplate && itemTemplate !== toolbars.ItemTemplate) {
+            contentTemplate = itemTemplate;
+         }
+         return contentTemplate;
+      },
+
+      getItemsSizes: function(items, visibleKeys, theme, itemTemplate, itemTemplateProperty) {
          var
             measurer = document.createElement('div'),
             itemsSizes = [],
             itemsMark = '';
 
          visibleKeys.forEach(function(key) {
+            const item = items.getRecordById(key);
             itemsMark += toolbars.ItemTemplate({
-               item: items.getRecordById(key),
+               item,
                size: 'm',
                itemsSpacing: 'medium',
-               theme: theme
+               theme,
+               contentTemplate: _private.getContentTemplate(item, itemTemplate, itemTemplateProperty)
             });
          });
 
@@ -44,8 +57,7 @@ import getWidthUtil = require('Controls/Utils/getWidth');
    };
 
    export = {
-
-      fillItemsType: function(keyProperty, parentProperty, items, availableWidth, theme) {
+      fillItemsType: function(keyProperty, parentProperty, items, availableWidth, theme, defaultItemTemplate, itemTemplateProperty) {
          var
             itemsSizes,
             currentWidth,
@@ -56,7 +68,7 @@ import getWidthUtil = require('Controls/Utils/getWidth');
                visibleItemsKeys.push(item.get(keyProperty));
             }
          });
-         itemsSizes = _private.getItemsSizes(items, visibleItemsKeys, theme);
+         itemsSizes = _private.getItemsSizes(items, visibleItemsKeys, theme, defaultItemTemplate, itemTemplateProperty);
          currentWidth = itemsSizes.reduce(function(acc, width) {
             return acc + width;
          }, 0);
@@ -79,6 +91,6 @@ import getWidthUtil = require('Controls/Utils/getWidth');
             });
          }
          return items;
-      }
+      },
+      _private // for unit testing
    };
-
