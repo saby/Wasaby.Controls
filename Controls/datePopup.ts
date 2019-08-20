@@ -129,7 +129,7 @@ var _private = {
                 if (yearStateEnabled) {
                     if (((dateUtils.isValidDate(options.startValue) && dateUtils.isValidDate(options.endValue)) &&
                         (!dateUtils.isStartOfMonth(options.startValue) || !dateUtils.isEndOfMonth(options.endValue)) &&
-                        dateRangeUtil.gePeriodLengthInDays(options.startValue, options.endValue) <= MONTH_STATE_SELECTION_DAYS) {
+                        dateRangeUtil.gePeriodLengthInDays(options.startValue, options.endValue) <= MONTH_STATE_SELECTION_DAYS)) {
                         return STATES.month;
                     }
                 } else {

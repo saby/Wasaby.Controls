@@ -72,7 +72,7 @@ var _private = {
          fieldWrapperMinHeight = _private.getFieldWrapperMinHeight(self),
          fieldWrapperWidth = self._getFieldWrapperWidth();
 
-      if (!readOnly && (multiSelect || comment) {
+      if (!readOnly && (multiSelect || comment)) {
          additionalWidth += _private.getInputMinWidth(self._fieldWrapper.offsetWidth, afterFieldWrapperWidth, fieldWrapperMinHeight);
       }
 
