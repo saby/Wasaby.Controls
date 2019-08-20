@@ -272,7 +272,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
             this._dragging = false;
             this._notify('draggingChanged', [this._dragging]);
         }
-    },
+    }
 
     /**
      * Обработчик прокрутки колесиком мыши.
