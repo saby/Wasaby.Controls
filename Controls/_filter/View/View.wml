@@ -1,5 +1,5 @@
 <ws:template name="textTemplate">
-   <div class="controls-FilterView__block_theme_{{_options.theme}}
+   <div class="controls-FilterView__block controls-FilterView__block_theme_{{_options.theme}}
    {{_options.detailPanelTemplateName ? 'controls-FilterView-' + _options.alignment + '__block_theme_' + _options.theme}}">
       <div class="icon-DayForward controls-FilterView__iconArrow_theme_{{_options.theme}} controls-FilterView-{{_options.alignment}}__iconArrow_theme_{{_options.theme}}
                controls-FilterView__iconArrow_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}} "></div>
