@@ -12,26 +12,32 @@ import getWidthUtil = require('Controls/Utils/getWidth');
          }
       },
 
-      getItemMarkup: function(item, theme) {
-         const templateProperty = item && item.get('itemTemplateProperty');
-         const contentTemplate = templateProperty && item.get(templateProperty);
-         return toolbars.ItemTemplate({
-            item,
-            size: 'm',
-            itemsSpacing: 'medium',
-            theme,
-            contentTemplate
-         });
+      getContentTemplate: function(item, itemTemplate, itemTemplateProperty) {
+         let contentTemplate = null;
+         if (itemTemplateProperty && item) {
+            contentTemplate = item.get(itemTemplateProperty);
+         }
+         if (!contentTemplate && itemTemplate !== toolbars.ItemTemplate) {
+            contentTemplate = itemTemplate;
+         }
+         return contentTemplate;
       },
 
-      getItemsSizes: function(items, visibleKeys, theme) {
+      getItemsSizes: function(items, visibleKeys, theme, itemTemplate, itemTemplateProperty) {
          var
             measurer = document.createElement('div'),
             itemsSizes = [],
             itemsMark = '';
 
          visibleKeys.forEach(function(key) {
-            itemsMark += _private.getItemMarkup(items.getRecordById(key), theme);
+            const item = items.getRecordById(key);
+            itemsMark += toolbars.ItemTemplate({
+               item,
+               size: 'm',
+               itemsSpacing: 'medium',
+               theme,
+               contentTemplate: _private.getContentTemplate(item, itemTemplate, itemTemplateProperty)
+            });
          });
 
          measurer.innerHTML = itemsMark;
@@ -51,8 +57,7 @@ import getWidthUtil = require('Controls/Utils/getWidth');
    };
 
    export = {
-
-      fillItemsType: function(keyProperty, parentProperty, items, availableWidth, theme) {
+      fillItemsType: function(keyProperty, parentProperty, items, availableWidth, theme, defaultItemTemplate, itemTemplateProperty) {
          var
             itemsSizes,
             currentWidth,
@@ -63,7 +68,7 @@ import getWidthUtil = require('Controls/Utils/getWidth');
                visibleItemsKeys.push(item.get(keyProperty));
             }
          });
-         itemsSizes = _private.getItemsSizes(items, visibleItemsKeys, theme);
+         itemsSizes = _private.getItemsSizes(items, visibleItemsKeys, theme, defaultItemTemplate, itemTemplateProperty);
          currentWidth = itemsSizes.reduce(function(acc, width) {
             return acc + width;
          }, 0);
