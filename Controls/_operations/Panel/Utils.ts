@@ -12,6 +12,18 @@ import getWidthUtil = require('Controls/Utils/getWidth');
          }
       },
 
+      getItemMarkup: function(item, theme) {
+         const templateProperty = item && item.get('itemTemplateProperty');
+         const contentTemplate = templateProperty && item.get(templateProperty);
+         return toolbars.ItemTemplate({
+            item,
+            size: 'm',
+            itemsSpacing: 'medium',
+            theme,
+            contentTemplate
+         });
+      },
+
       getItemsSizes: function(items, visibleKeys, theme) {
          var
             measurer = document.createElement('div'),
@@ -19,12 +31,7 @@ import getWidthUtil = require('Controls/Utils/getWidth');
             itemsMark = '';
 
          visibleKeys.forEach(function(key) {
-            itemsMark += toolbars.ItemTemplate({
-               item: items.getRecordById(key),
-               size: 'm',
-               itemsSpacing: 'medium',
-               theme: theme
-            });
+            itemsMark += _private.getItemMarkup(items.getRecordById(key), theme);
          });
 
          measurer.innerHTML = itemsMark;
@@ -81,4 +88,3 @@ import getWidthUtil = require('Controls/Utils/getWidth');
          return items;
       }
    };
-
