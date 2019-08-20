@@ -19,10 +19,17 @@
    cursor: pointer;
 }
 
-.controls-FilterView__block_theme_@{themeName} {
+.controls-FilterView__block {
    display: inline-flex;
    align-items: baseline;
    white-space: nowrap;
+}
+
+.controls-FilterView__block:before {
+   content: "\200b";
+}
+
+.controls-FilterView__block_theme_@{themeName} {
    min-width: @font-size_FilterButton_arrow + @min-width_FilterButton_text;
 }
 

@@ -30,6 +30,13 @@ var
          }
          return SearchViewModel.superclass.getItemActions.call(this, item);
       },
+      setHoveredItem(item) {
+         let actualItem = item;
+         if (item && this.isBredCrumbsItem(item)) {
+            actualItem = item[item.length - 1];
+         }
+         SearchViewModel.superclass.setHoveredItem.call(this, actualItem);
+      },
       hasItemById(id) {
          return !!this._items.getRecordById(id);
       },

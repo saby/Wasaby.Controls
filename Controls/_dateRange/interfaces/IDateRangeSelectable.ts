@@ -8,6 +8,10 @@ import IRangeSelectable from './IInputSelectable';
  * @public
  */
 var selectionTypes = coreMerge({'quantum': 'quantum'}, IRangeSelectable.SELECTION_TYPES);
+const minRange = {
+   day: 'day',
+   month: 'month'
+};
 
 export = {
    getDefaultOptions: function () {
@@ -34,12 +38,14 @@ export = {
        * @variant 'day' selection mode period multiple days
        * @variant 'month' selection mode period multiple months
        */
-      options.minRange = 'day';
+      options.minRange = minRange.day;
 
       return options;
    },
 
    SELECTION_TYPES: selectionTypes,
+
+   minRange,
 
    getOptionTypes: function () {
       var optionsTypes = IRangeSelectable.getOptionTypes();

@@ -79,7 +79,8 @@ var Component = BaseControl.extend({
                 closeButtonEnabled: true,
                 selectionType: this._options.selectionType,
                 quantum: this._options.ranges,
-                minRange: this._options.minRange
+                minRange: this._options.minRange,
+                clearButtonVisible: this._options.clearButtonVisible || this._options.clearButtonVisibility
             }
         };
 

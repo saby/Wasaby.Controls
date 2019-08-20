@@ -11,7 +11,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             multiSelectVisibility: 'visible',
             stickyColumnsCount: 1,
             listModel: {
-               getResultsPosition: () => undefined
+               getResultsPosition: () => undefined,
+               getItems: () => ({
+                  getCount: () => 3
+               })
             }
          },
          columnScroll = new ColumnScroll(cfg);
@@ -173,6 +176,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          };
 
          endColumnScroll.saveOptions(cfg);
+         endColumnScroll._options.listModel.getItems = () => ({
+            getCount: () => 3
+         });
          endColumnScroll._afterMount(cfg);
          assert.strictEqual(endColumnScroll._contentSize, 500);
          assert.strictEqual(endColumnScroll._contentContainerSize, 250);
@@ -366,10 +372,11 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
       });
 
       it('_isColumnScrollVisible', function() {
+
          assert.isTrue(columnScroll._isColumnScrollVisible());
-         columnScroll._options.items = {
+         columnScroll._options.listModel.getItems = () => ({
             getCount: () => 0
-         };
+         });
          assert.isFalse(columnScroll._isColumnScrollVisible());
       });
       it('_calculateShadowStyles', function() {
@@ -486,6 +493,26 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             'controls-ColumnScroll__shadow controls-ColumnScroll__shadow-end controls-ColumnScroll__shadow_invisible');
          assert.equal(columnScroll._children.contentStyle.innerHTML, '.controls-ColumnScroll__transform-1234567890' +
             ' .controls-Grid__cell_transform { transform: translateX(-250px); }');
+      });
+
+      it('_calcPositionByWheel', function() {
+         var newPos;
+         newPos = columnScroll._calcPositionByWheel(100, 200, 50);
+         assert.equal(150, newPos);
+         newPos = columnScroll._calcPositionByWheel(20, 200, -50);
+         assert.equal(0, newPos);
+         newPos = columnScroll._calcPositionByWheel(180, 200, 50);
+         assert.equal(200, newPos);
+      });
+
+      it('_calcWheelDelta', function() {
+         var delta;
+         delta = columnScroll._calcWheelDelta(false, 200);
+         assert.equal(200, delta);
+         delta = columnScroll._calcWheelDelta(true, 2);
+         assert.equal(100, delta);
+         delta = columnScroll._calcWheelDelta(true, -2);
+         assert.equal(-100, delta);
       });
 
       it('setOffsetForHScroll', function () {

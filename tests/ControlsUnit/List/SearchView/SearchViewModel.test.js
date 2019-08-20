@@ -182,5 +182,25 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection'], fu
          assert.equal(6, model.getMarkedKey());
 
       });
+
+      it('setHoveredItem', function() {
+         const model = new SearchViewModel({
+            root: 'myTestRoot',
+            items: []
+         });
+
+         const fakeItem = { fakeItem: true };
+         model.setHoveredItem(fakeItem);
+         assert.strictEqual(model.getHoveredItem(), fakeItem);
+
+         // does not fail on breadcrumbs
+         const fakeCrumbs = [{ crumb: 1 }, { crumb: 2 }, { crumb: 3 }];
+         model.setHoveredItem(fakeCrumbs);
+         assert.strictEqual(model.getHoveredItem(), fakeCrumbs[2]);
+
+         // does not fail when hover is removed
+         model.setHoveredItem(null);
+         assert.isNull(model.getHoveredItem());
+      });
    });
 });

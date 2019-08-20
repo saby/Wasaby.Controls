@@ -496,6 +496,11 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
     CoreMerge(templateOptions, popupOptions.templateOptions || {});
     const baseCfg = {...baseConfig, ...popupOptions, templateOptions};
 
+    // protect against wrong config. Opener must be specified only on popupOptions.
+    if (baseCfg.templateOptions) {
+        delete baseCfg.templateOptions.opener;
+    }
+
     if (baseCfg.hasOwnProperty('closeOnTargetScroll')) {
         Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Use option "actionOnScroll" instead of "closeOnTargetScroll"');
         if (baseCfg.closeOnTargetScroll) {

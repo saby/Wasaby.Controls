@@ -1,12 +1,14 @@
 define([
    'Core/core-merge',
    'Core/Deferred',
+   'Types/formatter',
    'Controls/datePopup',
    'Controls/Utils/Date',
    'ControlsUnit/Calendar/Utils'
 ], function(
    coreMerge,
    Deferred,
+   formatter,
    PeriodDialog,
    dateUtils,
    calendarTestUtils
@@ -15,6 +17,10 @@ define([
 
    const start = new Date(2018, 0, 1),
       end = new Date(2018, 0, 2);
+
+   const formatDate = function(date) {
+      return formatter.date(date, formatter.date.FULL_DATE);
+   };
 
    describe('Controls/Date/PeriodDialog', function() {
       describe('Initialisation', function() {
@@ -131,6 +137,24 @@ define([
             );
             assert.strictEqual(component._headerType, PeriodDialog.HEADER_TYPES.input);
          });
+
+         describe('mask', function() {
+            [{
+               options: {},
+               mask: 'DD.MM.YY'
+            }, {
+               options: { mask: 'DD.MM.YY hh:mm' },
+               mask: 'DD.MM.YY hh:mm'
+            }, {
+               options: { minRange: 'month' },
+               mask: 'MM.YYYY'
+            }].forEach(function (test) {
+               it(`should set mask to ${test.mask} if options are equals ${JSON.stringify(test.options)}.`, function () {
+                  const component = calendarTestUtils.createComponent(PeriodDialog, test.options);
+                  assert.strictEqual(component._mask, test.mask);
+               });
+            });
+         });
       });
 
       describe('_homeButtonClick', function() {
@@ -153,6 +177,16 @@ define([
          });
       });
 
+      describe('_onHeaderLinkRangeChanged', function() {
+         it('should update range.', function() {
+            const component = calendarTestUtils.createComponent(
+               PeriodDialog, { startValue: new Date(2019, 0, 1), endValue: new Date(2019, 1, 0) });
+            component._onHeaderLinkRangeChanged(null, null, null);
+            assert.isNull(component._rangeModel.startValue);
+            assert.isNull(component._rangeModel.endValue);
+         });
+      });
+
       describe('_startValuePickerChanged', function() {
          it('should update start value.', function() {
             const component = calendarTestUtils.createComponent(PeriodDialog, {}),
@@ -164,12 +198,21 @@ define([
       });
 
       describe('_endValuePickerChanged', function() {
-         it('should update end value.', function() {
-            const component = calendarTestUtils.createComponent(PeriodDialog, {}),
-               date = new Date();
-            component._endValuePickerChanged(null, date);
-            assert.strictEqual(component._rangeModel.endValue, date);
-            assert.strictEqual(component._headerRangeModel.endValue, date);
+         [{
+            options: {},
+            date: new Date(2019, 6, 10),
+            endValue: new Date(2019, 6, 10)
+         }, {
+            options: { mask: 'MM.YYYY' },
+            date: new Date(2019, 6, 10),
+            endValue: new Date(2019, 7, 0)
+         }].forEach(function(test) {
+            it(`should update end value to ${formatDate(test.endValue)} if ${formatDate(test.date)} is passed and options is equal ${JSON.stringify(test.options)}.`, function() {
+               const component = calendarTestUtils.createComponent(PeriodDialog, test.options);
+               component._endValuePickerChanged(null, test.date);
+               assert(dateUtils.isDatesEqual(component._rangeModel.endValue, test.endValue));
+               assert(dateUtils.isDatesEqual(component._headerRangeModel.endValue, test.endValue));
+            });
          });
       });
 
