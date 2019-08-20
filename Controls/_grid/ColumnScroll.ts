@@ -19,8 +19,11 @@ const
             columnOffset = hasMultiSelect ? 1 : 0,
             lastStickyColumnIndex = stickyColumnsCount + columnOffset,
             lastStickyColumnSelector = `.controls-Grid__cell_fixed:nth-child(${lastStickyColumnIndex})`,
-            stickyCellContainer = container.querySelector(lastStickyColumnSelector),
-            stickyCellOffsetLeft = stickyCellContainer.getBoundingClientRect().left - container.getBoundingClientRect().left;
+            stickyCellContainer = container.querySelector(lastStickyColumnSelector);
+         if (!stickyCellContainer) {
+            return 0;
+         }
+         const stickyCellOffsetLeft = stickyCellContainer.getBoundingClientRect().left - container.getBoundingClientRect().left;
          return stickyCellOffsetLeft + stickyCellContainer.offsetWidth;
       },
       updateSizes(self) {
