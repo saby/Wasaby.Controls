@@ -291,7 +291,7 @@ var
                     `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`
                     )
                     const height = curEl.offsetHeight;
-                    const offset = curEl.offsetTop;
+                    const offset = Math.abs(curEl.offsetTop - container.offsetTop);
                     return {
                         ...cur,
                         offsetTop: offset,
