@@ -177,7 +177,7 @@ const
       },
 
       _isColumnScrollVisible: function() {
-         const items = this._options.items;
+         const items = this._options.listModel.getItems();
          return items && !!items.getCount() && (this._contentSize > this._contentContainerSize) ? true : false;
       },
 
