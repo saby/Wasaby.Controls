@@ -842,8 +842,10 @@ interface IFieldTemplate {
             this._displayValueAfterFocusIn = this._viewModel.displayValue;
             MobileFocusController.focusHandler(event);
 
+            /**
              * When a filled field was mounted, its carriage is placed at the beginning of the text. For example, in chrome, firefox,
              * IE10-11, can still where. The carriage needs to have a position in accordance with the model. So we change it to first focus.
+             */
             if (this._firstFocus) {
                this._firstFocus = false;
                _private.updateSelection(this, this._viewModel.selection);
