@@ -119,6 +119,54 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
          assert.deepEqual(filterLayout._filterButtonItems, expectedButtonItems);
          assert.deepEqual(filterLayout._fastFilterItems, expectedFastItems);
          assert.deepEqual(filterLayout._filter, {testKey: 'testValue', testKey2: 'testValue'});
+
+         fastItems = [];
+         filterLayout.saveOptions({filterButtonSource: buttonItems, fastFilterSource: fastItems});
+         let newButtonItems = [{
+            id: 'testKey',
+            value: 'testValue3',
+            textValue: 'testText',
+            resetValue: ''
+         }, {
+            id: 'testKey2',
+            value: '',
+            textValue: '',
+            resetValue: ''
+         }];
+         expectedButtonItems = [{
+            id: 'testKey',
+            isFast: true,
+            value: 'testValue3',
+            textValue: 'testText',
+            resetValue: ''
+         }, {
+            id: 'testKey2',
+            value: '',
+            textValue: '',
+            resetValue: ''
+         }];
+         filterLayout._beforeUpdate({filterButtonSource: newButtonItems, fastFilterSource: fastItems});
+         assert.deepEqual(filterLayout._filterButtonItems, expectedButtonItems);
+         assert.deepEqual(filterLayout._fastFilterItems, expectedFastItems);
+         assert.deepEqual(filterLayout._filter, {testKey: 'testValue', testKey2: ''});
+
+         filterLayout.saveOptions({filterButtonSource: buttonItems, fastFilterSource: fastItems});
+         let newFastItems = [{
+            id: 'testKey',
+            value: 'testValueFast',
+            textValue: '',
+            resetValue: ''
+         }];
+         expectedFastItems = [{
+            id: 'testKey',
+            value: 'testValueFast',
+            textValue: '',
+            resetValue: ''
+         }];
+         filterLayout._beforeUpdate({filterButtonSource: buttonItems, fastFilterSource: newFastItems});
+         assert.deepEqual(filterLayout._filterButtonItems, expectedButtonItems);
+         assert.deepEqual(filterLayout._fastFilterItems, expectedFastItems);
+         assert.deepEqual(filterLayout._filter, {testKey: 'testValueFast', testKey2: ''});
       });
 
       it('_itemsChanged', function () {
