@@ -11,7 +11,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             multiSelectVisibility: 'visible',
             stickyColumnsCount: 1,
             listModel: {
-               getResultsPosition: () => undefined
+               getResultsPosition: () => undefined,
+               getItems: () => ({
+                  getCount: () => 3
+               })
             }
          },
          columnScroll = new ColumnScroll(cfg);
@@ -173,6 +176,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          };
 
          endColumnScroll.saveOptions(cfg);
+         endColumnScroll._options.listModel.getItems = () => ({
+            getCount: () => 3
+         });
          endColumnScroll._afterMount(cfg);
          assert.strictEqual(endColumnScroll._contentSize, 500);
          assert.strictEqual(endColumnScroll._contentContainerSize, 250);
@@ -366,10 +372,11 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
       });
 
       it('_isColumnScrollVisible', function() {
+
          assert.isTrue(columnScroll._isColumnScrollVisible());
-         columnScroll._options.items = {
+         columnScroll._options.listModel.getItems = () => ({
             getCount: () => 0
-         };
+         });
          assert.isFalse(columnScroll._isColumnScrollVisible());
       });
       it('_calculateShadowStyles', function() {
