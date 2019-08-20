@@ -23,8 +23,10 @@
          showNextArrow="{{false}}"
          showPrevArrow="{{false}}"
          showUndefined="{{true}}"
+         clearButtonVisible="{{_options.clearButtonVisible}}"
          clickable="{{_options.selectionType !== 'quantum'}}"
          on:linkClick="_headerLinkClick()"
+         on:rangeChanged="_onHeaderLinkRangeChanged()"
       />
    </div>
    <div if="{{ _headerType === _HEADER_TYPES.input }}" class="controls-PeriodDialog__header-period">

@@ -248,6 +248,10 @@ var Component = BaseControl.extend([EventProxyMixin], {
         }
     },
 
+    _onHeaderLinkRangeChanged: function(e, startValue, endValue) {
+        _private.rangeChanged(this, startValue, endValue);
+    },
+
     _startValuePickerChanged: function (e, value) {
         _private.rangeChanged(
             this,
