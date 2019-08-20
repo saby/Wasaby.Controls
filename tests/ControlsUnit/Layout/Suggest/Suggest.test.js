@@ -261,7 +261,14 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
 
       it('Suggest::_private.searchErrback', function(done) {
          var self = getComponentObject();
+         var isIndicatorVisible;
          self._forceUpdate = function() {};
+         self._children = {};
+         self._children.indicator = {
+            hide: function() {
+               isIndicatorVisible = false;
+            }
+         };
 
          self._loading = null;
          suggestMod._InputController._private.searchErrback(self, {canceled: true});
@@ -273,9 +280,11 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
 
          self._forceUpdate = function() {
             assert.equal(self._emptyTemplate(), '<div class="controls-Suggest__empty"> Справочник недоступен </div>');
+            assert.isFalse(isIndicatorVisible);
             done();
          };
          self._loading = true;
+         isIndicatorVisible = true;
          suggestMod._InputController._private.searchErrback(self, {canceled: true});
          assert.isFalse(self._loading);
       });

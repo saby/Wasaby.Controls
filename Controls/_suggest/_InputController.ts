@@ -130,7 +130,7 @@ var _private = {
       if (!error || !error.canceled) {
          requirejs(['tmpl!Controls/_suggest/_InputController/emptyError'], function(result) {
             self._emptyTemplate = result;
-            self._forceUpdate();
+            self._children.indicator.hide();
          });
       }
    },
