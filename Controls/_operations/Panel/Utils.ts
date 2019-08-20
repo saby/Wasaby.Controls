@@ -91,5 +91,6 @@ import getWidthUtil = require('Controls/Utils/getWidth');
             });
          }
          return items;
-      }
+      },
+      _private // for unit testing
    };

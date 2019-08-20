@@ -1,11 +1,13 @@
 define([
    'Controls/operations',
    'Types/source',
-   'Controls/_operations/Panel/Utils'
+   'Controls/_operations/Panel/Utils',
+   'Controls/toolbars'
 ], function(
    View,
    sourceLib,
-   WidthUtils
+   WidthUtils,
+   toolbars
 ) {
    'use strict';
 
@@ -362,4 +364,49 @@ define([
          });
       });
    });
+
+   describe('Controls/_operations/Panel/Utils', () => {
+
+      describe('getContentTemplate', () => {
+
+         it('returns itemTemplate from item if it has one', () => {
+            const fakeItem = {
+               get: (name) => name === 'customTemplate' ? 'this template' : 'wrong field'
+            };
+            assert.strictEqual(
+               WidthUtils._private.getContentTemplate(fakeItem, 'default', 'customTemplate'),
+               'this template'
+            );
+         });
+
+         it('returns itemTemplate from panel if item does not have one', () => {
+            const fakeItem = {
+               get: (name) => name === 'myOwnTemplate' ? null : 'wrong field'
+            };
+            assert.strictEqual(
+               WidthUtils._private.getContentTemplate(fakeItem, 'default template', 'myOwnTemplate'),
+               'default template'
+            );
+         });
+
+         it('returns nothing if no template is specified', () => {
+            const fakeItem = {
+               get: () => null
+            };
+            assert.isNotOk(WidthUtils._private.getContentTemplate(fakeItem, null, null));
+         });
+
+         it('returns nothing if default template is toolbars:ItemTemplate', () => {
+            const fakeItem = {
+               get: (name) => name === 'myOwnTemplate' ? null : 'wrong field'
+            };
+            assert.isNotOk(
+               WidthUtils._private.getContentTemplate(fakeItem, toolbars.ItemTemplate, 'myOwnTemplate')
+            );
+         });
+
+      });
+
+   });
+
 });
