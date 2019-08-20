@@ -4,6 +4,7 @@ import coreMerge = require('Core/core-merge');
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import ILinkView from './interfaces/ILinkView';
 import IInputSelectable from './interfaces/IInputSelectable';
+import {IIconSize, IIconSizeOptions} from 'Controls/interface';
 import DateRangeModel from './DateRangeModel';
 import CalendarControlsUtils from './Utils';
 import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
@@ -15,6 +16,7 @@ import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/ISelector
+ * @mixes Controls/_interface/IFontSize
  * @control
  * @public
  * @category Input
