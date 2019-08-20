@@ -273,7 +273,7 @@
                  source="{{_createMemory(_oneGroupItems)}}"
                  groupingKeyCallback="{{_groupingKeyCallback}}"
                  groupTemplate="wml!Controls/_dropdownPopup/defaultGroupTemplate"
-                 attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups"
+                 attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups3"
                  tooltip="Add">
          </Controls.dropdown:Button>
       </div>
