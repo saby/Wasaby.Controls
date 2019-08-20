@@ -219,31 +219,36 @@ const
        _wheelHandler(e: SyntheticEvent<WheelEvent>): void {
            const nativeEvent = e.nativeEvent;
            const maxPosition = this._contentSize - this._contentContainerSize;
+           let newPosition: number;
+           let delta: number;
            if (nativeEvent.shiftKey || nativeEvent.deltaX) {
                e.stopPropagation();
                e.preventDefault();
 
-               let delta: number;
-               let newPosition: number;
-
-               //deltaX определена, когда качаем колесом мыши
+               // deltaX определена, когда качаем колесом мыши
                if (nativeEvent.deltaX) {
                    delta = this._calcWheelDelta(detection.firefox, nativeEvent.deltaX);
                } else {
                    delta = this._calcWheelDelta(detection.firefox, nativeEvent.deltaY);
                }
-
-               newPosition = this._scrollPosition + delta;
-               if (newPosition < 0) {
-                   newPosition = 0;
-               } else if (newPosition > maxPosition) {
-                   newPosition = maxPosition;
-               }
+               newPosition = this._calcPositionByWheel(this._scrollPosition, maxPosition, delta);
                this._setScrollPosition(newPosition);
-            }
+           }
        },
 
-       _calcWheelDelta: function(firefox, delta) {
+       _calcPositionByWheel(currentPosition: number, maxPosition: number, wheelDelta: number): number {
+           let newPosition: number;
+           newPosition = currentPosition + wheelDelta;
+           if (newPosition < 0) {
+               newPosition = 0;
+           } else if (newPosition > maxPosition) {
+               newPosition = maxPosition;
+           }
+
+           return newPosition;
+       },
+
+       _calcWheelDelta(firefox: boolean, delta: number): number {
            /**
             * Определяем смещение ползунка.
             * В firefox в дескрипторе события в свойстве deltaY лежит маленькое значение,
