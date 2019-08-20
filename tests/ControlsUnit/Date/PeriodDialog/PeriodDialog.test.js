@@ -153,6 +153,16 @@ define([
          });
       });
 
+      describe('_onHeaderLinkRangeChanged', function() {
+         it('should update range.', function() {
+            const component = calendarTestUtils.createComponent(
+               PeriodDialog, { startValue: new Date(2019, 0, 1), endValue: new Date(2019, 1, 0) });
+            component._onHeaderLinkRangeChanged(null, null, null);
+            assert.isNull(component._rangeModel.startValue);
+            assert.isNull(component._rangeModel.endValue);
+         });
+      });
+
       describe('_startValuePickerChanged', function() {
          it('should update start value.', function() {
             const component = calendarTestUtils.createComponent(PeriodDialog, {}),
