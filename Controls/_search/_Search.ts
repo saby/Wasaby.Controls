@@ -115,10 +115,6 @@ var Search  = extend({
             .addErrback(function(err) {
                _private.searchErrback(self, err);
                return err;
-            })
-            .addBoth(function(result) {
-               self._searchDeferred = null;
-               return result;
             });
       };
 
@@ -141,6 +137,7 @@ var Search  = extend({
       let abort = function() {
          if (self._searchDeferred && !self._searchDeferred.isReady()) {
             self._searchDeferred.cancel();
+            self._searchDeferred = null;
          }
          self._sourceController.cancelLoading();
          abortDef.callback();
