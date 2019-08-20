@@ -38,6 +38,7 @@
                                                       on:mouseup="_mouseupPage()"
                                                       on:keyPress="_keyPressHandler()"
                                                       on:mouseup="_mouseupPage()"
+                                                      on:mouseleave="_mouseleavePage()"
                                                       on:suggestStateChanged="_suggestStateChangedHandler()">
                                              <ws:bodyContent>
                                                 <div class="bodyContent">
