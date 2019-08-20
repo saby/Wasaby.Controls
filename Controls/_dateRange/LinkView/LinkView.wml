@@ -13,7 +13,7 @@
               </span>
            </ws:if>
            <ws:else data="{{ _viewMode == 'link' }}">
-              <Controls.buttons:Button name="Link" caption="{{ _caption }}" style="{{_styleMode}}" viewMode="link" on:click="_onClick()"/>
+              <Controls.buttons:Button name="Link" caption="{{ _caption }}" style="{{_styleMode}}" fontSize="{{_options.fontSize}}" viewMode="link" on:click="_onClick()"/>
            </ws:else>
            <ws:else>
               <Controls.input:Label name="Link" caption="{{ _caption }}" underline="hovered" on:click="_onClick()"/>
