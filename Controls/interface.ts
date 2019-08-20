@@ -20,6 +20,7 @@
  * @includes IExpandable Controls/_interface/IExpandable
  * @includes ISorting Controls/_interface/ISorting
  * @includes ISorting Controls/_interface/ILookup
+ * @includes IDateMask Controls/_interface/IDateMask
  * @public
  * @author Крайнов Д.О.
  */
@@ -46,3 +47,4 @@ export {default as INumberFormat, INumberFormatOptions} from './_interface/INumb
 export {default as IExpandable, IExpandableOptions} from './_interface/IExpandable';
 export {default as ISorting, ISortingOptions} from './_interface/ISorting';
 export {default as ILookup, ILookupOptions} from './_interface/ILookup';
+export {default as IDateMask, IDateMaskOptions, dateMaskConstants} from './_interface/IDateMask';

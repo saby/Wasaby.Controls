@@ -36,7 +36,7 @@
          </ws:validators>
          <ws:content>
             <Controls.input:DateBase
-               mask="{{_options.mask}}"
+               mask="{{_mask}}"
                autocompleteMode="start"
                value="{{_rangeModel.startValue}}"
                attr:class="controls-PeriodDialog__header-datePickerStart"
@@ -54,7 +54,7 @@
             </ws:validators>
             <ws:content>
                <Controls.input:DateBase
-                  mask="{{_options.mask}}"
+                  mask="{{_mask}}"
                   autocompleteMode="start"
                   value="{{_rangeModel.endValue}}"
                   attr:class="controls-PeriodDialog__header-datePickerEnd"
