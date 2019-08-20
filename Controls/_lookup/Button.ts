@@ -14,6 +14,8 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * @mixes Controls/interface/IFilter
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IFontColorStyle
+ * @mixes Controls/interface/IFontSize
  * @mixes Controls/_lookup/Button/SelectorButtonStyles
  * @extends Core/Control
  * @control
@@ -50,29 +52,3 @@ var Button = Control.extend({
 });
 
 export = Button;
-
-/**
- * @name Controls/_lookup/Button#style
- * @cfg {Enum} Стиль отображения кнопки.
- * @variant primary
- * @variant success
- * @variant warning
- * @variant danger
- * @variant info
- * @variant secondary
- * @variant default
- * @default secondary
- */
-
-/*
- * @name Controls/_lookup/Button#style
- * @cfg {Enum} Button display style.
- * @variant primary
- * @variant success
- * @variant warning
- * @variant danger
- * @variant info
- * @variant secondary
- * @variant default
- * @default secondary
- */
