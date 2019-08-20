@@ -154,6 +154,7 @@ import {isEqual} from 'Types/object';
                end: this.displayValue.length
             };
 
+            this._nextVersion();
             this._shouldBeChanged = true;
          }
       });
