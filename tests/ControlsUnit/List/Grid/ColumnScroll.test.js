@@ -488,6 +488,26 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             ' .controls-Grid__cell_transform { transform: translateX(-250px); }');
       });
 
+      it('_calcPositionByWheel', function() {
+         var newPos;
+         newPos = columnScroll._calcPositionByWheel(100, 200, 50);
+         assert.equal(150, newPos);
+         newPos = columnScroll._calcPositionByWheel(20, 200, -50);
+         assert.equal(0, newPos);
+         newPos = columnScroll._calcPositionByWheel(180, 200, 50);
+         assert.equal(200, newPos);
+      });
+
+      it('_calcWheelDelta', function() {
+         var delta;
+         delta = columnScroll._calcWheelDelta(false, 200);
+         assert.equal(200, delta);
+         delta = columnScroll._calcWheelDelta(true, 2);
+         assert.equal(100, delta);
+         delta = columnScroll._calcWheelDelta(true, -2);
+         assert.equal(-100, delta);
+      });
+
       it('setOffsetForHScroll', function () {
 
          columnScroll._children = {
