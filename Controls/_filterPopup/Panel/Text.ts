@@ -2,11 +2,12 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/Text/Text');
 import 'css!theme?Controls/filterPopup';
 
-   /**
+/**
     * Контрол, отображающий текст с кнопкой сброса в виде крестика.
     * Используется для демонстрации пользователю выбранного фильтра, клик по крестику сбрасывает фильтр.
     * @class Controls/_filterPopup/Panel/Text
     * @extends Core/Control
+    * @mixes Controls/interface/ITextValue
     * @control
     * @public
     * @author Герасимов А.М.
@@ -52,6 +53,7 @@ import 'css!theme?Controls/filterPopup';
 
       _afterMount: function() {
          this._notify('valueChanged', [true]);
+         this._notify('textValueChanged', [this._options.caption]);
       },
 
       _resetHandler: function() {
