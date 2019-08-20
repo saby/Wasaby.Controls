@@ -1,7 +1,5 @@
 define('Controls-demo/List/Grid/ValignGrid', [
-   'Env/Env',
    'Core/Control',
-   'Controls-demo/List/Grid/GridData',
    'wml!Controls-demo/List/Grid/ValignGrid',
    'Types/source',
    'wml!Controls-demo/List/Grid/DemoItem',
@@ -11,7 +9,7 @@ define('Controls-demo/List/Grid/ValignGrid', [
    'css!Controls-demo/List/Grid/Grid',
    'Controls/scroll',
    'Controls/grid',
-], function(Env, BaseControl, GridData, template, source) {
+], function(BaseControl, template, source) {
    'use strict';
    var
       fullColumns = [
