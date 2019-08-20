@@ -6,6 +6,11 @@
    display: flex;
    align-items: baseline;
    white-space: nowrap;
+
+   // есть темы, в которых выравнивание ХК идет по базовой линии шрифта размера, отличного от кнопки назад
+   .controls-Back__wrapper:before {
+      font-size:@font-size_BreadCrumbs-baseline;
+   }
 }
 
 .controls-BreadCrumbsPath__backButton {
