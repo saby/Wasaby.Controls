@@ -251,7 +251,7 @@ import {factory} from 'Types/chain';
                var emptyItem = {};
                var itemData = {};
                itemData[this._options.displayProperty] = this._options.emptyText;
-               itemData[this._options.keyProperty] = null;
+               itemData[this._options.keyProperty] = this._options.emptyKey || null;
                var item = new entity.Model({
                   rawData: itemData
                });
