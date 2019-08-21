@@ -68,6 +68,9 @@
 
 .controls-StackTemplate__headerContentTemplate_theme_@{themeName} {
    padding-right: @header-content_padding-right_stack;
+   &:empty {
+      padding-right: 0;
+   }
 }
 
 .controls-StackTemplate__command_buttons_theme_@{themeName} {
