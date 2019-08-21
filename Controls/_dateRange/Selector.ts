@@ -30,6 +30,7 @@ import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/ISelector
+ * @mixes Controls/_interface/IFontSize
  * @control
  * @public
  * @category Input
