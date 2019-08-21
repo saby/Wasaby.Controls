@@ -1,6 +1,6 @@
 {
    "name": "sbis3-controls",
-   "version": "19.610.0",
+   "version": "19.600.0",
    "repository": {
       "type": "git",
       "url": "git@git.sbis.ru:root/sbis3-controls"
@@ -56,24 +56,24 @@
    "dependencies": {},
    "devDependencies": {
       "@tensor-corp/eslint-config": "^2.0.3",
-      "Router": "git+https://github.com/saby/Router.git#rc-19.610",
+      "Router": "git+https://github.com/saby/Router.git#rc-19.600",
       "body-parser": "^1.19.0",
-      "cdn": "git+https://github.com/saby/wasaby-cdn.git#rc-19.610",
+      "cdn": "git+https://github.com/saby/wasaby-cdn.git#rc-19.600",
       "cookie-parser": "^1.4.3",
       "eslint": "^5.7.0",
       "express": "^4.17.1",
-      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.610",
-      "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.610",
-      "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-19.610",
-      "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.610",
-      "saby-ui": "git+https://github.com/saby/UI.git#rc-19.610",
-      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.610",
-      "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.610",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.610",
+      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.600",
+      "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.600",
+      "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-19.600",
+      "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.600",
+      "saby-ui": "git+https://github.com/saby/UI.git#rc-19.600",
+      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.600",
+      "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.600",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.600",
       "serve-static": "1.11.x",
       "stylelint": "^9.7.1",
       "stylelint-config-standard": "^18.2.0",
       "tslint": "^5.18.0",
-      "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.610"
+      "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.600"
    }
 }
