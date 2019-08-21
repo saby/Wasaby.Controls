@@ -392,6 +392,13 @@ define(
             emptyItem = viewModel.getEmptyItem();
             assert.isTrue(emptyItem.isSelected);
             assert.equal(emptyItem.emptyText, emptyConfig.emptyText);
+
+            emptyConfig.selectedKeys = ['100'];
+            emptyConfig.emptyKey = '100';
+            viewModel = new DropdownViewModel(emptyConfig);
+            emptyItem = viewModel.getEmptyItem();
+            assert.isTrue(emptyItem.isSelected);
+            assert.equal(emptyItem.emptyText, emptyConfig.emptyText);
          });
       })
    });
