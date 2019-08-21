@@ -32,7 +32,8 @@ var List = Control.extend({
             keyProperty: options.keyProperty,
             itemTemplateProperty: options.itemTemplateProperty,
             displayProperty: options.displayProperty,
-            emptyText: options.emptyText
+            emptyText: options.emptyText,
+            emptyKey: options.emptyKey
         });
 
         this._afterOpenDialogCallback = _private.afterOpenDialogCallback.bind(this);
