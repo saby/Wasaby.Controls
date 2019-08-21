@@ -12,6 +12,7 @@ import dateRangeUtil = require('Controls/Utils/DateRangeUtil');
 import componentTmpl = require('wml!Controls/_datePopup/DatePopup');
 import headerTmpl = require('wml!Controls/_datePopup/header');
 import 'css!theme?Controls/datePopup';
+import {Controller as ManagerController} from 'Controls/popup';
 
 /**
  * A dialog that allows you to choose dates and periods of arbitrary duration.
@@ -196,7 +197,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
         this._rangeModel = new DateRangeModel();
         this._rangeModel.update(options);
-
+        this._prepareTheme();
         this._headerRangeModel = new DateRangeModel();
         this._headerRangeModel.update(options);
 
@@ -240,6 +241,9 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._rangeModel.destroy();
         this._headerRangeModel.destroy();
         this._yearRangeModel.destroy();
+    },
+    _prepareTheme(): void {
+        this._headerTheme = ManagerController.getPopupHeaderTheme();
     },
 
     _toggleStateClick: function(): void {
