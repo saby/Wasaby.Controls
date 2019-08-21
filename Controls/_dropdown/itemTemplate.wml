@@ -5,10 +5,12 @@
                  {{itemData.getPropValue(itemData.item, 'pinned') === true && !itemData.hasParent ?  'controls-DropdownList__row_pinned'}}
                  controls-DropdownList__row_{{multiLine ? 'multiLine' : 'singleLine'}} theme_{{_options.theme}}">
    <ws:if data="{{(itemData.multiSelect || multiSelect) && !itemData.emptyText}}">
-      <Controls.toggle:Checkbox value="{{itemData.isSelected}}"
+      <Controls.Container.Async templateName="Controls/toggle:Checkbox"
                                 attr:class="controls-DropdownList__row-checkbox theme_{{_options.theme}}
                                    controls-DropdownList__row-checkbox-{{checkBoxAlign === 'right' ? 'right' : 'left'}}_theme_{{_options.theme}}
-                                   controls-DropdownList__row-checkbox_{{itemData.isSelected ? 'active' : 'default'}}_theme_{{_options.theme}}"/>
+                                   controls-DropdownList__row-checkbox_{{itemData.isSelected ? 'active' : 'default'}}_theme_{{_options.theme}}">
+         <ws:templateOptions value="{{itemData.isSelected}}" />
+      </Controls.Container.Async>
    </ws:if>
    <ws:if data="{{contentTemplate}}">
       <!--If contentTemplate is a string, then use Async to load required module-->
