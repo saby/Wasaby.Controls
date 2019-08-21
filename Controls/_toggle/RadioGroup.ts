@@ -10,8 +10,8 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
     *
     * @class Controls/_toggle/RadioGroup
     * @extends Core/Control
-    * @mixes Controls/interface/ISource
-    * @mixes Controls/interface/ISingleSelectable
+    * @mixes Controls/_interface/ISource
+    * @mixes Controls/_interface/ISingleSelectable
     * @implements Controls/_toggle/interface/IToggleGroup
     * @control
     * @public
@@ -30,8 +30,8 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
     *
     * @class Controls/_toggle/RadioGroup
     * @extends Core/Control
-    * @mixes Controls/interface/ISource
-    * @mixes Controls/interface/ISingleSelectable
+    * @mixes Controls/_interface/ISource
+    * @mixes Controls/_interface/ISingleSelectable
     * @implements Controls/_toggle/interface/IToggleGroup
     * @control
     * @public
