@@ -22,7 +22,15 @@ class Cell extends Control {
         if (this._options.itemData.isEditing) {
             return;
         }
-        this._options.eventHandlers[event.type](event, item);
+
+        // TODO KINGO Не нужно обрабатывать клик по строке с хлебными крошками (в результатах поиска).
+        // stopPropogation в SearchView данном случае не срабатывает из-за отстутсвия элемента DOM
+        // Поэтому остановить лишние события можно только здесь
+        if (event.type !== 'click' || (!item.getContents || item.getContents().get)) {
+            this._options.eventHandlers[event.type](event, item);
+        } else {
+            event.stopPropagation();
+        }
     }
 
 }
