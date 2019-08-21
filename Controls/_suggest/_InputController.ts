@@ -271,6 +271,8 @@ var _private = {
    },
 
    openSelector: function(self, popupOptions) {
+      popupOptions = clone(popupOptions) || {};
+
       if (self._notify('showSelector', [popupOptions]) !== false) {
          //loading showAll templates
          requirejs(['Controls/suggestPopup'], function () {
