@@ -131,7 +131,7 @@ define([
          cell.saveOptions(options);
 
          cell._beforeMount(options);
-         cell._callHandler({type:'click', stopPropagation}, fakeItem);
+         cell._callHandler(fakeEvent, fakeItem);
          assert.isFalse(called);
          assert.isTrue(propagationStopped);
       });
