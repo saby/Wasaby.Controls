@@ -286,8 +286,13 @@ define([
             return (new Deferred()).errback('update error');
          };
          let def = new Deferred();
+         let calledEventName;
+         FC._notify = (event) => {
+            calledEventName = event;
+         };
          FC._confirmDialogResult(true, def);
          assert.equal(def.isReady(), false);
+         assert.equal(calledEventName, 'cancelFinishingPending');
          FC.destroy();
       });
    });
