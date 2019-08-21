@@ -350,3 +350,13 @@
    top: @spacing_DropdownList-row-between-checkbox-topBorder;
    right: @spacing_DropdownList-row-between-checkbox-rightBorder;
 }
+
+// TODO Kingo
+// https://online.sbis.ru/opendoc.html?guid=c2744750-8f5f-4031-839c-0434f406db89
+// -webkit-overflow-scrolling: touch меняет сглаживание текста и иконок.
+// Этот стиль вешается для последнего открытого попапа, чтобы избежать багов со скролом.
+// Для того, чтобы не ломать логику навешивания -webkit-overflow-scrolling: touch,
+// чиню сглаживание через translateZ(0)
+.ws-is-mobile-safari .controls-DropdownList__popup{
+   transform: translateZ(0);
+}
