@@ -116,7 +116,7 @@
                 <Controls.buttons:Button attr:class="test_element" readOnly="{{false}}" iconStyle="secondary" iconSize="s" icon="icon-ArrowUp" buttonStyle="secondary" viewMode="toolButton" contrastBackground="{{false}}" inlineHeight="default"/>
                 <span class="demo-Button__Label">Up</span>
             </div>
-            <div attr:class="demo-Button__testBlock__controlPanel">
+            <div attr:class="demo-Button__testBlock__controlPanel demo-standartDemoButton__iconDown">
                 <Controls.buttons:Button attr:class="test_element" readOnly="{{false}}" iconStyle="secondary" iconSize="s" icon="icon-ArrowDown" buttonStyle="secondary" viewMode="toolButton" contrastBackground="{{false}}" inlineHeight="default"/>
                 <span class="demo-Button__Label">Down</span>
             </div>
