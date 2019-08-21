@@ -257,26 +257,16 @@ import 'css!theme?Controls/scroll';
                   verticalDirection = this._options.direction === 'vertical',
                   pageOffset = _private.getPageOffset(event.nativeEvent, this._options.direction),
                   thumbOffset = this._children.thumb.getBoundingClientRect()[verticalDirection ? 'top' : 'left'],
-                  delta;
+                  delta = _private.calcScrollbarDelta(thumbOffset, pageOffset, this._thumbSize);
 
                this._currentPageOffset = pageOffset;
-               if (this._fix1177446501) {
-                  this._startPageOffset = pageOffset;
-                  delta = _private.calcScrollbarDelta(thumbOffset, pageOffset, this._thumbSize);
-                  this._startPosition = this._position + delta / this._scrollRatio;
+               this._startPageOffset = pageOffset;
+               this._startPosition = this._position + delta / this._scrollRatio;
 
-                  if (event.target.getAttribute('name') === 'scrollbar') {
-                     this._setPosition(this._startPosition, true);
-                  } else {
-                     this._children.dragNDrop.startDragNDrop(null, event);
-                  }
+               if (event.target.getAttribute('name') === 'scrollbar') {
+                  this._setPosition(this._startPosition, true);
                } else {
-                  if (event.target.getAttribute('name') === 'scrollbar') {
-                     delta = _private.calcScrollbarDelta(thumbOffset, pageOffset, this._thumbSize);
-                     this._setPosition(this._position + delta / this._scrollRatio, true);
-                  } else {
-                     this._children.dragNDrop.startDragNDrop(null, event);
-                  }
+                  this._children.dragNDrop.startDragNDrop(null, event);
                }
             },
 
@@ -348,4 +338,3 @@ import 'css!theme?Controls/scroll';
       Scrollbar._private = _private;
 
       export = Scrollbar;
-
