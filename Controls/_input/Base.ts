@@ -97,7 +97,7 @@ interface IFieldTemplate {
           */
          updateField: function(self, value: string, selection) {
             _private.updateValue(self, value);
-            _private.updateSelection(self, selection, true);
+            _private.updateSelection(self, selection);
          },
 
          updateValue: function(self, value) {
@@ -108,7 +108,7 @@ interface IFieldTemplate {
             }
          },
 
-         updateSelection: function (self, selection, skipSaveSelection) {
+         updateSelection: function (self, selection) {
             const field = self._getField();
 
             /**
@@ -117,11 +117,11 @@ interface IFieldTemplate {
              */
             if (_private.hasSelectionChanged(field, selection) && _private.isFieldFocused(self)) {
                /**
-                * After calling setSelectionRange may by the select event is triggered and saved the selection in model.
-                * This behavior is for example when called in the input event handler, but not in the focus handler.
+                * After calling setSelectionRange the select event is triggered and saved the selection in model.
+                * Bug detected in all browsers except IE. Can check with the demo https://jsfiddle.net/xcnmbg9e/
                 * Do not need to do this because the model is now the actual selection.
                 */
-               if (skipSaveSelection) {
+               if (!self._isIE) {
                   self._numberSkippedSaveSelection++;
                }
                field.setSelectionRange(selection.start, selection.end);
@@ -545,6 +545,7 @@ interface IFieldTemplate {
          constructor: function(cfg) {
             Base.superclass.constructor.call(this, cfg);
 
+            this._isIE = Env.detection.isIE;
             this._ieVersion = Env.detection.IEVersion;
             this._isMobileAndroid = Env.detection.isMobileAndroid;
             this._isMobileIOS = Env.detection.isMobileIOS;
@@ -847,7 +848,7 @@ interface IFieldTemplate {
              */
             if (this._firstFocus) {
                this._firstFocus = false;
-               _private.updateSelection(this, this._viewModel.selection, false);
+               _private.updateSelection(this, this._viewModel.selection);
             }
          },
 
@@ -1018,6 +1019,8 @@ interface IFieldTemplate {
       });
 
       Base._theme = ['Controls/input'];
+
+      Base._private = _private;
 
       Base.getDefaultOptions = function() {
          return {
