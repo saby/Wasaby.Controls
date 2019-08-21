@@ -26,10 +26,14 @@ class Cell extends Control {
         // TODO KINGO Не нужно обрабатывать клик по строке с хлебными крошками (в результатах поиска).
         // stopPropogation в SearchView данном случае не срабатывает из-за отстутсвия элемента DOM
         // Поэтому остановить лишние события можно только здесь
-        if (event.type !== 'click' || (!item.getContents || item.getContents().get)) {
-            this._options.eventHandlers[event.type](event, item);
+        if (event.type === 'click'){
+            if (item.getContents && !item.getContents().get){
+                event.stopPropagation();
+            } else {
+                this._options.eventHandlers[event.type](event, item);
+            }
         } else {
-            event.stopPropagation();
+            this._options.eventHandlers[event.type](event, item);
         }
     }
 
