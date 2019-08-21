@@ -611,8 +611,12 @@ import 'Controls/context';
          },
 
          _beforeUpdate: function(newOptions) {
-            if (this._options.filterButtonSource !== newOptions.filterButtonSource || this._options.fastFilterSource !== newOptions.fastFilterSource) {
-               _private.setFilterItems(this, newOptions.filterButtonSource, newOptions.fastFilterSource);
+            let filterButtonChanged = this._options.filterButtonSource !== newOptions.filterButtonSource,
+                fastFilterChanged = this._options.fastFilterSource !== newOptions.fastFilterSource;
+            if (filterButtonChanged || fastFilterChanged) {
+               let actualFilterButtonSource = filterButtonChanged ? newOptions.filterButtonSource : this._filterButtonItems;
+               let actualFastFilterSource = fastFilterChanged ? newOptions.fastFilterSource : this._fastFilterItems;
+               _private.setFilterItems(this, actualFilterButtonSource, actualFastFilterSource);
                _private.resolveFilterButtonItems(this._filterButtonItems, this._fastFilterItems);
                _private.applyItemsToFilter(this, this._filter, this._filterButtonItems, this._fastFilterItems);
             }
