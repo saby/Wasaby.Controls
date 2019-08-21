@@ -202,7 +202,8 @@ import 'Controls/context';
 
             function processItems(elem) {
                // The filter can be changed by another control, in which case the value is set to the filter button, but textValue is not set.
-               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue')) && getPropValue(elem, 'textValue')) {
+               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue')) &&
+                   getPropValue(elem, 'textValue') !== undefined && getPropValue(elem, 'textValue') !== null) {
                   filter[getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name')] = getPropValue(elem, 'value');
                }
             }
