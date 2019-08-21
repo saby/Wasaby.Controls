@@ -2,10 +2,10 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_lookup/BaseLookupView/BaseLookupView');
 import DOMUtil = require('Controls/Utils/DOMUtil');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import {isEqual} from 'Types/object';
-import {constants, IoC} from 'Env/Env';
 import clearRecordsTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/clearRecordsTemplate');
 import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/showSelectorTemplate');
+import {isEqual} from 'Types/object';
+import {constants, IoC} from 'Env/Env';
 
 
 const KEY_CODE_F2 = 113;
@@ -98,7 +98,7 @@ var BaseLookupView = Control.extend({
         }
     },
 
-    _afterUpdate: function () {
+    _afterUpdate: function():void {
         if (this._needSetFocusInInput) {
             this._needSetFocusInInput = false;
 
@@ -119,14 +119,19 @@ var BaseLookupView = Control.extend({
     },
 
     _choose: function (event, item) {
-        this._notify('addItem', [item]);
-
-        _private.resetInputValue(this);
-
         // move focus to input after select, because focus will be lost after closing popup
-        if (this._isInputActive(this._options)) {
+        if (this._options.multiSelect) {
             this.activate({enableScreenKeyboard: true});
+        } else {
+            // activate method is focusing input.
+            // for lookup with multiSelect: false input will be hidden after select item,
+            // and focus will be lost.
+            // for this case activate lookup in _afterUpdate hook.
+            this._needSetFocusInInput = true;
         }
+
+        this._notify('addItem', [item]);
+        _private.resetInputValue(this);
     },
 
     _crossClick: function (event, item) {
@@ -193,7 +198,7 @@ var BaseLookupView = Control.extend({
     },
 
     _openInfoBox: function (event, config) {
-        config.width = this._container.offsetWidth;
+        config.width = this._getContainer().offsetWidth;
         this._suggestState = false;
         this._infoboxOpened = true;
         this._notify('openInfoBox', [config]);
@@ -234,6 +239,16 @@ var BaseLookupView = Control.extend({
             //If press backspace, the input field is empty and there are selected entries -  remove last item
             this._notify('removeItem', [items.at(items.getCount() - 1)]);
         }
+    },
+
+    _getContainer: function() {
+        let container = this._container;
+
+        if (window.jQuery && container instanceof window.jQuery) {
+            container = container[0];
+        }
+
+        return container;
     },
 
    _getPlaceholder: function(options) {

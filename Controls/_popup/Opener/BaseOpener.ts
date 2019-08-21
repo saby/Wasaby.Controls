@@ -351,6 +351,11 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
                     compatiblePopup.BaseOpener._prepareConfigForNewTemplate(newCfg);
                     compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
                     dialog.setTarget && dialog.setTarget($(newCfg.target));
+
+                    // Обновляем опцию для старого окна и зовем завершение обработки, т.к. окно уже открыто и просто
+                    // перерисовывает шаблон
+                    dialog._options.creatingDef = newCfg.creatingDef;
+                    dialog._finishPopupOpenedDeferred && dialog._finishPopupOpenedDeferred();
                 } else {
                     action.closeDialog();
                     action._isExecuting = false;
@@ -472,6 +477,7 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'targetPoint',
         'targetTracking',
         'locationStrategy',
+        'fittingMode',
         'actionOnScroll'
     ];
 
@@ -489,6 +495,11 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
     CoreMerge(templateOptions, baseConfig.templateOptions || {});
     CoreMerge(templateOptions, popupOptions.templateOptions || {});
     const baseCfg = {...baseConfig, ...popupOptions, templateOptions};
+
+    // protect against wrong config. Opener must be specified only on popupOptions.
+    if (baseCfg.templateOptions) {
+        delete baseCfg.templateOptions.opener;
+    }
 
     if (baseCfg.hasOwnProperty('closeOnTargetScroll')) {
         Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Use option "actionOnScroll" instead of "closeOnTargetScroll"');

@@ -11,7 +11,7 @@
          icon="icon-ArrangeList"
          iconStyle="secondary"
          iconSize="s"
-         on:valueChanged="_toggleState()"
+         on:valueChanged="_toggleStateClick()"
       />
    <!--</div>-->
    <div if="{{ _headerType === _HEADER_TYPES.link }}" class="controls-PeriodDialog__header-period">
@@ -23,8 +23,10 @@
          showNextArrow="{{false}}"
          showPrevArrow="{{false}}"
          showUndefined="{{true}}"
+         clearButtonVisible="{{_options.clearButtonVisible}}"
          clickable="{{_options.selectionType !== 'quantum'}}"
          on:linkClick="_headerLinkClick()"
+         on:rangeChanged="_onHeaderLinkRangeChanged()"
       />
    </div>
    <div if="{{ _headerType === _HEADER_TYPES.input }}" class="controls-PeriodDialog__header-period">
@@ -34,7 +36,7 @@
          </ws:validators>
          <ws:content>
             <Controls.input:DateBase
-               mask="{{_options.mask}}"
+               mask="{{_mask}}"
                autocompleteMode="start"
                value="{{_rangeModel.startValue}}"
                attr:class="controls-PeriodDialog__header-datePickerStart"
@@ -52,7 +54,7 @@
             </ws:validators>
             <ws:content>
                <Controls.input:DateBase
-                  mask="{{_options.mask}}"
+                  mask="{{_mask}}"
                   autocompleteMode="start"
                   value="{{_rangeModel.endValue}}"
                   attr:class="controls-PeriodDialog__header-datePickerEnd"

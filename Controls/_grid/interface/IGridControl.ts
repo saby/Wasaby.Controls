@@ -168,39 +168,48 @@
  *       </ws:header>
  *    </Controls.grid:View>
  * </pre>
+ * 
  * @example
- * Пример массива колонок многоуровнего заголовка:
+ * Пример массива колонок многоуровневого заголовка:
  * <pre>
- * columns=[
- *    {
- *       title: 'Name',
- *       startRow: 1,
- *       endRow: 3,
- *       startColumn: 1,
- *       endColumn: 2,
- *    },
- *    {
- *       title: 'Price',
- *       startRow: 1,
- *       endRow: 2,
- *       startColumn: 2,
- *       endColumn: 4,
- *    },
- *    {
- *       title: 'Cell',
- *       startRow: 2,
- *       endRow: 3,
- *       startColumn: 2,
- *       endColumn: 3,
- *    },
- *    {
- *       title: 'Residue',
- *       startRow: 2,
- *       endRow: 3,
- *       startColumn: 3,
- *       endColumn: 4,
- *    },
- * ]
+ * _header: null,
+ * _beforeMount: function(options) {
+ *    this._header = [
+ *       {
+ *          caption: 'Name',
+ *          startRow: 1,
+ *          endRow: 3,
+ *          startColumn: 1,
+ *          endColumn: 2
+ *       },
+ *       {
+ *          caption: 'Price',
+ *          startRow: 1,
+ *          endRow: 2,
+ *          startColumn: 2,
+ *          endColumn: 4
+ *       },
+ *       {
+ *          caption: 'Cell',
+ *          startRow: 2,
+ *          endRow: 3,
+ *          startColumn: 2,
+ *          endColumn: 3
+ *       },
+ *       {
+ *          caption: 'Residue',
+ *          startRow: 2,
+ *          endRow: 3,
+ *          startColumn: 3,
+ *          endColumn: 4
+ *       }
+ *    ]
+ * }
+ * </pre>
+ * <pre>
+ * <Controls.grid:View header="{{ _header }}">
+ *     ...
+ * </Controls.grid:View>
  * </pre>
  */
 

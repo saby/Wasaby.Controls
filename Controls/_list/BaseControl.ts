@@ -485,6 +485,7 @@ var _private = {
         if (_private.applyVirtualScrollIndexesToListModel(self)) {
             _private.applyPlaceholdersSizes(self);
         } else {
+            // если индексы не поменялись, то зовем коллбэк, если поменялись он позовется в beforePaint
             self._applyScrollTopCallback();
             self._applyScrollTopCallback = null;
         }
@@ -1303,7 +1304,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _checkLoadToDirectionTimeout: null,
 
     _resetScrollAfterReload: false,
-    _isMounted: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1636,17 +1636,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._virtualScroll && this._itemsChanged) {
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);
+        }
+
+        if (this._virtualScroll && this._applyScrollTopCallback) {
+            this._applyScrollTopCallback();
+            this._applyScrollTopCallback = null;
             // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
             // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
             this._checkLoadToDirectionTimeout = setTimeout(() => {
                 _private.checkLoadToDirectionCapability(this);
                 this._checkLoadToDirectionTimeout = null;
             });
-        }
-
-        if (this._virtualScroll && this._applyScrollTopCallback) {
-            this._applyScrollTopCallback();
-            this._applyScrollTopCallback = null;
         }
 
         // todo KINGO.

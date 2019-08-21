@@ -327,10 +327,7 @@ var CompoundArea = CompoundContainer.extend([
       self._notifyVDOM = self._notify;
       self._notify = self._notifyCompound;
 
-      // Событие об изменении размеров нужно пробросить наверх, чтобы окно перепозиционировалось
-      self.subscribe('onResize', function() {
-         this._notifyVDOM('controlResize', [], { bubbling: true });
-      });
+      self._subscribeOnResize();
 
       self._windowResize = self._windowResize.bind(self);
       if (window) {

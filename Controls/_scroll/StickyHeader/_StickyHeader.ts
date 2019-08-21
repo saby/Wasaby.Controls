@@ -173,6 +173,15 @@ var StickyHeader = Control.extend({
     * @private
     */
    _observeHandler: function(entries) {
+      // FIXME: this._container - jQuery element in old controls envirmoment https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+      let container = this._container[0] || this._container;
+      let popupContainer = container.closest('.controls-Popup__template');
+
+      // Stack popups can be hidden when child popup has a large width.
+      // In this case don't start observable handler.
+      if (popupContainer && popupContainer.classList.contains('ws-hidden')) {
+         return;
+      }
       var fixedPosition = this._model.fixedPosition;
 
       this._model.update(entries);

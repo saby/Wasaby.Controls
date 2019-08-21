@@ -1099,67 +1099,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel.setColumns(gridColumns);
             assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" before "setColumns(gridColumns)".');
          });
-         it('_prepareCrossBrowserColumn', function() {
-            var
-               noGridSupport = {
-                  initialColumns: [
-                     {
-                        title: 'first',
-                        width: ''
-                     },
-                     {
-                        title: 'second',
-                        width: '1fr'
-                     },
-                     {
-                        title: 'third',
-                        width: '100px'
-                     },
-                     {
-                        title: 'fourth',
-                        width: 'max-content'
-                     },
-                     {
-                        title: 'last',
-                        width: 'auto'
-                     }
-                  ],
-                  resultColumns: [
-                     {
-                        title: 'first',
-                        width: ''
-                     },
-                     {
-                        title: 'second',
-                        width: 'auto'
-                     },
-                     {
-                        title: 'third',
-                        width: '100px'
-                     },
-                     {
-                        title: 'fourth',
-                        width: 'auto'
-                     },
-                     {
-                        title: 'last',
-                        width: 'auto'
-                     }
-                  ]
-               },
-                partialOfFullGridSupport={};
-            partialOfFullGridSupport.initialColumns = noGridSupport.initialColumns;
-
-            for (var i = 0; i < noGridSupport.initialColumns.length; i++) {
-               assert.deepEqual(noGridSupport.resultColumns[i], gridViewModel._prepareCrossBrowserColumn(noGridSupport.initialColumns[i], true),
-                   'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".');
-            }
-
-            for (var i = 0; i < partialOfFullGridSupport.initialColumns.length; i++) {
-               assert.deepEqual(partialOfFullGridSupport.initialColumns[i], gridViewModel._prepareCrossBrowserColumn(partialOfFullGridSupport.initialColumns[i], false),
-                   'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".');
-            }
-         });
 
          it('should +1 on row index on rows after editting', function () {
 
@@ -1460,7 +1399,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.equal(
                 editingItemData.getEditingRowStyles(),
-                'display: grid; display: -ms-grid; grid-template-columns: max-content 1fr 123px 321px; grid-column: 1 / 5; grid-row: 3;'
+                'display: grid; display: -ms-grid; grid-template-columns: max-content 1fr 123px 321px; grid-column: 1 / 2; grid-row: 3;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
          });
@@ -1599,6 +1538,33 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel.setItemActions(current.item, [{}, {}, {}]);
             assert.isTrue(gridViewModel.getCurrent().isHovered);
          });
+         it('getItemDataByItem: in list one item and it\'s in group. Should draw separator bottom', function () {
+            const groupedVM = new gridMod.GridViewModel({
+               ...cfg,
+               items: new collection.RecordSet({
+                  rawData: [
+                     {
+                        id: 1,
+                        group: 'once'
+                     }
+                  ],
+                  idProperty: 'id'
+               }),
+               groupingKeyCallback: (item) => {
+                  return item.get('group')
+               },
+               rowSeparatorVisibility: true
+            });
+
+            groupedVM.goToNext();
+            const soloItem = groupedVM.getCurrent();
+            assert.isTrue(soloItem.rowSeparatorVisibility);
+            assert.equal(
+                ' controls-Grid__row-cell_first-row-in-group controls-Grid__row-cell_lastRow controls-Grid__row-cell_withRowSeparator_lastRow',
+                gridMod.GridViewModel._private.prepareRowSeparatorClasses(soloItem)
+            );
+
+         });
          it('isFixedCell', function() {
             var testCases = [
                {
@@ -1722,8 +1688,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getColspanForColumnScroll', function () {
             assert.deepEqual(
                 {
-                   fixedColumns: 'grid-column: 1 / 3; -ms-grid-column: 1; -ms-grid-column-span: 2;',
-                   scrollableColumns: 'grid-column: 3 / 11; -ms-grid-column: 3; -ms-grid-column-span: 8;'
+                   fixedColumns: 'grid-column: 1 / 3; -ms-grid-column: 1; -ms-grid-column-span: 2; z-index: 3;',
+                   scrollableColumns: 'grid-column: 3 / 11; -ms-grid-column: 3; -ms-grid-column-span: 8; z-index: auto;'
                 },
                 gridMod.GridViewModel._private.getColspanForColumnScroll({
                    _options: {
@@ -1737,8 +1703,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.deepEqual(
                 {
-                   fixedColumns: 'grid-column: 2 / 4; -ms-grid-column: 2; -ms-grid-column-span: 2;',
-                   scrollableColumns: 'grid-column: 4 / 12; -ms-grid-column: 4; -ms-grid-column-span: 8;'
+                   fixedColumns: 'grid-column: 2 / 4; -ms-grid-column: 2; -ms-grid-column-span: 2; z-index: 3;',
+                   scrollableColumns: 'grid-column: 4 / 12; -ms-grid-column: 4; -ms-grid-column-span: 8; z-index: auto;'
                 },
                 gridMod.GridViewModel._private.getColspanForColumnScroll({
                    _options: {
@@ -2027,6 +1993,33 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             itemData.multiSelectVisibility = 'visible';
             assert.equal(4, gridMod.GridViewModel._private.getColspan(itemData, true));
          });
+
+         it('_prepareCrossBrowserColumn', function () {
+            const initialColumns = [
+               {title: 'first', width: ''},
+               {title: 'second', compatibleWidth: '100px', width: '1fr'},
+               {title: 'third', width: '100px'},
+               {title: 'fourth', width: 'max-content', compatibleWidth: '12%' },
+               {title: 'last', width: 'auto'}
+            ];
+            const resultColumns = [
+               {title: 'first', width: 'auto'},
+               {title: 'second', width: '100px', compatibleWidth: '100px'},
+               {title: 'third', width: '100px'},
+               {title: 'fourth', width: '12%', compatibleWidth: '12%'},
+               {title: 'last', width: 'auto'}
+            ];
+
+            for (let i = 0; i < initialColumns.length; i++) {
+               assert.deepEqual(
+                   resultColumns[i],
+                   model._prepareCrossBrowserColumn(initialColumns[i]),
+                   'Incorrect result "_prepareCrossBrowserColumn(initialColumns[' + i + '])".'
+               );
+            }
+
+         });
+
       });
 
    });

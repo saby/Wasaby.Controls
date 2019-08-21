@@ -294,6 +294,12 @@ var HierarchySelection = Selection.extend({
             this._excludedKeys,
             this._items
          );
+
+         // All items from selectedKeys is in another root, if count is 0 and we have selectedKeys.
+         // in this case multiSelector displays "Selected" without count.
+         if (countItems === 0 && this._selectedKeys.length) {
+            countItems = null;
+         }
       }
 
       return countItems;

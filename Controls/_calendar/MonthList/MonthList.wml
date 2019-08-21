@@ -23,7 +23,8 @@
          <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate"
                         itemData="{{itemTemplate.itemData}}"
-                        highlightOnHover="{{false}}">
+                        highlightOnHover="{{false}}"
+                        attr:class="controls-MonthList__item">
                <ws:contentTemplate>
                   <ws:partial
                      template="{{_itemTemplate}}"

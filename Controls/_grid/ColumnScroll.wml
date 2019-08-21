@@ -1,13 +1,12 @@
-<div name="content" class="{{_transformSelector}}">
+<div name="content" class="{{_transformSelector}}" on:wheel="_wheelHandler()">
    <style name="contentStyle" data-vdom-ignore="true"></style>
    <ws:if data="{{_isColumnScrollVisible()}}">
       <Controls._scroll.Scroll.Scrollbar
               name="columnScrollbar"
               position="{{_scrollPosition}}"
               direction="horizontal"
-              contentSize="{{_contentSize}}"
+              contentSize="{{_contentSizeForHScroll}}"
               isNotGridSupport="{{_isNotGridSupport}}"
-              leftOffset="{{_leftOffsetForHScroll}}"
               attr:class="controls-ColumnScroll"
               attr:style="top:{{_offsetForHScroll}}px;left:{{_leftOffsetForHScroll}}px;"
               on:positionChanged="_positionChangedHandler()"/>

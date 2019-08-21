@@ -4,6 +4,7 @@ import 'css!theme?Controls/grid';
 import { detection } from 'Env/Env';
 import Entity = require('Types/entity');
 import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
@@ -106,23 +107,29 @@ const
       },
       setOffsetForHScroll (self) {
          const container = self._children.content;
-         const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0].childNodes;
+         self._offsetForHScroll = 0;
+         self._leftOffsetForHScroll = 0;
+         const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0] && container.getElementsByClassName('controls-Grid__header')[0].childNodes;
          if (HeaderGroup && !!HeaderGroup.length) {
             const firstCell = HeaderGroup[0];
             if (self._fixedColumnsWidth) {
-               self._leftOffsetForHScroll = self._fixedColumnsWidth;
+                self._leftOffsetForHScroll = self._fixedColumnsWidth;
             } else if (self._options.multiSelectVisibility !== 'hidden') {
                self._leftOffsetForHScroll = firstCell.offsetWidth + HeaderGroup[1].offsetWidth;
             } else {
                self._leftOffsetForHScroll = firstCell.offsetWidth;
             }
-            self._offsetForHScroll = firstCell.offsetHeight + container.offsetTop;
+            self._offsetForHScroll += firstCell.offsetHeight + container.offsetTop;
          }
          if (self._options.listModel.getResultsPosition() === 'top') {
-            const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
-            self._offsetForHScroll += ResultsContainer[0].offsetHeight;
+            const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0] && container.getElementsByClassName('controls-Grid__results')[0].childNodes;
+            if (ResultsContainer && !!ResultsContainer.length) {
+               self._offsetForHScroll += ResultsContainer[0].offsetHeight;
+            }
          }
-      },
+
+         self._contentSizeForHScroll = self._contentSize - self._leftOffsetForHScroll;
+      }
    },
    ColumnScroll = Control.extend({
       _template: ColumnScrollTpl,
@@ -137,6 +144,7 @@ const
       _offsetForHScroll: 0,
       _leftOffsetForHScroll: 0,
       _isNotGridSupport: false,
+      _contentSizeForHScroll: 0,
 
       _beforeMount(opt) {
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
@@ -171,8 +179,9 @@ const
          _private.updateSizes(this);
       },
 
-      _isColumnScrollVisible() {
-         return this._contentSize > this._contentContainerSize;
+      _isColumnScrollVisible: function() {
+         const items = this._options.listModel.getItems();
+         return items && !!items.getCount() && (this._contentSize > this._contentContainerSize) ? true : false;
       },
 
       _calculateShadowClasses(position) {
@@ -191,19 +200,71 @@ const
          }
       },
 
-      _positionChangedHandler(event, position) {
-         const
-            newScrollPosition = Math.round(position);
-         if (this._scrollPosition !== newScrollPosition) {
-            this._scrollPosition = newScrollPosition;
-            this._shadowState =
-               _private.calculateShadowState(this._scrollPosition, this._contentContainerSize, this._contentSize);
+      _setScrollPosition: function(position) {
+          const
+              newScrollPosition = Math.round(position);
+          if (this._scrollPosition !== newScrollPosition) {
+              this._scrollPosition = newScrollPosition;
+              this._shadowState =
+                  _private.calculateShadowState(this._scrollPosition, this._contentContainerSize, this._contentSize);
 
-            _private.drawTransform(this, this._scrollPosition);
-         }
+              _private.drawTransform(this, this._scrollPosition);
+          }
       },
-      getContentContainerSize() {
-         return this._contentContainerSize;
-      },
+
+       _positionChangedHandler(event, position) {
+           this._setScrollPosition(position);
+       },
+       getContentContainerSize() {
+           return this._contentContainerSize;
+       },
+
+       _wheelHandler(e: SyntheticEvent<WheelEvent>): void {
+           const nativeEvent = e.nativeEvent;
+           const maxPosition = this._contentSize - this._contentContainerSize;
+           let newPosition: number;
+           let delta: number;
+           if (nativeEvent.shiftKey || nativeEvent.deltaX) {
+               e.stopPropagation();
+               e.preventDefault();
+
+               // deltaX определена, когда качаем колесом мыши
+               if (nativeEvent.deltaX) {
+                   delta = this._calcWheelDelta(detection.firefox, nativeEvent.deltaX);
+               } else {
+                   delta = this._calcWheelDelta(detection.firefox, nativeEvent.deltaY);
+               }
+               newPosition = this._calcPositionByWheel(this._scrollPosition, maxPosition, delta);
+               this._setScrollPosition(newPosition);
+           }
+       },
+
+       _calcPositionByWheel(currentPosition: number, maxPosition: number, wheelDelta: number): number {
+           let newPosition: number;
+           newPosition = currentPosition + wheelDelta;
+           if (newPosition < 0) {
+               newPosition = 0;
+           } else if (newPosition > maxPosition) {
+               newPosition = maxPosition;
+           }
+
+           return newPosition;
+       },
+
+       _calcWheelDelta(firefox: boolean, delta: number): number {
+           /**
+            * Определяем смещение ползунка.
+            * В firefox в дескрипторе события в свойстве deltaY лежит маленькое значение,
+            * поэтому установим его сами.
+            * TODO: Нормальное значение есть в дескрипторе события MozMousePixelScroll в
+            * свойстве detail, но на него нельзя подписаться.
+            * https://online.sbis.ru/opendoc.html?guid=3e532f22-65a9-421b-ab0c-001e69d382c8
+            */
+           if (firefox) {
+               return Math.sign(delta) * 100;
+           }
+
+           return delta;
+       }
    });
 export = ColumnScroll;

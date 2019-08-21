@@ -175,10 +175,10 @@ var
                     } else {
                         result += ' controls-Grid__row-cell_withRowSeparator';
                     }
-                    if (current.index === rowCount - 1) {
-                        result += ' controls-Grid__row-cell_lastRow';
-                        result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
-                    }
+                }
+                if (current.index === rowCount - 1) {
+                    result += ' controls-Grid__row-cell_lastRow';
+                    result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
                 }
             } else {
                 result += ' controls-Grid__row-cell_withoutRowSeparator';
@@ -441,13 +441,11 @@ var
             if (!itemData.isGroup) {
 
                 itemData.getEditingRowStyles = function () {
-                    let
-                        columnsLength = self._columns.length + (self._options.multiSelectVisibility === 'hidden' ? 0 : 1),
-                        editingRowStyles = '';
+                    let editingRowStyles = '';
 
                     editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
                     editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
-                    editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, columnsLength);
+                    editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, 1);
 
                     return editingRowStyles;
                 }
@@ -520,8 +518,8 @@ var
             const end = start + self._columns.length;
 
             return {
-                fixedColumns: `grid-column: ${start} / ${center}; -ms-grid-column: ${start}; -ms-grid-column-span: ${stickyColumnsCount};`,
-                scrollableColumns: `grid-column: ${center} / ${end}; -ms-grid-column: ${center}; -ms-grid-column-span: ${scrollableColumnsCount};`,
+                fixedColumns: `grid-column: ${start} / ${center}; -ms-grid-column: ${start}; -ms-grid-column-span: ${stickyColumnsCount}; z-index: 3;`,
+                scrollableColumns: `grid-column: ${center} / ${end}; -ms-grid-column: ${center}; -ms-grid-column-span: ${scrollableColumnsCount}; z-index: auto;`,
             };
         }
 
@@ -611,15 +609,14 @@ var
             this._model.nextModelVersion(notUpdatePrefixItemVersion);
         },
 
-        _prepareCrossBrowserColumn: function(column, isNoGridSupport) {
-            var
-                result = cClone(column);
-            if (isNoGridSupport) {
-                if (result.width === '1fr') {
-                    result.width = 'auto';
-                }
-                if (result.width === 'max-content') {
-                    result.width = 'auto';
+        _prepareCrossBrowserColumn: function(column) {
+            const result = cClone(column);
+
+            if (GridLayoutUtil.isNoGridSupport()) {
+                if (column.compatibleWidth) {
+                    result.width = column.compatibleWidth;
+                } else {
+                    result.width = GridLayoutUtil.isCompatibleWidth(column.width) ? column.width : 'auto';
                 }
             }
             return result;
@@ -1290,7 +1287,7 @@ var
 
             current.isFirstInGroup = !current.isGroup && this._isFirstInGroup(current.item);
 
-            if (current.isFirstInGroup) {
+            if (current.isFirstInGroup && current.item !== self.getLastItem()) {
                 current.rowSeparatorVisibility = false;
             } else {
                 current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;

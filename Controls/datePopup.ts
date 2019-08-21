@@ -1,6 +1,7 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {descriptor} from 'Types/entity';
+import {dateMaskConstants} from 'Controls/interface';
 import IRangeSelectable from './_datePopup/IRangeSelectable';
 import {DateRangeModel, IDateRangeSelectable} from 'Controls/dateRange';
 import EventProxyMixin from './_datePopup/Mixin/EventProxy';
@@ -129,7 +130,7 @@ var _private = {
                 if (yearStateEnabled) {
                     if (((dateUtils.isValidDate(options.startValue) && dateUtils.isValidDate(options.endValue)) &&
                         (!dateUtils.isStartOfMonth(options.startValue) || !dateUtils.isEndOfMonth(options.endValue)) &&
-                        dateRangeUtil.gePeriodLengthInDays(options.startValue, options.endValue) <= MONTH_STATE_SELECTION_DAYS) {
+                        dateRangeUtil.gePeriodLengthInDays(options.startValue, options.endValue) <= MONTH_STATE_SELECTION_DAYS)) {
                         return STATES.month;
                     }
                 } else {
@@ -137,6 +138,15 @@ var _private = {
                 }
             }
             return STATES.year;
+        },
+
+        toggleState: function(self, date?: Date): void {
+            self._displayedDate = date || self._options.startValue || self._options.endValue || new Date();
+            self._state = self._state === STATES.year ? STATES.month : STATES.year;
+        },
+
+        isMaskWithDays: function(mask: string) {
+            return mask.indexOf('D') !== -1;
         }
     },
     HEADER_TYPES = {
@@ -147,7 +157,8 @@ var _private = {
         year: 'year',
         month: 'month'
     },
-    MONTH_STATE_SELECTION_DAYS = 30;
+    MONTH_STATE_SELECTION_DAYS = 30,
+    popupMask = coreMerge({auto: 'auto'}, dateMaskConstants);
 
 var Component = BaseControl.extend([EventProxyMixin], {
     _template: componentTmpl,
@@ -177,6 +188,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _yearRangeSelectionType: null,
 
+    _mask: null,
+
     _beforeMount: function (options) {
         this._displayedDate = dateUtils.getStartOfMonth(
             dateUtils.isValidDate(options.startValue) ? options.startValue : new Date());
@@ -198,6 +211,12 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._yearRangeQuantum = {};
         this._monthRangeSelectionType = options.selectionType;
         this._monthRangeQuantum = {};
+
+        if (options.mask === popupMask.auto) {
+            this._mask = options.minRange === IDateRangeSelectable.minRange.month ? popupMask.MM_YYYY : popupMask.DD_MM_YY;
+        } else {
+            this._mask = options.mask;
+        }
 
         if (options.selectionType === 'quantum') {
             if ('years' in options.quantum) {
@@ -223,8 +242,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._yearRangeModel.destroy();
     },
 
-    _toggleState: function () {
-        this._state = this._state === STATES.year ? STATES.month : STATES.year;
+    _toggleStateClick: function(): void {
+        _private.toggleState(this);
     },
 
     _homeButtonClick: function () {
@@ -243,6 +262,10 @@ var Component = BaseControl.extend([EventProxyMixin], {
         }
     },
 
+    _onHeaderLinkRangeChanged: function(e, startValue, endValue) {
+        _private.rangeChanged(this, startValue, endValue);
+    },
+
     _startValuePickerChanged: function (e, value) {
         _private.rangeChanged(
             this,
@@ -252,12 +275,14 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _endValuePickerChanged: function (e, value) {
-        _private.rangeChanged(
-            this,
-            this._options.selectionType === IRangeSelectable.SELECTION_TYPES.single
-                ? value : this._rangeModel.startValue,
-            value
-        );
+        let startValue = this._rangeModel.startValue,
+            endValue = value;
+        if (this._options.selectionType === IRangeSelectable.SELECTION_TYPES.single) {
+            startValue = value;
+        } else if (!_private.isMaskWithDays(this._mask)) {
+            endValue = dateUtils.getEndOfMonth(value);
+        }
+        _private.rangeChanged(this, startValue, endValue);
     },
 
     _yearsSelectionChanged: function (e, start, end, selectionDirection) {
@@ -295,8 +320,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _monthRangeMonthClick: function (e, date) {
-        this._displayedDate = date;
-        this._toggleState();
+        _private.toggleState(this, date);
     },
 
     _monthRangeFixedPeriodClick: function (e, start, end) {
@@ -355,7 +379,8 @@ Component.getDefaultOptions = function () {
          */
         headerType: HEADER_TYPES.link,
 
-        minRange: 'day'
+        minRange: IDateRangeSelectable.minRange.day,
+        mask: popupMask.auto
 
     }, IRangeSelectable.getDefaultOptions());
 };

@@ -52,38 +52,79 @@ define(
             }
          });
 
-         describe('_shadowVisible ipad', function() {
-            beforeEach(function() {
-               if (typeof window === 'undefined') {
-                  Env.detection['test::isMobileIOS'] = true;
-               } else {
-                  Env.detection.isMobileIOS = true;
-               }
-            });
-            afterEach(function() {
-               if (typeof window === 'undefined') {
-                  Env.detection['test::isMobileIOS'] = undefined;
-               } else {
-                  Env.detection.isMobileIOS = false;
-               }
-            });
+         describe('_shadowVisible', function() {
+            [{
+               title: "shouldn't display shadow if there are fixed headers",
+               shadowPosition: 'top',
+               hasFixed: true,
+               result: false
+            }, {
+               title: 'should display shadow if shadowVisibilityMode is equal "visible"',
+               shadowVisibilityMode: 'visible',
+               result: true
+            }, {
+               title: 'shouldn\'t display shadow if shadowVisibilityMode is equal "auto" and shadowPosition is equal ""',
+               result: false
+            }, {
+               title: 'shouldn display shadow if shadowVisibilityMode is equal "auto" and shadowPosition is equal "top"',
+               shadowPosition: 'top',
+               result: true
+            }].forEach(function(test) {
+               it(test.title, function () {
+                  scroll._displayState.shadowPosition = test.shadowPosition || '';
+                  scroll._shadowVisiblityMode.top = test.shadowVisibilityMode;
+                  scroll._children.stickyController = {
+                     hasFixed: function () {
+                        return Boolean(test.hasFixed);
+                     }
+                  };
 
-            it('should display top shadow if scrollTop > 0.', function() {
-               scroll._displayState.shadowPosition = 'top';
-               scroll._children.stickyController = {
-                  hasFixed: function() {
-                     return false;
+                  if (test.result) {
+                     assert.isTrue(scroll._shadowVisible('top'));
+                  } else {
+                     assert.isFalse(scroll._shadowVisible('top'));
                   }
-               };
-
-               assert.isTrue(scroll._shadowVisible('top'));
+               });
             });
 
-            it('should not display top shadow if scrollTop < 0.', function() {
-               scroll._displayState.shadowPosition = 'top';
-               scroll._children.content.scrollTop = -10;
+            describe('ipad', function() {
+               beforeEach(function () {
+                  if (typeof window === 'undefined') {
+                     Env.detection['test::isMobileIOS'] = true;
+                  } else {
+                     Env.detection.isMobileIOS = true;
+                  }
+               });
+               afterEach(function () {
+                  if (typeof window === 'undefined') {
+                     Env.detection['test::isMobileIOS'] = undefined;
+                  } else {
+                     Env.detection.isMobileIOS = false;
+                  }
+               });
 
-               assert.isFalse(scroll._shadowVisible('top'));
+               it('should display top shadow if scrollTop > 0.', function () {
+                  scroll._displayState.shadowPosition = 'top';
+                  scroll._children.stickyController = {
+                     hasFixed: function () {
+                        return false;
+                     }
+                  };
+
+                  assert.isTrue(scroll._shadowVisible('top'));
+               });
+
+               it('should not display top shadow if scrollTop < 0.', function () {
+                  scroll._displayState.shadowPosition = 'top';
+                  scroll._children.content.scrollTop = -10;
+                  scroll._children.stickyController = {
+                     hasFixed: function () {
+                        return false;
+                     }
+                  };
+
+                  assert.isFalse(scroll._shadowVisible('top'));
+               });
             });
          });
 

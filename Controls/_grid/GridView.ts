@@ -221,12 +221,19 @@ var
         },
 
         _afterUpdate() {
-            if (GridLayoutUtil.isPartialGridSupport()) {
-                _private.fillItemsContainerForPartialSupport(this);
-            }
             if (this._options.columnScroll) {
                 this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
             }
+        },
+
+        _afterRender() {
+            if (GridLayoutUtil.isPartialGridSupport()) {
+                // TODO Kingo
+                // Для IE нужно обновить itemsContainer здесь, потому что виртуальный
+                // скролл вычисляет высоту строк сразу после _afterRender
+                _private.fillItemsContainerForPartialSupport(this);
+            }
+            GridView.superclass._afterRender.apply(this, arguments);
         },
 
         _onItemMouseEnter: function (event, itemData) {
@@ -305,7 +312,12 @@ var
             }
             return [newColumns, resultOffset];
         },
-
+        protected resizeNotifyOnListChanged: function(){
+            GridView.superclass.resizeNotifyOnListChanged.apply(this, arguments);
+            if (this._children.columnScroll) {
+                this._children.columnScroll._resizeHandler();
+            }
+        },
         _afterMount: function() {
             GridView.superclass._afterMount.apply(this, arguments);
             if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._listModel.isDrawHeaderWithEmtyList()) {

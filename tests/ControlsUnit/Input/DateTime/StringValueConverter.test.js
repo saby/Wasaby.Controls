@@ -1,11 +1,13 @@
 define([
    'Core/core-merge',
    'Types/formatter',
+   'Controls/interface',
    'Controls/input',
    'Controls/Utils/Date'
 ], function(
    cMerge,
    formatter,
+   interfaceModule,
    input,
    dateUtils
 ) {
@@ -17,7 +19,8 @@ define([
          value: new Date(2018, 0, 1),
          replacer: '_',
       },
-      now = new Date();
+      now = new Date(),
+      masks = interfaceModule.dateMaskConstants;
 
    describe('Controls/_input/DateTime/StringValueConverter', function() {
 
@@ -96,6 +99,8 @@ define([
             // other cases
             { mask: 'DD.MM.YY', stringValue: '__.01.__', value: new Date('Invalid') },
             { mask: 'DD.MM', stringValue: '__.__', value: null },
+            { mask: masks.MM_YYYY, stringValue: '__.____', value: null },
+            { mask: masks.MM_YYYY, stringValue: '10.2019', value: new Date(2019, 9) },
             { mask: 'HH.mm', stringValue: '10.__', value: new Date(1900, 0, 1, 10) },
             { mask: 'HH.mm.ss', stringValue: '10.__.__', value: new Date(1900, 0, 1, 10) },
             { mask: 'HH.mm.ss', stringValue: '10.05.__', value: new Date(1900, 0, 1, 10, 5) },

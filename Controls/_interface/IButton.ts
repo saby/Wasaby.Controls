@@ -37,11 +37,11 @@ export default interface IButton {
  * @example
  * Кнопка-ссылка со стилем отображения 'primary'.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
  * </pre>
  * Кнопка на панели инструментов со стилем 'danger'.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="danger" viewMode="toolButton"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="danger" viewMode="toolButton"/>
  * </pre>
  * @see Size
  */
@@ -60,11 +60,11 @@ export default interface IButton {
  * @example
  * Primary link button with 'primary' style.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
  * </pre>
  * Toolbar button with 'danger' style.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="danger" viewMode="toolButton"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="danger" viewMode="toolButton"/>
  * </pre>
  * @see Size
  */
@@ -79,15 +79,15 @@ export default interface IButton {
  * @example
  * Кнопка в режиме отображения 'link'.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
  * </pre>
  * Кнопка в режиме отображения 'toolButton'.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="danger" viewMode="toolButton"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="danger" viewMode="toolButton"/>
  * </pre>
  * Кнопка в режиме отображения 'button'.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="success" viewMode="button"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="success" viewMode="button"/>
  * </pre>
  * @see Size
  */
@@ -102,15 +102,15 @@ export default interface IButton {
  * @example
  * Button with 'link' viewMode.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
  * </pre>
  * Button with 'toolButton' viewMode.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="danger" viewMode="toolButton"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="danger" viewMode="toolButton"/>
  * </pre>
  * Button with 'button' viewMode.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="success" viewMode="button"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="success" viewMode="button"/>
  * </pre>
  * @see Size
  */
@@ -126,11 +126,11 @@ export default interface IButton {
  * @example
  * Размер кнопки 'L'.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="button" size="l"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="button" size="l"/>
  * </pre>
  * Размер кнопки по умолчанию.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="button"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="button"/>
  * </pre>
  * @see style
  */
@@ -146,15 +146,15 @@ export default interface IButton {
  * @example
  * 'L' size of primary button.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="button" size="l"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="button" size="l"/>
  * </pre>
  * Default size of primary button.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="button"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="button"/>
  * </pre>
  * Uncorrect size of primary button.
  * <pre>
- *    <Controls.buttons:Path caption="Send document" style="primary" viewMode="button" size="xl"/>
+ *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="button" size="xl"/>
  * </pre>
  * @see style
  */

@@ -38,8 +38,14 @@ const Link = Control.extend({
    },
 
    _clickHandler: function (e) {
-      if (this._options.readOnly) {
-         e.stopPropagation();
+      /* toDo !KINGO Cаггест при установленной опции autoDropDown покажется при клике, поэтому отменяем всплытие нативного события,
+       и стреляем не всплывающим событием, что бы прикладник смог подписаться и показать справочник.
+       Всплытие тут не нужно, т.к. метка лежит только в подсказке поля связи.
+       */
+      e.stopPropagation();
+
+      if (!this._options.readOnly) {
+         this._notify('click');
       }
    }
 });

@@ -318,13 +318,23 @@ var _private = {
       return _private.getSourceByMeta(self, meta).update(item, meta);
    },
 
+   getKeyProperty: function(self) {
+      let source;
+      if (cInstance.instanceOfModule(self.originSource, 'Types/_source/IDecorator')) {
+         source = self.originSource.getOriginal();
+      } else {
+         source = self.originSource;
+      }
+      return source.getKeyProperty();
+   },
+
    resolveRecent: function (self, data) {
       var recent = self._history && self._history.recent;
       if (recent) {
          var items = [];
          chain.factory(data).each(function (item) {
             if (!(self._nodeProperty && item.get(self._nodeProperty))) {
-               let id = item.get(self.originSource.getKeyProperty());
+               let id = item.get(_private.getKeyProperty(self));
                var hItem = recent.getRecordById(id);
                if (hItem) {
                   recent.remove(hItem);
@@ -343,7 +353,7 @@ var _private = {
             ids: []
          };
          chain.factory(data).each(function(item) {
-            historyData.ids.push(item.get(self.originSource.getKeyProperty()));
+            historyData.ids.push(item.get(_private.getKeyProperty(self)));
          });
          _private.resolveRecent(self, data);
       } else {
