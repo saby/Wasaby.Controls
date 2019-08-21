@@ -107,6 +107,9 @@ define([
          let
             called = false,
             options = {
+                itemData: {
+                    isEditing: false
+                },
                eventHandlers: {
                   'click': () => {
                      called = true
