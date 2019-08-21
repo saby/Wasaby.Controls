@@ -213,6 +213,7 @@ var _private = {
 
         self._configs[item.name] = CoreClone(options);
         self._configs[item.name].emptyText = item.emptyText;
+        self._configs[item.name].emptyKey = item.emptyKey;
 
         if (options.source) {
             return _private.loadItemsFromSource(self._configs[item.name], options.source, options.filter, options.navigation, options.dataLoadCallback);
