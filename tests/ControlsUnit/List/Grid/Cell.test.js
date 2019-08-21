@@ -117,14 +117,22 @@ define([
                }
             },
             cell = new Cell(options),
+            propagationStopped = false;
             fakeItem = {getContents: function() {
                   return [{},{}];
-               }};
+               }},
+            fakeEvent = {
+                type: 'click',
+                stopPropagation: function() {
+                    propagationStopped = true;
+                }
+            }
          cell.saveOptions(options);
 
          cell._beforeMount(options);
-         cell._callHandler({type:'click'}, fakeItem);
+         cell._callHandler({type:'click', stopPropagation}, fakeItem);
          assert.isFalse(called);
+         assert.isTrue(propagationStopped);
       });
    });
 
