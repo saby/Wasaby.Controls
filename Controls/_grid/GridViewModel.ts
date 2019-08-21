@@ -414,7 +414,7 @@ var
                 hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
                 columnsWidth = hasMultiselect ? ['max-content'] : [],
                 hasDynamicWidth = !!columns.find((column) => {
-                    return column.width && !column.width.match(GridLayoutUtil.nonDynamicWidthRegExp);
+                    return column.width && !GridLayoutUtil.isCompatibleWidth(column.width);
                 });
 
             if (!hasDynamicWidth) {
