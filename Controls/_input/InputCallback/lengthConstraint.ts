@@ -25,11 +25,11 @@ export default function lengthConstraint(maxLength: number, useGrouping: boolean
 
             if (charOfIntegerPart.test(char)) {
                 formattedDisplayValue += char;
-            } else if (i < data.position) {
-                relativePosition--;
             } else if (char === '.') {
                 dotPosition = i;
                 break;
+            } else if (i < data.position) {
+                relativePosition--;
             }
         }
 
