@@ -259,25 +259,34 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.isFalse(errorFired);
       });
 
-      it('Suggest::_private.searchErrback', function(done) {
+      it('Suggest::_private.searchErrback', function() {
          var self = getComponentObject();
+         var isIndicatorVisible = true;
          self._forceUpdate = function() {};
+         self._children = {};
+         self._children.indicator = {
+            hide: function() {
+               isIndicatorVisible = false;
+            }
+         };
 
          self._loading = null;
          suggestMod._InputController._private.searchErrback(self, {canceled: true});
          assert.isTrue(self._loading === null);
 
          self._loading = true;
-         suggestMod._InputController._private.searchErrback(self, {canceled: false});
-         assert.isFalse(self._loading);
-
-         self._forceUpdate = function() {
-            assert.equal(self._emptyTemplate(), '<div class="controls-Suggest__empty"> Справочник недоступен </div>');
-            done();
-         };
-         self._loading = true;
          suggestMod._InputController._private.searchErrback(self, {canceled: true});
          assert.isFalse(self._loading);
+
+         return new Promise(function(resolve) {
+            self._loading = true;
+            suggestMod._InputController._private.searchErrback(self, {canceled: false}).then(function() {
+               assert.equal(self._emptyTemplate(), '<div class="controls-Suggest__empty"> Справочник недоступен </div>');
+               assert.isFalse(isIndicatorVisible);
+               assert.isFalse(self._loading);
+               resolve();
+            });
+         });
       });
 
       it('Suggest::_private.setSearchValue', function() {

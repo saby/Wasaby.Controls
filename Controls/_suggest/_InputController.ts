@@ -128,10 +128,13 @@ var _private = {
          self._loading = false;
       }
       if (!error || !error.canceled) {
-         requirejs(['tmpl!Controls/_suggest/_InputController/emptyError'], function(result) {
-            self._emptyTemplate = result;
-            self._forceUpdate();
-         });
+          return new Promise(function(resolve) {
+              requirejs(['tmpl!Controls/_suggest/_InputController/emptyError'], function(result) {
+                  self._emptyTemplate = result;
+                  self._children.indicator.hide();
+                  resolve();
+              });
+          });
       }
    },
    shouldSearch: function(self, value) {
