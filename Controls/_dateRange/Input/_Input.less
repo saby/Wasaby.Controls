@@ -3,6 +3,11 @@
    white-space: nowrap;
 }
 
+// The wrong height is set for the control in ie. min-height thing solves the problem.
+.ws-is-ie .controls-Input-DateRange {
+   min-height: 1px;
+}
+
 .controls-Input-DateRange__button {
    margin-left: @spacing_DateRange-between-input-button;
 }
