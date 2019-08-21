@@ -277,7 +277,8 @@ interface ISuggest {
       /**
        * @event Происходит, когда пользователь выбирает элемент из автодополнения.
        * @name Controls/interface/ISuggest#choose
-       * @param {String} value Выбранное значение.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+       * @param {Types/entity:Model} value Выбранное значение.
        * @example
        * myModule.js
        * <pre>
@@ -315,7 +316,8 @@ interface ISuggest {
       /*
        * @event Occurs when user selects item from suggest.
        * @name Controls/interface/ISuggest#choose
-       * @param {String} value Selected value.
+       * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
+       * @param {Types/entity:Model} value Selected value.
        * @example
        * myModule.js
        * <pre>
