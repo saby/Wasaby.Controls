@@ -8,6 +8,7 @@ import template = require('wml!Controls/_popupTemplate/Notification/Simple/Simpl
        * @control
        * @public
        * @category popup
+       * @demo Controls-demo/NotificationDemo/NotificationTemplate
        * @author Красильников А.С.
        */
 
