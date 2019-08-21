@@ -234,6 +234,111 @@ var
                 self.setExpandedItems(_private.getExpandedParents(self, self.getItemById(itemId)));
                 self._expandedItems.push(itemId);
             }
+        },
+        setNodeFooterWithTask1177672941(self, current) {
+            current.nodeFooter = [];
+            if (current.item.get(current.nodeProperty) !== null && current.isExpanded) {
+                current.hasChildren = self._display.getChildren(current.dispItem).getCount() || (self._editingItemData && self._editingItemData.item.get(current.parentProperty) === current.key);
+                if (current.item.get(current.nodeProperty) && !current.hasChildren && self._options.nodeFooterTemplate) {
+                    let idx = current.nodeFooter.push({
+                        key: current.key,
+                        task1177672941: true,
+                        item: current.dispItem.getContents(),
+                        dispItem: current.dispItem,
+                        multiSelectVisibility: current.multiSelectVisibility,
+                        level: current.dispItem.getLevel()
+                    }) - 1;
+                    if (self._options.nodeFooterTemplate) {
+                        current.nodeFooter[idx].template = self._options.nodeFooterTemplate;
+                    }
+                }
+            }
+            var itemParent = current.dispItem.getParent();
+            var itemParentKey = current.item.get(current.parentProperty);
+            if (itemParentKey !== self._display.getRoot().getContents() && (self._options.nodeFooterTemplate || self._hasMoreStorage && self._hasMoreStorage[itemParentKey])) {
+                var itemParentChilds = self._hierarchyRelation.getChildren(itemParentKey, self._items);
+                if (itemParentChilds && itemParentChilds[itemParentChilds.length - 1].getId() === current.key) {
+                    if ((self._hasMoreStorage && self._hasMoreStorage[itemParentKey] && self._hierarchyRelation.getChildren(current.key, self._items).length === 0)) {
+                        let idx = current.nodeFooter.push({
+                            key: itemParentKey,
+                            item: itemParent.getContents(),
+                            dispItem: itemParent,
+                            task1177672941: true,
+                            multiSelectVisibility: current.multiSelectVisibility,
+                            level: itemParent.getLevel()
+                        }) - 1;
+                        if (self._options.nodeFooterTemplate) {
+                            current.nodeFooter[idx].template = self._options.nodeFooterTemplate;
+                        }
+                        if (self._hasMoreStorage && self._hasMoreStorage[itemParentKey]) {
+                            current.nodeFooter[idx].hasMoreStorage = self._hasMoreStorage[itemParentKey];
+                        }
+                    }
+                }
+                if (
+                    itemParent.getParent() && itemParent.getParent().getContents &&
+                    itemParent.getParent().getContents() !== self._display.getRoot().getContents() &&
+                    itemParentChilds && itemParentChilds[itemParentChilds.length - 1].getId() === current.key
+                ) {
+                    const dadDispItem = itemParent.getParent();
+                    const dadId = itemParent.getParent().getContents().getId();
+                    const dadChildren = self._hierarchyRelation.getChildren(dadId, self._items);
+                    if (dadChildren && dadChildren[dadChildren.length - 1].getId() === itemParentKey) {
+                        let idx = current.nodeFooter.push({
+                            key: dadId,
+                            task1177672941: true,
+                            item: dadDispItem.getContents(),
+                            dispItem: dadDispItem,
+                            multiSelectVisibility: current.multiSelectVisibility,
+                            level: dadDispItem.getLevel()
+                        }) - 1;
+                        if (self._options.nodeFooterTemplate) {
+                            current.nodeFooter[idx].template = self._options.nodeFooterTemplate;
+                        }
+                        if (self._hasMoreStorage && self._hasMoreStorage[dadId]) {
+                            current.nodeFooter[idx].hasMoreStorage = self._hasMoreStorage[dadId];
+                        }
+                    }
+                }
+            }
+        },
+
+        setNodeFooterIfNeed(self, current) {
+            if (current.item.get(current.nodeProperty) !== null && current.isExpanded) {
+                current.hasChildren = self._display.getChildren(current.dispItem).getCount() || (self._editingItemData && self._editingItemData.item.get(current.parentProperty) === current.key);
+                if (current.item.get(current.nodeProperty) && !current.hasChildren && self._options.nodeFooterTemplate) {
+                    current.nodeFooter = {
+                        key: current.key,
+                        item: current.dispItem.getContents(),
+                        dispItem: current.dispItem,
+                        multiSelectVisibility: current.multiSelectVisibility,
+                        level: current.dispItem.getLevel()
+                    };
+                    if (self._options.nodeFooterTemplate) {
+                        current.nodeFooter.template = self._options.nodeFooterTemplate;
+                    }
+                }
+            }
+            var itemParent = current.dispItem.getParent();
+            var itemParentKey = current.item.get(current.parentProperty);
+            if (itemParentKey !== self._display.getRoot().getContents() && (self._options.nodeFooterTemplate || self._hasMoreStorage && self._hasMoreStorage[itemParentKey])) {
+                var itemParentChilds = self._hierarchyRelation.getChildren(itemParentKey, self._items);
+                if (itemParentChilds && itemParentChilds[itemParentChilds.length - 1].getId() === current.key) {
+                    current.nodeFooter = {
+                        key: itemParentKey,
+                        item: itemParent.getContents(),
+                        dispItem: itemParent,
+                        multiSelectVisibility: current.multiSelectVisibility,
+                        level: itemParent.getLevel()
+                    };
+                    if (self._options.nodeFooterTemplate) {
+                        current.nodeFooter.template = self._options.nodeFooterTemplate;
+                    }
+                    if (self._hasMoreStorage && self._hasMoreStorage[itemParentKey]) {
+                        current.nodeFooter.hasMoreStorage = self._hasMoreStorage[itemParentKey];
+                    }
+                }
+            }
         }
 
     },
@@ -418,41 +523,11 @@ var
             }
 
            if (current.item.get) {
-              if (current.item.get(current.nodeProperty) !== null && current.isExpanded) {
-                 current.hasChildren = this._display.getChildren(current.dispItem).getCount() || (this._editingItemData && this._editingItemData.item.get(current.parentProperty) === current.key);
-                  if (current.item.get(current.nodeProperty) && !current.hasChildren && this._options.nodeFooterTemplate) {
-                      current.nodeFooter = {
-                          key: current.key,
-                          item: current.dispItem.getContents(),
-                          dispItem: current.dispItem,
-                          multiSelectVisibility: current.multiSelectVisibility,
-                          level: current.dispItem.getLevel()
-                      };
-                      if (this._options.nodeFooterTemplate) {
-                          current.nodeFooter.template = this._options.nodeFooterTemplate;
-                      }
-                  }
-              }
-              var itemParent = current.dispItem.getParent();
-              var itemParentKey = current.item.get(current.parentProperty);
-              if (itemParentKey !== this._display.getRoot().getContents() && (this._options.nodeFooterTemplate || this._hasMoreStorage && this._hasMoreStorage[itemParentKey])) {
-                 var itemParentChilds = this._hierarchyRelation.getChildren(itemParentKey, this._items);
-                 if (itemParentChilds && itemParentChilds[itemParentChilds.length - 1].getId() === current.key) {
-                    current.nodeFooter = {
-                       key: itemParentKey,
-                       item: itemParent.getContents(),
-                       dispItem: itemParent,
-                       multiSelectVisibility: current.multiSelectVisibility,
-                       level: itemParent.getLevel()
-                    };
-                    if (this._options.nodeFooterTemplate) {
-                       current.nodeFooter.template = this._options.nodeFooterTemplate;
-                    }
-                    if (this._hasMoreStorage && this._hasMoreStorage[itemParentKey]) {
-                       current.nodeFooter.hasMoreStorage = this._hasMoreStorage[itemParentKey];
-                    }
-                 }
-              }
+               if (this._options.task1177672941) {
+                   _private.setNodeFooterWithTask1177672941(this, current);
+               } else {
+                   _private.setNodeFooterIfNeed(this, current);
+               }
            }
             return current;
         },

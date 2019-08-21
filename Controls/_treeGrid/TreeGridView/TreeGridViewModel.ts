@@ -204,17 +204,30 @@ var
                 return `controls-TreeGrid__row-levelPadding_size_${resultPaddingSize}`;
             };
 
-            // For browsers with partial grid support need to calc real rows' index and set explicit rows' style with grid-row and grid-column
-            if (current.nodeFooter) {
-                current.nodeFooter.columns = current.columns;
-                current.nodeFooter.isPartialGridSupport = GridLayoutUtil.isPartialGridSupport;
-                current.nodeFooter.getLevelIndentClasses = current.getLevelIndentClasses;
-                if (GridLayoutUtil.isPartialGridSupport()) {
-                    current.nodeFooter.rowIndex = current.rowIndex + 1;
-                    current.nodeFooter.gridStyles = _private.getFooterStyles(this, current.nodeFooter.rowIndex, current.nodeFooter.columns.length);
+            if (this._options.task1177672941) {
+                if (current.nodeFooter && current.nodeFooter.length > 0) {
+                    current.nodeFooter.forEach((footer, idx) => {
+                        footer.columns = current.columns;
+                        footer.isPartialGridSupport = GridLayoutUtil.isPartialGridSupport;
+                        footer.getLevelIndentClasses = current.getLevelIndentClasses;
+                        if (GridLayoutUtil.isPartialGridSupport()) {
+                            footer.rowIndex = current.rowIndex + idx + 1;
+                            footer.gridStyles = _private.getFooterStyles(this, footer.rowIndex, current.columns.length);
+                        }
+                    });
+                }
+            } else {
+                // For browsers with partial grid support need to calc real rows' index and set explicit rows' style with grid-row and grid-column
+                if (current.nodeFooter) {
+                    current.nodeFooter.columns = current.columns;
+                    current.nodeFooter.isPartialGridSupport = GridLayoutUtil.isPartialGridSupport;
+                    current.nodeFooter.getLevelIndentClasses = current.getLevelIndentClasses;
+                    if (GridLayoutUtil.isPartialGridSupport()) {
+                        current.nodeFooter.rowIndex = current.rowIndex + 1;
+                        current.nodeFooter.gridStyles = _private.getFooterStyles(this, current.nodeFooter.rowIndex, current.nodeFooter.columns.length);
+                    }
                 }
             }
-
             return current;
         },
         _onNodeRemoved: function (event, nodeId) {
