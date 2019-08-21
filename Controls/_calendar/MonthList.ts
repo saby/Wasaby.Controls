@@ -71,7 +71,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
 
     private _viewSource: BaseSource;
     private _startPositionId: string;
-    private _scrollToPosition: Date;
+    private _positionToScroll: Date;
     private _displayedPosition: Date;
 
     private _itemTemplate: Function;
@@ -94,7 +94,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
         this._updateItemTemplate(options);
         this._updateSource(options);
         this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
-        this._scrollToPosition = position;
+        this._positionToScroll = position;
         this._displayedPosition = position;
     }
 
@@ -108,8 +108,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
     protected _beforeUpdate(options: IModuleComponentOptions): void {
         this._updateItemTemplate(options);
         this._updateSource(options);
-        if (+options.position !== +this._displayedPosition) {
-            this._updatePosition(options.position, this._options.position);
+        if (options.position !== this._displayedPosition) {
+            this._displayedPosition = options.position;
+            this._scrollToPosition(options.position);
         }
     }
 
@@ -141,15 +142,14 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
             });
         }
     }
-    private _updatePosition(position: Date): void {
+    private _scrollToPosition(position: Date): void {
         if (!position) {
             return;
         }
 
         const newPosition = dateUtils.getStartOfMonth(position);
 
-        this._displayedPosition = newPosition;
-        this._scrollToPosition = newPosition;
+        this._positionToScroll = newPosition;
 
         if (this._container && !this._findElementByDate(newPosition)) {
             this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
@@ -234,9 +234,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
     }
 
     private _updateScrollAfterViewModification(): void {
-        if (this._scrollToPosition) {
-            if (this._scrollToDate(this._scrollToPosition)) {
-                this._scrollToPosition = null;
+        if (this._positionToScroll) {
+            if (this._scrollToDate(this._positionToScroll)) {
+                this._positionToScroll = null;
             }
         }
     }
