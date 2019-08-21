@@ -148,10 +148,13 @@ define(
             return new Promise(function(resolve) {
                searchDef.addErrback(function(err) {
                   searchDef = search.search({ name: 'Sasha' });
-
                   search.abort(true);
                   assert.isTrue(!search._searchDeferred);
                   assert.equal(search._searchDelayTimer, null, 'forced abort work asynchronously');
+
+                  search.search({ name: 'Sasha' }, true);
+                  search.abort(true);
+                  assert.isTrue(!!search._searchDeferred);
 
                   resolve();
                   return err;
