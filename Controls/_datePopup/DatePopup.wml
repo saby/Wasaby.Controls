@@ -3,6 +3,7 @@
       <ws:partial
          template="{{_headerTmpl}}"
          _options="{{_options}}"
+         theme="{{_headerTheme}}"
          _homeButtonVisible="{{_homeButtonVisible}}"
          _HEADER_TYPES="{{_HEADER_TYPES}}"
          _headerType="{{_headerType}}"
