@@ -1,1 +1,1 @@
-<ws:partial template="Controls/list:GroupTemplate" itemData="{{itemData}}" expanderVisibility="{{false}}"/>
+<ws:partial template="Controls/list:GroupTemplate" itemData="{{itemData}}" expanderVisibility="hidden"/>
