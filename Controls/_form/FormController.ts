@@ -293,7 +293,7 @@ import dataSource = require('Controls/dataSource');
 
       _confirmDialogResult(answer: boolean, def: Promise<boolean>): void {
          if (answer === true) {
-            this.update().addCallback((res) => {
+            this.update().addCallbacks((res) => {
                if (!res.validationErrors) {
                   // если нет ошибок в валидации, просто завершаем пендинг с результатом
                   if (!def.isReady()) {
@@ -306,6 +306,8 @@ import dataSource = require('Controls/dataSource');
                   this._notify('cancelFinishingPending', [], {bubbling: true});
                }
                return res;
+            }, (err: Error) => {
+               this._notify('cancelFinishingPending', [], {bubbling: true});
             });
          } else if (answer === false) {
             if (!def.isReady()) {
