@@ -118,9 +118,11 @@ define([
             },
             cell = new Cell(options),
             propagationStopped = false;
-            fakeItem = {getContents: function() {
-                  return [{},{}];
-               }},
+            fakeItem = {
+                getContents: function() {
+                    return [{},{}];
+                }
+            },
             fakeEvent = {
                 type: 'click',
                 stopPropagation: function() {
@@ -130,7 +132,7 @@ define([
          cell.saveOptions(options);
 
          cell._beforeMount(options);
-         cell._callHandler({type:'click', stopPropagation}, fakeItem);
+         cell._callHandler(fakeEvent, fakeItem);
          assert.isFalse(called);
          assert.isTrue(propagationStopped);
       });
