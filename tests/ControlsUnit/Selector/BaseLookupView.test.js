@@ -206,15 +206,18 @@ define([
 
       it('_onClickClearRecords', function() {
          var
+            configActivate,
             activated = false,
             lookup = new Lookup();
 
-         lookup.activate = function() {
+         lookup.activate = function(config) {
+            configActivate = config;
             activated = true;
          };
 
          lookup._onClickClearRecords();
          assert.isTrue(activated);
+         assert.equal(configActivate, undefined);
       });
 
       it('_keyDown', function() {
