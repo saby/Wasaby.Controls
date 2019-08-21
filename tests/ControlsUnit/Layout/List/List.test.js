@@ -386,7 +386,21 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
                done();
             }, 50);
          }, 50);
+      });
 
+      it('_beforeUpdate: changed reverse list', function() {
+         let
+            isReverseData = false,
+            newOpts = clone(listOptions),
+            listLayout = new deprecatedList.Container(listOptions);
+
+         deprecatedList.Container._private.reverseSourceData = function() {
+            isReverseData = true;
+         };
+
+         newOpts.reverseList = true;
+         listLayout._beforeUpdate(newOpts);
+         assert.isTrue(isReverseData);
       });
 
       it('Container/List::_private.isFilterChanged', function() {
