@@ -342,6 +342,27 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.isTrue(!!openCfg);
       });
 
+      it('Suggest::_moreClick', function() {
+         let
+            isNotifyShowSelector = false,
+            suggest = new suggestMod._InputController();
+
+         suggest._children = {
+            stackOpener: {
+               open: () => {}
+            }
+         };
+         suggest._notify = function(eventName, data) {
+            if (eventName === 'showSelector') {
+               isNotifyShowSelector = true;
+               assert.deepEqual(data[0], {});
+            }
+         };
+
+         suggest._moreClick();
+         assert.isTrue(isNotifyShowSelector);
+      });
+
       it('Suggest::_inputActivated/inputClicked with autoDropDown', function() {
          var self = getComponentObject();
          var suggestComponent = new suggestMod._InputController();
