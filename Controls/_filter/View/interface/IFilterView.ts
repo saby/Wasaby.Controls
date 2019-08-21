@@ -57,19 +57,13 @@
  */
 
 /**
- * @typedef {Number|String} EmptyKey
- * @description Ключ для элемента с emptyText. Не работает, если опция emptyText не установлена.
- * @default null
- */
-
-/**
  * @typedef {Object} FilterItem
  * @property {String} name Имя поля фильтра.
  * @property {*} value Текущее значение поля фильтра.
  * @property {*} resetValue Значение поля при сбрасывании фильтра.
  * @property {String} textValue Текстовое значение поля фильтра. Используется для отображения текста у кнопки фильтра.
- * @property {String} emptyText В нвчало списка добавляется элемент с заданным текстом.
- * @property {EmptyKey} emptyKey Ключ для элемента с emptyText. Не работает, если опция emptyText не установлена.
+ * @property {String} emptyText Текст пункта, значение которого является значением "по-умолчанию" для фильтра. Пункт будет добавлен в начало списка с заданным текстом.
+ * @property {String|Number} emptyKey Первичный ключ для пункта выпадающего списка, который создаётся при установке опции emptyText.
  * @property {EditorOptions} editorOptions Опции для редактора.
  * @property {FilterViewMode} viewMode Режим отображения фильтра.
  */
