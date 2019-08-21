@@ -1,7 +1,7 @@
 import entity = require('Types/entity');
 import Env = require('Env/Env');
-import {Base, TextViewModel as ViewModel} from 'Controls/input';
 import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
+import {Base, TextViewModel as ViewModel} from 'Controls/input';
 
 /**
  * Контрол, позволяющий пользователю вводить однострочный текст.
@@ -58,15 +58,46 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
  */
 
 /**
- * @name Controls/_search/Input/Search#searchButtonVisible
- * @cfg {Boolean} Determines whether to show the search icon.
+ * @event Controls/_suggest/Input/Search/Suggest#searchClick Происходит при нажатии на иконку поиска (лупы).
+ * @remark Клик по иконке поиска закрывает автодополнение, это поведение можео отменить, если из событие вернуть false.
+ * @example
+ * WML:
+ * <pre>
+ *     <Controls.suggest:SearchInput on:searchClick="_searchClick()" bind:value="_value">
+ *        ...
+ *     </Controls.suggest:SearchInput>
+ * </pre>
+ *
+ * TS:
+ * <pre>
+ *     protected _value: string = '';
+ *
+ *     private _searchClick():boolean {
+ *       //Не закрываем автодополнение при клике на лупу, если введено больше 3 символов
+ *       return this._value.length < 3;
+ *     }
+ * <pre>
  */
 
 /**
- * @event Controls/_search/Input/Search#searchClick Occurs when search button is clicked.
- * @event Controls/Input/resetClick#resetClick Occurs when reset button is clicked.
+ * @event Controls/_suggest/Input/Search/Suggest#searchClick Occurs when search button is clicked..
+ * @example
+ * WML:
+ * <pre>
+ *     <Controls.suggest:SearchInput on:searchClick="_searchClick()" bind:value="_value">
+ *        ...
+ *     </Controls.suggest:SearchInput>
+ * </pre>
+ *
+ * TS:
+ * <pre>
+ *     protected _value: string = '';
+ *
+ *     private _searchClick():boolean {
+ *       return this._value.length < 3;
+ *     }
+ * <pre>
  */
-
 var _private = {
    isVisibleResetButton: function() {
       return !!this._options.value && !this._options.readOnly;
