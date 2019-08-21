@@ -1428,12 +1428,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             calledCallback = false;
             gridViewModel.setMultiSelectVisibility('hidden');
-            gridViewModel.setColumns([{width:'1fr'}]);
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['1fr']);
+            gridViewModel.setColumns([{width:'1px'}]);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['1px']);
             assert.isFalse(calledCallback);
 
             gridViewModel.setMultiSelectVisibility('visible');
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1fr']);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1px']);
             assert.isFalse(calledCallback);
 
             calledCallback = false;
