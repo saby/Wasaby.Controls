@@ -1188,14 +1188,22 @@ var _private = {
                     virtualSegmentSize: cfg.virtualSegmentSize
                 });
             }
-            self._virtualScrollTriggerVisibility = {
-                up: false,
-                down: false
-            };
-            self._loadTriggerVisibility = {
-                up: false,
-                down: false
-            };
+
+            // Не нужно сбрасывать видимость триггеров виртуального скролла и
+            // загрузки, если она уже вычислена. Если их видимость изменится,
+            // об этом скажет IntersectionObserver.
+            if (!self._virtualScrollTriggerVisibility) {
+                self._virtualScrollTriggerVisibility = {
+                    up: false,
+                    down: false
+                };
+            }
+            if (!self._loadTriggerVisibility) {
+                self._loadTriggerVisibility = {
+                    up: false,
+                    down: false
+                };
+            }
         } else {
             self._loadTriggerVisibility = null;
             self._virtualScrollTriggerVisibility = null;
