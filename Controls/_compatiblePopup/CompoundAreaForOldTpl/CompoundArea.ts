@@ -246,6 +246,10 @@ var CompoundArea = CompoundContainer.extend([
          this._waitClose = false;
          this.close();
       } else {
+         // Слой совместимости нотифаит событие manager'a за него, т.к. только он знает, когда будет построен старый шаблон
+         const item = this._getManagerConfig();
+         const popupItems = Controller.getContainer()._popupItems;
+         this._notifyVDOM('managerPopupCreated', [item, popupItems], {bubbling: true});
          self._setCustomHeaderAsync();
          runDelayed(function() {
             // Перед автофокусировкой нужно проверить, что фокус уже не находится внутри
