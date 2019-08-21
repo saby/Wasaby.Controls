@@ -44,7 +44,7 @@ define('Controls/interface/IGroupedGrid', [
     * Шаблон поддерживает следующие параметры:
     * <ul>
     *    <li>separatorVisibility {Boolean} — аидимость горизонтальной линии-разделителя.</li>
-    *    <li>expanderVisibility {Boolean} — аидимость кнопки-экспандера.</li>
+    *    <li>expanderVisibility {Boolean | enum('hidden'|'right'|'left')} — аидимость и расположение кнопки-экспандера. Стандартное расположение - слева.</li>
     *    <li>textAlign {String} — горизонтальное выравнивание текста группы. Доступные значения опции: "left" и "right". По умолчанию используется выравнивание текста по центру.</li>
     *    <li>rightTemplate {Function} — шаблон, выводимый в правой части группы. Может использоваться, например, для вывода итогов по группе.</li>
     * </ul>
@@ -80,6 +80,6 @@ define('Controls/interface/IGroupedGrid', [
     * @event Controls/interface/IGroupedGrid#groupCollapsed Происходит при сворачивании группы.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
-    */    
+    */
 
 });
