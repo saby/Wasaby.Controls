@@ -135,11 +135,15 @@ var Search  = extend({
       let abortDef = new Deferred();
 
       let abort = function() {
-         if (self._searchDeferred && !self._searchDeferred.isReady()) {
+         const isLoading = self._sourceController.isLoading();
+
+         if (self._searchDeferred && !self._searchDeferred.isReady() && !isLoading) {
             self._searchDeferred.cancel();
             self._searchDeferred = null;
          }
-         self._sourceController.cancelLoading();
+         if (isLoading) {
+            self._sourceController.cancelLoading();
+         }
          abortDef.callback();
       };
 
