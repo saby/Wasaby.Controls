@@ -12,7 +12,7 @@ import 'css!theme?Controls/popupTemplate';
        * @category popup
        * @author Красильников А.С.
        * @mixes Controls/_popupTemplate/Notification/NotificationStyles
-       * @demo Controls-demo/Popup/Templates/NotificationTemplatePG
+       * @demo Controls-demo/NotificationDemo/NotificationTemplate
        */
 
       var Notification = Control.extend({
