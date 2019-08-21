@@ -45,6 +45,15 @@ define(
                   displayValue: '-123.12345'
                });
             });
+            it('0.0', function() {
+               assert.deepEqual(callback({
+                  position: 2,
+                  displayValue: '0.0'
+               }), {
+                  position: 2,
+                  displayValue: '0.0'
+               });
+            });
          });
          describe('The maximum length is 4 and not use grouping.', function() {
             var callback = lengthConstraint(4, false);
@@ -83,6 +92,15 @@ define(
                }), {
                   position: 0,
                   displayValue: '-123.12345'
+               });
+            });
+            it('0.0', function() {
+               assert.deepEqual(callback({
+                  position: 2,
+                  displayValue: '0.0'
+               }), {
+                  position: 2,
+                  displayValue: '0.0'
                });
             });
          });
