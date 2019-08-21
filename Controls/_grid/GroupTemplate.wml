@@ -6,7 +6,9 @@
       <div class="controls-ListView__groupContent-text
          {{expanderVisibility !== 'hidden' ? ' controls-ListView__groupExpander' +
          (expanderVisibility === 'right' ? ' controls-ListView__groupExpander_right' : ' controls-ListView__groupExpander_left') +
-         (!itemData.isGroupExpanded ? expanderVisibility === 'right' ? ' controls-ListView__groupExpander_collapsed_right' : ' controls-ListView__groupExpander_collapsed_left' : '')}}">
+         (!itemData.isGroupExpanded ?
+         ' controls-ListView__groupExpander_collapsed' + (expanderVisibility === 'right' ?
+            ' controls-ListView__groupExpander_collapsed_right' : ' controls-ListView__groupExpander_collapsed_left') :'')}}">
          <ws:if data="{{contentTemplate}}">
             <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
          </ws:if>
