@@ -626,6 +626,10 @@ import 'Controls/context';
          },
 
          _itemsChanged: function(event, items) {
+            // Откатываем в 600 https://online.sbis.ru/opendoc.html?guid=ba2a670e-5797-4261-99cb-0164abe258ca
+            if (this._options.notMergeItems) {
+               this._filterButtonItems = clone(items);
+            }
             _private.updateFilterItems(this, items);
 
             if (this._options.historyId) {
