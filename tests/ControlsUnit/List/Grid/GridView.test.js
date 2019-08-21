@@ -308,6 +308,7 @@ define(['Controls/grid'], function(gridMod) {
             }
          }
          gridView._container = {
+            offsetTop: 0,
             querySelector: function() {
                const obj = queryCells();
                i++;
