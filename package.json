@@ -74,10 +74,6 @@
       "stylelint": "^9.7.1",
       "stylelint-config-standard": "^18.2.0",
       "tslint": "^5.18.0",
-<<<<<<< HEAD
       "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.610"
-=======
-      "wasaby-app": "git+https://github.com/saby/wasaby-app.git#rc-19.600"
->>>>>>> rc-19.600
    }
 }
