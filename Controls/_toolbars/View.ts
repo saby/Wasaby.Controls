@@ -353,7 +353,7 @@ var Toolbar = Control.extend({
                 this._notify('menuOpened', [], {bubbling: true});
             }
             event.stopPropagation();
-            this._notify('itemClick', [item]);
+            this._notify('itemClick', [item, event.nativeEvent]);
             item.handler && item.handler(item);
         }
     },

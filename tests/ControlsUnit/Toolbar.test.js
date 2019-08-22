@@ -115,11 +115,12 @@ define(
             });
             it('click toolbar item', function() {
                let isNotify = false;
-               toolbar._notify = (e) => {
+               toolbar._notify = (e, data) => {
                   assert.equal(e, 'itemClick');
+                  assert.equal(data[1], 'nativeEvent');
                   isNotify = true;
                };
-               toolbar._onItemClick({ stopPropagation: () => {} }, {
+               toolbar._onItemClick({ stopPropagation: () => {}, nativeEvent: 'nativeEvent' }, {
                   id: 'myTestItem',
                   get: () => {},
                   handler: () => {}

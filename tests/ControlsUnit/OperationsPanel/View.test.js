@@ -330,17 +330,6 @@ define([
          });
       });
 
-      it('_toolbarItemClick', function() {
-         var item = {
-            test: 123
-         };
-         instance._notify = function(e, eventArgs) {
-            assert.equal(e, 'itemClick');
-            assert.equal(item, eventArgs[0]);
-         };
-         instance._toolbarItemClick({}, item);
-      });
-
       it('panel is not visible', function(done) {
          var forceUpdateCalled = false;
          instance._container = {
