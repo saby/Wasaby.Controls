@@ -129,7 +129,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @remark
  * * true - контрастный фон.
  * * false - фон, гармонично сочетающийся с окружением.
- * Опция изспользуется для акцентирования внимания на кнопке, и ее визуального выделения относительно окружения.
+ * Опция используется для акцентирования внимания на кнопке, и ее визуального выделения относительно окружения.
  * @demo Controls-demo/Buttons/ContrastBackground/Index
  * @example
  * У кнопки контрастный фон.
