@@ -383,6 +383,7 @@ import dataSource = require('Controls/dataSource');
          function updateCallback(result) {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
+               self._notifyToOpener('updateStarted', [self._record, self._getRecordId()]);
                var res = self._update().addCallback(getData);
                updateResult.dependOn(res);
             } else {
@@ -432,7 +433,9 @@ import dataSource = require('Controls/dataSource');
                res.addCallback(function(arg) {
                   self._updateIsNewRecord(false);
 
-                  updateDef.callback({ data: true });
+                  setTimeout(() => {
+                     updateDef.callback({ data: true });
+                  }, 3000);
                   return arg;
                });
                res.addErrback((error: Error) => {
@@ -548,6 +551,7 @@ import dataSource = require('Controls/dataSource');
 
       _notifyToOpener: function(eventName, args) {
          var handlers = {
+            'updatestarted': '_getUpdateStartedData',
             'updatesuccessed': '_getUpdateSuccessedData',
             'createsuccessed': '_getCreateSuccessedData',
             'readsuccessed': '_getReadSuccessedData',
@@ -558,6 +562,12 @@ import dataSource = require('Controls/dataSource');
             var resultData = this[resultDataHandlerName].apply(this, args);
             this._notify('sendResult', [resultData], { bubbling: true });
          }
+      },
+
+      _getUpdateStartedData(record, key) {
+         let config = this._getUpdateSuccessedData(record, key);
+         config.formControllerEvent = 'updateStarted';
+         return config;
       },
 
       _getUpdateSuccessedData: function(record, key) {

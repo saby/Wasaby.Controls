@@ -7,6 +7,8 @@ import CoreClone = require('Core/core-clone');
 import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
+import {RecordSet} from '../../../application/Types/collection';
+import {Model} from '../../../application/Types/entity';
       /**
        * The control opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, control synchronize editable entry with recordsets.
        *  <li>If option 'mode' is set to 'stack' use {@link Controls/popup:Stack Stack options}</li>
@@ -48,7 +50,7 @@ import Deferred = require('Core/Deferred');
             return cfg;
          },
          processingResult: function(RecordSynchronizer, data, items, editKey) {
-            if (data.formControllerEvent === 'update') {
+            if (data.formControllerEvent === 'update' || data.formControllerEvent === 'updateStarted') {
                if (data.additionalData.isNewRecord) {
                   RecordSynchronizer.addRecord(data.record, data.additionalData, items);
                } else {
@@ -58,6 +60,11 @@ import Deferred = require('Core/Deferred');
                RecordSynchronizer.deleteRecord(items, editKey);
             }
          },
+
+         // getSyncRecord(items: RecordSet, editKey: string): Model {
+         //    const index: number = items.getIndexByValue(items.getIdProperty(), editKey);
+         //    return items.at(index);
+         // },
 
          getResultArgs: function(instance, data, RecordSynchronizer) {
             return [RecordSynchronizer, data, instance._options.items, instance._linkedKey];
