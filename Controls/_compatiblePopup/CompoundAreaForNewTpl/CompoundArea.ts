@@ -22,6 +22,9 @@ var moduleClass = CompoundControl.extend({
    _dotTplFn: template,
    $protected: {
       _isVDomTemplateMounted: false,
+      _options: {
+         isDefaultOpener: true // Останавливаем поиск опенера(Vdom.DefaultOpenerFinder) на compoundArea
+      },
       _closeTimerId: null
    },
    init: function() {
