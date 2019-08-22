@@ -39,6 +39,7 @@ define([
       });
 
       it('_afterUpdate', function() {
+         let configActivate;
          let activated = false;
          let lookup = new Lookup();
          let isInputActive = false;
@@ -49,7 +50,8 @@ define([
 
          lookup._needSetFocusInInput = true;
          lookup._options.items = getItems(0);
-         lookup.activate = function() {
+         lookup.activate = function(config) {
+            configActivate = config;
             activated = true;
          };
 
@@ -63,6 +65,7 @@ define([
          lookup._afterUpdate();
          assert.isTrue(activated);
          assert.isFalse(lookup._needSetFocusInInput);
+         assert.equal(configActivate, undefined);
       });
 
       it('_beforeUpdate', function() {
