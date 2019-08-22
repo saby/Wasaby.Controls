@@ -48,10 +48,16 @@ define(['Controls/suggest', 'Types/entity'], function(suggest, entity) {
          searchSuggest._suggestState = true;
 
          var searchClickNotifyed = false;
+         var suggestStateChangedNotifyed = false;
          var searchClickResult = true;
 
-         searchSuggest._notify = function() {
-            searchClickNotifyed = true;
+         searchSuggest._notify = function(eventName) {
+            if (eventName === 'searchClick') {
+               searchClickNotifyed = true;
+            }
+            if (eventName === 'suggestStateChanged') {
+               suggestStateChangedNotifyed = true;
+            }
             return searchClickResult;
          };
 
@@ -64,6 +70,7 @@ define(['Controls/suggest', 'Types/entity'], function(suggest, entity) {
          searchSuggest._searchClick();
          assert.isTrue(searchClickNotifyed);
          assert.isFalse(searchSuggest._suggestState);
+         assert.isTrue(suggestStateChangedNotifyed);
 
          searchSuggest._suggestState = true;
          searchClickResult = false;
