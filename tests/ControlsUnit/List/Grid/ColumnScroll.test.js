@@ -328,6 +328,14 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(clearColumnScroll._offsetForHScroll, 50);
          assert.equal(clearColumnScroll._leftOffsetForHScroll, 100);
 
+         assert.isTrue(clearColumnScroll._isColumnScrollVisible());
+
+         clearColumnScroll._afterUpdate({...cfg, root: '123'});
+         assert.isFalse(clearColumnScroll._isColumnScrollVisible());
+
+         clearColumnScroll._children.content.offsetTop = 50;
+         clearColumnScroll._setOffsetForHScroll();
+         assert.isTrue(clearColumnScroll._isColumnScrollVisible());
       });
 
       it('no sticky columns', function() {
