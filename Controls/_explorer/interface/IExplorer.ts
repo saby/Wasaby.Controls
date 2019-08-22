@@ -46,32 +46,12 @@
 /*
  * @name Controls/_explorer/interface/IExplorer#root
  * @cfg {String} Identifier of the root node.
- */ 
-
-/**
- * @event Controls/_explorer/interface/IExplorer#itemOpen Происходит при проваливании в узел.
- * @param {Env/Event:Object} eventObject Дескриптор события.
- */
-
-/*
- * @event Controls/_explorer/interface/IExplorer#itemOpen Occurs before opening a folder.
- * @param {Env/Event:Object} eventObject The event descriptor.
- */
-
-/**
- * @event Controls/_explorer/interface/IExplorer#itemOpened Происходит после проваливания в узел.
- * @param {Env/Event:Object} eventObject Дескриптор события.
- */
-
-/*
- * @event Controls/_explorer/interface/IExplorer#itemOpened Occurs after the folder was opened.
- * @param {Env/Event:Object} eventObject The event descriptor.
  */
 
 /**
  * @event Controls/_explorer/interface/IExplorer#rootChanged Происходит при изменении корня иерархии (например, при переходе пользователя по хлебным крошкам).
  * @param event {eventObject} Дескриптор события.
- * @param root {String} Идентификатор корневой записи. 
+ * @param root {String} Идентификатор корневой записи.
  */
 
 /**
