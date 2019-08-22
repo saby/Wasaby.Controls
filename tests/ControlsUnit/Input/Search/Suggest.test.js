@@ -45,18 +45,30 @@ define(['Controls/suggest', 'Types/entity'], function(suggest, entity) {
 
       it('_searchClick', function() {
          var searchSuggest = new suggest.SearchInput();
+         searchSuggest._suggestState = true;
+
          var searchClickNotifyed = false;
+         var searchClickResult = true;
+
          searchSuggest._notify = function() {
             searchClickNotifyed = true;
-         }
+            return searchClickResult;
+         };
 
          searchSuggest._suggestMarkedKeyChanged(null, 'test');
          searchSuggest._searchClick();
          assert.isFalse(searchClickNotifyed);
+         assert.isTrue(searchSuggest._suggestState);
 
          searchSuggest._suggestMarkedKeyChanged(null, null);
          searchSuggest._searchClick();
          assert.isTrue(searchClickNotifyed);
+         assert.isFalse(searchSuggest._suggestState);
+
+         searchSuggest._suggestState = true;
+         searchClickResult = false;
+         searchSuggest._searchClick();
+         assert.isTrue(searchSuggest._suggestState);
       });
 
       if('_choose', () => {
