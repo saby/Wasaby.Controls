@@ -320,7 +320,8 @@ function getChildrenOnDisplayCount(id, display, hierarchyRelation, expandedItems
 
     let count = 0, children;
 
-    if (expandedItems && expandedItems.indexOf(id) !== -1) {
+    // TODO: Удеберется лишний map, при переводе объектов с ключами на map.
+    if (expandedItems && expandedItems.map((itemKey) => `${itemKey}`).indexOf(`${id}`) !== -1) {
         children = hierarchyRelation.getChildren(id, display.getCollection());
         count = children.length;
 
