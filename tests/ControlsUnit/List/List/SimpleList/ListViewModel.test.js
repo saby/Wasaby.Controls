@@ -63,7 +63,7 @@ define([
 
          model._markedKey = 1;
          version = model._calcItemVersion(item, item.key);
-         assert.exists(version, 'MARKED');
+         assert.include(version, 'MARKED');
 
          model.setDragEntity({
             getItems: function() {
@@ -71,21 +71,29 @@ define([
             }
          });
          version = model._calcItemVersion(item, item.key);
-         assert.exists(version, 'DRAG_ITEM');
+         assert.include(version, 'DRAG_ITEM');
 
          model._dragTargetPosition = {
             item: item.item,
             position: "AFTER"
          };
          version = model._calcItemVersion(item, item.key);
-         assert.exists(version, 'DRAG_POSITION_AFTER');
+         assert.include(version, 'DRAG_POSITION_AFTER');
 
          model._dragTargetPosition = {
             item: item.item,
             position: "BEFORE"
          };
          version = model._calcItemVersion(item, item.key);
-         assert.exists(version, 'DRAG_POSITION_BEFORE');
+         assert.include(version, 'DRAG_POSITION_BEFORE');
+
+         model._reloadedKeys[item.key] = true;
+         version = model._calcItemVersion(item, item.key);
+         assert.include(version, 'RELOADED');
+
+         model.clearReloadedMarks();
+         version = model._calcItemVersion(item, item.key);
+         assert.notInclude(version, 'RELOADED');
       });
 
       it('getCurrent', function() {
