@@ -96,7 +96,7 @@ define([
             ml._container = {};
 
             ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position }));
-            assert.isTrue(DateUtil.isDatesEqual(ml._positionToScroll, position));
+            assert.isNull(ml._positionToScroll);
             assert.strictEqual(ml._displayedPosition, position);
             assert.equal(ml._startPositionId, '2017-01-01');
             sinon.assert.notCalled(ml._children.months.reload);
