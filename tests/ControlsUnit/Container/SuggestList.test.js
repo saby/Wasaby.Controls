@@ -164,6 +164,23 @@ define(
             assert.equal(suggestList._items, items);
          });
 
+         it('_drawItems', function() {
+            let
+               callSrollToLastItem = false,
+               suggestList = new suggestPopup.ListContainer();
+
+            suggestPopup.ListContainer._private.scrollToLastItem = function() {
+               callSrollToLastItem = true;
+            };
+
+            suggestList._drawItems();
+            assert.isFalse(callSrollToLastItem);
+
+            suggestList._reverseList = true;
+            suggestList._drawItems();
+            assert.isTrue(callSrollToLastItem);
+         });
+
          it('_private:checkContext', function() {
             let suggestList = new suggestPopup.ListContainer();
             let contextObject = {
