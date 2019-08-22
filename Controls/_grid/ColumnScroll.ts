@@ -110,32 +110,33 @@ const
             ' .controls-Grid__cell_transform { transform: translateX(-' + position + 'px); }';
       },
       setOffsetForHScroll (self) {
-         const prevOffset = self._offsetForHScroll;
-         const container = self._children.content;
-         self._offsetForHScroll = 0;
-         self._leftOffsetForHScroll = 0;
-         const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0] && container.getElementsByClassName('controls-Grid__header')[0].childNodes;
-         if (HeaderGroup && !!HeaderGroup.length) {
-            const firstCell = HeaderGroup[0];
-            if (self._fixedColumnsWidth) {
-                self._leftOffsetForHScroll = self._fixedColumnsWidth;
-            } else if (self._options.multiSelectVisibility !== 'hidden') {
-               self._leftOffsetForHScroll = firstCell.offsetWidth + HeaderGroup[1].offsetWidth;
-            } else {
-               self._leftOffsetForHScroll = firstCell.offsetWidth;
-            }
-            self._offsetForHScroll += firstCell.offsetHeight + container.offsetTop;
-         }
-         if (self._options.listModel.getResultsPosition() === 'top') {
-            const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0] && container.getElementsByClassName('controls-Grid__results')[0].childNodes;
-            if (ResultsContainer && !!ResultsContainer.length) {
-               self._offsetForHScroll += ResultsContainer[0].offsetHeight;
-            }
-         }
-         self._contentSizeForHScroll = self._contentSize - self._leftOffsetForHScroll;
-         if (prevOffset !== self._offsetForHScroll) {
-            self._scrollVisible = true;
-         }
+          const prevOffset = self._offsetForHScroll;
+          const container = self._children.content;
+          self._offsetForHScroll = 0;
+          self._leftOffsetForHScroll = 0;
+          const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0] && container.getElementsByClassName('controls-Grid__header')[0].childNodes;
+          if (HeaderGroup && !!HeaderGroup.length) {
+              const firstCell = HeaderGroup[0];
+              if (self._fixedColumnsWidth) {
+                  self._leftOffsetForHScroll = self._fixedColumnsWidth;
+              } else if (self._options.multiSelectVisibility !== 'hidden') {
+                  self._leftOffsetForHScroll = firstCell.offsetWidth + HeaderGroup[1].offsetWidth;
+              } else {
+                  self._leftOffsetForHScroll = firstCell.offsetWidth;
+              }
+              self._offsetForHScroll += firstCell.offsetHeight + container.offsetTop;
+          }
+          if (self._options.listModel.getResultsPosition() === 'top') {
+              const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0] && container.getElementsByClassName('controls-Grid__results')[0].childNodes;
+              if (ResultsContainer && !!ResultsContainer.length) {
+                  self._offsetForHScroll += ResultsContainer[0].offsetHeight;
+              }
+          }
+          self._contentSizeForHScroll = self._contentSize - self._leftOffsetForHScroll;
+          if (prevOffset !== self._offsetForHScroll) {
+              self._scrollVisible = true;
+          }
+      }
    },
    ColumnScroll = Control.extend({
       _template: ColumnScrollTpl,
