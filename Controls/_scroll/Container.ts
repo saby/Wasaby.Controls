@@ -626,10 +626,27 @@ var
        * @private
        */
       _updateStickyHeaderContext: function(shadowVisible) {
-         var shadowPosition = '';
+         var
+            shadowPosition = '',
+            shadowVisible = { top: false, bottom: false };
 
          if ((shadowVisible || this._options.shadowVisible) && this._displayState.hasScroll) {
-            shadowPosition = this._displayState.shadowPosition;
+            shadowVisible.top = this._displayState.shadowPosition.indexOf('top') !== -1;
+            shadowVisible.bottom = this._displayState.shadowPosition.indexOf('bottom') !== -1;
+
+            if (this._shadowVisiblityMode.top === 'visible') {
+               shadowVisible.top = true;
+            }
+            if (this._shadowVisiblityMode.bottom === 'visible') {
+               shadowVisible.bottom = true;
+            }
+         }
+
+         if (shadowVisible.top) {
+            shadowPosition += 'top';
+         }
+         if (shadowVisible.bottom) {
+            shadowPosition += 'bottom';
          }
 
          if (this._stickyHeaderContext.shadowPosition !== shadowPosition) {
