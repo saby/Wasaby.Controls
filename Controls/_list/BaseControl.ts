@@ -1166,8 +1166,8 @@ var _private = {
         }
     },
 
-    needBottomPadding: function(options) {
-        return (options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
+    needBottomPadding: function(options, items) {
+        return (!!items && !!items.getCount() && options.itemActionsPosition === 'outside' && !options.footerTemplate && options.resultsPosition !== 'bottom');
     },
 
     isPagingNavigation: function(navigation) {
@@ -1339,7 +1339,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         _private.initializeNavigation(this, newOptions);
         _private.updateNavigation(this);
-        this._needBottomPadding = _private.needBottomPadding(newOptions);
 
         this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden';
 
@@ -1364,6 +1363,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
                     self._items = self._listViewModel.getItems();
+                    self._needBottomPadding = _private.needBottomPadding(newOptions, self._items);
+
                     if (self._pagingNavigation) {
                         var hasMoreData = self._items.getMetaData().more;
                         self._knownPagesCount = _private.calcPaging(self, hasMoreData, newOptions.navigation.sourceConfig.pageSize);
@@ -1443,7 +1444,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
-        this._needBottomPadding = _private.needBottomPadding(newOptions);
+        this._needBottomPadding = _private.needBottomPadding(newOptions, this._items);
         if (!isEqual(newOptions.navigation, this._options.navigation)) {
             _private.initializeNavigation(this, newOptions, resetPaging);
         }
