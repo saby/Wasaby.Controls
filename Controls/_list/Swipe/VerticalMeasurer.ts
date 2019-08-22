@@ -2,6 +2,7 @@ import { IMeasurer } from './interface/IMeasurer';
 import { IItemAction, ShowType } from './interface/IItemAction';
 import { ISwipeConfig, ItemActionsSize } from './interface/ISwipeConfig';
 import { ISwipeControlOptions } from './interface/ISwipeControl';
+import {getActualActions} from './SwipeUtils';
 
 const breakpoints: Record<
    ISwipeControlOptions['actionCaptionPosition'],
@@ -81,11 +82,8 @@ const VerticalMeasurer: IMeasurer = {
       actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']
    ): ISwipeConfig {
       let columnsCount = 1;
-      // если у действия есть родитель, то нам не нужно его рисовать
-      let itemActions = actions.filter((action) => !action.parent);
-      itemActions.sort(function(action1, action2) {
-         return (action2.showType || ShowType.MENU) - (action1.showType || ShowType.MENU);
-      });
+      let itemActions = getActualActions(actions);
+
       const {
          itemActionsSize,
          countOfActions
