@@ -78,17 +78,63 @@ define([
       });
 
       describe('_wheelHandler', function() {
-         it('should should increase the year.', function() {
-            const component = calendarTestUtils.createComponent(DateRange, { position: year });
-            sandbox.stub(component, '_notify');
-            component._wheelHandler({ preventDefault: function(){}, nativeEvent: { deltaY: 1 } });
-            sinon.assert.calledWith(component._notify, 'positionChanged', [new Date(year.getFullYear() + 1, 0, 1)]);
-         });
-         it('should should decrease the year.', function() {
-            const component = calendarTestUtils.createComponent(DateRange, { position: year });
-            sandbox.stub(component, '_notify');
-            component._wheelHandler({ preventDefault: function(){}, nativeEvent: { deltaY: -1 } });
-            sinon.assert.calledWith(component._notify, 'positionChanged', [new Date(year.getFullYear() - 1, 0, 1)]);
+         const
+            scrollNextDate = new Date(year.getFullYear(), 10, 1),
+            scrollPrevDate = new Date(year.getFullYear(), 0, 1);
+
+         [{
+            caption: 'should increase the year.',
+            offset: { top: 10, bottom: 1000 },
+            offsetHeight: 400,
+            deltaY: 1,
+            resultDate: scrollNextDate
+         }, {
+            caption: 'should\'t change scroll position.',
+            offset: { top: 10, bottom: 300 },
+            offsetHeight: 400,
+            deltaY: 1,
+            resultDate: null
+         }, {
+            caption: 'should\'t change scroll position.',
+            offset: { top: -10, bottom: 1000 },
+            offsetHeight: 400,
+            deltaY: 1,
+            resultDate: null
+         }, {
+            caption: 'should decrease the year.',
+            offset: { top: 10, bottom: 1000 },
+            offsetHeight: 400,
+            deltaY: -1,
+            resultDate: scrollPrevDate
+         }, {
+            caption: 'should\'t change scroll position.',
+            offset: { top: -10, bottom: 1000 },
+            offsetHeight: 400,
+            deltaY: -1,
+            resultDate: null
+         }, {
+            caption: 'should\'t change scroll position.',
+            offset: { top: 10, bottom: -1000 },
+            offsetHeight: 400,
+            deltaY: -1,
+            resultDate: null
+         }].forEach(function(test) {
+            it(test.caption, function() {
+               const component = calendarTestUtils.createComponent(DateRange, { position: year });
+               component._children.monthList = {
+                  getDisplayedItemOffset: function() {
+                     return test.offset;
+                  },
+                  scrollIntoView: sinon.fake()
+               };
+               component._container.offsetHeight = test.offsetHeight;
+               component._wheelHandler({ preventDefault: function(){}, nativeEvent: { deltaY: test.deltaY } });
+               if (test.resultDate) {
+                  sinon.assert.calledWith(component._children.monthList.scrollIntoView, test.resultDate);
+               } else {
+                  sinon.assert.notCalled(component._children.monthList.scrollIntoView);
+               }
+            });
          });
       });
 
