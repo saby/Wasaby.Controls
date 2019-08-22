@@ -15,14 +15,16 @@ import {RecordSet} from 'Types/collection';
 import {getItemsWithHistory, isHistorySource} from 'Controls/_filter/HistoryUtils';
 
 /**
- * Контрол для фильтрации данных. Состоит из иконки-кнопки, строкового представления выбранного фильтра и параметров быстрого фильтра.
- * При клике на иконку-кнопку или строку представления открывается панель фильтров. {@link Controls/filterPopup:DetailPanel}
- * Клик на параметры быстрого фильтра открывает простую панель. {@link Controls/filterPopup:SimplePanel}
- * <a href="/materials/demo-ws4-filter-view">Демо-пример</a>.
+ * Контрол для фильтрации данных. Предосталвяет возможожность представлять и редактировать фильтр,
+ * в удобном для пользователя виде.
+ * Состоит из кнопки-иконки, строкового представления выбранного фильтра и параметров быстрого фильтра.
+ * При клике на кнопку-иконку или строковое представления, открывается панель фильтров. {@link Controls/filterPopup:DetailPanel}
+ * Клик на параметры быстрого фильтра открывает панель "Быстрых фильтров". {@link Controls/filterPopup:SimplePanel}.
+ * Здесь вы можете посмотреть<a href="/materials/demo-ws4-filter-view">демонстрационный пример</a>.
  *
  * @class Controls/_filter/View
  * @extends Core/Control
- * @mixes Controls/_filter/interface/IFilterView
+ * @mixes Controls/_filter/View/interface/IFilterView
  * @control
  * @public
  * @author Золотова Э.Е.
