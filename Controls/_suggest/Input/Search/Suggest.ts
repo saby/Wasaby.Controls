@@ -104,7 +104,11 @@ var Suggest = Control.extend({
       /* the search should not fire an event if marked key in suggstions list was changed,
          because enter should activate marked item */
       if (!this._markedKeyChanged) {
-         this._notify('searchClick');
+         const eventResult = this._notify('searchClick');
+
+         if (eventResult !== false) {
+            this._suggestState = false;
+         }
       }
    },
 
