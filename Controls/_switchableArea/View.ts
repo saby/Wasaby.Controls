@@ -19,7 +19,7 @@ import defaultItemTemplate from './ItemTpl';
 */
 /**
  * @typedef {Object} SwitchableAreaItem
- * @property {String|Number} id
+ * @property {String|Number} key
  * @property {Function} itemTemplate
  */
 
@@ -43,6 +43,9 @@ var View = Control.extend({
 
    _beforeMount: function(options) {
       this._viewModel = new ViewModel(options.items, options.selectedKey);
+      // if(options.items.id){
+      //    IoC.resolve('ILogger').warn('SwitchableArea', 'items.id will be deprecated and removed in 19.700. Use items.key');
+      // }
    },
 
    _beforeUpdate: function(newOptions) {
