@@ -29,20 +29,13 @@ define([
             }
          });
 
-         if (currentWidth > availableWidth) {
-            if (visibleItemsKeys.length === 1) {
-               items.getRecordById(visibleItemsKeys[0]).set('withTitle', true);
-               items.each(function(item) {
-                  item.set('showType', 2);
-               });
-            } else {
-               for (var i = visibleItemsKeys.length - 1; i >= 0; i--) {
-                  items.getRecordById(visibleItemsKeys[i]).set('showType', currentWidth > availableWidth ? 0 : 1);
-                  currentWidth -= itemsSizes[i];
-               }
+         if (visibleItemsKeys.length > 1 && currentWidth > availableWidth) {
+            for (var i = visibleItemsKeys.length - 1; i >= 0; i--) {
+               items.getRecordById(visibleItemsKeys[i]).set('showType', currentWidth > availableWidth ? 0 : 1);
+               currentWidth -= itemsSizes[i];
             }
          } else {
-            items.each(function(item) {
+            items.each(function (item) {
                item.set('showType', 2);
             });
          }
@@ -316,7 +309,6 @@ define([
                instance._afterUpdate();
                instance._toolbarSource.query().addCallback(function(result) {
                   assert.equal(result.getAll().getRecordById(0).get('showType'), 2);
-                  assert.isTrue(result.getAll().getRecordById(0).get('withTitle'));
                   assert.isTrue(forceUpdateCalled);
                   done();
                });

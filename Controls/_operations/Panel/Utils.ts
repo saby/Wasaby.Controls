@@ -75,16 +75,15 @@ import getWidthUtil = require('Controls/Utils/getWidth');
             }
          });
 
-         itemsSizes = _private.getItemsSizes(items, visibleItemsKeys, theme, defaultItemTemplate, itemTemplateProperty);
-         currentWidth = itemsSizes.reduce(function(acc, width) {
-            return acc + width;
-         }, 0);
+         if (visibleItemsKeys.length <= 1) {
+            _private.setShowType(items, showType.TOOLBAR);
+         } else {
+            itemsSizes = _private.getItemsSizes(items, visibleItemsKeys, theme, defaultItemTemplate, itemTemplateProperty);
+            currentWidth = itemsSizes.reduce(function (acc, width) {
+               return acc + width;
+            }, 0);
 
-         if (currentWidth > availableWidth) {
-            if (visibleItemsKeys.length === 1) {
-               items.getRecordById(visibleItemsKeys[0]).set('withTitle', true);
-               _private.setShowType(items, showType.TOOLBAR);
-            } else {
+            if (currentWidth > availableWidth) {
                _private.initializeConstants();
                _private.setShowType(items, showType.MENU);
                currentWidth += MENU_WIDTH;
@@ -93,9 +92,9 @@ import getWidthUtil = require('Controls/Utils/getWidth');
                   items.getRecordById(visibleItemsKeys[i]).set('showType', currentWidth > availableWidth ? showType.MENU : showType.MENU_TOOLBAR);
                   currentWidth -= itemsSizes[i];
                }
+            } else {
+               _private.setShowType(items, showType.TOOLBAR);
             }
-         } else {
-            _private.setShowType(items, showType.TOOLBAR);
          }
 
          return items;

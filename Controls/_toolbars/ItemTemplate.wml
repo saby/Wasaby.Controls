@@ -23,7 +23,7 @@
         <ws:if data="{{(item['title'] || item[displayProperty]) && !item['buttonViewMode']}}">
             <span class="controls-Toolbar__item_title{{item['readOnly'] ? '_readOnly'}}_theme-{{theme}}
                   {{item['icon'] || item[iconProperty] ? 'controls-Toolbar__item_has-title-and-icon_theme-' + theme}}"
-                  title="{{item['withTitle'] ? item['title'] || item[displayProperty]}}">
+                  title="{{item['title'] || item[displayProperty]}}">
                {{item['title'] || item[displayProperty]}}
             </span>
         </ws:if>
