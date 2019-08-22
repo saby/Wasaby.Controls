@@ -98,15 +98,21 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _wheelHandler: function(event) {
-        let year;
+        const
+            //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+            container = this._container.get ? this._container.get(0) : this._container,
+            height = container.offsetHeight,
+            offset = this._children.monthList.getDisplayedItemOffset(dateUtils.getStartOfYear(this._options.position));
 
-        if (event.nativeEvent.deltaY > 0) {
-            year = this._options.position.getFullYear() + 1;
-        } else {
-            year = this._options.position.getFullYear() - 1;
+        let date;
+
+        if (event.nativeEvent.deltaY > 0 && offset.top > 0 && offset.bottom > height) {
+            date = new Date(this._options.position.getFullYear(), 10, 1);
+            this._children.monthList.scrollIntoView(date);
+        } else if ( event.nativeEvent.deltaY < 0 && offset.top > 0 && offset.bottom > 0) {
+            date = new Date(this._options.position.getFullYear(), 0, 1);
+            this._children.monthList.scrollIntoView(date);
         }
-        _private.notifyPositionChanged(this, new Date(year, 0, 1));
-        event.preventDefault();
     },
 
     _dateToString: function(date) {
