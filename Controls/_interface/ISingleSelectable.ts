@@ -16,6 +16,14 @@ export default interface ISingleSelectable {
 }
 /**
  * @name Controls/_interface/ISingleSelectable#selectedKey
+ * @cfg {Number|String} Ключ выбранного элемента коллекции.
+ * @default Undefined
+ * @see selectedKeyChanged
+ * @see keyProperty
+ */
+
+/*
+ * @name Controls/_interface/ISingleSelectable#selectedKey
  * @cfg {Number|String} Selected item key.
  * @default Undefined
  * @example
@@ -25,14 +33,21 @@ export default interface ISingleSelectable {
  * </pre>
  * <pre>
  *    _beforeMount: function() {
-    *       this._selectedKey = '1';
-    *    }
+ *       this._selectedKey = '1';
+ *    }
  * </pre>
  * @see selectedKeyChanged
  * @see keyProperty
  */
 
 /**
+ * @event Controls/_interface/ISingleSelectable#selectedKeyChanged Происходит при изменении выбранного значения.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Number|String} key Ключ выбранного элемента коллекции.
+ * @see selectedKey
+ */
+
+/*
  * @event Controls/_interface/ISingleSelectable#selectedKeyChanged Occurs when selection was changed.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Number|String} key Selected item key.
@@ -45,12 +60,12 @@ export default interface ISingleSelectable {
  * </pre>
  * <pre>
  *    _beforeMount: function() {
-    *       this._selectedKey = undefined;
-    *    },
+ *       this._selectedKey = undefined;
+ *    },
  *    onSelectedKeyChanged: function(e, selectedKey) {
-    *       //Note that we simultaneously have event handler and bind for the same option, so we don't have to update state manually.
-    *       this._panelSource = this._getPanelSource(selectedKey);
-    *    }
+ *       //Note that we simultaneously have event handler and bind for the same option, so we don't have to update state manually.
+ *       this._panelSource = this._getPanelSource(selectedKey);
+ *    }
  * </pre>
  * @see selectedKey
  */
