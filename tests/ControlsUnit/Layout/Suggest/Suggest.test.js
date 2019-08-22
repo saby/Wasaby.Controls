@@ -1,5 +1,7 @@
 define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Controls/history', 'Core/Deferred'], function(suggestMod, collection, entity, Env, history, Deferred) {
 
+   'use strict';
+
    describe('Controls.Container.Suggest.Layout', function() {
       var IDENTIFICATORS = [1, 2, 3];
 
