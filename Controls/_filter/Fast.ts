@@ -26,6 +26,7 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
        * @demo Controls-demo/FastFilter/fastPG
        * @control
        * @public
+       * @deprecated Контрол устарел и в скором времени будет удалён, используйте {@link Controls/filter:View}.
        * @author Герасимов А.М.
        */
 
