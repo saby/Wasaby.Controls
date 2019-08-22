@@ -108,6 +108,8 @@ var Suggest = Control.extend({
 
          if (eventResult !== false) {
             this._suggestState = false;
+            // Всплытие будет удалено по задаче. https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec
+            this._notify('suggestStateChanged', [false], {bubbling: true});
          }
       }
    },
