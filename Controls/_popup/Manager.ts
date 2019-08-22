@@ -142,12 +142,15 @@ const _private = {
     },
 
     popupCreated(id) {
-        const element = _private.find(id);
-        if (element) {
+        const item = _private.find(id);
+        if (item) {
             // Register new popup
             _private.fireEventHandler(id, 'onOpen');
-            element.controller._elementCreated(element, _private.getItemContainer(id), id);
-            this._notify('managerPopupCreated', [element, _private.popupItems], {bubbling: true});
+            item.controller._elementCreated(item, _private.getItemContainer(id), id);
+            // if it's CompoundTemplate, then compoundArea notify event, when template will ready.
+            if (!item.popupOptions.isCompoundTemplate) {
+                this._notify('managerPopupCreated', [item, _private.popupItems], {bubbling: true});
+            }
             return true;
         }
         return false;

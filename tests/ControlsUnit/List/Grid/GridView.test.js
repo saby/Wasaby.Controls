@@ -264,17 +264,17 @@ define(['Controls/grid'], function(gridMod) {
          };
 
 
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['1fr', '11px', '1fr']);
+         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['10px', '11px', '1fr']);
 
          gridView._options.multiSelectVisibility = 'visible';
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['1fr', '12px', '1fr']);
+         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['11px', '12px', '1fr']);
 
          gridView._listModel.getCount = () => 0;
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['1fr', '12px', '1fr']);
+         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['11px', '12px', '1fr']);
 
          gridView._listModel.getCount = () => 1;
          gridView._listModel.getHeader = () => null;
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['1fr', '22px', '1fr']);
+         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['21px', '22px', '1fr']);
 
          gridView._listModel.getCount = () => 0;
          gridView._listModel.getHeader = () => null;
@@ -308,6 +308,7 @@ define(['Controls/grid'], function(gridMod) {
             }
          }
          gridView._container = {
+            offsetTop: 0,
             querySelector: function() {
                const obj = queryCells();
                i++;

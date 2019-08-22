@@ -102,6 +102,39 @@ define([
          cell._callHandler({type:'click'}, {});
          assert.isFalse(called);
       });
+
+      it('should not notify about click if item is a breadCrumbs', function () {
+         let
+            called = false,
+            options = {
+                itemData: {
+                    isEditing: false
+                },
+               eventHandlers: {
+                  'click': () => {
+                     called = true
+                  }
+               }
+            },
+            cell = new Cell(options),
+            propagationStopped = false,
+            fakeItem = {getContents: function() {
+                  return [{},{}];
+               }
+            },
+            fakeEvent = {
+                type: 'click',
+                stopPropagation: function() {
+                    propagationStopped = true;
+                }
+            };
+         cell.saveOptions(options);
+
+         cell._beforeMount(options);
+         cell._callHandler(fakeEvent, fakeItem);
+         assert.isFalse(called);
+         assert.isTrue(propagationStopped);
+      });
    });
 
 });

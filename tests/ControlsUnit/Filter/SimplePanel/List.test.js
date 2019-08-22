@@ -41,7 +41,8 @@ define(
                keyProperty: defaultConfig.keyProperty,
                itemTemplateProperty: defaultConfig.itemTemplateProperty,
                displayProperty: defaultConfig.displayProperty,
-               emptyText: defaultConfig.emptyText
+               emptyText: defaultConfig.emptyText,
+               emptyKey: defaultConfig.emptyKey
             });
             let list = getList(defaultConfig);
             list._beforeMount(defaultConfig);

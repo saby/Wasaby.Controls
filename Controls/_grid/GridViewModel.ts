@@ -414,7 +414,7 @@ var
                 hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
                 columnsWidth = hasMultiselect ? ['max-content'] : [],
                 hasDynamicWidth = !!columns.find((column) => {
-                    return column.width && !column.width.match(GridLayoutUtil.nonDynamicWidthRegExp);
+                    return column.width && !GridLayoutUtil.isCompatibleWidth(column.width);
                 });
 
             if (!hasDynamicWidth) {
@@ -443,9 +443,21 @@ var
                 itemData.getEditingRowStyles = function () {
                     let editingRowStyles = '';
 
+                    // TODO: KINGO
+                    // В IE (едиственный поддерживаемый браузер с частичной поддержкой грида) обнаружился баг неясной природы.
+                    // В IE, из-за особенностей вёрстки, строка редактирования это сабгрид.
+                    // Для выравнивания колонок сабгрида строки редактирования, необходимо задать ему template-columns в px.
+                    // При взятии ширины колонки у родительского грида, getBoundingClientRect возвращает неправильную ширину.
+                    // Такое поведение встречается, только если задать -ms-grid-column-span !== 1.
+                    // https://online.sbis.ru/opendoc.html?guid=e61af344-59d8-4bc2-9645-fcbac1ddd767
+
+                    // Если единственное содержимое грида - это строка редактирования, то нужно растянуть строку по гриду,
+                    // т.к. больше его некому растянуть.
+                    const colspan = (self.getItems().getCount() || !!self.getHeader()) ? 1 : self._columns.length;
+
                     editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
                     editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
-                    editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, 1);
+                    editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, colspan);
 
                     return editingRowStyles;
                 }

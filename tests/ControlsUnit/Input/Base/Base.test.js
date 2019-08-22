@@ -14,6 +14,7 @@ define(
       describe('Controls/_input/Base', function() {
          var calls;
          var ctrl = new inputMod.Base();
+         var _private = inputMod.Base._private;
          makeInstanceCompatible(ctrl);
          ctrl._template({});
 
@@ -360,6 +361,38 @@ define(
                      end: 10
                   }
                }]);
+            });
+            it('Test _numberSkippedSaveSelection not in IE.', function() {
+               ctrl._isBrowserPlatform = true;
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
+               ctrl._beforeMount({
+                  value: ''
+               });
+               ctrl._isIE = false;
+
+               _private.updateSelection(ctrl, {
+                  start: 3,
+                  end: 3
+               });
+               assert.equal(ctrl._numberSkippedSaveSelection, 1);
+            });
+            it('Test _numberSkippedSaveSelection in IE.', function() {
+               ctrl._isBrowserPlatform = true;
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
+               ctrl._beforeMount({
+                  value: ''
+               });
+               ctrl._isIE = true;
+
+               _private.updateSelection(ctrl, {
+                  start: 3,
+                  end: 3
+               });
+               assert.equal(ctrl._numberSkippedSaveSelection, 0);
             });
          });
          describe('Focus in event', function() {

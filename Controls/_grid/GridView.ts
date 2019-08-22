@@ -140,7 +140,7 @@ var
 
             self._options.columns.forEach((column, index: number) => {
                 const realIndex = index + (hasMultiselect ? 1 : 0);
-                const isDynamicWidth = column.width && !column.width.match(GridLayoutUtil.nonDynamicWidthRegExp);
+                const isDynamicWidth = column.width && !GridLayoutUtil.isCompatibleWidth(column.width);
                 const cWidth = isDynamicWidth ? (cells[realIndex].getBoundingClientRect().width + 'px') : (column.width || '1fr');
 
                 columnsWidths.push(cWidth);
@@ -291,7 +291,7 @@ var
                     `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`
                     )
                     const height = curEl.offsetHeight;
-                    const offset = curEl.offsetTop;
+                    const offset = Math.abs(curEl.offsetTop - container.offsetTop);
                     return {
                         ...cur,
                         offsetTop: offset,

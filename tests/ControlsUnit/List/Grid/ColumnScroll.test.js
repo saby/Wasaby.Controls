@@ -328,6 +328,14 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(clearColumnScroll._offsetForHScroll, 50);
          assert.equal(clearColumnScroll._leftOffsetForHScroll, 100);
 
+         assert.isTrue(clearColumnScroll._isColumnScrollVisible());
+
+         clearColumnScroll._afterUpdate({...cfg, root: '123'});
+         assert.isFalse(clearColumnScroll._isColumnScrollVisible());
+
+         clearColumnScroll._children.content.offsetTop = 50;
+         clearColumnScroll._setOffsetForHScroll();
+         assert.isTrue(clearColumnScroll._isColumnScrollVisible());
       });
 
       it('no sticky columns', function() {
@@ -370,6 +378,40 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.deepEqual(clearColumnScroll._shadowState, 'end');
          assert.deepEqual(clearColumnScroll._fixedColumnsWidth, 0);
       });
+      it('empty grid', function() {
+         let clearColumnScroll = new ColumnScroll({...cfg, stickyColumnsCount: 0});
+
+         clearColumnScroll._children = {
+            contentStyle: {
+               innerHTML: ''
+            },
+            content: {
+               getElementsByClassName: () => {
+                  return [{
+                     scrollWidth: 250,
+                     offsetWidth: 250,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 20
+                        }
+                     },
+                     querySelector:
+
+                        function () {
+                           return null;
+                        }
+                  }]
+               }
+            }
+         };
+         clearColumnScroll.saveOptions({...cfg, stickyColumnsCount: undefined});
+         clearColumnScroll._afterMount({...cfg, stickyColumnsCount: undefined});
+         assert.equal(clearColumnScroll._contentSize, 250);
+         assert.equal(clearColumnScroll._contentContainerSize, 250);
+         assert.deepEqual(clearColumnScroll._shadowState, '');
+         assert.deepEqual(clearColumnScroll._fixedColumnsWidth, 0);
+      });
+
 
       it('_isColumnScrollVisible', function() {
 

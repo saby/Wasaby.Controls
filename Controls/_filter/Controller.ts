@@ -202,7 +202,8 @@ import 'Controls/context';
 
             function processItems(elem) {
                // The filter can be changed by another control, in which case the value is set to the filter button, but textValue is not set.
-               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue')) && getPropValue(elem, 'textValue')) {
+               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue')) &&
+                   getPropValue(elem, 'textValue') !== undefined && getPropValue(elem, 'textValue') !== null) {
                   filter[getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name')] = getPropValue(elem, 'value');
                }
             }
@@ -610,8 +611,12 @@ import 'Controls/context';
          },
 
          _beforeUpdate: function(newOptions) {
-            if (this._options.filterButtonSource !== newOptions.filterButtonSource || this._options.fastFilterSource !== newOptions.fastFilterSource) {
-               _private.setFilterItems(this, newOptions.filterButtonSource, newOptions.fastFilterSource);
+            let filterButtonChanged = this._options.filterButtonSource !== newOptions.filterButtonSource,
+                fastFilterChanged = this._options.fastFilterSource !== newOptions.fastFilterSource;
+            if (filterButtonChanged || fastFilterChanged) {
+               let actualFilterButtonSource = filterButtonChanged ? newOptions.filterButtonSource : this._filterButtonItems;
+               let actualFastFilterSource = fastFilterChanged ? newOptions.fastFilterSource : this._fastFilterItems;
+               _private.setFilterItems(this, actualFilterButtonSource, actualFastFilterSource);
                _private.resolveFilterButtonItems(this._filterButtonItems, this._fastFilterItems);
                _private.applyItemsToFilter(this, this._filter, this._filterButtonItems, this._fastFilterItems);
             }
@@ -621,6 +626,10 @@ import 'Controls/context';
          },
 
          _itemsChanged: function(event, items) {
+            // Откатываем в 600 https://online.sbis.ru/opendoc.html?guid=ba2a670e-5797-4261-99cb-0164abe258ca
+            if (this._options.notMergeItems) {
+               this._filterButtonItems = clone(items);
+            }
             _private.updateFilterItems(this, items);
 
             if (this._options.historyId) {

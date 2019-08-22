@@ -20,8 +20,11 @@ const
             columnOffset = hasMultiSelect ? 1 : 0,
             lastStickyColumnIndex = stickyColumnsCount + columnOffset,
             lastStickyColumnSelector = `.controls-Grid__cell_fixed:nth-child(${lastStickyColumnIndex})`,
-            stickyCellContainer = container.querySelector(lastStickyColumnSelector),
-            stickyCellOffsetLeft = stickyCellContainer.getBoundingClientRect().left - container.getBoundingClientRect().left;
+            stickyCellContainer = container.querySelector(lastStickyColumnSelector);
+         if (!stickyCellContainer) {
+            return 0;
+         }
+         const stickyCellOffsetLeft = stickyCellContainer.getBoundingClientRect().left - container.getBoundingClientRect().left;
          return stickyCellOffsetLeft + stickyCellContainer.offsetWidth;
       },
       updateSizes(self) {
@@ -47,6 +50,7 @@ const
             self._shadowState =
                _private.calculateShadowState(self._scrollPosition, self._contentContainerSize, self._contentSize);
             _private.updateFixedColumnWidth(self);
+            self._scrollVisible = true;
             self._forceUpdate();
          }
          if (newContentContainerSize + self._scrollPosition > newContentSize) {
@@ -106,6 +110,7 @@ const
             ' .controls-Grid__cell_transform { transform: translateX(-' + position + 'px); }';
       },
       setOffsetForHScroll (self) {
+         const prevOffset = self._offsetForHScroll;
          const container = self._children.content;
          self._offsetForHScroll = 0;
          self._leftOffsetForHScroll = 0;
@@ -127,9 +132,10 @@ const
                self._offsetForHScroll += ResultsContainer[0].offsetHeight;
             }
          }
-
          self._contentSizeForHScroll = self._contentSize - self._leftOffsetForHScroll;
-      }
+         if (prevOffset !== self._offsetForHScroll) {
+            self._scrollVisible = true;
+         }
    },
    ColumnScroll = Control.extend({
       _template: ColumnScrollTpl,
@@ -145,6 +151,7 @@ const
       _leftOffsetForHScroll: 0,
       _isNotGridSupport: false,
       _contentSizeForHScroll: 0,
+       _scrollVisible: true,
 
       _beforeMount(opt) {
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
@@ -173,6 +180,9 @@ const
             _private.updateFixedColumnWidth(this);
             this._setOffsetForHScroll();
          }
+          if (this._options.root !== oldOptions.root) {
+              this._scrollVisible = false;
+          }
       },
 
       _resizeHandler() {
@@ -181,7 +191,7 @@ const
 
       _isColumnScrollVisible: function() {
          const items = this._options.listModel.getItems();
-         return items && !!items.getCount() && (this._contentSize > this._contentContainerSize) ? true : false;
+         return this._scrollVisible && items && !!items.getCount() && (this._contentSize > this._contentContainerSize) ? true : false;
       },
 
       _calculateShadowClasses(position) {

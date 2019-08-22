@@ -218,7 +218,7 @@ var BaseLookupView = Control.extend({
         this._notify('updateItems', [[]]);
 
         // When click on the button, it disappears from the layout and the focus is lost, we return the focus to the input field.
-        this.activate({enableScreenKeyboard: true});
+        this.activate();
     },
 
     _itemClick: function (event, item) {
