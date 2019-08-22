@@ -271,8 +271,6 @@ var _private = {
    },
 
    openSelector: function(self, popupOptions) {
-      popupOptions = clone(popupOptions) || {};
-
       if (self._notify('showSelector', [popupOptions]) !== false) {
          //loading showAll templates
          requirejs(['Controls/suggestPopup'], function () {
@@ -505,12 +503,20 @@ var SuggestLayout = Control.extend({
       var filter = clone(this._filter) || {};
 
       filter[this._options.searchParam] = '';
-      _private.openSelector(this, filter);
+      _private.openSelector(this, {
+         templateOptions: {
+            filter: filter
+         }
+      });
       _private.close(this);
    },
 
    _moreClick: function() {
-      _private.openSelector(this, this._filter);
+      _private.openSelector(this, {
+         templateOptions: {
+            filter: this._filter
+         }
+      });
       _private.close(this);
    },
 

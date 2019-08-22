@@ -1,7 +1,5 @@
 define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Controls/history', 'Core/Deferred'], function(suggestMod, collection, entity, Env, history, Deferred) {
 
-   'use strict';
-
    describe('Controls.Container.Suggest.Layout', function() {
       var IDENTIFICATORS = [1, 2, 3];
 
@@ -357,7 +355,11 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          suggest._notify = function(eventName, data) {
             if (eventName === 'showSelector') {
                isNotifyShowSelector = true;
-               assert.deepEqual(data[0], {});
+               assert.deepEqual(data[0], {
+                  templateOptions: {
+                     filter: suggest._filter
+                  }
+               });
             }
          };
 
