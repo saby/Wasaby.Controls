@@ -22,6 +22,7 @@ import 'css!theme?Controls/filter';
  * @extends Core/Control
  * @mixes Controls/interface/IFilterButton
  * @demo Controls-demo/Filter/Button/ButtonPG
+ * @deprecated Контрол устарел и в скором времени будет удалён, используйте {@link Controls/filter:View}.
  * @control
  * @public
  * @author Герасимов А.М.
