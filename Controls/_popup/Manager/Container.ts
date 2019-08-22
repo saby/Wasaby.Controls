@@ -74,7 +74,9 @@ import 'css!theme?Controls/popup';
          },
 
          _overlayClickHandler: function(event) {
+            //Click on the overlay shouldn't do anything
             event.preventDefault();
+            event.stopPropagation();
          },
 
          _getPopupZIndex: function(item, index) {
