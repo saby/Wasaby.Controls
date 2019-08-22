@@ -19,13 +19,30 @@
     </div>
 </ws:template>
 
-<ws:if data="{{!itemData.isPartialGridSupport()}}">
-    <div attr:class="controls-Grid__row controls-TreeGrid__nodeFooter" attr:key="nodeFooter_{{itemData.key}}">
-        <ws:partial template="footer"></ws:partial>
-    </div>
+<ws:if data="{{task1177672941}}">
+    <ws:for data="nodeFooter in nodeFooters">
+        <ws:if data="{{!nodeFooter.isPartialGridSupport()}}">
+            <div attr:class="controls-Grid__row controls-TreeGrid__nodeFooter" attr:key="nodeFooter_{{nodeFooter.key}}">
+                <ws:partial template="wml!Controls/_treeGrid/TreeGridView/NodeFooterContent" itemData="{{nodeFooter}}"/>
+            </div>
+        </ws:if>
+        <ws:else>
+            <ws:partial template="wml!Controls/_treeGrid/TreeGridView/NodeFooterContent"
+                        attr:style="{{ nodeFooter.gridStyles ? nodeFooter.gridStyles }}"
+                        itemData="{{nodeFooter}}"/>
+        </ws:else>
+    </ws:for>
 </ws:if>
 <ws:else>
-    <ws:partial template="footer"
-                attr:style="{{ itemData.gridStyles ? itemData.gridStyles }}"
-    ></ws:partial>
+    <ws:if data="{{!itemData.isPartialGridSupport()}}">
+        <div attr:class="controls-Grid__row controls-TreeGrid__nodeFooter" attr:key="nodeFooter_{{itemData.key}}">
+            <ws:partial template="footer"></ws:partial>
+        </div>
+    </ws:if>
+    <ws:else>
+        <ws:partial template="footer"
+                    attr:style="{{ itemData.gridStyles ? itemData.gridStyles }}"
+        ></ws:partial>
+    </ws:else>
 </ws:else>
+
