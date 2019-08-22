@@ -104,7 +104,7 @@ var BaseLookupView = Control.extend({
 
             /* focus can be moved in choose event */
             if (this._active) {
-                this.activate({enableScreenKeyboard: true});
+                this.activate();
             }
         }
 
