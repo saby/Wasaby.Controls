@@ -9,8 +9,8 @@ export interface IFontColorStyleOptions {
  * @public
  */
 
-/*
- * Interface for control, which has different font colors
+/*APPROVED
+ * Interface for controls, which support different colors of text
  *
  * @interface Controls/_interface/IFontColorStyle
  * @public
@@ -47,7 +47,7 @@ export default interface IFontColorStyle {
 
 /*
  * @name Controls/_interface/IFontColorStyle#fontColorStyle
- * @cfg {Enum} Font color style value.
+ * @cfg {Enum} Text color style.
  * @variant primary
  * @variant secondary
  * @variant success
@@ -57,6 +57,9 @@ export default interface IFontColorStyle {
  * @variant link
  * @variant label
  * @variant default
+ * @demo Controls-demo/Buttons/FontStyles/Index
+ * @remark
+ * Text color style is set by a constant from default color set. The color values are determined by the theme.
  * @example
  * Button with default font style.
  * <pre>

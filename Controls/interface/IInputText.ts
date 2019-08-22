@@ -25,7 +25,7 @@ interface IInputText {
          * true - удаляет пробелы с обоих концов строки по завершении ввода.
          * false - ничего не происходит.
          * @example
-         * В этом примере, лишние пробелы с обеих сторон будут обрезаны, когда фокус уйдет из поле.
+         * В этом примере, лишние пробелы с обеих сторон будут обрезаны, когда фокус уйдет из поля.
          * <pre>
          *    <Controls.input:Text trim="{{true}}" bind:value="_fieldValue" on:inputCompleted="_inputCompletedHandler()"/>
          * </pre>
