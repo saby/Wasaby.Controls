@@ -14,7 +14,7 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
  *
  * @class Controls/_search/Input/Search
  * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputText
+ * @mixes Controls/_input/interface/IText
  * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IPaste
  * @mixes Controls/interface/IInputPlaceholder
@@ -41,7 +41,7 @@ import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
  *
  * @class Controls/_search/Input/Search
  * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputText
+ * @mixes Controls/_input/interface/IText
  * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IPaste
  * @mixes Controls/interface/IInputPlaceholder

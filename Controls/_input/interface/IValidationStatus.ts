@@ -8,7 +8,7 @@ export type ValidationStatus = 'valid' | 'invalid';
  */
 export interface IValidationStatusOptions {
     /**
-     * @name Controls/_input/interface/IValidationStatus
+     * @name Controls/_input/interface#validationStatus
      * @cfg {Enum} Статус валидации поля ввода.
      * @variant valid валидное поле.
      * @variant invalid невалидное поле.

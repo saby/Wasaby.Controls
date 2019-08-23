@@ -18,6 +18,7 @@
  * @includes Render Controls/_input/Render
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  * @includes IValidationStatus Controls/_input/interface/IValidationStatus
+ * @includes IValidationStatus Controls/_input/interface/IText
  *
  * @includes BaseStyles Controls/_input/Base/Styles
  * @includes RenderStyles Controls/_input/Render/Styles
@@ -48,6 +49,7 @@
  * @includes Render Controls/_input/Render
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  * @includes IValidationStatus Controls/_input/interface/IValidationStatus
+ * @includes IValidationStatus Controls/_input/interface/IText
  *
  * @includes BaseStyles Controls/_input/Base/Styles
  * @includes RenderStyles Controls/_input/Render/Styles
@@ -82,7 +84,8 @@ import StringValueConverter = require('Controls/_input/DateTime/StringValueConve
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
 import INewLineKey from 'Controls/_input/interface/INewLineKey';
-import IValidationStatus from 'Controls/_input/interface/IValidationStatus';
+export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus} from 'Controls/_input/interface/IValidationStatus';
+export {default as IText, ITextOptions} from 'Controls/_input/interface/IText';
 
 const InputCallback = {
     lengthConstraint
@@ -109,7 +112,6 @@ export {
     StringValueConverter,
     InputCallback,
     INewLineKey,
-    IValidationStatus,
     Render,
     ActualAPI
 };

@@ -23,7 +23,7 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * @mixes Controls/_interface/ITextValue
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/interface/IInputBase
- * @mixes Controls/interface/IInputText
+ * @mixes Controls/_input/interface/IText
  * @mixes Controls/_lookup/BaseLookupView/LookupStyles
  * @control
  * @public
@@ -53,7 +53,7 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/interface/IInputBase
- * @mixes Controls/interface/IInputText
+ * @mixes Controls/_input/interface/IText
  * @mixes Controls/_lookup/BaseLookupView/LookupStyles
  * @control
  * @public

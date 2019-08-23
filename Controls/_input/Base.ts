@@ -377,6 +377,10 @@ interface IFieldTemplate {
        * @extends UI/_base/Control
        *
        * @mixes Controls/interface/IInputBase
+       * @mixes Controls/_input/interface/IBase
+       * @mixes Controls/_interface/IHeight
+       * @mixes Controls/_interface/IFontSize
+       * @mixes Controls/_interface/IFontColorStyle
        *
        * @public
        * @demo Controls-demo/Input/SizesAndHeights/Index
@@ -384,6 +388,7 @@ interface IFieldTemplate {
        * @demo Controls-demo/Input/TextAlignments/Index
        * @demo Controls-demo/Input/TagStyles/Index
        * @demo Controls-demo/Input/ValidationStatuses/Index
+       * @demo Controls-demo/Input/SelectOnClick/Index
        *
        * @author Красильников А.С.
        */
