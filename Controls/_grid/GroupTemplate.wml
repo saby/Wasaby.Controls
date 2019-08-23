@@ -1,13 +1,13 @@
 <ws:template name="groupContentTemplate">
-   <div class="controls-ListView__groupContent {{ expanderVisibility === 'hidden' ? ' controls-ListView__groupContent_cursor-default' : '' }}">
+   <div class="controls-ListView__groupContent {{ expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '' }}">
       <ws:if data="{{columnAlignGroup !== undefined || textAlign !== 'left'}}">
          <div class="controls-ListView__groupSeparator-left">&nbsp;</div>
       </ws:if>
       <div class="controls-ListView__groupContent-text
-         {{expanderVisibility !== 'hidden' ? ' controls-ListView__groupExpander' +
-         (expanderVisibility === 'right' ? ' controls-ListView__groupExpander_right' : ' controls-ListView__groupExpander_left') +
+         {{expanderVisible !== false ? ' controls-ListView__groupExpander' +
+         (expanderAlign === 'right' ? ' controls-ListView__groupExpander_right' : ' controls-ListView__groupExpander_left') +
          (!itemData.isGroupExpanded ?
-         ' controls-ListView__groupExpander_collapsed' + (expanderVisibility === 'right' ?
+         ' controls-ListView__groupExpander_collapsed' + (expanderAlign === 'right' ?
             ' controls-ListView__groupExpander_collapsed_right' : ' controls-ListView__groupExpander_collapsed_left') :'')}}">
          <ws:if data="{{contentTemplate}}">
             <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>

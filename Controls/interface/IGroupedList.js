@@ -40,7 +40,8 @@ define('Controls/interface/IGroupedList', [
     * Шаблон группировки поддерживает параметры:
     * <ul>
     *    <li>separatorVisibility (тип Boolean) — видимость горизонтальной линии-разделителя.</li>
-    *    <li>expanderVisibility (тип enum('hidden'|'right'|'left')) — видимость и расположение кнопки-экспандера, позволяющей сворачивать/разворачивать группу. Стандартное расположение - слева.</li>
+    *    <li>expanderAlign (тип enum('hidden'|'right'|'left')) — расположение кнопки-экспандера, позволяющей сворачивать/разворачивать группу. Стандартное расположение - слева.</li>
+    *    <li>expanderVisible (тип Boolean) — видимость кнопки-экспандера, позволяющей сворачивать/разворачивать группу.</li>
     *    <li>textAlign (тип String) — горизонтальное выравнивание текста группы. Доступные значения: 'left' и 'right'. По умолчанию используется выравнивание текста по центру.</li>
     *    <li>rightTemplate (тип Function) — шаблон, выводимый в правой части группы. Может использоваться, например, для вывода итогов по группе.</li>
     * </ul>
@@ -49,7 +50,7 @@ define('Controls/interface/IGroupedList', [
     * <pre>
     *    <Controls.list:View
     *       <ws:groupTemplate>
-    *          <ws:partial template="Controls/list:GroupTemplate" expanderVisibility="{{ false }}" textAlign="left" />
+    *          <ws:partial template="Controls/list:GroupTemplate" expanderVisible="{{ false }}" textAlign="left" />
     *       </ws:groupTemplate>
     *    </Controls.list:View>
     * </pre>

@@ -15,7 +15,7 @@
       keyProperty="id"
       groupingKeyCallback="{{_groupingKeyCallback}}">
       <ws:groupTemplate>
-         <ws:partial template="wml!Controls-demo/List/DemoGroupTemplate" expanderVisibility="hidden" textAlign="right"></ws:partial>
+         <ws:partial template="wml!Controls-demo/List/DemoGroupTemplate" expanderVisible="{{false}}" textAlign="right"></ws:partial>
       </ws:groupTemplate>
    </Controls.list:View>
     <div style="background-color: #55AA55; padding: 12px 0;">With right expander</div>
@@ -27,7 +27,7 @@
             keyProperty="id"
             groupingKeyCallback="{{_groupingKeyCallback}}">
         <ws:groupTemplate>
-            <ws:partial template="wml!Controls-demo/List/DemoGroupTemplate" expanderVisibility="right" textAlign="left"></ws:partial>
+            <ws:partial template="wml!Controls-demo/List/DemoGroupTemplate" expanderVisible="{{true}}" expanderAlign="right" textAlign="left"></ws:partial>
         </ws:groupTemplate>
     </Controls.list:View>
 </div>

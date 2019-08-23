@@ -1,4 +1,4 @@
-<ws:partial template="Controls/grid:GroupTemplate" itemData="{{itemData}}" expanderVisibility="hidden">
+<ws:partial template="Controls/grid:GroupTemplate" itemData="{{itemData}}" expanderVisible="{{false}}">
     <ws:contentTemplate>
         <span>{{itemData.item}}</span>
     </ws:contentTemplate>
