@@ -1,7 +1,7 @@
 export type ValidationStatus = 'valid' | 'invalid';
 
 /**
- * Интерфейс статуса валидации поля ввода.
+ * Интерфейс контролов ввода, которые могут визуально отображать наличие ошибки, допущенной при вводе.
  *
  * @interface Controls/_input/interface/IValidationStatus
  * @public

@@ -18,9 +18,7 @@ export interface ISeparatorOptions extends IControlOptions {
  * @public
  * @author Красильников А.С.
  *
- * @demo Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo
- *
- * @mixes Controls/_heading/Separator/SeparatorStyles
+ * @demo Controls-demo/Heading/Separators/Index
  */
 
 /*
@@ -35,9 +33,7 @@ export interface ISeparatorOptions extends IControlOptions {
  * @public
  * @author Красильников А.С.
  *
- * @demo Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo
- *
- * @mixes Controls/_heading/Separator/SeparatorStyles
+ * @demo Controls-demo/Heading/Separators/Index
  */
 
 /**
