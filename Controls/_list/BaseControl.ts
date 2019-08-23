@@ -132,9 +132,7 @@ var _private = {
                 if (self._pagingNavigation) {
                     var hasMoreDataDown = list.getMetaData().more;
                     self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, cfg.navigation.sourceConfig.pageSize);
-                    self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDown,
-                                                                        cfg.navigation.sourceConfig.pageSize,
-                                                                        self._currentPage);
+                    self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDow);
                 }
                 var
                     isActive,
@@ -1155,14 +1153,11 @@ var _private = {
         return newKnownPagesCount;
     },
 
-    getPagingLabelData: function(totalItemsCount, pageSize, currentPage) {
+    getPagingLabelData: function(totalItemsCount) {
         let pagingLabelData;
         if (typeof totalItemsCount === 'number') {
             pagingLabelData = {
-                totalItemsCount: totalItemsCount,
-                pageSize: pageSize,
-                firstItemNumber: (currentPage - 1) * pageSize + 1,
-                lastItemNumber: Math.min(currentPage * pageSize, totalItemsCount),
+                totalItemsCount: totalItemsCount
             };
         } else {
             pagingLabelData = null;
@@ -1378,9 +1373,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     if (self._pagingNavigation) {
                         var hasMoreData = self._items.getMetaData().more;
                         self._knownPagesCount = _private.calcPaging(self, hasMoreData, newOptions.navigation.sourceConfig.pageSize);
-                        self._pagingLabelData = _private.getPagingLabelData(hasMoreData,
-                                                                            newOptions.navigation.sourceConfig.pageSize,
-                                                                            self._currentPage);
+                        self._pagingLabelData = _private.getPagingLabelData(hasMoreData);
                     }
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);
