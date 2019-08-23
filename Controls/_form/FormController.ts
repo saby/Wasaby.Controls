@@ -14,7 +14,7 @@ import dataSource = require('Controls/dataSource');
     * @extends Core/Control
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IFormController
-    * @mixes Controls/interface/IErrorController
+    * @implements Controls/_interface/IErrorController
     * @demo Controls-demo/Popup/Edit/Opener
     * @control
     * @public
