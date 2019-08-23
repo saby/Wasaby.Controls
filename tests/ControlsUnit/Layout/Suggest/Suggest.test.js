@@ -355,7 +355,11 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          suggest._notify = function(eventName, data) {
             if (eventName === 'showSelector') {
                isNotifyShowSelector = true;
-               assert.deepEqual(data[0], {});
+               assert.deepEqual(data[0], {
+                  templateOptions: {
+                     filter: suggest._filter
+                  }
+               });
             }
          };
 
