@@ -128,6 +128,32 @@ define(
             });
          });
 
+         describe('_updateStickyHeaderContext', function() {
+            [{
+               title: 'should display shadow if shadowVisibilityMode is "visible"',
+               shadowVisible: true,
+               shadowVisibilityMode: { top: 'visible', bottom: 'visible' },
+               resultShadowPosition: 'topbottom'
+            }, {
+               title: 'shouldn\'t display shadow if shadowVisibilityMode is "auto" and shadowPosition is ""',
+               shadowVisible: true,
+               shadowVisibilityMode: { top: 'auto', bottom: 'auto' },
+               resultShadowPosition: ''
+            }].forEach(function (test) {
+               it(test.title, function () {
+                  scroll._displayState.shadowPosition = test.shadowPosition || '';
+                  scroll._displayState.hasScroll = true;
+                  scroll._shadowVisiblityMode = test.shadowVisibilityMode;
+                  scroll._stickyHeaderContext = {
+                     updateConsumers: function() { }
+                  };
+
+                  scroll._updateStickyHeaderContext(test.shadowVisible);
+                  assert.strictEqual(scroll._stickyHeaderContext.shadowPosition, test.resultShadowPosition);
+               });
+            });
+         });
+
          describe('_resizeHandler. Paging buttons.', function() {
             it('Content at the top', function() {
                scroll._pagingState = {};
