@@ -1,0 +1,13 @@
+<div class="controlsDemo__wrapper">
+    <Controls.scroll:Container attr:class="controlsDemo__height400">
+        <Controls.list:View
+                keyProperty="id"
+                source="{{_viewSource}}"
+                stickyFooter = "{{true}}">
+            <ws:navigation source="page" view="pages">
+                <ws:sourceConfig pageSize="{{20}}" page="{{0}}" hasMore="{{false}}"/>
+                <ws:viewConfig pagingMode="direct"/>
+            </ws:navigation>
+        </Controls.list:View>
+    </Controls.scroll:Container>
+</div>

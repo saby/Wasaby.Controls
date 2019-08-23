@@ -4,7 +4,6 @@ import {Memory} from "Types/source";
 import {getFewCategories as getData} from "../DemoHelpers/DataCatalog";
 import 'css!Controls-demo/Controls-demo';
 
-
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     private _viewSource: Memory;

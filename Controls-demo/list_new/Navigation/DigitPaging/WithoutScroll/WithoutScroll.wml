@@ -1,0 +1,10 @@
+<div class="controlsDemo__wrapper">
+    <Controls.list:View
+            keyProperty="id"
+            source="{{_viewSource}}">
+        <ws:navigation source="page" view="pages">
+            <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
+            <ws:viewConfig pagingMode="direct"/>
+        </ws:navigation>
+    </Controls.list:View>
+</div>

@@ -1,0 +1,21 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow controlsDemo__childMaxWidth500">
+
+    <div class="controlsDemo__cell controlsDemo__mr4">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Navigation/DigitPaging/WithScroll/Index' }}">
+            <a href="{{content.href}}">Со скролом</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Navigation.DigitPaging.WithScroll.Index/>
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr4">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Navigation/DigitPaging/WithoutScroll/Index' }}">
+            <a href="{{content.href}}">Без скрола</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Navigation.DigitPaging.WithoutScroll.Index/>
+    </div>
+
+</div>
