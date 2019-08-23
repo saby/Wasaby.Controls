@@ -132,7 +132,7 @@ var _private = {
                 if (self._pagingNavigation) {
                     var hasMoreDataDown = list.getMetaData().more;
                     self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, cfg.navigation.sourceConfig.pageSize);
-                    self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDow);
+                    self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDown);
                 }
                 var
                     isActive,
