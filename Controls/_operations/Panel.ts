@@ -4,6 +4,7 @@ import toolbars = require('Controls/toolbars');
 import sourceLib = require('Types/source');
 import WidthUtils = require('Controls/_operations/Panel/Utils');
 import buttons = require('Controls/buttons');
+import notifyHandler = require('Controls/Utils/tmplNotify');
 
 
    var _private = {
@@ -145,6 +146,7 @@ import buttons = require('Controls/buttons');
     * @event Controls/_operations/Panel#itemClick Occurs when an item was clicked.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} item Clicked item.
+    * @param {Event} originalEvent Descriptor of the original event.
     * @example
     * TMPL:
     * <pre>
@@ -169,6 +171,7 @@ import buttons = require('Controls/buttons');
       _template: template,
       _oldToolbarWidth: 0,
       _initialized: false,
+      _notifyHandler: notifyHandler,
 
       _beforeMount: function(options) {
          return _private.loadData(this, options.source);
@@ -208,10 +211,6 @@ import buttons = require('Controls/buttons');
 
          // todo зову _forceUpdate потому что нужно отрисовать пересчет, произошедший в checkToolbarWidth. добавляю на всякий случай, возможно это лишний вызов. раньше тут _forceUpdate звался из-за события
          this._forceUpdate();
-      },
-
-      _toolbarItemClick: function(event, item) {
-         this._notify('itemClick', [item]);
       }
    });
 
