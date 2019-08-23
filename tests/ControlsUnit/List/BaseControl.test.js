@@ -1941,7 +1941,7 @@ define([
             }, 100)
             lnBaseControl._afterUpdate(lnCfg);
          });
-         it('locking by DnD', async function () {
+         it('locking by DnD', function () {
             lnBaseControl._listViewModel.getItemDataByItem = function() {};
             lnBaseControl._listViewModel.setDragItemData = function() {};
             lnBaseControl._itemDragData = {
@@ -1951,6 +1951,27 @@ define([
             lnBaseControl._onHoveredItemChanged({}, {});
             assert.isFalse(lnBaseControl._canUpdateItemsActions);
             lnBaseControl._dragEnd({}, {});
+            assert.isTrue(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._afterUpdate(lnCfg);
+         });
+         it('update on recreating source', async function() {
+            let newSource = new sourceLib.Memory({
+               idProperty: 'id',
+               data: data
+            });
+            let newCfg = {
+                  viewName: 'Controls/List/ListView',
+                  source: newSource,
+                  keyProperty: 'id',
+                  itemActions: [
+                     {
+                        id: 1,
+                        title: '123'
+                     }
+                  ],
+                  viewModelConstructor: lists.ListViewModel
+               };
+            await lnBaseControl._beforeUpdate(newCfg);
             assert.isTrue(lnBaseControl._canUpdateItemsActions);
             lnBaseControl._afterUpdate(lnCfg);
          });
