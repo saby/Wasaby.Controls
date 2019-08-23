@@ -5,7 +5,7 @@ import 'css!theme?Controls/heading';
 
 
    /**
-    * Счетчик с поддержкой различных стилей отображения и размеров. 
+    * Счетчик с поддержкой различных стилей отображения и размеров.
     * Используется в составе сложных заголовков, состоящих из <a href="/docs/js/Controls/_heading/?v=3.18.500">header</a>, <a href="/docs/js/Controls/_heading/Separator/?v=3.18.500">header-separator</a> и <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
     *
     * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
@@ -16,9 +16,7 @@ import 'css!theme?Controls/heading';
     * @public
     * @author Красильников А.С.
     *
-    * @demo Controls-demo/Headers/Counter/counterDemo
-    *
-    * @mixes Controls/_heading/Counter/HeadingCounterStyles
+    * @demo Controls-demo/Heading/Counters/Index
     */
 
    /*
@@ -33,9 +31,7 @@ import 'css!theme?Controls/heading';
     * @public
     * @author Красильников А.С.
     *
-    * @demo Controls-demo/Headers/Counter/counterDemo
-    *
-    * @mixes Controls/_heading/Counter/HeadingCounterStyles
+    * @demo Controls-demo/Heading/Counters/Index
     */
 
    /**

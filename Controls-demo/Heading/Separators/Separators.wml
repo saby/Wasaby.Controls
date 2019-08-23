@@ -1,0 +1,10 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">style=secondary</div>
+        <div attr:class="controls-Header_all__clickable">
+            <Controls.heading:Title caption="Header" fontColorStyle="primary" fontSize="3xl"/>
+            <Controls.heading:Separator style="secondary"/>
+        </div>
+    </div>
+</div>
+
