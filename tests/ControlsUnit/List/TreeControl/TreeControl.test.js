@@ -1084,9 +1084,6 @@ define([
             baseControl: {
                getViewModel: function() {
                   return treeGridViewModel;
-               },
-               focus: () => {
-                  baseControlFocused = true;
                }
             }
          };
@@ -1095,12 +1092,9 @@ define([
 
          treeControl._onExpanderClick(e, treeGridViewModel.at(0));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
-         assert.isTrue(baseControlFocused);
 
-         baseControlFocused = false;
          treeControl._onExpanderClick(e, treeGridViewModel.at(1));
          assert.deepEqual(2, treeGridViewModel._model._markedKey);
-         assert.isTrue(baseControlFocused);
 
          treeGrid.TreeControl._private.toggleExpanded = savedMethod;
       });
@@ -1143,9 +1137,6 @@ define([
             baseControl: {
                getViewModel: function() {
                   return treeGridViewModel;
-               },
-               focus: () => {
-                  baseControlFocused = true;
                }
             }
          };
@@ -1154,12 +1145,9 @@ define([
 
          treeControl._onExpanderClick(e, treeGridViewModel.at(0));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
-         assert.isTrue(baseControlFocused);
 
-         baseControlFocused = false;
          treeControl._onExpanderClick(e, treeGridViewModel.at(1));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
-         assert.isTrue(baseControlFocused);
 
          treeGrid.TreeControl._private.toggleExpanded = savedMethod;
       });
