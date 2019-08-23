@@ -1,7 +1,7 @@
 define([
    'Controls/_list/Swipe/SwipeUtils'
 ], function(
-   SwipeUtils,
+   SwipeUtils
 ) {
    describe('Controls.List.Swipe.SwipeUtils', function()
    {
