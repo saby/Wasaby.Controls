@@ -25,7 +25,6 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
     * @mixes Controls/_interface/ICaption
     * @mixes Controls/_interface/IFontColorStyle
     * @mixes Controls/_interface/IFontSize
-    * @mixes Controls/_heading/Heading/HeadingStyles
     */
 
    /*
