@@ -1941,7 +1941,7 @@ define([
             }, 100)
             lnBaseControl._afterUpdate(lnCfg);
          });
-         it('locking by DnD', async function () {
+         it('locking by DnD', function () {
             lnBaseControl._listViewModel.getItemDataByItem = function() {};
             lnBaseControl._listViewModel.setDragItemData = function() {};
             lnBaseControl._itemDragData = {
@@ -1973,6 +1973,7 @@ define([
                };
             await lnBaseControl._beforeUpdate(newCfg);
             assert.isTrue(lnBaseControl._canUpdateItemsActions);
+            lnBaseControl._afterUpdate(lnCfg);
          });
 
       });
