@@ -1,0 +1,15 @@
+<div
+   attr:class="controls-ListRender__item controls-ListRender__item-highlightOnHover">
+   <ws:if data="{{ multiSelectVisibility !== 'hidden' }}">
+      <ws:partial template="{{ multiSelectTpl }}" attr:class="{{ item.getMultiSelectClasses() }}">
+         <ws:templateOptions multiSelectStatus="{{ item.isSelected() }}" key="{{ item.getContents().getId() }}"/>
+      </ws:partial>
+   </ws:if>
+   <ws:if data="{{ item.isMarked() }}">
+      <div attr:class="controls-ListRender__itemMarker"></div>
+   </ws:if>
+   <ws:partial
+      template="{{ itemTemplate }}"
+      item="{{ item }}"
+      attr:class="controls-ListRender__itemContent {{ spacingClassList }}" />
+</div>

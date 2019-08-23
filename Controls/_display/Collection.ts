@@ -480,6 +480,12 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    protected _$displayProperty: string;
 
+   protected _$multiSelectVisibility: string;
+
+   protected _$leftSpacing: string;
+   protected _$rightSpacing: string;
+   protected _$rowSpacing: string;
+
    /**
     * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
     * игнорироваться). Работает только если задано {@link idProperty}.
@@ -1891,6 +1897,28 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       return this._$displayProperty;
    }
 
+   getMultiSelectVisibility(): string {
+      return this._$multiSelectVisibility;
+   }
+
+   getSpacingClassList(): string {
+      let classList = '';
+
+      // TODO Change ListView to ListRender
+
+      classList += ' controls-ListView__item-topPadding_' + (this._$rowSpacing || 'default').toLowerCase();
+      classList += ' controls-ListView__item-bottomPadding_' + (this._$rowSpacing || 'default').toLowerCase();
+      classList += ' controls-ListView__item-rightPadding_' + (this._$rightSpacing || 'default').toLowerCase();
+
+      if (this._$multiSelectVisibility !== 'hidden') {
+         classList += ' controls-ListView__itemContent_withCheckboxes';
+      } else {
+         classList += ' controls-ListView__item-leftPadding_' + (this._$leftSpacing || 'default').toLowerCase();
+      }
+
+      return classList;
+   }
+
    setMarkedItem(item: CollectionItem<S>): void {
       this._markerManager.markItem(item);
       this._nextVersion();
@@ -2982,6 +3010,10 @@ Object.assign(Collection.prototype, {
    _$sort: null,
    _$idProperty: '',
    _$displayProperty: '',
+   _$multiSelectVisibility: 'hidden',
+   _$leftSpacing: '',
+   _$rightSpacing: '',
+   _$rowSpacing: '',
    _$unique: false,
    _$importantItemProperties: null,
    _localize: false,

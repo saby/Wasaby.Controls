@@ -1,0 +1,19 @@
+<ws:for data="item in collection">
+   <ws:partial
+      template="wml!Controls/_list/Render/resources/ItemTemplateWrapper"
+      item="{{ item }}"
+      multiSelectVisibility="{{ collection.getMultiSelectVisibility() }}"
+      spacingClassList="{{ collection.getSpacingClassList() }}"
+
+      attr:key="{{ keyPrefix }}-{{ item.getUid() }}"
+
+      on:click="_onItemClick(item)"
+
+      itemActionsTemplate="{{ itemActionsTemplate }}"
+      swipeTemplate="{{ swipeTemplate }}"
+      multiSelectTpl="{{ multiSelectTpl }}"
+      editingItemData="{{ editingItemData }}"
+      isAdd="{{ isAdd }}"
+      itemTemplate="{{ itemTemplate }}"
+      itemActionsPosition="{{ itemActionsPosition }}"/>
+</ws:for>
