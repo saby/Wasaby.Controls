@@ -3,9 +3,9 @@ import template = require('wml!Controls/_MoveDialog/MoveDialog');
 import 'css!theme?Controls/_MoveDialog/MoveDialog';
 
    /**
-    * Базовый шаблон диалогового окна, используемый в списках при перемещении элементов для выбора целевой папки
+    * Базовый шаблон диалогового окна, используемый в списках при перемещении элементов для выбора целевой папки.
     * - <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/actions/mover-remover/">См. руководство разработчика</a>
-    * - <a href="/materials/demo-ws4-operations-panel">См. демо-пример</a>.
+    * - <a href="/materials/demo-ws4-operations-panel">См. демо-пример</a>
     * @class Controls/MoveDialog
     * @extends Core/Control
     * @mixes Controls/_interface/IHierarchy
@@ -42,6 +42,11 @@ import 'css!theme?Controls/_MoveDialog/MoveDialog';
     * @public
     * @author Авраменко А.С.
     * @category List
+    */
+
+   /**
+    * @name Controls/MoveDialog#displayProperty
+    * @cfg {String} Имя поля элемента, данные которого используются для правильной работы <a href="/doc/platform/developmentapl/interface-development/controls/bread-crumbs/">Хлебных крошек</a>.
     */
 
    /**
