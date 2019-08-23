@@ -33,7 +33,6 @@ interface IRenderOptions extends IControlOptions, IHeightOptions, IFontColorStyl
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  *
- * @public
  *
  * @author Krasilnikov A.S.
  */
