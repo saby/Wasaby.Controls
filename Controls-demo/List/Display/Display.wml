@@ -18,6 +18,7 @@
             keyProperty="key"
             displayProperty="title"
             source="{{_viewSource}}"
+            multiSelectVisibility="onhover"
 
             on:itemClick="_onItemClick()"/>
       </ws:else>

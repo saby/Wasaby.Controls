@@ -186,6 +186,14 @@ export default class CollectionItem<T> extends mixin<
 
    // endregion
 
+   getMultiSelectClasses(): string {
+      let classes = 'controls-ListRender__checkbox controls-ListRender__notEditable';
+      if (this.getOwner().getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
+         classes += ' controls-ListRender__checkbox-onhover';
+      }
+      return classes;
+   }
+
    getDisplayProperty(): string {
       return this.getOwner().getDisplayProperty();
    }

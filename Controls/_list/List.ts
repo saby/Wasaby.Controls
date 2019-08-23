@@ -9,6 +9,8 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import viewName = require('Controls/_list/ListView');
 import viewTemplate = require('Controls/_list/ListControl');
 
+import Render from 'Controls/_list/Render';
+
 /**
  * Простой список с пользовательским шаблоном элемента. Может загружать данные из источника данных.
  * Подробное описание и инструкцию по настройке контрола вы можете прочитать <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>здесь</a>.
@@ -81,18 +83,19 @@ import viewTemplate = require('Controls/_list/ListControl');
 
 var ListControl = Control.extend(/** @lends Controls/_list/List.prototype */{
     _template: ListControlTpl,
-    _viewName: viewName,
+    _viewName: null,
     _viewTemplate: viewTemplate,
     _viewModelConstructor: null,
 
     _theme: ['Controls/list_multi'],
 
-    _beforeMount: function() {
-        this._viewModelConstructor = this._getModelConstructor();
+    _beforeMount: function(options) {
+        this._viewModelConstructor = this._getModelConstructor(options.useNewModel);
+        this._viewName = options.useNewModel ? Render : viewName;
     },
 
-    _getModelConstructor: function() {
-        return ListViewModel;
+    _getModelConstructor: function(useNewModel: boolean) {
+        return !useNewModel ? ListViewModel : null;
     },
 
     reload: function() {

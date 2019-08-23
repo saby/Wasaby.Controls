@@ -1,0 +1,11 @@
+<div style="display: flex; justify-content: space-around;">
+   <Controls.scroll:Container scn="1" attr:style="width: 50%; height: 600px;">
+      <Controls.list:View
+         keyProperty="key"
+         displayProperty="title"
+         source="{{ _viewSource }}"
+         multiSelectVisibility="visible"
+
+         useNewModel="{{ true }}"/>
+   </Controls.scroll:Container>
+</div>

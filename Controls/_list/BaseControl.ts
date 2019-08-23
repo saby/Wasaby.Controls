@@ -29,6 +29,8 @@ import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 
+import { Abstract } from 'Controls/display';
+
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 var
@@ -1338,14 +1340,21 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
 
         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
-            var
-                viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), { collapsedGroups: collapsedGroups }) : cClone(newOptions);
+            let viewModelConfig = cClone(newOptions);
+            if (collapsedGroups) {
+                viewModelConfig = cMerge(viewModelConfig, { collapsedGroups });
+            }
+
             if (newOptions.viewModelConstructor) {
                 self._viewModelConstructor = newOptions.viewModelConstructor;
                 if (receivedData) {
                     viewModelConfig.items = receivedData;
                 }
                 self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
+            } else if (newOptions.useNewModel && receivedData) {
+                self._listViewModel = Abstract.getDefaultDisplay(receivedData, viewModelConfig);
+            }
+            if (self._listViewModel) {
                 _private.initListViewModelHandler(self, self._listViewModel);
             }
 
@@ -1355,7 +1364,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
-                    self._items = self._listViewModel.getItems();
+                    if (newOptions.useNewModel) {
+                        self._items = self._listViewModel.getCollection();
+                    } else {
+                        self._items = self._listViewModel.getItems();
+                    }
                     if (self._pagingNavigation) {
                         var hasMoreData = self._items.getMetaData().more;
                         self._knownPagesCount = _private.calcPaging(self, hasMoreData, newOptions.navigation.sourceConfig.pageSize);
@@ -1377,6 +1390,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     return _private.showError(self, receivedError);
                 }
                 return _private.reload(self, newOptions).addCallback((result) => {
+                    if (newOptions.useNewModel && !self._listViewModel && result.data) {
+                        self._listViewModel = Abstract.getDefaultDisplay(result.data, viewModelConfig);
+                    }
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
                     // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
@@ -1878,8 +1894,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
              */
             e.stopPropagation();
         }
-        var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
-        this._listViewModel.setMarkedKey(newKey);
+
+        if (this._options.useNewModel) {
+            this._listViewModel.setMarkedItem(this._listViewModel.getItemBySourceItem(item));
+        } else {
+            var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
+            this._listViewModel.setMarkedKey(newKey);
+        }
 
         // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
         // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
