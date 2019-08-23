@@ -1954,6 +1954,26 @@ define([
             assert.isTrue(lnBaseControl._canUpdateItemsActions);
             lnBaseControl._afterUpdate(lnCfg);
          });
+         it('update on recreating source', async function() {
+            let newSource = new sourceLib.Memory({
+               idProperty: 'id',
+               data: data
+            });
+            let newCfg = {
+                  viewName: 'Controls/List/ListView',
+                  source: newSource,
+                  keyProperty: 'id',
+                  itemActions: [
+                     {
+                        id: 1,
+                        title: '123'
+                     }
+                  ],
+                  viewModelConstructor: lists.ListViewModel
+               };
+            await lnBaseControl._beforeUpdate(newCfg);
+            assert.isTrue(lnBaseControl._canUpdateItemsActions);
+         });
 
       });
 
