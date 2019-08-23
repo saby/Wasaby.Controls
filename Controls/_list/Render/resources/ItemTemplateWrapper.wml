@@ -8,8 +8,10 @@
    <ws:if data="{{ item.isMarked() }}">
       <div attr:class="controls-ListRender__itemMarker"></div>
    </ws:if>
-   <ws:partial
-      template="{{ itemTemplate }}"
-      item="{{ item }}"
-      attr:class="controls-ListRender__itemContent {{ spacingClassList }}" />
+   <div
+      attr:class="controls-ListRender__itemContent {{ spacingClassList }}">
+      <ws:partial
+         template="{{ itemTemplate }}"
+         item="{{ item }}" />
+   </div>
 </div>
