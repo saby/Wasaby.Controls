@@ -2,12 +2,16 @@ define([
    'Controls/operations',
    'Types/source',
    'Controls/_operations/Panel/Utils',
-   'Controls/toolbars'
+   'Controls/toolbars',
+   'Types/entity',
+   'Types/collection'
 ], function(
    View,
    sourceLib,
    WidthUtils,
-   toolbars
+   toolbars,
+   entity,
+   collection
 ) {
    'use strict';
 
@@ -25,13 +29,13 @@ define([
             }
          });
 
-         if (currentWidth > availableWidth) {
+         if (visibleItemsKeys.length > 1 && currentWidth > availableWidth) {
             for (var i = visibleItemsKeys.length - 1; i >= 0; i--) {
                items.getRecordById(visibleItemsKeys[i]).set('showType', currentWidth > availableWidth ? 0 : 1);
                currentWidth -= itemsSizes[i];
             }
          } else {
-            items.each(function(item) {
+            items.each(function (item) {
                item.set('showType', 2);
             });
          }
@@ -55,6 +59,13 @@ define([
             source: new sourceLib.Memory({
                idProperty: 'id',
                data: data
+            }),
+            keyProperty: 'id'
+         },
+         cfgWithOneItem = {
+            source: new sourceLib.Memory({
+               idProperty: 'id',
+               data: [data[0]]
             }),
             keyProperty: 'id'
          };
@@ -282,6 +293,27 @@ define([
                });
             });
          });
+
+         it('not enough space for one item', function(done) {
+            var forceUpdateCalled = false;
+            instance._children = {
+               toolbarBlock: {
+                  clientWidth: 50
+               }
+            };
+            instance._forceUpdate = function() {
+               forceUpdateCalled = true;
+            };
+            WidthUtils.fillItemsType = mockFillItemsType([80]);
+            instance._beforeMount(cfgWithOneItem).addCallback(function() {
+               instance._afterUpdate();
+               instance._toolbarSource.query().addCallback(function(result) {
+                  assert.equal(result.getAll().getRecordById(0).get('showType'), 2);
+                  assert.isTrue(forceUpdateCalled);
+                  done();
+               });
+            });
+         });
       });
 
       describe('_onResize', function() {
@@ -357,7 +389,6 @@ define([
    describe('Controls/_operations/Panel/Utils', () => {
 
       describe('getContentTemplate', () => {
-
          it('returns itemTemplate from item if it has one', () => {
             const fakeItem = {
                get: (name) => name === 'customTemplate' ? 'this template' : 'wrong field'
@@ -396,6 +427,20 @@ define([
 
       });
 
-   });
+      it('setShowType', () => {
+         let items = new collection.List({
+            items: [new entity.Model({
+               rawData: {id: 1},
+               idProperty: 'id'
+            }), new entity.Model({
+               rawData: {id: 2},
+               idProperty: 'id'
+            })]
+         });
 
+         WidthUtils._private.setShowType(items, 1);
+         assert.equal(items.at(0).get('showType'), 1);
+         assert.equal(items.at(1).get('showType'), 1);
+      });
+   });
 });
