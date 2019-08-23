@@ -1,10 +1,20 @@
 <div class="controls-MasterDetail">
-   <ws:partial
-      attr:class="controls-MasterDetail_master"
-      template="{{_options.master}}"
-      on:selectedMasterValueChanged="_selectedMasterValueChangedHandler()"/>
+   <div class="controls-MasterDetail_master" style="width: {{_currentWidth}}">
+      <ws:partial
+         template="{{_options.master}}"
+         attr:class="controls-MasterDetail_master-template"
+         on:selectedMasterValueChanged="_selectedMasterValueChangedHandler()"/>
+      <ws:if data="{{_currentWidth}}">
+         <Controls.dragnDrop:ResizingLine attr:class="controls-MasterDetail_resizing-line"
+                                          minOffset="{{_minOffset}}"
+                                          maxOffset="{{_maxOffset}}"
+                                          on:offset="_offsetHandler()"/>
+      </ws:if>
+
+   </div>
    <ws:partial
            attr:class="controls-MasterDetail_details"
       template="{{_options.detail}}"
       selectedMasterValue="{{_selected}}"/>
+   <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
 </div>
