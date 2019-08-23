@@ -132,6 +132,9 @@ var _private = {
                 if (self._pagingNavigation) {
                     var hasMoreDataDown = list.getMetaData().more;
                     self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, cfg.navigation.sourceConfig.pageSize);
+                    self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDown,
+                                                                        cfg.navigation.sourceConfig.pageSize,
+                                                                        self._currentPage);
                 }
                 var
                     isActive,
@@ -1152,6 +1155,21 @@ var _private = {
         return newKnownPagesCount;
     },
 
+    getPagingLabelData: function(totalItemsCount, pageSize, currentPage) {
+        let pagingLabelData;
+        if (typeof totalItemsCount === 'number') {
+            pagingLabelData = {
+                totalItemsCount: totalItemsCount,
+                pageSize: pageSize,
+                firstItemNumber: (currentPage - 1) * pageSize + 1,
+                lastItemNumber: Math.min(currentPage * pageSize, totalItemsCount),
+            };
+        } else {
+            pagingLabelData = null;
+        }
+        return pagingLabelData;
+    },
+
     getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty:string}): SourceController {
         return new SourceController({
             source: source,
@@ -1294,6 +1312,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _currentPage: INITIAL_PAGES_COUNT,
     _pagingNavigation: false,
     _pagingNavigationVisible: false,
+    _pagingLabelData: null,
 
     _canUpdateItemsActions: false,
     _blockItemActionsByScroll: false,
@@ -1359,6 +1378,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     if (self._pagingNavigation) {
                         var hasMoreData = self._items.getMetaData().more;
                         self._knownPagesCount = _private.calcPaging(self, hasMoreData, newOptions.navigation.sourceConfig.pageSize);
+                        self._pagingLabelData = _private.getPagingLabelData(hasMoreData,
+                                                                            newOptions.navigation.sourceConfig.pageSize,
+                                                                            self._currentPage);
                     }
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);

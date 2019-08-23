@@ -20,7 +20,11 @@
     </ws:if>
     <ws:if data="{{_pagingNavigation && _pagingNavigationVisible}}">
         <div class="controls-BaseControl__footerPaging_wrapper">
-            <Controls.paging:Paging showDigits = "{{true}}"
+            <ws:if data="{{_pagingLabelData}}">
+                <div class="controls-BaseControl_paging-label">Всего {{_pagingLabelData.totalItemsCount}}</div>
+            </ws:if>
+            <Controls.paging:Paging attr:class="controls-BaseControl__footerPaging"
+                                    showDigits = "{{!_options.navigation.sourceConfig.hasMore}}"
                                     pagesCount = "{{_knownPagesCount}}"
                                     selectedPage = "{{_currentPage}}"
                                     on:selectedPageChanged="__pagingChangePage()"

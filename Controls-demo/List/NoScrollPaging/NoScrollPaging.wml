@@ -3,7 +3,6 @@
       <Controls.scroll:Container attr:class="cDemo-ScrollContainer">
          <ws:content>
             <Controls.list:View
-                  stickyFooter = "{{true}}"
                   source = "{{_viewSource}}"
                   markedKey = "{{4}}"
                   displayProperty="title"
@@ -34,7 +33,7 @@
                        displayProperty="title"
                        resultsPosition="top"
                        itemActions="{{_itemActions}}"
-                       itemActionsPosition="{{'outside'}}"
+                       itemActionsPosition="{{'inside'}}"
                        rowSeparatorVisibility="{{true}}"
                        itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                        columns="{{gridColumns2}}"

@@ -94,9 +94,16 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
    font-size: @font-size_BaseControl-footer-content-baseline;
 }
 
-.controls-BaseControl__footerPaging_wrapper {
-   left: 0;
-   right: 0;
-   width: 100%;
+.controls-BaseControl__footerPaging {
    background: @background-color_BaseControl-footer-paging;
+}
+.controls-BaseControl__footerPaging_wrapper {
+   display: flex;
+   justify-content: flex-end;
+}
+.controls-BaseControl_paging-label {
+   display: flex;
+   align-items: center;
+   color: @color_BaseControl-paging_label;
+   font-size: @font-size_BaseControl-paging_label;
 }
