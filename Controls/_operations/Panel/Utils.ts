@@ -53,6 +53,12 @@ import getWidthUtil = require('Controls/Utils/getWidth');
          document.body.removeChild(measurer);
 
          return itemsSizes;
+      },
+
+      setShowType: function(items, type) {
+         items.each(function (item) {
+            item.set('showType', type);
+         });
       }
    };
 
@@ -68,28 +74,29 @@ import getWidthUtil = require('Controls/Utils/getWidth');
                visibleItemsKeys.push(item.get(keyProperty));
             }
          });
-         itemsSizes = _private.getItemsSizes(items, visibleItemsKeys, theme, defaultItemTemplate, itemTemplateProperty);
-         currentWidth = itemsSizes.reduce(function(acc, width) {
-            return acc + width;
-         }, 0);
 
-         _private.initializeConstants();
-
-         items.forEach(function(item) {
-            item.set('showType', 0);
-         });
-
-         if (currentWidth > availableWidth) {
-            currentWidth += MENU_WIDTH;
-            for (var i = visibleItemsKeys.length - 1; i >= 0; i--) {
-               items.getRecordById(visibleItemsKeys[i]).set('showType', currentWidth > availableWidth ? showType.MENU : showType.MENU_TOOLBAR);
-               currentWidth -= itemsSizes[i];
-            }
+         if (visibleItemsKeys.length <= 1) {
+            _private.setShowType(items, showType.TOOLBAR);
          } else {
-            items.each(function(item) {
-               item.set('showType', showType.TOOLBAR);
-            });
+            itemsSizes = _private.getItemsSizes(items, visibleItemsKeys, theme, defaultItemTemplate, itemTemplateProperty);
+            currentWidth = itemsSizes.reduce(function (acc, width) {
+               return acc + width;
+            }, 0);
+
+            if (currentWidth > availableWidth) {
+               _private.initializeConstants();
+               _private.setShowType(items, showType.MENU);
+               currentWidth += MENU_WIDTH;
+
+               for (var i = visibleItemsKeys.length - 1; i >= 0; i--) {
+                  items.getRecordById(visibleItemsKeys[i]).set('showType', currentWidth > availableWidth ? showType.MENU : showType.MENU_TOOLBAR);
+                  currentWidth -= itemsSizes[i];
+               }
+            } else {
+               _private.setShowType(items, showType.TOOLBAR);
+            }
          }
+
          return items;
       },
       _private // for unit testing

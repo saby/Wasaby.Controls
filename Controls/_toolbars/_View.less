@@ -3,6 +3,7 @@
 }
 .controls-Toolbar {
   display: inline-block;
+  max-width: 100%;
 }
 .controls-Toolbar_item_medium_theme-@{themeName} {
   margin-right: @spacing_Toolbar-between-items_medium;
@@ -12,6 +13,7 @@
   margin-right: @spacing_Toolbar-between-items_big;
 }
 .controls-Toolbar_item_theme-@{themeName} {
+  max-width: 100%;
   .inline-flexbox();
   cursor: pointer;
   .align-items(center);
@@ -40,6 +42,8 @@
   .icon(@font-size_Toolbar-icon, 'cbuc-icons24');
 }
 .controls-Toolbar__item_title_theme-@{themeName} {
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
   color: @color_Toolbar-text;
 }
