@@ -289,6 +289,7 @@ var
  * @class Controls/_list/EditInPlace
  * @extends Core/Control
  * @mixes Controls/interface/IEditableList
+ * @implements Controls/_interface/IErrorController
  * @author Авраменко А.С.
  * @private
  */
