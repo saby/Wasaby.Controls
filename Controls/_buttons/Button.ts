@@ -23,6 +23,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
 
 /**
  * Графический контрол, который предоставляет пользователю возможность простого запуска события при нажатии на него.
+ * @remark
  * Кнопки могут отображаться в нескольких режимах, отличающихся друга от друга внешне.
  * Более подробное описание можно найти <a href='/doc/platform/developmentapl/interface-development/controls/buttons/'>здесь</a>
  *
