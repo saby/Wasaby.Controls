@@ -5,7 +5,8 @@ import ViewModel = require('Controls/_input/Text/ViewModel');
 
 
       /**
-       * Однострочное текстовое поле ввода.
+       * Однострочное поле ввода текста.
+       * @remark
        * <a href="/materials/demo-ws4-input">Demo examples.</a>.
        *
        * @class Controls/_input/Text
@@ -112,4 +113,4 @@ import ViewModel = require('Controls/_input/Text/ViewModel');
       };
 
       export = Text;
-   
+

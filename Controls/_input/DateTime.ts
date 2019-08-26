@@ -18,6 +18,7 @@ function proxyModelEvents(component, model, eventNames) {
 
 /**
  * Поле ввода даты и времени.
+ * @remark
  * В зависимости от маски может использоваться для ввода:
  * <ol>
  *    <li>даты;</li>

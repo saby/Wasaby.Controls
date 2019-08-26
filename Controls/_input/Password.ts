@@ -3,7 +3,9 @@ import entity = require('Types/entity');
 import ViewModel = require('Controls/_input/Password/ViewModel');
 import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/PasswordVisibilityButton');
       /**
-       *  Поле ввода пароля. Контрол скрывает введенные символы и вместо них отображает символы-заменители.
+       *  Поле ввода пароля.
+       *  @remark
+       *  Контрол скрывает введенные символы и вместо них отображает символы-заменители.
        *  Видимость введенного текста можно переключить, нажав на иконку 'eye'.
        *  <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *

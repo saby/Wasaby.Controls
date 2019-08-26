@@ -9,6 +9,7 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
 
    /**
     * Простой заголовок с поддержкой различных стилей отображения и размеров.
+    * @remark
     * Может использоваться самостоятельно или в составе сложных заголовков, состоящих из {@link Controls/heading:Separator} и {@link Controls/heading:Counter}.
     *
     * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
