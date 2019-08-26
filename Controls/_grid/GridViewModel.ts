@@ -52,6 +52,20 @@ var
             }
             return itemData.columns.length - (itemData.multiSelectVisibility === 'hidden' ? 0 : 1);
         },
+
+        //Google Chrome on winXP doesn't support colspan style, so we need to set colspan on <th> element
+        getColspanForNoGridSupport(
+            multiSelectVisibility: 'hidden' | 'visible' | 'onhover',
+
+            // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+            isHeaderBreadCrumbs: boolean = false
+        ): number {
+            let colspan = 1;
+            if (multiSelectVisibility !== 'hidden' && isHeaderBreadCrumbs) {
+                colspan = 2;
+            }
+            return colspan;
+        },
         getColspanStyles(
            multiSelectVisibility: 'hidden' | 'visible' | 'onhover',
            columnIndex: number,
@@ -683,6 +697,7 @@ var
                 this._maxEndRow = getMaxEndRow(this._headerRows);
                 if (multiSelectVisibility && columns[0] && columns[0].isBreadCrumbs) {
                     this._headerRows[0][0].hiddenForBreadCrumbs = true;
+                    this._headerRows[0][1].startRow = 1;
                 }
             } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
@@ -825,6 +840,7 @@ var
                   this._headerRows[0].length,
                   true
                );
+               headerColumn.colSpan = _private.getColspanForNoGridSupport(this._options.multiSelectVisibility, true);
             }
 
             if (headerColumn.column.sortingProperty) {
