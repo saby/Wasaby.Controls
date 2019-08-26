@@ -26,4 +26,53 @@ export default interface IExpandable {
 /*
  * @name Controls/_interface/IExpandable#expanded
  * @cfg {Boolean} The state of extensibility.
- */ 
+ */
+
+/**
+ * @event Controls/_interface/IExpandable#expandedChanged Происходит при изменении состояния развернутости.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Boolean} expandedState Текущее состояние развёрнутости.
+ * @example
+ * В следующем примере создается Controls.operations:Button и демонстрируется сценарий использования.
+ * WML:
+ * <pre>
+ *    <Controls.operations:Button
+ *       expanded="{{_options.expanded}}"
+ *       on:expandedChanged="_onExpandedChanged()">
+ *    </Controls.operations:Button>
+ * </pre>
+ * JS:
+ * <pre>
+ *    _beforeMount: function() {
+ *       this._onExpandedChanged = this._onExpandedChanged.bind(this);
+ *    },
+ *
+ *    _onExpandedChanged: function(e, expandedState) {
+ *       this._expandedState = expandedState;
+ *    }
+ * </pre>
+ */
+/*
+ * @event Controls/_interface/IExpandable#expandedChanged Occurs when the deployment state changes.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
+ * @param {Boolean} expandedState The current state of deployment.
+ * @example
+ * The following example creates Controls.operations:Button and shows how to handle the event.
+ * WML:
+ * <pre>
+ *    <Controls.operations:Button
+ *       expanded="{{_options.expanded}}"
+ *       on:expandedChanged="_onExpandedChanged()">
+ *    </Controls.operations:Button>
+ * </pre>
+ * JS:
+ * <pre>
+ *    _beforeMount: function() {
+ *       this._onExpandedChanged = this._onExpandedChanged.bind(this);
+ *    },
+ *
+ *    _onExpandedChanged: function(e, expandedState) {
+ *       this._expandedState = expandedState;
+ *    }
+ * </pre>
+ */
