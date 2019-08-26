@@ -12,14 +12,13 @@ import ViewModel = require('Controls/_input/Phone/ViewModel');
        * @class Controls/_input/Phone
        * @extends Controls/_input/Base
        *
-       * @mixes Controls/interface/IInputBase
-       *
        * @public
        * @demo Controls-demo/Input/SizesAndHeights/Index
        * @demo Controls-demo/Input/FontStyles/Index
        * @demo Controls-demo/Input/TextAlignments/Index
        * @demo Controls-demo/Input/TagStyles/Index
        * @demo Controls-demo/Input/ValidationStatuses/Index
+       * @demo Controls-demo/Input/SelectOnClick/Index
        *
        * @author Красильников А.С.
        */
@@ -34,8 +33,6 @@ import ViewModel = require('Controls/_input/Phone/ViewModel');
        *
        * @class Controls/_input/Phone
        * @extends Controls/_input/Base
-       *
-       * @mixes Controls/interface/IInputBase
        *
        * @public
        * @demo Controls-demo/Input/Phone/PhonePG

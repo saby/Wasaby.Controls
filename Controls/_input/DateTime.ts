@@ -31,7 +31,7 @@ function proxyModelEvents(component, model, eventNames) {
  * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/_input/interface/IDateTimeMask
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/interface/IInputBase
+ * @mixes Controls/_input/interface/IBase
  * @mixes Controls/interface/IInputPlaceholder
  *
  * @control
@@ -56,7 +56,7 @@ function proxyModelEvents(component, model, eventNames) {
  * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/_input/interface/IDateTimeMask
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/interface/IInputBase
+ * @mixes Controls/_input/interface/IBase
  * @mixes Controls/interface/IInputPlaceholder
  *
  * @control

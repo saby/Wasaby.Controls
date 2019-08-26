@@ -18,7 +18,6 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
        * @class Controls/_input/Mask
        * @extends Controls/_input/Base
        *
-       * @mixes Controls/interface/IInputBase
        * @mixes Controls/interface/IInputMaskValue
        * @public
        * @author Красильников А.С.
@@ -27,6 +26,7 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
        * @demo Controls-demo/Input/TextAlignments/Index
        * @demo Controls-demo/Input/TagStyles/Index
        * @demo Controls-demo/Input/ValidationStatuses/Index
+       * @demo Controls-demo/Input/SelectOnClick/Index
        */
 
       /*
@@ -40,7 +40,6 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
        * @class Controls/_input/Mask
        * @extends Controls/_input/Base
        *
-       * @mixes Controls/interface/IInputBase
        * @mixes Controls/interface/IInputMaskValue
        * @public
        * @author Красильников А.С.

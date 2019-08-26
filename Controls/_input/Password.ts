@@ -10,7 +10,6 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
        * @class Controls/_input/Password
        * @extends Controls/_input/Base
        *
-       * @mixes Controls/interface/IInputBase
        * @mixes Controls/_input/Password/PasswordStyles
        *
        * @public
@@ -19,6 +18,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
        * @demo Controls-demo/Input/TextAlignments/Index
        * @demo Controls-demo/Input/TagStyles/Index
        * @demo Controls-demo/Input/ValidationStatuses/Index
+       * @demo Controls-demo/Input/SelectOnClick/Index
        *
        * @author Красильников А.С.
        */
@@ -31,7 +31,6 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
        * @class Controls/_input/Password
        * @extends Controls/_input/Base
        *
-       * @mixes Controls/interface/IInputBase
        * @mixes Controls/_input/Password/PasswordStyles
        *
        * @public
