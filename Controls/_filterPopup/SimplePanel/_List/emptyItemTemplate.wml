@@ -5,6 +5,7 @@
                itemData="{{itemData}}"
                displayProperty="{{displayProperty}}"
                multiSelect="{{false}}"
-               showClose="{{true}}"
-               class="controls-SimplePanel-dropdown__emptyItem_theme_{{_options.theme}}"/>
+               hasApplyButton="{{hasApplyButton}}"
+               class="controls-SimplePanel-dropdown__emptyItem_theme_{{_options.theme}}">
+   </ws:partial>
 </Controls.scroll:StickyHeader>

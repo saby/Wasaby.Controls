@@ -49,8 +49,8 @@ define(
 
          let defaultConfig = {
             items: new collection.RecordSet({
-            idProperty: 'id',
-            rawData: defaultItemsConfig
+               idProperty: 'id',
+               rawData: defaultItemsConfig
             })
          };
 
@@ -68,6 +68,17 @@ define(
             let panel = getPanel(defaultConfig);
             panel._beforeMount(defaultConfig);
             assert.deepStrictEqual(panel._items, expectedItems);
+            assert.isFalse(panel._hasApplyButton);
+
+            let multiSelectDefaultConfig = [...defaultItemsConfig];
+            multiSelectDefaultConfig[0].multiSelect = true;
+            panel._beforeMount({
+               items: new collection.RecordSet({
+                  idProperty: 'id',
+                  rawData: multiSelectDefaultConfig
+               })
+            });
+            assert.isTrue(panel._hasApplyButton);
          });
 
          it('_beforeUpdate', function() {
