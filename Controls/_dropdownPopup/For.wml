@@ -8,6 +8,7 @@
          marker="{{multiSelect ? false : marker}}"
          displayProperty="{{displayProperty}}"
          showClose="{{showClose}}"
+         hasApplyButton="{{hasApplyButton}}"
          class="{{!emptyTemplate ? 'controls-DropdownList__emptyItem controls-DropdownList_' + (multiSelect ? 'multiSelect' : 'singleSelect') + '__emptyItem'}}
                   controls-DropdownList__row-separator theme_{{_options.theme}}"/>
 </ws:if>

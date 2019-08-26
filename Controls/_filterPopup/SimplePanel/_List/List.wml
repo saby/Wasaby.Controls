@@ -8,6 +8,7 @@
                checkBoxAlign="right"
                showClose="{{true}}"
                defaultItemTemplate="{{_defaultItemTemplate}}"
+               hasApplyButton="{{_options.hasApplyButton}}"
                emptyTemplate="{{_emptyItemTemplate}}"
    />
    <ws:if data="{{_options.hasMoreButton && _options.selectorTemplate}}">

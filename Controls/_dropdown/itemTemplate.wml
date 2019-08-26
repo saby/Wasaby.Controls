@@ -1,6 +1,7 @@
 <div attr:class="controls-DropdownList__row controls-DropdownList__row_state_{{itemData.getPropValue(itemData.item, 'readOnly') ? 'readOnly' : 'default'}}
                  {{marker !== false && itemData.isSelected && (!itemData.multiSelect || itemData.emptyText) ? 'controls-DropdownList__selected'}}
-                 controls-DropdownList__item-right_{{showClose || itemData.hasClose ? 'close-padding' : hasPinned ? 'history-padding': itemData.hasChildren ? 'hierarchy-padding' : 'default-padding'}}
+                 controls-DropdownList__item-right_{{showClose || itemData.hasClose ? 'close-padding' : hasPinned ? 'history-padding': itemData.hasChildren ? 'hierarchy-padding' :
+                  hasApplyButton ? 'multiSelect-padding' : 'default-padding'}}
                  {{itemData.spacingClassList}}
                  {{itemData.getPropValue(itemData.item, 'pinned') === true && !itemData.hasParent ?  'controls-DropdownList__row_pinned'}}
                  controls-DropdownList__row_{{multiLine ? 'multiLine' : 'singleLine'}} theme_{{_options.theme}}">

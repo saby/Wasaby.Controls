@@ -63,6 +63,16 @@ var _private = {
             result.selectedKeys[item.id] = item.selectedKeys;
         });
         return result;
+    },
+
+    hasApplyButton: function (items) {
+        let result = false;
+        factory(items).each((item) => {
+            if (item.multiSelect) {
+                result = true;
+            }
+        });
+        return result;
     }
 };
 
@@ -72,6 +82,7 @@ var Panel = Control.extend({
 
     _beforeMount: function(options) {
         this._items = _private.getItems(this, options.items);
+        this._hasApplyButton = _private.hasApplyButton(this._items);
     },
 
     _beforeUpdate: function(newOptions) {
