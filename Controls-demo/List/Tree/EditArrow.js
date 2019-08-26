@@ -1,7 +1,5 @@
 define('Controls-demo/List/Tree/EditArrow', [
-   'Env/Env',
    'Core/Control',
-   'Controls-demo/List/Tree/GridData',
    'wml!Controls-demo/List/Tree/EditArrow/EditArrow',
    'Controls-demo/List/Tree/TreeMemory',
    'Controls-demo/Utils/MemorySourceFilter',
@@ -10,7 +8,7 @@ define('Controls-demo/List/Tree/EditArrow', [
    'Controls/scroll',
    'Controls/treeGrid',
    'wml!Controls-demo/List/Tree/DemoContentTemplate'
-], function(Env, BaseControl, GridData, template, MemorySource, memorySourceFilter, columnTemplate) {
+], function(BaseControl, template, MemorySource, memorySourceFilter, columnTemplate) {
    'use strict';
    var
       ModuleClass = BaseControl.extend({
@@ -20,6 +18,7 @@ define('Controls-demo/List/Tree/EditArrow', [
          _column: null,
          _header: null,
          _customColumns: null,
+         _editArrowClickSurfaced: false,
          _beforeMount: function() {
             this._header = [{
                title: ''
@@ -129,7 +128,7 @@ define('Controls-demo/List/Tree/EditArrow', [
             });
          },
          _editArrowClick: function(e, item) {
-            console.log('editArrowClick');
+            this._editArrowClickSurfaced = true;
          }
       });
 
