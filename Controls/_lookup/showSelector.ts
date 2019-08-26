@@ -24,7 +24,7 @@ export default function(self, popupOptions, multiSelect) {
 
     if (popupOptions && popupOptions.template || selectorTemplate) {
         defaultPopupOptions.templateOptions = merge({
-            selectedItems: self._getItems(),
+            selectedItems: self._getItems().clone(),
             multiSelect: multiSelect,
             handlers: {
                 onSelectComplete: function (event, result) {
