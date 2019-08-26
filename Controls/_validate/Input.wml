@@ -1,4 +1,5 @@
-<ws:partial template="{{ _options.content }}"
+<div>
+    <ws:partial template="{{ _options.content }}"
             validationErrors="{{isValid()}}"
             style="{{_isValidResult() ? 'invalid': 'info'}}"
             scope="{{_options}}"
@@ -8,4 +9,8 @@
             on:mouseenter="_hoverHandler()"
             on:focusIn="_focusInHandler()"
             on:mouseleave="_mouseLeaveHandler()"
-/>
+    />
+    <ws:if data="{{_isOpened}}">
+        <Controls.event:Listener event="scroll" on:scroll="_scrollHandler()"/>
+    </ws:if>
+</div>
