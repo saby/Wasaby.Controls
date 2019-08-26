@@ -769,7 +769,7 @@ var
         getCurrentHeaderColumn: function(rowIndex, columnIndex) {
             const cell = this._headerRows[rowIndex][columnIndex];
             let
-                cellClasses = 'controls-Grid__header-cell',
+                cellClasses = 'controls-Grid__header-cell' + (this._isMultyHeader ? ' controls-Grid__multi-header-cell_min-height' : ' controls-Grid__header-cell_min-height'),
                 headerColumn = {
                     column: cell,
                     index: columnIndex
