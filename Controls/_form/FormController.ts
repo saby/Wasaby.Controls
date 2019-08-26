@@ -551,7 +551,8 @@ import dataSource = require('Controls/dataSource');
             'updatesuccessed': '_getUpdateSuccessedData',
             'createsuccessed': '_getCreateSuccessedData',
             'readsuccessed': '_getReadSuccessedData',
-            'deletesuccessed': '_getDeleteSuccessedData'
+            'deletesuccessed': '_getDeleteSuccessedData',
+            'updatefailed': '_getUpdateFailedData'
          };
          var resultDataHandlerName = handlers[eventName.toLowerCase()];
          if (this[resultDataHandlerName]) {
@@ -578,6 +579,10 @@ import dataSource = require('Controls/dataSource');
 
       _getReadSuccessedData: function(record) {
          return this._getResultData('read', record);
+      },
+
+      _getUpdateFailedData:function(record) {
+         return this._getResultData('updateFailed', record);
       },
       _getResultData: function(eventName, record, additionalData) {
          return {
