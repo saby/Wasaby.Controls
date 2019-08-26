@@ -98,6 +98,11 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
          _initProperties: function(options) {
             Password.superclass._initProperties.apply(this, arguments);
 
+            const CONTROL_NAME: string = 'Password';
+
+            this._field.scope.controlName = CONTROL_NAME;
+            this._readOnlyField.scope.controlName = CONTROL_NAME;
+
             this._type = _private.calculateType(this._passwordVisible, _private.isAutoComplete(this._autoComplete));
 
             this._afterFieldWrapper.template = passwordVisibilityButtonTemplate;
