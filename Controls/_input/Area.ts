@@ -7,10 +7,10 @@ import fieldTemplate = require('wml!Controls/_input/Area/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Area/ReadOnly');
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 import 'Controls/decorator';
-      
+
 
       /**
-       * Многострочное поле ввода.
+       * Многострочное поле ввода текста.
        * Вы можете настроить {@link minLines минимальное} и {@link maxLines максимальное} количество строк.
        * Когда вводимый текст превысит ограничение {@link maxLines}, в поле появится скролл и оно перестанет увеличиваться по высоте.
        * Вы можете переместить текст в следующую строку с помощью {@link newLineKey горячих клавиш}.
@@ -53,7 +53,7 @@ import 'Controls/decorator';
        * @remark Поддерживается значение от 1 до 10.
        * @default 1
        */
-      
+
       /*
        * @name Controls/_input/Area#minLines
        * @cfg {Number} Minimum number of lines.
@@ -307,4 +307,4 @@ import 'Controls/decorator';
       };
 
       export = Area;
-   
+

@@ -1,5 +1,5 @@
 /**
- * Библиотека кнопок.
+ * Библиотека контролов, отвечающих за отображение разных вариантов кнопок. Также библиотека содержит публичные интерфейсы, необходимые для работы кнопок.
  * @library Controls/buttons
  * @includes Button Controls/_buttons/Button
  * @includes IHref Controls/_buttons/interface/IHref
