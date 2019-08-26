@@ -21,7 +21,7 @@ var
     ],
     _private = {
         beginEdit: function (self, options, isAdd) {
-            var result = self._notify('beforeBeginEdit', [options, isAdd]);
+            var result = self._notify('beforeBeginEdit', [options, !!isAdd]);
             if (!isAdd) {
                 self._originalItem = options.item;
             }
@@ -373,7 +373,9 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
                     return Deferred.success({validationFailed: true});
                 }
             }
-            return _private.endItemEdit(self, true);
+            return _private.endItemEdit(self, true).addCallback((result) => {
+                return Deferred.success({validationFailed: result && result.cancelled});
+            });
         });
     },
 

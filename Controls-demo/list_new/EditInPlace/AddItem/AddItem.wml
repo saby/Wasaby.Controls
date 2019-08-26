@@ -6,7 +6,7 @@
         <ws:footerTemplate>
             <Controls.list:AddButton caption="Add record" on:click="_beginAdd()"/>
         </ws:footerTemplate>
-        <ws:editingConfig editOnClick="{{true}}" autoAdd="{{true}}"/>
+        <ws:editingConfig editOnClick="{{true}}"/>
         <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate">
                 <ws:contentTemplate>

@@ -1,0 +1,38 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow controlsDemo__childMinWidth400">
+
+    <div class="controlsDemo__cell controlsDemo__mr4">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Navigation/DigitPaging/Index' }}">
+            <a href="{{content.href}}">Навигация с подсчетом страниц</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Navigation.DigitPaging.Index/>
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr4 controlsDemo__maxWidth500">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Navigation/HasMorePaging/Index' }}">
+            <a href="{{content.href}}">Подгрузка данных по кнопке "Ещё"</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Navigation.HasMorePaging.Index/>
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr4 controlsDemo__maxWidth500">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Navigation/ScrollPaging/Index' }}">
+            <a href="{{content.href}}">Навигация без подсчета страниц (навигация по скроллу, навигация с кнопками прокрутки)</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Navigation.ScrollPaging.Index/>
+    </div>
+
+    <div class="controlsDemo__cell controlsDemo__mr4">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Navigation/Direction/Index' }}">
+            <a href="{{content.href}}">Подгрузка данных по скролу</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Navigation.Direction.Index/>
+    </div>
+</div>

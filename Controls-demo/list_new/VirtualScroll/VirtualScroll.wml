@@ -1,0 +1,13 @@
+<Controls-demo.list_new.WIP byTask="https://online.sbis.ru/opendoc.html?guid=d39c25fd-3b40-45d3-9143-2bd868492f4a"/>
+
+<!--<div class="controlsDemo__wrapper">-->
+    <!--<Controls.scroll:Container attr:style="height: 600px">-->
+        <!--<Controls.list:View source="{{_viewSource}}"-->
+                            <!--keyProperty="id"-->
+                            <!--virtualScrolling="{{true}}">-->
+            <!--<ws:navigation source="page" view="infinity">-->
+                <!--<ws:sourceConfig pageSize="{{200}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>-->
+            <!--</ws:navigation>-->
+        <!--</Controls.list:View>-->
+    <!--</Controls.scroll:Container>-->
+<!--</div>-->

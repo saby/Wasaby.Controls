@@ -8,6 +8,7 @@ import template = require('wml!Controls/_scroll/Scroll/Watcher/Watcher');
 import {Registrar}  from 'Controls/event';
 import Env = require('Env/Env');
 import isEmpty = require('Core/helpers/Object/isEmpty');
+import {SyntheticEvent} from "Vdom/Vdom"
 
 
 
@@ -350,8 +351,9 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
             }
          },
 
-         _doScrollHandler: function(e, scrollParam) {
+         _doScrollHandler: function(e: SyntheticEvent<null>, scrollParam) {
             _private.doScroll(this, scrollParam, _private.getDOMContainer(this._container));
+            e.stopPropagation();
          },
 
          doScroll: function(scrollParam) {
