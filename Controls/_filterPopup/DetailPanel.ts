@@ -2,15 +2,15 @@ import Control = require('Core/Control');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Clone = require('Core/core-clone');
-import {isEqual} from 'Types/object';
-import {HistoryUtils} from 'Controls/filter';
 import _FilterPanelOptions = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions');
 import template = require('wml!Controls/_filterPopup/Panel/Panel');
 import Env = require('Env/Env');
+import {isEqual} from 'Types/object';
+import {HistoryUtils} from 'Controls/filter';
 import {List} from 'Types/collection';
 import 'css!theme?Controls/filterPopup';
 import 'Controls/form';
-   /**
+/**
     * Component for displaying a filter panel template. Displays each filters by specified templates.
     * It consists of three blocks: Selected, Also possible to select, Previously selected.
     * Here you can see <a href="/materials/demo-ws4-filter-button">demo-example</a>.
@@ -214,14 +214,20 @@ import 'Controls/form';
          });
       },
 
-      _resetFilter: function() {
+      _resetFilter: function(): void {
          this._items = _private.cloneItems(this._options.items || this._contextOptions.items);
-         chain.factory(this._items).each(function(item) {
+         chain.factory(this._items).each((item) => {
+            const resetValue = getPropValue(item, 'resetValue');
+            const textValue = getPropValue(item, 'textValue');
+
             if (getPropValue(item, 'visibility') !== undefined) {
                setPropValue(item, 'visibility', false);
             }
-            if (getPropValue(item, 'resetValue') !== undefined) {
-               setPropValue(item, 'value', getPropValue(item, 'resetValue'));
+            if (resetValue !== undefined) {
+               setPropValue(item, 'value', resetValue);
+            }
+            if (textValue !== undefined) {
+               setPropValue(item, 'textValue', textValue === null ? textValue : '');
             }
          });
          this._isChanged = false;
