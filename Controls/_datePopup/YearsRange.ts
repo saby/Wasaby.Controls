@@ -31,7 +31,18 @@ var Component = BaseControl.extend({
 
     _beforeMount: function (options) {
         this._year = options.year ? options.year.getFullYear() : (new Date()).getFullYear();
-        this._lastYear = this._year;
+
+        if (dateUtils.isValidDate(options.endValue)) {
+            this._lastYear = Math.max(this._year, options.endValue.getFullYear());
+            if (this._lastYear - this._year >= BUTTONS_COUNT) {
+                this._lastYear = this._year + BUTTONS_COUNT - 1;
+            }
+        } else if (dateUtils.isValidDate(options.startValue)) {
+            this._lastYear = options.startValue.getFullYear();
+        } else {
+            this._lastYear = this._year;
+        }
+
         this._rangeModel = new DateRangeModel();
         this._rangeModel.update(options);
         this._updateModel();
@@ -107,7 +118,10 @@ var Component = BaseControl.extend({
             this._rangeModel.endValue,
             this._options.selectionProcessing,
             this._options.selectionBaseValue,
-            this._options.selectionHoveredValue
+            this._options.selectionHoveredValue,
+            null,
+            null,
+            { periodQuantum: rangeSelectionUtils.PERIOD_QUANTUM.year }
         ));
 
         css.push(rangeSelectionUtils.prepareHoveredClass(
