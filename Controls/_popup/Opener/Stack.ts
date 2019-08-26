@@ -13,6 +13,7 @@ import {IoC} from 'Env/Env';
  * @author Красильников А.С.
  * @category Popup
  * @mixes Controls/interface/IOpener
+ * @mixes Controls/interface/IPropStorage
  * @demo Controls-demo/Popup/Opener/StackPG
  * @public
  */
@@ -293,13 +294,7 @@ export = Stack;
  */
 
 /**
- * @name Controls/_popup/Opener/Stack#resizable
- * @cfg {Number} Определяет, будет ли окно изменять свои размеры с помощью d'n'd.
+ * @name Controls/_popup/Opener/Stack#propStorageId
+ * @cfg {String} Уникальный идентификатор
  * Для работы этой опции необходимо задать опции {@link width}, {@link minWidth}, {@link maxWidth}.
- */
-
-/**
- * @name Controls/_popup/Opener/Stack#resizable
- * @cfg {Number} Determines whether the popup will be resized using D'n'd.
- * To use this option, you must specify the {@link width}, {@link minWidth}, {@link maxWidth} options.
  */

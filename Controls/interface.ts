@@ -1,5 +1,5 @@
 /**
- * Библиотека с общими интерфейсами. 
+ * Библиотека с общими интерфейсами.
  * @library Controls/interface
  * @includes ITooltip Controls/_interface/ITooltip
  * @includes IButton Controls/_interface/IButton
@@ -48,3 +48,4 @@ export {default as IExpandable, IExpandableOptions} from './_interface/IExpandab
 export {default as ISorting, ISortingOptions} from './_interface/ISorting';
 export {default as ILookup, ILookupOptions} from './_interface/ILookup';
 export {default as IDateMask, IDateMaskOptions, dateMaskConstants} from './_interface/IDateMask';
+export {default as IPropStorage} from './_interface/IPropStorage';
