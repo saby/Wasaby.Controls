@@ -498,6 +498,7 @@ define(
             };
             let id0 = Manager.show(popupOptions, new BaseController());
             Manager._private.popupCreated.call(Manager, id0);
+            Manager._private.popupBeforePaintOnMount.call(Manager, id0);
             assert.isTrue(isCreateNotified);
             assert.isTrue(isPopupOpenedEventTriggered);
          });
