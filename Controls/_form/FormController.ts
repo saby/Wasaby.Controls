@@ -432,6 +432,8 @@ import dataSource = require('Controls/dataSource');
                }
                res.addCallback(function(arg) {
                   self._updateIsNewRecord(false);
+
+                  updateDef.callback({ data: true });
                   return arg;
                });
                res.addErrback((error: Error) => {
