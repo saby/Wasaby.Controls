@@ -2,148 +2,144 @@ import Base = require('Controls/_input/Base');
 import entity = require('Types/entity');
 import ViewModel = require('Controls/_input/Password/ViewModel');
 import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/PasswordVisibilityButton');
-      /**
-       *  Поле ввода пароля.
-       *  @remark
-       *  Контрол скрывает введенные символы и вместо них отображает символы-заменители.
-       *  Видимость введенного текста можно переключить, нажав на иконку 'eye'.
-       *  <a href="/materials/demo-ws4-input">Демо-пример</a>.
-       *
-       * @class Controls/_input/Password
-       * @extends Controls/_input/Base
-       *
-       * @mixes Controls/interface/IInputBase
-       *
-       * @public
-       * @demo Controls-demo/Input/SizesAndHeights/Index
-       * @demo Controls-demo/Input/FontStyles/Index
-       * @demo Controls-demo/Input/TextAlignments/Index
-       * @demo Controls-demo/Input/TagStyles/Index
-       * @demo Controls-demo/Input/ValidationStatuses/Index
-       *
-       * @author Красильников А.С.
-       */
+/**
+ *  Поле ввода пароля.
+ *  @remark
+ *  Контрол скрывает введенные символы и вместо них отображает символы-заменители.
+ *  Видимость введенного текста можно переключить, нажав на иконку 'eye'.
+ *  <a href="/materials/demo-ws4-input">Демо-пример</a>.
+ *
+ * @class Controls/_input/Password
+ * @extends Controls/_input/Base
+ *
+ * @public
+ * @demo Controls-demo/Input/SizesAndHeights/Index
+ * @demo Controls-demo/Input/FontStyles/Index
+ * @demo Controls-demo/Input/TextAlignments/Index
+ * @demo Controls-demo/Input/TagStyles/Index
+ * @demo Controls-demo/Input/ValidationStatuses/Index
+ * @demo Controls-demo/Input/SelectOnClick/Index
+ *
+ * @author Красильников А.С.
+ */
 
-      /*
-       *  Control that hides all entered characters and shows replacer-symbols in place of them.
-       *  Visibility of entered text can be toggled by clicking on 'eye' icon.
-       *  <a href="/materials/demo-ws4-input">Configured Inputs Demo.</a>.
-       *
-       * @class Controls/_input/Password
-       * @extends Controls/_input/Base
-       *
-       * @mixes Controls/interface/IInputBase
-       *
-       * @public
-       * @demo Controls-demo/Input/Password/PasswordPG
-       *
-       * @author Красильников А.С.
-       */
+/*
+ *  Control that hides all entered characters and shows replacer-symbols in place of them.
+ *  Visibility of entered text can be toggled by clicking on 'eye' icon.
+ *  <a href="/materials/demo-ws4-input">Configured Inputs Demo.</a>.
+ *
+ * @class Controls/_input/Password
+ * @extends Controls/_input/Base
+ *
+ * @public
+ * @demo Controls-demo/Input/Password/PasswordPG
+ *
+ * @author Красильников А.С.
+ */
 
-      /**
-       * @name Controls/_input/Password#revealable
-       * @cfg {Boolean} В значении true в поле ввода присутствует кнопка-переключатель видимости введённых символов.
-       * @default true
-       * @remark
-       *
-       * Кнопка не отображается в {@link readOnly режиме чтения} и в незаполненном поле.
-       */
+/**
+ * @name Controls/_input/Password#revealable
+ * @cfg {Boolean} В значении true в поле ввода присутствует кнопка-переключатель видимости введённых символов.
+ * @default true
+ * @remark
+ *
+ * Кнопка не отображается в {@link readOnly режиме чтения} и в незаполненном поле.
+ */
 
-      /*
-       * @name Controls/_input/Password#revealable
-       * @cfg {Boolean} Determines whether to enables the reveal toggle button that will show the password in clear text.
-       * @default true
-       * @remark
-       *
-       * The button does not appear in {@link readOnly read mode} or in an empty field.
-       */
+/*
+ * @name Controls/_input/Password#revealable
+ * @cfg {Boolean} Determines whether to enables the reveal toggle button that will show the password in clear text.
+ * @default true
+ * @remark
+ *
+ * The button does not appear in {@link readOnly read mode} or in an empty field.
+ */
 
 
-      var _private = {
-         calculateType: function(passwordVisible, autoComplete) {
-            return passwordVisible || !autoComplete ? 'text' : 'password';
-         },
+var _private = {
+    calculateType: function (passwordVisible, autoComplete) {
+        return passwordVisible || !autoComplete ? 'text' : 'password';
+    },
 
-         isVisibleButton: function() {
-            return !this._options.readOnly && this._options.value && this._options.revealable;
-         },
+    isVisibleButton: function () {
+        return !this._options.readOnly && this._options.value && this._options.revealable;
+    },
 
-         isVisiblePassword: function() {
-            return this._passwordVisible;
-         },
-         getTheme: function() {
-            return this._options.theme;
-         },
-         isAutoComplete: function(autoComplete) {
-            return autoComplete !== 'off';
-         }
-      };
+    isVisiblePassword: function () {
+        return this._passwordVisible;
+    },
+    getTheme: function () {
+        return this._options.theme;
+    },
+    isAutoComplete: function (autoComplete) {
+        return autoComplete !== 'off';
+    }
+};
 
-      var Password = Base.extend({
-         _passwordVisible: false,
-         _defaultValue: '',
+var Password = Base.extend({
+    _passwordVisible: false,
+    _defaultValue: '',
 
-         _getViewModelOptions: function(options) {
-            return {
-               readOnly: options.readOnly,
-               autoComplete: _private.isAutoComplete(this._autoComplete),
-               passwordVisible: this._passwordVisible
-            };
-         },
+    _getViewModelOptions: function (options) {
+        return {
+            readOnly: options.readOnly,
+            autoComplete: _private.isAutoComplete(this._autoComplete),
+            passwordVisible: this._passwordVisible
+        };
+    },
 
-         _getViewModelConstructor: function() {
-            return ViewModel;
-         },
+    _getViewModelConstructor: function () {
+        return ViewModel;
+    },
 
-         _initProperties: function(options) {
-            Password.superclass._initProperties.apply(this, arguments);
+    _initProperties: function (options) {
+        Password.superclass._initProperties.apply(this, arguments);
 
-            this._type = _private.calculateType(this._passwordVisible, _private.isAutoComplete(this._autoComplete));
+        this._type = _private.calculateType(this._passwordVisible, _private.isAutoComplete(this._autoComplete));
 
-            this._afterFieldWrapper.template = passwordVisibilityButtonTemplate;
-            this._afterFieldWrapper.scope.getTheme = _private.getTheme.bind(this);
-            this._afterFieldWrapper.scope.isVisibleButton = _private.isVisibleButton.bind(this);
-            this._afterFieldWrapper.scope.isVisiblePassword = _private.isVisiblePassword.bind(this);
-         },
+        this._afterFieldWrapper.template = passwordVisibilityButtonTemplate;
+        this._afterFieldWrapper.scope.getTheme = _private.getTheme.bind(this);
+        this._afterFieldWrapper.scope.isVisibleButton = _private.isVisibleButton.bind(this);
+        this._afterFieldWrapper.scope.isVisiblePassword = _private.isVisiblePassword.bind(this);
+    },
 
-         _getTooltip: function() {
-            /**
-             * If the password is hidden, there should be no tooltip. Otherwise, the tooltip is defined as usual.
-             */
-            if (this._passwordVisible) {
-               return Password.superclass._getTooltip.apply(this, arguments);
-            }
+    _getTooltip: function () {
+        /**
+         * If the password is hidden, there should be no tooltip. Otherwise, the tooltip is defined as usual.
+         */
+        if (this._passwordVisible) {
+            return Password.superclass._getTooltip.apply(this, arguments);
+        }
 
-            return '';
-         },
+        return '';
+    },
 
-         _toggleVisibilityHandler: function() {
-            var passwordVisible = !this._passwordVisible;
+    _toggleVisibilityHandler: function () {
+        var passwordVisible = !this._passwordVisible;
 
-            this._passwordVisible = passwordVisible;
-            this._forceUpdate();
-            this._type = _private.calculateType(passwordVisible, _private.isAutoComplete(this._autoComplete));
-         }
-      });
+        this._passwordVisible = passwordVisible;
+        this._forceUpdate();
+        this._type = _private.calculateType(passwordVisible, _private.isAutoComplete(this._autoComplete));
+    }
+});
 
-      Password._theme = Base._theme.concat(['Controls/input']);
+Password._theme = Base._theme.concat(['Controls/input']);
 
-      Password.getDefaultOptions = function() {
-         var defaultOptions = Base.getDefaultOptions();
+Password.getDefaultOptions = function () {
+    var defaultOptions = Base.getDefaultOptions();
 
-         defaultOptions.revealable = true;
-         defaultOptions.autoComplete = 'on';
+    defaultOptions.revealable = true;
+    defaultOptions.autoComplete = 'on';
 
-         return defaultOptions;
-      };
+    return defaultOptions;
+};
 
-      Password.getOptionTypes = function getOptionsTypes() {
-         var optionTypes = Base.getOptionTypes();
+Password.getOptionTypes = function getOptionsTypes() {
+    var optionTypes = Base.getOptionTypes();
 
-         optionTypes.revealable = entity.descriptor(Boolean);
+    optionTypes.revealable = entity.descriptor(Boolean);
 
-         return optionTypes;
-      };
+    return optionTypes;
+};
 
-      export = Password;
-
+export = Password;

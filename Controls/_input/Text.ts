@@ -4,113 +4,97 @@ import entity = require('Types/entity');
 import ViewModel = require('Controls/_input/Text/ViewModel');
 
 
-      /**
-       * Однострочное поле ввода текста.
-       * @remark
-       * <a href="/materials/demo-ws4-input">Demo examples.</a>.
-       *
-       * @class Controls/_input/Text
-       * @extends Controls/_input/Base
-       *
-       * @mixes Controls/interface/IInputText
-       * @mixes Controls/interface/IInputBase
-       *
-       * @public
-       * @demo Controls-demo/Input/SizesAndHeights/Index
-       * @demo Controls-demo/Input/FontStyles/Index
-       * @demo Controls-demo/Input/TextAlignments/Index
-       * @demo Controls-demo/Input/TagStyles/Index
-       * @demo Controls-demo/Input/ValidationStatuses/Index
-       *
-       * @author Красильников А.С.
-       */
+/**
+ * Однострочное поле ввода текста.
+ * @remark
+ * <a href="/materials/demo-ws4-input">Demo examples.</a>.
+ *
+ * @class Controls/_input/Text
+ * @extends Controls/_input/Base
+ *
+ * @mixes Controls/_input/interface/IText
+ *
+ * @public
+ * @demo Controls-demo/Input/SizesAndHeights/Index
+ * @demo Controls-demo/Input/FontStyles/Index
+ * @demo Controls-demo/Input/TextAlignments/Index
+ * @demo Controls-demo/Input/TagStyles/Index
+ * @demo Controls-demo/Input/ValidationStatuses/Index
+ * @demo Controls-demo/Input/SelectOnClick/Index
+ * @demo Controls-demo/Input/Text/Index
+ *
+ * @author Красильников А.С.
+ */
 
-      /*
-       * Controls that allows user to enter single-line text.
-       * <a href="/materials/demo-ws4-input">Demo examples.</a>.
-       *
-       * @class Controls/_input/Text
-       * @extends Controls/_input/Base
-       *
-       * @mixes Controls/interface/IInputText
-       * @mixes Controls/interface/IInputBase
-       *
-       * @public
-       * @demo Controls-demo/Input/Text/TextPG
-       *
-       * @author Красильников А.С.
-       */
+var _private = {
+    validateConstraint: function (constraint) {
+        if (constraint && !/^\[[\s\S]+?\]$/.test(constraint)) {
+            Env.IoC.resolve('ILogger').error('Controls/_input/Text', 'The constraint options are not set correctly. More on https://wi.sbis.ru/docs/js/Controls/_input/Text/options/constraint/');
+            return false;
+        }
 
-      var _private = {
-         validateConstraint: function(constraint) {
-            if (constraint && !/^\[[\s\S]+?\]$/.test(constraint)) {
-               Env.IoC.resolve('ILogger').error('Controls/_input/Text', 'The constraint options are not set correctly. More on https://wi.sbis.ru/docs/js/Controls/_input/Text/options/constraint/');
-               return false;
+        return true;
+    }
+};
+
+var Text = Base.extend({
+    _defaultValue: '',
+
+    _getViewModelOptions: function (options) {
+        return {
+            maxLength: options.maxLength,
+            constraint: options.constraint
+        };
+    },
+
+    _getViewModelConstructor: function () {
+        return ViewModel;
+    },
+
+    _changeHandler: function () {
+        if (this._options.trim) {
+            var trimmedValue = this._viewModel.displayValue.trim();
+
+            if (trimmedValue !== this._viewModel.displayValue) {
+                this._viewModel.displayValue = trimmedValue;
+                this._notifyValueChanged();
             }
+        }
 
-            return true;
-         }
-      };
+        Text.superclass._changeHandler.apply(this, arguments);
+    },
 
-      var Text = Base.extend({
-         _defaultValue: '',
+    _beforeMount: function (options) {
+        Text.superclass._beforeMount.apply(this, arguments);
 
-         _getViewModelOptions: function(options) {
-            return {
-               maxLength: options.maxLength,
-               constraint: options.constraint
-            };
-         },
+        _private.validateConstraint(options.constraint);
+    },
 
-         _getViewModelConstructor: function() {
-            return ViewModel;
-         },
+    _beforeUpdate: function (newOptions) {
+        Text.superclass._beforeUpdate.apply(this, arguments);
 
-         _changeHandler: function() {
-            if (this._options.trim) {
-               var trimmedValue = this._viewModel.displayValue.trim();
+        if (this._options.constraint !== newOptions.constraint) {
+            _private.validateConstraint(newOptions.constraint);
+        }
+    }
+});
 
-               if (trimmedValue !== this._viewModel.displayValue) {
-                  this._viewModel.displayValue = trimmedValue;
-                  this._notifyValueChanged();
-               }
-            }
+Text.getDefaultOptions = function () {
+    var defaultOptions = Base.getDefaultOptions();
 
-            Text.superclass._changeHandler.apply(this, arguments);
-         },
+    defaultOptions.trim = false;
 
-         _beforeMount: function(options) {
-            Text.superclass._beforeMount.apply(this, arguments);
+    return defaultOptions;
+};
 
-            _private.validateConstraint(options.constraint);
-         },
+Text.getOptionTypes = function () {
+    var optionTypes = Base.getOptionTypes();
 
-         _beforeUpdate: function(newOptions) {
-            Text.superclass._beforeUpdate.apply(this, arguments);
+    optionTypes.maxLength = entity.descriptor(Number, null);
+    optionTypes.trim = entity.descriptor(Boolean);
+    optionTypes.constraint = entity.descriptor(String);
 
-            if (this._options.constraint !== newOptions.constraint) {
-               _private.validateConstraint(newOptions.constraint);
-            }
-         }
-      });
+    return optionTypes;
+};
 
-      Text.getDefaultOptions = function() {
-         var defaultOptions = Base.getDefaultOptions();
-
-         defaultOptions.trim = false;
-
-         return defaultOptions;
-      };
-
-      Text.getOptionTypes = function() {
-         var optionTypes = Base.getOptionTypes();
-
-         optionTypes.maxLength = entity.descriptor(Number, null);
-         optionTypes.trim = entity.descriptor(Boolean);
-         optionTypes.constraint = entity.descriptor(String);
-
-         return optionTypes;
-      };
-
-      export = Text;
-
+export = Text;

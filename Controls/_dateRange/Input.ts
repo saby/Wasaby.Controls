@@ -13,7 +13,7 @@ import template = require('wml!Controls/_dateRange/Input/Input');
  * <a href="/materials/demo-ws4-input-daterange">Демо-пример</a>.
  * @class Controls/_dateRange/Input
  * @extends Core/Control
- * @mixes Controls/interface/IInputBase
+ * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_dateRange/interfaces/IInput
  * @mixes Controls/_dateRange/interfaces/IInputDateTag
  * @mixes Controls/interface/IDateMask
@@ -38,7 +38,7 @@ import template = require('wml!Controls/_dateRange/Input/Input');
  * <a href="/materials/demo-ws4-input-daterange">Demo examples.</a>.
  * @class Controls/_dateRange/Input
  * @extends Core/Control
- * @mixes Controls/interface/IInputBase
+ * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_dateRange/interfaces/IInput
  * @mixes Controls/_dateRange/interfaces/IInputDateTag
  * @mixes Controls/interface/IDateMask

@@ -11,7 +11,6 @@ import ViewModel from 'Controls/_input/Money/ViewModel';
  * @class Controls/_input/Money
  * @extends Controls/_input/Base
  *
- * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IOnlyPositive
  *
  * @public
@@ -20,6 +19,7 @@ import ViewModel from 'Controls/_input/Money/ViewModel';
  * @demo Controls-demo/Input/TextAlignments/Index
  * @demo Controls-demo/Input/TagStyles/Index
  * @demo Controls-demo/Input/ValidationStatuses/Index
+ * @demo Controls-demo/Input/SelectOnClick/Index
  *
  * @author Красильников А.С.
  */
@@ -31,7 +31,6 @@ import ViewModel from 'Controls/_input/Money/ViewModel';
  * @class Controls/_input/Money
  * @extends Controls/_input/Base
  *
- * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/IOnlyPositive
  *
  * @public
