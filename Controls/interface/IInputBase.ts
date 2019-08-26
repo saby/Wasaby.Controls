@@ -11,12 +11,9 @@ import IInputField from "./IInputField";
  *
  * @interface Controls/interface/IInputBase
  *
- * @mixes Controls/interface/IPaste
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputPlaceholder
  *
- * @mixes Controls/interface/IInputTooltip
  * @mixes Controls/interface/IInputStyle
  * @mixes Controls/_input/interface/IValidationStatus
  *

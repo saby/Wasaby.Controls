@@ -16,7 +16,7 @@ import 'css!theme?Controls/input';
     * @mixes Controls/interface/IInputDateTime
     * @mixes Controls/interface/IDateMask
     * @mixes Controls/interface/IInputTag
-    * @mixes Controls/interface/IInputBase
+    * @mixes Controls/_input/interface/IBase
     * @mixes Controls/interface/IInputPlaceholder
     *
     * @css @spacing_DatePicker-between-input-button Расстояние между полем ввода и кнопкой календаря.
@@ -37,7 +37,7 @@ import 'css!theme?Controls/input';
     * @mixes Controls/interface/IInputDateTime
     * @mixes Controls/interface/IDateMask
     * @mixes Controls/interface/IInputTag
-    * @mixes Controls/interface/IInputBase
+    * @mixes Controls/_input/interface/IBase
     * @mixes Controls/interface/IInputPlaceholder
     *
     * @css @spacing_DatePicker-between-input-button Spacing between input field and button.

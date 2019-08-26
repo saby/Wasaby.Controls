@@ -1,0 +1,14 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label_theme-{{_options.theme}}">Time</div>
+      <Controls.input:Mask replacer=" " mask="dd:dd"/>
+   </div>
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label_theme-{{_options.theme}}">Date</div>
+      <Controls.input:Mask replacer=" " mask="dd.dd.dd"/>
+   </div>
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label_theme-{{_options.theme}}">Phone</div>
+      <Controls.input:Mask replacer=" " mask="+7(ddd)ddd-dd-dd"/>
+   </div>
+</div>

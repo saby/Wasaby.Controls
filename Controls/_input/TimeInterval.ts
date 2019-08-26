@@ -12,7 +12,6 @@ type IOptions = IModelOptions;
  * @class Controls/_input/TimeInterval
  * @extends Controls/_input/Base
  *
- * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/ITimeInterval
  *
  * @public
@@ -35,7 +34,6 @@ type IOptions = IModelOptions;
  * @class Controls/_input/TimeInterval
  * @extends Controls/_input/Base
  *
- * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/ITimeInterval
  *
  * @public

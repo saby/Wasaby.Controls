@@ -12,8 +12,6 @@ import ViewModel = require('Controls/_input/Phone/ViewModel');
        * @class Controls/_input/Phone
        * @extends Controls/_input/Base
        *
-       * @mixes Controls/interface/IInputBase
-       *
        * @public
        * @demo Controls-demo/Input/SizesAndHeights/Index
        * @demo Controls-demo/Input/FontStyles/Index
@@ -35,8 +33,6 @@ import ViewModel = require('Controls/_input/Phone/ViewModel');
        *
        * @class Controls/_input/Phone
        * @extends Controls/_input/Base
-       *
-       * @mixes Controls/interface/IInputBase
        *
        * @public
        * @demo Controls-demo/Input/Phone/PhonePG

@@ -5,6 +5,8 @@ export type ValidationStatus = 'valid' | 'invalid';
  *
  * @interface Controls/_input/interface/IValidationStatus
  * @public
+ *
+ * @author Красильников А.С.
  */
 export interface IValidationStatusOptions {
     /**
@@ -12,7 +14,7 @@ export interface IValidationStatusOptions {
      * @cfg {Enum} Статус валидации поля ввода.
      * @variant valid валидное поле.
      * @variant invalid невалидное поле.
-     * @demo Controls-demo/Input/ValidationStatuses/Index
+     * @demo Controls-demo/Input/ValidationStatuses/Index       * @demo Controls-demo/Input/Placeholders/Index
      */
     validationStatus: ValidationStatus;
 }
