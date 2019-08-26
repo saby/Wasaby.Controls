@@ -9,6 +9,7 @@
             on:mouseenter="_hoverHandler()"
             on:focusIn="_focusInHandler()"
             on:mouseleave="_mouseLeaveHandler()"
+            attr:style="width:100%"
     />
     <ws:if data="{{_isOpened}}">
         <Controls.event:Listener event="scroll" on:scroll="_scrollHandler()"/>
