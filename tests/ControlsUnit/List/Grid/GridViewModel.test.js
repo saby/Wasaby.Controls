@@ -1139,7 +1139,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             console.log(headerRow.getCurrentHeaderColumn())
             assert.deepEqual({
                column: {},
-               cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell-checkbox',
+               cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_min-height controls-Grid__header-cell-checkbox',
                index: 0,
                cellContentClasses: '',
                cellStyles:`grid-column: 1/2; grid-row: 1/${gridViewModel._maxEndRow};`,
@@ -1154,7 +1154,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.deepEqual({
                column: gridHeader[0],
-               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingRight controls-Grid__cell_default',
+               cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_min-height controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 1,
                shadowVisibility: "visible",
                offsetTop: 0,
@@ -1175,7 +1175,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.deepEqual({
                column: gridHeader[1],
-               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default',
+               cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_min-height controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 2,
                sortingDirection: 'DESC',
                cellContentClasses: " control-Grid__cell_header-nowrap controls-Grid__header-cell_justify_content_right",
@@ -1197,7 +1197,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.deepEqual({
                column: gridHeader[2],
-               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default',
+               cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_min-height controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default',
                index: 3,
                cellContentClasses: " control-Grid__cell_header-nowrap controls-Grid__header-cell_justify_content_right",
                cellStyles: `grid-column: ${fourthCell.startColumn + 1}/${fourthCell.endColumn + 1}; grid-row: ${fourthCell.startRow}/${fourthCell.endRow};`,
