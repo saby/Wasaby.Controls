@@ -76,6 +76,11 @@ export default class CollectionItem<T> extends mixin<
     */
    protected _$marked: boolean;
 
+   /**
+    * Элемент находится в режиме редактирования
+    */
+   protected _$editing: boolean;
+
    protected _instancePrefix: string;
 
    /**
@@ -213,6 +218,21 @@ export default class CollectionItem<T> extends mixin<
       }
    }
 
+   isEditing(): boolean {
+      return this._$editing;
+   }
+
+   setEditing(editing: boolean, silent?: boolean): void {
+      if (this._$editing === editing) {
+         return;
+      }
+      this._$editing = editing;
+      this._nextVersion();
+      if (!silent) {
+         this._notifyItemChangeToOwner('editing');
+      }
+   }
+
    increaseCounter(name: string): number {
       if (typeof this._counters[name] === 'undefined') {
          this._counters[name] = 0;
@@ -301,6 +321,7 @@ Object.assign(CollectionItem.prototype, {
    _$contents: null,
    _$selected: false,
    _$marked: false,
+   _$editing: false,
    _instancePrefix: 'collection-item-',
    _contentsIndex: undefined,
    _counters: null,

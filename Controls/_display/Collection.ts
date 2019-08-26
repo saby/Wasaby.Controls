@@ -27,6 +27,7 @@ import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 import MarkerManager from './utils/MarkerManager';
+import EditInPlaceManager from './utils/EditInPlaceManager';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -578,6 +579,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
    protected _oEventRaisingChange: Function;
 
    protected _markerManager: MarkerManager;
+   protected _editInPlaceManager: EditInPlaceManager;
 
    constructor(options: IOptions<S, T>) {
       super(options);
@@ -620,6 +622,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       }
 
       this._markerManager = new MarkerManager();
+      this._editInPlaceManager = new EditInPlaceManager();
    }
 
    destroy(): void {
@@ -1924,6 +1927,11 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       this._nextVersion();
    }
 
+   setEditingItem(item: CollectionItem<S>): void {
+      this._editInPlaceManager.beginEdit(item);
+      this._nextVersion();
+   }
+
    getItemCounters(): ICollectionCounters[] {
       const result: ICollectionCounters[] = [];
       this.each((item: unknown) => {
@@ -3027,7 +3035,8 @@ Object.assign(Collection.prototype, {
    _onCollectionChange: null,
    _onCollectionItemChange: null,
    _oEventRaisingChange: null,
-   _markerManager: null
+   _markerManager: null,
+   _editInPlaceManager: null
 });
 
 register('Controls/display:Collection', Collection);
