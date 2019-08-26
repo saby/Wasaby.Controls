@@ -141,6 +141,15 @@ const _private = {
         return false;
     },
 
+    popupBeforePaintOnMount(id) {
+        const item = _private.find(id);
+        if (item) {
+            if (!item.popupOptions.isCompoundTemplate) {
+                this._notify('managerPopupCreated', [item, _private.popupItems], {bubbling: true});
+            }
+        }
+    },
+
     popupCreated(id) {
         const item = _private.find(id);
         if (item) {
@@ -148,9 +157,10 @@ const _private = {
             _private.fireEventHandler(id, 'onOpen');
             item.controller._elementCreated(item, _private.getItemContainer(id), id);
             // if it's CompoundTemplate, then compoundArea notify event, when template will ready.
-            if (!item.popupOptions.isCompoundTemplate) {
-                this._notify('managerPopupCreated', [item, _private.popupItems], {bubbling: true});
-            }
+            // notify this event on popupBeforePaintOnMount, cause we need synchronous reaction on created popup
+            // if (!item.popupOptions.isCompoundTemplate) {
+            //     this._notify('managerPopupCreated', [item, _private.popupItems], {bubbling: true});
+            // }
             return true;
         }
         return false;
