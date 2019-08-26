@@ -52,5 +52,28 @@ define([
             assert.isTrue(item.isEditing());
          });
       });
+
+      describe('.isEditing()', function() {
+         it('starts as false', function() {
+            assert.isFalse(manager.isEditing());
+         });
+
+         it('returns true when an item is being edited', function() {
+            const item = makeItem();
+
+            manager.beginEdit(item);
+
+            assert.isTrue(manager.isEditing());
+         });
+
+         it('returns false when no items are being edited', function() {
+            const item = makeItem();
+
+            manager.beginEdit(item);
+            manager.beginEdit(null);
+
+            assert.isFalse(manager.isEditing());
+         });
+      });
    });
 });

@@ -1932,6 +1932,10 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       this._nextVersion();
    }
 
+   isEditing(): boolean {
+      return this._editInPlaceManager.isEditing();
+   }
+
    getItemCounters(): ICollectionCounters[] {
       const result: ICollectionCounters[] = [];
       this.each((item: unknown) => {
