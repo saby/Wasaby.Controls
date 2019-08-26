@@ -71,6 +71,10 @@ class Popup extends Control<IPopupOptions> {
         }
     }
 
+    private _beforePaintOnMount(): void {
+        this._notify('popupBeforePaintOnMount', [this._options.id], {bubbling: true});
+    }
+
     protected _afterMount(): void {
         /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
          * inside can be compoundArea and we have to wait for it, and there is an asynchronous phase. Look at the flag waitForPopupCreated */
