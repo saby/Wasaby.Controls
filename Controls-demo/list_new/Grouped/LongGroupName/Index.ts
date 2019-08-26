@@ -17,7 +17,6 @@ export default class extends Control {
     }
 
     private _groupingKeyCallback(item: Model): string {
-        debugger;
         return item.get('longBrandName') ? item.get('longBrandName') : item.get('brand');
     }
 }

@@ -56,6 +56,15 @@
     <div class="controlsDemo__cell">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Filtering/Index' }}">
+            <a href="{{content.href}}">Фильтрация</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Filtering.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/MultiSelect/Index' }}">
             <a href="{{content.href}}">Множественный выбор</a>
         </Router.router:Reference>
@@ -78,6 +87,33 @@
             <a href="{{content.href}}">Редактирование по месту</a>
         </Router.router:Reference>
         <Controls-demo.list_new.EditInPlace.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/VirtualScroll/Index' }}">
+            <a href="{{content.href}}">Виртуальный скролл</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.VirtualScroll.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Navigation/Index' }}">
+            <a href="{{content.href}}">Навигация</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Navigation.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/ItemActions/Index' }}">
+            <a href="{{content.href}}">Операции над записью</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.ItemActions.Index/>
     </div>
 
 </div>

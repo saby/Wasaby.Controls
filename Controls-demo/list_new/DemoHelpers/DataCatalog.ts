@@ -1,8 +1,10 @@
+const LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nulla ex, consectetur lacinia odio blandit sit amet.';
+
 function getFewCategories(): Array<{
     id: number,
     title: string,
     description: string,
-    byDemand?: string,
+    byDemand?: 'Popular' | 'Unpopular' | 'Hit!',
     tplPath?: string
 }> {
     return [
@@ -30,7 +32,7 @@ function getFewCategories(): Array<{
             id: 4,
             title: 'Apple gadgets',
             description: 'Explore new Apple accessories for a range of Apple products',
-            byDemand: 'Average demand',
+            byDemand: 'Hit!',
             tplPath: 'wml!Controls-demo/list_new/ItemTemplate/ItemTemplateProperty/itemTemplateNoHighlight'
         },
         {
@@ -151,8 +153,120 @@ function getGroupedCatalogWithHiddenGroup(): Array<{
     ];
 }
 
+
+function getEditableCatalog(): Array<{
+    id: number,
+    beforeBeginEditTitle: string,
+    beforeEndEditTitle?: string
+}> {
+    return [
+        {
+            id: 0,
+            beforeBeginEditTitle: 'Стандартное начало редактирования',
+            beforeEndEditTitle: 'Стандартное завершение редактирования'
+        },
+        {
+            id: 1,
+            beforeBeginEditTitle: 'В строке недоступно редактирование',
+            beforeEndEditTitle: 'Редактирование не завершится если поле пустое'
+        },
+        {
+            id: 2,
+            beforeBeginEditTitle: 'Редактирование начнется с задержкой. Например, долгая валидация на сервере, 1сек, индикатор не появится',
+            beforeEndEditTitle: 'Редактирование завершится после задержки в 1 сек. Например, долгая валидация на сервере, индикатор не появится'
+
+        },
+        {
+            id: 3,
+            beforeBeginEditTitle: 'Редактирование начнется с задержкой. Например, долгая валидация на сервере, 3сек, появится индикатор',
+            beforeEndEditTitle: 'Редактирование завершится после задержки в 3 сек. Например, долгая валидация на сервере, появится индикатор'
+        },
+        {
+            id: 4,
+            beforeBeginEditTitle: 'Редактирование не начнется, при этом валидация занимает 1 сек.',
+            beforeEndEditTitle: 'Редактирование не завершится если поле пустое, при этом валидация занимает 1 сек.'
+        }
+    ]
+}
+
+function getContactsCatalog() {
+    return [
+        {
+            id: 0,
+            title: 'What makes every American a typical one is a desire to get a well-paid job that will cover their credit card. A credit card is an indispensable part of life in America. In other words, any American knows that how he or she handles their credit card or cards, either will help them or haunt them for years... re-establish his/her good credit by applying for a secured credit.'
+        },
+        {
+            id: 1,
+            title: 'For those who are deep in credit card debt, there are some Credit Services agencies that offer anyone in America both online or telephone, and face-to-face counseling.'
+        },
+        {
+            id: 2,
+            title: 'The agencies’ average client makes about $32,000 a year.'
+        },
+        {
+            id: 3,
+            title: 'Once debts have been repaid, an American can re-establish his/her good credit by applying for a secured credit card and paying the balance off regularly.'
+        }
+    ];
+}
+
+
+interface  IGenerateDataOptions {
+    count: number,
+    keyProperty?: string,
+    entityTemplate?: Record<string, 'number'|'string'|'lorem'>,
+    beforeCreateItemCallback?: (item) => void | false
+}
+
+/**
+ * Генерирует массив объектов по заданному шаблону {названиеПоля: типПоля}
+ * Note! Поддерживается только один уровень вложенности у шаблона объекта.
+ *
+ * @param {IGenerateDataOptions} cfg
+ * @returns {Array<TEntityData extends Record<string, any>>}
+ */
+function generateData<
+    TEntityData extends Record<string, any> = {id: number, title: string}
+    >(
+        {count, entityTemplate = {id: 'number', title: 'string'}, keyProperty = 'id', beforeCreateItemCallback = () => {}}: IGenerateDataOptions
+    ): Array<TEntityData> {
+
+    const items: Array<TEntityData> = [];
+
+    const createItem = (entityTemplate: IGenerateDataOptions["entityTemplate"], forLoremPseudoRandom: number = 0): TEntityData => {
+        let item = {};
+
+        Object.keys(entityTemplate).forEach((key) => {
+            if (entityTemplate[key] === 'string') {
+                item[key] = '';
+            } else if (entityTemplate[key] === 'number') {
+                item[key] = 0;
+            } else if (entityTemplate[key] === 'lorem') {
+                item[key] = forLoremPseudoRandom % 3 === 0 ? `${LOREM.slice(0, 110)}.` : (forLoremPseudoRandom % 2 === 0 ? `${LOREM} ${LOREM}` : `${LOREM.slice(0, 50)}.`);
+            } else {
+                item[key] = entityTemplate[key];
+            }
+        });
+
+        return <TEntityData>item;
+    };
+
+    for (let i = 0; i < count; i++) {
+        let item = createItem(entityTemplate, items.length);
+        item[keyProperty] = items.length;
+        if (beforeCreateItemCallback(item) !== false) {
+            items.push(item);
+        }
+    }
+
+    return items;
+}
+
 export {
+    getContactsCatalog,
     getFewCategories,
     getGroupedCatalog,
-    getGroupedCatalogWithHiddenGroup
+    getGroupedCatalogWithHiddenGroup,
+    getEditableCatalog,
+    generateData
 }

@@ -15,7 +15,8 @@ export default class extends Control {
         });
     }
 
-    private _reloadList(): void {
+    private _reloadList(e: MouseEvent): void {
+        e.preventDefault();
         this._children.list.reload();
     }
 }

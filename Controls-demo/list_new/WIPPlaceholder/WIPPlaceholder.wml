@@ -1,0 +1,18 @@
+<div class="controlsDemo__wrapper">
+    <div style="color: #8991A9; font-size: 16px;">
+        <span style="color: #FF7033">Д</span>емо-пример пока не готов!
+        <ws:if data="{{_canShowTask}}">
+            <ws:if data="{{_options.byTask}}">
+                <div><span style="color: #C0C0C0;">Страница будет сделана по <a href="{{_options.byTask}}">задаче</a>.</span></div>
+            </ws:if>
+            <ws:else data="{{_options.afterSolve}}">
+                <div>
+                    <span style="color: #C0C0C0;">
+                        Страница будет восстановлена после закрытия
+                        <ws:if data="{{_options.afterSolve.length > 0}}"><a href="{{_options.afterSolve}}">ошибки</a></ws:if><ws:else>ошибки</ws:else>.
+                    </span>
+                </div>
+            </ws:else>
+        </ws:if>
+    </div>
+</div>
