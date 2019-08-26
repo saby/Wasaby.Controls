@@ -1,0 +1,3 @@
+<div attr:class="controls-DisplayList__itemContent">
+   {{ item.getContents()[item.getDisplayProperty()] }}
+</div>
