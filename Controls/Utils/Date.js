@@ -81,7 +81,7 @@ define('Controls/Utils/Date', [
        * @return {Boolean}
        */
       isStartOfMonth: function(date) {
-         return date.getDate() === 1;
+         return this.isValidDate(date) && date.getDate() === 1;
       },
 
       /**
@@ -90,6 +90,9 @@ define('Controls/Utils/Date', [
        * @return {Boolean}
        */
       isEndOfMonth: function(date) {
+         if (!this.isValidDate(date)) {
+            return false;
+         }
          var d = new Date(date);
          d.setDate(d.getDate() + 1);
          return this.isStartOfMonth(d);
@@ -129,7 +132,7 @@ define('Controls/Utils/Date', [
        * @return {Boolean}
        */
       isStartOfQuarter: function(date) {
-         return this.isStartOfMonth(date) && date.getMonth() % 3 === 0;
+         return this.isValidDate(date) && this.isStartOfMonth(date) && date.getMonth() % 3 === 0;
       },
 
       /**
@@ -138,6 +141,9 @@ define('Controls/Utils/Date', [
        * @return {Boolean}
        */
       isEndOfQuarter: function(date) {
+         if (!this.isValidDate(date)) {
+            return false;
+         }
          var d = new Date(date);
          d.setDate(d.getDate() + 1);
          return this.isStartOfQuarter(d);
@@ -167,7 +173,7 @@ define('Controls/Utils/Date', [
        * @return {Boolean}
        */
       isStartOfHalfyear: function(date) {
-         return this.getStartOfMonth(date) && date.getMonth() % 6 === 0;
+         return this.isValidDate(date) && this.getStartOfMonth(date) && date.getMonth() % 6 === 0;
       },
 
       /**
@@ -176,6 +182,9 @@ define('Controls/Utils/Date', [
        * @return {Boolean}
        */
       isEndOfHalfyear: function(date) {
+         if (!this.isValidDate(date)) {
+            return false;
+         }
          var d = new Date(date);
          d.setDate(d.getDate() + 1);
          return this.isStartOfHalfyear(d);
@@ -205,7 +214,7 @@ define('Controls/Utils/Date', [
        * @return {Boolean}
        */
       isStartOfYear: function(date) {
-         return date.getDate() === 1 && date.getMonth() === 0;
+         return this.isValidDate(date) && date.getDate() === 1 && date.getMonth() === 0;
       },
 
       /**
@@ -214,6 +223,9 @@ define('Controls/Utils/Date', [
        * @return {Boolean}
        */
       isEndOfYear: function(date) {
+         if (!this.isValidDate(date)) {
+            return false;
+         }
          var d = new Date(date);
          d.setDate(d.getDate() + 1);
          return this.isStartOfYear(d);

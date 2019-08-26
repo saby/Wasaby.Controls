@@ -46,7 +46,6 @@
                attr:class="controls-DateRangeBigChoose__months-month-wrapper"
                monthClickable="{{_monthStateEnabled}}"
                bind:position="_displayedDate"
-               bind:selectionViewType="_monthRangeSelectionViewType"
                on:monthClick="_monthRangeMonthClick()"
                on:fixedPeriodClick="_monthRangeFixedPeriodClick()"
             />
