@@ -14,7 +14,6 @@ type IOptions = IModelOptions;
  * @class Controls/_input/TimeInterval
  * @extends Controls/_input/Base
  *
- * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/ITimeInterval
  *
  * @public
@@ -23,6 +22,7 @@ type IOptions = IModelOptions;
  * @demo Controls-demo/Input/TextAlignments/Index
  * @demo Controls-demo/Input/TagStyles/Index
  * @demo Controls-demo/Input/ValidationStatuses/Index
+ * @demo Controls-demo/Input/SelectOnClick/Index
  *
  * @author Красильников А.С.
  */
@@ -36,7 +36,6 @@ type IOptions = IModelOptions;
  * @class Controls/_input/TimeInterval
  * @extends Controls/_input/Base
  *
- * @mixes Controls/interface/IInputBase
  * @mixes Controls/interface/ITimeInterval
  *
  * @public

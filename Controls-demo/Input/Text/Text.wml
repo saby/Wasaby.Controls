@@ -1,0 +1,5 @@
+<div>
+   <Controls-demo.Input.Constraint.Index/>
+   <Controls-demo.Input.MaxLength.Index/>
+   <Controls-demo.Input.Trim.Index/>
+</div>

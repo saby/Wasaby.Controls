@@ -3,6 +3,7 @@ import {descriptor} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as ActualAPI from 'Controls/_input/ActualAPI';
+import {default as IValidationStatus, IValidationStatusOptions} from 'Controls/_input/interface/IValidationStatus';
 import {
    IHeight, IHeightOptions, IFontColorStyle,
    IFontColorStyleOptions, IFontSize, IFontSizeOptions
@@ -12,19 +13,44 @@ import * as template from 'wml!Controls/_input/Render/Render';
 
 type State = 'valid' | 'valid-active' | 'invalid' | 'invalid-active' | 'readonly' | 'readonly-multiline';
 
-interface IRenderOptions extends IControlOptions, IHeightOptions, IFontColorStyleOptions, IFontSizeOptions {
+interface IRenderOptions extends IControlOptions, IHeightOptions,
+IFontColorStyleOptions, IFontSizeOptions, IValidationStatusOptions {
+   /**
+    * @name Controls/_input/Render#multiline
+    * @cfg {Boolean} Определяет режим рендеринга текстового поля.
+    * @remark
+    * * false - однострочный режим.
+    * * true - многострочный режим.
+    */
    multiline: boolean;
+   /**
+    * @name Controls/_input/Render#roundBorder
+    * @cfg {Boolean} Определяет скругление рамки текстого поля.
+    * @remark
+    * * false - квадратная рамка.
+    * * true - круглая рамка.
+    */
    roundBorder: boolean;
 
-   validationStatus: 'valid' | 'invalid';
-
+   /**
+    * @name Controls/_input/Render#content
+    * @cfg {HTMLElement} Шаблон текстового поля
+    */
    content: TemplateFunction;
+   /**
+    * @name Controls/_input/Render#beforeFieldWrapper
+    * @cfg {HTMLElement}
+    */
    beforeFieldWrapper?: TemplateFunction;
+   /**
+    * @name Controls/_input/Render#afterFieldWrapper
+    * @cfg {HTMLElement}
+    */
    afterFieldWrapper?: TemplateFunction;
 }
 
 /**
- * Контрол для рендеринга текстовых полей.
+ * Контрол для рендеринга текстового поля.
  *
  * @class Controls/_input/Render
  * @extends UI/_base/Control
@@ -32,26 +58,13 @@ interface IRenderOptions extends IControlOptions, IHeightOptions, IFontColorStyl
  * @mixes Controls/_interface/IHeight
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_input/interface/IValidationStatus
  *
  *
- * @author Krasilnikov A.S.
+ * @author Красильников А.С.
  */
 
-/*
- * Control the rendering of text fields.
- *
- * @class Controls/_input/Render
- * @extends UI/_base/Control
- *
- * @mixes Controls/_interface/IHeight
- * @mixes Controls/_interface/IFontSize
- * @mixes Controls/_interface/IFontColorStyle
- *
- * @public
- *
- * @author Krasilnikov A.S.
- */
-class Render extends Control<IRenderOptions, void> implements IHeight, IFontColorStyle, IFontSize {
+class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle, IFontSize, IValidationStatus {
    private _tag: SVGElement | null = null;
    private _contentActive: boolean = false;
 
@@ -66,6 +79,7 @@ class Render extends Control<IRenderOptions, void> implements IHeight, IFontColo
    readonly '[Controls/_interface/IHeight]': true;
    readonly '[Controls/_interface/IFontSize]': true;
    readonly '[Controls/_interface/IFontColorStyle]': true;
+   readonly '[Controls/_interface/IValidationStatus]': true;
 
    private updateState(options: IRenderOptions): void {
       this._fontSize = ActualAPI.fontSize(options.fontStyle, options.fontSize);
@@ -128,3 +142,18 @@ class Render extends Control<IRenderOptions, void> implements IHeight, IFontColo
 }
 
 export default Render;
+
+/*
+ * Control the rendering of text fields.
+ *
+ * @class Controls/_input/Render
+ * @extends UI/_base/Control
+ *
+ * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IFontColorStyle
+ *
+ * @public
+ *
+ * @author Krasilnikov A.S.
+ */

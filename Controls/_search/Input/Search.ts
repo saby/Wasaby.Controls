@@ -13,12 +13,10 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  * <a href="/materials/demo-ws4-filter-search-new">Демо с контролами filter:Selector, search:Input и List</a>.
  *
  * @class Controls/_search/Input/Search
+ * @extends Controls/_input/Base
+ *
  * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputText
- * @mixes Controls/interface/IInputBase
- * @mixes Controls/interface/IPaste
- * @mixes Controls/interface/IInputPlaceholder
- * @mixes Controls/_interface/ITooltip
+ * @mixes Controls/_input/interface/IText
  *
  * @ignoreOptions style
  *
@@ -40,12 +38,10 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List control</a>.
  *
  * @class Controls/_search/Input/Search
+ * @extends Controls/_input/Base
+ *
  * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputText
- * @mixes Controls/interface/IInputBase
- * @mixes Controls/interface/IPaste
- * @mixes Controls/interface/IInputPlaceholder
- * @mixes Controls/_interface/ITooltip
+ * @mixes Controls/_input/interface/IText
  *
  * @ignoreOptions style
  *

@@ -11,13 +11,9 @@ import IInputField from "./IInputField";
  *
  * @interface Controls/interface/IInputBase
  *
- * @mixes Controls/interface/IPaste
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputPlaceholder
  *
- * @mixes Controls/interface/ISelectableInput
- * @mixes Controls/interface/IInputTooltip
  * @mixes Controls/interface/IInputStyle
  * @mixes Controls/_input/interface/IValidationStatus
  *
@@ -28,28 +24,6 @@ import IInputField from "./IInputField";
  * @author Красильников А.С.
  */
 
-/*
- * Interface for Input.Base.
- *
- * @interface Controls/interface/IInputBase
- *
- * @mixes Controls/interface/IPaste
- * @mixes Controls/interface/IInputTag
- * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputPlaceholder
- *
- * @mixes Controls/interface/ISelectableInput
- * @mixes Controls/interface/IInputTooltip
- *
- * @mixes Controls/_interface/IHeight
- * @mixes Controls/_interface/IFontSize
- * @mixes Controls/_interface/IFontColorStyle
- *
- * @mixes Controls/interface/ICallback
- *
- * @public
- * @author Красильников А.С.
- */
 type IInputBase =
     IPaste
     & IInputTag
@@ -60,78 +34,6 @@ type IInputBase =
     & IInputStyle
     & {
     readonly _options: {
-        /**
-         * @name Controls/interface/IInputBase#size
-         * @cfg {Enum} Размер поля.
-         * @variant s - Небольшой размер поля.
-         * @variant m - Средний размер поля.
-         * @variant l - Большой размер поля.
-         * @variant default - Стандартный размер поля.
-         * @default default
-         * @remark
-         * Размер выбирается в зависимости от контекста значения в поле.
-         */
-
-        /*
-         * @name Controls/interface/IInputBase#size
-         * @cfg {Enum} Field size.
-         * @variant s - The size of a small field.
-         * @variant m - The size of a medium field.
-         * @variant l - The size of a large field.
-         * @variant default - The size of a standard field.
-         * @default default
-         * @remark
-         * The size is selected depending on the context of the value in the field.
-         */
-        size: 's' | 'm' | 'l' | 'default';
-        /**
-         * @name Controls/interface/IInputBase#fontStyle
-         * @cfg {Enum} Шрифты текста в поле.
-         * @variant default - Стиль шрифта в стандартном поле.
-         * @variant primary - Стиль шрифта для привлечения внимания.
-         * @variant secondary - Стиль шрифта в дополнительном поле.
-         * @default default
-         * @remark
-         * Стиль шрифта выбирается в зависимости от контекста значения в поле.
-         * @example
-         * В этом примере мы создаем форму для ввода паспортных данных. Поля для ввода имеют акцентный шрифта.
-         * <pre>
-         *    <div class="form">
-         *       <div class="fio">
-         *          <Controls.input:Text name="firstName" fontStyle="primary"/>
-         *          <Controls.input:Text name="lastName" fontStyle="primary"/>
-         *       </div>
-         *       <div class="residence">
-         *          <Controls.input:Text name="street"/>
-         *       </div>
-         *    </div>
-         * </pre>
-         */
-
-        /*
-         * @name Controls/interface/IInputBase#fontStyle
-         * @cfg {Enum} Fonts of the text in field.
-         * @variant default - Font style in standard field.
-         * @variant primary - Font style to attract attention.
-         * @variant secondary - Font style in secondary field.
-         * @default default
-         * @remark
-         * The font style is selected depending on the context of the value in the field.
-         * @example
-         * In this example, we create a form for input passport data. Fields for entering your name have accent font.
-         * <pre>
-         *    <div class="form">
-         *       <div class="fio">
-         *          <Controls.input:Text name="firstName" fontStyle="primary"/>
-         *          <Controls.input:Text name="lastName" fontStyle="primary"/>
-         *       </div>
-         *       <div class="residence">
-         *          <Controls.input:Text name="street"/>
-         *       </div>
-         *    </div>
-         * </pre>
-         */
-        fontStyle: 'default' | 'primary' | 'secondary';
         /**
          * @name Controls/interface/IInputBase#textAlign
          * @cfg {Enum} Горизонтальное выравнивание текста в поле.

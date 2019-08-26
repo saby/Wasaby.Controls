@@ -1,0 +1,11 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__cell">
+      <Controls.input:Text attr:class="controlsDemo__input" placeholder="Enter your name"/>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.input:Text attr:class="controlsDemo__input" name="password" placeholder="Enter password"/>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.buttons:Button attr:ws-no-focus="true" caption="Complicate password" on:click="_complicate()"/>
+   </div>
+</div>
