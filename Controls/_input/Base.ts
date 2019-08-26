@@ -392,8 +392,6 @@ var _private = {
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/interface/IInputField
  * @mixes Controls/interface/IInputStyle
- * @mixes Controls/_input/Base/Styles
- * @mixes Controls/_input/Render/Styles
  * @mixes Controls/interface/ICallback
  *
  * @public

@@ -1,5 +1,5 @@
 /**
- * Библиотека полей ввода.
+ * Библиотека контролов, которые служат для ввода значений различного типа. Примеры типов: строка, число, дата, телефон и т.д.
  * @library Controls/input
  * @includes Base Controls/_input/Base
  * @includes Area Controls/_input/Area
@@ -20,9 +20,6 @@
  * @includes IValidationStatus Controls/_input/interface/IValidationStatus
  * @includes IValidationStatus Controls/_input/interface/IText
  *
- * @includes BaseStyles Controls/_input/Base/Styles
- * @includes RenderStyles Controls/_input/Render/Styles
- * @includes PasswordStyles Controls/_input/Password/PasswordStyles
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  *
  * @public
@@ -32,7 +29,7 @@
 /*
  * List library
  * @library Controls/input
- * @includes Base Controls/_input/Base
+ * @includes Base Controls/_input/Baseы
  * @includes Area Controls/_input/Area
  * @includes Number Controls/_input/Number
  * @includes Text Controls/_input/Text
@@ -49,11 +46,8 @@
  * @includes Render Controls/_input/Render
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  * @includes IValidationStatus Controls/_input/interface/IValidationStatus
- * @includes IValidationStatus Controls/_input/interface/IText
- *
- * @includes BaseStyles Controls/_input/Base/Styles
- * @includes RenderStyles Controls/_input/Render/Styles
- * @includes PasswordStyles Controls/_input/Password/PasswordStyles
+ * @includes IText Controls/_input/interface/IText
+ * @includes IBase Controls/_input/interface/IBase
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  *
  * @public
@@ -84,8 +78,9 @@ import StringValueConverter = require('Controls/_input/DateTime/StringValueConve
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
 import INewLineKey from 'Controls/_input/interface/INewLineKey';
-export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus} from 'Controls/_input/interface/IValidationStatus';
 export {default as IText, ITextOptions} from 'Controls/_input/interface/IText';
+export {default as IBase, IBaseOptions, TextAlign, AutoComplete} from 'Controls/_input/interface/IBase';
+export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus} from 'Controls/_input/interface/IValidationStatus';
 
 const InputCallback = {
     lengthConstraint

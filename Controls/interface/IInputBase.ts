@@ -17,8 +17,6 @@ import IInputField from "./IInputField";
  * @mixes Controls/interface/IInputStyle
  * @mixes Controls/_input/interface/IValidationStatus
  *
- * @mixes Controls/_input/Base/Styles
- * @mixes Controls/_input/Render/Styles
  *
  * @mixes Controls/interface/ICallback
  *

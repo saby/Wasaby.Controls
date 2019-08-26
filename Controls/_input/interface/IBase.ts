@@ -57,18 +57,19 @@ export interface IBaseOptions {
     placeholder: string | TemplateFunction;
     /**
      * @name Controls/_input/interface/IBase#tooltip
-     * @cfg {String} Текст всплывающей подсказки. Она показывается при наведении указателя мыши на элемент.
+     * @cfg {String} Текст всплывающей подсказки, отображаемой при наведении указателя мыши на элемент.
      * @remark
-     * Когда введенный текст не уместился в поле по ширине, тогда текст подсказки игнорируется, и вместо него будет введенный текст.
+     * Подсказка отображает указанный текст, только если введенное значение полностью помещается в поле ввода. Когда значение не помещается полностью, подсказка отображает значение из поля ввода.
      * @demo Controls-demo/Input/Tooltip/Index
      */
     tooltip?: string;
     /**
      * @name Controls/_input/interface/IBase#paste
      * @function
-     * @description Вставить значение в поле ввода.
-     * @param {String} value Заменяемое значение.
+     * @description Установить выделенное значение равным указанному значению.
+     * @param {String} value Значение для замены.
      * @remark
+     * Метод используется, когда выделенное значение не известно, а вам требуется заменить его на другое.
      * @demo Controls-demo/Input/Paste/Index
      */
     paste: (value: string) => void;
