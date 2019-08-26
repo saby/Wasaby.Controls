@@ -230,9 +230,7 @@ let Validate = Base.extend({
         }
     },
     _scrollHandler() {
-        if (this._isOpened) {
-            _private.forceCloseInfoBox(this);
-        }
+        _private.forceCloseInfoBox(this);
     },
     _focusInHandler() {
         if (!this._isOpened) {
