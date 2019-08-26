@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Heading/Counters/Counters');
+import controlTemplate = require('wml!Controls-demo/Heading/Counters/Template');
 import 'css!Controls-demo/Controls-demo';
 
 class ViewModes extends Control<IControlOptions> {
