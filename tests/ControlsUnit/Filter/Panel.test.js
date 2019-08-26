@@ -160,13 +160,15 @@ define(
                {
                   id: 'list',
                   value: 5,
-                  resetValue: 1
+                  resetValue: 1,
+                  textValue: 'listValue'
                },
                {
                   id: 'text',
                   value: '123',
                   resetValue: '',
-                  visibility: true
+                  visibility: true,
+                  textValue: null
                },
                {
                   id: 'bool',
@@ -183,13 +185,15 @@ define(
                {
                   id: 'list',
                   value: 1,
-                  resetValue: 1
+                  resetValue: 1,
+                  textValue: ''
                },
                {
                   id: 'text',
                   value: '',
                   resetValue: '',
-                  visibility: false
+                  visibility: false,
+                  textValue: null
                },
                {
                   id: 'bool',
