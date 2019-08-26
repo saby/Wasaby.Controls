@@ -118,38 +118,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
         this._updateScrollAfterViewModification();
     }
 
-    /**
-     * Возвращает позицию отображаемого элемента относительно скролируемого контейнера.
-     * @noshow
-     */
-    getDisplayedItemOffset(): { top: number; bottom: number } {
-        const
-            //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
-            container = this._container.get ? this._container.get(0) : this._container,
-            scrollDimensions: ClientRect = container.getBoundingClientRect(),
-            itemDate: Date = this._options.viewMode === 'year' ?
-                dateUtils.getStartOfYear(this._displayedPosition) : dateUtils.getStartOfMonth(this._displayedPosition),
-            elementDimensions: ClientRect = this._findElementByDate(itemDate).getBoundingClientRect();
-
-        return {
-            top: scrollDimensions.top - elementDimensions.top,
-            bottom: elementDimensions.bottom - scrollDimensions.bottom
-        };
-    }
-
-    /**
-     * Скролирует к элементу с анимацией с помощью element.scrollIntoView. В отличии от стандартного скролирование при
-     * обновлении опции position, элемент не обязательно окажется в самом верху скролируемого контенера.
-     * Используется только в Controls.datePopup. Не рекомендуется использовать в других местах.
-     * @param date
-     * @noshow
-     */
-    scrollIntoView(date: Date): void {
-        this._displayedPosition = date;
-        this._findElementByDate(date, 'month').scrollIntoView();
-        this._notify('positionChanged', [date]);
-    }
-
     protected _getMonth(year: number, month: number): Date {
         return new Date(year, month, 1);
     }
@@ -286,11 +254,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
         return false;
     }
 
-    private _findElementByDate(date: Date, viewMode?: string): HTMLElement {
-        let element: HTMLElement,
-            _viewMode = viewMode || this._options.viewMode;
+    private _findElementByDate(date: Date): HTMLElement {
+        let element: HTMLElement;
 
-        if (_viewMode === 'month' || date.getMonth() !== 0) {
+        if (this._options.viewMode === 'month' || date.getMonth() !== 0) {
             element = this._getElementByDate(
                 ITEM_BODY_SELECTOR.month,
                 monthListUtils.dateToId(dateUtils.getStartOfMonth(date)));
