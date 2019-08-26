@@ -26,8 +26,7 @@
                hoveredStartValue="{{_options.hoveredStartValue}}"
                hoveredEndValue="{{_options.hoveredEndValue}}"
 
-               selectionViewType="{{_options.selectionViewType}}"
-               on:selectionViewTypeChanged="_proxyEvent('selectionViewTypeChanged')"
+               bind:selectionViewType="_selectionViewType"
 
                on:monthClick="_proxyEvent('monthClick')"
                on:fixedPeriodClick="_proxyEvent('fixedPeriodClick')"

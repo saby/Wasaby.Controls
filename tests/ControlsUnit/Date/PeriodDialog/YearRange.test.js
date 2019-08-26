@@ -32,6 +32,39 @@ define([
             assert(dateUtils.isDatesEqual(component._rangeModel.startValue, start));
             assert(dateUtils.isDatesEqual(component._rangeModel.endValue, end));
          });
+
+         [{
+            position: new Date(2019, 0),
+            lastYear: 2019
+         }, {
+            position: new Date(2019, 0),
+            startValue: new Date(2019, 0),
+            lastYear: 2019
+         }, {
+            position: new Date(2019, 0),
+            startValue: new Date(2019, 0),
+            endValue: new Date(2021, 0),
+            lastYear: 2021
+         }, {
+            position: new Date(2019, 0),
+            startValue: new Date(2019, 0),
+            endValue: new Date(2024, 0),
+            lastYear: 2024
+         }, {
+            position: new Date(2019, 0),
+            startValue: new Date(2019, 0),
+            endValue: new Date(2025, 0),
+            lastYear: 2024
+         }].forEach(function(test) {
+            it('should set the correct lastYear model when options' +
+               `{ year: ${test.position}, startValue: ${test.startValue}, endValue: ${test.endValue} } passed.`, function() {
+               const component = calendarTestUtils.createComponent(
+                  YearsRange,
+                  { year: test.position, startValue: test.startValue, endValue: test.endValue }
+               );
+               assert.strictEqual(component._lastYear, test.lastYear);
+            });
+         });
       });
 
 

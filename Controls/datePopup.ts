@@ -118,6 +118,16 @@ var _private = {
             self._rangeModel.endValue = end;
             self._headerRangeModel.startValue = start;
             self._headerRangeModel.endValue = end;
+            _private.updateYearsRangeModel(self, start, end);
+        },
+        updateYearsRangeModel: function(self, start: Date, end: Date): void {
+            if (dateUtils.isStartOfYear(start) && dateUtils.isEndOfYear(end)) {
+                self._yearRangeModel.startValue = start;
+                self._yearRangeModel.endValue = end;
+            } else {
+                self._yearRangeModel.startValue = null;
+                self._yearRangeModel.endValue = null;
+            }
         },
         sendResult: function (self, start, end) {
             self._notify(
@@ -179,7 +189,6 @@ var Component = BaseControl.extend([EventProxyMixin], {
     _STATES: STATES,
     _state: STATES.year,
 
-    _monthRangeSelectionViewType: MonthsRange.SELECTION_VEIW_TYPES.days,
     _monthRangeSelectionProcessing: false,
 
     _dateRangeSelectionProcessing: false,
@@ -202,6 +211,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._headerRangeModel.update(options);
 
         this._yearRangeModel = new DateRangeModel();
+        _private.updateYearsRangeModel(this, options.startValue, options.endValue);
 
         this._monthStateEnabled = periodDialogUtils.isMonthStateEnabled(options);
         this._yearStateEnabled = periodDialogUtils.isYearStateEnabled(options);
@@ -297,11 +307,13 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _onYearsSelectionHoveredValueChanged: function(e, value) {
-        this._displayedDate = value;
+        // We update the displayed date only during the selection process.
+        if (value) {
+            this._displayedDate = value;
+        }
     },
 
     _yearsSelectionStarted: function (e, start, end) {
-        this._monthRangeSelectionViewType = MonthsRange.SELECTION_VEIW_TYPES.days;
         this._monthRangeSelectionProcessing = false;
     },
 
@@ -311,8 +323,6 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _monthsRangeChanged: function (e, start, end) {
         _private.rangeChanged(this, start, end ? dateUtils.getEndOfMonth(end) : null);
-        this._yearRangeModel.startValue = null;
-        this._yearRangeModel.endValue = null;
     },
 
     _monthsSelectionChanged: function (e, start, end) {
