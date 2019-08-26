@@ -132,8 +132,7 @@ interface IInputField {
 }
 
 /**
- * @event valueChanged Происходит при изменении отображаемого значения контрола ввода.
- * @name Controls/interface/IInputField#valueChanged
+ * @event Controls/interface/IInputField#valueChanged Происходит при изменении отображаемого значения контрола ввода.
  * @param {String} value Значение контрола ввода.
  * @param {String} displayValue Отображаемое значение контрола ввода.
  * @remark
@@ -205,8 +204,7 @@ interface IInputField {
  */
 
 /**
- * @event inputCompleted Происходит при завершении ввода. Завершение ввода - это контрол потерял фокус, или пользователь нажал "enter".
- * @name Controls/interface/IInputField#inputCompleted
+ * @event Controls/interface/IInputField#inputCompleted Происходит при завершении ввода. Завершение ввода - это контрол потерял фокус, или пользователь нажал "enter".
  * @param {String} value Значение контрола ввода.
  * @param {String} displayValue Отображаемое значение контрола ввода.
  * @remark
