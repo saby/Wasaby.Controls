@@ -1,6 +1,8 @@
 define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], function(showSelector, BaseController) {
+   'use strict';
+
    describe('Controls/_lookup/showSelector', function() {
-      var
+      let
          lastPopupOptions,
          isShowSelector = false,
          baseController = new BaseController();
@@ -22,9 +24,11 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
       };
 
       it('showSelector without params', function() {
+         let items = baseController._getItems();
          showSelector.default(baseController);
          assert.isTrue(isShowSelector);
          assert.equal(lastPopupOptions.templateOptions.selectedTab, 'defaultTab');
+         assert.notEqual(lastPopupOptions.templateOptions.selectedItems, items);
          assert.equal(lastPopupOptions.width, 100);
          assert.equal(lastPopupOptions.opener, baseController);
          assert.equal(lastPopupOptions.multiSelect, undefined);
