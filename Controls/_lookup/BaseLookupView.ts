@@ -29,6 +29,18 @@ var _private = {
             self._inputValue = '';
             _private.notifyValue(self, '');
         }
+    },
+
+    activate: function(self) {
+        if (self._options.multiSelect) {
+            self.activate({enableScreenKeyboard: true});
+        } else {
+            // activate method is focusing input.
+            // for lookup with multiSelect: false input will be hidden after select item,
+            // and focus will be lost.
+            // for this case activate lookup in _afterUpdate hook.
+            self._needSetFocusInInput = true;
+        }
     }
 };
 
@@ -120,15 +132,7 @@ var BaseLookupView = Control.extend({
 
     _choose: function (event, item) {
         // move focus to input after select, because focus will be lost after closing popup
-        if (this._options.multiSelect) {
-            this.activate({enableScreenKeyboard: true});
-        } else {
-            // activate method is focusing input.
-            // for lookup with multiSelect: false input will be hidden after select item,
-            // and focus will be lost.
-            // for this case activate lookup in _afterUpdate hook.
-            this._needSetFocusInInput = true;
-        }
+        _private.activate(this);
 
         this._notify('addItem', [item]);
         _private.resetInputValue(this);
@@ -139,7 +143,7 @@ var BaseLookupView = Control.extend({
 
         /* move focus to input after remove, because focus will be lost after removing dom element */
         if (!this._infoboxOpened) {
-            this._needSetFocusInInput = true;
+            _private.activate(this);
         }
     },
 
