@@ -9,6 +9,7 @@
 
       on:click="_onItemClick(item)"
 
+      itemActionsPosition="{{ itemActionsPosition }}"
       itemActionsTemplate="{{ itemActionsTemplate }}"
       swipeTemplate="{{ swipeTemplate }}"
       multiSelectTpl="{{ multiSelectTpl }}"

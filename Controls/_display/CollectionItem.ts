@@ -11,6 +11,7 @@ import {ISerializableState as IDefaultSerializableState} from 'Types/entity';
 import {IList} from 'Types/collection';
 import {register} from 'Types/di';
 import {mixin} from 'Types/util';
+import IItemActions from './interface/IItemActions';
 
 export interface IOptions<T> {
    contents: T;
@@ -80,6 +81,11 @@ export default class CollectionItem<T> extends mixin<
     * Элемент находится в режиме редактирования
     */
    protected _$editing: boolean;
+
+   /**
+    * Операции над записью
+    */
+   protected _$actions: IItemActions;
 
    protected _instancePrefix: string;
 
@@ -233,6 +239,29 @@ export default class CollectionItem<T> extends mixin<
       }
    }
 
+   setActions(actions: IItemActions, silent?: boolean): void {
+      if (this._$actions === actions) {
+         return;
+      }
+      this._$actions = actions;
+      this._nextVersion();
+      if (!silent) {
+         this._notifyItemChangeToOwner('actions');
+      }
+   }
+
+   getActions(): IItemActions {
+      return this._$actions;
+   }
+
+   hasVisibleActions(): boolean {
+      return this._$actions && this._$actions.showed && this._$actions.showed.length > 0;
+   }
+
+   shouldDisplayActions(): boolean {
+      return this.hasVisibleActions() || this.isEditing();
+   }
+
    increaseCounter(name: string): number {
       if (typeof this._counters[name] === 'undefined') {
          this._counters[name] = 0;
@@ -322,6 +351,7 @@ Object.assign(CollectionItem.prototype, {
    _$selected: false,
    _$marked: false,
    _$editing: false,
+   _$actions: null,
    _instancePrefix: 'collection-item-',
    _contentsIndex: undefined,
    _counters: null,
