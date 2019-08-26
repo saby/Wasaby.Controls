@@ -3,7 +3,9 @@ import entity = require('Types/entity');
 import ViewModel = require('Controls/_input/Password/ViewModel');
 import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/PasswordVisibilityButton');
       /**
-       *  Поле ввода пароля. Контрол скрывает введенные символы и вместо них отображает символы-заменители.
+       *  Поле ввода пароля.
+       *  @remark
+       *  Контрол скрывает введенные символы и вместо них отображает символы-заменители.
        *  Видимость введенного текста можно переключить, нажав на иконку 'eye'.
        *  <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
@@ -11,7 +13,6 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
        * @extends Controls/_input/Base
        *
        * @mixes Controls/interface/IInputBase
-       * @mixes Controls/_input/Password/PasswordStyles
        *
        * @public
        * @demo Controls-demo/Input/SizesAndHeights/Index
@@ -32,7 +33,6 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
        * @extends Controls/_input/Base
        *
        * @mixes Controls/interface/IInputBase
-       * @mixes Controls/_input/Password/PasswordStyles
        *
        * @public
        * @demo Controls-demo/Input/Password/PasswordPG
@@ -56,8 +56,8 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
        * @remark
        *
        * The button does not appear in {@link readOnly read mode} or in an empty field.
-       */       
-      
+       */
+
 
       var _private = {
          calculateType: function(passwordVisible, autoComplete) {
@@ -146,4 +146,4 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
       };
 
       export = Password;
-   
+

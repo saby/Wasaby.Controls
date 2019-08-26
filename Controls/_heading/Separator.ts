@@ -8,7 +8,8 @@ export interface ISeparatorOptions extends IControlOptions {
 
 /**
  * Разделитель заголовков с поддержкой некоторых стилей отображения.
- * Используется в составе сложных заголовков, состоящих из <a href="/docs/js/Controls/_heading/?v=3.18.500">header</a>, <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a> и <a href="/docs/js/Controls/_heading/Counter/?v=3.18.500">counter</a>.
+ * @remark
+ * Используется в составе сложных заголовков, состоящих из {@link Controls/heading:Separator} и {@link Controls/heading:Counter}.
  *
  * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
  *

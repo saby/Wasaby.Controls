@@ -1,5 +1,5 @@
 /**
- * Библиотека полей ввода.
+ * Библиотека контролов, которые служат для ввода значений различного типа. Примеры типов: строка, число, дата, телефон и т.д.
  * @library Controls/input
  * @includes Base Controls/_input/Base
  * @includes Area Controls/_input/Area
@@ -19,9 +19,6 @@
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  * @includes IValidationStatus Controls/_input/interface/IValidationStatus
  *
- * @includes BaseStyles Controls/_input/Base/Styles
- * @includes RenderStyles Controls/_input/Render/Styles
- * @includes PasswordStyles Controls/_input/Password/PasswordStyles
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  *
  * @public
@@ -31,7 +28,7 @@
 /*
  * List library
  * @library Controls/input
- * @includes Base Controls/_input/Base
+ * @includes Base Controls/_input/Baseы
  * @includes Area Controls/_input/Area
  * @includes Number Controls/_input/Number
  * @includes Text Controls/_input/Text
@@ -48,10 +45,6 @@
  * @includes Render Controls/_input/Render
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  * @includes IValidationStatus Controls/_input/interface/IValidationStatus
- *
- * @includes BaseStyles Controls/_input/Base/Styles
- * @includes RenderStyles Controls/_input/Render/Styles
- * @includes PasswordStyles Controls/_input/Password/PasswordStyles
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  *
  * @public
