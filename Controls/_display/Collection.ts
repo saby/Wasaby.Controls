@@ -28,6 +28,8 @@ import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 import MarkerManager from './utils/MarkerManager';
 import EditInPlaceManager from './utils/EditInPlaceManager';
+import ItemActionsManager from './utils/ItemActionsManager';
+import IItemActions from './interface/IItemActions';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -580,6 +582,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    protected _markerManager: MarkerManager;
    protected _editInPlaceManager: EditInPlaceManager;
+   protected _itemActionsManager: ItemActionsManager;
 
    constructor(options: IOptions<S, T>) {
       super(options);
@@ -623,6 +626,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
       this._markerManager = new MarkerManager();
       this._editInPlaceManager = new EditInPlaceManager();
+      this._itemActionsManager = new ItemActionsManager();
    }
 
    destroy(): void {
@@ -1936,6 +1940,10 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       return this._editInPlaceManager.isEditing();
    }
 
+   setItemActions(item: CollectionItem<S>, actions: IItemActions): void {
+      this._itemActionsManager.setItemActions(item, actions);
+   }
+
    getItemCounters(): ICollectionCounters[] {
       const result: ICollectionCounters[] = [];
       this.each((item: unknown) => {
@@ -3040,7 +3048,8 @@ Object.assign(Collection.prototype, {
    _onCollectionItemChange: null,
    _oEventRaisingChange: null,
    _markerManager: null,
-   _editInPlaceManager: null
+   _editInPlaceManager: null,
+   _itemActionsManager: null
 });
 
 register('Controls/display:Collection', Collection);
