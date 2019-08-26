@@ -72,6 +72,47 @@ define([
             assert.isNull(component._yearRangeModel.endValue);
          });
 
+         [{
+            options: {},
+            yearModel: {
+               startValue: null,
+               endValue: null
+            }
+         }, {
+            options: {
+               startValue: new Date(2019, 1, 1),
+               endValue: new Date(2020, 0, 0)
+            },
+            yearModel: {
+               startValue: null,
+               endValue: null
+            }
+         }, {
+            options: {
+               startValue: new Date(2019, 0, 1),
+               endValue: new Date(2019, 1, 10)
+            },
+            yearModel: {
+               startValue: null,
+               endValue: null
+            }
+         }, {
+            options: {
+               startValue: new Date(2019, 0, 1),
+               endValue: new Date(2020, 0, 0)
+            },
+            yearModel: {
+               startValue: new Date(2019, 0, 1),
+               endValue: new Date(2020, 0, 0)
+            }
+         }].forEach(function(test) {
+            it(`should update _yearsModel if options are equals ${JSON.stringify(test.options)}.`, function () {
+               const component = calendarTestUtils.createComponent(PeriodDialog, test.options);
+               assert(dateUtils.isDatesEqual(component._yearRangeModel.startValue, test.yearModel.startValue));
+               assert(dateUtils.isDatesEqual(component._yearRangeModel.endValue, test.yearModel.endValue));
+            });
+         });
+
          [
             {},
             { selectionType: PeriodDialog.SELECTION_TYPES.quantum, quantum: { months: [1], days: [1] } }
@@ -257,13 +298,12 @@ define([
             component._onYearsSelectionHoveredValueChanged(null, date);
             assert(dateUtils.isDatesEqual(component._displayedDate, date));
          });
-      });
-
-      describe('_yearsSelectionStarted', function() {
-         it('should update range models.', function() {
-            const component = calendarTestUtils.createComponent(PeriodDialog, {});
-            component._yearsSelectionStarted(null, start, end);
-            assert.equal(component._monthRangeSelectionViewType, 'days');
+         it('should\'t update displayed day.', function() {
+            const
+               date = new Date(2018, 0, 1),
+               component = calendarTestUtils.createComponent(PeriodDialog, { startValue: date, endValue: date });
+            component._onYearsSelectionHoveredValueChanged(null, null);
+            assert(dateUtils.isDatesEqual(component._displayedDate, date));
          });
       });
 

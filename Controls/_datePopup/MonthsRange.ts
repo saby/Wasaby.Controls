@@ -28,6 +28,8 @@ class Component extends Control {
 
     _formatDate: Function = formatDate;
 
+    _selectionViewType: string;
+
     constructor() {
         super();
         this._rangeModel = new DateRangeModel();
@@ -37,6 +39,12 @@ class Component extends Control {
     _beforeMount(options) {
         this._position = dateUtils.getStartOfYear(options.position || new Date());
         this._rangeModel.update(options);
+
+        if (dateUtils.isStartOfMonth(options.startValue) && dateUtils.isEndOfMonth(options.endValue)) {
+            this._selectionViewType = MonthsRangeItem.SELECTION_VEIW_TYPES.months;
+        } else {
+            this._selectionViewType = MonthsRangeItem.SELECTION_VEIW_TYPES.days;
+        }
     }
 
     _beforeUpdate(options) {
