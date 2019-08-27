@@ -195,7 +195,9 @@ define(['Controls/grid'], function(gridMod) {
       it('getColumnsWidthForEditingRow', function () {
 
          let
-             gridView = new gridMod.GridView({});
+             gridView = new gridMod.GridView({}),
+             testFallback = false;
+
          gridView = {
             _options: {
                multiSelectVisibility: 'hidden',
@@ -258,7 +260,35 @@ define(['Controls/grid'], function(gridMod) {
                         },
                      ]
                   }
-
+               },
+               querySelectorAll: function(selector) {
+                  if (testFallback) {
+                     return [];
+                  }
+                  if (selector === '.controls-Grid__row-cell[data-r="0"]') {
+                     return [
+                        {
+                           getBoundingClientRect: () => {
+                              return {width: 20}
+                           }
+                        },
+                        {
+                           getBoundingClientRect: () => {
+                              return {width: 21}
+                           }
+                        },
+                        {
+                           getBoundingClientRect: () => {
+                              return {width: 22}
+                           }
+                        },
+                        {
+                           getBoundingClientRect: () => {
+                              return {width: 23}
+                           }
+                        },
+                     ];
+                  }
                }
             }
          };
@@ -276,9 +306,67 @@ define(['Controls/grid'], function(gridMod) {
          gridView._listModel.getHeader = () => null;
          assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['21px', '22px', '1fr']);
 
+         testFallback = true;
+         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['21px', '22px', '1fr']);
+
          gridView._listModel.getCount = () => 0;
          gridView._listModel.getHeader = () => null;
          assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['1fr', 'auto', '1fr']);
+      });
+
+      it('getNoColspanRowCells', () => {
+         const
+            row1 = [{}],
+            row2 = [{}, {}],
+            row3 = [{}, {}, {}],
+            container = {
+               querySelectorAll: (selector) => {
+                  if (selector.indexOf('data-r="0"') >= 0) {
+                     return row1;
+                  } else if (selector.indexOf('data-r="1"') >= 0) {
+                     return row2;
+                  } else if (selector.indexOf('data-r="2"') >= 0) {
+                     return row3;
+                  }
+                  return [];
+               }
+            };
+
+         assert.strictEqual(
+            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}], false),
+            row1,
+            'failed scenario: 1 column, no multiselect'
+         );
+
+         assert.strictEqual(
+            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}], true),
+            row2,
+            'failed scenario: 1 column, multiselect'
+         );
+
+         assert.strictEqual(
+            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}], false),
+            row2,
+            'failed scenario: 2 columns, no multiselect'
+         );
+
+         assert.strictEqual(
+            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}, {}], false),
+            row3,
+            'failed scenario: 3 columns, no multiselect'
+         );
+
+         assert.deepEqual(
+            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}, {}], true),
+            [],
+            'failed scenario: 3 column, multiselect (more columns than exist in the grid)'
+         );
+
+         assert.deepEqual(
+            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}, {}, {}], false),
+            [],
+            'failed scenario: 4 columns, no multiselect (more columns than exist in the grid)'
+         );
       });
 
       it('_setHeaderWithHeight', function () {
