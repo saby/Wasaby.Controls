@@ -40,11 +40,10 @@ const DialogTemplate = Control.extend({
      * @name Controls/_popupTemplate/Dialog#headingCaption
      * @cfg {String} Заголовок диалогового окна.
      */
-
-   /*
-    * @name Controls/_popupTemplate/Dialog#headingCaption
-    * @cfg {String} Header title.
-    */
+    /*
+     * @name Controls/_popupTemplate/Dialog#headingCaption
+     * @cfg {String} Header title.
+     */
 
     /**
      * @name Controls/_popupTemplate/Dialog#headingStyle
@@ -65,10 +64,10 @@ const DialogTemplate = Control.extend({
      * @name Controls/_popupTemplate/Dialog#headerContentTemplate
      * @cfg {function|String} Контент, отображаемый между заголовком и кнопкой, закрывающей окно.
      */
-   /*
-    * @name Controls/_popupTemplate/Dialog#headerContentTemplate
-    * @cfg {function|String} The content between the header and the cross closure.
-    */
+    /*
+     * @name Controls/_popupTemplate/Dialog#headerContentTemplate
+     * @cfg {function|String} The content between the header and the cross closure.
+     */
 
     /**
      * @name Controls/_popupTemplate/Dialog#bodyContentTemplate

@@ -52,7 +52,6 @@ import 'css!theme?Controls/popupTemplate';
           * @variant success
           * @variant danger
           */
-
          /*
           * @name Controls/_popupTemplate/Confirmation#style
           * @cfg {String} Confirmation display style
@@ -65,7 +64,6 @@ import 'css!theme?Controls/popupTemplate';
           * @name Controls/_popupTemplate/Confirmation#bodyContentTemplate
           * @cfg {function|String} Основной контент окна диалога.
           */
-
          /*
           * @name Controls/_popupTemplate/Confirmation#bodyContentTemplate
           * @cfg {function|String} Main content.
@@ -75,8 +73,7 @@ import 'css!theme?Controls/popupTemplate';
           * @name Controls/_popupTemplate/Confirmation#footerContentTemplate
           * @cfg {function|String} Контент футера окна диалога.
           */
-
-         /**
+         /*
           * @name Controls/_popupTemplate/Confirmation#footerContentTemplate
           * @cfg {function|String} Content at the bottom of the confirm panel.
           */
