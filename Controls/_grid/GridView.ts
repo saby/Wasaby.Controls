@@ -136,7 +136,14 @@ var
                 return self._options.columns.map((column) => column.width || '1fr');
             }
 
-            cells = container.getElementsByClassName(hasHeader ? 'controls-Grid__header-cell' : 'controls-Grid__row-cell');
+            if (hasHeader) {
+                cells = container.getElementsByClassName('controls-Grid__header-cell');
+            } else {
+                cells = _private.getNoColspanRowCells(self, container, self._options.columns, hasMultiselect);
+                if (cells.length === 0) {
+                    cells = container.getElementsByClassName('controls-Grid__row-cell');
+                }
+            }
 
             self._options.columns.forEach((column, index: number) => {
                 const realIndex = index + (hasMultiselect ? 1 : 0);
@@ -147,6 +154,19 @@ var
             });
 
             return columnsWidths;
+        },
+
+        getNoColspanRowCells: function(self, container, columnsCfg, hasMultiselect) {
+            const totalColumns = columnsCfg.length + (hasMultiselect ? 1 : 0);
+            let currentRow = 0;
+            let cells = [];
+
+            do {
+                cells = container.querySelectorAll(`.controls-Grid__row-cell[data-r="${currentRow}"]`);
+                ++currentRow;
+            } while (cells.length > 0 && cells.length < totalColumns);
+
+            return cells;
         }
     },
     GridView = ListView.extend({
