@@ -1498,6 +1498,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel.resetColgroupColumns();
             assert.equal(0, gridViewModel._curColgroupColumnIndex, 'Incorrect value "_curColgroupColumnIndex" after "resetColgroupColumns()".');
          });
+         it('getColspanForNoGridSupport', function() {
+            assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('hidden', true), 1);
+            assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('hidden', false), 1);
+            assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('visible', true), 2);
+            assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('visible', false), 1);
+         });
          it('getColspanStyles', function() {
             assert.equal(
                gridMod.GridViewModel._private.getColspanStyles('hidden', 0, 2),
