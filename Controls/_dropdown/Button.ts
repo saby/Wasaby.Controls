@@ -127,7 +127,7 @@ Button.getDefaultOptions = function () {
       size: 'm',
       iconStyle: 'secondary',
       transparent: true,
-      lazyItemsLoad: true
+      lazyItemsLoad: false
    };
 };
 
