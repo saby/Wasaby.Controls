@@ -1,5 +1,5 @@
 <div
-   attr:class="controls-ListRender__item controls-ListRender__item-highlightOnHover">
+   attr:class="controls-ListRender__item controls-ListRender__item-highlightOnHover controls-ListView__item_showActions">
    <ws:if data="{{ multiSelectVisibility !== 'hidden' }}">
       <ws:partial template="{{ multiSelectTpl }}" attr:class="{{ item.getMultiSelectClasses() }}">
          <ws:templateOptions multiSelectStatus="{{ item.isSelected() }}" key="{{ item.getContents().getId() }}"/>
@@ -19,8 +19,9 @@
          <ws:partial
             template="{{ itemActionsTemplate }}"
             itemActionsClass="{{ itemActionsClass }}"
-            itemData="{{ item }}"
-            highlightOnHover="{{ true }}" />
+            item="{{ item }}"
+            highlightOnHover="{{ true }}"
+            size="s" />
       </ws:if>
    </ws:if>
 </div>
