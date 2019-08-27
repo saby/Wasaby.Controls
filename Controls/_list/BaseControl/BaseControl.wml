@@ -21,7 +21,12 @@
     <ws:if data="{{_pagingNavigation && _pagingNavigationVisible}}">
         <div class="controls-BaseControl__footerPaging_wrapper">
             <ws:if data="{{_pagingLabelData}}">
-                <div class="controls-BaseControl_paging-label">Всего {{_pagingLabelData.totalItemsCount}}</div>
+                <ws:if data="{{_options.navigation.viewConfig.detailedLabel}}">
+                    <div class="controls-BaseControl_paging-label">{{_pagingLabelData.firstItemNumber}} - {{_pagingLabelData.lastItemNumber}} из {{_pagingLabelData.totalItemsCount}}, по {{_pagingLabelData.pageSize}}</div>
+                </ws:if>
+                <ws:else>
+                    <div class="controls-BaseControl_paging-label">Всего {{_pagingLabelData.totalItemsCount}}</div>
+                </ws:else>
             </ws:if>
             <Controls.paging:Paging attr:class="controls-BaseControl__footerPaging"
                                     showDigits = "{{!_options.navigation.sourceConfig.hasMore}}"
