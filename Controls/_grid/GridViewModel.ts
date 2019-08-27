@@ -1670,6 +1670,14 @@ var
             return item === currentGroupItems[0].getContents();
         },
 
+        markItemReloaded: function(key) {
+            this._model.markItemReloaded(key);
+        },
+
+        clearReloadedMarks: function() {
+            this._model.clearReloadedMarks();
+        },
+
         destroy: function() {
             this._model.unsubscribe('onListChange', this._onListChangeFn);
             this._model.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);

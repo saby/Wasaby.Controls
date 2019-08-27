@@ -1312,6 +1312,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _resetScrollAfterReload: false,
 
+    _itemReloaded: false,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1534,13 +1536,21 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         let filter;
         let itemsCount;
 
-        function loadCallback(item):void {
+        const loadCallback = (item): void => {
             if (replaceItem) {
                 items.replace(item, currentItemIndex);
             } else {
                 items.at(currentItemIndex).merge(item);
             }
-        }
+
+            // New item has a version of 0. If the replaced item has the same
+            // version, it will not be redrawn. Notify the model that the
+            // item was reloaded to force its redraw.
+            if (item && item.getId) {
+                this._listViewModel.markItemReloaded(item.getId());
+                this._itemReloaded = true;
+            }
+        };
 
         if (currentItemIndex === -1) {
             throw new Error('BaseControl::reloadItem no item with key ' + key);
@@ -1716,6 +1726,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             } else if (!this._sourceController.isLoading() && this._loadingState === 'all') {
                 _private.hideIndicator(this);
             }
+        }
+
+        // After update the reloaded items have been redrawn, clear
+        // the marks in the model
+        if (this._itemReloaded) {
+            this._listViewModel.clearReloadedMarks();
+            this._itemReloaded = false;
         }
     },
 
