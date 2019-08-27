@@ -64,7 +64,14 @@ interface IPosition {
          if (position.hasOwnProperty(isHorizontal ? 'right' : 'bottom')) {
             return popupCfg.sizes[isHorizontal ? 'width' : 'height'] - (_private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll']);
          }
-         return position[isHorizontal ? 'left' : 'top'] + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+         let taskBarKeyboardIosHeight = 0;
+         // Над клавой в ios может быть показана управляющая панель высотой 30px (задается в настройках ios).
+         // У нас нет никакой инфы про ее наличие и/или высоту.
+         // Единственное решение учитывать ее всегда и поднимать окно от низа экрана на 30px.
+         if (!isHorizontal && TouchKeyboardHelper.isKeyboardVisible(true)) {
+            taskBarKeyboardIosHeight = 30;
+         }
+         return position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
       },
 
       invertPosition: function(popupCfg, direction) {
