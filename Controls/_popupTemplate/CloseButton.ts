@@ -40,11 +40,11 @@ import Env = require('Env/Env');
     * @example
     * Отображение в виде ссылки:
     * <pre>
-    *    <Controls.buttons:Button.Close viewMode="link" size="l"/>
+    *    <Controls.popupTemplate:CloseButton viewMode="link" size="l"/>
     * </pre>
     * Отображение как кнопки панели инструментов:
     * <pre>
-    *    <Controls.buttons:Button.Close viewMode="toolButton" size="l"/>
+    *    <Controls.popupTemplate:CloseButton viewMode="toolButton" size="l"/>
     * </pre>
     */
 
@@ -57,11 +57,11 @@ import Env = require('Env/Env');
     * @example
     * Close button display as link.
     * <pre>
-    *    <Controls.buttons:Button.Close viewMode="link" size="l"/>
+    *    <Controls.popupTemplate:CloseButton viewMode="link" size="l"/>
     * </pre>
     * Close button display as toolButton.
     * <pre>
-    *    <Controls.buttons:Button.Close viewMode="toolButton" size="l"/>
+    *    <Controls.popupTemplate:CloseButton viewMode="toolButton" size="l"/>
     * </pre>
     */
 
@@ -74,11 +74,11 @@ import Env = require('Env/Env');
     * @example
     * Кнопка "Закрыть" с прозрачным фоном:
     * <pre>
-    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{true}}" size="l"/>
+    *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{true}}" size="l"/>
     * </pre>
     * Кнопка "Закрыть" с фоном кнопки панели инструментов.
     * <pre>
-    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{false}}" size="l"/>
+    *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{false}}" size="l"/>
     * </pre>
     */
 
@@ -91,11 +91,11 @@ import Env = require('Env/Env');
     * @example
     * Close button has transparent background.
     * <pre>
-    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{true}}" size="l"/>
+    *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{true}}" size="l"/>
     * </pre>
     * Close button has toolButton's background.
     * <pre>
-    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{false}}" size="l"/>
+    *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{false}}" size="l"/>
     * </pre>
     */
 
@@ -110,11 +110,11 @@ import Env = require('Env/Env');
     * @example
     * Устанавливается средний размер кнопки:
     * <pre>
-    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{true}}" size="l"/>
+    *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{true}}" size="l"/>
     * </pre>
     * Устанавливается большой размер кнопки:
     * <pre>
-    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{false}}" size="m"/>
+    *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{false}}" size="m"/>
     * </pre>
     */
 
@@ -129,11 +129,11 @@ import Env = require('Env/Env');
     * @example
     * Close button has l size.
     * <pre>
-    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{true}}" size="l"/>
+    *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{true}}" size="l"/>
     * </pre>
     * Close button has m size.
     * <pre>
-    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{false}}" size="m"/>
+    *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{false}}" size="m"/>
     * </pre>
     */
 
