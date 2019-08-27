@@ -2,10 +2,24 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_popupTemplate/CloseButton/CloseButton');
 import Env = require('Env/Env');
    /**
+    * Кнопка для закрытия всплывающих окон и диалогов.
+    *
+    * <a href="/materials/demo-ws4-buttons">Демо-пример</a>.
+    *
+    * @class Controls/_popupTemplate/CloseButton
+    * @extends Core/Control
+    * @control
+    * @public
+    * @author Красильников А.С.
+    * @demo Controls-demo/Buttons/Close/CloseDemo
+    * @mixes Controls/_buttons/interface/IClick
+    *
+    */
+
+   /*
     * Specialized type of button for closing windows.
     *
     * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
-    *
     *
     * @class Controls/_popupTemplate/CloseButton
     * @extends Core/Control
@@ -18,6 +32,23 @@ import Env = require('Env/Env');
     */
 
    /**
+    * @name Controls/_popupTemplate/CloseButton#viewMode
+    * @cfg {String} Устанавливает вид отображения кнопки.
+    * @variant toolButton Отображение как кнопки панели инструментов.
+    * @variant link Отображение кнопки в виде ссылки.
+    * @default toolButton
+    * @example
+    * Отображение в виде ссылки:
+    * <pre>
+    *    <Controls.buttons:Button.Close viewMode="link" size="l"/>
+    * </pre>
+    * Отображение как кнопки панели инструментов:
+    * <pre>
+    *    <Controls.buttons:Button.Close viewMode="toolButton" size="l"/>
+    * </pre>
+    */
+
+   /*
     * @name Controls/_popupTemplate/CloseButton#viewMode
     * @cfg {String} Close button display view mode.
     * @variant toolButton  Close display style as button toolButton.
@@ -36,6 +67,23 @@ import Env = require('Env/Env');
 
    /**
     * @name Controls/_popupTemplate/CloseButton#transparent
+    * @cfg {String} Определяет цвет кнопки.
+    * @variant true Кнопке будет установлен прозрачный фон.
+    * @variant false Кнопке будет установлен фон кнопки панели инструментов.
+    * @default true
+    * @example
+    * Кнопка "Закрыть" с прозрачным фоном:
+    * <pre>
+    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{true}}" size="l"/>
+    * </pre>
+    * Кнопка "Закрыть" с фоном кнопки панели инструментов.
+    * <pre>
+    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{false}}" size="l"/>
+    * </pre>
+    */
+
+   /*
+    * @name Controls/_popupTemplate/CloseButton#transparent
     * @cfg {String} Determines whether close button background color.
     * @variant true Close button has transparent background.
     * @variant false Close button has their viewmode's background.
@@ -52,6 +100,25 @@ import Env = require('Env/Env');
     */
 
    /**
+    * @name Controls/_popupTemplate/CloseButton#size
+    * @cfg {String} Устанавливает размер кнопки. Используется общепринятая нотация.
+    * @variant l Средний размер кнопки.
+    * @variant m Большой размер кнопки.
+    * @default m
+    * @remark
+    * Размер устанавливается только для кнопок вида toolButton.
+    * @example
+    * Устанавливается средний размер кнопки:
+    * <pre>
+    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{true}}" size="l"/>
+    * </pre>
+    * Устанавливается большой размер кнопки:
+    * <pre>
+    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{false}}" size="m"/>
+    * </pre>
+    */
+
+   /*
     * @name Controls/_popupTemplate/CloseButton#size
     * @cfg {String} Close button size. The value is given by common size notations.
     * @variant l Medium button size.
