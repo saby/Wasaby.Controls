@@ -1,10 +1,11 @@
 /**
  * Created by as.krasilnikov on 26.12.2017.
  */
-import {ItemsViewModel, BaseViewModel, ItemsUtil, getStyle} from 'Controls/list';
-import entity = require('Types/entity');
+import {BaseViewModel, getStyle, ItemsUtil, ItemsViewModel} from 'Controls/list';
 import {factory} from 'Types/chain';
-      var _private = {
+import entity = require('Types/entity');
+
+var _private = {
          filterHierarchy: function(item) {
             var parent;
             if (!this._options.parentProperty || !this._options.nodeProperty || !item.get) {
@@ -251,7 +252,7 @@ import {factory} from 'Types/chain';
                var emptyItem = {};
                var itemData = {};
                itemData[this._options.displayProperty] = this._options.emptyText;
-               itemData[this._options.keyProperty] = this._options.emptyKey || null;
+               itemData[this._options.keyProperty] = this._options.emptyKey !== undefined ? this._options.emptyKey : null;
                var item = new entity.Model({
                   rawData: itemData
                });
