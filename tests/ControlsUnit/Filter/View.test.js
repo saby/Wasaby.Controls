@@ -411,6 +411,8 @@ define(
          });
 
          it('_private:updateHistory', function() {
+            let view = getView(defaultConfig);
+            view._source = defaultConfig.source;
             let resultHistoryItems, resultMeta;
             let source = new history.Source({
                originSource: new sourceLib.Memory({
@@ -425,8 +427,16 @@ define(
                resultHistoryItems = historyItems;
                resultMeta = meta;
             };
+            view._source[0].editorOptions.source = source;
+            view._configs = {
+               document: {
+                  items: Clone(defaultItems[0]),
+                  displayProperty: 'title',
+                  keyProperty: 'id'
+               }
+            };
             let items = [{key: 1}];
-            filter.View._private.updateHistory({}, items, source);
+            filter.View._private.updateHistory(view, 'document', items);
             assert.deepEqual(resultHistoryItems, items);
             assert.deepEqual(resultMeta, {$_history: true});
          });

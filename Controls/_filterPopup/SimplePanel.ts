@@ -1,6 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/SimplePanel/SimplePanel');
 import * as defaultItemTemplate from 'wml!Controls/_filterPopup/SimplePanel/itemTemplate';
+import Merge = require('Core/core-merge');
 
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
@@ -21,7 +22,12 @@ import {dropdownHistoryUtils as historyUtils} from "Controls/dropdown";
 
 var _private = {
     loadItems: function(config) {
-        let filter = historyUtils.getSourceFilter(config.filter, config.source);
+        let filter;
+        if (config.nodeProperty) {
+            filter = Merge(config.filter, {historyId: config.historyId});
+        } else {
+            filter = historyUtils.getSourceFilter(config.filter, config.source);
+        }
         return config.sourceController.load(filter).addCallback((items) => {
             return items;
         });

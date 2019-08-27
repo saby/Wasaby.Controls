@@ -354,6 +354,11 @@ var _private = {
          };
          chain.factory(data).each(function(item) {
             historyData.ids.push(item.get(_private.getKeyProperty(self)));
+
+            // TODO Delete after https://online.sbis.ru/opendoc.html?guid=77601764-a451-4da1-8afb-89ce1161b96f
+            if (meta.parentId) {
+               _private.getSourceByMeta(self, meta).update({id: item.get(_private.getKeyProperty(self))}, meta);
+            }
          });
          _private.resolveRecent(self, data);
       } else {
@@ -362,7 +367,9 @@ var _private = {
       }
 
       self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
-      return _private.getSourceByMeta(self, meta).update(historyData, meta);
+      if (!meta.parentId) { // TODO Delete after https://online.sbis.ru/opendoc.html?guid=77601764-a451-4da1-8afb-89ce1161b96f
+         return _private.getSourceByMeta(self, meta).update(historyData, meta);
+      }
    },
 
    getRawHistoryItem: function (self, id, hId) {
@@ -417,7 +424,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
       return _private.getSourceByMeta(this, meta).read(key, meta);
    },
 
-   update: function (data, meta, historyId?) {
+   update: function (data, meta) {
       var self = this;
       if (meta.hasOwnProperty('$_pinned')) {
          return Deferred.success(_private.updatePinned(self, data, meta));
@@ -425,7 +432,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
       if (meta.hasOwnProperty('$_history')) {
          return Deferred.success(_private.updateRecent(self, data, meta));
       }
-      return _private.getSourceByMeta(this, meta).update(data, meta, historyId);
+      return _private.getSourceByMeta(this, meta).update(data, meta);
    },
 
    destroy: function (keys, meta) {

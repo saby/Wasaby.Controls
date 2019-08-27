@@ -129,14 +129,6 @@ var _private = {
         return folders;
     },
 
-    getDisplay: function(textArr) {
-        return {
-            text: textArr[0] || '',
-            title: textArr.join(', '),
-            hasMoreText: textArr.length > 1 ? ', ' + rk('еще ') + (textArr.length - 1) : ''
-        };
-    },
-
     getFastText: function(config, selectedKeys) {
         var textArr = [];
         if (selectedKeys[0] === null && config.emptyText) {
@@ -148,15 +140,11 @@ var _private = {
                 }
             });
         }
-        return textArr;
-    },
-
-    getHierarchyFastText: function(config, selectedKeys) {
-        let textArr = [];
-        factory(selectedKeys).each((sKey, index) => {
-            textArr = textArr.concat(_private.getFastText(config, sKey));
-        });
-        return _private.getDisplay(textArr);
+        return {
+            text: textArr[0] || '',
+            title: textArr.join(', '),
+            hasMoreText: textArr.length > 1 ? ', ' + rk('еще ') + (textArr.length - 1) : ''
+        };
     },
 
     getFilterButtonText: function(self, items) {
@@ -178,11 +166,8 @@ var _private = {
                 self._displayText[item.name] = {};
                 if (_private.isItemChanged(item)) {
                     var sKey = configs[item.name].multiSelect ? item.value : [item.value];
-                    if (configs[item.name].parentProperty) {
-                        self._displayText[item.name] = _private.getHierarchyFastText(configs[item.name], sKey);
-                    } else {
-                        self._displayText[item.name] = _private.getDisplay(_private.getFastText(configs[item.name], sKey));
-                    }
+                    let flatSelectedKeys = factory(sKey).flatten().value();
+                    self._displayText[item.name] = _private.getFastText(configs[item.name], flatSelectedKeys);
                     if (item.textValue !== undefined) {
                         item.textValue = self._displayText[item.name].text + self._displayText[item.name].hasMoreText;
                     }
@@ -200,7 +185,8 @@ var _private = {
 
     getLoadKeys: function(config, value) {
         let selectedKeys = value instanceof Array ? value : [value];
-        return factory(selectedKeys).filter((key) => {
+        let flattenKeys = factory(selectedKeys).flatten().value();
+        return factory(flattenKeys).filter((key) => {
             if (key !== undefined && !config.items.getRecordById(key) && !(key === null && config.emptyText)) {
                 return key;
             }
@@ -353,8 +339,12 @@ var _private = {
 
     getSelectedItems: function(items, selectedKeys) {
         let selectedItems = [];
-        factory(selectedKeys).each((key) => {
-            selectedItems.push(items.getRecordById(key));
+        let flatKeys = factory(selectedKeys).flatten().value();
+
+        factory(flatKeys).each((selectedKey) => {
+            if (items.getRecordById(selectedKey)) {
+                selectedItems.push(items.getRecordById(selectedKey));
+            }
         });
         return selectedItems;
     },
@@ -404,8 +394,8 @@ var _private = {
         } else {
             curConfig.items.prepend(newItems);
             _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
-            _private.updateText(this, this._source, this._configs);
         }
+        _private.updateText(this, this._source, this._configs);
     },
 
     moreButtonClick: function(result) {
@@ -429,17 +419,17 @@ var _private = {
 
     updateHierarchyHistory: function(currentFilter, selectedItems, source) {
         if (currentFilter.nodeProperty) {
-            let folders = _private.getFolders(currentFilter.items, currentFilter.nodeProperty);
-            let folderIds = factory(folders).map((folder) => {return folder.getId()}).toArray();
+            let folderIds = _private.getFolderIds(currentFilter.items, currentFilter.nodeProperty, currentFilter.keyProperty);
             factory(folderIds).each((folderId) => {
-                let hId = source.historySource.getHistoryId() + folderId;
                 let historyItems = [];
                 factory(selectedItems).each((item) => {
-                    if (item.get(currentFilter.parentProperty) === folderId || item.get(currentFilter.nodeProperty) === folderId) {
+                    if (item.get(currentFilter.parentProperty) === folderId || item.get(currentFilter.keyProperty) === folderId) {
                         historyItems.push(item);
                     }
                 });
-                source.update(historyItems, historyUtils.getMetaHistory(), hId);
+                if (historyItems.length) {
+                    source.update(historyItems, Merge(historyUtils.getMetaHistory(), {parentId: folderId}));
+                }
             });
         }
     },
