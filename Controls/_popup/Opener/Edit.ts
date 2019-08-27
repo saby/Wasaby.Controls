@@ -166,11 +166,18 @@ import Deferred = require('Core/Deferred');
          isOpened: function() {
             return this._children.Opener.isOpened();
          },
-
+         /**
+          * @typedef {Object} additionalData
+          * @property {Boolean} isNewRecord Flag that determines what record is it.
+          * @property {String} key Key of record
+          */
          _onResult: function(data) {
             if (data && data.formControllerEvent) {
                /**
                 * @event Controls/_popup/Opener/Edit#beforeItemEndEdit The event is called before the synchronization with the recordset.
+                * @param {String} formControllerEvent Name of event from formController(update, create, delete)
+                * @param {Object} record Data from formController
+                * @param {additionalData} additionalData Additional data from formController
                 */
                var eventResult = this._notify('beforeItemEndEdit', [data.formControllerEvent, data.record, data.additionalData || {}], { bubbling: true });
                var self = this;
