@@ -338,12 +338,14 @@ export = Sticky;
  * @typedef {Enum} vertical
  * @variant top
  * @variant bottom
+ * @variant center
  */
 
 /**
  * @typedef {Enum} horizontal
  * @variant left
  * @variant right
+ * @variant center
  */
 
 /**
