@@ -1,6 +1,6 @@
-import {Control, IControlOptions} from 'UI/Base';
+import {Control} from 'UI/Base';
 
-class ListenerUtils extends Control {
+class ListenerUtils {
     //It is listener without template, because additional <div> can affects on display of the content.
     static register(instance: Control, event: String, callback: Function) {
         instance._notify('register', [event, instance, callback], {bubbling: true});
