@@ -141,6 +141,8 @@ var
             } else {
                 cells = _private.getNoColspanRowCells(self, container, self._options.columns, hasMultiselect);
                 if (cells.length === 0) {
+                    // If we were unable to find a row with no colspan cells, fallback to the previous
+                    // getElementsByClassName solution
                     cells = container.getElementsByClassName('controls-Grid__row-cell');
                 }
             }
@@ -156,11 +158,24 @@ var
             return columnsWidths;
         },
 
+        // TODO Kingo
+        // В IE для колонок строки редактирования в гриде нужно установить фиксированную ширину,
+        // чтобы она отображалась правильно. Для этого мы измеряем текущую ширину колонок в другой
+        // строке грида.
+        // Но первую попавшуюся строку взять нельзя - в ней могут быть колонки с colspan'ом, тогда
+        // их ширина будет отличаться, ее использовать нельзя.
+        // getNoColspanRowCells ищет в гриде строку, в которой нет колонок с colspan'ом, и возвращает
+        // ее колонки.
         getNoColspanRowCells: function(self, container, columnsCfg, hasMultiselect) {
             const totalColumns = columnsCfg.length + (hasMultiselect ? 1 : 0);
             let currentRow = 0;
             let cells = [];
 
+            // Из columnsCfg мы знаем, сколько колонок на самом деле в гриде (+1 если есть столбец
+            // множественного выбора). Перебираем все строки грида, пока не найдем ту, в которой
+            // будет нужное число колонок. Если их меньше нужного, значит какая-то из них имеет colspan,
+            // такую строку пропускаем.
+            // Если в какой-то строке получили 0 колонок, значит дошли до конца грида.
             do {
                 cells = container.querySelectorAll(`.controls-Grid__row-cell[data-r="${currentRow}"]`);
                 ++currentRow;
