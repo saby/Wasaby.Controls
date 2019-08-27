@@ -319,7 +319,7 @@ define([
          assert.isTrue(isNotifyClosePopup);
       });
 
-      it('resetInputValue', function() {
+      it('private:resetInputValue', function() {
          var
             isValueChanged = false,
             self = {
@@ -338,6 +338,31 @@ define([
          Lookup._private.resetInputValue(self);
          assert.equal(self._inputValue, '');
          assert.isTrue(isValueChanged);
+      });
+
+      it('private:activate', function() {
+         let
+            isActivate = false,
+            self = {
+               _needSetFocusInInput: false,
+               _options: {
+                  multiSelect: false
+               },
+               activate: function(config) {
+                  assert.deepEqual(config, {enableScreenKeyboard: true});
+                  isActivate = true;
+               }
+            }
+
+         Lookup._private.activate(self);
+         assert.isFalse(isActivate);
+         assert.isTrue(self._needSetFocusInInput);
+
+         self._needSetFocusInInput = false;
+         self._options.multiSelect = true;
+         Lookup._private.activate(self);
+         assert.isTrue(isActivate);
+         assert.isFalse(self._needSetFocusInInput);
       });
 
       it('_isInputActive', function() {
