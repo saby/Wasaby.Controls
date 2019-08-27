@@ -1171,6 +1171,9 @@ var
         getSorting: function() {
             return this._model.getSorting();
         },
+        setEditingConfig: function(editingConfig) {
+            this._model.setEditingConfig(editingConfig);
+        },
 
         setItemPadding: function(itemPadding) {
             this._model.setItemPadding(itemPadding);

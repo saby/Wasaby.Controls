@@ -118,7 +118,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         this._reloadedKeys = {};
     },
-    setEditingConfig: function(editingConfig){
+    setEditingConfig: function(editingConfig) {
         this._options.editingConfig = editingConfig;
         this._nextModelVersion();
     },
