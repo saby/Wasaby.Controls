@@ -1942,6 +1942,7 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    setItemActions(item: CollectionItem<S>, actions: IItemActions): void {
       this._itemActionsManager.setItemActions(item, actions);
+      this._nextVersion();
    }
 
    getItemCounters(): ICollectionCounters[] {
