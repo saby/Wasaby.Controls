@@ -52,13 +52,13 @@ import Deferred = require('Core/Deferred');
                if (data.additionalData.isNewRecord) {
                   RecordSynchronizer.addRecord(data.record, data.additionalData, items);
                } else {
-                  instance.record = items.getRecordById(editKey);
+                  instance.record = items.getRecordById(editKey).clone();
                   RecordSynchronizer.mergeRecord(data.record, items, editKey);
                }
             } else if (data.formControllerEvent === 'delete') {
                RecordSynchronizer.deleteRecord(items, editKey);
             } else if (data.formControllerEvent === 'updateFailed') {
-               if (instance === undefined) {
+               if (instance.record === undefined) {
                   RecordSynchronizer.deleteRecord(items, editKey);
                } else {
                   RecordSynchronizer.mergeRecord(instance.record, items, editKey);
@@ -67,7 +67,7 @@ import Deferred = require('Core/Deferred');
          },
 
          getResultArgs: function(instance, data, RecordSynchronizer) {
-            return [RecordSynchronizer, data, instance._options.items, instance._linkedKey];
+            return [RecordSynchronizer, data, instance._options.items, instance._linkedKey, instance];
          },
          synchronize: function(instance, eventResult, data, Synchronizer) {
             if (cInstance.instanceOfModule(eventResult, 'Core/Deferred')) {
@@ -75,10 +75,10 @@ import Deferred = require('Core/Deferred');
 
                eventResult.addCallback(function(record) {
                   data.record = record;
-                  _private.processingResult.apply(_private, _private.getResultArgs(instance, data, Synchronizer), instance);
+                  _private.processingResult.apply(_private, _private.getResultArgs(instance, data, Synchronizer));
                });
             } else {
-               _private.processingResult.apply(_private, _private.getResultArgs(instance, data, Synchronizer), instance);
+               _private.processingResult.apply(_private, _private.getResultArgs(instance, data, Synchronizer));
             }
          },
          loadSynchronizer: function() {
