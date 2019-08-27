@@ -3764,6 +3764,7 @@ define([
                   assert.equal(item.get('id'), 1);
                   assert.equal(item.get('title'), 'Первый');
                   assert.isTrue(baseCtrl._sourceController.hasMoreData('down'), 'wrong navigation after reload item');
+                  assert.isTrue(baseCtrl._itemReloaded);
 
                   baseCtrl.reloadItem(1, null, true, 'query').addCallback(function(items) {
                      assert.isTrue(!!items.getCount);

@@ -89,6 +89,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _markedKey: null,
     _hoveredItem: null,
     _menuState: '',
+    _reloadedKeys: null,
 
     constructor: function(cfg) {
         var self = this;
@@ -106,6 +107,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         // TODO надо ли?
         _private.updateIndexes(self, 0, self.getCount());
+
+        this._reloadedKeys = {};
     },
     setItemPadding: function(itemPadding) {
         this._options.itemPadding = itemPadding;
@@ -232,6 +235,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
         if (this._selectedKeys && this._selectedKeys.hasOwnProperty(key)) {
             version = 'SELECTED_' + this._selectedKeys[key] + '_' + version;
+        }
+        if (this._reloadedKeys[key]) {
+            version = 'RELOADED_' + version;
         }
 
         return version;
@@ -622,6 +628,13 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
          }
          this._markedItem = this._display.at(this._selectedIndex);
          } */
+    },
+
+    clearReloadedMarks: function() {
+        this._reloadedKeys = {};
+    },
+    markItemReloaded: function(key) {
+        this._reloadedKeys[key] = true;
     }
 });
 
