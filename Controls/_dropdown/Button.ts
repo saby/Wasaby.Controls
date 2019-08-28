@@ -93,7 +93,7 @@ var Button = Control.extend({
    },
 
    _dataLoadCallback: function (items) {
-      this._hasChoice = items.getCount() > 1;
+      this._hasItems = items.getCount() > 0;
 
       if (this._options.dataLoadCallback) {
          this._options.dataLoadCallback(items);
