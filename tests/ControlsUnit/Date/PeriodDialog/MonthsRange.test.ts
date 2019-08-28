@@ -3,8 +3,7 @@ import MonthsRange from 'Controls/_datePopup/MonthsRange';
 import calendarTestUtils = require('ControlsUnit/Calendar/Utils');
 
 describe('Controls/_datePopup/MonthsRange', function() {
-   describe('Initialisation', function() {
-      [{
+   const selectionViewTypeTests = [{
          options: {},
          selectionViewType: MonthsRangeItem.SELECTION_VEIW_TYPES.days
       }, {
@@ -29,9 +28,23 @@ describe('Controls/_datePopup/MonthsRange', function() {
             endValue: new Date(2019, 1, 0)
          },
          selectionViewType: MonthsRangeItem.SELECTION_VEIW_TYPES.months
-      }].forEach(function(test) {
-         it(`should set proper model for options ${JSON.stringify(test.options)}.`, function() {
+      }];
+
+   describe('Initialisation', function() {
+      selectionViewTypeTests.forEach(function(test) {
+         it(`should set proper _selectionViewType for options ${JSON.stringify(test.options)}.`, function() {
             const component = calendarTestUtils.createComponent(MonthsRange, test.options);
+            assert.strictEqual(component._selectionViewType, test.selectionViewType);
+         });
+      });
+   });
+
+   describe('_beforeUpdate', function() {
+      selectionViewTypeTests.forEach(function(test) {
+         it(`should set proper _selectionViewType for options ${JSON.stringify(test.options)}.`, function() {
+            const component = calendarTestUtils.createComponent(MonthsRange, {});
+            component._beforeUpdate(calendarTestUtils.prepareOptions(
+                MonthsRange, { ...{ position: new Date(2019, 0)}, ...test.options }));
             assert.strictEqual(component._selectionViewType, test.selectionViewType);
          });
       });
