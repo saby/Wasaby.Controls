@@ -160,7 +160,7 @@ function toCssString(cssRules: Array<CssRule>): string {
 }
 
 function isCompatibleWidth(width: string | number): boolean {
-    return !!`${width}`.match(compatibleWidthRegExp);
+    return !!width && !!`${width}`.match(compatibleWidthRegExp);
 }
 
 const _cssTemplatesStyles = {

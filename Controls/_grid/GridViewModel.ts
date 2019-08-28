@@ -427,7 +427,7 @@ var
                 hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
                 columnsWidth = hasMultiselect ? ['max-content'] : [],
                 hasDynamicWidth = !!columns.find((column) => {
-                    return column.width && !GridLayoutUtil.isCompatibleWidth(column.width);
+                    return !GridLayoutUtil.isCompatibleWidth(column.width);
                 });
 
             if (!hasDynamicWidth) {
@@ -438,7 +438,29 @@ var
 
             return columnsWidth;
         },
+        getEditingRowStyles(self, itemData): string {
+            let editingRowStyles = '';
 
+            // TODO: KINGO
+            // В IE (едиственный поддерживаемый браузер с частичной поддержкой грида) обнаружился баг неясной природы.
+            // В IE, из-за особенностей вёрстки, строка редактирования это сабгрид.
+            // Для выравнивания колонок сабгрида строки редактирования, необходимо задать ему template-columns в px.
+            // При взятии ширины колонки у родительского грида, getBoundingClientRect возвращает неправильную ширину.
+            // Такое поведение встречается, только если задать -ms-grid-column-span !== 1.
+            // https://online.sbis.ru/opendoc.html?guid=e61af344-59d8-4bc2-9645-fcbac1ddd767
+
+            // Если единственное содержимое грида - это строка редактирования, то нужно растянуть строку по гриду,
+            // т.к. больше его некому растянуть.
+            // Также, если в таблице есть колонка чекбоксов (ее ширина задается как max-content), то попавшая на место
+            // первой ячейки строка редактирования, растянет всю колонку на ширину таблицы. Поэтому нужно ее заколспанить.
+            const colspan = ((self.getItems().getCount() || !!self.getHeader()) && self._options.multiSelectVisibility === 'hidden') ? 1 : self._columns.length;
+
+            editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
+            editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
+            editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, colspan);
+
+            return editingRowStyles;
+        },
         prepareItemDataForPartialSupport(self, itemData): void {
 
             /* When using a custom item template, the scope of the base template becomes the same as the scope of custom template.
@@ -453,27 +475,13 @@ var
             // In browsers with partial grid support grid requires explicit setting grid cell styles.
             if (!itemData.isGroup) {
 
-                itemData.getEditingRowStyles = function () {
-                    let editingRowStyles = '';
+                itemData.getEditingRowStyles = () => {
+                    if (!self.editingRowGridStyles) {
+                        self.editingRowGridStyles = _private.getEditingRowStyles(self, itemData);
+                    }
+                    return self.editingRowGridStyles;
+                };
 
-                    // TODO: KINGO
-                    // В IE (едиственный поддерживаемый браузер с частичной поддержкой грида) обнаружился баг неясной природы.
-                    // В IE, из-за особенностей вёрстки, строка редактирования это сабгрид.
-                    // Для выравнивания колонок сабгрида строки редактирования, необходимо задать ему template-columns в px.
-                    // При взятии ширины колонки у родительского грида, getBoundingClientRect возвращает неправильную ширину.
-                    // Такое поведение встречается, только если задать -ms-grid-column-span !== 1.
-                    // https://online.sbis.ru/opendoc.html?guid=e61af344-59d8-4bc2-9645-fcbac1ddd767
-
-                    // Если единственное содержимое грида - это строка редактирования, то нужно растянуть строку по гриду,
-                    // т.к. больше его некому растянуть.
-                    const colspan = (self.getItems().getCount() || !!self.getHeader()) ? 1 : self._columns.length;
-
-                    editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
-                    editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
-                    editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, colspan);
-
-                    return editingRowStyles;
-                }
             } else {
                 itemData.gridGroupStyles = GridLayoutUtil.toCssString([
                     {name: 'grid-row', value: itemData.rowIndex + 1},
@@ -1471,8 +1479,13 @@ var
         },
 
         _setEditingItemData: function (itemData) {
-            if (GridLayoutUtil.isPartialGridSupport() && itemData) {
-                itemData.rowIndex = itemData.index + this._getRowIndexHelper().getTopOffset();
+            if (GridLayoutUtil.isPartialGridSupport()) {
+                if (itemData) {
+                    itemData.rowIndex = itemData.index + this._getRowIndexHelper().getTopOffset();
+                    this.editingRowGridStyles = _private.getEditingRowStyles(this, itemData);
+                } else {
+                    this.editingRowGridStyles = null;
+                }
             }
             this._model._setEditingItemData(itemData);
         },
