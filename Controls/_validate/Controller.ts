@@ -5,7 +5,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import getZIndex = require('Controls/Utils/getZIndex');
-import {default as ListenerUtils} from 'Controls/_event/ListenerUtils';
+import ListenerUtils = require ('Controls/event');
 import errorMessage = require('wml!Controls/_validate/ErrorMessage');
 import 'css!theme?Controls/validate';
 
