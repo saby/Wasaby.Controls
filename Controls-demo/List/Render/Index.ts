@@ -2,6 +2,7 @@ import { Control, TemplateFunction } from 'UI/Base';
 import template = require('wml!Controls-demo/List/Render/Render');
 
 import { Memory } from 'Types/source';
+import { SyntheticEvent } from 'Vdom/Vdom';
 
 interface IListItem {
     key: number;
@@ -15,6 +16,7 @@ export default class RenderDemo extends Control {
 
     private _nextKey: number = 0;
     private _viewSource: Memory;
+    private _multiSelectVisibility: string = 'hidden';
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
@@ -24,8 +26,30 @@ export default class RenderDemo extends Control {
     }
 
     protected _afterMount(): void {
-        // remove after debugging
+        // remove all after debugging
         window.model = this._children.listView._children.listControl._children.baseControl.getViewModel();
+
+        // setup item action
+        const itemAction = {
+            id: 1,
+            icon: 'icon-PhoneNull controls-itemActionsV__action_icon  icon-size',
+            title: 'phone',
+            style: 'success',
+            iconStyle: 'success',
+            showType: 0
+        };
+        window.model.each((item) => { window.model.setItemActions(item, { all: [itemAction], showed: [itemAction] }) });
+
+        // fix for multiselect breaking
+        window.model.updateSelection = function() {};
+
+        setTimeout(() => {
+            window.model._nextVersion();
+        }, 5);
+    }
+
+    private _changeMultiselect(e: SyntheticEvent<null>, visibility: string): void {
+        this._multiSelectVisibility = visibility;
     }
 
     private _generateListItems(count: number): IListItem[] {
