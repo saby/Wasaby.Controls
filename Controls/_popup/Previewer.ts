@@ -237,14 +237,31 @@ import 'css!theme?Controls/popup';
 
 /**
  * @name Controls/_popup/Previewer#content
+ * @cfg {Content} Контент, к которому добавлена ​​логика открытия и закрытия мини-карты.
+ */
+/*
+ * @name Controls/_popup/Previewer#content
  * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
  */
 
 /**
  * @name Controls/_popup/Previewer#template
+ * @cfg {Content} Содержимое мини-карты.
+ */
+/*
+ * @name Controls/_popup/Previewer#template
  * @cfg {Content} Mini card contents.
  */
 
+/**
+ * @name Controls/_popup/Previewer#trigger
+ * @cfg {String} Название события, которое запускает открытие или закрытие шаблона.
+ * @variant click Открытие кликом по контенту. Закрытие кликом "мимо" - не по контенту или шаблону.
+ * @variant demand Закрытие кликом по контенту или шаблону.
+ * @variant hover Открытие по ховеру - по наведению курсора на контент. Закрытие по ховеру - по навердению курсора на контент или шаблон.
+ * @variant hoverAndClick Открытие по клику или ховеру на контент. Закрытие по клику или или ховеру "мимо" - не по контенту или шаблону.
+ * @default hoverAndClick
+ */
 /**
  * @name Controls/_popup/Previewer#trigger
  * @cfg {String} Event name trigger the opening or closing of the template.
@@ -254,5 +271,4 @@ import 'css!theme?Controls/popup';
  * @variant hoverAndClick Opening by click or hover on the content. Closing by click or hover not on the content or template.
  * @default hoverAndClick
  */
-
 

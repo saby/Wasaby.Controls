@@ -8,7 +8,23 @@ import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
       /**
-       * The control opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, control synchronize editable entry with recordsets.
+       * Контрол, который открывает всплывающее окно с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ диалогом редактирования записи}.
+       * Когда в диалоге редактирования происходит действие с записью, управляйте синхронизацией редактируемой записи с рекордсетом.
+       * В зависимости от значения опции 'mode':
+       *  <li>'stack'  - используйте опции {@link Controls/popup:Stack}</li>
+       *  <li>'dialog' - используйте опции {@link Controls/popup:Dialog}</li>
+       *  <li>'sticky' - используйте опции {@link Controls/popup:Sticky}</li>
+       * <a href="/materials/demo-ws4-popup-edit">Демо-пример</a>
+       * @class Controls/_popup/Opener/Edit
+       * @control
+       * @public
+       * @author Красильников А.С.
+       * @demo Controls-demo/Popup/Edit/Opener
+       * @category Popup
+       */
+      /*
+       * The control opens a popup with a record editing dialog.
+       * When in the edit dialog the action takes place with the entry, control synchronize editable entry with recordsets.
        *  <li>If option 'mode' is set to 'stack' use {@link Controls/popup:Stack Stack options}</li>
        *  <li>If option 'mode' is set to 'dialog' use  {@link Controls/popup:Dialog Dialog options}</li>
        *  <li>If option 'mode' is set to 'sticky' use  {@link Controls/popup:Sticky Sticky options}</li>
@@ -107,6 +123,46 @@ import Deferred = require('Core/Deferred');
          },
 
          /**
+          * Открыть всплывающее окно диалога редактирования.
+          * @function Controls/_popup/Opener/Edit#open
+          * @param {Object} meta Данные для редактирования: key, record.
+          * @param {Object} popupOptions Опции всплывающего окна диалога редактирования.
+          * В зависимости от значения опции 'mode':
+          * <ul>
+          *     <li>'stack'  - смотреть {@link Controls/_popup/Opener/Stack/PopupOptions.typedef popupOptions стекового окна}</li>
+          *     <li>'dialog' - смотреть {@link Controls/_popup/Opener/Dialog/PopupOptions.typedef popupOptions диалогового окна}</li>
+          *     <li>'sticky' - смотреть {@link Controls/_popup/Opener/Sticky/PopupOptions.typedef popupOptions окна прилипающего блока}</li>
+          * </ul>
+          * @returns {undefined}
+          * @example
+          * wml
+          * <pre>
+          *     <Controls.popup:Edit name="EditOpener">
+          *        <ws:popupOptions template="Controls-demo/Popup/Edit/MyFormController">
+          *           <ws:templateOptions source="{{_viewSource}}" />
+          *        </ws:popupOptions>
+          *     </Controls.popup:Edit>
+          * </pre>
+          * js
+          * <pre>
+          *   Control.extend({
+          *        ...
+          *
+          *        _itemClick(event, record) {
+          *           var popupOptions = {
+          *              closeOnOutsideClick: false,
+          *           };
+          *
+          *           var meta = {
+          *              record: record,
+          *          };
+          *
+          *           this._children.EditOpener.open(meta, popupOptions);
+          *       }
+          *    });
+          * </pre>
+          */
+         /*
           * Open edit popup.
           * @function Controls/_popup/Opener/Edit#open
           * @param {Object} meta Data to edit: key, record.
@@ -151,6 +207,10 @@ import Deferred = require('Core/Deferred');
          },
 
          /**
+          * Закрыть всплывающее окно диалога редактирования.
+          * @function Controls/_popup/Opener/Edit#close
+          */
+         /*
           * Close popup
           * @function Controls/_popup/Opener/Edit#close
           */
@@ -159,6 +219,11 @@ import Deferred = require('Core/Deferred');
          },
 
          /**
+          * Состояние окна диалога редактирования.
+          * @function Controls/_popup/Opener/Edit#isOpened
+          * @returns {Boolean} всплывающее окно открыто.
+          */
+         /*
           * Popup opened status
           * @function Controls/_popup/Opener/Edit#isOpened
           * @returns {Boolean} is popup opened
@@ -212,10 +277,22 @@ import Deferred = require('Core/Deferred');
 /**
  * @name Controls/_popup/Opener/Edit#close
  * @function
+ * @description Закрыть окно редактирования.
+ */
+/**
+ * @name Controls/_popup/Opener/Edit#close
+ * @function
  * @description Close edit popup.
  */
 
 /**
+ * @name Controls/_popup/Opener/Edit#mode
+ * @cfg {Object} Устанавливает режим отображения диалога редактирования.
+ * @variant stack Отображение диалога в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ стековом окне}.
+ * @variant dialog Отображение диалога в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ диалоговом окне}.
+ * @variant sticky Отображение диалога в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ окне прилипающего блока}.
+ */
+/*
  * @name Controls/_popup/Opener/Edit#mode
  * @cfg {Object} Sets the display mode of the dialog.
  * @variant stack Open edit dialog in the stack panel.
@@ -224,6 +301,10 @@ import Deferred = require('Core/Deferred');
  */
 
 /**
+ * @name Controls/_popup/Opener/Edit#items
+ * @cfg {Object} Рекордсет для синхронизации с редактируемой записью.
+ */
+/*
  * @name Controls/_popup/Opener/Edit#items
  * @cfg {Object} RecordSet for synchronization with the editing record.
  */
