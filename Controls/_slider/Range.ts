@@ -19,6 +19,17 @@ export interface ISliderRangeOptions extends IControlOptions {
 const maxPercentValue = 100;
 
 /**
+ * Слайдер с двумя подвижными ползунками для выбора диапазона.
+ *
+ * <a href="/materials/demo-ws4-sliderrange">Демо-пример</a>.
+ * @public
+ * @extends Core/Control
+ * @class Controls/_slider/Range
+ * @author Колесов В.А.
+ * @demo Controls-demo/Slider/Range/SliderRangeDemo
+ */
+
+/*
  * Slider with two movable points for choosing range.
  *
  * <a href="/materials/demo-ws4-sliderrange">Demo-example</a>.
@@ -31,6 +42,16 @@ const maxPercentValue = 100;
 
 /**
  * @name Controls/_slider/Range#size
+ * @cfg {Boolean} Устанавливает размер ползунка слайдера. 
+ * @example
+ * Слайдер с диаметром ползунка = 12px
+ * <pre class="brush:html">
+ *   <Controls.slider:Base size="s"/>
+ * </pre>
+ */
+
+/*
+ * @name Controls/_slider/Range#size
  * @cfg {Boolean} sets the size of slider point
  * @example
  * Slider with diameter of point = 12px
@@ -41,15 +62,37 @@ const maxPercentValue = 100;
 
 /**
  * @name Controls/_slider/Range#borderVisible
+ * @cfg {Boolean} Устанавливает границу вокруг контрола.
+ * @example
+ * Слайдер с границей:
+ * <pre class="brush:html">
+ *   <Controls.slider:Base borderVisible="{{true}}"/>
+ * </pre>
+ */
+
+/*
+ * @name Controls/_slider/Range#borderVisible
  * @cfg {Boolean} sets the stroke around control
  * @example
  * Slider with border
  * <pre class="brush:html">
  *   <Controls.slider:Base borderVisible="{{true}}"/>
  * </pre>
- */
+ */ 
 
 /**
+ * @name Controls/_slider/Range#minValue
+ * @cfg {Number} Устанавливает минимальное значение слайдера.
+ * @remark Должно быть меньше, чем maxValue.
+ * @example
+ * Слайдер с границей:
+ * <pre class="brush:html">
+ *   <Controls.slider:Base minValue="{{10}}"/>
+ * </pre>
+ * @see maxValue
+ */
+
+/*
  * @name Controls/_slider/Range#minValue
  * @cfg {Number} sets the minimum value of slider
  * @remark must be less than maxValue
@@ -59,9 +102,21 @@ const maxPercentValue = 100;
  *   <Controls.slider:Base minValue="{{10}}"/>
  * </pre>
  * @see maxValue
- */
+ */ 
 
 /**
+ * @name Controls/_slider/Range#maxValue
+ * @cfg {Number} Устанавливает максимальное значение слайдера.
+ * @remark Должно быть больше, чем minValue.
+ * @example
+ * Слайдер с границей:
+ * <pre class="brush:html">
+ *   <Controls.slider:Base maxValue="{{100}}"/>
+ * </pre>
+ * @see minValue
+ */
+
+/*
  * @name Controls/_slider/Range#maxValue
  * @cfg {Number} sets the maximum value of slider
  * @remark must be greater than minValue
@@ -71,9 +126,20 @@ const maxPercentValue = 100;
  *   <Controls.slider:Base maxValue="{{100}}"/>
  * </pre>
  * @see minValue
- */
+ */ 
 
 /**
+ * @name Controls/_slider/Range#scaleStep
+ * @cfg {Number} Параметр scaleStep определяет шаг шкалы, расположенной под слайдером.
+ * @remark Шкала отображается только если borderVisible имеет значение false и scaleStep значение true.
+ * @example
+ * Слайдер со шкалой с шагом 20:
+ * <pre class="brush:html">
+ *   <Controls.slider:Base scaleStep="{{20}}"/>
+ * </pre>
+ */
+
+/*
  * @name Controls/_slider/Range#scaleStep
  * @cfg {Number} The scaleStep option determines the step in the scale grid under the slider
  * @remark Scale displayed only if borderVisible is false and scaleStep is positive.
@@ -82,9 +148,21 @@ const maxPercentValue = 100;
  * <pre class="brush:html">
  *   <Controls.slider:Base scaleStep="{{20}}"/>
  * </pre>
- */
+ */ 
 
 /**
+ * @name Controls/_slider/Range#startValue
+ * @cfg {Number} Устанавливает текущее начальное значение слайдера.
+ * @remark Должно находиться в диапазоне [minValue..maxValue]
+ * @example
+ * Слайдер с первым ползунком, установленном в положение 40:
+ * <pre class="brush:html">
+ *   <Controls.slider:Base startValue="{{40}}"/>
+ * </pre>
+ * @see endValue
+ */
+
+/*
  * @name Controls/_slider/Range#startValue
  * @cfg {Number} sets the current start value of slider
  * @remark Must be in range of [minValue..maxValue]
@@ -94,9 +172,21 @@ const maxPercentValue = 100;
  *   <Controls.slider:Base startValue="{{40}}"/>
  * </pre>
  * @see endValue
- */
+ */ 
 
 /**
+ * @name Controls/_slider/Range#endValue
+ * @cfg {Number} Устанавливает текущее конечное значение слайдера.
+ * @remark Должно находится в диапазоне [minValue..maxValue]
+ * @example
+ * Слайдер со вторым ползунком, установленном в положение 40;
+ * <pre class="brush:html">
+ *   <Controls.slider:Base endValue="{{40}}"/>
+ * </pre>
+ * @see startValue
+ */
+
+/*
  * @name Controls/_slider/Range#endValue
  * @cfg {Number} sets the current end value of slider
  * @remark Must be in range of [minValue..maxValue]
@@ -106,9 +196,20 @@ const maxPercentValue = 100;
  *   <Controls.slider:Base endValue="{{40}}"/>
  * </pre>
  * @see startValue
- */
+ */ 
 
 /**
+ * @name Controls/_slider/Range#precision
+ * @cfg {Number} Количество символов в десятичной части.
+ * @remark Должно быть неотрицательным.
+ * @example
+ * Слайдер с целыми значениями:
+ * <pre class="brush:html">
+ *   <Controls.slider:Base precision="{{0}}"/>
+ * </pre>
+ */
+
+/*
  * @name Controls/_slider/Range#precision
  * @cfg {Number} Number of characters in decimal part.
  * @remark Must be non-negative
@@ -117,7 +218,7 @@ const maxPercentValue = 100;
  * <pre class="brush:html">
  *   <Controls.slider:Base precision="{{0}}"/>
  * </pre>
- */
+ */ 
 class Range extends Control<ISliderRangeOptions> {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
