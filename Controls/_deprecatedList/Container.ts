@@ -1,16 +1,16 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_deprecatedList/Container');
+import merge = require('Core/core-merge');
+import Deferred = require('Core/Deferred');
+import cInstance = require('Core/core-instance');
+import clone = require('Core/core-clone');
 import {Memory, PrefetchProxy} from 'Types/source';
 import {_SearchController} from 'Controls/search';
-import merge = require('Core/core-merge');
 import {isEqual} from 'Types/object';
-import {SearchContextField, FilterContextField} from 'Controls/context';
-import Deferred = require('Core/Deferred');
+import {FilterContextField, SearchContextField} from 'Controls/context';
 import {Source} from 'Controls/history';
-import cInstance = require('Core/core-instance');
 import {RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
-import clone = require('Core/core-clone');
 
 var SEARCH_CONTEXT_FIELD = 'searchLayoutField';
 var SEARCH_VALUE_FIELD = 'searchValue';
@@ -66,12 +66,23 @@ var _private = {
 
       /* TODO will be a cached source */
       _private.cachedSourceFix(self);
-      self._source = new Memory({
+      const memorySource = new Memory({
          model: data.getModel(),
          idProperty: data.getIdProperty(),
          data: items,
          adapter: source.getAdapter()
       });
+
+      if (self._options.reverseList) {
+         self._source = memorySource;
+      } else {
+         self._source = new PrefetchProxy({
+            data: {
+               query: data
+            },
+            target: memorySource
+         });
+      }
    },
 
    reverseData: function(data, source) {
