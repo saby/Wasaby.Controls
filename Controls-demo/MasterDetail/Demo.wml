@@ -1,6 +1,7 @@
 <div>
    <h1>Двухколоночный браузер</h1>
-   <Controls.masterDetail:Base attr:class="controls-demo_MasterDetail controls-demo_First">
+   <h3>Ширина мастера может меняться от 200px до 50% контейнера. Начальная ширина 27%. </h3>
+   <Controls.masterDetail:Base attr:class="controls-demo_MasterDetail controls-demo_First" masterMinWidth="{{200}}" masterMaxWidth="50%" masterWidth="27%">
       <ws:master>
 
          <div>
@@ -50,7 +51,8 @@
          </div>
       </ws:detail>
    </Controls.masterDetail:Base>
-   <Controls.masterDetail:Base attr:class="controls-demo_MasterDetail controls-demo_Second">
+   <h3>Ширина мастера может меняться от 200px до 500px. Начальная ширина 27%. </h3>
+   <Controls.masterDetail:Base attr:class="controls-demo_MasterDetail controls-demo_Second"  masterMinWidth="{{200}}" masterMaxWidth="{{500}}" masterWidth="27%">
       <ws:master>
          <div>
             <div class="controls-demo_MasterDetail_master_search">
@@ -102,7 +104,8 @@
          </div>
       </ws:detail>
    </Controls.masterDetail:Base>
-   <Controls.masterDetail:Base attr:class="controls-demo_MasterDetail controls-demo_Third">
+   <h3>Ширина мастера может меняться от 10% до 50% контейнера. Начальная ширина 10%.</h3>
+   <Controls.masterDetail:Base attr:class="controls-demo_MasterDetail controls-demo_Third" masterMinWidth="10%" masterMaxWidth="50%" masterWidth="10%">
       <ws:master>
 
          <div>
