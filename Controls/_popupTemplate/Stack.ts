@@ -8,7 +8,7 @@ const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
 const DialogTemplate = Control.extend({
 
     /**
-     * Базовый шаблон стековой панели {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/#template-standart Подробнее}.
+     * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ стекового окна}.
      * @class Controls/_popupTemplate/Stack
      * @extends Core/Control
      * @control
@@ -17,7 +17,6 @@ const DialogTemplate = Control.extend({
      * @author Красильников А.С.
      * @demo Controls-demo/Popup/Templates/StackTemplatePG
      */
-
     /*
      * Base template of stack panel. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/#template-standart See more}.
      * @class Controls/_popupTemplate/Stack
@@ -33,7 +32,6 @@ const DialogTemplate = Control.extend({
      * @name Controls/_popupTemplate/Stack#headingCaption
      * @cfg {String} Текст заголовка.
      */
-
     /*
      * @name Controls/_popupTemplate/Stack#headingCaption
      * @cfg {String} Header title.
@@ -46,7 +44,6 @@ const DialogTemplate = Control.extend({
      * @variant primary
      * @variant info
      */
-
     /*
      * @name Controls/_popupTemplate/Stack#headingStyle
      * @cfg {String} Caption display style.
@@ -64,7 +61,6 @@ const DialogTemplate = Control.extend({
      * @variant xl
      * @default l
      */
-
     /*
      * @name Controls/_popupTemplate/Stack#headingSize
      * @cfg {String} Heading size.
@@ -79,7 +75,6 @@ const DialogTemplate = Control.extend({
      * @name Controls/_popupTemplate/Stack#headerContentTemplate
      * @cfg {function|String} Контент, располагающийся между заголовком и крестиком закрытия.
      */
-
     /*
      * @name Controls/_popupTemplate/Stack#headerContentTemplate
      * @cfg {function|String} The content between the header and the cross closure.
@@ -89,27 +84,24 @@ const DialogTemplate = Control.extend({
      * @name Controls/_popupTemplate/Stack#bodyContentTemplate
      * @cfg {function|String} Основной контент шаблона, располагается под headerContentTemplate.
      */
-
     /*
      * @name Controls/_popupTemplate/Stack#bodyContentTemplate
      * @cfg {function|String} Main content.
-     */
-
-    /*
-     * @name Controls/_popupTemplate/Stack#footerContentTemplate
-     * @cfg {function|String} Content at the bottom of the stack panel.
      */
 
     /**
      * @name Controls/_popupTemplate/Stack#footerContentTemplate
      * @cfg {function|String} Контент, располагающийся в нижней части шаблона.
      */
+    /*
+     * @name Controls/_popupTemplate/Stack#footerContentTemplate
+     * @cfg {function|String} Content at the bottom of the stack panel.
+     */
 
     /**
      * @name Controls/_popupTemplate/Stack#closeButtonVisibility
      * @cfg {Boolean} Определяет, будет ли отображаться кнопка закрытия
      */
-
     /*
      * @name Controls/_popupTemplate/Stack#closeButtonVisibility
      * @cfg {Boolean} Determines whether display of the close button.
@@ -119,7 +111,6 @@ const DialogTemplate = Control.extend({
      * @name Controls/_popupTemplate/Stack#maximizeButtonVisibility
      * @cfg {Boolean} Определяет, будет ли отображаться кнопка изменения размера.
      */
-
     /*
      * @name Controls/_popupTemplate/Stack#maximizeButtonVisibility
      * @cfg {Boolean} Determines the display maximize button.
@@ -133,7 +124,6 @@ const DialogTemplate = Control.extend({
      * @variant popup
      * @default popup
      */
-
     /*
      * @name Controls/_popupTemplate/Stack#closeButtonViewMode
      * @cfg {String} Close button display style.
