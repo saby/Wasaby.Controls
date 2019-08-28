@@ -47,22 +47,17 @@ import Deferred = require('Core/Deferred');
 
             return cfg;
          },
-         processingResult: function(RecordSynchronizer, data, items, editKey, instance) {
-            if (data.formControllerEvent === 'update' || data.formControllerEvent === 'updateStarted') {
+         processingResult: function(RecordSynchronizer, data, items, editKey) {
+            if (data.formControllerEvent === 'update') {
+
                if (data.additionalData.isNewRecord) {
+                  data.additionalData.key = Math.random();
                   RecordSynchronizer.addRecord(data.record, data.additionalData, items);
                } else {
-                  instance.record = items.getRecordById(editKey).clone();
                   RecordSynchronizer.mergeRecord(data.record, items, editKey);
                }
             } else if (data.formControllerEvent === 'delete') {
                RecordSynchronizer.deleteRecord(items, editKey);
-            } else if (data.formControllerEvent === 'updateFailed') {
-               if (instance.record === undefined) {
-                  RecordSynchronizer.deleteRecord(items, editKey);
-               } else {
-                  RecordSynchronizer.mergeRecord(instance.record, items, editKey);
-               }
             }
          },
 
