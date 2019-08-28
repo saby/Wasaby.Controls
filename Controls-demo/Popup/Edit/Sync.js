@@ -126,34 +126,27 @@ define('Controls-demo/Popup/Edit/Sync',
             this._eventText = event.type + '. Аргументы: ' + args.toString();
          },
 
-         getResultArgs: function(instance, data) {
-            return [RecordSynchronizer, data, instance._options.items, instance._linkedKey, instance];
-         },
-
-         _beforeSyncRecord: function(event, action, record, additionaData) {
+         _beforeSyncRecord: function(event, action, record, additionalData) {
             if (this._cancelEdit) {
                return 'cancel';
             }
 
-            if (additionaData && additionaData.isNewRecord) {
-               additionaData.at = this._addPosition;
+            if (additionalData && additionalData.isNewRecord) {
+               additionalData.at = this._addPosition;
             }
 
-            if (event === 'update' || event === 'updateStarted') {
-               if (additionaData.isNewRecord) {
-                  additionaData.key = Math.random();
-                  RecordSynchronizer.addRecord(record, additionaData, this._items);
+            if (event === 'updateStarted') {
+               if (additionalData.isNewRecord) {
+                  RecordSynchronizer.addRecord(record, additionalData, this._items);
                } else {
-                  this.record = this._items.getRecordById(additionaData.key).clone();
-                  RecordSynchronizer.mergeRecord(record, this._items, editKey);
+                  this.record = this._items.getRecordById(additionalData.key).clone();
+                  RecordSynchronizer.mergeRecord(record, this._items, additionalData.key);
                }
-            } else if (event === 'delete') {
-               RecordSynchronizer.deleteRecord(this._items, additionaData.key);
             } else if (event === 'updateFailed') {
                if (this.record === undefined) {
-                  RecordSynchronizer.deleteRecord(this._items, additionaData.key);
+                  RecordSynchronizer.deleteRecord(this._items, additionalData.key);
                } else {
-                  RecordSynchronizer.mergeRecord(this.record, this._items, additionaData.key);
+                  RecordSynchronizer.mergeRecord(this.record, this._items, additionalData.key);
                }
             }
          },

@@ -60,7 +60,9 @@ import Env = require('Env/Env');
 
             var self = this;
             def.addCallback(function(key) {
-               self._notify('updateSuccessed', [record, key]);
+                setTimeout(() =>
+                        self._notify('updateFailed', [record, key]),
+                    4000);
                return key;
             });
             def.addErrback(function(e) {
