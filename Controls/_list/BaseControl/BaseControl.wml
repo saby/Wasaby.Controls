@@ -21,7 +21,7 @@
     <ws:if data="{{_pagingNavigation && _pagingNavigationVisible}}">
         <div class="controls-BaseControl__footerPaging_wrapper">
             <ws:if data="{{_pagingLabelData}}">
-                <ws:if data="{{_options.navigation.viewConfig.detailedLabel}}">
+                <ws:if data="{{_options.navigation.viewConfig.totalInfo === 'extended'}}">
                     <div class="controls-BaseControl_paging-label">{{_pagingLabelData.firstItemNumber}} - {{_pagingLabelData.lastItemNumber}} из {{_pagingLabelData.totalItemsCount}}, по {{_pagingLabelData.pageSize}}</div>
                 </ws:if>
                 <ws:else>

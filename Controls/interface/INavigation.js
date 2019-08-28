@@ -77,7 +77,7 @@ define('Controls/interface/INavigation', [
     * @property {Number} pageSize Загружать размер страницы.
     * @property {Boolean} hasMore Если поле hasMore имеет значение false, аналогичный параметр добавляется в запрос. В ответ, вместо получения флага наличия записей (логическое значение), ожидается общее количество записей (числовое значение).
     */
-   
+
    /*
     * @typedef {Object} PageSourceConfig Source configuration for page-based navigation.
     * @property {Number} page Loading page number.
@@ -87,10 +87,15 @@ define('Controls/interface/INavigation', [
 
    /**
     * @typedef {Object} NavigationViewConfig
-    * @property {String} pagingMode Режим отображения постраничной навигации. 
+    * @property {String} pagingMode Режим отображения постраничной навигации.
     * Поддерживаются следующие значения:
     * <ul>
     *    <li><b>direct</b> - Постраничная навигация отображается в прямом направлении: от первой страницы до последней.</li>
+    * </ul>
+    * @property {String} totalInfo Режим отображения информационной подписи.
+    * <ul>
+    *    <li><b>basic</b> - отображается только общее число записей. (по умолчанию)/li>
+    *    <li><b>extended</b> - отображается общее число записей, номера первой и последней записей на текущей странице, а также размер страницы.</li>
     * </ul>
     */
 
@@ -100,6 +105,11 @@ define('Controls/interface/INavigation', [
     * The following values are supported:
     * <ul>
     *    <li><b>direct</b> - paging is displayed in the forward direction: from the first page to the last.</li>
+    * </ul>
+    * @property {String} totalInfo Info label display mode.
+    * <ul>
+    *    <li><b>basic</b> - only total count of records is displayed. (default)</li>
+    *    <li><b>extended</b> - total count of records, numbers of first and last record on current page and size of page are displayed.</li>
     * </ul>
     */
 
