@@ -1,3 +1,4 @@
+import {Bus} from 'Env/Event';
 import Control = require('Core/Control');
 import template = require('wml!Controls/_dragnDrop/Controller/Compound/Compound');
 import draggingTemplateWrapper = require('wml!Controls/_dragnDrop/DraggingTemplateWrapper');
@@ -33,8 +34,13 @@ import { SyntheticEvent } from 'Vdom/Vdom';
             }
          },
 
+         _documentDragStart: function() {
+            Bus.globalChannel().notify('_compoundDragStart');
+         },
+
          _documentDragEnd: function() {
             this._removeDraggingTemplate();
+            Bus.globalChannel().notify('_compoundDragEnd');
          },
 
          _updatePosition: function(draggingTemplateOptions) {

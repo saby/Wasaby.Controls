@@ -360,7 +360,7 @@ define('Controls/Application',
             this._children.mousemoveDetect.start(ev);
          },
          _updateClasses: function() {
-            // Данный метод вызывается о построения вёрстки, и при первой отрисовке еще нет _children (это нормально)
+            // Данный метод вызывается до построения вёрстки, и при первой отрисовке еще нет _children (это нормально)
             // поэтому сами детектим touch с помощью compatibility
             if (this._children.touchDetector) {
                this._touchClass = this._children.touchDetector.getClass();
