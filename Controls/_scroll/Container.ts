@@ -503,18 +503,19 @@ var
       _keydownHandler: function(ev) {
          // если сами вызвали событие keydown (горячие клавиши), нативно не прокрутится, прокрутим сами
          if (!ev.nativeEvent.isTrusted) {
-            var offset;
+            let offset: number;
+            const scrollTop: number = _private.getScrollTop(this, this._children.content);
             if (ev.nativeEvent.which === Env.constants.key.pageDown) {
-               offset = this._children.content.scrollTop + this._children.content.clientHeight;
+               offset = scrollTop + this._children.content.clientHeight;
             }
             if (ev.nativeEvent.which === Env.constants.key.down) {
-               offset = this._children.content.scrollTop + 40;
+               offset = scrollTop + 40;
             }
             if (ev.nativeEvent.which === Env.constants.key.pageUp) {
-               offset = this._children.content.scrollTop - this._children.content.clientHeight;
+               offset = scrollTop - this._children.content.clientHeight;
             }
             if (ev.nativeEvent.which === Env.constants.key.up) {
-               offset = this._children.content.scrollTop - 40;
+               offset = scrollTop - 40;
             }
             if (offset !== undefined) {
                this.scrollTo(offset);
