@@ -145,6 +145,12 @@ export default class CollectionItem<T> extends mixin<
       return this._$contents;
    }
 
+   // TODO: обсудить, по идее это костыль для бинда. Нужно либо перейти на
+   // реактивный объект, либо придумать что-то другое
+   get contents(): T {
+      return this.getContents();
+   }
+
    /**
     * Устанавливает содержимое элемента коллекции
     * @param contents Новое содержимое

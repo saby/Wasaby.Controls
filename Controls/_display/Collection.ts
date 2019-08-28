@@ -489,6 +489,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
    protected _$rightSpacing: string;
    protected _$rowSpacing: string;
 
+   protected _$searchValue: string;
+
    /**
     * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
     * игнорироваться). Работает только если задано {@link idProperty}.
@@ -1951,6 +1953,10 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       this._nextVersion();
    }
 
+   getSearchValue(): string {
+      return this._$searchValue;
+   }
+
    getItemCounters(): ICollectionCounters[] {
       const result: ICollectionCounters[] = [];
       this.each((item: unknown) => {
@@ -3041,6 +3047,7 @@ Object.assign(Collection.prototype, {
    _$leftSpacing: '',
    _$rightSpacing: '',
    _$rowSpacing: '',
+   _$searchValue: '',
    _$unique: false,
    _$importantItemProperties: null,
    _localize: false,

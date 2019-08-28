@@ -4,6 +4,7 @@
       controls-ListView__item_highlightOnHover_default_theme_default
       controls-ListView__item_default
       controls-ListView__item_showActions
+      {{ item.isEditing() ? 'controls-ListView__item_editing' }}
       js-controls-SwipeControl__actionsContainer
    ">
    <ws:if data="{{ multiSelectVisibility !== 'hidden' }}">
@@ -19,7 +20,9 @@
          attr:class="controls-ListView__itemContent {{ spacingClassList }}">
          <ws:partial
             template="{{ contentTemplate }}"
-            item="{{ item }}" />
+            item="{{ item }}"
+            useNewModel="{{ true }}"
+            searchValue="{{ searchValue }}" />
       </div>
    </ws:if>
    <ws:else>
@@ -36,7 +39,7 @@
             itemActionsTemplate="{{ itemActionsTemplate }}"
 
             highlightOnHover="{{ true }}"
-            itemActionsPosition="inline"
+            itemActionsPosition="inside"
             actionAlignment="horizontal"
             actionCaptionPosition="bottom"
             needSeparator="{{ true }}"
@@ -53,7 +56,7 @@
 
             highlightOnHover="{{ true }}"
             size="m"
-            itemActionsPosition="inline"
+            itemActionsPosition="inside"
             toolbarVisibility="{{ true }}"
             actionMenuIsShown="{{ true }}"
             itemActionsContainerStyles="" />

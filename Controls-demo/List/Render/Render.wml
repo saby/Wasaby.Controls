@@ -11,7 +11,11 @@
          <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate">
                <ws:contentTemplate>
-                  <div>{{ itemTemplate.item.getContents()['title'] }}</div>
+                  <ws:partial template="Controls/list:EditingTemplate" value="{{ itemTemplate.item.contents.title }}" enabled="{{ true }}">
+                     <ws:editorTemplate>
+                        <Controls.input:Text bind:value="itemTemplate.item.contents.title" selectOnClick="{{ false }}" />
+                     </ws:editorTemplate>
+                  </ws:partial>
                </ws:contentTemplate>
             </ws:partial>
          </ws:itemTemplate>
