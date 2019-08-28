@@ -8,7 +8,7 @@ import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
       /**
-       * Контрол, который открывает всплывающее окно с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ диалогом редактирования записи}.
+       * Контрол, который открывает всплывающее окно с {@link /doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ диалогом редактирования записи}.
        * Когда в диалоге редактирования происходит действие с записью, управляйте синхронизацией редактируемой записи с рекордсетом.
        * В зависимости от значения опции 'mode':
        *  <li>'stack'  - используйте опции {@link Controls/popup:Stack}</li>
@@ -29,7 +29,7 @@ import Deferred = require('Core/Deferred');
        *  <li>If option 'mode' is set to 'dialog' use  {@link Controls/popup:Dialog Dialog options}</li>
        *  <li>If option 'mode' is set to 'sticky' use  {@link Controls/popup:Sticky Sticky options}</li>
        * <a href="/materials/demo-ws4-popup-edit">Demo-example</a>
-       * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ Подробнее}
+       * {@link /doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ Подробнее}
        * @class Controls/_popup/Opener/Edit
        * @control
        * @public
@@ -135,7 +135,7 @@ import Deferred = require('Core/Deferred');
           * </ul>
           * @returns {undefined}
           * @example
-          * wml
+          * WML
           * <pre>
           *     <Controls.popup:Edit name="EditOpener">
           *        <ws:popupOptions template="Controls-demo/Popup/Edit/MyFormController">
@@ -143,7 +143,7 @@ import Deferred = require('Core/Deferred');
           *        </ws:popupOptions>
           *     </Controls.popup:Edit>
           * </pre>
-          * js
+          * JavaScript
           * <pre>
           *   Control.extend({
           *        ...
@@ -174,7 +174,7 @@ import Deferred = require('Core/Deferred');
           * </ul>
           * @returns {undefined}
           * @example
-          * wml
+          * WML
           * <pre>
           *     <Controls.popup:Edit name="EditOpener">
           *        <ws:popupOptions template="Controls-demo/Popup/Edit/MyFormController">
@@ -182,7 +182,7 @@ import Deferred = require('Core/Deferred');
           *        </ws:popupOptions>
           *     </Controls.popup:Edit>
           * </pre>
-          * js
+          * JavaScript
           * <pre>
           *   Control.extend({
           *        ...

@@ -237,7 +237,7 @@ import 'css!theme?Controls/popup';
 
 /**
  * @name Controls/_popup/Previewer#content
- * @cfg {Content} Контент, к которому добавлена ​​логика открытия и закрытия мини-карты.
+ * @cfg {Content} Контент, к которому добавлена ​​логика открытия и закрытия миникарточки.
  */
 /*
  * @name Controls/_popup/Previewer#content
@@ -246,7 +246,7 @@ import 'css!theme?Controls/popup';
 
 /**
  * @name Controls/_popup/Previewer#template
- * @cfg {Content} Содержимое мини-карты.
+ * @cfg {Content} Содержимое миникарточки.
  */
 /*
  * @name Controls/_popup/Previewer#template

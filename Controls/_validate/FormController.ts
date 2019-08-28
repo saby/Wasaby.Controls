@@ -98,30 +98,30 @@ import ParallelDeferred = require('Core/ParallelDeferred');
  * @description Запуск валидации.
  * @returns {Deferred}
  * @example
- * wml
+ * WML
  * <pre>
- *<Controls.validate:Controller name="formController">
- * <ws:content>
- *   <Controls.validate:Container>
- *     <ws:validators>
- *        <ws:Function value="{{_value2}}" >Controls/validate:isRequired</ws:Function>
- *     </ws:validators>
- *      <ws:content>
- *        <Controls.input:Text bind:value="_value2"/>
- *      </ws:content>
- *   </Controls.validate:Container>
- * </ws:content>
- *</Controls.validate:Controller>
- *<Controls.buttons:Button caption="Submit" on:click="_clickHandler()"
+ * <Controls.validate:Controller name="formController">
+ *    <ws:content>
+ *       <Controls.validate:Container>
+ *          <ws:validators>
+ *             <ws:Function value="{{_value2}}" >Controls/validate:isRequired</ws:Function>
+ *          </ws:validators>
+ *          <ws:content>
+ *             <Controls.input:Text bind:value="_value2"/>
+ *          </ws:content>
+ *       </Controls.validate:Container>
+ *    </ws:content>
+ * </Controls.validate:Controller>
+ * <Controls.buttons:Button caption="Submit" on:click="_clickHandler()"
  * </pre>
- * js
+ * JavaScript
  * <pre>
  *     Control.extend({
  *        ...
  *
- *         _clickHandler: function() {
-         this._children.formController.submit();
-      }
+ *        _clickHandler: function() {
+ *           this._children.formController.submit();
+ *        }
  *        ...
  *    });
  * </pre>
@@ -131,30 +131,30 @@ import ParallelDeferred = require('Core/ParallelDeferred');
  * @description Start the validation
  * @returns {Deferred}
  * @example
- * wml
+ * WML
  * <pre>
- *<Controls.validate:Controller name="formController">
- * <ws:content>
- *   <Controls.validate:Container>
- *     <ws:validators>
- *        <ws:Function value="{{_value2}}" >Controls/validate:isRequired</ws:Function>
- *     </ws:validators>
- *      <ws:content>
- *        <Controls.input:Text bind:value="_value2"/>
- *      </ws:content>
- *   </Controls.validate:Container>
- * </ws:content>
- *</Controls.validate:Controller>
- *<Controls.buttons:Button caption="Submit" on:click="_clickHandler()"
+ * <Controls.validate:Controller name="formController">
+ *    <ws:content>
+ *       <Controls.validate:Container>
+ *          <ws:validators>
+ *             <ws:Function value="{{_value2}}" >Controls/validate:isRequired</ws:Function>
+ *          </ws:validators>
+ *          <ws:content>
+ *             <Controls.input:Text bind:value="_value2"/>
+ *          </ws:content>
+ *       </Controls.validate:Container>
+ *    </ws:content>
+ * </Controls.validate:Controller>
+ * <Controls.buttons:Button caption="Submit" on:click="_clickHandler()"
  * </pre>
- * js
+ * JavaScript
  * <pre>
  *     Control.extend({
  *        ...
  *
- *         _clickHandler: function() {
-         this._children.formController.submit();
-      }
+ *        _clickHandler: function() {
+ *           this._children.formController.submit();
+ *        }
  *        ...
  *    });
  * </pre>
