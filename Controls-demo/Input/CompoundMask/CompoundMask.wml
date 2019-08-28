@@ -1,0 +1,5 @@
+<div>
+   <Controls.input:CompoundMask bind:value="_controlValue" mask="{{_controlMask}}" replacer="{{_controlReplacer}}">
+      <Controls.input:Mask/>
+   </Controls.input:CompoundMask>
+</div>
