@@ -3,6 +3,7 @@ import template = require('wml!Controls/_list/Render/Render');
 
 import defaultItemTemplate = require('wml!Controls/_list/Render/resources/ItemTemplate');
 import itemActionsTemplate = require('wml!Controls/_list/Render/resources/ItemActionsTemplate');
+import swipeTemplate = require('wml!Controls/_list/Render/resources/SwipeTemplate');
 
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { CollectionItem } from 'Controls/display';
@@ -13,6 +14,7 @@ export default class Render extends Control {
     private _templateKeyPrefix: string;
     private _itemTemplate: TemplateFunction;
     private _itemActionsTemplate: TemplateFunction = itemActionsTemplate;
+    private _swipeTemplate: TemplateFunction = swipeTemplate;
 
     protected _beforeMount(options): void {
         this._templateKeyPrefix = `list-render-${this.getInstanceId()}`;

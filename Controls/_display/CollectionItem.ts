@@ -87,6 +87,11 @@ export default class CollectionItem<T> extends mixin<
     */
    protected _$actions: IItemActions;
 
+   /**
+    * Элемент находится в режиме отображения операций над записью по свайпу
+    */
+   protected _$swiped: boolean;
+
    protected _instancePrefix: string;
 
    /**
@@ -198,9 +203,9 @@ export default class CollectionItem<T> extends mixin<
    // endregion
 
    getMultiSelectClasses(): string {
-      let classes = 'controls-ListRender__checkbox controls-ListRender__notEditable';
+      let classes = 'controls-ListView__checkbox controls-ListView__notEditable';
       if (this.getOwner().getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
-         classes += ' controls-ListRender__checkbox-onhover';
+         classes += ' controls-ListView__checkbox-onhover';
       }
       return classes;
    }
@@ -239,6 +244,21 @@ export default class CollectionItem<T> extends mixin<
       }
    }
 
+   isSwiped(): boolean {
+      return this._$swiped;
+   }
+
+   setSwiped(swiped: boolean, silent?: boolean): void {
+      if (this._$swiped === swiped) {
+         return;
+      }
+      this._$swiped = swiped;
+      this._nextVersion();
+      if (!silent) {
+         this._notifyItemChangeToOwner('swiped');
+      }
+   }
+
    setActions(actions: IItemActions, silent?: boolean): void {
       if (this._$actions === actions) {
          return;
@@ -256,6 +276,10 @@ export default class CollectionItem<T> extends mixin<
 
    hasVisibleActions(): boolean {
       return this._$actions && this._$actions.showed && this._$actions.showed.length > 0;
+   }
+
+   hasActionWithIcon(): boolean {
+      return this.hasVisibleActions() && this._$actions.showed.some((action) => !!action.icon);
    }
 
    shouldDisplayActions(): boolean {
@@ -352,6 +376,7 @@ Object.assign(CollectionItem.prototype, {
    _$marked: false,
    _$editing: false,
    _$actions: null,
+   _$swiped: false,
    _instancePrefix: 'collection-item-',
    _contentsIndex: undefined,
    _counters: null,
