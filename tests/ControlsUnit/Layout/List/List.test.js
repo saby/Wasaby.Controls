@@ -108,15 +108,18 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
 
       describe('.updateSource', function() {
          var recordSet = new collection.RecordSet({
-            rawData:[
+            rawData: [
                { id: 1, title: 'Sasha' },
                { id: 2, title: 'Dmitry' }
-               ]
+            ]
          });
+
+         recordSet.setMetaData({ more: 123 });
 
          it ('list is not reverse', function() {
             deprecatedList.Container._private.updateSource(listLayout, recordSet);
-            assert.deepEqual(recordSet.getRawData(), listLayout._source._$data);
+            assert.deepEqual(recordSet.getRawData(), listLayout._source._$target._$data);
+            assert.deepEqual(listLayout._source._$data.query.getMetaData(), { more: 123 });
          });
 
          it('list is reverse', function() {
@@ -173,7 +176,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
          });
          listLayout._searchDeferred = new Deferred();
          deprecatedList.Container._private.searchCallback(listLayout, {data: recordSet}, {testField: 'testValue'});
-         assert.deepEqual(recordSet.getRawData(), listLayout._source._$data);
+         assert.deepEqual(recordSet.getRawData(), listLayout._source._$target._$data);
          //FIXME вернуть как будет cached source
          //assert.deepEqual(listLayout._filter, {testField: 'testValue'});
          assert.deepEqual(listLayout._filter, {});
@@ -195,7 +198,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
             //FIXME вернуть как будет cached source
             //assert.deepEqual(listLayout._filter, {title: 'Sasha'});
             assert.deepEqual(listLayout._filter, {});
-            assert.deepEqual(listLayout._source._$data, [
+            assert.deepEqual(listLayout._source._$target._$data, [
                { id: 1, title: 'Sasha' },
                { id: 5, title: 'Sasha' }
                ]);
@@ -256,7 +259,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
             //FIXME вернуть как будет cached source
             //assert.deepEqual(listLayout._filter, {title: 'Sasha'});
             assert.deepEqual(listLayout._filter, {});
-            assert.deepEqual(listLayout._source._$data, [
+            assert.deepEqual(listLayout._source._$target._$data, [
                { id: 1, title: 'Sasha' },
                { id: 5, title: 'Sasha' }
             ]);
@@ -319,7 +322,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
             //FIXME вернуть как будет cached source
             //assert.deepEqual(listLayout._filter, {title: 'Sasha'});
             assert.deepEqual(listLayout._filter, {});
-            assert.deepEqual(listLayout._source._$data, [
+            assert.deepEqual(listLayout._source._$target._$data, [
                { id: 1, title: 'Sasha' },
                { id: 5, title: 'Sasha' }
             ]);
