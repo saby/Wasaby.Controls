@@ -151,6 +151,34 @@ define([
          });
       });
 
+      describe('_prepareItemClass', function() {
+         [{
+            options: {
+               selectionProcessing: false,
+               hoveredSelectionValue: start
+            },
+            cssClass: 'controls-PeriodDialog-MonthsRange__hovered'
+         }, {
+            options: {
+               selectionProcessing: false,
+               hoveredSelectionValue: start,
+               hoveredStartValue: start,
+               selectionViewType: MonthsRangeItem.SELECTION_VEIW_TYPES.months
+            },
+            cssClass: 'controls-RangeSelection__start-end-hovered'
+         }].forEach(function(test) {
+            it(`should return correct css class if options are equal to ${JSON.stringify(test.options)}.`, function() {
+               const component = calendarTestUtils.createComponent(
+                     MonthsRangeItem,
+                     coreMerge({ date: start }, test.options, { preferSource: true })
+                  ),
+                  css = component._prepareItemClass();
+
+               assert.include(css, test.cssClass);
+            });
+         });
+      });
+
       // describe('_toggleState', function() {
       //    it('should toggle state.', function() {
       //       const component = calendarTestUtils.createComponent(PeriodDialog, {});
