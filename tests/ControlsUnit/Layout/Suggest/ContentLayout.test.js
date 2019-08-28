@@ -36,7 +36,7 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
          };
       };
 
-      it('Suggest::_close', function() {
+      it('Suggest::close', function() {
          var suggestComponent = new __ContentLayer.default();
          var closed = false;
 
@@ -45,7 +45,7 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
                closed = true;
             }
          };
-         suggestComponent._close();
+         suggestComponent.close();
          assert.isTrue(closed);
       });
 
