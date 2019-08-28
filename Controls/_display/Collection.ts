@@ -1908,10 +1908,16 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       return this._$multiSelectVisibility;
    }
 
+   setMultiSelectVisibility(visibility: string): string {
+      if (this._$multiSelectVisibility === visibility) {
+         return;
+      }
+      this._$multiSelectVisibility = visibility;
+      this._nextVersion();
+   }
+
    getSpacingClassList(): string {
       let classList = '';
-
-      // TODO Change ListView to ListRender
 
       classList += ' controls-ListView__item-topPadding_' + (this._$rowSpacing || 'default').toLowerCase();
       classList += ' controls-ListView__item-bottomPadding_' + (this._$rowSpacing || 'default').toLowerCase();

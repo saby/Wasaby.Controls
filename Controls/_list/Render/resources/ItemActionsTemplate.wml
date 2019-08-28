@@ -6,7 +6,7 @@
             {{item.isEditing() ? 'controls-itemActionsV_editing'}}
             {{item.isEditing() && toolbarVisibility ? 'controls-itemActionsV_editingToolbarVisible'}}
             {{itemData.isActive && actionMenuIsShown ? 'controls-itemActionsV_visible'}}
-            {{itemData.isSwiped ? 'controls-itemActionsV_swiped'}}">
+            {{item.isSwiped() ? 'controls-itemActionsV_swiped'}}">
         <div attr:class="controls-itemActionsV__wrapper">
             <ws:partial
                     template="wml!Controls/_list/ItemActions/resources/ItemActionsFor"

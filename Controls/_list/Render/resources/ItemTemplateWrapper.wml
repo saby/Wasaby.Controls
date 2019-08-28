@@ -1,27 +1,54 @@
 <div
-   attr:class="controls-ListRender__item controls-ListRender__item-highlightOnHover controls-ListView__item_showActions">
+   attr:class="
+      controls-ListView__itemV
+      controls-ListView__item_highlightOnHover_default_theme_default
+      controls-ListView__item_default
+      controls-ListView__item_showActions
+      js-controls-SwipeControl__actionsContainer
+   ">
    <ws:if data="{{ multiSelectVisibility !== 'hidden' }}">
       <ws:partial template="{{ multiSelectTpl }}" attr:class="{{ item.getMultiSelectClasses() }}">
          <ws:templateOptions multiSelectStatus="{{ item.isSelected() }}" key="{{ item.getContents().getId() }}"/>
       </ws:partial>
    </ws:if>
    <ws:if data="{{ item.isMarked() }}">
-      <div attr:class="controls-ListRender__itemMarker"></div>
+      <div class="controls-ListView__itemV_marker"></div>
    </ws:if>
    <div
-      attr:class="controls-ListRender__itemContent {{ spacingClassList }}">
+      attr:class="controls-ListView__itemContent {{ spacingClassList }}">
       <ws:partial
          template="{{ itemTemplate }}"
          item="{{ item }}" />
    </div>
    <ws:if data="{{ item.shouldDisplayActions() }}">
-      <ws:if data="{{ itemActionsPosition !== 'custom' }}">
+      <ws:if data="{{ item.isSwiped() }}">
+         <ws:partial
+            template="{{ swipeTemplate }}"
+            item="{{ item }}"
+            itemActionsTemplate="{{ itemActionsTemplate }}"
+
+            highlightOnHover="{{ true }}"
+            itemActionsPosition="inline"
+            actionAlignment="horizontal"
+            actionCaptionPosition="bottom"
+            needSeparator="{{ true }}"
+            needIcon="{{ item.isSwiped.bind(item) }}"
+            needTitle="{{ item.isSwiped }}">
+            <ws:swipeConfig itemActionsSize="m" paddingSize="s"/>
+         </ws:partial>
+      </ws:if>
+      <ws:else data="{{ itemActionsPosition !== 'custom' }}">
          <ws:partial
             template="{{ itemActionsTemplate }}"
             itemActionsClass="{{ itemActionsClass }}"
             item="{{ item }}"
+
             highlightOnHover="{{ true }}"
-            size="s" />
-      </ws:if>
+            size="m"
+            itemActionsPosition="inline"
+            toolbarVisibility="{{ true }}"
+            actionMenuIsShown="{{ true }}"
+            itemActionsContainerStyles="" />
+      </ws:else>
    </ws:if>
 </div>
