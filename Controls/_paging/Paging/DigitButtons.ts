@@ -67,9 +67,6 @@ _private = {
     }
 };
 
-/**
- * class Controls/_paging/Paging/DigitButtons
- */
 ModuleClass = BaseControl.extend({
     _selectedKey: null,
     _template: template,
