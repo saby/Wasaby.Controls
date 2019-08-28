@@ -16,10 +16,12 @@
  * @includes PagingStyles Controls/_paging/DigitButtonsStyles
  * @public
  * @author Крайнов Д.О.
- */ 
+ */
 
 import Paging = require('Controls/_paging/Paging');
+import DigitButtons = require('Controls/_paging/Paging/DigitButtons');
 
 export {
+   DigitButtons,
    Paging
 };
