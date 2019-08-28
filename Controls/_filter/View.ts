@@ -103,6 +103,9 @@ var _private = {
                 popupItem.selectedKeys = configs[item.name].multiSelect ? item.value : [item.value];
                 popupItem.resetValue = (item.resetValue instanceof Array) ? item.resetValue : [item.resetValue];
                 if (item.editorOptions.source) {
+                    if (!configs[item.name].source) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
+                        _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter);
+                    }
                     popupItem.hasMoreButton = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation).hasMoreData('down');
                     popupItem.selectorOpener = self._children.selectorOpener;
                     popupItem.selectorDialogResult = self._onSelectorTemplateResult.bind(self);
@@ -183,7 +186,7 @@ var _private = {
                 let keys = _private.getLoadKeys(config, item.value);
                 if (keys.length) {
                     let editorOpts = {source: item.editorOptions.source};
-                    editorOpts.filter = config.filter || {};
+                    editorOpts.filter = {...config.filter};
 
                     const keyProperty = config.keyProperty;
                     editorOpts.filter[keyProperty] = keys;

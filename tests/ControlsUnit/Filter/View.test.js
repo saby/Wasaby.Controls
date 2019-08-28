@@ -4,9 +4,10 @@ define(
       'Core/core-clone',
       'Types/source',
       'Types/collection',
-      'Controls/history'
+      'Controls/history',
+      'Core/Deferred'
    ],
-   function(filter, Clone, sourceLib, collection, history) {
+   function(filter, Clone, sourceLib, collection, history, Deferred) {
       describe('Filter:View', function() {
 
          let defaultItems = [
@@ -459,6 +460,42 @@ define(
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
                done();
             });
+         });
+
+
+
+         it('_private:setPopupConfig', function() {
+            let isLoading = false;
+            let source = Clone(defaultSource);
+            let configs = {
+               document: {
+                  items: Clone(defaultItems[0]),
+                  displayProperty: 'title',
+                  keyProperty: 'id',
+                  source: new sourceLib.Memory({
+                     idProperty: 'id',
+                     data: defaultItems[0]
+                  })
+               },
+               state: {
+                  items: Clone(defaultItems[1]),
+                  _sourceController: {
+                     load: () => {
+                        isLoading = true; return Deferred.success();
+                     },
+                     hasMoreData: () => {return true;}},
+                  displayProperty: 'title',
+                  keyProperty: 'id',
+                  multiSelect: true}
+            };
+
+            let self = {
+               _children: {},
+               _onSelectorTemplateResult: () => {}
+            };
+
+            filter.View._private.setPopupConfig(self, configs, source);
+            assert.isTrue(isLoading);
          });
 
          it('_beforeUpdate loadSelectedItems', function(done) {
