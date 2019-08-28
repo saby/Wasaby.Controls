@@ -1,3 +1,0 @@
-<div>
-   {{ item.getContents()[item.getDisplayProperty() || 'title'] }}
-</div>

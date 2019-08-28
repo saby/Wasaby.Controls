@@ -23,6 +23,11 @@ export default class RenderDemo extends Control {
         });
     }
 
+    protected _afterMount(): void {
+        // remove after debugging
+        window.model = this._children.listView._children.listControl._children.baseControl.getViewModel();
+    }
+
     private _generateListItems(count: number): IListItem[] {
         const result = [];
         while (count--) {
