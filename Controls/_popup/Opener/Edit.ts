@@ -11,9 +11,9 @@ import Deferred = require('Core/Deferred');
        * Контрол, который открывает всплывающее окно с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ диалогом редактирования записи}.
        * Когда в диалоге редактирования происходит действие с записью, управляйте синхронизацией редактируемой записи с рекордсетом.
        * В зависимости от значения опции 'mode':
-       *  <li>'stack'  - используйте опции {@link Controls/popup:Stack}</li>
-       *  <li>'dialog' - используйте опции {@link Controls/popup:Dialog}</li>
-       *  <li>'sticky' - используйте опции {@link Controls/popup:Sticky}</li>
+       * * 'stack'  - используйте опции {@link Controls/popup:Stack}
+       * * 'dialog' - используйте опции {@link Controls/popup:Dialog}
+       * * 'sticky' - используйте опции {@link Controls/popup:Sticky}
        * <a href="/materials/demo-ws4-popup-edit">Демо-пример</a>
        * @class Controls/_popup/Opener/Edit
        * @control
