@@ -38,6 +38,7 @@
             item="{{ item }}"
             itemActionsTemplate="{{ itemActionsTemplate }}"
 
+            style="default"
             highlightOnHover="{{ true }}"
             itemActionsPosition="inside"
             actionAlignment="horizontal"
@@ -54,6 +55,7 @@
             itemActionsClass="{{ itemActionsClass }}"
             item="{{ item }}"
 
+            style="default"
             highlightOnHover="{{ true }}"
             size="m"
             itemActionsPosition="inside"
