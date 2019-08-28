@@ -212,6 +212,7 @@ define(
                let query = new sourceLib.Query().where();
                let historyDef = hSource.query(query);
                let originHSource = hSource.historySource;
+               let originSource = hSource.originSource;
                var errorSource = {
                   query: function() {
                      return Deferred.fail(new Error('testError'));
@@ -237,7 +238,15 @@ define(
                         let records = data.getAll();
                         assert.isFalse(records.at(0).has('pinned'));
                         hSource.historySource = originHSource;
-                        done();
+
+                        hSource.originSource = errorSource;
+                        historyDef = hSource.query(query);
+
+                        historyDef.addErrback(function(error) {
+                           assert.isTrue(error instanceof Error);
+                           hSource.originSource = originSource;
+                           done();
+                        });
                      });
                   });
                });
