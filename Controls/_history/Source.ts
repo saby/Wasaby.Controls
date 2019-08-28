@@ -453,20 +453,30 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
          pd.push(self.originSource.query(query));
 
          return pd.done().getResult().addBoth(function (data) {
-            self._oldItems = data[1].getAll();
+            let result;
 
-            if (data[0] && !(data[0] instanceof Error)) {
-               _private.initHistory(self, data[0], self._oldItems);
-               newItems = _private.getItemsWithHistory(self, self._history, self._oldItems);
-               self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
+            // method returns error
+            if (data[1] && !(data[1] instanceof Error)) {
+               self._oldItems = data[1].getAll();
+
+               // history service returns error
+               if (data[0] && !(data[0] instanceof Error)) {
+                  _private.initHistory(self, data[0], self._oldItems);
+                  newItems = _private.getItemsWithHistory(self, self._history, self._oldItems);
+                  self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
+               } else {
+                  newItems = self._oldItems;
+               }
+               result = new sourceLib.DataSet({
+                  rawData: newItems.getRawData(),
+                  idProperty: newItems.getIdProperty(),
+                  adapter: newItems.getAdapter()
+               });
             } else {
-               newItems = self._oldItems;
+               result = data[1];
             }
-            return new sourceLib.DataSet({
-               rawData: newItems.getRawData(),
-               idProperty: newItems.getIdProperty(),
-               adapter: newItems.getAdapter()
-            });
+
+            return result;
          });
       }
       return self.originSource.query(query);
