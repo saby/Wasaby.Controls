@@ -451,7 +451,9 @@ var
 
             // Если единственное содержимое грида - это строка редактирования, то нужно растянуть строку по гриду,
             // т.к. больше его некому растянуть.
-            const colspan = (self.getItems().getCount() || !!self.getHeader()) ? 1 : self._columns.length;
+            // Также, если в таблице есть колонка чекбоксов (ее ширина задается как max-content), то попавшая на место
+            // первой ячейки строка редактирования, растянет всю колонку на ширину таблицы. Поэтому нужно ее заколспанить.
+            const colspan = ((self.getItems().getCount() || !!self.getHeader()) && self._options.multiSelectVisibility === 'hidden') ? 1 : self._columns.length;
 
             editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
             editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';

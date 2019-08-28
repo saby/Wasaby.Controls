@@ -1382,30 +1382,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.deepEqual([{}].concat(gridColumns), gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns(gridColumns)" with multiselect.');
          });
 
-         it('prepareItemDataForPartialSupport', function () {
-            let
-                groupItemData = {
-                   key: '234',
-                   isGroup: true,
-                   rowIndex: 2
-                },
-                editingItemData = {
-                   key: '234',
-                   isEditing: true,
-                   rowIndex: 2
-                };
-            gridViewModel.editingRowGridStyles = null;
-            gridViewModel.getColumnsWidthForEditingRow = () => ['1fr', '123px', '321px'];
-            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gridViewModel, editingItemData);
-            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gridViewModel, groupItemData);
-
-            assert.equal(
-                editingItemData.getEditingRowStyles(),
-                'display: grid; display: -ms-grid; grid-template-columns: max-content 1fr 123px 321px; grid-column: 1 / 2; grid-row: 3;'
-            );
-            assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
-         });
-
          it('prepareColumnsWidth', function () {
             let
                 paramItemData = {},
@@ -1748,7 +1724,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             model = null;
          });
 
-         it('prepareItemDataForPartialSupport', function () {
+         it('prepareItemDataForPartialSupport without multiSelection', function () {
             let
                 groupItemData = {
                    key: '234',
@@ -1762,17 +1738,40 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 };
 
             model.getColumnsWidthForEditingRow = () => ['1fr', '123px', '321px'];
-
+            model.setMultiSelectVisibility('hidden');
             gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, editingItemData);
             gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, groupItemData);
 
             assert.equal(
                 editingItemData.getEditingRowStyles(),
-                'display: grid; display: -ms-grid; grid-template-columns: max-content 1fr 123px 321px; grid-column: 1 / 2; grid-row: 3;'
+                'display: grid; display: -ms-grid; grid-template-columns: 1fr 123px 321px; grid-column: 1 / 2; grid-row: 3;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
          });
+         it('prepareItemDataForPartialSupport with multiSelection', function () {
+            let
+                groupItemData = {
+                   key: '234',
+                   isGroup: true,
+                   rowIndex: 2
+                },
+                editingItemData = {
+                   key: '234',
+                   isEditing: true,
+                   rowIndex: 2
+                };
 
+            model.getColumnsWidthForEditingRow = () => ['1fr', '123px', '321px'];
+            model.setMultiSelectVisibility('visible');
+            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, editingItemData);
+            gridMod.GridViewModel._private.prepareItemDataForPartialSupport(model, groupItemData);
+
+            assert.equal(
+                editingItemData.getEditingRowStyles(),
+                'display: grid; display: -ms-grid; grid-template-columns: max-content 1fr 123px 321px; grid-column: 1 / 4; grid-row: 3;'
+            );
+            assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
+         });
 
          it('getEditingRowStyles in empty grid can use real template columns', function () {
             model = new gridMod.GridViewModel({
