@@ -1124,6 +1124,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                assert.equal(iData.rowIndex, 2);
             };
 
+            gridViewModel.getColumnsWidthForEditingRow = () => [];
+
             gridViewModel._setEditingItemData({
                index: 1
             });
@@ -1392,7 +1394,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                    isEditing: true,
                    rowIndex: 2
                 };
-
+            gridViewModel.editingRowGridStyles = null;
             gridViewModel.getColumnsWidthForEditingRow = () => ['1fr', '123px', '321px'];
             gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gridViewModel, editingItemData);
             gridMod.GridViewModel._private.prepareItemDataForPartialSupport(gridViewModel, groupItemData);
