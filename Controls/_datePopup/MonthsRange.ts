@@ -39,12 +39,7 @@ class Component extends Control {
     _beforeMount(options) {
         this._position = dateUtils.getStartOfYear(options.position || new Date());
         this._rangeModel.update(options);
-
-        if (dateUtils.isStartOfMonth(options.startValue) && dateUtils.isEndOfMonth(options.endValue)) {
-            this._selectionViewType = MonthsRangeItem.SELECTION_VEIW_TYPES.months;
-        } else {
-            this._selectionViewType = MonthsRangeItem.SELECTION_VEIW_TYPES.days;
-        }
+        this._updateSelectionType(options);
     }
 
     _beforeUpdate(options) {
@@ -52,6 +47,7 @@ class Component extends Control {
         if (options.position.getFullYear() !== this._position.getFullYear()) {
             this._position = dateUtils.getStartOfYear(options.position);
         }
+        this._updateSelectionType(options);
     }
 
     _beforeUnmount() {
@@ -64,6 +60,14 @@ class Component extends Control {
 
     _onPositionChanged(e: Event, position: Date) {
         this._notify('positionChanged', [position]);
+    }
+
+    private _updateSelectionType(options): void {
+        if (dateUtils.isStartOfMonth(options.startValue) && dateUtils.isEndOfMonth(options.endValue)) {
+            this._selectionViewType = MonthsRangeItem.SELECTION_VEIW_TYPES.months;
+        } else {
+            this._selectionViewType = MonthsRangeItem.SELECTION_VEIW_TYPES.days;
+        }
     }
 }
 
