@@ -19,9 +19,7 @@
  */
 
 import Paging = require('Controls/_paging/Paging');
-import DigitButtons = require('Controls/_paging/Paging/DigitButtons');
 
 export {
-   DigitButtons,
    Paging
 };
