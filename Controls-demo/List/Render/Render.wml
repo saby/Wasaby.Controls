@@ -6,6 +6,15 @@
          source="{{ _viewSource }}"
          multiSelectVisibility="hidden"
 
-         useNewModel="{{ true }}"/>
+         name="listView"
+         useNewModel="{{ true }}">
+         <ws:itemTemplate>
+            <ws:partial template="Controls/list:ItemTemplate">
+               <ws:contentTemplate>
+                  <div>{{ itemTemplate.item.getContents()['title'] }}</div>
+               </ws:contentTemplate>
+            </ws:partial>
+         </ws:itemTemplate>
+      </Controls.list:View>
    </Controls.scroll:Container>
 </div>

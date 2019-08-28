@@ -1,7 +1,7 @@
 import { Control, TemplateFunction } from 'UI/Base';
 import template = require('wml!Controls/_list/Render/Render');
 
-import defaultItemTemplate = require('wml!Controls/_list/Render/resources/ItemTemplate');
+import defaultItemTemplate = require('wml!Controls/_list/Render/resources/ItemTemplateWrapper');
 import itemActionsTemplate = require('wml!Controls/_list/Render/resources/ItemActionsTemplate');
 import swipeTemplate = require('wml!Controls/_list/Render/resources/SwipeTemplate');
 
