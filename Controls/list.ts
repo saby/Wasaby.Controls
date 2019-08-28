@@ -74,7 +74,7 @@ import DataContainer = require('Controls/_list/Data');
 import _forTemplate = require('wml!Controls/_list/resources/For');
 
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
-import EditingTemplate = require('wml!Controls/_list/EditInPlace/EditingTemplate');
+import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 import BaseViewModel = require('Controls/_list/BaseViewModel');
 import ItemActionsControl = require('Controls/_list/ItemActions/ItemActionsControl');
