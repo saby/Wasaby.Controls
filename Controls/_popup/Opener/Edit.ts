@@ -10,9 +10,9 @@ import Deferred = require('Core/Deferred');
       /**
        * Контрол, который открывает всплывающее окно с {@link /doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ диалогом редактирования записи}.
        * В зависимости от значения опции 'mode':
-       * * 'stack'  - используйте опции {@link Controls/popup:Stack}
-       * * 'dialog' - используйте опции {@link Controls/popup:Dialog}
-       * * 'sticky' - используйте опции {@link Controls/popup:Sticky}
+       * * 'stack' — используйте опции {@link Controls/popup:Stack}
+       * * 'dialog' — используйте опции {@link Controls/popup:Dialog}
+       * * 'sticky' — используйте опции {@link Controls/popup:Sticky}
        * <a href="/materials/demo-ws4-popup-edit">Демо-пример</a>
        * @class Controls/_popup/Opener/Edit
        * @control
@@ -127,14 +127,12 @@ import Deferred = require('Core/Deferred');
           * @param {Object} meta Данные для редактирования: key, record.
           * @param {Object} popupOptions Опции всплывающего окна диалога редактирования.
           * В зависимости от значения опции 'mode':
-          * <ul>
-          *     <li>'stack'  - смотреть {@link Controls/_popup/Opener/Stack/PopupOptions.typedef popupOptions стекового окна}</li>
-          *     <li>'dialog' - смотреть {@link Controls/_popup/Opener/Dialog/PopupOptions.typedef popupOptions диалогового окна}</li>
-          *     <li>'sticky' - смотреть {@link Controls/_popup/Opener/Sticky/PopupOptions.typedef popupOptions окна прилипающего блока}</li>
-          * </ul>
+          * * 'stack' — смотреть {@link Controls/_popup/Opener/Stack/PopupOptions.typedef popupOptions стекового окна}
+          * * 'dialog' — смотреть {@link Controls/_popup/Opener/Dialog/PopupOptions.typedef popupOptions диалогового окна}
+          * *'sticky' — смотреть {@link Controls/_popup/Opener/Sticky/PopupOptions.typedef popupOptions окна прилипающего блока}
           * @returns {undefined}
           * @example
-          * WML
+          * * WML
           * <pre>
           *     <Controls.popup:Edit name="EditOpener">
           *        <ws:popupOptions template="Controls-demo/Popup/Edit/MyFormController">
@@ -142,23 +140,17 @@ import Deferred = require('Core/Deferred');
           *        </ws:popupOptions>
           *     </Controls.popup:Edit>
           * </pre>
-          * JavaScript
+          * * JavaScript
           * <pre>
-          *   Control.extend({
-          *        ...
-          *
-          *        _itemClick(event, record) {
-          *           var popupOptions = {
-          *              closeOnOutsideClick: false,
-          *           };
-          *
-          *           var meta = {
-          *              record: record,
-          *          };
-          *
-          *           this._children.EditOpener.open(meta, popupOptions);
-          *       }
-          *    });
+          * Control.extend({
+          *    ...
+          *    _itemClick(event, record) {
+          *       var popupOptions = {
+          *          closeOnOutsideClick: false,
+          *       };
+          *       this._children.EditOpener.open({record: record}, popupOptions);
+          *    }
+          * });
           * </pre>
           */
          /*
@@ -220,7 +212,6 @@ import Deferred = require('Core/Deferred');
          /**
           * Возвращает информацию о том, открыто ли всплывающее окно.
           * @function Controls/_popup/Opener/Edit#isOpened
-          * @returns {Boolean} всплывающее окно открыто.
           */
          /*
           * Popup opened status
@@ -287,9 +278,9 @@ import Deferred = require('Core/Deferred');
 /**
  * @name Controls/_popup/Opener/Edit#mode
  * @cfg {Object} Устанавливает режим отображения диалога редактирования.
- * @variant stack Отображение диалога в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ стековом окне}.
- * @variant dialog Отображение диалога в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ диалоговом окне}.
- * @variant sticky Отображение диалога в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ окне прилипающего блока}.
+ * @variant stack Отображение диалога в {@link /doc/platform/developmentapl/interface-development/controls/openers/stack/ стековом окне}.
+ * @variant dialog Отображение диалога в {@link /doc/platform/developmentapl/interface-development/controls/openers/dialog/ диалоговом окне}.
+ * @variant sticky Отображение диалога в {@link /doc/platform/developmentapl/interface-development/controls/openers/sticky/ окне прилипающего блока}.
  */
 /*
  * @name Controls/_popup/Opener/Edit#mode
