@@ -237,7 +237,7 @@ import 'css!theme?Controls/popup';
 
 /**
  * @name Controls/_popup/Previewer#content
- * @cfg {Content} Контент, к которому добавлена ​​логика открытия и закрытия миникарточки.
+ * @cfg {Content} Контент, при взаимодействии с которым открывается окно.
  */
 /*
  * @name Controls/_popup/Previewer#content
@@ -246,7 +246,7 @@ import 'css!theme?Controls/popup';
 
 /**
  * @name Controls/_popup/Previewer#template
- * @cfg {Content} Содержимое миникарточки.
+ * @cfg {Content} Содержимое окна.
  */
 /*
  * @name Controls/_popup/Previewer#template
@@ -255,7 +255,7 @@ import 'css!theme?Controls/popup';
 
 /**
  * @name Controls/_popup/Previewer#trigger
- * @cfg {String} Название события, которое запускает открытие или закрытие шаблона.
+ * @cfg {String} Название события, которое запускает открытие или закрытие окна.
  * @variant click Открытие кликом по контенту. Закрытие кликом "мимо" - не по контенту или шаблону.
  * @variant demand Закрытие кликом по контенту или шаблону.
  * @variant hover Открытие по ховеру - по наведению курсора на контент. Закрытие по ховеру - по навердению курсора на контент или шаблон.

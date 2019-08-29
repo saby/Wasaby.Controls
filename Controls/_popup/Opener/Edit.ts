@@ -9,7 +9,6 @@ import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
       /**
        * Контрол, который открывает всплывающее окно с {@link /doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ диалогом редактирования записи}.
-       * Когда в диалоге редактирования происходит действие с записью, управляйте синхронизацией редактируемой записи с рекордсетом.
        * В зависимости от значения опции 'mode':
        * * 'stack'  - используйте опции {@link Controls/popup:Stack}
        * * 'dialog' - используйте опции {@link Controls/popup:Dialog}
@@ -123,7 +122,7 @@ import Deferred = require('Core/Deferred');
          },
 
          /**
-          * Открыть всплывающее окно диалога редактирования.
+          * Открывает всплывающее окно диалога редактирования.
           * @function Controls/_popup/Opener/Edit#open
           * @param {Object} meta Данные для редактирования: key, record.
           * @param {Object} popupOptions Опции всплывающего окна диалога редактирования.
@@ -207,7 +206,7 @@ import Deferred = require('Core/Deferred');
          },
 
          /**
-          * Закрыть всплывающее окно диалога редактирования.
+          * Закрывает всплывающее окно диалога редактирования.
           * @function Controls/_popup/Opener/Edit#close
           */
          /*
@@ -219,7 +218,7 @@ import Deferred = require('Core/Deferred');
          },
 
          /**
-          * Состояние окна диалога редактирования.
+          * Возвращает информацию о том, открыто ли всплывающее окно.
           * @function Controls/_popup/Opener/Edit#isOpened
           * @returns {Boolean} всплывающее окно открыто.
           */

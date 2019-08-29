@@ -304,7 +304,7 @@ export = Validate;
 
 /**
  * @name Controls/_validate/Controller#content
- * @cfg {Content} Содержимое, к которому добавлена ​​логика валидации.
+ * @cfg {Content} Контент, который будет провалидирован.
  */
 /*
  * @name Controls/_validate/Controller#content
