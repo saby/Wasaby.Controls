@@ -435,7 +435,11 @@ var
                     return !GridLayoutUtil.isCompatibleWidth(column.width);
                 });
 
-            if (!hasDynamicWidth) {
+            // TODO Kingo
+            // Метод getColumnsWidthForEditingRow добавляет в GridViewModel сам GridView
+            // при его создании. Если его еще нет, используем ширину из конфигурации
+            // колонок (вызывается только в IE)
+            if (!hasDynamicWidth || !self.getColumnsWidthForEditingRow) {
                 columnsWidth = columnsWidth.concat(columns.map((column) => column.width || '1fr'));
             } else {
                 columnsWidth = columnsWidth.concat(self.getColumnsWidthForEditingRow(itemData));
