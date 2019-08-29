@@ -106,7 +106,7 @@ Button.getDefaultOptions = function () {
       size: 'm',
       iconStyle: 'secondary',
       transparent: true,
-      lazyItemsLoad: true
+      lazyItemsLoading: true
    };
 };
 
