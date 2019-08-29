@@ -78,6 +78,11 @@ var _private = {
       });
    },
 
+   closePopup: function(self) {
+      let layerOpener = self._children.layerOpener;
+      layerOpener && layerOpener.close();
+   },
+
    openWithHistory: function(self) {
       var filter;
 
@@ -457,6 +462,7 @@ var SuggestLayout = Control.extend({
    _select: function(event, item) {
       item = item || event;
       _private.close(this);
+      _private.closePopup(this);
 
       // after select from the suggest, focus on input will lost
       // if the focus should be returned, the control (such Input/Suggest) should do it
