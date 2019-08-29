@@ -13,6 +13,7 @@ import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
 import {getItemsWithHistory, isHistorySource} from 'Controls/_filter/HistoryUtils';
+import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 
 /**
  * Контрол для фильтрации данных. Состоит из иконки-кнопки, строкового представления выбранного фильтра и параметров быстрого фильтра.
