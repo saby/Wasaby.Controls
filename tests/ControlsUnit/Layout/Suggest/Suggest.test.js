@@ -708,6 +708,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.isFalse(item._isUpdateHistory);
          assert.isFalse(suggestComponent._inputActive);
 
+
          suggestComponent._options.historyId = 'testFieldHistoryId';
          suggestComponent._select(item);
          assert.isTrue(item._isUpdateHistory);
@@ -843,6 +844,19 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.isFalse(!!suggestMod._InputController._private.isEmptyData(getSearchResult(undefined, 1)));
       });
 
+      it('Suggest::_private.closePopup', function() {
+         let
+            isClosePopup = false,
+            suggestComponent = new suggestMod._InputController();
 
+         suggestComponent._children.layerOpener = {
+            close: function() {
+               isClosePopup = true;
+            }
+         }
+
+         suggestMod._InputController._private.closePopup(suggestComponent);
+         assert.isTrue(isClosePopup);
+      });
    });
 });
