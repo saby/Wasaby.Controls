@@ -53,6 +53,43 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
 }
 
 /**
+ * Модуль возвращает функцию, которая позволяет прокручивать содержимое
+ * в родительских прокручиваемых контейнерах,
+ * так что переданный DOM-элемент становится видимым.
+ *
+ * <h2>Аргументы функции</h2>
+ *
+ * <ul>
+ * <li>element: HTMLElement - DOM-элемент, который нужно сделать видимым,</li>
+ * <li>toBottom: boolean - определяет, должен ли быть виден нижний край контейнера,</li>
+ * <li>force: boolean:</li>
+ *    <ul>
+ *       <li>true - позволяет прокручивать элемент вверх/вниз в области прокрутки, безоговорочно,</li>
+ *       <li>false - элемент будет прокручиваться только в случае, если он частично или полностью скрыт за пределами области прокрутки.</li>
+ *    </ul>
+ * </ul>
+ *
+ * <h3>Пример использования</h3>
+ * <pre>
+ * require([
+ *     'Controls/Utils/scrollToElement'
+ * ], function(
+ *     scrollToElement
+ * ) {
+ *     class Component extends Control {
+ *         _onClick() {
+ *             scrollToElement(this._children.child, true);
+ *         }
+ *     }
+ * });
+ * </pre>
+ *
+ * The
+ * @class Controls/Utils/scrollToElement
+ * @public
+ * @author Красильников А.С.
+ */
+/*
  * The module returns a function that allows scrolling content in parent scrollable containers
  * so that the passed dom element becomes visible.
  *
@@ -84,6 +121,7 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
  * @public
  * @author Красильников А.С.
  */
+
 function scrollToElement(element: HTMLElement, toBottom?: Boolean, force?: Boolean) {
    getScrollableParents(element).forEach(parent => {
       const
