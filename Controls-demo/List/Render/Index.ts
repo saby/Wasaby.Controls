@@ -52,6 +52,16 @@ export default class RenderDemo extends Control {
         this._multiSelectVisibility = visibility;
     }
 
+    private _changeSwiped(e: SyntheticEvent<null>, swiped: boolean): void {
+        // no swipe controller yet
+        window.model.at(0).setSwiped(swiped);
+        window.model._nextVersion();
+    }
+
+    private _changeEditing(e: SyntheticEvent<null>, editing: boolean): void {
+        window.model.setEditingItem(editing ? window.model.at(0) : null);
+    }
+
     private _generateListItems(count: number): IListItem[] {
         const result = [];
         while (count--) {
