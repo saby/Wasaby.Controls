@@ -87,7 +87,7 @@ define('Controls/interface/IFormController', [
 
    /**
     * @name Controls/interface/IFormController#destroyMetaData
-    * @cfg {Object} Устанавливает набор инициализирующих значений, которые будут использованы при уничтожении черновой записи. Подробнее {@link Types/source:ICrud#destroy}
+    * @cfg {Object} Устанавливает набор инициализирующих значений, которые будут использованы при уничтожении "черновика". Подробнее {@link Types/source:ICrud#destroy}
     * Также, это значение по умолчанию для метода destroy.
     */
 
