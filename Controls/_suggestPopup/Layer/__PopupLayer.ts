@@ -73,6 +73,10 @@ var __PopupLayer = Control.extend({
       }
    },
 
+   close: function() {
+      this._children.suggestPopup.close();
+   },
+
    _onResult: function(position) {
       //fix suggest position after show
       this._popupOptions.verticalAlign = position.verticalAlign;
@@ -83,7 +87,6 @@ var __PopupLayer = Control.extend({
       this._popupOptions.className = _private.getPopupClassName(position.verticalAlign.side);
       this._popupOptions.fittingMode = 'fixed';
    }
-
 });
 
 __PopupLayer._private = _private;
