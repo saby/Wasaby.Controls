@@ -8,7 +8,7 @@ import dataSource = require('Controls/dataSource');
 
    /**
     * Контроллер, в котором определена логика CRUD-методов, выполняемых над редактируемой записью. 
-    * В частном случае контрол применяется для создания <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">диалогов редактирования записи.</a> Может выполнять запросы CRUD-методов на БЛ.
+    * В частном случае контрол применяется для создания <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">диалогов редактирования записи</a>. Может выполнять запросы CRUD-методов на БЛ.
     * @category FormController
     * @class Controls/_form/FormController
     * @extends Core/Control
