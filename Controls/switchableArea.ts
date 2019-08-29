@@ -1,11 +1,20 @@
 /**
- * switchableArea library
+ * Библиотека, которая реализует область с возможностью переключения контента.
  * @library Controls/switchableArea
  * @includes View Controls/_switchableArea/View
  * @includes itemTemplate wml!Controls/_switchableArea/resource/itemTemplate
  * @public
  * @author Крайнов Д.О.
  */
+
+/*
+ * switchableArea library
+ * @library Controls/switchableArea
+ * @includes View Controls/_switchableArea/View
+ * @includes itemTemplate wml!Controls/_switchableArea/resource/itemTemplate
+ * @public
+ * @author Крайнов Д.О.
+ */ 
 
 import itemTemplate from 'Controls/_switchableArea/ItemTpl';
 

@@ -17,6 +17,7 @@ import defaultItemTemplate from './ItemTpl';
 /*
  Component switches content areas.
 */
+
 /**
  * @typedef {Object} SwitchableAreaItem
  * @property {String|Number} key
@@ -30,13 +31,23 @@ import defaultItemTemplate from './ItemTpl';
 
 /**
  * @name Controls/_switchableArea/View#selectedKey
- * @cfg {String} Key of selected item.
+ * @cfg {String} Ключ выбранного элемента.
  */
+
+/*
+ * @name Controls/_switchableArea/View#selectedKey
+ * @cfg {String} Key of selected item.
+ */ 
 
 /**
  * @name Controls/_switchableArea/View#itemTemplate
- * @cfg {Function} Template for item render.
+ * @cfg {Function} Шаблон отображения элемента.
  */
+
+/*
+ * @name Controls/_switchableArea/View#itemTemplate
+ * @cfg {Function} Template for item render.
+ */ 
 
 var View = Control.extend({
    _template: template,
