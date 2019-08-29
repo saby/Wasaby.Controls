@@ -430,10 +430,6 @@ var Filter = Control.extend({
     },
 
     openDetailPanel: function() {
-        this._openDetailPanel();
-    },
-
-    _openDetailPanel: function() {
         if (this._options.detailPanelTemplateName) {
             let panelItems = converterFilterItems.convertToDetailPanelItems(this._source);
             let popupOptions =  {};

@@ -147,7 +147,7 @@ var _private = {
    resetItems: function(self, items) {
       let textValue;
       let resetValue;
-      
+
       chain.factory(items).each(function(item) {
          // Fast filters could not be reset from the filter button.
          if (!Utils.object.getPropertyValue(item, 'isFast')) {
@@ -230,10 +230,6 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
    },
 
    openDetailPanel: function() {
-      this._openFilterPanel();
-   },
-
-   _openFilterPanel: function() {
       var self = this;
       if (!this._options.readOnly) {
          /* if template - show old component */
