@@ -82,7 +82,11 @@ var
                  if (GridLayoutUtil.isNoGridSupport()) {
                     return ' colspan: 1;';
                  } else if (GridLayoutUtil.isPartialGridSupport()) {
-                    return ` -ms-grid-column: 1; -ms-grid-column-span: ${multiselectOffset + 1};`;
+
+                    // TODO: KINGO
+                    // в edge, в отличие от ie воспринимаются стили grid-column, поэтому нужно для частичной поддержки грида задавать и их.
+                    // перебивание стилей будет убрано по https://online.sbis.ru/opendoc.html?guid=a0c4964a-2474-4fb6-ab8c-ffab9db62dd0
+                    return ` -ms-grid-column: 1; -ms-grid-column-span: ${multiselectOffset + 1}; grid-column: 1 / ${multiselectOffset + 2};`;
                  } else {
                     return ` grid-column: 1 / ${multiselectOffset + 2};`;
                  }
