@@ -114,7 +114,7 @@ var _private = {
    itemOpenHandler: function(root:string|number|null):void {
       if (root !== null) {
          _private.getSearchController(this).abort(true);
-         this._inputSearchValue = '';
+         _private.setInputSearchValue(this, '');
       }
       this._root = root;
    },
@@ -148,6 +148,10 @@ var _private = {
       }
 
       return root;
+   },
+
+   setInputSearchValue: function(self, value: string): void {
+      self._inputSearchValue = value;
    }
 };
 
@@ -229,8 +233,9 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
       if (this._searchController) {
          if (_private.needUpdateSearchController(currentOptions, this._dataOptions) || _private.needUpdateSearchController(this._options, newOptions)) {
-            this._searchController.abort();
+            this._searchController.abort(true);
             this._searchController = null;
+            _private.setInputSearchValue(this, '');
          } else if (filter) {
             this._searchController.setFilter(clone(filter));
          }
@@ -246,7 +251,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
    _search: function (event, value, force) {
       _private.getSearchController(this).search(value, force);
-      this._inputSearchValue = value;
+      _private.setInputSearchValue(this, value);
    },
 
    _beforeUnmount: function () {
