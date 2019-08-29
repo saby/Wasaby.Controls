@@ -28,6 +28,7 @@
             </div>
          </div>
       </ws:if>
+      <!-- virtualPageSize="{{4}}" - with a value of 4, scrolling the mouse wheel over the years panel works faster. -->
       <Controls.calendar:MonthList
          name="monthList"
          virtualPageSize="{{4}}"

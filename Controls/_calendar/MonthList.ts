@@ -293,6 +293,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             viewMode: 'year',
             yearTemplate,
             monthTemplate,
+            // In most places where control is used, no more than 4 elements are displayed at the visible area.
+            // Draw the elements above and below.
             virtualPageSize: 6
         };
     }
