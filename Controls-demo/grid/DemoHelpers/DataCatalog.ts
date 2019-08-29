@@ -1,9 +1,9 @@
-function getCountriesStats(): {
-    getData: any,
-    getColumnsWithoutWidths: any
-    getColumnsWithWidths: any
-    getDefaultHeader
-} {
+import * as simpleResultTpl from 'wml!Controls-demo/grid/_resources/ResultCellTemplates/Simple'
+import * as numberResultTpl from 'wml!Controls-demo/grid/_resources/ResultCellTemplates/Number'
+
+const resultCellTpl = numberResultTpl;
+
+function getCountriesStats() {
     return {
         getData: () => [
             {
@@ -31,7 +31,7 @@ function getCountriesStats(): {
                 capital: 'Вашингтон',
                 population: 295734100,
                 square: 9629091,
-                populationDensity: 3071
+                populationDensity: 30.71
             },
             {
                 id: 3,
@@ -201,28 +201,33 @@ function getCountriesStats(): {
         getColumnsWithWidths: () => [
             {
                 displayProperty: 'number',
-                width: 'max-content'
+                width: '40px',
             },
             {
                 displayProperty: 'country',
-                width: 'minmax(max-content, 1fr)',
+                width: '300px',
             },
             {
                 displayProperty: 'capital',
-                width: 'minmax(max-content, 300px)'
-
+                width: 'max-content'
             },
             {
                 displayProperty: 'population',
-                width: 'max-content'
+                width: 'max-content',
+                result: 3956986345,
+                resultTemplate: resultCellTpl
             },
             {
                 displayProperty: 'square',
-                width: 'max-content'
+                width: 'max-content',
+                result: 12423523,
+                resultTemplate: resultCellTpl
             },
             {
                 displayProperty: 'populationDensity',
-                width: 'max-content'
+                width: 'max-content',
+                result: 5.8,
+                resultTemplate: resultCellTpl
             }
         ],
         getDefaultHeader: () => [
@@ -243,6 +248,88 @@ function getCountriesStats(): {
             },
             {
                 title: 'Плотность населения чел/км2'
+            }
+        ],
+        getMultiHeader: () => [
+            {
+                title: '#',
+                startRow: 1,
+                endRow: 3,
+                startColumn: 1,
+                endColumn: 2
+            },
+            {
+                title: 'Географические данные',
+                startRow: 1,
+                endRow: 2,
+                startColumn: 2,
+                endColumn: 4
+            },
+            {
+                title: 'Страна',
+                startRow: 2,
+                endRow: 3,
+                startColumn: 2,
+                endColumn: 3
+            },
+            {
+                title: 'Столица',
+                startRow: 2,
+                endRow: 3,
+                startColumn: 3,
+                endColumn: 4
+            },
+            {
+                title: 'Цифры',
+                startRow: 1,
+                endRow: 2,
+                startColumn: 4,
+                endColumn: 7,
+                align: 'center'
+            },
+            {
+                title: 'Население',
+                startRow: 2,
+                endRow: 3,
+                startColumn: 4,
+                endColumn: 5
+            },
+            {
+                title: 'Площадь км2',
+                startRow: 2,
+                endRow: 3,
+                startColumn: 5,
+                endColumn: 6
+            },
+            {
+                title: 'Плотность населения чел/км2',
+                startRow: 2,
+                endRow: 3,
+                startColumn: 6,
+                endColumn: 7
+            }
+        ],
+        getHeaderWithSorting: () => [
+            {
+                title: '#'
+            },
+            {
+                title: 'Страна'
+            },
+            {
+                title: 'Столица'
+            },
+            {
+                title: 'Население',
+                sortingProperty: 'population'
+            },
+            {
+                title: 'Площадь км2',
+                sortingProperty: 'square'
+            },
+            {
+                title: 'Плотность населения чел/км2',
+                sortingProperty: 'populationDensity'
             }
         ]
     }
