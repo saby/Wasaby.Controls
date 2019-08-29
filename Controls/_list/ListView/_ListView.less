@@ -203,10 +203,17 @@
    cursor: pointer;
 }
 
-.controls-ListView__groupExpander:before {
+.controls-ListView__groupExpander_left:before {
    width: @width_ListView-groupExpander;
    font-size: @font-size_ListView-groupExpander;
    padding-right: @spacing_ListView-group-between-text-expander;
+   content: '\e000';
+}
+
+.controls-ListView__groupExpander_right:after {
+   width: @width_ListView-groupExpander;
+   font-size: @font-size_ListView-groupExpander;
+   padding-left: @spacing_ListView-group-between-text-expander;
    content: '\e000';
 }
 
@@ -218,7 +225,11 @@
    color: @color_ListView-groupExpander_active;
 }
 
-.controls-ListView__groupExpander_collapsed:before {
+.controls-ListView__groupExpander_collapsed_left:before {
+   content: '\e013';
+}
+
+.controls-ListView__groupExpander_collapsed_right:after {
    content: '\e013';
 }
 
