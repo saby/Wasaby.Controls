@@ -298,7 +298,7 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
                   properties.filter = itemProperties.filter || {};
                   properties.filter[itemProperties.keyProperty] = keys;
                   let result = _private.loadItemsFromSource({}, properties, false).addCallback(function(items) {
-                     configs[index]._items = getItemsWithHistory(configs[index]._items, items, configs[index]._sourceController, configs[index]._source);
+                     configs[index]._items = getItemsWithHistory(configs[index]._items, items, configs[index]._sourceController, configs[index]._source, configs[index].keyProperty);
                   });
                   pDef.push(result);
                } else {
