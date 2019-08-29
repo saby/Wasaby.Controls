@@ -4177,6 +4177,37 @@ define([
                };
                assert.equal(lists.BaseControl._private.calcPaging(self, hasMore, pageSize), 1);
             });
+
+            describe('getPagingLabelData', function() {
+               it('getPagingLabelData', function() {
+                  let getPagingLabelData = lists.BaseControl._private.getPagingLabelData;
+                  let totalItemsCount = false,
+                     currentPage = 1,
+                     pageSize = 10;
+                  assert.equal(getPagingLabelData(totalItemsCount, pageSize, currentPage), null);
+
+                  totalItemsCount = 100;
+                  assert.deepEqual({
+                        totalItemsCount: 100,
+                        pageSize: 10,
+                        firstItemNumber: 1,
+                        lastItemNumber: 10,
+                     },
+                     getPagingLabelData(totalItemsCount, pageSize, currentPage)
+                  );
+
+                  totalItemsCount = 15;
+                  currentPage = 2;
+                  assert.deepEqual({
+                        totalItemsCount: 15,
+                        pageSize: 10,
+                        firstItemNumber: 11,
+                        lastItemNumber: 15,
+                     },
+                     getPagingLabelData(totalItemsCount, pageSize, currentPage)
+                  );
+               });
+            });
          });
          describe('navigation switch', function() {
             var cfg = {
