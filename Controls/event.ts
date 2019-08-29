@@ -20,10 +20,12 @@
 import Register = require('Controls/_event/Register');
 import Listener = require('Controls/_event/Listener');
 import Registrar = require('Controls/_event/Registrar');
+import {register as RegisterUtil,unregister as UnregisterUtil} from 'Controls/_event/ListenerUtils'
 
 export {
    Register,
    Listener,
-
-   Registrar
+   Registrar,
+   RegisterUtil,
+    UnregisterUtil
 }
