@@ -10,8 +10,7 @@ define('Controls/Application',
       'UI/Base',
       'Controls/scroll',
       'Core/helpers/getResourceUrl',
-      'Controls/decorator',
-      'css!theme?Controls/Application/Application'
+      'Controls/decorator'
    ],
 
    /**
@@ -404,7 +403,7 @@ define('Controls/Application',
 
          _beforeMount: function(cfg) {
             this.BodyClasses = _private.calculateBodyClasses;
-            this._scrollData = new scroll._scrollContext({pagingVisible: cfg.pagingVisible});
+            this._scrollData = new scroll._scrollContext({ pagingVisible: cfg.pagingVisible });
             this.headJson = cfg.headJson;
             this.headValidHtml = generateHeadValidHtml();
 
@@ -479,6 +478,8 @@ define('Controls/Application',
             pagingVisible: false
          };
       };
+
+      Page._theme = ['Controls/application'];
 
       return Page;
    });
