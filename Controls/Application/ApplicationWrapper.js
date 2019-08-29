@@ -1,8 +1,7 @@
 define('Controls/Application/ApplicationWrapper', [
    'Core/Control',
    'Env/Env',
-   'wml!Controls/Application/ApplicationWrapper',
-   'css!Controls/Application/ApplicationWrapper'
+   'wml!Controls/Application/ApplicationWrapper'
 ], function(Control, Env, template) {
    'use strict';
 
@@ -42,5 +41,6 @@ define('Controls/Application/ApplicationWrapper', [
          }
       }
    });
+   ModuleClass._theme = ['Controls/application'];
    return ModuleClass;
 });
