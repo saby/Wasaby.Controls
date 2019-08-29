@@ -17,7 +17,7 @@
       <ws:if data="{{_options.emptyTemplate}}">
          <ws:partial template="{{_options.emptyTemplate}}" attr:class="controls-TileView__flex-grow"/>
       </ws:if>
-      <ws:if data="{{_options.emptyTemplate}}">
+      <ws:if data="{{_options.footerTemplate}}">
          <div class="controls-TileView__footer">
             <ws:partial template="{{_options.footerTemplate}}"/>
          </div>
