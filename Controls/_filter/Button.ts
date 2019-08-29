@@ -8,6 +8,7 @@ import Utils = require('Types/util');
 import Deferred = require('Core/Deferred');
 import libHelper = require('Core/library');
 import {isEqual} from 'Types/object';
+import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import 'css!theme?Controls/filter';
 /**
  * Контрол для поддержки фильтрации данных. Состоит из иконки-кнопки и строкового представления выбранного фильтра.
@@ -209,6 +210,12 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
       return this._options.readOnly ? 'disabled' : 'default';
    },
 
+   reset: function() {
+      resetFilter(this._items);
+      this._notify('filterChanged', [{}]);
+      this._notify('itemsChanged', [this._items]);
+   },
+
    _clearClick: function() {
       if (this._options.filterTemplate) {
          _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
@@ -220,6 +227,10 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
          this._notify('itemsChanged', [this._items]);
       }
       this._text = '';
+   },
+
+   openDetailPanel: function() {
+      this._openFilterPanel();
    },
 
    _openFilterPanel: function() {

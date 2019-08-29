@@ -429,6 +429,10 @@ var Filter = Control.extend({
         }
     },
 
+    openDetailPanel: function() {
+        this._openDetailPanel();
+    },
+
     _openDetailPanel: function() {
         if (this._options.detailPanelTemplateName) {
             let panelItems = converterFilterItems.convertToDetailPanelItems(this._source);
@@ -520,6 +524,12 @@ var Filter = Control.extend({
             }
         });
         return isReseted;
+    },
+
+    reset: function() {
+        resetFilter(this._source);
+        _private.notifyChanges(this, this._source);
+        _private.updateText(this, this._source, this._configs);
     },
 
     _reset: function(event, item) {
