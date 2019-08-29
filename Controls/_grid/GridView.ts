@@ -351,6 +351,12 @@ var
             GridView.superclass.resizeNotifyOnListChanged.apply(this, arguments);
             if (this._children.columnScroll) {
                 this._children.columnScroll._resizeHandler();
+
+                // TODO: KINGO
+                // перерисовка тени после обновления размеров в columnScroll происходит уже в следующую отрисовку.
+                // из-за этого, между обновлениями, тень от скролла рисуется поверх колонок.
+                // Чтобы тень заняла акуальную позицию раньше, нужно вручную установить стиль элементу
+                this._children.columnScroll.updateShadowStyle();
             }
         },
         _afterMount: function() {
