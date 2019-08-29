@@ -25,14 +25,14 @@
       showHeader="{{_options.showHeader}}"
       navigation="{{_options.navigation}}"
       filter="{{_options.filter}}"
-      lazyItemsLoad="{{_options.lazyItemsLoad}}"
+      lazyItemsLoad="{{_options.lazyItemsLoading}}"
       theme="{{_options.theme}}"
       on:selectedItemsChanged="_onItemClickHandler()"
       on:pinClick="_onPinClickHandler()"
       on:dropDownOpen="_tmplNotify('dropDownOpen')"
       on:dropDownClose="_tmplNotify('dropDownClose')"
       attr:class="controls-MenuButton__Wrapper theme_{{_options.theme}}">
-      <ws:if data="{{!_options.lazyItemsLoad && !_hasItems && _viewModeButton === 'link'}}">
+      <ws:if data="{{!_options.lazyItemsLoading && !_hasItems && _viewModeButton === 'link'}}">
          <div class="controls-text-default_theme-{{_options.theme}}
                      controls-fontsize-{{_fontSizeButton}}_theme-{{_options.theme}}">{{_options.caption}}</div>
       </ws:if>
