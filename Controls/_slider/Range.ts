@@ -134,7 +134,7 @@ const maxPercentValue = 100;
 /**
  * @name Controls/_slider/Range#scaleStep
  * @cfg {Number} Параметр scaleStep определяет шаг шкалы, расположенной под слайдером.
- * @remark Шкала отображается, когда опции {@link borderVisible} и scaleStep установлены  в значение false и true соответственно.
+ * @remark Шкала отображается, когда опция {@link borderVisible} установлена в значения false, а параметр scaleStep положительный.
  * @example
  * Слайдер со шкалой с шагом 20:
  * <pre class="brush:html">
