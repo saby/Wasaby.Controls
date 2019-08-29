@@ -27,6 +27,9 @@ import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 import MarkerManager from './utils/MarkerManager';
+import EditInPlaceManager from './utils/EditInPlaceManager';
+import ItemActionsManager from './utils/ItemActionsManager';
+import IItemActions from './interface/IItemActions';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -480,6 +483,14 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    protected _$displayProperty: string;
 
+   protected _$multiSelectVisibility: string;
+
+   protected _$leftSpacing: string;
+   protected _$rightSpacing: string;
+   protected _$rowSpacing: string;
+
+   protected _$searchValue: string;
+
    /**
     * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
     * игнорироваться). Работает только если задано {@link idProperty}.
@@ -572,6 +583,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
    protected _oEventRaisingChange: Function;
 
    protected _markerManager: MarkerManager;
+   protected _editInPlaceManager: EditInPlaceManager;
+   protected _itemActionsManager: ItemActionsManager;
 
    constructor(options: IOptions<S, T>) {
       super(options);
@@ -614,6 +627,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       }
 
       this._markerManager = new MarkerManager();
+      this._editInPlaceManager = new EditInPlaceManager();
+      this._itemActionsManager = new ItemActionsManager();
    }
 
    destroy(): void {
@@ -1891,9 +1906,55 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       return this._$displayProperty;
    }
 
+   getMultiSelectVisibility(): string {
+      return this._$multiSelectVisibility;
+   }
+
+   setMultiSelectVisibility(visibility: string): string {
+      if (this._$multiSelectVisibility === visibility) {
+         return;
+      }
+      this._$multiSelectVisibility = visibility;
+      this._nextVersion();
+   }
+
+   getSpacingClassList(): string {
+      let classList = '';
+
+      classList += ' controls-ListView__item-topPadding_' + (this._$rowSpacing || 'default').toLowerCase();
+      classList += ' controls-ListView__item-bottomPadding_' + (this._$rowSpacing || 'default').toLowerCase();
+      classList += ' controls-ListView__item-rightPadding_' + (this._$rightSpacing || 'default').toLowerCase();
+
+      if (this._$multiSelectVisibility !== 'hidden') {
+         classList += ' controls-ListView__itemContent_withCheckboxes';
+      } else {
+         classList += ' controls-ListView__item-leftPadding_' + (this._$leftSpacing || 'default').toLowerCase();
+      }
+
+      return classList;
+   }
+
    setMarkedItem(item: CollectionItem<S>): void {
       this._markerManager.markItem(item);
       this._nextVersion();
+   }
+
+   setEditingItem(item: CollectionItem<S>): void {
+      this._editInPlaceManager.beginEdit(item);
+      this._nextVersion();
+   }
+
+   isEditing(): boolean {
+      return this._editInPlaceManager.isEditing();
+   }
+
+   setItemActions(item: CollectionItem<S>, actions: IItemActions): void {
+      this._itemActionsManager.setItemActions(item, actions);
+      this._nextVersion();
+   }
+
+   getSearchValue(): string {
+      return this._$searchValue;
    }
 
    getItemCounters(): ICollectionCounters[] {
@@ -2982,6 +3043,11 @@ Object.assign(Collection.prototype, {
    _$sort: null,
    _$idProperty: '',
    _$displayProperty: '',
+   _$multiSelectVisibility: 'hidden',
+   _$leftSpacing: '',
+   _$rightSpacing: '',
+   _$rowSpacing: '',
+   _$searchValue: '',
    _$unique: false,
    _$importantItemProperties: null,
    _localize: false,
@@ -2995,7 +3061,9 @@ Object.assign(Collection.prototype, {
    _onCollectionChange: null,
    _onCollectionItemChange: null,
    _oEventRaisingChange: null,
-   _markerManager: null
+   _markerManager: null,
+   _editInPlaceManager: null,
+   _itemActionsManager: null
 });
 
 register('Controls/display:Collection', Collection);

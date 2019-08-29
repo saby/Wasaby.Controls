@@ -11,6 +11,7 @@ import {ISerializableState as IDefaultSerializableState} from 'Types/entity';
 import {IList} from 'Types/collection';
 import {register} from 'Types/di';
 import {mixin} from 'Types/util';
+import IItemActions from './interface/IItemActions';
 
 export interface IOptions<T> {
    contents: T;
@@ -76,6 +77,21 @@ export default class CollectionItem<T> extends mixin<
     */
    protected _$marked: boolean;
 
+   /**
+    * Элемент находится в режиме редактирования
+    */
+   protected _$editing: boolean;
+
+   /**
+    * Операции над записью
+    */
+   protected _$actions: IItemActions;
+
+   /**
+    * Элемент находится в режиме отображения операций над записью по свайпу
+    */
+   protected _$swiped: boolean;
+
    protected _instancePrefix: string;
 
    /**
@@ -127,6 +143,12 @@ export default class CollectionItem<T> extends mixin<
          }
       }
       return this._$contents;
+   }
+
+   // TODO: обсудить, по идее это костыль для бинда. Нужно либо перейти на
+   // реактивный объект, либо придумать что-то другое
+   get contents(): T {
+      return this.getContents();
    }
 
    /**
@@ -186,6 +208,14 @@ export default class CollectionItem<T> extends mixin<
 
    // endregion
 
+   getMultiSelectClasses(): string {
+      let classes = 'controls-ListView__checkbox controls-ListView__notEditable';
+      if (this.getOwner().getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
+         classes += ' controls-ListView__checkbox-onhover';
+      }
+      return classes;
+   }
+
    getDisplayProperty(): string {
       return this.getOwner().getDisplayProperty();
    }
@@ -203,6 +233,63 @@ export default class CollectionItem<T> extends mixin<
       if (!silent) {
          this._notifyItemChangeToOwner('marked');
       }
+   }
+
+   isEditing(): boolean {
+      return this._$editing;
+   }
+
+   setEditing(editing: boolean, silent?: boolean): void {
+      if (this._$editing === editing) {
+         return;
+      }
+      this._$editing = editing;
+      this._nextVersion();
+      if (!silent) {
+         this._notifyItemChangeToOwner('editing');
+      }
+   }
+
+   isSwiped(): boolean {
+      return this._$swiped;
+   }
+
+   setSwiped(swiped: boolean, silent?: boolean): void {
+      if (this._$swiped === swiped) {
+         return;
+      }
+      this._$swiped = swiped;
+      this._nextVersion();
+      if (!silent) {
+         this._notifyItemChangeToOwner('swiped');
+      }
+   }
+
+   setActions(actions: IItemActions, silent?: boolean): void {
+      if (this._$actions === actions) {
+         return;
+      }
+      this._$actions = actions;
+      this._nextVersion();
+      if (!silent) {
+         this._notifyItemChangeToOwner('actions');
+      }
+   }
+
+   getActions(): IItemActions {
+      return this._$actions;
+   }
+
+   hasVisibleActions(): boolean {
+      return this._$actions && this._$actions.showed && this._$actions.showed.length > 0;
+   }
+
+   hasActionWithIcon(): boolean {
+      return this.hasVisibleActions() && this._$actions.showed.some((action) => !!action.icon);
+   }
+
+   shouldDisplayActions(): boolean {
+      return this.hasVisibleActions() || this.isEditing();
    }
 
    increaseCounter(name: string): number {
@@ -293,6 +380,9 @@ Object.assign(CollectionItem.prototype, {
    _$contents: null,
    _$selected: false,
    _$marked: false,
+   _$editing: false,
+   _$actions: null,
+   _$swiped: false,
    _instancePrefix: 'collection-item-',
    _contentsIndex: undefined,
    _counters: null,
