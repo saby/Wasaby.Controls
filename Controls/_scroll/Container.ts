@@ -142,8 +142,8 @@ var
 
       setScrollTop: function(self, scrollTop) {
          self._children.scrollWatcher.setScrollTop(scrollTop);
-         self._scrollTop = scrollTop;
-         self._notify('scroll', [scrollTop]);
+         self._scrollTop = _private.getScrollTop(self, self._children.content);
+         self._notify('scroll', [self._scrollTop]);
       },
 
       calcHasScroll: function(self) {
