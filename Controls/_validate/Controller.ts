@@ -5,6 +5,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import getZIndex = require('Controls/Utils/getZIndex');
+import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 import errorMessage = require('wml!Controls/_validate/ErrorMessage');
 import 'css!theme?Controls/validate';
 
@@ -110,9 +111,13 @@ let Validate = Base.extend({
         this._isNewEnvironment = isNewEnvironment();
     },
     _afterMount() {
+        //Use listener without template.
+        //Some people can add style to the container of validation, and some people can add style to the content.
+        RegisterUtil(this, 'scroll', this._scrollHandler.bind(this));
         this._notify('validateCreated', [this], {bubbling: true});
     },
     _beforeUnmount() {
+        UnregisterUtil(this, 'scroll');
         this._notify('validateDestroyed', [this], {bubbling: true});
         if (this._isOpened) {
             _private.forceCloseInfoBox(this);
@@ -227,6 +232,11 @@ let Validate = Base.extend({
         clearTimeout(this._closeId);
         if (!this._isOpened) {
             _private.openInfoBox(this);
+        }
+    },
+    _scrollHandler() {
+        if (this._isOpened) {
+            _private.forceCloseInfoBox(this);
         }
     },
     _focusInHandler() {
