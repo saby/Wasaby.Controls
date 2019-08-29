@@ -17,9 +17,9 @@ interface IInputMaskValue {
     readonly _options: {
         /**
          * @name Controls/interface/IInputMaskValue#value
-         * @cfg {String} Текст в поле ввода без разделителей.
-         * @default '' (empty string)
-         * @remark Если вы не обновите параметр "value", то не сможете ничего ввести в поле. Необходимо подписаться на событие _valueChanged и обновить "value", которое передается контролу. 
+         * @cfg {String}  Значение контрола ввода. 
+         * @default '' (пустая строка)
+         * @remark Текст в поле ввода без разделителей. Для корректной работы поля ввода необходимо подписаться на событие _valueChanged и обновить "value", которое передается контролу. 
          * Вы можете использовать синтаксис биндинга. Передаваемый параметр "value" должен быть необработанным без разделителей. 
          * Если необходимо получить значение с разделителями, то вы можете сделать это с помощью события {@link Controls/interface/IInputMaskValue#valueChanged}.
          * @example
@@ -142,7 +142,7 @@ interface IInputMaskValue {
  */ 
 
 /**
- * @event Происходит при завершении ввода в поле (поле потеряло фокус или пользователь нажал клавишу "enter").
+ * @event Происходит при завершении ввода (поле потеряло фокус или пользователь нажал клавишу "enter").
  * @name Controls/interface/IInputMaskValue#inputCompleted
  * @param {String} value Значение поля.
  * @param {String} displayValue Текстовое значение поля.

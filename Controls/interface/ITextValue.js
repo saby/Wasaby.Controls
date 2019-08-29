@@ -17,7 +17,7 @@ define('Controls/interface/ITextValue', [], function() {
     */    
 
    /**
-    * @event Controls/interface/ITextValue#textValueChanged Происходит при изменении текстового значения в поле.
+    * @event Controls/interface/ITextValue#textValueChanged Происходит при изменении значения в поле.
     * @param {String} textValue New field textValue.
     */
 
