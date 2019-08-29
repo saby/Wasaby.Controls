@@ -483,11 +483,15 @@ define(['Controls/grid'], function(gridMod) {
             },
             gridView = new gridMod.GridView(cfg),
             columnScrollResizeHandlerCalled = false,
+            columnScrollUpdateShadowStyleCalled = false,
             controlResizeNotified = false;
          gridView._children = {
             columnScroll:{
                _resizeHandler: function() {
                   columnScrollResizeHandlerCalled = true;
+               },
+               updateShadowStyle() {
+                  columnScrollUpdateShadowStyleCalled = true;
                }
             }
          };
@@ -499,6 +503,7 @@ define(['Controls/grid'], function(gridMod) {
          gridView.resizeNotifyOnListChanged();
          assert.isTrue(controlResizeNotified);
          assert.isTrue(columnScrollResizeHandlerCalled);
+         assert.isTrue(columnScrollUpdateShadowStyleCalled);
       });
    });
 });
