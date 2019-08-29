@@ -2,7 +2,7 @@ define('Controls/interface/IFormController', [
 ], function() {
 
    /**
-    * Интерфейс для контрола-контроллера редактирования записей.
+    * Интерфейс для контроллера редактирования записи.
     *
     * @interface Controls/interface/IFormController
     * @public
