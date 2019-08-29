@@ -43,6 +43,9 @@ const maxPercentValue = 100;
 /**
  * @name Controls/_slider/Range#size
  * @cfg {Boolean} Устанавливает размер ползунка слайдера. 
+ * @variant m
+ * @variant s
+ * @default m
  * @example
  * Слайдер с диаметром ползунка = 12px
  * <pre class="brush:html">
@@ -82,8 +85,8 @@ const maxPercentValue = 100;
 
 /**
  * @name Controls/_slider/Range#minValue
- * @cfg {Number} Устанавливает минимальное значение слайдера.
- * @remark Должно быть меньше, чем maxValue.
+ * @cfg {Number} Устанавливает минимальное значение слайдера. Обязательная к конфигурации опция.
+ * @remark Должно быть меньше, чем {@link maxValue}.
  * @example
  * Слайдер с границей:
  * <pre class="brush:html">
@@ -106,8 +109,8 @@ const maxPercentValue = 100;
 
 /**
  * @name Controls/_slider/Range#maxValue
- * @cfg {Number} Устанавливает максимальное значение слайдера.
- * @remark Должно быть больше, чем minValue.
+ * @cfg {Number} Устанавливает максимальное значение слайдера. Обязательная к конфигурации опция.
+ * @remark Должно быть больше, чем {@link minValue}.
  * @example
  * Слайдер с границей:
  * <pre class="brush:html">
@@ -131,7 +134,7 @@ const maxPercentValue = 100;
 /**
  * @name Controls/_slider/Range#scaleStep
  * @cfg {Number} Параметр scaleStep определяет шаг шкалы, расположенной под слайдером.
- * @remark Шкала отображается только если borderVisible имеет значение false и scaleStep значение true.
+ * @remark Шкала отображается, когда опции {@link borderVisible} и scaleStep установлены  в значение false и true соответственно.
  * @example
  * Слайдер со шкалой с шагом 20:
  * <pre class="brush:html">

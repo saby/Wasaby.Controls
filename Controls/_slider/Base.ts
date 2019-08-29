@@ -18,7 +18,7 @@ export interface ISliderBaseOptions extends IControlOptions {
 const maxPercentValue = 100;
 
 /**
- * Базовый слайдер с одной подвижным ползунком для выбора значения.
+ * Базовый слайдер с одним подвижным ползунком для выбора значения.
  *
  * <a href="/materials/demo-ws4-sliderbase">Демо-пример</a>.
  * @public
@@ -42,6 +42,9 @@ const maxPercentValue = 100;
 /**
  * @name Controls/_slider/Base#size
  * @cfg {String} Устанавливает размер ползунка слайдера.
+ * @variant s
+ * @variant m
+ * @default m
  * @example
  * Слайдер с диаметром ползунка = 12px
  * <pre class="brush:html">
@@ -82,7 +85,7 @@ const maxPercentValue = 100;
 /**
  * @name Controls/_slider/Base#minValue
  * @cfg {Number} Устанавливает минимальное значение слайдера.
- * @remark Должно быть меньше, чем maxValue.
+ * @remark Должно быть меньше, чем {@link maxValue}.
  * @example
  * Слайдер с границей:
  * <pre class="brush:html">
@@ -106,7 +109,7 @@ const maxPercentValue = 100;
 /**
  * @name Controls/_slider/Base#maxValue
  * @cfg {Number} Устанавливает максимальное значение слайдера.
- * @remark Должно быть больше, чем minValue.
+ * @remark Должно быть больше, чем {@link minValue}.
  * @example
  * Слайдер с границей:
  * <pre class="brush:html">
@@ -130,9 +133,9 @@ const maxPercentValue = 100;
 /**
  * @name Controls/_slider/Base#scaleStep
  * @cfg {Number} Параметр scaleStep определяет шаг шкалы, расположенной под слайдером.
- * @remark Шкала отображается только если borderVisible имеет значение false и scaleStep значение true.
+ * @remark Шкала отображается, когда опции {@link borderVisible} и scaleStep установлены в значения false и true соответственно.
  * @example
- * Слайдер со шкалой с шагом 20:
+ * Слайдер со шкалой с шагом 20.
  * <pre class="brush:html">
  *   <Controls.slider:Base scaleStep="{{20}}"/>
  * </pre>
@@ -152,9 +155,9 @@ const maxPercentValue = 100;
 /**
  * @name Controls/_slider/Base#value
  * @cfg {Number} Устанавливает текущее значение слайдера.
- * @remark Должно находиится в диапазоне [minValue..maxValue]
+ * @remark Должно находиться в диапазоне [minValue..maxValue]
  * @example
- * Слайдер с ползунком, установленным в положение 40;
+ * Слайдер с ползунком, установленным в положение 40.
  * <pre class="brush:html">
  *   <Controls.slider:Base value="{{40}}"/>
  * </pre>
