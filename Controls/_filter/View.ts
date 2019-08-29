@@ -190,7 +190,7 @@ var _private = {
                     editorOpts.filter[keyProperty] = keys;
                     let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
                         configs[item.name].items = getItemsWithHistory(configs[item.name].items, newItems,
-                            configs[item.name]._sourceController, item.editorOptions.source, configs[item.name].multiSelect);
+                            configs[item.name]._sourceController, item.editorOptions.source, configs[item.name].keyProperty);
                     });
                     pDef.push(result);
                 }
