@@ -18,7 +18,7 @@ export interface ISliderBaseOptions extends IControlOptions {
 const maxPercentValue = 100;
 
 /**
- * Базовый слайдер с одной подвижным ползунком для выбора значения.
+ * Базовый слайдер с одним подвижным ползунком для выбора значения.
  *
  * <a href="/materials/demo-ws4-sliderbase">Демо-пример</a>.
  * @public
