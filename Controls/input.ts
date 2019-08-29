@@ -78,6 +78,7 @@ import StringValueConverter = require('Controls/_input/DateTime/StringValueConve
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
 import INewLineKey from 'Controls/_input/interface/INewLineKey';
+import * as MaskFormatterValue from 'Controls/_input/Mask/FormatterValue'
 export {default as IText, ITextOptions} from 'Controls/_input/interface/IText';
 export {default as IBase, IBaseOptions, TextAlign, AutoComplete} from 'Controls/_input/interface/IBase';
 export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus} from 'Controls/_input/interface/IValidationStatus';
@@ -104,6 +105,7 @@ export {
     TextViewModel,
     MaskFormatBuilder,
     MaskInputProcessor,
+    MaskFormatterValue,
     StringValueConverter,
     InputCallback,
     INewLineKey,
