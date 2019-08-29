@@ -70,7 +70,7 @@ define(
             assert.equal(menu._offsetClassName, 'controls-MenuButton_button__m_popup');
             newConfig.size = 's';
             menu._beforeUpdate(newConfig);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_button__s_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button__default_popup');
          });
          it('_onPinClickHandler', function() {
             var newConfig = Clone(menuConfig);
