@@ -1,25 +1,26 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_input/Mask/Compound';
-import {formattedValueToValue} from 'Controls/_input/Mask/FormatterValue';
-import * as Mask from 'Controls/_input/Mask';
+import * as template from 'wml!Controls/_source/Adapter/Mask/Mask';
+import {Mask as InputMask, MaskFormatterValue} from 'Controls/input';
 import * as tmplNotify from 'Controls/Utils/tmplNotify';
 
 /**
  * Контрол обертка над полем ввода маски. Обеспечивает работу со значением с разделителями.
  *
- * @class Controls/_input/Mask/Compound
+ * @class Controls/_source/Adapter/Mask
  * @extends UI/_base/Control
- * @private
+ *
+ * @public
+ * @demo Controls-demo/Adapter/Mask/Index
  *
  * @author Красильников А.С.
  */
-class Compound extends Control<IControlOptions> {
+class Mask extends Control<IControlOptions> {
     private _notifyHandler = tmplNotify;
 
     protected _template: TemplateFunction = template;
 
     protected _beforeMount(options): void {
-        this._value = formattedValueToValue(options.value, {
+        this._value = MaskFormatterValue.formattedValueToValue(options.value, {
             mask: options.mask,
             replacer: options.replacer,
             formatMaskChars: options.formatMaskChars
@@ -31,7 +32,7 @@ class Compound extends Control<IControlOptions> {
             this._options.mask !== newOptions.mask ||
             this._options.replacer !== newOptions.replacer
         ) {
-            this._value = formattedValueToValue(newOptions.value, {
+            this._value = MaskFormatterValue.formattedValueToValue(newOptions.value, {
                 mask: newOptions.mask,
                 replacer: newOptions.replacer,
                 formatMaskChars: newOptions.formatMaskChars
@@ -39,7 +40,7 @@ class Compound extends Control<IControlOptions> {
         }
     }
 
-    static getDefaultOptions = Mask.getDefaultOptions;
+    static getDefaultOptions = InputMask.getDefaultOptions;
 }
 
-export default Compound;
+export default Mask;
