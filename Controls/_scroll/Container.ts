@@ -424,6 +424,10 @@ var
             return false;
          }
 
+          if (this._shadowVisiblityMode[position] === 'visible') {
+              return true;
+          }
+
          // On ipad with inertial scrolling due to the asynchronous triggering of scrolling and caption fixing  events,
          // sometimes it turns out that when the first event is triggered, the shadow must be displayed,
          // and immediately after the second event it is not necessary.
@@ -431,11 +435,7 @@ var
          if (Env.detection.isMobileIOS && position === 'top' && _private.getScrollTop(this, this._children.content) < 0) {
             return false;
          }
-
-         if (this._shadowVisiblityMode[position] === 'visible') {
-            return true;
-         }
-
+         
          return this._displayState.shadowPosition.indexOf(position) !== -1;
       },
 
