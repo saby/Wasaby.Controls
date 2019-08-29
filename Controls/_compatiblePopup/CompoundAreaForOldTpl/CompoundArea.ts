@@ -57,6 +57,9 @@ var CompoundArea = CompoundContainer.extend([
 
    _isReadOnly: true,
 
+   _baseAfterUpdate: null,
+   _popupController: null,
+
    _beforeMount: function(_options) {
       CompoundArea.superclass._beforeMount.apply(this, arguments);
 
@@ -1056,6 +1059,8 @@ var CompoundArea = CompoundContainer.extend([
             // CompoundArea
             if (!popupConfig.controller._modifiedByCompoundArea) {
                popupConfig.controller._modifiedByCompoundArea = true;
+               self._popupController = popupConfig.controller;
+               self._baseAfterUpdate = popupConfig.controller.elementAfterUpdated;
                popupConfig.controller.elementAfterUpdated = callNext(
                   popupConfig.controller.elementAfterUpdated,
                   popupAfterUpdated
@@ -1110,6 +1115,11 @@ var CompoundArea = CompoundContainer.extend([
       this._unregisterEventListener();
       if (window) {
          window.removeEventListener('resize', this._windowResize);
+      }
+
+      if (this._popupController && this._baseAfterUpdate) {
+         this._popupController.elementAfterUpdated = this._baseAfterUpdate;
+         this._popupController._modifiedByCompoundArea = false;
       }
 
       var ops = this._producedPendingOperations;
