@@ -30,6 +30,7 @@
       </ws:if>
       <Controls.calendar:MonthList
          name="monthList"
+         virtualPageSize="{{4}}"
          position="{{_options.position}}"
          attr:class="controls-PeriodDialog-DateRange-dates-wrapper"
          calendarSource="{{_options.calendarSource}}"

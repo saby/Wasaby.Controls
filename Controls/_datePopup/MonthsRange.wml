@@ -1,5 +1,6 @@
 <Controls.calendar:MonthList
    attr:class="controls-PeriodDialog-MonthsRange"
+   virtualPageSize="{{3}}"
    position="{{_options.position}}"
    on:itemClick="_onItemClick()"
 >
