@@ -6,6 +6,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {IMonthListSource, IMonthListSourceOptions} from './interfaces/IMonthListSource';
 import {IMonthList, IMonthListOptions} from './interfaces/IMonthList';
+import {IMonthListVirtualPageSize, IMonthListVirtualPageSizeOptions} from './interfaces/IMonthListVirtualPageSize';
 import ExtDataModel from './MonthList/ExtDataModel';
 import YearsSource from './MonthList/YearsSource';
 import MonthsSource from './MonthList/MonthsSource';
@@ -50,7 +51,11 @@ import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
  * </pre>
  */
 
-interface IModuleComponentOptions extends IControlOptions, IMonthListSourceOptions, IMonthListOptions {
+interface IModuleComponentOptions extends
+    IControlOptions,
+    IMonthListSourceOptions,
+    IMonthListOptions,
+    IMonthListVirtualPageSizeOptions {
 }
 
 const
@@ -63,9 +68,11 @@ const
         month: '.controls-MonthList__month-body'
     };
 
-class  ModuleComponent extends Control<IModuleComponentOptions> implements IMonthListSource, IMonthList {
+class  ModuleComponent extends Control<IModuleComponentOptions> implements
+        IMonthListSource, IMonthList, IMonthListVirtualPageSize {
     readonly '[Controls/_calendar/interface/IMonthListSource]': true;
     readonly '[Controls/_calendar/interface/IMonthList]': true;
+    readonly '[Controls/_calendar/interface/IMonthListVirtualPageSize]': true;
 
     protected _template: TemplateFunction = template;
 
@@ -285,7 +292,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
         return {
             viewMode: 'year',
             yearTemplate,
-            monthTemplate
+            monthTemplate,
+            // In most places where control is used, no more than 4 elements are displayed at the visible area.
+            // Draw the elements above and below.
+            virtualPageSize: 6
         };
     }
 }
