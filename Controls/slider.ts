@@ -9,7 +9,7 @@
  */
 
 /*
- * Progress indicators library
+ * A library of controls that allow you to edit a number or range by moving the slider.
  * @library Controls/slider
  * @includes Base Controls/_slider/Base
  * @includes Range Controls/_slider/Range
