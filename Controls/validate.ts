@@ -9,7 +9,7 @@
  * @includes isValidDate Controls/_validate/Validators/IsValidDate
  * @includes Selection Controls/_validate/Selection
  * @public
- * @author Крайнов Д.О.
+ * @author Красильников А.С.
  */
 /*
  * validate library
@@ -22,7 +22,7 @@
  * @includes isValidDate Controls/_validate/Validators/IsValidDate
  * @includes Selection Controls/_validate/Selection
  * @public
- * @author Крайнов Д.О.
+ * @author Красильников А.С.
  */
 
 import Controller = require('Controls/_validate/FormController');
