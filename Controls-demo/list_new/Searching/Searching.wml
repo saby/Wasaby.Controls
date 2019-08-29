@@ -2,5 +2,7 @@
     <Controls.list:View
             keyProperty="id"
             source="{{_viewSource}}"
-            itemActionsProperty="itemActions"/>
+            displayProperty="title"
+            searchParam="title"
+            searchValue="ap"/>
 </div>

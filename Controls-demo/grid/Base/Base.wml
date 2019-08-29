@@ -1,6 +1,6 @@
 <div class="controlsDemo__wrapper">
-    <Controls.list:View
+    <Controls.grid:View
             keyProperty="id"
             source="{{_viewSource}}"
-            itemActionsProperty="itemActions"/>
+            columns="{{_columns}}"/>
 </div>

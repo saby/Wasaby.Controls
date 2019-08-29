@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/list_new/ItemActions/ItemActionsProperty/ItemActionsProperty"
+import * as Template from "wml!Controls-demo/list_new/Searching/Searching"
 import {Memory} from "Types/source"
-import {getContactsCatalogWithActions as getData} from "../../DemoHelpers/DataCatalog"
+import {getFewCategories as getData} from "../DemoHelpers/DataCatalog"
 import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
@@ -14,5 +14,4 @@ export default class extends Control {
             data: getData()
         });
     }
-
 }
