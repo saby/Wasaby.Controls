@@ -48,13 +48,14 @@ define('Controls-demo/List/Grid/Grid', [
          {
             displayProperty: 'name',
             width: '1fr',
-            template: 'wml!Controls-demo/List/Grid/DemoName'
+            template: 'wml!Controls-demo/List/Grid/DemoName',
          },
          {
             displayProperty: 'price',
             width: 'auto',
             align: 'right',
-            template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
+            template: 'wml!Controls-demo/List/Grid/DemoCostPrice',
+            cellPadding: {left: 'null', right: 'null'}
          },
          {
             displayProperty: 'balance',
@@ -62,7 +63,8 @@ define('Controls-demo/List/Grid/Grid', [
             align: 'right',
             template: 'wml!Controls-demo/List/Grid/DemoBalancePrice',
             resultTemplate: 'wml!Controls-demo/List/Grid/Results',
-            result: 7893.87
+            result: 7893.87,
+            cellPadding: {left: 's', right: 's'}
          },
          {
             displayProperty: 'reserve',
