@@ -56,7 +56,9 @@ var _private = {
       this.addProperty(this, items, 'ObjectData', 'string', '');
       this.addProperty(this, items, 'pinned', 'boolean', false);
 
-      this.fillPinned(self, history, items);
+      if (self.historySource._pinned) {
+         this.fillPinned(self, history, items);
+      }
       this.fillRecent(self, history, items);
 
       return items;

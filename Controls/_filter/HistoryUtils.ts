@@ -18,10 +18,10 @@ function destroyHistorySource(historyId) {
    HISTORY_SOURCE[historyId] = null;
 }
 
-function createHistorySource(historyId) {
+function createHistorySource(historyId, hasPinned = true) {
    var historySourceData = {
       historyId: historyId,
-      pinned: true,
+      pinned: hasPinned,
 
       /* A record about resets filters is stored in the history, but it is not necessary to display it in the history list.
          We request one more record, so that the number of records remains equal to 10 */
@@ -39,17 +39,17 @@ function createHistorySource(historyId) {
    });
 }
 
-function getHistorySource(historyId) {
+function getHistorySource(historyId, hasPinned?) {
    if (Env.constants.isBuildOnServer) {
       return createHistorySource(historyId);
    } else {
-      HISTORY_SOURCE[historyId] = HISTORY_SOURCE[historyId] || createHistorySource(historyId);
+      HISTORY_SOURCE[historyId] = HISTORY_SOURCE[historyId] || createHistorySource(historyId, hasPinned);
    }
    return HISTORY_SOURCE[historyId];
 }
 
-function loadHistoryItems(historyId) {
-   var source = getHistorySource(historyId);
+function loadHistoryItems(historyId, hasPinned) {
+   var source = getHistorySource(historyId, hasPinned);
    var sourceController = new SourceController({
       source: source
    });
