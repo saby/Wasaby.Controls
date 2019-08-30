@@ -16,6 +16,7 @@ export interface IScrollBarOptions extends IControlOptions {
     position?: number;
     contentSize: number;
     direction: TDirection;
+    getScrollWidth: () => number;
 }
 /**
  * Thin scrollbar.
@@ -73,8 +74,13 @@ class Scrollbar extends Control<IScrollBarOptions> {
     // Координата точки на ползунке, за которую начинаем тащить
     private _dragPointOffset: number | null = null;
     private _isIe: boolean = detection.isIE;
+    private _horizontalScrollOffset: number = 0;
 
     protected _afterMount(): void {
+        if (this._options.direction === 'horizontal') {
+            const { clientWidth, offsetWidth } = this._children.scrollbar;
+            this._horizontalScrollOffset = offsetWidth - clientWidth;
+        }
         this._resizeHandler();
         this._forceUpdate();
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
@@ -173,9 +179,10 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private _setSizes(contentSize: number): boolean {
         const verticalDirection = this._options.direction === 'vertical';
         const horizontalDirection = this._options.direction === 'horizontal';
+        const horizontalScrollWidth = horizontalDirection ? this._options.getScrollWidth() : 0;
         const scrollbar = this._children.scrollbar;
-        this._scrollBarSize = scrollbar[verticalDirection ? 'offsetHeight' : 'offsetWidth'];
-        const scrollbarAvailableSize = scrollbar[verticalDirection ? 'clientHeight' : 'clientWidth'];
+        this._scrollBarSize = verticalDirection ? scrollbar.offsetHeight : horizontalScrollWidth;
+        const scrollbarAvailableSize = verticalDirection ? scrollbar.clientHeight : horizontalScrollWidth - this._horizontalScrollOffset;
         let thumbSize: number;
 
         let viewportRatio: number;

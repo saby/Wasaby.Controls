@@ -1245,7 +1245,8 @@ var
                     hasHeader: !!this.getHeader(),
                     resultsPosition: this.getResultsPosition(),
                     multyHeaderOffset: this.getMultyHeaderOffset(),
-                    hasBottomPadding: this._options._needBottomPadding
+                    hasBottomPadding: this._options._needBottomPadding,
+                    hasColumnScroll: this._options.columnScroll
                 },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
 
@@ -1260,7 +1261,7 @@ var
                 getResultsIndex: () => getResultsIndex({...cfg, hasEmptyTemplate}),
                 getBottomPaddingRowIndex: () => getBottomPaddingRowIndex(cfg),
                 getFooterIndex: () => getFooterIndex({...cfg, hasEmptyTemplate}),
-                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multyHeaderOffset)
+                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multyHeaderOffset,  cfg.hasColumnScroll)
             };
         },
 

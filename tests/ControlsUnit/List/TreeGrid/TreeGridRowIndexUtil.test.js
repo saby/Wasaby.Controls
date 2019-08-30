@@ -76,6 +76,7 @@ define([
             rawData: data || treeGridData,
             idProperty: cfg.keyProperty
          });
+         cfg.columnScroll = cfg.columnScroll || false;
          let model = new treeGridLib.ViewModel(cfg);
          model.setHasMoreStorage({'1': true, '1_1': true, '2': false, '3': undefined});
          model.setExpandedItems(['1', '1_1', '2', '3']);
@@ -88,6 +89,31 @@ define([
       describe('TreeGrid with header and grouping', function () {
 
          describe('with results in top', function () {
+
+            describe('with columnScroll', function () {
+
+
+               beforeEach(function () {
+                  model = createModel({resultsPosition: 'top', groupBy: 'group', nodeFooterTemplate: 'qwe'});
+               });
+
+               it('getBottomPaddingRowIndex', function () {
+                  let index = model._getRowIndexHelper().getBottomPaddingRowIndex();
+                  model._setEditingItemData({index: 0});
+                  assert.equal(index + 1, model._getRowIndexHelper().getBottomPaddingRowIndex());
+                  model._multyHeaderOffset = 1;
+                  assert.equal(index + 2, model._getRowIndexHelper().getBottomPaddingRowIndex());
+               });
+
+               it('getFooterIndex', function () {
+                  let index = model._getRowIndexHelper().getFooterIndex();
+                  model._options._needBottomPadding = true;
+                  assert.equal(index + 1, model._getRowIndexHelper().getFooterIndex());
+                  model._multyHeaderOffset = 1;
+                  assert.equal(index + 2, model._getRowIndexHelper().getFooterIndex());
+               });
+
+            });
 
             describe('with node footer template', function () {
 

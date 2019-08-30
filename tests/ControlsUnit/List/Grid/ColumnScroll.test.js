@@ -11,7 +11,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             multiSelectVisibility: 'visible',
             stickyColumnsCount: 1,
             listModel: {
-               isStickyHeader: () => true,
+               isFullGridSupport: () => true,
                getResultsPosition: () => undefined,
                getItems: () => ({
                   getCount: () => 3
@@ -142,7 +142,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                stickyColumnsCount: 1,
                columnScrollStartPosition: 'end',
                listModel: {
-                  isStickyHeader: () => true,
+                  isFullGridSupport: () => true,
                   getResultsPosition: () => undefined
                }
             },
@@ -625,7 +625,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          columnScroll._leftOffsetForHScroll = 0;
          columnScroll._offsetForHScroll = 0;
 
-         columnScroll._isStickyHeader = false;
+         columnScroll._isFullGridSupport = false;
          columnScroll._setOffsetForHScroll();
          assert.equal(columnScroll._leftOffsetForHScroll, 0);
          assert.equal(columnScroll._offsetForHScroll, 0);

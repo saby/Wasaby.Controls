@@ -19,7 +19,8 @@ interface IBaseGridRowIndexOptions {
     hasBottomPadding: boolean;
     resultsPosition?: 'top' | 'bottom';
     multyHeaderOffset?: number;
-    editingRowIndex?: number
+    editingRowIndex?: number;
+    hasColumnScroll?: boolean;
 }
 
 /**
@@ -145,6 +146,7 @@ function getBottomPaddingRowIndex(cfg: GridRowIndexOptions): number {
     index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
     index += hasEditingItem ? 1 : 0;
     index += itemsCount;
+    index += cfg.hasColumnScroll ? 1 : 0;
 
     return index;
 }
@@ -168,6 +170,7 @@ function getFooterIndex(cfg: GridRowIndexOptions<HasEmptyTemplate>): number {
     index += cfg.hasBottomPadding ? 1 : 0;
     index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
     index += hasEditingItem ? 1 : 0;
+    index += cfg.hasColumnScroll ? 1 : 0;
 
     if (itemsCount) {
         index += itemsCount;
@@ -188,12 +191,13 @@ function getFooterIndex(cfg: GridRowIndexOptions<HasEmptyTemplate>): number {
  * @return {Number} Отступ сверху для первой записи списка
  */
 //offset
-function getTopOffset(hasHeader: boolean, resultsPosition: GridRowIndexOptions["resultsPosition"] = null, multyHeaderOffset: number): number {
+function getTopOffset(hasHeader: boolean, resultsPosition: GridRowIndexOptions["resultsPosition"] = null, multyHeaderOffset: number, hasColumnScroll: boolean): number {
     let
         topOffset = 0;
     topOffset += multyHeaderOffset ? multyHeaderOffset : 0;
     topOffset += hasHeader ? 1 : 0;
     topOffset += resultsPosition === "top" ? 1 : 0;
+    topOffset += hasColumnScroll ? 1 : 0;
 
     return topOffset;
 }
@@ -209,7 +213,7 @@ function getTopOffset(hasHeader: boolean, resultsPosition: GridRowIndexOptions["
  */
 // offset
 function getItemRealIndex(cfg: GridRowIndexOptions<DisplayItemIndex>): number {
-    return cfg.index + getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multyHeaderOffset);
+    return cfg.index + getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multyHeaderOffset, cfg.hasColumnScroll);
 }
 
 

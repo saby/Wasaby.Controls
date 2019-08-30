@@ -1,0 +1,25 @@
+<ws:if data="{{_options.gridSupport === 'full'}}">
+    <div style="{{_getGridStyles()}}" class="controls-Grid_columnScroll_wrapper">
+        <Controls._scroll.Scroll.Scrollbar
+                name="columnScrollbar"
+                position="{{_options.position}}"
+                direction="horizontal"
+                contentSize="{{_options.contentSize}}"
+                getScrollWidth="{{_options.getScrollWidth}}"
+                attr:class="controls-ColumnScroll controls-ColumnScroll_without_offset"
+                attr:style="width:{{_options.getScrollWidth()}}px;"
+                on:positionChanged="_localPositionHandler()"/>
+    </div>
+</ws:if>
+<ws:else>
+<Controls._scroll.Scroll.Scrollbar
+        name="columnScrollbar"
+        position="{{_options.position}}"
+        direction="horizontal"
+        contentSize="{{_options.contentSize}}"
+        gridSupport="{{_options.gridSupport}}"
+        getScrollWidth="{{_options.getScrollWidth}}"
+        attr:class="controls-ColumnScroll"
+        attr:style="width:{{_options.getScrollWidth()}}px;"
+        on:positionChanged="_localPositionHandler()"/>
+</ws:else>

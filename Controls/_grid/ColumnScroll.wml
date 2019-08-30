@@ -1,21 +1,21 @@
 <div name="content" class="{{_transformSelector}}" on:wheel="_wheelHandler()">
    <style name="contentStyle" data-vdom-ignore="true"></style>
    <ws:if data="{{_isColumnScrollVisible()}}">
-      <Controls._scroll.Scroll.Scrollbar
-              name="columnScrollbar"
-              position="{{_scrollPosition}}"
-              direction="horizontal"
-              contentSize="{{_contentSizeForHScroll}}"
-              isNotGridSupport="{{_isNotGridSupport}}"
-              attr:class="controls-ColumnScroll {{!_isStickyHeader ? 'controls-ColumnScroll_without_offset'}}"
-              attr:style="top:{{_offsetForHScroll}}px;left:{{_leftOffsetForHScroll}}px;"
-              on:positionChanged="_positionChangedHandler()"/>
-      <div name="startShadow" class="{{_calculateShadowClasses('start')}}" style="{{_calculateShadowStyles('start')}}"></div>
+      <div class="{{_calculateShadowClasses('start')}}" style="{{_calculateShadowStyles('start')}}"></div>
       <div class="{{_calculateShadowClasses('end')}}"></div>
    </ws:if>
    <ws:partial
            template="{{_options.content}}"
            scope="{{_options}}"
+
+           position="{{_scrollPosition}}"
+           contentSize="{{_contentSizeForHScroll}}"
+           isNotGridSupport="{{_isNotGridSupport}}"
+           topOffset="{{_offsetForHScroll}}"
+           positionChangeHandler="{{_positionHandler}}"
+           getScrollWidth="{{_getScrolWidthHandler}}"
+           isHorizontalScrollVisible="{{_isColumnScrollVisible()}}"
+
            attr:class="controls-Grid_columnScroll"
            on:itemClick="_notifyHandler('itemClick')"
            on:checkboxClick="_notifyHandler('checkboxClick')"

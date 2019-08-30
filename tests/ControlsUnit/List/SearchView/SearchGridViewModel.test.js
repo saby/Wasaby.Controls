@@ -1,9 +1,9 @@
 define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeGrid, collection, entity) {
-   
+
    describe('Controls.List.SearchView.SearchGridViewModel', function() {
 
       describe('instance tests', function() {
-      
+
          it('getCurrent', function () {
             var items = new collection.RecordSet({
                rawData: [{id: 1, title: 'test'}],
@@ -17,12 +17,12 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
                multiSelectVisibility: 'hidden'
             });
             model._curIndex = 0;
-   
+
             var current = model.getCurrent();
             current.resetColumnIndex();
             assert.isFalse(!!current.getCurrentColumn().column.needSearchHighlight);
             assert.equal(current.getCurrentColumn().searchValue, 'tes');
-            
+
             current.goToNextColumn();
             assert.isTrue(!!current.getCurrentColumn().column.needSearchHighlight);
             assert.equal(current.getCurrentColumn().searchValue, 'tes');
@@ -93,11 +93,11 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
             });
          });
          it('current.rowIndex', function() {
-            assert.equal(searchModel.getCurrent().rowIndex, 0);
-            searchModel.goToNext();
             assert.equal(searchModel.getCurrent().rowIndex, 1);
             searchModel.goToNext();
             assert.equal(searchModel.getCurrent().rowIndex, 2);
+            searchModel.goToNext();
+            assert.equal(searchModel.getCurrent().rowIndex, 3);
          });
          it('current.breadCrumbs', function() {
             assert.isFalse(searchModel.getCurrent().breadCrumbs);
