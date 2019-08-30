@@ -234,33 +234,8 @@ define([
             }),
             itemData = {isExpanded: false},
             toggleExpandedCalled = false;
-         it('ExpandOnDrag', async function() {
-            treeControl._expandNodeOnDrag = function(itemData) {
-               if (!itemData.isExpanded) {
-                  toggleExpandedCalled = true;
-                  itemData.isExpanded = true;
-               }
-            }
-            treeControl._setTimeoutForExpandOnDrag(itemData);
-            assert.isFalse(toggleExpandedCalled);
-            assert.notEqual(treeControl._timeoutForExpandOnDrag, null);
-            await setTimeout(function() {
-               assert.isTrue(toggleExpandedCalled);
-            }, 1000);
-
-            toggleExpandedCalled = false;
-            treeControl._setTimeoutForExpandOnDrag(itemData);
-            assert.isFalse(toggleExpandedCalled);
-            assert.notEqual(treeControl._timeoutForExpandOnDrag, null);
-            await setTimeout(function() {
-               assert.isFalse(toggleExpandedCalled);
-            }, 1000);
-         });
 
          it('clearTimeoutForExpandOnDrag on dragEnd', async function() {
-            itemData = {isExpanded: false};
-            toggleExpandedCalled = false;
-
             treeControl._setTimeoutForExpandOnDrag(itemData);
             assert.isFalse(toggleExpandedCalled);
             assert.notEqual(treeControl._timeoutForExpandOnDrag, null);
@@ -282,6 +257,30 @@ define([
             assert.equal(treeControl._timeoutForExpandOnDrag, null);
             await setTimeout(function() {
                assert.isFalse(toggleExpandedCalled);
+            }, 1000);
+         });
+
+         it('ExpandOnDrag', async function() {
+            itemData = {isExpanded: false};
+            toggleExpandedCalled = false;
+            treeControl._expandNodeOnDrag = function(itemData) {
+               if (!itemData.isExpanded) {
+                  toggleExpandedCalled = true;
+               }
+            }
+            treeControl._setTimeoutForExpandOnDrag(itemData);
+            assert.isFalse(toggleExpandedCalled);
+            assert.notEqual(treeControl._timeoutForExpandOnDrag, null);
+            await setTimeout(function() {
+               assert.isTrue(toggleExpandedCalled);
+               toggleExpandedCalled = false;
+               itemData.isExpanded = true;
+               treeControl._setTimeoutForExpandOnDrag(itemData);
+               assert.isFalse(toggleExpandedCalled);
+               assert.notEqual(treeControl._timeoutForExpandOnDrag, null);
+               setTimeout(function() {
+                  assert.isFalse(toggleExpandedCalled);
+               }, 1000);
             }, 1000);
          });
       });
