@@ -258,6 +258,9 @@ var _Controller = Control.extend({
                 sourceController.calculateState(self._items);
             });
             _private.updateSelectedItems(this, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
+            if (options.dataLoadCallback) {
+               options.dataLoadCallback(self._items);
+            }
          } else if (options.source) {
             return _private.loadItems(this, options);
          }
