@@ -429,6 +429,7 @@ var
                     }
                 }
                 this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+                this.updateDragItemIndex(this._draggingItemData);
                 this._nextModelVersion();
                 this._notify('expandedItemsChanged', this._expandedItems);
             }
@@ -549,7 +550,11 @@ var
 
             TreeViewModel.superclass.setDragEntity.apply(this, arguments);
         },
-
+        updateDragItemIndex: function(itemData) {
+            if (itemData) {
+                itemData.index = this._display.getIndex(itemData.dispItem);
+            }
+        },
         setDragItemData: function(itemDragData) {
             var getVersionOrigin;
 

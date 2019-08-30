@@ -224,6 +224,68 @@ define([
          });
       });
 
+      describe('expanding nodes on dragging', function() {
+         let treeControl = correctCreateTreeControl({
+               columns: [],
+               source: new sourceLib.Memory({
+                  data: [],
+                  idProperty: 'id'
+               })
+            }),
+            itemData = {isExpanded: false},
+            toggleExpandedCalled = false;
+         it('ExpandOnDrag', async function() {
+            treeControl._expandNodeOnDrag = function(itemData) {
+               if (!itemData.isExpanded) {
+                  toggleExpandedCalled = true;
+                  itemData.isExpanded = true;
+               }
+            }
+            treeControl._setTimeoutForExpandOnDrag(itemData);
+            assert.isFalse(toggleExpandedCalled);
+            assert.notEqual(treeControl._timeoutForExpandOnDrag, null);
+            await setTimeout(function() {
+               assert.isTrue(toggleExpandedCalled);
+            }, 1000);
+
+            toggleExpandedCalled = false;
+            treeControl._setTimeoutForExpandOnDrag(itemData);
+            assert.isFalse(toggleExpandedCalled);
+            assert.notEqual(treeControl._timeoutForExpandOnDrag, null);
+            await setTimeout(function() {
+               assert.isFalse(toggleExpandedCalled);
+            }, 1000);
+         });
+
+         it('clearTimeoutForExpandOnDrag on dragEnd', async function() {
+            itemData = {isExpanded: false};
+            toggleExpandedCalled = false;
+
+            treeControl._setTimeoutForExpandOnDrag(itemData);
+            assert.isFalse(toggleExpandedCalled);
+            assert.notEqual(treeControl._timeoutForExpandOnDrag, null);
+            treeControl._dragEnd();
+            assert.equal(treeControl._timeoutForExpandOnDrag, null);
+            await setTimeout(function() {
+               assert.isFalse(toggleExpandedCalled);
+            }, 1000);
+         });
+
+         it('clearTimeoutForExpandOnDrag on itemMouseLeave', async function() {
+            itemData = {isExpanded: false};
+            toggleExpandedCalled = false;
+
+            treeControl._setTimeoutForExpandOnDrag(itemData);
+            assert.isFalse(toggleExpandedCalled);
+            assert.notEqual(treeControl._timeoutForExpandOnDrag, null);
+            treeControl._onItemMouseLeave();
+            assert.equal(treeControl._timeoutForExpandOnDrag, null);
+            await setTimeout(function() {
+               assert.isFalse(toggleExpandedCalled);
+            }, 1000);
+         });
+      });
+
       it('TreeControl.toggleExpanded with sorting', function() {
          let treeControl = correctCreateTreeControl({
             columns: [],
