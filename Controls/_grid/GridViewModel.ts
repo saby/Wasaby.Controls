@@ -940,6 +940,14 @@ var
 
         setResultsPosition: function(position) {
             this._options.resultsPosition = position;
+
+            // TODO Kingo
+            // Из-за появления/скрытия строки итогов могут сдвинуться строки грида. Так
+            // как в IE на каждую ячейку вешается номер строки вручную, эти номера нужно
+            // пересчитать. В других браузерах появившаяся строка сдвинет другие автоматически
+            if (GridLayoutUtil.isPartialGridSupport()) {
+                this._nextModelVersion();
+            }
         },
 
         getStyleForCustomResultsTemplate: function() {
