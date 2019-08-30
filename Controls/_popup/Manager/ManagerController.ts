@@ -1,7 +1,6 @@
 /**
  * Created by as.krasilnikov on 02.04.2018.
  */
-
       // Модуль, необходимый для работы окон/панелей в слое совместимости
       // В WS2/WS3 модулях нет возможности работать через события, чтобы вызвать методы по работе с окнами
       // т.к. хелперы/инстансы старых компонентов могут не лежать в верстке. (а если и лежат, то нет возможности общаться с Manager)
@@ -10,6 +9,7 @@
          _container: null,
          _indicator: null,
          _popupHeaderTheme: undefined,
+         _popupSettingsController: undefined,
          setManager(manager) {
             this._manager = manager;
          },
@@ -98,4 +98,4 @@
             return false;
          }
       };
-
+
