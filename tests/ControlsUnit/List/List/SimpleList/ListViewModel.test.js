@@ -206,6 +206,49 @@ define([
          assert.equal(1, iv._markedKey);
       });
 
+      describe('needToDrawActions', function () {
+         let needToDrawActions = lists.ListViewModel._private.needToDrawActions;
+         let currentItem = {
+               key: 1
+             },
+             editingItem = {
+               key: 1
+             },
+             editingConfig = {
+               toolbarVisibility: true
+             },
+             drawnActions = [1];
+         it('editing with actions and toolbar', function() {
+            assert.isTrue(needToDrawActions(editingItem, currentItem, editingConfig, drawnActions));
+            assert.isFalse(needToDrawActions(editingItem, {key: 2}, editingConfig, drawnActions));
+         });
+         it('editing without actions and with toolbar', function() {
+            drawnActions = [];
+            assert.isTrue(needToDrawActions(editingItem, currentItem, editingConfig, drawnActions));
+            assert.isFalse(needToDrawActions(editingItem, {key: 2}, editingConfig, drawnActions));
+         });
+         it('editing with actions and without toolbar', function() {
+            drawnActions = [1];
+            editingConfig.toolbarVisibility = false;
+            assert.isTrue(needToDrawActions(editingItem, currentItem, editingConfig, drawnActions));
+            assert.isFalse(needToDrawActions(editingItem, {key: 2}, editingConfig, drawnActions));
+         });
+         it('editing without actions and without toolbar', function() {
+            drawnActions = [];
+            editingConfig.toolbarVisibility = false;
+            assert.isFalse(needToDrawActions(editingItem, currentItem, editingConfig, drawnActions));
+            assert.isFalse(needToDrawActions(editingItem, {key: 2}, editingConfig, drawnActions));
+         });
+         it('without actions', function() {
+            editingItem = null;
+            assert.isFalse(needToDrawActions(editingItem, currentItem, editingConfig, drawnActions));
+         });
+         it('with actions', function() {
+            drawnActions = [1]
+            assert.isTrue(needToDrawActions(editingItem, currentItem, editingConfig, drawnActions));
+         });
+      });
+
       it('updateIndexes', function() {
          var
             items = new collection.RecordSet({

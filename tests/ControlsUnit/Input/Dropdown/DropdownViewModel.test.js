@@ -399,6 +399,11 @@ define(
             emptyItem = viewModel.getEmptyItem();
             assert.isTrue(emptyItem.isSelected);
             assert.equal(emptyItem.emptyText, emptyConfig.emptyText);
+
+            emptyConfig.emptyKey = 0;
+            viewModel = new DropdownViewModel(emptyConfig);
+            emptyItem = viewModel.getEmptyItem();
+            assert.equal(emptyItem.item.get('id'), 0);
          });
       })
    });

@@ -32,7 +32,7 @@ interface IInputField {
          *         }
          *     }
          * </pre>
-         * Пример можно упростить воспользовавшись синтаксисом шаблонизатора {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/options/#two-way-binding bind}:
+         * Пример можно упростить, воспользовавшись синтаксисом шаблонизатора {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/options/#two-way-binding bind}:
          * <pre>
          *     <Controls:input:Text bind:value="_value"/>
          * </pre>

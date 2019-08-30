@@ -150,18 +150,8 @@ const DialogTemplate = Control.extend({
      */
 
     /**
-     * @name Controls/_popupTemplate/Stack#stackWidth
-     * @cfg {Boolean} Текущая ширина шаблона стековой панели
-     */
-
-    /**
-     * @name Controls/_popupTemplate/Stack#stackMaxWidth
-     * @cfg {Boolean} Максимальная ширина шаблона стековой панели
-     */
-
-    /**
-     * @name Controls/_popupTemplate/Stack#stackMinWidth
-     * @cfg {Boolean} Минимальная ширина шаблона стековой панели
+     * @name Controls/_popupTemplate/Stack#workspaceWidth
+     * @cfg {Number} Текущая ширина шаблона стековой панели
      */
 
     _template: template,

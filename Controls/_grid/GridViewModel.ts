@@ -11,7 +11,7 @@ import {
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
     getResultsIndex, getTopOffset, IBaseGridRowIndexOptions, getRowsArray, getMaxEndRow, getBottomPaddingRowIndex
 } from 'Controls/_grid/utils/GridRowIndexUtil';
-
+import ControlsConstants = require('Controls/Constants');
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -83,7 +83,11 @@ var
                  if (GridLayoutUtil.isNoGridSupport()) {
                     return ' colspan: 1;';
                  } else if (GridLayoutUtil.isPartialGridSupport()) {
-                    return ` -ms-grid-column: 1; -ms-grid-column-span: ${multiselectOffset + 1};`;
+
+                    // TODO: KINGO
+                    // в edge, в отличие от ie воспринимаются стили grid-column, поэтому нужно для частичной поддержки грида задавать и их.
+                    // перебивание стилей будет убрано по https://online.sbis.ru/opendoc.html?guid=a0c4964a-2474-4fb6-ab8c-ffab9db62dd0
+                    return ` -ms-grid-column: 1; -ms-grid-column-span: ${multiselectOffset + 1}; grid-column: 1 / ${multiselectOffset + 2};`;
                  } else {
                     return ` grid-column: 1 / ${multiselectOffset + 2};`;
                  }
@@ -174,13 +178,11 @@ var
         },
 
         prepareRowSeparatorClasses: function(current) {
-            var
-                result = '',
-                rowCount = current.dispItem.getOwner().getCount();
+            let result = '';
 
             if (current.rowSeparatorVisibility) {
-
-                if (current.isFirstInGroup) {
+                const rowCount = current.dispItem.getOwner().getCount();
+                if (current.isFirstInGroup && !current.isInHiddenGroup) {
                     result += ' controls-Grid__row-cell_first-row-in-group';
                 } else {
                     if (current.index === 0) {
@@ -428,10 +430,14 @@ var
                 hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
                 columnsWidth = hasMultiselect ? ['max-content'] : [],
                 hasDynamicWidth = !!columns.find((column) => {
-                    return column.width && !GridLayoutUtil.isCompatibleWidth(column.width);
+                    return !GridLayoutUtil.isCompatibleWidth(column.width);
                 });
 
-            if (!hasDynamicWidth) {
+            // TODO Kingo
+            // Метод getColumnsWidthForEditingRow добавляет в GridViewModel сам GridView
+            // при его создании. Если его еще нет, используем ширину из конфигурации
+            // колонок (вызывается только в IE)
+            if (!hasDynamicWidth || !self.getColumnsWidthForEditingRow) {
                 columnsWidth = columnsWidth.concat(columns.map((column) => column.width || '1fr'));
             } else {
                 columnsWidth = columnsWidth.concat(self.getColumnsWidthForEditingRow(itemData));
@@ -439,7 +445,29 @@ var
 
             return columnsWidth;
         },
+        getEditingRowStyles(self, itemData): string {
+            let editingRowStyles = '';
 
+            // TODO: KINGO
+            // В IE (едиственный поддерживаемый браузер с частичной поддержкой грида) обнаружился баг неясной природы.
+            // В IE, из-за особенностей вёрстки, строка редактирования это сабгрид.
+            // Для выравнивания колонок сабгрида строки редактирования, необходимо задать ему template-columns в px.
+            // При взятии ширины колонки у родительского грида, getBoundingClientRect возвращает неправильную ширину.
+            // Такое поведение встречается, только если задать -ms-grid-column-span !== 1.
+            // https://online.sbis.ru/opendoc.html?guid=e61af344-59d8-4bc2-9645-fcbac1ddd767
+
+            // Если единственное содержимое грида - это строка редактирования, то нужно растянуть строку по гриду,
+            // т.к. больше его некому растянуть.
+            // Также, если в таблице есть колонка чекбоксов (ее ширина задается как max-content), то попавшая на место
+            // первой ячейки строка редактирования, растянет всю колонку на ширину таблицы. Поэтому нужно ее заколспанить.
+            const colspan = ((self.getItems().getCount() || !!self.getHeader()) && self._options.multiSelectVisibility === 'hidden') ? 1 : self._columns.length;
+
+            editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
+            editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
+            editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, colspan);
+
+            return editingRowStyles;
+        },
         prepareItemDataForPartialSupport(self, itemData): void {
 
             /* When using a custom item template, the scope of the base template becomes the same as the scope of custom template.
@@ -454,27 +482,13 @@ var
             // In browsers with partial grid support grid requires explicit setting grid cell styles.
             if (!itemData.isGroup) {
 
-                itemData.getEditingRowStyles = function () {
-                    let editingRowStyles = '';
+                itemData.getEditingRowStyles = () => {
+                    if (!self.editingRowGridStyles) {
+                        self.editingRowGridStyles = _private.getEditingRowStyles(self, itemData);
+                    }
+                    return self.editingRowGridStyles;
+                };
 
-                    // TODO: KINGO
-                    // В IE (едиственный поддерживаемый браузер с частичной поддержкой грида) обнаружился баг неясной природы.
-                    // В IE, из-за особенностей вёрстки, строка редактирования это сабгрид.
-                    // Для выравнивания колонок сабгрида строки редактирования, необходимо задать ему template-columns в px.
-                    // При взятии ширины колонки у родительского грида, getBoundingClientRect возвращает неправильную ширину.
-                    // Такое поведение встречается, только если задать -ms-grid-column-span !== 1.
-                    // https://online.sbis.ru/opendoc.html?guid=e61af344-59d8-4bc2-9645-fcbac1ddd767
-
-                    // Если единственное содержимое грида - это строка редактирования, то нужно растянуть строку по гриду,
-                    // т.к. больше его некому растянуть.
-                    const colspan = (self.getItems().getCount() || !!self.getHeader()) ? 1 : self._columns.length;
-
-                    editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
-                    editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
-                    editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, colspan);
-
-                    return editingRowStyles;
-                }
             } else {
                 itemData.gridGroupStyles = GridLayoutUtil.toCssString([
                     {name: 'grid-row', value: itemData.rowIndex + 1},
@@ -924,6 +938,14 @@ var
 
         setResultsPosition: function(position) {
             this._options.resultsPosition = position;
+
+            // TODO Kingo
+            // Из-за появления/скрытия строки итогов могут сдвинуться строки грида. Так
+            // как в IE на каждую ячейку вешается номер строки вручную, эти номера нужно
+            // пересчитать. В других браузерах появившаяся строка сдвинет другие автоматически
+            if (GridLayoutUtil.isPartialGridSupport()) {
+                this._nextModelVersion();
+            }
         },
 
         getStyleForCustomResultsTemplate: function() {
@@ -1170,6 +1192,9 @@ var
         getSorting: function() {
             return this._model.getSorting();
         },
+        setEditingConfig: function(editingConfig) {
+            this._model.setEditingConfig(editingConfig);
+        },
 
         setItemPadding: function(itemPadding) {
             this._model.setItemPadding(itemPadding);
@@ -1312,9 +1337,15 @@ var
                 return current;
             }
 
-            current.isFirstInGroup = !current.isGroup && this._isFirstInGroup(current.item);
+            const itemGroupId = !current.isGroup && this._getItemGroup(current.item);
+            current.isInHiddenGroup = itemGroupId === ControlsConstants.view.hiddenGroup;
+            current.isFirstInGroup = itemGroupId && this._isFirstInGroup(current.item, itemGroupId);
 
-            if (current.isFirstInGroup && current.item !== self.getLastItem()) {
+            if (
+                current.isFirstInGroup &&
+                !current.isInHiddenGroup &&
+                current.item !== self.getLastItem()
+            ) {
                 current.rowSeparatorVisibility = false;
             } else {
                 current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
@@ -1474,8 +1505,13 @@ var
         },
 
         _setEditingItemData: function (itemData) {
-            if (GridLayoutUtil.isPartialGridSupport() && itemData) {
-                itemData.rowIndex = itemData.index + this._getRowIndexHelper().getTopOffset();
+            if (GridLayoutUtil.isPartialGridSupport()) {
+                if (itemData) {
+                    itemData.rowIndex = itemData.index + this._getRowIndexHelper().getTopOffset();
+                    this.editingRowGridStyles = _private.getEditingRowStyles(this, itemData);
+                } else {
+                    this.editingRowGridStyles = null;
+                }
             }
             this._model._setEditingItemData(itemData);
         },
@@ -1664,20 +1700,16 @@ var
             return this._eventHandlersForPartialSupport;
         },
 
-        _isFirstInGroup: function(item): boolean {
-            var display = this._model._display,
-                groupingKeyCallback = this._options.groupingKeyCallback,
-                currentItemGroup,
-                currentGroupItems;
+        _isFirstInGroup: function(item, groupId?): boolean {
+            const display = this._model._display;
+            let currentGroupItems;
 
-            // If grouping is not enabled.
-            if (!groupingKeyCallback) {
+            groupId = groupId || this._getItemGroup(item);
+            if (!groupId) {
                 return false;
             }
 
-            // Getting all items of the current items' group.
-            currentItemGroup = groupingKeyCallback(item);
-            currentGroupItems = display.getGroupItems(currentItemGroup);
+            currentGroupItems = display.getGroupItems(groupId);
 
             // If current item is out of any group.
             if (!currentGroupItems || currentGroupItems.length === 0) {
@@ -1686,6 +1718,15 @@ var
 
 
             return item === currentGroupItems[0].getContents();
+        },
+
+        _getItemGroup: function(item): boolean {
+            const groupingKeyCallback = this._options.groupingKeyCallback;
+            if (groupingKeyCallback) {
+                return groupingKeyCallback(item);
+            } else {
+                return null;
+            }
         },
 
         markItemReloaded: function(key) {

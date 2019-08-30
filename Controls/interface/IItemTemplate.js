@@ -2,12 +2,20 @@ define('Controls/interface/IItemTemplate', [
 ], function() {
 
    /**
-    * Interface for components with customizable display of elements.
+    * Интерфейс для контролов с возможностью настройки отображения элементов.
     *
     * @interface Controls/interface/IItemTemplate
     * @public
     * @author Герасимов А.М.
     */
+
+   /*
+    * Interface for components with customizable display of elements.
+    *
+    * @interface Controls/interface/IItemTemplate
+    * @public
+    * @author Герасимов А.М.
+    */    
 
    /**
     * @name Controls/interface/IItemTemplate#itemTemplate
@@ -67,7 +75,7 @@ define('Controls/interface/IItemTemplate', [
    /**
     * @name Controls/interface/IItemTemplate#itemTemplateProperty
     * @cfg {String} Имя свойства, содержащего ссылку на шаблон элемента. Если значение свойства не передано, то для отрисовки используется itemTemplate.
-    * <a href="/materials/demo-ws4-list-item-template">Example</a>.
+    * <a href="/materials/demo-ws4-list-item-template">Демо-пример</a>.
     */
 
    /*

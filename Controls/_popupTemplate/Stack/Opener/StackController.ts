@@ -1,5 +1,6 @@
 import BaseController = require('Controls/_popupTemplate/BaseController');
 import StackStrategy = require('Controls/_popupTemplate/Stack/Opener/StackStrategy');
+import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 import collection = require('Types/collection');
 import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import Deferred = require('Core/Deferred');
@@ -96,6 +97,7 @@ const _private = {
         const targetCoords = _private.getStackParentCoords();
         item.position = StackStrategy.getPosition(targetCoords, item);
         item.popupOptions.stackWidth = item.position.stackWidth;
+        item.popupOptions.workspaceWidth = item.position.stackWidth;
         item.popupOptions.stackMinWidth = item.position.stackMinWidth;
         item.popupOptions.stackMaxWidth = item.position.stackMaxWidth;
         // todo https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
@@ -181,6 +183,27 @@ const _private = {
         }
 
         return templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
+    },
+    getPopupWidth(item): Promise<undefined> {
+        return new Promise((resolve) => {
+            const propStorageId = item.popupOptions.propStorageId;
+            if (propStorageId) {
+                getSettings([propStorageId]).then((width: number) => {
+                    if (width) {
+                        item.popupOptions.width = width;
+                    }
+                    resolve();
+                });
+            } else {
+                resolve();
+            }
+        });
+    },
+    savePopupWidth(item): void {
+        const propStorageId = item.popupOptions.propStorageId;
+        if (propStorageId && item.position.stackWidth) {
+            setSettings({[propStorageId]: item.position.stackWidth});
+        }
     }
 };
 
@@ -235,6 +258,7 @@ const StackController = BaseController.extend({
     },
 
     elementDestroyed(item) {
+        _private.savePopupWidth(item);
         this._stack.remove(item);
         this._update();
         return (new Deferred()).callback();
@@ -242,6 +266,7 @@ const StackController = BaseController.extend({
 
     popupResizingLine(item, offset): void {
         item.popupOptions.stackWidth += offset;
+        item.popupOptions.workspaceWidth += offset;
         _private.updatePopupOptions(item);
     },
 
@@ -289,52 +314,54 @@ const StackController = BaseController.extend({
     },
 
     getDefaultConfig(item) {
-        _private.prepareSizeWithoutDOM(item);
-        _private.setStackContent(item);
-        _private.addStackClasses(item.popupOptions);
-        if (StackStrategy.isMaximizedPanel(item)) {
-            // set default values
-            item.popupOptions.templateOptions.showMaximizedButton = undefined; // for vdom dirtyChecking
-            const maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : false;
-            _private.setMaximizedState(item, maximizedState);
-        }
-
-        if (item.popupOptions.isCompoundTemplate) {
-            // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
-            const position = _private.getItemPosition(item, this);
-            item.position = {
-                top: -10000,
-                left: -10000,
-                height: _private.getWindowSize().height,
-                stackWidth: position.stackWidth || undefined
-            };
-        } else {
-            // TODO KINGO
-            // Когда несколько раз зовут open до того как построилось окно и у него может вызываться фаза update
-            // мы обновляем опции, которые пришли в последний вызов метода open и зовем getDefaultConfig, который
-            // добавляет item в _stack. Добавление нужно делать 1 раз, чтобы не дублировалась конфигурация.
-            const itemIndex = this._stack.getIndexByValue('id', item.id);
-            if (itemIndex === -1) {
-                this._stack.add(item);
-            } else {
-                this._stack.replace(item, itemIndex);
+        return _private.getPopupWidth(item).then(() => {
+            _private.prepareSizeWithoutDOM(item);
+            _private.setStackContent(item);
+            _private.addStackClasses(item.popupOptions);
+            if (StackStrategy.isMaximizedPanel(item)) {
+                // set default values
+                item.popupOptions.templateOptions.showMaximizedButton = undefined; // for vdom dirtyChecking
+                const maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : false;
+                _private.setMaximizedState(item, maximizedState);
             }
 
-            if (this._stack.getCount() > 1) {
-                this._update();
+            if (item.popupOptions.isCompoundTemplate) {
+                // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
+                const position = _private.getItemPosition(item, this);
+                item.position = {
+                    top: -10000,
+                    left: -10000,
+                    height: _private.getWindowSize().height,
+                    stackWidth: position.stackWidth || undefined
+                };
             } else {
-                item.position = _private.getItemPosition(item, this);
-                _private.showPopup(item);
-                if (StackStrategy.isMaximizedPanel(item)) {
-                    _private.prepareMaximizedState(StackStrategy.getMaxPanelWidth(), item);
+                // TODO KINGO
+                // Когда несколько раз зовут open до того как построилось окно и у него может вызываться фаза update
+                // мы обновляем опции, которые пришли в последний вызов метода open и зовем getDefaultConfig, который
+                // добавляет item в _stack. Добавление нужно делать 1 раз, чтобы не дублировалась конфигурация.
+                const itemIndex = this._stack.getIndexByValue('id', item.id);
+                if (itemIndex === -1) {
+                    this._stack.add(item);
+                } else {
+                    this._stack.replace(item, itemIndex);
                 }
-                _private.updatePopupOptions(item);
+
+                if (this._stack.getCount() > 1) {
+                    this._update();
+                } else {
+                    item.position = _private.getItemPosition(item, this);
+                    _private.showPopup(item);
+                    if (StackStrategy.isMaximizedPanel(item)) {
+                        _private.prepareMaximizedState(StackStrategy.getMaxPanelWidth(), item);
+                    }
+                    _private.updatePopupOptions(item);
+                }
             }
-        }
+        });
     },
+
     TYPE: 'Stack',
     _private
 });
 
 export = new StackController();
-

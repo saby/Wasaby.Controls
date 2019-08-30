@@ -7,7 +7,9 @@
    background-color: @background-color_List-masterList;
    flex-shrink: 0;
    width: 27%;
+}
 
+.controls-MasterDetail_master-template {
    // https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context
    // :before is necessary for correct work of z-index stack, :after makes below all elements without z-index in the stack
    // and children of these elements can not overlap this pseudo element.
@@ -26,13 +28,21 @@
    background-color: @background-color_List-masterList-details;
 }
 
+.controls-MasterDetail_resizing-line {
+   position: absolute;
+   right: 0;
+   top: 0;
+   height: 100%;
+   z-index: 2;
+}
+
 .ws-is-ie,
 .ws-is-mobile-safari,
 .ws-is-desktop-safari {
    // stack of z-index on safari and ie work differently, then in chrome and ff
    // https://online.sbis.ru/opendoc.html?guid=1b3f1c99-6d0c-47c2-af1b-621d81c6bab9
    // https://online.sbis.ru/opendoc.html?guid=06db74da-222c-48f8-9843-42263175d973
-   .controls-MasterDetail_master::before {
+   .controls-MasterDetail_master-template::before {
       z-index: 1;
    }
 }

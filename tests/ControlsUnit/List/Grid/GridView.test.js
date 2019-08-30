@@ -294,20 +294,20 @@ define(['Controls/grid'], function(gridMod) {
          };
 
 
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['10px', '11px', '1fr']);
+         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['10px', '11px', '12px']);
 
          gridView._options.multiSelectVisibility = 'visible';
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['11px', '12px', '1fr']);
+         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['11px', '12px', '13px']);
 
          gridView._listModel.getCount = () => 0;
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['11px', '12px', '1fr']);
+         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['11px', '12px', '13px']);
 
          gridView._listModel.getCount = () => 1;
          gridView._listModel.getHeader = () => null;
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['21px', '22px', '1fr']);
+         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['21px', '22px', '23px']);
 
          testFallback = true;
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['21px', '22px', '1fr']);
+         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['21px', '22px', '23px']);
 
          gridView._listModel.getCount = () => 0;
          gridView._listModel.getHeader = () => null;
@@ -483,11 +483,15 @@ define(['Controls/grid'], function(gridMod) {
             },
             gridView = new gridMod.GridView(cfg),
             columnScrollResizeHandlerCalled = false,
+            columnScrollUpdateShadowStyleCalled = false,
             controlResizeNotified = false;
          gridView._children = {
             columnScroll:{
                _resizeHandler: function() {
                   columnScrollResizeHandlerCalled = true;
+               },
+               updateShadowStyle() {
+                  columnScrollUpdateShadowStyleCalled = true;
                }
             }
          };
@@ -499,6 +503,7 @@ define(['Controls/grid'], function(gridMod) {
          gridView.resizeNotifyOnListChanged();
          assert.isTrue(controlResizeNotified);
          assert.isTrue(columnScrollResizeHandlerCalled);
+         assert.isTrue(columnScrollUpdateShadowStyleCalled);
       });
    });
 });

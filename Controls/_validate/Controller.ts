@@ -5,6 +5,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import getZIndex = require('Controls/Utils/getZIndex');
+import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 import errorMessage = require('wml!Controls/_validate/ErrorMessage');
 import 'css!theme?Controls/validate';
 
@@ -110,9 +111,13 @@ let Validate = Base.extend({
         this._isNewEnvironment = isNewEnvironment();
     },
     _afterMount() {
+        //Use listener without template.
+        //Some people can add style to the container of validation, and some people can add style to the content.
+        RegisterUtil(this, 'scroll', this._scrollHandler.bind(this));
         this._notify('validateCreated', [this], {bubbling: true});
     },
     _beforeUnmount() {
+        UnregisterUtil(this, 'scroll');
         this._notify('validateDestroyed', [this], {bubbling: true});
         if (this._isOpened) {
             _private.forceCloseInfoBox(this);
@@ -198,7 +203,12 @@ let Validate = Base.extend({
 
     /**
      * @name Controls/_validate/Controller#validate
-     * @description Start the validation
+     * @description Запуск валидации.
+     * @returns {Deferred}
+     */
+    /*
+     * @name Controls/_validate/Controller#validate
+     * @description Start the validation.
      * @returns {Deferred}
      */
     validate: function validate() {
@@ -208,6 +218,11 @@ let Validate = Base.extend({
     },
 
     /**
+     * @name Controls/_validate/Controller#setValidationResult
+     * @description Устанавливает значение validationResult.
+     * @param validationResult
+     */
+    /*
      * @name Controls/_validate/Controller#setValidationResult
      * @description Set the validationResult from the outside
      * @param validationResult
@@ -227,6 +242,11 @@ let Validate = Base.extend({
         clearTimeout(this._closeId);
         if (!this._isOpened) {
             _private.openInfoBox(this);
+        }
+    },
+    _scrollHandler() {
+        if (this._isOpened) {
+            _private.forceCloseInfoBox(this);
         }
     },
     _focusInHandler() {
@@ -272,10 +292,14 @@ let Validate = Base.extend({
 
     /**
      * @name Controls/_validate/Controller#isValid
+     * @description Получает значение validationResult.
+     * @returns {undefined|Array}
+     */
+    /*
+     * @name Controls/_validate/Controller#isValid
      * @description Get the validationResult
      * @returns {undefined|Array}
      */
-
     isValid() {
         return this._validationResult;
     },
@@ -290,6 +314,10 @@ export = Validate;
 
 /**
  * @name Controls/_validate/Controller#content
+ * @cfg {Content} Контент, который будет провалидирован.
+ */
+/*
+ * @name Controls/_validate/Controller#content
  * @cfg {Content} The content to which the logic of validation is added.
  */
 
@@ -297,8 +325,17 @@ export = Validate;
  * @name Controls/_validate/Controller#validators
  * @cfg {Array} The function of validation.
  */
+/*
+ * @name Controls/_validate/Controller#validators
+ * @cfg {Array} Функция (или массив функций) валидации.
+ */
 
 /**
  * @name Controls/_validate/Controller#readOnly
+ * @cfg {Boolean} Валидация контрола в режиме чтения.
+ */
+/*
+ * @name Controls/_validate/Controller#readOnly
  * @cfg {Boolean} Validate field in read mode.
  */
+

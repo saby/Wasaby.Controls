@@ -5,9 +5,12 @@
 .controls-RangeSelection__selection-end-hovered,
 .controls-RangeSelection__selection-start-base-hovered,
 .controls-RangeSelection__selected-start,
+.controls-RangeSelection__selected-start-hovered,
 .controls-RangeSelection__selected-inner,
-.controls-RangeSelection__selected-end {
-   outline: @border-color_RangeSelection-selected-startEnd solid 1px;
+.controls-RangeSelection__selected-inner-hovered,
+.controls-RangeSelection__selected-end,
+.controls-RangeSelection__selected-end-hovered {
+   outline: @border-color_RangeSelection-selected-startEnd solid @border-thickness_RangeSelection;
 }
 
 .controls-RangeSelection__selection-start-base,
@@ -31,9 +34,7 @@
 .controls-RangeSelection__selected-start,
 .controls-RangeSelection__selected-start-hovered,
 .controls-RangeSelection__selection-start-base,
-.controls-RangeSelection__selection-start-base-hovered,
-.controls-RangeSelection__selected-start-end,
-.controls-RangeSelection__selected-start-end-hovered {
+.controls-RangeSelection__selection-start-base-hovered {
    position: relative;
    &:before {
       content: "";
@@ -48,9 +49,7 @@
 
 .controls-RangeSelection__selected-end,
 .controls-RangeSelection__selected-end-hovered,
-.controls-RangeSelection__selection-end-base,
-.controls-RangeSelection__selected-start-end,
-.controls-RangeSelection__selected-start-end-hovered {
+.controls-RangeSelection__selection-end-base {
    position: relative;
    &:after {
       content: "";
@@ -63,11 +62,19 @@
    }
 }
 
+.controls-RangeSelection__selected-start-end,
+.controls-RangeSelection__selected-start-end-hovered {
+   outline: @border-color_RangeSelection-selected-startEnd-edgeBorder solid @border-thickness_RangeSelection-selected-startEnd;
+   outline-offset: @border-thickness_RangeSelection - @border-thickness_RangeSelection-selected-startEnd;
+}
+
 .controls-RangeSelection__selection-start-hovered,
 .controls-RangeSelection__selection-end-hovered,
 .controls-RangeSelection__selected-start-hovered,
 .controls-RangeSelection__selected-inner-hovered,
-.controls-RangeSelection__selected-start-end-hovered {
+.controls-RangeSelection__selected-start-end-hovered,
+.controls-RangeSelection__selected-start-hovered,
+.controls-RangeSelection__selected-end-hovered {
    background-color: @background-color_RangeSelection-selected-unfinishedEdge;
 }
 
@@ -79,5 +86,5 @@
 
 .controls-RangeSelection__hovered {
    background-color: @background-color_RangeSelection-selected-unfinishedEdge;
-   outline: @border-color_RangeSelection-selected-startEnd solid 1px;
+   outline: @border-color_RangeSelection-selected-startEnd solid  @border-thickness_RangeSelection;
 }

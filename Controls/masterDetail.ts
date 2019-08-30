@@ -16,12 +16,12 @@
  * @includes ListStyles Controls/_masterDetail/List/Styles
  * @public
  * @author Авраменко А.С.
- */ 
+ */
 
-import Base = require('Controls/_masterDetail/Base');
+import Base from 'Controls/_masterDetail/Base';
 import List = require('Controls/_masterDetail/List');
 
 export {
    Base,
    List
-}
+};

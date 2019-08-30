@@ -149,7 +149,7 @@ var
 
             self._options.columns.forEach((column, index: number) => {
                 const realIndex = index + (hasMultiselect ? 1 : 0);
-                const isDynamicWidth = column.width && !GridLayoutUtil.isCompatibleWidth(column.width);
+                const isDynamicWidth = !GridLayoutUtil.isCompatibleWidth(column.width);
                 const cWidth = isDynamicWidth ? (cells[realIndex].getBoundingClientRect().width + 'px') : (column.width || '1fr');
 
                 columnsWidths.push(cWidth);
@@ -347,10 +347,16 @@ var
             }
             return [newColumns, resultOffset];
         },
-        protected resizeNotifyOnListChanged: function(){
+        resizeNotifyOnListChanged: function(){
             GridView.superclass.resizeNotifyOnListChanged.apply(this, arguments);
             if (this._children.columnScroll) {
                 this._children.columnScroll._resizeHandler();
+
+                // TODO: KINGO
+                // перерисовка тени после обновления размеров в columnScroll происходит уже в следующую отрисовку.
+                // из-за этого, между обновлениями, тень от скролла рисуется поверх колонок.
+                // Чтобы тень заняла акуальную позицию раньше, нужно вручную установить стиль элементу
+                this._children.columnScroll.updateShadowStyle();
             }
         },
         _afterMount: function() {

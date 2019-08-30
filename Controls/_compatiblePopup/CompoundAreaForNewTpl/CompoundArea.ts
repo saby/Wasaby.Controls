@@ -268,13 +268,24 @@ var moduleClass = CompoundControl.extend({
    onBringToFront: function() {
       this._vDomTemplate && this._vDomTemplate.activate();
    },
-   _onMaximizedHandler: function() {
+
+   _getFloatAreaStackRootCoords() {
+      const stackRootContainer = document.querySelector('.ws-float-area-stack-root');
+      let right = 0;
+      const top = 0;
+      if (stackRootContainer) {
+         right = document.body.clientWidth - stackRootContainer.getBoundingClientRect().right;
+      }
+      return {top, right};
+   },
+
+   _onMaximizedHandler(): void {
       if (!this._panel._updateAreaWidth) {
          return;
       }
 
       this._maximized = !this._maximized;
-      var coords = { top: 0, right: 0 };
+      var coords = this._getFloatAreaStackRootCoords();
       var item = {
          popupOptions: {
             maximized: this._maximized,
@@ -287,14 +298,17 @@ var moduleClass = CompoundControl.extend({
 
       // todo https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
       item.popupOptions.width = this._maximized ? item.popupOptions.maxWidth : (item.popupOptions.minimizedWidth || item.popupOptions.minWidth);
-      var width = StackStrategy.getPosition(coords, item).stackWidth;
+      const width = StackStrategy.getPosition(coords, item).stackWidth;
 
       this._panel._options.maximized = this._maximized;
+      this._panel._options.width = width;
+      this._panel._options.maxWidth = width;
       this._panel._updateAreaWidth(width);
+      this._panel._updateSideBarVisibility();
       this._panel.getContainer()[0].style.maxWidth = '';
       this._panel.getContainer()[0].style.minWidth = '';
 
-      var newOptions = clone(this._options.templateOptions);
+      const newOptions = clone(this._options.templateOptions);
       newOptions.maximized = this._maximized;
 
       this._updateVDOMTemplate(newOptions);

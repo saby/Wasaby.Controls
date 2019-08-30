@@ -1,4 +1,17 @@
 /**
+ * Библиотека валидации.
+ * @library Controls/validate
+ * @includes Controller Controls/_validate/FormController
+ * @includes Container Controls/_validate/Controller
+ * @includes InputContainer Controls/_validate/Input
+ * @includes isEmail Controls/_validate/Validators/IsEmail
+ * @includes isRequired Controls/_validate/Validators/IsRequired
+ * @includes isValidDate Controls/_validate/Validators/IsValidDate
+ * @includes Selection Controls/_validate/Selection
+ * @public
+ * @author Красильников А.С.
+ */
+/*
  * validate library
  * @library Controls/validate
  * @includes Controller Controls/_validate/FormController
@@ -9,7 +22,7 @@
  * @includes isValidDate Controls/_validate/Validators/IsValidDate
  * @includes Selection Controls/_validate/Selection
  * @public
- * @author Крайнов Д.О.
+ * @author Красильников А.С.
  */
 
 import Controller = require('Controls/_validate/FormController');

@@ -11,7 +11,7 @@ define('Controls/Application',
       'Controls/scroll',
       'Core/helpers/getResourceUrl',
       'Controls/decorator',
-      'css!theme?Controls/Application/Application'
+      'Controls/Application/SettingsController'
    ],
 
    /**
@@ -39,7 +39,7 @@ define('Controls/Application',
     * @control
     * @public
     * @author Белотелов Н.В.
-    */    
+    */
 
    /**
     * @name Controls/Application#staticDomains
@@ -69,11 +69,11 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#headJson
-    * @cfg {Content} Разметка, которая будет встроена в содержимое тега head. 
+    * @cfg {Content} Разметка, которая будет встроена в содержимое тега head.
     * Используйте эту опцию, чтобы подключить на страницу внешние библиотеки (скрипты), стили или шрифты.
     * @remark
     * Список разрешённых тегов: link, style, script, meta, title.
-    * Список разрешённых атрибутов: rel, as, name, sizes, crossorigin, type, href, property, http-equiv, content, id, class. 
+    * Список разрешённых атрибутов: rel, as, name, sizes, crossorigin, type, href, property, http-equiv, content, id, class.
     */
 
    /**
@@ -140,7 +140,7 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#beforeScripts
-    * @cfg {Boolean} В значении true скрипты из опции {@link scripts} будут вставлены до других скриптов, созданных приложением. 
+    * @cfg {Boolean} В значении true скрипты из опции {@link scripts} будут вставлены до других скриптов, созданных приложением.
     * @default false
     */
 
@@ -244,7 +244,8 @@ define('Controls/Application',
       UIBase,
       scroll,
       getResourceUrl,
-      decorator) {
+      decorator,
+      SettingsController) {
       'use strict';
 
       var _private;
@@ -404,7 +405,7 @@ define('Controls/Application',
 
          _beforeMount: function(cfg) {
             this.BodyClasses = _private.calculateBodyClasses;
-            this._scrollData = new scroll._scrollContext({pagingVisible: cfg.pagingVisible});
+            this._scrollData = new scroll._scrollContext({ pagingVisible: cfg.pagingVisible });
             this.headJson = cfg.headJson;
             this.headValidHtml = generateHeadValidHtml();
 
@@ -420,6 +421,8 @@ define('Controls/Application',
                   this.headValidHtml = undefined;
                }
             }
+
+            SettingsController.setController(cfg.settingsController);
          },
 
          _beforeUpdate: function(cfg) {
@@ -479,6 +482,8 @@ define('Controls/Application',
             pagingVisible: false
          };
       };
+
+      Page._theme = ['Controls/application'];
 
       return Page;
    });

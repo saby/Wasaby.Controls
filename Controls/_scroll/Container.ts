@@ -142,8 +142,8 @@ var
 
       setScrollTop: function(self, scrollTop) {
          self._children.scrollWatcher.setScrollTop(scrollTop);
-         self._scrollTop = scrollTop;
-         self._notify('scroll', [scrollTop]);
+         self._scrollTop = _private.getScrollTop(self, self._children.content);
+         self._notify('scroll', [self._scrollTop]);
       },
 
       calcHasScroll: function(self) {
@@ -424,6 +424,10 @@ var
             return false;
          }
 
+          if (this._shadowVisiblityMode[position] === 'visible') {
+              return true;
+          }
+
          // On ipad with inertial scrolling due to the asynchronous triggering of scrolling and caption fixing  events,
          // sometimes it turns out that when the first event is triggered, the shadow must be displayed,
          // and immediately after the second event it is not necessary.
@@ -431,11 +435,7 @@ var
          if (Env.detection.isMobileIOS && position === 'top' && _private.getScrollTop(this, this._children.content) < 0) {
             return false;
          }
-
-         if (this._shadowVisiblityMode[position] === 'visible') {
-            return true;
-         }
-
+         
          return this._displayState.shadowPosition.indexOf(position) !== -1;
       },
 
@@ -503,18 +503,19 @@ var
       _keydownHandler: function(ev) {
          // если сами вызвали событие keydown (горячие клавиши), нативно не прокрутится, прокрутим сами
          if (!ev.nativeEvent.isTrusted) {
-            var offset;
+            let offset: number;
+            const scrollTop: number = _private.getScrollTop(this, this._children.content);
             if (ev.nativeEvent.which === Env.constants.key.pageDown) {
-               offset = this._children.content.scrollTop + this._children.content.clientHeight;
+               offset = scrollTop + this._children.content.clientHeight;
             }
             if (ev.nativeEvent.which === Env.constants.key.down) {
-               offset = this._children.content.scrollTop + 40;
+               offset = scrollTop + 40;
             }
             if (ev.nativeEvent.which === Env.constants.key.pageUp) {
-               offset = this._children.content.scrollTop - this._children.content.clientHeight;
+               offset = scrollTop - this._children.content.clientHeight;
             }
             if (ev.nativeEvent.which === Env.constants.key.up) {
-               offset = this._children.content.scrollTop - 40;
+               offset = scrollTop - 40;
             }
             if (offset !== undefined) {
                this.scrollTo(offset);
