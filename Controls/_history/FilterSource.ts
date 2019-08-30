@@ -235,36 +235,12 @@ var _private = {
 };
 
 /**
- * Прокси-сервер, который принимает данные из источника истории.
- * @class Controls/_history/FilterSource
- * @extends Core/core-extend
- * @mixes Types/_entity/OptionsToPropertyMixin
- * @control
- * @public
- * @author Герасимов А.М.
- * @category Menu
- * @example
- * <pre>
- *    var source = new filterSource({
- *           originSource: new Memory({
- *               idProperty: 'id',
- *               data: []
- *           }),
- *           historySource: new historyService({
- *               historyId: 'TEST_FILTER_HISTORY_ID',
- *               dataLoaded: true
- *           })
- *       });
- * </pre>
- */
-
-/*
  * A proxy that works only takes data from the history source
  * @class Controls/_history/FilterSource
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
  * @control
- * @public
+ * @private
  * @author Герасимов А.М.
  * @category Menu
  * @example

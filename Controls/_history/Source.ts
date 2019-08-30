@@ -13,7 +13,7 @@ import clone = require('Core/core-clone');
 import cInstance = require('Core/core-instance');
 
 /**
- * Прокси-источник добавления данных истории в исходный источник.
+ * Источник, который возвращает из исходного источника отсортированные данные с учётом истории. 
  * @class Controls/_history/Source
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
