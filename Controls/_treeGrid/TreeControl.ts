@@ -485,8 +485,10 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
 
     _clearTimeoutForExpandOnDrag: function() {
-        clearTimeout(this._timeoutForExpandOnDrag);
-        this._timeoutForExpandOnDrag = null;
+        if (this._timeoutForExpandOnDrag) {
+            clearTimeout(this._timeoutForExpandOnDrag);
+            this._timeoutForExpandOnDrag = null;
+        }
         this._expandOnDragData = null;
     },
 
@@ -496,11 +498,10 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         }
     },
     _setTimeoutForExpandOnDrag: function(itemData) {
-        let self = this;
-        this._timeoutForExpandOnDrag = setTimeout(
-            function() {
-                self._expandNodeOnDrag(itemData);
-            }, EXPAND_ON_DRAG_DELAY);
+        this._timeoutForExpandOnDrag = setTimeout(() => {
+                this._expandNodeOnDrag(itemData);
+            },
+            EXPAND_ON_DRAG_DELAY);
     },
     _nodeMouseMove: function(itemData, event) {
         var
@@ -525,9 +526,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
                     model.setDragTargetPosition(dragTargetPosition);
                 }
                 if (itemData.item.get(itemData.nodeProperty) !== null && (!this._expandOnDragData || this._expandOnDragData !== itemData) && !itemData.isExpanded) {
-                    this._expandOnDragData = itemData;
                     this._clearTimeoutForExpandOnDrag(this);
-                    this._setTimeoutForExpandOnDrag(this, this._expandOnDragData);
+                    this._expandOnDragData = itemData;
+                    this._setTimeoutForExpandOnDrag(this._expandOnDragData);
                 }
             }
         }
@@ -547,6 +548,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _beforeUnmount: function() {
         _private.clearSourceControllers(this);
         TreeControl.superclass._beforeUnmount.apply(this, arguments);
+        this._clearTimeoutForExpandOnDrag();
     }
 });
 
