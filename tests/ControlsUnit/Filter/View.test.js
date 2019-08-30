@@ -165,7 +165,7 @@ define(
             });
          });
 
-         it('_openDetailPanel', function() {
+         it('openDetailPanel', function() {
             let view = getView(defaultConfig),
                popupOptions;
             view._children = {
@@ -181,7 +181,7 @@ define(
             assert.strictEqual(popupOptions.templateOptions.items.length, 5);
 
             view._options.detailPanelTemplateName = null;
-            view._openDetailPanel();
+            view.openDetailPanel();
          });
 
          it('_openPanel', function() {
