@@ -33,6 +33,7 @@ import Dropdown = require('Controls/_filterPopup/Panel/Dropdown');
 import Text = require('Controls/_filterPopup/Panel/Text');
 import Lookup = require('Controls/_filterPopup/Panel/Lookup');
 import _List = require('Controls/_filterPopup/SimplePanel/_List');
+import _HierarchyList = require('Controls/_filterPopup/SimplePanel/_HierarchyList');
 
 import _FilterPanelWrapper = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelWrapper');
 
@@ -48,6 +49,7 @@ export {
    Text,
    Lookup,
    _List,
+   _HierarchyList,
 
    _FilterPanelWrapper
 }

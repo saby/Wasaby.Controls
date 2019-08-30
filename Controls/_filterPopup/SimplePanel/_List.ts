@@ -3,7 +3,6 @@ import template = require('wml!Controls/_filterPopup/SimplePanel/_List/List');
 import {ItemTemplate as defaultItemTemplate} from 'Controls/dropdown';
 import emptyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_List/emptyItemTemplate');
 import {isEqual} from 'Types/object';
-
 import {DropdownViewModel} from 'Controls/dropdownPopup';
 
 var _private = {
@@ -12,6 +11,24 @@ var _private = {
             clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox'),
             hasSelection = self._listModel.getSelectedKeys().length && !isEqual(self._listModel.getSelectedKeys(), self._options.resetValue);
         return self._options.multiSelect && !clickOnEmptyItem && (hasSelection || clickOnCheckBox);
+    },
+
+    updateSelection: function(listModel, item, resetValue) {
+        let updatedSelectedKeys = [...listModel.getSelectedKeys()];
+        if (updatedSelectedKeys.includes(item.getId())) {
+            var index = updatedSelectedKeys.indexOf(item.getId());
+            updatedSelectedKeys.splice(index, 1);
+
+            if (!updatedSelectedKeys.length) {
+                updatedSelectedKeys = resetValue;
+            }
+        } else {
+            if (isEqual(updatedSelectedKeys, resetValue)) {
+                updatedSelectedKeys = [];
+            }
+            updatedSelectedKeys.push(item.getId());
+        }
+        listModel.setSelectedKeys(updatedSelectedKeys);
     },
 
     afterOpenDialogCallback: function(selectedItems) {
@@ -50,8 +67,9 @@ var List = Control.extend({
 
     _itemClickHandler: function(event, item) {
         if (_private.isNeedUpdateSelectedKeys(this, event.target, item)) {
-            this._listModel.updateSelection(item, this._options.resetValue[0]);
-            this._notify('checkBoxClick', [this._listModel.getSelectedKeys()]);
+            _private.updateSelection(this._listModel, item, this._options.resetValue);
+            let selectedKeys = this._listModel.getSelectedKeys().slice().sort();
+            this._notify('checkBoxClick', [selectedKeys]);
         } else {
             this._notify('itemClick', [[item.get(this._options.keyProperty)]]);
         }

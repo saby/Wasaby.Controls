@@ -1,5 +1,12 @@
-<Controls._filterPopup.SimplePanel._List
-   scope="{{_options}}"
-   isLast="{{isLast}}"
-   showSeparator="{{showSeparator}}"
-/>
+<ws:if data="{{_options.nodeProperty}}">
+   <Controls._filterPopup.SimplePanel._HierarchyList
+           scope="{{_options}}"
+      />
+</ws:if>
+<ws:else>
+   <Controls._filterPopup.SimplePanel._List
+      scope="{{_options}}"
+      isLast="{{isLast}}"
+      showSeparator="{{showSeparator}}"
+   />
+</ws:else>

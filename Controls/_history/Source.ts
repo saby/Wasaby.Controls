@@ -353,7 +353,13 @@ var _private = {
             ids: []
          };
          chain.factory(data).each(function(item) {
-            historyData.ids.push(item.get(_private.getKeyProperty(self)));
+            let itemId = item.get(_private.getKeyProperty(self));
+            historyData.ids.push(itemId);
+
+            // TODO Delete after https://online.sbis.ru/opendoc.html?guid=77601764-a451-4da1-8afb-89ce1161b96f
+            if (meta.parentKey) {
+               _private.getSourceByMeta(self, meta).update({id: itemId}, meta);
+            }
          });
          _private.resolveRecent(self, data);
       } else {
@@ -362,7 +368,9 @@ var _private = {
       }
 
       self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
-      return _private.getSourceByMeta(self, meta).update(historyData, meta);
+      if (!meta.parentKey) { // TODO Delete after https://online.sbis.ru/opendoc.html?guid=77601764-a451-4da1-8afb-89ce1161b96f
+         return _private.getSourceByMeta(self, meta).update(historyData, meta);
+      }
    },
 
    getRawHistoryItem: function (self, id, hId) {
