@@ -295,6 +295,21 @@ define(
                });
             });
          });
+
+         describe('_getStartingPosition', function() {
+            it('123', function() {
+               const model = new ViewModel({}, '123');
+
+               assert.equal(model.selection.start, 3);
+               assert.equal(model.selection.end, 3);
+            });
+            it('123.456', function() {
+               const model = new ViewModel({}, '123.456');
+
+               assert.equal(model.selection.start, 3);
+               assert.equal(model.selection.end, 3);
+            });
+         });
       });
    }
 );
