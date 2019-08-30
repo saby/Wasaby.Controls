@@ -58,33 +58,23 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
  * так что переданный DOM-элемент становится видимым.
  *
  * <h2>Аргументы функции</h2>
- *
- * <ul>
- * <li>element: HTMLElement - DOM-элемент, который нужно сделать видимым,</li>
- * <li>toBottom: boolean - определяет, должен ли быть виден нижний край контейнера,</li>
- * <li>force: boolean:</li>
- *    <ul>
- *       <li>true - позволяет прокручивать элемент вверх/вниз в области прокрутки, безоговорочно,</li>
- *       <li>false - элемент будет прокручиваться только в случае, если он частично или полностью скрыт за пределами области прокрутки.</li>
- *    </ul>
- * </ul>
+ * 
+ * * element: HTMLElement - DOM-элемент, который нужно сделать видимым
+ * * toBottom: boolean - определяет, должен ли быть виден нижний край контейнера
+ * * force: boolean:
+ *     * true - позволяет прокручивать элемент вверх/вниз в области прокрутки, безоговорочно.
+ *     * false - элемент будет прокручиваться только в случае, если он частично или полностью скрыт за пределами области прокрутки.
  *
  * <h3>Пример использования</h3>
  * <pre>
- * require([
- *     'Controls/Utils/scrollToElement'
- * ], function(
- *     scrollToElement
- * ) {
- *     class Component extends Control {
- *         _onClick() {
- *             scrollToElement(this._children.child, true);
- *         }
- *     }
+ * require(['Controls/Utils/scrollToElement'], function(scrollToElement) {
+ *    class Component extends Control {
+ *       _onClick() {
+ *          scrollToElement(this._children.child, true);
+ *       }
+ *    }
  * });
  * </pre>
- *
- * The
  * @class Controls/Utils/scrollToElement
  * @public
  * @author Красильников А.С.
