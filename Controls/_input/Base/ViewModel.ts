@@ -23,7 +23,7 @@ import {isEqual} from 'Types/object';
             if (self._displayValue !== displayValue) {
                var oldValue = self._displayValue;
                self._displayValue = displayValue;
-               self.selection = displayValue.length;
+               self.selection = self._getStartingPosition();
 
                // если ничего не поменялось - не надо изменять версию
                if (oldValue !== displayValue) {
@@ -42,6 +42,10 @@ import {isEqual} from 'Types/object';
 
          _convertToDisplayValue: function(value) {
             return value === null ? '' : value;
+         },
+
+         _getStartingPosition: function () {
+            return this.displayValue.length;
          },
 
          get shouldBeChanged() {
