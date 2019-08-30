@@ -21,7 +21,7 @@ define(
             displayProperty: 'title',
             keyProperty: 'id',
             emptyText: '',
-            resetValue: '2',
+            resetValue: ['2'],
             id: 'text',
             items: defaultItems.clone(),
             selectedKeys: [],
@@ -85,9 +85,9 @@ define(
             assert.deepStrictEqual(itemClickResult, ['1']);
 
             // item click with selection
-            let newConfig = {...defaultConfig, selectedKeys: ['2']};
+            let newConfig = {...defaultConfig, selectedKeys: ['1', '3']};
             list._beforeUpdate(newConfig);
-            list._itemClickHandler(event, defaultItems.at(0));
+            list._itemClickHandler(event, defaultItems.at(2));
             assert.deepStrictEqual(checkBoxClickResult, ['1']);
 
             //checkbox click
