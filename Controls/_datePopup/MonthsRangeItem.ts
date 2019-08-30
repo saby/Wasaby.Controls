@@ -24,6 +24,8 @@ var _private = {},
         months: 'months'
     };
 
+const MONTHS_RANGE_CSS_CLASS_PREFIX = 'controls-PeriodDialog-MonthsRange__';
+
 var Component = BaseControl.extend([EventProxyMixin], {
     _template: componentTmpl,
     _monthViewModel: modelViewModel,
@@ -209,16 +211,16 @@ var Component = BaseControl.extend([EventProxyMixin], {
                 this._options.selectionHoveredValue,
                 this._options.hoveredStartValue,
                 this._options.hoveredEndValue,
-                {periodQuantum: rangeSelectionUtils.PERIOD_QUANTUM.month}
+                {periodQuantum: rangeSelectionUtils.PERIOD_TYPE.month}
+            ));
+        } else {
+            css.push(rangeSelectionUtils.prepareHoveredClass(
+                itemValue,
+                this._options.hoveredStartValue,
+                this._options.hoveredEndValue,
+                {cssPrefix: MONTHS_RANGE_CSS_CLASS_PREFIX}
             ));
         }
-
-        css.push(rangeSelectionUtils.prepareHoveredClass(
-            itemValue,
-            this._options.hoveredStartValue,
-            this._options.hoveredEndValue,
-            {cssPrefix: 'controls-PeriodDialog-MonthsRange__'}
-        ));
 
         return css.join(' ');
     },
