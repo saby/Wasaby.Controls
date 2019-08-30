@@ -18,23 +18,19 @@ define('Controls/Utils/isVDOMTemplate', [], function() {
     *
     * <h2>Возвращает</h2>
     *
-    * <ul>
-    *     <li><b>true</b> - класс унаследован от Core/Control</li>
-    *     <li><b>false</b> - класс не унаследован от Core/Control</li>
-    * </ul>
+    * * true - класс унаследован от Core/Control.
+    * * false - класс не унаследован от Core/Control.
     *
     * <h2>Пример использования</h2>
     * <pre>
-    * require(
-    * ['Controls/buttons:Button', 'SBIS3.CONTROLS/Button', 'Controls/Utils/isVDOMTemplate'],
-    * function(VDOMButton, WS3Button, isVDOMTemplate) {
+    * require(['Controls/buttons:Button', 'SBIS3.CONTROLS/Button', 'Controls/Utils/isVDOMTemplate'], function(VDOMButton, WS3Button, isVDOMTemplate) {
     *
     *   // true
     *   isVDOMTemplate(VDOMButton);
     *
     *   // false
     *   isVDOMTemplate(WS3Button);
-    *  });
+    * });
     * </pre>
     *
     * @class Controls/Utils/isVDOMTemplate
