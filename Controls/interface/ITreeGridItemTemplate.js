@@ -16,10 +16,10 @@ define('Controls/interface/ITreeGridItemTemplate', [
 
    /**
     * @name Controls/interface/ITreeGridItemTemplate#itemTemplate
-    * @cfg {Function} Template for item render.
+    * @cfg {Function} Шаблон отображения элемента.
     * <a href="/materials/demo-ws4-tree-grid-item-template">Демо-пример</a>.
     * @remark
-    * Базовый шаблон отображения элемента для Controls.treeGrid:View: "Controls/treeGrid:ItemTemplate".
+    * Базовый шаблон отображения элемента для Controls/treeGrid:View: "Controls/treeGrid:ItemTemplate".
     * Внутри шаблона доступен объект itemData, позволяющий получить доступ к данным для рендеринга (например: item, key, etc.).
     * Базовый шаблон отображения itemTemplate поддерживает следующие параметры:
     * <ul>
