@@ -11,7 +11,7 @@ import {
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
     getResultsIndex, getTopOffset, IBaseGridRowIndexOptions, getRowsArray, getMaxEndRow, getBottomPaddingRowIndex
 } from 'Controls/_grid/utils/GridRowIndexUtil';
-
+import ControlsConstants = require('Controls/Constants');
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -178,13 +178,11 @@ var
         },
 
         prepareRowSeparatorClasses: function(current) {
-            var
-                result = '',
-                rowCount = current.dispItem.getOwner().getCount();
+            let result = '';
 
             if (current.rowSeparatorVisibility) {
-
-                if (current.isFirstInGroup) {
+                const rowCount = current.dispItem.getOwner().getCount();
+                if (current.isFirstInGroup && !current.isInHiddenGroup) {
                     result += ' controls-Grid__row-cell_first-row-in-group';
                 } else {
                     if (current.index === 0) {
@@ -1339,9 +1337,15 @@ var
                 return current;
             }
 
-            current.isFirstInGroup = !current.isGroup && this._isFirstInGroup(current.item);
+            const itemGroupId = !current.isGroup && this._getItemGroup(current.item);
+            current.isInHiddenGroup = itemGroupId === ControlsConstants.view.hiddenGroup;
+            current.isFirstInGroup = itemGroupId && this._isFirstInGroup(current.item, itemGroupId);
 
-            if (current.isFirstInGroup && current.item !== self.getLastItem()) {
+            if (
+                current.isFirstInGroup &&
+                !current.isInHiddenGroup &&
+                current.item !== self.getLastItem()
+            ) {
                 current.rowSeparatorVisibility = false;
             } else {
                 current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
@@ -1696,20 +1700,16 @@ var
             return this._eventHandlersForPartialSupport;
         },
 
-        _isFirstInGroup: function(item): boolean {
-            var display = this._model._display,
-                groupingKeyCallback = this._options.groupingKeyCallback,
-                currentItemGroup,
-                currentGroupItems;
+        _isFirstInGroup: function(item, groupId?): boolean {
+            const display = this._model._display;
+            let currentGroupItems;
 
-            // If grouping is not enabled.
-            if (!groupingKeyCallback) {
+            groupId = groupId || this._getItemGroup(item);
+            if (!groupId) {
                 return false;
             }
 
-            // Getting all items of the current items' group.
-            currentItemGroup = groupingKeyCallback(item);
-            currentGroupItems = display.getGroupItems(currentItemGroup);
+            currentGroupItems = display.getGroupItems(groupId);
 
             // If current item is out of any group.
             if (!currentGroupItems || currentGroupItems.length === 0) {
@@ -1718,6 +1718,15 @@ var
 
 
             return item === currentGroupItems[0].getContents();
+        },
+
+        _getItemGroup: function(item): boolean {
+            const groupingKeyCallback = this._options.groupingKeyCallback;
+            if (groupingKeyCallback) {
+                return groupingKeyCallback(item);
+            } else {
+                return null;
+            }
         },
 
         markItemReloaded: function(key) {
