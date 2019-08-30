@@ -486,6 +486,51 @@ define([
          });
       });
 
+      it('_getDisplayItemCacheKey works based on key property', function() {
+         const cfg = {
+            items: data,
+            keyProperty: 'id'
+         };
+         const model = new list.ItemsViewModel(cfg);
+         const dispItem = {
+            getContents: () => {
+               return {
+                  '[Types/_entity/IObject]': true,
+                  getId: () => {
+                     return 123;
+                  },
+                  get: (propName) => {
+                     if (propName === 'id') {
+                        return 456;
+                     }
+                  },
+                  has: (propName) => {
+                     return propName === 'id'
+                  }
+               };
+            }
+         };
+
+         assert.strictEqual(
+            model._getDisplayItemCacheKey(dispItem),
+            model._convertItemKeyToCacheKey(456)
+         );
+
+         // emulate breadcrumbs
+         const crumbsDisplay = { getContents: () => [{}, {}, dispItem.getContents()] };
+         assert.strictEqual(
+            model._getDisplayItemCacheKey(crumbsDisplay),
+            model._convertItemKeyToCacheKey(456)
+         );
+
+         // emulate group
+         const groupDisplay = { getContents: () => 'hiddenGroup' };
+         assert.strictEqual(
+            model._getDisplayItemCacheKey(groupDisplay),
+            model._convertItemKeyToCacheKey('hiddenGroup')
+         );
+      });
+
       it('isAllGroupsCollapsed', function () {
          const
              cfg = {

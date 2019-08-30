@@ -74,7 +74,7 @@ var ItemsUtil = {
         }
     },
 
-    getDisplayItemKey: function(dispItem) {
+    getDisplayItemKey: function(dispItem, keyProperty) {
         let contents = dispItem.getContents();
 
         if (contents instanceof Array) {
@@ -82,13 +82,7 @@ var ItemsUtil = {
             contents = contents[contents.length - 1];
         }
 
-        if (contents && typeof contents.getId === 'function') {
-            // Standard item has a getId method
-            return contents.getId();
-        } else {
-            // Groups are unique identifiers themselves
-            return contents;
-        }
+        return ItemsUtil.getPropertyValue(contents, keyProperty);
     }
 };
 export = ItemsUtil;
