@@ -131,7 +131,7 @@ define('Controls-demo/Popup/Edit/Sync',
 
             if (action === 'update') {
                if (additionalData.isNewRecord) {
-                  this.record.set('id', additionalData.key);
+                  this.record.set(this._items.getIdProperty(), additionalData.key);
                }
                return 'cancel';
             }
