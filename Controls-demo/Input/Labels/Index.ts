@@ -5,6 +5,7 @@ import 'css!Controls-demo/Controls-demo';
 class Labels extends Control<IControlOptions> {
     private _value = Labels._defaultValue;
     private _requiredValue = Labels._defaultValue;
+    private _topValue = Labels._defaultValue;
     private _placeholder = 'Tooltip';
 
     protected _template: TemplateFunction = controlTemplate;
