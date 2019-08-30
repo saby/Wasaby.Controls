@@ -84,47 +84,45 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * @cfg {SourceCfg} Объект, который реализует интерфейс ISource для доступа к данным.
  * @default undefined
  * @remark
- * Элемент может иметь свойства 'title' и 'showType'.
- * 'Title' определяет текст подписи элемента.
- * 'ShowType' определяет местоположение элемента тулбара:
- * <ul>
- * <li>0 - элемент отображается в дополнительном меню,</li>
- * <li>1 - элемент отображается и в дополнительном меню, и в тулбаре,</li>
- * <li>2 - элемент отображается в тулбаре.</li>
- * </ul>
+ * Элемент может иметь свойства:
+ * * title определяет текст подписи элемента. 
+ * * showType определяет местоположение элемента тулбара:
+ *     * 0 - элемент отображается в дополнительном меню.
+ *     * 1 - элемент отображается и в дополнительном меню, и в тулбаре.
+ *     * 2 - элемент отображается в тулбаре.
  * Для отображения элемента в режиме readOnly нужно установить свойство 'readOnly' в true.
  * @example
  * <pre>
- * <Controls.toolbars:View
- *           keyProperty="key"
- *           source="{{_source}}"
- * />
+ * <Controls.toolbars:View keyProperty="key" source="{{_source}}" />
  * </pre>
  * <pre>
- * _source: new Memory({
- *    idProperty: 'key',
- *    data: [
- *       {
- *          id: '1',
- *          showType: 2,
- *          icon: 'icon-Time',
- *          '@parent': false,
- *          parent: null
- *       },
- *       {
- *          id: '2',
- *          title: 'Moscow',
- *          '@parent': false,
- *          parent: null
- *       },
- *       {
- *          id: '3',
- *          title: 'St-Petersburg',
- *          '@parent': false,
- *          parent: null
- *       }
- *    ]
- * })
+ * _source: null,
+ * _beforeMount: function() {
+ *    this._source = source.Memory({
+ *       idProperty: 'key',
+ *       data: [
+ *          {
+ *             id: '1',
+ *             showType: 2,
+ *             icon: 'icon-Time',
+ *             '@parent': false,
+ *             parent: null
+ *          },
+ *          {
+ *             id: '2',
+ *             title: 'Moscow',
+ *             '@parent': false,
+ *             parent: null
+ *          },
+ *          {
+ *             id: '3',
+ *             title: 'St-Petersburg',
+ *             '@parent': false,
+ *             parent: null
+ *          }
+ *       ]
+ *    });
+ * }
  * </pre>
  */
 /*
@@ -174,14 +172,12 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
 /**
  * @name Controls/_toolbars/View#itemsSpacing
  * @cfg {String} Размер расстояния между элементами тулбара.
+ * @variant big
+ * @variant medium
  * @default medium
  * @example
  * <pre>
- * <Controls.toolbars:View
- *           keyProperty="key"
- *           source="{{_source}}"
- *           itemsSpacing="big"
- * />
+ * <Controls.toolbars:View keyProperty="key" source="{{_source}}" itemsSpacing="big" />
  * </pre>
  */
 /*
@@ -204,11 +200,11 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Record} item Элемент, по которому произвели клик.
  * @example
- * TMPL:
+ * WML
  * <pre>
  *    <Controls.toolbars:View on:itemClick="onToolbarItemClick()" />
  * </pre>
- * JS:
+ * JavaScript
  * <pre>
  *    onToolbarItemClick: function(e, selectedItem) {
  *       var itemId = selectedItem.get('id');
