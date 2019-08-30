@@ -690,6 +690,83 @@ define(
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});
             });
          });
+
+         describe('View hierarchyList', function() {
+            let view;
+            beforeEach(function() {
+               let documentItems = [
+                  {id: -1, title: 'Folder 1', node: true},
+                  {id: -2, title: 'Folder 2', node: true},
+                  {id: 1, title: 'In any state', parent: -1},
+                  {id: 2, title: 'In progress', parent: -1},
+                  {id: 3, title: 'Completed', parent: -1},
+                  {id: 4, title: 'Deleted', parent: -2},
+                  {id: 5, title: 'Drafts', parent: -2}
+               ];
+               let hierarchySource = [
+                  {
+                     name: 'document',
+                     value: [[-1], []],
+                     resetValue: [],
+                     textValue: '',
+                     emptyText: 'All documents',
+                     editorOptions: {
+                        source: new sourceLib.Memory({
+                           idProperty: 'id',
+                           data: documentItems
+                        }),
+                        displayProperty: 'title',
+                        keyProperty: 'id',
+                        nodeProperty: 'node',
+                        parentProperty: 'parent',
+                        multiSelect: true
+                     },
+                     viewMode: 'frequent'
+                  }
+               ];
+               view = getView({source: hierarchySource});
+               view._displayText = {};
+               view._source = Clone(hierarchySource);
+               view._configs = {
+                  document: {
+                     items: new collection.RecordSet({
+                        idProperty: 'id',
+                        rawData: documentItems
+                     }),
+                     displayProperty: 'title',
+                     keyProperty: 'id',
+                     nodeProperty: 'node',
+                     parentProperty: 'parent',
+                     multiSelect: true
+                  }
+               };
+               view._children = {
+                  StickyOpener: { close: () => {} }
+               };
+            });
+
+            it ('updateText', function () {
+               filter.View._private.updateText(view, view._source, view._configs);
+               assert.deepStrictEqual(view._displayText.document, {text: 'Folder 1', title: 'Folder 1', hasMoreText: '' });
+            });
+
+            it ('applyClick', function () {
+               let filterChanged;
+               view._notify = (event, data) => {
+                  if (event === 'filterChanged') {
+                     filterChanged = data[0];
+                  }
+               };
+               let eventResult = {
+                  action: 'applyClick',
+                  selectedKeys: { document: [[1, 2], [-2, 4]] }
+               };
+               view._resultHandler('resultEvent', eventResult);
+               assert.deepStrictEqual(view._source[0].value, [[1, 2], [-2]]);
+               assert.deepStrictEqual(view._displayText.document, {text: 'Folder 2', title: 'Folder 2, In any state, In progress', hasMoreText: ', еще 2' });
+               assert.deepStrictEqual(filterChanged, {document: [[1, 2], [-2]]});
+            });
+         });
       });
    }
 );

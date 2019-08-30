@@ -29,10 +29,6 @@ var _private = {
         return result;
     },
 
-    afterOpenDialogCallback: function(selectedItems) {
-        this._notify('moreButtonClick', [selectedItems]);
-    },
-
     getSelectedKeys: function(selectedKeys, folders) {
         let clonedKeys = clone(selectedKeys);
         factory(folders).each((folder, index) => {
@@ -73,10 +69,9 @@ var HierarchyList = Control.extend({
             keyProperty: options.keyProperty,
             itemTemplateProperty: options.itemTemplateProperty,
             displayProperty: options.displayProperty,
-            emptyText: options.emptyText
+            emptyText: options.emptyText,
+            emptyKey: options.emptyKey
         });
-
-        this._afterOpenDialogCallback = _private.afterOpenDialogCallback.bind(this);
     },
 
     _hasMoreButton: function(folder) {
