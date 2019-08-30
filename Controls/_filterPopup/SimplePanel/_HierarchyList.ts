@@ -41,6 +41,17 @@ var _private = {
             }
         });
         return clonedKeys;
+    },
+
+    getNodeItems: function(folders, {items, keyProperty, parentProperty}) {
+        let nodeItems = [];
+        factory(folders).each((folder) => {
+            const records = new RecordSet({idProperty: keyProperty});
+            records.add(folder);
+            records.append(_private.getItemsByFolder(items, folder.get(keyProperty), parentProperty));
+            nodeItems.push(records);
+        });
+        return nodeItems;
     }
 };
 
@@ -54,6 +65,7 @@ var HierarchyList = Control.extend({
     _beforeMount: function(options) {
         this._folders = _private.getFolders(options.items, options.nodeProperty);
         this._selectedKeys = _private.getSelectedKeys(options.selectedKeys, this._folders);
+        this._nodeItems = _private.getNodeItems(this._folders, options);
 
         this._listModel = new DropdownViewModel({
             items: options.items,
@@ -65,20 +77,6 @@ var HierarchyList = Control.extend({
         });
 
         this._afterOpenDialogCallback = _private.afterOpenDialogCallback.bind(this);
-    },
-
-    _beforeUpdate: function(newOptions) {
-        if (newOptions.items && newOptions.items !== this._options.items) {
-        }
-        if (newOptions.selectedKeys !== this._options.selectedKeys) {
-        }
-    },
-
-    _getListItems: function(folder) {
-        const recordSet = new RecordSet({idProperty: this._options.keyProperty});
-        recordSet.add(folder);
-        recordSet.append(_private.getItemsByFolder(this._options.items, folder.get(this._options.keyProperty), this._options.parentProperty));
-        return recordSet;
     },
 
     _hasMoreButton: function(folder) {

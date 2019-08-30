@@ -21,17 +21,6 @@ import {dropdownHistoryUtils as historyUtils} from "Controls/dropdown";
  */
 
 var _private = {
-    loadItems: function(config) {
-        let filter;
-        if (config.nodeProperty) {
-            filter = Merge(config.filter, {historyId: config.historyId});
-        } else {
-            filter = historyUtils.getSourceFilter(config.filter, config.source);
-        }
-        return config.sourceController.load(filter).addCallback((items) => {
-            return items;
-        });
-    },
 
     getItems: function(self, initItems) {
         var items = [];
@@ -39,10 +28,6 @@ var _private = {
             var curItem = item.getRawData();
             curItem.initSelectedKeys = self._items ? self._items[index].initSelectedKeys : CoreClone(item.get('selectedKeys'));
             items.push(curItem);
-
-            if (curItem._needQuery) {
-                _private.loadItems(curItem);
-            }
         });
         return items;
     },

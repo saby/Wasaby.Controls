@@ -14,7 +14,7 @@
               selectedKeys="{{_selectedKeys[index] || []}}"
               resetValue="{{_options.resetValue}}"
               multiSelect="{{_options.multiSelect}}"
-              items="{{_getListItems(item)}}"
+              items="{{_nodeItems[index]}}"
               showSeparator="{{false}}"
               on:itemClick="_itemClickHandler(index)"
               on:checkBoxClick="_checkBoxClickHandler(index)"

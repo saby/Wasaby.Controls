@@ -28,10 +28,10 @@ var _private = {
    },
 
    updateHistory: function (self, data, meta) {
-      if (meta.parentId) {
+      if (meta.parentKey) {
          _private.getHistoryDataSource(self).call('AddHierarchy', {
             history_id: self._historyId,
-            parent1: meta.parentId,
+            parent1: meta.parentKey,
             id: data.id
          });
       } else if (data.ids) {
