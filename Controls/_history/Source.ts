@@ -13,8 +13,7 @@ import clone = require('Core/core-clone');
 import cInstance = require('Core/core-instance');
 
 /**
- * Source
- * Proxy source adding history data to the original source
+ * Прокси-источник добавления данных истории в исходный источник.
  * @class Controls/_history/Source
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
@@ -37,16 +36,52 @@ import cInstance = require('Core/core-instance');
  * </pre>
  */
 
+/*
+ * Source
+ * Proxy source adding history data to the original source
+ * @class Controls/_history/Source
+ * @extends Core/core-extend
+ * @mixes Types/_entity/OptionsToPropertyMixin
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ * @category Menu
+ * @example
+ * <pre>
+ *    var source = new historySource({
+ *        originSource: new Memory({
+ *           idProperty: 'id',
+ *           data: items
+ *        }),
+ *        historySource: new historyService({
+ *           historyId: 'TEST_HISTORY_ID'
+ *        }),
+ *        parentProperty: 'parent'
+ *    });
+ * </pre>
+ */ 
+
 /**
  * @name Controls/_history/Source#originSource
- * @cfg {Source} A data source
+ * @cfg {Source} Источник данных.
  */
+
+/*
+ * @name Controls/_history/Source#originSource
+ * @cfg {Source} A data source
+ */ 
 
 /**
  * @name Controls/_history/Source#historySource
+ * @cfg {Source} Источник, который работает с историей.
+ * @see {Controls/_history/Service} Источник работает с сервисом истории ввода.
+ */
+
+/*
+ * @name Controls/_history/Source#historySource
  * @cfg {Source} A source which work with history
  * @see {Controls/_history/Service} Source working with the service of InputHistory
- */
+ */ 
 
 var historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
 

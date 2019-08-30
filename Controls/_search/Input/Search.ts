@@ -59,7 +59,7 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
 
 /**
  * @event Controls/_suggest/Input/Search/Suggest#searchClick Происходит при нажатии на иконку поиска (лупы).
- * @remark Клик по иконке поиска закрывает автодополнение, это поведение можео отменить, если из событие вернуть false.
+ * @remark Клик по иконке поиска закрывает автодополнение, это поведение можно отменить, если из события вернуть false.
  * @example
  * WML:
  * <pre>
@@ -77,9 +77,14 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  *       return this._value.length < 3;
  *     }
  * <pre>
- */
+ */ 
 
 /**
+ * @event Controls/_search/Input/Search#searchClick Происходит при клике на кнопку поиска.
+ * @event Controls/Input/resetClick#resetClick Происходит при клике на кнопку сброса.
+ */
+
+/*
  * @event Controls/_suggest/Input/Search/Suggest#searchClick Occurs when search button is clicked..
  * @example
  * WML:

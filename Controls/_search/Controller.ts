@@ -156,6 +156,32 @@ var _private = {
 };
 
 /**
+ * Контрол-контроллер поиска позволяет осуществлять поиск данных в {@link Controls/list:View}
+ * с помощью любого компонента с интерфейсом {@link Controls/interface/IInputField}.
+ * Контроллер поиска позволяет:
+ * 1) установить задержку перед поиском;
+ * 2) установить количество символов;
+ * 3) установить параметры поиска;
+ * 4) изменить раскладку клавиатуры для случаев неудачного поиска.
+ * Следует запомнить: Контрол с интерфейсом {@link Controls/interface/IInputField} должен быть обернут в {@link Controls/_search/Input/Container}.
+ *
+ * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
+ *
+ * <a href="/materials/demo/demo-ws4-explorer-with-search">Демо-пример</a>. 
+ *
+ * @class Controls/_search/Controller
+ * @extends Core/Control
+ * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IFilter
+ * @mixes Controls/interface/INavigation
+ * @mixes Controls/interface/IHierarchySearch
+ * @author Герасимов А.М.
+ * @control
+ * @public
+ */
+
+/*
  * The search controller allows you to search data in a {@link Controls/list:View}
  * using any component with {@link Controls/interface/IInputField} interface.
  * Search controller allows you:
@@ -179,7 +205,7 @@ var _private = {
  * @author Герасимов А.М.
  * @control
  * @public
- */
+ */ 
 
 var Container = Control.extend(/** @lends Controls/_search/Container.prototype */{
 

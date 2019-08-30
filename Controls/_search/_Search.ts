@@ -69,6 +69,12 @@ var _private = {
 
 /**
  * @name Controls/_search/_Search#searchDelay
+ * @cfg {Number} Задержка в миллисекундах между нажатием клавиши и выполнением поиска.
+ * Нулевая задержка имеет смысл для локальных данных.
+ */
+
+/*
+ * @name Controls/_search/_Search#searchDelay
  * @cfg {Number} The delay in milliseconds between when a keystroke occurs and when a search is performed.
  * A zero-delay makes sense for local data.
  */
@@ -80,7 +86,7 @@ var _private = {
 
 /**
  * @name Controls/_search/_Search#navigation
- * @cfg 'Controls/interface/INavigation} source
+ * @cfg {Controls/interface/INavigation} source
  */
 
 var Search  = extend({
@@ -98,7 +104,7 @@ var Search  = extend({
    },
 
    /**
-    * @cfg {Object} filter
+    * @cfg {Object} Фильтр.
     * @returns {Core/Deferred}
     */
    search: function(filter, force) {
@@ -127,6 +133,11 @@ var Search  = extend({
    },
 
    /**
+    * Прервать поиск.
+    * @public
+    */
+
+   /*
     * Aborting search
     * @public
     */

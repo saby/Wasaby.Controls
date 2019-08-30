@@ -77,7 +77,7 @@ var _private = {
 };
 
 /**
- * Source working with the service of InputHistory
+ * Источник, который работает с сервисом истории ввода.
  *
  * @class Controls/_history/Service
  * @extends Core/core-extend
@@ -93,47 +93,106 @@ var _private = {
  * </pre>
  */
 
+/*
+ * Source working with the service of InputHistory
+ *
+ * @class Controls/_history/Service
+ * @extends Core/core-extend
+ * @implements Types/_source/ICrud
+ * @mixes Types/_entity/OptionsToPropertyMixin
+ * @public
+ * @author Герасимов А.М.
+ * @example
+ * <pre>
+ *    new historyService({
+ *       historyId: 'TEST_HISTORY_ID'
+ *    })
+ * </pre>
+ */ 
+
 /**
  * @name Controls/_history/Service#historyId
- * @cfg {String} unique service history identifier
+ * @cfg {String} Уникальный идентификатор сервиса истории.
  */
+
+/*
+ * @name Controls/_history/Service#historyId
+ * @cfg {String} unique service history identifier
+ */ 
 
 /**
  * @name Controls/_history/Service#historyIds
- * @cfg {Array of String} unique service history identifiers
+ * @cfg {Array of String} Уникальные идентификаторы сервиса истории.
  */
 
+/*
+ * @name Controls/_history/Service#historyIds
+ * @cfg {Array of String} unique service history identifiers
+ */ 
+
 /**
+ * @name Controls/_history/Service#pinned
+ * @cfg {Boolean} Загружает закрепленные записи из БЛ.
+ * @remark
+ * true - Load items
+ * false - No load items
+ */
+
+/*
  * @name Controls/_history/Service#pinned
  * @cfg {Boolean} Loads pinned items from BL
  * @remark
  * true - Load items
  * false - No load items
- */
+ */ 
 
 /**
+ * @name Controls/_history/Service#frequent
+ * @cfg {Boolean} Загружает наиболее часто выбираемые записи из БЛ.
+ * @remark
+ * true - Load items
+ * false - No load items
+ */
+
+/*
  * @name Controls/_history/Service#frequent
  * @cfg {Boolean} Loads frequent items from BL
  * @remark
  * true - Load items
  * false - No load items
- */
+ */ 
 
 /**
  * @name Controls/_history/Service#recent
- * @cfg {Boolean} Loads recent items from BL
+ * @cfg {Boolean} Загружает последние записи из БЛ.
  * @remark
  * true - Load items
  * false - No load items
  */
 
+/*
+ * @name Controls/_history/Service#recent
+ * @cfg {Boolean} Loads recent items from BL
+ * @remark
+ * true - Load items
+ * false - No load items
+ */ 
+
 /**
+ * @name Controls/_history/Service#dataLoaded
+ * @cfg {Boolean} Записи, загруженные с данными объекта.
+ * @remark
+ * true - БЛ вернет записи с данными.
+ * false - Бл вернет записи без данных.
+ */
+
+/*
  * @name Controls/_history/Service#dataLoaded
  * @cfg {Boolean} Items loaded with object data
  * @remark
  * true - BL return items with data
  * false - BL return items without data
- */
+ */ 
 
 var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
    _historyDataSource: null,
