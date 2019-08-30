@@ -29,7 +29,7 @@
  *             <ws:Array>
  *                <ws:Object width="1fr">
  *                   <ws:template>
- *                      <ws:partial template="Controls/grid:ColumnTemplate">
+ *                      <ws:partial template="Controls/grid:Columns">
  *                         <ws:contentTemplate>
  *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
@@ -62,7 +62,7 @@
  *             <ws:Array>
  *                <ws:Object width="1fr">
  *                   <ws:template>
- *                      <ws:partial template="Controls/grid:ColumnTemplate">
+ *                      <ws:partial template="Controls/grid:Columns">
  *                         <ws:contentTemplate>
  *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
@@ -247,8 +247,8 @@
  * В значении "auto" ширина столбца устанавливается исходя из типа и содержимого элемента.
  * В значении "minmax(,)" устанавливаются минимальная и максимальная ширина столбца, например "minmax(600px, 1fr)".
  * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в столбце.
- * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
- * По умолчанию используется базовый шаблон {@link Controls/grid:ColumnTemplate}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
+ * @property {String} [template=Controls/grid:Columns] Шаблон отображения ячейки.
+ * По умолчанию используется базовый шаблон {@link Controls/grid:Columns}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
  * 
  * На корневой элемент пользовательского шаблона следует задать CSS-класс "controls-Grid__row-cell__content_baseline_L". Это обеспечит выравнивание контента ячейки по базовой линии.
  * <pre>
@@ -257,7 +257,7 @@
  *         <ws:Array>
  *             <ws:Object displayProperty="Name" width="200px">
  *                 <ws:template>
- *                     <ws:partial template="Controls/grid:ColumnTemplate" attr:class="controls-Grid__row-cell__content_baseline_L">
+ *                     <ws:partial template="Controls/grid:Columns" attr:class="controls-Grid__row-cell__content_baseline_L">
  *                         <ws:contentTemplate>
  *                           <!-- контент шаблона -->
  *                         </ws:contentTemplate>
@@ -279,11 +279,11 @@
  * - <code>column</code> (тип Object) — конфигурация колонки.
  * @property {String} resultTemplate Шаблон отображения ячейки в строке итогов.
  * Подробнее о работе со строкой итогов читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/">руководство разработчика</a>.
- * @property {GridCellAlign} [align=top] Выравнивание содержимого ячейки по горизонтали.
+ * @property {GridCellAlign} [align=left] Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} [valign=baseline] Выравнивание содержимого ячейки по вертикали.
  * По умолчанию содержимое выравнивается по базовой линии (см. {@link align-items https://developer.mozilla.org/ru/docs/Web/CSS/align-items}).
  * @property {String} stickyProperty Имя поля, которое используется для настройки прилипания данных столбца к верхней границе таблицы.
- * @property {TextOverflow} textOverflow Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
+ * @property {TextOverflow} [textOverflow=none] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
  */
 
 /*

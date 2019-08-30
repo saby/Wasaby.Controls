@@ -1,5 +1,11 @@
 import * as simpleResultTpl from 'wml!Controls-demo/grid/_resources/ResultCellTemplates/Simple'
 import * as numberResultTpl from 'wml!Controls-demo/grid/_resources/ResultCellTemplates/Number'
+import * as countryRatingNumber from 'wml!Controls-demo/grid/_resources/CellTemplates/CountryRatingNumber'
+import {constants} from 'Env/Env'
+import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksPhoto'
+import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksDescription'
+import 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksReceived'
+
 
 const resultCellTpl = numberResultTpl;
 
@@ -230,6 +236,58 @@ function getCountriesStats() {
                 resultTemplate: resultCellTpl
             }
         ],
+        getColumnsWithAlign: () => [
+            {
+                displayProperty: 'number',
+                width: '40px',
+                align: 'right'
+            },
+            {
+                displayProperty: 'country',
+                width: '300px',
+                align: 'center'
+            },
+            {
+                displayProperty: 'capital',
+                width: '1fr',
+                align: 'left'
+            },
+            {
+                displayProperty: 'population',
+                width: '150px',
+                align: 'right'
+            },
+            {
+                displayProperty: 'square',
+                width: '150px',
+                align: 'left'
+            },
+            {
+                displayProperty: 'populationDensity',
+                width: 'max-content'
+            }
+        ],
+        getColumnsWithValign: () => [
+            {
+                displayProperty: 'number',
+                width: '40px',
+                valign: 'right'
+            },
+            {
+                displayProperty: 'country',
+                width: '300px',
+                valign: 'top'
+            },
+            {
+                displayProperty: 'capital',
+                width: '1fr',
+                valign: 'bottom'
+            },
+            {
+                displayProperty: 'population',
+                width: '150px'
+            }
+        ],
         getDefaultHeader: () => [
             {
                 title: '#'
@@ -331,10 +389,240 @@ function getCountriesStats() {
                 title: 'Плотность населения чел/км2',
                 sortingProperty: 'populationDensity'
             }
+        ],
+        getColumnsWithTemplate: () => [
+            {
+                displayProperty: 'number',
+                width: 'max-content',
+                template: countryRatingNumber
+            },
+            {
+                displayProperty: 'country',
+                width: '300px'
+            },
+            {
+                displayProperty: 'capital',
+                width: '100px'
+            },
+            {
+                displayProperty: 'population',
+                width: '150px'
+            },
+            {
+                displayProperty: 'square',
+                width: '150px'
+            },
+            {
+                displayProperty: 'populationDensity',
+                width: 'max-content'
+            }
         ]
     }
 }
 
+function getTasks() {
+    return {
+        getData: () => [
+            {
+                id: 1,
+                message: 'Регламент: Ошибка в разработку. Автор: Дубенец Д.А. Описание: (reg-chrome-presto) 3.18.150 controls - Поехала верстка кнопок когда они задизейблены prestocarry',
+                fullName: 'Крайнов Дмитрий',
+                photo: getImages().krainov,
+                date: '6 мар',
+                state: 'Review кода (нач. отдела)'
+            },
+            {
+                id: 2,
+                message: 'Регламент: Ошибка в разработку. Автор: Волчихина Л.С. Описание: Отображение колонок. При снятии галки с колонки неверная всплывающая подсказка',
+                fullName: 'Крайнов Дмитрий',
+                photo: getImages().krainov,
+                date: '6 мар',
+                state: 'Review кода (нач. отдела)'
+            },
+            {
+                id: 3,
+                message: 'Смотри надошибку. Нужно сделать тесты, чтобы так в будущем не разваливалось',
+                fullName: 'Крайнов Дмитрий',
+                photo: getImages().krainov,
+                date: '6 мар',
+                state: 'Выполнение'
+            },
+            {
+                id: 4,
+                message: 'Регламент: Ошибка в разработку. Автор: Оборевич К.А. Описание: Розница. Замечания к шрифтам в окнах Что сохранить в PDF/Excel и Что напечатать',
+                fullName: 'Крайнов Дмитрий',
+                photo: getImages().krainov,
+                date: '12 ноя',
+                state: 'Review кода (нач. отдела)'
+            },
+            {
+                id: 5,
+                message: 'Пустая строка при сканировании в упаковку Тест-онлайн adonis1/adonis123 1) Создать документ списания 2) отсканировать в него наименование/открыть РР/+Упаковка 3) Заполнить данные по упаковке/отсканировать еще 2 марки',
+                fullName: 'Корбут Антон',
+                photo: getImages().korbyt,
+                date: '5 мар',
+                state: 'Выполнение'
+            },
+            {
+                id: 6,
+                message: 'Разобраться с getViewModel - либо наследование, либо создавать модель прямо в TreeControl и передавать в BaseControl, либо ещё какой то вариант придумать.',
+                fullName: 'Кесарева Дарья',
+                photo: getImages().kesareva,
+                date: '12 сен',
+                state: 'Выполнение'
+            },
+            {
+                id: 7,
+                message: 'Научить reload обновлять табличное представление VDOM с сохранением набранных данных (например загруженных по кнопке "еще"). В данный момент есть deepReload, но он не сохраняет набранные данные.',
+                fullName: 'Кесарева Дарья',
+                photo: getImages().kesareva,
+                date: '12 сен',
+                state: 'Выполнение'
+            },
+            {
+                id: 8,
+                message: 'Лесенка на VDOM. Перевести алгоритм на предварительный расчет в модели. Сделать демку.',
+                fullName: 'Кесарева Дарья',
+                photo: getImages().kesareva,
+                date: '12 сен',
+                state: 'Выполнение'
+            },
+            {
+                id: 9,
+                message: 'Прошу сделать возможность отключения: 1) ховера на айтемах  у Controls/List, 2) курсор: поинтер',
+                fullName: 'Кесарева Дарья',
+                photo: getImages().kesareva,
+                date: '12 сен',
+                state: 'Выполнение'
+            },
+            {
+                id: 10,
+                message: 'через шаблон ячейки должна быть возможность управлять colspan (или rowspan) отдельной ячейки. <ws:partial template="standartCellTemplate" colspan="2"> типа такого если я напишу, то у меня будет ячейка на две колонки',
+                fullName: 'Кесарева Дарья',
+                photo: getImages().kesareva,
+                date: '12 сен',
+                state: 'Выполнение'
+            },
+            {
+                id: 11,
+                message: 'Не работают хлебные крошки и навигация по ним если идентификатор записи равен 0 Как повторить',
+                fullName: 'Догадкин Владимир',
+                photo: getImages().dogadkin,
+                date: '28 фев',
+                state: 'Выполнение'
+            },
+            {
+                id: 12,
+                message: 'Не работает collapse в группировке в дереве test-online.sbis.ru сталин/Сталин123',
+                fullName: 'Догадкин Владимир',
+                photo: getImages().dogadkin,
+                date: '26 фев',
+                state: 'Выполнение'
+            }
+        ],
+        getColumns: () => [
+            {
+                template: 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksPhoto',
+                width: '98px'
+            },
+            {
+                template: 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksDescription',
+                width: '1fr'
+            },
+            {
+                template: 'wml!Controls-demo/grid/_resources/CellTemplates/LadderTasksReceived',
+                width: 'auto'
+            }
+        ]
+    }
+}
+
+function getImages() {
+    return {
+        dogadkin: constants.resourceRoot + 'Controls-demo/grid/_resources/images/dogadkin.png',
+        kesareva: constants.resourceRoot + 'Controls-demo/grid/_resources/images/kesareva.png',
+        korbyt: constants.resourceRoot + 'Controls-demo/grid/_resources/images/korbyt.png',
+        krainov: constants.resourceRoot + 'Controls-demo/grid/_resources/images/krainov.png',
+        baturina: constants.resourceRoot + 'Controls-demo/grid/_resources/images/baturina.png'
+    }
+}
+
+function getPorts() {
+    return {
+        getData: () => [
+            {
+                id: 1,
+                invoice: 3500,
+                documentSign: 1,
+                documentNum: 10,
+                taxBase: 17215.00,
+                document: 'б/н',
+                documentDate: null,
+                serviceContract: null,
+                description: 'морской/речной',
+                shipper: null
+            },
+            {
+                id: 2,
+                invoice: 3501,
+                documentSign: 1,
+                documentNum: 10,
+                taxBase: 21015.00,
+                document: '48000560-ABCC',
+                documentDate: null,
+                serviceContract: null,
+                description: 'морской/речной',
+                shipper: null
+            },
+            {
+                id: 3,
+                invoice: 3502,
+                documentSign: 2,
+                documentNum: 10,
+                taxBase: 890145.04,
+                document: '456990005',
+                documentDate: null,
+                serviceContract: null,
+                description: 'ж/д, морской/речной',
+                shipper: null
+            }
+        ],
+        getColumns: () => [
+            {
+                width: '100px',
+                displayProperty: 'invoice'
+            },
+            {
+                width: '200px',
+                displayProperty: 'documentSign'
+            },
+            {
+                width: '200px',
+                displayProperty: 'document'
+            },
+            {
+                width: '1fr',
+                displayProperty: 'description'
+            },
+            {
+                width: '200px',
+                displayProperty: 'taxBase'
+            }
+        ],
+        getDocumentSigns: () => [
+            {
+                id: 1,
+                title: 'ТД предусмотрено'
+            },
+            {
+                id: 2,
+                title: 'ТД не предусмотрено'
+            }
+        ]
+    }
+}
 export {
-    getCountriesStats
+    getCountriesStats,
+    getTasks,
+    getPorts
 }
