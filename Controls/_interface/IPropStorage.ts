@@ -1,18 +1,20 @@
+export interface IPropStorageOptions {
+    propStorageId: string;
+}
+
 /**
  * Интерфейс для контролов, сохраняющих пользовательскую конфигурацию.
  *
- * @interface Controls/interface/IPropStorage
+ * @interface Controls/_interface/IPropStorage
  * @public
  * @author Красильников А.С.
  */
-interface IPropStorage {
-    readonly _options: {
-        /**
-         * @name Controls/interface/IPropStorage#propStorageId
-         * @cfg {String} Уникальный идентификатор контрола, по которому будет сохраняться конфигурация в хранилище данных.
-         */
-        propStorageId: string;
-    };
+
+export default interface IPropStorage {
+    readonly '[Controls/_interface/IPropStorage]': boolean;
 }
 
-export default IPropStorage;
+/**
+ * @name Controls/_interface/IPropStorage#propStorageId
+ * @cfg {String} Уникальный идентификатор контрола, по которому будет сохраняться конфигурация в хранилище данных.
+ */

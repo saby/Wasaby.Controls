@@ -13,7 +13,7 @@ import {IoC} from 'Env/Env';
  * @author Красильников А.С.
  * @category Popup
  * @mixes Controls/interface/IOpener
- * @mixes Controls/interface/IPropStorage
+ * @mixes Controls/_interface/IPropStorage
  * @demo Controls-demo/Popup/Opener/StackPG
  * @public
  */
