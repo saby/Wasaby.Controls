@@ -55,7 +55,6 @@ define('Controls-demo/List/Grid/Grid', [
             width: 'auto',
             align: 'right',
             template: 'wml!Controls-demo/List/Grid/DemoCostPrice',
-            cellPadding: {left: 'null', right: 'null'}
          },
          {
             displayProperty: 'balance',
@@ -64,7 +63,6 @@ define('Controls-demo/List/Grid/Grid', [
             template: 'wml!Controls-demo/List/Grid/DemoBalancePrice',
             resultTemplate: 'wml!Controls-demo/List/Grid/Results',
             result: 7893.87,
-            cellPadding: {left: 's', right: 's'}
          },
          {
             displayProperty: 'reserve',
