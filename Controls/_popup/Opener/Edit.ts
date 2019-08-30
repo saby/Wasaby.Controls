@@ -49,9 +49,7 @@ import Deferred = require('Core/Deferred');
          },
          processingResult: function(RecordSynchronizer, data, items, editKey) {
             if (data.formControllerEvent === 'update') {
-
                if (data.additionalData.isNewRecord) {
-                  data.additionalData.key = Math.random();
                   RecordSynchronizer.addRecord(data.record, data.additionalData, items);
                } else {
                   RecordSynchronizer.mergeRecord(data.record, items, editKey);
@@ -62,7 +60,7 @@ import Deferred = require('Core/Deferred');
          },
 
          getResultArgs: function(instance, data, RecordSynchronizer) {
-            return [RecordSynchronizer, data, instance._options.items, instance._linkedKey, instance];
+            return [RecordSynchronizer, data, instance._options.items, instance._linkedKey];
          },
          synchronize: function(instance, eventResult, data, Synchronizer) {
             if (cInstance.instanceOfModule(eventResult, 'Core/Deferred')) {

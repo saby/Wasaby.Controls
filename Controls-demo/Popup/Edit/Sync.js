@@ -14,12 +14,8 @@ define('Controls-demo/Popup/Edit/Sync',
    function(Control, template, source, GridData, RecordSynchronizer) {
       'use strict';
 
-      var EditOpener = Control.extend({
+      var Sync = Control.extend({
          _template: template,
-         _addPosition: 0,
-         _addRecordCount: 1,
-         _cancelEdit: false,
-         _openRecordByNewKey: false,
 
          _beforeMount: function(opt, context) {
             this._dataLoadCallback = this._dataLoadCallback.bind(this);
@@ -102,10 +98,6 @@ define('Controls-demo/Popup/Edit/Sync',
                record: record,
             };
 
-            if (this._openRecordByNewKey) {
-               meta.key = '442584';
-            }
-
             this._children.EditOpener.open(meta, popupOptions);
          },
 
@@ -113,78 +105,42 @@ define('Controls-demo/Popup/Edit/Sync',
             this._children.EditOpener.open();
          },
 
-         _openHandler: function(event) {
-            this._eventText = event.type;
-         },
-
-         _closeHandler: function(event) {
-            this._eventText = event.type;
-         },
-
-         _resultHandler: function(event) {
-            var args = Array.prototype.slice.call(arguments, 1);
-            this._eventText = event.type + '. Аргументы: ' + args.toString();
-         },
-
          _beforeSyncRecord: function(event, action, record, additionalData) {
-            if (this._cancelEdit) {
-               return 'cancel';
-            }
-
             if (additionalData && additionalData.isNewRecord) {
-               additionalData.at = this._addPosition;
+               if (!additionalData.at) {
+                  additionalData.at = 0;
+               }
             }
 
-            if (event === 'updateStarted') {
+            if (action === 'updateStarted') {
                if (additionalData.isNewRecord) {
                   RecordSynchronizer.addRecord(record, additionalData, this._items);
+                  this.record = this._items.at(additionalData.at);
                } else {
                   this.record = this._items.getRecordById(additionalData.key).clone();
                   RecordSynchronizer.mergeRecord(record, this._items, additionalData.key);
                }
-            } else if (event === 'updateFailed') {
-               if (this.record === undefined) {
-                  RecordSynchronizer.deleteRecord(this._items, additionalData.key);
+            } else if (action === 'updateFailed') {
+               if (this.record === this._items.at(additionalData.at)) {
+                  this.record.set(this._items.getIdProperty(), additionalData.key);
+                  this._items.remove(this._items.getRecordById(additionalData.key));
                } else {
-                  RecordSynchronizer.mergeRecord(this.record, this._items, additionalData.key);
+                  RecordSynchronizer.mergeRecord(this.record, this._items, additionalData.record.getId());
                }
+            }
+
+            if (action === 'update') {
+               if (additionalData.isNewRecord) {
+                  this.record.set('id', additionalData.key);
+               }
+               return 'cancel';
             }
          },
 
          _dataLoadCallback: function(items) {
             this._items = items;
-            this._baseRecord = this._items.at(0).clone();
-         },
-
-         _addRecords: function() {
-            var addRecords = [];
-            for (var i = this._addRecordCount; i < this._addRecordCount + 10; i++) {
-               var cloneRecord = this._baseRecord.clone();
-               cloneRecord.set('id', i);
-               cloneRecord.set('name', 'Созданная запись ' + i);
-               addRecords.push(cloneRecord);
-            };
-            this._addRecordCount += 10;
-            RecordSynchronizer.addRecord(addRecords, {}, this._items);
-         },
-         _mergeRecords: function() {
-            var editRecord = [];
-            var i = 0;
-            this._items.each(function(model) {
-               var a = model.clone();
-               a.set('name', 'Обновленная запись ' + ++i);
-               editRecord.push(a);
-            });
-            RecordSynchronizer.mergeRecord(editRecord, this._items);
-         },
-         _deleteRecords: function() {
-            var ids = [];
-            this._items.each(function(model) {
-               ids.push(model.getId());
-            });
-            RecordSynchronizer.deleteRecord(this._items, ids);
          }
       });
 
-      return EditOpener;
+      return Sync;
    });

@@ -23,9 +23,11 @@
             </Controls.scroll:Container>
         </div>
 
+        <Controls.toggle:Checkbox bind:value="_errorUpdate" caption="Выпадает ошибка на бизнес-логике" class="demo-PopupEditSync__cancelEdit"/>
+
         <Controls.popup:EditContainer on:beforeItemEndEdit="_beforeSyncRecord()">
-            <Controls.popup:Edit name="EditOpener" on:close="_closeHandler()" on:open="_openHandler()" on:result="_resultHandler()" template="Controls-demo/Popup/Edit/MyFormController">
-                <ws:templateOptions source="{{_viewSource}}" width="{{400}}" isFormControllerDemo="{{true}}"/>
+            <Controls.popup:Edit name="EditOpener" template="Controls-demo/Popup/Edit/MyFormController">
+                <ws:templateOptions source="{{_viewSource}}" width="{{400}}" isFormControllerDemo="{{true}}" errorUpdate="{{_errorUpdate}}"/>
             </Controls.popup:Edit>
         </Controls.popup:EditContainer>
     </div>

@@ -563,11 +563,11 @@ import dataSource = require('Controls/dataSource');
          }
       },
 
-      _getUpdateStartedData(record, key) {
-         let config = this._getUpdateSuccessedData(record, key);
-         config.formControllerEvent = 'updateStarted';
-         return config;
-      },
+       _getUpdateStartedData(record, key) {
+          let config = this._getUpdateSuccessedData(record, key);
+          config.formControllerEvent = 'updateStarted';
+          return config;
+       },
 
       _getUpdateSuccessedData: function(record, key) {
          var additionalData = {
@@ -589,8 +589,13 @@ import dataSource = require('Controls/dataSource');
          return this._getResultData('read', record);
       },
 
-      _getUpdateFailedData:function(record) {
-         return this._getResultData('updateFailed', record);
+      _getUpdateFailedData: function(error, record) {
+         var additionalData = {
+            record: record,
+            error: error,
+            isNewRecord: this._isNewRecord
+         };
+         return this._getResultData('updateFailed', record, additionalData);
       },
       _getResultData: function(eventName, record, additionalData) {
          return {
