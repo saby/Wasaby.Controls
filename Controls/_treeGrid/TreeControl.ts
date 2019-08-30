@@ -6,6 +6,7 @@ import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
 import keysHandler = require('Controls/Utils/keysHandler');
 import {isEqual} from 'Types/object';
+import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
 
 var
     HOT_KEYS = {
@@ -180,6 +181,13 @@ var _private = {
             filter[parentProperty] = self._root;
             _private.clearSourceControllers(self);
         }
+
+        if (cfg.selectedKeys && cfg.selectedKeys.length) {
+            filter.entries = selectionToRecord({
+                selected: cfg.selectedKeys || [],
+                excluded: cfg.excludedKeys || []
+            }, _private.getOriginalSource(cfg.source).getAdapter());
+        }
     },
 
     afterReloadCallback: function(self, options) {
@@ -295,6 +303,14 @@ var _private = {
         };
 
         findChildNodesRecursive(nodeKey);
+    },
+
+    getOriginalSource: function(source) {
+        while(source.getOriginal) {
+            source = source.getOriginal();
+        }
+
+        return source;
     }
 };
 

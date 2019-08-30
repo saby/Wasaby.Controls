@@ -1356,7 +1356,13 @@ define([
                keyProperty: 'id',
                parentProperty: 'Раздел',
                nodeProperty: 'Раздел@',
-               expandedItems: [null]
+               expandedItems: [null],
+               selectedKeys: [1],
+               excludedKeys: [2],
+               source: new sourceLib.Memory({
+                  rawData: getHierarchyData(),
+                  idProperty: 'id'
+               })
             };
          }
          let cfg = getDefaultCfg();
@@ -1409,12 +1415,16 @@ define([
          var filter = {};
          treeGrid.TreeControl._private.beforeReloadCallback(self, filter, null, null, cfg);
          assert.equal(filter['Раздел'], self._root);
+         assert.deepEqual(filter.entries.get('marked'), ['1']);
+         assert.deepEqual(filter.entries.get('excluded'), ['2']);
 
          filter = {};
+         cfg.selectedKeys = [];
          selfWithBaseControl._nodesSourceControllers = getNodesSourceControllers();
          treeGrid.TreeControl._private.beforeReloadCallback(selfWithBaseControl, filter, null, null, cfg);
          assert.equal(filter['Раздел'], self._root);
          assert.isFalse(!!selfWithBaseControl._nodesSourceControllers[1]);
+         assert.equal(filter.entries, undefined);
 
          treeGridViewModel.setExpandedItems([1, 2]);
          filter = {};

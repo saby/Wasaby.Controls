@@ -19,6 +19,8 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
  * @cfg {String} Name of the field that contains information about parent node.
  */
 
+const FIELD_ENTRY_PATH = 'ENTRY_PATH';
+
 var
    SELECTION_STATUS = {
       NOT_SELECTED: false,
@@ -176,6 +178,22 @@ var
          return firstCollection.filter(function(key) {
             return secondCollection.indexOf(key) !== -1;
          });
+      },
+
+      hasNotLoadedSelectedChildren: function(hierarchyRelation, itemId, items, entryPath) {
+         let
+            hasChildren = false,
+            loadedChildrenIds = _private.getChildrenIds(hierarchyRelation, itemId, items);
+
+         if (loadedChildrenIds.length) {
+            loadedChildrenIds.forEach(function(currentItemId) {
+               hasChildren = hasChildren || _private.hasNotLoadedSelectedChildren(hierarchyRelation, currentItemId, items, entryPath);
+            });
+         } else {
+            hasChildren = entryPath.indexOf(itemId) !== -1;
+         }
+
+         return hasChildren;
       }
    };
 
@@ -306,28 +324,31 @@ var HierarchySelection = Selection.extend({
    },
 
    _getSelectionStatus: function(item) {
-      var
+      let
+         status = false,
+         hasExcludedChildren,
          itemId = item.get(this._options.keyProperty),
+         entryPath = this._items.getMetaData()[FIELD_ENTRY_PATH] || [],
          isParentSelected = _private.isParentSelected(this._hierarchyRelation, itemId, this._selectedKeys, this._excludedKeys, this._items),
-         hasSelectedChildren = _private.getSelectedChildrenCount(this._hierarchyRelation, itemId, this._selectedKeys, this._excludedKeys, this._items) > 0,
-         hasExcludedChildren;
+         hasSelectedChildren = _private.getSelectedChildrenCount(this._hierarchyRelation, itemId, this._selectedKeys, this._excludedKeys, this._items) > 0 ||
+            _private.hasNotLoadedSelectedChildren(this._hierarchyRelation, itemId, this._items, entryPath);
 
       if (this._excludedKeys.indexOf(itemId) !== -1) {
-         return hasSelectedChildren ? null : false;
-      }
-
-      if (this._selectedKeys.indexOf(itemId) !== -1 || isParentSelected || hasSelectedChildren) {
+         status = hasSelectedChildren ? null : false;
+      } else if (this._selectedKeys.indexOf(itemId) !== -1 || isParentSelected || hasSelectedChildren) {
          if (this._hierarchyRelation.isNode(item) !== null) {
             hasExcludedChildren = _private.hasExcludedChildren(this._hierarchyRelation, itemId, this._excludedKeys, this._items);
-            if (hasExcludedChildren) {
-               return null;
+            if (!hasExcludedChildren && (this._selectedKeys.indexOf(itemId) !== -1 || isParentSelected)) {
+               status = true;
+            } else {
+               status = null;
             }
-            return this._selectedKeys.indexOf(itemId) !== -1 || isParentSelected ? true : null;
+         } else {
+            status = true;
          }
-         return true;
       }
 
-      return false;
+      return status;
    },
 
    _getParams: function(rootId) {
