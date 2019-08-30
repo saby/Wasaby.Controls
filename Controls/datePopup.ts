@@ -102,10 +102,7 @@ import {Controller as ManagerController} from 'Controls/popup';
 
 var _private = {
         fixedPeriodClick: function (self, start, end) {
-            self._rangeModel.startValue = start;
-            self._rangeModel.endValue = end;
-            self._headerRangeModel.startValue = start;
-            self._headerRangeModel.endValue = end;
+            _private.rangeChanged(self, start, end);
             self._monthRangeSelectionProcessing = false;
             _private.sendResult(self, start, end);
         },

@@ -119,15 +119,9 @@ var Component = BaseControl.extend({
             this._options.selectionProcessing,
             this._options.selectionBaseValue,
             this._options.selectionHoveredValue,
-            null,
-            null,
-            { periodQuantum: rangeSelectionUtils.PERIOD_QUANTUM.year }
-        ));
-
-        css.push(rangeSelectionUtils.prepareHoveredClass(
-            itemDate,
             this._options.hoveredStartValue,
-            this._options.hoveredEndValue
+            this._options.hoveredEndValue,
+            { periodQuantum: rangeSelectionUtils.PERIOD_TYPE.year }
         ));
 
         if (itemValue === this._year) {
