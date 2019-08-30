@@ -15,7 +15,6 @@ import Env = require('Env/Env');
     * @mixes Controls/_buttons/interface/IClick
     *
     */
-
    /*
     * Specialized type of button for closing windows.
     *
@@ -67,16 +66,16 @@ import Env = require('Env/Env');
 
    /**
     * @name Controls/_popupTemplate/CloseButton#transparent
-    * @cfg {String} Определяет цвет кнопки.
+    * @cfg {String} Определяет фон кнопки.
     * @variant true Кнопке будет установлен прозрачный фон.
-    * @variant false Кнопке будет установлен фон кнопки панели инструментов.
+    * @variant false Кнопка имеет фон по умолчанию для этого режима отображения и стиля.
     * @default true
     * @example
     * Кнопка "Закрыть" с прозрачным фоном:
     * <pre>
     *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{true}}" size="l"/>
     * </pre>
-    * Кнопка "Закрыть" с фоном кнопки панели инструментов.
+    * Кнопка "Закрыть" с непрозрачным фоном.
     * <pre>
     *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{false}}" size="l"/>
     * </pre>
@@ -101,7 +100,7 @@ import Env = require('Env/Env');
 
    /**
     * @name Controls/_popupTemplate/CloseButton#size
-    * @cfg {String} Устанавливает размер кнопки. Используется общепринятая нотация.
+    * @cfg {String} Устанавливает размер кнопки. Значение задается общими обозначениями размера.
     * @variant l Средний размер кнопки.
     * @variant m Большой размер кнопки.
     * @default m
