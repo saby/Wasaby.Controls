@@ -463,11 +463,17 @@ const Manager = Control.extend({
      * @param options popup configuration
      * @param controller popup controller
      */
-    show(options, controller) {
+    show(options, controller): string {
         const item = this._createItemConfig(options, controller);
-        controller.getDefaultConfig(item);
-        _private.addElement.call(this, item);
-        _private.redrawItems();
+        const defaultConfigResult = controller.getDefaultConfig(item);
+        _private.addElement(item);
+        if (defaultConfigResult instanceof Promise) {
+            defaultConfigResult.then(() => {
+                _private.redrawItems();
+            });
+        } else {
+            _private.redrawItems();
+        }
         return item.id;
     },
 

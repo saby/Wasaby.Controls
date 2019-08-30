@@ -6,12 +6,14 @@ define('Controls-demo/Index', [
    'wml!Controls-demo/Index',
    'Application/Initializer',
    'Application/Env',
+   'Core/Deferred',
    'css!Controls-demo/Demo/Page',
    'css!Controls-theme/themes/default/helpers/AreaBlocks'
 ], function (BaseControl,
              template,
              AppInit,
-             AppEnv
+             AppEnv,
+             Deferred
 ) {
    'use strict';
 
@@ -27,6 +29,14 @@ define('Controls-demo/Index', [
          },
          _beforeMount: function() {
             this._title = this._getTitle();
+            this._settigsController = {
+               getSettings: function() {
+                  return (new Deferred()).callback(1000);
+               },
+               setSettings: function() {
+                  //'Сохранили панель с шириной ' + a['123']
+               }
+            };
          },
          _getTitle: function() {
             var location = this._getLocation();
