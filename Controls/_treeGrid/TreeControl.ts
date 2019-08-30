@@ -14,6 +14,7 @@ var
     };
 
 var DRAG_MAX_OFFSET = 15,
+    EXPAND_ON_DRAG_DELAY = 1000,
     DEFAULT_COLUMNS_VALUE = [];
 
 var _private = {
@@ -321,6 +322,8 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _beforeReloadCallback: null,
     _afterReloadCallback: null,
     _beforeLoadToDirectionCallback: null,
+    _expandOnDragData: null,
+    _setTimeoutForExpandOnDrag: null,
     constructor: function(cfg) {
         this._nodesSourceControllers = {};
         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
@@ -473,6 +476,33 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         }
     },
 
+    _onItemMouseLeave: function() {
+        this._clearTimeoutForExpandOnDrag(this);
+        this._expandOnDragData = null;
+    },
+    _dragEnd: function() {
+        this._clearTimeoutForExpandOnDrag(this);
+    },
+
+    _clearTimeoutForExpandOnDrag: function() {
+        if (this._timeoutForExpandOnDrag) {
+            clearTimeout(this._timeoutForExpandOnDrag);
+            this._timeoutForExpandOnDrag = null;
+        }
+        this._expandOnDragData = null;
+    },
+
+    _expandNodeOnDrag: function(itemData) {
+        if (!itemData.isExpanded) {
+            _private.toggleExpanded(this, itemData.dispItem);
+        }
+    },
+    _setTimeoutForExpandOnDrag: function(itemData) {
+        this._timeoutForExpandOnDrag = setTimeout(() => {
+                this._expandNodeOnDrag(itemData);
+            },
+            EXPAND_ON_DRAG_DELAY);
+    },
     _nodeMouseMove: function(itemData, event) {
         var
             position,
@@ -495,6 +525,11 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
                 if (dragTargetPosition && this._notify('changeDragTarget', [model.getDragEntity(), dragTargetPosition.item, dragTargetPosition.position]) !== false) {
                     model.setDragTargetPosition(dragTargetPosition);
                 }
+                if (itemData.item.get(itemData.nodeProperty) !== null && (!this._expandOnDragData || this._expandOnDragData !== itemData) && !itemData.isExpanded) {
+                    this._clearTimeoutForExpandOnDrag(this);
+                    this._expandOnDragData = itemData;
+                    this._setTimeoutForExpandOnDrag(this._expandOnDragData);
+                }
             }
         }
     },
@@ -513,6 +548,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _beforeUnmount: function() {
         _private.clearSourceControllers(this);
         TreeControl.superclass._beforeUnmount.apply(this, arguments);
+        this._clearTimeoutForExpandOnDrag();
     }
 });
 

@@ -2106,7 +2106,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData, nativeEvent]);
     },
-
+    _itemMouseLeave(event, itemData, nativeEvent) {
+        this._notify('itemMouseLeave', [itemData, nativeEvent]);
+    },
     _sortingChanged: function(event, propName, sortingType) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);
         event.stopPropagation();

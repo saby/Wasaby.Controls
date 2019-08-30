@@ -414,6 +414,15 @@ define([
                idProperty: 'id'
             }));
             assert.deepEqual(['123', '234'], treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after setItems.');
+
+            treeViewModel._draggingItemData = {};
+            treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), false);
+            let dragItemIndexUpdated = false;
+            treeViewModel.updateDragItemIndex = function() {
+               dragItemIndexUpdated = true;
+            }
+            treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), true);
+            assert.isTrue(dragItemIndexUpdated);
          });
 
          it('singleExpand toggleExpanded', function() {
