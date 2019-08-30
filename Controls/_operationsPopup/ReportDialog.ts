@@ -5,6 +5,24 @@ import template = require('wml!Controls/_operationsPopup/ReportDialog/ReportDial
 
 
    /**
+    * Шаблон диалога с результатами массовых операций.
+    *
+    * @class Controls/_operationsPopup/ReportDialog
+    * @extends Core/Control
+    * @control
+    * @author Сухоручкин А.С.
+    * @public
+    *
+    * @css @font-size_ReportDialog-title Заголовок - размер шрифта.
+    * @css @color_ReportDialog-title Заголовок - цвет текста.
+    * @css @color_ReportDialog-message Сообщение - цвет текста.
+    * @css @color_ReportDialog-error Блок с текстами сообщений об ошибках выполнения массовой операции - цвет текста.
+    * @css @spacing_ReportDialog-between-title-message Расстояние между заголовком и текстом сообщения.
+    * @css @spacing_ReportDialog-between-message-errors Расстояние между текстом сообщения и блоком с текстами сообщений об ошибках.
+    * @css @spacing_ReportDialog-between-errors Расстояние между сообщениями об ошибках.
+    *
+    */
+   /*
     * The template of the dialog with the results of mass operations.
     *
     * @class Controls/_operationsPopup/ReportDialog
