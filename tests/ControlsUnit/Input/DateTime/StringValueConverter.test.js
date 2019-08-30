@@ -104,7 +104,8 @@ define([
             { mask: 'HH.mm', stringValue: '10.__', value: new Date(1900, 0, 1, 10) },
             { mask: 'HH.mm.ss', stringValue: '10.__.__', value: new Date(1900, 0, 1, 10) },
             { mask: 'HH.mm.ss', stringValue: '10.05.__', value: new Date(1900, 0, 1, 10, 5) },
-            { mask: 'HH.mm.ss', stringValue: '6_.5_.1_', value: new Date(1900, 0, 1, 6, 5, 1) },
+            { mask: 'HH.mm.ss', stringValue: '1_.5_.1_', value: new Date(1900, 0, 1, 10, 50, 10) },
+            { mask: 'HH.mm.ss', stringValue: '_1._5._1', value: new Date(1900, 0, 1, 1, 5, 1) },
             { mask: 'HH.mm', stringValue: '__.10', value: new Date('Invalid') },
 
             // the date is more than maybe
