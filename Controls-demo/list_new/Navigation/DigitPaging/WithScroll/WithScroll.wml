@@ -6,7 +6,7 @@
                 stickyFooter = "{{true}}">
             <ws:navigation source="page" view="pages">
                 <ws:sourceConfig pageSize="{{20}}" page="{{0}}" hasMore="{{false}}"/>
-                <ws:viewConfig pagingMode="direct"/>
+                <ws:viewConfig pagingMode="direct" totalInfo="extended"/>
             </ws:navigation>
         </Controls.list:View>
     </Controls.scroll:Container>
