@@ -67,20 +67,29 @@ function isHistorySource(source) {
    return coreInstance.instanceOfModule(source, 'Controls/history:Source');
 }
 
-function prependNewItems(oldItems, newItems, sourceController) {
+function prependNewItems(oldItems, newItems, sourceController, keyProperty) {
+   let getUniqItems = (items) => {
+      let uniqItems = factory(items).filter((item) => {
+         if (!newItems.getRecordById(item.get(keyProperty))) {
+            return item;
+         }
+      }).value();
+      newItems.append(uniqItems);
+   };
+
    if (sourceController.hasMoreData('down')) {
       const allCount = oldItems.getCount();
       const firstItems = factory(oldItems).first(allCount - newItems.getCount()).value();
-      newItems.append(firstItems);
+      getUniqItems(firstItems);
    } else {
-      newItems.append(oldItems);
+      getUniqItems(oldItems);
    }
    newItems.setMetaData(oldItems.getMetaData());
 }
 
-function getItemsWithHistory(oldItems, newItems, sourceController, source) {
+function getItemsWithHistory(oldItems, newItems, sourceController, source, keyProperty) {
    let itemsWithHistory;
-   prependNewItems(oldItems, newItems, sourceController);
+   prependNewItems(oldItems, newItems, sourceController, keyProperty);
    if (isHistorySource(source)) {
       itemsWithHistory = source.prepareItems(newItems);
    } else {

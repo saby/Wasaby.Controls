@@ -7,6 +7,21 @@ import dataSource = require('Controls/dataSource');
 
 
    /**
+    * Контроллер, в котором определена логика CRUD-методов, выполняемых над редактируемой записью. 
+    * В частном случае контрол применяется для создания <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">диалогов редактирования записи</a>. Может выполнять запросы CRUD-методов на БЛ.
+    * @category FormController
+    * @class Controls/_form/FormController
+    * @extends Core/Control
+    * @mixes Controls/_interface/ISource
+    * @mixes Controls/interface/IFormController
+    * @implements Controls/_interface/IErrorController
+    * @demo Controls-demo/Popup/Edit/Opener
+    * @control
+    * @public
+    * @author Красильников А.С.
+    */
+
+   /*
     * Record editing controller. The control stores data about the record and can execute queries CRUD methods on the BL.
     * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">More information and details.</a>.
     * @category FormController
@@ -21,14 +36,21 @@ import dataSource = require('Controls/dataSource');
     * @author Красильников А.С.
     */
 
-
    /**
-    * Object with state from server side rendering
+    * Объект с состоянием, полученным при серверном рендеринге.
     * @typedef {Object}
     * @name ReceivedState
     * @property {*} [data]
     * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
     */
+
+   /*
+    * Object with state from server side rendering
+    * @typedef {Object}
+    * @name ReceivedState
+    * @property {*} [data]
+    * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
+    */    
 
    /**
     * @typedef {Object}
@@ -40,7 +62,7 @@ import dataSource = require('Controls/dataSource');
 
    /**
     * Удаляет оригинал ошибки из CrudResult перед вызовом сриализатора состояния,
-    * который не сможет нормально разобрать/собрать экземпляр случайной ошибки
+    * который не сможет нормально разобрать/собрать экземпляр случайной ошибки.
     * @param {CrudResult} crudResult
     * @return {ReceivedState}
     */
@@ -51,10 +73,16 @@ import dataSource = require('Controls/dataSource');
 
 
    /**
-    * getting result from <CrudResult> wrapper
+    * Получение результата из обертки <CrudResult>
     * @param {CrudResult} [crudResult]
     * @return {Promise}
     */
+
+   /*
+    * getting result from <CrudResult> wrapper
+    * @param {CrudResult} [crudResult]
+    * @return {Promise}
+    */    
    var getData = function(crudResult) {
       if (!crudResult) {
          return Promise.resolve();

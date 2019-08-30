@@ -27,7 +27,7 @@ import buttonLib = require('Controls/buttons');
 
    function cssStyleGeneration(options) {
       let menuStyle = options.headConfig && options.headConfig.menuStyle,
-         currentButtonClass, iconSize;
+         currentButtonClass;
 
       currentButtonClass = buttonLib.ActualApi.styleToViewMode(options.style);
 
@@ -35,7 +35,9 @@ import buttonLib = require('Controls/buttons');
       var offsetClassName = 'controls-MenuButton_' + (currentButtonClass.viewMode || options.viewMode);
 
       if ((!options.icon || options.viewMode === 'toolButton')) {
-         offsetClassName += ('__' + options.size);
+         let currentHeight = buttonLib.ActualApi.actualHeight(options.size, options.inlineHeight, options.viewMode) || options.size;
+         offsetClassName += ('__' + currentHeight);
+
       } else if (options.icon) {
          // у кнопки типа 'Ссылка' высота вызывающего элемента зависит от размера иконки,
          // поэтому необходимо это учесть при сдвиге

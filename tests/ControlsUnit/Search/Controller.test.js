@@ -327,6 +327,17 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             assert.isNull(searchController._searchController);
          });
 
+         it('source is changed', function() {
+            var options = getDefaultOptions();
+            options.source = new sourceLib.Memory();
+            searchMod.Controller._private.getSearchController(searchController);
+            searchController._inputSearchValue = 'test';
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+
+            assert.isNull(searchController._searchController);
+            assert.isTrue(searchController._inputSearchValue === '');
+         });
+
          it('filter is changed', function() {
             var options = getDefaultOptions();
 

@@ -57,6 +57,9 @@ var CompoundArea = CompoundContainer.extend([
 
    _isReadOnly: true,
 
+   _baseAfterUpdate: null,
+   _popupController: null,
+
    _beforeMount: function(_options) {
       CompoundArea.superclass._beforeMount.apply(this, arguments);
 
@@ -249,7 +252,6 @@ var CompoundArea = CompoundContainer.extend([
          // Слой совместимости нотифаит событие manager'a за него, т.к. только он знает, когда будет построен старый шаблон
          const item = this._getManagerConfig();
          const popupItems = Controller.getContainer()._popupItems;
-         this._notifyVDOM('managerPopupCreated', [item, popupItems], {bubbling: true});
          self._setCustomHeaderAsync();
          runDelayed(function() {
             // Перед автофокусировкой нужно проверить, что фокус уже не находится внутри
@@ -258,6 +260,9 @@ var CompoundArea = CompoundContainer.extend([
             // onAfterShow, onReady, ...).
             // В таком случае, если мы позовем автофокус, мы можем сбить правильно поставленный
             // фокус.
+
+            // Нотифай события делаю в следующий цикл синхронизации после выставления позиции окну.
+            self._notifyVDOM('managerPopupCreated', [item, popupItems], {bubbling: true});
             if (
                self._options.catchFocus &&
                self._container.length &&
@@ -1054,6 +1059,8 @@ var CompoundArea = CompoundContainer.extend([
             // CompoundArea
             if (!popupConfig.controller._modifiedByCompoundArea) {
                popupConfig.controller._modifiedByCompoundArea = true;
+               self._popupController = popupConfig.controller;
+               self._baseAfterUpdate = popupConfig.controller.elementAfterUpdated;
                popupConfig.controller.elementAfterUpdated = callNext(
                   popupConfig.controller.elementAfterUpdated,
                   popupAfterUpdated
@@ -1108,6 +1115,11 @@ var CompoundArea = CompoundContainer.extend([
       this._unregisterEventListener();
       if (window) {
          window.removeEventListener('resize', this._windowResize);
+      }
+
+      if (this._popupController && this._baseAfterUpdate) {
+         this._popupController.elementAfterUpdated = this._baseAfterUpdate;
+         this._popupController._modifiedByCompoundArea = false;
       }
 
       var ops = this._producedPendingOperations;

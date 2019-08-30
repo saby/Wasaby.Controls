@@ -12,7 +12,7 @@
          keyProperty="id"
          markerVisibility="hidden"
          virtualScrolling="{{true}}"
-         virtualPageSize="{{4}}"
+         virtualPageSize="{{_options.virtualPageSize}}"
          on:drawItems="_drawItemsHandler()"
          >
          <ws:itemPadding left="null" right="null" bottom="null" top="null"/>

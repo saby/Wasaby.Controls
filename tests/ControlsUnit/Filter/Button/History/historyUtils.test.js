@@ -56,6 +56,15 @@ define(
             assert.equal(resultItems.getCount(), 4);
             assert.deepStrictEqual(resultItems.getRawData(), expectedItems);
             assert.deepStrictEqual(resultItems.getMetaData(), {test: true});
+
+            newItems = new collection.RecordSet({
+               idProperty: 'key',
+               rawData: [{ key: 20, title: '20 record' }, {key: 1, title: 'Россия'}]
+            });
+            expectedItems = [{ key: 20, title: '20 record' }, {key: 1, title: 'Россия'}].concat(initItems.slice(0, 1));
+            resultItems = filter.HistoryUtils.getItemsWithHistory(items, newItems, sourceController, source, 'key');
+            assert.equal(resultItems.getCount(), 3);
+            assert.deepStrictEqual(resultItems.getRawData(), expectedItems);
          });
 
          it('isHistorySource', function() {

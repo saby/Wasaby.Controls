@@ -146,6 +146,16 @@ var ViewModel = BaseViewModel.extend({
         return displayValue;
     },
 
+    _getStartingPosition: function() {
+        const splitterPosition: number = this.displayValue.indexOf(decimalSplitter);
+
+        if (splitterPosition !== -1) {
+            return splitterPosition;
+        }
+
+        return ViewModel.superclass._getStartingPosition.call(this);
+    },
+
     handleInput: function (splitValue, inputType) {
         let text: IText;
 

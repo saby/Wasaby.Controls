@@ -1,4 +1,21 @@
 /**
+ * Библиотека базовых шаблонов всплывающих окон и диалогов.
+ * @library Controls/popupTemplate
+ * @includes CloseButton Controls/_popupTemplate/CloseButton
+ * @includes Stack Controls/_popupTemplate/Stack
+ * @includes Dialog Controls/_popupTemplate/Dialog
+ * @includes Confirmation Controls/_popupTemplate/Confirmation
+ * @includes InfoBox Controls/_popupTemplate/InfoBox
+ * @includes Notification Controls/_popupTemplate/Notification/Base
+ * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
+ * @includes NotificationStyles Controls/_popupTemplate/Notification/NotificationStyles
+ * @includes DialogStyles Controls/_popupTemplate/Dialog/DialogStyles
+ * @includes ConfirmationStyles Controls/_popupTemplate/Confirmation/ConfirmationStyles
+ * @includes CloseButtonStyles Controls/_popupTemplate/CloseButton/CloseButtonStyles
+ * @public
+ * @author Крайнов Д.О.
+ */
+/*
  * popupTemplate library
  * @library Controls/popupTemplate
  * @includes CloseButton Controls/_popupTemplate/CloseButton

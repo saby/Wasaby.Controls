@@ -177,6 +177,12 @@ define([
          describe('updating range with other period type', function () {
             testCase([new Date(2017, 0, 1), 1, { bindType: 'byCapacity' }, 5, 1, 'days'], createMonths(new Date(2016, 0, 1), 6, 6));
          });
+         describe('updating range with other period length', function () {
+            testCase(
+               [new Date(2017, 0, 1), 1, { bindType: 'byCapacity' }, 2, 1, 'days'],
+               [[new Date(2017, 1, 1), new Date(2017, 1, 2)], [new Date(2017, 1, 3), new Date(2017, 1, 4)]]
+            );
+         });
       });
 
       describe('period = 1 quarter', function () {

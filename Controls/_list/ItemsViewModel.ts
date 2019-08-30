@@ -374,7 +374,7 @@ var ItemsViewModel = BaseViewModel.extend({
         return itemKey;
     },
     _getDisplayItemCacheKey: function(dispItem) {
-        const key = ItemsUtil.getDisplayItemKey(dispItem);
+        const key = ItemsUtil.getDisplayItemKey(dispItem, this._options.keyProperty);
         return this._convertItemKeyToCacheKey(key);
     },
     isCachedItemData: function(itemKey) {

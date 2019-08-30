@@ -77,6 +77,14 @@ var _private = {
                            .add('controls-ListView__checkbox-onhover', checkboxOnHover && !isSelected)
                            .compile();
     },
+    needToDrawActions: function (editingItemData, currentItem, editingConfig, drawnActions) {
+        if (editingItemData) {
+            return !!(currentItem.key === editingItemData.key &&
+                (drawnActions && drawnActions.length || editingConfig.toolbarVisibility));
+        } else {
+            return !!(drawnActions && drawnActions.length);
+        }
+    }
 };
 
 var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
@@ -109,6 +117,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         _private.updateIndexes(self, 0, self.getCount());
 
         this._reloadedKeys = {};
+    },
+    setEditingConfig: function(editingConfig) {
+        this._options.editingConfig = editingConfig;
+        this._nextModelVersion();
     },
     setItemPadding: function(itemPadding) {
         this._options.itemPadding = itemPadding;
@@ -181,11 +193,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (itemsModelCurrent.itemActions) {
            drawnActions = itemsModelCurrent.itemActions.showed;
         }
-        if (this._editingItemData) {
-            itemsModelCurrent.drawActions = itemsModelCurrent.key === this._editingItemData.key;
-        } else {
-            itemsModelCurrent.drawActions = drawnActions && drawnActions.length;
-        }
+
+        itemsModelCurrent.drawActions = _private.needToDrawActions(this._editingItemData, itemsModelCurrent, this._options.editingConfig, drawnActions);
+
         if (itemsModelCurrent.drawActions && drawnActions) {
             itemsModelCurrent.hasActionWithIcon = false;
             for (var i = 0; i < drawnActions.length; i++) {

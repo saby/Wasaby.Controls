@@ -17,7 +17,7 @@
    .flex-grow(1);
    .flex-shrink(1);
    .flexbox();
-   margin-right: 1px;
+   margin-right: @border-thickness__MonthView-item;
 }
 
 .controls-MonthViewVDOM__tableHead {
@@ -33,13 +33,17 @@
    .flexbox();
    .align-items(center);
    .justify-content(center);
-   margin-top: 1px;
-   margin-left: 1px;
+   margin-top: @border-thickness__MonthView-item;
+   margin-left: @border-thickness__MonthView-item;
    .box-sizing(content-box);
 }
 
-.ws-is-hover {
-   .controls-MonthViewVDOM__hover-selectableItem {
+.ws-is-no-touch {
+   .controls-MonthViewVDOM__hover-selectableItem,
+   .controls-MonthViewVDOM__item-selectedStart,
+   .controls-MonthViewVDOM__item-selectedEnd,
+   .controls-MonthViewVDOM__item-selectedStartEnd,
+   .controls-MonthViewVDOM__item-selectedInner {
       &:hover {
          background: @background_MonthView-item-hover;
       }
@@ -47,7 +51,7 @@
 
    .controls-MonthViewVDOM__border-currentMonthDay-unselected {
       &:hover {
-         outline: 1px solid @border-color__MonthView-item-hover;
+         outline: @border-thickness__MonthView-item solid @border-color__MonthView-item-hover;
       }
    }
 }
@@ -58,11 +62,12 @@
 .controls-MonthViewVDOM__item-selectedStart-unfinished,
 .controls-MonthViewVDOM__item-selectedEnd-unfinished {
    outline-style: solid;
-   outline-width: 1px;
+   outline-width: @border-thickness__MonthView-item;
 }
 
 .controls-MonthViewVDOM__item-selectedStart,
-.controls-MonthViewVDOM__item-selectedEnd {
+.controls-MonthViewVDOM__item-selectedEnd,
+.controls-MonthViewVDOM__item-selectedStartEnd {
    font-weight: bold;
 }
 
@@ -81,6 +86,11 @@
    height: 100%;
    top: 0;
    right: -1px;
+}
+
+.controls-MonthViewVDOM__item-selectedStartEnd {
+   outline: @border-color_RangeSelection-selected-startEnd-edgeBorder solid @border-thickness_RangeSelection-selected-startEnd;
+   outline-offset: @border-thickness_RangeSelection - @border-thickness_RangeSelection-selected-startEnd;
 }
 
 .controls-MonthViewVDOM__item-today-background {
@@ -134,7 +144,7 @@
    }
 
    &.controls-MonthViewVDOM__tableRow {
-      .setStyle(flex-basis, @height_item);
+      .setStyle(flex-basis, @height_item + @border-thickness__MonthView-item);
    }
 
    &.controls-MonthViewVDOM__tableHead {
@@ -246,7 +256,7 @@
    }
 }
 
-.ws-is-hover .controls-MonthView__accordionTheme {
+.ws-is-no-touch .controls-MonthView__accordionTheme {
    &.controls-MonthViewVDOM__border-currentMonthDay-unselected,
    &.controls-MonthViewVDOM__backgroundColor-otherMonthDay-unselected,
    &.controls-MonthViewVDOM__backgroundColor-otherMonthDay-selected {
