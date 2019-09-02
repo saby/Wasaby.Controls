@@ -421,6 +421,7 @@ define('Controls/Application',
          },
 
          _beforeMount: function(cfg) {
+            this.headTagResolver = this._headTagResolver.bind(this);
             this.BodyClasses = _private.calculateBodyClasses;
             this._scrollData = new scroll._scrollContext({ pagingVisible: cfg.pagingVisible });
             this.headJson = cfg.headJson;
@@ -464,7 +465,11 @@ define('Controls/Application',
             }
          },
 
-         headTagResolver: function(value, parent) {
+         _getResourceUrl: function(str) {
+            return getResourceUrl(str);
+         },
+
+         _headTagResolver: function(value, parent) {
             var newValue = decorator.noOuterTag(value, parent),
                attributes = Array.isArray(newValue) && typeof newValue[1] === 'object' &&
                   !Array.isArray(newValue[1]) && newValue[1];
@@ -473,7 +478,7 @@ define('Controls/Application',
                   if (attributes.hasOwnProperty(attributeName)) {
                      var attributeValue = attributes[attributeName];
                      if (typeof attributeValue === 'string' && linkAttributes[attributeName]) {
-                        attributes[attributeName] = getResourceUrl(attributeValue);
+                        attributes[attributeName] = this._getResourceUrl(attributeValue);
                      }
                   }
                }
