@@ -435,7 +435,7 @@ var
          if (Env.detection.isMobileIOS && position === 'top' && _private.getScrollTop(this, this._children.content) < 0) {
             return false;
          }
-         
+
          return this._displayState.shadowPosition.indexOf(position) !== -1;
       },
 
@@ -633,8 +633,11 @@ var
             shadowVisible = { top: false, bottom: false };
 
          if ((shadowVisible || this._options.shadowVisible) && this._displayState.hasScroll) {
-            shadowVisible.top = this._displayState.shadowPosition.indexOf('top') !== -1;
-            shadowVisible.bottom = this._displayState.shadowPosition.indexOf('bottom') !== -1;
+            // в before/afterMount this._displayState.shadowPosition еще не задан
+            if (this._displayState.shadowPosition) {
+                shadowVisible.top = this._displayState.shadowPosition.indexOf('top') !== -1;
+                shadowVisible.bottom = this._displayState.shadowPosition.indexOf('bottom') !== -1;
+            }
 
             if (this._shadowVisiblityMode.top === 'visible') {
                shadowVisible.top = true;
