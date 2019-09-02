@@ -6,7 +6,7 @@ define('Controls/Utils/isVDOMTemplate', [], function() {
    'use strict';
 
    /**
-    * Модуль возвращает функцию, которая проверяет, совместим ли класс компонента с WaSaby.
+    * Модуль возвращает функцию, которая проверяет, является ли класс наследником 'UI/Base:Control'.
     *
     * <h2>Аргументы функции</h2>
     *
@@ -37,6 +37,7 @@ define('Controls/Utils/isVDOMTemplate', [], function() {
     * @public
     * @author Красильников А.С.
     */
+   
    /*
     * The module returns a function that checks whether the component class is compatible with the WaSaby.
     *
