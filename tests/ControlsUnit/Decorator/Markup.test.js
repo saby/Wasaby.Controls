@@ -1387,7 +1387,7 @@ define([
          var app = new Application();
          var json = [['script', { src: 'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' }]];
          app._beforeMount({ headJson: json });
-         var goodHtml = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>';
+         var goodHtml = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js?x_version=0"></script>';
          var checkHtml = template({
             _options: {
                value: app.headJson[0],
@@ -1402,7 +1402,7 @@ define([
          var app = new Application();
          var json = [['link', { src: 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' }]];
          app._beforeMount({ headJson: json });
-         var goodHtml = '<link src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />';
+         var goodHtml = '<link src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?x_version=0" />';
          var checkHtml = template({
             _options: {
                value: app.headJson[0],
