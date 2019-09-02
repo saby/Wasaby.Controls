@@ -271,7 +271,7 @@ var _private = {
 /**
  * @name Controls/_history/FilterSource#historySource
  * @cfg {Source} Источник, который работает с историей.
- * @see {Controls/_history/Service} Источник, который работает с сервисом InputHistory.
+ * @see {Controls/_history/Service} Источник, который работает с <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервисом истории ввода</a>.
  */
 
 /*
