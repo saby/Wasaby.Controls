@@ -642,20 +642,27 @@ define(
 
             it('_resultHandler filterDetailPanelResult', function() {
                let filterChanged;
+               let historyEventFired;
+
                view._notify = (event, data) => {
                   if (event === 'filterChanged') {
                      filterChanged = data[0];
+                  }
+                  if (event === 'historyApply') {
+                     historyEventFired = true;
                   }
                };
                let eventResult = {
                   id: 'state',
                   items: [{id: 'author', value: '', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic'},
                         {id: 'sender', value: 'Sander123', resetValue: '', viewMode: 'extended', visibility: false},
-                        {id: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false}]
+                        {id: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false}],
+                  history: [{ test: 'test' }]
                };
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[1].value, 'Sander123');
                assert.deepStrictEqual(filterChanged, {'sender': 'Sander123'});
+               assert.isTrue(historyEventFired);
             });
 
             it('_onSelectorTemplateResult', function() {

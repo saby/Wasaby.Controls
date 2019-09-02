@@ -189,13 +189,12 @@ import 'Controls/form';
          this._notify('itemsChanged', [this._items]);
       },
 
-      _applyHistoryFilter: function(event, items) {
-         var filter = _private.getFilter(items);
-         filter.$_history = true;
-         this._applyFilter(event, items);
+      _applyHistoryFilter: function(event, history) {
+         const items = history.items || history;
+         this._applyFilter(event, items, history);
       },
 
-      _applyFilter: function(event, items) {
+      _applyFilter: function(event, items, history) {
          var self = this,
             curItems = items || this._items;
          _private.validate(this).addCallback(function(result) {
@@ -207,7 +206,8 @@ import 'Controls/form';
                */
                self._notify('sendResult', [{
                   filter: _private.getFilter(curItems),
-                  items: _private.prepareItems(curItems)
+                  items: _private.prepareItems(curItems),
+                  history
                }], {bubbling: true});
                self._notify('close', [], {bubbling: true});
             }
