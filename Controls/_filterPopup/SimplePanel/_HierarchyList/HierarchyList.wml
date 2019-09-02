@@ -1,0 +1,28 @@
+<div>
+   <ws:partial template="{{_emptyItemTemplate}}" itemData="{{_listModel.getEmptyItem()}}" on:click="_emptyItemClickHandler()"/>
+
+   <ws:for data="index, item in _folders">
+      <Controls._filterPopup.SimplePanel._List
+              keyProperty="{{_options.keyProperty}}"
+              displayProperty="{{_options.displayProperty}}"
+              itemTemplate="{{_options.itemTemplate}}"
+              itemTemplateProperty="{{_options.itemTemplateProperty}}"
+              hasMoreButton="{{_hasMoreButton(item)}}"
+              selectorTemplate="{{_options.selectorTemplate}}"
+              selectorOpener="{{_options.selectorOpener}}"
+              isCompoundTemplate="{{_options.isCompoundTemplate}}"
+              selectedKeys="{{_selectedKeys[index] || []}}"
+              resetValue="{{_options.resetValue}}"
+              multiSelect="{{_options.multiSelect}}"
+              items="{{_nodeItems[index]}}"
+              showSeparator="{{false}}"
+              on:itemClick="_itemClickHandler(index)"
+              on:checkBoxClick="_checkBoxClickHandler(index)"
+              on:moreButtonClick="_moreButtonClick(item)"
+      />
+   </ws:for>
+
+   <ws:if data="{{!_options.isLast && _options.showSeparator !== false}}">
+      <div class="controls-SimplePanel__block_separator_theme_{{_options.theme}}"></div>
+   </ws:if>
+</div>

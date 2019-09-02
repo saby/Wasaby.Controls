@@ -475,7 +475,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   ' controls-Grid__row-cell_withoutRowSeparator',
                   ' controls-Grid__row-cell_withoutRowSeparator'
                ],
-               expectedResultForFirstItemInGroup = ' controls-Grid__row-cell_first-row-in-group';
+               expectedResultForFirstItemInGroup = ' controls-Grid__row-cell_first-row-in-group',
+               expectedResultForFirstItemInHiddenGroup = ' controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow',
+               expectedResultForOnlyItemInHiddenGroup = ' controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow controls-Grid__row-cell_lastRow controls-Grid__row-cell_withRowSeparator_lastRow';
 
             assert.equal(expectedResultWithRowSeparator[0], gridMod.GridViewModel._private.prepareRowSeparatorClasses({
                rowSeparatorVisibility: true,
@@ -577,6 +579,44 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   }
                }
             }));
+
+            assert.strictEqual(
+               gridMod.GridViewModel._private.prepareRowSeparatorClasses({
+                  rowSeparatorVisibility: true,
+                  isFirstInGroup: true,
+                  isInHiddenGroup: true,
+                  index: 0,
+                  dispItem: {
+                     getOwner: function() {
+                        return {
+                           getCount: function() {
+                              return 3;
+                           }
+                        }
+                     }
+                  }
+               }),
+               expectedResultForFirstItemInHiddenGroup
+            );
+
+            assert.strictEqual(
+               gridMod.GridViewModel._private.prepareRowSeparatorClasses({
+                  rowSeparatorVisibility: true,
+                  isFirstInGroup: true,
+                  isInHiddenGroup: true,
+                  index: 0,
+                  dispItem: {
+                     getOwner: function() {
+                        return {
+                           getCount: function() {
+                              return 1;
+                           }
+                        }
+                     }
+                  }
+               }),
+               expectedResultForOnlyItemInHiddenGroup
+            );
          });
          it('getItemColumnCellClasses for old browsers', function() {
             var

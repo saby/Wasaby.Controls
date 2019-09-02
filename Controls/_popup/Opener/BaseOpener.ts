@@ -461,6 +461,7 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'maxWidth',
         'maximize',
         'width',
+        'propStorageId',
         'resizable',
         'top',
         'autoHide',

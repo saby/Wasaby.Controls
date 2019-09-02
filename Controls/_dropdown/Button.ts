@@ -1,7 +1,9 @@
 import Control = require('Core/Control');
+import Deferred = require('Core/Deferred');
 import template = require('wml!Controls/_dropdown/Button/Button');
 import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 import tmplNotify = require('Controls/Utils/tmplNotify');
+import ActualApi from 'Controls/_buttons/ActualApi';
 
 /**
  * Кнопка с меню.
@@ -65,14 +67,36 @@ var Button = Control.extend({
    _tmplNotify: tmplNotify,
    _filter: null,
 
+   constructor: function () {
+      Button.superclass.constructor.apply(this, arguments);
+      this._dataLoadCallback = this._dataLoadCallback.bind(this);
+   },
+
    _beforeMount: function (options) {
       this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+      this._updateState(options);
    },
 
    _beforeUpdate: function (options) {
       if (this._options.size !== options.size || this._options.icon !== options.icon ||
          this._options.viewMode !== options.viewMode) {
          this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+      }
+      this._updateState(options);
+   },
+
+   _updateState: function (options) {
+      const currentButtonClass = ActualApi.styleToViewMode(options.style);
+
+      this._fontSizeButton = ActualApi.fontSize(options);
+      this._viewModeButton = ActualApi.viewMode(currentButtonClass.viewMode, options.viewMode).viewMode;
+   },
+
+   _dataLoadCallback: function (items) {
+      this._hasItems = items.getCount() > 0;
+
+      if (this._options.dataLoadCallback) {
+         this._options.dataLoadCallback(items);
       }
    },
 
@@ -102,7 +126,8 @@ Button.getDefaultOptions = function () {
       viewMode: 'button',
       size: 'm',
       iconStyle: 'secondary',
-      transparent: true
+      transparent: true,
+      lazyItemsLoading: false
    };
 };
 

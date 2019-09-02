@@ -10,7 +10,8 @@ define('Controls/Application',
       'UI/Base',
       'Controls/scroll',
       'Core/helpers/getResourceUrl',
-      'Controls/decorator'
+      'Controls/decorator',
+      'Controls/Application/SettingsController'
    ],
 
    /**
@@ -38,7 +39,7 @@ define('Controls/Application',
     * @control
     * @public
     * @author Белотелов Н.В.
-    */    
+    */
 
    /**
     * @name Controls/Application#staticDomains
@@ -68,11 +69,11 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#headJson
-    * @cfg {Content} Разметка, которая будет встроена в содержимое тега head. 
+    * @cfg {Content} Разметка, которая будет встроена в содержимое тега head.
     * Используйте эту опцию, чтобы подключить на страницу внешние библиотеки (скрипты), стили или шрифты.
     * @remark
     * Список разрешённых тегов: link, style, script, meta, title.
-    * Список разрешённых атрибутов: rel, as, name, sizes, crossorigin, type, href, property, http-equiv, content, id, class. 
+    * Список разрешённых атрибутов: rel, as, name, sizes, crossorigin, type, href, property, http-equiv, content, id, class.
     */
 
    /**
@@ -139,7 +140,7 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#beforeScripts
-    * @cfg {Boolean} В значении true скрипты из опции {@link scripts} будут вставлены до других скриптов, созданных приложением. 
+    * @cfg {Boolean} В значении true скрипты из опции {@link scripts} будут вставлены до других скриптов, созданных приложением.
     * @default false
     */
 
@@ -243,7 +244,8 @@ define('Controls/Application',
       UIBase,
       scroll,
       getResourceUrl,
-      decorator) {
+      decorator,
+      SettingsController) {
       'use strict';
 
       var _private;
@@ -268,6 +270,9 @@ define('Controls/Application',
             var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
 
             return bodyClasses;
+         },
+         isHover: function(touchClass, dragClass) {
+            return touchClass === 'ws-is-no-touch' && dragClass === 'ws-is-no-drag';
          }
       };
 
@@ -313,6 +318,8 @@ define('Controls/Application',
           */
          _scrollingClass: 'controls-Scroll_webkitOverflowScrollingTouch',
 
+         _dragClass: 'ws-is-no-drag',
+
          _getChildContext: function() {
             return {
                ScrollData: this._scrollData
@@ -353,14 +360,26 @@ define('Controls/Application',
              */
             this._children.mousemoveDetect.start(ev);
          },
-         _touchclass: function() {
-            // Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
+         _updateClasses: function() {
+            // Данный метод вызывается до построения вёрстки, и при первой отрисовке еще нет _children (это нормально)
             // поэтому сами детектим touch с помощью compatibility
-            return this._children.touchDetector
-               ? this._children.touchDetector.getClass()
-               : Env.compatibility.touch
-                  ? 'ws-is-touch'
-                  : 'ws-is-no-touch';
+            if (this._children.touchDetector) {
+               this._touchClass = this._children.touchDetector.getClass();
+            } else {
+               this._touchClass = Env.compatibility.touch ? 'ws-is-touch' : 'ws-is-no-touch';
+            }
+
+            this._hoverClass = _private.isHover(this._touchClass, this._dragClass) ? 'ws-is-hover' : 'ws-is-no-hover';
+         },
+
+         _dragStartHandler: function() {
+            this._dragClass = 'ws-is-drag';
+            this._updateClasses();
+         },
+
+         _dragEndHandler: function() {
+            this._dragClass = 'ws-is-no-drag';
+            this._updateClasses();
          },
 
          /**
@@ -419,6 +438,9 @@ define('Controls/Application',
                   this.headValidHtml = undefined;
                }
             }
+            this._updateClasses();
+
+            SettingsController.setController(cfg.settingsController);
          },
 
          _beforeUpdate: function(cfg) {
@@ -426,6 +448,7 @@ define('Controls/Application',
                this._scrollData.pagingVisible = cfg.pagingVisible;
                this._scrollData.updateConsumers();
             }
+            this._updateClasses();
          },
 
          _afterUpdate: function(oldOptions) {

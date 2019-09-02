@@ -83,6 +83,7 @@
         on:itemMouseDown="_itemMouseDown()"
         on:itemMouseEnter="_itemMouseEnter()"
         on:itemMouseMove="_itemMouseMove()"
+        on:itemMouseLeave="_itemMouseLeave()"
         on:hoveredItemChanged="_onHoveredItemChanged()"
         on:itemSwipe="_listSwipe()"
     >

@@ -124,7 +124,7 @@ export class ViewModel extends BaseViewModel {
         const seconds: ITimeUnits = {
             id: 'S',
             regExp: /S/g,
-            limit: false
+            limit: true
         };
 
         const formatTimeInterval: string = 'P0DT' +
@@ -148,7 +148,7 @@ export class ViewModel extends BaseViewModel {
             if (typeof item === 'number' && !isNaN(item)) {
                 clearArray.push(item);
             } else {
-                clearArray.push(ViewModel._replacer);
+                clearArray.push(0);
             }
         }
 

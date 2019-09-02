@@ -1,3 +1,5 @@
+import {showType} from "../../../Controls/Utils/Toolbar";
+
 const LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nulla ex, consectetur lacinia odio blandit sit amet.';
 
 function getFewCategories(): Array<{
@@ -210,6 +212,55 @@ function getContactsCatalog() {
     ];
 }
 
+function getContactsCatalogWithActions() {
+    const catalog = getContactsCatalog();
+
+    catalog[0]['itemActions'] = [
+        {
+            id: 1,
+            title: 'Прочитано',
+            showType: showType.TOOLBAR,
+        },
+        {
+            id: 2,
+            icon: 'icon-PhoneNull',
+            title: 'Позвонить',
+            showType: showType.MENU_TOOLBAR,
+        },
+        {
+            id: 3,
+            icon: 'icon-EmptyMessage',
+            title: 'Написать',
+            showType: showType.TOOLBAR,
+        }
+    ];
+    catalog[1]['itemActions'] = [];
+    catalog[2]['itemActions'] = [
+        {
+            id: 1,
+            icon: 'icon-Chat',
+            title: 'Диалог',
+            showType: showType.MENU_TOOLBAR,
+            parent: 3,
+        },
+        {
+            id: 2,
+            icon: 'icon-Email',
+            title: 'Email',
+            showType: showType.MENU,
+            parent: 3,
+        },
+        {
+            id: 3,
+            icon: 'icon-Profile',
+            title: 'Профиль пользователя',
+            showType: showType.MENU,
+        }
+    ];
+    catalog[3]['itemActions'] = [];
+
+    return catalog;
+}
 
 interface  IGenerateDataOptions {
     count: number,
@@ -264,6 +315,7 @@ function generateData<
 
 export {
     getContactsCatalog,
+    getContactsCatalogWithActions,
     getFewCategories,
     getGroupedCatalog,
     getGroupedCatalogWithHiddenGroup,
