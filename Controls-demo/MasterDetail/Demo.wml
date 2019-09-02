@@ -1,7 +1,7 @@
 <div>
    <h1>Двухколоночный браузер</h1>
    <h3>Ширина мастера может меняться от 200px до 50% контейнера. Начальная ширина 27%. </h3>
-   <Controls.masterDetail:Base attr:class="controls-demo_MasterDetail controls-demo_First" masterMinWidth="{{200}}" masterMaxWidth="50%" masterWidth="27%">
+   <Controls.masterDetail:Base attr:class="controls-demo_MasterDetail controls-demo_First" masterMinWidth="{{200}}" masterMaxWidth="50%" masterWidth="27%" propStorageId="master111">
       <ws:master>
 
          <div>
