@@ -713,7 +713,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             textValue: 'test2',
             resetTextValue: 'test2'
          }];
-         assert.deepEqual(Filter._private.getHistoryData(filterButtonItems2), [{
+         assert.deepEqual(Filter._private.getHistoryData(filterButtonItems2).items, [{
             id: 'testId2',
             value: 'testValue',
          }]);

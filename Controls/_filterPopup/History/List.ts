@@ -106,7 +106,7 @@ var MAX_NUMBER_ITEMS = 5;
             const history = historySource.getDataObject(item.get('ObjectData'));
 
             if (history) {
-               text = _private.getStringHistoryFromItems(histoNBury.items || history, resetValues);
+               text = _private.getStringHistoryFromItems(history.items || history, resetValues);
             }
             itemsText[index] = text;
          });
