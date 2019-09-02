@@ -135,7 +135,7 @@ define([
       }
 
       function equalsHtml(html1, html2) {
-         return sortAttrs(html1) === sortAttrs(html2);
+         assert.equal(sortAttrs(html1), sortAttrs(html2));
       }
 
    describe('Controls.Decorator.Markup.Converter', function() {
@@ -429,9 +429,9 @@ define([
             }
          });
          it('empty', function() {
-            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml([]), ''));
-            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(), ''));
-            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml([[], 'some text']), '<div>some text</div>'));
+            equalsHtml(decorator.Converter.jsonToHtml([]), '');
+            equalsHtml(decorator.Converter.jsonToHtml(), '');
+            equalsHtml(decorator.Converter.jsonToHtml([[], 'some text']), '<div>some text</div>');
          });
          it('only text', function() {
             // TODO: remove case in https://online.sbis.ru/opendoc.html?guid=a8a904f8-6c0d-4754-9e02-d53da7d32c99.
@@ -443,14 +443,14 @@ define([
          it('escape', function() {
             var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><&#39;'];
             var vdomTemplate = template({ _options: { 'value': json } }, {}, undefined, true);
-            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json), '<div><p title="&quot;&amp;lt;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;&amp;#39;</p></div>'));
+            equalsHtml(decorator.Converter.jsonToHtml(json), '<div><p title="&quot;&amp;lt;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;&amp;#39;</p></div>');
             assert.equal(vdomTemplate[0].children[0].children[0].children, '&amp;gt;&amp;lt;><&amp;#39;');
             assert.equal(vdomTemplate[0].children[0].hprops.attributes.title, '"&amp;lt;<>');
          });
          it('one big', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             var html = '<div><p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p></div>';
-            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json), html));
+            equalsHtml(decorator.Converter.jsonToHtml(json), html);
          });
          it('no XSS', function() {
             var
@@ -488,7 +488,7 @@ define([
                   '<p><iframe>base64 alert</iframe></p>' +
                   '</div>',
                checkHtml = decorator.Converter.jsonToHtml(json);
-            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+            equalsHtml(checkHtml, goodHtml);
          });
 
          it('not string attribute', function() {
@@ -504,7 +504,7 @@ define([
             var goodError = 'Невалидное значение атрибута class, ожидается строковый тип.';
             var checkHtml = decorator.Converter.jsonToHtml(json);
             var chechError = errorArray.shift()[1];
-            assert.ok(equalsHtml(goodHtml, checkHtml));
+            equalsHtml(goodHtml, checkHtml);
             assert.equal(goodError, chechError);
          });
 
@@ -523,7 +523,7 @@ define([
             var goodError = 'Узел в JsonML должен быть строкой или массивом.';
             var checkHtml = decorator.Converter.jsonToHtml(json);
             var chechError = errorArray.shift()[1];
-            assert.ok(equalsHtml(goodHtml, checkHtml));
+            equalsHtml(goodHtml, checkHtml);
             assert.equal(goodError, chechError);
          });
 
@@ -629,7 +629,7 @@ define([
                '</p>' +
                '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="http://www.testHref.com" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="./testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
                '</div>';
-            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json), html));
+            equalsHtml(decorator.Converter.jsonToHtml(json), html);
          });
 
          it('valid href - 1', function() {
@@ -639,7 +639,7 @@ define([
                ],
                checkHtml = decorator.Converter.jsonToHtml(json),
                goodHtml = '<div><a href="https://www.google.com/"></a></div>';
-            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+            equalsHtml(checkHtml, goodHtml);
          });
 
          it('valid href - 2', function() {
@@ -649,7 +649,7 @@ define([
                ],
                checkHtml = decorator.Converter.jsonToHtml(json),
                goodHtml = '<div><a href="hTtPs://www.google.com/"></a></div>';
-            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+            equalsHtml(checkHtml, goodHtml);
          });
 
          it('valid href - 3', function() {
@@ -659,7 +659,7 @@ define([
                ],
                checkHtml = decorator.Converter.jsonToHtml(json),
                goodHtml = '<div><a href="/resources/some.html"></a></div>';
-            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+            equalsHtml(checkHtml, goodHtml);
          });
 
          it('valid href - 4', function() {
@@ -669,7 +669,7 @@ define([
                ],
                checkHtml = decorator.Converter.jsonToHtml(json),
                goodHtml = '<div><a href="./resources/some.html"></a></div>';
-            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+            equalsHtml(checkHtml, goodHtml);
          });
 
          it('invalid href - 1', function() {
@@ -679,7 +679,7 @@ define([
                ],
                checkHtml = decorator.Converter.jsonToHtml(json),
                goodHtml = '<div><a></a></div>';
-            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+            equalsHtml(checkHtml, goodHtml);
          });
 
          it('invalid href - 2', function() {
@@ -689,7 +689,7 @@ define([
                ],
                checkHtml = decorator.Converter.jsonToHtml(json),
                goodHtml = '<div><a></a></div>';
-            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+            equalsHtml(checkHtml, goodHtml);
          });
 
          it('invalid href - 3', function() {
@@ -699,7 +699,7 @@ define([
                ],
                checkHtml = decorator.Converter.jsonToHtml(json),
                goodHtml = '<div><a></a></div>';
-            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+            equalsHtml(checkHtml, goodHtml);
          });
 
          it('validate data- attributes - 1', function() {
@@ -709,7 +709,7 @@ define([
                ],
                checkHtml = decorator.Converter.jsonToHtml(json),
                goodHtml = '<div><p>text</p></div>';
-            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+            equalsHtml(checkHtml, goodHtml);
          });
 
          it('validate data- attributes - 2', function() {
@@ -719,7 +719,7 @@ define([
                ],
                checkHtml = decorator.Converter.jsonToHtml(json),
                goodHtml = '<div><p data-ewghierg="value">text</p></div>';
-            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+            equalsHtml(checkHtml, goodHtml);
          });
 
          it('validate data- attributes - 3', function() {
@@ -729,7 +729,7 @@ define([
                ],
                checkHtml = decorator.Converter.jsonToHtml(json),
                goodHtml = '<div><p>text</p></div>';
-            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+            equalsHtml(checkHtml, goodHtml);
          });
 
          it('validate data- attributes - 4', function() {
@@ -739,7 +739,7 @@ define([
                ],
                checkHtml = decorator.Converter.jsonToHtml(json),
                goodHtml = '<div><p data-component-style="value">text</p></div>';
-            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+            equalsHtml(checkHtml, goodHtml);
          });
 
          it('validate data- attributes - 5', function() {
@@ -749,7 +749,7 @@ define([
                ],
                checkHtml = decorator.Converter.jsonToHtml(json),
                goodHtml = '<div><p>text</p></div>';
-            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+            equalsHtml(checkHtml, goodHtml);
          });
 
          it('validHtml option', function() {
@@ -786,7 +786,7 @@ define([
                      tagResolver: decorator.noOuterTag
                   }
                }, {});
-            assert.isTrue(equalsHtml(checkHtml, goodHtml));
+            equalsHtml(checkHtml, goodHtml);
          });
 
          it('with linkDecorate resolver', function() {
@@ -828,7 +828,7 @@ define([
                '<p><a href="' + longLink + '">' + longLink + '</a></p>' +
                '<p><a href="https://ya.ru">text</a></p>' +
             '</div>';
-            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, decorator.linkDecorate), html));
+            equalsHtml(decorator.Converter.jsonToHtml(json, decorator.linkDecorate), html);
          });
          it('with highlight resolver', function() {
             var json = [
@@ -843,7 +843,7 @@ define([
                '<p><span class="controls-MarkupDecorator_highlight">aba</span>b<span class="controls-MarkupDecorator_highlight">aba</span>b<span class="controls-MarkupDecorator_highlight">aba</span></p>' +
                '<p>no highlight</p>' +
                '</div>';
-            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, decorator._highlightResolver, { textToHighlight: 'aBa' }), html));
+            equalsHtml(decorator.Converter.jsonToHtml(json, decorator._highlightResolver, { textToHighlight: 'aBa' }), html);
          });
          it('with innerText resolver', function() {
             var json = [['p', 'text&amp;', ['br'], 'more text'], ['p', deepNode], ['p'], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
@@ -852,7 +852,7 @@ define([
          it('with noOuterTag resolver', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             var html = '<p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
-            assert.isTrue(equalsHtml(decorator.Converter.jsonToHtml(json, decorator.noOuterTag), html));
+            equalsHtml(decorator.Converter.jsonToHtml(json, decorator.noOuterTag), html);
             assert.equal(decorator.Converter.jsonToHtml([], decorator.noOuterTag), '');
          });
       });
@@ -1365,7 +1365,7 @@ define([
                tagResolver: app.headTagResolver
             }
          }, {});
-         assert.isTrue(equalsHtml(goodHtml, checkHtml));
+         equalsHtml(goodHtml, checkHtml);
       });
 
       it('link with module href', function() {
@@ -1380,14 +1380,14 @@ define([
                tagResolver: app.headTagResolver
             }
          }, {});
-         assert.isTrue(equalsHtml(goodHtml, checkHtml));
+         equalsHtml(goodHtml, checkHtml);
       });
 
       it('script with non-module scr', function() {
          var app = new Application();
          var json = [['script', { src: 'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' }]];
          app._beforeMount({ headJson: json });
-         var goodHtml = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js?x_version=0"></script>';
+         var goodHtml = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>';
          var checkHtml = template({
             _options: {
                value: app.headJson[0],
@@ -1395,14 +1395,14 @@ define([
                tagResolver: app.headTagResolver
             }
          }, {});
-         assert.isTrue(equalsHtml(goodHtml, checkHtml));
+         equalsHtml(goodHtml, checkHtml);
       });
 
       it('link with non-module href', function() {
          var app = new Application();
          var json = [['link', { src: 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' }]];
          app._beforeMount({ headJson: json });
-         var goodHtml = '<link src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?x_version=0" />';
+         var goodHtml = '<link src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />';
          var checkHtml = template({
             _options: {
                value: app.headJson[0],
@@ -1410,7 +1410,7 @@ define([
                tagResolver: app.headTagResolver
             }
          }, {});
-         assert.isTrue(equalsHtml(goodHtml, checkHtml));
+         equalsHtml(goodHtml, checkHtml);
       });
 
       it('module link in an attribute that is not a link', function() {
@@ -1428,7 +1428,7 @@ define([
                tagResolver: app.headTagResolver
             }
          }, {});
-         assert.isTrue(equalsHtml(goodHtml, checkHtml));
+         equalsHtml(goodHtml, checkHtml);
       });
 
       it('just a title', function() {
@@ -1443,7 +1443,7 @@ define([
                tagResolver: app.headTagResolver
             }
          }, {});
-         assert.isTrue(equalsHtml(goodHtml, checkHtml));
+         equalsHtml(goodHtml, checkHtml);
       });
    });
 });
