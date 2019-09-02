@@ -297,6 +297,11 @@ var StickyHeader = Control.extend({
          style += 'z-index: ' + this._options.fixedZIndex + ';';
       }
 
+      //убрать по https://online.sbis.ru/opendoc.html?guid=ede86ae9-556d-4bbe-8564-a511879c3274
+      if (this._options.task1177692247 && this._options.fixedZIndex) {
+         style += 'z-index: ' + this._options.fixedZIndex + ';';
+      }
+
       return style;
    },
 
