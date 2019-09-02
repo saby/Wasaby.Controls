@@ -77,7 +77,7 @@ var _private = {
 };
 
 /**
- * Источник, который работает с сервисом истории ввода.
+ * Источник, который работает с <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервисом истории ввода</a>.
  *
  * @class Controls/_history/Service
  * @extends Core/core-extend
@@ -112,7 +112,7 @@ var _private = {
 
 /**
  * @name Controls/_history/Service#historyId
- * @cfg {String} Уникальный идентификатор сервиса истории.
+ * @cfg {String} Уникальный идентификатор <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервиса истории</a>.
  */
 
 /*
@@ -122,7 +122,7 @@ var _private = {
 
 /**
  * @name Controls/_history/Service#historyIds
- * @cfg {Array of String} Уникальные идентификаторы сервиса истории.
+ * @cfg {Array of String} Уникальные идентификаторы <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервиса истории</a>.
  */
 
 /*

@@ -23,12 +23,12 @@ import cInstance = require('Core/core-instance');
  * @category Menu
  * @example
  * <pre>
- *    var source = new historySource({
- *        originSource: new Memory({
+ *    var source = new history.Source({
+ *        originSource: new source.Memory({
  *           idProperty: 'id',
  *           data: items
  *        }),
- *        historySource: new historyService({
+ *        historySource: new history.Service({
  *           historyId: 'TEST_HISTORY_ID'
  *        }),
  *        parentProperty: 'parent'
@@ -48,12 +48,12 @@ import cInstance = require('Core/core-instance');
  * @category Menu
  * @example
  * <pre>
- *    var source = new historySource({
- *        originSource: new Memory({
+ *    var source = new history.Source({
+ *        originSource: new source.Memory({
  *           idProperty: 'id',
  *           data: items
  *        }),
- *        historySource: new historyService({
+ *        historySource: new history.Service({
  *           historyId: 'TEST_HISTORY_ID'
  *        }),
  *        parentProperty: 'parent'

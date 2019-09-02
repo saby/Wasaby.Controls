@@ -70,8 +70,8 @@ export default interface IProperty {
     editorClass?: string;
     /**
      * @name Controls/_propertyGrid/IProperty#type
-     * @cfg {String} Тип свойства, для которого допустимы значения:
-     * ‘int’, ‘boolean’, ‘string’, ‘enum’, ‘date’, если значение не задано, тип будет определяться по value.
+     * @cfg {String} Тип свойства. Опция принимает значения:
+     * 'int', 'boolean', 'string', 'enum', 'date'. Если не задано, тип определяется по значению.
      */
 
     /*
