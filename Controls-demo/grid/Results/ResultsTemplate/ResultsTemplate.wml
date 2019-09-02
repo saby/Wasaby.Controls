@@ -1,0 +1,17 @@
+<div class="controlsDemo__wrapper">
+    <Controls.grid:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            columns="{{_columns}}"
+            resultsPosition="bottom">
+        <ws:resultsTemplate>
+            <ws:partial template="Controls/grid:ResultsTemplate" scope="{{_options}}">
+                <ws:contentTemplate>
+                    <div style="color: #313E78; background-color: #F5F5F5; padding: 5px 2px; font-size: 13px; font-weight: 600">
+                        Итого: 2 страны с населением более миллиарда человек
+                    </div>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:resultsTemplate>
+    </Controls.grid:View>
+</div>

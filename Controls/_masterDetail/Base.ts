@@ -2,6 +2,8 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_masterDetail/Base/Base';
 import 'css!theme?Controls/masterDetail';
 import {debounce} from 'Types/function';
+import {setSettings, getSettings} from 'Controls/Application/SettingsController';
+import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
 
 /**
  * Контрол, который обеспечивает связь между двумя контролами для отображения подробной информации по выбранному элементу.
@@ -9,6 +11,7 @@ import {debounce} from 'Types/function';
  * @class Controls/_masterDetail/Base
  * @extends Core/Control
  * @mixes Controls/_masterDetail/List/Styles
+ * @mixes Controls/_interface/IPropStorage
  * @control
  * @author Авраменко А.С.
  * @public
@@ -28,7 +31,7 @@ import {debounce} from 'Types/function';
  */
 const RESIZE_DELAY = 50;
 
-interface IMasterDetail extends IControlOptions {
+interface IMasterDetail extends IControlOptions, IPropStorageOptions {
     master: TemplateFunction;
     detail: TemplateFunction;
     masterWidth: number|string;
@@ -83,12 +86,32 @@ class Base extends Control<IMasterDetail> {
     protected _containerWidth: number;
     protected _updateOffsetDebounced: Function;
 
-    protected _beforeMount(options: IMasterDetail): void {
+    protected _beforeMount(options: IMasterDetail, context: object, receivedState: number): Promise<number> | void {
         this._updateOffsetDebounced = debounce(this._updateOffset.bind(this), RESIZE_DELAY);
-        if (this._isPercentValue(options.masterWidth)) {
-            this._currentWidth = String(options.masterWidth);
-        } else if (options.masterWidth) {
-            this._currentWidth = options.masterWidth + 'px';
+
+        if (receivedState) {
+            this._currentWidth = receivedState + 'px';
+        } else if (options.propStorageId) {
+            return new Promise((resolve) => {
+                getSettings([options.propStorageId]).then((width: number) => {
+                    if (width) {
+                        this._currentWidth = width + 'px';
+                    } else {
+                        this.initCurrentWidth(options.masterWidth);
+                    }
+                    resolve(width);
+                });
+            });
+        } else {
+            this.initCurrentWidth(options.masterWidth);
+        }
+    }
+
+    private initCurrentWidth(width: string|number): void {
+        if (this._isPercentValue(width)) {
+            this._currentWidth = String(width);
+        } else if (width) {
+            this._currentWidth = width + 'px';
         }
     }
 
@@ -124,7 +147,12 @@ class Base extends Control<IMasterDetail> {
     }
 
     private _offsetHandler(event: Event, offset: number): void {
-        this._currentWidth = parseInt(this._currentWidth, 10) + offset + 'px';
+        const width = parseInt(this._currentWidth, 10) + offset;
+        this._currentWidth = width + 'px';
+        const propStorageId = this._options.propStorageId;
+        if (propStorageId) {
+            setSettings({[propStorageId]: width});
+        }
     }
 
     private _isPercentValue(value: string|number): boolean {

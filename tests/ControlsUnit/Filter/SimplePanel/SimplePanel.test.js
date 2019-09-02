@@ -207,8 +207,6 @@ define(
             assert.isFalse(isEqual);
             isEqual = filterPopup.SimplePanel._private.isEqualKeys([3,5,4], [1,2,3]);
             assert.isFalse(isEqual);
-            isEqual = filterPopup.SimplePanel._private.isEqualKeys([3,5,4], [4,5,3]);
-            assert.isTrue(isEqual);
          });
 
       });

@@ -27,8 +27,14 @@ var _private = {
       return typeof id === 'number' ? intMethod : stringMethod;
    },
 
-   updateHistory: function (self, data) {
-      if (data.ids) {
+   updateHistory: function (self, data, meta) {
+      if (meta.parentKey) {
+         _private.getHistoryDataSource(self).call('AddHierarchy', {
+            history_id: self._historyId,
+            parent1: meta.parentKey,
+            id: data.id
+         });
+      } else if (data.ids) {
          _private.getHistoryDataSource(self).call(_private.getMethodNameByIdType('AddList', 'AddIntList', data.ids[0]), {
             history_id: self._historyId,
             ids: data.ids,

@@ -9,7 +9,18 @@
         <Controls-demo.list_new.ItemActions.ItemActionsPosition.Index/>
     </div>
 
-    <div class="controlsDemo__cell controlsDemo__mr4">
+
+    <div class="controlsDemo__cell controlsDemo__mr4 controlsDemo__maxWidth500">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/ItemActions/ItemActionClickHandler/Index' }}">
+            <a href="{{content.href}}">Обработка клика по операции над записью</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.ItemActions.ItemActionClickHandler.Index/>
+    </div>
+
+
+    <div class="controlsDemo__cell controlsDemo__mr4 controlsDemo__maxWidth500">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/ItemActions/ItemActionVisibilityCallback/Index' }}">
@@ -18,7 +29,7 @@
         <Controls-demo.list_new.ItemActions.ItemActionVisibilityCallback.Index/>
     </div>
 
-    <div class="controlsDemo__cell controlsDemo__mr4">
+    <div class="controlsDemo__cell controlsDemo__mr4 controlsDemo__maxWidth500">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/list_new/ItemActions/ItemActionsProperty/Index' }}">

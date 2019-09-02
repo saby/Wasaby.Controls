@@ -58,13 +58,14 @@
    box-shadow: @box-shadow-size_TileView-item @box-shadow-color_TileView-item;
 }
 
-.ws-is-no-touch {
+.ws-is-hover {
    .controls-ListView__item_shadow_visible, .controls-ListView__item_shadow_onhover {
       &:hover, &.controls-TileView__item_active, &.controls-TileView__item_swiped {
          box-shadow: @box-shadow-size_TileView-item @box-shadow-color_TileView-item_hover;
       }
    }
-
+}
+.ws-is-no-touch {
    // On ios the tile is positioned absolutely, without increasing. Increases only the caption. It may not fit,
    // if the parent container limits through overflow: hidden.
    // Turn on the display of the caption only for the desktop, so tile does not change the size by swipe on ios .
@@ -178,7 +179,7 @@
 }
 
 //TODO: Выписана задача. чтобы унести стили из плитки https://online.sbis.ru/opendoc.html?guid=f1421bfc-67dd-4aa5-bf13-28df0a9ab79b
-.ws-is-no-touch:not(.ws-is-mobile-platform) {
+.ws-is-hover:not(.ws-is-mobile-platform) {
    .controls-ListView__item_showActions:hover > .controls-itemActionsV {
       display: inline-block;
    }

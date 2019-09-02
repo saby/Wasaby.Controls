@@ -151,7 +151,7 @@
    opacity: @opacity_ListView-item_dragging;
 }
 
-.ws-is-no-touch {
+.ws-is-hover {
    .controls-ListView__item_showActions {
       &:hover {
          > .controls-itemActionsV {
@@ -336,7 +336,7 @@
 
 //Пока страница не ожила, мы не знаем тач устройство или нет, так что на мобильных устройствах нужно скрыть операции над записью
 //TODO: после этой задачи нужно убрать not https://online.sbis.ru/opendoc.html?guid=87ddbeeb-fa7e-4462-b69b-c15188df61da
-.ws-is-no-touch:not(.ws-is-mobile-platform) {
+.ws-is-hover:not(.ws-is-mobile-platform) {
    .controls-ListView__item_master {
       &:hover {
          background-color: @background-color_List-masterList-item_hover;
