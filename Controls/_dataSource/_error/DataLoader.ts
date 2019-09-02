@@ -13,6 +13,7 @@ interface IErrorContainerReceivedState {
 
 interface IErrorContainerOptions extends IControlOptions {
    sources: ISourceConfig[];
+   errorController: Controller;
 }
 
 /**
@@ -72,7 +73,7 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
             this._sources = sourcesConfigurations;
             return {sources: sourcesConfigurations};
          }).catch((err) => {
-            return this._errorController.process({
+            return this._getErrorController().process({
                error: err,
                mode: Mode.include
             }).then((errorViewConfig: ViewConfig) => {
@@ -81,5 +82,9 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
             });
          });
       }
+   }
+
+   private _getErrorController(): Controller {
+      return this._options.errorController || this._errorController;
    }
 }
