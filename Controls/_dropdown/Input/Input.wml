@@ -30,7 +30,6 @@
         selectedItemsChangedCallback="{{_setText}}"
         theme="{{_options.theme}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
-        on:selectedKeysChanged="_selectedKeysChangedHandler()"
         attr:class="controls-Dropdown_theme_{{_options.theme}} {{_options.style === 'invalid' ? 'controls-Dropdown-style_invalid_theme_' + _options.theme}}">
    <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}"
                item="{{_item}}"
