@@ -1,4 +1,4 @@
-<Controls._dragnDrop.Controller on:_updateDraggingTemplate="_updateDraggingTemplate()" on:_documentDragEnd="_documentDragEnd()">
+<Controls._dragnDrop.Controller on:_updateDraggingTemplate="_updateDraggingTemplate()" on:_documentDragStart="_documentDragStart()" on:_documentDragEnd="_documentDragEnd()">
    <ws:partial
       template="{{_options.content}}"
       scope="{{_options}}"

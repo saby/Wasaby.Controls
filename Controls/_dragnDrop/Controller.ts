@@ -36,12 +36,14 @@ import 'Controls/_dragnDrop/DraggingTemplate';
 
          _documentDragStart: function(event, dragObject) {
             this._children.dragStartDetect.start(dragObject);
+            this._notify('dragStart');
          },
 
          _documentDragEnd: function(event, dragObject) {
             this._children.dragEndDetect.start(dragObject);
             this._draggingTemplate = null;
             this._draggingTemplateOptions = null;
+             this._notify('dragEnd');
          },
 
          _updateDraggingTemplate: function(event, draggingTemplateOptions, draggingTemplate) {
