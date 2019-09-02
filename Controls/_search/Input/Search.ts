@@ -62,14 +62,13 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @remark Клик по иконке поиска закрывает автодополнение, это поведение можно отменить, если из события вернуть false.
  * @example
- * WML:
+ * WML
  * <pre>
  *     <Controls.suggest:SearchInput on:searchClick="_searchClick()" bind:value="_value">
  *        ...
  *     </Controls.suggest:SearchInput>
  * </pre>
- *
- * TS:
+ * TypeScript
  * <pre>
  *     protected _value: string = '';
  *
