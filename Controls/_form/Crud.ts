@@ -63,8 +63,9 @@ import Env = require('Env/Env');
                self._notify('updateSuccessed', [record, key]);
                return key;
             });
+
             def.addErrback(function(e) {
-               self._notify('updateFailed', [e]);
+               self._notify('updateFailed', [e, record]);
                return e;
             });
          } else {

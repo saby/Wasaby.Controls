@@ -411,6 +411,7 @@ import dataSource = require('Controls/dataSource');
          function updateCallback(result) {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
+               self._notifyToOpener('updateStarted', [self._record, self._getRecordId()]);
                var res = self._update().addCallback(getData);
                updateResult.dependOn(res);
             } else {
@@ -576,10 +577,12 @@ import dataSource = require('Controls/dataSource');
 
       _notifyToOpener: function(eventName, args) {
          var handlers = {
+            'updatestarted': '_getUpdateStartedData',
             'updatesuccessed': '_getUpdateSuccessedData',
             'createsuccessed': '_getCreateSuccessedData',
             'readsuccessed': '_getReadSuccessedData',
-            'deletesuccessed': '_getDeleteSuccessedData'
+            'deletesuccessed': '_getDeleteSuccessedData',
+            'updatefailed': '_getUpdateFailedData'
          };
          var resultDataHandlerName = handlers[eventName.toLowerCase()];
          if (this[resultDataHandlerName]) {
@@ -587,6 +590,12 @@ import dataSource = require('Controls/dataSource');
             this._notify('sendResult', [resultData], { bubbling: true });
          }
       },
+
+       _getUpdateStartedData(record, key) {
+          let config = this._getUpdateSuccessedData(record, key);
+          config.formControllerEvent = 'updateStarted';
+          return config;
+       },
 
       _getUpdateSuccessedData: function(record, key) {
          var additionalData = {
@@ -606,6 +615,15 @@ import dataSource = require('Controls/dataSource');
 
       _getReadSuccessedData: function(record) {
          return this._getResultData('read', record);
+      },
+
+      _getUpdateFailedData: function(error, record) {
+         var additionalData = {
+            record: record,
+            error: error,
+            isNewRecord: this._isNewRecord
+         };
+         return this._getResultData('updateFailed', record, additionalData);
       },
       _getResultData: function(eventName, record, additionalData) {
          return {
