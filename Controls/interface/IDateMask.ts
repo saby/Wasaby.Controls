@@ -35,19 +35,19 @@ interface IDateMask {
          * В данном примере маска установлена так, что в поле можно ввести только время.
          * После того, как пользователь ввел "01:01:2018", значениe _inputValue будет равно "01.01:2018 00:00.000".
          * <pre>
-         *    <Controls/input:Date bind:value="_inputValue" mask="DD.MM.YYYY"/>
+         *    <Controls.input:Date bind:value="_inputValue" mask="DD.MM.YYYY"/>
          * </pre>
          * <pre>
-         *    Control.extend({
+         *    Base.Control.extend({
          *       _inputValue: null
          *    });
          * </pre>
          * В следующем примере после того, как пользователь ввел "01:01:2018", значение _inputValue будет равно "01.01.2018 14:15.000".
          * <pre>
-         *    <Controls/input:Date bind:value="_inputValue" mask="DD.MM.YYYY"/>
+         *    <Controls.input:Date bind:value="_inputValue" mask="DD.MM.YYYY"/>
          * </pre>
          * <pre>
-         *    Control.extend({
+         *    Base.Control.extend({
          *       _inputValue: ew Date(2001, 2, 10, 14, 15 )
          *    });
          * </pre>
@@ -76,7 +76,7 @@ interface IDateMask {
          *    <Controls.input:Date bind:value="_inputValue" mask="DD.MM.YYYY"/>
          * </pre>
          * <pre>
-         *    Control.extend({
+         *    Base.Control.extend({
          *       _inputValue: null
          *    });
          * </pre>
@@ -85,8 +85,8 @@ interface IDateMask {
          *    <Controls.input:Date bind:value="_inputValue" mask="DD.MM.YYYY"/>
          * </pre>
          * <pre>
-         *    Control.extend({
-         *       _inputValue: ew Date(2001, 2, 10, 14, 15 )
+         *    Base.Control.extend({
+         *       _inputValue: new Date(2001, 2, 10, 14, 15 )
          *    });
          * </pre>
          */

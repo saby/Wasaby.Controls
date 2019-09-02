@@ -77,6 +77,10 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  */
 
 /**
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ */
+
+/**
  * @event Controls/Input/resetClick#resetClick Происходит при клике на кнопку сброса.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */ 

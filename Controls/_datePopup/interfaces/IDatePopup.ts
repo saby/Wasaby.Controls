@@ -23,14 +23,14 @@
  *    <Controls.buttons:Button on:click="_sendButtonClick()" />
  * </pre>
  * <pre>
- *    Control.extend({
+ *    Base.Control.extend({
  *       ...
  *       _startValue: new Date(),
- *      _sendButtonClick() {
- *         this._sendData(this._startValue);
- *      }
- *      ...
- *   });
+ *       _sendButtonClick() {
+ *          this._sendData(this._startValue);
+ *       }
+ *       ...
+ *    });
  * </pre>
  */
 
@@ -45,14 +45,14 @@
  *    <Controls.buttons:Button on:click="_sendButtonClick()" />
  * </pre>
  * <pre>
- *    Control.extend({
+ *    Base.Control.extend({
  *       ...
  *       _startValue: new Date(),
- *      _sendButtonClick() {
- *         this._sendData(this._startValue);
- *      }
- *      ...
- *   });
+ *       _sendButtonClick() {
+ *          this._sendData(this._startValue);
+ *       }
+ *       ...
+ *    });
  * </pre>
  */
 
@@ -67,14 +67,14 @@
  *    <Controls.Button on:click="_sendButtonClick()" />
  * </pre>
  * <pre>
- *    Control.extend({
+ *    Base.Control.extend({
  *       ...
  *       _endValue: new Date(),
- *      _sendButtonClick() {
- *         this._sendData(this._endValue);
- *      }
- *      ...
- *   });
+ *       _sendButtonClick() {
+ *          this._sendData(this._endValue);
+ *       }
+ *       ...
+ *    });
  * </pre>
  */
 
@@ -89,19 +89,20 @@
  *    <Controls.buttons:Button on:click="_sendButtonClick()" />
  * </pre>
  * <pre>
- *    Control.extend({
+ *    Base.Control.extend({
  *       ...
  *       _endValue: new Date(),
- *      _sendButtonClick() {
- *         this._sendData(this._endValue);
- *      }
- *      ...
- *   });
+ *       _sendButtonClick() {
+ *          this._sendData(this._endValue);
+ *       }
+ *       ...
+ *    });
  * </pre>
  */
 
 /**
  * @event Controls/_datePopup/interfaces/IDatePopup#startValueChanged Происходит при изменении начального значения периода.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} value Значение нового периода.
  * @param {String} displayValue Текстовое значение периода.
  * @remark
@@ -115,7 +116,7 @@
  *    <Controls.datePopup bind:startValue="_anotherFieldValue"/>
  * </pre>
  * <pre>
- *    Control.extend({
+ *    Base.Control.extend({
  *       ....
  *       _fieldValue: null,
  *       _valueChangedHandler(value, displayValue) {
@@ -143,7 +144,7 @@
  *    <Controls.datePopup bind:startValue="_anotherFieldValue"/>
  * </pre>
  * <pre>
- *    Control.extend({
+ *    Base.Control.extend({
  *       ....
  *       _fieldValue: null,
  *       _valueChangedHandler(value, displayValue) {
@@ -171,7 +172,7 @@
  *    <Controls.datePopup bind:endValue="_anotherFieldValue"/>
  * </pre>
  * <pre>
- *    Control.extend({
+ *    Base.Control.extend({
  *       ....
  *       _fieldValue: null,
  *       _valueChangedHandler(value, displayValue) {
@@ -199,7 +200,7 @@
  *    <Controls.datePopup bind:endValue="_anotherFieldValue"/>
  * </pre>
  * <pre>
- *    Control.extend({
+ *    Base.Control.extend({
  *       ....
  *       _fieldValue: null,
  *       _valueChangedHandler(value, displayValue) {
@@ -226,9 +227,9 @@
  *    <Controls.datePopup on:inputCompleted="_inputCompletedHandler()" />
  * </pre>
  * <pre>
- *    Control.extend({
+ *    Base.Control.extend({
  *       ....
- *       _inputCompletedHandler(startValue, endValue, displaydStartValue, displaydEndValue) {
+ *       _inputCompletedHandler(event, startValue, endValue, displaydStartValue, displaydEndValue) {
  *          this._saveEnteredValueToDabase1(startValue, endValue);
  *          this._saveEnteredValueToDabase2(displaydStartValue, displaydEndValue);
  *       },
@@ -251,9 +252,9 @@
  *    <Controls.datePopup on:inputCompleted="_inputCompletedHandler()" />
  * </pre>
  * <pre>
- *    Control.extend({
+ *    Base.Control.extend({
  *       ....
- *       _inputCompletedHandler(startValue, endValue, displaydStartValue, displaydEndValue) {
+ *       _inputCompletedHandler(event, startValue, endValue, displaydStartValue, displaydEndValue) {
  *          this._saveEnteredValueToDabase1(startValue, endValue);
  *          this._saveEnteredValueToDabase2(displaydStartValue, displaydEndValue);
  *       },

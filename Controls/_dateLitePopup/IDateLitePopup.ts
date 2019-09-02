@@ -150,18 +150,20 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
              * @cfg {String} Шаблон отображения года. Может принимать опцию monthCaptionTemplate как шаблон заголовка месяца.
              * Дата первого дня месяца и функция форматирования даты передаются в шаблон месяца {@link Types/formatter:date}.
              * @example
-             * <ws:itemTemplate>
-             *    <ws:partial template="{{itemTemplate.defaultTemplate}}">
-             *       <ws:monthCaptionTemplate>
-             *          <ws:if data="{{month.getMonth() % 2 === 0}}">
-             *             <div class="controls-PeriodLiteDialog__vLayoutItem-caption"
-             *                  style="{{ (month.getMonth() % 4 === 0) ? 'color: red;' }}">
-             *                {{ formatDate(month, "MMMM") }} !
-             *             </div>
-             *          </ws:if>
-             *        </ws:monthCaptionTemplate>
-             *    </ws:partial>
-             * </ws:itemTemplate>
+             * <pre>
+             *    <ws:itemTemplate>
+             *       <ws:partial template="{{itemTemplate.defaultTemplate}}">
+             *          <ws:monthCaptionTemplate>
+             *             <ws:if data="{{month.getMonth() % 2 === 0}}">
+             *                <div class="controls-PeriodLiteDialog__vLayoutItem-caption"
+             *                     style="{{ (month.getMonth() % 4 === 0) ? 'color: red;' }}">
+             *                   {{ formatDate(month, "MMMM") }} !
+             *                </div>
+             *             </ws:if>
+             *          </ws:monthCaptionTemplate>
+             *       </ws:partial>
+             *    </ws:itemTemplate>
+             * </pre>
              */
 
             /*
@@ -170,18 +172,20 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
              * of the month. The date of the first day of the month and date formatting function are passed
              * to the template of the month {@link Types/formatter:date}.
              * @example
-             * <ws:itemTemplate>
-             *    <ws:partial template="{{itemTemplate.defaultTemplate}}">
-             *       <ws:monthCaptionTemplate>
-             *          <ws:if data="{{month.getMonth() % 2 === 0}}">
-             *             <div class="controls-PeriodLiteDialog__vLayoutItem-caption"
-             *                  style="{{ (month.getMonth() % 4 === 0) ? 'color: red;' }}">
-             *                {{ formatDate(month, "MMMM") }} !
-             *             </div>
-             *          </ws:if>
-             *        </ws:monthCaptionTemplate>
-             *    </ws:partial>
-             * </ws:itemTemplate>
+             * <pre>
+             *    <ws:itemTemplate>
+             *       <ws:partial template="{{itemTemplate.defaultTemplate}}">
+             *          <ws:monthCaptionTemplate>
+             *             <ws:if data="{{month.getMonth() % 2 === 0}}">
+             *                <div class="controls-PeriodLiteDialog__vLayoutItem-caption"
+             *                     style="{{ (month.getMonth() % 4 === 0) ? 'color: red;' }}">
+             *                   {{ formatDate(month, "MMMM") }} !
+             *                </div>
+             *             </ws:if>
+             *          </ws:monthCaptionTemplate>
+             *       </ws:partial>
+             *    </ws:itemTemplate>
+             * </pre>
              */
 
             /* That not to drag dependence on a template in all, the default value we set only in the PeriodLiteDialog
