@@ -3,7 +3,7 @@ export interface ISingleSelectableOptions {
    keyProperty: string;
 }
 /**
- * Интерфейс для выбора элементов в списках с одиночным выбором (одновременно может быть выбран только один элемент).
+ * Интерфейс для выбора элементов в списках с одиночным выбором (единовременно может быть выбран только один элемент).
  *
  * @interface Controls/_interface/ISingleSelectable
  * @public
@@ -64,9 +64,9 @@ export default interface ISingleSelectable {
  * @param {Number|String} key Ключ выбранного элемента коллекции.
  * @example
  * <pre>
- *    <Controls.Container.RadioGroup on:selectedKeyChanged="onSelectedKeyChanged()" bind:selectedKey="_selectedKey">
+ *    <Controls.source:SelectedKey on:selectedKeyChanged="onSelectedKeyChanged()" bind:selectedKey="_selectedKey">
  *       <Controls.operations:Panel source="{{ _panelSource }} />
- *    </Controls.Container.RadioGroup>
+ *    </Controls.source:SelectedKey>
  * </pre>
  * <pre>
  *    _beforeMount: function() {
@@ -85,9 +85,9 @@ export default interface ISingleSelectable {
  * @example
  * The following example creates RadioGroup with empty selection. Subsequent changes made to selectedKey will be synchronized through binding mechanism. Source of the operations panel will be updated every time selectedKey change.
  * <pre>
- *    <Controls.Container.RadioGroup on:selectedKeyChanged="onSelectedKeyChanged()" bind:selectedKey="_selectedKey">
+ *    <Controls.source:SelectedKey on:selectedKeyChanged="onSelectedKeyChanged()" bind:selectedKey="_selectedKey">
  *       <Controls.operations:Panel source="{{ _panelSource }} />
- *    </Controls.Container.RadioGroup>
+ *    </Controls.source:SelectedKey>
  * </pre>
  * <pre>
  *    _beforeMount: function() {

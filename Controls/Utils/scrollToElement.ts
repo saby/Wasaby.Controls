@@ -57,11 +57,11 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
  *
  * <h2>Аргументы функции</h2>
  * 
- * * element: HTMLElement - DOM-элемент, к которому нужно проскроллить содержимое
- * * toBottom: boolean - определяет, должен ли быть виден нижний край контейнера
+ * * element: HTMLElement — DOM-элемент, к которому нужно проскроллить содержимое
+ * * toBottom: boolean — определяет, должен ли быть виден нижний край контейнера
  * * force: boolean:
- *     * true - позволяет прокручивать элемент вверх/вниз в области прокрутки, безоговорочно.
- *     * false - элемент будет прокручиваться только в случае, если он частично или полностью скрыт за пределами области прокрутки.
+ *     * true — позволяет прокручивать элемент вверх/вниз в области прокрутки, безоговорочно.
+ *     * false — элемент будет прокручиваться только в случае, если он частично или полностью скрыт за пределами области прокрутки.
  *
  * <h3>Пример использования</h3>
  * <pre>
@@ -83,9 +83,9 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
  *
  * <h2>Function arguments</h2>
  *
- * <h3>element: HTMLElement - The dom element to be made visible</h3>
- * <h3>toBottom: boolean - Determines if bottom edge should be visible</h3>
- * <h3>force: boolean - If true, then it will scroll the element to the top or to the bottom
+ * <h3>element: HTMLElement — The dom element to be made visible</h3>
+ * <h3>toBottom: boolean — Determines if bottom edge should be visible</h3>
+ * <h3>force: boolean — If true, then it will scroll the element to the top or to the bottom
  * of the scrolled area unconditionally. If false, it will scroll only if the element
  * is completely or partially hidden outside the scrolled area.</h3>
  *

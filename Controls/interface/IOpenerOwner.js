@@ -1,7 +1,7 @@
 define('Controls/interface/IOpenerOwner', [], function() {
 
    /**
-    * Интерфейс для контролов, имеющих <a href='/doc/platform/developmentapl/interface-development/ui-library/focus/#_23'>опенер</a>.
+    * Интерфейс для контролов, имеющих <a href='/doc/platform/developmentapl/interface-development/ui-library/focus/#control-opener'>опенер</a>.
     * Более подробно информация изложена в документе <a href='/doc/platform/developmentapl/interface-development/ui-library/focus/'>Работа с фокусами</a>.
     *
     * @interface Controls/interface/IOpenerOwner
