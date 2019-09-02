@@ -13,14 +13,14 @@ export function setController(controller: IPopupSettingsController): void {
 }
 
 export function getSettings(ids: string[]): Promise<number|void> {
-    if (settingsController) {
+    if (settingsController && settingsController.getSettings) {
         return settingsController.getSettings(ids);
     }
     return Promise.resolve();
 }
 
 export function setSettings(config: unknown): void {
-    if (settingsController) {
+    if (settingsController && settingsController.setSettings) {
         settingsController.setSettings(config);
     }
 }

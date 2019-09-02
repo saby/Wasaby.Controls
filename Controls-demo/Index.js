@@ -30,11 +30,15 @@ define('Controls-demo/Index', [
          _beforeMount: function() {
             this._title = this._getTitle();
             this._settigsController = {
-               getSettings: function() {
+               getSettings: function(ids) {
+                  // if (ids[0] === 'master111') {
+                  //    return (new Deferred()).callback(300);
+                  // }
                   return (new Deferred()).callback(1000);
                },
-               setSettings: function() {
-                  //'Сохранили панель с шириной ' + a['123']
+               setSettings: function(settings) {
+                  //'Сохранили панель с шириной ' + settings['123']
+                  //'Сохранили masterDetail с шириной ' + settings['master111']
                }
             };
          },
