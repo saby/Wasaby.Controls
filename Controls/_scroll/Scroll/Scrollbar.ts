@@ -279,7 +279,14 @@ class Scrollbar extends Control<IScrollBarOptions> {
      * @param {SyntheticEvent} event дескриптор события.
      */
     private _wheelHandler(event: SyntheticEvent<Event>): void {
-        const newPosition = this._position + Scrollbar._calcWheelDelta(detection.firefox, event.nativeEvent.deltaY);
+        let newPosition = this._position + Scrollbar._calcWheelDelta(detection.firefox, event.nativeEvent.deltaY);
+        const minPosition = 0;
+        const maxPosition = this._options.contentSize - this._scrollBarSize;
+        if (newPosition < 0) {
+            newPosition = 0;
+        } else if (newPosition > maxPosition) {
+            newPosition = maxPosition;
+        }
         this._setPosition(newPosition, true);
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
             this._thumbSize, newPosition);
