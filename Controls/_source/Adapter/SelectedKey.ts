@@ -8,6 +8,17 @@ export interface ISelectedKeyAdapterOptions extends IControlOptions {
 
 type TSelectedKeys = Array<string | number>;
 /**
+ * Контейнер ждя контролов, реализующих интерфейс {@link Controls/_interface/IMultiSelectable multiSelectable}.
+ * Контейнер получает параметр selectedKey и передает selectedKeys дочерним контролам.
+ * Получает результат дочернего события "selectedKeysChanged"  и уведомляет о событии "selectedKeyChanged".
+ * @class Controls/_source/Adapter/SelectedKey
+ * @extends Controls/Control
+ * @control
+ * @public
+ * @author Золотова Э.Е.
+ */
+
+/*
  * Container for controls that implement interface {@link Controls/_interface/IMultiSelectable multiSelectable}.
  * Container receives selectedKey option and transfers selectedKeys option to children.
  * Listens for children "selectedKeysChanged" event and notify event "selectedKeyChanged".
@@ -16,7 +27,7 @@ type TSelectedKeys = Array<string | number>;
  * @control
  * @public
  * @author Золотова Э.Е.
- */
+ */ 
 
 class SelectedKeyAdapter extends Control<ISelectedKeyAdapterOptions> {
    protected _template: TemplateFunction = SelectedKeyAdapterTemplate;

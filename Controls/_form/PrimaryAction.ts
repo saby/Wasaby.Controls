@@ -3,6 +3,14 @@ import {constants} from 'Env/Env';
 import template = require('wml!Controls/_form/PrimaryAction/PrimaryAction');
 
 /**
+ * Основной контроллер действия. Обрабатывает нажатие комбинации клавиш ctrl+enter (cmd+enter) и запускает событие 'triggered'.
+ * @class Controls/_form/PrimaryAction
+ * @extends Core/Control
+ * @public
+ * @author Красильников А.С.
+ */
+
+/*
  * Primary action controller. Catches ctrl+enter (cmd+enter) press and fires 'triggered' event.
  * @class Controls/_form/PrimaryAction
  * @extends Core/Control
