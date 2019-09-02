@@ -682,6 +682,16 @@ var
       },
 
       /**
+       * Возвращает true если есть возможность вроскролить к позиции offset.
+       * @function Controls/_scroll/Container#canScrollTo
+       * @param offset Позиция в пикселях
+       * @noshow
+       */
+      canScrollTo: function(offset: number): boolean {
+         return offset < this._children.content.scrollHeight - this._children.content.clientHeight;
+      },
+
+      /**
        * Скроллит к верху контейнера
        * @function Controls/_scroll/Container#scrollToTop
        */
