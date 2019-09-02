@@ -184,6 +184,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ? _private.getMultiSelectClassList(itemsModelCurrent) : '';
         itemsModelCurrent.showEditArrow = this._options.showEditArrow;
+        itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
 
         itemsModelCurrent.shouldDrawMarker = function (markerVisibility: boolean) {
             const canDrawMarker = markerVisibility !== false && itemsModelCurrent.markerVisibility !== 'hidden';
@@ -224,6 +225,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             }
         }
         return itemsModelCurrent;
+    },
+
+    _calcCursorClasses: function(clickable) {
+        return ` controls-ListView__itemV ${clickable === false ? 'controls-ListView__itemV_cursor-default' : 'controls-ListView__itemV_cursor-pointer'}`;
     },
 
     _calcItemVersion: function(item, key) {

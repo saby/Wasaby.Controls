@@ -125,7 +125,7 @@
 </td>
 </ws:template>
 <ws:if data="{{itemData.isNoGridSupport()}}">
-   <tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
+   <tr attr:class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
          {{itemData.resetColumnIndex();}}
          <ws:if data="{{itemData.hasMultiSelect}}">
@@ -200,7 +200,7 @@
 </ws:if>
 <ws:if data="{{itemData.isSticky}}">
    <Controls.scroll:Group>
-      <div class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
+      <div class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
          <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
          <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
          <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
@@ -220,7 +220,7 @@
    </Controls.scroll:Group>
 </ws:if>
 <ws:else>
-   <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
+   <div attr:class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
          {{itemData.resetColumnIndex();}}
          <ws:if data="{{itemData.hasMultiSelect}}">
