@@ -108,6 +108,12 @@
  * @variant bottom Align content to bottom side.
  */
 
+/*
+ * @typedef {Object} cellPadding
+ * @property {enum('s'|'null')} left левый отступ ячейки.
+ * @property {enum('s'|'null')} right правый отступ ячейки.
+ */
+
 /**
  * @typedef {Object} HeaderCell Описывает ячейку заголовка строки.
  * @property {String} caption Текст заголовка ячейки.
@@ -120,6 +126,7 @@
  * @property {Number} startColumn Порядковый номер колонки на которой начинается ячейка.
  * @property {Number} endColumn Порядковый номер колонки на которой заканчивается ячейка.
  * @property {Object} templateOptions Опции, передаваемые в шаблон ячейки заголовка.
+ * @property {cellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
  */
 
 /*
@@ -168,7 +175,7 @@
  *       </ws:header>
  *    </Controls.grid:View>
  * </pre>
- * 
+ *
  * @example
  * Пример массива колонок многоуровневого заголовка:
  * <pre>
@@ -249,7 +256,7 @@
  * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в столбце.
  * @property {String} [template=Controls/grid:Columns] Шаблон отображения ячейки.
  * По умолчанию используется базовый шаблон {@link Controls/grid:Columns}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
- * 
+ *
  * На корневой элемент пользовательского шаблона следует задать CSS-класс "controls-Grid__row-cell__content_baseline_L". Это обеспечит выравнивание контента ячейки по базовой линии.
  * <pre>
  * <Controls.grid:View>
@@ -268,9 +275,9 @@
  *     </ws:columns>
  * </Controls.grid:View>
  * </pre>
- * 
+ *
  * Базовый шаблон поддерживает контентную опцию <code>contentTemplate</code>. Поместите в неё вёрстку, которая описывает отображение ячейки.
- * 
+ *
  * В области видимости базового шаблона доступна переменная <code>itemData</code> (тип <code>Object</code>) со следующими свойствами:
  * - <code>columnIndex</code> (тип Number) — порядковый номер колонки. Отсчет от 0.
  * - <code>index</code> (тип Number) — порядковый номер строки. Отсчет от 0.

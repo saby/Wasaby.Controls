@@ -103,15 +103,17 @@ var
           }
         },
         getPaddingCellClasses: function(params) {
+            const { columns, columnIndex } = params;
+            const { cellPadding } = columns[columnIndex];
             var
                 preparedClasses = '';
 
             // Колонки
             if (params.multiSelectVisibility ? params.columnIndex > 1 : params.columnIndex > 0) {
-                preparedClasses += ' controls-Grid__cell_spacingLeft';
+                preparedClasses += cellPadding && cellPadding.left ? ` controls-Grid__cell_spacingLeft_${cellPadding.left}` : ' controls-Grid__cell_spacingLeft';
             }
             if (params.columnIndex < params.columns.length - 1) {
-                preparedClasses += ' controls-Grid__cell_spacingRight';
+                preparedClasses += cellPadding && cellPadding.right ? ` controls-Grid__cell_spacingRight_${cellPadding.right}` : ' controls-Grid__cell_spacingRight';
             }
 
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
@@ -246,7 +248,7 @@ var
                     style: current.style,
                     columnIndex: current.columnIndex,
                     multiSelectVisibility: current.multiSelectVisibility !== 'hidden',
-                    itemPadding: current.itemPadding
+                    itemPadding: current.itemPadding,
                 });
             }
 
