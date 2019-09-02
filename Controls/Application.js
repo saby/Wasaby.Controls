@@ -270,6 +270,9 @@ define('Controls/Application',
             var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
 
             return bodyClasses;
+         },
+         isHover: function(touchClass, dragClass) {
+            return touchClass === 'ws-is-no-touch' && dragClass === 'ws-is-no-drag';
          }
       };
 
@@ -315,6 +318,8 @@ define('Controls/Application',
           */
          _scrollingClass: 'controls-Scroll_webkitOverflowScrollingTouch',
 
+         _dragClass: 'ws-is-no-drag',
+
          _getChildContext: function() {
             return {
                ScrollData: this._scrollData
@@ -355,14 +360,26 @@ define('Controls/Application',
              */
             this._children.mousemoveDetect.start(ev);
          },
-         _touchclass: function() {
-            // Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
+         _updateClasses: function() {
+            // Данный метод вызывается до построения вёрстки, и при первой отрисовке еще нет _children (это нормально)
             // поэтому сами детектим touch с помощью compatibility
-            return this._children.touchDetector
-               ? this._children.touchDetector.getClass()
-               : Env.compatibility.touch
-                  ? 'ws-is-touch'
-                  : 'ws-is-no-touch';
+            if (this._children.touchDetector) {
+               this._touchClass = this._children.touchDetector.getClass();
+            } else {
+               this._touchClass = Env.compatibility.touch ? 'ws-is-touch' : 'ws-is-no-touch';
+            }
+
+            this._hoverClass = _private.isHover(this._touchClass, this._dragClass) ? 'ws-is-hover' : 'ws-is-no-hover';
+         },
+
+         _dragStartHandler: function() {
+            this._dragClass = 'ws-is-drag';
+            this._updateClasses();
+         },
+
+         _dragEndHandler: function() {
+            this._dragClass = 'ws-is-no-drag';
+            this._updateClasses();
          },
 
          /**
@@ -421,6 +438,7 @@ define('Controls/Application',
                   this.headValidHtml = undefined;
                }
             }
+            this._updateClasses();
 
             SettingsController.setController(cfg.settingsController);
          },
@@ -430,6 +448,7 @@ define('Controls/Application',
                this._scrollData.pagingVisible = cfg.pagingVisible;
                this._scrollData.updateConsumers();
             }
+            this._updateClasses();
          },
 
          _afterUpdate: function(oldOptions) {

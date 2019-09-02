@@ -24,10 +24,13 @@
                                  on:managerPopupDestroyed="_popupDestroyedHandler()"
                                  stackRootWidth="{{_options.width}}">
                                  <Controls.Application.TouchDetector name="touchDetector">
-                                    <Controls.dragnDrop:Controller name="dragNDropContainer">
+                                    <Controls.dragnDrop:Controller name="dragNDropContainer"
+                                                                   on:dragStart="_dragStartHandler()"
+                                                                   on:dragEnd="_dragEndHandler()">
                                        <UI.HotKeys:Dispatcher>
                                           <ws:partial template="{{bodyTemplate.content}}"
-                                                      class="{{BodyClasses()}} {{_scrollingClass}} {{_options.bodyClass}} {{_touchclass()}} zIndex-context"
+                                                      class="{{BodyClasses()}} {{_scrollingClass}} {{_options.bodyClass}}
+                                                            {{_touchClass}} {{_dragClass}} {{_hoverClass}} zIndex-context"
                                                       id="body"
                                                       key="1_2_"
                                                       on:scroll="_scrollPage()"
