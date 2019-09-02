@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/list_new/WIPPlaceholder/WIPPlaceholder"
+import * as Template from "wml!Controls-demo/WIPPlaceholder/WIPPlaceholder"
 import {cookie} from "Env/Env"
 import 'css!Controls-demo/Controls-demo'
 

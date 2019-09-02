@@ -1,0 +1,13 @@
+<div class="controlsDemo__wrapper">
+    <Controls.grid:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            header="{{_header}}"
+            columns="{{_columns}}">
+        <ws:emptyTemplate>
+            <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xl" bottomSpacing="m">
+                <ws:contentTemplate>No data available!</ws:contentTemplate>
+            </ws:partial>
+        </ws:emptyTemplate>
+    </Controls.grid:View>
+</div>

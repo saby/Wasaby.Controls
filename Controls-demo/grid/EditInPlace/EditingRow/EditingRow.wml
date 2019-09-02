@@ -1,0 +1,12 @@
+<div class="controlsDemo__cell">
+    <Controls.grid:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            columns="{{_columns}}">
+        <ws:editingConfig editOnClick="{{true}}" sequentialEditing="{{true}}" toolbarVisibility="{{true}}"/>
+        <ws:itemTemplate>
+            <ws:partial template="wml!Controls-demo/grid/EditInPlace/EditingRow/_rowEditor"
+                        documentSignMemory="{{_documentSignMemory}}"/>
+        </ws:itemTemplate>
+    </Controls.grid:View>
+</div>

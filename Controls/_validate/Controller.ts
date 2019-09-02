@@ -203,7 +203,12 @@ let Validate = Base.extend({
 
     /**
      * @name Controls/_validate/Controller#validate
-     * @description Start the validation
+     * @description Запуск валидации.
+     * @returns {Deferred}
+     */
+    /*
+     * @name Controls/_validate/Controller#validate
+     * @description Start the validation.
      * @returns {Deferred}
      */
     validate: function validate() {
@@ -213,6 +218,11 @@ let Validate = Base.extend({
     },
 
     /**
+     * @name Controls/_validate/Controller#setValidationResult
+     * @description Устанавливает значение validationResult.
+     * @param validationResult
+     */
+    /*
      * @name Controls/_validate/Controller#setValidationResult
      * @description Set the validationResult from the outside
      * @param validationResult
@@ -282,10 +292,14 @@ let Validate = Base.extend({
 
     /**
      * @name Controls/_validate/Controller#isValid
+     * @description Получает значение validationResult.
+     * @returns {undefined|Array}
+     */
+    /*
+     * @name Controls/_validate/Controller#isValid
      * @description Get the validationResult
      * @returns {undefined|Array}
      */
-
     isValid() {
         return this._validationResult;
     },
@@ -300,6 +314,10 @@ export = Validate;
 
 /**
  * @name Controls/_validate/Controller#content
+ * @cfg {Content} Контент, который будет провалидирован.
+ */
+/*
+ * @name Controls/_validate/Controller#content
  * @cfg {Content} The content to which the logic of validation is added.
  */
 
@@ -307,8 +325,17 @@ export = Validate;
  * @name Controls/_validate/Controller#validators
  * @cfg {Array} The function of validation.
  */
+/*
+ * @name Controls/_validate/Controller#validators
+ * @cfg {Array} Функция (или массив функций) валидации.
+ */
 
 /**
  * @name Controls/_validate/Controller#readOnly
+ * @cfg {Boolean} Валидация контрола в режиме чтения.
+ */
+/*
+ * @name Controls/_validate/Controller#readOnly
  * @cfg {Boolean} Validate field in read mode.
  */
+

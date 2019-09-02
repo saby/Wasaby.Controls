@@ -19,6 +19,7 @@
                            <Controls.popup:Global>
                               <Controls.popup:Manager
                                  popupHeaderTheme="{{_options.popupHeaderTheme}}"
+                                 popupSettingsController="{{_options.popupSettingsController}}"
                                  on:managerPopupCreated="_popupCreatedHandler()"
                                  on:managerPopupDestroyed="_popupDestroyedHandler()"
                                  stackRootWidth="{{_options.width}}">

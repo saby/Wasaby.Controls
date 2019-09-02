@@ -1,0 +1,93 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/Base/Index' }}">
+            <a href="{{content.href}}">Базовая настройка таблицы</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.Base.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/ItemTemplate/Index' }}">
+            <a href="{{content.href}}">Шаблон отображения строки</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.ItemTemplate.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/EmptyGrid/Index' }}">
+            <a href="{{content.href}}">Шаблон отображения пустой таблицы</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.EmptyGrid.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/Header/Index' }}">
+            <a href="{{content.href}}">Заголовки в таблице</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.Header.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/Results/Index' }}">
+            <a href="{{content.href}}">Строка итогов</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.Results.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/Sorting/Index' }}">
+            <a href="{{content.href}}">Сортировка</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.Sorting.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/EditInPlace/Index' }}">
+            <a href="{{content.href}}">Редактирование записей</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.EditInPlace.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/ColumnScroll/Index' }}">
+            <a href="{{content.href}}">Горизонтальная прокрутка</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.ColumnScroll.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/Columns/Index' }}">
+            <a href="{{content.href}}">Шаблон ячейки</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.Columns.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/Ladder/Index' }}">
+            <a href="{{content.href}}">"Лесенка"</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.Ladder.Index/>
+    </div>
+
+
+</div>
