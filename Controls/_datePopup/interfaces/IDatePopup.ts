@@ -159,6 +159,7 @@
 
 /**
  * @event Controls/_datePopup/interfaces/IDatePopup#endValueChanged Происходит при изменении конечного значения периода.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} value Значение нового периода.
  * @param {String} displayValue Текстовое значение периода.
  * @remark
@@ -215,6 +216,7 @@
 
 /**
  * @event Controls/_datePopup/interfaces/IDatePopup#inputCompleted Происходит при завершении ввода (поле ввода периода потеряло фокус или пользователь нажал клавишу "Enter").
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} startValue Начальное значение периода.
  * @param {Date} endValue Конечное значение периода.
  * @param {String} displayedStartValue Текстовое значение начала периода.
