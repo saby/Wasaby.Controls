@@ -18,13 +18,6 @@
   "output": "controls-container-async.package.js"
 }, {
   "include": [
-    "Controls/Application/HeadDataContext",
-    "Controls/Application/AppData",
-    "Controls/Context/*"
-  ],
-  "output": "controls-context.package.js"
-}, {
-  "include": [
     "Controls/Container/Input/Search",
     "wml!Controls/Container/Input/Search/Search"
   ],
