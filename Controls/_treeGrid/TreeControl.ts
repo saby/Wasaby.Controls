@@ -323,7 +323,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _afterReloadCallback: null,
     _beforeLoadToDirectionCallback: null,
     _expandOnDragData: null,
-    _setTimeoutForExpandOnDrag: null,
     constructor: function(cfg) {
         this._nodesSourceControllers = {};
         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
@@ -497,7 +496,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             _private.toggleExpanded(this, itemData.dispItem);
         }
     },
-    _setTimeoutForExpandOnDrag: function(itemData) {
+    _setTimeoutForExpandOnDrag: function (itemData) {
         this._timeoutForExpandOnDrag = setTimeout(() => {
                 this._expandNodeOnDrag(itemData);
             },
