@@ -226,11 +226,8 @@ var _private = {
       return item;
    },
 
-   getSerialize: function (self) {
-      if (!self._serialize) {
-         self._serialize = new Serializer();
-      }
-      return self._serialize;
+   getSerialize: function () {
+      return new Serializer();
    }
 };
 
