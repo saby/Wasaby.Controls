@@ -87,7 +87,7 @@ var _private = {
  * @author Герасимов А.М.
  * @example
  * <pre>
- *    new historyService({
+ *    new history.Service({
  *       historyId: 'TEST_HISTORY_ID'
  *    })
  * </pre>
