@@ -216,10 +216,11 @@ var _private = {
       var myself = this;
       var item = null;
       var objectData;
-
+      var deserialize = myself.getSerialize(self).deserialize;
+      
       items.forEach(function (element) {
          objectData = element.get('ObjectData');
-         if (objectData && isEqual(JSON.parse(objectData, myself.getSerialize(self).deserialize), data)) {
+         if (objectData && isEqual(JSON.parse(objectData, deserialize), data)) {
             item = element;
          }
       });
