@@ -452,15 +452,14 @@ var _private = {
                 top: self._virtualScroll.PlaceholdersSizes.top,
                 bottom: self._virtualScroll.PlaceholdersSizes.bottom
             }], { bubbling: true });
-            _private.updateShadowMode(self);
         }
     },
 
     updateShadowMode(self): void {
         self._notify('updateShadowMode', [{
-            top: self._virtualScroll.PlaceholdersSizes.top ||
+            top: self._virtualScroll && self._virtualScroll.PlaceholdersSizes.top ||
             self._sourceController && self._sourceController.hasMoreData('up') ? 'visible' : 'auto',
-            bottom: self._virtualScroll.PlaceholdersSizes.bottom ||
+            bottom: self._virtualScroll && self._virtualScroll.PlaceholdersSizes.bottom ||
             self._sourceController && self._sourceController.hasMoreData('down') ? 'visible' : 'auto'
         }], { bubbling: true });
     },
@@ -484,6 +483,7 @@ var _private = {
         self._virtualScroll.recalcToDirectionByScrollTop(params, self._loadOffset.top);
         if (_private.applyVirtualScrollIndexesToListModel(self)) {
             _private.applyPlaceholdersSizes(self);
+            _private.updateShadowMode(self);
         } else {
             self._applyScrollTopCallback();
             self._applyScrollTopCallback = null;
@@ -547,6 +547,7 @@ var _private = {
                 self._saveAndRestoreScrollPosition = direction;
                 self._shouldRestoreScrollPosition = true;
                 _private.applyPlaceholdersSizes(self);
+                _private.updateShadowMode(self);
             }
         };
 
@@ -1433,8 +1434,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (this._virtualScroll) {
             this._setScrollItemContainer();
-            _private.updateShadowMode(this);
         }
+        _private.updateShadowMode(this);
     },
 
     _beforeUpdate: function(newOptions) {
@@ -1603,6 +1604,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     toBottom: toBottom
                 };
                 _private.applyPlaceholdersSizes(this);
+                _private.updateShadowMode(this);
             } else {
                 _private.scrollToItem(this, key, toBottom);
             }
@@ -1654,6 +1656,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);
         }
+
+        _private.updateShadowMode(this);
 
         if (this._virtualScroll && this._applyScrollTopCallback) {
             this._applyScrollTopCallback();
@@ -1929,6 +1933,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._virtualScroll && this._virtualScroll.ItemsContainer) {
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);
+            _private.updateShadowMode(this);
         }
     },
     _setScrollItemContainer: function () {
