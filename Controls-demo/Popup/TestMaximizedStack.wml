@@ -1,6 +1,5 @@
 <Controls.popupTemplate:Stack headingCaption="PopupManager"
-                                              maximizeButtonVisibility="{{true}}"
-                                              stackWidth="{{_options.stackWidth}}"
+                                              stackWidth="{{_options.workspaceWidth}}"
                                               stackMinWidth="{{_options.stackMinWidth}}"
                                               stackMaxWidth="{{_options.stackMaxWidth}}">
     <ws:headerContentTemplate>
