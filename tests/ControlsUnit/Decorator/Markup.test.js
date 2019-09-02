@@ -1335,8 +1335,11 @@ define([
       var realBuildnumber;
       var realResourceRoot;
       var realGetAppData;
+      var app;
 
       before(function() {
+         app = new Application();
+         app._getResourceUrl = function (str) { return str + '?testversion'}
          realBuildnumber = global.contents.buildnumber;
          global.contents.buildnumber = '0';
          realResourceRoot = global.wsConfig.resourceRoot;
@@ -1354,67 +1357,62 @@ define([
       });
 
       it('script with module scr', function() {
-         var app = new Application();
          var json = [['script', { src: '/test/Controls/_decorator/Markup.js' }]];
          app._beforeMount({ headJson: json });
-         var goodHtml = '<script src="/test/Controls/_decorator/Markup.js?x_module=0"></script>';
+         var goodHtml = '<script src="/test/Controls/_decorator/Markup.js?testversion"></script>';
          var checkHtml = template({
             _options: {
                value: app.headJson[0],
                validHtml: app.headValidHtml,
-               tagResolver: app.headTagResolver
+               tagResolver: app.headTagResolver.bind(app)
             }
          }, {});
          equalsHtml(goodHtml, checkHtml);
       });
 
       it('link with module href', function() {
-         var app = new Application();
          var json = [['link', { href: '/test/Controls/_decorator/Markup/resolvers/highlight.css' }]];
          app._beforeMount({ headJson: json });
-         var goodHtml = '<link href="/test/Controls/_decorator/Markup/resolvers/highlight.css?x_module=0" />';
+         var goodHtml = '<link href="/test/Controls/_decorator/Markup/resolvers/highlight.css?testversion" />';
          var checkHtml = template({
             _options: {
                value: app.headJson[0],
                validHtml: app.headValidHtml,
-               tagResolver: app.headTagResolver
+               tagResolver: app.headTagResolver.bind(app)
             }
          }, {});
          equalsHtml(goodHtml, checkHtml);
       });
 
       it('script with non-module scr', function() {
-         var app = new Application();
          var json = [['script', { src: 'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' }]];
          app._beforeMount({ headJson: json });
-         var goodHtml = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js?x_version=0"></script>';
+         var goodHtml = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js?testversion"></script>';
          var checkHtml = template({
             _options: {
                value: app.headJson[0],
                validHtml: app.headValidHtml,
-               tagResolver: app.headTagResolver
+               tagResolver: app.headTagResolver.bind(app)
             }
          }, {});
          equalsHtml(goodHtml, checkHtml);
       });
 
       it('link with non-module href', function() {
-         var app = new Application();
          var json = [['link', { src: 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' }]];
          app._beforeMount({ headJson: json });
-         var goodHtml = '<link src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?x_version=0" />';
+         var goodHtml = '<link src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?testversion" />';
          var checkHtml = template({
             _options: {
                value: app.headJson[0],
                validHtml: app.headValidHtml,
-               tagResolver: app.headTagResolver
+               tagResolver: app.headTagResolver.bind(app)
             }
          }, {});
          equalsHtml(goodHtml, checkHtml);
       });
 
       it('module link in an attribute that is not a link', function() {
-         var app = new Application();
          var json = [['meta', {
             name: '/test/Controls/_decorator/Markup.js',
             content: 'yes'
@@ -1425,14 +1423,13 @@ define([
             _options: {
                value: app.headJson[0],
                validHtml: app.headValidHtml,
-               tagResolver: app.headTagResolver
+               tagResolver: app.headTagResolver.bind(app)
             }
          }, {});
          equalsHtml(goodHtml, checkHtml);
       });
 
       it('just a title', function() {
-         var app = new Application();
          var json = [['title', 'SABY']];
          app._beforeMount({ headJson: json });
          var goodHtml = '<title>SABY</title>';
@@ -1440,7 +1437,7 @@ define([
             _options: {
                value: app.headJson[0],
                validHtml: app.headValidHtml,
-               tagResolver: app.headTagResolver
+               tagResolver: app.headTagResolver.bind(app)
             }
          }, {});
          equalsHtml(goodHtml, checkHtml);
