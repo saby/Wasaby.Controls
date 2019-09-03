@@ -188,6 +188,7 @@ import entity = require('Types/entity');
  * @variant secondary
  * @variant success
  * @variant primary
+ * @default secondary
  */
 
       /*
@@ -433,7 +434,7 @@ InfoBox.getDefaultOptions = function() {
          return {
             targetSide: 'top',
             alignment: 'start',
-            style: 'default',
+            style: 'secondary',
             showDelay: 300,
             hideDelay: 300,
             trigger: 'hover'
