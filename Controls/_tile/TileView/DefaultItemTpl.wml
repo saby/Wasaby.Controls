@@ -1,5 +1,5 @@
 <ws:template name="itemTpl">
-   <div attr:class="controls-TileView__item controls-ListView__itemV">
+   <div attr:class="controls-TileView__item {{itemData.calcCursorClasses()}}">
       <ws:partial template="{{content}}"/>
    </div>
 </ws:template>
