@@ -863,13 +863,18 @@ var
             // -----------------------------------------------------------
             // ---------------------- multyHeader ------------------------
             // -----------------------------------------------------------
-            const { endRow, startRow, endColumn, startColumn } = cell;
+
             let cellContentClasses = '';
             let cellStyles = '';
             let offsetTop = 0;
             let shadowVisibility = 'visible';
 
-            if (cell.startRow) {
+            if (cell.startRow || cell.startColumn) {
+                let { endRow, startRow, endColumn, startColumn } = cell;
+                if (!startRow) {
+                    startRow = 1;
+                    endRow = 2;
+                }
                 if (this.isNoGridSupport()) {
                     headerColumn.rowSpan = endRow - startRow;
                     headerColumn.colSpan = endColumn - startColumn;
