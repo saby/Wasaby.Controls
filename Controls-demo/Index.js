@@ -22,7 +22,6 @@ define('Controls-demo/Index', [
          _template: template,
          backClickHdl: function() {
             window.history.back();
-            this._forceUpdate();
          },
          changeTheme: function(event, theme) {
             this._notify('themeChanged', [theme], { bubbling: true });
