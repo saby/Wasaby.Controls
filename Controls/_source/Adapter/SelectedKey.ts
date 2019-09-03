@@ -8,9 +8,9 @@ export interface ISelectedKeyAdapterOptions extends IControlOptions {
 
 type TSelectedKeys = Array<string | number>;
 /**
- * Контейнер ждя контролов, реализующих интерфейс {@link Controls/_interface/IMultiSelectable multiSelectable}.
+ * Контейнер для контролов, реализующих интерфейс {@link Controls/_interface/IMultiSelectable multiSelectable}.
  * Контейнер получает параметр selectedKey и передает selectedKeys дочерним контролам.
- * Получает результат дочернего события "selectedKeysChanged"  и уведомляет о событии "selectedKeyChanged".
+ * Получает результат дочернего события "selectedKeysChanged" и уведомляет о событии "selectedKeyChanged".
  * @class Controls/_source/Adapter/SelectedKey
  * @extends Controls/Control
  * @control
