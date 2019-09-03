@@ -16,6 +16,7 @@ import 'wml!Controls/_grid/ColGroup';
 import 'css!theme?Controls/grid';
 import {ScrollEmitter} from 'Controls/list';
 import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
+import {TouchContextField as isTouch} from "Controls/context";
 
 var
     _private = {
@@ -273,7 +274,8 @@ var
 
         _onItemMouseEnter: function (event, itemData) {
             // In partial grid supporting browsers hovered item calculates in code
-            if (GridLayoutUtil.isPartialGridSupport() && (itemData.item !== this._listModel.getHoveredItem())) {
+            if (!this._context.isTouch.isTouch && GridLayoutUtil.isPartialGridSupport() &&
+                (itemData.item !== this._listModel.getHoveredItem())) {
                 this._listModel.setHoveredItem(itemData.item);
             }
             GridView.superclass._onItemMouseEnter.apply(this, arguments);
@@ -281,7 +283,7 @@ var
 
         _onItemMouseLeave: function (event, itemData) {
             // In partial grid supporting browsers hovered item calculates in code
-            if (GridLayoutUtil.isPartialGridSupport()) {
+            if (!this._context.isTouch.isTouch && GridLayoutUtil.isPartialGridSupport()) {
                 this._listModel.setHoveredItem(null);
             }
             GridView.superclass._onItemMouseLeave.apply(this, arguments);
@@ -378,6 +380,11 @@ var
     });
 
 GridView._private = _private;
+GridView.contextTypes = () => {
+    return {
+        isTouch
+    };
+};
 
 
 export = GridView;
