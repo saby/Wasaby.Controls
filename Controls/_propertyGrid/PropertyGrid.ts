@@ -90,6 +90,18 @@ function getGroupingKeyCallback(items: PropertyGridItems): Function|null {
 }
 
 /**
+ * Контрол, который позволяет пользователям просматривать и редактировать свойства объекта.
+ * Вы можете использовать стандартные редакторы PropertyGrid или специальные редакторы.
+ * По умолчанию propertyGrid будет автоматически генерировать все свойства для данного объекта.
+ * @class Controls/_propertyGrid/PropertyGrid
+ * @extends Core/Control
+ * @interface Controls/_propertyGrid/IPropertyGridOptions
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ */
+
+/*
  * Represents a control that allows users to inspect and edit the properties of an object.
  * You can use the standard editors that are provided with the PropertyGrid or you can use custom editors.
  * By default the propertyGrid will autogenerate all the properties for a given object

@@ -240,7 +240,7 @@ var _private = {
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
  * @control
- * @public
+ * @private
  * @author Герасимов А.М.
  * @category Menu
  * @example
@@ -256,18 +256,29 @@ var _private = {
  *           })
  *       });
  * </pre>
- */
+ */ 
 
 /**
+ * @name Controls/_history/FilterSource#originSource
+ * @cfg {Source} Источник данных.
+ */
+
+/*
  * @name Controls/_history/FilterSource#originSource
  * @cfg {Source} A data source
  */
 
 /**
  * @name Controls/_history/FilterSource#historySource
+ * @cfg {Source} Источник, который работает с историей.
+ * @see {Controls/_history/Service} Источник, который работает с <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервисом истории ввода</a>.
+ */
+
+/*
+ * @name Controls/_history/FilterSource#historySource
  * @cfg {Source} A source which work with history
  * @see {Controls/_history/Service} Source working with the service of InputHistory
- */
+ */ 
 
 var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
    _history: null,
