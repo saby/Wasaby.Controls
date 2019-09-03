@@ -971,6 +971,21 @@ define([
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'after');
             });
+            it('_calcCursorClasses', function() {
+               var
+                  cfg = {
+                     items: new collection.RecordSet({
+                        rawData: data,
+                        idProperty: 'id'
+                     }),
+                     keyProperty: 'id',
+                     displayProperty: 'title'
+                  },
+                  model = new lists.ListViewModel(cfg);
+               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-default', model._calcCursorClasses(false));
+               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-pointer', model._calcCursorClasses(true));
+               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-pointer', model._calcCursorClasses());
+            })
          });
       });
    });
