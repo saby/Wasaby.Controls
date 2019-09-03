@@ -112,9 +112,19 @@ import 'css!theme?Controls/filterPopup';
          }
       },
 
+      _lastVisibleItemIndex: function () {
+         let last_index = 0;
+         this._items.forEach((item, i) => {
+            if (Utils.object.getPropertyValue(item, 'visibility') === undefined || Utils.object.getPropertyValue(item, 'visibility')) {
+               last_index = i;
+            }
+         });
+         return last_index;
+      },
+
       _isItemVisible: function(item) {
-         return Utils.object.getPropertyValue(item, 'visibility') === undefined ||
-            Utils.object.getPropertyValue(item, 'visibility');
+          return Utils.object.getPropertyValue(item, 'visibility') === undefined ||
+              Utils.object.getPropertyValue(item, 'visibility');
       },
 
       _updateItem: function(index, field, value) {
