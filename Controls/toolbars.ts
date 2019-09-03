@@ -1,5 +1,5 @@
 /**
- * Библиотека тулбара.
+ * Библиотека, которая реализует <a href='/doc/platform/developmentapl/interface-development/controls/toolbar/'>набор команд</a> в виде кнопок и выпадающего меню с дополнительными командами.
  * @library Controls/toolbars
  * @includes View Controls/_toolbars/View
  * @includes ItemTemplate wml!Controls/_toolbars/ItemTemplate
