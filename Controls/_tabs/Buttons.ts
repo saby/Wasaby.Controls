@@ -259,7 +259,7 @@ import Env = require('Env/Env');
     * <pre>
     *    _selectedKey: '1',
     *    _source: new Memory({
-    *        idProperty: 'key',
+    *        keyProperty: 'key',
     *        data: [
     *        {
     *           key: '1',
