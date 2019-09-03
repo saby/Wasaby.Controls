@@ -87,20 +87,6 @@ define('Controls/Application',
     *        </ws:Array>
     *     </ws:scripts>
     * </pre>
-    * @remark В описании скрипта можно указать параметр textContent, содержимое которого вставится в тело скрипта.
-    * Таким образом инлайн-скрипты тоже поддерживаются
-    */
-
-   /**
-    * @name Controls/Application#styles
-    * @cfg {Content} Позволяет использовать инлайн описание стилей. Содержимое тега style описывается в параметре textContent
-    * <pre class="brush:xml">
-    *     <ws:styles>
-    *        <ws:Array>
-    *           <ws:Object textContent=".testSelector { position:absolute; }"/>
-    *        </ws:Array>
-    *     </ws:styles>
-    * </pre>
     */
 
    /**
@@ -328,10 +314,6 @@ define('Controls/Application',
             var result = [];
             for (var i = 0; i < objects.length; i++) {
                result[i] = [type, objects[i]];
-               if (typeof objects[i].textContent === 'string') {
-                  result[i].push(objects[i].textContent);
-                  delete objects[i].textContent;
-               }
             }
             return result;
          },
@@ -519,7 +501,6 @@ define('Controls/Application',
             this._updateClasses();
 
             SettingsController.setController(cfg.settingsController);
-            this.headTagResolver.__noNeedEscapeString = true;
          },
 
          _beforeUpdate: function(cfg) {
