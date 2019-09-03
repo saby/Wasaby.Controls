@@ -2,10 +2,12 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_search/Controller');
 import clone = require('Core/core-clone');
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
+import cInstance = require('Core/core-instance');
 import {ContextOptions as DataOptions} from 'Controls/context';
 import _SearchController from './_SearchController';
 import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
+import {ICrud} from 'Types/source';
 
 const SERVICE_FILTERS = {
    HIERARCHY: {
@@ -35,6 +37,10 @@ var _private = {
       }
 
       return self._searchController;
+   },
+
+   getOriginSource: function(source: ICrud): ICrud {
+      return cInstance.instanceOfModule(source, 'Types/_source/IDecorator') ? source.getOriginal() : source;
    },
 
    searchCallback: function (self, result, filter) {
@@ -107,7 +113,7 @@ var _private = {
    needUpdateSearchController: function (options, newOptions) {
       return !isEqual(options.navigation, newOptions.navigation) ||
          options.searchDelay !== newOptions.searchDelay ||
-         options.source !== newOptions.source ||
+         _private.getOriginSource(options.source) !== _private.getOriginSource(newOptions.source) ||
          options.searchParam !== newOptions.searchParam ||
          options.minSearchLength !== newOptions.minSearchLength;
    },
