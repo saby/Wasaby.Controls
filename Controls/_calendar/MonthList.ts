@@ -258,7 +258,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         const containerToScroll: HTMLElement = this._findElementByDate(date);
 
         if (containerToScroll) {
-            scrollToElement(containerToScroll, false, true);
+            // todo removed in 19.610
+            setTimeout(function() {
+                scrollToElement(containerToScroll, false, true);
+            }, 50);
             return true;
         }
         return false;
