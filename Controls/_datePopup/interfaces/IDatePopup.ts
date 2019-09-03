@@ -1,12 +1,12 @@
 /**
  * Interface to select the period of the dialogue..
- * @interface Controls/_datePopup/interfaces/IDatePopup
+ * @interface Controls/datePopup/interfaces/IDatePopup
  * @public
  * @author Красильников А.С.
  */
 
 /**
- * @name Controls/_datePopup/interfaces/IDatePopup#startValue
+ * @name Controls/datePopup/interfaces/IDatePopup#startValue
  * @cfg {Date} Beginning of period
  * @example
  * In this example you bind _startValue in control's state to the value of period.
@@ -28,7 +28,7 @@
  */
 
 /**
- * @name Controls/_datePopup/interfaces/IDatePopup#endValue
+ * @name Controls/datePopup/interfaces/IDatePopup#endValue
  * @cfg {Date} End of period
  * @example
  * In this example you bind _endValue in control's state to the value of period.
@@ -50,7 +50,7 @@
  */
 
 /**
- * @event Controls/_datePopup/interfaces/IDatePopup#startValueChanged Occurs when period start value was changed.
+ * @event Controls/datePopup/interfaces/IDatePopup#startValueChanged Occurs when period start value was changed.
  * @param {Date} value New period value.
  * @param {String} displayValue Text value of the period.
  * @remark
@@ -78,7 +78,7 @@
  */
 
 /**
- * @event Controls/_datePopup/interfaces/IDatePopup#endValueChanged Occurs when period end value was changed.
+ * @event Controls/datePopup/interfaces/IDatePopup#endValueChanged Occurs when period end value was changed.
  * @param {Date} value New period value.
  * @param {String} displayValue Text value of the period.
  * @remark
@@ -106,7 +106,7 @@
  */
 
 /**
- * @event Controls/_datePopup/interfaces/IDatePopup#inputCompleted Occurs when input was completed (period lost focus or user pressed ‘enter’).
+ * @event Controls/datePopup/interfaces/IDatePopup#inputCompleted Occurs when input was completed (period lost focus or user pressed ‘enter’).
  * @param {Date} startValue Start period value.
  * @param {Date} endValue End period value.
  * @param {String} displayedStartValue Text value of the start period.
