@@ -1215,7 +1215,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             headerRow.goToNextHeaderColumn();
 
             const secondCell = headerRow.getCurrentHeaderColumn().column;
-            console.log('tak1', headerRow.getCurrentHeaderColumn())
 
             assert.deepEqual({
                column: gridHeader[0],
