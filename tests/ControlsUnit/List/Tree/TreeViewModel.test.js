@@ -273,7 +273,35 @@ define([
                   'Invalid value "shouldDrawExpander(...)" for step ' + i + '.');
             });
          });
-         it('should redraw list if once folder was deleted', function() {
+          it('shouldDrawExpanderPadding', function() {
+              var
+                  shouldDrawExpanderPadding = treeGrid.TreeViewModel._private.shouldDrawExpanderPadding;
+              assert.isTrue(shouldDrawExpanderPadding({
+                  expanderVisibility: 'visible',
+                  thereIsChildItem: true
+              }, 'node'));
+              assert.isTrue(shouldDrawExpanderPadding({
+                  expanderVisibility: 'visible',
+                  thereIsChildItem: false
+              }, 'node'));
+              assert.isTrue(shouldDrawExpanderPadding({
+                  expanderVisibility: 'hasChildren',
+                  thereIsChildItem: true
+              }, 'node'));
+              assert.isFalse(shouldDrawExpanderPadding({
+                  expanderVisibility: 'visible',
+                  thereIsChildItem: true
+              }, 'none'));
+              assert.isFalse(shouldDrawExpanderPadding({
+                  expanderVisibility: 'hasChildren',
+                  thereIsChildItem: true
+              }, 'none'));
+              assert.isFalse(shouldDrawExpanderPadding({
+                  expanderVisibility: 'hasChildren',
+                  thereIsChildItem: false
+              }, 'node'));
+          });
+          it('should redraw list if once folder was deleted', function() {
             var
                rs = new collection.RecordSet({
                   rawData: [
