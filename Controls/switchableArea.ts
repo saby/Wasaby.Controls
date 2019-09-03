@@ -1,5 +1,5 @@
 /**
- * Библиотека, которая реализует область с возможностью переключения контента.
+ * Библиотека контролов, которые реализуют область с возможностью переключения контента.
  * @library Controls/switchableArea
  * @includes View Controls/_switchableArea/View
  * @includes itemTemplate wml!Controls/_switchableArea/resource/itemTemplate
