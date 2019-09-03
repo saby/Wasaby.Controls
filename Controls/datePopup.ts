@@ -21,7 +21,7 @@ import {Controller as ManagerController} from 'Controls/popup';
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/interface/IDateMask
- * @mixes Controls/_datePopup/interfaces/IDatePopup
+ * @mixes Controls/datePopup/interfaces/IDatePopup
  * @control
  * @public
  * @author Красильников А.С.
