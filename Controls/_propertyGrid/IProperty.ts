@@ -2,7 +2,6 @@
  * Interface of PropertyGrid property.
  *
  * @interface Controls/_propertyGrid/IProperty
- * @public
  * @author Герасимов А.М.
  */
 

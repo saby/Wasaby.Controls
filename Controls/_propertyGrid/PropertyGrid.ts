@@ -1,15 +1,13 @@
 import Control = require('Core/Control');
-import { ItemsViewModel } from 'Controls/list';
 import template = require('wml!Controls/_propertyGrid/PropertyGrid');
 import defaultGroupTemplate = require('wml!Controls/_propertyGrid/groupTemplate');
-import defaultItemTemplate = require('wml!Controls/_propertyGrid/itemTemplate');
 import PropertyGridItem = require('Controls/_propertyGrid/PropertyGridItem');
+import {ItemsViewModel} from 'Controls/list';
 
-import { factory } from 'Types/chain';
-import { object } from 'Types/util';
-import { RecordSet } from 'Types/collection';
+import {factory} from 'Types/chain';
+import {RecordSet} from 'Types/collection';
 
-import IPropertyGridOptions from 'Controls/_propertyGrid/IPropertyGridOptions';
+import {IPropertyGridOptions} from 'Controls/_propertyGrid/IPropertyGrid';
 import IProperty from 'Controls/_propertyGrid/IProperty';
 
 interface IPropertyGridItem extends IProperty {
@@ -95,7 +93,7 @@ function getGroupingKeyCallback(items: PropertyGridItems): Function|null {
  * By default the propertyGrid will autogenerate all the properties for a given object
  * @class Controls/_propertyGrid/PropertyGrid
  * @extends Core/Control
- * @interface Controls/_propertyGrid/IPropertyGridOptions
+ * @interface Controls/_propertyGrid/IPropertyGrid
  * @control
  * @public
  * @author Герасимов А.М.
