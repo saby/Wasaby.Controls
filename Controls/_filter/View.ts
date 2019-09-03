@@ -13,6 +13,7 @@ import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
 import {getItemsWithHistory, isHistorySource} from 'Controls/_filter/HistoryUtils';
+import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 
 /**
  * Контрол для фильтрации данных. Предосталвяет возможожность представлять и редактировать фильтр,
@@ -529,7 +530,7 @@ var Filter = Control.extend({
         }
     },
 
-    _openDetailPanel: function() {
+    openDetailPanel: function() {
         if (this._options.detailPanelTemplateName) {
             let panelItems = converterFilterItems.convertToDetailPanelItems(this._source);
             let popupOptions =  {};
@@ -625,6 +626,12 @@ var Filter = Control.extend({
             }
         });
         return isReseted;
+    },
+
+    reset: function() {
+        resetFilter(this._source);
+        _private.notifyChanges(this, this._source);
+        _private.updateText(this, this._source, this._configs);
     },
 
     _reset: function(event, item) {
