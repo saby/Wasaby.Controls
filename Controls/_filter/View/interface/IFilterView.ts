@@ -432,3 +432,83 @@
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Object} items New items.
  */
+
+/**
+ * Открыть панель фильтрации с шабоном переданным в опции {@link Controls/_filter/View/interface/IFilterView#detailPanelTemplateName detailPanelTemplateName}.
+ * @example
+ * TS:
+ * <pre>
+ *    private _openFilter():void {
+ *       this._children.filterView.openDetailPanel();
+ *    }
+ * </pre>
+ *
+ * WML:
+ * <pre>
+ *    <Controls.buttons:Button caption='Open filter' on:click='_openFilter()'/>
+ *    <Controls.filter:View name='filterView'>
+ *       ...
+ *    </Controls.filter:View>
+ * </pre>
+ * @function Controls/_list/interface/IList#reset
+ */
+/**
+ * Сбрасывает фильтрацию к значениям "по-умолчанию".
+ * Для всех свойств переданных в опции {@link Controls/_filter/View/interface/IFilterView#source source} в значение value будет установлено значение из resetValue.
+ * @example
+ * TS:
+ * <pre>
+ *    private _resetFilter():void {
+ *       this._children.filterView.reset();
+ *    }
+ * </pre>
+ *
+ * WML:
+ * <pre>
+ *    <Controls.buttons:Button caption='Reset filter' on:click='_resetFilter()'/>
+ *    <Controls.filter:View name='filterView'>
+ *       ...
+ *    </Controls.filter:View>
+ * </pre>
+ * @function Controls/_list/interface/IList#reset
+ */
+
+/*
+ * Open filter panel with template from option {@link Controls/_filter/View/interface/IFilterView#detailPanelTemplateName detailPanelTemplateName}.
+ * @example
+ * TS:
+ * <pre>
+ *    private _openFilter():void {
+ *       this._children.filterView.openDetailPanel();
+ *    }
+ * </pre>
+ *
+ * WML:
+ * <pre>
+ *    <Controls.buttons:Button caption='Open filter' on:click='_openFilter()'/>
+ *    <Controls.filter:View name='filterView'>
+ *       ...
+ *    </Controls.filter:View>
+ * </pre>
+ * @function Controls/_list/interface/IList#reset
+ */
+/*
+ * Reset filter.
+ * @example
+ * TS:
+ * <pre>
+ *    private _resetFilter():void {
+ *       this._children.filterView.reset();
+ *    }
+ * </pre>
+ *
+ * WML:
+ * <pre>
+ *    <Controls.buttons:Button caption='Reset filter' on:click='_resetFilter()'/>
+ *    <Controls.filter:View name='filterView'>
+ *       ...
+ *    </Controls.filter:View>
+ * </pre>
+ * @function Controls/_list/interface/IList#reset
+ */
+
