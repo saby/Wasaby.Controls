@@ -20,7 +20,7 @@ interface IRawDataElem {
  * Контейнер принимает объекты типа Enum.
  * @class Controls/_source/Adapter/Enum
  * @extends Core/Control
- * @author Герасимов Александр
+ * @author Герасимов А.М.
  * @demo Controls-demo/Container/Enum
  * @control
  * @public
