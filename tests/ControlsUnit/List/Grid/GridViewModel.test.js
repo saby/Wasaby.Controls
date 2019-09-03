@@ -1701,6 +1701,26 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             );
 
          });
+         it('setMultiselect with multiheader', () => {
+            let gridModel = new gridMod.GridViewModel({
+               ...cfg,
+               header: [{}, {}, {}],
+               items: new collection.RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               })
+            });
+            let isMultiHeader = false;
+            gridModel._prepareHeaderColumns = (array) => {
+               isMultiHeader = Array.isArray(array[0]);
+            };
+            gridModel.setMultiSelectVisibility('visible');
+            assert.isFalse(isMultiHeader);
+            gridModel._cachaedHeaderColumns = [[{}, {}], [{}]];
+            gridModel._isMultyHeader = true;
+            gridModel.setMultiSelectVisibility('visible');
+            assert.isTrue(isMultiHeader);
+         })
       });
 
       describe('partial grid support', () => {
