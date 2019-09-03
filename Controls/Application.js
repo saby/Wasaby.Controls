@@ -69,11 +69,48 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#headJson
+    * @deprecated Используйте одну из опций {@link scripts}, {@link styles}, {@link meta} или {@link links}.
     * @cfg {Content} Разметка, которая будет встроена в содержимое тега head.
     * Используйте эту опцию, чтобы подключить на страницу внешние библиотеки (скрипты), стили или шрифты.
     * @remark
     * Список разрешённых тегов: link, style, script, meta, title.
     * Список разрешённых атрибутов: rel, as, name, sizes, crossorigin, type, href, property, http-equiv, content, id, class.
+    */
+
+   /**
+    * @name Controls/Application#scripts
+    * @cfg {Content} Описание скриптов, которые будут вставлены в head страницы
+    * <pre class="brush:xml">
+    *     <ws:scripts>
+    *        <ws:Array>
+    *           <ws:Object type="text/javascript" src="/cdn/Maintenance/1.0.1/js/checkSoftware.js" data-pack-name="skip" async=""/>
+    *        </ws:Array>
+    *     </ws:scripts>
+    * </pre>
+    */
+
+   /**
+    * @name Controls/Application#meta
+    * @cfg {Content} Позволяет описывать meta информацию страницы.
+    * <pre class="brush:xml">
+    *     <ws:meta>
+    *        <ws:Array>
+    *           <ws:Object name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE"/>
+    *        </ws:Array>
+    *     </ws:meta>
+    * </pre>
+    */
+
+   /**
+    * @name Controls/Application#links
+    * @cfg {Content} Позволяет описывать ссылки на дополнительные ресурсы, которые необходимы при загрузке страницы.
+    * <pre class="brush:xml">
+    *     <ws:links>
+    *        <ws:Array>
+    *           <ws:Object rel="shortcut icon" href="{{_options.wsRoot}}img/themes/wi_scheme/favicon.ico?v=2" type="image/x-icon"/>
+    *        </ws:Array>
+    *     </ws:links>
+    * </pre>
     */
 
    /**
@@ -271,6 +308,23 @@ define('Controls/Application',
 
             return bodyClasses;
          },
+
+         // Generates JML from options array of objects
+         translateJML: function JMLTranslator(type, objects) {
+            var result = [];
+            for (var i = 0; i < objects.length; i++) {
+               result[i] = [type, objects[i]];
+            }
+            return result;
+         },
+         generateJML: function(links, styles, meta, scripts) {
+            var jml = [];
+            jml = jml.concat(_private.translateJML('link', links || []));
+            jml = jml.concat(_private.translateJML('style', styles || []));
+            jml = jml.concat(_private.translateJML('meta', meta || []));
+            jml = jml.concat(_private.translateJML('script', scripts || []));
+            return jml;
+         },
          isHover: function(touchClass, dragClass) {
             return touchClass === 'ws-is-no-touch' && dragClass === 'ws-is-no-drag';
          }
@@ -424,7 +478,12 @@ define('Controls/Application',
             this.headTagResolver = this._headTagResolver.bind(this);
             this.BodyClasses = _private.calculateBodyClasses;
             this._scrollData = new scroll._scrollContext({ pagingVisible: cfg.pagingVisible });
-            this.headJson = cfg.headJson;
+
+            // translate arrays of links, styles, meta and scripts from options to JsonML format
+            this.headJson = _private.generateJML(cfg.links, cfg.styles, cfg.meta, cfg.scripts);
+            if (Array.isArray(cfg.headJson)) {
+               this.headJson = this.headJson.concat(cfg.headJson);
+            }
             this.headValidHtml = generateHeadValidHtml();
 
             var appData = UIBase.AppData.getAppData();
