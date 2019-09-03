@@ -84,6 +84,29 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                endColumn: 4
             }
       ],
+      gridHeaderWithColumns = [
+         {
+            title: '',
+            style: 'default',
+            startColumn: 1,
+            endColumn: 2
+         },
+         {
+            title: 'Цена',
+            align: 'right',
+            style: 'default',
+            sortingProperty: 'price',
+            startColumn: 2,
+            endColumn: 3
+         },
+         {
+            title: 'Остаток',
+            align: 'right',
+            style: 'default',
+            startColumn: 3,
+            endColumn: 4
+         }
+      ],
       itemActions = [],
       cfg = {
          keyProperty: 'id',
@@ -1178,7 +1201,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
             gridViewModel._prepareHeaderColumns(gridHeader, true);
             const headerRow = gridViewModel.getCurrentHeaderRow();
-            console.log(headerRow.getCurrentHeaderColumn())
             assert.deepEqual({
                column: {},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_min-height controls-Grid__header-cell-checkbox',
@@ -1261,6 +1283,36 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             headerRow.resetHeaderColumns();
             assert.equal(0, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
          });
+
+         it('getCurrentHeaderColumn with header (startColumn and endColumn)', function() {
+            gridViewModel._prepareHeaderColumns(gridHeaderWithColumns, true);
+            const headerRow = gridViewModel.getCurrentHeaderRow();
+            assert.deepEqual({
+               column: {},
+               cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_min-height controls-Grid__header-cell-checkbox',
+               index: 0,
+               cellContentClasses: '',
+               cellStyles:`grid-column: 1/2; grid-row: 1/${gridViewModel._maxEndRow};`,
+               shadowVisibility: 'visible',
+               offsetTop: 0,
+            }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
+
+            headerRow.goToNextHeaderColumn();
+
+            const secondCell = headerRow.getCurrentHeaderColumn().column;
+
+            assert.deepEqual({
+               column: gridHeaderWithColumns[0],
+               cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_min-height controls-Grid__cell_spacingRight controls-Grid__cell_default',
+               index: 1,
+               shadowVisibility: "visible",
+               offsetTop: 0,
+               cellContentClasses: " control-Grid__cell_header-nowrap",
+               cellStyles:`grid-column: ${secondCell.startColumn + 1}/${secondCell.endColumn + 1}; grid-row: 1/2;`,
+            }, headerRow.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
+
+         });
+
          it('getResultsPosition()', function() {
             assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
             gridViewModel._options.resultsPosition = 'top'
