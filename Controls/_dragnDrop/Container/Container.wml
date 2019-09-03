@@ -1,4 +1,5 @@
 <ws:partial template="{{_options.content}}"
+            attr:style="{{_contentStyle}}"
             on:mouseenter="_mouseEnter()"
             on:mouseleave="_mouseLeave()"
             scope="{{_options}}">

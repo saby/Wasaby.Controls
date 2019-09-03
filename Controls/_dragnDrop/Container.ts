@@ -29,12 +29,13 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
             var offset = _private.getDragOffset(moveEvent, startEvent);
             return Math.abs(offset.x) > SHIFT_LIMIT || Math.abs(offset.y) > SHIFT_LIMIT;
          },
-         preventClickEvent: function(event) {
+         getSelection() {
+            return window.getSelection();
+         },
+         clearSelection: function(event) {
             if (event.type === 'mousedown') {
-               event.preventDefault();
-
                //снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику из за preventDefault
-               var selection = window.getSelection();
+               var selection = _private.getSelection();
                if (selection.removeAllRanges) {
                   selection.removeAllRanges();
                } else if (selection.empty) {
@@ -891,11 +892,13 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
          _documentDragging: false,
          _insideDragging: false,
          _endDragNDropTimer: null,
+         _contentStyle: '',
 
          startDragNDrop: function(entity, mouseDownEvent) {
             this._dragEntity = entity;
             this._startEvent = mouseDownEvent.nativeEvent;
-            _private.preventClickEvent(this._startEvent);
+            _private.clearSelection(this._startEvent);
+            this._contentStyle = 'user-select: none;';
             this._registerMouseMove();
             this._registerMouseUp();
          },
@@ -989,6 +992,7 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
             if (this._documentDragging) {
                this._notify('_documentDragEnd', [this._getDragObject(event.nativeEvent, this._startEvent)], {bubbling: true});
             }
+            this._contentStyle = '';
             this._unregisterMouseMove();
             this._unregisterMouseUp();
             this._dragEntity = null;
