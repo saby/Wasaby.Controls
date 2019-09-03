@@ -7,9 +7,10 @@ define('Controls-demo/Popup/Edit/MyFormController',
       'Controls-demo/List/Grid/GridData',
       'wml!Controls-demo/Popup/Edit/MyFormController',
       'Types/source',
+      'Core/Deferred',
       'css!Controls-demo/Popup/Edit/MyFormController'
    ],
-   function(Control, GridData, template, source) {
+   function(Control, GridData, template, source, Deferred) {
       'use strict';
 
       var MyFormController = Control.extend({
@@ -22,6 +23,18 @@ define('Controls-demo/Popup/Edit/MyFormController',
                idProperty: 'id',
                data: GridData.catalog.slice(0, 11)
             });
+            var baseUpdate = this._dataSource.update;
+            var self = this;
+            this._dataSource.update = function() {
+               if (!options.errorUpdate) {
+                  return baseUpdate.apply(self._dataSource, arguments);
+               }
+               var def = new Deferred();
+               setTimeout(function() {
+                  def.errback('Ошибка сохранения');
+               },2000);
+               return def;
+            };
          },
 
          _beforeUpdate: function(opt) {
@@ -59,7 +72,7 @@ define('Controls-demo/Popup/Edit/MyFormController',
                style: 'error',
                type: 'ok'
             };
-            this._children.popupOpener.open(cfg);
+            //this._children.popupOpener.open(cfg);
          },
          _sendResult: function() {
             this._notify('sendResult', ['Цена ' + (this._record.get('price') || 0), 'Ост. ' + (this._record.get('balance') || 0)], { bubbling: true });
