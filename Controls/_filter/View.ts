@@ -602,6 +602,11 @@ var Filter = Control.extend({
         }
         if (result.action !== 'moreButtonClick') {
             _private.notifyChanges(this, this._source);
+
+            if (result.history) {
+                this._notify('historyApply', [result.history]);
+            }
+
             this._children.StickyOpener.close();
         }
     },

@@ -3,20 +3,27 @@ import template = require('wml!Controls/_filter/Controller');
 import Deferred = require('Core/Deferred');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
-import {isEqual} from 'Types/object';
 import historyUtils = require('Controls/_filter/HistoryUtils');
-import {Controller as SourceController} from 'Controls/source';
 import merge = require('Core/core-merge');
 import clone = require('Core/core-clone');
 import isEmpty = require('Core/helpers/Object/isEmpty');
-import 'Controls/context';
+import {isEqual} from 'Types/object';
+import {Controller as SourceController} from 'Controls/source';
+import {RecordSet} from 'Types/Collection';
+import * as Prefetch from 'Controls/_filter/Prefetch';
+import {IPrefetchHistoryParams} from './IPrefetch';
 
-      var getPropValue = Utils.object.getPropertyValue.bind(Utils);
-      var setPropValue = Utils.object.setPropertyValue.bind(Utils);
+export interface IFilterHistoryData {
+   items: object[];
+   prefetchParams?: IPrefetchHistoryParams;
+}
 
-      var _private = {
-         getItemsByOption: function(option, history) {
-            var result;
+const getPropValue = Utils.object.getPropertyValue.bind(Utils);
+const setPropValue = Utils.object.setPropertyValue.bind(Utils);
+
+const _private = {
+         getItemsByOption(option, history) {
+            let result;
 
             if (option) {
                if (typeof option === 'function') {
@@ -72,25 +79,27 @@ import 'Controls/context';
             // if textValue is null, do not save
             const isNeedSaveHistory = textValue !== undefined && textValue !== null;
             const visibility = !isNeedSaveHistory && getPropValue(item, 'visibility') ? false : getPropValue(item, 'visibility');
-            let minItem = {
-               visibility: visibility
-            };
+            const minimizedItem = {};
+
+            if (visibility !== undefined) {
+                minimizedItem.visibility = visibility;
+            }
 
             if (isNeedSaveHistory) {
-               minItem.value = getPropValue(item, 'value');
+                minimizedItem.value = getPropValue(item, 'value');
             }
 
             if (visibility !== false && textValue !== getPropValue(item, 'resetTextValue')) {
-               minItem.textValue = getPropValue(item, 'textValue');
+                minimizedItem.textValue = getPropValue(item, 'textValue');
             }
 
             if (getPropValue(item, 'id')) {
-               minItem.id = getPropValue(item, 'id');
+                minimizedItem.id = getPropValue(item, 'id');
             } else {
-               minItem.name = getPropValue(item, 'name');
-               minItem.viewMode = getPropValue(item, 'viewMode');
+                minimizedItem.name = getPropValue(item, 'name');
+                minimizedItem.viewMode = getPropValue(item, 'viewMode');
             }
-            return minItem;
+            return minimizedItem;
          },
 
          minimizeFilterItems: function(items) {
@@ -139,14 +148,16 @@ import 'Controls/context';
 
             return result;
          },
-
-         updateHistory: function(self, filterButtonItems, fastFilterItems, historyId) {
-            var meta = {
-               '$_addFromData': true
+         addToHistory: function(self, filterButtonItems, fastFilterItems, historyId: string, prefetchParams?: IPrefetchHistoryParams): void {
+            const meta = {
+               $_addFromData: true
             };
 
             function update() {
-               historyUtils.getHistorySource(historyId).update(_private.getHistoryData(filterButtonItems, fastFilterItems), meta);
+               historyUtils.getHistorySource(historyId).update(
+                   _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams),
+                   meta
+               );
             }
 
             if (!historyUtils.getHistorySource(historyId)._history) {
@@ -225,7 +236,13 @@ import 'Controls/context';
             return removedKeys;
          },
 
-         setFilterItems: function(self, filterButtonOption, fastFilterOption, historyItems) {
+         setFilterItems: function(self, filterButtonOption, fastFilterOption, history) {
+            let historyItems;
+
+            if (history) {
+                historyItems = history.items || history;
+            }
+
             self._filterButtonItems = _private.getItemsByOption(filterButtonOption, historyItems);
             self._fastFilterItems = _private.getItemsByOption(fastFilterOption, historyItems);
          },
@@ -311,17 +328,21 @@ import 'Controls/context';
 
             return filterClone;
          },
-         applyItemsToFilter: function(self, filter, filterButtonItems, fastFilterItems) {
+         applyItemsToFilter: function(self, filter, filterButtonItems, fastFilterItems?) {
             var filterClone = _private.calculateFilterByItems(filter, filterButtonItems, fastFilterItems);
             _private.setFilter(self, filterClone);
          },
 
-         getHistoryData: function(filterButtonItems, fastFilterItems) {
-            /* An empty filter should not appear in the history, but should be applied when loading data from the history.
-               To understand this, save an empty object in history. */
+         getHistoryData(filterButtonItems, fastFilterItems, prefetchParams?: IPrefetchHistoryParams): IFilterHistoryData|{} {
+            let result = {};
 
+            /* An empty filter should not appear in the history,
+               but should be applied when loading data from the history.
+               To understand this, save an empty object in history. */
             if (_private.isFilterChanged(filterButtonItems, fastFilterItems)) {
-               return _private.prepareHistoryItems(filterButtonItems, fastFilterItems);
+               result = Prefetch.addPrefetchToHistory(result, prefetchParams);
+               result.items = _private.prepareHistoryItems(filterButtonItems, fastFilterItems);
+               return result;
             }
             return {};
          },
@@ -340,6 +361,16 @@ import 'Controls/context';
             }
             return clone(items);
          },
+         itemsReady: function (self, filter, history?): void {
+             let resultFilter = filter;
+
+             if (history) {
+                 resultFilter = Prefetch.applyPrefetchFromHistory(resultFilter, history);
+             }
+
+             _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
+             _private.applyItemsToFilter(self, resultFilter, self._filterButtonItems, self._fastFilterItems);
+         }
       };
 
       function getCalculatedFilter(cfg) {
@@ -372,7 +403,7 @@ import 'Controls/context';
             throw new Error('Controls/_filter/Controller::historyId is required');
          }
          _private.resolveFilterButtonItems(cfg.filterButtonItems, cfg.fastFilterItems);
-         _private.updateHistory({}, cfg.filterButtonItems, cfg.fastFilterItems, cfg.historyId);
+         _private.addToHistory({}, cfg.filterButtonItems, cfg.fastFilterItems, cfg.historyId);
       }
 
       /**
@@ -384,6 +415,7 @@ import 'Controls/context';
        * @class Controls/_filter/Controller
        * @extends Core/Control
        * @mixes Controls/interface/IFilter
+       * @mixes Controls/_filter/IPrefetch
        * @control
        * @public
        * @author Герасимов А.М.
@@ -475,7 +507,7 @@ import 'Controls/context';
 
       /**
        * @name Controls/_filter/Controller#fastFilterSource
-       * @cfg {Array|Function|Types/collection:IList} Элемент или функция FastFilter, которая возвращает элемент FastFilter.  
+       * @cfg {Array|Function|Types/collection:IList} Элемент или функция FastFilter, которая возвращает элемент FastFilter.
        * @remark Если опция historyId передана, в функцию придет история фильтра.
        * @example
        * TMPL:
@@ -587,7 +619,7 @@ import 'Controls/context';
        * this items will applied/merged to filterButtonItems and fastFilterItem. Filter history will not loading, if this option setted.
        */
 
-      var Container = Control.extend(/** @lends Controls/_filter/Container.prototype */{
+const Container = Control.extend(/** @lends Controls/_filter/Container.prototype */{
 
          _template: template,
          _historySource: null,
@@ -595,58 +627,105 @@ import 'Controls/context';
          _filterButtonItems: null,
          _fastFilterItems: null,
 
-         _beforeMount: function(options, context, receivedState) {
+         constructor(): void {
+            this._dataLoadCallback = this._dataLoadCallback.bind(this);
+            Container.superclass.constructor.apply(this, arguments);
+         },
+
+        _beforeMount: function(options, context, receivedState): Promise<IFilterHistoryData|{}> {
+            let filter = options.filter;
+
+            if (options.prefetchParams) {
+                filter = Prefetch.prepareFilter(filter, options.prefetchParams);
+            }
+
             if (receivedState) {
-               _private.setFilterItems(this, options.filterButtonSource, options.fastFilterSource, receivedState);
-               _private.resolveFilterButtonItems(this._filterButtonItems, this._fastFilterItems);
-               _private.applyItemsToFilter(this, options.filter, this._filterButtonItems, this._fastFilterItems);
+                _private.setFilterItems(this, options.filterButtonSource, options.fastFilterSource, receivedState);
+                _private.itemsReady(this, filter, receivedState);
             } else {
-               var self = this;
-               return _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource, options.historyItems).addCallback(function(items) {
-                  _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
-                  _private.applyItemsToFilter(self, options.filter, self._filterButtonItems, self._fastFilterItems);
-                  return items;
-               });
+                return _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource, options.historyItems).addCallback((history) => {
+                    _private.itemsReady(this, filter, history);
+                    return history;
+                });
             }
-         },
+        },
 
-         _beforeUpdate: function(newOptions) {
-            let filterButtonChanged = this._options.filterButtonSource !== newOptions.filterButtonSource,
-                fastFilterChanged = this._options.fastFilterSource !== newOptions.fastFilterSource;
+         _beforeUpdate(newOptions): void {
+            const filterButtonChanged = this._options.filterButtonSource !== newOptions.filterButtonSource;
+            const fastFilterChanged = this._options.fastFilterSource !== newOptions.fastFilterSource;
+
             if (filterButtonChanged || fastFilterChanged) {
-               let actualFilterButtonSource = filterButtonChanged ? newOptions.filterButtonSource : this._filterButtonItems;
-               let actualFastFilterSource = fastFilterChanged ? newOptions.fastFilterSource : this._fastFilterItems;
-               _private.setFilterItems(this, actualFilterButtonSource, actualFastFilterSource);
-               _private.resolveFilterButtonItems(this._filterButtonItems, this._fastFilterItems);
-               _private.applyItemsToFilter(this, this._filter, this._filterButtonItems, this._fastFilterItems);
+               _private.setFilterItems(
+                   this,
+                   filterButtonChanged ? newOptions.filterButtonSource : this._filterButtonItems,
+                   fastFilterChanged ? newOptions.fastFilterSource : this._fastFilterItems);
+
+               _private.itemsReady(this, this._filter);
             }
+
             if (!isEqual(this._options.filter, newOptions.filter)) {
-               _private.applyItemsToFilter(this, newOptions.filter, this._filterButtonItems, this._fastFilterItems);
+               _private.applyItemsToFilter(
+                   this,
+                   Prefetch.prepareFilter(newOptions.filter, newOptions.prefetchParams),
+                   this._filterButtonItems,
+                   this._fastFilterItems
+               );
             }
          },
 
-         _itemsChanged: function(event, items) {
+         _itemsChanged(event, items) {
+            this._changedFilterItems = items;
             _private.updateFilterItems(this, items);
-
-            if (this._options.historyId) {
-               _private.updateHistory(this, this._filterButtonItems, this._fastFilterItems, this._options.historyId);
-            }
-
             _private.applyItemsToFilter(this, this._filter, items);
+            this._filter = Prefetch.clearPrefetchSession(this._filter);
             _private.notifyFilterChanged(this);
          },
 
-         _filterChanged: function(event, filter) {
-            //Controller should stop bubbling of 'filterChanged' event, that container-control fired
+         _historyApply(event: Event, history): void {
+             if (this._options.historyId && this._options.prefetchParams) {
+                 if (Prefetch.needInvalidatePrefetch(history)) {
+                     // invalidate
+                 } else {
+                     this._filter = Prefetch.applyPrefetchFromHistory(this._filter, history);
+                     _private.notifyFilterChanged(this);
+                 }
+             }
+         },
+
+         _filterChanged(event, filter) {
+            // Controller should stop bubbling of 'filterChanged' event, that container-control fired
             event.stopPropagation();
-            _private.setFilter(this, filter);
+            _private.setFilter(this, Prefetch.prepareFilter(filter, this._options.prefetchParams));
             _private.notifyFilterChanged(this);
+         },
+
+         _dataLoadCallback(items: RecordSet): void {
+            if (this._options.historyId && this._changedFilterItems) {
+
+               _private.addToHistory(
+                   this,
+                   this._filterButtonItems,
+                   this._fastFilterItems,
+                   this._options.historyId,
+                   Prefetch.getPrefetchParamsForSave(items));
+
+               // Намеренное допущение, что меняем объект по ссылке.
+               // Сейчас по-другому не сделать, т.к. контроллер фильтрации находится над
+               // контейнером и списком, которые владеют данными.
+               // А изменение фильтра вызывает повторный запрос за данными.
+               Prefetch.applyPrefetchFromItems(this._filter, items);
+            }
+
+            this._changedFilterItems = null;
+
+            if (this._options.dataLoadCallback) {
+               this._options.dataLoadCallback(items);
+            }
          }
 
       });
 
-      Container._private = _private;
-      Container.getCalculatedFilter = getCalculatedFilter;
-      Container.updateFilterHistory = updateFilterHistory;
-      export = Container;
-
+Container._private = _private;
+Container.getCalculatedFilter = getCalculatedFilter;
+Container.updateFilterHistory = updateFilterHistory;
+export = Container;

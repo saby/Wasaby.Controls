@@ -242,6 +242,10 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
    _onFilterChanged: function(event, data) {
       this._notify('filterChanged', [data.filter]);
       this._notify('itemsChanged', [data.items]);
+
+      if (data.history) {
+         this._notify('historyApply', [data.history,  {bubbling: true}]);
+      }
    }
 });
 
