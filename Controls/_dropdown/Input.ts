@@ -239,6 +239,7 @@ var Input = Control.extend({
 
    _beforeMount: function () {
       this._setText = this._setText.bind(this);
+      this._dataLoadCallback = this._dataLoadCallback.bind(this);
    },
 
    _afterMount: function (options) {
@@ -252,6 +253,14 @@ var Input = Control.extend({
    _selectedItemsChangedHandler: function (event, items) {
       this._notify('textValueChanged', [_private.getText(this, items) + _private.getMoreText(items)]);
       return this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
+   },
+
+   _dataLoadCallback: function (items) {
+      this._countItems = items.getCount();
+
+      if (this._options.dataLoadCallback) {
+         this._options.dataLoadCallback(items);
+      }
    },
 
    _setText: function (items) {
