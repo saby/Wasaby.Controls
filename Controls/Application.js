@@ -69,11 +69,62 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#headJson
+    * @deprecated Используйте одну из опций {@link scripts}, {@link styles}, {@link meta} или {@link links}.
     * @cfg {Content} Разметка, которая будет встроена в содержимое тега head.
     * Используйте эту опцию, чтобы подключить на страницу внешние библиотеки (скрипты), стили или шрифты.
     * @remark
     * Список разрешённых тегов: link, style, script, meta, title.
     * Список разрешённых атрибутов: rel, as, name, sizes, crossorigin, type, href, property, http-equiv, content, id, class.
+    */
+
+   /**
+    * @name Controls/Application#scripts
+    * @cfg {Content} Описание скриптов, которые будут вставлены в head страницы
+    * <pre class="brush:xml">
+    *     <ws:scripts>
+    *        <ws:Array>
+    *           <ws:Object type="text/javascript" src="/cdn/Maintenance/1.0.1/js/checkSoftware.js" data-pack-name="skip" async=""/>
+    *        </ws:Array>
+    *     </ws:scripts>
+    * </pre>
+    * @remark В описании скрипта можно указать параметр textContent, содержимое которого вставится в тело скрипта.
+    * Таким образом инлайн-скрипты тоже поддерживаются
+    */
+
+   /**
+    * @name Controls/Application#styles
+    * @cfg {Content} Позволяет использовать инлайн описание стилей. Содержимое тега style описывается в параметре textContent
+    * <pre class="brush:xml">
+    *     <ws:styles>
+    *        <ws:Array>
+    *           <ws:Object textContent=".testSelector { position:absolute; }"/>
+    *        </ws:Array>
+    *     </ws:styles>
+    * </pre>
+    */
+
+   /**
+    * @name Controls/Application#meta
+    * @cfg {Content} Позволяет описывать meta информацию страницы.
+    * <pre class="brush:xml">
+    *     <ws:meta>
+    *        <ws:Array>
+    *           <ws:Object name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE"/>
+    *        </ws:Array>
+    *     </ws:meta>
+    * </pre>
+    */
+
+   /**
+    * @name Controls/Application#links
+    * @cfg {Content} Позволяет описывать ссылки на дополнительные ресурсы, которые необходимы при загрузке страницы.
+    * <pre class="brush:xml">
+    *     <ws:links>
+    *        <ws:Array>
+    *           <ws:Object rel="shortcut icon" href="{{_options.wsRoot}}img/themes/wi_scheme/favicon.ico?v=2" type="image/x-icon"/>
+    *        </ws:Array>
+    *     </ws:links>
+    * </pre>
     */
 
    /**
