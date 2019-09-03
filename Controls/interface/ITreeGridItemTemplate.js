@@ -71,6 +71,14 @@ define('Controls/interface/ITreeGridItemTemplate', [
     * Inside the template scope, object itemData is available, allowing you to access the render data (for example: item, key, etc.).
     * Base itemTemplate supports these parameters:
     * <ul>
+    *     <li>
+    *       clickable {Boolean} - Cursor type (default or pointer).
+    *       <ul>
+    *          <li>true - cursor pointer</li>
+    *          <li>false - cursor default</li>
+    *       </ul>
+    *       Default: <b>true</b>
+    *    </li>
     *    <li>
     *       levelIndentSize {String} - Size of hierarchical indent.
     *       <ul>
