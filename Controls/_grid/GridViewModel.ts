@@ -592,6 +592,7 @@ var
         _columnsVersion: 0,
 
         _eventHandlersForPartialSupport: {},
+        _cachaedHeaderColumns: null,
 
         constructor: function(cfg) {
             this._options = cfg;
@@ -727,6 +728,7 @@ var
         setHeaderCellMinHeight: function(data) {
             if (!isEqual(getRowsArray(data[0], this._options.multiSelectVisibility !== 'hidden'), this._headerRows)) {
                 this._prepareHeaderColumns(data[0], this._options.multiSelectVisibility !== 'hidden');
+                this._cachaedHeaderColumns = [...data[0]];
                 if (data[1]) { this._setResultOffset(data[1]); }
                 this._nextModelVersion();
             }
@@ -1121,7 +1123,11 @@ var
                 hasMultiSelect = multiSelectVisibility !== 'hidden';
             this._model.setMultiSelectVisibility(multiSelectVisibility);
             this._prepareColgroupColumns(this._columns, hasMultiSelect);
-            this._prepareHeaderColumns(this._header, hasMultiSelect);
+            if (this._cachaedHeaderColumns && this._isMultyHeader) {
+                this._prepareHeaderColumns(this._cachaedHeaderColumns, hasMultiSelect);
+            } else {
+                this._prepareHeaderColumns(this._header, hasMultiSelect);
+            }
             this._prepareResultsColumns(this._columns, hasMultiSelect);
         },
 
