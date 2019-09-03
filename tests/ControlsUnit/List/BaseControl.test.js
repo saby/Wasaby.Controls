@@ -237,10 +237,7 @@ define([
 
 
             ctrl.saveOptions(cfg);
-            ctrl._beforeMount(cfg);
-
-            // waiting for first load
-            setTimeout(function () {
+            ctrl._beforeMount(cfg).addCallback(function() {
                try {
                   assert.equal(ctrl._items.getIdProperty(), cfg.keyProperty);
                } catch (e) {
@@ -254,16 +251,17 @@ define([
                   return def;
                };
 
-            lists.BaseControl._private.reload(ctrl, ctrl._options).addCallback(function() {
-               resolve();
-            }).addErrback(function() {
-               try {assert.isTrue(false, 'reload() returns errback');
-               } catch(e) {
+               lists.BaseControl._private.reload(ctrl, ctrl._options).addCallback(function() {
+                  resolve();
+               }).addErrback(function() {
+                  try {assert.isTrue(false, 'reload() returns errback');
+                  } catch(e) {
                      reject(e);
                   }
                   resolve();
+               });
             });
-         }, 100);});
+         });
       });
 
       it('check dataLoadCallback and afterReloadCallback calling order', async function() {
