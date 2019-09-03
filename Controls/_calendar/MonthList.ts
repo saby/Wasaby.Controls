@@ -278,8 +278,11 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             return false;
         }
 
+        //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+        const container = this._container.get ? this._container.get(0) : this._container;
+
         itemDimensions = getDimensions(itemContainer);
-        containerDimensions = getDimensions(this._container);
+        containerDimensions = getDimensions(container);
 
         scrollTop = this._scrollTop + (itemDimensions.top - containerDimensions.top);
         return this._children.scroll.canScrollTo(scrollTop);
