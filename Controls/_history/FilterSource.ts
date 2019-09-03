@@ -216,21 +216,25 @@ var _private = {
       var myself = this;
       var item = null;
       var objectData;
-
+      var deserialize = myself.getSerialize(self).deserialize;
+      
       items.forEach(function (element) {
          objectData = element.get('ObjectData');
-         if (objectData && isEqual(JSON.parse(objectData, myself.getSerialize(self).deserialize), data)) {
+         if (objectData && isEqual(JSON.parse(objectData, deserialize), data)) {
             item = element;
          }
       });
       return item;
    },
-
-   getSerialize: function (self) {
-      if (!self._serialize) {
-         self._serialize = new Serializer();
-      }
-      return self._serialize;
+   
+   // Serializer при сериализации кэширует инстансы по идентификаторам,
+   // и при десериализации, если идентификатор есть в кэше, берёт инстанс оттуда
+   // Поэтому, когда применяем фильтр из истории,
+   // идентификатор в сериалайзере на клиенте может совпасть с идентификатором сохранённым в истории
+   // и мы по итогу получим некорректный результат
+   // Для этого всегда создаём новый инстанс Serializer'a
+   getSerialize: function () {
+      return new Serializer();
    }
 };
 

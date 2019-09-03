@@ -124,6 +124,16 @@ define(
 
 
          });
+
+         it('serialize', function() {
+            let instValue = new entity.Date();
+            let data = {id: '1', value: instValue, resetValue: null};
+            JSON.stringify({value: instValue}, historyMod.FilterSource._private.getSerialize().serialize);
+
+            let serializeData = JSON.stringify(data, historyMod.FilterSource._private.getSerialize().serialize);
+            let result = JSON.parse(serializeData, historyMod.FilterSource._private.getSerialize().deserialize);
+            assert.deepStrictEqual(data, result);
+         });
       });
    }
 );
