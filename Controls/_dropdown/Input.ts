@@ -147,6 +147,7 @@ var Input = Control.extend({
 
    _beforeMount: function () {
       this._setText = this._setText.bind(this);
+      this._dataLoadCallback = this._dataLoadCallback.bind(this);
    },
 
    _afterMount: function (options) {
@@ -164,6 +165,14 @@ var Input = Control.extend({
 
    _selectedKeysChangedHandler: function (event, selectedKeys) {
       return this._notify('selectedKeysChanged', [selectedKeys]);
+   },
+
+   _dataLoadCallback: function (items) {
+      this._countItems = items.getCount();
+
+      if (this._options.dataLoadCallback) {
+         this._options.dataLoadCallback(items);
+      }
    },
 
    _setText: function (items) {
