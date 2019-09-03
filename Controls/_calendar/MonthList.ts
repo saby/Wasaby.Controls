@@ -13,6 +13,7 @@ import MonthsSource from './MonthList/MonthsSource';
 import monthListUtils from './MonthList/Utils';
 import {IntersectionObserverSyntheticEntry} from 'Controls/scroll';
 import dateUtils = require('Controls/Utils/Date');
+import getDimensions = require("Controls/Utils/getDimensions");
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
@@ -88,6 +89,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     private _displayedDates: number[] = [];
     private _extData: ExtDataModel;
 
+    private _scrollTop: number = 0;
+
     _enrichItemsDebounced: Function;
 
     protected _beforeMount(options: IModuleComponentOptions): void {
@@ -121,7 +124,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
     }
 
-    protected _beforePaint(): void {
+    protected _afterRender(): void {
         this._updateScrollAfterViewModification();
     }
 
@@ -158,7 +161,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
         this._positionToScroll = newPosition;
 
-        if (this._container && this._findElementByDate(newPosition)) {
+        if (this._container && this._canScroll(newPosition)) {
             // Update scroll position without waiting view modification
             this._updateScrollAfterViewModification();
         } else {
@@ -244,7 +247,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     private _updateScrollAfterViewModification(): void {
-        if (this._positionToScroll) {
+        if (this._positionToScroll && this._canScroll(this._positionToScroll)) {
             if (this._scrollToDate(this._positionToScroll)) {
                 this._positionToScroll = null;
             }
@@ -259,6 +262,30 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             return true;
         }
         return false;
+    }
+
+    private _canScroll(date: Date): boolean {
+        const itemContainer: HTMLElement = this._findElementByDate(date);
+
+        let itemDimensions: ClientRect,
+            containerDimensions: ClientRect,
+            scrollTop: number;
+
+        if (!itemContainer) {
+            return false;
+        }
+
+        itemDimensions = getDimensions(itemContainer);
+        containerDimensions = getDimensions(this._container);
+
+        scrollTop = this._scrollTop + (itemDimensions.top - containerDimensions.top);
+        return this._children.scroll.canScrollTo(scrollTop);
+
+    }
+
+    private _scrollHandler(event: SyntheticEvent, scrollTop: number) {
+        this._scrollTop = scrollTop;
+        this._enrichItemsDebounced();
     }
 
     private _findElementByDate(date: Date): HTMLElement {
