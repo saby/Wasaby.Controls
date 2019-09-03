@@ -47,8 +47,8 @@ define('Controls/Application/Core',
             } catch (e) {
             }
 
-            //__hasRequest - для совместимости, пока не смержено WS. Нужно чтобы работало
-            //и так и сяк
+            // __hasRequest - для совместимости, пока не смержено WS. Нужно чтобы работало
+            // и так и сяк
             if (!AppInit.isInit()) {
                var stateReceiverInst = new StateReceiver();
                var environmentFactory = undefined;
@@ -58,8 +58,8 @@ define('Controls/Application/Core',
                AppInit.default(cfg, environmentFactory, stateReceiverInst);
 
                if (typeof window === 'undefined' || window.__hasRequest === undefined) {
-                  //need create request for SSR
-                  //on client request will create in app-init.js
+                  // need create request for SSR
+                  // on client request will create in app-init.js
                   if (typeof window !== 'undefined' && window.receivedStates) {
                      stateReceiverInst.deserialize(window.receivedStates);
                   }

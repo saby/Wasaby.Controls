@@ -271,6 +271,27 @@ define('Controls/Application',
 
             return bodyClasses;
          },
+
+         // Generates JML from options array of objects
+         translateJML: function JMLTranslator(type, objects) {
+            var result = [];
+            for (var i = 0; i < objects.length; i++) {
+               result[i] = [type, objects[i]];
+               if (typeof objects[i].textContent === 'string') {
+                  result[i].push(objects[i].textContent);
+                  delete objects[i].textContent;
+               }
+            }
+            return result;
+         },
+         generateJML: function(links, styles, meta, scripts) {
+            var jml = [];
+            jml = jml.concat(_private.translateJML('link', links || []));
+            jml = jml.concat(_private.translateJML('style', styles || []));
+            jml = jml.concat(_private.translateJML('meta', meta || []));
+            jml = jml.concat(_private.translateJML('script', scripts || []));
+            return jml;
+         },
          isHover: function(touchClass, dragClass) {
             return touchClass === 'ws-is-no-touch' && dragClass === 'ws-is-no-drag';
          }
@@ -424,7 +445,12 @@ define('Controls/Application',
             this.headTagResolver = this._headTagResolver.bind(this);
             this.BodyClasses = _private.calculateBodyClasses;
             this._scrollData = new scroll._scrollContext({ pagingVisible: cfg.pagingVisible });
-            this.headJson = cfg.headJson;
+
+            // translate arrays of links, styles, meta and scripts from options to JsonML format
+            this.headJson = _private.generateJML(cfg.links, cfg.styles, cfg.meta, cfg.scripts);
+            if (Array.isArray(cfg.headJson)) {
+               this.headJson = this.headJson.concat(cfg.headJson);
+            }
             this.headValidHtml = generateHeadValidHtml();
 
             var appData = UIBase.AppData.getAppData();
@@ -442,6 +468,7 @@ define('Controls/Application',
             this._updateClasses();
 
             SettingsController.setController(cfg.settingsController);
+            this.headTagResolver.__noNeedEscapeString = true;
          },
 
          _beforeUpdate: function(cfg) {

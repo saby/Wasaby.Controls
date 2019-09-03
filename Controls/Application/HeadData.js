@@ -1,6 +1,6 @@
 define('Controls/Application/HeadData', [
    'Core/core-extend',
-   'Controls/Application/DepsCollector/DepsCollector',
+   'UI/Base',
    'Core/Deferred',
    'Env/Env',
    'Core/Themes/ThemesController',
@@ -8,7 +8,7 @@ define('Controls/Application/HeadData', [
    'Core/i18n'
 
 ], function(extend,
-   DepsCollector,
+   UIBase,
    Deferred,
    Env,
    ThemesController,
@@ -66,7 +66,7 @@ define('Controls/Application/HeadData', [
       },
 
       getDepsCollector: function() {
-         return new DepsCollector(modDeps.links, modDeps.nodes, bundles, this.themesActive, true);
+         return new UIBase.DepsCollector(modDeps.links, modDeps.nodes, bundles, this.themesActive, true);
       },
       initThemesController: function(themedCss, simpleCss) {
          return ThemesController.getInstance().initCss({
