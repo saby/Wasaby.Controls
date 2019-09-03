@@ -261,6 +261,7 @@ define([
                   resolve();
                });
             });
+         });
       });
 
       it('check dataLoadCallback and afterReloadCallback calling order', async function() {
