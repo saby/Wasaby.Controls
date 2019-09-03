@@ -1,12 +1,13 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/_Controller');
-import {Controller as SourceController} from 'Controls/source';
 import chain = require('Types/chain');
-import {isEqual} from 'Types/object';
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
-import * as mStubs from 'Core/moduleStubs';
 import Env = require('Env/Env');
+import {Controller as SourceController} from 'Controls/source';
+import {isEqual} from 'Types/object';
+import * as mStubs from 'Core/moduleStubs';
+import {descriptor} from 'Types/entity';
 
 // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 var
@@ -435,6 +436,12 @@ _Controller.getDefaultOptions = function getDefaultOptions() {
    return {
       filter: defaultFilter,
       selectedKeys: defaultSelectedKeys
+   };
+};
+
+_Controller.getOptionTypes = function getOptionTypes() {
+   return {
+      selectedKeys: descriptor(Array)
    };
 };
 
