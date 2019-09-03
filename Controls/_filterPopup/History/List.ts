@@ -4,13 +4,13 @@
 import BaseControl = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/History/List');
 import chain = require('Types/chain');
-import {isEqual} from 'Types/object';
 import Utils = require('Types/util');
+import {isEqual} from 'Types/object';
 import {HistoryUtils} from 'Controls/filter';
 import 'css!theme?Controls/filterPopup';
 
 
-   var MAX_NUMBER_ITEMS = 5;
+var MAX_NUMBER_ITEMS = 5;
 
    var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
@@ -84,8 +84,8 @@ import 'css!theme?Controls/filterPopup';
          this._notify('historyChanged');
       },
       _contentClick: function(event, item) {
-         var items = HistoryUtils.getHistorySource(this._options.historyId).getDataObject(item.get('ObjectData'));
-         this._notify('applyHistoryFilter', [items]);
+         var history = HistoryUtils.getHistorySource(this._options.historyId).getDataObject(item.get('ObjectData'));
+         this._notify('applyHistoryFilter', [history]);
       },
 
       _afterMount: function() {
@@ -97,15 +97,16 @@ import 'css!theme?Controls/filterPopup';
       },
 
       _getText: function(items, filterItems, historySource) {
-         var itemsText = {};
-
+         const itemsText = {};
          // the resetValue is not stored in history, we take it from the current filter items
-         var resetValues = _private.getResetValues(filterItems);
-         chain.factory(items).each(function(item, index) {
-            var text = '';
-            var historyItems = historySource.getDataObject(item.get('ObjectData'));
-            if (historyItems) {
-               text = _private.getStringHistoryFromItems(historyItems, resetValues);
+         const resetValues = _private.getResetValues(filterItems);
+
+         chain.factory(items).each((item, index) => {
+            let text = '';
+            const history = historySource.getDataObject(item.get('ObjectData'));
+
+            if (history) {
+               text = _private.getStringHistoryFromItems(history.items || history, resetValues);
             }
             itemsText[index] = text;
          });
