@@ -243,9 +243,14 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
       });
 
       it('_private.needUpdateSearchController', function() {
+         let originSource = new sourceLib.Memory();
+         let prefetchSource = new sourceLib.PrefetchProxy({ target: originSource });
+         let newPrefetchSource = new sourceLib.PrefetchProxy({ target: originSource });
+         
          assert.isFalse(searchMod.Controller._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test'}}));
          assert.isFalse(searchMod.Controller._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test1'}}));
          assert.isTrue(searchMod.Controller._private.needUpdateSearchController({minSearchLength: 3}, {minSearchLength: 2}));
+         assert.isFalse(searchMod.Controller._private.needUpdateSearchController({source: prefetchSource}, {source: newPrefetchSource}));
       });
 
       it('_private.getSearchController', function() {
