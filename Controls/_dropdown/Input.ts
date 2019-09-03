@@ -254,10 +254,6 @@ var Input = Control.extend({
       return this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
    },
 
-   _selectedKeysChangedHandler: function (event, selectedKeys) {
-      return this._notify('selectedKeysChanged', [selectedKeys]);
-   },
-
    _setText: function (items) {
       if (items.length) {
          this._item = items[0];
