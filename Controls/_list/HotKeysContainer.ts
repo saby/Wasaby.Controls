@@ -3,7 +3,7 @@ import template = require('wml!Controls/_list/HotKeysContainer');
 import {constants} from 'Env/Env';
 
 /**
- * Контрол устанавливает для Controls.list:Container обработку горячих клавиш keyup, keydown.
+ * Контрол добавляет обработку клавиш KeyUp и KeyDown в контрол {@link Controls/list:Container}.
  * @class Controls/_list/HotKeysContainer
  * @extends Core/Control
  * @author Шипин А.А.
