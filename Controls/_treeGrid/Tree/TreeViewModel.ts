@@ -149,8 +149,11 @@ var
             return (itemData.expanderVisibility !== 'hasChildren' || itemData.thereIsChildItem && itemData.hasChildItem);
         },
         shouldDrawExpanderPadding: function(itemData, expanderIcon, expanderSize) {
-            return (itemData.expanderVisibility !== 'hasChildren' || itemData.thereIsChildItem) &&
-                !expanderSize && expanderIcon !== 'none';
+            if (itemData.expanderVisibility === 'hasChildren') {
+                return itemData.thereIsChildItem && expanderIcon !== 'none';
+            } else {
+                return !expanderSize && expanderIcon !== 'none';
+            }
         },
         prepareExpanderClasses: function(itemData, expanderIcon, expanderSize) {
             var
