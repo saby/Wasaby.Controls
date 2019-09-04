@@ -1,4 +1,4 @@
-/**
+/*
  * compatiblePopup library
  * @library Controls/compatiblePopup
  * @includes BaseOpener Controls/_compatiblePopup/BaseOpener
