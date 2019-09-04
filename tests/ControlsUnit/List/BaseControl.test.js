@@ -2643,6 +2643,69 @@ define([
          ctrl._itemMouseDown({}, {key: 1}, {});
          assert.isUndefined(ctrl._itemDragData);
       });
+      describe('mouseDown with different buttons', function() {
+         it('dragNDrop do not start on right or middle mouse button', async function() {
+            var source = new sourceLib.Memory({
+               idProperty: 'id',
+               data: data
+            });
+            let
+                cfg = {
+                   viewName: 'Controls/List/ListView',
+                   source: source,
+                   viewConfig: {
+                      keyProperty: 'id'
+                   },
+                   viewModelConfig: {
+                      items: rs,
+                      keyProperty: 'id',
+                      selectedKeys: [1, 3]
+                   },
+                   viewModelConstructor: lists.ListViewModel,
+                   itemsDragNDrop: true,
+                   navigation: {
+                      source: 'page',
+                      sourceConfig: {
+                         pageSize: 6,
+                         page: 0,
+                         hasMore: false
+                      },
+                      view: 'infinity',
+                      viewConfig: {
+                         pagingMode: 'direct'
+                      }
+                   }
+                },
+                ctrl = new lists.BaseControl();
+            let dragNDropStarted = false;
+            let domEvent = {
+               target:{
+                  closest:function() {
+                     return null;
+                  }
+               }
+            }
+            ctrl.saveOptions(cfg);
+            await ctrl._beforeMount(cfg);
+            ctrl.itemsDragNDrop = true;
+            ctrl._notify = function() {
+               return true;
+            }
+            ctrl._children = {
+               dragNDropController: {
+                  startDragNDrop: function() {
+                     dragNDropStarted = true;
+                  }
+               }
+            };
+            ctrl._itemMouseDown({button: 1}, {key: 1}, domEvent);
+            assert.isFalse(dragNDropStarted);
+            ctrl._itemMouseDown({button: 2}, {key: 1}, domEvent);
+            assert.isFalse(dragNDropStarted);
+            ctrl._itemMouseDown({button: 0}, {key: 1}, domEvent);
+            assert.isTrue(dragNDropStarted);
+         });
+      });
 
       it('_dragEnter only works with ItemsEntity', function() {
          const ctrl = new lists.BaseControl({});
