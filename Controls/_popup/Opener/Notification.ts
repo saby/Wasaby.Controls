@@ -45,7 +45,7 @@ const BASE_OPTIONS = {
 
 const _private = {
     clearPopupIds(self) {
-        if (!self.isOpened() && self._options.displayMode === 'single') {
+        if (!self.isOpened()) {
             self._popupId = null;
         }
     },

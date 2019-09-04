@@ -6,23 +6,6 @@ define(
       'use strict';
 
       describe('Controls/_popup/Opener/BaseOpener', () => {
-         it('clearPopupIds', () => {
-            let clearPopupIds = popup.BaseOpener._private.clearPopupIds;
-            let popupIds = [1, 2, 3];
-
-            clearPopupIds(popupIds, true, 'multiple');
-            assert.deepEqual(popupIds, [1, 2, 3]);
-
-            clearPopupIds(popupIds, false, 'multiple');
-            assert.deepEqual(popupIds, [1, 2, 3]);
-
-            clearPopupIds(popupIds, true, 'single');
-            assert.deepEqual(popupIds, [1, 2, 3]);
-
-            clearPopupIds(popupIds, false, 'single');
-            assert.deepEqual(popupIds, []);
-         });
-
          it('registerOpenerUpdateCallback', () => {
             let opener = new popup.BaseOpener();
             opener._notify = (eventName, args) => {

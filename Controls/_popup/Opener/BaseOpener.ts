@@ -11,9 +11,9 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import {parse as parserLib, load} from 'Core/library';
 
 var _private = {
-    clearPopupIds: function (popupIds, opened, displayMode) {
-        if (!opened && displayMode === 'single') {
-            popupIds.length = 0;
+    clearPopupIds: function (self) {
+        if (!self.isOpened()) {
+            self._popupId = null;
         }
     },
     compatibleOpen: function (self, cfg, controller): Promise<string | undefined> {
@@ -42,10 +42,7 @@ var Base = Control.extend({
     _showOldIndicator: false,
 
     _beforeMount: function (options) {
-        this._popupIds = [];
-        if (options.displayMode && options.displayMode !== 'single') {
-            Env.IoC.resolve('ILogger').error(this._moduleName, 'Вместо опции displayMode используйте открытие окна через статический метод openPopup');
-        }
+        this._popupId = null;
     },
 
     _afterMount: function () {
@@ -58,9 +55,7 @@ var Base = Control.extend({
         this._toggleIndicator(false);
         if (this._options.closePopupBeforeUnmount) {
             if (this._useVDOM()) {
-                this._popupIds.forEach(function (popupId) {
-                    ManagerController.remove(popupId);
-                });
+                ManagerController.remove(this._popupId);
             } else if (this._action) { // todo Compatible
                 this._action.destroy();
                 this._action = null;
@@ -98,8 +93,8 @@ var Base = Control.extend({
     _openPopup: function (cfg, controller): Promise<string | undefined> {
         return new Promise((resolve => {
             this._requireModules(cfg, controller).addCallback((result) => {
-                _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
-                const popupId = this._options.displayMode === 'single' ? this._getCurrentPopupId() : null;
+                _private.clearPopupIds(this);
+                const popupId = this._getCurrentPopupId();
 
                 cfg._vdomOnOldPage = this._options._vdomOnOldPage;
                 this._compatibleCreatingDef(cfg, !popupId);
@@ -108,9 +103,7 @@ var Base = Control.extend({
                         this._toggleIndicator(false);
                     }
                     if (this._useVDOM()) {
-                        if (this._popupIds.indexOf(popupId) === -1) {
-                            this._popupIds.push(popupId);
-                        }
+                        this._popupId = popupId;
                         // Call redraw to create emitter on scroll after popup opening
                         this._forceUpdate();
                     } else {
@@ -201,10 +194,7 @@ var Base = Control.extend({
         const popupId: string = id || this._getCurrentPopupId();
         if (popupId) {
             Base.closeDialog(popupId).addCallback(() => {
-                // todo: Перейти с массива на collection.list
-                if (this._popupIds.indexOf(popupId) > -1) {
-                    this._popupIds.splice(this._popupIds.indexOf(popupId), 1);
-                }
+                this._popupId = null;
             });
         } else if (!Base.isNewEnvironment() && this._action) {
             this._action.closeDialog();
@@ -229,8 +219,8 @@ var Base = Control.extend({
         this.close();
     },
 
-    _getCurrentPopupId: function () {
-        return this._popupIds[this._popupIds.length - 1];
+    _getCurrentPopupId(): string {
+        return this._popupId;
     },
 
     /**
@@ -502,22 +492,6 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         delete baseCfg.templateOptions.opener;
     }
 
-    if (baseCfg.hasOwnProperty('closeOnTargetScroll')) {
-        Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Use option "actionOnScroll" instead of "closeOnTargetScroll"');
-        if (baseCfg.closeOnTargetScroll) {
-            baseCfg.actionOnScroll = 'close';
-        }
-    }
-    if (baseCfg.hasOwnProperty('targetTracking')) {
-        Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Use option "actionOnScroll" instead of "targetTracking"');
-        if (baseCfg.targetTracking) {
-            baseCfg.actionOnScroll = 'track';
-        }
-    }
-
-    if (baseCfg.hasOwnProperty('corner')) {
-        Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Используется устаревшая опция corner, используйте опцию targetPoint');
-    }
     if (baseCfg.hasOwnProperty('verticalAlign') || baseCfg.hasOwnProperty('horizontalAlign')) {
         Env.IoC.resolve('ILogger').warn(Base.prototype._moduleName, 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
     }
@@ -555,7 +529,6 @@ Base.getDefaultOptions = function () {
     return {
         closePopupBeforeUnmount: true,
         actionOnScroll: 'none',
-        displayMode: 'single',
         _vdomOnOldPage: false // Always open vdom panel
     };
 };
