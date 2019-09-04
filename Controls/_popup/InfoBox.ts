@@ -15,7 +15,7 @@ import entity = require('Types/entity');
        * В один момент времени на странице может отображаться только одна всплывающая подсказка.
        * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ Подробнее}.
        *
-       * <a href="/materials/demo-ws4-infobox">Demo-example</a>.
+       * <a href="/materials/demo-ws4-infobox">Демо-пример</a>.
        * @class Controls/_popup/InfoBox
        *
        * @public
@@ -93,7 +93,8 @@ import entity = require('Types/entity');
 
 /**
  * @name Controls/_popup/InfoBox#hideDelay
- * @cfg {Number} Определяет задержку перед началом закрытия всплывающей подсказки. ( измеряется в миллисекундах)
+ * @cfg {Number} Определяет задержку перед началом закрытия всплывающей подсказки. 
+ * Значение задаётся в миллисекундах.
  * @default 300
  */
 
@@ -105,7 +106,8 @@ import entity = require('Types/entity');
 
 /**
  * @name Controls/_popup/InfoBox#showDelay
- * @cfg {Number} Определяет задержку перед началом открытия всплывающей подсказки. ( измеряется в миллисекундах)
+ * @cfg {Number} Определяет задержку перед началом открытия всплывающей подсказки.
+ * Значение задаётся в миллисекундах.
  * @default 300
  */
 

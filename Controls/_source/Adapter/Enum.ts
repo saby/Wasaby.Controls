@@ -16,6 +16,17 @@ interface IRawDataElem {
 }
 
 /**
+ * Контейнер для работы с контролами.
+ * Контейнер принимает объекты типа Enum.
+ * @class Controls/_source/Adapter/Enum
+ * @extends Core/Control
+ * @author Герасимов А.М.
+ * @demo Controls-demo/Container/Enum
+ * @control
+ * @public
+ */
+
+/*
  * Container component for working with controls.
  * This container accepts an Enum object.
  * @class Controls/_source/Adapter/Enum
@@ -24,7 +35,7 @@ interface IRawDataElem {
  * @demo Controls-demo/Container/Enum
  * @control
  * @public
- */
+ */ 
 
 class EnumAdapter extends Control {
 
