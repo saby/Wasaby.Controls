@@ -110,6 +110,8 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
 /**
  * @name Controls/Container/LoadingIndicator#delay
  * @cfg {Number} Задержка перед началом показа индикатора.
+ * @remark
+ * Значение задаётся в миллисекундах.
  * @default 2000
  */
 
