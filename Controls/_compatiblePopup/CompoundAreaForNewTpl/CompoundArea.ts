@@ -374,6 +374,9 @@ var moduleClass = CompoundControl.extend({
    _forceUpdate: function() {
       // Заглушка для ForceUpdate которого на compoundControl нет
    },
+   canAcceptFocus: function(){
+      return this.isVisible();
+   },
 
    setTemplateOptions: function(newOptions) {
       // Могут позвать перерисоку до того, как компонент создался
