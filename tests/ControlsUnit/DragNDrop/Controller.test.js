@@ -4,14 +4,19 @@ define([
 ], function(dragnDrop, Vdom) {
    'use strict';
 
-
-   //mock method, because it works with DOM
-   dragnDrop.Container._private.preventClickEvent = function() {};
+   dragnDrop.Container._private.getSelection = function() {
+      return {};
+   };
 
    function createNativeEvent(type, pageX, pageY) {
       //mock dom event
       var result =  {
-         preventDefault: function() {},
+         preventDefault: function() {
+            // Check don't call preventDefault (preventDefault "mousedown" event stops closing popup windows).
+            if (type === 'mousedown') {
+               throw new Error('preventDefault called');
+            }
+         },
          type: type,
          buttons: 1
       };
