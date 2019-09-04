@@ -33,7 +33,8 @@ define('Controls-demo/Popup/Opener/StackDemo',
                opener: this._children.button3,
                closeOnOutsideClick: true,
                maxHeight: 700,
-               maxWidth: 700
+               maxWidth: 700,
+               minWidth: 550
             });
          },
          openModalDialog: function() {
@@ -43,7 +44,9 @@ define('Controls-demo/Popup/Opener/StackDemo',
                   footerContentTemplate: 'wml!Controls-demo/Popup/Opener/resources/footer',
                },
                modal: true,
-               maxHeight: 700
+               maxHeight: 700,
+               maxWidth: 700,
+               minWidth: 550
             });
          },
          openSticky: function() {
