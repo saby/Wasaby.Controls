@@ -1,5 +1,5 @@
 <Controls.filterPopup:Panel
-        historyId="DEMO_HISTORY_ID"
+        historyId="{{_options.historyId}}"
         attr:class="controls-FilterPanel__width-m"
         items="{{items}}">
    <ws:itemTemplate templateName="tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel"/>
