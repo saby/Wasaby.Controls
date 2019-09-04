@@ -72,7 +72,7 @@ define('Controls/interface/IEditableList', [
     * _editRecord: null,
     * _source: null,
     * 
-    * // Хук отрабатывает до отрисовке контрола.
+    * // Хук отрабатывает до отрисовки контрола.
     * _beforeMount: function(options) {
     *    
     *    // Создаём экземпляр источника данных.
@@ -101,7 +101,7 @@ define('Controls/interface/IEditableList', [
     *             record.acceptChanges();
     *
     *             // Сохраняем редактируемую запись.
-    *             // Эта настройка будет передан в опцию editingConfig.
+    *             // Этой настройкой будет передана редактируемая запись в опцию editingConfig.
     *             self._editRecord = record;
     *          });
     *       } else
