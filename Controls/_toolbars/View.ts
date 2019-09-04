@@ -143,7 +143,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * />
  * </pre>
  * <pre>
- *    _source: new Memory({
+ *    _source: new source.Memory({
  *        idProperty: 'key',
  *        data: [
  *        {
