@@ -13,6 +13,7 @@ type TSelectedKeys = Array<string | number>;
  * Listens for children "selectedKeysChanged" event and notify event "selectedKeyChanged".
  * @class Controls/_source/Adapter/SelectedKey
  * @extends Controls/Control
+ * @mixes Controls/_interface/ISingleSelectable
  * @control
  * @public
  * @author Золотова Э.Е.
