@@ -139,10 +139,9 @@ var TileView = ListView.extend({
             // Такое поведение стало проявляться, видимо, после оптимизации и ускорения шаблонизатора.
             // Перерисовки, которые раньше происходили в два кадра, теперь происходят в один.
             // Поэтому нужно вызвать forced reflow, чтобы применились первые стили, перед применением вторых.
-            if (this._container) {
-                this._container.getBoundingClientRect();
-            }
 
+            let container = this._container[0] || this._container;
+            container.getBoundingClientRect();
 
             this._listModel.setHoveredItem({
                 key: hoveredItem.key,
