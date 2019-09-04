@@ -56,15 +56,15 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
 /**
  * @event Controls/_suggest/Input/Search/Suggest#searchClick Происходит при нажатии на иконку поиска (лупы).
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @remark Клик по иконке поиска закрывает автодополнение, это поведение можно отменить, если из события вернуть false.
+ * @remark Клик по иконке поиска закрывает автодополнение. Это поведение можно отменить, если из события вернуть false.
  * @example
- * WML
+ * * WML
  * <pre>
  *     <Controls.suggest:SearchInput on:searchClick="_searchClick()" bind:value="_value">
  *        ...
  *     </Controls.suggest:SearchInput>
  * </pre>
- * TypeScript
+ * * TypeScript
  * <pre>
  *     protected _value: string = '';
  *
@@ -77,6 +77,7 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  */
 
 /**
+ * @event Controls/_search/Input/Search#searchClick Происходит при клике на кнопку поиска.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
@@ -86,7 +87,7 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  */ 
 
 /*
- * @event Controls/_suggest/Input/Search/Suggest#searchClick Occurs when search button is clicked..
+ * @event Controls/_suggest/Input/Search/Suggest#searchClick Occurs when search button is clicked.
  * @example
  * WML:
  * <pre>
