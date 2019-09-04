@@ -746,6 +746,9 @@ define([
             field1: 'value 1',
             parent: 'myCurrentRoot'
          });
+
+         treeGrid.TreeControl._private.beforeLoadToDirectionCallback({ _root: 'myCurrentRoot' }, filter, { parentProperty: 'parent', selectedKeys: [1] });
+         assert.deepEqual(filter.entries.get('marked'), [1]);
       });
       it('TreeControl._private.loadMore', function() {
          var

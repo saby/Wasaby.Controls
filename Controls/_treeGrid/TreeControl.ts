@@ -1,12 +1,12 @@
 import Control = require('Core/Control');
 import TreeControlTpl = require('wml!Controls/_treeGrid/TreeControl/TreeControl');
-import {Controller as SourceController} from 'Controls/source';
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
 import keysHandler = require('Controls/Utils/keysHandler');
-import {isEqual} from 'Types/object';
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
+import {Controller as SourceController} from 'Controls/source';
+import {isEqual} from 'Types/object';
 
 var
     HOT_KEYS = {
@@ -116,6 +116,20 @@ var _private = {
         }
         return hasMore;
     },
+
+    getEntries: function(selectedKeys: string|number[], excludedKeys: string|number[], source) {
+        let entriesRecord;
+
+        if (selectedKeys && selectedKeys.length) {
+            entriesRecord = selectionToRecord({
+                selected: selectedKeys || [],
+                excluded: excludedKeys || []
+            }, _private.getOriginalSource(source).getAdapter());
+        }
+
+        return entriesRecord;
+    },
+
     loadMore: function(self, dispItem) {
         var
             filter = cClone(self._options.filter),
@@ -146,6 +160,7 @@ var _private = {
     beforeReloadCallback: function(self, filter, sorting, navigation, cfg) {
         const parentProperty = cfg.parentProperty;
         const baseControl = self._children.baseControl;
+        const entries = _private.getEntries(cfg.selectedKeys, cfg.excludedKeys, cfg.source);
 
         let nodeSourceControllers = self._nodesSourceControllers;
         let expandedItemsKeys: Array[number|string|null] = [];
@@ -182,11 +197,8 @@ var _private = {
             _private.clearSourceControllers(self);
         }
 
-        if (cfg.selectedKeys && cfg.selectedKeys.length) {
-            filter.entries = selectionToRecord({
-                selected: cfg.selectedKeys || [],
-                excluded: cfg.excludedKeys || []
-            }, _private.getOriginalSource(cfg.source).getAdapter());
+        if (entries) {
+            filter.entries = entries;
         }
     },
 
@@ -231,6 +243,11 @@ var _private = {
     },
 
     beforeLoadToDirectionCallback: function(self, filter, cfg) {
+        const entries = _private.getEntries(cfg.selectedKeys, cfg.excludedKeys, cfg.source);
+
+        if (entries) {
+            filter.entries = entries;
+        }
         filter[cfg.parentProperty] = self._root;
     },
 
