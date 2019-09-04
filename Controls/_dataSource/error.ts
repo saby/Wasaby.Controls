@@ -6,7 +6,6 @@
  * @includes Controller Controls/_dataSource/_error/Controller
  * @includes Container Controls/_dataSource/_error/Container
  * @includes Mode Controls/_dataSource/_error/Mode
- * @includes DefaultTemplate Controls/_dataSource/_error/DefaultTemplate
  * @includes Handler Controls/_dataSource/_error/Handler
  * @includes ViewConfig Controls/_dataSource/_error/ViewConfig
  * @includes IContainer Controls/_dataSource/_error/IContainer
@@ -23,7 +22,6 @@ export {
 } from 'Controls/_dataSource/_error/Handler';
 export { default as Controller, Config } from 'Controls/_dataSource/_error/Controller';
 export { default as Mode } from 'Controls/_dataSource/_error/Mode';
-export { default as DefaultTemplate } from 'Controls/_dataSource/_error/DefaultTemplate';
 export { default as Container } from 'Controls/_dataSource/_error/Container';
 export {
     default as IContainer,
