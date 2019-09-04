@@ -29,7 +29,7 @@ export default interface IHierarchy {
  * В данном примере элемент с id: 4 является родителем для элементов с id: 5, 6, 7.
  * TMPL:
  * <pre>
- *    <Controls.Tree
+ *    <Controls.treeGrid:View
  *       keyProperty="id"
  *       source="{{_source}}"
  *       parentProperty="parent"
@@ -59,7 +59,7 @@ export default interface IHierarchy {
  * In this example, item with id: 4 is parent for items with id: 5, 6, 7.
  * TMPL:
  * <pre>
- *    <Controls.Tree
+ *    <Controls.treeGrid:View
  *       keyProperty="id"
  *       source="{{_source}}"
  *       parentProperty="parent"
@@ -89,7 +89,7 @@ export default interface IHierarchy {
  * В данном примере элемент с id: 4 является родителем для элементов с id: 5, 6, 7.
  * TMPL:
  * <pre>
- *    <Controls.Tree
+ *    <Controls.treeGrid:View
  *       keyProperty="id"
  *       source="{{_source}}"
  *       parentProperty="parent"
@@ -119,7 +119,7 @@ export default interface IHierarchy {
  * In this example, item with id: 4 is parent for items with id: 5, 6, 7.
  * TMPL:
  * <pre>
- *    <Controls.Tree
+ *    <Controls.treeGrid:View
  *       keyProperty="id"
  *       source="{{_source}}"
  *       parentProperty="parent"
