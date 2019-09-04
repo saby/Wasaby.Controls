@@ -18,6 +18,7 @@ interface IDropdownEmptyText {
       /**
        * @name Controls/interface/IDropdownEmptyText#emptyText
        * @cfg {String} Добавляет пустой элемент в список с заданным текстом.
+       * Ключ пустого элемента - null.
        */
 
       /*
