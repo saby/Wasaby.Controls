@@ -11,6 +11,25 @@ import {List} from 'Types/collection';
 import 'css!theme?Controls/filterPopup';
 import 'Controls/form';
 /**
+    * Контрол для отображения шаблона панели фильтров. Отображает каждый фильтр по заданным шаблонам.
+    * Он состоит из трех блоков: Отбираются, Еще можно отобрать, Ранее отбирались.
+    * <a href="/materials/demo-ws4-filter-button">Демо-пример</a>.
+    *
+    *
+    * @class Controls/_filterPopup/DetailPanel
+    * @extends Core/Control
+    * @mixes Controls/interface/IFilterPanel
+    * @demo Controls-demo/Filter/Button/panelOptions/panelPG
+    * @control
+    * @public
+    * @author Золотова Э.Е.
+    *
+    * @cssModifier controls-FilterPanel__width-m Medium panel width.
+    * @cssModifier controls-FilterPanel__width-l Large panel width.
+    * @cssModifier controls-FilterPanel__width-xl Extra large panel width.
+    */
+
+   /*
     * Component for displaying a filter panel template. Displays each filters by specified templates.
     * It consists of three blocks: Selected, Also possible to select, Previously selected.
     * Here you can see <a href="/materials/demo-ws4-filter-button">demo-example</a>.
@@ -30,11 +49,16 @@ import 'Controls/form';
     */
 
    /**
+    * @event Controls/_filterPopup/DetailPanel#sendResult Происходит при клике по кнопке "Отобрать".
+    * @param {Object} filter Объект фильтра {'filter_id': 'filter_value'}.
+    * @param {Object} items Набор элементов.
+    */
+
+   /*
     * @event Controls/_filterPopup/DetailPanel#sendResult Happens when clicking the button "Select".
     * @param {Object} filter Filter object view {'filter_id': 'filter_value'}
     * @param {Object} items items
     */
-
 
 
    var getPropValue = Utils.object.getPropertyValue.bind(Utils);

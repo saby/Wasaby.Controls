@@ -1,4 +1,27 @@
 /**
+ * Библиотека окон для фильтров.
+ * @library Controls/filterPopup
+ * @includes Panel Controls/_filterPopup/Panel
+ * @includes DetailPanel Controls/_filterPopup/DetailPanel
+ * @includes SimplePanel Controls/_filterPopup/SimplePanel
+ * @includes Link Controls/_filterPopup/Panel/Link
+ * @includes Select Controls/_filterPopup/Panel/Select
+ * @includes Dropdown Controls/_filterPopup/Panel/Dropdown
+ * @includes Text Controls/_filterPopup/Panel/Text
+ * @includes Lookup Controls/_filterPopup/Panel/Lookup
+ * @includes HistoryStyles Controls/_filterPopup/Button/History/Styles
+ * @includes LinkStyles Controls/_filter/Button/Panel/Link/Styles
+ * @includes PropertyGridStyles Controls/_filter/Button/Panel/PropertyGrid/Styles
+ * @includes PanelStyles Controls/_filter/Button/Panel/Styles
+ * @includes TextStyles Controls/_filter/Button/Panel/Text/Styles
+ * @includes DropdownStyles Controls/_filterPopup/Panel/Dropdown/Styles
+ * @includes AdditionalParamsStyles Controls/_filterPopup/Panel/AdditionalParams/Styles
+ * @includes SimplePanelStyles Controls/_filterPopup/SimplePanel/SimplePanelStyles
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+/*
  * filterPopup library
  * @library Controls/filterPopup
  * @includes Panel Controls/_filterPopup/Panel
