@@ -85,8 +85,21 @@ define([
             'Раздел': null,
             'Раздел@': false
          }],
+         rootItems = [{
+            'id': 1,
+            'Раздел': null,
+            'Раздел@': true
+         }, {
+            'id': 6,
+            'Раздел': null,
+            'Раздел@': true
+         }, {
+            'id': 7,
+            'Раздел': null,
+            'Раздел@': false
+         }],
          hiddenNodeWithChildren,
-         allData, flatData;
+         allData, flatData, rootData;
 
       /*
          1
@@ -104,6 +117,10 @@ define([
          });
          flatData = new collection.RecordSet({
             rawData: flatItems.slice(),
+            idProperty: 'id'
+         });
+         rootData = new collection.RecordSet({
+            rawData: rootItems.slice(),
             idProperty: 'id'
          });
          hiddenNodeWithChildren = new collection.RecordSet({
@@ -710,6 +727,39 @@ define([
          };
          selectionInstance = new operations.HierarchySelection(cfg);
          assert.equal(null, selectionInstance.getCount());
+      });
+
+
+
+      describe('_getSelectionStatus', function() {
+         it('without entry path', function() {
+            cfg = {
+               selectedKeys: [4],
+               excludedKeys: [],
+               items: rootData,
+               keyProperty: 'id',
+               listModel: getListModel()
+            };
+            selectionInstance = new operations.HierarchySelection(cfg);
+
+            assert.isFalse(selectionInstance._getSelectionStatus(selectionInstance._items.at(0)));
+         });
+
+         it('with entry path', function() {
+            cfg = {
+               selectedKeys: [4],
+               excludedKeys: [],
+               items: rootData,
+               keyProperty: 'id',
+               listModel: getListModel()
+            };
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selectionInstance._items.setMetaData({
+               ENTRY_PATH: [1, 2]
+            });
+
+            assert.equal(selectionInstance._getSelectionStatus(selectionInstance._items.at(0)), null);
+         });
       });
    });
 });
