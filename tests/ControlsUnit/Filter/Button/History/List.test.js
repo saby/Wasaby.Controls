@@ -49,7 +49,8 @@ define(
          var list = new List();
 
          var config = {
-            historyId: 'TEST_HISTORY_ID'
+            historyId: 'TEST_HISTORY_ID',
+            orientation: 'vertical'
          };
 
          var items = [
@@ -99,7 +100,7 @@ define(
             assert.isFalse(list._isMaxHeight);
          });
 
-         it('content click', function() {
+         it('_clickHandler', function() {
             var histItems = [];
             list._notify = (e, args) => {
                if (e == 'applyHistoryFilter') {
@@ -109,7 +110,7 @@ define(
             var savedList = list;
             chain.factory(list._options.items).each(function(item, index) {
                if (item) {
-                  savedList._contentClick('click', item);
+                  savedList._clickHandler('click', item);
                   assert.deepEqual(histItems, itemsHistory[index]);
                }
             });

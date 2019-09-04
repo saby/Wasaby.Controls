@@ -87,9 +87,9 @@ import 'Controls/form';
          }
       },
 
-      loadHistoryItems: function(self, historyId, historyMode) {
+      loadHistoryItems: function(self, historyId, isReportPanel) {
          if (historyId) {
-            return HistoryUtils.loadHistoryItems(historyId, historyMode === 'pinned').addCallback(function(items) {
+            return HistoryUtils.loadHistoryItems(historyId, isReportPanel).addCallback(function(items) {
                self._historyItems = items;
                return items;
             }).addErrback(function() {
@@ -188,7 +188,8 @@ import 'Controls/form';
          this._hasAdditionalParams = (options.additionalTemplate || options.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
          this._isChanged = _private.isChangedValue(this._items);
          this._hasResetValue = _private.hasResetValue(this._items);
-         return _private.loadHistoryItems(this, this._historyId, options.saveHistoryMode);
+         const isReportPanel = options.orientation === 'horizontal';
+         return _private.loadHistoryItems(this, this._historyId, isReportPanel);
       },
 
       _beforeUpdate: function(newOptions, context) {
@@ -271,8 +272,7 @@ import 'Controls/form';
          headingCaption: rk('Отбираются'),
          headingStyle: 'secondary',
          orientation: 'vertical',
-         applyButtonCaption: rk('Отобрать'),
-         saveHistoryMode: 'favorite'
+         applyButtonCaption: rk('Отобрать')
       };
    };
 

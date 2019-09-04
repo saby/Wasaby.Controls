@@ -23,7 +23,7 @@
               items="{{_historyItems}}"
               filterItems="{{_items}}"
               historyId="{{_historyId}}"
-              saveMode="{{_options.saveHistoryMode}}"
+              saveMode="{{_options.orientation === 'horizontal' ? 'favorite' : 'pinned'}}"
               orientation="{{_options.orientation}}"
               on:historyChanged="_historyItemsChanged()"
               attr:class="controls-HistoryList__{{_options.orientation}}"

@@ -18,10 +18,11 @@ function destroyHistorySource(historyId) {
    HISTORY_SOURCE[historyId] = null;
 }
 
-function createHistorySource(historyId, hasPinned = true) {
+function createHistorySource(historyId, isReport) {
    var historySourceData = {
       historyId: historyId,
-      pinned: hasPinned,
+      // the report filters panel uses favorite history, for it we don't request pinned items from the history service
+      pinned: !isReport,
 
       /* A record about resets filters is stored in the history, but it is not necessary to display it in the history list.
          We request one more record, so that the number of records remains equal to 10 */
@@ -39,17 +40,17 @@ function createHistorySource(historyId, hasPinned = true) {
    });
 }
 
-function getHistorySource(historyId, hasPinned?) {
+function getHistorySource(historyId, isReport?) {
    if (Env.constants.isBuildOnServer) {
-      return createHistorySource(historyId);
+      return createHistorySource(historyId, isReport);
    } else {
-      HISTORY_SOURCE[historyId] = HISTORY_SOURCE[historyId] || createHistorySource(historyId, hasPinned);
+      HISTORY_SOURCE[historyId] = HISTORY_SOURCE[historyId] || createHistorySource(historyId, isReport);
    }
    return HISTORY_SOURCE[historyId];
 }
 
-function loadHistoryItems(historyId, hasPinned) {
-   var source = getHistorySource(historyId, hasPinned);
+function loadHistoryItems(historyId, isReport) {
+   var source = getHistorySource(historyId, isReport);
    var sourceController = new SourceController({
       source: source
    });

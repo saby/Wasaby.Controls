@@ -67,7 +67,7 @@ import 'css!theme?Controls/filterPopup';
       },
 
       onResize: function(self) {
-         if (self._options.orientation === 'vertical)') {
+         if (self._options.orientation === 'vertical') {
             var arrowVisibility = self._arrowVisible;
             self._arrowVisible = self._options.items.getCount() > MAX_NUMBER_ITEMS;
 
