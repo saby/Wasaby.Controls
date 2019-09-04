@@ -177,7 +177,7 @@
 
 /**
  * @name Controls/_filter/View/interface/IFilterView#detailPanelTemplateName
- * @cfg {String} Шаблон всплывающей панели быстрых фильтров, которая открывается после клика по кнопке.
+ * @cfg {String} Шаблон всплывающей панели, которая открывается после клика по кнопке.
  * @remark
  * В качестве шаблона рекомендуется использовать контрол {@link Controls/filterPopup:DetailPanel}
  * Подробнее о настройке панели фильтров читайте <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>здесь</a>.
@@ -198,7 +198,7 @@
  *    <Controls.filterPopup:DetailPanel>
  *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
  *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
- *    </Controls.filterPopup:Panel>
+ *    </Controls.filterPopup:DetailPanel>
  * </pre>
  *
  * JS:
@@ -251,7 +251,7 @@
 
 /**
  * @name Controls/_filter/View/interface/IFilterView#panelTemplateName
- * @cfg {String} Шаблон всплывающей панели, которая открывается после клика.
+ * @cfg {String} Шаблон всплывающей панели быстрых фильтров, которая открывается после клика по параметрам быстрого фильтра.
  * @remark
  * В качестве шаблона ркомендуется использовать {@link Controls/filterPopup:SimplePanel}
  * При указании panelTemplateName, параметр items должен быть передан в шаблон.
