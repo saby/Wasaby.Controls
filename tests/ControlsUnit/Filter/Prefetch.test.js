@@ -6,9 +6,13 @@ define(['Controls/_filter/Prefetch', 'Types/collection', 'Types/entity'], functi
          PrefetchDataValidUntil: new Date()
       };
    }
+   
+   function getRecordSetWithoutPrefetch() {
+      return new collection.RecordSet();
+   }
 
    function getRecordSetWithPrefetch() {
-      var recordSet = new collection.RecordSet();
+      var recordSet = getRecordSetWithoutPrefetch();
       var results = new entity.Model({
          rawData: getPrefetchParams()
       });
@@ -28,6 +32,9 @@ define(['Controls/_filter/Prefetch', 'Types/collection', 'Types/entity'], functi
       it('applyPrefetchFromItems', function() {
          var filter = {};
          assert.deepEqual(Prefetch.applyPrefetchFromItems(filter, getRecordSetWithPrefetch()), { PrefetchSessionId: 'test' });
+
+         filter = {};
+         assert.deepEqual(Prefetch.applyPrefetchFromItems(filter, getRecordSetWithoutPrefetch()), {});
       });
 
       it('applyPrefetchFromHistory', function() {
@@ -38,6 +45,9 @@ define(['Controls/_filter/Prefetch', 'Types/collection', 'Types/entity'], functi
       it('getPrefetchParamsForSave', function() {
          var params = Prefetch.getPrefetchParamsForSave(getRecordSetWithPrefetch());
          assert.equal(params.PrefetchSessionId, 'test');
+
+         params = Prefetch.getPrefetchParamsForSave(getRecordSetWithoutPrefetch());
+         assert.equal(params, undefined);
       });
 
       it('addPrefetchToHistory', function() {

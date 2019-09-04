@@ -7,7 +7,12 @@ const PREFETCH_SESSION_FIELD = 'PrefetchSessionId';
 const PREFETCH_DATA_VALID_FIELD = 'PrefetchDataValidUntil';
 
 function isPrefetchParamsValid(items: RecordSet): boolean {
-    const sessionId = getSessionId(items);
+    let sessionId;
+
+    if (getPrefetchMeta(items)) {
+        sessionId = getSessionId(items);
+    }
+
     return sessionId && sessionId !== PREFETCH_SESSION_ERROR;
 }
 
@@ -58,10 +63,12 @@ function applyPrefetchFromHistory(filter: object, history): object {
 }
 
 function applyPrefetchFromItems(filter: object, items: RecordSet): object {
-    const sessionId = getSessionId(items);
+    if (isPrefetchParamsValid(items)) {
+        const sessionId = getSessionId(items);
 
-    if (sessionId) {
-        filter[PREFETCH_SESSION_FIELD] = sessionId;
+        if (sessionId) {
+            filter[PREFETCH_SESSION_FIELD] = sessionId;
+        }
     }
 
     return  filter;
