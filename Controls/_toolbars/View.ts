@@ -87,27 +87,19 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * @default undefined
  * @remark
  * Может иметь свойства 'title' и 'showType':
- * <ul>
- *  <li>'Title' определяет заголовок элемента.</li> 
- *  <li>'ShowType' определяет, где отображается элемент: 
- *      <ul>
- *          <li>0 - в меню,</li>
- *          <li>1 - в меню и тулбаре,</li>
- *          <li>2 - в тулбаре.</li>
- *      </ul>
- *  </li>
- * </ul>
+ * * 'title' определяет заголовок элемента.
+ * * 'showType' определяет, где отображается элемент: 
+ *     * 0 - в меню.
+ *     * 1 - в меню и тулбаре.
+ *     * 2 - в тулбаре.
  * Для readOnly элемента, установите значение 'true' в поле readOnly.
  * @example
  * Кнопки будут отображены из источника _source. Первый элемент выравнен по левому краю, другие элементы выравнены по правому краю по умолчанию.
  * <pre>
- *    <Controls.toolbars:View
- *              keyProperty="key"
- *              source="{{_source}}"
- *    />
+ *    <Controls.toolbars:View keyProperty="key" source="{{_source}}" />
  * </pre>
  * <pre>
- *    _source: new Memory({
+ *    _source: new source.Memory({
  *        idProperty: 'key',
  *        data: [
  *        {
