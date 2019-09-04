@@ -2,6 +2,14 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/Link/Link');
 import 'css!theme?Controls/filterPopup';
    /**
+    * Кнопка-ссылка на панели фильтров.
+    * @class Controls/_filterPopup/Panel/Link
+    * @extends Core/Control
+    * @control
+    * @public
+    */
+
+   /*
     * Control filter link
     * @class Controls/_filterPopup/Panel/Link
     * @extends Core/Control
@@ -11,9 +19,13 @@ import 'css!theme?Controls/filterPopup';
 
    /**
     * @name Controls/_filterPopup/Panel/Link#caption
-    * @cfg {Object} Caption
+    * @cfg {Object} Caption Текст кнопки-ссылки.
     */
 
+   /*
+    * @name Controls/_filterPopup/Panel/Link#caption
+    * @cfg {Object} Caption
+    */   
 
 
    var FilterLink = Control.extend({
