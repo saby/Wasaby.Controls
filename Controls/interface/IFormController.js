@@ -278,7 +278,7 @@ define('Controls/interface/IFormController', [
     * @example
     * Проверяет данные на сервере перед сохранением.
     * <pre>
-    * _requestCustomUpdateHandler(): promise<boolean> {
+    * _requestCustomUpdateHandler(): Promise<boolean> {
     *    this._checkDataOnServer();
     * }
     * </pre>
