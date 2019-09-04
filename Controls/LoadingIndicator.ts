@@ -7,7 +7,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
 
 /**
  * @name Controls/Container/LoadingIndicator#isGlobal
- * @cfg {Boolean} Показать индикатор, покрывающий всю страницу (глобальный) или покрывающий только собственный контент.
+ * @cfg {Boolean} Показать индикатор над всей страницей или только над собственным контентом.
  * @variant true It means position: fixed of indicator's container
  * @variant false It means position: absolute of indicator's container
  * @default true
