@@ -153,6 +153,7 @@ const
       _isNotGridSupport: false,
       _contentSizeForHScroll: 0,
        _scrollVisible: true,
+      _isStickyHeader: true,
 
       _beforeMount(opt) {
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
