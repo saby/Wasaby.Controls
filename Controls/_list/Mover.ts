@@ -6,6 +6,7 @@ import {ContextOptions as dataOptions} from 'Controls/context';
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 import template = require('wml!Controls/_list/Mover/Mover');
+import {Confirmation} from 'Controls/popup';
 
 var BEFORE_ITEMS_MOVE_RESULT = {
     CUSTOM: 'Custom',
@@ -315,6 +316,12 @@ var Mover = Control.extend({
                         source: self._source,
                         keyProperty: self._keyProperty
                     }
+                });
+            } else {
+                Confirmation.openPopup({
+                    type: 'ok',
+                    message: rk('Нет записей для обработки команды'),
+                    style: 'danger'
                 });
             }
         });
