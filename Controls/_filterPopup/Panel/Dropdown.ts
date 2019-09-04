@@ -4,7 +4,7 @@ import 'css!theme?Controls/filterPopup';
    /**
     * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки и используется на панели фильтров.
     * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию скрыто.
-    * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с Controls/source:SelectedKey.
+    * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
     *
     * @class Controls/_filterPopup/Panel/Dropdown
     * @extends Controls/_dropdown/Input
