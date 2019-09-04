@@ -34,10 +34,18 @@ import dateUtils = require('Controls/Utils/Date');
  *
  */
 
+function isValidDate(startValue: Date, endValue: Date): boolean {
+   const start = new Date(startValue.getTime());
+   const end = new Date(endValue.getTime());
+   start.setHours(0, 0, 0, 0); // Убираю часы, минуты, секунды
+   end.setHours(0, 0, 0, 0); // Убираю часы, минуты, секунды
+   return start.getTime() <= end.getTime();
+}
+
 export default function isValidDateRange(args): boolean {
    if (args.doNotValidate || !args.startValue || !args.endValue ||
        !dateUtils.isValidDate(args.startValue) || !dateUtils.isValidDate(args.endValue) ||
-       args.startValue <= args.endValue) {
+       isValidDate(args.startValue, args.endValue)) {
       return true;
    }
 
