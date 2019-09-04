@@ -216,6 +216,11 @@ export default Dialog;
  */
 
 /**
+ * @name Controls/_popup/Opener/Dialog#opener
+ * @cfg {Node} opener Логический инициатор открытия всплывающего окна
+ */
+
+/**
  * @name Controls/_popup/Opener/Dialog#close
  * @function
  * @description Метод закрытия диалогового окна.
@@ -268,4 +273,5 @@ export default Dialog;
  * @property {Number} minWidth Минимально допустимая ширина всплывающего окна
  * @property {Number} top Расстояние от всплывающего окна до верхнего края экрана.
  * @property {Number} left Расстояние от всплывающего окна до левого края экрана.
+ * @property {Node} opener Логический инициатор открытия всплывающего окна
  */

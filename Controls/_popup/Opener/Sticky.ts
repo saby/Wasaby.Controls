@@ -59,6 +59,7 @@ const Sticky = BaseOpener.extend({
      * @property {Number} height Текущая высота всплывающего окна
      * @property {Number} width Текущая ширина всплывающего окна
      * @property {Node} target Элемент, относительно которого позиционнируется всплывающее окно.
+     * @property {Node} opener Логический инициатор открытия всплывающего окна
      * @property {String} fittingMode Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
      */
 
@@ -297,6 +298,11 @@ export = Sticky;
 /**
  * @name Controls/_popup/Opener/Sticky#target
  * @cfg {Node} target Элемент, относительно которого позиционнируется всплывающее окно.
+ */
+
+/**
+ * @name Controls/_popup/Opener/Sticky#opener
+ * @cfg {Node} opener Логический инициатор открытия всплывающего окна
  */
 
 
