@@ -73,10 +73,10 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  *       return this._value.length < 3;
  *     }
  * <pre>
- */ 
+ * @default true
+ */
 
 /**
- * @event Controls/_search/Input/Search#searchClick Происходит при клике на кнопку поиска.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
@@ -104,6 +104,11 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  *     }
  * <pre>
  */
+
+/*
+ * @event Controls/_search/Input/Search#searchClick Occurs when search button is clicked.
+ * @event Controls/Input/resetClick#resetClick Occurs when reset button is clicked.
+ */ 
 var _private = {
    isVisibleResetButton: function() {
       return !!this._options.value && !this._options.readOnly;

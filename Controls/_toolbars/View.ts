@@ -7,7 +7,7 @@ import {getMenuItems, showType} from 'Controls/Utils/Toolbar';
 import {ActualApi as ButtonActualApi} from 'Controls/buttons';
 
 /**
- * Контрол, который реализует <a href='/doc/platform/developmentapl/interface-development/controls/toolbar/'>набор команд</a> в виде кнопок и выпадающего меню с дополнительными командами.
+ * Графический контрол, отображаемый в виде панели с размещенными на ней кнопками, клик по которым вызывает соответствующие им команды.
  * <a href="/materials/demo/demo-ws4-toolbar">Демо-пример</a>.
  *
  * @class Controls/_toolbars/View
@@ -23,6 +23,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/ToolbarPG
  */
+
 /*
  * Graphical control element on which buttons, menu and other input or output elements are placed.
  * <a href="/materials/demo/demo-ws4-toolbar">Demo-example</a>.
@@ -39,7 +40,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * @category Toolbar
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/ToolbarPG
- */
+ */ 
 
 /**
  * @typedef {Object} Item
@@ -72,59 +73,67 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
 
 /**
  * @typedef {Object} SourceCfg
- * @property {Item} [SourceCfg.item] Формат записи источника данных.
+ * @property {Item} [SourceCfg.item] Формат исходной записи.
  */
+
 /*
  * @typedef {Object} SourceCfg
  * @property {Item} [SourceCfg.item] Format of source record.
- */
+ */ 
 
 /**
  * @name Controls/_toolbars/View#source
- * @cfg {SourceCfg} Объект, который реализует интерфейс ISource для доступа к данным.
+ * @cfg {SourceCfg} Объект, который реализует интерфейс ISource, необходимый для работы с источником данных.
  * @default undefined
  * @remark
- * Элемент может иметь свойства:
- * * title определяет текст подписи элемента. 
- * * showType определяет местоположение элемента тулбара:
- *     * 0 - элемент отображается в дополнительном меню.
- *     * 1 - элемент отображается и в дополнительном меню, и в тулбаре.
- *     * 2 - элемент отображается в тулбаре.
- * Для отображения элемента в режиме readOnly нужно установить свойство 'readOnly' в true.
+ * Может иметь свойства 'title' и 'showType':
+ * <ul>
+ *  <li>'Title' определяет заголовок элемента.</li> 
+ *  <li>'ShowType' определяет, где отображается элемент: 
+ *      <ul>
+ *          <li>0 - в меню,</li>
+ *          <li>1 - в меню и тулбаре,</li>
+ *          <li>2 - в тулбаре.</li>
+ *      </ul>
+ *  </li>
+ * </ul>
+ * Для readOnly элемента, установите значение 'true' в поле readOnly.
  * @example
+ * Кнопки будут отображены из источника _source. Первый элемент выравнен по левому краю, другие элементы выравнены по правому краю по умолчанию.
  * <pre>
- * <Controls.toolbars:View keyProperty="key" source="{{_source}}" />
+ *    <Controls.toolbars:View
+ *              keyProperty="key"
+ *              source="{{_source}}"
+ *    />
  * </pre>
  * <pre>
- * _source: null,
- * _beforeMount: function() {
- *    this._source = source.Memory({
- *       idProperty: 'key',
- *       data: [
- *          {
- *             id: '1',
- *             showType: 2,
- *             icon: 'icon-Time',
- *             '@parent': false,
- *             parent: null
- *          },
- *          {
- *             id: '2',
- *             title: 'Moscow',
- *             '@parent': false,
- *             parent: null
- *          },
- *          {
- *             id: '3',
- *             title: 'St-Petersburg',
- *             '@parent': false,
- *             parent: null
- *          }
- *       ]
- *    });
- * }
+ *    _source: new Memory({
+ *        idProperty: 'key',
+ *        data: [
+ *        {
+ *           id: '1',
+ *           showType: 2,
+ *           icon: 'icon-Time',
+ *           '@parent': false,
+ *           parent: null
+ *        },
+ *        {
+ *           id: '2',
+ *           title: 'Moscow',
+ *           '@parent': false,
+ *           parent: null
+ *        },
+ *        {
+ *           id: '3',
+ *           title: 'St-Petersburg',
+ *           '@parent': false,
+ *           parent: null
+ *        }
+ *        ]
+ *    })
  * </pre>
  */
+
 /*
  * @name Controls/_toolbars/View#source
  * @cfg {SourceCfg} Object that implements ISource interface for data access.
@@ -142,44 +151,48 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * />
  * </pre>
  * <pre>
- * _source: new Memory({
- *    idProperty: 'key',
- *    data: [
- *       {
- *          id: '1',
- *          showType: 2,
- *          icon: 'icon-Time',
- *          '@parent': false,
- *          parent: null
- *       },
- *       {
- *          id: '2',
- *          title: 'Moscow',
- *          '@parent': false,
- *          parent: null
- *       },
- *       {
- *          id: '3',
- *          title: 'St-Petersburg',
- *          '@parent': false,
- *          parent: null
- *       }
- *    ]
- * })
+ *    _source: new Memory({
+ *        idProperty: 'key',
+ *        data: [
+ *        {
+ *           id: '1',
+ *           showType: 2,
+ *           icon: 'icon-Time',
+ *           '@parent': false,
+ *           parent: null
+ *        },
+ *        {
+ *           id: '2',
+ *           title: 'Moscow',
+ *           '@parent': false,
+ *           parent: null
+ *        },
+ *        {
+ *           id: '3',
+ *           title: 'St-Petersburg',
+ *           '@parent': false,
+ *           parent: null
+ *        }
+ *        ]
+ *    })
  * </pre>
- */
+ */ 
 
 /**
  * @name Controls/_toolbars/View#itemsSpacing
- * @cfg {String} Размер расстояния между элементами тулбара.
- * @variant big
- * @variant medium
+ * @cfg {String} Тип интервала между элементами.
  * @default medium
  * @example
+ * Кнопки будут отображены из источника _source. Первый элемент выравнен по левому краю, другие элементы выравнены по правому краю по умолчанию.
  * <pre>
- * <Controls.toolbars:View keyProperty="key" source="{{_source}}" itemsSpacing="big" />
+ *    <Controls.toolbars:View
+ *              keyProperty="key"
+ *              source="{{_source}}"
+ *              itemsSpacing="big"
+ *    />
  * </pre>
  */
+
 /*
  * @name Controls/_toolbars/View#itemsSpacing
  * @cfg {String} Type of spacing between items.
@@ -193,9 +206,33 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  *              itemsSpacing="big"
  *    />
  * </pre>
- */
+ */ 
 
 /**
+ * @event Controls/_toolbars/View#itemClick Происходит при клике по элементу.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Record} item Элемент, по которому производим клик.
+ * @example
+ * TMPL:
+ * <pre>
+ *    <Controls.toolbars:View on:itemClick="onToolbarItemClick()" />
+ * </pre>
+ * JS:
+ * <pre>
+ *    onToolbarItemClick: function(e, selectedItem) {
+ *       var itemId = selectedItem.get('id');
+ *       switch (itemId) {
+ *          case 'remove':
+ *             this._removeItems();
+ *             break;
+ *          case 'move':
+ *             this._moveItems();
+ *             break;
+ *    }
+ * </pre>
+ */
+
+/*
  * @event Controls/_toolbars/View#itemClick Происходит при клике по элементу.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Record} item Элемент, по которому произвели клик.
@@ -240,22 +277,22 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  *             break;
  *    }
  * </pre>
- */
+ */ 
 
 /**
  * @name Controls/_toolbars/View#itemTemplate
- * @cfg {Function} Шаблон для рендеринга элемента.
+ * @cfg {Function} Шаблон отображения элементов.
  * @remark
- * Чтобы определить шаблон, нужно вызвать базовый шаблон 'Controls/toolbars:ItemTemplate'.
- * Шаблон размещается в компоненте с использованием тега <ws:partial> с атрибутом 'template'.
- * Можно изменить режим отображения записей, установив значения для следующих параметров:
+ * Для определения шаблона вызовите базовый шаблон 'Controls/toolbars:ItemTemplate'.
+ * Шаблон помещается в компонент с помощью тега ws:partial с атрибутом template.
+ * Вы можете изменить формат отображение записей, настроив параметры кнопки:
  * <ul>
  *    <li>buttonReadOnly</li>
  *    <li>buttonTransparent</li>
  *    <li>buttonStyle</li>
  *    <li>buttonCaption</li>
  *    <li>buttonViewMode</li>
- *    <li>displayProperty - определяет отображаемое поле записи, 'title' - значение по умолчанию.</li>
+ *    <li>displayProperty - имя отображаемого текстового поля, значение по умолчанию - "title" </li>
  * <ul>
  * @example
  * <pre>
@@ -277,6 +314,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  *      </ws:itemTemplate>
  * </pre>
  */
+
 /*
  * @name Controls/_toolbars/View#itemTemplate
  * @cfg {Function} Template for item render.
@@ -311,7 +349,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  *          />
  *      </ws:itemTemplate>
  * </pre>
- */
+ */ 
 
 /**
  * @name Controls/_toolbars/View#popupClassName
@@ -335,6 +373,18 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  *       on:itemClick="_itemClick()"/>
  * </pre>
  */
+
+/*
+ * @name Controls/_toolbars/View#popupClassName
+ * @cfg {String} Класс для выпадающего списка в меню тулбара.
+ * @example
+ * <pre>
+ *    <Controls.toolbars:View
+ *       popupClassName="your-custom-class"
+ *       source="{{_source}}"
+ *       on:itemClick="_itemClick()"/>
+ * </pre>
+ */ 
 
 var _private = {
     loadItems: function (instance, source) {
