@@ -196,22 +196,30 @@ import 'Controls/form';
 
       _applyFilter: function(event, items, history) {
          var self = this,
-            curItems = items || this._items;
-         _private.validate(this).addCallback(function(result) {
-            if (_private.isPassedValidation(result)) {
+             curItems = items || this._items;
 
-               /*
+         let apply = () => {
+            /*
                Due to the fact that a bar can be created as you like (the bar will be not in the root, but a bit deeper)
                and the popup captures the sendResult operation from the root node, bubbling must be set in true.
-               */
-               self._notify('sendResult', [{
-                  filter: _private.getFilter(curItems),
-                  items: _private.prepareItems(curItems),
-                  history
-               }], {bubbling: true});
-               self._notify('close', [], {bubbling: true});
-            }
-         });
+            */
+            self._notify('sendResult', [{
+               filter: _private.getFilter(curItems),
+               items: _private.prepareItems(curItems),
+               history
+            }], {bubbling: true});
+            self._notify('close', [], {bubbling: true});
+         };
+
+         if (history) {
+            apply();
+         } else {
+            _private.validate(this).addCallback(function (result) {
+               if (_private.isPassedValidation(result)) {
+                  apply();
+               }
+            });
+         }
       },
 
       _resetFilter: function(): void {
