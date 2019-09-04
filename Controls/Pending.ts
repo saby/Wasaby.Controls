@@ -5,6 +5,54 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 
 
    /**
+    * Контрол (HOC), который помогает установить порядок выполнения действий в системе.
+    * Или, более конкретно, контролирует выполнение необходимых действий, которые должны быть завершены до начала текущего действия.
+    * Текущее действие запрашивает экземпляр класса Deferred, который будет выполнен после завершения всех необходимых действий.
+    * Например, всплывающее окно должно быть закрыто только после сохранения/не сохранения измененных данных, которые содержит это всплывающее окно.
+    *
+    * Pending - это зарегистрированное в текущем экземпляре класса Controls/Pending необходимое действие, которое должно завершиться до начала текущего действия.
+    * Поэтому все пендинги должны быть завершены для разблокировки следующего действия.
+    * @remark
+    * Controls/Pending может запросить подтверждение перед закрытием вкладки/браузера, если пендинг зарегистрирован.
+    * Controls/Pending имеет собственный LoadingIndicator, который может отображаться во время ожидания выполнения. Этот LoadingIndicator имеет параметры по умолчанию.
+    * В момент, когда будет зарегистрирован первый пендинг с параметром showLoadingIndicator = true, LoadingIndicator отобразит индикатор.
+    * В момент, когда последний пендинг с параметром showLoadingIndicator = true завершится, индикатор скроется.
+    *
+    * Controls/Pending обрабатывает 2 события: registerPending и cancelFinishingPending.
+    *
+    * registerPending - регистрация пендинга
+    * registerPending имеет 2 аргумента: [deferred, config].
+    * dererred - пендинг будет отменен, когда Deferred будет выполнен.
+    * config - это объект с параметрами:
+    *    - showLoadingIndicator (Boolean) - показывать индикатор загрузки или нет (во время регистрации пендинга)
+    *    - onPendingFail (Function) - будет вызвана при попытке завершить пендинг (вызовы finishPendingOperations).
+    *    Функция помогает выполнить Deferred. Пользователь должен разрешить этот _deferred_ (второй аргумент) в этой функции.
+    *    It would be synchronous or asynchronous resolving.
+    *
+    * onPendingFail имеет 2 аргумента - [forceFinishValue, deferred].
+    * forceFinishValue дает дополнительную информацию о том, как resolve deferred.
+    * deferred - это значение пендинга. User must resolve this deferred in onPendingFail function.
+    * forceFinishValue берется из аргумента finishPendingOperations (finishPendingOperations defines additional information of resolving).
+    * Пользователь может использовать этот аргумент в своей собственной функции onPendingFail.
+    * Например, если в пендинге зарегистрирована измененная запись и нам нужно сохранить изменения, по умолчанию мы можем запросить подтверждение сохранения.
+    * Но forceFinishValue может давать принудительный овтет и мы можем сохранить (или отменить) запись без подтверждения действия.
+    *
+    * cancelFinishingPending - отменяет deferred, который возвращен finishPendingOperations. This deferred never resolve. It's need
+    * to request new deferred by finishPendingOperations for setting callback on pendings finish.
+    * It can be useful when pending can't be resolved now but will be resolve later another way.
+    * For example, popup waiting finish of pendings before close, but record can not be saved because of validation errors.
+    * In this case, if we don't cancel deferred by finishPendingOperations, popup will be closed later when validation errors
+    * will be corrected. It will be unexpected closing of popup for user who maybe don't want to close popup anymore
+    * in the light of developments.
+    *
+    * @class Controls/Pending
+    * @extends Core/Control
+    * @control
+    * @author Красильников А.С.
+    * @public
+    */
+
+   /*
     * Controls/Pending is control (HOC) that helps to distribute order of action executions in the system.
     * Or, more specifically, it's controlling execution of necessary actions that must be complete before starting current action.
     * Current action requests Deferred instance that will be resolved when all necessary actions ends.
@@ -52,12 +100,19 @@ import ParallelDeferred = require('Core/ParallelDeferred');
     * @author Красильников А.С.
     * @public
     */
+    
 
    /**
-    * @event pendingsFinished Event will be notified in moment when no more pendings in Controls/Pending
+    * @event pendingsFinished Событие произойдет в момент, в Controls/Pending не останется пендингов
     * (after moment of last pending is resolving).
     * @param {SyntheticEvent} eventObject.
     */
+
+   /*
+    * @event pendingsFinished Event will be notified in moment when no more pendings in Controls/Pending
+    * (after moment of last pending is resolving).
+    * @param {SyntheticEvent} eventObject.
+    */    
 
    // pending identificator counter
    var cnt = 0;
@@ -152,13 +207,25 @@ import ParallelDeferred = require('Core/ParallelDeferred');
        * Method returns deferred resolving when all pendings will be resolved.
        * deferred callbacks with array of results of pendings.
        * If one of pending's deferred will be rejected (call errback), deferred of finishPendingOperations will be rejected too.
-       * If finishPendingOperations will be called some times, only last call will be actual, but another returned deffereds
+       * If finishPendingOperations will be called some times, only last call will be actual, but another returned deferreds
        * will be cancelled.
        * When finishPendingOperations calling, every pending trying to finish by calling it's onPendingFail method.
-       * If onPendingFail is not setted, pending registration notified control is responsible for pending's deffered resolving.
+       * If onPendingFail is not setted, pending registration notified control is responsible for pending's deferred resolving.
        * @param forceFinishValue this argument use as argument of onPendingFail.
        * @returns {Deferred} deferred resolving when all pendings will be resolved
        */
+
+      /*
+       * Method returns deferred resolving when all pendings will be resolved.
+       * deferred callbacks with array of results of pendings.
+       * If one of pending's deferred will be rejected (call errback), deferred of finishPendingOperations will be rejected too.
+       * If finishPendingOperations will be called some times, only last call will be actual, but another returned deferreds
+       * will be cancelled.
+       * When finishPendingOperations calling, every pending trying to finish by calling it's onPendingFail method.
+       * If onPendingFail is not setted, pending registration notified control is responsible for pending's deferred resolving.
+       * @param forceFinishValue this argument use as argument of onPendingFail.
+       * @returns {Deferred} deferred resolving when all pendings will be resolved
+       */       
       finishPendingOperations: function(forceFinishValue) {
          var resultDeferred = new Deferred(),
             parallelDef = new ParallelDeferred(),
