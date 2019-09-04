@@ -126,7 +126,7 @@ define(
 
          it('_applyHistoryFilter', function() {
             var panel = getFilterPanel(config),
-               isNotifyClose, filter;
+               isNotifyClose, filter, isValidated = false;
             panel._notify = (e, args) => {
                if (e == 'sendResult') {
                   filter = args[0].filter;
@@ -135,7 +135,7 @@ define(
                }
             };
             panel._beforeMount(config);
-            panel._children = { formController: { submit: ()=>{return Deferred.success([])} } };
+            panel._children = { formController: { submit: ()=>{isValidated = true; return Deferred.success([])} } };
             var historyItems = [
                {
                   id: 'text',
@@ -152,6 +152,7 @@ define(
             ];
             panel._applyHistoryFilter('applyHistoryFilter', historyItems);
             assert.deepEqual({ text: '123', bool: true }, filter);
+            assert.isFalse(isValidated);
             assert.isTrue(isNotifyClose);
          });
 
