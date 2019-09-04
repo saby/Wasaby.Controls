@@ -52,7 +52,72 @@ define('Controls/interface/IEditableList', [
     * @property {Boolean} [sequentialEditing=true] Если передано значение "true", после окончания редактирования любого элемента списка, кроме последнего, автоматически запускается редактирование следующего элемента списка.
     * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
     * @property {AddPositionOption} [addPosition] Позиция редактирования по месту.
-    * @property {Types/entity:Record} [item=undefined] Позволяет начать редактирование элемента списка при первом рендеринге.
+    * @property {Types/entity:Record} [item=undefined] Запись, которая будет запущена на редактирование при первой отрисовке списка.
+    * Такая запись должна присутствовать в {@link Types/source:DataSet}, который получен от источника данных списка, чтобы после редактирования она удачно сохранилась в источнике.
+    * 
+    * Создание записи выполняют по следующему алгоритму:
+    * 
+    * 1. В хуке <a href="/doc/platform/developmentapl/interface-development/ui-library/control/#phase-before-mount">_beforeMount()</a> опишите источник данных бизнес-логики (см. {@link Types/source:SbisService}).
+    * 2. Из этого источника асинхронно получите набор данных (далее DataSet), которые отрисует контрол.
+    * 3. В обработчике такого запроса создайте источник данных {@link Types/source:PrefetchProxy}, в который передайте SbisService и DataSet.
+    * 4. Создайте редактируемую запись и добавьте её в DataSet .
+    *     * Примечание: создание редактируемой записи можно выполнять по некоторому условию (см. пример ниже).
+    * 5. Передайте редактируемую запись в опцию {@link editingConfig}.
+    * 
+    * Далее показан пример создания редактируемой записи.
+    * 
+    * * JavaScript
+    * <pre class="brush: js">
+    * _BLsource: null,
+    * _editRecord: null,
+    * _source: null,
+    * 
+    * // Хук отрабатывает до отрисовки контрола.
+    * _beforeMount: function(options) {
+    *    
+    *    // Создаём экземпляр источника данных.
+    *    this._BLsource = new source.SbisService({ ... });
+    *    
+    *    // Асинхронно получаем набор данных, который отрисует контрол.
+    *    return this._BLsource.query(query).addCallback(function (dataSet) {
+    *       var recordSet = dataSet.getAll();
+    *       self._source = new source.PrefetchProxy({
+    *          data: {
+    *             
+    *             // Это набор данных, который отрисует контрол.
+    *             query: dataSet
+    *          },
+    *          
+    *          // Это целевой источник бизнес-логика.
+    *          target: self._BLsource
+    *       });
+    *       
+    *       // Здесь - прикладное условие.
+    *       // В dataSet добавляется та самая запись, которая 
+    *       // запускается на редактирование при первой отрисовке контрола.
+    *       if (recordSet.getCount() === 0 && !options.readOnly) {
+    *          return self._BLsource.create().addCallback(function (record){
+    *             record.set('ВидЦены', <value>);
+    *             record.acceptChanges();
+    *
+    *             // Сохраняем редактируемую запись.
+    *             // Этой настройкой будет передана редактируемая запись в опцию editingConfig.
+    *             self._editRecord = record;
+    *          });
+    *       } else
+    *          return true;
+    *    });
+    *   
+    * }
+    * </pre>
+    * * WML
+    * <pre>
+    * <Controls.list:DataContainer source="{{_source}}">
+    *   <Controls.explorer:View>
+    *       <ws:editingConfig item="{{ _editRecord }}" />
+    *   </Controls.explorer:View>
+    * </Controls.list:DataContainer>
+    * </pre>
     */
 
    /*
