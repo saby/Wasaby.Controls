@@ -16,6 +16,10 @@
    transition: transform @animation-duration_Scrollbar ease-in-out;
 }
 
+.controls-ColumnScroll_without_offset {
+   transform-origin: 50% 0;
+}
+
 .controls-VScrollbar_horizontal_margin-top {
   margin-top: -((@width_Scrollbar + 2 * @margin_Scrollbar) / 2);
 }
@@ -33,6 +37,11 @@
 .controls-VScrollbar__thumbWrapper {
    padding: @margin_Scrollbar;
    box-sizing: border-box;
+}
+
+.controls-ColumnScroll_without_offset .controls-VScrollbar__thumbWrapper {
+   padding: 0;
+   height: (@width_Scrollbar + 2 * @margin_Scrollbar) - 4;
 }
 
 .controls-VScrollbar__thumbWrapper_horizontal {
