@@ -1,6 +1,7 @@
 import Control = require('Core/Control');
 import Env = require('Env/Env');
 import template = require('wml!Controls/_dragnDrop/Container/Container');
+import 'css!Controls/_dragnDrop/Container';
 
       var
          SHIFT_LIMIT = 4,
@@ -892,13 +893,14 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
          _documentDragging: false,
          _insideDragging: false,
          _endDragNDropTimer: null,
-         _contentStyle: '',
 
          startDragNDrop: function(entity, mouseDownEvent) {
             this._dragEntity = entity;
             this._startEvent = mouseDownEvent.nativeEvent;
             _private.clearSelection(this._startEvent);
-            this._contentStyle = 'user-select: none;';
+            if (this._startEvent && this._startEvent.target) {
+               this._startEvent.target.classList.add('controls-DragNDrop__dragTarget');
+            }
             this._registerMouseMove();
             this._registerMouseUp();
          },
@@ -992,7 +994,9 @@ import template = require('wml!Controls/_dragnDrop/Container/Container');
             if (this._documentDragging) {
                this._notify('_documentDragEnd', [this._getDragObject(event.nativeEvent, this._startEvent)], {bubbling: true});
             }
-            this._contentStyle = '';
+            if (this._startEvent && this._startEvent.target) {
+               this._startEvent.target.classList.remove('controls-DragNDrop__dragTarget');
+            }
             this._unregisterMouseMove();
             this._unregisterMouseUp();
             this._dragEntity = null;
