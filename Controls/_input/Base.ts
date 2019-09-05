@@ -740,26 +740,22 @@ var Base = Control.extend({
      * @private
      */
     _clickHandler: function () {
-        if (this._options.selectOnClick && this._firstClick) {
-            this._viewModel.select();
-        } else {
-            var self = this;
+        var self = this;
+
+        /**
+         * If the value in the field is selected, when you click on the selected area,
+         * the cursor in the field is placed after the event. https://jsfiddle.net/wv9o4xmd/
+         * Therefore, we remember the selection from the field at the next drawing cycle.
+         */
+        runDelayed(function () {
+            self._viewModel.selection = self._getFieldSelection();
 
             /**
-             * If the value in the field is selected, when you click on the selected area,
-             * the cursor in the field is placed after the event. https://jsfiddle.net/wv9o4xmd/
-             * Therefore, we remember the selection from the field at the next drawing cycle.
+             * Changes are applied during the synchronization cycle. We are not in it,
+             * so we need to inform the model that the changes have been applied.
              */
-            runDelayed(function () {
-                self._viewModel.selection = self._getFieldSelection();
-
-                /**
-                 * Changes are applied during the synchronization cycle. We are not in it,
-                 * so we need to inform the model that the changes have been applied.
-                 */
-                self._viewModel.changesHaveBeenApplied();
-            });
-        }
+            self._viewModel.changesHaveBeenApplied();
+        });
 
         this._firstClick = false;
     },
@@ -863,6 +859,10 @@ var Base = Control.extend({
     },
 
     _focusInHandler: function (event) {
+        if (this._options.selectOnClick) {
+            this._viewModel.select();
+        }
+
         if (this._focusByMouseDown) {
             this._firstClick = true;
         }
