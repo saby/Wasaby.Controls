@@ -18,7 +18,7 @@
  * @name Controls/_list/interface/IVirtualScroll#virtualScrolling
  * @cfg {Boolean} Включает и выключает виртуальный скролл в списке.
  * @remark
- * Опция также необходима для включения бесконечного скролла.
+ * Также необходимо установить "navigation" в значение "infinity".
  */
 
 /*

@@ -8,8 +8,8 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
 /**
  * @name Controls/Container/LoadingIndicator#isGlobal
  * @cfg {Boolean} Показать индикатор над всей страницей или только над собственным контентом.
- * @variant true It means position: fixed of indicator's container
- * @variant false It means position: absolute of indicator's container
+ * @variant true В этом случае индикатор позиционируется через position: fixed.
+ * @variant false В этом случае индикатор позиционируется через position: absolute.
  * @default true
  */
 
