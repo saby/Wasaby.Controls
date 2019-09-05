@@ -24,6 +24,14 @@ define('Controls/interface/ITreeGridItemTemplate', [
     * Базовый шаблон отображения itemTemplate поддерживает следующие параметры:
     * <ul>
     *    <li>
+    *       clickable {Boolean} - Тип курсора (default или pointer).
+    *       <ul>
+    *          <li>true - курсор pointer</li>
+    *          <li>false - курсор default</li>
+    *       </ul>
+    *       По умолчанию: <b>true</b>
+    *    </li>
+    *    <li>
     *       levelIndentSize {String} - Размер отступа элемента иерархии.
     *       <ul>
     *          <li>s - размер S</li>
