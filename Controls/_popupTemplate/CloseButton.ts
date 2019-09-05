@@ -136,47 +136,17 @@ import Env = require('Env/Env');
     * </pre>
     */
 
-   var _private = {
-
-      // TODO: удалить по подзадаче, когда уберем поддержку старых опций https://online.sbis.ru/opendoc.html?guid=375f4d56-c47c-4ee2-abbc-e38a45fd474a
-      compatibleViewMode: function(options, self) {
-         if (options.transparent !== undefined) {
-            self._transparent = options.transparent;
-         }
-         if (options.viewMode !== undefined) {
-            self._viewMode = options.viewMode;
-         } else {
-            //TODO: https://online.sbis.ru/opendoc.html?guid=1f771374-0295-4add-bbd4-12d478d14163
-            self._viewMode = (options.style === 'light' ? 'link' : 'toolButton');
-         }
-         if (options.style !== undefined) {
-            Env.IoC.resolve('ILogger').error(this._moduleName, 'Option "style" is deprecated and removed in 19.200. Use option "viewMode".');
-            if (options.style === 'primary') {
-               Env.IoC.resolve('ILogger').error(this._moduleName, 'Option "style" is deprecated and not regulated transparency. Use option "transparent".');
-               self._transparent = false;
-            }
-         }
-      }
-   };
-
    var CloseButton = Control.extend({
-      _template: template,
-      _viewMode: null,
-      _transparent: true,
-
-      _beforeMount: function(options) {
-         _private.compatibleViewMode(options, this);
-      },
-      _beforeUpdate: function(newOptions) {
-         _private.compatibleViewMode(newOptions, this);
-      }
+      _template: template
    });
 
    CloseButton._theme = ['Controls/popupTemplate'];
 
    CloseButton.getDefaultOptions = function() {
       return {
-         size: 'l'
+         size: 'l',
+         viewMode: 'toolButton',
+         transparent: true
       };
    };
 
