@@ -40,8 +40,8 @@
 }
 
 .controls-ColumnScroll_without_offset .controls-VScrollbar__thumbWrapper {
-   padding: 0;
-   height: (@width_Scrollbar + 2 * @margin_Scrollbar) - 4;
+   padding: 0 @margin_Scrollbar;
+   height: (@width_Scrollbar + 2 * @margin_Scrollbar) - (@margin_Scrollbar * 2);
 }
 
 .controls-VScrollbar__thumbWrapper_horizontal {
