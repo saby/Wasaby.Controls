@@ -1174,12 +1174,12 @@ var _private = {
     isPagingNavigation: function(navigation) {
         return navigation && navigation.view === 'pages';
     },
-    resetPagingNavigation: function(self) {
+    resetPagingNavigation: function(self, navigation) {
         self._knownPagesCount = INITIAL_PAGES_COUNT;
-        self._currentPage = INITIAL_PAGES_COUNT;
+        self._currentPage = navigation && navigation.sourceConfig && navigation.sourceConfig.page || INITIAL_PAGES_COUNT;
     },
 
-    initializeNavigation: function(self, cfg, resetPaging) {
+    initializeNavigation: function(self, cfg) {
         self._needScrollCalculation = _private.needScrollCalculation(cfg.navigation);
         self._pagingNavigation = _private.isPagingNavigation(cfg.navigation);
 
@@ -1212,13 +1212,9 @@ var _private = {
             self._pagingVisible = false;
         }
 
-        if (self._pagingNavigation) {
-            if (resetPaging) {
-                _private.resetPagingNavigation(self);
-            }
-        } else {
+        if (!self._pagingNavigation) {
             self._pagingNavigationVisible = false;
-            _private.resetPagingNavigation(self);
+            _private.resetPagingNavigation(self, cfg.navigation);
         }
     },
     updateNavigation: function(self) {
@@ -1449,7 +1445,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items);
         if (!isEqual(newOptions.navigation, this._options.navigation)) {
-            _private.initializeNavigation(this, newOptions, resetPaging);
+            _private.initializeNavigation(this, newOptions);
         }
         _private.updateNavigation(this);
 
@@ -1509,7 +1505,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
-            _private.resetPagingNavigation(this);
+            _private.resetPagingNavigation(this, newOptions.navigation);
 
             //return result here is for unit tests
             return _private.reload(self, newOptions);
