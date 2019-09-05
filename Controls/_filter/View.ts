@@ -130,7 +130,7 @@ var _private = {
 
     getFastText: function(config, selectedKeys) {
         var textArr = [];
-        if (selectedKeys[0] === null && config.emptyText) {
+        if (selectedKeys[0] === config.emptyKey && config.emptyText) {
             textArr.push(config.emptyText);
         } else if (config.items) {
             factory(config.items).each(function (item) {
@@ -185,11 +185,13 @@ var _private = {
     getLoadKeys: function(config, value) {
         let selectedKeys = value instanceof Array ? value : [value];
         let flattenKeys = factory(selectedKeys).flatten().value();
-        return factory(flattenKeys).filter((key) => {
-            if (key !== undefined && !config.items.getRecordById(key) && !(key === null && config.emptyText)) {
-                return key;
+        let newKeys = [];
+        factory(flattenKeys).each((key) => {
+            if (key !== undefined && !config.items.getRecordById(key) && !(key === config.emptyKey && config.emptyText)) {
+                newKeys.push(key);
             }
-        }).value();
+        });
+        return newKeys;
     },
 
     loadSelectedItems: function(items, configs) {
@@ -237,7 +239,7 @@ var _private = {
 
         self._configs[item.name] = CoreClone(options);
         self._configs[item.name].emptyText = item.emptyText;
-        self._configs[item.name].emptyKey = item.emptyKey;
+        self._configs[item.name].emptyKey = item.hasOwnProperty('emptyKey') ? item.emptyKey : null;
 
         if (options.source) {
             return _private.loadItemsFromSource(self._configs[item.name], options.source, options.filter, options.navigation, options.dataLoadCallback);
@@ -284,7 +286,8 @@ var _private = {
     setValue: function(self, selectedKeys, name) {
         const item = _private.getItemByName(self._source, name);
         let value;
-        if (!selectedKeys.length || (item.emptyText && selectedKeys.includes(null))) {
+        let resetValue = object.getPropertyValue(item, 'resetValue');
+        if (!selectedKeys.length || selectedKeys.includes(resetValue) || isEqual(selectedKeys, resetValue)) {
             value = object.getPropertyValue(item, 'resetValue');
         } else if (self._configs[name].multiSelect) {
             value = selectedKeys;
