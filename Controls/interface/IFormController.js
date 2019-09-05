@@ -290,8 +290,8 @@ define('Controls/interface/IFormController', [
     * @example
     * Check the data on the server before saving.
     * <pre>
-    * _  requestCustomUpdateHandler(): Promise<boolean> {
-    *       this._checkDataOnServer();
+    *    _requestCustomUpdateHandler(): Promise<boolean> {
+    *          this._checkDataOnServer();
     * }
     * </pre>
     */
