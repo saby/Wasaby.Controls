@@ -215,6 +215,7 @@ export = Stack;
  * @property {Number} minWidth Минимально допустимая ширина всплывающего окна
  * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна
  * @property {Number} width Текущая ширина всплывающего окна
+ * @property {Node} opener Логический инициатор открытия всплывающего окна
  */
 
 
