@@ -2,12 +2,12 @@
  * Created by kraynovdo on 25.01.2018.
  */
 import Control = require('Core/Control');
-import {Controller as SourceController} from 'Controls/source';
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 import Env = require('Env/Env');
+import {Controller as SourceController} from 'Controls/source';
 
-   var _private = {
+var _private = {
       initItems: function(source, instance) {
          instance._sourceController = new SourceController({
             source: source
@@ -448,6 +448,7 @@ import Env = require('Env/Env');
       _template: TabButtonsTpl,
       _items: null,
       _itemsOrder: null,
+      _defaultItemTemplate: ItemTemplate,
       _beforeMount: function(options, context, receivedState) {
          if (receivedState) {
             this._items = receivedState.items;
@@ -483,7 +484,6 @@ import Env = require('Env/Env');
 
    TabsButtons.getDefaultOptions = function() {
       return {
-         itemTemplate: ItemTemplate,
          style: 'primary',
          displayProperty: 'title',
          theme: 'default'
