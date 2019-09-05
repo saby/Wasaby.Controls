@@ -334,9 +334,11 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
                 }
 
                 var action;
+                let openedDialog = null;
                 if (!opener || !opener._action) {
                     action = new Action({
                         closeByFocusOut: true,
+                        dialogCreatedCallback: (newDialog) => openedDialog = newDialog
                     });
                 } else {
                     action = opener._action;
@@ -357,9 +359,20 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
                     dialog._options.creatingDef = newCfg.creatingDef;
                     dialog._finishPopupOpenedDeferred && dialog._finishPopupOpenedDeferred();
                 } else {
+                    openedDialog = null;
                     action.closeDialog();
                     action._isExecuting = false;
-                    action.execute(newCfg);
+                    action.execute(newCfg).addCallback(() => {
+                        // Защита от утечки. проверяем, что закрылось окно, которое открывали последним. в этом случае дестроим action.
+                        // Т.к. мы создаем его динамически, никто кроме baseOpener его не задестроит
+                        if (action.getDialog() === openedDialog) {
+                            action.destroy();
+                            if (opener && opener._action) {
+                                opener._action = null;
+                            }
+                            openedDialog = null;
+                        }
+                    });
                 }
                 def.callback(action);
             } catch (err) {
