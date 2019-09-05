@@ -278,20 +278,20 @@ define('Controls/interface/IFormController', [
     * @example
     * Проверяет данные на сервере перед сохранением.
     * <pre>
-    * _requestCustomUpdateHandler(): Promise<boolean> {
-    *    this._checkDataOnServer();
+    *    _requestCustomUpdateHandler(): Promise<boolean> {
+    *       this._checkDataOnServer();
     * }
     * </pre>
     */
 
    /*
-    * @event Controls/interface/IFormController#requestCustomUpdate Happens before saving a record. In the event handler the basic saving logic can canceled or deferred for user actions before saving. It's used, for example, for asynchronous validation or user saving of a record.
+    * @event Controls/interface/IFormController#requestCustomUpdate Happens before saving a record. In the event handler the basic saving logic can be canceled or deferred for user actions before saving. It's used, for example, for asynchronous validation or user saving of a record.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @example
     * Check the data on the server before saving.
     * <pre>
-    * _requestCustomUpdateHandler(): Promise<boolean> {
-    *    this._checkDataOnServer();
+    * _  requestCustomUpdateHandler(): Promise<boolean> {
+    *       this._checkDataOnServer();
     * }
     * </pre>
     */
