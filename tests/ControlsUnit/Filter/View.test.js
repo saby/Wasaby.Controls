@@ -402,6 +402,49 @@ define(
             assert.strictEqual(self._filterText, 'Author: Ivanov K.K., test_extended');
          });
 
+         it('_private:getFastText', function() {
+            let config = {
+               displayProperty: 'title',
+               keyProperty: 'id',
+               emptyText: 'empty text',
+               emptyKey: 'empty',
+               items: new collection.RecordSet({
+                  rawData: [
+                     {id: null, title: 'Reset'},
+                     {id: '1', title: 'Record 1'},
+                     {id: '2', title: 'Record 2'},
+                     {id: '3', title: 'Record 3'}
+                  ]
+               })
+            };
+            let display = filter.View._private.getFastText(config, [null]);
+            assert.strictEqual(display.text, 'Reset');
+
+            display = filter.View._private.getFastText(config, ['empty']);
+            assert.strictEqual(display.text, 'empty text');
+         });
+
+         it('_private:getLoadKeys', function() {
+            let config = {
+               displayProperty: 'title',
+               keyProperty: 'id',
+               emptyText: 'empty text',
+               emptyKey: 'empty',
+               items: new collection.RecordSet({
+                  rawData: [
+                     {id: '1', title: 'Record 1'},
+                     {id: '2', title: 'Record 2'},
+                     {id: '3', title: 'Record 3'}
+                  ]
+               })
+            };
+            let keys = filter.View._private.getLoadKeys(config, null);
+            assert.strictEqual(keys[0], null);
+
+            keys = filter.View._private.getLoadKeys(config, 'empty');
+            assert.isFalse(!!keys.length);
+         });
+
          it('_private:prepareItems', function() {
             let date = new Date();
             date.setSQLSerializationMode(Date.SQL_SERIALIZE_MODE_TIME);
@@ -451,6 +494,8 @@ define(
                      idProperty: 'id'
                   }),
                   source: source[0].editorOptions.source,
+                  emptyText: 'All documents',
+                  emptyKey: null,
                   displayProperty: 'title',
                   keyProperty: 'id'},
                state: {
@@ -459,6 +504,8 @@ define(
                      idProperty: 'id'
                   }),
                   source: source[1].editorOptions.source,
+                  emptyText: 'all state',
+                  emptyKey: null,
                   _sourceController: {hasMoreData: () => {return true;}},
                   displayProperty: 'title',
                   keyProperty: 'id',
@@ -472,7 +519,33 @@ define(
             });
          });
 
-
+         it('_private:setValue', function() {
+            let view = getView(defaultConfig);
+            view._source = [
+               {
+                  name: 'document',
+                  value: '',
+                  resetValue: false,
+                  emptyText: 'Test',
+                  emptyKey: null
+               }
+            ];
+            view._configs = {
+               document: {
+                  items: Clone(defaultItems[0]),
+                  displayProperty: 'title',
+                  keyProperty: 'id',
+                  emptyText: 'Test',
+                  emptyKey: null,
+                  source: new sourceLib.Memory({
+                     idProperty: 'id',
+                     data: defaultItems[0]
+                  })
+               }
+            };
+            filter.View._private.setValue(view, [null], 'document');
+            assert.strictEqual(view._source[0].value, null);
+         });
 
          it('_private:setPopupConfig', function() {
             let isLoading = false;
