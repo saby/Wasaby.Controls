@@ -7,7 +7,7 @@
               direction="horizontal"
               contentSize="{{_contentSizeForHScroll}}"
               isNotGridSupport="{{_isNotGridSupport}}"
-              attr:class="controls-ColumnScroll"
+              attr:class="controls-ColumnScroll {{!_isStickyHeader ? 'controls-ColumnScroll_without_offset'}}"
               attr:style="top:{{_offsetForHScroll}}px;left:{{_leftOffsetForHScroll}}px;"
               on:positionChanged="_positionChangedHandler()"/>
       <div name="startShadow" class="{{_calculateShadowClasses('start')}}" style="{{_calculateShadowStyles('start')}}"></div>
