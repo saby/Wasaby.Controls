@@ -12,6 +12,7 @@ class Cell extends Control {
             canBeHighlighted = this._options.highlightOnHover !== false;
 
         return  CssClassList.add('controls-ListView__itemV')
+                            .add('controls-ListView__itemV_cursor-pointer')
                             .add('controls-Grid__row_'+ (itemData.style || 'default'))
                             .add('controls-Grid_row-cell_hovered', itemData.isHovered)
                             .add('controls-Grid__row_highlightOnHover_' + (itemData.style || 'default'), canBeHighlighted)
