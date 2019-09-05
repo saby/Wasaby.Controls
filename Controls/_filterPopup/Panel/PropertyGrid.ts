@@ -83,6 +83,16 @@ import 'css!theme?Controls/filterPopup';
       setItems: function(self, items) {
          self._items = _private.cloneItems(items);
          _private.observeItems(self, self._items);
+      },
+
+      getLastVisibleItemIndex: function (items) {
+         let last_index = 0;
+         items.forEach((item, i) => {
+            if (Utils.object.getPropertyValue(item, 'visibility') === undefined || Utils.object.getPropertyValue(item, 'visibility')) {
+               last_index = i;
+            }
+         });
+         return last_index;
       }
    };
 
@@ -91,6 +101,7 @@ import 'css!theme?Controls/filterPopup';
 
       _beforeMount: function(options) {
          this._items = _private.cloneItems(options.items);
+         this._lastVisibleIndex = _private.getLastVisibleItemIndex(options.items);
       },
 
       _afterMount: function() {
@@ -104,6 +115,7 @@ import 'css!theme?Controls/filterPopup';
          } else {
             this._changedIndex = -1;
          }
+         this._lastVisibleIndex = _private.getLastVisibleItemIndex(newOptions.items);
       },
 
       _afterUpdate: function() {
@@ -113,8 +125,8 @@ import 'css!theme?Controls/filterPopup';
       },
 
       _isItemVisible: function(item) {
-         return Utils.object.getPropertyValue(item, 'visibility') === undefined ||
-            Utils.object.getPropertyValue(item, 'visibility');
+          return Utils.object.getPropertyValue(item, 'visibility') === undefined ||
+              Utils.object.getPropertyValue(item, 'visibility');
       },
 
       _updateItem: function(index, field, value) {
