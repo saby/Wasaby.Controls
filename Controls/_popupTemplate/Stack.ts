@@ -153,7 +153,7 @@ const DialogTemplate = Control.extend({
      * @name Controls/_popupTemplate/Stack#workspaceWidth
      * @cfg {Number} Текущая ширина шаблона стековой панели
      * @remark
-     * Опция только для чтения, размер задается контролом Controls/popup
+     * Опция только для чтения, значение устанавливается контролом Controls/popup исходя из заданной конфигурации окна
      */
 
     _template: template,
