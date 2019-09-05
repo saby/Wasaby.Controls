@@ -25,6 +25,7 @@ var _private = {
             searchParam: self._options.searchParam,
             minSearchLength: self._options.minSearchLength,
             searchDelay: self._options.searchDelay,
+            searchValueTrim: self._options.searchValueTrim,
             filter: clone(options.filter),
             source: options.source,
             sorting: options.sorting,
