@@ -280,7 +280,7 @@ define('Controls/interface/IFormController', [
     * <pre>
     *    _requestCustomUpdateHandler(): Promise<boolean> {
     *       this._checkDataOnServer();
-    * }
+    *    }
     * </pre>
     */
 
@@ -292,7 +292,7 @@ define('Controls/interface/IFormController', [
     * <pre>
     *    _requestCustomUpdateHandler(): Promise<boolean> {
     *          this._checkDataOnServer();
-    * }
+    *    }
     * </pre>
     */
 });
