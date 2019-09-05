@@ -75,6 +75,19 @@ define([
          mover.moveItemsWithDialog(items);
       });
 
+      it('moveItemsWithDialog with empty items', function() {
+         var items = [];
+
+         mover._children = {
+            dialogOpener: {
+               open: function() {
+                  throw new Error('Dialog opened for empty items.');
+               }
+            }
+         };
+         mover.moveItemsWithDialog(items);
+      });
+
        it('moveItemsWithDialog for models', function(done) {
            var movedItems = [1, 2, 3];
 
