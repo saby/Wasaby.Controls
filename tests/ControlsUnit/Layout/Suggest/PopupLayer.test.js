@@ -11,11 +11,11 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
          var layer = new PopupLayer.default();
          var resultPopupOptions = {
             direction: {
-               vertical: 'test'
+               vertical: 'test',
                horizontal: 'test'
             },
             offset: {
-               vertical: 10
+               vertical: 10,
                horizontal: 20
             },
             targetPoint: {side: 'test'},
