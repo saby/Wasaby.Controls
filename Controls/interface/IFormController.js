@@ -279,7 +279,7 @@ define('Controls/interface/IFormController', [
     * Проверяет данные на сервере перед сохранением.
     * <pre>
     *    _requestCustomUpdateHandler(): Promise<boolean> {
-    *       this._checkDataOnServer();
+    *       return this._checkDataOnServer();
     *    }
     * </pre>
     */
@@ -291,7 +291,7 @@ define('Controls/interface/IFormController', [
     * Check the data on the server before saving.
     * <pre>
     *    _requestCustomUpdateHandler(): Promise<boolean> {
-    *          this._checkDataOnServer();
+    *       return this._checkDataOnServer();
     *    }
     * </pre>
     */
