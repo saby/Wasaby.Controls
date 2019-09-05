@@ -197,6 +197,8 @@ var
                 if (current.index === rowCount - 1) {
                     result += ' controls-Grid__row-cell_lastRow';
                     result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
+                } else {
+                    result += ' controls-Grid__row-cell_withRowSeparator_notLastRow';
                 }
             } else {
                 result += ' controls-Grid__row-cell_withoutRowSeparator';
