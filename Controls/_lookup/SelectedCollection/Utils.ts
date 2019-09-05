@@ -1,4 +1,5 @@
 import GetWidth = require('Controls/Utils/getWidth');
+import {detection} from 'Env/Env';
 import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
 
 export = {
@@ -11,7 +12,8 @@ export = {
    getItemMaxWidth: function(indexItem, itemsLength, maxVisibleItems, itemsLayout, counterWidth) {
       var itemMaxWidth;
 
-      if (indexItem === 0 && itemsLength > maxVisibleItems && (maxVisibleItems === 1 || itemsLayout === 'default')) {
+      // toDO !KINGO в IE max-width работает по-другому, если ширина родителя задана не явно
+      if (indexItem === 0 && itemsLength > maxVisibleItems && (maxVisibleItems === 1 || itemsLayout === 'default') && !detection.isIE) {
          itemMaxWidth = 'calc(100% - ' + counterWidth + 'px);';
       }
 
