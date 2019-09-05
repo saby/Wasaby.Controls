@@ -411,6 +411,9 @@ define(['Controls/_tile/TileView/TileView',
                controlResizeFired = true;
             }
          };
+         tileView._container = {
+            getBoundingClientRect: function(){}
+         };
          tileView._afterUpdate();
          hoveredItem = tileView._listModel.getHoveredItem();
 
