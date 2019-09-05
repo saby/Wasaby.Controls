@@ -184,6 +184,14 @@ var Search = Base.extend({
       this.activate();
    },
 
+   _keyDownHandler: function(event) {
+      if (event.nativeEvent.which === Env.constants.key.enter) {
+         event.stopPropagation();
+      }
+
+      Search.superclass._keyDownHandler.apply(this, arguments);
+   },
+
    _keyUpHandler: function(event) {
       if (event.nativeEvent.which === Env.constants.key.enter) {
          this._searchClick();
