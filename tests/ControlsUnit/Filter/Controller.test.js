@@ -185,6 +185,12 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
          filterLayout._itemsChanged(null, items);
          assert.deepEqual(filterLayout._filter, {testKey: 'testValue'});
          assert.isTrue(filterChangedNotifyed);
+         assert.isTrue(!filterLayout._changedFilterItems);
+
+         filterLayout._filter = {testKey: 'testValue2', PrefetchSessionId: 'test'};
+         filterLayout._options.prefetchParams = {};
+         filterLayout._itemsChanged(null, items);
+         assert.deepEqual(filterLayout._filter, {testKey: 'testValue'});
       });
 
       it('_private.getItemsByOption::array', function () {
