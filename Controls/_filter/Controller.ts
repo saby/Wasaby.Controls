@@ -674,10 +674,15 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
          },
 
          _itemsChanged(event, items) {
-            this._changedFilterItems = items;
             _private.updateFilterItems(this, items);
             _private.applyItemsToFilter(this, this._filter, items);
-            this._filter = Prefetch.clearPrefetchSession(this._filter);
+
+             if (this._options.prefetchParams) {
+                 this._filter = Prefetch.clearPrefetchSession(this._filter);
+                 this._changedFilterItems = items;
+             } else if (this._options.historyId) {
+                 _private.addToHistory(this, this._filterButtonItems, this._fastFilterItems, this._options.historyId);
+             }
             _private.notifyFilterChanged(this);
          },
 
