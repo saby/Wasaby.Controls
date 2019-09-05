@@ -216,11 +216,6 @@ export default Dialog;
  */
 
 /**
- * @name Controls/_popup/Opener/Dialog#opener
- * @cfg {Node} opener Логический инициатор открытия всплывающего окна
- */
-
-/**
  * @name Controls/_popup/Opener/Dialog#close
  * @function
  * @description Метод закрытия диалогового окна.

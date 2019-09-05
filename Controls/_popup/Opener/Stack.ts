@@ -299,8 +299,3 @@ export = Stack;
  * @cfg {String} Уникальный идентификатор
  * Для работы этой опции необходимо задать опции {@link width}, {@link minWidth}, {@link maxWidth}.
  */
-
-/**
- * @name Controls/_popup/Opener/Stack#opener
- * @cfg {Node} opener Логический инициатор открытия всплывающего окна
- */

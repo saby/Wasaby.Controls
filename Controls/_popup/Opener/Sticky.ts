@@ -301,12 +301,6 @@ export = Sticky;
  */
 
 /**
- * @name Controls/_popup/Opener/Sticky#opener
- * @cfg {Node} opener Логический инициатор открытия всплывающего окна
- */
-
-
-/**
  * @name Controls/_popup/Opener/Sticky#actionOnScroll
  * @cfg {String} Определяет реакцию всплывающего окна на скролл родительской области
  * @variant close Всплывающее окно закрывается
