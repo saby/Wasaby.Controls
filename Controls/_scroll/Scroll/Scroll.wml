@@ -32,7 +32,7 @@
                            on:collapsedItemsChanged="_tmplNotify('collapsedItemsChanged')"
                            on:checkboxClick="_tmplNotify('checkboxClick')"
                            on:actionClick="_tmplNotify('actionClick')"
-                           on:editArrowClick="_notifyHandler('editArrowClick')"/>
+                           on:editArrowClick="_tmplNotify('editArrowClick')"/>
             </div>
          </Controls._scroll.StickyHeader.Controller>
       </Controls.event:Register>
