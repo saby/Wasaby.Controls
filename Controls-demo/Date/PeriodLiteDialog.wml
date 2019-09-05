@@ -6,12 +6,14 @@
                startValue="{{_startValue}}"
                endValue="{{_endValue}}"
                year="{{_year}}"
+			   attr:class="ControlsDemo-PeriodLiteDialog__full"
          />
          <Controls.dateLitePopup
                startValue="{{_startValue}}"
                endValue="{{_endValue}}"
                checkedStart="{{_checkedStart}}"
                year="{{_year}}"
+			   attr:class="ControlsDemo-PeriodLiteDialog__fullYes"
          />
          <Controls.dateLitePopup
                startValue="{{_startValue}}"
@@ -19,6 +21,7 @@
                year="{{_year}}"
                chooseHalfyears="{{false}}"
                chooseQuarters="{{false}}"
+			   attr:class="ControlsDemo-PeriodLiteDialog__months"
          />
          <Controls.dateLitePopup
                startValue="{{_startValue}}"
@@ -27,6 +30,7 @@
                chooseHalfyears="{{false}}"
                chooseQuarters="{{false}}"
                checkedStart="{{_checkedStart}}"
+			   attr:class="ControlsDemo-PeriodLiteDialog__monthsYes"
          />
          <Controls.dateLitePopup
                startValue="{{_startValue}}"
@@ -36,6 +40,7 @@
                chooseMonths="{{false}}"
                checkedStart="2015-02-31"
                checkedEnd="2015-08-31"
+			   attr:class="ControlsDemo-PeriodLiteDialog__quarters"
          />
          <Controls.dateLitePopup
                startValue="{{_startValue}}"
@@ -43,6 +48,7 @@
                year="{{_year}}"
                chooseHalfyears="{{false}}"
                chooseMonths="{{false}}"
+			   attr:class="ControlsDemo-PeriodLiteDialog__quartersYes"
          />
          <Controls.dateLitePopup
                startValue="{{_startValue}}"
@@ -51,6 +57,7 @@
                chooseHalfyears="{{false}}"
                chooseMonths="{{false}}"
                chooseQuarters="{{false}}"
+			   attr:class="ControlsDemo-PeriodLiteDialog__years"
          />
       </div>
    </div>
