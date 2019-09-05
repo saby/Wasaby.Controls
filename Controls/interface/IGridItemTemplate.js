@@ -13,7 +13,7 @@ define('Controls/interface/IGridItemTemplate', [
     *
     * @interface Controls/interface/IGridItemTemplate
     * @public
-    */    
+    */
 
    /**
     * @name Controls/interface/IGridItemTemplate#itemTemplate
@@ -25,6 +25,14 @@ define('Controls/interface/IGridItemTemplate', [
     * Базовый шаблон itemTemplate поддерживает следующие параметры:
     * <ul>
     *    <li>highlightOnHover {Boolean} — включить выделение элемента при наведении курсора.</li>
+    *    <li>
+    *       clickable {Boolean} - Тип курсора (default или pointer).
+    *       <ul>
+    *          <li>true - курсор pointer</li>
+    *          <li>false - курсор default</li>
+    *       </ul>
+    *       По умолчанию: <b>true</b>
+    *    </li>
     * </ul>
     * @example
     * Использование пользовательского шаблона для рендеринга:
@@ -36,7 +44,7 @@ define('Controls/interface/IGridItemTemplate', [
     *    </Controls.grid:View>
     * </pre>
     */
-   
+
    /*
     * @name Controls/interface/IGridItemTemplate#itemTemplate
     * @cfg {Function} Template for item render.
