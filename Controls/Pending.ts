@@ -5,8 +5,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 
 
    /**
-    * Контрол, контролирующий выполнение необходимых действий, которые должны быть завершены до начала текущего действия.
-    * Является контролом высшего порядка.
+    * Контрол, отслеживающий выполнение необходимых действий, которые должны быть завершены до начала текущего действия.
     * Текущее действие запрашивает экземпляр класса Promise, который будет завершен после того, как завершатся все необходимые действия.
     * Например, всплывающее окно должно быть закрыто только после сохранения/не сохранения измененных данных, которые содержит это всплывающее окно.
     *
@@ -14,7 +13,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
     * Поэтому все пендинги должны быть завершены для разблокировки и запуска следующего действия.
     * @remark
     * Controls/Pending может запросить подтверждение перед закрытием вкладки/браузера, если пендинг зарегистрирован.
-    * Controls/Pending имеет собственный LoadingIndicator, который может отображаться во время ожидания завершения. Этот {@link /docs/js/Controls/Container/LoadingIndicator/ LoadingIndicator} имеет параметры по умолчанию.
+    * Controls/Pending имеет собственный LoadingIndicator, который может отображаться во время завершения пендинга. Этот {@link /docs/js/Controls/Container/LoadingIndicator/ LoadingIndicator} имеет параметры по умолчанию.
     * В момент, когда будет зарегистрирован первый пендинг с параметром showLoadingIndicator = true, LoadingIndicator отобразит индикатор.
     * В момент, когда последний пендинг с параметром showLoadingIndicator = true завершится, индикатор скроется.
     *
@@ -30,7 +29,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
     *    Это может быть синхронное или асинхронное завершение. 
     *
     * onPendingFail имеет 2 аргумента - [forceFinishValue, resultPromise].
-    * forceFinishValue дает дополнительную информацию о том, как resolve Promise.
+    * forceFinishValue дает дополнительную информацию о завершении Promise.
     * resultPromise - Promise, по завершению которого завершается пендинг. Мы должны завершить его в функции onPendingFail.
     * forceFinishValue берется из аргумента finishPendingOperations (finishPendingOperations дает дополнительную информацию о завершении).
     * Пользователь может использовать этот аргумент в своей собственной функции onPendingFail.
