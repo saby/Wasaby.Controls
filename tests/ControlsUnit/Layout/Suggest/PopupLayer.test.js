@@ -10,8 +10,14 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
       it('_onResult', function() {
          var layer = new PopupLayer.default();
          var resultPopupOptions = {
-            verticalAlign: {side: 'test'},
-            horizontalAlign: {side: 'test'},
+            direction: {
+               vertical: 'test'
+               horizontal: 'test'
+            },
+            offset: {
+               vertical: 10
+               horizontal: 20
+            },
             targetPoint: {side: 'test'},
             className: 'controls-Suggest__suggestionsContainer_popup_test',
             fittingMode: 'fixed'
@@ -20,8 +26,8 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
          layer._popupOptions = {};
 
          layer._onResult({
-            verticalAlign: {side: 'test'},
-            horizontalAlign: {side: 'test'},
+            verticalAlign: {side: 'test', offset: 10},
+            horizontalAlign: {side: 'test', offset: 20},
             corner: {side: 'test'}
          });
 
