@@ -55,6 +55,14 @@ define('Controls/interface/IGridItemTemplate', [
     * Base itemTemplate supports these parameters:
     * <ul>
     *    <li>highlightOnHover {Boolean} - Enable highlighting item by hover.</li>
+    *    <li>
+    *       clickable {Boolean} - Cursor type (default или pointer).
+    *       <ul>
+    *          <li>true - cursor pointer</li>
+    *          <li>false - cursor default</li>
+    *       </ul>
+    *       By default: <b>true</b>
+    *    </li>
     * </ul>
     * @example
     * Using custom template for item rendering:

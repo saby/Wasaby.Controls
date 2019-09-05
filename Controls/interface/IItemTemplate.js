@@ -57,6 +57,7 @@ define('Controls/interface/IItemTemplate', [
     * <ul>
     *    <li>contentTemplate {Function} - Template for render item content.</li>
     *    <li>highlightOnHover {Boolean} - Enable highlighting item by hover.</li>
+    *    <li>clickable {Boolean} - Cursor type (false - default or true - pointer) By default: true.</li>
     * </ul>
     * @example
     * Using custom template for item rendering:
