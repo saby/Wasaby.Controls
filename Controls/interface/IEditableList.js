@@ -53,14 +53,15 @@ define('Controls/interface/IEditableList', [
     * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
     * @property {AddPositionOption} [addPosition] Позиция редактирования по месту.
     * @property {Types/entity:Record} [item=undefined] Запись, которая будет запущена на редактирование при первой отрисовке списка.
-    * Такая запись должна присутствовать в {@link Types/source:DataSet}, который получен от источника данных списка, чтобы после редактирования она удачно сохранилась в источнике.
+    * Такая запись должна присутствовать в {@link Types/source:DataSet}, который получен от источника данных и отрисован контролом.
+    * Когда выполнено это условие, после редактирования такой записи она удачно сохраняется в источнике данных.
     * 
     * Создание записи выполняют по следующему алгоритму:
     * 
-    * 1. В хуке <a href="/doc/platform/developmentapl/interface-development/ui-library/control/#phase-before-mount">_beforeMount()</a> опишите источник данных бизнес-логики (см. {@link Types/source:SbisService}).
-    * 2. Из этого источника асинхронно получите набор данных (далее DataSet), которые отрисует контрол.
-    * 3. В обработчике такого запроса создайте источник данных {@link Types/source:PrefetchProxy}, в который передайте SbisService и DataSet.
-    * 4. Создайте редактируемую запись и добавьте её в DataSet .
+    * 1. В хуке <a href="/doc/platform/developmentapl/interface-development/ui-library/control/#phase-before-mount">_beforeMount()</a> опишите {@link Types/source:SbisService источник данных бизнес-логики} (далее SbisService).
+    * 2. Из этого источника запросите набор данных (далее DataSet). Полученный DataSet будет передан в контрол для отрисовки.
+    * 3. В {@link Core/Deferred#addCallback обработчике} запроса создайте источник данных {@link Types/source:PrefetchProxy}, в который передайте SbisService и DataSet.
+    * 4. Создайте редактируемую запись и добавьте её в DataSet.
     *     * Примечание: создание редактируемой записи можно выполнять по некоторому условию (см. пример ниже).
     * 5. Передайте редактируемую запись в опцию {@link editingConfig}.
     * 
@@ -79,21 +80,21 @@ define('Controls/interface/IEditableList', [
     *    this._BLsource = new source.SbisService({ ... });
     *    
     *    // Асинхронно получаем набор данных, который отрисует контрол.
-    *    return this._BLsource.query(query).addCallback(function (dataSet) {
-    *       var recordSet = dataSet.getAll();
+    *    return this._BLsource.query(query).addCallback(function (DataSet) {
+    *       var recordSet = DataSet.getAll();
     *       self._source = new source.PrefetchProxy({
     *          data: {
     *             
     *             // Это набор данных, который отрисует контрол.
-    *             query: dataSet
+    *             query: DataSet
     *          },
     *          
     *          // Это целевой источник бизнес-логика.
     *          target: self._BLsource
     *       });
     *       
-    *       // Здесь - прикладное условие.
-    *       // В dataSet добавляется та самая запись, которая 
+    *       // Здесь создано прикладное условие.
+    *       // В DataSet добавляется та самая запись, которая 
     *       // запускается на редактирование при первой отрисовке контрола.
     *       if (recordSet.getCount() === 0 && !options.readOnly) {
     *          return self._BLsource.create().addCallback(function (record){
@@ -107,7 +108,6 @@ define('Controls/interface/IEditableList', [
     *       } else
     *          return true;
     *    });
-    *   
     * }
     * </pre>
     * * WML
