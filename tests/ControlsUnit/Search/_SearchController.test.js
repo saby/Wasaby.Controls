@@ -182,6 +182,7 @@ define(
 
             var searched = false;
             var forced = false;
+            var reseted = false;
 
             let originalSearch = searchController._search.search;
             searchController._search.search = function(value, force) {
@@ -193,17 +194,30 @@ define(
                return originalSearch.apply(searchController._search, arguments);
             };
 
+            let originalAbort = searchController._search.abort;
+            searchController._search.abort = function() {
+               reseted = true;
+               return originalAbort.apply(searchController._search, arguments);
+            };
+
             searchController.search('t');
             assert.isFalse(searched);
             assert.isFalse(forced);
+            assert.isFalse(reseted);
 
             searchController.search('test');
             assert.isFalse(searched);
             assert.isFalse(forced);
+            assert.isFalse(reseted);
 
             searchController.search('t', true);
             assert.isTrue(searched);
             assert.isTrue(forced);
+
+            searchController.abort(true);
+            reseted = false;
+            searchController.search('');
+            assert.isTrue(reseted);
          });
       });
    });

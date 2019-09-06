@@ -87,9 +87,12 @@ var SearchController = extend({
    },
 
    search: function(value, force) {
-      if ((this._options.minSearchLength !== null && value.length >= this._options.minSearchLength) || (force && value.length)) {
+      const valueLength = value.length;
+      const searchByValueChanged = this._options.minSearchLength !== null;
+
+      if ((searchByValueChanged && valueLength >= this._options.minSearchLength) || (force && valueLength)) {
          _private.search(this, value, force);
-      } else {
+      } else if (searchByValueChanged || !valueLength) {
          _private.abort(this);
       }
    },
