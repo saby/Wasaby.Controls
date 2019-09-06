@@ -606,9 +606,6 @@ var
                 if (changesType === 'collectionChanged') {
                     this._ladder = _private.prepareLadder(this);
                 }
-                if (changesType === 'collectionChanged' && GridLayoutUtil.isPartialGridSupport()){
-                    this._nextModelVersion();
-                }
                 this._nextVersion();
                 this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
             }.bind(this);
@@ -1472,10 +1469,13 @@ var
             this._ladder = _private.prepareLadder(this);
             this._nextModelVersion();
         },
+
         setLadderProperties: function(ladderProperties) {
-            this._options.ladderProperties = ladderProperties;
-            this._ladder = _private.prepareLadder(this);
-            this._nextModelVersion();
+            if (!isEqual(this._options.ladderProperties, ladderProperties)) {
+                this._options.ladderProperties = ladderProperties;
+                this._ladder = _private.prepareLadder(this);
+                this._nextModelVersion();
+            }
         },
 
         updateIndexes: function(startIndex, stopIndex) {
