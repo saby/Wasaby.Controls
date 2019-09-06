@@ -42,7 +42,10 @@ var _private = {
     getNodeItems: function(folders, {items, keyProperty, parentProperty}) {
         let nodeItems = [];
         factory(folders).each((folder) => {
-            const records = new RecordSet({idProperty: keyProperty});
+            const records = new RecordSet({
+                idProperty: keyProperty,
+                adapter: items.getAdapter()
+            });
             records.add(folder);
             records.append(_private.getItemsByFolder(items, folder.get(keyProperty), parentProperty));
             nodeItems.push(records);

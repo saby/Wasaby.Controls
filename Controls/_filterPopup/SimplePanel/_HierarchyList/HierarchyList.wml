@@ -1,5 +1,9 @@
 <div>
-   <ws:partial template="{{_emptyItemTemplate}}" itemData="{{_listModel.getEmptyItem()}}" on:click="_emptyItemClickHandler()"/>
+   <ws:partial template="{{_emptyItemTemplate}}"
+               itemData="{{_listModel.getEmptyItem()}}"
+               displayProperty="{{_options.displayProperty}}"
+               hasApplyButton="{{_options.hasApplyButton}}"
+               on:click="_emptyItemClickHandler()"/>
 
    <ws:for data="index, item in _folders">
       <Controls._filterPopup.SimplePanel._List
