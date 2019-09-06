@@ -16,12 +16,11 @@ import {getItemsWithHistory, isHistorySource} from 'Controls/_filter/HistoryUtil
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 
 /**
- * Контрол для фильтрации данных. Предосталвяет возможожность отображать и редактировать фильтр,
- * в удобном для пользователя виде.
+ * Контрол для фильтрации данных. Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
  * Состоит из кнопки-иконки, строкового представления выбранного фильтра и параметров быстрого фильтра.
- * При клике на кнопку-иконку или строковое представления, открывается панель фильтров. {@link Controls/filterPopup:DetailPanel}
- * Клик на параметры быстрого фильтра открывает панель "Быстрых фильтров". {@link Controls/filterPopup:SimplePanel}.
- * Здесь вы можете посмотреть<a href="/materials/demo-ws4-filter-view">демонстрационный пример</a>.
+ * При клике на кнопку-иконку или строковое представления, открывается панель фильтров {@link Controls/filterPopup:DetailPanel}.
+ * Клик на параметры быстрого фильтра открывает панель "Быстрых фильтров" {@link Controls/filterPopup:SimplePanel}.
+ * Здесь вы можете посмотреть <a href="/materials/demo-ws4-filter-view">демонстрационный пример</a>.
  *
  * @class Controls/_filter/View
  * @extends Core/Control
