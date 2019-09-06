@@ -35,30 +35,6 @@ var
             return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
         },
 
-        prepareHeaderAndResultsIfFullGridSupport: function(resultsPosition, header, container) {
-            var
-                resultsPadding,
-                cells;
-
-            //FIXME remove container[0] after fix https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-            container = container[0] || container;
-            if (resultsPosition) {
-                if (resultsPosition === 'top') {
-                    if (header) {
-                        resultsPadding = container.getElementsByClassName('controls-Grid__header-cell')[0].getBoundingClientRect().height + 'px';
-                    } else {
-                        resultsPadding = '0';
-                    }
-                } else {
-                    resultsPadding = 'calc(100% - ' + container.getElementsByClassName('controls-Grid__results-cell')[0].getBoundingClientRect().height + 'px)';
-                }
-                cells = container.getElementsByClassName('controls-Grid__results-cell');
-                Array.prototype.forEach.call(cells, function(elem) {
-                    elem.style.top = resultsPadding;
-                });
-            }
-        },
-
         calcFooterPaddingClass: function(params) {
             var
                 paddingLeft,
@@ -225,16 +201,10 @@ var
             // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                 this._listModel.setColumns(newCfg.columns);
-                if (!Env.detection.isNotFullGridSupport) {
-                    _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
-                }
             }
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._isHeaderChanged = true;
                 this._listModel.setHeader(newCfg.header);
-                if (!Env.detection.isNotFullGridSupport) {
-                    _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
-                }
             }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {
                 this._listModel.setStickyColumn(newCfg.stickyColumn);
@@ -365,9 +335,6 @@ var
             GridView.superclass._afterMount.apply(this, arguments);
             if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._listModel.isDrawHeaderWithEmtyList()) {
                 this._listModel.setHeaderCellMinHeight(this._setHeaderWithHeight());
-            }
-            if (!Env.detection.isNotFullGridSupport) {
-                _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
             }
             if (this._options.columnScroll) {
                 this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
