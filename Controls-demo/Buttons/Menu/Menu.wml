@@ -293,7 +293,7 @@
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__horWrapper">
-      <div class="ControlsDemo-ButtonsMenu__wrapper">
+      <div class="ControlsDemo-ButtonsMenu__wrapper ControlsDemo__additionalItems">
          <h4>Additional items</h4>
          <Controls.dropdown:Button
                  keyProperty="id"
