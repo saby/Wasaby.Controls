@@ -7,14 +7,14 @@
       <div class="ControlsDemo-EditableArea__eapWrapper">
          <Controls.editableArea:Base
             bind:value="content.editObject.name"
-            attr:class="ControlsDemo-EditableArea__tabEditor"
             size="l"
             style="accentHeader"
          >
             <ws:editorTemplate>
                <Controls.input:Text selectOnClick="{{ false }}"
                                     size="m"
-                                    fontStyle="secondary" />
+                                    fontStyle="secondary"
+                                    attr:class="controls-Input_negativeOffset-s_theme_{{_options.theme}}"/>
             </ws:editorTemplate>
          </Controls.editableArea:Base>
       </div>

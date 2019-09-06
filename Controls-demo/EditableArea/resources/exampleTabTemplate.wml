@@ -1,5 +1,5 @@
 <div class="ws-align-items-baseline ws-inline-flexbox">
-   <div class="ControlsDemo-EditableArea__header ControlsDemo-EditableArea__tabEditor">{{item[displayProperty]}}</div>
+   <div class="ControlsDemo-EditableArea__header">{{item[displayProperty]}}</div>
    <Controls.editableArea:View
       editObject="{{item}}"
       readOnly="{{!selected}}"
