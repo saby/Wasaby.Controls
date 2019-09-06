@@ -18,19 +18,22 @@ define([
          cell._beforeMount(options);
          cell.saveOptions(options);
 
-         assert.equal('controls-ListView__itemV controls-Grid__row_primary controls-Grid_row-cell_hovered ' +
+         assert.equal('controls-ListView__itemV controls-ListView__itemV_cursor-pointer controls-Grid__row_primary controls-Grid_row-cell_hovered ' +
              'controls-Grid__row_highlightOnHover_primary', cell.getCellClasses());
 
          cell._options.itemData.isHovered = false;
          cell._options.itemData.style = null;
 
-         assert.equal('controls-ListView__itemV controls-Grid__row_default ' +
+         assert.equal('controls-ListView__itemV controls-ListView__itemV_cursor-pointer controls-Grid__row_default ' +
              'controls-Grid__row_highlightOnHover_default', cell.getCellClasses());
 
          cell._options.itemData.isHovered = true;
          cell._options.highlightOnHover = false;
 
-         assert.equal('controls-ListView__itemV controls-Grid__row_default controls-Grid_row-cell_hovered', cell.getCellClasses());
+         assert.equal('controls-ListView__itemV controls-ListView__itemV_cursor-pointer controls-Grid__row_default controls-Grid_row-cell_hovered', cell.getCellClasses());
+
+         cell._options.clickable = false;
+         assert.equal('controls-ListView__itemV controls-ListView__itemV_cursor-default controls-Grid__row_default controls-Grid_row-cell_hovered', cell.getCellClasses());
 
       });
 
