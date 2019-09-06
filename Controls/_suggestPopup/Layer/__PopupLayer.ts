@@ -37,8 +37,8 @@ var _private = {
       self._popupOptions = {
          autofocus: false,
          className: _private.getPopupClassName('bottom'),
-         verticalAlign: {
-            side: 'bottom'
+         direction: {
+            vertical: 'bottom'
          },
          targetPoint: {
             vertical: 'bottom'
@@ -79,8 +79,14 @@ var __PopupLayer = Control.extend({
 
    _onResult: function(position) {
       //fix suggest position after show
-      this._popupOptions.verticalAlign = position.verticalAlign;
-      this._popupOptions.horizontalAlign = position.horizontalAlign;
+      this._popupOptions.direction = {
+         vertical: position.verticalAlign.side,
+         horizontal: position.horizontalAlign.side
+      };
+      this._popupOptions.offset = {
+         vertical: position.verticalAlign.offset,
+         horizontal: position.horizontalAlign.offset
+      };
 
       // position.corner fixed by https://online.sbis.ru/opendoc.html?guid=b7a05d49-4a68-423f-81d0-70374f875a22
       this._popupOptions.targetPoint = position.corner;
