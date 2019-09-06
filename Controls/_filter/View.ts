@@ -163,11 +163,15 @@ var _private = {
             if (configs[item.name]) {
                 self._displayText[item.name] = {};
                 if (_private.isItemChanged(item)) {
-                    var sKey = configs[item.name].multiSelect ? item.value : [item.value];
-                    let flatSelectedKeys = factory(sKey).flatten().value();
-                    self._displayText[item.name] = _private.getFastText(configs[item.name], flatSelectedKeys);
-                    if (item.textValue !== undefined) {
-                        item.textValue = self._displayText[item.name].text + self._displayText[item.name].hasMoreText;
+                    const selectedKeys = configs[item.name].multiSelect ? item.value : [item.value];
+                    const flatSelectedKeys = factory(selectedKeys).flatten().value(); //[ [selectedKeysList1], [selectedKeysList2] ] in hierarchy list
+                    const isSelectedKeysChanged = !_private.getKeysUnloadedItems(configs[item.name], flatSelectedKeys).length;
+                    
+                    if (isSelectedKeysChanged) {
+                        self._displayText[item.name] = _private.getFastText(configs[item.name], flatSelectedKeys);
+                        if (item.textValue !== undefined) {
+                            item.textValue = self._displayText[item.name].text + self._displayText[item.name].hasMoreText;
+                        }
                     }
                 }
             }
@@ -181,7 +185,7 @@ var _private = {
         return !isEqual(object.getPropertyValue(item, 'value'), object.getPropertyValue(item, 'resetValue'));
     },
 
-    getLoadKeys: function(config, value) {
+    getKeysUnloadedItems: function(config, value) {
         let selectedKeys = value instanceof Array ? value : [value];
         let flattenKeys = factory(selectedKeys).flatten().value();
         let newKeys = [];
@@ -198,7 +202,7 @@ var _private = {
         factory(items).each(function(item) {
             if (_private.isFrequentItem(item)) {
                 const config = configs[item.name];
-                let keys = _private.getLoadKeys(config, item.value);
+                let keys = _private.getKeysUnloadedItems(config, item.value);
                 if (keys.length) {
                     let editorOpts = {source: item.editorOptions.source};
                     editorOpts.filter = {...config.filter};
