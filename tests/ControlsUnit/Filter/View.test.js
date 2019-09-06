@@ -81,16 +81,23 @@ define(
             return view;
          };
 
+         let getItems = function (items) {
+            return new collection.RecordSet({
+               idProperty: 'id',
+               rawData: items
+            });
+         };
+
          it('_beforeMount from receivedState', function() {
             let view = getView(defaultConfig);
             let receivedState = {
                configs: {
                   document: {
-                     items: Clone(defaultItems[0]),
+                     items: getItems(Clone(defaultItems[0])),
                      displayProperty: 'title',
                      keyProperty: 'id'},
                   state: {
-                     items: Clone(defaultItems[1]),
+                     items: getItems(Clone(defaultItems[1])),
                      displayProperty: 'title',
                      keyProperty: 'id',
                      multiSelect: true}
@@ -307,11 +314,11 @@ define(
             view._source = Clone(defaultConfig.source);
             view._configs = {
                document: {
-                  items: Clone(defaultItems[0]),
+                  items: getItems(Clone(defaultItems[0])),
                   displayProperty: 'title',
                   keyProperty: 'id'},
                state: {
-                  items: Clone(defaultItems[1]),
+                  items: getItems(Clone(defaultItems[1])),
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}
@@ -424,7 +431,7 @@ define(
             assert.strictEqual(display.text, 'empty text');
          });
 
-         it('_private:getLoadKeys', function() {
+         it('_private:getKeysUnloadedItems', function() {
             let config = {
                displayProperty: 'title',
                keyProperty: 'id',
@@ -438,10 +445,10 @@ define(
                   ]
                })
             };
-            let keys = filter.View._private.getLoadKeys(config, null);
+            let keys = filter.View._private.getKeysUnloadedItems(config, null);
             assert.strictEqual(keys[0], null);
 
-            keys = filter.View._private.getLoadKeys(config, 'empty');
+            keys = filter.View._private.getKeysUnloadedItems(config, 'empty');
             assert.isFalse(!!keys.length);
          });
 
@@ -621,11 +628,11 @@ define(
                view._source = Clone(defaultConfig.source);
                view._configs = {
                   document: {
-                     items: Clone(defaultItems[0]),
+                     items: getItems(Clone(defaultItems[0])),
                      displayProperty: 'title',
                      keyProperty: 'id'},
                   state: {
-                     items: Clone(defaultItems[1]),
+                     items: getItems(Clone(defaultItems[1])),
                      displayProperty: 'title',
                      keyProperty: 'id',
                      multiSelect: true}
@@ -739,12 +746,15 @@ define(
                   id: 'state',
                   items: [{id: 'author', value: '', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic'},
                         {id: 'sender', value: 'Sander123', resetValue: '', viewMode: 'extended', visibility: false},
-                        {id: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false}],
+                        {id: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false},
+                     {id: 'document', value: '11111', resetValue: '', textValue: 'new document', viewMode: 'frequent', visibility: false}],
                   history: [{ test: 'test' }]
                };
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[1].value, 'Sander123');
-               assert.deepStrictEqual(filterChanged, {'sender': 'Sander123'});
+               assert.deepStrictEqual(view._source[3].textValue, 'new document');
+               assert.deepStrictEqual(filterChanged, {'document': '11111', 'sender': 'Sander123'});
+               assert.deepStrictEqual(view._displayText, {document: {}});
                assert.isTrue(historyEventFired);
             });
 
