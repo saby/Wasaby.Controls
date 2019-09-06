@@ -741,20 +741,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._options.multiSelectVisibility = 'visible';
          });
 
-         it('should update model in old browsers on collection change', function () {
-            var
-                gridViewModel = new gridMod.GridViewModel(cfg),
-                oldVersion = gridViewModel._model._prefixItemVersion,
-                initialStatus = GridLayoutUtil.isPartialGridSupport;
-
-            GridLayoutUtil.isPartialGridSupport = function() { return true; };
-
-            gridViewModel._model._notify('onListChange', 'collectionChanged');
-            assert.equal(oldVersion + 1, gridViewModel._model._prefixItemVersion);
-
-            GridLayoutUtil.isPartialGridSupport = initialStatus;
-         });
-
          it('getItemColumnCellClasses', function() {
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
@@ -1133,6 +1119,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                'date': {}
             }
          }, 'Incorrect value prepared ladder with grouping.');
+
+         var curLadderViewModelVersion = ladderViewModel.getVersion();
+         ladderViewModel.setLadderProperties(['date']);
+         assert.equal(curLadderViewModelVersion, ladderViewModel.getVersion());
       });
       describe('other methods of the class', function() {
          var
