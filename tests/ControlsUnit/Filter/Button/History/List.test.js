@@ -64,7 +64,7 @@ define(
             list.destroy();
          });
 
-         filter.HistoryUtils.loadHistoryItems('TEST_HISTORY_ID').addCallback(function(items) {
+         filter.HistoryUtils.loadHistoryItems({historyId: 'TEST_HISTORY_ID'}).addCallback(function(items) {
             config.items = items;
             config.filterItems = items;
          });
@@ -74,7 +74,7 @@ define(
          it('get text', function() {
             var textArr = [];
             list._beforeMount(config);
-            textArr = list._getText(list._options.items, items, filter.HistoryUtils.getHistorySource(config.historyId));
+            textArr = list._getText(list._options.items, items, filter.HistoryUtils.getHistorySource({historyId: config.historyId}));
             assert.equal(textArr[0], 'Past month, Due date, Ivanov K.K., Unread, On department');
             assert.equal(textArr[1], 'Past month, Ivanov K.K.');
 

@@ -8,10 +8,9 @@ import Utils = require('Types/util');
 import {HistoryUtils} from 'Controls/filter';
 import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
-import HistoryStorage = require('SBIS3.CONTROLS/History/HistoryList');
 import {Constants} from 'Controls/history';
 import ParallelDeferred = require('Core/ParallelDeferred');
-import isEmpty = require('Core/helpers/Object/isEmpty');
+import Deferred = require('Core/Deferred');
 import {convertToFilterStructure, convertToSourceData} from 'Controls/_filterPopup/converterFilterStructure';
 import 'css!theme?Controls/filterPopup';
 
@@ -25,6 +24,10 @@ import 'css!theme?Controls/filterPopup';
    var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
    var _private = {
+      getSource: function(historyId) {
+         return HistoryUtils.getHistorySource({ historyId: historyId });
+      },
+
       getItemId: function(item) {
          let id;
          if (item.hasOwnProperty('id')) {
@@ -100,13 +103,33 @@ import 'css!theme?Controls/filterPopup';
          record.set('filterPanelItems', historyItems);
       },
 
+      loadFavoriteItems: function(self, HistoryStorage, historyId) {
+         let pDef = new ParallelDeferred();
+         self._historyGlobalStorage = new HistoryStorage({
+            historyId: historyId,
+            isGlobalUserConfig: true
+         });
+         self._historyStorage = new HistoryStorage({
+            historyId: historyId
+         });
+         pDef.push(self._historyStorage.getHistory(true));
+         pDef.push(self._historyGlobalStorage.getHistory(true));
+         return pDef.done().getResult().addCallback((items) => {
+            self._favoriteList = items[0].clone();
+            self._favoriteList.prepend(items[1]);
+            _private.convertToItems(self._favoriteList);
+            self._historyCount = Constants.MAX_HISTORY - self._favoriteList.getCount();
+            return items;
+         });
+      },
+
       getFavoriteDialogRecord: function(self, item, historyId) {
          let editItem = item.get('data');
          let items;
          if (editItem) {
             items = item.get('data').get('filterPanelItems');
          } else {
-            let history = HistoryUtils.getHistorySource(historyId).getDataObject(item.get('ObjectData'));
+            let history = _private.getSource(historyId).getDataObject(item.get('ObjectData'));
             items = history.items || history;
          }
          let captionsObject = _private.getCaptions(self._options.filterItems);
@@ -149,7 +172,7 @@ import 'css!theme?Controls/filterPopup';
                   onBeforeUpdateModel: function(event, record) {
                      let editItemData = item.get('data');
                      if (item.has('pinned')) {
-                        HistoryUtils.getHistorySource(self._options.historyId).update(item, {
+                        _private.getSource(self._options.historyId).update(item, {
                            $_pinned: true
                         });
                      }
@@ -214,34 +237,24 @@ import 'css!theme?Controls/filterPopup';
       _beforeMount: function(options) {
          if (options.items) {
             this._items = options.items.clone();
-            this._itemsText = this._getText(options.items, options.filterItems, HistoryUtils.getHistorySource(options.historyId));
+            this._itemsText = this._getText(options.items, options.filterItems, _private.getSource(options.historyId));
          }
          if (options.saveMode === 'favorite') {
             let self = this;
-            let pDef = new ParallelDeferred();
-            this._historyGlobalStorage = new HistoryStorage({
-               historyId: options.historyId,
-               isGlobalUserConfig: true
+            let loadDef = new Deferred();
+            require(['SBIS3.CONTROLS/History/HistoryList'], (HistoryStorage) => {
+               _private.loadFavoriteItems(self, HistoryStorage, options.historyId).addCallback(() => {
+                  loadDef.callback();
+               });
             });
-            this._historyStorage = new HistoryStorage({
-               historyId: options.historyId
-            });
-            pDef.push(this._historyStorage.getHistory(true));
-            pDef.push(this._historyGlobalStorage.getHistory(true));
-            return pDef.done().getResult().addCallback((items) => {
-               self._favoriteList = items[0].clone();
-               self._favoriteList.prepend(items[1]);
-               _private.convertToItems(self._favoriteList);
-               self._historyCount = Constants.MAX_HISTORY - self._favoriteList.getCount();
-               return items;
-            });
+            return loadDef;
          }
       },
 
       _beforeUpdate: function(newOptions) {
          if (!isEqual(this._options.items, newOptions.items)) {
             this._items = newOptions.items.clone();
-            this._itemsText = this._getText(newOptions.items, newOptions.filterItems, HistoryUtils.getHistorySource(newOptions.historyId));
+            this._itemsText = this._getText(newOptions.items, newOptions.filterItems, _private.getSource(newOptions.historyId));
          }
          if (newOptions.saveMode === 'favorite') {
             this._historyCount = Constants.MAX_HISTORY - this._favoriteList.getCount();
@@ -249,7 +262,7 @@ import 'css!theme?Controls/filterPopup';
       },
 
       _onPinClick: function(event, item) {
-           HistoryUtils.getHistorySource(this._options.historyId).update(item, {
+           _private.getSource(this._options.historyId).update(item, {
                $_pinned: !item.get('pinned')
            });
            this._notify('historyChanged');
@@ -264,7 +277,7 @@ import 'css!theme?Controls/filterPopup';
          if (isFavorite) {
              history = item.get('data').get('filterPanelItems');
          } else {
-             history = HistoryUtils.getHistorySource(this._options.historyId).getDataObject(item.get('ObjectData'));
+             history = _private.getSource(this._options.historyId).getDataObject(item.get('ObjectData'));
          }
          this._notify('applyHistoryFilter', [history]);
       },

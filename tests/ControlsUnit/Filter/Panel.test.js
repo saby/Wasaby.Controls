@@ -2,11 +2,12 @@ define(
    [
       'Controls/filterPopup',
       'Controls/filter',
+      'Controls/history',
       'Types/collection',
       'Core/core-clone',
       'Core/Deferred'
    ],
-   function(filterPopup, filter, collection, Clone, Deferred) {
+   function(filterPopup, filter, history, collection, Clone, Deferred) {
       describe('FilterPanelVDom', function() {
          var template = 'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate';
          var config = {},
@@ -53,11 +54,21 @@ define(
                historyId: 'TEST_PANEL_HISTORY_ID'
             };
             var panel2 = getFilterPanel(config2);
-            filterPopup.DetailPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID', 'pinned').addCallback(function(items) {
-               assert.isOk(filter.HistoryUtils.getHistorySource('TEST_PANEL_HISTORY_ID')._history);
+            filterPopup.DetailPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function(items) {
+               assert.isOk(filter.HistoryUtils.getHistorySource({historyId: 'TEST_PANEL_HISTORY_ID'})._history);
                assert.equal(items.getCount(), 2);
                done();
             });
+         });
+
+         it('Init::historyItems isReportPanel', function() {
+            let historyConfig = {
+               historyId: 'TEST_REPORT_PANEL_HISTORY_ID',
+               recent: 'MAX_HISTORY_REPORTS',
+               pinned: false
+            };
+            let hSource = filter.HistoryUtils.getHistorySource(historyConfig);
+            assert.strictEqual(hSource.historySource._recent, history.Constants.MAX_HISTORY_REPORTS + 1);
          });
 
          it('Init::historyItems fail loading', function(done) {
