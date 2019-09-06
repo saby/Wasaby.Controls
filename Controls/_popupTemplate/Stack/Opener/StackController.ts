@@ -69,12 +69,12 @@ const _private = {
         const currentContainerWidth = container.style.width;
         container.style.width = 'auto';
 
-        const templateWidth = container.querySelector('.controls-Stack__content').offsetWidth;
+        const templateWidth = container.querySelector('.controls-Stack__content-wrapper').offsetWidth;
         container.style.width = currentContainerWidth;
         return templateWidth;
     },
     updatePopupWidth(item, self) {
-        if (!item.containerWidth && !item.position.stackWidth && item.popupState !== BaseController.POPUP_STATE_INITIALIZING) {
+        if (!item.containerWidth && !item.position.width && item.popupState !== BaseController.POPUP_STATE_INITIALIZING) {
             item.containerWidth = _private.getContainerWidth(item, self._getPopupContainer(item.id));
         }
     },
@@ -96,10 +96,10 @@ const _private = {
     getItemPosition(item, self) {
         const targetCoords = _private.getStackParentCoords();
         item.position = StackStrategy.getPosition(targetCoords, item);
-        item.popupOptions.stackWidth = item.position.stackWidth;
-        item.popupOptions.workspaceWidth = item.position.stackWidth;
-        item.popupOptions.stackMinWidth = item.position.stackMinWidth;
-        item.popupOptions.stackMaxWidth = item.position.stackMaxWidth;
+        item.popupOptions.stackWidth = item.position.width;
+        item.popupOptions.workspaceWidth = item.position.width;
+        item.popupOptions.stackMinWidth = item.position.minWidth;
+        item.popupOptions.stackMaxWidth = item.position.maxWidth;
         // todo https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
         item.popupOptions.stackMinimizedWidth = item.popupOptions.minimizedWidth;
 
@@ -201,10 +201,8 @@ const _private = {
     },
     savePopupWidth(item): void {
         const propStorageId = item.popupOptions.propStorageId;
-        // TODO: после доброски https://online.sbis.ru/opendoc.html?guid=79fa38a7-7b4b-4784-80c2-3218d9d2d6f6
-        // заменить popupOptions.stackWidth на position: width
-        if (propStorageId && item.popupOptions.stackWidth) {
-            setSettings({[propStorageId]: item.popupOptions.stackWidth});
+        if (propStorageId && item.position.width) {
+            setSettings({[propStorageId]: item.position.width});
         }
     },
     addLastStackClass(item): void {
@@ -275,6 +273,7 @@ const StackController = BaseController.extend({
 
     popupResizingLine(item, offset): void {
         item.popupOptions.stackWidth += offset;
+        item.position.width += offset;
         item.popupOptions.workspaceWidth += offset;
         _private.updatePopupOptions(item);
         _private.savePopupWidth(item);
@@ -288,11 +287,11 @@ const StackController = BaseController.extend({
                 item.position = _private.getItemPosition(item, this);
                 _private.updatePopupWidth(item, this);
                 _private.removeLastStackClass(item);
-                const currentWidth = item.containerWidth || item.position.stackWidth;
+                const currentWidth = item.containerWidth || item.position.width;
                 let forRemove;
                 if (currentWidth) {
                     const cacheItem = cache.find((el) => {
-                        const itemWidth = el.containerWidth || el.position.stackWidth;
+                        const itemWidth = el.containerWidth || el.position.width;
                         return itemWidth === currentWidth;
                     });
 
@@ -309,7 +308,7 @@ const StackController = BaseController.extend({
                         forRemove = null;
                         return false;
                     }
-                    const itemWidth = el.containerWidth || el.position.stackWidth;
+                    const itemWidth = el.containerWidth || el.position.width;
                     const isVisiblePopup = itemWidth >= (currentWidth || 0);
                     if (!isVisiblePopup) {
                         _private.hidePopup(el);
@@ -347,7 +346,7 @@ const StackController = BaseController.extend({
                     top: -10000,
                     left: -10000,
                     height: _private.getWindowSize().height,
-                    stackWidth: position.stackWidth || undefined
+                    width: position.width || undefined
                 };
             } else {
                 // TODO KINGO
