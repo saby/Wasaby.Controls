@@ -91,11 +91,13 @@ var SearchController = extend({
    },
 
    search: function(value, force) {
+      const valueLength = value.length;
+      const searchByValueChanged = this._options.minSearchLength !== null;
       let result;
 
-      if ((this._options.minSearchLength !== null && value.length >= this._options.minSearchLength) || (force && value.length)) {
+      if ((searchByValueChanged && valueLength >= this._options.minSearchLength) || (force && valueLength)) {
          result = _private.search(this, value, force);
-      } else {
+      } else if (searchByValueChanged || !valueLength) {
          result = _private.abort(this);
       }
 
