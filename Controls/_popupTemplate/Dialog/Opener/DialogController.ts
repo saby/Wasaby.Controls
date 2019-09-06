@@ -1,5 +1,6 @@
 import BaseController = require('Controls/_popupTemplate/BaseController');
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
+import Env = require('Env/Env');
 
 let _private = {
     prepareConfig(item, sizes) {
@@ -73,6 +74,14 @@ let DialogController = BaseController.extend({
 
         /* end: We remove the set values that affect the size and positioning to get the real size of the content */
         this.prepareConfig(cfg, container);
+
+        // container could be hidden by scroll after keyboard animation.
+        // position popup in the visible part of the screen
+        if (Env.detection.isMobileIOS) {
+            setTimeout(() => {
+                container.scrollIntoView({behavior: 'smooth'});
+            }, 500);
+        }
 
         /* start: Return all values to the node. Need for vdom synchronizer */
         container.style.width = width;
