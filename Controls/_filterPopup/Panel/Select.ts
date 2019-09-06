@@ -1,12 +1,14 @@
 import Control = require('Core/Control');
 import Utils = require('Types/util');
 import template = require('wml!Controls/_filterPopup/Panel/Select/Select');
-   /**
+/**
     * Контрол, отображающий заданный набор элементов через разделитель.
     *
     * Для работы с единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
     * @class Controls/_filterPopup/Panel/Select
     * @extends Core/Control
+    * @mixes Controls/_interface/ITextValue
+    * @mixes Controls/_interface/IMultiSelectable
     * @control
     * @public
     * @author Герасимов А.М.
@@ -19,6 +21,8 @@ import template = require('wml!Controls/_filterPopup/Panel/Select/Select');
     * @class Controls/_filterPopup/Panel/Select
     * @extends Core/Control
     * @control
+    * @mixes Controls/_interface/ITextValue
+    * @mixes Controls/_interface/IMultiSelectable
     * @public
     * @author Герасимов А.М.
     */
