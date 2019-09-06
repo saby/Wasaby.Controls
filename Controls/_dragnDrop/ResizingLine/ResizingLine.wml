@@ -4,7 +4,7 @@
                                  on:dragstart="_onStartDragHandler()"
                                  on:documentdragend="_onEndDragHandler()"><div name="{{border}}"
                  attr:class="controls-ResizingLine controls-ResizingLine__border_theme_{{_options.theme}}"
-                 on:mousedown="_beginDragHandler()"></div></Controls._dragnDrop.Container>
+                 on:mousedown="_beginDragHandler()"  on:touchstart="_beginDragHandler()"></div></Controls._dragnDrop.Container>
    <ws:if data="{{_dragging}}">
       <div class="controls-ResizingLine__area_theme_{{_options.theme}}"
            style="{{_styleArea}}">
