@@ -1,5 +1,5 @@
 /**
- * Библиотека окон для фильтров.
+ * Библиотека контролов, которые реализуют панель фильтрации и её содержимое.
  * @library Controls/filterPopup
  * @includes Panel Controls/_filterPopup/Panel
  * @includes DetailPanel Controls/_filterPopup/DetailPanel

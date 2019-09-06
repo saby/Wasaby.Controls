@@ -1,5 +1,5 @@
 /**
- * Библиотека контрола сетки свойств.
+ * Библиотека контролов, которые реализуют propertyGrid и набор стандартных редакторов типов.
  * @library Controls/propertyGrid
  * @includes PropertyGrid Controls/_propertyGrid/PropertyGrid
  * @includes BooleanEditor Controls/_propertyGrid/defaultEditors/Boolean

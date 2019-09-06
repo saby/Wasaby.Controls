@@ -1,5 +1,5 @@
 /**
- * Библиотека выпадающих списков.
+ * Библиотека контролов, которые реализуют выбор из меню.
  * @library Controls/dropdownPopup
  * @includes Template wml!Controls/_dropdownPopup/defaultHeadTemplate
  * @includes List Controls/_dropdownPopup/DropdownList

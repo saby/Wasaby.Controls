@@ -1,5 +1,5 @@
 /**
- * Библиотека декораторов.
+ * Библиотека контролов, которые предназначены для преобразования данных к какому-либо внешнему виду.
  * @library Controls/decorator
  * @includes Highlight Controls/_decorator/Highlight
  * @includes Markup Controls/_decorator/Markup

@@ -1,5 +1,5 @@
 /**
- * Библиотека автодополнения.
+ * Библиотека контролов, позволяющих выводить подсказку при вводе текста.
  * @library Controls/suggest
  * @includes Input Controls/_suggest/Input
  * @includes InputStyles Controls/_suggest/Input/Styles

@@ -1,5 +1,5 @@
 /**
- * Библиотека переключателей.
+ * Библиотека контролов, которые позволяют организовать выбор из одного или нескольких значений.
  * @library Controls/toggle
  * @includes Button Controls/_toggle/Button
  * @includes Switch Controls/_toggle/Switch

@@ -1,5 +1,5 @@
 /**
- * Библиотека контролов поиска.
+ * Библиотека контролов, которые служат для организации поиска в списках.
  * @library Controls/search
  * @includes InputContainer Controls/_search/Input/Container
  * @includes Misspell Controls/_search/Misspell
