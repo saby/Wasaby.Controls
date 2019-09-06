@@ -93,13 +93,14 @@
          height: @border-width_Tabs-item_selected;
          background: @border-color_Tabs-item_selected;
       }
-      z-index: 1;
    }
 }
 .controls-Tabs__item_state_selected_theme_@{themeName} {
    font-weight: @font-weight_Tabs-item_selected;
    font-size: @font-size_Tabs-item_selected;
-   z-index: 2;
+   &:after {
+      z-index: 1;
+   }
 }
 .controls-Tabs__item_align_left_theme_@{themeName} {
    margin-left: -@border-width_Tabs;
