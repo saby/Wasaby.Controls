@@ -223,7 +223,68 @@ define([
             resolve();
          });
       });
+      describe('itemMouseMove calls nodeMouseMove when dragging', function() {
+         let tree = correctCreateTreeControl({
+            columns: [],
+            source: new sourceLib.Memory({
+               data: [],
+               idProperty: 'id'
+            })
+         });
+         let nodeMouseMoveCalled;
+         let dragEntity;
+         let dragItemData;
+         let nodeItem = {
+            dispItem: {
+               isNode: function () {
+                  return true;
+               }
+            }
+         };
+         let leafItem = {
+            dispItem: {
+               isNode: function () {
+                  return false;
+               }
+            }
+         };
+         let model = tree._children.baseControl.getViewModel();
+         model.getDragEntity = function () {
+            return dragEntity;
+         };
+         model.getDragItemData = function () {
+            return dragItemData;
+         };
+         tree._nodeMouseMove = function() {
+            nodeMouseMoveCalled = true;
+         };
+         beforeEach(function() {
+            nodeMouseMoveCalled = false;
+            dragItemData = null;
+            dragEntity = null;
+         });
+         it('dragEntity', function() {
+            dragEntity = {};
+            tree._itemMouseMove({}, leafItem, {});
+            assert.isFalse(nodeMouseMoveCalled);
+            tree._itemMouseMove({}, nodeItem, {});
+            assert.isTrue(nodeMouseMoveCalled);
+         });
+         it('dragItemData', function() {
+            dragItemData = {};
+            tree._itemMouseMove({}, leafItem, {});
+            assert.isFalse(nodeMouseMoveCalled);
+            tree._itemMouseMove({}, nodeItem, {});
+            assert.isTrue(nodeMouseMoveCalled);
+         });
+         it('nothing', function() {
+            tree._itemMouseMove({}, leafItem, {});
+            assert.isFalse(nodeMouseMoveCalled);
+            tree._itemMouseMove({}, nodeItem, {});
+            assert.isFalse(nodeMouseMoveCalled);
+         });
 
+      });
       describe('expanding nodes on dragging', function() {
          let treeControl = correctCreateTreeControl({
                columns: [],
