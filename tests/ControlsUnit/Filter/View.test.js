@@ -431,7 +431,7 @@ define(
             assert.strictEqual(display.text, 'empty text');
          });
 
-         it('_private:getLoadKeys', function() {
+         it('_private:getKeysUnloadedItems', function() {
             let config = {
                displayProperty: 'title',
                keyProperty: 'id',
@@ -445,10 +445,10 @@ define(
                   ]
                })
             };
-            let keys = filter.View._private.getLoadKeys(config, null);
+            let keys = filter.View._private.getKeysUnloadedItems(config, null);
             assert.strictEqual(keys[0], null);
 
-            keys = filter.View._private.getLoadKeys(config, 'empty');
+            keys = filter.View._private.getKeysUnloadedItems(config, 'empty');
             assert.isFalse(!!keys.length);
          });
 
