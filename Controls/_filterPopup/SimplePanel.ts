@@ -1,15 +1,13 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/SimplePanel/SimplePanel');
+import CoreClone = require('Core/core-clone');
 import * as defaultItemTemplate from 'wml!Controls/_filterPopup/SimplePanel/itemTemplate';
-import Merge = require('Core/core-merge');
 
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
-import CoreClone = require('Core/core-clone');
-import {dropdownHistoryUtils as historyUtils} from "Controls/dropdown";
 
 /**
- * Выпадающий список для {@link Controls/filter:View}.
+ * Панель "быстрых фильтров" для {@link Controls/filter:View}.
  *
  * @class Controls/_filterPopup/SimplePanel
  * @extends Core/Control
