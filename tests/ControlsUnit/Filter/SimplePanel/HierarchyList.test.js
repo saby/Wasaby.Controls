@@ -2,9 +2,10 @@ define(
    [
       'Controls/filterPopup',
       'Controls/_dropdownPopup/DropdownViewModel',
-      'Types/collection'
+      'Types/collection',
+      'Types/entity'
    ],
-   function(filterPopup, DropdownViewModel, collection) {
+   function(filterPopup, DropdownViewModel, collection, entity) {
       describe('SimplePanel:HierarchyList', function() {
 
          let defaultItems = new collection.RecordSet({
@@ -55,6 +56,36 @@ define(
             assert.strictEqual(list._folders.length, 2);
             assert.deepStrictEqual(list._selectedKeys, [[], []]);
             assert.strictEqual(list._nodeItems[0].getCount(), 4);
+         });
+
+         it('_beforeMount adapter', function() {
+            let sbisItems = new collection.RecordSet({
+               adapter: new entity.adapter.Sbis(),
+               rawData: {
+                  d: [ [ 1, 'first item' ],
+                       [ 2, 'second item' ],
+                       [ 3, 'third item' ] ],
+                  s: [
+                     { n: 'id', t: 'Строка'},
+                     { n: 'title', t: 'Строка'}
+                  ]
+               }
+            });
+            let expectedListModel = new DropdownViewModel({
+               items: sbisItems,
+               selectedKeys: defaultConfig.selectedKeys,
+               keyProperty: defaultConfig.keyProperty,
+               itemTemplateProperty: defaultConfig.itemTemplateProperty,
+               displayProperty: defaultConfig.displayProperty,
+               emptyText: defaultConfig.emptyText,
+               emptyKey: defaultConfig.emptyKey
+            });
+            let config = {...defaultConfig, items: sbisItems};
+            let list = getHierarchyList(config);
+            list._beforeMount(config);
+            assert.deepStrictEqual(list._listModel._options, expectedListModel._options);
+            assert.strictEqual(list._folders.length, 0);
+            assert.strictEqual(list._listModel.getItems().at(0).get('title'), 'first item');
          });
 
          it('_itemClickHandler', function() {
