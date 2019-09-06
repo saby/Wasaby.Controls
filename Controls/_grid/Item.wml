@@ -93,6 +93,7 @@
         itemData="{{ itemData }}"
         attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode)}}"
         currentColumn="{{ currentColumn }}"
+        clickable="{{ clickable }}"
         highlightOnHover="{{ highlightOnHover }}">
    <ws:columnContentTpl>
       <ws:partial template="colTpl" itemData="{{itemData}}" currentColumn="{{currentColumn}}"/>

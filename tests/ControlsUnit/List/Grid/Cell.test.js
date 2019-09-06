@@ -32,6 +32,9 @@ define([
 
          assert.equal('controls-ListView__itemV controls-ListView__itemV_cursor-pointer controls-Grid__row_default controls-Grid_row-cell_hovered', cell.getCellClasses());
 
+         cell._options.clickable = false;
+         assert.equal('controls-ListView__itemV controls-ListView__itemV_cursor-default controls-Grid__row_default controls-Grid_row-cell_hovered', cell.getCellClasses());
+
       });
 
       it('event handler from options should be called on event', function() {
