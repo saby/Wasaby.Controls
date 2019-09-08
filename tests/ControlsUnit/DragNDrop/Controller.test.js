@@ -56,6 +56,10 @@ define([
          assert.isFalse(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 20, 14)));
          assert.isFalse(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 16, 10)));
          assert.isFalse(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 20, 6)));
+         assert.isTrue(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 24, 10), true));
+         assert.isTrue(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 20, 14), true));
+         assert.isTrue(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 16, 10), true));
+         assert.isTrue(dragnDrop.Container._private.isDragStarted(startEvent, createNativeEvent('mousemove', 20, 6), true));
       });
       it('getDragOffset', function() {
          assert.deepEqual(dragnDrop.Container._private.getDragOffset(startEvent, createNativeEvent('mousemove', 40, 20)), {x: -20, y: -10});

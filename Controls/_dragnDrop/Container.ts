@@ -26,8 +26,12 @@ import 'css!Controls/_dragnDrop/Container';
                y: pageY
             };
          },
-         isDragStarted: function(startEvent, moveEvent) {
-            var offset = _private.getDragOffset(moveEvent, startEvent);
+         isDragStarted: function(startEvent, moveEvent, immediately) {
+            if (immediately) {
+               return true;
+            }
+
+            const offset = _private.getDragOffset(moveEvent, startEvent);
             return Math.abs(offset.x) > SHIFT_LIMIT || Math.abs(offset.y) > SHIFT_LIMIT;
          },
          getSelection() {
@@ -60,7 +64,7 @@ import 'css!Controls/_dragnDrop/Container';
 
             if (self._startEvent) {
                dragObject = self._getDragObject(nativeEvent, self._startEvent);
-               if (!self._documentDragging && _private.isDragStarted(self._startEvent, nativeEvent)) {
+               if (!self._documentDragging && _private.isDragStarted(self._startEvent, nativeEvent, self._startImmediately)) {
                   self._insideDragging = true;
                   self._notify('_documentDragStart', [dragObject], {bubbling: true});
                }
@@ -890,13 +894,15 @@ import 'css!Controls/_dragnDrop/Container';
          _template: template,
          _dragEntity: undefined,
          _startEvent: undefined,
+         _startImmediately: false,
          _documentDragging: false,
          _insideDragging: false,
          _endDragNDropTimer: null,
 
-         startDragNDrop: function(entity, mouseDownEvent) {
+         startDragNDrop: function(entity, mouseDownEvent, options = {}) {
             this._dragEntity = entity;
             this._startEvent = mouseDownEvent.nativeEvent;
+            this._startImmediately = options.immediately;
             _private.clearSelection(this._startEvent);
             if (this._startEvent && this._startEvent.target) {
                this._startEvent.target.classList.add('controls-DragNDrop__dragTarget');

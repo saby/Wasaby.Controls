@@ -80,7 +80,9 @@ class ResizingLine extends Control<IContainerOptions, void> {
         this._height = this._container.get ? this._container.get(0).clientHeight : this._container.clientHeight;
         this._children.dragNDrop.startDragNDrop(new Entity({
             itemId: this.getInstanceId()
-        }), event);
+        }), event, {
+            immediately: true
+        });
     }
 
     protected _onStartDragHandler(): void {
