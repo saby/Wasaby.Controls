@@ -191,6 +191,9 @@ class Popup extends Control<IPopupOptions> {
 
     protected _controlResize(): void {
         this._notify('popupControlResize', [this._options.id], {bubbling: true});
+
+        //toDO Временное решение, выписана задача https://online.sbis.ru/opendoc.html?guid=79cdc24c-cf4c-45da-97b4-7353540a2b1b
+        this._children.popupResize.start();
     }
 
     /**

@@ -264,7 +264,9 @@ var _private = {
    },
 
    reverseSourceData: function(self) {
-      if (self._source.data) {
+      let source = _private.getOriginSource(self._source);
+
+      if (source.data) {
          /* toDO !KONGO Вынуждены использовать PrefetchProxy до перевода саггеста на search/Controller
            https://online.sbis.ru/opendoc.html?guid=ab4d807e-9e1a-4a0a-b95b-f0c3f6250f63
            Использовать приходится, т.к. мы не можем просто пересоздать выпадашку с новыми данными,
@@ -272,10 +274,10 @@ var _private = {
            из-за которой моргают данные */
          self._source = new PrefetchProxy({
             target: new Memory({
-               model: self._source.getModel(),
-               idProperty: self._source.getIdProperty(),
-               data: _private.reverseData(self._source.data, self._source),
-               adapter: self._source.getAdapter()
+               model: source.getModel(),
+               idProperty: source.getIdProperty(),
+               data: _private.reverseData(source.data, source),
+               adapter: source.getAdapter()
             })
          });
       }

@@ -18,6 +18,19 @@ var __PopupContent = BaseLayer.extend({
    _positionFixed: false,
    _popupOptions: null,
    _suggestWidth: null,
+   _reverseList: false,
+
+   _beforeUpdate: function(newOptions) {
+      __PopupContent.superclass._beforeUpdate.apply(this, arguments);
+
+      let reverseList = newOptions.stickyPosition && newOptions.stickyPosition.verticalAlign.side === 'top';
+
+      if (!this._reverseList && reverseList) {
+         this._children.scrollContainer.scrollToBottom();
+      }
+
+      this._reverseList = reverseList;
+   },
 
    _afterUpdate: function(oldOptions) {
       //need to notify resize after show content, that the popUp recalculated its position
@@ -46,6 +59,12 @@ var __PopupContent = BaseLayer.extend({
          <Controls.suggest:Input/> */
       this._suggestWidth = _private.getSuggestWidth(target, container);
       this._forceUpdate();
+   },
+
+   _resize: function() {
+      if (this._reverseList) {
+         this._children.scrollContainer.scrollToBottom();
+      }
    }
 });
 
