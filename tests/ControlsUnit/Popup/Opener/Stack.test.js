@@ -159,6 +159,32 @@ define(
             assert.isFalse(popupTemplate.StackController._stack.at(14).popupOptions.hidden);
             assert.isFalse(popupTemplate.StackController._stack.at(15).popupOptions.hidden);
          });
+         it('last stack className', () => {
+            let baseGetItemPosition = popupTemplate.StackController._private.getItemPosition;
+            popupTemplate.StackController._private.getItemPosition = items => (items.position);
+            popupTemplate.StackController._stack.clear();
+            popupTemplate.StackController._stack.add({
+               position: { stackWidth: 720 },
+               popupOptions: { className: '' }
+            });
+            popupTemplate.StackController._update();
+            assert.isTrue(popupTemplate.StackController._stack.at(0).popupOptions.className.indexOf('controls-Stack__last-item') >= 0);
+            popupTemplate.StackController._stack.add({
+               containerWidth: 1100,
+               popupOptions: { className: '' }
+            });
+            popupTemplate.StackController._update();
+            assert.isTrue(popupTemplate.StackController._stack.at(0).popupOptions.className.indexOf('controls-Stack__last-item') < 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(1).popupOptions.className.indexOf('controls-Stack__last-item') >= 0);
+            popupTemplate.StackController._stack.add({
+               containerWidth: 720,
+               popupOptions: { className: '' }
+            });
+            popupTemplate.StackController._update();
+            assert.isTrue(popupTemplate.StackController._stack.at(0).popupOptions.className.indexOf('controls-Stack__last-item') < 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(1).popupOptions.className.indexOf('controls-Stack__last-item') < 0);
+            assert.isTrue(popupTemplate.StackController._stack.at(2).popupOptions.className.indexOf('controls-Stack__last-item') >= 0);
+         });
 
 
          it('stack default position', (done) => {
@@ -591,31 +617,6 @@ define(
             stackContentInstance._beforeUpdate(item);
             assert.equal(stackContentInstance._minOffset, 400);
             assert.equal(stackContentInstance._maxOffset, 300);
-         });
-         it('last stack className', () => {
-            let baseGetItemPosition = popupTemplate.StackController._private.getItemPosition;
-            popupTemplate.StackController._private.getItemPosition = items => (items.position);
-            popupTemplate.StackController._stack.add({
-               position: { stackWidth: 720 },
-               popupOptions: { stackClassName: '' }
-            });
-            popupTemplate.StackController._update();
-            assert.isTrue(popupTemplate.StackController._stack.at(0).popupOptions.className.indexOf('controls-Stack__last-item') >= 0);
-            popupTemplate.StackController._stack.add({
-               containerWidth: 1100,
-               popupOptions: { stackClassName: '' }
-            });
-            popupTemplate.StackController._update();
-            assert.isTrue(popupTemplate.StackController._stack.at(0).popupOptions.className.indexOf('controls-Stack__last-item') < 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(1).popupOptions.className.indexOf('controls-Stack__last-item') >= 0);
-            popupTemplate.StackController._stack.add({
-               containerWidth: 720,
-               popupOptions: { stackClassName: '' }
-            });
-            popupTemplate.StackController._update();
-            assert.isTrue(popupTemplate.StackController._stack.at(0).popupOptions.className.indexOf('controls-Stack__last-item') < 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(1).popupOptions.className.indexOf('controls-Stack__last-item') < 0);
-            assert.isTrue(popupTemplate.StackController._stack.at(2).popupOptions.className.indexOf('controls-Stack__last-item') >= 0);
          });
       });
    });
