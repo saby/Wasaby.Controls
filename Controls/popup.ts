@@ -1,5 +1,5 @@
 /**
- * Библиотека контролов, открывающих всплывающие окна.
+ * Библиотека контролов, открывающих всплывающие окна. Существуют окна нескольких видов, которые различаются внешним видом и алгоритмом позиционирования.
  * @library Controls/popup
  * @includes Confirmation Controls/_popup/Opener/Confirmation
  * @includes Dialog Controls/_popup/Opener/Dialog

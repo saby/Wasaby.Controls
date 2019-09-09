@@ -1,5 +1,5 @@
 /**
- * Библиотека контролов, отображающих данные в виде плитки.
+ * Библиотека контролов, которые реализуют иерархический список, отображающийся в виде плитки.
  * @library Controls/tile
  * @includes View Controls/_tile/View
  * @includes ItemTemplate wml!Controls/_tile/TreeTileView/DefaultItemTpl
