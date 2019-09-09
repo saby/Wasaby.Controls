@@ -80,6 +80,9 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
             inst.setState(this._deserialized[key]);
             delete this._deserialized[key];
          }
+         if (typeof this.receivedStateObjectsArray[key] !== 'undefined') {
+            Env.IoC.resolve('ILogger').warn('SRec::register', 'Try to register instance more than once or duplication of keys happened');
+         }
          this.receivedStateObjectsArray[key] = inst;
       },
 
