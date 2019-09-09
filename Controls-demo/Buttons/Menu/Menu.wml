@@ -293,7 +293,7 @@
    </div>
 
    <div class="ControlsDemo-ButtonsMenu__horWrapper">
-      <div class="ControlsDemo-ButtonsMenu__wrapper ControlsDemo__additionalItems">
+      <div class="ControlsDemo-ButtonsMenu__wrapper">
          <h4>Additional items</h4>
          <Controls.dropdown:Button
                  keyProperty="id"
@@ -302,6 +302,7 @@
                  additionalProperty="additional"
                  groupingKeyCallback="{{_groupingKeyCallback}}"
                  groupTemplate="Controls/dropdownPopup:GroupTemplate"
+                 attr:class="ControlsDemo__additionalItems"
                  style="secondary"
                  viewMode="link"
                  icon="icon-Linked"
