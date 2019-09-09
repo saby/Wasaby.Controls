@@ -12,6 +12,7 @@ import {
     getResultsIndex, getTopOffset, IBaseGridRowIndexOptions, getRowsArray, getMaxEndRow, getBottomPaddingRowIndex
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 import ControlsConstants = require('Controls/Constants');
+import collection = require('Types/collection');
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -613,9 +614,14 @@ var
             this._onGroupsExpandChangeFn = function(event, changes) {
                 this._notify('onGroupsExpandChange', changes);
             }.bind(this);
-            this._onCollectionChangeFn = function() {
+            this._onCollectionChangeFn = function(event, action) {
                 this._updateLastItemKey();
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
+                // In browsers that do not support "display: contents", need redraw all elements,
+                // because row and column indices are set for all elements.
+                if (GridLayoutUtil.isPartialGridSupport() && action === collection.IObservable.ACTION_ADD) {
+                    event.setResult('updatePrefix');
+                }
             }.bind(this);
             // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
             // Use callback for fix it. https://online.sbis.ru/opendoc.html?guid=78a1760a-bfcf-4f2c-8b87-7f585ea2707e
