@@ -93,7 +93,8 @@ class Base extends Control<IMasterDetail> {
             this._currentWidth = receivedState + 'px';
         } else if (options.propStorageId) {
             return new Promise((resolve) => {
-                getSettings([options.propStorageId]).then((width: number) => {
+                getSettings([options.propStorageId]).then((storage) => {
+                    const width = storage && storage[options.propStorageId];
                     if (width) {
                         this._currentWidth = width + 'px';
                     } else {

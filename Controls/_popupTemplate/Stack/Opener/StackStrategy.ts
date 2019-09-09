@@ -23,7 +23,7 @@ const _private = {
         let minWidth = parseInt(item.popupOptions.minWidth, 10);
         const maxWidth = parseInt(item.popupOptions.maxWidth, 10);
 
-        if (_private.isMaximizedPanel(item)) { // todo:https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
+        if (_private.isMaximizedPanel(item) && !item.popupOptions.propStorageId) { // todo:https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
             if (!_private.isMaximizedState(item)) {
                 panelWidth = item.popupOptions.minimizedWidth;
             } else {
