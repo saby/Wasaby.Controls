@@ -24,6 +24,12 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
+ * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputStyle
  * @mixes Controls/_lookup/BaseLookupView/LookupStyles
  * @control
  * @public
@@ -42,14 +48,20 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/interface/ISearch
- * @mixes Controls/_interface/ITextValue
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFilter
+ * @mixes Controls/_interface/ITextValue
  * @mixes Controls/interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
+ * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputStyle
  * @mixes Controls/_lookup/BaseLookupView/LookupStyles
  * @control
  * @public

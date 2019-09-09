@@ -4,51 +4,6 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import Env = require('Env/Env');
 import 'Controls/lookup';
 import 'css!theme?Controls/filterPopup';
-   /**
-    * Метка с полем связи. Пока коллекция пуста - поле связи скрыто.
-    * <a href="/materials/demo-ws4-engine-selector-lookup">Демо-пример</a>.
-    * @class Controls/_filterPopup/Panel/Lookup
-    * @extends Core/Control
-    * @mixes Controls/_interface/ILookup
-    * @mixes Controls/interface/ISelectedCollection
-    * @mixes Controls/interface/ISelectorDialog
-    * @mixes Controls/interface/ISuggest
-    * @mixes Controls/interface/ISearch
-    * @mixes Controls/_interface/ISource
-    * @mixes Controls/interface/IFilter
-    * @mixes Controls/interface/INavigation
-    * @mixes Controls/_interface/IMultiSelectable
-    * @mixes Controls/_interface/ISorting
-    * @mixes Controls/interface/IInputBase
-    * @mixes Controls/interface/IInputText
-    * @mixes Controls/_lookup/BaseLookupView/LookupStyles
-    * @control
-    * @public
-    * @author Герасимов А.М.
-    */
-
-   /*
-    * Control link with lookup
-    * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
-    * @class Controls/_filterPopup/Panel/Lookup
-    * @extends Core/Control
-    * @mixes Controls/_interface/ILookup
-    * @mixes Controls/interface/ISelectedCollection
-    * @mixes Controls/interface/ISelectorDialog
-    * @mixes Controls/interface/ISuggest
-    * @mixes Controls/interface/ISearch
-    * @mixes Controls/_interface/ISource
-    * @mixes Controls/interface/IFilter
-    * @mixes Controls/interface/INavigation
-    * @mixes Controls/_interface/IMultiSelectable
-    * @mixes Controls/_interface/ISorting
-    * @mixes Controls/interface/IInputBase
-    * @mixes Controls/interface/IInputText
-    * @mixes Controls/_lookup/BaseLookupView/LookupStyles
-    * @control
-    * @public
-    * @author Герасимов А.М.
-    */
 
 /**
  * Метка с полем связи. Пока коллекция пуста - поле связи скрыто.
@@ -70,6 +25,12 @@ import 'css!theme?Controls/filterPopup';
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
+ * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputStyle
  * @mixes Controls/_lookup/BaseLookupView/LookupStyles
  * @control
  * @public
@@ -95,6 +56,12 @@ import 'css!theme?Controls/filterPopup';
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
+ * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputStyle
  * @mixes Controls/_lookup/BaseLookupView/LookupStyles
  * @control
  * @public
