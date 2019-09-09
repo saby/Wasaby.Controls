@@ -506,7 +506,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _itemMouseMove: function(event, itemData, nativeEvent) {
         var model = this._children.baseControl.getViewModel();
 
-        if (model.getDragItemData() && itemData.dispItem.isNode()) {
+        if ((model.getDragEntity() || model.getDragItemData()) && itemData.dispItem.isNode()) {
             this._nodeMouseMove(itemData, nativeEvent);
         }
     },
