@@ -6,7 +6,7 @@
                 direction="horizontal"
                 contentSize="{{_options.contentSize}}"
                 getScrollWidth="{{_options.getScrollWidth}}"
-                attr:class="controls-ColumnScroll controls-ColumnScroll_without_offset"
+                attr:class="controls-ColumnScroll"
                 attr:style="width:{{_options.getScrollWidth()}}px;"
                 on:positionChanged="_localPositionHandler()"/>
     </div>
@@ -19,7 +19,7 @@
         contentSize="{{_options.contentSize}}"
         gridSupport="{{_options.gridSupport}}"
         getScrollWidth="{{_options.getScrollWidth}}"
-        attr:class="controls-ColumnScroll"
+        attr:class="controls-ColumnScroll controls-ColumnScroll_without_offset"
         attr:style="width:{{_options.getScrollWidth()}}px;"
         on:positionChanged="_localPositionHandler()"/>
 </ws:else>

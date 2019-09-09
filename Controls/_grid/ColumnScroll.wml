@@ -1,4 +1,4 @@
-<div name="content" class="{{_transformSelector}}" on:wheel="_wheelHandler()">
+<div name="content" class="{{_transformSelector}}" on:wheel="_wheelHandler()" style="position: relative">
    <style name="contentStyle" data-vdom-ignore="true"></style>
    <ws:if data="{{_isColumnScrollVisible()}}">
       <div class="{{_calculateShadowClasses('start')}}" style="{{_calculateShadowStyles('start')}}"></div>

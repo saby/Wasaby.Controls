@@ -9,13 +9,13 @@ var HorizontalScrollWrapper = Control.extend({
    _getGridStyles: function() {
       let style = '';
       const { listModel } = this._options;
-      const { _options: { stickyColumnsCount, header } } = listModel;
+      const { _options: { stickyColumnsCount, header }, maxEndColumn } = listModel;
 
-      let offset = 1;
+      let offset = 0;
       if (listModel.getMultiSelectVisibility() !== 'hidden') {
          offset += 1;
       }
-      style += `grid-column:${stickyColumnsCount + offset} / ${header.length + offset};`;
+      style += `grid-column:${stickyColumnsCount + 1 + offset} / ${(maxEndColumn ? maxEndColumn : header.length + 1) + offset};`;
       style += `top:${this._options.topOffset}px;`;
       return style;
    },

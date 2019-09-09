@@ -579,6 +579,7 @@ var
         _headerColumns: [],
         _curHeaderColumnIndex: 0,
         _maxEndRow: 0,
+        maxEndColumn: 0,
         _curHeaderRowIndex: 0,
         _multyHeaderOffset: 0,
         _headerCellMinHeight: null,
@@ -709,7 +710,7 @@ var
         _prepareHeaderColumns: function(columns, multiSelectVisibility) {
             if (columns && columns.length) {
                 this._headerRows = getRowsArray(columns, multiSelectVisibility);
-                this._maxEndRow = getMaxEndRow(this._headerRows);
+                [this._maxEndRow, this.maxEndColumn] = getMaxEndRow(this._headerRows);
                 if (multiSelectVisibility && columns[0] && columns[0].isBreadCrumbs) {
                     this._headerRows[0][0].hiddenForBreadCrumbs = true;
                 }

@@ -265,19 +265,25 @@ function getRowsCount(array): number {
  * @return {Number} Максимальная строка.
  */
 
-function getMaxEndRow(array): number {
-    let max = 0;
+function getMaxEndRow(array): number[] {
+    let maxRow = 0;
+    let maxColumn = 0;
+    let isMuliRow = true;
     if (array.length === 1) {
-        return 2;
+        isMuliRow = false;
+        maxRow = 2;
     }
     array.forEach((cur) => {
         cur.forEach((c) => {
-            if (c.endRow > max) {
-                max = c.endRow;
+            if (isMuliRow && c.endRow > maxRow) {
+                maxRow = c.endRow;
+            }
+            if (c.endColumn > maxColumn) {
+                maxColumn = c.endColumn;
             }
         });
     });
-    return max;
+    return [maxRow, maxColumn];
 }
 
 /**

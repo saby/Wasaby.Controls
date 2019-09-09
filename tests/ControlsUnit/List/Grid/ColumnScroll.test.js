@@ -55,6 +55,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          Entity.Guid.create = function() {
             return '1234567890';
          };
+         cfg.listModel.isFullGridSupport = () => true;
          cfg.listModel.isNoGridSupport = () => false;
          columnScroll._beforeMount(cfg);
          Entity.Guid.create = baseCreateGuid;
@@ -335,9 +336,6 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          clearColumnScroll._afterUpdate({...cfg, root: '123'});
          assert.isFalse(clearColumnScroll._isColumnScrollVisible());
 
-         clearColumnScroll._children.content.offsetTop = 50;
-         clearColumnScroll._setOffsetForHScroll();
-         assert.isTrue(clearColumnScroll._isColumnScrollVisible());
       });
 
       it('no sticky columns', function() {
@@ -617,10 +615,6 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          columnScroll._setOffsetForHScroll();
 
          assert.equal(columnScroll._offsetForHScroll, 100);
-
-         columnScroll._children.content.offsetTop = 25;
-         columnScroll._setOffsetForHScroll();
-         assert.equal(columnScroll._offsetForHScroll, 125)
 
          columnScroll._leftOffsetForHScroll = 0;
          columnScroll._offsetForHScroll = 0;

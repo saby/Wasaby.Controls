@@ -32,7 +32,7 @@ const
          let
             newContentSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].scrollWidth,
             newContentContainerSize = null;
-         if (self._isFullGridSupport) {
+         if (!self._isFullGridSupport) {
             newContentContainerSize = self._children.content.offsetWidth;
          } else {
             newContentContainerSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].offsetWidth;
@@ -128,7 +128,7 @@ const
               } else {
                   self._leftOffsetForHScroll = firstCell.offsetWidth;
               }
-              self._offsetForHScroll += firstCell.offsetHeight + container.offsetTop;
+              self._offsetForHScroll += firstCell.offsetHeight;
           }
           if (self._options.listModel.getResultsPosition() === 'top') {
               const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0] && container.getElementsByClassName('controls-Grid__results')[0].childNodes;
@@ -158,7 +158,7 @@ const
       _contentSizeForHScroll: 0,
       _scrollVisible: true,
       _scrollWidth: 0,
-      _isFullGridSupport: null,
+      _isFullGridSupport: true,
 
       _beforeMount(opt) {
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
