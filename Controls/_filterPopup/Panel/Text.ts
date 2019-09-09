@@ -7,7 +7,7 @@ import 'css!theme?Controls/filterPopup';
     * Используется для демонстрации пользователю выбранного фильтра, клик по крестику сбрасывает фильтр.
     * @class Controls/_filterPopup/Panel/Text
     * @extends Core/Control
-    * @mixes Controls/interface/ITextValue
+    * @mixes Controls/_interface/ITextValue
     * @control
     * @public
     * @author Герасимов А.М.
