@@ -1,5 +1,5 @@
 /**
- * Библиотка хлебных крошек.
+ * Библиотека контролов, которые служат для поддержки навигации, позволяющей  пользователю перейти c текущей страницы/документа на любой уровень вложенности.
  * @library Controls/breadcrumbs
  * @includes Path Controls/_breadcrumbs/Path
  * @includes HeadingPath Controls/_breadcrumbs/HeadingPath

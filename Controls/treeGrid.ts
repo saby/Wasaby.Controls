@@ -1,5 +1,5 @@
 /**
- * Иерархический список.
+ * Библиотека контролов, которые реализуют иерархический список, отображающийся в виде дерева.
  * @library Controls/treeGrid
  * @includes View Controls/_treeGrid/View
  * @includes ItemTemplate wml!Controls/_treeGrid/TreeGridView/Item
