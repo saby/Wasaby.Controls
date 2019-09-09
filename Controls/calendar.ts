@@ -1,5 +1,5 @@
 /**
- * Библиотека для работы с датой.
+ * Библиотека контролов, которые служат для задания и отображения диапазона дат в рамках одного или нескольких месяцев. 
  * @library Controls/calendar
  * @includes Month Controls/_calendar/Month
  * @includes MonthList Controls/_calendar/MonthList

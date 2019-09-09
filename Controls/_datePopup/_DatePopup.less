@@ -26,9 +26,12 @@
    flex-direction: column;
    background-color: @background-color_PeriodDialog;
    width: @width_PeriodDialog;
-   max-height: @height_PeriodDialog;
    border: @border-width_PeriodDialog solid @border-color_PeriodDialog;
    box-shadow: @size_shadow_default @color_shadow_popup;
+}
+
+.controls-PeriodDialog__body {
+   max-height: @height_PeriodDialog - @height_PeriodDialog-header;
 }
 
 .controls-DatePopup__selector-marginTop {
