@@ -68,6 +68,11 @@ var _private = {
    close: function(self) {
       this.setCloseState(self);
       this.suggestStateNotify(self, false);
+
+      if (self._dependenciesDeferred && !self._dependenciesDeferred.isReady()) {
+         self._dependenciesDeferred.cancel();
+         self._dependenciesDeferred = null;
+      }
    },
    open: function(self) {
       _private.loadDependencies(self).addCallback(function() {
@@ -378,7 +383,7 @@ var SuggestLayout = Control.extend({
          _private.setFilter(this, newOptions.filter);
       }
 
-      if (this._options.emptyTemplate !== newOptions.emptyTemplate) {
+      if (!isEqual(this._options.emptyTemplate, newOptions.emptyTemplate)) {
          this._emptyTemplate = _private.getEmptyTemplate(newOptions.emptyTemplate);
          this._dependenciesDeferred = null;
       }
