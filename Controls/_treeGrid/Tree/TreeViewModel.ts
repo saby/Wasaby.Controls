@@ -261,7 +261,8 @@ var
             if (itemParentKey !== self._display.getRoot().getContents() && (self._options.nodeFooterTemplate || self._hasMoreStorage && self._hasMoreStorage[itemParentKey])) {
                 var itemParentChilds = self._hierarchyRelation.getChildren(itemParentKey, self._items);
                 if (itemParentChilds && itemParentChilds[itemParentChilds.length - 1].getId() === current.key) {
-                    if ((self._hasMoreStorage && self._hasMoreStorage[itemParentKey] && self._hierarchyRelation.getChildren(current.key, self._items).length === 0)) {
+                    if ((self._hasMoreStorage && self._hasMoreStorage[itemParentKey] &&
+                       (!current.isExpanded || self._hierarchyRelation.getChildren(current.key, self._items).length === 0))) {
                         let idx = current.nodeFooter.push({
                             key: itemParentKey,
                             item: itemParent.getContents(),
