@@ -1,5 +1,5 @@
 /**
- * Библиотека валидации.
+ * Библиотека контролов, которые позволяют организовать валидацию данных на форме.
  * @library Controls/validate
  * @includes Controller Controls/_validate/FormController
  * @includes Container Controls/_validate/Controller

@@ -1,5 +1,5 @@
 /**
- * Библиотека с общими интерфейсами.
+ * Библиотека, содержащая интерфейсы, которые используются в нескольких библиотеках.
  * @library Controls/interface
  * @includes ITooltip Controls/_interface/ITooltip
  * @includes IButton Controls/_interface/IButton
