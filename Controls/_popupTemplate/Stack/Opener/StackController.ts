@@ -204,6 +204,13 @@ const _private = {
         if (propStorageId && item.position.stackWidth) {
             setSettings({[propStorageId]: item.position.stackWidth});
         }
+    },
+    addLastStackClass(item): void {
+        item.popupOptions.className += ' controls-Stack__last-item';
+    },
+
+    removeLastStackClass(item): void {
+        item.popupOptions.className = (item.popupOptions.className || '').replace(/controls-Stack__last-item/ig, '').trim();
     }
 };
 
@@ -225,6 +232,7 @@ const StackController = BaseController.extend({
         const isSinglePopup = this._stack.getCount() < 2;
         if (isSinglePopup) {
             _private.prepareSizeWithoutDOM(item);
+            _private.addLastStackClass(item);
         } else {
             _private.prepareSizes(item, container);
         }
@@ -277,6 +285,7 @@ const StackController = BaseController.extend({
             if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                 item.position = _private.getItemPosition(item, this);
                 _private.updatePopupWidth(item, this);
+                _private.removeLastStackClass(item);
                 const currentWidth = item.containerWidth || item.position.stackWidth;
                 let forRemove;
                 if (currentWidth) {
@@ -311,6 +320,10 @@ const StackController = BaseController.extend({
                 }
             }
         });
+        const lastItem = this._stack.at(this._stack.getCount() - 1);
+        if (lastItem) {
+            _private.addLastStackClass(lastItem);
+        }
     },
 
     getDefaultConfig(item) {

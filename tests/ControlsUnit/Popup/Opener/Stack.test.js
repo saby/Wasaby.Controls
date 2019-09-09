@@ -592,5 +592,30 @@ define(
             assert.equal(stackContentInstance._minOffset, 400);
             assert.equal(stackContentInstance._maxOffset, 300);
          });
+         it('last stack className', () => {
+            let baseGetItemPosition = popupTemplate.StackController._private.getItemPosition;
+            popupTemplate.StackController._private.getItemPosition = items => (items.position);
+            popupTemplate.StackController._stack.add({
+               position: { stackWidth: 720 },
+               popupOptions: { stackClassName: '' }
+            });
+            popupTemplate.StackController._update();
+            assert.equal(popupTemplate.StackController._stack.at(0).popupOptions.className, ' controls-Stack__last-item');
+            popupTemplate.StackController._stack.add({
+               containerWidth: 1100,
+               popupOptions: { stackClassName: '' }
+            });
+            popupTemplate.StackController._update();
+            assert.equal(popupTemplate.StackController._stack.at(0).popupOptions.className, '');
+            assert.equal(popupTemplate.StackController._stack.at(1).popupOptions.className, ' controls-Stack__last-item');
+            popupTemplate.StackController._stack.add({
+               containerWidth: 720,
+               popupOptions: { stackClassName: '' }
+            });
+            popupTemplate.StackController._update();
+            assert.equal(popupTemplate.StackController._stack.at(0).popupOptions.className, '');
+            assert.equal(popupTemplate.StackController._stack.at(1).popupOptions.className, '');
+            assert.equal(popupTemplate.StackController._stack.at(2).popupOptions.className, ' controls-Stack__last-item');
+         });
       });
    });
