@@ -353,8 +353,13 @@ var ItemsViewModel = BaseViewModel.extend({
          * It can cause all kinds of troubles, e.g. out of bounds access.
          * https://online.sbis.ru/opendoc.html?guid=e7978ebd-881c-494b-8449-d04af83f3404
          */
-        this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
-        this._nextModelVersion(action !== collection.IObservable.ACTION_RESET, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
+        const collectionChangeResult =
+           this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
+        if (collectionChangeResult === 'updatePrefix') {
+            this._nextModelVersion();
+        } else {
+            this._nextModelVersion(action !== collection.IObservable.ACTION_RESET, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
+        }
         this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     },
     _onBeginCollectionChange: function() {
