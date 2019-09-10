@@ -87,9 +87,16 @@ import 'Controls/form';
          }
       },
 
-      loadHistoryItems: function(self, historyId) {
+      loadHistoryItems: function(self, historyId, isReportPanel) {
          if (historyId) {
-            return HistoryUtils.loadHistoryItems(historyId).addCallback(function(items) {
+            let config = {
+               historyId: historyId,
+
+                // the report filters panel uses favorite history, for it we don't request pinned items from the history service
+                pinned: !isReportPanel,
+               recent: isReportPanel ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY'
+            };
+            return HistoryUtils.loadHistoryItems(config).addCallback(function(items) {
                self._historyItems = items;
                return items;
             }).addErrback(function() {
@@ -99,7 +106,7 @@ import 'Controls/form';
       },
 
       reloadHistoryItems: function(self, historyId) {
-         self._historyItems = HistoryUtils.getHistorySource(historyId).getItems();
+         self._historyItems = HistoryUtils.getHistorySource({historyId: historyId}).getItems();
       },
 
       cloneItems: function(items) {
@@ -188,7 +195,8 @@ import 'Controls/form';
          this._hasAdditionalParams = (options.additionalTemplate || options.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
          this._isChanged = _private.isChangedValue(this._items);
          this._hasResetValue = _private.hasResetValue(this._items);
-         return _private.loadHistoryItems(this, this._historyId);
+         const isReportPanel = options.orientation === 'horizontal';
+         return _private.loadHistoryItems(this, this._historyId, isReportPanel);
       },
 
       _beforeUpdate: function(newOptions, context) {
