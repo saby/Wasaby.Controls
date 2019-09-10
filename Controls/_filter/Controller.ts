@@ -118,7 +118,7 @@ const _private = {
             }
 
             if (id) {
-               let source = historyUtils.getHistorySource(id);
+               let source = historyUtils.getHistorySource({historyId: id});
 
                if (!self._sourceController) {
                   self._sourceController = new SourceController({
@@ -154,13 +154,13 @@ const _private = {
             };
 
             function update() {
-               historyUtils.getHistorySource(historyId).update(
+               historyUtils.getHistorySource({historyId: historyId}).update(
                    _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams),
                    meta
                );
             }
 
-            if (!historyUtils.getHistorySource(historyId)._history) {
+            if (!historyUtils.getHistorySource({historyId: historyId})._history) {
                // Getting history before updating if it hasn’t already done
                _private.getHistoryItems(self, historyId).addCallback(function() {
                   update();

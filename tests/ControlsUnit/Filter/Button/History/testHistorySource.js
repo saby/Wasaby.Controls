@@ -147,6 +147,10 @@ define('ControlsUnit/Filter/Button/History/testHistorySource',
       config.historySource.saveHistory = function() {};
 
       var histSource = Control.extend({
+         constructor: function(cfg) {
+            this._recent = cfg.recent;
+         },
+
          getHistoryId: function() {
             return 'DEMO_HISTORY_ID';
          },

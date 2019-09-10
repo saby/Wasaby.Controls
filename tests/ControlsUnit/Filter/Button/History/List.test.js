@@ -49,7 +49,8 @@ define(
          var list = new List();
 
          var config = {
-            historyId: 'TEST_HISTORY_ID'
+            historyId: 'TEST_HISTORY_ID',
+            orientation: 'vertical'
          };
 
          var items = [
@@ -63,7 +64,7 @@ define(
             list.destroy();
          });
 
-         filter.HistoryUtils.loadHistoryItems('TEST_HISTORY_ID').addCallback(function(items) {
+         filter.HistoryUtils.loadHistoryItems({historyId: 'TEST_HISTORY_ID'}).addCallback(function(items) {
             config.items = items;
             config.filterItems = items;
          });
@@ -73,7 +74,7 @@ define(
          it('get text', function() {
             var textArr = [];
             list._beforeMount(config);
-            textArr = list._getText(list._options.items, items, filter.HistoryUtils.getHistorySource(config.historyId));
+            textArr = list._getText(list._options.items, items, filter.HistoryUtils.getHistorySource({historyId: config.historyId}));
             assert.equal(textArr[0], 'Past month, Due date, Ivanov K.K., Unread, On department');
             assert.equal(textArr[1], 'Past month, Ivanov K.K.');
 
@@ -99,7 +100,7 @@ define(
             assert.isFalse(list._isMaxHeight);
          });
 
-         it('content click', function() {
+         it('_clickHandler', function() {
             var histItems = [];
             list._notify = (e, args) => {
                if (e == 'applyHistoryFilter') {
@@ -109,7 +110,7 @@ define(
             var savedList = list;
             chain.factory(list._options.items).each(function(item, index) {
                if (item) {
-                  savedList._contentClick('click', item);
+                  savedList._clickHandler('click', item);
                   assert.deepEqual(histItems, itemsHistory[index]);
                }
             });
