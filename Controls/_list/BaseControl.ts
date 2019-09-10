@@ -947,7 +947,7 @@ var _private = {
                     },
                     closeOnOutsideClick: true,
                     targetPoint: {vertical: 'top', horizontal: 'right'},
-                    horizontalAlign: {side: context ? 'right' : 'left'},
+                    direction: {horizontal: context ? 'right' : 'left'},
                     className: 'controls-Toolbar__popup__list_theme-' + self._options.theme,
                     nativeEvent: context ? childEvent.nativeEvent : false
                 });
