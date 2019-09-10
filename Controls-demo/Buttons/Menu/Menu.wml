@@ -302,6 +302,7 @@
                  additionalProperty="additional"
                  groupingKeyCallback="{{_groupingKeyCallback}}"
                  groupTemplate="Controls/dropdownPopup:GroupTemplate"
+                 attr:class="ControlsDemo__additionalItems"
                  style="secondary"
                  viewMode="link"
                  icon="icon-Linked"
