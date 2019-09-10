@@ -255,7 +255,7 @@ var HierarchySelection = Selection.extend({
 
    /* toDo Когда пытаются снять выделение, надо его снимать полностью для всех разделов
     Иначе сейчас люди в окнах выбора не могут снять выделение. Запись может быть выделена глубоко в иерархии
-    Поправится после задачи https://online.sbis.ru/opendoc.html?guid=0606ed47-453c-415e-90b5-51e34037433e
+    Поправится после задачи https://online.sbis.ru/opendoc.html?guid=55997d61-2076-49eb-bd6d-5429ec5f5661
 
    unselectAll: function() {
       this.unselect([this._getRoot()]);
@@ -270,10 +270,12 @@ var HierarchySelection = Selection.extend({
          childrensIdsRoot = _private.getChildrenIds(this._hierarchyRelation, rootId, this._items);
 
       if (this._isAllSelection(this._getParams(rootId))) {
+         // toDO после решения https://online.sbis.ru/opendoc.html?guid=55997d61-2076-49eb-bd6d-5429ec5f5661 перейти на unselectAll
          this.unselect([rootId]);
+         ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [rootId]);
          this.select(_private.getIntersection(childrensIdsRoot, excludedKeys));
       } else {
-         this.select([rootId]);
+         this.selectAll([rootId]);
          this.unselect(_private.getIntersection(childrensIdsRoot, selectedKeys));
       }
    },
