@@ -249,8 +249,14 @@ var HierarchySelection = Selection.extend({
    },
 
    selectAll: function() {
-      this.select([this._getRoot()]);
-      ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
+      let root = this._getRoot();
+
+      if (root === null) {
+         HierarchySelection.superclass.selectAll.apply(this, arguments);
+      } else {
+         this.select([root]);
+         ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
+      }
    },
 
    /* toDo Когда пытаются снять выделение, надо его снимать полностью для всех разделов
