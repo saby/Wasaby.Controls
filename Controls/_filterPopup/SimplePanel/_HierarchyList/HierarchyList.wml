@@ -9,6 +9,7 @@
       <Controls._filterPopup.SimplePanel._List
               keyProperty="{{_options.keyProperty}}"
               displayProperty="{{_options.displayProperty}}"
+              nodeProperty="{{_options.nodeProperty}}"
               itemTemplate="{{_options.itemTemplate}}"
               itemTemplateProperty="{{_options.itemTemplateProperty}}"
               hasMoreButton="{{_hasMoreButton(item)}}"
