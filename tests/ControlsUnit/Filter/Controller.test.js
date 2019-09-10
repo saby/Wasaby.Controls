@@ -887,6 +887,21 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             });
          });
       });
+
+      it('resetPrefetch', function() {
+         const controller = new Filter();
+         const filter = {
+            testField: 'testValue',
+            PrefetchSessionId: 'test'
+         };
+
+         controller._filter = filter;
+         controller._notify = () => {};
+
+         controller.resetPrefetch();
+         assert.isTrue(controller._filter !== filter);
+         assert.deepEqual(controller._filter, {testField: 'testValue'});
+      });
    });
 
 });
