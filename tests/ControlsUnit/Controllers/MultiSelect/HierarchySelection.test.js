@@ -618,7 +618,14 @@ define([
             selection = selectionInstance.getSelection();
 
             assert.deepEqual([null], selection.selected);
-            assert.deepEqual([1, 6, 7], selection.excluded);
+            assert.deepEqual([null, 1, 6, 7], selection.excluded);
+
+            selectionInstance.toggleAll();
+            selection = selectionInstance.getSelection();
+
+            // '2', '4', '5' не попали т.к являются дочерними '1' и будут выбраны
+            assert.deepEqual([1, 6, 7], selection.selected);
+            assert.deepEqual([], selection.excluded);
          });
 
          /* toDo До исправления https://online.sbis.ru/opendoc.html?guid=0606ed47-453c-415e-90b5-51e34037433e
