@@ -1,5 +1,5 @@
 define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Controls/history', 'Core/Deferred'], function(suggestMod, collection, entity, Env, history, Deferred) {
-
+'use strict';
    describe('Controls.Container.Suggest.Layout', function() {
       var IDENTIFICATORS = [1, 2, 3];
 
@@ -103,14 +103,28 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
       });
 
       it('Suggest::_private.close', function() {
-         var self = getComponentObject();
-         var state;
+         let
+            state,
+            isReady = true,
+            isCallCancel = false,
+            self = getComponentObject();
+
          self._options.suggestState = true;
          self._notify = function(eventName, args) {
             state = args[0];
          };
+         self._dependenciesDeferred = {
+            isReady: () => { return isReady },
+            cancel: () => { isCallCancel = true }
+         };
          suggestMod._InputController._private.close(self);
          assert.isFalse(state);
+         assert.isFalse(isCallCancel);
+
+         isReady = false;
+         suggestMod._InputController._private.close(self);
+         assert.isTrue(isCallCancel);
+         assert.equal(self._dependenciesDeferred, null);
       });
 
       it('Suggest::_close', function() {
