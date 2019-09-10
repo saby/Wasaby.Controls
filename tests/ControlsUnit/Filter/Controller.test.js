@@ -879,6 +879,8 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
                filterButtonSource: filterButtonItems,
                historyItems: historyItems
             }).addCallback(function(result) {
+               assert.equal(filterButtonItems[0].value, 'testValue');
+               assert.equal(filterButtonItems[0].textValue, '');
                assert.equal(result.filterButtonItems[0].value, 'testValueFromHistory');
                assert.equal(result.filterButtonItems[0].textValue, 'testTextValueFromHistory');
                resolve();

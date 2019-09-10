@@ -376,7 +376,7 @@ const _private = {
       function getCalculatedFilter(cfg) {
          var def = new Deferred();
          var tmpStorage = {};
-         _private.resolveItems(tmpStorage, cfg.historyId, cfg.filterButtonSource, cfg.fastFilterSource, cfg.historyItems).addCallback(function(items) {
+         _private.resolveItems(tmpStorage, cfg.historyId, clone(cfg.filterButtonSource), clone(cfg.fastFilterSource), cfg.historyItems).addCallback(function(items) {
             var calculatedFilter;
             try {
                calculatedFilter = _private.calculateFilterByItems(cfg.filter, tmpStorage._filterButtonItems, tmpStorage._fastFilterItems);
