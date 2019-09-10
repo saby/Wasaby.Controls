@@ -30,10 +30,12 @@ define('Controls-demo/Index', [
             this._title = this._getTitle();
             this._settigsController = {
                getSettings: function(ids) {
-                  // if (ids[0] === 'master111') {
-                  //    return (new Deferred()).callback(300);
-                  // }
-                  return (new Deferred()).callback(1000);
+                  var storage = {};
+                  storage[ids[0]] = 1000;
+                  if (ids[0] === 'master111') {
+                     storage[ids[0]] = 300;
+                  }
+                  return (new Deferred()).callback(storage);
                },
                setSettings: function(settings) {
                   //'Сохранили панель с шириной ' + settings['123']

@@ -188,9 +188,9 @@ const _private = {
         return new Promise((resolve) => {
             const propStorageId = item.popupOptions.propStorageId;
             if (propStorageId) {
-                getSettings([propStorageId]).then((width: number) => {
-                    if (width) {
-                        item.popupOptions.width = width;
+                getSettings([propStorageId]).then((storage) => {
+                    if (storage && storage[propStorageId]) {
+                        item.popupOptions.width = storage[propStorageId];
                     }
                     resolve();
                 });
@@ -201,8 +201,10 @@ const _private = {
     },
     savePopupWidth(item): void {
         const propStorageId = item.popupOptions.propStorageId;
-        if (propStorageId && item.position.stackWidth) {
-            setSettings({[propStorageId]: item.position.stackWidth});
+        // TODO: после доброски https://online.sbis.ru/opendoc.html?guid=79fa38a7-7b4b-4784-80c2-3218d9d2d6f6
+        // заменить popupOptions.stackWidth на position: width
+        if (propStorageId && item.popupOptions.stackWidth) {
+            setSettings({[propStorageId]: item.popupOptions.stackWidth});
         }
     }
 };
@@ -258,7 +260,6 @@ const StackController = BaseController.extend({
     },
 
     elementDestroyed(item) {
-        _private.savePopupWidth(item);
         this._stack.remove(item);
         this._update();
         return (new Deferred()).callback();
@@ -268,6 +269,7 @@ const StackController = BaseController.extend({
         item.popupOptions.stackWidth += offset;
         item.popupOptions.workspaceWidth += offset;
         _private.updatePopupOptions(item);
+        _private.savePopupWidth(item);
     },
 
     _update(): void {
