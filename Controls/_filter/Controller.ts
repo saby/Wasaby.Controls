@@ -632,6 +632,12 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             Container.superclass.constructor.apply(this, arguments);
          },
 
+        resetPrefetch(): void {
+             const filter = clone(this._filter);
+             _private.setFilter(this, Prefetch.clearPrefetchSession(filter));
+             _private.notifyFilterChanged(this);
+        },
+
         _beforeMount: function(options, context, receivedState): Promise<IFilterHistoryData|{}> {
             let filter = options.filter;
 
