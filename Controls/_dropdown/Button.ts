@@ -1,5 +1,4 @@
 import Control = require('Core/Control');
-import Deferred = require('Core/Deferred');
 import template = require('wml!Controls/_dropdown/Button/Button');
 import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 import tmplNotify = require('Controls/Utils/tmplNotify');
@@ -148,4 +147,34 @@ export = Button;
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Event object.
  * @remark If the menu has items with hierarchy and item with hierarchy was selected, you can return processing result from event handler,
  * if result will equals false, dropdown will not close. By default dropdown will close, when item with hierarchy was selected.
+ */
+
+/**
+ * @name Controls/_dropdown/Button#lazyItemsLoading
+ * @cfg {Boolean} Определяет, будут ли элементы меню загружаться лениво, только после первого клика по кнопке.
+ * @default false
+ * @remark Устанавливать опцию в значение true имеет смысл для локальных данных или
+ * при полной уверенности, что источник вернёт данные для меню.
+ * @example
+ * В данном примере данные для меню будут загружены лениво, после первого клика по кнопке.
+ * WML:
+ * <pre>
+ * <Controls.dropdown:Button
+ *       bind:selectedKeys="_selectedKeys"
+ *       keyProperty="id"
+ *       displayProperty="title"
+ *       source="{{_source)}}"
+ *       lazyItemsLoading="{{true}}">
+ * </Controls.dropdown:Input>
+ * </pre>
+ * JS:
+ * <pre>
+ * this._source = new Memory({
+ *    idProperty: 'id',
+ *    data: [
+ *       {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
+ *       {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
+ *    ]
+ * });
+ * </pre>
  */
