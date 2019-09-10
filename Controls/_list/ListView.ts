@@ -245,12 +245,6 @@ var ListView = BaseControl.extend(
 
         getHoveredItem: function () {
             return this._listModel.getHoveredItem();
-        },
-        _onEditArrowClick: function(e, item) {
-            this._notify('editArrowClick', [item]);
-
-            //we do not need to fire itemClick on clicking on editArrow
-            e.stopPropagation();
         }
     });
 

@@ -30,7 +30,6 @@
 <div class="controls-Grid__row-cell__content controls-Grid__row-cell__content_baseline_L">
     <ws:if data="{{itemData.showEditArrow && itemData.columnIndex === 0}}">
         <ws:partial template="cellContent" attr:class="controls-Grid__editArrow-cellContent controls-Grid__editArrow-overflow-{{itemData.column.textOverflow ? itemData.column.textOverflow}}"/>
-        <div class="controls-Grid__editArrow-separator{{itemData.column.textOverflow ? '-big'}}"></div>
         <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
     </ws:if>
     <ws:else>

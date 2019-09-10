@@ -79,36 +79,6 @@ define([
          lv._onItemClick({ preventItemEvent: true }, dispItem);
          assert.isNull(notifyResult, '_onItemClick should ignore preventItemEvent events');
       });
-      describe('editArrowClick', function() {
-         it('click on editArrow stops click event', function() {
-            let model = new lists.ListViewModel({
-               items: data,
-               keyProperty: 'id',
-               markedKey: null
-            });
-            let cfg = {
-               listModel: model,
-               keyProperty: 'id',
-               markedKey: 2
-            };
-            let view = new lists.ListView(cfg);
-            let clickEvent = {
-               stopped: false,
-               stopPropagation: function() {
-                  this.stopped = true;
-               }
-            };
-            let editArrowClickNotified = false;
-            view._notify = function (e) {
-               if (e === 'editArrowClick') {
-                  editArrowClickNotified = true;
-               }
-            }
-            view._onEditArrowClick(clickEvent);
-            assert.isTrue(clickEvent.stopped);
-            assert.isTrue(editArrowClickNotified);
-         });
-      });
 
       it('_beforeUpdate', function() {
          let itemPadding = {

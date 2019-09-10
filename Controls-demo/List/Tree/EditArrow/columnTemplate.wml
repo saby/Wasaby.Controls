@@ -10,7 +10,7 @@
       </ws:if>
       <ws:else>
             <div style="display:inline-flex; width:100%">
-               <div style="overflow:hidden; white-space:nowrap; text-overflow:ellipsis; padding-right: 8px;">
+               <div style="overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">
                   <div>{{itemData.item.get('title')}}</div>
                   <div style="font-size: 11px; color: grey">{{itemData.item['description']}}</div>
                </div>

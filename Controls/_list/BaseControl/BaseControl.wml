@@ -70,6 +70,7 @@
         on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
         on:itemClick="_onItemClick()"
         on:groupClick="_onGroupClick()"
+        on:editArrowClick="_notifyHandler('editArrowClick')"
         on:itemContextMenu="_onItemContextMenu()"
         on:itemMouseDown="_itemMouseDown()"
         on:itemMouseEnter="_itemMouseEnter()"
