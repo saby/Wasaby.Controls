@@ -899,6 +899,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
          controller.resetPrefetch();
          assert.isTrue(controller._filter !== filter);
          assert.deepEqual(controller._filter, {testField: 'testValue'});
+      });
    });
 
 });
