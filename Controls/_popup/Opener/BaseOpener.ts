@@ -356,6 +356,10 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
                         // Защита от утечки. проверяем, что закрылось окно, которое открывали последним. в этом случае дестроим action.
                         // Т.к. мы создаем его динамически, никто кроме baseOpener его не задестроит
                         if (action.getDialog() === openedDialog) {
+                            // Этот дестрой не должен звать за собой дестрой панели, т.к. она уже в состоянии закрытия
+                            // Если action позовет дестрой панели в этом обработчике, то все остальные обработчики на onAfterClose не вызовутся
+                            // т.к. в системе событий есть провека на isDestroyed();
+                            action._closeDialogAfterDestroy = false;
                             action.destroy();
                             if (opener && opener._action) {
                                 opener._action = null;
