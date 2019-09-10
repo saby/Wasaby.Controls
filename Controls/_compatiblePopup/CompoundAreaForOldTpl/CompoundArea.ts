@@ -461,6 +461,11 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
+   // Совместимость может принимать на себя фокус
+   canAcceptFocus(): boolean {
+      return this.isVisible();
+   },
+
    setSize: function(sizes) {
       if (sizes.width) {
          this._container.width(sizes.width);
