@@ -18,6 +18,8 @@ define([
 ) {
    'use strict';
 
+   var global = (function() { return this || (0,eval)('this') })();
+
    // В окружении юнит тестирования на сервере нет объекта contents, а для теста headJson там должен быть Controls.
    if (!global.contents) {
       global.contents = {
@@ -55,7 +57,7 @@ define([
             'href': 'https://ya.ru',
             'target': '_blank',
             'class': 'LinkDecorator__linkWrap',
-            'rel': 'noreferrer'
+            'rel': 'noreferrer noopener'
          },
          ['img',
             {
@@ -69,7 +71,7 @@ define([
       linkNode = ['a',
          {
             'class': 'asLink',
-            rel: 'noreferrer',
+            rel: 'noreferrer noopener',
             href: 'https://ya.ru',
             target: '_blank'
          },
@@ -78,7 +80,7 @@ define([
       httpLinkNode = ['a',
          {
             'class': 'asLink',
-            rel: 'noreferrer',
+            rel: 'noreferrer noopener',
             href: 'http://ya.ru',
             target: '_blank'
          },
@@ -87,7 +89,7 @@ define([
       wwwLinkNode = ['a',
          {
             'class': 'asLink',
-            rel: 'noreferrer',
+            rel: 'noreferrer noopener',
             href: 'http://www.ya.ru',
             target: '_blank'
          },
@@ -96,7 +98,7 @@ define([
       ftpLinkNode = ['a',
          {
             'class': 'asLink',
-            rel: 'noreferrer',
+            rel: 'noreferrer noopener',
             href: 'ftp://ya.ru',
             target: '_blank'
          },
@@ -105,7 +107,7 @@ define([
       fileLinkNode = ['a',
          {
             'class': 'asLink',
-            rel: 'noreferrer',
+            rel: 'noreferrer noopener',
             href: 'file://ya.ru',
             target: '_blank'
          },
@@ -114,7 +116,7 @@ define([
       smbLinkNode = ['a',
          {
             'class': 'asLink',
-            rel: 'noreferrer',
+            rel: 'noreferrer noopener',
             href: 'smb://ya.ru',
             target: '_blank'
          },
@@ -125,8 +127,8 @@ define([
       nbsp = String.fromCharCode(160),
       openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
       deepHtml = '<span style="text-decoration: line-through;" data-mce-style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;" data-mce-style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
-      linkHtml = '<a class="asLink" rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>',
-      decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer" href="https://ya.ru" target="_blank"><img class="LinkDecorator__image" alt="https://ya.ru" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1" /></a></span>';
+      linkHtml = '<a class="asLink" rel="noreferrer noopener" href="https://ya.ru" target="_blank">https://ya.ru</a>',
+      decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer noopener" href="https://ya.ru" target="_blank"><img class="LinkDecorator__image" alt="https://ya.ru" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1" /></a></span>';
 
       function sortAttrs(html) {
          return html.replace(openTagRegExp, function(match, begin, attrs, end) {
@@ -145,145 +147,6 @@ define([
             var newJson = decorator.Converter.deepCopyJson(json);
             assert.notEqual(newJson, json);
             assert.deepEqual(newJson, json);
-         });
-      });
-
-      describe('wrapUrl', function() {
-         it('with protocol - 1', function() {
-            var originHtml = '<p>https://ya.ru</p>';
-            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a></p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('with protocol - 2', function() {
-            var originHtml = '<p>http://localhost:1025</p>';
-            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://localhost:1025" target="_blank">http://localhost:1025</a></p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('with protocol - 3', function() {
-            var originHtml = '<p>http:\\\\localhost:1025</p>';
-            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http:\\\\localhost:1025" target="_blank">http:\\\\localhost:1025</a></p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('with protocol - 4', function() {
-            var originHtml = '<p>https://</p>';
-            var goodResultHtml = '<p>https://</p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('with protocol - 5', function() {
-            var originHtml = '<p>http:\\localhost:1025</p>';
-            var goodResultHtml = '<p>http:\\localhost:1025</p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('with protocol in brackets', function() {
-            var originHtml = '<p>(https://ya.ru)</p>';
-            var goodResultHtml = '<p>(<a class="asLink" rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>)</p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('with protocol with capital letters', function() {
-            var originHtml = '<p>HtTpS://ya.ru</p>';
-            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="HtTpS://ya.ru" target="_blank">HtTpS://ya.ru</a></p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('without protocol - 1', function() {
-            var originHtml = '<p>usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup</p>';
-            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup" target="_blank">usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup</a></p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('without protocol - 2', function() {
-            var originHtml = '<p>vk.com</p>';
-            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://vk.com" target="_blank">vk.com</a></p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('without protocol - 3', function() {
-            var originHtml = '<p>market.yandex.ru</p>';
-            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://market.yandex.ru" target="_blank">market.yandex.ru</a></p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('without protocol - 4', function() {
-            var originHtml = '<p>my&nbsp;page&nbsp;on&nbsp;vk.com&nbsp;is&nbsp;vk.com/id0</p>';
-            var goodResultHtml = '<p>my&nbsp;page&nbsp;on&nbsp;<a class="asLink" rel="noreferrer" href="http://vk.com" target="_blank">vk.com</a>&nbsp;is&nbsp;<a class="asLink" rel="noreferrer" href="http://vk.com/id0" target="_blank">vk.com/id0</a></p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('without protocol - 5', function() {
-            var originHtml = '<p>yandex.ru.</p>';
-            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://yandex.ru" target="_blank">yandex.ru</a>.</p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('without protocol - 6', function() {
-            var originHtml = '<p>www.google.com</p>';
-            var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://www.google.com" target="_blank">www.google.com</a></p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('without protocol in brackets', function() {
-            var originHtml = '<p>(www.google.com)</p>';
-            var goodResultHtml = '<p>(<a class="asLink" rel="noreferrer" href="http://www.google.com" target="_blank">www.google.com</a>)</p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('without protocol wrong top level domain name - 1', function() {
-            var originHtml = '<p>www.google.comma</p>';
-            var goodResultHtml = '<p>www.google.comma</p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('without protocol wrong top level domain name - 2', function() {
-            var originHtml = '<p>vk.comma/id0</p>';
-            var goodResultHtml = '<p>vk.comma/id0</p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('without protocol wrong top level domain name - 3', function() {
-            var originHtml = '<p>usd-comp162.corp.tensor.ur:1025/?grep=Controls%5C.Decorator%5C.Markup</p>';
-            var goodResultHtml = '<p>usd-comp162.corp.tensor.ur:1025/?grep=Controls%5C.Decorator%5C.Markup</p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('inside link', function() {
-            var originHtml = '<p><a>https://ya.ru</a><a>yandex.ru</a><a>rn.kondakov@tensor.ru</a></p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(originHtml, checkResultHtml);
-         });
-         it('inside attributes', function() {
-            var originHtml = '<p><div class="www.google.com">text</div><iframe style="min-width: 350px; min-height: 214px;" src="https://www.youtube.com/embed/LY2I4IXN1zQ" width="430" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(originHtml, checkResultHtml);
-         });
-         it('email - 1', function() {
-            var originHtml = '<p>rn.kondakov@tensor.ru</p>';
-            var goodResultHtml = '<p><a href="mailto:rn.kondakov@tensor.ru">rn.kondakov@tensor.ru</a></p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('email - 2', function() {
-            var originHtml = '<p>rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru</p>';
-            var goodResultHtml = '<p><a href="mailto:rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru">rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru</a></p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('email in brackets', function() {
-            var originHtml = '<p>text(rn.kondakov@tensor.ru)text</p>';
-            var goodResultHtml = '<p>text(<a href="mailto:rn.kondakov@tensor.ru">rn.kondakov@tensor.ru</a>)text</p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
-         });
-         it('email with wrong domain', function() {
-            var originHtml = '<p>rn.kondakov@tensor.rux</p>';
-            var goodResultHtml = '<p>rn.kondakov@tensor.rux</p>';
-            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
-            assert.equal(goodResultHtml, checkResultHtml);
          });
       });
 
@@ -336,83 +199,6 @@ define([
             var text = 'a'.repeat(2000);
             assert.deepEqual(decorator.Converter.htmlToJson('<p>' + text + '</p>'), [['p', { version: currentVersion }, text]]);
          }).timeout(1000);
-
-         it('Wrapping url', function() {
-            var html =
-               '<p>' + linkHtml + '</p>' +
-               '<p> a </p>' +
-               '<p>texthttps://ya.ru. More text</p>' +
-               '<p><a>https://ya.ru</a>https://ya.ru<a>https://ya.ru</a></p>' +
-               '<p>https://ya.ru</p>' +
-               '<p><iframe style="min-width: 350px; min-height: 214px;" src="https://www.youtube.com/embed/LY2I4IXN1zQ" width="430" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>' +
-               '<p><img src="https://ya.ru" alt="a2ae6fcf-a3fa-471f-8b92-2017f78e8155" /></p>' +
-               '<p>https://ya.ru&nbsp;https://ya.ru&nbsp;</p>' +
-               '<p>  https://ya.ru  </p>' +
-               '<p><strong>https://ya.ru</strong></p>' +
-               '<p>https://ya.ru: text</p>' +
-               '<p>http://ya.ru</p>' +
-               '<p>http://ya.ru, text</p>' +
-               '<p>www.ya.ru</p>' +
-               '<p>www.ya.ru. Text</p>' +
-               '<p>ftp://ya.ru</p>' +
-               '<p>file://ya.ru</p>' +
-               '<p>smb://ya.ru</p>' +
-               '<p><a> https://ya.ru </a></p>' +
-               '<p>e@mail.ru</p>' +
-               '<p><a>e@mail.ru</a></p>' +
-               '<p><a>e@mail.ru.</a>https://ya.ru</p>' +
-               '<p>http://update*.sbis.ru/tx_stat</p>';
-            var json = [
-               ['p', { version: currentVersion }, linkNode],
-               ['p', ' a '],
-               ['p', 'text', linkNode, '. More text'],
-               ['p', ['a', 'https://ya.ru'], linkNode, ['a', 'https://ya.ru']],
-               ['p', linkNode],
-               ['p', ['iframe',
-                  {
-                     style: 'min-width: 350px; min-height: 214px;',
-                     src: 'https://www.youtube.com/embed/LY2I4IXN1zQ',
-                     width: '430',
-                     height: '300',
-                     frameborder: '0',
-                     allowfullscreen: 'allowfullscreen'
-                  }
-               ]],
-               ['p', ['img',
-                  {
-                     src: 'https://ya.ru',
-                     alt: 'a2ae6fcf-a3fa-471f-8b92-2017f78e8155'
-                  }
-               ]],
-               ['p', linkNode, nbsp, linkNode, nbsp],
-               ['p', '  ', linkNode, '  '],
-               ['p', ['strong', linkNode]],
-               ['p', linkNode, ': text'],
-               ['p', httpLinkNode],
-               ['p', httpLinkNode, ', text'],
-               ['p', wwwLinkNode],
-               ['p', wwwLinkNode, '. Text'],
-               ['p', ftpLinkNode],
-               ['p', fileLinkNode],
-               ['p', smbLinkNode],
-               ['p', ['a', ' https://ya.ru ']],
-               ['p', ['a', { href: 'mailto:e@mail.ru' }, 'e@mail.ru']],
-               ['p', ['a', 'e@mail.ru']],
-               ['p', ['a', 'e@mail.ru.'], linkNode],
-               ['p',
-                  ['a',
-                     {
-                        'class': 'asLink',
-                        rel: 'noreferrer',
-                        href: 'http://update*.sbis.ru/tx_stat',
-                        target: '_blank'
-                     },
-                     'http://update*.sbis.ru/tx_stat'
-                  ]
-               ]
-            ];
-            assert.deepEqual(decorator.Converter.htmlToJson(html), json);
-         });
       });
 
       describe('jsonToHtml', function() {
@@ -558,7 +344,7 @@ define([
                         ['img', { alt: 'Test image', src: '/test.gif', onclick: 'alert("Test")' }],
                         ['br'],
                         ['hamlet', 'Not to be: that is the answer'],
-                        ['a', { rel: 'noreferrer', target: '_blank' }, 'Test link'],
+                        ['a', { rel: 'noreferrer noopener', target: '_blank' }, 'Test link'],
                         ['pre', 'Test pretty print'],
                         ['label', 'Test label'],
                         ['font', { color: 'red', face: 'verdana', size: '5' }, 'Test font'],
@@ -617,7 +403,7 @@ define([
                '<span>Test span</span>' +
                '<img alt="Test image" src="/test.gif" />' +
                '<br />' +
-               '<a rel="noreferrer" target="_blank">Test link</a>' +
+               '<a rel="noreferrer noopener" target="_blank">Test link</a>' +
                '<pre>Test pretty print</pre>' +
                '<label>Test label</label>' +
                '<font>Test font</font>' +
@@ -817,7 +603,7 @@ define([
                ['p',
                   ['a',
                      {
-                        rel: 'noreferrer',
+                        rel: 'noreferrer noopener',
                         href: 'https:\\\\ya.ru\\som"e'
                      },
                      'https:\\\\ya.ru\\som"e'
@@ -836,7 +622,7 @@ define([
                '<p>' + decoratedLinkHtml + '<br />text</p>' +
                '<p>' + decoratedLinkHtml + '   <br />text</p>' +
                '<p><strong>' + linkHtml + '</strong>text</p>' +
-               '<p><span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer" href="https:\\\\ya.ru\\som&quot;e" target="_blank"><img class="LinkDecorator__image" alt="https:\\\\ya.ru\\som&quot;e" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6XFxcXHlhLnJ1XFxzb21cImUifQ%3D%3D&amp;id=0&amp;srv=1" /></a></span></p>' +
+               '<p><span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer noopener" href="https:\\\\ya.ru\\som&quot;e" target="_blank"><img class="LinkDecorator__image" alt="https:\\\\ya.ru\\som&quot;e" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6XFxcXHlhLnJ1XFxzb21cImUifQ%3D%3D&amp;id=0&amp;srv=1" /></a></span></p>' +
                '<p><a href="' + longLink + '">' + longLink + '</a></p>' +
                '<p><a href="https://ya.ru">text</a></p>' +
             '</div>';
@@ -920,6 +706,291 @@ define([
             assert.deepEqual(linkDecorateUtils.getUndecoratedLink(decoratedLinkFirstChildNode), linkNode);
          });
       });
+
+      describe('wrapLinksInString', function() {
+         it('with protocol - 1', function() {
+            var parentNode = ['p', 'https://ya.ru'];
+            var goodResultNode = [[], ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer noopener',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ]];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('with protocol - 2', function() {
+            var parentNode = ['p', 'http://localhost:1025'];
+            var goodResultNode = [[], ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer noopener',
+                  href: 'http://localhost:1025',
+                  target: '_blank'
+               },
+               'http://localhost:1025'
+            ]];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('with protocol - 3', function() {
+            var parentNode = ['p', 'http:\\\\localhost:1025'];
+            var goodResultNode = [[], ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer noopener',
+                  href: 'http:\\\\localhost:1025',
+                  target: '_blank'
+               },
+               'http:\\\\localhost:1025'
+            ]];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('with protocol - 4', function() {
+            var parentNode = ['p', 'https://'];
+            var goodResultNode = 'https://';
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('with protocol - 5', function() {
+            var parentNode = ['p', 'http:\\localhost:1025'];
+            var goodResultNode = 'http:\\localhost:1025';
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('with protocol in brackets', function() {
+            var parentNode = ['p', '(http://localhost:1025)'];
+            var goodResultNode = [[], '(', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer noopener',
+                  href: 'http://localhost:1025',
+                  target: '_blank'
+               },
+               'http://localhost:1025'
+            ], ')'];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('with protocol with capital letters', function() {
+            var parentNode = ['p', 'HtTpS://ya.ru'];
+            var goodResultNode = [[], ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer noopener',
+                  href: 'HtTpS://ya.ru',
+                  target: '_blank'
+               },
+               'HtTpS://ya.ru'
+            ]];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('without protocol - 1', function() {
+            var parentNode = ['p', 'usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup'];
+            var goodResultNode = [[], ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer noopener',
+                  href: 'http://usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup',
+                  target: '_blank'
+               },
+               'usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup'
+            ]];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('without protocol - 2', function() {
+            var parentNode = ['p', 'vk.com'];
+            var goodResultNode = [[], ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer noopener',
+                  href: 'http://vk.com',
+                  target: '_blank'
+               },
+               'vk.com'
+            ]];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('without protocol - 3', function() {
+            var parentNode = ['p', 'market.yandex.ru'];
+            var goodResultNode = [[], ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer noopener',
+                  href: 'http://market.yandex.ru',
+                  target: '_blank'
+               },
+               'market.yandex.ru'
+            ]];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('without protocol - 4', function() {
+            var parentNode = ['p', 'my page on vk.com is vk.com/id0'];
+            var goodResultNode = [[],
+               'my page on ',
+               ['a',
+                  {
+                     'class': 'asLink',
+                     rel: 'noreferrer noopener',
+                     href: 'http://vk.com',
+                     target: '_blank'
+                  },
+                  'vk.com'
+               ],
+               ' is ',
+               ['a',
+                  {
+                     'class': 'asLink',
+                     rel: 'noreferrer noopener',
+                     href: 'http://vk.com/id0',
+                     target: '_blank'
+                  },
+                  'vk.com/id0'
+               ]
+            ];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('without protocol - 5', function() {
+            var parentNode = ['p', 'yandex.ru.'];
+            var goodResultNode = [[], ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer noopener',
+                  href: 'http://yandex.ru',
+                  target: '_blank'
+               },
+               'yandex.ru'
+            ], '.'];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('without protocol - 6', function() {
+            var parentNode = ['p', 'www.google.com'];
+            var goodResultNode = [[], ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer noopener',
+                  href: 'http://www.google.com',
+                  target: '_blank'
+               },
+               'www.google.com'
+            ]];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('without protocol in brackets', function() {
+            var parentNode = ['p', '(www.google.com)'];
+            var goodResultNode = [[],
+               '(',
+               ['a',
+                  {
+                     'class': 'asLink',
+                     rel: 'noreferrer noopener',
+                     href: 'http://www.google.com',
+                     target: '_blank'
+                  },
+                  'www.google.com'
+               ],
+               ')'
+            ];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('without protocol wrong top level domain name - 1', function() {
+            var parentNode = ['p', 'www.google.comma'];
+            var goodResultNode = 'www.google.comma';
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('without protocol wrong top level domain name - 2', function() {
+            var parentNode = ['p', 'vk.comma/id0'];
+            var goodResultNode = 'vk.comma/id0';
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('without protocol wrong top level domain name - 3', function() {
+            var parentNode = ['p', 'usd-comp162.corp.tensor.ur:1025/?grep=Controls%5C.Decorator%5C.Markup'];
+            var goodResultNode = 'usd-comp162.corp.tensor.ur:1025/?grep=Controls%5C.Decorator%5C.Markup';
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('inside link', function() {
+            var parentNode = ['a', 'https://ya.ru'];
+            var goodResultNode = 'https://ya.ru';
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('email - 1', function() {
+            var parentNode = ['p', 'rn.kondakov@tensor.ru'];
+            var goodResultNode = [[], ['a',
+               {
+                  href: 'mailto:rn.kondakov@tensor.ru'
+               },
+               'rn.kondakov@tensor.ru'
+            ]];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('email - 2', function() {
+            var parentNode = ['p', 'rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru'];
+            var goodResultNode = [[], ['a',
+               {
+                  href: 'mailto:rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru'
+               },
+               'rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru'
+            ]];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('email in brackets', function() {
+            var parentNode = ['p', 'text(rn.kondakov@tensor.ru)text'];
+            var goodResultNode = [[], 'text(', ['a',
+               {
+                  href: 'mailto:rn.kondakov@tensor.ru'
+               },
+               'rn.kondakov@tensor.ru'
+            ], ')text'];
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+
+         it('email with wrong domain', function() {
+            var parentNode = ['p', 'rn.kondakov@tensor.rux'];
+            var goodResultNode = 'rn.kondakov@tensor.rux';
+            var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.deepEqual(goodResultNode, checkResultNode);
+         });
+      });
+
       describe('needDecorate', function() {
          beforeEach(function() {
             decoratedLinkService = Env.constants.decoratedLinkService;
@@ -932,7 +1003,7 @@ define([
             var parentNode = ['p', ['b',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -944,7 +1015,7 @@ define([
             var parentNode = ['span', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -956,7 +1027,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -968,7 +1039,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   target: '_blank'
                },
                'https://ya.ru'
@@ -982,7 +1053,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: linkHref,
                   target: '_blank'
                },
@@ -994,7 +1065,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'file://test-perfleakps/leaks/test/30_03_19/21_06_58.zip',
                   target: '_blank'
                },
@@ -1006,7 +1077,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'smb://test-perfleakps/leaks/test/30_03_19/21_06_58.zip',
                   target: '_blank'
                },
@@ -1018,7 +1089,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'smb://test-perfleakps/leaks/http/30_03_19/21_06_58.zip',
                   target: '_blank'
                },
@@ -1030,7 +1101,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1042,7 +1113,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1054,7 +1125,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1066,7 +1137,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1078,7 +1149,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1090,7 +1161,7 @@ define([
             var parentNode = ['pre', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1102,7 +1173,7 @@ define([
             var parentNode = ['div', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1114,7 +1185,7 @@ define([
             var parentNode = ['div', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'http://ya.ru',
                   target: '_blank'
                },
@@ -1126,7 +1197,7 @@ define([
             var parentNode = ['div', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer',
+                  rel: 'noreferrer noopener',
                   href: 'HtTpS://ya.ru',
                   target: '_blank'
                },

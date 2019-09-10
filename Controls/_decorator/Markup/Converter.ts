@@ -60,77 +60,6 @@ import { IoC } from 'Env/Env';
       return [];
    }
 
-   var tagPattern = '(?:</?([a-z]+)[^>]*[>])',
-      protocolNames = [
-         'http:(?://|\\\\\\\\)',
-         'https:(?://|\\\\\\\\)',
-         'ftp:(?://|\\\\\\\\)',
-         'file:(?://|\\\\\\\\)',
-         'smb:(?://|\\\\\\\\)',
-      ],
-      correctTopLevelDomainNames = [
-         'ru',
-         'com',
-         'edu',
-         'org',
-         'net',
-         'int',
-         'info',
-         'рф',
-         'рус'
-      ],
-      protocolLinkPrefixPattern = `(?:${protocolNames.join('|')})`.replace(/[a-z]/g, (m) => `[${m + m.toUpperCase()}]`),
-      simpleLinkPrefixPattern = '([\\w\\-]+(?:\\.[a-zA-Z]+)*\\.([a-zA-Z]+)(?::[0-9]+)?)',
-      linkPrefixPattern = `(?:${protocolLinkPrefixPattern}|${simpleLinkPrefixPattern})`,
-      linkPattern = `(${linkPrefixPattern}(?:[^\\s\\x16<>()]*))`,
-      emailPattern = '([\\wа-яёА-ЯЁ!#$%&\'*+\\-/=?^`{|}~.]+@[^\\s\\x16<>@()]+\\.([\\wа-яёА-ЯЁ]+))',
-      endingPattern = '([^.,:\\s\\x16<>()])',
-      nbsp = '&nbsp;',
-      nbspReplacer = '\x16',
-      nbspRegExp = new RegExp(nbsp, 'g'),
-      nbspReplacerRegExp = new RegExp(nbspReplacer, 'g'),
-      characterRegExp = /[\wа-яёА-ЯЁ]/,
-      linkParseRegExp = new RegExp(`${tagPattern}|(?:(?:${emailPattern}|${linkPattern})${endingPattern})`, 'g');
-
-   // Wrap all links and email addresses placed not in tag a.
-   function wrapUrl(html) {
-      var resultHtml = html.replace(nbspRegExp, nbspReplacer),
-         linkIgnore = false;
-      resultHtml = resultHtml.replace(linkParseRegExp, function(match, tag, email, emailDomain, link, simpleLinkPrefix, simpleLinkDomain, ending) {
-         var linkParseResult;
-         if (tag) {
-            if (tag === 'a') {
-               linkIgnore = !linkIgnore;
-            }
-            linkParseResult = match;
-         } else if (linkIgnore) {
-            linkParseResult = match;
-         } else {
-            if (link) {
-               if (link === simpleLinkPrefix) {
-                  simpleLinkDomain += ending;
-               }
-               const wrongDomain = simpleLinkDomain && correctTopLevelDomainNames.indexOf(simpleLinkDomain) === -1;
-               link = link + ending;
-               linkParseResult = wrongDomain ? match : '<a class="asLink" rel="noreferrer" href="' +
-                  (simpleLinkPrefix ? 'http://' : '') + link + '" target="_blank">' + link + '</a>';
-            } else {
-               const isEndingPartOfEmail = characterRegExp.test(ending);
-               if (isEndingPartOfEmail) {
-                  emailDomain += ending;
-                  email += ending;
-               }
-               const wrongDomain = correctTopLevelDomainNames.indexOf(emailDomain) === -1;
-               linkParseResult = wrongDomain ? match
-                  : '<a href="mailto:' + email + '">' + email + '</a>' + (isEndingPartOfEmail ? '' : ending);
-            }
-         }
-         return linkParseResult;
-      });
-      resultHtml = resultHtml.replace(nbspReplacerRegExp, nbsp);
-      return resultHtml;
-   }
-
    /**
     * Преобразует html-строки в допустимый JsonML. Используется только на стороне клиента.
     * @function Controls/_decorator/Markup/Converter#htmlToJson
@@ -156,7 +85,7 @@ import { IoC } from 'Env/Env';
          rootNodeAttributes,
          hasRootTag,
          result;
-      div.innerHTML = wrapUrl(html).trim();
+      div.innerHTML = html.trim();
       hasRootTag = div.innerHTML[0] === '<';
       result = nodeToJson(div).slice(1);
       if (!hasRootTag && div.innerHTML) {
@@ -242,8 +171,7 @@ import { IoC } from 'Env/Env';
    var MarkupConverter = {
       htmlToJson: htmlToJson,
       jsonToHtml: jsonToHtml,
-      deepCopyJson: deepCopyJson,
-      wrapUrl: wrapUrl
+      deepCopyJson: deepCopyJson
    };
 
    export = MarkupConverter;
