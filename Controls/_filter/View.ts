@@ -100,7 +100,7 @@ var _private = {
             if (_private.isFrequentItem(item)) {
                 var popupItem = configs[item.name];
                 popupItem.id = item.name;
-                popupItem.selectedKeys = configs[item.name].multiSelect ? item.value : [item.value];
+                popupItem.selectedKeys = (item.value instanceof Array) ? item.value : [item.value];
                 popupItem.resetValue = (item.resetValue instanceof Array) ? item.resetValue : [item.resetValue];
                 if (item.editorOptions.source) {
                     if (!configs[item.name].source) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
@@ -164,9 +164,11 @@ var _private = {
                 self._displayText[item.name] = {};
                 if (_private.isItemChanged(item)) {
                     const selectedKeys = configs[item.name].multiSelect ? item.value : [item.value];
-                    const flatSelectedKeys = factory(selectedKeys).flatten().value(); //[ [selectedKeysList1], [selectedKeysList2] ] in hierarchy list
+
+                    // [ [selectedKeysList1], [selectedKeysList2] ] in hierarchy list
+                    const flatSelectedKeys = configs[item.name].nodeProperty ? factory(selectedKeys).flatten().value() : selectedKeys;
                     const isSelectedKeysChanged = !_private.getKeysUnloadedItems(configs[item.name], flatSelectedKeys).length;
-                    
+
                     if (isSelectedKeysChanged) {
                         self._displayText[item.name] = _private.getFastText(configs[item.name], flatSelectedKeys);
                         if (item.textValue !== undefined) {
@@ -367,8 +369,9 @@ var _private = {
         _private.updateHistory(this, result.id, result.data, result.selectedKeys);
     },
 
-    prepareHierarchySelection: function(selectedKeys, curConfig) {
+    prepareHierarchySelection: function(selectedKeys, curConfig, resetValue) {
         let folderIds = _private.getFolderIds(curConfig.items, curConfig.nodeProperty, curConfig.keyProperty);
+        let isEmptySelection = true;
 
         let resultSelectedKeys = [];
         folderIds.forEach((parentKey, index) => {
@@ -380,8 +383,13 @@ var _private = {
             } else {
                 resultSelectedKeys[index] = nodeSelectedKeys;
             }
+            if (nodeSelectedKeys.length && !nodeSelectedKeys.includes(curConfig.emptyKey)) {
+                isEmptySelection = false;
+            }
         });
-
+        if (isEmptySelection) {
+            resultSelectedKeys = resetValue;
+        }
         return resultSelectedKeys;
     },
 
@@ -391,7 +399,7 @@ var _private = {
             if (sKey) {
                 let curConfig = self._configs[index];
                 if (curConfig.nodeProperty) {
-                    sKey = _private.prepareHierarchySelection(sKey, curConfig);
+                    sKey = _private.prepareHierarchySelection(sKey, curConfig, _private.getItemByName(self._source, index).resetValue);
                 }
                 _private.setValue(self, sKey, index);
                 _private.updateHistory(self, index, result.data, sKey);

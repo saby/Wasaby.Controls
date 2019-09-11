@@ -294,6 +294,12 @@ define(
             assert.deepStrictEqual(item.value, [null]);
             assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.'});
             assert.deepStrictEqual(view._displayText, {document: {}, state: {}});
+
+            item = view._source[0];
+            view._displayText = {};
+            view._reset('clearClick', item);
+            assert.deepStrictEqual(item.value, null);
+            assert.deepStrictEqual(view._displayText, {document: {}, state: {}});
          });
 
          it('_resetFilterText', function() {
@@ -855,6 +861,14 @@ define(
                assert.deepStrictEqual(view._source[0].value, [[1, 2], [-2]]);
                assert.deepStrictEqual(view._displayText.document, {text: 'Folder 2', title: 'Folder 2, In any state, In progress', hasMoreText: ', еще 2' });
                assert.deepStrictEqual(filterChanged, {document: [[1, 2], [-2]]});
+
+               eventResult = {
+                  action: 'applyClick',
+                  selectedKeys: { document: [[], []] }
+               };
+               view._resultHandler('resultEvent', eventResult);
+               assert.deepStrictEqual(view._source[0].value, []);
+               assert.deepStrictEqual(view._displayText.document, {});
             });
          });
       });

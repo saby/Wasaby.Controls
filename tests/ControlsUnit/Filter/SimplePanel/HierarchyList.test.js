@@ -27,6 +27,7 @@ define(
             nodeProperty: 'node',
             parentProperty: 'parent',
             emptyText: '',
+            emptyKey: '2',
             resetValue: ['2'],
             id: 'text',
             items: defaultItems.clone(),
@@ -111,6 +112,44 @@ define(
             //checkbox click
             list._itemClickHandler({}, 0, []);
             assert.deepStrictEqual(checkBoxClickResult, [[], ['5']]);
+         });
+
+         it('_checkBoxClickHandler', function() {
+            let list = getHierarchyList(defaultConfig),
+               itemClickResult, checkBoxClickResult;
+            list._notify = (event, data) => {
+               if (event === 'itemClick') {
+                  itemClickResult = data[0];
+               } else if (event === 'checkBoxClick') {
+                  checkBoxClickResult = data[0];
+               }
+            };
+            list._beforeMount(defaultConfig);
+
+            list._checkBoxClickHandler({}, 0, ['1']);
+            assert.deepStrictEqual(checkBoxClickResult, [['1'], []]);
+
+            // folder click
+            list._checkBoxClickHandler({}, 0, ['-1']);
+            assert.deepStrictEqual(itemClickResult, [['-1'], []]);
+
+            // item click, folder was selected
+            list._checkBoxClickHandler({}, 0, ['1']);
+            assert.deepStrictEqual(itemClickResult, [['1'], []]);
+
+            // folder 1 was selected, click on another folder
+            list._selectedKeys = [['-1'], []];
+            list._checkBoxClickHandler({}, 1, ['0']);
+            assert.deepStrictEqual(itemClickResult, [[], ['0']]);
+
+            // folder 2 was selected, click on item from folder 1
+            list._checkBoxClickHandler({}, 0, ['1']);
+            assert.deepStrictEqual(checkBoxClickResult, [['1'], ['0']]);
+
+            // folder 2 and item from folder 1 was selected, click on folder 1
+            list._checkBoxClickHandler({}, 0, ['-1']);
+            assert.deepStrictEqual(itemClickResult, [['-1'], []]);
+
          });
 
          it('_emptyItemClickHandler', function() {
