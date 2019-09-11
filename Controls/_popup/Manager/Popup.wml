@@ -11,6 +11,7 @@
          opener="{{null}}"
          on:sendResult="_sendResult()"
          on:close="_close()"
+         on:popupDragEnd="_popupDragEnd()"
          on:popupDragStart="_popupDragStart()"
          on:popupResizingLine="_popupResizingLine()"
          on:popupMouseEnter="_popupMouseEnter()"
