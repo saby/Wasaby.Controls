@@ -11,6 +11,7 @@
       itemActionsTemplate="{{itemActionsTemplate}}"
       swipeTemplate="{{swipeTemplate}}"
       multiSelectTpl="{{multiSelectTpl}}"
+      editArrowTemplate="{{editArrowTemplate}}"
       itemTemplate="{{itemTemplate}}"
       template="wml!Controls/_list/ItemTemplateWrapper"
       itemData="{{itemData}}"
