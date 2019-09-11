@@ -2640,7 +2640,7 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          ctrl.itemsDragNDrop = true;
-         ctrl._itemMouseDown({}, {key: 1}, {});
+         ctrl._itemMouseDown({}, {key: 1}, {nativeEvent: {button: 0}});
          assert.isUndefined(ctrl._itemDragData);
       });
       describe('mouseDown with different buttons', function() {
@@ -2679,6 +2679,9 @@ define([
                 ctrl = new lists.BaseControl();
             let dragNDropStarted = false;
             let domEvent = {
+               nativeEvent: {
+                  button: 2
+               },
                target:{
                   closest:function() {
                      return null;
@@ -2698,11 +2701,13 @@ define([
                   }
                }
             };
-            ctrl._itemMouseDown({button: 1}, {key: 1}, domEvent);
+            ctrl._itemMouseDown({}, {key: 1}, domEvent);
             assert.isFalse(dragNDropStarted);
-            ctrl._itemMouseDown({button: 2}, {key: 1}, domEvent);
+            domEvent.nativeEvent.button = 1;
+            ctrl._itemMouseDown({}, {key: 1}, domEvent);
             assert.isFalse(dragNDropStarted);
-            ctrl._itemMouseDown({button: 0}, {key: 1}, domEvent);
+            domEvent.nativeEvent.button = 0;
+            ctrl._itemMouseDown({}, {key: 1}, domEvent);
             assert.isTrue(dragNDropStarted);
          });
       });
@@ -2773,6 +2778,9 @@ define([
             },
             ctrl = new lists.BaseControl(),
             fakeMouseDown = {
+               nativeEvent: {
+                  button: 0
+               },
                target: {
                   closest: () => false
                },
