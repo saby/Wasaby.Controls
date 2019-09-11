@@ -25,7 +25,7 @@
          <ws:partial template="{{itemData.expanderTemplate}}" itemData="{{itemData}}" expanderIcon="{{expanderIcon}}" expanderSize="{{expanderSize}}"/>
       </ws:if>
       <ws:else data="{{itemData.shouldDrawExpanderPadding(itemData, expanderIcon, expanderSize)}}">
-         <div class="controls-TreeGrid__row-expanderPadding js-controls-ListView__notEditable"></div>
+         <div class="{{itemData.getExpanderPaddingClasses(expanderSize)}}"></div>
       </ws:else>
    </ws:if>
    <ws:if data="{{colspan}}">

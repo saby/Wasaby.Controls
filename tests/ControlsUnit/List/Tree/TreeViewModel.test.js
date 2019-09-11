@@ -332,6 +332,20 @@ define([
 
 
          });
+         it('getExpanderPaddingClasses', function() {
+            let expectation = [
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_default',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_s',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_m',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_l',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_xl',
+            ];
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses(), expectation[0]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('s'), expectation[1]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('m'), expectation[2]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('l'), expectation[3]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('xl'), expectation[4]);
+         });
          it('prepareExpanderClasses', function() {
             var
                testsPrepareExpanderClasses = [{
