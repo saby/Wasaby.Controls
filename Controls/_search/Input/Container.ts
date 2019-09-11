@@ -1,5 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_search/Input/Container');
+import {constants} from 'Env/Env';
 
 /**
  * Контейнер для контрола с {@link Controls/interface/IInputField}.
@@ -65,6 +66,12 @@ var SearchContainer = Control.extend(/** @lends Controls/_search/Input/Container
 
    _resetClick: function () {
       this._notifySearch('', true);
+   },
+
+   _keyDown: function(event) {
+      if (event.nativeEvent.which === constants.key.enter) {
+         event.stopPropagation();
+      }
    }
 });
 
