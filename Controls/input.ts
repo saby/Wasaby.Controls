@@ -11,14 +11,15 @@
  * @includes Password Controls/_input/Password
  * @includes DateBase Controls/_input/DateTime
  * @includes Date Controls/_input/Date/Picker
- * @includes Time Controls/_input/Time/Picker
  * @includes DateTimeModel Controls/_input/DateTime/Model
  * @includes TimeInterval Controls/_input/TimeInterval
  * @includes Money Controls/_input/Money
- * @includes Render Controls/_input/Render
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  * @includes IValidationStatus Controls/_input/interface/IValidationStatus
- * @includes IValidationStatus Controls/_input/interface/IText
+ * @includes IText Controls/_input/interface/IText
+ * @includes IBase Controls/_input/interface/IBase
+ * @includes ITag Controls/_input/interface/ITag
+ * @includes IValue Controls/_input/interface/IValue
  *
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  *
@@ -39,11 +40,9 @@
  * @includes Password Controls/_input/Password
  * @includes DateBase Controls/_input/DateTime
  * @includes Date Controls/_input/Date/Picker
- * @includes Time Controls/_input/Time/Picker
  * @includes DateTimeModel Controls/_input/DateTime/Model
  * @includes TimeInterval Controls/_input/TimeInterval
  * @includes Money Controls/_input/Money
- * @includes Render Controls/_input/Render
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  * @includes IValidationStatus Controls/_input/interface/IValidationStatus
  * @includes IText Controls/_input/interface/IText
@@ -80,7 +79,9 @@ import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 import INewLineKey from 'Controls/_input/interface/INewLineKey';
 export {default as IText, ITextOptions} from 'Controls/_input/interface/IText';
 export {default as IBase, IBaseOptions, TextAlign, AutoComplete} from 'Controls/_input/interface/IBase';
+export {default as ITag, ITagOptions, TagStyle} from 'Controls/_input/interface/ITag';
 export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus} from 'Controls/_input/interface/IValidationStatus';
+export {default as IValue, IValueOptions, ICallback, ICallbackData, IFieldData} from 'Controls/_input/interface/IValue';
 
 const InputCallback = {
     lengthConstraint
@@ -107,6 +108,5 @@ export {
     StringValueConverter,
     InputCallback,
     INewLineKey,
-    Render,
     ActualAPI
 };

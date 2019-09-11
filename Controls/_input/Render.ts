@@ -58,8 +58,8 @@ IFontColorStyleOptions, IFontSizeOptions, IValidationStatusOptions {
  * @mixes Controls/_interface/IHeight
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_input/interface/ITag
  * @mixes Controls/_input/interface/IValidationStatus
- *
  *
  * @author Красильников А.С.
  */
@@ -79,7 +79,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
    readonly '[Controls/_interface/IHeight]': true;
    readonly '[Controls/_interface/IFontSize]': true;
    readonly '[Controls/_interface/IFontColorStyle]': true;
-   readonly '[Controls/_interface/IValidationStatus]': true;
+   readonly '[Controls/_input/interface/IValidationStatus]': true;
 
    private updateState(options: IRenderOptions): void {
       this._fontSize = ActualAPI.fontSize(options.fontStyle, options.fontSize);

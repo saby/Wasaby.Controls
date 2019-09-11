@@ -26,7 +26,7 @@ interface ISelectableInput {
          * @example
          * В этом примере при клике по полю будет выделен весь текст.
          * <pre>
-         *    <Controls.input:Text selectOnClick={{true}}/>
+         *    <Controls.input:Text selectOnClick="{{true}}"/>
          * </pre>
          */
         /*
@@ -40,7 +40,7 @@ interface ISelectableInput {
          * @example
          * In this example, when the field is clicked, all text in it will be selected.
          * <pre>
-         *    <Controls.input:Text selectOnClick={{true}}/>
+         *    <Controls.input:Text selectOnClick="{{true}}"/>
          * </pre>
          */
         selectOnClick: boolean;
