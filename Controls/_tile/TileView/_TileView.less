@@ -86,7 +86,12 @@
 }
 
 .controls-TileView__item_scaled {
-   z-index: 1;
+
+   // TODO: KINGO
+   // чекбоксы на плитке имеют z-index: 1, и, если плитка не увеличена (например навели на чекбокс),
+   // то чекбоксы других плиток будут поверх заголовка текущей, если он появился снизу от плитки.
+   // Поэтому нужно установить для активной плитки z-index больше чем у чекбоксов
+   z-index: 2;
 }
 .controls-TileView__item_hovered, .controls-TileView__item_active, .controls-TileView__item_swiped {
    .controls-TileView__title {
