@@ -463,6 +463,11 @@ var _private = {
     },
 
     generateMenuConfig: function (self) {
+        //Todo: https://online.sbis.ru/opendoc.html?guid=c010823c-cdd7-4f1c-8d3a-25b0e711ecea
+        self._menuItems.each((item) => {
+            item.set('icon', item.get('icon') || item.get('buttonIcon'));
+            item.set('iconStyle', item.get('iconStyle') || item.get('buttonIconStyle'));
+        });
         return {
             className: 'controls-Toolbar__popup__list_theme-' + self._options.theme + ' ' + (self._options.popupClassName || ''),
             templateOptions: {
