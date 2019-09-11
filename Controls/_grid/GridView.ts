@@ -103,8 +103,8 @@ var
         getColumnsWidthForEditingRow: function (self, itemData): Array<string> {
             let
                 container = (self._container[0] || self._container),
-                hasHeader = !!self._listModel.getHeader(),
                 hasItems = self._listModel.getCount(),
+                hasHeader = !!self._listModel.getHeader() && (hasItems || self._listModel.isDrawHeaderWithEmptyList()),
                 hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
                 cells,
                 columnsWidths = [];
@@ -273,7 +273,7 @@ var
         },
 
         _beforePaint: function() {
-            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._isHeaderChanged && this._listModel.isDrawHeaderWithEmtyList()) {
+            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._isHeaderChanged && this._listModel.isDrawHeaderWithEmptyList()) {
                 const newHeader = this._setHeaderWithHeight();
                 this._listModel.setHeaderCellMinHeight(newHeader);
                 this._isHeaderChanged = false;
@@ -333,7 +333,7 @@ var
         },
         _afterMount: function() {
             GridView.superclass._afterMount.apply(this, arguments);
-            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._listModel.isDrawHeaderWithEmtyList()) {
+            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._listModel.isDrawHeaderWithEmptyList()) {
                 this._listModel.setHeaderCellMinHeight(this._setHeaderWithHeight());
             }
             if (this._options.columnScroll) {

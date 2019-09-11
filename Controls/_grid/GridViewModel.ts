@@ -752,7 +752,7 @@ var
             this._curHeaderRowIndex++;
         },
 
-        isDrawHeaderWithEmtyList: function() {
+        isDrawHeaderWithEmptyList: function() {
             if (!this.headerInEmptyListVisible && !this.isGridListNotEmpty()) {
                 return false;
             }
