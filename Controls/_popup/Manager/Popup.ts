@@ -85,11 +85,9 @@ class Popup extends Control<IPopupOptions> {
             this.callbackCreated = (function () {
                 this.callbackCreated = null;
                 this._notify('popupCreated', [this._options.id], {bubbling: true});
-                this._options.creatingDef && this._options.creatingDef.callback(this._options.id);
             }).bind(this);
         } else {
             this._notify('popupCreated', [this._options.id], {bubbling: true});
-            this._options.creatingDef && this._options.creatingDef.callback(this._options.id);
             this.activatePopup();
         }
     }
