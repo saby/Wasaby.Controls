@@ -13,6 +13,7 @@ type TSelectedKeys = Array<string | number>;
  * Получает результат дочернего события "selectedKeysChanged" и уведомляет о событии "selectedKeyChanged".
  * @class Controls/_source/Adapter/SelectedKey
  * @extends Controls/Control
+ * @mixes Controls/_interface/ISingleSelectable
  * @control
  * @public
  * @author Золотова Э.Е.
@@ -28,7 +29,7 @@ type TSelectedKeys = Array<string | number>;
  * @control
  * @public
  * @author Золотова Э.Е.
- */ 
+ */
 
 class SelectedKeyAdapter extends Control<ISelectedKeyAdapterOptions> {
    protected _template: TemplateFunction = SelectedKeyAdapterTemplate;
