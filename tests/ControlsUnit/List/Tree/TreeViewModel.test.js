@@ -530,6 +530,7 @@ define([
                123: true,
                234: true
             });
+            let getExpanderPaddingClasses = treeGrid.TreeViewModel._private.getExpanderPaddingClasses;
             assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(0)).nodeFooter, undefined, 'Incorrect nodeFooter for displayItem[0].');
             assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(1)).nodeFooter, {
                dispItem: treeViewModel._display.at(0),
@@ -537,6 +538,7 @@ define([
                item: treeViewModel._items.at(0),
                key: treeViewModel._items.at(0).getId(),
                template: "footer",
+               getExpanderPaddingClasses: getExpanderPaddingClasses,
                level: 1,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[1].');
@@ -547,6 +549,7 @@ define([
                item: treeViewModel._items.at(1),
                template: "footer",
                key: treeViewModel._items.at(1).getId(),
+               getExpanderPaddingClasses: getExpanderPaddingClasses,
                level: 2,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[4].');
@@ -555,6 +558,7 @@ define([
                item: treeViewModel._items.at(5),
                template: "footer",
                key: treeViewModel._items.at(5).getId(),
+               getExpanderPaddingClasses: getExpanderPaddingClasses,
                level: 1,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[5].');
