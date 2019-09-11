@@ -224,8 +224,12 @@ import entity = require('Types/entity');
             };
          },
          resetTimeOut: function(self) {
-            clearTimeout(self._openId);
-            clearTimeout(self._closeId);
+            if (self._openId) {
+               clearTimeout(self._openId);
+            }
+            if (self._closeId) {
+               clearTimeout(self._closeId);
+            }
             self._openId = null;
             self._closeId = null;
          }
@@ -335,6 +339,7 @@ import entity = require('Types/entity');
             _private.resetTimeOut(this);
 
             this._openId = setTimeout(function() {
+               self._openId = null;
                self._open();
                self._forceUpdate();
             }, self._options.showDelay);
@@ -345,6 +350,7 @@ import entity = require('Types/entity');
                this._clearWaitTimer();
                clearTimeout(this._openId);
                this._closeId = setTimeout(() => {
+                  this._closeId = null;
                   this._close();
                   this._forceUpdate();
                }, this._options.hideDelay);
