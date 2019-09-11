@@ -6,11 +6,7 @@ var HorizontalScrollWrapper = Control.extend({
    _beforeMount: function(opt) {
       this._localPositionHandler = opt.positionChangeHandler;
    },
-   _afterUpdate(newOpt) {
-      if (newOpt.getScrollWidth !== this._options.getScrollWidth) {
-         this._children.columnScrollbar._resizeHandler();
-      }
-   },
+
    _getGridStyles: function() {
       let style = '';
       const { listModel } = this._options;

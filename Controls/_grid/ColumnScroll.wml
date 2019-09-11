@@ -13,7 +13,7 @@
            isNotGridSupport="{{_isNotGridSupport}}"
            topOffset="{{_offsetForHScroll}}"
            positionChangeHandler="{{_positionHandler}}"
-           bind:getScrollWidth="_scrollWidth"
+           bind:scrollWidth="_scrollWidth"
            isHorizontalScrollVisible="{{_isColumnScrollVisible()}}"
 
            attr:class="controls-Grid_columnScroll"

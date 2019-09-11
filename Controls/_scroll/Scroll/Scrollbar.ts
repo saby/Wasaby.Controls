@@ -174,8 +174,8 @@ class Scrollbar extends Control<IScrollBarOptions> {
         const verticalDirection = this._options.direction === 'vertical';
         const horizontalDirection = this._options.direction === 'horizontal';
         const scrollbar = this._children.scrollbar;
-        this._scrollBarSize = verticalDirection ? scrollbar.offsetHeight : scrollbar.offsetWidth;
-        const scrollbarAvailableSize = verticalDirection ? scrollbar.clientHeight : scrollbar.clientWidth;
+        this._scrollBarSize = scrollbar[verticalDirection ? 'offsetHeight' : 'offsetWidth'];
+        const scrollbarAvailableSize = scrollbar[verticalDirection ? 'clientHeight' : 'clientWidth'];
         let thumbSize: number;
 
         let viewportRatio: number;

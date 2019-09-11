@@ -12,7 +12,7 @@
                 contentSize="{{contentSize}}"
                 topOffset="{{topOffset}}"
                 gridSupport="full"
-                getScrollWidth="{{getScrollWidth}}"
+                scrollWidth="{{scrollWidth}}"
                 listModel="{{_listModel}}"
                 positionChangeHandler="{{positionChangeHandler}}">
         </Controls._grid.ScrollWrapper>

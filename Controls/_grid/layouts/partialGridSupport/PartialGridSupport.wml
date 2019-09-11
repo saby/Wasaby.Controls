@@ -11,7 +11,7 @@
                 position="{{position}}"
                 contentSize="{{contentSize}}"
                 gridSupport="partial"
-                getScrollWidth="{{getScrollWidth}}"
+                scrollWidth="{{scrollWidth}}"
                 listModel="{{_listModel}}"
                 positionChangeHandler="{{positionChangeHandler}}">
         </Controls._grid.ScrollWrapper>

@@ -5,9 +5,9 @@
                 position="{{_options.position}}"
                 direction="horizontal"
                 contentSize="{{_options.contentSize}}"
-                getScrollWidth="{{_options.getScrollWidth}}"
+                scrollWidth="{{_options.scrollWidth}}"
                 attr:class="controls-ColumnScroll"
-                attr:style="width:{{_options.getScrollWidth}}px;"
+                attr:style="width:{{_options.scrollWidth}}px;"
                 on:positionChanged="_localPositionHandler()"/>
     </div>
 </ws:if>
@@ -18,8 +18,8 @@
         direction="horizontal"
         contentSize="{{_options.contentSize}}"
         gridSupport="{{_options.gridSupport}}"
-        getScrollWidth="{{_options.getScrollWidth}}"
+        getScrollWidth="{{_options.scrollWidth}}"
         attr:class="controls-ColumnScroll controls-ColumnScroll_without_offset"
-        attr:style="width:{{_options.getScrollWidth}}px;"
+        attr:style="width:{{_options.scrollWidth}}px;"
         on:positionChanged="_localPositionHandler()"/>
 </ws:else>
