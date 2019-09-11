@@ -186,7 +186,7 @@ var _private = {
 
                 // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                 if (!list.getCount()) {
-                    _private.checkLoadToDirectionCapability(self);
+                    _private.checkLoadToDirectionCapability(self, filter);
                 }
             }).addErrback(function(error) {
                 return _private.processError(self, {
@@ -352,7 +352,7 @@ var _private = {
         }
     },
 
-    loadToDirection: function(self, direction, userCallback, userErrback) {
+    loadToDirection: function(self, direction, userCallback, userErrback, receivedFilter) {
         const beforeAddItems = (addedItems) => {
             if (addedItems.getCount()) {
                 self._loadedItems = addedItems;
@@ -393,7 +393,7 @@ var _private = {
         _private.showIndicator(self, direction);
 
         if (self._sourceController) {
-            const filter = cClone(self._options.filter);
+            const filter = cClone(receivedFilter || self._options.filter);
             if (self._options.beforeLoadToDirectionCallback) {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }
@@ -499,13 +499,13 @@ var _private = {
         }
     },
 
-    checkLoadToDirectionCapability: function(self) {
+    checkLoadToDirectionCapability: function(self, filter) {
         if (self._needScrollCalculation) {
             if (self._loadTriggerVisibility.up) {
-                _private.onScrollLoadEdge(self, 'up');
+                _private.onScrollLoadEdge(self, 'up', filter);
             }
             if (self._loadTriggerVisibility.down) {
-                _private.onScrollLoadEdge(self, 'down');
+                _private.onScrollLoadEdge(self, 'down', filter);
             }
             _private.checkVirtualScrollCapability(self);
         }
@@ -559,7 +559,7 @@ var _private = {
         }
     },
 
-    loadToDirectionIfNeed: function(self, direction) {
+    loadToDirectionIfNeed: function(self, direction, filter) {
         //source controller is not created if "source" option is undefined
         // todo возможно hasEnoughDataToDirection неправильная. Надо проверять startIndex +/- virtualSegmentSize
         if (!self._virtualScroll || !self._virtualScroll.hasEnoughDataToDirection(direction)) {
@@ -567,16 +567,17 @@ var _private = {
                 _private.loadToDirection(
                    self, direction,
                    self._options.dataLoadCallback,
-                   self._options.dataLoadErrback
+                   self._options.dataLoadErrback,
+                   filter
                 );
             }
         }
     },
 
     // Метод, вызываемый при прокрутке скролла до триггера
-    onScrollLoadEdge: function (self, direction) {
+    onScrollLoadEdge: function (self, direction, filter) {
         if (self._options.navigation && self._options.navigation.view === 'infinity') {
-            _private.loadToDirectionIfNeed(self, direction);
+            _private.loadToDirectionIfNeed(self, direction, filter);
         }
     },
 
