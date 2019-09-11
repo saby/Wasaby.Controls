@@ -343,6 +343,12 @@ var
 
         _getColumnsWidthForEditingRow: function (itemData) {
             return _private.getColumnsWidthForEditingRow(this, itemData);
+        },
+        _onEditArrowClick: function(e, item) {
+            this._notify('editArrowClick', [item]);
+
+            //we do not need to fire itemClick on clicking on editArrow
+            e.stopPropagation();
         }
     });
 

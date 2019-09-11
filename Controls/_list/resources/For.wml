@@ -6,6 +6,7 @@
       itemActionsTemplate="{{itemActionsTemplate}}"
       swipeTemplate="{{swipeTemplate}}"
       multiSelectTpl="{{multiSelectTpl}}"
+      editArrowTemplate="{{editArrowTemplate}}"
       editingItemData="{{editingItemData}}"
       isAdd="{{isAdd}}"
       itemTemplate="{{itemTemplate}}"

@@ -5,6 +5,7 @@
    isAdd="{{isAdd}}"
    itemActionsTemplate="{{itemActionsTemplate}}"
    swipeTemplate="{{swipeTemplate}}"
+   editArrowTemplate="{{editArrowTemplate}}"
    multiSelectTpl="{{multiSelectTpl}}"
    itemTemplate="{{(listModel.getCurrent().item.get && listModel.getCurrent().item.get(listModel.getCurrent().itemTemplateProperty)) || itemTemplate}}"
    itemData="{{listModel.getCurrent()}}"
