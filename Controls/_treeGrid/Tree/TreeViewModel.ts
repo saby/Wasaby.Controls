@@ -155,6 +155,11 @@ var
                 return !expanderSize && expanderIcon !== 'none';
             }
         },
+        getExpanderPaddingClasses: function(expanderSize) {
+            let expanderPaddingClasses = 'controls-TreeGrid__row-expanderPadding';
+            expanderPaddingClasses += ' controls-TreeGrid__row-expanderPadding_size_' + (expanderSize || 'default');
+            return expanderPaddingClasses;
+        },
         prepareExpanderClasses: function(itemData, expanderIcon, expanderSize) {
             var
                 itemType = itemData.item.get(itemData.nodeProperty),
@@ -249,6 +254,7 @@ var
                         item: current.dispItem.getContents(),
                         dispItem: current.dispItem,
                         multiSelectVisibility: current.multiSelectVisibility,
+                        getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                         level: current.dispItem.getLevel()
                     }) - 1;
                     if (self._options.nodeFooterTemplate) {
@@ -269,6 +275,7 @@ var
                             dispItem: itemParent,
                             task1177672941: true,
                             multiSelectVisibility: current.multiSelectVisibility,
+                            getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                             level: itemParent.getLevel()
                         }) - 1;
                         if (self._options.nodeFooterTemplate) {
@@ -294,6 +301,7 @@ var
                             item: dadDispItem.getContents(),
                             dispItem: dadDispItem,
                             multiSelectVisibility: current.multiSelectVisibility,
+                            getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                             level: dadDispItem.getLevel()
                         }) - 1;
                         if (self._options.nodeFooterTemplate) {
@@ -315,6 +323,7 @@ var
                         key: current.key,
                         item: current.dispItem.getContents(),
                         dispItem: current.dispItem,
+                        getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                         multiSelectVisibility: current.multiSelectVisibility,
                         level: current.dispItem.getLevel()
                     };
@@ -333,6 +342,7 @@ var
                         item: itemParent.getContents(),
                         dispItem: itemParent,
                         multiSelectVisibility: current.multiSelectVisibility,
+                        getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                         level: itemParent.getLevel()
                     };
                     if (self._options.nodeFooterTemplate) {
@@ -508,6 +518,7 @@ var
             current.hasChildItem = !current.isGroup && _private.hasChildItem(this, current.key);
             current.shouldDrawExpander = _private.shouldDrawExpander;
             current.shouldDrawExpanderPadding = _private.shouldDrawExpanderPadding;
+            current.getExpanderPaddingClasses = _private.getExpanderPaddingClasses;
             current.prepareExpanderClasses = _private.prepareExpanderClasses;
 
             // todo https://online.sbis.ru/opendoc.html?guid=0649e69a-d507-4024-9f99-c70205f535ef
