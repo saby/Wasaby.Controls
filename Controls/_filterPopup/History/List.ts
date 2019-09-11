@@ -11,7 +11,7 @@ import {factory} from 'Types/chain';
 import {Constants} from 'Controls/history';
 import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
-import {convertToFilterStructure, convertToSourceData} from 'Controls/_filterPopup/converterFilterStructure';
+import {convertToFilterStructure, convertToSourceDataArray} from 'Controls/_filterPopup/converterFilterStructure';
 import 'css!theme?Controls/filterPopup';
 
    var MAX_NUMBER_ITEMS = 5;
@@ -151,6 +151,7 @@ import 'css!theme?Controls/filterPopup';
       updateFavoriteList: function(favoriteList, localStorage, globalStorage) {
          favoriteList.assign(localStorage.getHistory());
          favoriteList.prepend(globalStorage.getHistory());
+         _private.convertToItems(favoriteList);
       },
 
       updateFavorite: function(self, item, text, isFavorite) {
@@ -220,7 +221,7 @@ import 'css!theme?Controls/filterPopup';
 
       convertToItems: function(favoriteList) {
          factory(favoriteList).each((favoriteItem) => {
-            favoriteItem.get('data').set('filterPanelItems', convertToSourceData(favoriteItem.get('data').get('filter')));
+            favoriteItem.get('data').set('filterPanelItems', convertToSourceDataArray(favoriteItem.get('data').get('filter')));
          });
       }
    };
