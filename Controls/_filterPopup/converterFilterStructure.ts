@@ -32,28 +32,32 @@ import Utils = require('Types/util');
             return itemStructureItem;
          }).value();
       }
-      
-      function convertToSourceData(filterStructure) {
-         var dataArray = [];
 
-         chain.factory(filterStructure)
-            .each(function(item) {
-               var rsItem = {};
-               for (var i in recordToSructureElemMap) {
-                  if (Utils.object.getPropertyValue(item, recordToSructureElemMap[i]) && recordToSructureElemMap.hasOwnProperty(i)) {
-                     rsItem[i] = Utils.object.getPropertyValue(item, recordToSructureElemMap[i]);
+      function convertToSourceDataArray(filterStructure) {
+          var dataArray = [];
+          chain.factory(filterStructure)
+              .each(function(item) {
+                  var rsItem = {};
+                  for (var i in recordToSructureElemMap) {
+                      if (Utils.object.getPropertyValue(item, recordToSructureElemMap[i]) && recordToSructureElemMap.hasOwnProperty(i)) {
+                          rsItem[i] = Utils.object.getPropertyValue(item, recordToSructureElemMap[i]);
+                      }
                   }
-               }
-               dataArray.push(rsItem);
-            });
+                  dataArray.push(rsItem);
+              });
+          return dataArray;
+      }
+
+      function convertToSourceData(filterStructure) {
+        let dataArray = convertToSourceDataArray(filterStructure);
+
          return new collection.RecordSet({
             rawData: dataArray
          });
-
       }
-      
+
       export = {
          convertToFilterStructure: convertToFilterStructure,
-         convertToSourceData: convertToSourceData
+         convertToSourceData: convertToSourceData,
+         convertToSourceDataArray: convertToSourceDataArray
       };
-   
