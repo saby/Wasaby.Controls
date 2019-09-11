@@ -916,6 +916,13 @@ import 'css!Controls/_dragnDrop/Container';
             }
 
             _private.onMove(this, event.nativeEvent);
+
+            /**
+             * Когда мышь покидает граници экрана, тогда перемещение элемента должно закончиться.
+             */
+            if (event.type === 'mouseleave') {
+               this._dragNDropEnded(event);
+            }
          },
 
          _onMouseMoveIEFix: function(event) {
