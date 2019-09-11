@@ -42,11 +42,6 @@ define([
          let configActivate;
          let activated = false;
          let lookup = new Lookup();
-         let isInputActive = false;
-
-         lookup._isInputActive = function() {
-            return isInputActive;
-         };
 
          lookup._needSetFocusInInput = true;
          lookup._options.items = getItems(0);
@@ -59,7 +54,6 @@ define([
          assert.isFalse(activated);
          assert.isFalse(lookup._needSetFocusInInput);
 
-         isInputActive = true;
          lookup._needSetFocusInInput = true;
          lookup._active = true;
          lookup._afterUpdate();
@@ -72,8 +66,13 @@ define([
          var
             isCalculatingSizes = false,
             items = new collection.List(),
-            lookup = new Lookup();
+            lookup = new Lookup(),
+            isInputActive = true;
 
+         lookup._suggestState = true;
+         lookup._isInputActive = function() {
+            return isInputActive;
+         };
          lookup._calculatingSizes = function() {
             isCalculatingSizes = true;
          };
@@ -83,7 +82,9 @@ define([
          lookup._beforeUpdate({value: 'test'});
          assert.equal(lookup._inputValue, 'test');
          assert.isFalse(isCalculatingSizes);
+         assert.isTrue(lookup._suggestState);
 
+         isInputActive = false;
          lookup._options.items = items;
          lookup._beforeUpdate({
             items: items,
@@ -93,6 +94,7 @@ define([
 
          assert.equal(lookup._inputValue, 'test');
          assert.isTrue(isCalculatingSizes);
+         assert.isFalse(lookup._suggestState);
 
          isCalculatingSizes = false;
          lookup._options.value = 'diff with new value';
