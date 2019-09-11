@@ -254,6 +254,7 @@ var
                         item: current.dispItem.getContents(),
                         dispItem: current.dispItem,
                         multiSelectVisibility: current.multiSelectVisibility,
+                        getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                         level: current.dispItem.getLevel()
                     }) - 1;
                     if (self._options.nodeFooterTemplate) {
@@ -274,6 +275,7 @@ var
                             dispItem: itemParent,
                             task1177672941: true,
                             multiSelectVisibility: current.multiSelectVisibility,
+                            getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                             level: itemParent.getLevel()
                         }) - 1;
                         if (self._options.nodeFooterTemplate) {
@@ -299,6 +301,7 @@ var
                             item: dadDispItem.getContents(),
                             dispItem: dadDispItem,
                             multiSelectVisibility: current.multiSelectVisibility,
+                            getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                             level: dadDispItem.getLevel()
                         }) - 1;
                         if (self._options.nodeFooterTemplate) {
@@ -320,6 +323,7 @@ var
                         key: current.key,
                         item: current.dispItem.getContents(),
                         dispItem: current.dispItem,
+                        getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                         multiSelectVisibility: current.multiSelectVisibility,
                         level: current.dispItem.getLevel()
                     };
@@ -338,6 +342,7 @@ var
                         item: itemParent.getContents(),
                         dispItem: itemParent,
                         multiSelectVisibility: current.multiSelectVisibility,
+                        getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                         level: itemParent.getLevel()
                     };
                     if (self._options.nodeFooterTemplate) {
