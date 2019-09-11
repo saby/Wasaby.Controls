@@ -135,7 +135,7 @@
                 on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
                 on:afterBeginEdit="_onAfterBeginEdit()"
                 on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
-                on:afterEndEdit="_notifyHandler('afterEndEdit')"
+                on:afterEndEdit="_onAfterEndEdit()"
                 listModel="{{_listViewModel}}"
                 multiSelectVisibility="{{_options.multiSelectVisibility}}"
                 errorController="{{ __errorController }}"

@@ -1956,7 +1956,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _showActionsMenu: function(event, itemData, childEvent, showAll) {
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
-
+    _onAfterEndEdit: function(event, item, isAdd) {
+        this._canUpdateItemsActions = true;
+        return this._notify('afterEndEdit', [item, isAdd]);
+    },
     _onAfterBeginEdit: function (event, item, isAdd) {
 
         /*
