@@ -47,7 +47,7 @@
  *       </Controls.grid:View>
  *    </div>
  * </pre>
- * 
+ *
  * Пример 2. Шаблон ленесенки вынесен в отдельный шаблон.
  * * WML
  * <pre>
@@ -90,7 +90,7 @@
  *             <ws:Array>
  *                <ws:Object width="1fr">
  *                   <ws:template>
- *                      <ws:partial template="Controls/grid:Columns">
+ *                      <ws:partial template="Controls/grid:ColumnTemplate">
  *                         <ws:contentTemplate>
  *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
@@ -282,8 +282,8 @@
  * В значении "auto" ширина столбца устанавливается исходя из типа и содержимого элемента.
  * В значении "minmax(,)" устанавливаются минимальная и максимальная ширина столбца, например "minmax(600px, 1fr)".
  * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в столбце.
- * @property {String} [template=Controls/grid:Columns] Шаблон отображения ячейки.
- * По умолчанию используется базовый шаблон {@link Controls/grid:Columns}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
+ * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
+ * По умолчанию используется базовый шаблон {@link Controls/grid:ColumnTemplate}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
  *
  * На корневой элемент пользовательского шаблона следует задать CSS-класс "controls-Grid__row-cell__content_baseline_L". Это обеспечит выравнивание контента ячейки по базовой линии.
  * <pre>
@@ -292,7 +292,7 @@
  *         <ws:Array>
  *             <ws:Object displayProperty="Name" width="200px">
  *                 <ws:template>
- *                     <ws:partial template="Controls/grid:Columns" attr:class="controls-Grid__row-cell__content_baseline_L">
+ *                     <ws:partial template="Controls/grid:ColumnTemplate" attr:class="controls-Grid__row-cell__content_baseline_L">
  *                         <ws:contentTemplate>
  *                           <!-- контент шаблона -->
  *                         </ws:contentTemplate>
