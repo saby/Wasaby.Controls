@@ -4193,6 +4193,92 @@ define([
             assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
             assert.equal(ctrl._loadingState, null);
          });
+         it('Reload with empty results', async function() {
+            let src = new sourceLib.Memory({
+               idProperty: 'id',
+               data: []
+            });
+            const cfg = {
+               source: src,
+               viewName: 'Controls/List/ListView',
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  view: 'infinity',
+                  source: 'page',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  },
+                  sourceConfig: {
+                     pageSize: 3,
+                     page: 0
+                  }
+               }
+            };
+
+            const ctrl = new lists.BaseControl(cfg);
+
+            ctrl._setLoadOffset = lists.BaseControl._private.startScrollEmitter = function(){};
+            ctrl._loadTriggerVisibility = {
+               up: false,
+               down: true
+            };
+            ctrl.saveOptions(cfg);
+            await ctrl._beforeMount(cfg);
+            ctrl._afterMount(cfg);
+
+            let queryCallsCount = 0;
+            src.query = function(query) {
+               if (queryCallsCount === 0) {
+                  queryCallsCount++;
+                  assert.deepEqual({ field: 'updatedFilter' }, query.getWhere());
+                  return new Promise(function (resolve) {
+                     resolve(new sourceLib.DataSet({
+                        keyProperty: 'id',
+                        metaProperty: 'meta',
+                        itemsProperty: 'items',
+                        rawData: {
+                           items: [],
+                           meta: {
+                              more: true
+                           }
+                        }
+                     }));
+                  });
+               } else if (queryCallsCount === 1) {
+                  queryCallsCount++;
+                  assert.deepEqual({ field: 'updatedFilter' }, query.getWhere());
+                  return new Promise(function (resolve) {
+                     resolve(new sourceLib.DataSet({
+                        keyProperty: 'id',
+                        metaProperty: 'meta',
+                        itemsProperty: 'items',
+                        rawData: {
+                           items: [{ id: 1 }, { id: 2 }],
+                           meta: {
+                              more: false
+                           }
+                        }
+                     }));
+                  });
+               }
+            };
+
+            let cfgClone = {...cfg};
+            cfgClone.filter = {
+               field: 'updatedFilter'
+            };
+
+            await lists.BaseControl._private.reload(ctrl, cfgClone);
+
+            assert.equal(2, queryCallsCount);
+         });
          it('Navigation position', function() {
             return new Promise(function(resolve, reject) {
                var
