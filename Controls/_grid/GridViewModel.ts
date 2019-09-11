@@ -579,7 +579,7 @@ var
         _headerColumns: [],
         _curHeaderColumnIndex: 0,
         _maxEndRow: 0,
-        maxEndColumn: 0,
+        _maxEndColumn: 0,
         _curHeaderRowIndex: 0,
         _multyHeaderOffset: 0,
         _headerCellMinHeight: null,
@@ -710,7 +710,7 @@ var
         _prepareHeaderColumns: function(columns, multiSelectVisibility) {
             if (columns && columns.length) {
                 this._headerRows = getRowsArray(columns, multiSelectVisibility);
-                [this._maxEndRow, this.maxEndColumn] = getMaxEndRow(this._headerRows);
+                [this._maxEndRow, this._maxEndColumn] = getMaxEndRow(this._headerRows);
                 if (multiSelectVisibility && columns[0] && columns[0].isBreadCrumbs) {
                     this._headerRows[0][0].hiddenForBreadCrumbs = true;
                 }
@@ -744,6 +744,14 @@ var
         },
         goToNextHeaderRow: function() {
             this._curHeaderRowIndex++;
+        },
+
+        getStickyColumnsCount: function() {
+            return this._options.stickyColumnsCount;
+        },
+
+        getMaxEndColumn: function() {
+            return this._maxEndColumn;
         },
 
         isDrawHeaderWithEmtyList: function() {

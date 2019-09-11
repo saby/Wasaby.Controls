@@ -3,6 +3,7 @@ import HorizontalScrollWrapperTpl = require('wml!Controls/_grid/ScrollWrapperTem
 
 var HorizontalScrollWrapper = Control.extend({
    _template: HorizontalScrollWrapperTpl,
+
    _beforeMount: function(opt) {
       this._localPositionHandler = opt.positionChangeHandler;
    },
@@ -10,8 +11,9 @@ var HorizontalScrollWrapper = Control.extend({
    _getGridStyles: function() {
       let style = '';
       const { listModel } = this._options;
-      const { _options: { stickyColumnsCount, header }, maxEndColumn } = listModel;
-
+      const maxEndColumn = listModel.getMaxEndColumn();
+      const stickyColumnsCount = listModel.getStickyColumnsCount();
+      const header = listModel.getHeader();
       let offset = 0;
       if (listModel.getMultiSelectVisibility() !== 'hidden') {
          offset += 1;
