@@ -165,7 +165,6 @@ const
          this._isNotGridSupport = opt.listModel.isNoGridSupport();
          this._isFullGridSupport = opt.listModel.isFullGridSupport();
          this._positionHandler = this._positionChangedHandler.bind(this);
-         this._getScrolWidthHandler = this.getScrollWidth.bind(this);
       },
 
       _afterMount() {
@@ -201,10 +200,6 @@ const
           if (this._children.startShadow) {
               this._children.startShadow.style = _private.calculateShadowStyles(this, 'start');
           }
-      },
-
-      getScrollWidth() {
-         return this._scrollWidth;
       },
 
       _resizeHandler() {
