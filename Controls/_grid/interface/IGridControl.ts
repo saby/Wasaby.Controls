@@ -19,8 +19,10 @@
  * @cfg {Array.<String>} Массив свойств, по которым происходит прилипание.
  * <a href="/materials/demo-ws4-grid-sticky">Example</a>
  * @example
- * Установите ladderProperties отобразите шаблон элемента через ladderWrapper:
+ * Пример 1. Шаблон лесенки задан в рамках шаблона родительского контрола.
+ * * WML
  * <pre>
+ *    <!-- MyControl.wml -->
  *    <div class="demoGrid">
  *       <Controls.grid:View
  *          ...
@@ -29,11 +31,11 @@
  *             <ws:Array>
  *                <ws:Object width="1fr">
  *                   <ws:template>
- *                      <ws:partial template="Controls/grid:Columns">
+ *                      <ws:partial template="Controls/grid:ColumnTemplate">
  *                         <ws:contentTemplate>
- *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
+ *                            <ws:partial template="{{template.ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
- *                                  {{itemData.item['date']}}
+ *                                  {{template.itemData.item['date']}}
  *                               </div>
  *                            </ws:partial>
  *                         </ws:contentTemplate>
@@ -44,6 +46,32 @@
  *          </ws:columns>
  *       </Controls.grid:View>
  *    </div>
+ * </pre>
+ * 
+ * Пример 2. Шаблон ленесенки вынесен в отдельный шаблон.
+ * * WML
+ * <pre>
+ *    <!-- MyControl.wml -->
+ *    <div class="demoGrid">
+ *       <Controls.grid:View
+ *          ...
+ *          ladderProperties="{{ ['date'] }}">
+ *          <ws:columns>
+ *             <ws:Array>
+ *                <ws:Object width="1fr" template="wml!MyModule/MyControl" />
+ *             </ws:Array>
+ *          </ws:columns>
+ *       </Controls.grid:View>
+ *    </div>
+ * </pre>
+ * * WML
+ * <pre>
+ *    <!-- MyTemplate.wml -->
+ *    <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
+ *       <div class="demoGrid__date">
+ *          {{itemData.item['date']}}
+ *       </div>
+ *    </ws:partial>
  * </pre>
  */
 
