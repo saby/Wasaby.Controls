@@ -16,7 +16,6 @@ export interface IScrollBarOptions extends IControlOptions {
     position?: number;
     contentSize: number;
     direction: TDirection;
-    getScrollWidth: () => number;
 }
 /**
  * Thin scrollbar.
