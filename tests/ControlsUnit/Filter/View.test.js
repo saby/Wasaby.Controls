@@ -172,6 +172,28 @@ define(
             });
          });
 
+         it('_beforeUpdate new items length', function() {
+            let view = getView(defaultConfig);
+            view._beforeUpdate(defaultConfig);
+
+            let expectedDisplayText = {
+               document: {text: 'My', title: 'My', hasMoreText: ''}
+            };
+
+            let newConfig = Clone(defaultConfig);
+            newConfig.source[0].value = 1;
+            newConfig.source[0].editorOptions.source = new sourceLib.Memory({
+               idProperty: 'id',
+               data: defaultItems[0]
+            });
+            view._configs = {};
+            view._displayText = {};
+            newConfig.source.splice(1,1);
+            view._beforeUpdate(newConfig).addCallback(() => {
+               assert.deepStrictEqual(view._displayText, expectedDisplayText);
+            });
+         });
+
          it('openDetailPanel', function() {
             let view = getView(defaultConfig),
                popupOptions;
@@ -468,7 +490,7 @@ define(
 
          it('_private:updateHistory', function() {
             let view = getView(defaultConfig);
-            view._source = defaultConfig.source;
+            view._source = Clone(defaultConfig.source);
             let resultHistoryItems, resultMeta;
             let source = new history.Source({
                originSource: new sourceLib.Memory({
@@ -605,6 +627,7 @@ define(
                      idProperty: 'id'
                   }),
                   source: source[0].editorOptions.source,
+                  _sourceController: {hasMoreData: () => {return false;}},
                   displayProperty: 'title',
                   keyProperty: 'id'},
                state: {
@@ -613,6 +636,7 @@ define(
                      idProperty: 'id'
                   }),
                   source: source[1].editorOptions.source,
+                  _sourceController: {hasMoreData: () => {return false;}},
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}
