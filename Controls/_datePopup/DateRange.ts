@@ -30,6 +30,25 @@ const _private = {
 
     notifyPositionChanged: function(self, date) {
         self._notify('positionChanged', [date]);
+    },
+
+    changeYear: function(self, position, direction) {
+        let year: number = null;
+
+        switch (direction) {
+            case 'top':
+                year = position.getFullYear() + 1;
+                break;
+            case 'bottom':
+                year = position.getFullYear() - 1;
+                break;
+            default:
+                break;
+        }
+
+        if (year !== null) {
+            _private.notifyPositionChanged(self, new Date(year, 0, 1));
+        }
     }
 };
 
@@ -98,14 +117,13 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _wheelHandler: function(event) {
-        let year;
+        const direction = event.nativeEvent.deltaY > 0 ? 'top' : 'bottom';
+        _private.changeYear(this, this._options.position, direction);
+        event.preventDefault();
+    },
 
-        if (event.nativeEvent.deltaY > 0) {
-            year = this._options.position.getFullYear() + 1;
-        } else {
-            year = this._options.position.getFullYear() - 1;
-        }
-        _private.notifyPositionChanged(this, new Date(year, 0, 1));
+    _swipeHandler: function(event) {
+        _private.changeYear(this, this._options.position, event.nativeEvent.direction);
         event.preventDefault();
     },
 
