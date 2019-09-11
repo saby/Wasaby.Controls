@@ -5,11 +5,20 @@
    flex-shrink: 1;
    height: 100%;
    position: relative;
-   overflow: hidden;
+   box-shadow: @size_Stack-shadow @color_Stack-shadow;
 }
 
 .controls-StackTemplate_theme_@{themeName} {
    background-color: @background-color_stack;
+   &:before {
+      content: '';
+      position: absolute;
+      left: -1px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: @color_Stack-border-left;
+   }
 }
 
 .controls-StackTemplate__top-area_theme_@{themeName} {

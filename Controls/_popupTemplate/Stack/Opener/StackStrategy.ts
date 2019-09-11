@@ -7,9 +7,9 @@ interface IPosition {
     right: Number;
     top: Number;
     bottom: Number;
-    stackWidth?: Number;
-    stackMinWidth?: Number;
-    stackMaxWidth?: Number;
+    width?: Number;
+    minWidth?: Number;
+    maxWidth?: Number;
     position?: String;
 }
 
@@ -88,7 +88,7 @@ export = {
         const maxPanelWidth = this.getMaxPanelWidth();
         const width = _private.getPanelWidth(item, tCoords, maxPanelWidth);
         const position: IPosition = {
-            stackWidth: width,
+            width,
             right: item.hasMaximizePopup ? 0 : tCoords.right,
             top: tCoords.top,
             bottom: 0
@@ -101,9 +101,9 @@ export = {
 
         if (item.popupOptions.minWidth) {
             // todo: Удалить minimizedWidth https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
-            position.stackMinWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
+            position.minWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
         }
-        position.stackMaxWidth = _private.calculateMaxWidth(this, item.popupOptions, tCoords);
+        position.maxWidth = _private.calculateMaxWidth(this, item.popupOptions, tCoords);
 
         return position;
     },
