@@ -4,6 +4,8 @@
  * @includes Panel Controls/_filterPopup/Panel
  * @includes DetailPanel Controls/_filterPopup/DetailPanel
  * @includes SimplePanel Controls/_filterPopup/SimplePanel
+ * @includes SimplePanelEmptyItemTemplate Controls/_filterPopup/SimplePanel/_List/emptyItemTemplate
+ * @includes SimplePanelHierarchyItemTemplate Controls/_filterPopup/SimplePanel/_HierarchyList/hierarchyItemTemplate
  * @includes Link Controls/_filterPopup/Panel/Link
  * @includes Select Controls/_filterPopup/Panel/Select
  * @includes Dropdown Controls/_filterPopup/Panel/Dropdown
@@ -50,6 +52,7 @@ import DetailPanel = require('Controls/_filterPopup/DetailPanel');
 import SimplePanel = require('Controls/_filterPopup/SimplePanel');
 import SimplePanelItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/itemTemplate');
 import SimplePanelEmptyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_List/emptyItemTemplate');
+import SimplePanelHierarchyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_HierarchyList/hierarchyItemTemplate');
 import Link = require('Controls/_filterPopup/Panel/Link');
 import Select = require('Controls/_filterPopup/Panel/Select');
 import Dropdown = require('Controls/_filterPopup/Panel/Dropdown');
@@ -66,6 +69,7 @@ export {
    SimplePanel,
    SimplePanelItemTemplate,
    SimplePanelEmptyItemTemplate,
+   SimplePanelHierarchyItemTemplate,
    Link,
    Select,
    Dropdown,

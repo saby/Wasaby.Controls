@@ -99,6 +99,14 @@ define(
             isCheckBoxClick = true;
             list._itemClickHandler(event, defaultItems.at(1));
             assert.deepStrictEqual(itemClickResult, ['2']);
+
+            //folder click
+            isCheckBoxClick = false;
+            list._options.nodeProperty = 'node';
+            let item = defaultItems.at(2).clone();
+            item.set('node', true);
+            list._itemClickHandler(event, item);
+            assert.deepStrictEqual(itemClickResult, ['3']);
          });
 
          it('_afterOpenDialogCallback', function() {
