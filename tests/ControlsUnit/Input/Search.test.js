@@ -118,22 +118,6 @@ define(
                self._options.readOnly = true;
                assert.isFalse(searchMod.Input._private.isVisibleResetButton.call(self));
             });
-
-            it('_keyDownHandler', function() {
-               let search = new searchMod.Input();
-               let propagationStopped = false;
-               let event = {
-                  stopPropagation: () => {
-                     propagationStopped = true;
-                  },
-                  nativeEvent: {
-                     which: 13 //enter
-                  }
-               };
-
-               search._keyDownHandler(event);
-               assert.isTrue(propagationStopped);
-            });
          });
       });
    }
