@@ -108,6 +108,16 @@ import 'css!theme?Controls/filterPopup';
  * </pre>
  */
 
+/**
+ * @name Controls/_filterPopup/Panel/Lookup#lookupClassName
+ * @cfg {String} Класс, который вешается на корневой элемент шаблона lookupTemplateName
+ * @example
+ * На корневой элемент шаблона "namePace/Lookup" навешивается класс "myClass"
+ * <pre>
+ *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup" lookupClassName="myClass"/>
+ * </pre>
+ */
+
 
 
 var _private = {
