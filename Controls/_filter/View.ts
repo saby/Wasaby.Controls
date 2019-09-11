@@ -270,6 +270,7 @@ var _private = {
 
     reload: function(self) {
         var pDef = new ParallelDeferred();
+        self._configs = {};
         factory(self._source).each(function(item) {
             if (_private.isFrequentItem(item)) {
                 var result = _private.loadItems(self, item);
@@ -433,15 +434,19 @@ var _private = {
 
     isNeedReload: function(oldItems, newItems) {
         let result = false;
-        factory(oldItems).each((oldItem) => {
-            const newItem = _private.getItemByName(newItems, oldItem.name);
-           if (newItem && _private.isFrequentItem(oldItem) &&
-               (!isEqual(oldItem.editorOptions.source, newItem.editorOptions.source) ||
-               !isEqual(oldItem.editorOptions.filter, newItem.editorOptions.filter) ||
-               !isEqual(oldItem.editorOptions.navigation, newItem.editorOptions.navigation))) {
-               result = true;
-           }
-        });
+        if (oldItems.length !== newItems.length) {
+            result = true;
+        } else {
+            factory(oldItems).each((oldItem) => {
+                const newItem = _private.getItemByName(newItems, oldItem.name);
+                if (newItem && _private.isFrequentItem(oldItem) &&
+                    (!isEqual(oldItem.editorOptions.source, newItem.editorOptions.source) ||
+                        !isEqual(oldItem.editorOptions.filter, newItem.editorOptions.filter) ||
+                        !isEqual(oldItem.editorOptions.navigation, newItem.editorOptions.navigation))) {
+                    result = true;
+                }
+            });
+        }
         return result;
     },
 
