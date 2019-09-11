@@ -27,7 +27,10 @@ define('Controls-demo/Popup/TestStack',
 
          _openStack: function() {
             this._children.stack.open({
-               maxWidth: 600
+               maxWidth: 600,
+               templateOptions: {
+                  width: '600px'
+               }
             });
          },
 
