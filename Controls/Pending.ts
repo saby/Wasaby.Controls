@@ -277,7 +277,9 @@ import ParallelDeferred = require('Core/ParallelDeferred');
          }
       },
       _beforeUnmount: function() {
-         window.removeEventListener('beforeunload', this._beforeUnloadHandler);
+         if (typeof window !== 'undefined') {
+            window.removeEventListener('beforeunload', this._beforeUnloadHandler);
+         }
       }
    });
 
