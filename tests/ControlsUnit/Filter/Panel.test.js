@@ -324,6 +324,45 @@ define(
             filterPopup.DetailPanel._private.resolveHistoryId(self, {}, self._contextOptions);
             assert.equal(self._historyId, 'testId');
          });
+			it('filterHistoryItems', function() {
+			   let self = {
+			 		_items: [
+			 			{
+			 			   id: 'PeriodFilter',
+			 			   value: 5,
+			 			   resetValue: {
+			 			 		'StartDate': '12.31.1233',
+			 			 		'LastDate': '13.31.1233',
+			 			 		'Period': 'За последний час',
+			 			   },
+			 			   textValue: 'listValue'
+			 			},
+			 			{
+			 			   id: 'Methods',
+			 			   value: '123',
+			 			   resetValue: '',
+			 			   visibility: true,
+			 			   textValue: null
+			 			},
+			 			{
+			 			   id: 'Faces',
+			 			   value: true,
+			 			   resetValue: false,
+			 			   visibility: false
+			 			}
+			 		]
+			   };
+			   var config2 = {
+			 		items: items,
+			 		historyId: 'TEST_PANEL_HISTORY_ID'
+			   };
+			   filter.HistoryUtils.loadHistoryItems('TEST_PANEL_HISTORY_ID').addCallback(function(items) {
+			 		let filteredHistoryItems = _private.filterHistoryItems(self,items);
+			 		assert.isUndefined(filteredHistoryItems);
+			 		done();
+			   });
+			});
+
 
          it('_private:prepareItems', function() {
             var changeItems = [

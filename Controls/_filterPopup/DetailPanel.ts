@@ -6,6 +6,7 @@ import _FilterPanelOptions = require('Controls/_filterPopup/Panel/Wrapper/_Filte
 import template = require('wml!Controls/_filterPopup/Panel/Panel');
 import Env = require('Env/Env');
 import {isEqual} from 'Types/object';
+import {RecordSet, factory} from 'Types/collection';
 import {HistoryUtils} from 'Controls/filter';
 import {List} from 'Types/collection';
 import 'css!theme?Controls/filterPopup';
@@ -97,13 +98,27 @@ import 'Controls/form';
                recent: isReportPanel ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY'
             };
             return HistoryUtils.loadHistoryItems(config).addCallback(function(items) {
-               self._historyItems = items;
-               return items;
+               self._historyItems = _private.filterHistoryItems(self, items);
+               return self._historyItems;
             }).addErrback(function() {
                self._historyItems = new List({ items: [] });
             });
          }
       },
+
+       filterHistoryItems: function(self,items) {
+           return chain.factory(items).filter(function(item) {
+               let history = JSON.parse(item.get('ObjectData')).items || JSON.parse(item.get('ObjectData'));
+               let itemHasData = false;
+               for (var i = 0, length = history.length; i < length; i++) {
+                   var textValue = getPropValue(history[i], 'textValue');
+                   if (textValue !== '' && textValue !== undefined) {
+                       itemHasData = true;
+                   }
+               }
+               return itemHasData;
+           }).value(factory.recordSet,{adapter: items.getAdapter()});
+       },
 
       reloadHistoryItems: function(self, historyId) {
          self._historyItems = HistoryUtils.getHistorySource({historyId: historyId}).getItems();
