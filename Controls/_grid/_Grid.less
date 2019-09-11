@@ -186,6 +186,13 @@
       background-color: @background-color_Grid-row_hover;
    }
 
+   .controls-Grid_row-cell_hovered {
+      .controls-Grid__editArrow-blur,
+      .controls-Grid__editArrow-wrapper {
+         visibility: visible;
+      }
+   }
+
    .controls-Grid_row-cell_hovered .controls-itemActionsV {
       display: inline-block;
    }
@@ -530,12 +537,12 @@
       visibility: visible;
    }
 }
-.controls-Grid__row {
-   .controls-Grid__editArrow-blur,
-   .controls-Grid__editArrow-wrapper {
-      visibility: hidden;
-   }
+
+.controls-Grid__editArrow-blur,
+.controls-Grid__editArrow-wrapper {
+   visibility: hidden;
 }
+
 .controls-Grid__editArrow-wrapper {
    flex-shrink:0;
    background: @background-color_Grid-row_hover;
