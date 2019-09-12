@@ -85,8 +85,21 @@ define([
             'Раздел': null,
             'Раздел@': false
          }],
+         rootItems = [{
+            'id': 1,
+            'Раздел': null,
+            'Раздел@': true
+         }, {
+            'id': 6,
+            'Раздел': null,
+            'Раздел@': true
+         }, {
+            'id': 7,
+            'Раздел': null,
+            'Раздел@': false
+         }],
          hiddenNodeWithChildren,
-         allData, flatData;
+         allData, flatData, rootData;
 
       /*
          1
@@ -104,6 +117,10 @@ define([
          });
          flatData = new collection.RecordSet({
             rawData: flatItems.slice(),
+            idProperty: 'id'
+         });
+         rootData = new collection.RecordSet({
+            rawData: rootItems.slice(),
             idProperty: 'id'
          });
          hiddenNodeWithChildren = new collection.RecordSet({
@@ -704,6 +721,23 @@ define([
 
             assert.deepEqual([], selection.selected);
             assert.deepEqual([], selection.excluded);
+         });
+
+         it('selectAll in root with not loaded selected items', function() {
+            cfg = {
+               selectedKeys: [1, 2, 3, 4, 6],
+               excludedKeys: [],
+               items: rootData,
+               keyProperty: 'id',
+               listModel: getListModel()
+            };
+
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selectionInstance.selectAll();
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([null], selection.selected);
+            assert.deepEqual([null], selection.excluded);
          });
       });
 
