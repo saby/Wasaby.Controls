@@ -98,6 +98,10 @@ let _fakeDiv;
 
          },
 
+         elementUpdateOptions(item, container): boolean|Promise<boolean> {
+            return this._elementUpdated(item, container);
+         },
+
          _elementUpdated: function(item, container) {
             if (this._checkContainer(item, container, 'elementUpdated')) {
                if (item.popupState === BaseController.POPUP_STATE_CREATED || item.popupState === BaseController.POPUP_STATE_UPDATED || item.popupState === BaseController.POPUP_STATE_UPDATING) {
