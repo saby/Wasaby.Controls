@@ -580,7 +580,18 @@ define([
             all: [],
             showed: []
          });
-         assert.isOk(editingItem, "shoud set itemActions for editing item");
+         assert.isFalse(editingItem.drawActions, "shoud not draw actions on editing item if actions array is empty");
+         listModel.setItemActions(new entity.Record({
+            rawData: {
+               id: 'test',
+               title: 'test'
+            },
+            idProperty: 'id'
+         }), {
+            all: [1,2,3],
+            showed: [1,2,3]
+         });
+         assert.isTrue(editingItem.drawActions, "shoud draw actions on editing item if actions array is not empty");
       });
 
       it('Clear itemActions for removed items', function() {

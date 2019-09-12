@@ -580,7 +580,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                this.resetCachedItemData(this._convertItemKeyToCacheKey(id));
             } else if (this._editingItemData && this._editingItemData.key === id) {
                 this._editingItemData.itemActions = actions;
-                this._editingItemData.drawActions = !!actions;
+                this._editingItemData.drawActions = !!(actions && actions.all.length);
             }
         }
     },
