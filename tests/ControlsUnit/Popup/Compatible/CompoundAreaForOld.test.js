@@ -149,7 +149,7 @@ define(
                assert.notProperty(parent._childsMapId, Area._id);
                assert.notInclude(parent._childControls, Area);
                assert.notInclude(parent._childContainers, Area._container);
-               assert.notProperty(parent._childsMapName, Area._options.name);
+               assert.notProperty(parent._childsMapName, Area._options.name || '');
             });
 
             it('does not throw exception if parent does not have required fields', () => {
