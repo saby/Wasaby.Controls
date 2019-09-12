@@ -116,10 +116,11 @@ define([
             assert.isTrue(Util.isPartialGridSupport());
             assert.isFalse(Util.isNoGridSupport());
          });
-         it('chrome xp in no grid support', () => {
+         it('chrome in xp is no grid support', () => {
             Env.detection = {
                isNotFullGridSupport: true,
                isWinXP: true,
+               yandex: false,
                isIE: false,
                isModernIE: false,
                safari: false,
@@ -129,10 +130,25 @@ define([
             assert.isFalse(Util.isPartialGridSupport());
             assert.isTrue(Util.isNoGridSupport());
          });
-         it('mozila xp in no grid support', () => {
+         it('yandex in xp is partial grid support', () => {
+            Env.detection = {
+               isNotFullGridSupport: true,
+               isWinXP: true,
+               yandex: true,
+               isIE: false,
+               isModernIE: false,
+               safari: false,
+               isNoGridSupport: false
+            };
+            assert.isFalse(Util.isFullGridSupport());
+            assert.isTrue(Util.isPartialGridSupport());
+            assert.isFalse(Util.isNoGridSupport());
+         });
+         it('mozila in xp is no grid support', () => {
             Env.detection = {
                isNotFullGridSupport: false,
                isWinXP: true,
+               yandex: false,
                isIE: false,
                isModernIE: false,
                safari: false,
