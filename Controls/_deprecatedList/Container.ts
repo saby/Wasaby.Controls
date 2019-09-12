@@ -146,15 +146,7 @@ var _private = {
 
    searchCallback: function(self, result, filter) {
       if (self._options.searchEndCallback) {
-
-         /* FIXME
-            Когда отдаёшь memory источник с данными,
-            запрос искуственно делаем асинхронным в BaseControl, поэтому и список строится асинхронным. Но, т.к. в VDOM'е
-            асинхронное построение контролов сейчас работает с ошибками, тоже эмулирую асинхронность.
-            Правится по ошибке в плане Зуева https://online.sbis.ru/opendoc.html?guid=fb08b40e-f2ac-4dd2-9a84-dfbfc404da02 */
-         Deferred.fromTimer(10).addCallback(function() {
-            self._options.searchEndCallback(result, filter);
-         });
+         self._options.searchEndCallback(result, filter);
       }
 
       if (!isEqual(filter, _private.getFilterFromContext(self, self._context)) || !isEqual(filter, self._filter)) {
