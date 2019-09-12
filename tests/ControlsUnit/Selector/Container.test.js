@@ -78,6 +78,10 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          };
 
          assert.deepEqual(lookupPopup.Container._private.getSelectedKeys(options, context), [0, 2, 4]);
+
+         options.selectedItems = getItems();
+         options.selectedItems[0].set('id', 'testId');
+         assert.deepEqual(lookupPopup.Container._private.getSelectedKeys(options, context), ['testId', 2, 4]);
       });
 
       it('prepareFilter', function() {
