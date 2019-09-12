@@ -5,7 +5,6 @@
    flex-shrink: 1;
    height: 100%;
    position: relative;
-   box-shadow: @size_Stack-shadow @color_Stack-shadow;
 }
 
 .controls-StackTemplate_theme_@{themeName} {
@@ -13,11 +12,13 @@
    &:before {
       content: '';
       position: absolute;
-      left: -1px;
+      left: -@size_Stack-border-left;
       top: 0;
       bottom: 0;
-      width: 1px;
+      width: @size_Stack-border-left;
       background: @color_Stack-border-left;
+      box-shadow: @size_Stack-shadow @color_Stack-shadow;
+      z-index: -1; // shadow can't overlap a content
    }
 }
 
