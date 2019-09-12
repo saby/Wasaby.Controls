@@ -6,7 +6,6 @@ import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
-import Indicator = require('Core/Indicator');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import {parse as parserLib, load} from 'Core/library';
 
@@ -39,7 +38,6 @@ var _private = {
 var Base = Control.extend({
     _template: Template,
     _actionOnScroll: 'none',
-    _showOldIndicator: false,
 
     _beforeMount: function (options) {
         this._popupId = null;
@@ -65,6 +63,7 @@ var Base = Control.extend({
     open: function (popupOptions, controller): Promise<string | undefined> {
         return new Promise((resolve => {
             var cfg = this._getConfig(popupOptions || {});
+            _private.clearPopupIds(this);
             this._toggleIndicator(true);
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                 _private.compatibleOpen(this, cfg, controller).then(popupId => resolve(popupId));
@@ -74,22 +73,6 @@ var Base = Control.extend({
         }));
     },
 
-    // Сейчас ядро не умеет обновлять контрол, если другой контрол находится в ожидании построения
-    // (на beforeMount вернул Promise). Поэтому сделан этот костыль, который открывает старый индикатор по опции.
-    // Иначе при долгом построении индикатора загрузики вообще не будет
-    // После того как ядро полечит проблему, костыль нужно удалить
-    // TODO: https://online.sbis.ru/opendoc.html?guid=13e4d473-5b91-485b-8d9d-fcd2f1f80f72
-    _compatibleCreatingDef(config, isCreating: boolean): void {
-        if (isCreating) {
-            if (this._showOldIndicator) {
-                config.creatingDef = new Deferred();
-                config.creatingDef.addCallback(() => {
-                    this._toggleIndicator(false);
-                });
-            }
-        }
-    },
-
     _openPopup: function (cfg, controller): Promise<string | undefined> {
         return new Promise((resolve => {
             this._requireModules(cfg, controller).addCallback((result) => {
@@ -97,11 +80,7 @@ var Base = Control.extend({
                 const popupId = this._getCurrentPopupId();
 
                 cfg._vdomOnOldPage = this._options._vdomOnOldPage;
-                this._compatibleCreatingDef(cfg, !popupId);
                 Base.showDialog(result.template, cfg, result.controller, popupId, this).addCallback((popupId) => {
-                    if (!cfg.creatingDef) {
-                        this._toggleIndicator(false);
-                    }
                     if (this._useVDOM()) {
                         this._popupId = popupId;
                         // Call redraw to create emitter on scroll after popup opening
@@ -139,7 +118,6 @@ var Base = Control.extend({
         if (!baseConfig.hasOwnProperty('opener')) {
             baseConfig.opener = DefaultOpenerFinder.find(this) || this;
         }
-        this._showOldIndicator = baseConfig.showOldIndicator;
         if (baseConfig.actionOnScroll) {
             this._actionOnScroll = baseConfig.actionOnScroll;
         }
@@ -148,41 +126,41 @@ var Base = Control.extend({
     },
 
     _prepareNotifyConfig: function (cfg) {
-        this._notifyEvent = this._notifyEvent.bind(this);
+        this._popupHandler = this._popupHandler.bind(this);
 
         // Handlers for popup events
         cfg._events = {
-            onOpen: this._notifyEvent,
-            onResult: this._notifyEvent,
-            onClose: this._notifyEvent
+            onOpen: this._popupHandler,
+            onResult: this._popupHandler,
+            onClose: this._popupHandler
         };
     },
 
-    _notifyEvent: function (eventName, args) {
+    _popupHandler(eventName: string, args: any[]): void {
         // Trim the prefix "on" in the event name
-        var event = eventName.substr(2);
+        const event = eventName.substr(2).toLowerCase();
+
+        if (event === 'close' || event === 'open') {
+            this._toggleIndicator(false);
+        }
+
         this._notify(event, args);
     },
 
     _toggleIndicator: function (visible) {
-        let message =  rk('Загрузка');
-        if(!this._showOldIndicator) {
-            if (visible) {
-                var cfg = {
-                    id: this._indicatorId,
-                    message: message
-                };
-                this._indicatorId = this._notify('showIndicator', [cfg], {bubbling: true});
-            } else if (this._indicatorId) {
-                this._notify('hideIndicator', [this._indicatorId], {bubbling: true});
-                this._indicatorId = null;
+        if (visible) {
+            // if popup was opened, then don't show indicator, because we don't have async phase
+            if (this._getCurrentPopupId()) {
+                return;
             }
-        } else {
-            if(visible){
-                Indicator.setMessage(message,true)
-            } else {
-                Indicator.hide();
-            }
+            const cfg = {
+                id: this._indicatorId,
+                message: rk('Загрузка')
+            };
+            this._indicatorId = this._notify('showIndicator', [cfg], {bubbling: true});
+        } else if (this._indicatorId) {
+            this._notify('hideIndicator', [this._indicatorId], {bubbling: true});
+            this._indicatorId = null;
         }
     },
 
@@ -344,9 +322,6 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
                     compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
                     dialog.setTarget && dialog.setTarget($(newCfg.target));
 
-                    // Обновляем опцию для старого окна и зовем завершение обработки, т.к. окно уже открыто и просто
-                    // перерисовывает шаблон
-                    dialog._options.creatingDef = newCfg.creatingDef;
                     dialog._finishPopupOpenedDeferred && dialog._finishPopupOpenedDeferred();
                 } else {
                     openedDialog = null;
