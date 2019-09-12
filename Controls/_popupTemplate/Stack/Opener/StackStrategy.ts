@@ -53,7 +53,7 @@ const _private = {
     },
 
     isMaximizedPanel(item) {
-        return !!item.popupOptions.minimizedWidth;
+        return !!item.popupOptions.minimizedWidth && !item.popupOptions.propStorageId;
     },
 
     isMaximizedState(item) {
