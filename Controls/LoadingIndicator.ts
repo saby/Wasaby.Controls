@@ -6,7 +6,7 @@ import Env = require('Env/Env');
 import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
 
 /**
- * @name Controls/Container/LoadingIndicator#isGlobal
+ * @name Controls/LoadingIndicator#isGlobal
  * @cfg {Boolean} Показать индикатор над всей страницей или только над собственным контентом.
  * @variant true В этом случае индикатор позиционируется через position: fixed.
  * @variant false В этом случае индикатор позиционируется через position: absolute.
@@ -14,27 +14,27 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  */
 
 /*
- * @name Controls/Container/LoadingIndicator#isGlobal
+ * @name Controls/LoadingIndicator#isGlobal
  * @cfg {Boolean} show indicator covering whole page (global) or covering just own content
  * @variant true It means position: fixed of indicator's container
  * @variant false It means position: absolute of indicator's container
  * @default true
- */ 
+ */
 
 /**
- * @name Controls/Container/LoadingIndicator#message
+ * @name Controls/LoadingIndicator#message
  * @cfg {String} Текст сообщения индикатора.
  * @default '' (пустая строка)
  */
 
 /*
- * @name Controls/Container/LoadingIndicator#message
+ * @name Controls/LoadingIndicator#message
  * @cfg {String} message of indicator
  * @default '' (empty string)
  */
 
 /**
- * @name Controls/Container/LoadingIndicator#scroll
+ * @name Controls/LoadingIndicator#scroll
  * @cfg {String} Добавляет градиент к фону индикатора для прокручивания объекта привязки.
  * @variant '' (пустая строка) без градиента.
  * @variant 'left' Градиент слева направо (увелечение цветового наполнения)
@@ -45,7 +45,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  */
 
 /*
- * @name Controls/Container/LoadingIndicator#scroll
+ * @name Controls/LoadingIndicator#scroll
  * @cfg {String} add gradient of indicator's background
  * @variant '' (empty string) no gradient
  * @variant 'left' gradient from left to right (increase of fullness)
@@ -56,7 +56,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  */
 
 /**
- * @name Controls/Container/LoadingIndicator#small
+ * @name Controls/LoadingIndicator#small
  * @cfg {String} Размер некоторых стилей индикатора (настройки полей, фона, границы, ширины, высоты).
  * @variant '' (пустая строка) Стандартный размер индикатора
  * @variant 'small' Делает индикатор меньше
@@ -64,7 +64,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  */
 
 /*
- * @name Controls/Container/LoadingIndicator#small
+ * @name Controls/LoadingIndicator#small
  * @cfg {String} size of some styles of indicator (tuning of margin, background, border, width, height styles)
  * @variant '' (empty string) standard size of indicator
  * @variant 'small' make indicator smaller
@@ -72,7 +72,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  */
 
 /**
- * @name Controls/Container/LoadingIndicator#overlay
+ * @name Controls/LoadingIndicator#overlay
  * @cfg {String} Настройка оверлея индикатора.
  * @variant 'default' невидимый фон, индикатор блокирует клики
  * @variant 'dark' темный фон, индикатор блокирует клики
@@ -81,7 +81,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  */
 
 /*
- * @name Controls/Container/LoadingIndicator#overlay
+ * @name Controls/LoadingIndicator#overlay
  * @cfg {String} setting of indicator's overlay
  * @variant 'default' invisible background, indicator blocks clicks
  * @variant 'dark' dark background, indicator blocks clicks
@@ -90,25 +90,25 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  */
 
 /**
- * @name Controls/Container/LoadingIndicator#mods
+ * @name Controls/LoadingIndicator#mods
  * @cfg {Array.<String>|String} Параметр может использоваться для пользовательской настройки индикатора.
  * Параметр mods содержит слова, которые будут добавлены в качестве стиля "controls-loading-indicator_mod-[mod]" в контейнер индикатора.
  * @variant [] Без использования параметра mods
- * @variant ['gray'] Серый цвет градиента. Используется с настройками скролла. 
+ * @variant ['gray'] Серый цвет градиента. Используется с настройками скролла.
  * @default []
  */
 
 /*
- * @name Controls/Container/LoadingIndicator#mods
+ * @name Controls/LoadingIndicator#mods
  * @cfg {Array.<String>|String} It can be using for custom tuning of indicator.
  * mods contains words what will be adding as "controls-loading-indicator_mod-[mod]" style in indicator's container
  * @variant [] no mods
  * @variant ['gray'] gray color of gradient. it's using with scroll property
  * @default []
  */
- 
+
 /**
- * @name Controls/Container/LoadingIndicator#delay
+ * @name Controls/LoadingIndicator#delay
  * @cfg {Number} Задержка перед началом показа индикатора.
  * @remark
  * Значение задаётся в миллисекундах.
@@ -116,10 +116,10 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  */
 
 /*
- * @name Controls/Container/LoadingIndicator#delay
+ * @name Controls/LoadingIndicator#delay
  * @cfg {Number} timeout before indicator will be visible
  * @default 2000
- */ 
+ */
 
 /**
  * Контейнер для контента с возможностью отображения индикатора загрузки.
@@ -130,9 +130,9 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * showIndicator используется для отображения индикатора. Это могут быть какие-либо запросы.
  * Запросы составляют стек, где последний обработанный запрос LoadingIndicator используется для отображения индикатора.
  * Индикатор пропадает, когда стек становится пустым.
- * 
+ *
  * showIndicator имеет два аргумента [config, waitPromise].
- * 
+ *
  * * config — это объект, имеющий свойства:
  *     * id (String) — определяет уникальный идентификатор запроса на отображение индикатора (по умолчанию используется автоматически сгенерированный идентификатор)
  *     * isGlobal (Boolean) — определяет, глобальный или нет идентификатор (если не задан, по умолчанию используется значение аналогичного параметра контрола)
@@ -143,7 +143,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  *     * mods (Array.<String>|String) — может использоваться для пользовательской настройки индикатора. (если не задан, по умолчанию используется значение аналогичного параметра контрола)
  *     * delay (Number) — задержка перед началом показа индикатора. (если не задан, по умолчанию используется значение аналогичного параметра контрола)
  * * waitPromise (Promise) — когда условие будет выполнено, индикатор скроется (необязательное свойство)
- * 
+ *
  * showIndicator возвращает значение id, используя в качестве аргумента hideIndicator.
  *
  * hideIndicator используется для удаления запроса отображения индикатора.
@@ -170,7 +170,7 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @css @background-url_LoadingIndicator-s Фон ссылки когда задан размер параметра — маленький.
  * @css @background-color_LoadingIndicator Цвет фона LoadingIndicator.
  *
- * @class Controls/Container/LoadingIndicator
+ * @class Controls/LoadingIndicator
  * @extends Core/Control
  * @control
  * @author Красильников А.С.
@@ -225,16 +225,16 @@ import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
  * @css @background-url_LoadingIndicator-s Background-url when options size is set to small.
  * @css @background-color_LoadingIndicator Background color of Loading Indicator.
  *
- * @class Controls/Container/LoadingIndicator
+ * @class Controls/LoadingIndicator
  * @extends Core/Control
  * @control
  * @author Красильников А.С.
  * @public
  * @category Container
  * @demo Controls-demo/LoadingIndicator/LoadingIndicatorPG
- */ 
+ */
 let ManagerController;
-const module = Control.extend(/** @lends Controls/Container/LoadingIndicator.prototype */{
+const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
     _template: tmpl,
     _isOverlayVisible: false,
     _isMessageVisible: false,
@@ -473,4 +473,3 @@ const module = Control.extend(/** @lends Controls/Container/LoadingIndicator.pro
 });
 
 export = module;
-
