@@ -581,6 +581,7 @@ var
         _headerColumns: [],
         _curHeaderColumnIndex: 0,
         _maxEndRow: 0,
+        _maxEndColumn: 0,
         _curHeaderRowIndex: 0,
         _multyHeaderOffset: 0,
         _headerCellMinHeight: null,
@@ -716,7 +717,7 @@ var
         _prepareHeaderColumns: function(columns, multiSelectVisibility) {
             if (columns && columns.length) {
                 this._headerRows = getRowsArray(columns, multiSelectVisibility);
-                this._maxEndRow = getMaxEndRow(this._headerRows);
+                [this._maxEndRow, this._maxEndColumn] = getMaxEndRow(this._headerRows);
                 if (multiSelectVisibility && columns[0] && columns[0].isBreadCrumbs) {
                     this._headerRows[0][0].hiddenForBreadCrumbs = true;
                 }
@@ -750,6 +751,14 @@ var
         },
         goToNextHeaderRow: function() {
             this._curHeaderRowIndex++;
+        },
+
+        getStickyColumnsCount: function() {
+            return this._options.stickyColumnsCount;
+        },
+
+        getMaxEndColumn: function() {
+            return this._maxEndColumn;
         },
 
         isDrawHeaderWithEmptyList: function() {
@@ -1252,7 +1261,8 @@ var
                     hasHeader: !!this.getHeader(),
                     resultsPosition: this.getResultsPosition(),
                     multyHeaderOffset: this.getMultyHeaderOffset(),
-                    hasBottomPadding: this._options._needBottomPadding
+                    hasBottomPadding: this._options._needBottomPadding,
+                    hasColumnScroll: this._options.columnScroll
                 },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
 
@@ -1267,7 +1277,7 @@ var
                 getResultsIndex: () => getResultsIndex({...cfg, hasEmptyTemplate}),
                 getBottomPaddingRowIndex: () => getBottomPaddingRowIndex(cfg),
                 getFooterIndex: () => getFooterIndex({...cfg, hasEmptyTemplate}),
-                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multyHeaderOffset)
+                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multyHeaderOffset,  cfg.hasColumnScroll)
             };
         },
 

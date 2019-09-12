@@ -61,6 +61,7 @@ define([
             rawData: data || gridData,
             keyProperty: cfg.keyProperty
          });
+         cfg.columnScroll = cfg.columnScroll || false;
          return new gridLib.GridViewModel(cfg)
       }
 
@@ -72,6 +73,27 @@ define([
       });
 
       describe('Grid with header', function () {
+
+         describe('columnScroll', function () {
+
+            beforeEach(function () {
+               gridModel = createModel({resultsPosition: 'top', columnScroll: true});
+            });
+
+            it('getBottomPaddingRowIndex', function () {
+               assert.equal(gridModel._getRowIndexHelper().getBottomPaddingRowIndex(), 8);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getBottomPaddingRowIndex(), 9);
+            });
+
+            it('getFooterIndex', function () {
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 8);
+               gridModel._setEditingItemData({index: 0});
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 9);
+               gridModel._options._needBottomPadding = true;
+               assert.equal(gridModel._getRowIndexHelper().getFooterIndex(), 10);
+            });
+         });
 
          describe('results in top', function () {
 

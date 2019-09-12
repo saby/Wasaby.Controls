@@ -32,7 +32,7 @@ const
          let
             newContentSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].scrollWidth,
             newContentContainerSize = null;
-         if (!self._isStickyHeader) {
+         if (!self._isFullGridSupport) {
             newContentContainerSize = self._children.content.offsetWidth;
          } else {
             newContentContainerSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].offsetWidth;
@@ -65,6 +65,10 @@ const
             self._options.multiSelectVisibility,
             self._options.stickyColumnsCount
          );
+         self._scrollWidth = self._options.listModel.isFullGridSupport() ?
+              self._children.content.offsetWidth - self._fixedColumnsWidth :
+              self._children.content.offsetWidth;
+
       },
       calculateShadowState(scrollPosition, containerSize, contentSize) {
          let
@@ -124,7 +128,7 @@ const
               } else {
                   self._leftOffsetForHScroll = firstCell.offsetWidth;
               }
-              self._offsetForHScroll += firstCell.offsetHeight + container.offsetTop;
+              self._offsetForHScroll += firstCell.offsetHeight;
           }
           if (self._options.listModel.getResultsPosition() === 'top') {
               const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0] && container.getElementsByClassName('controls-Grid__results')[0].childNodes;
@@ -152,13 +156,15 @@ const
       _leftOffsetForHScroll: 0,
       _isNotGridSupport: false,
       _contentSizeForHScroll: 0,
-       _scrollVisible: true,
-      _isStickyHeader: true,
+      _scrollVisible: true,
+      _scrollWidth: 0,
+      _isFullGridSupport: true,
 
       _beforeMount(opt) {
          this._transformSelector = 'controls-ColumnScroll__transform-' + Entity.Guid.create();
          this._isNotGridSupport = opt.listModel.isNoGridSupport();
-         this._isStickyHeader = opt.listModel.isStickyHeader();
+         this._isFullGridSupport = opt.listModel.isFullGridSupport();
+         this._positionHandler = this._positionChangedHandler.bind(this);
       },
 
       _afterMount() {
@@ -166,7 +172,7 @@ const
          if (this._options.columnScrollStartPosition === 'end' && this._isColumnScrollVisible()) {
             this._positionChangedHandler(null, this._contentSize - this._contentContainerSize);
          }
-         if (!this._isStickyHeader) {
+         if (!this._isFullGridSupport) {
             this._contentSizeForHScroll = this._contentSize;
          }
       },
@@ -186,15 +192,16 @@ const
             _private.updateFixedColumnWidth(this);
             this._setOffsetForHScroll();
          }
-          if (this._options.root !== oldOptions.root) {
+         if (this._options.root !== oldOptions.root) {
               this._scrollVisible = false;
-          }
+         }
       },
       updateShadowStyle() {
           if (this._children.startShadow) {
               this._children.startShadow.style = _private.calculateShadowStyles(this, 'start');
           }
       },
+
       _resizeHandler() {
          _private.updateSizes(this);
       },
@@ -213,7 +220,7 @@ const
       },
 
       _setOffsetForHScroll() {
-         if (this._isStickyHeader) {
+         if (this._isFullGridSupport) {
             _private.setOffsetForHScroll(this);
          }
       },
