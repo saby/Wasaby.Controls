@@ -6,7 +6,7 @@ import {IoC} from 'Env/Env';
  * Всплывающее окно располагается в правой части контентной области приложения и растянуто на всю высоту экрана.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ Подробнее}.
  *
- *  <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
+ *  <a href="/materials/demo-ws4-stack-dialog">Демо-пример</a>.
  * @class Controls/_popup/Opener/Stack
  * @extends Controls/_popup/Opener/BaseOpener
  * @control
