@@ -2,9 +2,10 @@ define(
    [
       'Controls/_popupTemplate/Sticky/StickyStrategy',
       'Controls/_popupTemplate/Sticky/StickyController',
-      'Controls/_popup/Manager/ManagerController'
+      'Controls/_popup/Manager/ManagerController',
+      'UI/Base'
    ],
-   (StickyStrategy, StickyController, ManagerController) => {
+   (StickyStrategy, StickyController, ManagerController, UIBase) => {
       'use strict';
 
       describe('Controls/_popup/Opener/Sticky', () => {
@@ -58,6 +59,27 @@ define(
             };
             let destroyDef = StickyController._elementDestroyed(itemConfig);
             assert.equal(destroyDef.isReady(), true);
+         });
+
+         it('Sticky gets target node', () => {
+            //Тестируем: передаем в опцию target платформенный Control
+            let cfg = {};
+            cfg.popupOptions = {};
+            cfg.popupOptions.target = new UIBase.Control({});
+            cfg.popupOptions.target._container = '123';
+            assert.equal(cfg.popupOptions.target._container,
+               StickyController._private.getTargetNode(cfg));
+            cfg.popupOptions.target.destroy();
+
+            //Тестируем: передаем в опцию target domNode
+            cfg.popupOptions.target = '222';
+            assert.equal(cfg.popupOptions.target,
+               StickyController._private.getTargetNode(cfg));
+
+            //Тестируем: передаем не контрол и не domNode
+            cfg.popupOptions.target = null;
+            assert.equal(document && document.body,
+               StickyController._private.getTargetNode(cfg));
          });
 
          it('Sticky updated classes', () => {
