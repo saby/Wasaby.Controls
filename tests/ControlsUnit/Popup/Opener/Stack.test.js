@@ -4,10 +4,24 @@ define(
       'Controls/popup',
       'Controls/popupTemplate',
       'Controls-demo/Popup/TestMaximizedStack',
-      'Controls/_popupTemplate/BaseController'
+      'Controls/_popupTemplate/BaseController',
+      'Controls/_popupTemplate/Stack/Opener/StackContent'
    ],
-   (StackStrategy, popupMod, popupTemplate, TestMaximizedStack, BaseController) => {
+   (StackStrategy, popupMod, popupTemplate, TestMaximizedStack, BaseController, StackContent) => {
       'use strict';
+
+      describe('Controls/_popupTemplate/Stack/Opener/StackContent', () => {
+         it('canResize', () => {
+            let stackC = new StackContent.default();
+            assert.equal(false, stackC._canResize(1, 2, 3, null));
+            assert.equal(false, stackC._canResize(1, 2, null, 4));
+            assert.equal(false, stackC._canResize(1, null, 3, 4));
+            assert.equal(false, stackC._canResize(null, 2, 3, 4));
+            assert.equal(false, stackC._canResize(1, 2, 3, 3));
+            assert.equal(true, stackC._canResize(1, 2, 3, 4));
+            stackC.destroy();
+         });
+      });
 
       describe('Controls/_popup/Opener/Stack', () => {
          StackStrategy.getMaxPanelWidth = () => 1000;
