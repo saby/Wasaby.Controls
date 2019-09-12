@@ -23,7 +23,7 @@ define('Controls-demo/Popup/PopupPage',
 
          openSticky: function () {
             this._children.sticky.open({
-               target: this._children.stickyButton._container,
+               target: this._children.stickyButton,
                opener: this._children.stickyButton,
                templateOptions: {
                   template: 'Controls-demo/Popup/TestDialog',
@@ -119,7 +119,7 @@ define('Controls-demo/Popup/PopupPage',
          openInfoBoxByHelper: function() {
             popupLib.Infobox.openPopup({
                message: 'Great job',
-               target: this._children.helperButton1._container
+               target: this._children.helperButton1
             });
             setTimeout(function() {
                popupLib.Infobox.closePopup();
@@ -151,7 +151,7 @@ define('Controls-demo/Popup/PopupPage',
             popupLib.Sticky.openPopup({
                template: 'Controls-demo/Popup/TestDialog',
                opener: this._children.helperButton4,
-               target: this._children.helperButton4._container
+               target: this._children.helperButton4
             }).addCallback(function(popupId) {
                setTimeout(function() {
                   popupLib.Sticky.closePopup(popupId);

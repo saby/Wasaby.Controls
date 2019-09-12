@@ -6,6 +6,7 @@ import Env = require('Env/Env');
 import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import StickyContent = require('wml!Controls/_popupTemplate/Sticky/StickyContent');
 import 'css!theme?Controls/popupTemplate';
+import * as cInstance from 'Core/core-instance';
 
 const DEFAULT_OPTIONS = {
     horizontalAlign: {
@@ -90,6 +91,13 @@ const _private = {
         }
     },
 
+    getTargetNode(cfg): HTMLElement {
+        if (cInstance.instanceOfModule(cfg.popupOptions.target, 'UI/Base:Control')) {
+            return cfg.popupOptions.target._container;
+        }
+        return cfg.popupOptions.target || (document && document.body);
+    },
+
     _getTargetCoords(cfg, sizes) {
         if (cfg.popupOptions.nativeEvent) {
             const top = cfg.popupOptions.nativeEvent.clientY;
@@ -129,8 +137,7 @@ const _private = {
                 leftScroll: 0
             };
         }
-
-        return TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body);
+        return TargetCoords.get(_private.getTargetNode(cfg));
     },
 
     isTargetVisible(item) {
