@@ -226,15 +226,14 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
             keyProperty = this._options.keyProperty,
             selectedItems = _private.getItems(this).clone(true);
 
-         if (items && items.each) {
-            items.each(function(item) {
-               selectedKeys.push(item.get(keyProperty));
-            });
-         }
-
          selectedItems.assign(items);
          _private.setItems(this, selectedItems);
          _private.prepareItems(this);
+
+         selectedItems.each(function(item) {
+            selectedKeys.push(item.get(keyProperty));
+         });
+
          _private.notifyChanges(this, selectedKeys);
          _private.setSelectedKeys(this, selectedKeys);
       },
