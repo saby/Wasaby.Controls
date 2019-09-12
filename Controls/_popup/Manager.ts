@@ -425,6 +425,19 @@ const _private = {
     // у compoundArea вызовется сразу destroy. такую логику прервать нельзя
     _getCompoundArea(popupContainer) {
         return $('.controls-CompoundArea', popupContainer)[0].controlNodes[0].control;
+    },
+    updatePopupOptions(id, item, oldOptions, result) {
+        if (result) {
+            _private.updateOverlay();
+            _private.redrawItems();
+
+            // wait, until popup will be update options
+            runDelayed(function() {
+                ManagerController.getContainer().activatePopup(id);
+            });
+        } else {
+            item.popupOptions = oldOptions;
+        }
     }
 };
 
@@ -560,20 +573,17 @@ const Manager = Control.extend({
      * @param options new options of popup
      */
     update(id, options) {
-        const element = this.find(id);
-        if (element) {
-            const oldOptions = element.popupOptions;
-            element.popupOptions = options;
-            if (element.controller._elementUpdated(element, _private.getItemContainer(id))) {
-                _private.updateOverlay();
-                _private.redrawItems();
-
-                // wait, until popup will be update options
-                runDelayed(function() {
-                    ManagerController.getContainer().activatePopup(id);
+        const item = this.find(id);
+        if (item) {
+            const oldOptions = item.popupOptions;
+            item.popupOptions = options;
+            const updateOptionsResult = item.controller.elementUpdateOptions(item, _private.getItemContainer(id));
+            if (updateOptionsResult instanceof Promise) {
+                updateOptionsResult.then((result) => {
+                    return _private.updatePopupOptions(id, item, oldOptions, result);
                 });
             } else {
-                element.popupOptions = oldOptions;
+                _private.updatePopupOptions(id, item, oldOptions, updateOptionsResult);
             }
             return id;
         }
