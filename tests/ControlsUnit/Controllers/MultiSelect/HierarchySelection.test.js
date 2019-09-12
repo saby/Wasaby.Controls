@@ -123,6 +123,10 @@ define([
             rawData: rootItems.slice(),
             keyProperty: 'id'
          });
+         rootData = new collection.RecordSet({
+            rawData: rootItems.slice(),
+            idProperty: 'id'
+         });
          hiddenNodeWithChildren = new collection.RecordSet({
             rawData: [{
                'id': 1,
@@ -721,6 +725,23 @@ define([
 
             assert.deepEqual([], selection.selected);
             assert.deepEqual([], selection.excluded);
+         });
+
+         it('selectAll in root with not loaded selected items', function() {
+            cfg = {
+               selectedKeys: [1, 2, 3, 4, 6],
+               excludedKeys: [],
+               items: rootData,
+               keyProperty: 'id',
+               listModel: getListModel()
+            };
+
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selectionInstance.selectAll();
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([null], selection.selected);
+            assert.deepEqual([null], selection.excluded);
          });
       });
 
