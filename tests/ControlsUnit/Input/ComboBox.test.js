@@ -3,9 +3,10 @@ define(
       'Controls/dropdown',
       'Core/core-clone',
       'Types/source',
-      'Types/collection'
+      'Types/collection',
+      'Types/entity'
    ],
-   (dropdown, Clone, sourceLib, collection) => {
+   (dropdown, Clone, sourceLib, collection, entity) => {
       describe('Input.Combobox', () => {
          let items = [
             {
@@ -53,6 +54,11 @@ define(
             combobox._setText([]);
             assert.strictEqual('', combobox._value);
             assert.strictEqual('This is placeholder', combobox._placeholder);
+
+            combobox._setText([new entity.Model({
+               rawData: { id: '1', title: 123 }
+            })]);
+            assert.strictEqual('123', combobox._value);
          });
 
          it('_setText empty item', function() {
