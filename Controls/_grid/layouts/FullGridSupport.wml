@@ -5,6 +5,18 @@
     <ws:if data="{{_listModel.getResultsPosition() === 'top'}}">
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
     </ws:if>
+    <ws:if data="{{isHorizontalScrollVisible}}">
+        <Controls._grid.ScrollWrapper
+                name="horizontalScrollWrapper"
+                position="{{position}}"
+                contentSize="{{contentSize}}"
+                topOffset="{{topOffset}}"
+                gridSupport="full"
+                scrollWidth="{{scrollWidth}}"
+                listModel="{{_listModel}}"
+                positionChangeHandler="{{positionChangeHandler}}">
+        </Controls._grid.ScrollWrapper>
+    </ws:if>
     <div name="itemsContainer" class="controls-GridViewV__itemsContainer">
         <ws:partial template="wml!Controls/_list/resources/For"
                     listModel="{{_listModel}}"
