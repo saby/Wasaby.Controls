@@ -8,7 +8,7 @@ import {parse as load} from 'Core/library';
  *  Одновременно может быть открыто несколько окон уведомлений. В этом случае они выстраиваются в стек по вертикали.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ Подробнее}.
  *
- * <a href="/materials/demo-ws4-notification">Demo-example</a>.
+ * <a href="/materials/demo-ws4-notification">Демо-пример</a>.
  * @class Controls/_popup/Opener/Notification
  * @control
  * @public

@@ -176,6 +176,7 @@ var _private = {
 /**
  * @name Controls/_dropdown/Input#multiSelect
  * @cfg {Boolean} Определяет, установлен ли множественный выбор.
+ * @default false
  * @example
  * Множественный выбор установлен.
  * WML:
@@ -205,6 +206,7 @@ var _private = {
 /*
  * @name Controls/_dropdown/Input#multiSelect
  * @cfg {Boolean} Determines whether multiple selection is set.
+ * @default false
  * @example
  * Multiple selection is set.
  * WML:
