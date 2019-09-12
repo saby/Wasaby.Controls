@@ -38,7 +38,7 @@ define('Controls-demo/Tabs/Buttons', [
       _spaceTemplate: spaceTemplate,
       _beforeMount: function() {
          this._source1 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: '1',
@@ -79,7 +79,7 @@ define('Controls-demo/Tabs/Buttons', [
             ]
          });
          this._source2 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: '1',
@@ -110,7 +110,7 @@ define('Controls-demo/Tabs/Buttons', [
             ]
          });
          this._source3 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: '1',
@@ -140,7 +140,7 @@ define('Controls-demo/Tabs/Buttons', [
             ]
          });
          this._source4 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: '1',
@@ -158,7 +158,7 @@ define('Controls-demo/Tabs/Buttons', [
             ]
          });
          this._source5 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: '1',
@@ -173,7 +173,7 @@ define('Controls-demo/Tabs/Buttons', [
             ]
          });
          this._source6 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: '1',
@@ -192,7 +192,7 @@ define('Controls-demo/Tabs/Buttons', [
             ]
          });
          this._source7 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: '1',
@@ -233,7 +233,7 @@ define('Controls-demo/Tabs/Buttons', [
             ]
          });
          this._source8 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: '1',
@@ -257,7 +257,7 @@ define('Controls-demo/Tabs/Buttons', [
       },
       _setSource: function() {
          this._source6 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: '1',

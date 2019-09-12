@@ -38,7 +38,7 @@ define('Controls-demo/List/Tree/Tree', [
             };
             this.gridData = GridData;
             this._viewSource = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: GridData.catalog
             });
             this._itemActions = [

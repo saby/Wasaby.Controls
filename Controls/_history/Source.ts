@@ -13,7 +13,7 @@ import clone = require('Core/core-clone');
 import cInstance = require('Core/core-instance');
 
 /**
- * Источник, который возвращает из исходного источника отсортированные данные с учётом истории. 
+ * Источник, который возвращает из исходного источника отсортированные данные с учётом истории.
  * @class Controls/_history/Source
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
@@ -25,7 +25,7 @@ import cInstance = require('Core/core-instance');
  * <pre>
  *    var source = new history.Source({
  *        originSource: new source.Memory({
- *           idProperty: 'id',
+ *           keyProperty: 'id',
  *           data: items
  *        }),
  *        historySource: new history.Service({
@@ -50,7 +50,7 @@ import cInstance = require('Core/core-instance');
  * <pre>
  *    var source = new history.Source({
  *        originSource: new source.Memory({
- *           idProperty: 'id',
+ *           keyProperty: 'id',
  *           data: items
  *        }),
  *        historySource: new history.Service({
@@ -59,7 +59,7 @@ import cInstance = require('Core/core-instance');
  *        parentProperty: 'parent'
  *    });
  * </pre>
- */ 
+ */
 
 /**
  * @name Controls/_history/Source#originSource
@@ -69,7 +69,7 @@ import cInstance = require('Core/core-instance');
 /*
  * @name Controls/_history/Source#originSource
  * @cfg {Source} A data source
- */ 
+ */
 
 /**
  * @name Controls/_history/Source#historySource
@@ -81,7 +81,7 @@ import cInstance = require('Core/core-instance');
  * @name Controls/_history/Source#historySource
  * @cfg {Source} A source which work with history
  * @see {Controls/_history/Service} Source working with the service of InputHistory
- */ 
+ */
 
 var historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
 
@@ -304,7 +304,7 @@ var _private = {
    fillFrequentItems: function (self, history, oldItems, items) {
       var config = {
          adapter: items.getAdapter(),
-         idProperty: items.getIdProperty(),
+         keyProperty: items.getIdProperty(),
          format: items.getFormat()
       };
       var frequentItems = new collection.RecordSet(config);
@@ -512,7 +512,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
                }
                result = new sourceLib.DataSet({
                   rawData: newItems.getRawData(),
-                  idProperty: newItems.getIdProperty(),
+                  keyProperty: newItems.getIdProperty(),
                   adapter: newItems.getAdapter()
                });
             } else {

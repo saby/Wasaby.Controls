@@ -36,7 +36,7 @@ define('Controls-demo/List/DocWI/GridItemTemplate', [
 
          _beforeMount: function(newOptions) {
             this._viewSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: srcData
             });
 

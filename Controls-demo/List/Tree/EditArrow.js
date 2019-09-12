@@ -64,7 +64,7 @@ define('Controls-demo/List/Tree/EditArrow', [
                template: columnTemplate,
             }];
             this._source = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'parent',
                filter: memorySourceFilter(),
                data: [{

@@ -30,7 +30,7 @@ define(
                emptyText: 'empty text',
                hasMoreButton: false,
                items: new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: defaultItems[0]
                })
             }, {
@@ -41,7 +41,7 @@ define(
                emptyText: 'empty text2',
                hasMoreButton: false,
                items: new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: defaultItems[1]
                })
             }
@@ -49,7 +49,7 @@ define(
 
          let defaultConfig = {
             items: new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: defaultItemsConfig
             })
          };
@@ -74,7 +74,7 @@ define(
             multiSelectDefaultConfig[0].multiSelect = true;
             panel._beforeMount({
                items: new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: multiSelectDefaultConfig
                })
             });
@@ -88,7 +88,7 @@ define(
             let items = Clone(defaultItemsConfig);
             items[0].selectedKeys = [1];
             let newConfig = {...defaultConfig, items: new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: items
             })};
 

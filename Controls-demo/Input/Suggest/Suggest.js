@@ -23,7 +23,7 @@ define('Controls-demo/Input/Suggest/Suggest', [
          } else {
             cfg.data = self.secondData;
          }
-         cfg.idProperty = 'id';
+         cfg.keyProperty = 'id';
          self._source = new sourceLib.Memory(cfg);
       }
    };
@@ -139,7 +139,7 @@ define('Controls-demo/Input/Suggest/Suggest', [
       },
       _kindsOfSuggest: function() { //itemTemplate
          return new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: this._itemTpl,
             filter: function(record, filter) {
                if (record.get('title').indexOf(filter.title) !== -1) {
@@ -150,7 +150,7 @@ define('Controls-demo/Input/Suggest/Suggest', [
       },
       _mainSource: function() { //source
          return new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             filter: function(record, filter) {
                if (record.get('title').indexOf(filter.title) !== -1) {
                   return true;
@@ -161,7 +161,7 @@ define('Controls-demo/Input/Suggest/Suggest', [
       },
       _props: function() { //displayProperty, keyProperty
          return new sourceLib.Memory({
-            idProperty: 'title',
+            keyProperty: 'title',
             data: this._parameters,
             filter: function(record, filter) {
                if (record.get('title').indexOf(filter.title) !== -1) {

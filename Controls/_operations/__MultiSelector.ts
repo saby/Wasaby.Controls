@@ -26,7 +26,7 @@ import source = require('Types/source');
 
       _getMenuSource: function() {
          return new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: _defaultItems
          });
       },

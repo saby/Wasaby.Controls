@@ -30,7 +30,7 @@ define('Controls-demo/List/EditInPlace', [
       _addItem: null,
       _beforeMount: function() {
          this._viewSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: 1,
@@ -59,7 +59,7 @@ define('Controls-demo/List/EditInPlace', [
             ]
          });
          this._viewSource2 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: 1,
@@ -72,7 +72,7 @@ define('Controls-demo/List/EditInPlace', [
             ]
          });
          this._viewSource3 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: 1,
@@ -85,7 +85,7 @@ define('Controls-demo/List/EditInPlace', [
             ]
          });
          this._viewSource4 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: 1,
@@ -98,7 +98,7 @@ define('Controls-demo/List/EditInPlace', [
             ]
          });
          this._viewSource5 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: 1,

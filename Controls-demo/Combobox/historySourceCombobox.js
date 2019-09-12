@@ -35,7 +35,7 @@ define('Controls-demo/Combobox/historySourceCombobox',
       function createRecordSet(data) {
          return new collection.RecordSet({
             rawData: data,
-            idProperty: 'ObjectId',
+            keyProperty: 'ObjectId',
             adapter: new entity.adapter.Sbis()
          });
       }
@@ -48,11 +48,11 @@ define('Controls-demo/Combobox/historySourceCombobox',
                recent: createRecordSet(recentData)
             },
             itemsProperty: '',
-            idProperty: 'ObjectId'
+            keyProperty: 'ObjectId'
          });
          var hs = new history.Source({
             originSource: new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             }),
             historySource: new history.Service({

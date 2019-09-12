@@ -147,7 +147,7 @@ define('Controls-demo/List/Grid/Base', [
                TOOLBAR: 2
             };
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: GridData.catalog
             });
             this._itemActions = [

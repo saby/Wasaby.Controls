@@ -19,7 +19,7 @@ define('Controls-demo/Checkbox/Checkbox', [
          _source: null,
          _beforeMount: function() {
             this._source = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 'true',
@@ -47,7 +47,7 @@ define('Controls-demo/Checkbox/Checkbox', [
          setTristate: function(e, value) {
             if (value) {
                this._source = new source.Memory({
-                  idProperty: 'title',
+                  keyProperty: 'title',
                   data: [
                      {
                         title: 'true',
@@ -65,7 +65,7 @@ define('Controls-demo/Checkbox/Checkbox', [
                });
             } else {
                this._source = new source.Memory({
-                  idProperty: 'title',
+                  keyProperty: 'title',
                   data: [
                      {
                         title: 'true',

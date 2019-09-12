@@ -75,7 +75,7 @@ define('Controls/interface/IFastFilter', [
     * JS:
     * <pre>
     *    this._source = new MemorySource({
-    *       idProperty: 'id',
+    *       keyProperty: 'id',
     *       data: [
     *          {id: 'genre',
     *           resetValue: '0',
@@ -84,7 +84,7 @@ define('Controls/interface/IFastFilter', [
     *              keyProperty: 'key',
     *              displayProperty: 'title',
     *              source: new MemorySource({
-    *                 idProperty: 'id',
+    *                 keyProperty: 'id',
     *                 data: [
     *                    { key: '0', title: 'все жанры' },
     *                    { key: '1', title: 'фантастика' },
@@ -112,7 +112,7 @@ define('Controls/interface/IFastFilter', [
     * JS:
     * <pre>
     *    this._source = new MemorySource({
-    *       idProperty: 'id',
+    *       keyProperty: 'id',
     *       data: [
     *          {id: 'genre',
     *           resetValue: '0',
@@ -121,7 +121,7 @@ define('Controls/interface/IFastFilter', [
     *              keyProperty: 'key',
     *              displayProperty: 'title',
     *              source: new MemorySource({
-    *                 idProperty: 'id',
+    *                 keyProperty: 'id',
     *                 data: [
     *                    { key: '0', title: 'все жанры' },
     *                    { key: '1', title: 'фантастика' },

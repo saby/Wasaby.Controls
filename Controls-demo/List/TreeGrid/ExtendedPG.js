@@ -41,7 +41,7 @@ define('Controls-demo/List/TreeGrid/ExtendedPG',
             this._componentOptions = {
                name: 'BasePG',
                source: new TSource.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: data.smallCatalog
                }),
                markedKey: '2',

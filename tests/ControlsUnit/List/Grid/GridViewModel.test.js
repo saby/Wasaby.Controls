@@ -119,7 +119,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          columns: gridColumns,
          items: new collection.RecordSet({
             rawData: gridData,
-            idProperty: 'id'
+            keyProperty: 'id'
          }),
          itemActions: itemActions,
          leftPadding: 'XL',
@@ -182,7 +182,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   id: 0,
                   title: 'test'
                },
-               idProperty: 'id'
+               keyProperty: 'id'
             });
             assert.isFalse(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', 'xxx'));
             assert.isFalse(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', ''));
@@ -683,7 +683,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isTrue(lastItem.getVersion().indexOf('LAST_ITEM') !== -1);
 
             gridViewModel.appendItems(new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: [
                   { id: 121212, title: 'i0'},
                   { id: 231313, title: 'i1'}
@@ -1019,7 +1019,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             },
             ladderViewModel = new gridMod.GridViewModel({
                items: new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [
                      { id: 0, title: 'i0', date: date1, photo: '1.png' },
                      { id: 1, title: 'i1', date: date2, photo: '1.png' },
@@ -1042,7 +1042,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          var
             newItems = new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: [
                   { id: 0, title: 'i0', date: '01 янв', photo: '1.png' },
                   { id: 1, title: 'i1', date: '03 янв', photo: '1.png' },
@@ -1069,7 +1069,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          var
             groupingLadderViewModel = new gridMod.GridViewModel({
                items: new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [
                      { id: 0, title: 'i0', group: 'g1', date: '01 янв' },
                      { id: 1, title: 'i1', group: 'g1', date: '03 янв' },
@@ -1315,7 +1315,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                columns: gridColumns,
                items: new collection.RecordSet({
                   rawData: [],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                resultsPosition: 'top'
             })
@@ -1327,7 +1327,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                columns: gridColumns,
                items: new collection.RecordSet({
                   rawData: gridData,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                resultsPosition: 'top'
             })
@@ -1614,7 +1614,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         group: 'once'
                      }
                   ],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                groupingKeyCallback: (item) => {
                   return item.get('group')
@@ -1789,7 +1789,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                header: [{}, {}, {}],
                items: new collection.RecordSet({
                   rawData: [],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                })
             });
             let isMultiHeader = false;
@@ -1881,7 +1881,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                header: null,
                items: new collection.RecordSet({
                   rawData: [],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                })
             });
 

@@ -44,7 +44,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
             { id: 5, title: 'Sasha' }];
          listSource = new sourceLib.Memory({
             data: listSourceData,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          listPrefetchSource = new sourceLib.PrefetchProxy({
             target: listSource,
@@ -340,7 +340,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
             /* change source */
             var newSource = new sourceLib.Memory({
                data: listSourceData,
-               idProperty: 'id'
+               keyProperty: 'id'
             });
             newOpts = clone(listOptions);
             newOpts.source = newSource;
@@ -371,7 +371,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
                newOpts.navigation = newNavigation;
                newOpts.source = new sourceLib.Memory({
                   data: listSourceData,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
 
                listLayout._searchMode = true;

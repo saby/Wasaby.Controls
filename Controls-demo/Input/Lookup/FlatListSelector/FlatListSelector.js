@@ -39,7 +39,7 @@ define('Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector', [
                return queryFilter.selection ? selectionFilterFn(item, queryFilter) : MemorySourceFilter()(item, queryFilter);
             },
 
-            idProperty: keyProperty
+            keyProperty: keyProperty
          });
       },
 

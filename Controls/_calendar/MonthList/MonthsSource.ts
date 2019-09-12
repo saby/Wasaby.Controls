@@ -23,7 +23,7 @@ export default class MonthsSource extends Memory {
         _dataSetMetaProperty: 'meta'
     };
 
-    _$idProperty: 'id';
+    _$keyProperty: 'id';
 
     query(query: Query)/*: ExtendPromise<DataSet>*/ {
         let

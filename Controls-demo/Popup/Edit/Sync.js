@@ -21,7 +21,7 @@ define('Controls-demo/Popup/Edit/Sync',
             this._dataLoadCallback = this._dataLoadCallback.bind(this);
             this._itemPadding = { left: 'S', right: 'M', bottom: 'M' };
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: GridData.catalog.slice(0, 10)
             });
 

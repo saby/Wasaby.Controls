@@ -10,7 +10,7 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
                rawData: {
                   id: i
                },
-               idProperty: 'id'
+               keyProperty: 'id'
             })
          );
       }

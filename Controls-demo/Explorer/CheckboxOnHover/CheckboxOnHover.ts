@@ -6,7 +6,7 @@ import ExplorerImages = require('Controls-demo/Explorer/ExplorerImages');
 import 'css!Controls-demo/Explorer/Demo/Demo';
 
 class Demo extends Control {
-    
+
     private _template = template;
     _viewSource: HierarchicalMemory;
     _viewSourceDynamic: HierarchicalMemory;
@@ -22,10 +22,10 @@ class Demo extends Control {
         title: string;
         showType: number;
     }>;
-    
+
     _beforeMount() {
         this._viewSource = new HierarchicalMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             parentProperty: 'parent',
             data: [
                 {
@@ -118,7 +118,7 @@ class Demo extends Control {
                     'type': null,
                     title: 'Конфеты',
                     image: ExplorerImages[3]
-                    
+
                 },
                 {
                     id: 7,
@@ -131,7 +131,7 @@ class Demo extends Control {
             ]
         });
         this._viewSourceDynamic = new HierarchicalMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             parentProperty: 'parent',
             data: [
                 {
@@ -232,7 +232,7 @@ class Demo extends Control {
             }
         ];
     }
-    
+
     _groupingKeyCallback(item) {
         let group;
         if (item.get('hiddenGroup')) {
@@ -242,7 +242,7 @@ class Demo extends Control {
         }
         return group;
     }
-    
+
 }
 
 export = Demo;

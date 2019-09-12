@@ -14,7 +14,7 @@ define('Controls/interface/IDropdown', [], function() {
     * @interface Controls/interface/IDropdown
     * @public
     * @author Золотова Э.Е.
-    */    
+    */
 
    /**
     * @name Controls/interface/IDropdown#itemTemplate
@@ -68,7 +68,7 @@ define('Controls/interface/IDropdown', [], function() {
     *             title: 'Problem',
     *             comment: 'Do you have a problem? Tell about it and experts will help to find its solution' }
     *       ],
-    *       idProperty: 'id'
+    *       keyProperty: 'id'
     *    });
     * </pre>
     */
@@ -124,7 +124,7 @@ define('Controls/interface/IDropdown', [], function() {
     *             title: 'Problem',
     *             comment: 'Do you have a problem? Tell about it and experts will help to find its solution' }
     *       ],
-    *       idProperty: 'id'
+    *       keyProperty: 'id'
     *    });
     * </pre>
     */
@@ -178,7 +178,7 @@ define('Controls/interface/IDropdown', [], function() {
     *           { id: 3,
     *             title: 'Problem' }
     *       ],
-    *       idProperty: 'id'
+    *       keyProperty: 'id'
     *    });
     * </pre>
     */
@@ -231,7 +231,7 @@ define('Controls/interface/IDropdown', [], function() {
     *           { id: 3,
     *             title: 'Problem' }
     *       ],
-    *       idProperty: 'id'
+    *       keyProperty: 'id'
     *    });
     * </pre>
     */
@@ -269,7 +269,7 @@ define('Controls/interface/IDropdown', [], function() {
     *           { id: 8, title: 'Assignment for delivery' },
     *           { id: 9, title: 'Assignment for logisticians' }
     *       ],
-    *       idProperty: 'id'
+    *       keyProperty: 'id'
     *    });
     * </pre>
     */
@@ -309,7 +309,7 @@ define('Controls/interface/IDropdown', [], function() {
     *           { id: 8, title: 'Assignment for delivery' },
     *           { id: 9, title: 'Assignment for logisticians' }
     *       ],
-    *       idProperty: 'id'
+    *       keyProperty: 'id'
     *    });
     * </pre>
     */
@@ -330,7 +330,7 @@ define('Controls/interface/IDropdown', [], function() {
     *
     *     _beforeMount() {
     *         this._source = new sourceLib.Memory({
-    *             idProperty: 'id',
+    *             keyProperty: 'id',
     *             data: [
     *                {id: 1, title: 'Name'},
     *                {id: 2, title: 'Date of change'}
@@ -357,7 +357,7 @@ define('Controls/interface/IDropdown', [], function() {
     *
     *     _beforeMount() {
     *         this._source = new sourceLib.Memory({
-    *             idProperty: 'id',
+    *             keyProperty: 'id',
     *             data: [
     *                {id: 1, title: 'Name'},
     *                {id: 2, title: 'Date of change'}
@@ -386,7 +386,7 @@ define('Controls/interface/IDropdown', [], function() {
     * JS:
     * <pre>
     * this._source = new Memory({
-    *    idProperty: 'id',
+    *    keyProperty: 'id',
     *    data: [
     *       {id: 1, title: 'Yaroslavl'},
     *       {id: 2, title: 'Moscow'},
@@ -417,7 +417,7 @@ define('Controls/interface/IDropdown', [], function() {
     * JS:
     * <pre>
     * this._source = new Memory({
-    *    idProperty: 'id',
+    *    keyProperty: 'id',
     *    data: [
     *       {id: 1, title: 'Yaroslavl'},
     *       {id: 2, title: 'Moscow'},
@@ -481,7 +481,7 @@ define('Controls/interface/IDropdown', [], function() {
     *       this._dropDownOpened = false;
     *    }
     * </pre>
-    */    
+    */
 
    /**
     * @event Controls/interface/IDropdown#dropDownClose Происходит при закрытии выпадающего списка.
@@ -523,6 +523,6 @@ define('Controls/interface/IDropdown', [], function() {
     *       this._dropDownOpened = false;
     *    }
     * </pre>
-    */    
+    */
 
 });

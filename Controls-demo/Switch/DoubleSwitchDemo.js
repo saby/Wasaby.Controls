@@ -18,7 +18,7 @@ define('Controls-demo/Switch/DoubleSwitchDemo', [
          _eventName: 'no event',
          _beforeMount: function() {
             this._orientationSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 'horizontal'

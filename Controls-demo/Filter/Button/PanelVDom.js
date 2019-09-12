@@ -47,7 +47,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
                   {key: 4, title: 'Past 6 months'},
                   {key: 5, title: 'Past year'}
                ],
-               idProperty: 'key'
+               keyProperty: 'key'
             });
             this._stateSource = new sourceLib.Memory({
                data: [
@@ -57,10 +57,10 @@ define('Controls-demo/Filter/Button/PanelVDom',
                   {key: 4, title: 'Not done'},
                   {key: 5, title: 'Deleted'}
                ],
-               idProperty: 'key'
+               keyProperty: 'key'
             });
             this._limitSource = new sourceLib.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   {key: 1, title: 'Due date'},
                   {key: 2, title: 'Overdue'}
@@ -89,14 +89,14 @@ define('Controls-demo/Filter/Button/PanelVDom',
                {id: 'responsible', value: '', resetValue: '', visibility: false},
                {id: 'tagging', value: false, resetValue: false, textValue: 'Marks', visibility: false},
                {id: 'income', value: [1], resetValue: [1], textValue: '', visibility: false, source: new sourceLib.Memory({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      data: [
                         { key: 1, title: 'In the warehouse' },
                         { key: 2, title: 'In expenses' }
                      ]
                   })},
                {id: 'group', value: [1], resetValue: '', visibility: false, source: new sourceLib.Memory({
-                  idProperty: 'key',
+                  keyProperty: 'key',
                   data: [
                      { key: 1, title: 'My' },
                      { key: 2, title: 'My department' }
@@ -104,7 +104,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
                })},
                {id: 'loose', value: true, resetValue: '', textValue: 'Loose', visibility: false},
                {id: 'own', value: 2, resetValue: '', textValue: 'On department', visibility: false, source: new sourceLib.Memory({
-                  idProperty: 'key',
+                  keyProperty: 'key',
                   data: [
                      { key: 1, title: 'On me' },
                      { key: 2, title: 'On department' }

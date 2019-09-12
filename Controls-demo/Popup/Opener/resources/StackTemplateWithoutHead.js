@@ -38,7 +38,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
             };
             this.gridData = GridData;
             this._viewSource = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: GridData.catalog
             });
             this._itemActions = [

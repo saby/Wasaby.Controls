@@ -109,7 +109,7 @@
  *       { name: 'type', value: ['1'], resetValue: ['1'], textValue: '', viewMode: 'frequent',
  *          editorOptions: {
  *                 source: new sourceLib.Memory({
- *                    idProperty: 'id',
+ *                    keyProperty: 'id',
  *                    data: [
  *                       { id: '1', title: 'Yaroslavl' },
  *                       { id: '2', title: 'Moscow' },
@@ -157,7 +157,7 @@
  *       { name: 'type', value: ['1'], resetValue: ['1'], textValue: '', viewMode: 'frequent',
  *          editorOptions: {
  *                 source: new sourceLib.Memory({
- *                    idProperty: 'id',
+ *                    keyProperty: 'id',
  *                    data: [
  *                       { id: '1', title: 'Yaroslavl' },
  *                       { id: '2', title: 'Moscow' },
@@ -275,7 +275,7 @@
  *       { name: 'type', value: ['1'], resetValue: ['1'], viewMode: 'frequent',
  *          editorOptions: {
  *                 source: new sourceLib.Memory({
- *                    idProperty: 'id',
+ *                    keyProperty: 'id',
  *                    data: [
  *                       { id: '1', title: 'Yaroslavl' },
  *                       { id: '2', title: 'Moscow' },
@@ -317,7 +317,7 @@
  *       { name: 'type', value: ['1'], resetValue: ['1'], viewMode: 'frequent',
  *          editorOptions: {
  *                 source: new sourceLib.Memory({
- *                    idProperty: 'id',
+ *                    keyProperty: 'id',
  *                    data: [
  *                       { id: '1', title: 'Yaroslavl' },
  *                       { id: '2', title: 'Moscow' },

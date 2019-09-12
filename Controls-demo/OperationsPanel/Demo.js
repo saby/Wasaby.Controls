@@ -49,11 +49,11 @@ define('Controls-demo/OperationsPanel/Demo', [
             displayProperty: 'department'
          }];
          this._viewSource = new TreeMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: Data.employees
          });
          this._moverSource = new source.HierarchicalMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: Data.employees,
             parentProperty: 'Раздел',
             filter: function(item, where) {
@@ -216,7 +216,7 @@ define('Controls-demo/OperationsPanel/Demo', [
          }
 
          return new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: items
          });
       }

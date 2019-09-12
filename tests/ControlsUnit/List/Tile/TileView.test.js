@@ -33,7 +33,7 @@ define(['Controls/_tile/TileView/TileView',
                      'parent': null,
                      'parent@': null
                   }],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                })
             });
 

@@ -8,7 +8,7 @@ export default class extends Control {
 
     protected _beforeMount(newOptions) {
         this._addingItem = newOptions.items.getCount() ? null : new Model({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: {
                 id: 1001,
                 title: 'New element'

@@ -145,7 +145,7 @@ define('Controls/interface/INavigation', [
     * <pre>
     * _beforeMount: function(options) {
     *    this._source = new Memory({
-    *      idProperty: 'id',
+    *      keyProperty: 'id',
     *      data: [
     *         {
     *            id: '1',
@@ -189,7 +189,7 @@ define('Controls/interface/INavigation', [
     * <pre>
     * _beforeMount: function(options) {
     *    this._source = new Memory({
-    *      idProperty: 'id',
+    *      keyProperty: 'id',
     *      data: [
     *         {
     *            id: '1',

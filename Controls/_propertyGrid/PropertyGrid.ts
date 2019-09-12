@@ -67,7 +67,7 @@ function getPropertyGridItems(editingObject: Object, source: IProperty[]): Prope
     result = new RecordSet({
         rawData: itemsArray,
         model: PropertyGridItem,
-        idProperty: PROPERTY_NAME_FIELD
+        keyProperty: PROPERTY_NAME_FIELD
     });
     return result;
 }

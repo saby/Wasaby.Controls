@@ -22,19 +22,19 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @interface Controls/interface/IFilterPanel
     * @public
     * @author Герасимов А.М.
-    */    
+    */
 
    /**
     * @typedef {Object} itemTpl
     * @property {String} templateName
     * @property {Object} templateOptions
-    */  
+    */
 
    /**
     * @typedef {Object} additionalTpl
     * @property {String} templateName
     * @property {Object} templateOptions
-    */   
+    */
 
    /**
     * @name Controls/interface/IFilterPanel#orientation
@@ -76,7 +76,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
     *    </Controls.filterPopup:Panel>
     * </pre>
-    */    
+    */
 
    /**
     * @name Controls/interface/IFilterPanel#headingCaption
@@ -110,7 +110,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *    </Controls.filterPopup:Panel>
     * </pre>
     * @see Controls/heading:Title#caption
-    */    
+    */
 
    /**
     * @name Controls/interface/IFilterPanel#headingStyle
@@ -148,7 +148,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *    </Controls.filterPopup:Panel>
     * </pre>
     * @see Controls/heading:Title#style
-    */    
+    */
 
    /**
     * @name Controls/interface/IFilterPanel#itemTemplate
@@ -191,7 +191,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *         data: [{ id: '1', title: 'All types' },
     *         { id: '2', title: 'Meeting' },
     *         { id: 3, title: 'Videoconference' }],
-    *         idProperty: 'id'
+    *         keyProperty: 'id'
     *       })},
     *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted' }
     *    ];
@@ -241,14 +241,14 @@ define('Controls/interface/IFilterPanel', [], function() {
     *         data: [{ id: '1', title: 'All types' },
     *         { id: '2', title: 'Meeting' },
     *         { id: 3, title: 'Videoconference' }],
-    *         idProperty: 'id'
+    *         keyProperty: 'id'
     *       })},
     *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted' }
     *    ];
     * </pre>
     * @see itemTemplateProperty
     * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
-    */    
+    */
 
    /**
     * @name Controls/interface/IFilterPanel#additionalTemplate
@@ -309,7 +309,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *         data: [{ id: '1', title: 'All types' },
     *         { id: '2', title: 'Meeting' },
     *         { id: 3, title: 'Videoconference' }],
-    *         idProperty: 'id'
+    *         keyProperty: 'id'
     *       })},
     *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted', visibility: false }
     *    ];
@@ -377,14 +377,14 @@ define('Controls/interface/IFilterPanel', [], function() {
     *         data: [{ id: '1', title: 'All types' },
     *         { id: '2', title: 'Meeting' },
     *         { id: 3, title: 'Videoconference' }],
-    *         idProperty: 'id'
+    *         keyProperty: 'id'
     *       })},
     *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted', visibility: false }
     *    ];
     * </pre>
     * @see additionalTemplateProperty
     * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
-    */    
+    */
 
    /**
     * @name Controls/interface/IFilterPanel#additionalTemplateProperty
@@ -448,7 +448,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *         data: [{ id: '1', title: 'All types' },
     *         { id: '2', title: 'Meeting' },
     *         { id: 3, title: 'Videoconference' }],
-    *         idProperty: 'id'
+    *         keyProperty: 'id'
     *       })},
     *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted', visibility: false,
     *       myAddTpl="wml!MyModule/addTemplateDeleted"}
@@ -520,7 +520,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *         data: [{ id: '1', title: 'All types' },
     *         { id: '2', title: 'Meeting' },
     *         { id: 3, title: 'Videoconference' }],
-    *         idProperty: 'id'
+    *         keyProperty: 'id'
     *       })},
     *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted', visibility: false,
     *       myAddTpl="wml!MyModule/addTemplateDeleted"}
@@ -624,7 +624,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * </pre>
     * @see itemTemplate
     * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
-    */    
+    */
 
    /**
     * @name Controls/interface/IFilterPanel#historyId
@@ -636,7 +636,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @name Controls/interface/IFilterPanel#historyId
     * @cfg {String} Unique id for save history.
     * @remark For the correct work of the history mechanism, you need to configure the items property on the control by the <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>instruction</a>.
-    */    
+    */
 
    /**
     * @event Controls/interface/IFilterPanel#itemsChanged Событие возникает при изменении опции items.

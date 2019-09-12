@@ -49,7 +49,7 @@ define(
             showHeader: true,
             keyProperty: 'id',
             source: new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             })
          };

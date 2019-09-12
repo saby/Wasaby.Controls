@@ -37,7 +37,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
       }
    ];
 
-   var items =  new collection.RecordSet({rawData: rawData, idProperty: 'id'});
+   var items =  new collection.RecordSet({rawData: rawData, keyProperty: 'id'});
 
    var getDropDownConfig = function() {
       return {
@@ -241,7 +241,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
 
             let newItems = Clone(rawData);
             newItems[3].parent = 1;
-            dropDownList._beforeUpdate({...dropDownConfig, items: new collection.RecordSet({idProperty: 'id', rawData: newItems})});
+            dropDownList._beforeUpdate({...dropDownConfig, items: new collection.RecordSet({keyProperty: 'id', rawData: newItems})});
             assert.deepEqual(dropDownList._listModel.getItems().getRawData(), newItems);
          });
 

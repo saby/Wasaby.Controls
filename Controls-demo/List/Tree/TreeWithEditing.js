@@ -36,7 +36,7 @@ define('Controls-demo/List/Tree/TreeWithEditing', [
                }
             ];
             this._viewSource = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: cClone(TreeWithEditingData.catalog)
             });
          },

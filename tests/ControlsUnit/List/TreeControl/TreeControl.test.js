@@ -80,7 +80,7 @@ define([
                      id: 777777,
                      parent: 777
                   }],
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   filter: function(item, filter) {
                      for (var i = 0; i < filter.parent.length; i++) {
                         if (item.get('parent') === filter.parent[i]) {
@@ -129,7 +129,7 @@ define([
                columns: [],
                source: new sourceLib.Memory({
                   data: [],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                nodeLoadCallback: function() {
                   nodeLoadCallbackCalled = true;
@@ -228,7 +228,7 @@ define([
             columns: [],
             source: new sourceLib.Memory({
                data: [],
-               idProperty: 'id'
+               keyProperty: 'id'
             })
          });
          let nodeMouseMoveCalled;
@@ -290,7 +290,7 @@ define([
                columns: [],
                source: new sourceLib.Memory({
                   data: [],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                })
             }),
             itemData = {isExpanded: false},
@@ -360,7 +360,7 @@ define([
             sorting: [{sortField: 'DESC'}],
             source: new sourceLib.Memory({
                data: [],
-               idProperty: 'id'
+               keyProperty: 'id'
             })
          });
          let expandSorting;
@@ -488,7 +488,7 @@ define([
                sorting: [{sortField: 'DESC'}],
                source: new sourceLib.Memory({
                   data: [],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                })
             }),
             originalCreateSourceController = treeGrid.TreeControl._private.createSourceController,
@@ -553,7 +553,7 @@ define([
                columns: [],
                source: new sourceLib.Memory({
                   data: [],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                })
             });
          var isSourceControllerNode1Destroyed = false;
@@ -618,7 +618,7 @@ define([
       it('TreeControl._afterUpdate', function() {
          var source = new sourceLib.Memory({
             data: [],
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          var treeControl = correctCreateTreeControl({
             columns: [],
@@ -709,7 +709,7 @@ define([
             stopImmediateCalled = false,
 
             lnSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   { id: 1, type: true, parent: null },
                   { id: 2, type: true, parent: 1 }
@@ -767,14 +767,14 @@ define([
             isSourceControllerDestroyed = false,
             source = new sourceLib.Memory({
                data: [],
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             treeControl = correctCreateTreeControl({
                columns: [],
                source: source,
                items: new collection.RecordSet({
                   rawData: [],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                keyProperty: 'id',
                parentProperty: 'parent'
@@ -1037,7 +1037,7 @@ define([
                source: new sourceLib.Memory(),
                items: new collection.RecordSet({
                   rawData: [],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                })
             });
          treeControl.reload();
@@ -1052,7 +1052,7 @@ define([
                      { id: 2, type: true, parent: null },
                      { id: 11, type: null, parent: 1 }
                   ],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                columns: [],
                keyProperty: 'id',
@@ -1084,7 +1084,7 @@ define([
                      { id: 2, type: true, parent: null },
                      { id: 11, type: null, parent: 1 }
                   ],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                columns: [],
                keyProperty: 'id',
@@ -1119,7 +1119,7 @@ define([
                      { id: 2, type: true, parent: null },
                      { id: 11, type: null, parent: 1 }
                   ],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                columns: [],
                keyProperty: 'id',
@@ -1154,7 +1154,7 @@ define([
                      { id: 2, type: true, parent: null },
                      { id: 11, type: null, parent: 1 }
                   ],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                columns: [],
                keyProperty: 'id',
@@ -1190,7 +1190,7 @@ define([
             ],
             source = new sourceLib.Memory({
                rawData: rawData,
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             cfg = {
                source: source,
@@ -1209,7 +1209,7 @@ define([
          treeControl.saveOptions(cfg);
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: rawData,
-            idProperty: 'id'
+            keyProperty: 'id'
          }));
 
          treeControl._children = {
@@ -1243,7 +1243,7 @@ define([
             ],
             source = new sourceLib.Memory({
                rawData: rawData,
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             cfg = {
                source: source,
@@ -1262,7 +1262,7 @@ define([
          treeControl.saveOptions(cfg);
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: rawData,
-            idProperty: 'id'
+            keyProperty: 'id'
          }));
 
          treeControl._children = {
@@ -1288,7 +1288,7 @@ define([
          var source = new sourceLib.Memory({
             data: [{id: 0, 'Раздел@': false, "Раздел": null}],
             rawData: [{id: 0, 'Раздел@': false, "Раздел": null}],
-            idProperty: 'id',
+            keyProperty: 'id',
             filter: function(item, filter) {
                if (filter['Раздел'] && filter['Раздел'] instanceof Array) {
                   return filter['Раздел'].indexOf(item.get('id')) !== -1 || filter['Раздел'].indexOf(item.get('Раздел')) !== -1;
@@ -1308,7 +1308,7 @@ define([
          var treeGridViewModel = new treeGrid.ViewModel(cfg);
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
-            idProperty: 'id'
+            keyProperty: 'id'
          }));
          var treeControl = new treeGrid.TreeControl(cfg);
          treeControl.saveOptions(cfg);
@@ -1347,7 +1347,7 @@ define([
              ],
              source = new sourceLib.Memory({
                 rawData: data,
-                idProperty: 'id',
+                keyProperty: 'id',
              }),
              cfg = {
                 source: source,
@@ -1363,7 +1363,7 @@ define([
 
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          }));
 
          treeControl = new treeGrid.TreeControl(cfg);
@@ -1385,7 +1385,7 @@ define([
                      addCallback: (func) => {
                         func(new collection.RecordSet({
                            rawData: [],
-                           idProperty: 'id'
+                           keyProperty: 'id'
                         }));
                      }
                   }
@@ -1436,7 +1436,7 @@ define([
       it('check deepReload after load', function() {
          let source = new sourceLib.Memory({
             data: [{ id: 0, 'Раздел@': false, "Раздел": null }],
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          let cfg = {
             source: source,
@@ -1462,7 +1462,7 @@ define([
       it('_private.getReloadableNodes', function() {
          var source = new sourceLib.Memory({
             rawData: getHierarchyData(),
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          var cfg = {
             source: source,
@@ -1475,7 +1475,7 @@ define([
          var treeGridViewModel = new treeGrid.ViewModel(cfg);
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
-            idProperty: 'id'
+            keyProperty: 'id'
          }));
 
          assert.deepEqual(treeGrid.TreeControl._private.getReloadableNodes(treeGridViewModel, 0, 'id', 'Раздел@'), [1]);
@@ -1493,7 +1493,7 @@ define([
                excludedKeys: [2],
                source: new sourceLib.Memory({
                   rawData: getHierarchyData(),
-                  idProperty: 'id'
+                  keyProperty: 'id'
                })
             };
          }
@@ -1540,7 +1540,7 @@ define([
          };
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
-            idProperty: 'id'
+            keyProperty: 'id'
          }));
          treeGridViewModel.setExpandedItems([null]);
 
@@ -1573,7 +1573,7 @@ define([
       it('_private.applyReloadedNodes', function() {
          var source = new sourceLib.Memory({
             rawData: getHierarchyData(),
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          var cfg = {
             source: source,
@@ -1586,11 +1586,11 @@ define([
          var treeGridViewModel = new treeGrid.ViewModel(cfg);
          var newItems = new collection.RecordSet({
             rawData: [{id: 0, 'Раздел@': false, "Раздел": null}],
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
-            idProperty: 'id'
+            keyProperty: 'id'
          }));
 
          treeGrid.TreeControl._private.applyReloadedNodes(treeGridViewModel, 0, 'id', 'Раздел@', newItems);
@@ -1602,7 +1602,7 @@ define([
       it('_private.nodeChildsIterator', function() {
          var source = new sourceLib.Memory({
             rawData: getHierarchyData(),
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          var cfg = {
             source: source,
@@ -1615,7 +1615,7 @@ define([
          var treeGridViewModel = new treeGrid.ViewModel(cfg);
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
-            idProperty: 'id'
+            keyProperty: 'id'
          }));
          var nodes = [];
          var lists = [];

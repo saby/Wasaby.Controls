@@ -30,7 +30,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
       _displayProperty: 'title',
       _beforeMount: function() {
          this.source2 = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: '1',
@@ -55,7 +55,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
             ]
          });
          this._source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             displayProperty: 'caption',
             data: [
                {
@@ -92,7 +92,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
             ]
          });
          this._sourceOfSource = new sourceLib.Memory({
-            idProperty: 'title',
+            keyProperty: 'title',
             data: [
                {
                   title: 'source',
@@ -105,7 +105,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
             ]
          });
          this._directionSource = new sourceLib.Memory({
-            idProperty: 'title',
+            keyProperty: 'title',
             data: [
                {
                   title: 'horizontal'
@@ -116,7 +116,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
             ]
          });
          this._sourceContentTemplate = new sourceLib.Memory({
-            idProperty: 'title',
+            keyProperty: 'title',
             data: [
                {
                   title: 'default',

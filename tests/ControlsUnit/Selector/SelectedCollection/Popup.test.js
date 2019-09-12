@@ -8,11 +8,11 @@ define(['Controls/lookupPopup',
          var
             item = new entity.Model({
                rawData: {id: 1},
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             item2 = new entity.Model({
                rawData: {id: 2},
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             scPopup = new lookupPopup.Collection();
 

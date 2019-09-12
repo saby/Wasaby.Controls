@@ -19,7 +19,7 @@ define('Controls-demo/FormController/FormController', [
       _recordAsText: '',
       _beforeMount: function(cfg) {
          this._dataSource = cfg.dataSource || new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [{ id: 0 }]
          });
       },

@@ -133,7 +133,7 @@ define('Controls-demo/List/NavigationSwitching', [
             this._navigationMode = 'infinity';
 
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: srcData
             })
          },

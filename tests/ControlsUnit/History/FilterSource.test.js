@@ -82,7 +82,7 @@ define(
          function createRecordSet(data) {
             return new collection.RecordSet({
                rawData: data,
-               idProperty: 'ObjectId',
+               keyProperty: 'ObjectId',
                adapter: new entity.adapter.Sbis()
             });
          }
@@ -95,7 +95,7 @@ define(
          it('fillRecent', () => {
             let itemsRecent = new collection.RecordSet({
                adapter: new entity.adapter.Sbis(),
-               idProperty: 'ObjectId'
+               keyProperty: 'ObjectId'
             });
 
             let self = {

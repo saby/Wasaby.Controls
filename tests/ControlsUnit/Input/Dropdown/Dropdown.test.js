@@ -44,7 +44,7 @@ define(
          ];
 
          let itemsRecords = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: items
          });
 
@@ -53,7 +53,7 @@ define(
             displayProperty: 'title',
             keyProperty: 'id',
             source: new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             })
          };

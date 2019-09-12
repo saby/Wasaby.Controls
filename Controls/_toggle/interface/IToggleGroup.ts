@@ -159,7 +159,7 @@ export interface IToggleGroup {
      * </pre>
      * <pre>
      *    _source: new Memory({
-     *       idProperty: 'id',
+     *       keyProperty: 'id',
      *       data: [
      *          {id: 1, title: 'I agree'},
      *          {id: 2, title: 'I not decide'},
@@ -208,7 +208,7 @@ export interface IToggleGroup {
      * </pre>
      * <pre>
      *    _source: new Memory({
-     *       idProperty: 'id',
+     *       keyProperty: 'id',
      *       data: [
      *          {id: 1, title: 'I agree'},
      *          {id: 2, title: 'I not decide'},

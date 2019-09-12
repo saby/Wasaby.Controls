@@ -13,7 +13,7 @@ define('Controls-demo/Example/Input/Suggest',
       'strict use';
 
       var source = new sourceLib.Memory({
-         idProperty: 'id',
+         keyProperty: 'id',
          data: [
             { id: 1, title: 'Lozhkin Andrei Sergeevich' },
             { id: 2, title: 'Spielberg Marina Petrovna' },

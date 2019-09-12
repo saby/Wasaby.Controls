@@ -17,7 +17,7 @@ define('Controls-demo/DragNDrop/Grid', [
       _beforeMount: function() {
          this._selectedKeys = [];
          this._viewSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: cClone(DemoData)
          });
          this._gridColumns = [{

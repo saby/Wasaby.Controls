@@ -45,7 +45,7 @@ define([
                'parent@': null
             }];
             rs = new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: data
             });
          });
@@ -105,7 +105,7 @@ define([
                'parent@': null
             }];
             rs = new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: data
             });
             let root = 1;

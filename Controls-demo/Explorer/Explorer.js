@@ -110,7 +110,7 @@ define('Controls-demo/Explorer/Explorer', [
                }
             ];
             this._viewSource = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [{
                   id: 1,
                   'parent': null,

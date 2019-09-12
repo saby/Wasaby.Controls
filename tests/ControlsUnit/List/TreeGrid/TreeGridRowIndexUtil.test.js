@@ -74,7 +74,7 @@ define([
          }
          cfg.items = new collection.RecordSet({
             rawData: data || treeGridData,
-            idProperty: cfg.keyProperty
+            keyProperty: cfg.keyProperty
          });
          let model = new treeGridLib.ViewModel(cfg);
          model.setHasMoreStorage({'1': true, '1_1': true, '2': false, '3': undefined});

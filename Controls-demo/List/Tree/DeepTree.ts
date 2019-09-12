@@ -19,11 +19,11 @@ function getItem(id, cfg) {
 
 
 class DeepTree extends Control {
-    
+
     protected _template: Function = template;
-    
+
     private _viewSource = new Memory({
-        idProperty: 'id',
+        keyProperty: 'id',
         data: [
             getItem('1', { nodeType: true, parent: null, group: 'group_1'}),
             getItem('1_1', { nodeType: true, parent: '1', group: 'group_1'}),
@@ -37,16 +37,16 @@ class DeepTree extends Control {
             getItem('4', { nodeType: null, parent: null, group: 'group_2'})
         ]
     });
-    
-    
+
+
     private _columns = [{displayProperty: 'title'}];
-    
+
     private _header = [{title: 'Название'}];
-    
+
     private _groupingKeyCallback(item) {
         return item.get('group');
     }
-    
+
 }
 
 export = DeepTree;

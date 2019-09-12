@@ -39,7 +39,7 @@ define([
             }];
 
          items = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: cClone(data)
          });
          mover = new lists.Mover({});
@@ -47,7 +47,7 @@ define([
          mover._options.nodeProperty = 'folder@';
          mover._items = items;
          mover._source = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: cClone(data)
          });
          mover._keyProperty = 'id';

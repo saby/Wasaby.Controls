@@ -7,12 +7,12 @@ define([
    'require'
 ], function(form, entity, func, Deferred, source, require) {
    'use strict';
-   
+
    //TODO: Удалить эти тесты из юнитов, написать задачу на интеграционное тестирование по этим сценариям
 
    describe('FormController2-tests', function() {
       var testControl, testElement;
-      
+
       function mountControl(moduleName) {
          var def = new Deferred();
          require(['Core/Control', moduleName], function(CoreControl, Component) {
@@ -20,7 +20,7 @@ define([
             var config = {
                element: element,
                dataSource: new source.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: [{ id: 0 }]
                })
             };

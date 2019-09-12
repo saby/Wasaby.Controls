@@ -25,7 +25,7 @@ define('Controls-demo/List/Grid/Group', [
          },
 
          _viewSource: new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: 1,

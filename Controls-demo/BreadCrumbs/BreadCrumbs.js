@@ -56,7 +56,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
          ].map(function(item) {
             return new entity.Model({
                rawData: item,
-               idProperty: 'id'
+               keyProperty: 'id'
             });
          });
          this.items1 = [{
@@ -66,7 +66,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
          }].map(function(item) {
             return new entity.Model({
                rawData: item,
-               idProperty: 'id'
+               keyProperty: 'id'
             });
          });
          this.items2 = [{
@@ -80,7 +80,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
          }].map(function(item) {
             return new entity.Model({
                rawData: item,
-               idProperty: 'id'
+               keyProperty: 'id'
             });
          });
          this.items3 = [{ id: 5, title: 'Recor' },
@@ -91,7 +91,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
             }].map(function(item) {
             return new entity.Model({
                rawData: item,
-               idProperty: 'id'
+               keyProperty: 'id'
             });
          });
       },
@@ -141,7 +141,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
          ].map(function(item) {
             return new entity.Model({
                rawData: item,
-               idProperty: 'id'
+               keyProperty: 'id'
             });
          });
          this.info = '';

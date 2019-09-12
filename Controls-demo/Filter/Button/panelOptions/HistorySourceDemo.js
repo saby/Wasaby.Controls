@@ -26,7 +26,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
                   { key: 4, title: 'Past 6 months' },
                   { key: 5, title: 'Past year' }
                ],
-               idProperty: 'key'
+               keyProperty: 'key'
             })
          },
          {
@@ -41,7 +41,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
                   { key: 4, title: 'Not done' },
                   { key: 5, title: 'Deleted' }
                ],
-               idProperty: 'key'
+               keyProperty: 'key'
             })
          },
          {
@@ -51,7 +51,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             textValue: 'Due date',
             visibility: false,
             source: new sourceLib.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   { key: 1, title: 'Due date' },
                   { key: 2, title: 'Overdue' }
@@ -77,7 +77,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             resetValue: '',
             visibility: false,
             source: new sourceLib.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   { key: 1, title: 'My' },
                   { key: 2, title: 'My department' }
@@ -98,7 +98,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             textValue: 'On department',
             visibility: false,
             source: new sourceLib.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   { key: 1, title: 'On me' },
                   { key: 2, title: 'On department' }
@@ -129,7 +129,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
                   { key: 4, title: 'Past 6 months' },
                   { key: 5, title: 'Past year' }
                ],
-               idProperty: 'key'
+               keyProperty: 'key'
             })
          },
          {
@@ -144,7 +144,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
                   { key: 4, title: 'Not done' },
                   { key: 5, title: 'Deleted' }
                ],
-               idProperty: 'key'
+               keyProperty: 'key'
             })
          },
          {
@@ -154,7 +154,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             textValue: 'Due date',
             visibility: false,
             source: new sourceLib.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   { key: 1, title: 'Due date' },
                   { key: 2, title: 'Overdue' }
@@ -186,7 +186,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             resetValue: '',
             visibility: false,
             source: new sourceLib.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   { key: 1, title: 'My' },
                   { key: 2, title: 'My department' }
@@ -206,7 +206,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             textValue: 'On department',
             visibility: false,
             source: new sourceLib.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   { key: 1, title: 'On me' },
                   { key: 2, title: 'On department' }
@@ -225,7 +225,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             resetValue: [1],
             visibility: false,
             source: new sourceLib.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   { key: 1, title: 'Activity for the last month' },
                   { key: 2, title: 'Activity for the last quarter' },
@@ -248,7 +248,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
                   { key: 4, title: 'Past 6 months' },
                   { key: 5, title: 'Past year' }
                ],
-               idProperty: 'key'
+               keyProperty: 'key'
             })
          },
          {
@@ -263,7 +263,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
                   { key: 4, title: 'Not done' },
                   { key: 5, title: 'Deleted' }
                ],
-               idProperty: 'key'
+               keyProperty: 'key'
             })
          },
          {
@@ -273,7 +273,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             textValue: 'Due date',
             visibility: true,
             source: new sourceLib.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   { key: 1, title: 'Due date' },
                   { key: 2, title: 'Overdue' }
@@ -305,7 +305,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             resetValue: [1],
             visibility: false,
             source: new sourceLib.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   { key: 1, title: 'My' },
                   { key: 2, title: 'My department' }
@@ -325,7 +325,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             textValue: 'On department',
             visibility: true,
             source: new sourceLib.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   { key: 1, title: 'On me' },
                   { key: 2, title: 'On department' }
@@ -344,7 +344,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             resetValue: [1],
             visibility: false,
             source: new sourceLib.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   { key: 1, title: 'Activity for the last month' },
                   { key: 2, title: 'Activity for the last quarter' },
@@ -356,7 +356,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
 
       var config = {
          originSource: new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: items
          }),
          historySource: new history.Service({
@@ -415,7 +415,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
       function createRecordSet(data) {
          return new collection.RecordSet({
             rawData: data,
-            idProperty: 'ObjectId',
+            keyProperty: 'ObjectId',
             adapter: new entity.adapter.Sbis()
          });
       }
@@ -427,7 +427,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             recent: createRecordSet(recentData)
          },
          itemsProperty: '',
-         idProperty: 'ObjectId'
+         keyProperty: 'ObjectId'
       });
 
       config.historySource.saveHistory = function() {};
@@ -453,7 +453,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
                   recent: createRecordSet(recentData)
                },
                itemsProperty: '',
-               idProperty: 'ObjectId'
+               keyProperty: 'ObjectId'
             });
             return {};
          },

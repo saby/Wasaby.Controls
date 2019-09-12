@@ -31,7 +31,7 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
                displayProperty: 'title',
                keyProperty: 'id',
                source: new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: this._source
                })
             };

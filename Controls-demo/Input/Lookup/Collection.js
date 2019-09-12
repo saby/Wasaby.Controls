@@ -9,7 +9,7 @@ define('Controls-demo/Input/Lookup/Collection',
       'css!Controls-demo/Input/Lookup/Collection'
    ],
    function(Control, template, collection) {
-      
+
       'use strict';
       var Collection = Control.extend({
          _template: template,
@@ -17,7 +17,7 @@ define('Controls-demo/Input/Lookup/Collection',
          _sourceSingle: null,
          _beforeMount: function() {
             this._sourceMulti = new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: [
                   {
                      id: 0,
@@ -42,7 +42,7 @@ define('Controls-demo/Input/Lookup/Collection',
                ]
             });
             this._sourceSingle = new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: [
                   {
                      id: 0,
@@ -53,6 +53,6 @@ define('Controls-demo/Input/Lookup/Collection',
 
          },
       });
-      
+
       return Collection;
    });

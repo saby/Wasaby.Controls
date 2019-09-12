@@ -5,7 +5,7 @@ define(['Controls/_search/Misspell/getSwitcherStrFromData', 'Types/collection', 
       it('getSwitchedStrFromData', function() {
          var rs = new collection.RecordSet({
             rawData: [],
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          rs.setMetaData({
             results: new entity.Model({

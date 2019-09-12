@@ -323,11 +323,11 @@ define('Controls-demo/List/NoScrollPaging', [
                }
             ];
             this._viewSource = new mySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: srcData
             });
             this._viewSourceG = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: GridData.catalog
             });
             this._columnSource = new source.Memory({
@@ -335,7 +335,7 @@ define('Controls-demo/List/NoScrollPaging', [
                   { key: 'price', title: 'Цена' },
                   { key: 'costPrice', title: 'Себестоимость' }
                ],
-               idProperty: 'key'
+               keyProperty: 'key'
             });
             this.gridColumns2 = partialColumns;
             this._selectKeyColumn = ['price'];

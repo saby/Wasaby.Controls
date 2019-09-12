@@ -35,7 +35,7 @@ define('Controls-demo/Explorer/Search', [
                }
             ];
             this._searchStartingWithSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 'root', title: 'root'
@@ -46,7 +46,7 @@ define('Controls-demo/Explorer/Search', [
                ]
             });
             this._multiselectVisibilitySource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 'visible', title: 'visible'
@@ -60,7 +60,7 @@ define('Controls-demo/Explorer/Search', [
                ]
             });
             this._viewSource = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 1, 'parent': null, 'parent@': true, code: null, price: null, title: 'Комплектующие'

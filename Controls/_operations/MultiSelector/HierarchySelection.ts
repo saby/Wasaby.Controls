@@ -204,7 +204,7 @@ var HierarchySelection = Selection.extend({
       HierarchySelection.superclass.constructor.apply(this, arguments);
 
       this._hierarchyRelation = new relation.Hierarchy({
-         idProperty: options.keyProperty || 'id',
+         keyProperty: options.keyProperty || 'id',
          parentProperty: options.parentProperty || 'Раздел',
          nodeProperty: options.nodeProperty || 'Раздел@'
       });

@@ -113,15 +113,15 @@ define([
       beforeEach(function() {
          allData = new collection.RecordSet({
             rawData: items.slice(),
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          flatData = new collection.RecordSet({
             rawData: flatItems.slice(),
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          rootData = new collection.RecordSet({
             rawData: rootItems.slice(),
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          hiddenNodeWithChildren = new collection.RecordSet({
             rawData: [{
@@ -137,7 +137,7 @@ define([
                'Раздел': 1,
                'Раздел@': null
             }],
-            idProperty: 'id'
+            keyProperty: 'id'
          });
       });
       afterEach(function() {
@@ -589,7 +589,7 @@ define([
                excludedKeys: [],
                items: new collection.RecordSet({
                   rawData: itemsWithDuplicateIds,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                keyProperty: 'id'
             };
@@ -611,7 +611,7 @@ define([
                   'Раздел': 1,
                   'Раздел@': true
                }],
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             keyProperty: 'id',
             listModel: getListModel()

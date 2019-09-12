@@ -46,7 +46,7 @@ define([
             }
          ];
          rs = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
          listViewModel = new lists.ListViewModel({
@@ -171,7 +171,7 @@ define([
                }
             ],
             rs = new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: data
             }),
             listViewModel = new lists.ListViewModel({

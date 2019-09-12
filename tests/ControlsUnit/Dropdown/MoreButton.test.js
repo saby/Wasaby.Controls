@@ -7,7 +7,7 @@ define(
       describe('DropdownPopup:MoreButton', function() {
 
          let defaultItems = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: [{id: '1', title: 'Test1'},
                {id: '2', title: 'Test2'},
                {id: '3', title: 'Test3'},

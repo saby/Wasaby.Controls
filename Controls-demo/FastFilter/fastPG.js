@@ -22,7 +22,7 @@ define('Controls-demo/FastFilter/fastPG',
          _componentOptions: null,
          _beforeMount: function() {
             this._sourceProjects = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 'type',
@@ -63,7 +63,7 @@ define('Controls-demo/FastFilter/fastPG',
                ]
             });
             this._sourceContacts = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 'type',
@@ -73,7 +73,7 @@ define('Controls-demo/FastFilter/fastPG',
                         keyProperty: 'id',
                         displayProperty: 'title',
                         source: new sourceLib.Memory({
-                           idProperty: 'id',
+                           keyProperty: 'id',
                            data: [
                               { id: '0', title: 'In my circle' },
                               { id: '1', title: 'All contacts' }
@@ -84,7 +84,7 @@ define('Controls-demo/FastFilter/fastPG',
                ]
             });
             this._sourceMulti = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 'type',
@@ -95,7 +95,7 @@ define('Controls-demo/FastFilter/fastPG',
                         displayProperty: 'title',
                         multiSelect: true,
                         source: new sourceLib.Memory({
-                           idProperty: 'id',
+                           keyProperty: 'id',
                            data: [
                               { id: 1, title: 'Banking and financial services, credit' },
                               { id: 2, title: 'Gasoline, diesel fuel, light oil products' },

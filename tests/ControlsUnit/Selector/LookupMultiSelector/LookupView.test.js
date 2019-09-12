@@ -7,7 +7,7 @@ define([
       for (var items = []; countItems; countItems--) {
          items.push(new entity.Model({
             rawData: {id: countItems},
-            idProperty: 'id'
+            keyProperty: 'id'
          }));
       }
 

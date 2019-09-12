@@ -47,7 +47,7 @@ define('Controls-demo/List/List/GroupPG',
                markedKey: '3',
                allowEmptySelection: false,
                source: new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: data.groupGadgets
                }),
                groupingKeyCallback: this._groupByBrand,

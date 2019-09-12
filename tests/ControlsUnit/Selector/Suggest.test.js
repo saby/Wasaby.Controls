@@ -31,7 +31,7 @@ define(
             placeholder: 'This is placeholder',
             suggestTemplate: {},
             source: new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             })
          };

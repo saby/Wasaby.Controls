@@ -31,7 +31,7 @@ function createHistorySource(cfg) {
    };
    return new HistorySource({
       originSource: new sourceLib.Memory({
-         idProperty: 'id',
+         keyProperty: 'id',
          data: []
       }),
       historySource: Di.isRegistered('demoSourceHistory') ? Di.resolve('demoSourceHistory', historySourceData)

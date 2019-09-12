@@ -32,7 +32,7 @@ define('Controls-demo/List/DocWI/ListPadding', [
 
          _beforeMount: function(newOptions) {
             this._viewSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: srcData
             });
             this._itemPadding = {

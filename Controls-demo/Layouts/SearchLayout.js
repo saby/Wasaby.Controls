@@ -42,7 +42,7 @@ define('Controls-demo/Layouts/SearchLayout', [
                   {key: 3, title: 'США'},
                   {key: 4, title: 'Великобритания'}
                ],
-               idProperty: 'key'
+               keyProperty: 'key'
             });
             this.sourceId = new sourceLib.Memory({
                data: [
@@ -51,10 +51,10 @@ define('Controls-demo/Layouts/SearchLayout', [
                   {key: 2, title: '2'},
                   {key: 3, title: '3'}
                ],
-               idProperty: 'key'
+               keyProperty: 'key'
             });
             this._dataSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {id: 1, firstName: 'Sasha', lastName: 'aaaa'},
                   {id: 2, firstName: 'Dmitry', lastName: 'aaaa'},
@@ -140,7 +140,7 @@ define('Controls-demo/Layouts/SearchLayout', [
                            {id: 3, title: 'Ivan'},
                            {id: 3, title: 'Andrey'}
                         ],
-                        idProperty: 'id'
+                        keyProperty: 'id'
                      })
                   }
                },
@@ -160,7 +160,7 @@ define('Controls-demo/Layouts/SearchLayout', [
                            {id: 3, title: '3'},
                            {id: 4, title: '4'}
                         ],
-                        idProperty: 'id'
+                        keyProperty: 'id'
                      })
                   }
                },
@@ -180,13 +180,13 @@ define('Controls-demo/Layouts/SearchLayout', [
                            {id: 4, title: 'Lalala', lastName: 'Lalala'},
                            {id: 0, title: 'По фамилии', lastName: '0'}
                         ],
-                        idProperty: 'id'
+                        keyProperty: 'id'
                      })
                   }
                }
             ];
             this._fastFilterSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: this._fastFilterData
             });
             this._navigation = {
@@ -202,7 +202,7 @@ define('Controls-demo/Layouts/SearchLayout', [
 
          _afterMount: function () {
             this._dataSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {id: 1, firstName: 'Sasha', lastName: 'aaaa'},
                   {id: 2, firstName: 'Dmitry', lastName: 'aaaa'},

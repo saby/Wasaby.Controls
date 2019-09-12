@@ -207,7 +207,7 @@ define([
 
          var rs3 = new collection.RecordSet({
             rawData: data3,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
 
          var cfg1 = {

@@ -376,7 +376,7 @@ define('Controls-demo/List/Swipe', [
             };
             // this._onActClick = this._onActClick.bind(this);
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 1

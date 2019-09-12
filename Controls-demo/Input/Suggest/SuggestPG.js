@@ -44,12 +44,12 @@ define('Controls-demo/Input/Suggest/SuggestPG', [
          };
 
          this._citiesSource = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: cityData,
             filter: sourceFilter
          });
          this._namesSource = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: namesData,
             filter: sourceFilter
          });

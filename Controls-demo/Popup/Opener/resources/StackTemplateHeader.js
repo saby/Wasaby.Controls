@@ -26,7 +26,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateHeader',
          _source1: null,
          _beforeMount: function(opts) {
             this._source1 = new Source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: '1',
@@ -83,7 +83,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateHeader',
             };
             this.gridData = GridData;
             this._viewSource = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: GridData.catalog
             });
             this._itemActions = [
