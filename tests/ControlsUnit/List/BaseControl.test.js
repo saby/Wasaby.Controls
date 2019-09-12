@@ -1954,6 +1954,10 @@ define([
             lnBaseControl._itemsChanged = true;
             await lnBaseControl._beforeUpdate(lnCfg);
             assert.isTrue(lnBaseControl._canUpdateItemsActions);
+         });
+         it('_onAfterEndEdit', function() {
+            lnBaseControl._onAfterEndEdit({}, {});
+            assert.isTrue(lnBaseControl._canUpdateItemsActions);
             lnBaseControl._afterUpdate(lnCfg);
          });
          it('hoveredItemChanged', function() {
