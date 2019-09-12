@@ -108,6 +108,10 @@ var BaseLookupView = Control.extend({
         if (isNeedUpdate) {
             this._calculatingSizes(newOptions);
         }
+
+        if (!this._isInputActive(newOptions)) {
+            this._suggestState = false;
+        }
     },
 
     _afterUpdate: function():void {
@@ -118,10 +122,6 @@ var BaseLookupView = Control.extend({
             if (this._active) {
                 this.activate();
             }
-        }
-
-        if (!this._isInputActive(this._options)) {
-            this._suggestState = false;
         }
     },
 
