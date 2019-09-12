@@ -68,7 +68,7 @@ var _private = {
       _private.cachedSourceFix(self);
       const memorySource = new Memory({
          model: data.getModel(),
-         keyProperty: data.getIdProperty(),
+         keyProperty: data.getKeyProperty(),
          data: items,
          adapter: source.getAdapter()
       });
@@ -89,7 +89,7 @@ var _private = {
       const recordSet = new RecordSet({
          rawData: clone(data), // clone origin data
          adapter: source.getAdapter(),
-         keyProperty: source.getIdProperty()
+         keyProperty: source.getKeyProperty()
       });
 
       const recordSetToReverse = recordSet.clone();
@@ -139,7 +139,7 @@ var _private = {
       if (!error || !error.canceled) {
          self._source = new Memory({
             model: source.getModel(),
-            keyProperty: source.getIdProperty()
+            keyProperty: source.getKeyProperty()
          });
       }
    },
@@ -273,7 +273,7 @@ var _private = {
          self._source = new PrefetchProxy({
             target: new Memory({
                model: self._source.getModel(),
-                keyProperty: self._source.getIdProperty(),
+               keyProperty: self._source.getKeyProperty(),
                data: _private.reverseData(self._source.data, self._source),
                adapter: self._source.getAdapter()
             })
@@ -307,7 +307,7 @@ var List = Control.extend({
          var originSource = _private.getOriginSource(options.source);
          this._source = new Memory({
             model: originSource.getModel(),
-            keyProperty: originSource.getIdProperty()
+            keyProperty: originSource.getKeyProperty()
          });
       }
 

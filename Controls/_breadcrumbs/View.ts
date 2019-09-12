@@ -37,7 +37,7 @@ var BreadCrumbsView = Control.extend({
                     });
                     return newItem;
                 }),
-                keyProperty: this._options.items[0].getIdProperty()
+                keyProperty: this._options.items[0].getKeyProperty()
             });
             rs.each(function (item, index) {
                 item.set('indentation', index);

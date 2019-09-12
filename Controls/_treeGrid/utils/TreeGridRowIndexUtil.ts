@@ -82,7 +82,7 @@ type TreeGridRowIndexOptions<T = ItemId|DisplayItem|DisplayItemIndex|HasEmptyTem
  */
 function getIndexById(cfg: TreeGridRowIndexOptions<ItemId>): number {
 
-    let idProperty = cfg.display.getIdProperty() || (<Collection<unknown>>cfg.display.getCollection()).getIdProperty(),
+    let idProperty = cfg.display.getIdProperty() || (<Collection<unknown>>cfg.display.getCollection()).getKeyProperty(),
         item = ItemsUtil.getDisplayItemById(cfg.display, cfg.id, idProperty),
         index = cfg.display.getIndex(item);
 
@@ -285,7 +285,7 @@ function calcNodeFootersBeforeItem(cfg: TreeGridRowIndexOptions<ItemId & Display
     let
         count = 0,
         needToCheckRealFooterIndex = Object.keys(cfg.hasMoreStorage).filter((id)=>cfg.hasMoreStorage[id] === true),
-        idProperty: string = cfg.display.getIdProperty() || (<Collection<unknown>>cfg.display.getCollection()).getIdProperty();
+        idProperty: string = cfg.display.getIdProperty() || (<Collection<unknown>>cfg.display.getCollection()).getKeyProperty();
 
 
     if(cfg.hasNodeFooterTemplate) {

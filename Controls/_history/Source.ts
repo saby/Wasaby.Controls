@@ -242,7 +242,7 @@ var _private = {
                newItem.set('pinned', true);
             }
             if (filteredHistory.pinned.indexOf(id) !== -1 || filteredHistory.recent.indexOf(id) !== -1 || filteredHistory.frequent.indexOf(id) !== -1) {
-               _private.setHistoryFields(newItem, item.getIdProperty(), id);
+               _private.setHistoryFields(newItem, item.getKeyProperty(), id);
             }
             items.add(newItem);
          }
@@ -304,7 +304,7 @@ var _private = {
    fillFrequentItems: function (self, history, oldItems, items) {
       var config = {
          adapter: items.getAdapter(),
-         keyProperty: items.getIdProperty(),
+         keyProperty: items.getKeyProperty(),
          format: items.getFormat()
       };
       var frequentItems = new collection.RecordSet(config);
@@ -512,7 +512,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
                }
                result = new sourceLib.DataSet({
                   rawData: newItems.getRawData(),
-                  keyProperty: newItems.getIdProperty(),
+                  keyProperty: newItems.getKeyProperty(),
                   adapter: newItems.getAdapter()
                });
             } else {

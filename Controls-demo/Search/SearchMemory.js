@@ -40,7 +40,7 @@ define('Controls-demo/Search/SearchMemory', [
 
                      var ds = new source.DataSet({
                         rawData: rawData,
-                        keyProperty: recordSet.getIdProperty(),
+                        keyProperty: recordSet.getKeyProperty(),
                         adapter: recordSet.getAdapter()
                      });
 

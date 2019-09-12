@@ -400,7 +400,7 @@ var _private = {
     getMenuItems: function (items) {
         return getMenuItems(items).value(factory.recordSet, {
             adapter: items.getAdapter(),
-            keyProperty: items.getIdProperty(),
+            keyProperty: items.getKeyProperty(),
             format: items.getFormat()
         });
     },
