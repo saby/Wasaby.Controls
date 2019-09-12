@@ -12,9 +12,9 @@
 </ws:template>
 <ws:template name="itemContentTpl">
     <ws:if data="{{itemData.hasMultiSelect}}">
-        <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}} controls-ListView__checkbox">
-            <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}"/>
-        </ws:partial>
+       <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}} controls-ListView__checkbox">
+          <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" checkboxReadOnly="{{checkboxReadOnly}}"/>
+       </ws:partial>
     </ws:if>
 
    <ws:if data="{{itemData.shouldDrawMarker(marker)}}">
