@@ -76,7 +76,7 @@ define(
                assert.isTrue(pNav.hasMoreData('up'), 'Method hasMoreData returns incorrect value after reload');
 
                let moreDataRs = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [
                      {
                         id: 1,
@@ -177,7 +177,7 @@ define(
                assert.deepEqual([2], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
 
                let moreDataRs = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [
                      {
                         id: 1,

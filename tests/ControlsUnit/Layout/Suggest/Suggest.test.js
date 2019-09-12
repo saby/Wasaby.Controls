@@ -526,7 +526,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          var self = getComponentObject();
          var queryRecordSet = new collection.RecordSet({
             rawData: [{id: 1}, {id: 2}, {id: 3}],
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          var resultData = {
             data: queryRecordSet,

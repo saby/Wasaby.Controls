@@ -103,7 +103,7 @@ export default class News extends Control {
          }
       ];
       this._source = new Memory({
-         idProperty: 'id',
+         keyProperty: 'id',
          data
       });
    }

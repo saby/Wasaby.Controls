@@ -18,7 +18,7 @@ define('Controls-demo/Checkbox/Group', [
             this._selectedKeysHorizontal = [2, 4, 6];
             this._selectedKeysHierarchy = [4, 5];
             this._sourceVertical = new source.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   {
                      key: 1,
@@ -36,7 +36,7 @@ define('Controls-demo/Checkbox/Group', [
             });
 
             this._sourceHorizontal = new source.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   {
                      key: 1,
@@ -70,7 +70,7 @@ define('Controls-demo/Checkbox/Group', [
             });
 
             this._sourceHierarchy = new source.Memory({
-               idProperty: 'key',
+               keyProperty: 'key',
                data: [
                   {
                      key: 1,

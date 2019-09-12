@@ -23,7 +23,7 @@ define('Controls-demo/List/Tree/TreeWithPhoto', [
          _viewColumnsTwoLevels: null,
          _beforeMount: function() {
             this._viewSource = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 1, title: 'Node', 'Раздел': null, 'Раздел@': true, 'Раздел$': null, photo: ''
@@ -58,7 +58,7 @@ define('Controls-demo/List/Tree/TreeWithPhoto', [
                ]
             });
             this._viewSourceTwoLevels = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 1, title: 'Крайнов Дмитрий', 'Раздел': null, 'Раздел@': true, photo: resImages.staff.krainov

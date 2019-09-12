@@ -22,12 +22,12 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
          {id: 8, title: 'Assignment for delivery', parent: null},
          {id: 9, title: 'Assignment for logisticians', parent: null}
       ];
-      
+
       var coordSub = ['Coordination', 'Negotiate the discount', 'Harmonization of price changes', 'Approval of participation in trading',
          'Matching the layout', 'Matching the layout of the mobile application', 'Harmonization of the standard', 'Harmonization of themes',
          'Harmonization of the mobile application standard', 'Coordination of the change in a limited period',
          'Harmonization of the change of the contract template'];
-      
+
       var devSub = ['The task in development', 'Merge request', 'Error in development',
          'Run on the test bench', 'Harmonization of changes in the database', 'Changing the operation rule',
          'Creating (changing) a printed form', 'The task of developing a standard component (test)', 'Code review',
@@ -90,7 +90,7 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
       function createRecordSet(data) {
          return new collection.RecordSet({
             rawData: data,
-            idProperty: 'ObjectId',
+            keyProperty: 'ObjectId',
             adapter: new entity.adapter.Sbis()
          });
       }
@@ -103,11 +103,11 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
                recent: createRecordSet(recentData)
             },
             itemsProperty: '',
-            idProperty: 'ObjectId'
+            keyProperty: 'ObjectId'
          });
          var hs = new history.Source({
             originSource: new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: prepareItems()
             }),
             historySource: new history.Service({

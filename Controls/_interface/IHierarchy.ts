@@ -47,7 +47,7 @@ export default interface IHierarchy {
  *           { id: 6, title: 'Assignment for delivery', parent: 4, 'parent@': false },
  *           { id: 7, title: 'Assignment for logisticians', parent: 4, 'parent@': false }
  *       ],
- *       idProperty: 'id'
+ *       keyProperty: 'id'
  *    });
  * </pre>
  */
@@ -77,7 +77,7 @@ export default interface IHierarchy {
  *           { id: 6, title: 'Assignment for delivery', parent: 4, 'parent@': false },
  *           { id: 7, title: 'Assignment for logisticians', parent: 4, 'parent@': false }
  *       ],
- *       idProperty: 'id'
+ *       keyProperty: 'id'
  *    });
  * </pre>
  */
@@ -107,7 +107,7 @@ export default interface IHierarchy {
  *           { id: 6, title: 'Assignment for delivery', parent: 4, 'parent@': false },
  *           { id: 7, title: 'Assignment for logisticians', parent: 4, 'parent@': false }
  *       ],
- *       idProperty: 'id'
+ *       keyProperty: 'id'
  *    });
  * </pre>
  */
@@ -137,7 +137,7 @@ export default interface IHierarchy {
  *           { id: 6, title: 'Assignment for delivery', parent: 4, 'parent@': false },
  *           { id: 7, title: 'Assignment for logisticians', parent: 4, 'parent@': false }
  *       ],
- *       idProperty: 'id'
+ *       keyProperty: 'id'
  *    });
  * </pre>
  */

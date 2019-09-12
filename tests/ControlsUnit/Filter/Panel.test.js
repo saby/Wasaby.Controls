@@ -248,7 +248,7 @@ define(
          it('recordSet', function() {
 
             var rs = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: items
                }),
                options = {};

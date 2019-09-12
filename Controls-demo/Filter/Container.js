@@ -85,12 +85,12 @@ define('Controls-demo/Filter/Container', [
                   { id: '3', title: 'Субботин А.В.', lastName: 'Субботин А.В.' },
                   { id: '4', title: 'Чеперегин А.С.', lastName: 'Чеперегин А.С.' }
                ],
-               idProperty: 'id'
+               keyProperty: 'id'
             })
          }];
          this._source = new sourceLib.Memory({
             data: memorySourceData.departments,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
       }
    });

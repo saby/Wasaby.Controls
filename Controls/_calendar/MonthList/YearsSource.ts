@@ -18,7 +18,7 @@ var YearsSource = Memory.extend({
         _dataSetMetaProperty: 'meta'
     },
 
-    _$idProperty: 'id',
+    _$keyProperty: 'id',
 
     query: function (query) {
         var

@@ -51,7 +51,7 @@ define([
             }
          ];
          source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data,
             filter: function (item, filter) {
                var result = true;
@@ -65,7 +65,7 @@ define([
 
          });
          rs = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
          sandbox = sinon.createSandbox();
@@ -111,7 +111,7 @@ define([
          var oldSourceCtrl = ctrl._sourceController;
 
          source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -312,7 +312,7 @@ define([
 
       it('_needScrollCalculation', function(done) {
          var source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -372,7 +372,7 @@ define([
 
       it('loadToDirection down', async function() {
          var source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -598,7 +598,7 @@ define([
                viewModelConstructor: lists.ListViewModel,
                keyProperty: 'key',
                source: new sourceLib.Memory({
-                  idProperty: 'key',
+                  keyProperty: 'key',
                   data: [{
                      key: 1
                   }, {
@@ -647,7 +647,7 @@ define([
        it('scrollToItem', async function() {
            var
                source = new sourceLib.Memory({
-                   idProperty: 'key',
+                   keyProperty: 'key',
                    data: function(){
                        var result = [];
                        for (var i = 1; i <= 20; i++) {
@@ -930,7 +930,7 @@ define([
                 keyProperty: 'key',
                 multiSelectVisibility: 'visible',
                 source: new sourceLib.Memory({
-                   idProperty: 'key',
+                   keyProperty: 'key',
                    data: [{
                       key: 1
                    }, {
@@ -961,7 +961,7 @@ define([
 
       it('loadToDirection up', async function() {
          const source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -999,12 +999,12 @@ define([
 
       it('items should get loaded when a user scrolls to the bottom edge of the list', function(done) {
          var rs = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -1051,12 +1051,12 @@ define([
 
       it('scrollLoadStarted MODE', function(done) {
          var rs = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -1285,7 +1285,7 @@ define([
                       view: 'infinity'
                    },
                    source: new sourceLib.Memory({
-                       idProperty: 'id',
+                       keyProperty: 'id',
                        data: data
                    })
                },
@@ -1305,12 +1305,12 @@ define([
 
       it('scrollToEdge_load', function(done) {
          var rs = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -1373,12 +1373,12 @@ define([
       };
       it('ScrollPagingController', function(done) {
          var rs = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -1510,12 +1510,12 @@ define([
 
       it('scrollToEdge without load', function(done) {
          var rs = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -1567,12 +1567,12 @@ define([
 
       it('__onPagingArrowClick', function(done) {
          var rs = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -1635,12 +1635,12 @@ define([
 
       it('__onEmitScroll', function(done) {
          var rs = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -1761,11 +1761,11 @@ define([
 
          var
              lnSource = new sourceLib.Memory({
-                idProperty: 'id',
+                keyProperty: 'id',
                 data: data
              }),
              lnSource2 = new sourceLib.Memory({
-                idProperty: 'id',
+                keyProperty: 'id',
                 data: [{
                    id: 4,
                    title: 'Четвертый',
@@ -1778,7 +1778,7 @@ define([
                    }]
              }),
              lnSource3 = new sourceLib.Memory({
-                idProperty: 'id',
+                keyProperty: 'id',
                 data: []
              }),
              lnCfg = {
@@ -1824,11 +1824,11 @@ define([
 
          var
             lnSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data
             }),
             lnSource2 = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [{
                   id: 4,
                   title: 'Четвертый',
@@ -1874,7 +1874,7 @@ define([
       });
       describe('resetScrollAfterReload', function() {
          var source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data
             }),
             cfg = {
@@ -1920,7 +1920,7 @@ define([
 
       describe('_canUpdateItemsActions', function() {
          var lnSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data
             }),
             lnCfg = {
@@ -1998,7 +1998,7 @@ define([
          });
          it('update on recreating source', async function() {
             let newSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data
             });
             let newCfg = {
@@ -2043,7 +2043,7 @@ define([
             },
 
             lnSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data
             }),
             lnCfg = {
@@ -2056,7 +2056,7 @@ define([
             lnCfg2 = {
                viewName: 'Controls/List/ListView',
                source: new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: [{
                      id: 'firstItem',
                      title: 'firstItem'
@@ -2108,12 +2108,12 @@ define([
 
       it('_onCheckBoxClick', function() {
          var rs = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: data
          });
 
          var source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
@@ -2667,7 +2667,7 @@ define([
       describe('mouseDown with different buttons', function() {
          it('dragNDrop do not start on right or middle mouse button', async function() {
             var source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data
             });
             let
@@ -2999,7 +2999,7 @@ define([
                          { id: 1, title: 'item 1' },
                          { id: 2, title: 'item 2' }
                       ],
-                      idProperty: 'id'
+                      keyProperty: 'id'
                    }),
                    viewName: 'Controls/List/ListView',
                    viewConfig: {
@@ -3056,7 +3056,7 @@ define([
                          { id: 1, title: 'item 1' },
                          { id: 2, title: 'item 2' }
                       ],
-                      idProperty: 'id'
+                      keyProperty: 'id'
                    }),
                    viewName: 'Controls/List/ListView',
                    viewConfig: {
@@ -3899,7 +3899,7 @@ define([
                      assert.isTrue(baseCtrl._sourceController.hasMoreData('down'), 'wrong navigation after reload item');
 
                      let recordSet = new collection.RecordSet({
-                        idProperty: 'id',
+                        keyProperty: 'id',
                         rawData: [{ id: 'test' }]
                      });
                      baseCtrl._listViewModel.setItems(recordSet);
@@ -4145,7 +4145,7 @@ define([
       describe('navigation', function () {
          it('Navigation demand', async function() {
             const source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data
             });
 
@@ -4195,7 +4195,7 @@ define([
          });
          it('Reload with empty results', async function() {
             let src = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: []
             });
             const cfg = {
@@ -4284,7 +4284,7 @@ define([
                var
                    ctrl,
                    source = new sourceLib.Memory({
-                      idProperty: 'id',
+                      keyProperty: 'id',
                       data: data,
                       filter: function() {
                          return true;

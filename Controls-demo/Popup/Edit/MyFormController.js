@@ -20,7 +20,7 @@ define('Controls-demo/Popup/Edit/MyFormController',
          _beforeMount: function(options) {
             this._record = options.record;
             this._dataSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: GridData.catalog.slice(0, 11)
             });
             var baseUpdate = this._dataSource.update;

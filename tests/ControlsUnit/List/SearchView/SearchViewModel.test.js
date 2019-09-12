@@ -26,7 +26,7 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection'], fu
                      type: null,
                      parent: 1
                   }],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                parentProperty: 'parent',
                nodeProperty: 'type',
@@ -87,7 +87,7 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection'], fu
                      type: null,
                      parent: 1
                   }],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                parentProperty: 'parent',
                nodeProperty: 'type',
@@ -158,7 +158,7 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection'], fu
                      parent: 4
                   }
                ],
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             parentProperty: 'parent',
             nodeProperty: 'type',

@@ -25,7 +25,7 @@ define('Controls-demo/Input/ComboBox/ComboBoxPG',
 
          _beforeMount: function() {
             this._sourceRegions = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: '1',
@@ -50,7 +50,7 @@ define('Controls-demo/Input/ComboBox/ComboBoxPG',
                ]
             });
             this._sourceDisease = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   { id: '1', text: '01-disease,', title: '01-disease', myTemplate: 'wml!Controls-demo/Input/ComboBox/itemMyTemplateCustom', comment: 'The first 3 days are paid by the employer, the remaining days are paid for by the FSS' },
                   { id: '2', text: '02-injury,', title: '02-injury', comment: 'The first 3 days are paid by the employer, the remaining days are paid for by the FSS' },

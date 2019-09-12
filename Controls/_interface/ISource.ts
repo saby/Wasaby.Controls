@@ -50,7 +50,7 @@ export default interface ISource {
  *     _source: null,
  *     _beforeMount: function() {
  *         this._source = new Memory({
- *             idProperty: 'key',
+ *             keyProperty: 'key',
  *             data: [
  *                {
  *                   key: '1',
@@ -108,7 +108,7 @@ export default interface ISource {
  *     _source: null,
  *     _beforeMount: function() {
  *         this._source = new Memory({
- *             idProperty: 'key',
+ *             keyProperty: 'key',
  *             data: [
  *                {
  *                   key: '1',
@@ -144,7 +144,7 @@ export default interface ISource {
  * </pre>
  * <pre>
  *    _source: new Memory({
- *       idProperty: 'key',
+ *       keyProperty: 'key',
  *       data: [
  *       {
  *          key: '1',
@@ -177,7 +177,7 @@ export default interface ISource {
  * </pre>
  * <pre>
  *    _source: new Memory({
- *       idProperty: 'key',
+ *       keyProperty: 'key',
  *       data: [
  *       {
  *          key: '1',

@@ -24,13 +24,13 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
       _beforeMount: function () {
          this._sourceNames = new sourceLib.Memory({
             data: sourceData.names,
-            idProperty: 'id',
+            keyProperty: 'id',
             filter: memorySourceFilter()
          });
 
          this._sourceCars = new sourceLib.Memory({
             data: sourceData.cars,
-            idProperty: 'id',
+            keyProperty: 'id',
             filter: memorySourceFilter()
          });
 

@@ -167,7 +167,7 @@ define('Controls-demo/List/Grid/Grid', [
                TOOLBAR: 2
             };
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: GridData.catalog
             });
             this._itemActions = [
@@ -222,7 +222,7 @@ define('Controls-demo/List/Grid/Grid', [
                   { key: 'price', title: 'Цена' },
                   { key: 'costPrice', title: 'Себестоимость' }
                ],
-               idProperty: 'key'
+               keyProperty: 'key'
             });
             this.gridColumns2 = partialColumns;
 

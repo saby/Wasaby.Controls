@@ -275,7 +275,7 @@ define('Controls-demo/Compound/CompoundDemo', [
 
       _beforeMount: function() {
          this._rebuildTypeItems = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                { id: 0, title: 'No changes' },
                { id: 1, title: 'Add new option' },

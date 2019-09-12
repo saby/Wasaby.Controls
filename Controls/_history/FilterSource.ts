@@ -49,7 +49,7 @@ var _private = {
    getItemsWithHistory: function (self, history) {
       var items = new collection.RecordSet({
          adapter: new entity.adapter.Sbis(),
-         idProperty: 'ObjectId'
+         keyProperty: 'ObjectId'
       });
 
       this.addProperty(this, items, 'ObjectId', 'string', '');
@@ -219,7 +219,7 @@ var _private = {
       var item = null;
       var objectData;
       var deserialize = myself.getSerialize(self).deserialize;
-      
+
       items.forEach(function (element) {
          objectData = element.get('ObjectData');
          if (objectData && isEqual(JSON.parse(objectData, deserialize), data)) {
@@ -228,7 +228,7 @@ var _private = {
       });
       return item;
    },
-   
+
    // Serializer при сериализации кэширует инстансы по идентификаторам,
    // и при десериализации, если идентификатор есть в кэше, берёт инстанс оттуда
    // Поэтому, когда применяем фильтр из истории,
@@ -253,7 +253,7 @@ var _private = {
  * <pre>
  *    var source = new filterSource({
  *           originSource: new Memory({
- *               idProperty: 'id',
+ *               keyProperty: 'id',
  *               data: []
  *           }),
  *           historySource: new historyService({
@@ -262,7 +262,7 @@ var _private = {
  *           })
  *       });
  * </pre>
- */ 
+ */
 
 /**
  * @name Controls/_history/FilterSource#originSource
@@ -284,7 +284,7 @@ var _private = {
  * @name Controls/_history/FilterSource#historySource
  * @cfg {Source} A source which work with history
  * @see {Controls/_history/Service} Source working with the service of InputHistory
- */ 
+ */
 
 var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
    _history: null,
@@ -353,7 +353,7 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
             self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
             return new sourceLib.DataSet({
                rawData: newItems.getRawData(),
-               idProperty: newItems.getIdProperty()
+               keyProperty: newItems.getIdProperty()
             });
          });
       }

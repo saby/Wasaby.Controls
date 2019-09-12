@@ -31,7 +31,7 @@ define('Controls-demo/List/DocWI/ListMarker', [
 
          _beforeMount: function(newOptions) {
             this._viewSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: srcData
             });
          }

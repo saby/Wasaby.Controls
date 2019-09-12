@@ -8,7 +8,7 @@ define(['Controls/_lookupPopup/List/Utils/memorySourceFilter', 'Types/entity'], 
             rawData: {
                testField: 'testValue'
             },
-            idProperty: 'testField'
+            keyProperty: 'testField'
          });
          assert.isTrue(memorySourceFilter(model, {}, 'testField'));
       })
@@ -18,13 +18,13 @@ define(['Controls/_lookupPopup/List/Utils/memorySourceFilter', 'Types/entity'], 
             rawData: {
                testField: 'testValue'
             },
-            idProperty: 'testField'
+            keyProperty: 'testField'
          });
          var model2 = new entity.Model({
             rawData: {
                testField: 'testValue2'
             },
-            idProperty: 'testField'
+            keyProperty: 'testField'
          });
          var filter = {
             selection: new entity.Model({

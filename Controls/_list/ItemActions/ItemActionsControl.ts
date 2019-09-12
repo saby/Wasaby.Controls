@@ -125,7 +125,7 @@ var ItemActionsControl = Control.extend({
         ItemActionsControl.superclass.constructor.apply(this, arguments);
         this._onCollectionChangeFn = this._onCollectionChange.bind(this);
         this._hierarchyRelation = new relation.Hierarchy({
-           idProperty: 'id',
+           keyProperty: 'id',
            parentProperty: 'parent',
            nodeProperty: 'parent@'
         });
@@ -217,7 +217,7 @@ var ItemActionsControl = Control.extend({
             this._hierarchyRelation,
             action.id,
             new RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: actions
             })
          )

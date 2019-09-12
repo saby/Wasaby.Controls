@@ -21,7 +21,7 @@ define('Controls-demo/List/List/MultiselectPG',
                keyProperty: 'id',
                name: 'MultiSelectPG',
                source: new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: data.gadgets
                }),
                selectedKeys: [],

@@ -21,7 +21,7 @@ define('Controls-demo/List/Tree/ExpandAll', [
 
          _beforeMount: function() {
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: TreeData.generate()
             });
          }

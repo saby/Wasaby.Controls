@@ -42,7 +42,7 @@ define(
                emptyText: 'All documents',
                editorOptions: {
                   source: new sourceLib.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: defaultItems[0]
                   }),
                   displayProperty: 'title',
@@ -57,7 +57,7 @@ define(
                emptyText: 'all state',
                editorOptions: {
                   source: new sourceLib.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: defaultItems[1]
                   }),
                   displayProperty: 'title',
@@ -83,7 +83,7 @@ define(
 
          let getItems = function (items) {
             return new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: items
             });
          };
@@ -147,7 +147,7 @@ define(
             let newConfig = Clone(defaultConfig);
             newConfig.source[0].value = 1;
             newConfig.source[0].editorOptions.source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: defaultItems[0]
             });
             view._configs = {};
@@ -183,7 +183,7 @@ define(
             let newConfig = Clone(defaultConfig);
             newConfig.source[0].value = 1;
             newConfig.source[0].editorOptions.source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: defaultItems[0]
             });
             view._configs = {};
@@ -526,7 +526,7 @@ define(
                document: {
                   items: new collection.RecordSet({
                      rawData: defaultItems[0],
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   source: source[0].editorOptions.source,
                   emptyText: 'All documents',
@@ -536,7 +536,7 @@ define(
                state: {
                   items: new collection.RecordSet({
                      rawData: defaultItems[1].slice(1),
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   source: source[1].editorOptions.source,
                   emptyText: 'all state',
@@ -573,7 +573,7 @@ define(
                   emptyText: 'Test',
                   emptyKey: null,
                   source: new sourceLib.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: defaultItems[0]
                   })
                }
@@ -591,7 +591,7 @@ define(
                   displayProperty: 'title',
                   keyProperty: 'id',
                   source: new sourceLib.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: defaultItems[0]
                   })
                },
@@ -624,7 +624,7 @@ define(
                document: {
                   items: new collection.RecordSet({
                      rawData: defaultItems[0],
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   source: source[0].editorOptions.source,
                   _sourceController: {hasMoreData: () => {return false;}},
@@ -633,7 +633,7 @@ define(
                state: {
                   items: new collection.RecordSet({
                      rawData: defaultItems[1].slice(1),
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   source: source[1].editorOptions.source,
                   _sourceController: {hasMoreData: () => {return false;}},
@@ -721,11 +721,11 @@ define(
                   }
                };
                view._configs.state.items = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: defaultItems[1]
                });
                let newItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{id: 3, title: 'Completed'}, {id: 20, title: 'new item'}, {id: 28, title: 'new item 2'}]
                });
                let eventResult = {
@@ -747,12 +747,12 @@ define(
                   }
                };
                view._configs.state.items = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: defaultItems[1]
                });
                view._idOpenSelector = 'state';
                let newItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{id: 3, title: 'Completed'}, {id: 20, title: 'new item'}, {id: 28, title: 'new item 2'}]
                });
                view._onSelectorTemplateResult('event', newItems);
@@ -796,11 +796,11 @@ define(
                   }
                };
                view._configs.state.items = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: defaultItems[1]
                });
                let newItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{id: 3, title: 'Completed'}, {id: 20, title: 'new item'}, {id: 28, title: 'new item 2'}]
                });
                view._idOpenSelector = 'state';
@@ -832,7 +832,7 @@ define(
                      emptyText: 'All documents',
                      editorOptions: {
                         source: new sourceLib.Memory({
-                           idProperty: 'id',
+                           keyProperty: 'id',
                            data: documentItems
                         }),
                         displayProperty: 'title',
@@ -850,7 +850,7 @@ define(
                view._configs = {
                   document: {
                      items: new collection.RecordSet({
-                        idProperty: 'id',
+                        keyProperty: 'id',
                         rawData: documentItems
                      }),
                      displayProperty: 'title',

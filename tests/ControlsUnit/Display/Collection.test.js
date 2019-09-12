@@ -297,7 +297,7 @@ define([
                   {id: 3, title: 3},
                   {id: 4, title: 4}
                ],
-               idProperty: 'id'
+               keyProperty: 'id'
             });
             var display = new CollectionDisplay({
                collection: list,
@@ -2275,7 +2275,7 @@ define([
                   items: [
                      new Model({
                         rawData: {id: 1, foo: 'bar'},
-                        idProperty: 'foo'
+                        keyProperty: 'foo'
                      })
                   ]
                }),

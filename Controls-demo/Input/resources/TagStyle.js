@@ -24,7 +24,7 @@ function(
       },
       _createMemory: function() {
          return new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: this._items
          });
       },

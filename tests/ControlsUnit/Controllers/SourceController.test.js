@@ -28,7 +28,7 @@ define([
          ];
          source = new sourceLib.Memory({
             data: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
 
       });

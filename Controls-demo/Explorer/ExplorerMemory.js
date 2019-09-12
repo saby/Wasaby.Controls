@@ -27,7 +27,7 @@ define('Controls-demo/Explorer/ExplorerMemory', [
       if (needRecordSet) {
          return new collection.RecordSet({
             rawData: path,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
       }
       return path;
@@ -70,7 +70,7 @@ define('Controls-demo/Explorer/ExplorerMemory', [
                result.callback(new source.DataSet({
                   rawData: data,
                   adapter: this.getAdapter(),
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }));
             } else {
                query.where(function(item) {

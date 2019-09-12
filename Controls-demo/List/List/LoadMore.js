@@ -28,11 +28,11 @@ define('Controls-demo/List/List/LoadMore', [
 
          _beforeMount: function() {
             this._viewSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: ListData.generate(50)
             });
             this._gridViewSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: ListData.generate(50)
             });
          }

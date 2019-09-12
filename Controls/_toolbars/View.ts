@@ -40,7 +40,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * @category Toolbar
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/ToolbarPG
- */ 
+ */
 
 /**
  * @typedef {Object} Item
@@ -79,7 +79,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
 /*
  * @typedef {Object} SourceCfg
  * @property {Item} [SourceCfg.item] Format of source record.
- */ 
+ */
 
 /**
  * @name Controls/_toolbars/View#source
@@ -88,7 +88,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * @remark
  * Может иметь свойства 'title' и 'showType':
  * * 'title' определяет заголовок элемента.
- * * 'showType' определяет, где отображается элемент: 
+ * * 'showType' определяет, где отображается элемент:
  *     * 0 - в меню.
  *     * 1 - в меню и тулбаре.
  *     * 2 - в тулбаре.
@@ -100,7 +100,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * </pre>
  * <pre>
  *    _source: new source.Memory({
- *        idProperty: 'key',
+ *        keyProperty: 'key',
  *        data: [
  *        {
  *           id: '1',
@@ -144,7 +144,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * </pre>
  * <pre>
  *    _source: new source.Memory({
- *        idProperty: 'key',
+ *        keyProperty: 'key',
  *        data: [
  *        {
  *           id: '1',
@@ -168,7 +168,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  *        ]
  *    })
  * </pre>
- */ 
+ */
 
 /**
  * @name Controls/_toolbars/View#itemsSpacing
@@ -198,7 +198,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  *              itemsSpacing="big"
  *    />
  * </pre>
- */ 
+ */
 
 /**
  * @event Controls/_toolbars/View#itemClick Происходит при клике по элементу.
@@ -269,7 +269,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  *             break;
  *    }
  * </pre>
- */ 
+ */
 
 /**
  * @name Controls/_toolbars/View#itemTemplate
@@ -341,7 +341,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  *          />
  *      </ws:itemTemplate>
  * </pre>
- */ 
+ */
 
 /**
  * @name Controls/_toolbars/View#popupClassName
@@ -376,7 +376,7 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  *       source="{{_source}}"
  *       on:itemClick="_itemClick()"/>
  * </pre>
- */ 
+ */
 
 var _private = {
     loadItems: function (instance, source) {
@@ -400,7 +400,7 @@ var _private = {
     getMenuItems: function (items) {
         return getMenuItems(items).value(factory.recordSet, {
             adapter: items.getAdapter(),
-            idProperty: items.getIdProperty(),
+            keyProperty: items.getIdProperty(),
             format: items.getFormat()
         });
     },

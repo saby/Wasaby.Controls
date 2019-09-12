@@ -59,7 +59,7 @@ define([
          cfg.header = 'header' in cfg ? cfg.header : gridHeader;
          cfg.items = new collection.RecordSet({
             rawData: data || gridData,
-            idProperty: cfg.keyProperty
+            keyProperty: cfg.keyProperty
          });
          return new gridLib.GridViewModel(cfg)
       }

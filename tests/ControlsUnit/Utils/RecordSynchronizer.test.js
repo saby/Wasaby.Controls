@@ -9,7 +9,7 @@ define(
    ],
    (RecordSynchronizer, collection, entity) => {
       let items = new collection.RecordSet({
-         idProperty: 'id',
+         keyProperty: 'id',
          format: [{
             name: 'id',
             type: 'integer'
@@ -35,7 +35,7 @@ define(
 
       let createRecord = rawData => new entity.Model({
          rawData: rawData,
-         idProperty: 'id'
+         keyProperty: 'id'
       });
 
       describe('RecordSynchronizer', () => {
@@ -45,7 +45,7 @@ define(
                   id: 4,
                   title: 'Lukaku'
                },
-               idProperty: 'id'
+               keyProperty: 'id'
             });
             let additionalData = {
                at: 1,
@@ -63,7 +63,7 @@ define(
                   title: 'Rashford',
                   club: 'mu'
                },
-               idProperty: 'id'
+               keyProperty: 'id'
             });
             let linkedKey = 0;
             RecordSynchronizer.mergeRecord(editRecord, items, linkedKey);

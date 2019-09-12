@@ -43,7 +43,7 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
             width: 'auto'
          }];
          this._viewSource = new source.HierarchicalMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             parentProperty: 'parent',
             data: [{
                id: 1,
@@ -174,7 +174,7 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
             template: secondHeaderTemplate
          }];
          this._viewSource1 = new source.HierarchicalMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             parentProperty: 'parent',
             data: [{
                id: 1,
@@ -291,7 +291,7 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
             result: 39597
          }];
          this._viewSource2 = new source.HierarchicalMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             parentProperty: 'parent',
             data: [{
                id: 1,
@@ -416,7 +416,7 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
             result: 99088195.46
          }];
          this._viewSource3 = new source.HierarchicalMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             parentProperty: 'parent',
             data: [{
                id: 1,
@@ -506,7 +506,7 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
             resultTemplate: fifthResultTemplate
          }];
          this._viewSource4 = new source.HierarchicalMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             parentProperty: 'parent',
             data: [{
                id: 1,
@@ -586,7 +586,7 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
             resultTemplate: fifthResultTemplate
          }];
          this._viewSource5 = new source.HierarchicalMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             parentProperty: 'parent',
             data: [{
                id: 1,
@@ -622,20 +622,20 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
          });
          this._breadCrumbs6 = [
             new entity.Model({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: {
                   id: 1,
                   title: 'Солнце-море-пляж'
                }
             }), new entity.Model({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: {
                   id: 2,
                   title: 'Сардиния'
                }
             })];
          this._toolbarSource7 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: '1',
@@ -664,7 +664,7 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
             ]
          });
          this._viewSource8 = new source.HierarchicalMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             parentProperty: 'parent',
             filter: memorySourceFilter(),
             data: [{
@@ -764,31 +764,31 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
          }];
          this._breadCrumbs7 = [
             new entity.Model({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: {
                   id: 1,
                   title: 'Папка 1'
                }
             }), new entity.Model({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: {
                   id: 2,
                   title: 'Папка с длинным названием 2'
                }
             }), new entity.Model({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: {
                   id: 3,
                   title: 'Папка с длинным названием 3'
                }
             }), new entity.Model({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: {
                   id: 4,
                   title: 'Папка с длинным названием 4'
                }
             }), new entity.Model({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: {
                   id: 5,
                   title: 'Папка с длинным названием 5'
@@ -796,13 +796,13 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
             })];
          this._breadCrumbs8 = [
             new entity.Model({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: {
                   id: 1,
                   title: 'Папка с длинным названием 1'
                }
             }), new entity.Model({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: {
                   id: 2,
                   title: 'Папка с длинным названием 2'

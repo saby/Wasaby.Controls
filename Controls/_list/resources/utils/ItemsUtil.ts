@@ -5,7 +5,7 @@ import Utils = require('Types/util');
 var ItemsUtil = {
     getDefaultDisplayFlat: function(items, cfg, filter) {
         var projCfg = {};
-        projCfg.idProperty = cfg.keyProperty;
+        projCfg.keyProperty = cfg.keyProperty;
         if (cfg.groupMethod) {
             projCfg.group = cfg.groupMethod;
         }

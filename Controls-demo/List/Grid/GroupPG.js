@@ -43,7 +43,7 @@ define('Controls-demo/List/Grid/GroupPG',
                     name: 'GroupGridPG',
                     keyProperty: 'id',
                     source: new source.Memory({
-                        idProperty: 'id',
+                        keyProperty: 'id',
                         data: data.catalog
                     }),
                     collapsedGroups: '',

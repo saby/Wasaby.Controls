@@ -39,7 +39,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
                   resetValue: ['0'],
                   textValue: 'All',
                   source: new sourceLib.Memory({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      data: [
                         { key: '0', title: 'All topics' },
                         { key: '1', title: 'Unread' },
@@ -55,7 +55,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
                   resetValue: ['0'],
                   textValue: '',
                   source: new sourceLib.Memory({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      data: [
                         { key: '0', title: 'All types' },
                         { key: '1', title: 'Discussions' },
@@ -71,7 +71,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
                   resetValue: ['0'],
                   textValue: 'All',
                   source: new sourceLib.Memory({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      data: [
                         { key: '0', title: 'All' },
                         { key: '1', title: 'My' }
@@ -84,7 +84,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
                   resetValue: ['0'],
                   textValue: '',
                   source: new sourceLib.Memory({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      data: [
                         { key: '0', title: 'All states' },
                         { key: '1', title: 'In archive' },

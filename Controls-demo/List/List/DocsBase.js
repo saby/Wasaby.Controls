@@ -29,15 +29,15 @@ define('Controls-demo/List/List/DocsBase', [
          constructor: function() {
             ModuleClass.superclass.constructor.apply(this, arguments);
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data.srcData
             });
             this._groupSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: demoData.groupGadgets
             });
             this._emptySource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: []
             });
             this._firstItemActionsArray = demoData.firstItemActionsArray;
@@ -48,7 +48,7 @@ define('Controls-demo/List/List/DocsBase', [
                autoAdd: false
             };
             this._editingSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: demoData.gadgets
             });
             this._filter = { id: [1, 2, 3, 4] };

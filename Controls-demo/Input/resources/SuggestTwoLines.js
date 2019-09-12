@@ -19,7 +19,7 @@ define('Controls-demo/Input/resources/SuggestTwoLines',
          },
          _suggestSource: function() {
             return new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: this._options.source,
                filter: function(record, filter) {
                   if (record.get('title').indexOf(filter.title) !== -1) {

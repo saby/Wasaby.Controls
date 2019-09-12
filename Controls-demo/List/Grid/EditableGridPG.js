@@ -36,7 +36,7 @@ define('Controls-demo/List/Grid/EditableGridPG',
                    name: 'EditableGridPG',
                    markedKey: '4',
                    source: new source.Memory({
-                       idProperty: 'id',
+                       keyProperty: 'id',
                        data: data.catalog
                    }),
                    editingConfig: this._dataObject.editingConfig.value,

@@ -102,7 +102,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          var rs = new collection.RecordSet({
             rawData: [],
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          rs.setMetaData({
             results: new entity.Model({
@@ -246,7 +246,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          let originSource = new sourceLib.Memory();
          let prefetchSource = new sourceLib.PrefetchProxy({ target: originSource });
          let newPrefetchSource = new sourceLib.PrefetchProxy({ target: originSource });
-         
+
          assert.isFalse(searchMod.Controller._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test'}}));
          assert.isFalse(searchMod.Controller._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test1'}}));
          assert.isTrue(searchMod.Controller._private.needUpdateSearchController({minSearchLength: 3}, {minSearchLength: 2}));

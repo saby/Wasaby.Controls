@@ -25,11 +25,11 @@ define('Controls-demo/List/Grid/BasePG', [
       _beforeMount: function() {
 
          this._sourceCatalog = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data.catalog
          });
          this._emptySource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: []
          });
          this._errorSource = new source.SbisService({});

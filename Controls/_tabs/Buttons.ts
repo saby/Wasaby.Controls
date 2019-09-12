@@ -298,7 +298,7 @@ var _private = {
     * <pre>
     *    _selectedKey: '1',
     *    _source: new Memory({
-    *        idProperty: 'key',
+    *        keyProperty: 'key',
     *        data: [
     *        {
     *           key: '1',
@@ -399,7 +399,7 @@ var _private = {
     * </pre>
     * <pre>
     *    _source: new Memory({
-    *              idProperty: 'id',
+    *              keyProperty: 'id',
     *              data: [
     *                     {id: 1, title: 'I agree'},
     *                     {id: 2, title: 'I not decide'},
@@ -434,7 +434,7 @@ var _private = {
     * </pre>
     * <pre>
     *    _source: new Memory({
-    *              idProperty: 'id',
+    *              keyProperty: 'id',
     *              data: [
     *                     {id: 1, title: 'I agree'},
     *                     {id: 2, title: 'I not decide'},

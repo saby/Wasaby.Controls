@@ -12,7 +12,7 @@ define([
       for (var items = []; countItems; countItems--) {
          items.push(new entity.Model({
             rawData: {id: countItems},
-            idProperty: 'id'
+            keyProperty: 'id'
          }));
       }
 
@@ -60,11 +60,11 @@ define([
          var
             item = new entity.Model({
                rawData: {id: 1},
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             item2 = new entity.Model({
                rawData: {id: 2},
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             items = new collection.List({
                items: [item, item2]

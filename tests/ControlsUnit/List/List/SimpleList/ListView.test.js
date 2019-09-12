@@ -377,7 +377,7 @@ define([
          var model = new lists.ListViewModel({
             items: new collection.RecordSet({
                rawData: data,
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             keyProperty: 'id'
          });
@@ -406,7 +406,7 @@ define([
             var model = new lists.ListViewModel({
                items: new collection.RecordSet({
                   rawData: data,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                keyProperty: 'id',
                markerVisibility: 'visible'
@@ -430,7 +430,7 @@ define([
             var model = new lists.ListViewModel({
                items: new collection.RecordSet({
                   rawData: data,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                keyProperty: 'id',
                markerVisibility: 'visible'
@@ -460,7 +460,7 @@ define([
             var model = new lists.ListViewModel({
                items: new collection.RecordSet({
                   rawData: data,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                keyProperty: 'id'
             });

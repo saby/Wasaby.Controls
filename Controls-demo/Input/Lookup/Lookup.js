@@ -39,7 +39,7 @@ define('Controls-demo/Input/Lookup/Lookup',
             this._selectedKeys7 = [];
             this._source = new source.Memory({
                data: lookupData.names,
-               idProperty: 'id',
+               keyProperty: 'id',
                filter: memorySourceFilter()
             });
          },

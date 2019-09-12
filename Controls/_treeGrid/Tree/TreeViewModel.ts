@@ -358,7 +358,7 @@ var
             this._expandedItems = cfg.expandedItems ? cClone(cfg.expandedItems) : [];
             this._collapsedItems = _private.prepareCollapsedItems(this._expandedItems, cfg.collapsedItems);
             this._hierarchyRelation = new _entity.relation.Hierarchy({
-                idProperty: cfg.keyProperty || 'id',
+                keyProperty: cfg.keyProperty || 'id',
                 parentProperty: cfg.parentProperty || 'Раздел',
                 nodeProperty: cfg.nodeProperty || 'Раздел@'
             });

@@ -7,7 +7,7 @@ define(['Controls/toggle', 'Types/source'], function(toggles, sourceLib) {
       describe('methods', function() {
          it('prepare items', function() {
             const source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: '1',

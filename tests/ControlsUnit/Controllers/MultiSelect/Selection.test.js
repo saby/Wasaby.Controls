@@ -30,7 +30,7 @@ define([
          }],
          items = new collection.RecordSet({
             rawData: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
 
       it('ctor', function() {
@@ -316,7 +316,7 @@ define([
             excludedKeys: [],
             items: new collection.RecordSet({
                rawData: [],
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             keyProperty: 'id'
          };

@@ -31,7 +31,7 @@ define([
          ];
          source = new sourceLib.Memory({
             data: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
 
       });
@@ -87,7 +87,7 @@ define([
             stateNext: 'disabled',
             stateEnd: 'disabled'
          }, result, 'Wrong pagingCfg after scroll');
-   
+
          spInstance.handleScroll();//to reset _curState
          spInstance.handleScrollBottom(true);
          assert('bottom', spInstance._curState, 'Wrong curState after scroll to bottom');
@@ -97,7 +97,7 @@ define([
             stateNext: 'normal',
             stateEnd: 'normal'
          }, result, 'Wrong pagingCfg after scroll');
-         
+
          spInstance.handleScrollEdge('up', {down: true, up: false});
          assert('top', spInstance._curState, 'Wrong curState after scroll to edge up');
          assert.deepEqual({
@@ -115,7 +115,7 @@ define([
             stateNext: 'disabled',
             stateEnd: 'disabled'
          }, result, 'Wrong pagingCfg after scroll');
-   
+
          spInstance.handleScroll();//to reset _curState
          spInstance.handleScrollEdge('down', {down: true, up: false});
          assert('bottom', spInstance._curState, 'Wrong curState after scroll to edge down');
@@ -127,7 +127,7 @@ define([
          }, result, 'Wrong pagingCfg after scroll');
 
       });
-      
+
       it('_private.getStateByHasMore', function() {
          assert.equal(ScrollPaging._private.getStateByHasMoreData(true), 'normal');
          assert.equal(ScrollPaging._private.getStateByHasMoreData(false), 'disabled');

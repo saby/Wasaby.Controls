@@ -134,11 +134,11 @@ define('Controls-demo/List/ItemActionsWithConfig', [
                });
             }
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: srcData
             });
             this._viewSource2 = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: srcMore
             });
          },
@@ -153,7 +153,7 @@ define('Controls-demo/List/ItemActionsWithConfig', [
                });
             }
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: srcMore
             });
          },

@@ -18,7 +18,7 @@ const SELECTION_MARKED_FIELD = 'marked';
  * <pre>
  *    var myMemory = new Memory({
  *       data: myData,
- *       idProperty: 'id',
+ *       keyProperty: 'id',
  *       filter: function(item, filter) {
  *          return memorySourceFilter(item, filter, 'id');
  *       }
@@ -38,7 +38,7 @@ const SELECTION_MARKED_FIELD = 'marked';
  * @example
  * var myMemory = new Memory({
  *     data: myData,
- *     idProperty: 'id',
+ *     keyProperty: 'id',
  *     filter: function(item, filter) {
  *         return memorySourceFilter(item, filter, 'id');
  *     }

@@ -49,8 +49,8 @@ var _private = {
 };
 
 /**
- * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки. 
- * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию закрыто. 
+ * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки.
+ * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию закрыто.
  * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
  * <a href="/materials/demo-ws4-input-dropdown">Демо-пример</a>.
  * Руководство разработчика {@link /doc/platform/developmentapl/interface-development/controls/dropdown-menu/index/ Меню и выпадающий список}.
@@ -130,7 +130,7 @@ var _private = {
  * JS:
  * <pre>
  * this._source = new Memory({
- *    idProperty: 'id',
+ *    keyProperty: 'id',
  *    data: [
  *       {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
  *       {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
@@ -164,7 +164,7 @@ var _private = {
  * JS:
  * <pre>
  * this._source = new Memory({
- *    idProperty: 'id',
+ *    keyProperty: 'id',
  *    data: [
  *       {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
  *       {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
@@ -191,7 +191,7 @@ var _private = {
  * JS:
  * <pre>
  * this._source = new Memory({
- *    idProperty: 'id',
+ *    keyProperty: 'id',
  *    data: [
  *       {id: 1, title: 'Yaroslavl'},
  *       {id: 2, title: 'Moscow'},
@@ -220,7 +220,7 @@ var _private = {
  * JS:
  * <pre>
  * this._source = new Memory({
- *    idProperty: 'id',
+ *    keyProperty: 'id',
  *    data: [
  *       {id: 1, title: 'Yaroslavl'},
  *       {id: 2, title: 'Moscow'},

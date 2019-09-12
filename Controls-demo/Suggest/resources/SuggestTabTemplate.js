@@ -19,7 +19,7 @@ define('Controls-demo/Suggest/resources/SuggestTabTemplate', [
       _beforeMount: function () {
          this._tabsOptions = {
             source: new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: tabSourceData
             }),
             keyProperty: 'id',

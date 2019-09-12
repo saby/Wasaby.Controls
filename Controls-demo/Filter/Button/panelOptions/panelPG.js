@@ -33,7 +33,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   resetValue: [1],
                   myItemTemplate: 'wml!Controls-demo/Filter/Button/ChooseDate',
                   source: new sourceLib.Memory({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      data: [
                         { key: 1, title: 'All time' },
                         { key: 2, title: 'Today' },
@@ -48,7 +48,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   value: [1],
                   resetValue: [1],
                   source: new sourceLib.Memory({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      data: [
                         { key: 1, title: 'All state' },
                         { key: 2, title: 'In progress' },
@@ -65,7 +65,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   textValue: 'Due date',
                   visibility: false,
                   source: new sourceLib.Memory({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      data: [
                         { key: 1, title: 'Due date' },
                         { key: 2, title: 'Overdue' }
@@ -93,7 +93,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   resetValue: [1],
                   visibility: false,
                   source: new sourceLib.Memory({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      data: [
                         { key: 1, title: 'My' },
                         { key: 2, title: 'My department' }
@@ -113,7 +113,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   textValue: 'On department',
                   visibility: false,
                   source: new sourceLib.Memory({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      data: [
                         { key: 1, title: 'On me' },
                         { key: 2, title: 'On department' }
@@ -133,7 +133,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   textValue: '',
                   visibility: false,
                   source: new sourceLib.Memory({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      data: [
                         { key: 1, title: 'On documents', 'parent@': false, parent: null },
                         { key: 2, title: 'Summary', 'parent@': true, parent: null },
@@ -156,7 +156,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   value: [1],
                   resetValue: [1],
                   source: new sourceLib.Memory({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      data: [
                         { key: 1, title: 'All state' },
                         { key: 2, title: 'In progress' },

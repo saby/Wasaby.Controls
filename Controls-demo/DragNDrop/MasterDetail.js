@@ -19,12 +19,12 @@ define('Controls-demo/DragNDrop/MasterDetail', [
 
       _initSource: function() {
          this._detailSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data.detail
          });
 
          this._masterSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data.master
          });
       },

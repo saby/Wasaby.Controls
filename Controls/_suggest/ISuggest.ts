@@ -38,7 +38,7 @@ type ISuggest = ISuggest & {
        *                   {id: 0, city: 'Yaroslavl'},
        *                   {id: 1, city: 'Moscow'}
        *                ]
-       *                idProperty: 'id'
+       *                keyProperty: 'id'
        *             });
        *          },
        *
@@ -76,7 +76,7 @@ type ISuggest = ISuggest & {
        *                   {id: 0, city: 'Yaroslavl'},
        *                   {id: 1, city: 'Moscow'}
        *                ]
-       *                idProperty: 'id'
+       *                keyProperty: 'id'
        *             });
        *          },
        *

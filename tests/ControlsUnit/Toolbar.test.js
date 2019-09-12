@@ -50,7 +50,7 @@ define(
    });
    let config = {
       items: new sourceLib.Memory({
-         idProperty: 'id',
+         keyProperty: 'id',
          data: defaultItems
       }),
       parentProperty: 'parent',
@@ -161,7 +161,7 @@ define(
                   toolbar._beforeUpdate({
                      size: 's',
                      source: new sourceLib.Memory({
-                        idProperty: 'id',
+                        keyProperty: 'id',
                         data: defaultItems
                      })
                   });

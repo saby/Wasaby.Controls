@@ -9,7 +9,7 @@ define(
       describe('SimplePanel:HierarchyList', function() {
 
          let defaultItems = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: [
                {id: '-1', title: 'folder 1', node: true},
                {id: '0', title: 'folder 2', node: true},

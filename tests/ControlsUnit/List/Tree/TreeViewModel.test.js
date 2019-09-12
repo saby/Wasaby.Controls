@@ -106,7 +106,7 @@ define([
          nodeProperty: 'parent@',
          items: new collection.RecordSet({
             rawData: treeData,
-            idProperty: 'id'
+            keyProperty: 'id'
          })
       };
 
@@ -312,7 +312,7 @@ define([
                         type: null
                      }
                   ],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                treeViewModel = new treeGrid.TreeViewModel({
                   items: rs,
@@ -394,7 +394,7 @@ define([
                         { id: 2, parent: null, type: true },
                         { id: 3, parent: 2, type: true }
                      ],
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   parentProperty: 'parent',
                   keyProperty: 'id',
@@ -439,7 +439,7 @@ define([
             assert.deepEqual(['123', '234'], treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after expand "123" and "234".');
             treeViewModel.setItems(new collection.RecordSet({
                rawData: treeData,
-               idProperty: 'id'
+               keyProperty: 'id'
             }));
             assert.deepEqual(['123', '234'], treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after setItems.');
 
@@ -487,7 +487,7 @@ define([
                         'title': '21'
                      },
                   ],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                })
             };
             var SETVM = new treeGrid.TreeViewModel(singleExpangConfig);
@@ -557,7 +557,7 @@ define([
                         { id: 21, title: 'item 2-1', type: null, parent: 2 },
                         { id: 31, title: 'item 3-1', type: null, parent: 3 }
                      ],
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   keyProperty: 'id',
                   displayProperty: 'title',
@@ -659,7 +659,7 @@ define([
             var
                items = new collection.RecordSet({
                   rawData: params.items,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                model = new treeGrid.TreeViewModel({
                   items: items,

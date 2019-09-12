@@ -37,7 +37,7 @@ define([
       beforeEach(function() {
          sandbox = sinon.createSandbox();
          rs = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: items
          });
          cfg = {

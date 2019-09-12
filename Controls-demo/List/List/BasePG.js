@@ -26,17 +26,17 @@ define('Controls-demo/List/List/BasePG',
          _beforeMount: function() {
 
             this._sourceGadgets = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data.gadgets,
                filter: memorySourceFilter()
             });
             this._sourceMusic = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data.music,
                filter: memorySourceFilter()
             });
             this._emptySource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [],
                filter: memorySourceFilter()
             });

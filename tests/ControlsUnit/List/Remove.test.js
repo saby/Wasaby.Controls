@@ -21,11 +21,11 @@ define([
                title: 'Третий'
             }],
             rs = new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: cClone(data)
             }),
             source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: cClone(data)
             });
 

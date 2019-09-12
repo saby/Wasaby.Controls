@@ -18,7 +18,7 @@ define([
          counterCaption: 2
       }].map(function(item) {
          return new entity.Model({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: item
          });
       });

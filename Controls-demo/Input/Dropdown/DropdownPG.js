@@ -29,7 +29,7 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
 
          _beforeMount: function() {
             this._sourceTasks = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {id: 1, title: 'Task in development', text: 'TASK', parent: null, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown', comment: 'develop'},
                   {id: 2, title: 'Error in development', text: 'ERROR', parent: null, '@parent': false, comment: 'develop'},
@@ -43,7 +43,7 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
                ]
             });
             this._sourceIcons = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {id: 1, title: 'In the work', text: 'IN THE WORK', icon: 'icon-small icon-Trade icon-primary', parent: null, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown'},
                   {id: 2, title: 'It is planned', text: 'IT IS PLANNED', icon: 'icon-16 icon-Sandclock icon-primary', parent: null, '@parent': false },

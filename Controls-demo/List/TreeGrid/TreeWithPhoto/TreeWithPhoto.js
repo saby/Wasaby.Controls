@@ -16,7 +16,7 @@ define('Controls-demo/List/TreeGrid/TreeWithPhoto/TreeWithPhoto', [
          _viewColumns: null,
          _beforeMount: function() {
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 1, title: 'Node', 'Раздел': null, 'Раздел@': true, 'Раздел$': null, photo: ''

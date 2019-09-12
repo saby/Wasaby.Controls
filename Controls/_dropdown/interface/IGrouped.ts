@@ -43,7 +43,7 @@
  *                   { id: 8, title: 'Assignment for delivery', group: 'Create' },
  *                   { id: 9, title: 'Assignment for logisticians', group: 'Create' }
  *            ],
- *        idProperty: 'id'
+ *        keyProperty: 'id'
  *     });
  * </pre>
  */
@@ -77,7 +77,7 @@
  *                   { id: 8, title: 'Assignment for delivery', group: 'Create' },
  *                   { id: 9, title: 'Assignment for logisticians', group: 'Create' }
  *            ],
- *        idProperty: 'id'
+ *        keyProperty: 'id'
  *     });
  * </pre>
  */
@@ -88,7 +88,7 @@
  * @remark
  * Для определения шаблона вызовите базовый шаблон - "wml!Controls/_dropdownPopup/defaultGroupTemplate".
  * Шаблон должен быть помещен в компонент с помощью тега <ws:partial> с атрибутом "template".
- * Базовый шаблон wml!Controls/_dropdownPopup/defaultGroupTemplate по умолчанию отображает только разделитель. 
+ * Базовый шаблон wml!Controls/_dropdownPopup/defaultGroupTemplate по умолчанию отображает только разделитель.
  * Вы можете изменить отображение разделителя, установив опцию:
  *    -  showText - определяет, отображается ли название группы.
  * Содержимое можно переопределить с помощью параметра "contentTemplate".
@@ -123,7 +123,7 @@
  *                   { id: 8, title: 'Assignment for delivery', group: 'Create' },
  *                   { id: 9, title: 'Assignment for logisticians', group: 'Create' }
  *            ],
- *        idProperty: 'id'
+ *        keyProperty: 'id'
  *    });
  * </pre>
  */
@@ -168,7 +168,7 @@
  *                   { id: 8, title: 'Assignment for delivery', group: 'Create' },
  *                   { id: 9, title: 'Assignment for logisticians', group: 'Create' }
  *            ],
- *        idProperty: 'id'
+ *        keyProperty: 'id'
  *    });
  * </pre>
  */

@@ -58,7 +58,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                         { id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.' },
                         { id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.' },
                      ],
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   })
                }
             }
@@ -80,7 +80,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                         { id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.' },
                         { id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.' },
                      ],
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   })
                }
             },
@@ -103,7 +103,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                         { id: 6, title: 'Федеральный центр продаж. Call-центр Ярославль' },
                         { id: 7, title: 'Сопровождение информационных систем' }
                      ],
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   })
                }
             }
@@ -120,12 +120,12 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                   { id: 3, title: 'Субботин А.В.', lastName: 'Субботин А.В.' },
                   { id: 4, title: 'Чеперегин А.С.', lastName: 'Чеперегин А.С.' },
                ],
-               idProperty: 'id'
+               keyProperty: 'id'
             })
          }];
          this._source = new sourceLib.Memory({
             data: memorySourceData.departments,
-            idProperty: 'id',
+            keyProperty: 'id',
             filter: memorySourceFilter({
                'owner': '0',
                'department': 'По департаменту'
@@ -134,7 +134,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
 
          this._sourceWithoutFilter = new sourceLib.Memory({
             data: memorySourceData.departments,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
 
          this._tabSource = new sourceLib.Memory({
@@ -145,7 +145,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                   align: 'right'
                }
             ],
-            idProperty: 'id'
+            keyProperty: 'id'
          });
       }
    });

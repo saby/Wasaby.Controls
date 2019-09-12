@@ -34,7 +34,7 @@ define(
                   displayProperty: 'title',
                   source: new sourceLib.Memory({
                      data: items[0],
-                     idProperty: 'key'
+                     keyProperty: 'key'
                   })
                }
             },
@@ -46,7 +46,7 @@ define(
                properties: {
                   source: new sourceLib.Memory({
                      data: items[1],
-                     idProperty: 'key'
+                     keyProperty: 'key'
                   }),
                   keyProperty: 'title',
                   displayProperty: 'title'
@@ -65,7 +65,7 @@ define(
                   },
                   source: new sourceLib.Memory({
                      data: items[0],
-                     idProperty: 'key'
+                     keyProperty: 'key'
                   })
                }
             },
@@ -79,7 +79,7 @@ define(
                   displayProperty: 'title',
                   source: new sourceLib.Memory({
                      data: items[0],
-                     idProperty: 'key'
+                     keyProperty: 'key'
                   }),
                   navigation: {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, hasMore: false}}
                }
@@ -88,7 +88,7 @@ define(
 
          var config = {};
          config.source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: source
          });
 
@@ -104,7 +104,7 @@ define(
                   multiSelect: true,
                   source: new sourceLib.Memory({
                      data: items[0],
-                     idProperty: 'key'
+                     keyProperty: 'key'
                   })
                }}
             ]
@@ -121,7 +121,7 @@ define(
             fastFilter._beforeMount(config);
             fastFilter._configs[0]._items = new collection.RecordSet({
                rawData: Clone(items[0]),
-               idProperty: 'title'
+               keyProperty: 'title'
             });
             fastFilter.lastOpenIndex = 0;
             fastFilter._children.DropdownOpener = {
@@ -164,7 +164,7 @@ define(
             ];
             let receivedState = {
                configs: [{_items: new collection.RecordSet({
-                  idProperty: 'key',
+                  keyProperty: 'key',
                   rawData: items[0]
                })}],
                items: new collection.List({
@@ -182,7 +182,7 @@ define(
                      displayProperty: 'title',
                      source: new sourceLib.Memory({
                         data: items[0],
-                        idProperty: 'key'
+                        keyProperty: 'key'
                      })
                   }}
                ]
@@ -203,7 +203,7 @@ define(
 
             receivedStateSelector = Clone(receivedState);
             let optionsSource = {source: new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   items: [{
                      id: 'first',
                      value: ['Россия'],
@@ -214,7 +214,7 @@ define(
                         displayProperty: 'title',
                         source: new sourceLib.Memory({
                            data: items[0],
-                           idProperty: 'key'
+                           keyProperty: 'key'
                         })
                      }}
                   ]
@@ -234,7 +234,7 @@ define(
             sourceOptions[0].properties.selectorTemplate = 'new template';
             fastFilter._beforeMount({source: new sourceLib.Memory({
                data: sourceOptions,
-               idProperty: 'id'
+               keyProperty: 'id'
             })}).addCallback(function() {
                assert.isTrue(fastFilter._hasSelectorTemplate);
                done();
@@ -278,7 +278,7 @@ define(
             fastFilter._beforeMount(config);
             newSource[0].value = 'США';
             newConfigSource.source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: newSource
             });
             fastFilter._beforeUpdate(newConfigSource).addCallback(function() {
@@ -397,7 +397,7 @@ define(
          it('onResult selectorResult', function() {
             let fastData2 = getFastFilterWithItems(configItems);
             let selectedItems = new collection.RecordSet({
-               idProperty: 'key',
+               keyProperty: 'key',
                rawData: [
                   { key: 1, title: 'Россия' },
                   { key: 5, title: 'Франция' }
@@ -418,7 +418,7 @@ define(
                }
             };
             let selectedItems = new collection.RecordSet({
-               idProperty: 'key',
+               keyProperty: 'key',
                rawData: [
                   { key: 1, title: 'Россия' },
                   { key: 5, title: 'Франция' }
@@ -434,7 +434,7 @@ define(
          it('_onSelectorTemplateResult', function() {
             let fastData2 = getFastFilterWithItems(configItems);
             let selectedItems = new collection.RecordSet({
-               idProperty: 'key',
+               keyProperty: 'key',
                rawData: [
                   { key: 1, title: 'Россия' },
                   { key: 5, title: 'Франция' }
@@ -502,7 +502,7 @@ define(
                   displayProperty: 'title',
                   source: new sourceLib.Memory({
                      data: items[0],
-                     idProperty: 'key'
+                     keyProperty: 'key'
                   })
                }
             }];
@@ -550,13 +550,13 @@ define(
             };
             fastFilter._container = {children: []};
             fastFilter._configs = [{_items: new collection.RecordSet({
-                  idProperty: 'key',
+                  keyProperty: 'key',
                   rawData: items[0]
                }),
                _sourceController: { hasMoreData: () => {}, isLoading: () => {return isLoading} }}];
             fastFilter._items = new collection.RecordSet({
                rawData: configItems.items,
-               idProperty: 'title'
+               keyProperty: 'title'
             });
             fastFilter._open('itemClick', fastFilter._configs[0]._items, 0);
             assert.strictEqual(expectedConfig.fittingMode, 'overflow');
@@ -578,7 +578,7 @@ define(
             };
             fastFilter._container = {children: []};
             fastFilter._configs = [{_items: new collection.RecordSet({
-                  idProperty: 'key',
+                  keyProperty: 'key',
                   rawData: items[0]
                }),
                _sourceController: { hasMoreData: () => {}, isLoading: () => {} },
@@ -586,7 +586,7 @@ define(
             }];
             fastFilter._items = new collection.RecordSet({
                rawData: configItems.items,
-               idProperty: 'title'
+               keyProperty: 'title'
             });
             fastFilter._open('itemClick', fastFilter._configs[0]._items, 0);
             assert.isFalse(opened);
@@ -599,14 +599,14 @@ define(
             let newItems2 = Clone(source);
             let newItems3 = Clone(source);
             let result;
-            
+
             newItems[0].properties.navigation = {page: 2};
             result = filterMod.Fast._private.isNeedReload(oldItems, newItems);
             assert.isTrue(result);
-            
+
             result = filterMod.Fast._private.isNeedReload(oldItems, newItems2);
             assert.isFalse(result);
-   
+
             newItems3.splice(0, 1);
             result = filterMod.Fast._private.isNeedReload(oldItems, newItems3);
             assert.isTrue(result);
@@ -638,7 +638,7 @@ define(
          it('_private::getNewItems', function() {
             let fastData2 = getFastFilterWithItems(configItems);
             let selectedItems = new collection.RecordSet({
-               idProperty: 'key',
+               keyProperty: 'key',
                rawData: [
                   { key: 1, title: 'Россия' },
                   { key: 2, title: 'США' },
@@ -710,7 +710,7 @@ define(
             beforeEach(function() {
                historySource = new history.Source({
                   originSource: new sourceLib.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: items[0]
                   }),
                   historySource: new history.Service({
@@ -719,7 +719,7 @@ define(
                });
                historySource.getItems = () => {
                   return new collection.RecordSet({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      rawData: [{id: 1}]
                   });
                };
@@ -745,7 +745,7 @@ define(
                   assert.equal(Object.keys(result.configs).length, Object.keys(fastFilter._configs).length);
 
                   let selectedItems = [new entity.Model({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      rawData: { key: 1, title: 'Россия' }
                   })];
                   filterMod.Fast._private.updateHistory(fastFilter._configs[0], selectedItems);
@@ -760,13 +760,13 @@ define(
                   assert.equal(Object.keys(result.configs).length, Object.keys(fastFilter._configs).length);
 
                   filterMod.Fast._private.onSelectorResult(fastFilter._configs[0], [new entity.Model({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      rawData: { key: 1, title: 'Россия' }
                   })]);
                   assert.strictEqual(fastFilter._configs[0]._items.getCount(), 1);
 
                   filterMod.Fast._private.onSelectorResult(fastFilter._configs[0], [new entity.Model({
-                     idProperty: 'key',
+                     keyProperty: 'key',
                      rawData: { key: 5, title: 'Китай' }
                   })]);
                   assert.isNull(fastFilter._configs[0]._sourceController);

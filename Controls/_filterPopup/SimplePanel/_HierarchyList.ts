@@ -61,7 +61,7 @@ var _private = {
         let nodeItems = [];
         factory(folders).each((folder) => {
             const records = new RecordSet({
-                idProperty: keyProperty,
+                keyProperty,
                 adapter: items.getAdapter()
             });
             records.add(folder);

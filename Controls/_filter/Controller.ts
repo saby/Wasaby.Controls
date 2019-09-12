@@ -534,7 +534,7 @@ const _private = {
        *               keyProperty: 'title',
        *               displayProperty: 'title',
        *               source: new MemorySource({
-       *                  idProperty: 'title',
+       *                  keyProperty: 'title',
        *                  data: [
        *                      { key: '1', title: 'Yaroslavl' },
        *                      { key: '2', title: 'Moscow' },
@@ -580,7 +580,7 @@ const _private = {
        *               keyProperty: 'title',
        *               displayProperty: 'title',
        *               source: new MemorySource({
-       *                  idProperty: 'title',
+       *                  keyProperty: 'title',
        *                  data: [
        *                      { key: '1', title: 'Yaroslavl' },
        *                      { key: '2', title: 'Moscow' },

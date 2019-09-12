@@ -23,7 +23,7 @@ define('Controls-demo/FilterButton/FilterButton',
                      { key: 3, title: 'США' },
                      { key: 4, title: 'Великобритания' }
                   ],
-                  idProperty: 'key'
+                  keyProperty: 'key'
                }
             };
          }

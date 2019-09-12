@@ -23,7 +23,7 @@ define(
          ];
 
          let itemsRecords = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: items
          });
 
@@ -34,7 +34,7 @@ define(
             value: 'New text',
             placeholder: 'This is placeholder',
             source: new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             })
          };
@@ -58,7 +58,7 @@ define(
          it('_setText empty item', function() {
             let emptyConfig = Clone(config),
                emptyItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{ id: null, title: 'Не выбрано' }]
                });
             emptyConfig.emptyText = 'Не выбрано';
@@ -83,10 +83,10 @@ define(
 
          it('popupVisibilityChanged', function() {
             let combobox = getCombobox(config);
-   
+
             dropdown.Combobox._private.popupVisibilityChanged.call(combobox, true);
             assert.isTrue(combobox._isOpen);
-   
+
             dropdown.Combobox._private.popupVisibilityChanged.call(combobox, false);
             assert.isFalse(combobox._isOpen);
          });

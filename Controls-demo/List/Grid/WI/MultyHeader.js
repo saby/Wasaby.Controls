@@ -186,7 +186,7 @@ define('Controls-demo/List/Grid/WI/MultyHeader', [
 
             _beforeMount: function() {
                 this._viewSource = new source.Memory({
-                    idProperty: 'id',
+                    keyProperty: 'id',
                     data: GridData.catalog
                 });
                 this.gridColumns = fullColumns;
@@ -212,7 +212,7 @@ define('Controls-demo/List/Grid/WI/MultyHeader', [
             },
             _getDropDownItems: function() {
               return new source.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: _dropDownItems
               });
             },

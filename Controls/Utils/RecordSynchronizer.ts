@@ -34,7 +34,7 @@ const _private = {
         syncRecord = DICreate(items.getModel(), {
             adapter: items.getAdapter(),
             format: items.getFormat(),
-            idProperty: items.getIdProperty()
+            keyProperty: items.getIdProperty()
         });
 
         const changedValues: object = _private.getChangedValues(syncRecord, editRecord);
