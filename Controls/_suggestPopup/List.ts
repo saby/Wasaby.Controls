@@ -8,7 +8,6 @@ import _SuggestOptionsField = require('Controls/_suggestPopup/_OptionsField');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import { constants, detection } from 'Env/Env';
 import scrollToElement = require('Controls/Utils/scrollToElement');
-import {debounce} from 'Types/function';
 
 
 const DIALOG_PAGE_SIZE = 25;
@@ -98,6 +97,7 @@ var List = Control.extend({
    _template: template,
    _notifyHandler: tmplNotify,
    _markedKey: null,
+   _items: null,
 
    _beforeMount: function(options, context) {
       this._searchEndCallback = this._searchEndCallback.bind(this);
@@ -130,14 +130,22 @@ var List = Control.extend({
    },
 
    _inputKeydown: function(event, domEvent) {
-      /* TODO will refactor on the project https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
-       remove list._container[0] after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3 */
       let
-         list = this._children.list,
-         listContainer = list._container[0] || list._container,
-         customEvent = _private.getEvent('keydown');
+         items = this._items,
+         itemsCount = items && items.getCount();
 
-      _private.dispatchEvent(listContainer, domEvent.nativeEvent, customEvent);
+      if (this._markedKey === null && itemsCount && domEvent.nativeEvent.keyCode === constants.key.up) {
+         this._markedKey = items.at(itemsCount - 1).getId();
+      } else {
+         /* TODO will refactor on the project https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
+          remove list._container[0] after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3 */
+         let
+            list = this._children.list,
+            listContainer = list._container[0] || list._container,
+            customEvent = _private.getEvent('keydown');
+
+         _private.dispatchEvent(listContainer, domEvent.nativeEvent, customEvent);
+      }
    },
 
    _searchEndCallback: function(result, filter) {
@@ -145,9 +153,14 @@ var List = Control.extend({
          this._suggestListOptions.searchEndCallback(result, filter);
       }
 
-      if (result && result.data.getCount()) {
-         this._markedKey = result.data.at(0).getId();
+      if (result) {
+         this._items = result.data;
       }
+   },
+
+   _markedKeyChanged: function(event, key) {
+      this._markedKey = key;
+      this._notify('markedKeyChanged', [key]);
    }
 });
 

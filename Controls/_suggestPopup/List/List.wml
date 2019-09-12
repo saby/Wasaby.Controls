@@ -17,7 +17,8 @@
                                        markedKey="{{_markedKey}}"
                                        reverseList="{{_reverseList}}"
                                        navigation="{{_navigation}}"
-                                       searchEndCallback="{{_searchEndCallback}}">
+                                       searchEndCallback="{{_searchEndCallback}}"
+                                       on:markedKeyChanged="_markedKeyChanged()">
     </Controls.deprecatedList:Container>
 
     <Controls.event:Listener event="inputKeydown" on:inputKeydown="_inputKeydown()"/>

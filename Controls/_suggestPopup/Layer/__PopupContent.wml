@@ -6,5 +6,4 @@
                         reverseList="{{_reverseList}}"/>
         </ws:content>
     </Controls.scroll:Container>
-   <Controls.event:Listener event="popupResize" on:popupResize="_resize()"/>
 </div>

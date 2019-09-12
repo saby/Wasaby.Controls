@@ -61,7 +61,7 @@ var __PopupContent = BaseLayer.extend({
       this._forceUpdate();
    },
 
-   _resize: function() {
+   resize: function() {
       if (this._reverseList) {
          this._children.scrollContainer.scrollToBottom();
       }

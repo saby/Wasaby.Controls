@@ -94,6 +94,35 @@ define(
             assert.equal(suggestPopup.ListContainer._private.getTabKeyFromContext(contextWithValue), 1);
          });
 
+         describe('_inputKeydown, markedKey is null', function() {
+            var
+               suggestList = new suggestPopup.ListContainer(),
+               domEvent = {
+                  nativeEvent: {
+                     keyCode: Env.constants.key.up
+                  }
+               };
+
+            suggestList._options = {
+               keyProperty: 'id'
+            };
+            suggestList._items = new collection.List({
+               items: [
+                  new entity.Model({
+                     rawData: {id: 'first'},
+                     idProperty: 'id'
+                  }),
+                  new entity.Model({
+                     rawData: {id: 'last'},
+                     idProperty: 'id'
+                  })
+               ]
+            });
+
+            suggestList._inputKeydown(null, domEvent);
+            assert.equal(suggestList._markedKey, 'last');
+         });
+
          it('_searchEndCallback', function() {
             let
                items = [1, 2, 3],
