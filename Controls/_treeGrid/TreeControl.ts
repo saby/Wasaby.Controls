@@ -521,11 +521,13 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             bottomOffset = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
 
             if (topOffset < DRAG_MAX_OFFSET || bottomOffset < DRAG_MAX_OFFSET) {
-                position = topOffset < DRAG_MAX_OFFSET ? 'before' : 'after';
-                dragTargetPosition = model.calculateDragTargetPosition(itemData, position);
+                if (model.getDragItemData()) {
+                    position = topOffset < DRAG_MAX_OFFSET ? 'before' : 'after';
+                    dragTargetPosition = model.calculateDragTargetPosition(itemData, position);
 
-                if (dragTargetPosition && this._notify('changeDragTarget', [model.getDragEntity(), dragTargetPosition.item, dragTargetPosition.position]) !== false) {
-                    model.setDragTargetPosition(dragTargetPosition);
+                    if (dragTargetPosition && this._notify('changeDragTarget', [model.getDragEntity(), dragTargetPosition.item, dragTargetPosition.position]) !== false) {
+                        model.setDragTargetPosition(dragTargetPosition);
+                    }
                 }
                 if (itemData.item.get(itemData.nodeProperty) !== null && (!this._expandOnDragData || this._expandOnDragData !== itemData) && !itemData.isExpanded) {
                     this._clearTimeoutForExpandOnDrag(this);

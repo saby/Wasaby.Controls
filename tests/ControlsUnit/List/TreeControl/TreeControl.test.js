@@ -352,6 +352,58 @@ define([
             }, 1000);
          });
       });
+      it('nodeMouseMove does not call setDragTargetPosition if dragItemData is null', function() {
+         let tree = correctCreateTreeControl({
+            columns: [],
+            source: new sourceLib.Memory({
+               data: [],
+               idProperty: 'id'
+            })
+         });
+         let nodeItem = {
+            nodeProperty: 'node',
+            item: {
+               get: function () {
+                  return true;
+               }
+            },
+            isExpanded: true,
+            dispItem: {
+               isNode: function () {
+                  return true;
+               }
+            }
+         };
+         let target = {
+            getBoundingClientRect: function () {
+               return {
+                  top: 10,
+                  height: 10
+               };
+            }
+         }
+         let event = {
+            target: {
+               closest: function() {
+                  return target;
+               }
+            },
+            nativeEvent: {
+               pageY: 15,
+            }
+         }
+         let model = tree._children.baseControl.getViewModel();
+
+         model.getDragItemData = function () {
+            return null;
+         };
+         let setDragTargetPositionCalled = false;
+         model.setDragTargetPosition = function() {
+            setDragTargetPositionCalled = true;
+         };
+         tree._nodeMouseMove(nodeItem, event);
+         assert.isFalse(setDragTargetPositionCalled);
+      });
 
       it('TreeControl.toggleExpanded with sorting', function() {
          let treeControl = correctCreateTreeControl({
