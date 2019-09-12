@@ -37,7 +37,7 @@
         </Controls.LoadingIndicator>
 
         <ws:if data="{{_isFooterShown}}">
-            <ws:partial template="{{ _options.footerTemplate.templateName }}" scope="{{_options.footerTemplate.templateOptions}}">
+            <ws:partial template="{{ _options.footerTemplate.templateName }}" scope="{{_options.footerTemplate.templateOptions}}" _searchResult="{{_searchResult}}">
                 <ws:showSelectorButtonTemplate>
                             <span class="controls-Suggest__showAllLink" on:click="_showAllClick()">
                                 <span class="controls-Suggest__showAllLink-content">{[Показать все]}</span>
