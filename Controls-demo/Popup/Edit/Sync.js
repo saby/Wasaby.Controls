@@ -122,7 +122,7 @@ define('Controls-demo/Popup/Edit/Sync',
                }
             } else if (action === 'updateFailed') {
                if (this.record === this._items.at(additionalData.at)) {
-                  this.record.set(this._items.getIdProperty(), additionalData.key);
+                  this.record.set(this._items.getKeyProperty(), additionalData.key);
                   this._items.remove(this._items.getRecordById(additionalData.key));
                } else {
                   RecordSynchronizer.mergeRecord(this.record, this._items, additionalData.record.getId());
@@ -131,7 +131,7 @@ define('Controls-demo/Popup/Edit/Sync',
 
             if (action === 'update') {
                if (additionalData.isNewRecord) {
-                  this.record.set(this._items.getIdProperty(), additionalData.key);
+                  this.record.set(this._items.getKeyProperty(), additionalData.key);
                }
                return 'cancel';
             }

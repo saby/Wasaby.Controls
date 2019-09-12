@@ -61,7 +61,7 @@ type GridRowIndexOptions<T = DisplayItemIndex|DisplayItem|ItemId|HasEmptyTemplat
  */
 function getIndexById(cfg: GridRowIndexOptions<ItemId>): number {
     let
-        idProperty = cfg.display.getIdProperty() || (<Collection<unknown>>cfg.display.getCollection()).getIdProperty(),
+        idProperty = cfg.display.getIdProperty() || (<Collection<unknown>>cfg.display.getCollection()).getKeyProperty(),
         item = ItemsUtil.getDisplayItemById(cfg.display, cfg.id, idProperty),
         index = cfg.display.getIndex(item);
 

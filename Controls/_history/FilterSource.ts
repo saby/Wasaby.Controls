@@ -353,7 +353,7 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
             self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
             return new sourceLib.DataSet({
                rawData: newItems.getRawData(),
-               keyProperty: newItems.getIdProperty()
+               keyProperty: newItems.getKeyProperty()
             });
          });
       }

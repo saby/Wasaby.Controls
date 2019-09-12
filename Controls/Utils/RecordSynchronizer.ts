@@ -34,19 +34,19 @@ const _private = {
         syncRecord = DICreate(items.getModel(), {
             adapter: items.getAdapter(),
             format: items.getFormat(),
-            keyProperty: items.getIdProperty()
+            keyProperty: items.getKeyProperty()
         });
 
         const changedValues: object = _private.getChangedValues(syncRecord, editRecord);
         _private.setRecordValues(syncRecord, changedValues);
 
         const key: string = additionalData.key || editRecord.getId();
-        syncRecord.set(items.getIdProperty(), key);
+        syncRecord.set(items.getKeyProperty(), key);
         return syncRecord;
     },
 
     getSyncRecord(items: RecordSet, editKey: string): Model {
-        const index: number = items.getIndexByValue(items.getIdProperty(), editKey);
+        const index: number = items.getIndexByValue(items.getKeyProperty(), editKey);
         return items.at(index);
     },
     getChangedValues(syncRecord: Model, editRecord: Model): object {
@@ -57,7 +57,7 @@ const _private = {
             if (editRecord.has(key)) {
                 recValue = editRecord.get(key);
 
-                if (!_private.isEqual(recValue, value) && key !== editRecord.getIdProperty()) {
+                if (!_private.isEqual(recValue, value) && key !== editRecord.getKeyProperty()) {
                     // clone the model, flags, etc because
                     // when they lose touch with the current record, the edit can still continue.
                     if (recValue && (typeof recValue.clone === 'function')) {
