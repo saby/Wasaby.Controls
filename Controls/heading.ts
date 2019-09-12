@@ -27,7 +27,7 @@
 import {default as Title} from './_heading/Heading';
 import Back = require('Controls/_heading/Back');
 import {default as Separator} from './_heading/Separator';
-import Counter = require('Controls/_heading/Counter');
+import {default as Counter} from './_heading/Counter';
 
 export {
     Title,
