@@ -730,7 +730,7 @@ define([
             selection = selectionInstance.getSelection();
 
             assert.deepEqual([null], selection.selected);
-            assert.deepEqual([], selection.excluded);
+            assert.deepEqual([null], selection.excluded);
          });
       });
 

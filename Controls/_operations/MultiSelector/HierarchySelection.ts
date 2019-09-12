@@ -255,8 +255,9 @@ var HierarchySelection = Selection.extend({
          HierarchySelection.superclass.selectAll.apply(this, arguments);
       } else {
          this.select([root]);
-         ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
       }
+
+      ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
    },
 
    /* toDo Когда пытаются снять выделение, надо его снимать полностью для всех разделов
