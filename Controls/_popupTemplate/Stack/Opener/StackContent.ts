@@ -28,8 +28,9 @@ class StackContent extends Control<IStackContentOptions> {
     }
 
     private _updateOffset(options: IStackContentOptions): void {
-        this._maxOffset = options.stackMaxWidth - options.stackWidth;
-        this._minOffset = options.stackWidth - options.stackMinWidth;
+        // protect against wrong options
+        this._maxOffset = Math.max(options.stackMaxWidth - options.stackWidth, 0);
+        this._minOffset = Math.max(options.stackWidth - options.stackMinWidth, 0);
     }
 
 }
