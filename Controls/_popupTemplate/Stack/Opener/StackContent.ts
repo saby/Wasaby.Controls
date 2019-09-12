@@ -22,6 +22,11 @@ class StackContent extends Control<IStackContentOptions> {
         this._updateOffset(options);
     }
 
+    private _canResize(propStorageId: string, width: number, minWidth: number, maxWidth: number): boolean {
+        const canResize = propStorageId && width && minWidth && maxWidth && maxWidth !== minWidth;
+        return !!canResize;
+    }
+
     private _updateOffset(options: IStackContentOptions): void {
         this._maxOffset = options.stackMaxWidth - options.stackWidth;
         this._minOffset = options.stackWidth - options.stackMinWidth;
