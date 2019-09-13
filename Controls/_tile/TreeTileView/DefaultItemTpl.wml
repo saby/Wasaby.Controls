@@ -9,6 +9,7 @@
                   template="{{multiSelectTpl}}"
                   attr:class="{{itemData.multiSelectClassList}}">
          <ws:templateOptions triState="{{true}}"
+                             checkboxReadOnly="{{checkboxReadOnly}}"
                              multiSelectStatus="{{itemData.multiSelectStatus}}"
                              key="{{itemData.key}}" />
       </ws:partial>
