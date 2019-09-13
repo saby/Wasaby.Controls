@@ -10,7 +10,6 @@ import { constants, detection } from 'Env/Env';
 import scrollToElement = require('Controls/Utils/scrollToElement');
 
 
-const SCROLL_DELAY = detection.isMobileIOS ? 100 : 0;
 const DIALOG_PAGE_SIZE = 25;
 
 var _private = {
@@ -34,10 +33,8 @@ var _private = {
                self._navigation = navigation;
             }
          } else {
-            let stickyPosition = self._suggestListOptions.stickyPosition;
-
             self._navigation = self._suggestListOptions.navigation;
-            self._reverseList = stickyPosition && stickyPosition.verticalAlign.side === 'top';
+            self._reverseList = self._suggestListOptions.reverseList;
          }
       }
    },
@@ -55,18 +52,6 @@ var _private = {
    dispatchEvent: function(container, nativeEvent, customEvent) {
       customEvent.keyCode = nativeEvent.keyCode;
       container.dispatchEvent(customEvent);
-   },
-
-   scrollToLastItem: function(self) {
-      let
-         list = self._children.list,
-         listContainer = list._container[0] || list._container,
-         itemsContainers = listContainer.getElementsByClassName('controls-ListView__itemV'),
-         indexLastItem = itemsContainers.length - 1;
-
-      if (itemsContainers.length) {
-         scrollToElement(itemsContainers[indexLastItem], true);
-      }
    },
 
    // Список и input находят в разных контейнерах, поэтому мы просто проксируем нажатие клавиш up, down, enter с input'a
@@ -111,7 +96,6 @@ var List = Control.extend({
 
    _template: template,
    _notifyHandler: tmplNotify,
-   _reverseList: false,
    _markedKey: null,
    _items: null,
 
@@ -151,9 +135,7 @@ var List = Control.extend({
          itemsCount = items && items.getCount();
 
       if (this._markedKey === null && itemsCount && domEvent.nativeEvent.keyCode === constants.key.up) {
-         let indexItem = this._reverseList ? 0 : itemsCount - 1;
-
-         this._markedKey = items.at(indexItem).getId();
+         this._markedKey = items.at(itemsCount - 1).getId();
       } else {
          /* TODO will refactor on the project https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
           remove list._container[0] after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3 */
@@ -179,21 +161,6 @@ var List = Control.extend({
    _markedKeyChanged: function(event, key) {
       this._markedKey = key;
       this._notify('markedKeyChanged', [key]);
-   },
-
-   _drawItems: function() {
-      let self = this;
-
-      // toDO До .500, пока не появится опция https://online.sbis.ru/opendoc.html?guid=301f9f1b-9036-4b9b-b25f-1c363d0d32ee
-      if (this._reverseList) {
-         if (SCROLL_DELAY) {
-            setTimeout(function() {
-               _private.scrollToLastItem(self);
-            }, SCROLL_DELAY);
-         } else {
-            _private.scrollToLastItem(this);
-         }
-      }
    }
 });
 

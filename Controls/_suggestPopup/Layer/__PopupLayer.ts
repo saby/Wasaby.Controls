@@ -4,7 +4,6 @@
 
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggestPopup/Layer/__PopupLayer');
-import templateContent from './__PopupContent';
 import {detection} from 'Env/Env';
 import getZIndex = require('Controls/Utils/getZIndex');
 import 'css!theme?Controls/suggest';
@@ -15,17 +14,10 @@ var _private = {
    openPopup: function(self, opener, options) {
       opener.open({
          target: options.target,
-         template: templateContent,
          opener: self,
          actionOnScroll: detection.isMobileIOS ? 'none' : 'close',
          zIndex: getZIndex(self), // _vdomOnOldPage для слоя совместимости, уйдёт с удалением опции.
-         templateOptions: {
-            target: options.target,
-            filter: options.filter,
-            searchValue: options.searchValue,
-            content: options.content,
-            showContent: options.showContent
-         }
+         resizeCallback: self._resizeCallback
       });
    },
 
@@ -56,6 +48,7 @@ var __PopupLayer = Control.extend({
 
    _beforeMount: function() {
       this._onResult = this._onResult.bind(this);
+      this._resizeCallback = this._resizeCallback.bind(this);
       _private.setPopupOptions(this);
    },
 
@@ -92,7 +85,11 @@ var __PopupLayer = Control.extend({
       this._popupOptions.targetPoint = position.corner;
       this._popupOptions.className = _private.getPopupClassName(position.verticalAlign.side);
       this._popupOptions.fittingMode = 'fixed';
-   }
+   },
+
+   _resizeCallback: function() {
+      this._children.popupContent.resize();
+   },
 });
 
 __PopupLayer._private = _private;
