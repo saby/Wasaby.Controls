@@ -24,7 +24,6 @@ import {constants, detection, IoC} from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
-import {focus} from 'UI/Focus';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
@@ -1736,6 +1735,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.clearReloadedMarks();
             this._itemReloaded = false;
         }
+
+        this._emptyTemplateVisibility = this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel, this._loadingState);
     },
 
     __onPagingArrowClick: function(e, arrow) {
@@ -1809,7 +1810,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // в этот момент вызывают перезагрузку реестра (например поиском или фильтрацией)
         // и мы не должны показывать в этом случае заглушку, что нет данных,
         // пока реестр не загрузится
-        return this._emptyTemplateVisibility = newEmptyTemplateVisibility && (this._emptyTemplateVisibility || !loadingState);
+        return newEmptyTemplateVisibility && (this._emptyTemplateVisibility || !loadingState);
     },
 
     _onCheckBoxClick: function(e, key, status) {
