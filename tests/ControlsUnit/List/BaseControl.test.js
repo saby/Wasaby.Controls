@@ -1734,7 +1734,7 @@ define([
          await baseControl._beforeMount(baseControlOptions);
          
          assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
-         assert.isFalse(baseControl._emptyTemplateVisibility);
+         assert.isTrue(baseControl._emptyTemplateVisibility);
          baseControl._emptyTemplateVisibility = false;
 
          baseControl._listViewModel.getItems().clear();
