@@ -592,6 +592,20 @@ define([
             showed: [1,2,3]
          });
          assert.isTrue(editingItem.drawActions, "shoud draw actions on editing item if actions array is not empty");
+         listModel.setEditingConfig({
+            toolbarVisibility: true
+         });
+         listModel.setItemActions(new entity.Record({
+            rawData: {
+               id: 'test',
+               title: 'test'
+            },
+            idProperty: 'id'
+         }), {
+            all: [],
+            showed: []
+         });
+         assert.isTrue(editingItem.drawActions, 'should draw actions on editing item if actions array is empty and toolbarVisibility = true');
       });
 
       it('Clear itemActions for removed items', function() {
