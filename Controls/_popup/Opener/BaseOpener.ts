@@ -86,6 +86,11 @@ var Base = Control.extend({
                         // Call redraw to create emitter on scroll after popup opening
                         this._forceUpdate();
                     } else {
+                        // if old environment and old template, then we haven't compatible layer =>
+                        // hide indicator immediately
+                        if (!isNewEnvironment() && !Base.isVDOMTemplate(result.template)) {
+                            this._toggleIndicator(false);
+                        }
                         this._action = popupId;
                     }
                     resolve(popupId);
