@@ -38,9 +38,9 @@ const _private = {
         const templateStyle = container ? getComputedStyle(container.children[0]) : {};
         const defaultOptions = _private.getDefaultOptions(item);
 
-        item.popupOptions.minWidth = parseInt(item.popupOptions.minWidth || defaultOptions.minWidth || templateStyle.minWidth, 10);
-        item.popupOptions.maxWidth = parseInt(item.popupOptions.maxWidth || defaultOptions.maxWidth || templateStyle.maxWidth, 10);
-        item.popupOptions.width = parseInt(item.popupOptions.width || defaultOptions.width, 10);
+        item.popupOptions.minWidth = _private.prepareSize([item.popupOptions, defaultOptions, templateStyle], 'minWidth');
+        item.popupOptions.maxWidth = _private.prepareSize([item.popupOptions, defaultOptions, templateStyle], 'maxWidth');
+        item.popupOptions.width = _private.prepareSize([item.popupOptions, defaultOptions], 'width');
 
         // Validate the configuration
         if (item.popupOptions.maxWidth < item.popupOptions.minWidth) {
@@ -58,6 +58,16 @@ const _private = {
             templateContainer.style.minWidth = minWidth;
             /* end: Return all values to the node. Need for vdom synchronizer */
         }
+    },
+
+    prepareSize(optionsSet, property): number|void {
+        for (let i = 0; i < optionsSet.length; i++) {
+            // get size, if it's not percentage value
+            if (optionsSet[i][property] && (typeof optionsSet[i][property] !== 'string' || !optionsSet[i][property].includes('%'))) {
+                return parseInt(optionsSet[i][property], 10);
+            }
+        }
+        return null;
     },
 
     prepareSizeWithoutDOM(item) {

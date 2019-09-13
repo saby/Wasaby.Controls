@@ -173,6 +173,24 @@ define(
             assert.isFalse(popupTemplate.StackController._stack.at(14).popupOptions.hidden);
             assert.isFalse(popupTemplate.StackController._stack.at(15).popupOptions.hidden);
          });
+
+         it('prepareSize', () => {
+            let storages = [{ width: 1 }, { width: 2 }, { width: 3 }];
+            let result = popupTemplate.StackController._private.prepareSize(storages, 'width');
+            assert.equal(1, result);
+
+            storages = [{ width: NaN }, { width: 2 }, { width: 3 }];
+            result = popupTemplate.StackController._private.prepareSize(storages, 'width');
+            assert.equal(2, result);
+
+            storages = [{ width: NaN }, { width: '100%' }, { width: 3 }];
+            result = popupTemplate.StackController._private.prepareSize(storages, 'width');
+            assert.equal(3, result);
+
+            storages = [{ width: NaN }, { width: '100%' }, { width: '3px' }];
+            result = popupTemplate.StackController._private.prepareSize(storages, 'width');
+            assert.equal(3, result);
+         });
          it('stack default position', () => {
             popupTemplate.StackController._private.getWindowSize = () => ({
                width: 1920,
