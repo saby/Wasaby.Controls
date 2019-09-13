@@ -19,6 +19,7 @@
         attr:style="{{itemData.position ? itemData.position}}">
       <ws:partial if="{{itemData.hasMultiSelect}}"
                   template="{{multiSelectTpl}}"
+                  checkboxReadOnly="{{checkboxReadOnly}}"
                   attr:class="{{itemData.multiSelectClassList}}">
          <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" />
       </ws:partial>
