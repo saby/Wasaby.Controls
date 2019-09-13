@@ -1713,7 +1713,7 @@ define([
          assert.equal(self._loadingState, null);
       });
 
-      it('__needShowEmptyTemplate', async function() => {
+      it('__needShowEmptyTemplate', async function() {
          let baseControlOptions = {
             viewModelConstructor: lists.ListViewModel,
             viewConfig: {
