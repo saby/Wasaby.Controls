@@ -331,11 +331,11 @@ const StackController = BaseController.extend({
 
     popupResizingLine(item, offset): void {
         item.popupOptions.stackWidth += offset;
-        item.position.width += offset;
+        item.popupOptions.width += offset;
         item.popupOptions.workspaceWidth += offset;
-        _private.updatePopupOptions(item);
+        this._update();
         _private.savePopupWidth(item);
-    },
+        },
 
     _update(): void {
         const maxPanelWidth = StackStrategy.getMaxPanelWidth();
