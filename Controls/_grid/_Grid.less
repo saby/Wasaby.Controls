@@ -191,7 +191,8 @@
       background-color: @background-color_Grid-row_hover;
    }
 
-   .controls-Grid_row-cell_hovered {
+   .controls-Grid_row-cell_hovered,
+   .controls-Grid__row:hover {
       .controls-Grid__editArrow-blur,
       .controls-Grid__editArrow-wrapper {
          visibility: visible;
@@ -534,13 +535,6 @@
 
 .controls-Grid__header-cell_align_items_center {
    align-items: center;
-}
-
-.controls-Grid__row:hover {
-   .controls-Grid__editArrow-blur,
-   .controls-Grid__editArrow-wrapper {
-      visibility: visible;
-   }
 }
 
 .controls-Grid__editArrow-blur,
