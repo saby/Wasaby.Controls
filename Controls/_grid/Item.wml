@@ -96,7 +96,7 @@
         clickable="{{ clickable }}"
         highlightOnHover="{{ highlightOnHover }}">
    <ws:columnContentTpl>
-      <ws:partial template="colTpl" itemData="{{itemData}}" currentColumn="{{currentColumn}}"/>
+      <ws:partial template="colTpl" itemData="{{itemData}}" currentColumn="{{currentColumn}}" attr:class="{{className}}"/>
    </ws:columnContentTpl>
 </Controls._grid.layouts.partialGridSupport.Cell>
 </ws:template>
@@ -168,7 +168,7 @@
             <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
             {{itemData.resetColumnIndex()}}
             <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(!itemData.hasMultiSelect ? 1 : 0)); itemData.goToNextColumn();">
-               <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+               <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="{{className}}"/>
             </ws:for>
          </div>
       </Controls.scroll:Group>
@@ -176,7 +176,7 @@
    <ws:else>
       <div attr:class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
          <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(!itemData.hasMultiSelect ? 1 : 0)); itemData.goToNextColumn();">
-            <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}"/>
+            <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="{{className}}"/>
          </ws:for>
       </div>
    </ws:else>
