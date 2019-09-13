@@ -407,9 +407,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         }
         e.stopImmediatePropagation();
     },
-    _onEditArrowClick: function(e, item) {
-        this._notify('editArrowClick', [item]);
-    },
     _onLoadMoreClick: function(e, dispItem) {
         _private.loadMore(this, dispItem);
     },
