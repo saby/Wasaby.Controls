@@ -60,11 +60,11 @@ const _private = {
         }
     },
 
-    prepareSize(storages, property): number|void {
-        for (let i = 0; i < storages.length; i++) {
+    prepareSize(optionsSet, property): number|void {
+        for (let i = 0; i < optionsSet.length; i++) {
             // get size, if it's not percentage value
-            if (storages[i][property] && (typeof storages[i][property] !== 'string' || !storages[i][property].includes('%'))) {
-                return parseInt(storages[i][property], 10);
+            if (optionsSet[i][property] && (typeof optionsSet[i][property] !== 'string' || !optionsSet[i][property].includes('%'))) {
+                return parseInt(optionsSet[i][property], 10);
             }
         }
         return null;
