@@ -4,7 +4,7 @@
    <div class="controls-SelectedCollection__header_wrapper">
       <Controls.heading:Title caption="Выбрано" size="s" readOnly="{{true}}"/>
    </div>
-   <Controls.scroll:Container>
+   <Controls.scroll:Container attr:class="controls-SelectedCollection__scroll">
       <Controls.lookup:Collection
             items="{{_items}}"
             displayProperty="{{_options.displayProperty}}"
