@@ -76,14 +76,14 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             //moch child opener
             dropDownList._children = { subDropdownOpener: { close: function() {opened = false;}, open: function() {opened = true;} } };
             dropDownList._hasHierarchy = false;
-            dropDownList._subDropdownOpened = false;
+            dropDownList._subDropdownItem = null;
 
             dropDownList._itemMouseEnter( {}, items.at(3), true);
-            assert.isFalse(dropDownList._subDropdownOpened);
+            assert.isNull(dropDownList._subDropdownItem);
             assert.isFalse(opened);
 
             dropDownList._itemMouseEnter({}, items.at(4), true);
-            assert.isTrue(dropDownList._subDropdownOpened)
+            assert.isTrue(dropDownList._subDropdownItem === items.at(4));
             assert.isFalse(opened);
 
             return new Promise(function(resolve) {
@@ -93,15 +93,16 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                   dropDownList._hasHierarchy = false;
                   dropDownList._itemMouseEnter({}, items.at(4), true);
                   assert.isTrue(opened);
+                  assert.isTrue(dropDownList._subDropdownItem === items.at(4));
 
                   dropDownList._hasHierarchy = false;
-                  dropDownList._subDropdownOpened = false;
+                  dropDownList._subDropdownItem = null;
                   dropDownList._itemMouseEnter({}, items.at(4), true);
                   assert.isTrue(opened);
 
 
                   dropDownList._hasHierarchy = true;
-                  dropDownList._subDropdownOpened = true;
+                  dropDownList._subDropdownItem = items.at(3);
                   dropDownList._itemMouseEnter({}, items.at(4), false);
                   assert.isFalse(opened);
                   resolve();
