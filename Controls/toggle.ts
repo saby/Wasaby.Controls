@@ -18,6 +18,7 @@
  * @includes SeparatorStyles Controls/_toggle/Separator/SeparatorStyles
  * @includes SwitchStyles Controls/_toggle/Switch/SwitchStyles
  * @includes SwitchCircleStyles Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
+ * @includes switchCircleTemplate Controls/_toggle/resources/SwitchCircle/SwitchCircle
  * @public
  * @author Крайнов Д.О. 
  */
@@ -42,6 +43,7 @@
  * @includes SeparatorStyles Controls/_toggle/Separator/SeparatorStyles
  * @includes SwitchStyles Controls/_toggle/Switch/SwitchStyles
  * @includes SwitchCircleStyles Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
+ * @includes switchCircleTemplate Controls/_toggle/resources/SwitchCircle/SwitchCircle
  * @public
  * @author Крайнов Д.О.
  */
