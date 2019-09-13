@@ -14,6 +14,6 @@
            class="{{expanderTemplate.itemData.prepareExpanderClasses(expanderTemplate.itemData, expanderTemplate.expanderIcon, expanderTemplate.expanderSize)}}"></div>
    </ws:expanderTemplate>
    <ws:content>
-      <ws:partial template="{{content.viewTemplate}}" on:expanderClick="_onExpanderClick()" on:loadMoreClick="_onLoadMoreClick()" on:editArrowClick="_onEditArrowClick()"/>
+      <ws:partial template="{{content.viewTemplate}}" on:expanderClick="_onExpanderClick()" on:loadMoreClick="_onLoadMoreClick()"/>
    </ws:content>
 </Controls.list:BaseControl>
