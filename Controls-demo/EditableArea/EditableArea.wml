@@ -13,7 +13,7 @@
               style="asLink"
          >
             <ws:editorTemplate>
-                  <Controls.input:Text selectOnClick="{{ false }}" attr:class="controls-Input_negativeOffset-s_theme_{{_options.theme}}" />
+                  <Controls.input:Text selectOnClick="{{ false }}" attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}" />
             </ws:editorTemplate>
          </Controls.editableArea:Base>
       </div>

@@ -14,7 +14,7 @@
                <Controls.input:Text selectOnClick="{{ false }}"
                                     size="m"
                                     fontStyle="secondary"
-                                    attr:class="controls-Input_negativeOffset-s_theme_{{_options.theme}}"/>
+                                    attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
             </ws:editorTemplate>
          </Controls.editableArea:Base>
       </div>
