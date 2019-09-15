@@ -11,7 +11,8 @@ define('Controls/Application',
       'Controls/scroll',
       'Core/helpers/getResourceUrl',
       'Controls/decorator',
-      'Controls/Application/SettingsController'
+      'Controls/Application/SettingsController',
+      'css!theme?Controls/Application/oldCss'
    ],
 
    /**
