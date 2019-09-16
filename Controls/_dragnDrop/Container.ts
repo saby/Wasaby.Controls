@@ -890,16 +890,28 @@ import 'css!Controls/_dragnDrop/Container';
        * @see dragLeave
        */
 
+      /**
+       * @typedef {Object} IStartDragOptions
+       * @description Start dragNDrop options.
+       * @property {Boolean} immediately Определяет момент начала перемещения.
+       * @remark
+       * * false - Перемещение начинается после перемещения мыши на 4px по горизонтали или вертикали.
+       * * true - Перемещение начинается сразу.
+       */
+      interface IStartDragOptions {
+         immediately: boolean
+      }
+
       var DragNDropController = Control.extend({
          _template: template,
          _dragEntity: undefined,
          _startEvent: undefined,
-         _startImmediately: false,
+         _startImmediately: null,
          _documentDragging: false,
          _insideDragging: false,
          _endDragNDropTimer: null,
 
-         startDragNDrop: function(entity, mouseDownEvent, options = {}) {
+         startDragNDrop: function(entity, mouseDownEvent, options: IStartDragOptions = {immediately: false}) {
             this._dragEntity = entity;
             this._startEvent = mouseDownEvent.nativeEvent;
             this._startImmediately = options.immediately;
