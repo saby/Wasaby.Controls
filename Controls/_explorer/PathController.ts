@@ -15,6 +15,8 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
                template: HeadingPathBack,
                templateOptions: {
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
+                  showActionButton: options.showActionButton !== false,
+                  showArrowOutsideOfBackButton: true,
                   backButtonStyle: options.backButtonStyle,
                   backButtonCaption: ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty),
                   counterCaption: options.items[options.items.length - 1].get('counterCaption')
