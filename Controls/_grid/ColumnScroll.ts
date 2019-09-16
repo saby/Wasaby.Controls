@@ -57,6 +57,7 @@ const
             self._scrollPosition -= (newContentContainerSize + self._scrollPosition) - newContentSize;
          }
          self._setOffsetForHScroll();
+         self._contentSizeForHScroll = self._contentSize - self._leftOffsetForHScroll;
          _private.drawTransform(self, self._scrollPosition);
       },
       updateFixedColumnWidth(self) {
@@ -136,7 +137,6 @@ const
                   self._offsetForHScroll += ResultsContainer[0].offsetHeight;
               }
           }
-          self._contentSizeForHScroll = self._contentSize - self._leftOffsetForHScroll;
           if (prevOffset !== self._offsetForHScroll) {
               self._scrollVisible = true;
           }
