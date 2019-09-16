@@ -5,6 +5,7 @@
 import CompoundControl = require('Lib/Control/CompoundControl/CompoundControl');
 import template = require('wml!Controls/_compatiblePopup/CompoundAreaForNewTpl/CompoundArea');
 import ManagerWrapperController from 'Controls/Popup/Compatible/ManagerWrapper/Controller';
+import WindowManager = require('Core/WindowManager');
 import ComponentWrapper from './ComponentWrapper';
 import control = require('Core/Control');
 import clone = require('Core/core-clone');
@@ -45,6 +46,7 @@ var moduleClass = CompoundControl.extend({
       this._panel = this.getParent();
       this._panel.subscribe('onBeforeClose', this._beforeCloseHandler);
       this._panel.subscribe('onAfterClose', this._callCloseHandler.bind(this));
+      this._panel.subscribe('onFocusOut', this._onFocusOutHandler.bind(this));
       this._maximized = !!this._options.templateOptions.maximized;
 
       // Если внутри нас сработал вдомный фокус (активация), нужно активироваться
@@ -243,6 +245,12 @@ var moduleClass = CompoundControl.extend({
    _callCloseHandler: function() {
       this._options.onCloseHandler && this._options.onCloseHandler(this._result);
       this._options.onCloseHandlerEvent && this._options.onCloseHandlerEvent('onClose', [this._result]);
+   },
+   _onFocusOutHandler: function(event, destroyed, focusedControl) {
+      // если фокус уходит со старой панели на новый контрол, старых механизм не будет вызван, нужно вручную звать onaActivateWindow
+      if (focusedControl._template) {
+         WindowManager.onActivateWindow(focusedControl);
+      }
    },
    _onResultHandler: function() {
       this._result = Array.prototype.slice.call(arguments, 1); // first arg - event;
