@@ -26,9 +26,7 @@ import 'css!theme?Controls/scroll';
  * @author Красильников А.С.
  * @category Container
  * @remark
- * Для работы Controls/Container/Scroll требуется установить CSS-свойства height или max-height:
- * * Когда установлено свойство height, тонкий скролл появится, если высота контента станет больше установленной высоты Controls/Container/Scroll.
- * * Когда установлено свойство max-height, то Controls/Container/Scroll будет растягиваться по мере увеличения контента. Когда размер контента превысит max-height, тогда появится тонкий скролл.
+ * Контрол работает как нативный скролл. Чтобы появился скроллбар, необходимо ограничить высоту контрола, т.к. она должна быть меньше высоты контента.
  * @demo Controls-demo/Container/Scroll
  *
  */
