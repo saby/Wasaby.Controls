@@ -8,6 +8,19 @@
    display: flex;
 }
 
+.controls-Stack__resizingLine {
+   position: absolute;
+   left: 0;
+   height: 100%;
+   z-index: 2;
+   /**
+    * Делаем только в 610. Нормальное решение будет по задаче https://online.sbis.ru/opendoc.html?guid=fad244bb-2ba1-4d71-ad58-59622f52d615.
+    */
+   & .controls-ResizingLine__border_theme_@{themeName} {
+      width: 10px;
+   }
+}
+
 .controls-Stack__content {
    width: 100%;
 }
