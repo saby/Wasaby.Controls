@@ -194,6 +194,29 @@ define([
          assert.equal(explorer._items, items);
       });
 
+      it('itemsSetCallback', function() {
+         let markedKey = '';
+         const cfg = {};
+         const explorer = new explorerMod.View(cfg);
+         explorer.saveOptions(cfg);
+
+         explorer._isGoingBack = true;
+         explorer._root = null;
+         explorer._restoredMarkedKeys = {
+            [null]: { markedKey: 'test' }
+         };
+         explorer._children = {
+            treeControl: {
+               setMarkedKey: (key) => markedKey = key
+            }
+         };
+
+         explorerMod.View._private.itemsSetCallback(explorer);
+
+         assert.strictEqual(markedKey, 'test');
+         assert.isFalse(explorer._isGoingBack);
+      });
+
       it('setViewMode', function() {
          var
             cfg = {
