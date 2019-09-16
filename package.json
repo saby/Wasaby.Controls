@@ -30,7 +30,10 @@
    "saby-units": {
       "moduleType": "amd",
       "root": "application",
-      "tests": "ControlsUnit",
+      "tests": [
+         "ControlsUnit",
+         "SBIS3CONTROLSUnit"
+      ],
       "patchedRequire": true,
       "report": "./application/artifacts/xunit-report.xml",
       "htmlCoverageReport": "./application/artifacts/coverage/index.html",
