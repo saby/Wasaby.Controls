@@ -330,6 +330,8 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
          assert.equal(clearColumnScroll._offsetForHScroll, 50);
          assert.equal(clearColumnScroll._leftOffsetForHScroll, 100);
+         assert.equal(clearColumnScroll._contentSize, 500);
+         assert.equal(clearColumnScroll._contentSizeForHScroll, 400);
 
          assert.isTrue(clearColumnScroll._isColumnScrollVisible());
 
