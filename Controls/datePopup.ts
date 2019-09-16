@@ -13,6 +13,7 @@ import componentTmpl = require('wml!Controls/_datePopup/DatePopup');
 import headerTmpl = require('wml!Controls/_datePopup/header');
 import 'css!theme?Controls/datePopup';
 import {Controller as ManagerController} from 'Controls/popup';
+import {_scrollContext as ScrollData} from "./scroll";
 
 /**
  * Диалоговое окно, которое позволяет выбрать даты и периоды произвольной длительности.
@@ -449,6 +450,11 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _closeClick: function () {
         this._notify('close');
+    },
+    _getChildContext: function() {
+        return {
+            ScrollData: new ScrollData({pagingVisible: false})
+        };
     }
 });
 
