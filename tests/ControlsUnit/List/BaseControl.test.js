@@ -1732,7 +1732,7 @@ define([
          baseControl.saveOptions(baseControlOptions);
 
          await baseControl._beforeMount(baseControlOptions);
-         
+
          assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
          assert.isTrue(baseControl._emptyTemplateVisibility);
          baseControl._emptyTemplateVisibility = false;
@@ -2805,6 +2805,66 @@ define([
           // По dragStart нужно вызывать preventDefault
          ctrl._nativeDragStart(fakeDragStart);
          assert.isTrue(isDefaultPrevented);
+      });
+
+      it('_itemMouseDown places dragKey first', () => {
+         let dragKeys;
+         const
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [null],
+                  excludedKeys: []
+               },
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     hasMore: false
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               },
+               items: rs,
+               selectedKeys: [null],
+               excludedKeys: [],
+               readOnly: false,
+               itemsDragNDrop: true
+            },
+            ctrl = new lists.BaseControl(),
+            fakeMouseDown = {
+               nativeEvent: {
+                  button: 0
+               },
+               target: {
+                  closest: () => false
+               },
+               preventDefault: () => isDefaultPrevented = true
+            };
+
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+
+         ctrl._notify = (eventName, eventArgs) => {
+            if (eventName === 'dragStart') {
+               dragKeys = eventArgs[0];
+            }
+         };
+
+         ctrl._itemMouseDown({}, { key: 4 }, fakeMouseDown);
+         // First item in dragKeys should be the dragged item's key even if it
+         // is not first in the recordset
+         assert.strictEqual(dragKeys[0], 4);
       });
 
       it('_documentDragEnd', function() {
