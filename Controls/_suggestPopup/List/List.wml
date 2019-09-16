@@ -13,12 +13,12 @@
     </ws:if>
     <Controls.deprecatedList:Container scope="{{_suggestListOptions}}"
                                        name="list"
+                                       content="{{_options.content}}"
                                        markedKey="{{_markedKey}}"
                                        reverseList="{{_reverseList}}"
                                        navigation="{{_navigation}}"
                                        searchEndCallback="{{_searchEndCallback}}"
                                        on:markedKeyChanged="_markedKeyChanged()">
-       <ws:partial template="{{_options.content}}" on:drawItems="_drawItems()"/>
     </Controls.deprecatedList:Container>
 
     <Controls.event:Listener event="inputKeydown" on:inputKeydown="_inputKeydown()"/>

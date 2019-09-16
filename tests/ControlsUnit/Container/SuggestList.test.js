@@ -5,8 +5,6 @@ define(
       'use strict';
 
       describe('Controls.Container.Suggest.List', function() {
-         suggestPopup.ListContainer._private.scrollToLastItem = function(){};
-
          describe('_beforeUpdate', function() {
             var suggestList = new suggestPopup.ListContainer();
             var contextObject = {
@@ -20,17 +18,6 @@ define(
                suggestOptionsField: {
                   options: {
                      tabsSelectedKey: 'test'
-                  }
-               }
-            };
-            var contextObjectWithStickyPosition = {
-               suggestOptionsField: {
-                  options: {
-                     stickyPosition: {
-                        verticalAlign: {
-                           side: 'top'
-                        }
-                     }
                   }
                }
             };
@@ -59,12 +46,6 @@ define(
 
                assert.isTrue(eventFired);
                assert.equal(tab, 'test');
-            });
-
-            it('with stickyPosition reverse', function() {
-               suggestList._reverseList = false;
-               suggestList._beforeUpdate({}, contextObjectWithStickyPosition);
-               assert.isTrue(suggestList._reverseList);
             });
          });
 
@@ -138,17 +119,8 @@ define(
                ]
             });
 
-            it('list is not reverse', function() {
-               suggestList._inputKeydown(null, domEvent);
-               assert.equal(suggestList._markedKey, 'last');
-            });
-
-            it('list is reverse', function() {
-               suggestList._reverseList = true;
-               suggestList._markedKey = null;
-               suggestList._inputKeydown(null, domEvent);
-               assert.equal(suggestList._markedKey, 'first');
-            });
+            suggestList._inputKeydown(null, domEvent);
+            assert.equal(suggestList._markedKey, 'last');
          });
 
          it('_searchEndCallback', function() {
@@ -162,23 +134,6 @@ define(
             });
 
             assert.equal(suggestList._items, items);
-         });
-
-         it('_drawItems', function() {
-            let
-               callSrollToLastItem = false,
-               suggestList = new suggestPopup.ListContainer();
-
-            suggestPopup.ListContainer._private.scrollToLastItem = function() {
-               callSrollToLastItem = true;
-            };
-
-            suggestList._drawItems();
-            assert.isFalse(callSrollToLastItem);
-
-            suggestList._reverseList = true;
-            suggestList._drawItems();
-            assert.isTrue(callSrollToLastItem);
          });
 
          it('_private:checkContext', function() {

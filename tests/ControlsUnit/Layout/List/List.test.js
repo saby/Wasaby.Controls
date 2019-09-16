@@ -313,6 +313,15 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
          newOpts.reverseList = true;
          listLayout._beforeUpdate(newOpts, context);
          assert.deepEqual(listLayout._source._$target._$data, reversedData);
+
+         // reverseList changed with not origin source
+         listLayout._source = new sourceLib.PrefetchProxy({
+            target: listOptions.source
+         });
+         listLayout._beforeUpdate(newOpts, context);
+         assert.deepEqual(listLayout._source._$target._$data, reversedData);
+
+         listLayout._source = listOptions.source;
          newOpts.reverseList = false;
 
          /* SearchValue changed */
