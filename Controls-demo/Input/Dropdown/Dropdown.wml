@@ -217,6 +217,21 @@
                                   attr:class="demo-InputDropdown__readOnly"
                                   source="{{_getDefaultMemory()}}"/>
       </div>
+      <div class="ControlsDemo-InputDropdown__wrapper">
+         <h3>One item</h3>
+         <Controls.dropdown:Input bind:selectedKeys="_selectedKeyOneItem"
+                                  keyProperty="id"
+                                  displayProperty="title"
+                                  source="{{_createMemory(_oneItem)}}"/>
+      </div>
+      <div class="ControlsDemo-InputDropdown__wrapper">
+         <h3>One item + emptyText</h3>
+         <Controls.dropdown:Input bind:selectedKeys="_selectedKeysOneEmpty"
+                                  keyProperty="id"
+                                  displayProperty="title"
+                                  emptyText="Not selected"
+                                  source="{{_createMemory(_oneItem)}}"/>
+      </div>
    </div>
    <div attr:class="ControlsDemo-InputDropdown__wrapper ControlsDemo-InputDropdown-bottom-left">
       <Controls.dropdown:Input bind:selectedKeys="_selectedKeys0"
