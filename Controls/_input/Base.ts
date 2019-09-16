@@ -75,7 +75,7 @@ var _private = {
          * must notify the parent that the value in the field has changed.
          */
         _private.forField(self, function (field) {
-            if (_private.hasAutoFillField(field)) {
+            if (_private.hasAutoFillField(field, self._viewModel)) {
                 self._viewModel.displayValue = field.value;
                 _private.notifyValueChanged(self);
             }
@@ -147,11 +147,15 @@ var _private = {
 
     /**
      * Determinate whether the field has been auto fill.
-     * @param {Node} field
+     * @param {HTMLInputElement} field
+     * @param {String} modelValue
      * @return {Boolean}
      */
-    hasAutoFillField: function (field) {
-        return !!field.value;
+    hasAutoFillField: function (field: HTMLInputElement, model: ViewModel) {
+        const fieldValue: string = field.value;
+        const modelValue: string = model.displayValue;
+
+        return fieldValue !== '' && fieldValue !== modelValue;
     },
 
     isFieldFocused: function (self) {
