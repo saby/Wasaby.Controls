@@ -4,8 +4,6 @@
 import BaseControl = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/History/List');
 import Utils = require('Types/util');
-import ParallelDeferred = require('Core/ParallelDeferred');
-import Deferred = require('Core/Deferred');
 import {isEqual} from 'Types/object';
 import {HistoryUtils} from 'Controls/filter';
 import {Model} from 'Types/entity';
@@ -14,7 +12,7 @@ import {Constants} from 'Controls/history';
 import {convertToFilterStructure, convertToSourceDataArray} from 'Controls/_filterPopup/converterFilterStructure';
 import 'css!theme?Controls/filterPopup';
 
-var MAX_NUMBER_ITEMS = 5;
+   var MAX_NUMBER_ITEMS = 5;
 
    const FILTER_STATUS = {
       FOR_ME: 0,
@@ -81,15 +79,14 @@ var MAX_NUMBER_ITEMS = 5;
          }
       },
 
-      removeRecord: function(self, item, record) {
+      removeRecord: function(self, item, record, needSave?) {
          let storage = self._historyStorage;
          if (item.get('data') && item.get('data').get('globalParams')) {
             storage = self._historyGlobalStorage;
          }
          let recordIndex = storage.getIndexByValue('id', item.get('id'));
          if (recordIndex !== -1) {
-            // if globalParams have changed, then we need to re-save the item
-            storage.removeAt(recordIndex, record.get('globalParams') !== item.get('data').get('globalParams'));
+            storage.removeAt(recordIndex, needSave);
          }
       },
 
@@ -101,26 +98,6 @@ var MAX_NUMBER_ITEMS = 5;
             historyItems.push(item);
          });
          record.set('filterPanelItems', historyItems);
-      },
-
-      loadFavoriteItems: function(self, HistoryStorage, historyId) {
-         let pDef = new ParallelDeferred();
-         self._historyGlobalStorage = new HistoryStorage({
-            historyId: historyId,
-            isGlobalUserConfig: true
-         });
-         self._historyStorage = new HistoryStorage({
-            historyId: historyId
-         });
-         pDef.push(self._historyStorage.getHistory(true));
-         pDef.push(self._historyGlobalStorage.getHistory(true));
-         return pDef.done().getResult().addCallback((items) => {
-            self._favoriteList = items[0].clone();
-            self._favoriteList.prepend(items[1]);
-            _private.convertToItems(self._favoriteList);
-            self._historyCount = Constants.MAX_HISTORY - self._favoriteList.getCount();
-            return items;
-         });
       },
 
       getFavoriteDialogRecord: function(self, item, historyId, savedTextValue) {
@@ -201,8 +178,7 @@ var MAX_NUMBER_ITEMS = 5;
                      record.removeField('editedTextValue');
                      record.removeField('toSaveFields');
                      record.removeField('filterPanelItems');
-
-                     _private.removeRecord(self, item, record);
+                     _private.removeRecord(self, item, record, isFavorite && record.get('globalParams') !== editItemData.get('globalParams'));
 
                      if (record.get('globalParams')) {
                         self._historyGlobalStorage.prepend(record);
@@ -241,14 +217,11 @@ var MAX_NUMBER_ITEMS = 5;
             this._itemsText = this._getText(options.items, options.filterItems, _private.getSource(options.historyId));
          }
          if (options.saveMode === 'favorite') {
-            let self = this;
-            let loadDef = new Deferred();
-            require(['SBIS3.CONTROLS/History/HistoryList'], (HistoryStorage) => {
-               _private.loadFavoriteItems(self, HistoryStorage, options.historyId).addCallback(() => {
-                  loadDef.callback();
-               });
-            });
-            return loadDef;
+             this._favoriteList = options.favoriteItems;
+             this._historyStorage = options.historyStorage;
+             this._historyGlobalStorage = options.historyGlobalStorage;
+             _private.convertToItems(this._favoriteList);
+             this._historyCount = Constants.MAX_HISTORY_REPORTS - this._favoriteList.getCount();
          }
       },
 
@@ -258,7 +231,7 @@ var MAX_NUMBER_ITEMS = 5;
             this._itemsText = this._getText(newOptions.items, newOptions.filterItems, _private.getSource(newOptions.historyId));
          }
          if (newOptions.saveMode === 'favorite') {
-            this._historyCount = Constants.MAX_HISTORY - this._favoriteList.getCount();
+            this._historyCount = Constants.MAX_HISTORY_REPORTS - this._favoriteList.getCount();
          }
       },
 

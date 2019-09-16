@@ -2,6 +2,8 @@ import Control = require('Core/Control');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Clone = require('Core/core-clone');
+import Deferred = require('Core/Deferred');
+import ParallelDeferred = require('Core/ParallelDeferred');
 import _FilterPanelOptions = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions');
 import template = require('wml!Controls/_filterPopup/Panel/Panel');
 import Env = require('Env/Env');
@@ -88,8 +90,34 @@ import 'Controls/form';
          }
       },
 
+      loadFavoriteItems: function(self, historyId) {
+         let loadDef = new Deferred();
+         require(['SBIS3.CONTROLS/History/HistoryList'], (HistoryStorage) => {
+            let pDef = new ParallelDeferred();
+            self._historyGlobalStorage = new HistoryStorage({
+               historyId: historyId,
+               isGlobalUserConfig: true
+            });
+            self._historyStorage = new HistoryStorage({
+               historyId: historyId
+            });
+            pDef.push(self._historyStorage.getHistory(true));
+            pDef.push(self._historyGlobalStorage.getHistory(true));
+            return pDef.done().getResult().addCallback((items) => {
+               self._favoriteList = items[0].clone();
+               self._favoriteList.prepend(items[1]);
+               loadDef.callback();
+            });
+         });
+         return loadDef;
+      },
+
       loadHistoryItems: function(self, historyId, isReportPanel) {
          if (historyId) {
+            let pDef = new ParallelDeferred();
+            if (isReportPanel) {
+               pDef.push(_private.loadFavoriteItems(self, historyId));
+            }
             let config = {
                historyId: historyId,
 
@@ -97,11 +125,15 @@ import 'Controls/form';
                 pinned: !isReportPanel,
                recent: isReportPanel ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY'
             };
-            return HistoryUtils.loadHistoryItems(config).addCallback(function(items) {
+            let historyLoad = HistoryUtils.loadHistoryItems(config).addCallback(function(items) {
                self._historyItems = _private.filterHistoryItems(self, items);
                return self._historyItems;
             }).addErrback(function() {
                self._historyItems = new List({ items: [] });
+            });
+            pDef.push(historyLoad);
+            return pDef.done().getResult().addCallback(() => {
+               return self._historyItems;
             });
          }
       },

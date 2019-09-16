@@ -133,6 +133,16 @@ define(
             self.historySource._recent = 5;
             historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
             assert.equal(itemsRecent.getCount(), 4);
+
+            itemsRecent.clear();
+            historyInstance.pinned.add(getItem('12', '{title: 123}', 'TEST_HISTORY_ID_V1'));
+            historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
+            assert.equal(itemsRecent.getCount(), 3);
+
+            itemsRecent.clear();
+            self.historySource._pinned = false;
+            historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
+            assert.equal(itemsRecent.getCount(), 4);
          });
 
          it('serialize', function() {
