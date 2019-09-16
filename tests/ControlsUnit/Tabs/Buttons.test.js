@@ -4,8 +4,9 @@
 define([
    'Controls/tabs',
    'Types/source',
-   'Types/entity'
-], function(tabsMod, sourceLib, entity) {
+   'Types/entity',
+   'Types/collection'
+], function(tabsMod, sourceLib, entity, collection) {
    describe('Controls/_tabs/Buttons', function() {
       it('prepareItemOrder', function() {
          var
@@ -159,7 +160,7 @@ define([
       it('_beforeMount with received state', function() {
          var tabs = new tabsMod.Buttons(),
             receivedState = {
-               items: 'items',
+               items: [{id: '1'}],
                itemsOrder: 'itemsOrder'
             },
             options = {
@@ -191,6 +192,74 @@ define([
             tabs.destroy();
             done();
          });
+      });
+      it('checkHasFunction', function() {
+         var tabs = new tabsMod.Buttons(),
+            data = [
+               {
+                  id: '1',
+                  title: 'test1'
+               }
+            ],
+            source = new sourceLib.Memory({
+               data: data,
+               idProperty: 'id'
+            }),
+            options = {
+               source: source
+            };
+         //Тестируем: receivedState.items - RecordSet и есть функция
+         let receivedState = {};
+         receivedState.items = new collection.RecordSet({
+            rawData: [
+               {
+                  id: 1, 'title': '1_Номенклатура', hierarchy: false,
+                  func: function f() {
+                     return 123;
+                  }
+               },
+               {id: 2, 'title': '2_Ответственный', hierarchy: true},
+               {id: 3, 'title': '3_Покупатель', hierarchy: null},
+               {id: 4, 'title': '4_Склад', hierarchy: false}
+            ],
+         });
+         assert.equal(true, tabs.checkHasFunction(receivedState));
+         receivedState.items.destroy();
+
+         //Тестируем: receivedState.items - RecordSet и нет функции
+         receivedState.items = new collection.RecordSet({
+            rawData: [
+               { id: 1, 'title': '1_Номенклатура', hierarchy: false },
+               { id: 2, 'title': '2_Ответственный', hierarchy: true },
+               { id: 3, 'title': '3_Покупатель', hierarchy: null },
+               { id: 4, 'title': '4_Склад', hierarchy: false },
+            ],
+         });
+         assert.equal(false, tabs.checkHasFunction(receivedState));
+         receivedState.items.destroy();
+
+         //Тестируем: receivedState.items - массив объектов и есть функция
+         receivedState.items = [
+            {
+               id: 1, 'title': '1_Номенклатура', hierarchy: false,
+               func: function f() {
+                  return 123;
+               }
+            },
+            {id: 2, 'title': '2_Ответственный', hierarchy: true},
+            {id: 3, 'title': '3_Покупатель', hierarchy: null},
+            {id: 4, 'title': '4_Склад', hierarchy: false}
+         ];
+         assert.equal(true, tabs.checkHasFunction(receivedState));
+
+         //Тестируем: receivedState.items - массив объектов и нет функции
+         receivedState.items = [
+            { id: 1, 'title': '1_Номенклатура', hierarchy: false },
+            { id: 2, 'title': '2_Ответственный', hierarchy: true },
+            { id: 3, 'title': '3_Покупатель', hierarchy: null },
+            { id: 4, 'title': '4_Склад', hierarchy: false },
+         ];
+         assert.equal(false, tabs.checkHasFunction(receivedState));
       });
       it('_beforeUpdate', function() {
          var tabs = new tabsMod.Buttons(),

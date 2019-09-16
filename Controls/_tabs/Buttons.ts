@@ -7,6 +7,7 @@ import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 import Env = require('Env/Env');
 import {Controller as SourceController} from 'Controls/source';
 import {factory} from 'Types/chain';
+import * as cInstance from 'Core/core-instance';
 
 var _private = {
       initItems: function(source, instance) {
@@ -450,27 +451,29 @@ var _private = {
       _items: null,
       _itemsOrder: null,
       _defaultItemTemplate: ItemTemplate,
-      _beforeMount: function(options, context, receivedState) {
-         let hasFunction = false;
 
-         if (receivedState) {
-               factory(receivedState.items).each((item) => {
-                  const value = item.getRawData ? item.getRawData() : item;
+      checkHasFunction: function(receivedState) {
+          let hasFunction = false;
+         factory(receivedState.items).each((item) => {
+            const value = cInstance.instanceOfModule(item, 'Types/entity:Record') ?
+                item.getRawData() : item;
 
-                  for (const key in value) {
-                     if (typeof value[key] === 'function') {
+            if (!hasFunction) {
+                for (const key in value) {
+                    if (typeof value[key] === 'function') {
                         hasFunction = true;
-                     }
-                  }
-               });
+                    }
+                }
+            }
+         });
+         return hasFunction;
+      },
 
-               if (!hasFunction) {
-                  this._items = receivedState.items;
-                  this._itemsOrder = receivedState.itemsOrder;
-               }
-         }
-
-         if (options.source && (!receivedState || hasFunction)) {
+      _beforeMount: function(options, context, receivedState) {
+         if (receivedState && !this.checkHasFunction(receivedState)) {
+            this._items = receivedState.items;
+            this._itemsOrder = receivedState.itemsOrder;
+         } else if (options.source) {
             return _private.initItems(options.source, this).addCallback(function(result) {
                this._items = result.items;
                this._itemsOrder = result.itemsOrder;
