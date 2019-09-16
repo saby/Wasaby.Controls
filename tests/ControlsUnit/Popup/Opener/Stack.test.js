@@ -186,6 +186,15 @@ define(
             assert.equal(700, item.popupOptions.width);
             assert.equal(700, item.popupOptions.minWidth);
             assert.equal(700, item.popupOptions.maxWidth);
+
+            item = {
+               popupOptions: {
+                  width: 1000,
+                  minWidth: 700
+               }
+            };
+            assert.equal(1000, item.popupOptions.width);
+            assert.equal(700, item.popupOptions.minWidth);
          });
 
          it('prepareSize', () => {

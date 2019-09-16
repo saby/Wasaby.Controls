@@ -64,7 +64,7 @@ const _private = {
                 return parseInt(optionsSet[i][property], 10);
             }
         }
-        return null;
+        return undefined;
     },
 
     validateConfiguration(item): void {
