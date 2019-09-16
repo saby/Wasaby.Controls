@@ -108,13 +108,6 @@ import 'Controls/breadcrumbs';
          },
          dataLoadCallback: function(self, data) {
              self._breadCrumbsItems = _private.getPath(data);
-             if (self._isGoingBack) {
-                const curRoot = _private.getRoot(self, self._options.root);
-                 if (self._restoredMarkedKeys[curRoot]) {
-                     self._children.treeControl.setMarkedKey(self._restoredMarkedKeys[curRoot].markedKey);
-                 }
-                 self._isGoingBack = false;
-             }
              self._forceUpdate();
              if (self._options.dataLoadCallback) {
                 self._options.dataLoadCallback(data);
@@ -125,6 +118,15 @@ import 'Controls/breadcrumbs';
 
             if (self._options.itemsReadyCallback) {
                self._options.itemsReadyCallback(items);
+            }
+         },
+         itemsSetCallback: function(self) {
+            if (self._isGoingBack) {
+               const curRoot = _private.getRoot(self, self._options.root);
+               if (self._restoredMarkedKeys[curRoot]) {
+                  self._children.treeControl.setMarkedKey(self._restoredMarkedKeys[curRoot].markedKey);
+               }
+               self._isGoingBack = false;
             }
          },
          setVirtualScrolling(self, viewMode, cfg): void {
@@ -287,6 +289,7 @@ import 'Controls/breadcrumbs';
       _beforeMount: function(cfg) {
          this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
+         this._itemsSetCallback = _private.itemsSetCallback.bind(null, this);
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
 
          //process items from options to create a path
