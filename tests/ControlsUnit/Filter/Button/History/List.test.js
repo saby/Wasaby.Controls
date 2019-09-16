@@ -4,9 +4,10 @@ define(
       'Core/Serializer',
       'Types/chain',
       'ControlsUnit/Filter/Button/History/testHistorySource',
-      'Controls/filter'
+      'Controls/filter',
+      'Types/entity'
    ],
-   function(List, Serializer, chain, HistorySourceDemo, filter) {
+   function(List, Serializer, chain, HistorySourceDemo, filter, entity) {
       describe('FilterHistoryList', function() {
          var items2 = [
             {id: 'period', value: [3], resetValue: [1], textValue: 'Past month'},
@@ -157,6 +158,28 @@ define(
             ];
             let historyString = List._private.getStringHistoryFromItems(historyItems, resetValues);
             assert.strictEqual(historyString, 'Today, Ivanov K.K.');
+         });
+
+         it('_private::getFavoriteDialogRecord', function() {
+            var favoriteItem = new entity.Model({
+               rawData: {
+                  id: 'testId',
+                  data: new entity.Model({
+                     rawData: {
+                        linkText: 'testLinkText',
+                        filterPanelItems: items1,
+                        globalParams: 0
+                     }
+                  })
+               }
+            });
+            var self = {
+               _options: {
+                  filterItems: items1
+               }
+            };
+            var editableRecord = List._private.getFavoriteDialogRecord(self, favoriteItem, null, 'savedText');
+            assert.equal(editableRecord.get('editedTextValue'), 'savedText');
          });
       });
    });
