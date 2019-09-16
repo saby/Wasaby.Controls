@@ -452,6 +452,7 @@ var _private = {
       _itemsOrder: null,
       _defaultItemTemplate: ItemTemplate,
 
+      //Проверяет, есть ли функции в свойствах объектов receivedState
       checkHasFunction: function(receivedState) {
           let hasFunction = false;
          factory(receivedState.items).each((item) => {
