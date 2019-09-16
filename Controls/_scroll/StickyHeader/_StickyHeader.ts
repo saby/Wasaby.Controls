@@ -87,7 +87,7 @@ var StickyHeader = Control.extend({
    _cssClassName: null,
 
    constructor: function() {
-      StickyHeader.superclass.constructor.call(this);
+      StickyHeader.superclass.constructor.apply(this, arguments);
       this._observeHandler = this._observeHandler.bind(this);
       this._index = stickyUtils.getNextId();
       this._stickyHeadersHeight = {
