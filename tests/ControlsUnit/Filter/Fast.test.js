@@ -330,6 +330,18 @@ define(
             assert.strictEqual(fastData._configs[0].text, 'Россия');
          });
 
+         it('loadItems call while loading', function() {
+            return new Promise(function(resolve) {
+               var sourceController;
+               filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0);
+               sourceController = fastData._configs[0]._sourceController;
+
+               filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0);
+               assert.isFalse(!!sourceController.isLoading());
+               resolve();
+            });
+         });
+
          it('get filter', function(done) {
             filterMod.Fast._private.reload(fastData).addCallback(function() {
                filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
