@@ -255,7 +255,7 @@ const _private = {
             }
 
             if (self._stack.getCount() > 1) {
-                self._update();
+                item.position = _private.getItemPosition(item, self);
             } else {
                 item.position = _private.getItemPosition(item, self);
                 _private.showPopup(item);
