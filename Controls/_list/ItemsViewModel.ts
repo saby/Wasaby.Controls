@@ -451,6 +451,9 @@ var ItemsViewModel = BaseViewModel.extend({
             this.setIndexes(0, this.getCount());
             this._nextModelVersion();
         }
+        if (this._options.itemsSetCallback) {
+            this._options.itemsSetCallback(items);
+        }
     },
 
     getItems: function() {
