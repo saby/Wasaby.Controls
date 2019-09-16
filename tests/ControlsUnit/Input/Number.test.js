@@ -35,6 +35,7 @@ define(
             assert.deepEqual(inputMod.Number.getDefaultOptions(), {
                tooltip: '',
                style: 'info',
+               spellCheck: true,
                size: 'default',
                placeholder: '',
                useGrouping: true,
@@ -56,6 +57,7 @@ define(
                'precision',
                'textAlign',
                'fontStyle',
+               'spellCheck',
                'useGrouping',
                'onlyPositive',
                'selectOnClick',

@@ -34,7 +34,7 @@ export interface ITextOptions {
 }
 
 interface IText {
-    readonly '[Controls/_interface/IText]': boolean;
+    readonly '[Controls/_input/interface/IText]': boolean;
 }
 
 export default IText;

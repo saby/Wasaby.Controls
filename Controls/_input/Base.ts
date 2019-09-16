@@ -387,12 +387,9 @@ var _private = {
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_input/interface/IBase
+ * @mixes Controls/_input/interface/ITag
+ * @mixes Controls/_input/interface/IValue
  * @mixes Controls/_input/interface/IValidationStatus
- *
- * @mixes Controls/interface/IInputTag
- * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputStyle
- * @mixes Controls/interface/ICallback
  *
  * @public
  * @demo Controls-demo/Input/SizesAndHeights/Index
@@ -1061,6 +1058,7 @@ Base.getDefaultOptions = function () {
         textAlign: 'left',
         autoComplete: 'off',
         fontStyle: 'default',
+        spellCheck: true,
         selectOnClick: false
     };
 };
@@ -1076,6 +1074,7 @@ Base.getOptionTypes = function () {
          'username',
          'current-password'
          ]),*/
+        spellCheck: entity.descriptor(Boolean),
         selectOnClick: entity.descriptor(Boolean),
         inputCallback: entity.descriptor(Function),
 

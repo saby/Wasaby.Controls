@@ -13,7 +13,7 @@
  * @mixes Controls/interface/ITimeMask
  * @mixes Controls/interface/IValidation
  * @control
- * @public
+ * @private
  * @author Красильников А.С.
  * @category Input
  */
@@ -32,7 +32,7 @@
  * @mixes Controls/interface/ITimeMask
  * @mixes Controls/interface/IValidation
  * @control
- * @public
+ * @private
  * @author Красильников А.С.
  * @category Input
  */
