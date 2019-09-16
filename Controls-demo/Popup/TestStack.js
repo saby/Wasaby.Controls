@@ -26,7 +26,11 @@ define('Controls-demo/Popup/TestStack',
          },
 
          _openStack: function() {
-            this._children.stack.open();
+            this._children.stack.open({
+               templateOptions: {
+                  width: '600px'
+               }
+            });
          },
 
          _openInfobox: function() {
