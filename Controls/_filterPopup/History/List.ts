@@ -3,18 +3,18 @@
  */
 import BaseControl = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/History/List');
-import {isEqual} from 'Types/object';
 import Utils = require('Types/util');
+import ParallelDeferred = require('Core/ParallelDeferred');
+import Deferred = require('Core/Deferred');
+import {isEqual} from 'Types/object';
 import {HistoryUtils} from 'Controls/filter';
 import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
 import {Constants} from 'Controls/history';
-import ParallelDeferred = require('Core/ParallelDeferred');
-import Deferred = require('Core/Deferred');
 import {convertToFilterStructure, convertToSourceDataArray} from 'Controls/_filterPopup/converterFilterStructure';
 import 'css!theme?Controls/filterPopup';
 
-   var MAX_NUMBER_ITEMS = 5;
+var MAX_NUMBER_ITEMS = 5;
 
    const FILTER_STATUS = {
       FOR_ME: 0,
@@ -123,7 +123,7 @@ import 'css!theme?Controls/filterPopup';
          });
       },
 
-      getFavoriteDialogRecord: function(self, item, historyId) {
+      getFavoriteDialogRecord: function(self, item, historyId, savedTextValue) {
          let editItem = item.get('data');
          let items;
          if (editItem) {
@@ -142,7 +142,7 @@ import 'css!theme?Controls/filterPopup';
             rawData: {
                filterPanelItems: items,
                toSaveFields: {},
-               editedTextValue: '',
+               editedTextValue: savedTextValue || '',
                globalParams: item.get('data') && item.get('data').get('globalParams') ? FILTER_STATUS.FOR_ALL : FILTER_STATUS.FOR_ME
             }
          });
@@ -155,7 +155,7 @@ import 'css!theme?Controls/filterPopup';
       },
 
       updateFavorite: function(self, item, text, isFavorite) {
-         let record = _private.getFavoriteDialogRecord(self, item, self._options.historyId);
+         let record = _private.getFavoriteDialogRecord(self, item, self._options.historyId, isFavorite ? text : '');
 
          let popupOptions = {
             opener: self,
