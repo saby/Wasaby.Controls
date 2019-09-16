@@ -10,7 +10,7 @@
    </div>
    <textarea
       wrap="hard"
-      spellcheck="true"
+      spellcheck="{{options.spellCheck}}"
       name="{{fieldName}}"
       value="{{calculateValueForTemplate()}}"
       class="controls-InputBase__nativeField_theme_{{options.theme}} controls-Area__realField

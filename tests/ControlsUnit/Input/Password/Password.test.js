@@ -31,6 +31,7 @@ define(
                style: 'info',
                size: 'default',
                placeholder: '',
+               spellCheck: true,
                revealable: true,
                textAlign: 'left',
                autoComplete: 'on',
@@ -47,6 +48,7 @@ define(
                'tagStyle',
                'textAlign',
                'fontStyle',
+               'spellCheck',
                'revealable',
                'inputCallback',
                'selectOnClick'
