@@ -174,6 +174,29 @@ define(
             assert.isFalse(popupTemplate.StackController._stack.at(15).popupOptions.hidden);
          });
 
+         it('validate Configuration', () => {
+            let item = {
+               popupOptions: {
+                  width: 1000,
+                  minWidth: 700,
+                  maxWidth: 600
+               }
+            };
+            popupTemplate.StackController._private.validateConfiguration(item, 'width');
+            assert.equal(700, item.popupOptions.width);
+            assert.equal(700, item.popupOptions.minWidth);
+            assert.equal(700, item.popupOptions.maxWidth);
+
+            item = {
+               popupOptions: {
+                  width: 1000,
+                  minWidth: 700
+               }
+            };
+            assert.equal(1000, item.popupOptions.width);
+            assert.equal(700, item.popupOptions.minWidth);
+         });
+
          it('prepareSize', () => {
             let storages = [{ width: 1 }, { width: 2 }, { width: 3 }];
             let result = popupTemplate.StackController._private.prepareSize(storages, 'width');
