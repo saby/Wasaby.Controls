@@ -169,6 +169,7 @@ const _private = {
         const element = _private.find(id);
         if (element) {
             element.controller.popupResizingLine(element, offset);
+            this._notify('managerPopupUpdated', [element, _private.popupItems], {bubbling: true});
             return true;
         }
         return false;

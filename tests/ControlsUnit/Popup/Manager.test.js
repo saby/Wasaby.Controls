@@ -358,6 +358,9 @@ define(
             let id0 = Manager.show(popupOptions, new BaseController());
             Manager._private.popupUpdated(id0);
             assert.isTrue(isUpdateNotified);
+            isUpdateNotified = null;
+            Manager._private.popupResizingLine(id0, {});
+            assert.isTrue(isUpdateNotified);
          });
          it('managerPopupDestroyed notified', function() {
             let popupOptions = {
