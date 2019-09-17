@@ -264,10 +264,8 @@ const _private = {
             } else {
                 self._stack.replace(item, itemIndex);
             }
-
-            if (self._stack.getCount() > 1) {
-                self._update();
-            } else {
+            item.position = _private.getItemPosition(item, self);
+            if (self._stack.getCount() <= 1) {
                 item.position = _private.getItemPosition(item, self);
                 _private.showPopup(item);
                 if (StackStrategy.isMaximizedPanel(item)) {

@@ -215,6 +215,11 @@ define(
             assert.equal(3, result);
          });
          it('stack default position', () => {
+            let upd = popupTemplate.StackController._update;
+            let notUpdate = true;
+            popupTemplate.StackController._update = () => {
+               notUpdate = !notUpdate;
+            };
             popupTemplate.StackController._private.getWindowSize = () => ({
                width: 1920,
                height: 950
@@ -247,6 +252,8 @@ define(
                }
             }
             assert.equal(itemCount, 1);
+            assert.equal(notUpdate, true);
+            popupTemplate.StackController._update = upd;
          });
 
          it('stack maximized popup position', () => {
