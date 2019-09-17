@@ -1,7 +1,7 @@
-import {detection} from 'Env/Env';
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import isEmpty = require('Core/helpers/Object/isEmpty');
+import {IDateRangeOptions} from "./interfaces/IDateRange";
 import ILinkView from './interfaces/ILinkView';
 import IInputSelectable from './interfaces/IInputSelectable';
 import DateRangeModel from './DateRangeModel';
@@ -39,6 +39,23 @@ import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
  *
  */
 
+const _private = {
+    _updateRangeModel: function(self, options) {
+        const opts: IDateRangeOptions = {};
+
+        if (options.hasOwnProperty('startValue')) {
+            opts.startValue = options.startValue;
+            if (options.selectionType === IInputSelectable.SELECTION_TYPES.single) {
+                opts.endValue = options.startValue;
+            }
+        }
+        if (options.hasOwnProperty('endValue')) {
+            opts.endValue = options.endValue;
+        }
+        self._rangeModel.update(opts);
+    }
+};
+
 var Component = BaseControl.extend({
     _template: componentTmpl,
 
@@ -48,7 +65,7 @@ var Component = BaseControl.extend({
     _beforeMount: function (options) {
         this._rangeModel = new DateRangeModel();
         CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged', 'rangeChanged']);
-        this._rangeModel.update(options);
+        _private._updateRangeModel(this, options);
 
         // when adding control arrows, set the minimum width of the block,
         // so that the arrows are always fixed and not shifted.
@@ -59,7 +76,7 @@ var Component = BaseControl.extend({
     },
 
     _beforeUpdate: function (options) {
-        this._rangeModel.update(options);
+        _private._updateRangeModel(this, options);
     },
 
     _openDialog: function (event) {

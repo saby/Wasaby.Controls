@@ -19,6 +19,32 @@ define([
    };
 
    describe('Controls/_dateRange/Selector', function() {
+      describe('initialization', function() {
+         it('should set endValue if selectionType is equal "single"', function() {
+            const
+               date = new Date(2019, 0),
+               component = calendarTestUtils.createComponent(
+                  dateRange.Selector, { startValue: date, selectionType: 'single' });
+
+            assert.equal(component._rangeModel.startValue, date);
+            assert.equal(component._rangeModel.endValue, date);
+         });
+      });
+
+      describe('_beforeUpdate', function() {
+         it('should set endValue if selectionType is equal "single"', function() {
+            const
+               date = new Date(2019, 0),
+               component = calendarTestUtils.createComponent(dateRange.Selector, {});
+
+            component._beforeUpdate(
+               calendarTestUtils.prepareOptions(dateRange.Selector, { startValue: date, selectionType: 'single' }));
+
+            assert.equal(component._rangeModel.startValue, date);
+            assert.equal(component._rangeModel.endValue, date);
+         });
+      });
+
       describe('_openDialog', function() {
          it('should open opener with default options', function() {
             const component = calendarTestUtils.createComponent(dateRange.Selector, options);
