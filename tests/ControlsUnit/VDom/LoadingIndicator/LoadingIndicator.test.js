@@ -153,6 +153,7 @@ define([
          let LoadingInd = new LoadingIndicator();
          LoadingInd._beforeMount({});
          let baseToggleIndicatorVisible = LoadingInd._toggleIndicatorVisible;
+         LoadingInd._toggleOverlayAsync = LoadingInd._toggleOverlay;
          let config = {
             delay: 1
          };
