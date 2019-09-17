@@ -337,19 +337,19 @@ define('Controls/interface/IMovable', [
     * </pre>
     *
     * <pre>
-    *    Control.extend({
-    *       ...
-    *       _beforeMount: function() {
-    *          var self = this;
-    *          this._itemActions = [{
-    *             icon: 'icon-ArrowDown',
-    *             handler: function(item) {
-    *                self._children.listMover.moveItemDown(item.getId());
-    *             }
-    *          }]
-    *       }
-    *       ...
-    *    });
+    * Base.Control.extend({
+    *    _itemActions: null,
+    *    _beforeMount: function() {
+    *       var self = this;
+    *       this._itemActions = [{
+    *          icon: 'icon-ArrowDown',
+    *          handler: function(item) {
+    *             self._children.listMover.moveItemDown(item.getId());
+    *          }
+    *       }]
+    *    }
+    *    ...
+    * });
     * </pre>
     * @see moveItemUp
     * @see moveItems
@@ -390,27 +390,27 @@ define('Controls/interface/IMovable', [
     * Перемещает переданные элементы относительно указанного целевого элемента.
     * @function Controls/interface/IMovable#moveItems
     * @param {Array.<String>|Array.<Number>|Selection} movedItems Элементы для перемещения.
-    * @param {String|Number} target TЦелевой элемент перемещения.
+    * @param {String|Number} target Целевой элемент перемещения.
     * @param {MovePosition} position Положение перемещения.
     * @returns {Core/Deferred} Отложенный результат перемещения.
     * @remark
     * В зависимости от аргумента 'position' элементы могут быть перемещены до, после или на указанный целевой элемент.
     * @example
     * В следующем примере показано, как переместить элемент вниз с помощью панели операций над записью.
-    * <pre>
+    * <pre class="brush: html">
     *    <Controls.breadcrumbs:Path caption="Move items in root" on:click="_moveItems()"/>
     *    <Controls.list:Mover name="listMover"/>
     * </pre>
-    *
-    * <pre>
-    *    Control.extend({
-    *       ...
-    *       _selectedKeys: [],
-    *       _moveItems: function() {
-    *          this._children.listMover.moveItems(this._selectedKeys, 'rootId', 'on');
-    *       }
-    *       ...
-    *    });
+    * <pre class="brush: js">
+    * Base.Control.extend({
+    *    _selectedKeys: null,
+    *    _beforeMount: function() {
+    *       this._selectedKeys = [];
+    *    },
+    *    _moveItems: function() {
+    *       this._children.listMover.moveItems(this._selectedKeys, 'rootId', 'on');
+    *    }
+    * });
     * </pre>
     * @see moveItemUp
     * @see moveItemDown
