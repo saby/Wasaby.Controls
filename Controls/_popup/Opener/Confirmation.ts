@@ -1,6 +1,6 @@
-import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
-import Deferred = require('Core/Deferred');
-import isNewEnvironment = require('Core/helpers/isNewEnvironment');
+import * as BaseOpener from 'Controls/_popup/Opener/BaseOpener';
+import * as Deferred from 'Core/Deferred';
+import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 
 /**
  * Контрол, открывающий диалог подтверждения.
