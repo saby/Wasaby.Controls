@@ -81,7 +81,11 @@ function prepareFilter(filter: Object, prefetchParams: IPrefetchParams): object 
 
 function needInvalidatePrefetch(history): boolean {
     const prefetchParams = getPrefetchFromHistory(history);
-    return prefetchParams[PREFETCH_DATA_VALID_FIELD] < new Date();
+    let result = false;
+    if (prefetchParams) {
+        result = prefetchParams[PREFETCH_DATA_VALID_FIELD] < new Date();
+    }
+    return result;
 }
 
 function clearPrefetchSession(filter: object): object {
