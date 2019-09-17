@@ -10,6 +10,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * <a href="/materials/demo-ws4-confirmation">Демо-пример</a>.
  *
  * @class Controls/_popup/Opener/Confirmation
+ * @extends Controls/_popup/Opener/BaseOpener
  * @control
  * @public
  * @category Popup
@@ -165,7 +166,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  * @name Controls/_popup/Opener/Confirmation#okCaption
  * @cfg {String} Текст кнопки "принять"
  * @default ОК
-*/
+ */
 
 /*
  * @name Controls/_popup/Opener/Confirmation#okCaption
@@ -196,21 +197,21 @@ const _private = {
     }
 };
 
-const Confirmation = BaseOpener.extend({
-    _resultDef: null,
-    _openerResultHandler: null,
+class Confirmation extends BaseOpener {
+    private _resultDef: null;
+    private _openerResultHandler: null;
 
-    _beforeMount() {
+    protected _beforeMount() {
         this._closeHandler = this._closeHandler.bind(this);
         Confirmation.superclass._beforeMount.apply(this, arguments);
-    },
+    }
 
-    _closeHandler(res) {
+    private _closeHandler(res) {
         if (this._resultDef) {
             this._resultDef.callback(res);
             this._resultDef = null;
         }
-    },
+    }
 
     /**
      * @name Controls/_popup/Opener/Confirmation#isOpened
@@ -274,8 +275,7 @@ const Confirmation = BaseOpener.extend({
         Confirmation.superclass.open.call(this, popupOptions, POPUP_CONTROLLER);
         return this._resultDef;
     }
-
-});
+}
 
 /**
  * Статический метод для открытия окна подтверждения. При использовании метода не требуется создавать popup:Confirmation в верстке.
@@ -321,7 +321,7 @@ Confirmation.getDefaultOptions = () => {
     };
 };
 
-export = Confirmation;
+export default Confirmation;
 
 /**
  * @typedef {Object} popupOptions
