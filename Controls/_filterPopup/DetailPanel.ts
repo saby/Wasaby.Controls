@@ -139,31 +139,32 @@ import 'Controls/form';
          }
       },
 
-       getOriginalItem: function(self, historyItem) {
-          return find(self._items, (originalItem) => {
-             return originalItem.id === historyItem.id || originalItem.periodField == historyItem.id;
-          });
-       },
+      getOriginalItem: function(self, historyItem) {
+         return find(self._items, (originalItem) => {
+            return originalItem.id === historyItem.id;
+         });
+      },
 
-       filterHistoryItems: function(self,items) {
-          return chain.factory(items).filter(function(item) {
-               let history = JSON.parse(item.get('ObjectData')).items || JSON.parse(item.get('ObjectData'));
-
-               let itemHasData = false;
-               for (var i = 0, length = history.length; i < length; i++) {
-                   var textValue = getPropValue(history[i], 'textValue'),
-                       value = getPropValue(history[i], 'value');
-                   if (textValue !== '' && textValue !== undefined) {
-                      let originalItem = _private.getOriginalItem(self, history[i]);
-                       if (originalItem && (originalItem.resetValue === value)) {
-                          return false;
-                       }
-                       itemHasData = true;
-                   }
+      filterHistoryItems: function(self,items) {
+         return chain.factory(items).filter(function(item) {
+            let history = JSON.parse(item.get('ObjectData')).items || JSON.parse(item.get('ObjectData'));
+            let itemHasData = false;
+            for (var i = 0, length = history.length; i < length; i++) {
+               var textValue = getPropValue(history[i], 'textValue'),
+                   value = getPropValue(history[i], 'value');
+               if (textValue !== '' && textValue !== undefined) {
+                  let originalItem = _private.getOriginalItem(self, history[i]);
+                  let originalItemResetValue = originalItem ? originalItem.resetValue.length || originalItem.resetValue : false;
+                  let isItemInvalid = originalItemResetValue ? isEqual(originalItem.resetValue, value) : false;
+                  if (originalItem && isItemInvalid) {
+                     return false;
+                  }
+                  itemHasData = true;
                }
-               return itemHasData;
-           }).value(factory.recordSet,{adapter: items.getAdapter()});
-       },
+            }
+            return itemHasData;
+          }).value(factory.recordSet,{adapter: items.getAdapter()});
+      },
 
       reloadHistoryItems: function(self, historyId) {
          self._historyItems = HistoryUtils.getHistorySource({historyId: historyId}).getItems();
