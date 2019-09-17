@@ -452,7 +452,7 @@ var _private = {
       _itemsOrder: null,
       _defaultItemTemplate: ItemTemplate,
 
-      //Проверяет, есть ли функции в свойствах объектов receivedState
+      //Функции, передаваемые с сервера на клиент в receivedState, не могут корректно десериализоваться. Поэтому, если есть функции в receivedState, заново делаем запрос за данными.
       checkHasFunction: function(receivedState) {
           let hasFunction = false;
          factory(receivedState.items).each((item) => {
