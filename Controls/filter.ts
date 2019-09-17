@@ -12,6 +12,7 @@
  * @includes FastStyles Controls/_filter/Fast/FastStyles
  * @includes FilterViewStyles Controls/_filter/View/FilterViewStyles
  * @includes IFilterView Controls/_filter/View/interface/IFilterView
+ * @includes IPrefetch Controls/_filter/IPrefetch
  * @public
  * @author Крайнов Д.О.
  */
@@ -29,6 +30,7 @@
  * @includes ButtonStyles Controls/_filter/Button/Styles
  * @includes FastStyles Controls/_filter/Fast/FastStyles
  * @includes IFilterView Controls/_filter/View/interface/IFilterView
+ * @includes IPrefetch Controls/_filter/IPrefetch
  * @public
  * @author Крайнов Д.О.
  */
