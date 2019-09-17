@@ -458,16 +458,16 @@ define('Controls/interface/IMovable', [
     *    <Controls.breadcrumbs:Path caption="Move items in root" on:click="_moveItems()"/>
     *    <Controls.list:Mover name="listMover"/>
     * </pre>
-    *
     * <pre>
-    *    Control.extend({
-    *       ...
-    *       _selectedKeys: [...],
-    *       _moveItems: function() {
-    *          this._children.listMover.moveItemsWithDialog(this._selectedKeys);
-    *       }
-    *       ...
-    *    });
+    * Base.Control.extend({
+    *    _selectedKeys: null,
+    *    _beforeMount: function(){
+    *       this._selectedKeys = [...];
+    *    },
+    *    _moveItems: function() {
+    *       this._children.listMover.moveItemsWithDialog(this._selectedKeys);
+    *    }
+    * });
     * </pre>
     * @see moveItemUp
     * @see moveItemDown
