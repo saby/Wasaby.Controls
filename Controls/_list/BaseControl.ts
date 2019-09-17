@@ -1328,6 +1328,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _beforeMount: function(newOptions, context, receivedState: ReceivedState = {}) {
         var self = this;
 
+        // todo Костыль, т.к. построение ListView зависит от SelectionController.
+        // Будет удалено при выполнении одного из пунктов:
+        // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
+        // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
+        this._multiSelectReadyCallback = this._multiSelectReadyCallbackFn.bind(this);
+
         let receivedError = receivedState.errorConfig;
         let receivedData = receivedState.data;
 
@@ -1399,6 +1405,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         });
 
+    },
+
+    // todo Костыль, т.к. построение ListView зависит от SelectionController.
+    // Будет удалено при выполнении одного из пунктов:
+    // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
+    // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
+    _multiSelectReadyCallbackFn: function(multiSelectReady) {
+        this._multiSelectReady = multiSelectReady;
     },
 
     getViewModel: function() {
