@@ -257,6 +257,9 @@ var Input = Control.extend({
 
    _dataLoadCallback: function (items) {
       this._countItems = items.getCount();
+      if (this._options.emptyText) {
+         this._countItems += 1;
+      }
 
       if (this._options.dataLoadCallback) {
          this._options.dataLoadCallback(items);
