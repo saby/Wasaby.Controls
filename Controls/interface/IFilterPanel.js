@@ -86,7 +86,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     * В этом примере панель имеет заголовок "Sales"
     * <pre>
     *    <Controls.filterPopup:Panel
-    *          items={{_items}}
+    *          items="{{_items}}"
     *          headingCaption="Sales">
     *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
