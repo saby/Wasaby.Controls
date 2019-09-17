@@ -6,7 +6,6 @@
                 direction="horizontal"
                 contentSize="{{_options.contentSize}}"
                 attr:class="controls-ColumnScroll"
-                attr:style="width:{{_options.scrollWidth}}px;"
                 on:positionChanged="_localPositionHandler()"/>
     </div>
 </ws:if>
@@ -18,6 +17,5 @@
         contentSize="{{_options.contentSize}}"
         gridSupport="{{_options.gridSupport}}"
         attr:class="controls-ColumnScroll controls-ColumnScroll_without_offset"
-        attr:style="width:{{_options.scrollWidth}}px;"
         on:positionChanged="_localPositionHandler()"/>
 </ws:else>
