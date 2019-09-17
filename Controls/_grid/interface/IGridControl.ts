@@ -17,16 +17,13 @@
 /**
  * @name Controls/_grid/interface/IGridControl#ladderProperties
  * @cfg {Array.<String>} Массив свойств, по которым происходит прилипание.
- * <a href="/materials/demo-ws4-grid-sticky">Example</a>
+ * Работу лесенки можно проверить на <a href="/materials/demo-ws4-grid-sticky">демо-примере</a>.
  * @example
  * Пример 1. Шаблон лесенки задан в рамках шаблона родительского контрола.
- * * WML
- * <pre>
+ * <pre class="brush: html">
  *    <!-- MyControl.wml -->
  *    <div class="demoGrid">
- *       <Controls.grid:View
- *          ...
- *          ladderProperties="{{ ['date'] }}">
+ *       <Controls.grid:View ladderProperties="{{ ['date'] }}">
  *          <ws:columns>
  *             <ws:Array>
  *                <ws:Object width="1fr">
@@ -48,9 +45,8 @@
  *    </div>
  * </pre>
  *
- * Пример 2. Шаблон ленесенки вынесен в отдельный шаблон.
- * * WML
- * <pre>
+ * Пример 2. Шаблон лесенки вынесен в отдельный шаблон.
+ * <pre class="brush: html">
  *    <!-- MyControl.wml -->
  *    <div class="demoGrid">
  *       <Controls.grid:View
@@ -58,14 +54,13 @@
  *          ladderProperties="{{ ['date'] }}">
  *          <ws:columns>
  *             <ws:Array>
- *                <ws:Object width="1fr" template="wml!MyModule/MyControl" />
+ *                <ws:Object width="1fr" template="wml!MyModule/MyTemplate" />
  *             </ws:Array>
  *          </ws:columns>
  *       </Controls.grid:View>
  *    </div>
  * </pre>
- * * WML
- * <pre>
+ * <pre class="brush: html">
  *    <!-- MyTemplate.wml -->
  *    <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
  *       <div class="demoGrid__date">
