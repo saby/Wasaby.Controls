@@ -42,10 +42,7 @@ const _private = {
         item.popupOptions.maxWidth = _private.prepareSize([item.popupOptions, defaultOptions, templateStyle], 'maxWidth');
         item.popupOptions.width = _private.prepareSize([item.popupOptions, defaultOptions], 'width');
 
-        // Validate the configuration
-        if (item.popupOptions.maxWidth < item.popupOptions.minWidth) {
-            item.popupOptions.maxWidth = item.popupOptions.minWidth;
-        }
+        _private.validateConfiguration(item);
 
         if (!item.popupOptions.hasOwnProperty('minimizedWidth')) {
             item.popupOptions.minimizedWidth = defaultOptions.minimizedWidth;
@@ -67,7 +64,21 @@ const _private = {
                 return parseInt(optionsSet[i][property], 10);
             }
         }
-        return null;
+        return undefined;
+    },
+
+    validateConfiguration(item): void {
+        if (item.popupOptions.maxWidth < item.popupOptions.minWidth) {
+            item.popupOptions.maxWidth = item.popupOptions.minWidth;
+        }
+
+        if (item.popupOptions.width > item.popupOptions.maxWidth) {
+            item.popupOptions.width = item.popupOptions.maxWidth;
+        }
+
+        if (item.popupOptions.width < item.popupOptions.minWidth) {
+            item.popupOptions.width = item.popupOptions.minWidth;
+        }
     },
 
     prepareSizeWithoutDOM(item) {
