@@ -20,6 +20,7 @@ var HorizontalScrollWrapper = Control.extend({
       }
       style += `grid-column:${stickyColumnsCount + 1 + offset} / ${(maxEndColumn ? maxEndColumn : header.length + 1) + offset};`;
       style += `top:${this._options.topOffset}px;`;
+      style += `width: ${this._options.scrollWidth}px`;
       return style;
    },
 });
