@@ -203,7 +203,7 @@ const _private = {
             templateClass = template;
         }
 
-        return templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
+        return templateClass && templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
     },
     getPopupWidth(item): Promise<undefined> {
         return new Promise((resolve) => {
