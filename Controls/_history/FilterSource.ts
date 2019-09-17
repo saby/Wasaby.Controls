@@ -108,7 +108,8 @@ var _private = {
       var config = {
          adapter: new entity.adapter.Sbis()
       };
-      var maxLength = self.historySource._recent - history.pinned.getCount() - 1;
+      let pinnedCount = self.historySource._pinned !== false ? history.pinned.getCount() : 0;
+      var maxLength = self.historySource._recent - pinnedCount - 1;
       var currentCount = 0;
       var item, rawData, isPinned;
 
