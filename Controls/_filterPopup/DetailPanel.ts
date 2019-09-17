@@ -156,7 +156,6 @@ import 'Controls/form';
                    if (textValue !== '' && textValue !== undefined) {
                       let originalItem = _private.getOriginalItem(self, history[i]);
                        if (originalItem && (originalItem.resetValue === value)) {
-                          console.log(originalItem, originalItem.resetValue,value);
                           return false;
                        }
                        itemHasData = true;
