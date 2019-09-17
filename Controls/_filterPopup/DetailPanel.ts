@@ -125,7 +125,7 @@ import 'Controls/form';
                 pinned: !isReportPanel,
                recent: isReportPanel ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY'
             };
-            let historyLoad = HistoryUtils.loadHistoryItems(config).addCallback(function(items) {
+            let historyLoad = HistoryUtils.loadHistoryItems(config.historyId).addCallback(function(items) {
                self._historyItems = _private.filterHistoryItems(self, items);
                return self._historyItems;
             }).addErrback(function() {
@@ -138,17 +138,33 @@ import 'Controls/form';
          }
       },
 
+       getResetValues: function(items) {
+           var result = {};
+           items.forEach((item) => {
+               result[getPropValue(item, 'id')] = getPropValue(item, 'resetValue');
+           });
+           return result;
+       },
+
        filterHistoryItems: function(self,items) {
+           let resetValues = _private.getResetValues(self._items);
            return chain.factory(items).filter(function(item) {
                let history = JSON.parse(item.get('ObjectData')).items || JSON.parse(item.get('ObjectData'));
-               let itemHasData = false;
+               let itemHasData = false, itemHasResetValue = false;
                for (var i = 0, length = history.length; i < length; i++) {
-                   var textValue = getPropValue(history[i], 'textValue');
+                   var textValue = getPropValue(history[i], 'textValue'),
+                       value = getPropValue(history[i], 'value'),
+                       id = getPropValue(history[i], 'id');
                    if (textValue !== '' && textValue !== undefined) {
+                       if (resetValues[id] === value && (!itemHasData || itemHasResetValue)) {
+                           itemHasResetValue = true;
+                       } else {
+                           itemHasResetValue = false;
+                       }
                        itemHasData = true;
                    }
                }
-               return itemHasData;
+               return itemHasData && !itemHasResetValue;
            }).value(factory.recordSet,{adapter: items.getAdapter()});
        },
 
