@@ -71,8 +71,8 @@ define([
                templateOptions: {
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
                   backButtonStyle: undefined,
-                  showArrowOutsideOfBackButton: false,
-                  showActionButton: false,
+                  showArrowOutsideOfBackButton: true,
+                  showActionButton: true,
                   backButtonCaption: 'second',
                   counterCaption: 2
                },
@@ -161,8 +161,8 @@ define([
                template: PathBack.default,
                templateOptions: {
                   backButtonStyle: undefined,
-                  showArrowOutsideOfBackButton: false,
-                  showActionButton: false,
+                  showArrowOutsideOfBackButton: true,
+                  showActionButton: true,
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
                   backButtonCaption: 'second',
                   counterCaption: 2
