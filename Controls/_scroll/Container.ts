@@ -25,6 +25,8 @@ import 'css!theme?Controls/scroll';
  * @public
  * @author Красильников А.С.
  * @category Container
+ * @remark
+ * Контрол работает как нативный скролл: скроллбар появляется, когда высота контента больше высоты контрола. Для корректной работы контрола необходимо ограничить его высоту.
  * @demo Controls-demo/Container/Scroll
  *
  */
