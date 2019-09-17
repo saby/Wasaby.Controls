@@ -155,7 +155,8 @@ var Base = Control.extend({
     _toggleIndicator: function (visible) {
         if (visible) {
             // if popup was opened, then don't show indicator, because we don't have async phase
-            if (this._getCurrentPopupId()) {
+            // todo: Compatible if we have action, then we have opened popup on old page
+            if (this._getCurrentPopupId() || this._action) {
                 return;
             }
             const cfg = {
