@@ -657,5 +657,24 @@ define(
             assert.equal(stackContentInstance._minOffset, 400);
             assert.equal(stackContentInstance._maxOffset, 300);
          });
+         it('prepare propStorageId', () => {
+            const item = {
+               popupOptions: {
+                  template: {
+                     getDefaultOptions: () => {
+                        return {
+                           propStorageId: 111
+                        };
+                     }
+                  }
+               }
+            };
+            popupTemplate.StackController._private.preparePropStorageId(item);
+            assert.equal(111, item.popupOptions.propStorageId);
+
+            item.popupOptions.propStorageId = 222;
+            popupTemplate.StackController._private.preparePropStorageId(item);
+            assert.equal(222, item.popupOptions.propStorageId);
+         });
       });
    });
