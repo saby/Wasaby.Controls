@@ -148,23 +148,23 @@ var _private = {
       }
    },
 
-   processSelectionResult: function(result, selectedItems, multiSelect) {
-      var i;
-      var initialSelection;
-      var resultSelection;
-      var keyProperty;
+   processSelectionResult: function(result, selectedItems, multiSelect: boolean, keyProp: string|undefined): void {
+      let i;
+      let initialSelection;
+      let resultSelection;
+      let keyProperty;
 
       if (result) {
          for (i in result) {
             if (result.hasOwnProperty(i) && (multiSelect !== false || result[i].selectCompleteInitiator)) {
                initialSelection = result[i].initialSelection;
                resultSelection = result[i].resultSelection;
-               keyProperty = result[i].keyProperty;
+               keyProperty = keyProp || result[i].keyProperty;
 
-               chain.factory(initialSelection).each(function(itemId) {
+               chain.factory(initialSelection).each((itemId) => {
                   _private.removeFromSelected(itemId, selectedItems, keyProperty);
                });
-               chain.factory(resultSelection).each(function(item) {
+               chain.factory(resultSelection).each((item) => {
                   _private.addItemToSelected(item, selectedItems, keyProperty);
                });
             }
@@ -205,7 +205,7 @@ var Controller = Control.extend({
                // то очистим список выбранных элементов и возьмем только запись из этого справочника
                self._selectedItems.clear();
             }
-            _private.processSelectionResult(result, self._selectedItems, multiSelect);
+            _private.processSelectionResult(result, self._selectedItems, multiSelect, self._options.keyProperty);
             selectCallback();
             self._selectionLoadDef = null;
             return result;
