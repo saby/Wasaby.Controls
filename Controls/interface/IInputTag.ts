@@ -29,11 +29,11 @@ interface IInputTag {
          * В этом примере поле будет к полю будет применен стиль "danger". Когда вы кликните по тегу, появится информационное окно с сообщением "This field is required".
          * <pre>
          *    <Controls.input:Text tagStyle="danger" on:tagClick="tagClickHandler()"/>
-         *    <Controls.Opener.Infobox name="infoboxOpener"/>
+         *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
          * </pre>
          *
          * <pre>
-         *    Control.extend({
+         *    Base.Control.extend({
          *       ...
          *       _tagClickHandler(target) {
          *          this._children.infoboxOpener.open({
@@ -62,11 +62,11 @@ interface IInputTag {
          * In this example, the field will be rendered with "danger" to show that it is required. When you click on tag, the Infobox with message "This field is required" will be shown.
          * <pre>
          *    <Controls.input:Text tagStyle="danger" on:tagClick="tagClickHandler()"/>
-         *    <Controls.Opener.Infobox name="infoboxOpener"/>
+         *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
          * </pre>
          *
          * <pre>
-         *    Control.extend({
+         *    Base.Control.extend({
          *       ...
          *       _tagClickHandler(target) {
          *          this._children.infoboxOpener.open({
@@ -93,11 +93,11 @@ interface IInputTag {
  * В этом примере при нажатии на тег будет отображаться информационное окно с сообщением "This field is required".
  * <pre>
  *    <Controls.input:Text tagStyle="danger" on:tagClick="tagClickHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
- *    Control.extend({
+ *    Base.Control.extend({
  *       ...
  *       _tagClickHandler(event) {
  *          this._children.infoboxOpener.open({
@@ -121,11 +121,11 @@ interface IInputTag {
  * In this example, when you click on tag, the Infobox with message "This field is required" will be shown.
  * <pre>
  *    <Controls.input:Text tagStyle="danger" on:tagClick="tagClickHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
- *    Control.extend({
+ *    Base.Control.extend({
  *       ...
  *       _tagClickHandler(event) {
  *          this._children.infoboxOpener.open({
@@ -149,11 +149,11 @@ interface IInputTag {
  * В этом примере при наведении курсора на тег будет отображаться информационное окно с сообщением "This field is required".
  * <pre>
  *    <Controls.input:Text tagStyle="danger" on:tagHover="_tagHoverHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
- *    Control.extend({
+ *    Base.Control.extend({
  *       ...
  *       _tagHoverHandler(event) {
  *          this._children.infoboxOpener.open({
@@ -177,11 +177,11 @@ interface IInputTag {
  * In this example, when you hover on tag, the Infobox with message "This field is required" will be shown.
  * <pre>
  *    <Controls.input:Text tagStyle="danger" on:tagHover="_tagHoverHandler()"/>
- *    <Controls.Opener.Infobox name="infoboxOpener"/>
+ *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
  * </pre>
  *
  * <pre>
- *    Control.extend({
+ *    Base.Control.extend({
  *       ...
  *       _tagHoverHandler(event) {
  *          this._children.infoboxOpener.open({
