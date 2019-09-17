@@ -31,9 +31,11 @@ var _private = {
             //save last right order
             rightOrder--;
             instance._lastRightOrder = rightOrder;
+
             return {
                items: items,
-               itemsOrder: itemsOrder
+               itemsOrder: itemsOrder,
+               rightOrder: rightOrder
             };
          });
       },
@@ -42,7 +44,7 @@ var _private = {
       },
       prepareItemClass: function(item, order, options, lastRightOrder) {
          var
-            classes = ['controls-Tabs__item controls-Tabs__item_theme_'+ options.theme],
+            classes = ['controls-Tabs__item controls-Tabs__item_theme_' + options.theme],
             modifyToNewStyle = '';
          if (options.style === 'default') {
             modifyToNewStyle = 'primary';
@@ -450,6 +452,7 @@ var _private = {
       _template: TabButtonsTpl,
       _items: null,
       _itemsOrder: null,
+      _rightOrder: null,
       _defaultItemTemplate: ItemTemplate,
 
       /* Функции, передаваемые с сервера на клиент в receivedState, не могут корректно десериализоваться.
@@ -475,10 +478,12 @@ var _private = {
          if (receivedState && !this.checkHasFunction(receivedState)) {
             this._items = receivedState.items;
             this._itemsOrder = receivedState.itemsOrder;
+            this._rightOrder = receivedState.rightOrder;
          } else if (options.source) {
             return _private.initItems(options.source, this).addCallback(function(result) {
                this._items = result.items;
                this._itemsOrder = result.itemsOrder;
+               this._rightOrder = result.rightOrder;
                return result;
             }.bind(this));
          }
@@ -488,6 +493,7 @@ var _private = {
             return _private.initItems(newOptions.source, this).addCallback(function(result) {
                this._items = result.items;
                this._itemsOrder = result.itemsOrder;
+               this._rightOrder = result.rightOrder;
                this._forceUpdate();
             }.bind(this));
          }
