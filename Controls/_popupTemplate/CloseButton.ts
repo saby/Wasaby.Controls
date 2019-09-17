@@ -15,7 +15,6 @@ import Env = require('Env/Env');
     * @mixes Controls/_buttons/interface/IClick
     *
     */
-
    /*
     * Specialized type of button for closing windows.
     *
@@ -67,16 +66,16 @@ import Env = require('Env/Env');
 
    /**
     * @name Controls/_popupTemplate/CloseButton#transparent
-    * @cfg {String} Определяет цвет кнопки.
+    * @cfg {String} Определяет фон кнопки.
     * @variant true Кнопке будет установлен прозрачный фон.
-    * @variant false Кнопке будет установлен фон кнопки панели инструментов.
+    * @variant false Кнопка имеет фон по умолчанию для этого режима отображения и стиля.
     * @default true
     * @example
     * Кнопка "Закрыть" с прозрачным фоном:
     * <pre>
     *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{true}}" size="l"/>
     * </pre>
-    * Кнопка "Закрыть" с фоном кнопки панели инструментов.
+    * Кнопка "Закрыть" с непрозрачным фоном.
     * <pre>
     *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{false}}" size="l"/>
     * </pre>
@@ -101,7 +100,7 @@ import Env = require('Env/Env');
 
    /**
     * @name Controls/_popupTemplate/CloseButton#size
-    * @cfg {String} Устанавливает размер кнопки. Используется общепринятая нотация.
+    * @cfg {String} Устанавливает размер кнопки. Значение задается общими обозначениями размера.
     * @variant l Средний размер кнопки.
     * @variant m Большой размер кнопки.
     * @default m
@@ -137,47 +136,17 @@ import Env = require('Env/Env');
     * </pre>
     */
 
-   var _private = {
-
-      // TODO: удалить по подзадаче, когда уберем поддержку старых опций https://online.sbis.ru/opendoc.html?guid=375f4d56-c47c-4ee2-abbc-e38a45fd474a
-      compatibleViewMode: function(options, self) {
-         if (options.transparent !== undefined) {
-            self._transparent = options.transparent;
-         }
-         if (options.viewMode !== undefined) {
-            self._viewMode = options.viewMode;
-         } else {
-            //TODO: https://online.sbis.ru/opendoc.html?guid=1f771374-0295-4add-bbd4-12d478d14163
-            self._viewMode = (options.style === 'light' ? 'link' : 'toolButton');
-         }
-         if (options.style !== undefined) {
-            Env.IoC.resolve('ILogger').error(this._moduleName, 'Option "style" is deprecated and removed in 19.200. Use option "viewMode".');
-            if (options.style === 'primary') {
-               Env.IoC.resolve('ILogger').error(this._moduleName, 'Option "style" is deprecated and not regulated transparency. Use option "transparent".');
-               self._transparent = false;
-            }
-         }
-      }
-   };
-
    var CloseButton = Control.extend({
-      _template: template,
-      _viewMode: null,
-      _transparent: true,
-
-      _beforeMount: function(options) {
-         _private.compatibleViewMode(options, this);
-      },
-      _beforeUpdate: function(newOptions) {
-         _private.compatibleViewMode(newOptions, this);
-      }
+      _template: template
    });
 
    CloseButton._theme = ['Controls/popupTemplate'];
 
    CloseButton.getDefaultOptions = function() {
       return {
-         size: 'l'
+         size: 'l',
+         viewMode: 'toolButton',
+         transparent: true
       };
    };
 

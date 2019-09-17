@@ -4,5 +4,6 @@
                       style="secondary"
                       caption="{{_menuCaption}}"
                       size="{{_options.size}}"
+                      fontSize="{{_options.fontSize}}"
                       on:onMenuItemActivate="_onMenuItemActivate()"
                       source="{{_menuSource}}"/>

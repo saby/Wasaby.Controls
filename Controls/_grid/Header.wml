@@ -58,6 +58,7 @@
               attr:class="{{headerColumn.cellClasses}}"
               attr:style="{{headerColumn.style ? headerColumn.style : ''}}{{headerColumn.cellStyles}}"
               mode="stackable"
+              task1177692247="{{true}}"
               fixedZIndex="{{headerColumn.zIndex}}"
               offsetTop="{{headerColumn.offsetTop}}"
               shadowVisibility="{{headerColumn.shadowVisibility}}">

@@ -1,10 +1,21 @@
 <table attr:class="controls-Grid controls-Grid_layout_fixed {{_options.columnScroll ? ' controls-Grid_layout_auto'}} controls-Grid_{{_options.style}}">
     <ws:partial template="wml!Controls/_grid/ColGroup" listModel="{{_listModel}}"/>
-    <ws:if data="{{_listModel.getHeader() && _listModel.isDrawHeaderWithEmtyList()}}">
+    <ws:if data="{{_listModel.getHeader() && _listModel.isDrawHeaderWithEmptyList()}}">
         <ws:partial template="wml!Controls/_grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
     </ws:if>
     <ws:if data="{{_listModel.getResultsPosition() === 'top'}}">
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
+    </ws:if>
+    <ws:if data="{{isHorizontalScrollVisible}}">
+        <Controls._grid.ScrollWrapper
+                name="horizontalScrollWrapper"
+                position="{{position}}"
+                contentSize="{{contentSize}}"
+                gridSupport="no"
+                scrollWidth="{{scrollWidth}}"
+                listModel="{{_listModel}}"
+                positionChangeHandler="{{positionChangeHandler}}">
+        </Controls._grid.ScrollWrapper>
     </ws:if>
     <tbody name="itemsContainer">
         <ws:partial template="wml!Controls/_list/resources/For"
@@ -17,7 +28,11 @@
                     groupTemplate="{{_groupTemplate}}"
                     itemActionsPosition="{{_options.itemActionsPosition}}"
                     itemOutputWrapper="{{_itemOutputWrapper}}"
-                    swipeTemplate="{{_options.swipeTemplate}}"/>
+                    swipeTemplate="{{_options.swipeTemplate}}">
+            <ws:editArrowTemplate>
+                <ws:partial template="wml!Controls/_grid/_editArrowTemplate"></ws:partial>
+            </ws:editArrowTemplate>
+        </ws:partial>
         <ws:if data="{{_options._needBottomPadding}}">
             <div class="controls-itemActionsV_outside-spacing"></div>
         </ws:if>

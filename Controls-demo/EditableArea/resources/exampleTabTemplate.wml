@@ -1,5 +1,5 @@
 <div class="ws-align-items-baseline ws-inline-flexbox">
-   <div class="ControlsDemo-EditableArea__header ControlsDemo-EditableArea__tabEditor">{{item[displayProperty]}}</div>
+   <div class="ControlsDemo-EditableArea__header">{{item[displayProperty]}}</div>
    <Controls.editableArea:View
       editObject="{{item}}"
       readOnly="{{!selected}}"
@@ -12,7 +12,7 @@
                attr:class="ControlsDemo-EditableArea__date ControlsDemo-EditableArea__tabEditor"
             >
                <ws:editorTemplate>
-                  <Controls.input:Text selectOnClick="{{ false }}" />
+                  <Controls.input:Text selectOnClick="{{ false }}" attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}" />
                </ws:editorTemplate>
             </Controls.editableArea:Base>
          </div>
@@ -22,7 +22,7 @@
             attr:class="controls-Tabs__content_additionaltext ControlsDemo-EditableArea__number ControlsDemo-EditableArea__tabEditor"
          >
             <ws:editorTemplate>
-               <Controls.input:Text selectOnClick="{{ false }}" />
+               <Controls.input:Text selectOnClick="{{ false }}" attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
             </ws:editorTemplate>
          </Controls.editableArea:Base>
       </div>

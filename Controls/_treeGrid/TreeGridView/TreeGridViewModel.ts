@@ -255,7 +255,8 @@ var
                     hierarchyRelation: self._model.getHierarchyRelation(),
                     hasMoreStorage: self._model.getHasMoreStorage() || {},
                     expandedItems: _private.getExpandedItems(self.getDisplay(), self._model.getExpandedItems() || [], self._options.nodeProperty),
-                    hasNodeFooterTemplate: !!self._model.getNodeFooterTemplate()
+                    hasNodeFooterTemplate: !!self._model.getNodeFooterTemplate(),
+                    hasColumnScroll: this._options.columnScroll,
                 },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
 
@@ -270,7 +271,7 @@ var
                 getResultsIndex: () => getResultsIndex({hasEmptyTemplate, ...cfg}),
                 getBottomPaddingRowIndex: () => getBottomPaddingRowIndex(cfg),
                 getFooterIndex: () => getFooterIndex({hasEmptyTemplate, ...cfg}),
-                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition),
+                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multyHeaderOffset, cfg.hasColumnScroll),
             };
         }
     });

@@ -122,7 +122,7 @@ define([
             assert.isUndefined(async.optionsForComponent.opt);
             assert.isUndefined(async.currentTemplateName);
             assert.isUndefined(async.optionsForComponent.resolvedTemplate);
-            assert.isFalse(res);
+            assert.strictEqual(res, 'Loading error');
             assert.equal(async.error, 'Couldn\'t load module myTemplate Loading error');
             done();
          });
@@ -174,7 +174,6 @@ define([
          };
          var bmRes = async._beforeMount({templateName: "myTemplate", templateOptions: {opt: '123'}});
          assert.isTrue(loadContentAsyncCalled);
-         assert.equal(promiseResult, bmRes);
          assert.equal(args[0], 'myTemplate');
          assert.equal(args[1].opt, '123');
          assert.equal(args[2], true);
@@ -276,7 +275,7 @@ define([
          };
          var bmRes = async._beforeMount({templateName: "myTemplate", templateOptions: {opt: '123'}}, {});
          bmRes.catch(function(res) {
-            assert.isUndefined(res);
+            assert.strictEqual(res, "Couldn't load module myTemplate ");
             done();
          });
       });

@@ -35,6 +35,22 @@ define(['Controls/search'], function(searchMod) {
          assert.isTrue(notifyed);
       });
 
+      it('_keyDown', function() {
+         var cont = new searchMod.InputContainer();
+         let propagationStopped = false;
+         let event = {
+            stopPropagation: () => {
+               propagationStopped = true;
+            },
+            nativeEvent: {
+               which: 13 //enter
+            }
+         };
+
+         cont._keyDown(event);
+         assert.isTrue(propagationStopped);
+      });
+
       describe('_valueChanged', function() {
          var cont = new searchMod.InputContainer();
          var notifyed = false;

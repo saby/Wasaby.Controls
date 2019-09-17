@@ -4,12 +4,23 @@
    flex-grow: 1;
    flex-shrink: 1;
    height: 100%;
+   width: 100%;
    position: relative;
-   overflow: hidden;
 }
 
 .controls-StackTemplate_theme_@{themeName} {
    background-color: @background-color_stack;
+   &:before {
+      content: '';
+      position: absolute;
+      left: -@size_Stack-border-left;
+      top: 0;
+      bottom: 0;
+      width: @size_Stack-border-left;
+      background: @color_Stack-border-left;
+      box-shadow: @size_Stack-shadow @color_Stack-shadow;
+      z-index: -1; // shadow can't overlap a content
+   }
 }
 
 .controls-StackTemplate__top-area_theme_@{themeName} {

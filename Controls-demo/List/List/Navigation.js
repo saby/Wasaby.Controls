@@ -24,11 +24,11 @@ define('Controls-demo/List/List/Navigation', [
          constructor: function() {
             ModuleClass.superclass.constructor.apply(this, arguments);
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data.srcData
             });
             this._navigationViewTypeSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 1,

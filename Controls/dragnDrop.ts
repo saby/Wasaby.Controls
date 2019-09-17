@@ -1,5 +1,5 @@
 /**
- * Библиотека dragnDrop.
+ * Библиотека контролов, которые реализуют перемещение элементов при помощи курсора мыши.
  * @library Controls/dragnDrop
  * @includes Container Controls/_dragnDrop/Container
  * @includes Controller Controls/_dragnDrop/Controller

@@ -17,6 +17,9 @@ define('Controls-demo/Popup/TestMaximizedStack',
          },
          updateMaximizeButton: function(options) {
             this._showMaximizedButton = options.stackMaxWidth - options.stackMinWidth > 200;
+         },
+         _close: function() {
+            this._notify('close', [], { bubbling: true });
          }
       });
 

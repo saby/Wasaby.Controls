@@ -25,6 +25,8 @@ import 'css!theme?Controls/scroll';
  * @public
  * @author Красильников А.С.
  * @category Container
+ * @remark
+ * Контрол работает как нативный скролл: скроллбар появляется, когда высота контента больше высоты контрола. Для корректной работы контрола необходимо ограничить его высоту.
  * @demo Controls-demo/Container/Scroll
  *
  */
@@ -142,8 +144,8 @@ var
 
       setScrollTop: function(self, scrollTop) {
          self._children.scrollWatcher.setScrollTop(scrollTop);
-         self._scrollTop = scrollTop;
-         self._notify('scroll', [scrollTop]);
+         self._scrollTop = _private.getScrollTop(self, self._children.content);
+         self._notify('scroll', [self._scrollTop]);
       },
 
       calcHasScroll: function(self) {
@@ -424,16 +426,16 @@ var
             return false;
          }
 
+          if (this._shadowVisiblityMode[position] === 'visible') {
+              return true;
+          }
+
          // On ipad with inertial scrolling due to the asynchronous triggering of scrolling and caption fixing  events,
          // sometimes it turns out that when the first event is triggered, the shadow must be displayed,
          // and immediately after the second event it is not necessary.
          // These conditions appear during scrollTop < 0. Just do not display the shadow when scrollTop < 0.
          if (Env.detection.isMobileIOS && position === 'top' && _private.getScrollTop(this, this._children.content) < 0) {
             return false;
-         }
-
-         if (this._shadowVisiblityMode[position] === 'visible') {
-            return true;
          }
 
          return this._displayState.shadowPosition.indexOf(position) !== -1;
@@ -633,8 +635,11 @@ var
             shadowVisible = { top: false, bottom: false };
 
          if ((shadowVisible || this._options.shadowVisible) && this._displayState.hasScroll) {
-            shadowVisible.top = this._displayState.shadowPosition.indexOf('top') !== -1;
-            shadowVisible.bottom = this._displayState.shadowPosition.indexOf('bottom') !== -1;
+            // в before/afterMount this._displayState.shadowPosition еще не задан
+            if (this._displayState.shadowPosition) {
+                shadowVisible.top = this._displayState.shadowPosition.indexOf('top') !== -1;
+                shadowVisible.bottom = this._displayState.shadowPosition.indexOf('bottom') !== -1;
+            }
 
             if (this._shadowVisiblityMode.top === 'visible') {
                shadowVisible.top = true;
@@ -680,6 +685,16 @@ var
        */
       scrollTo: function(offset) {
          _private.setScrollTop(this, offset);
+      },
+
+      /**
+       * Возвращает true если есть возможность вроскролить к позиции offset.
+       * @function Controls/_scroll/Container#canScrollTo
+       * @param offset Позиция в пикселях
+       * @noshow
+       */
+      canScrollTo: function(offset: number): boolean {
+         return offset < this._children.content.scrollHeight - this._children.content.clientHeight;
       },
 
       /**

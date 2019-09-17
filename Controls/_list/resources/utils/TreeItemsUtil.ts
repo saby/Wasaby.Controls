@@ -9,7 +9,7 @@ var
            var
               displayProperties = {
                  collection: items,
-                 idProperty: cfg.keyProperty,
+                 keyProperty: cfg.keyProperty,
                  parentProperty: cfg.parentProperty,
                  nodeProperty: cfg.nodeProperty,
                  loadedProperty: '!' + cfg.parentProperty + '$',

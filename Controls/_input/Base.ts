@@ -387,12 +387,9 @@ var _private = {
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_input/interface/IBase
+ * @mixes Controls/_input/interface/ITag
+ * @mixes Controls/_input/interface/IValue
  * @mixes Controls/_input/interface/IValidationStatus
- *
- * @mixes Controls/interface/IInputTag
- * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputStyle
- * @mixes Controls/interface/ICallback
  *
  * @public
  * @demo Controls-demo/Input/SizesAndHeights/Index
@@ -740,26 +737,22 @@ var Base = Control.extend({
      * @private
      */
     _clickHandler: function () {
-        if (this._options.selectOnClick && this._firstClick) {
-            this._viewModel.select();
-        } else {
-            var self = this;
+        var self = this;
+
+        /**
+         * If the value in the field is selected, when you click on the selected area,
+         * the cursor in the field is placed after the event. https://jsfiddle.net/wv9o4xmd/
+         * Therefore, we remember the selection from the field at the next drawing cycle.
+         */
+        runDelayed(function () {
+            self._viewModel.selection = self._getFieldSelection();
 
             /**
-             * If the value in the field is selected, when you click on the selected area,
-             * the cursor in the field is placed after the event. https://jsfiddle.net/wv9o4xmd/
-             * Therefore, we remember the selection from the field at the next drawing cycle.
+             * Changes are applied during the synchronization cycle. We are not in it,
+             * so we need to inform the model that the changes have been applied.
              */
-            runDelayed(function () {
-                self._viewModel.selection = self._getFieldSelection();
-
-                /**
-                 * Changes are applied during the synchronization cycle. We are not in it,
-                 * so we need to inform the model that the changes have been applied.
-                 */
-                self._viewModel.changesHaveBeenApplied();
-            });
-        }
+            self._viewModel.changesHaveBeenApplied();
+        });
 
         this._firstClick = false;
     },
@@ -809,13 +802,22 @@ var Base = Control.extend({
         _private.handleInput(this, splitValue, inputType);
 
         /**
-         * На Android работа с данными поля во время ввода приводит к ошибке
-         * https://online.sbis.ru/opendoc.html?guid=34bc55ac-807f-4d98-88b8-37b7ba0520de
-         * Последующие значения атрибута value не обновляются после пользовательского ввода.
-         * Из-за невалидного value нарушается логика работы контрола. Поэтому работать с value нужно во
-         * время цикла синхронизации. Модель синхронизируется с полем во время цикла синхронизации, если изменения
-         * не были применены(у модели не был вызван метод changesHaveBeenApplied). Такой подход увеличит время перерисоки,
-         * но на Android визуально не заметно.
+         * Некоторые браузеры предоставляют возможность пользователю выбрать значение из предложенного списка.
+         * Список формируется на основе введенного слова, путем попытки предугадать, какое слово вы пытаетесь набрать.
+         * Выбранное значение полностью заменяет введенное слово.
+         * Опытным путем удалось определить, что после ввода возможны 2 сценария:
+         * 1. Каретка стоит в конце слова. Свойство selectionStart = selectionEnd = конец слова. Например, устройство ASUS_Z00AD, Android 5, браузер chrome.
+         * 2. Слово выделено целиком. Свойство selectionStart = 0, а selectionEnd = конец слова. Например, устройство ASUS_Z00AD, Android 5, встроенный браузер.
+         * Данные в первом случае ничем не отличаются от обычного ввода, поэтому он не вызывает проблем.
+         * Разберем работу контрола во втором случае. Контрол всегда должен отображаться в соответствии со своей моделью.
+         * После ввода selectionStart в модели равен текущей позиции каретки, а у поля, как говорилось ранее, selectionStart = 0. Из-за этого контрол будет менять выделение.
+         * В этом случае возникает нативный баг. Он проявляется в том, что последующего ввода символов не происходит. https://jsfiddle.net/fxzsqug4/1/
+         * Чтобы избавиться от бага, нужно поставить операцию изменения выделение в конец стека.
+         * Например, можно воспользоваться setTimeout. https://jsfiddle.net/fxzsqug4/2/
+         * Однако, можно просто не синхронизироваться с моделью во время обработки события input.
+         * Потому что модель синхронизируется с полем во время цикла синхронизации, если изменения
+         * не были применены (у модели не был вызван метод changesHaveBeenApplied). Такой подход увеличит время перерисоки,
+         * но в местах с багом этого визуально не заметно.
          */
         if (!this._isMobileAndroid) {
             _private.updateField(this, model.displayValue, model.selection);
@@ -854,6 +856,10 @@ var Base = Control.extend({
     },
 
     _focusInHandler: function (event) {
+        if (this._options.selectOnClick) {
+            this._viewModel.select();
+        }
+
         if (this._focusByMouseDown) {
             this._firstClick = true;
         }
@@ -1052,6 +1058,7 @@ Base.getDefaultOptions = function () {
         textAlign: 'left',
         autoComplete: 'off',
         fontStyle: 'default',
+        spellCheck: true,
         selectOnClick: false
     };
 };
@@ -1067,6 +1074,7 @@ Base.getOptionTypes = function () {
          'username',
          'current-password'
          ]),*/
+        spellCheck: entity.descriptor(Boolean),
         selectOnClick: entity.descriptor(Boolean),
         inputCallback: entity.descriptor(Function),
 

@@ -8,7 +8,7 @@ define(
       describe('FilterSimplePanelList', function() {
 
          let defaultItems = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: [{id: '1', title: 'Test1'},
                {id: '2', title: 'Test2'},
                {id: '3', title: 'Test3'},
@@ -21,7 +21,7 @@ define(
             displayProperty: 'title',
             keyProperty: 'id',
             emptyText: '',
-            resetValue: '2',
+            resetValue: ['2'],
             id: 'text',
             items: defaultItems.clone(),
             selectedKeys: [],
@@ -52,7 +52,7 @@ define(
          it('_beforeUpdate', function() {
             let list = getList(defaultConfig),
                items = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{id: '1', title: 'Test1'}, {id: '2', title: 'Test2'}, {id: '3', title: 'Test3'}]});
             let newConfig = {...defaultConfig, items};
             list._beforeMount(defaultConfig);
@@ -85,9 +85,9 @@ define(
             assert.deepStrictEqual(itemClickResult, ['1']);
 
             // item click with selection
-            let newConfig = {...defaultConfig, selectedKeys: ['2']};
+            let newConfig = {...defaultConfig, selectedKeys: ['1', '3']};
             list._beforeUpdate(newConfig);
-            list._itemClickHandler(event, defaultItems.at(0));
+            list._itemClickHandler(event, defaultItems.at(2));
             assert.deepStrictEqual(checkBoxClickResult, ['1']);
 
             //checkbox click
@@ -99,6 +99,14 @@ define(
             isCheckBoxClick = true;
             list._itemClickHandler(event, defaultItems.at(1));
             assert.deepStrictEqual(itemClickResult, ['2']);
+
+            //folder click
+            isCheckBoxClick = false;
+            list._options.nodeProperty = 'node';
+            let item = defaultItems.at(2).clone();
+            item.set('node', true);
+            list._itemClickHandler(event, item);
+            assert.deepStrictEqual(itemClickResult, ['3']);
          });
 
          it('_afterOpenDialogCallback', function() {

@@ -1,22 +1,37 @@
 import DateUtil = require('Controls/Utils/Date');
 
-var Utils = {
+const DEFAULT_CSS_CLASS_BASE = 'controls-RangeSelection';
+const PERIOD_TYPE = {
+   day: 'day',
+   month: 'month',
+   year: 'year'
+};
 
-   PERIOD_QUANTUM: {
-      day: 'day',
-      month: 'month',
-      year: 'year'
-   },
+type PeriodType = 'day' | 'month' | 'year';
+
+const isPeriodsEqual = (date1: Date, date2: Date, cfg: object): boolean => {
+   const periodType: PeriodType = cfg ? cfg.periodQuantum : 'day';
+   let isEqual;
+   if (periodType === PERIOD_TYPE.year) {
+      isEqual = DateUtil.isYearsEqual;
+   } else if (periodType === PERIOD_TYPE.month) {
+      isEqual = DateUtil.isMonthsEqual;
+   } else {
+      isEqual = DateUtil.isDatesEqual;
+   }
+   return isEqual(date1, date2);
+};
+
+var Utils = {
+   PERIOD_TYPE: PERIOD_TYPE,
 
    /**
     * Returns a string containing css selection classes
     * @returns {String}
     */
    prepareSelectionClass: function(itemValue, startValue, endValue, selectionProcessing, baseSelectionValue,
-                                   hoveredSelectionValue, hoveredStartValue, hoveredEndValue, cfg) {
+                                   hoveredSelectionValue, hoveredStartValue, hoveredEndValue, cfg?: object) {
       var css = [],
-         periodQuantum = cfg ? cfg.periodQuantum : 'day',
-         isPeriodsEqual,
          start,
          end,
          selected,
@@ -24,7 +39,7 @@ var Utils = {
          isEnd,
          range;
 
-      if (!(startValue || endValue) && !selectionProcessing) {
+      if (!(startValue || endValue) && !selectionProcessing && !(hoveredStartValue || hoveredEndValue)) {
          return '';
       }
 
@@ -35,22 +50,12 @@ var Utils = {
       selected = Utils.isSelected(itemValue, startValue, endValue, selectionProcessing, baseSelectionValue,
          hoveredSelectionValue);
 
-      if (!selected) {
-         return '';
+      if (selected) {
+         css.push(selectionProcessing ? 'selection' : 'selected');
       }
 
-      css.push(selectionProcessing ? 'selection' : 'selected');
-
-      if (periodQuantum === this.PERIOD_QUANTUM.year) {
-         isPeriodsEqual = DateUtil.isYearsEqual;
-      } else if (periodQuantum === this.PERIOD_QUANTUM.month) {
-         isPeriodsEqual = DateUtil.isMonthsEqual;
-      } else {
-         isPeriodsEqual = DateUtil.isDatesEqual;
-      }
-
-      isStart = isPeriodsEqual(itemValue, start);
-      isEnd = isPeriodsEqual(itemValue, end);
+      isStart = isPeriodsEqual(itemValue, start, cfg);
+      isEnd = isPeriodsEqual(itemValue, end, cfg);
 
       if (isStart) {
          css.push('start');
@@ -58,33 +63,40 @@ var Utils = {
       if (isEnd && ((selectionProcessing && !isStart) || !selectionProcessing)) {
          css.push('end');
       }
-      if (!isStart && !isEnd) {
+      if (!isStart && !isEnd && selected) {
          css.push('inner');
       }
 
       if (selectionProcessing) {
-         if (isPeriodsEqual(itemValue, baseSelectionValue)) {
+         if (isPeriodsEqual(itemValue, baseSelectionValue, cfg)) {
             css.push('base');
          }
-         if (isPeriodsEqual(itemValue, hoveredSelectionValue)) {
-            css.push('hovered');
-         }
-      } else if (this.isHovered(itemValue, hoveredStartValue, hoveredEndValue)) {
+      }
+
+      if (Utils.isHovered(itemValue, hoveredSelectionValue, hoveredStartValue, hoveredEndValue)) {
          css.push('hovered');
       }
 
-      return ((cfg && cfg.cssPrefix) || 'controls-RangeSelection__') + css.join('-');
+      return Utils.buildCssClass(cfg, css);
    },
 
-   isHovered: function(itemValue, hoveredStartValue, hoveredEndValue) {
-      return hoveredStartValue && hoveredEndValue && itemValue >= hoveredStartValue && itemValue <= hoveredEndValue;
+   isHovered: function(itemValue, hoveredSelectionValue, hoveredStartValue, hoveredEndValue, cfg) {
+      return isPeriodsEqual(itemValue, hoveredSelectionValue, cfg) ||
+          (hoveredStartValue && hoveredEndValue && itemValue >= hoveredStartValue && itemValue <= hoveredEndValue);
    },
 
    prepareHoveredClass: function(itemValue, hoveredStartValue, hoveredEndValue, cfg) {
-      if (this.isHovered(itemValue, hoveredStartValue, hoveredEndValue)) {
-         return ((cfg && cfg.cssPrefix) || 'controls-RangeSelection__') + 'hovered';
+      if (this.isHovered(itemValue, hoveredStartValue, hoveredEndValue, cfg)) {
+         return Utils.buildCssClass(cfg, ['hovered']);
       }
       return '';
+   },
+
+   buildCssClass: function(cfg: object, parts: string[]): string {
+      if (!parts.length) {
+         return DEFAULT_CSS_CLASS_BASE;
+      }
+      return ((cfg && cfg.cssPrefix) || (DEFAULT_CSS_CLASS_BASE + '__')) + parts.join('-');
    },
 
    isSelected: function(itemValue, startValue, endValue, selectionProcessing, baseSelectionValue,

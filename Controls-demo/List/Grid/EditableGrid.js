@@ -35,7 +35,7 @@ define('Controls-demo/List/Grid/EditableGrid', [
                }
             ];
             this._documentSignMemory = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 1,
@@ -48,7 +48,7 @@ define('Controls-demo/List/Grid/EditableGrid', [
                ]
             });
             this._source = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 1,

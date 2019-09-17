@@ -177,6 +177,39 @@ define(
             assert.isFalse(pGrid._items === initItems );
          });
 
+         it('getLastVisibleItemIndex', function () {
+            var lastVisibleIndex = PropertyGrid._private.getLastVisibleItemIndex(config.items);
+            assert.equal(lastVisibleIndex, 1);
+				var items = [
+					  {
+							id: 'list',
+							value: 1,
+							resetValue: 1,
+							visibility: true
+					  },
+					  {
+							id: 'text',
+							value: '123',
+							resetValue: '',
+							visibility: true
+					  },
+					  {
+							id: 'bool',
+							value: true,
+							resetValue: false,
+							visibility: false
+					  },
+					 {
+						  id: 'bool',
+						  value: '1234',
+						  resetValue: false,
+						  visibility: true
+					 }
+				 ];
+            lastVisibleIndex = PropertyGrid._private.getLastVisibleItemIndex(items);
+            assert.equal(lastVisibleIndex, 3);
+         });
+
          it('_visibilityChangedHandler', function() {
             let pGrid = getPropertyGrid(config);
             let result;

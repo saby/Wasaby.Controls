@@ -86,38 +86,75 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 
 /**
  * @name Controls/_validate/FormController#content
+ * @cfg {Content} Содержимое, к которому добавлена ​​логика валидации.
+ */
+/*
+ * @name Controls/_validate/FormController#content
  * @cfg {Content} The content to which the logic of validation is added.
  */
 
 /**
  * @name Controls/_validate/FormController#submit
- * @description Start the validation
+ * @description Запуск валидации.
  * @returns {Deferred}
  * @example
- * wml
+ * WML
  * <pre>
- *<Controls.validate:Controller name="formController">
- * <ws:content>
- *   <Controls.validate:Container>
- *     <ws:validators>
- *        <ws:Function value="{{_value2}}" >Controls/validate:isRequired</ws:Function>
- *     </ws:validators>
- *      <ws:content>
- *        <Controls.input:Text bind:value="_value2"/>
- *      </ws:content>
- *   </Controls.validate:Container>
- * </ws:content>
- *</Controls.validate:Controller>
- *<Controls.buttons:Button caption="Submit" on:click="_clickHandler()"
+ * <Controls.validate:Controller name="formController">
+ *    <ws:content>
+ *       <Controls.validate:Container>
+ *          <ws:validators>
+ *             <ws:Function value="{{_value2}}" >Controls/validate:isRequired</ws:Function>
+ *          </ws:validators>
+ *          <ws:content>
+ *             <Controls.input:Text bind:value="_value2"/>
+ *          </ws:content>
+ *       </Controls.validate:Container>
+ *    </ws:content>
+ * </Controls.validate:Controller>
+ * <Controls.buttons:Button caption="Submit" on:click="_clickHandler()"
  * </pre>
- * js
+ * JavaScript
  * <pre>
  *     Control.extend({
  *        ...
  *
- *         _clickHandler: function() {
-         this._children.formController.submit();
-      }
+ *        _clickHandler: function() {
+ *           this._children.formController.submit();
+ *        }
+ *        ...
+ *    });
+ * </pre>
+ */
+/*
+ * @name Controls/_validate/FormController#submit
+ * @description Start the validation
+ * @returns {Deferred}
+ * @example
+ * WML
+ * <pre>
+ * <Controls.validate:Controller name="formController">
+ *    <ws:content>
+ *       <Controls.validate:Container>
+ *          <ws:validators>
+ *             <ws:Function value="{{_value2}}" >Controls/validate:isRequired</ws:Function>
+ *          </ws:validators>
+ *          <ws:content>
+ *             <Controls.input:Text bind:value="_value2"/>
+ *          </ws:content>
+ *       </Controls.validate:Container>
+ *    </ws:content>
+ * </Controls.validate:Controller>
+ * <Controls.buttons:Button caption="Submit" on:click="_clickHandler()"
+ * </pre>
+ * JavaScript
+ * <pre>
+ *     Control.extend({
+ *        ...
+ *
+ *        _clickHandler: function() {
+ *           this._children.formController.submit();
+ *        }
  *        ...
  *    });
  * </pre>
@@ -126,5 +163,10 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 /**
  * @name Controls/_validate/FormController#isValid
  * @description Return the result of validation
+ * @returns {Array}
+ */
+/*
+ * @name Controls/_validate/FormController#isValid
+ * @description Возвращает результат валидации.
  * @returns {Array}
  */

@@ -82,6 +82,10 @@
       "path": "./tests/ControlsUnit"
     },
     {
+      "name": "SBIS3CONTROLSUnit",
+      "path": "./tests/SBIS3CONTROLSUnit"
+    },
+    {
       "name": "Application",
       "path": "./node_modules/wasaby-app/src/Application",
       "required": true

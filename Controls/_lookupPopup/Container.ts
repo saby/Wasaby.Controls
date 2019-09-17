@@ -1,13 +1,13 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookupPopup/Container');
 import ControllerContext = require('Controls/_lookupPopup/__ControllerContext');
-import {ContextOptions} from 'Controls/context';
 import chain = require('Types/chain');
 import Utils = require('Types/util');
-import {Controller as SourceController} from 'Controls/source';
-import {selectionToRecord} from 'Controls/operations';
 import Deferred = require('Core/Deferred');
 import cInstance = require('Core/core-instance');
+import {ContextOptions} from 'Controls/context';
+import {Controller as SourceController} from 'Controls/source';
+import {selectionToRecord} from 'Controls/operations';
 import {adapter} from 'Types/entity';
 import {IData, IDecorator} from "Types/source";
 
@@ -157,7 +157,7 @@ import {IData, IDecorator} from "Types/source";
          },
 
          getSelectedKeys: function(options, context) {
-            var items = _private.getFilteredItems(context.selectorControllerContext.selectedItems, _private.getFilterFunction(options.selectionFilter));
+            var items = _private.getFilteredItems(options.selectedItems || context.selectorControllerContext.selectedItems, _private.getFilterFunction(options.selectionFilter));
             return _private.getKeysByItems(items, context.dataOptions.keyProperty);
          },
 
@@ -244,8 +244,8 @@ import {IData, IDecorator} from "Types/source";
          },
 
          _beforeUpdate: function(newOptions, context) {
-            var currentSelectedItems = this.context.get('selectorControllerContext').selectedItems;
-            var newSelectedItems = context.selectorControllerContext.selectedItems;
+            const currentSelectedItems = this._options.selectedItems || this.context.get('selectorControllerContext').selectedItems;
+            const newSelectedItems = newOptions.selectedItems || context.selectorControllerContext.selectedItems;
 
             if (currentSelectedItems !== newSelectedItems) {
                this._selectedKeys = _private.getSelectedKeys(newOptions, context);

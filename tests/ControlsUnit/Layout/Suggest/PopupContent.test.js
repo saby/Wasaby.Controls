@@ -20,6 +20,30 @@ define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPop
    }
 
    describe('Controls._suggestPopup.Layer.__PopupContent', function() {
+      it('_beforeUpdate', function() {
+         let
+            isScrollToBottom = false,
+            layer = new PopupContent.default(),
+            optionsReverseList = {
+               stickyPosition: {
+                  verticalAlign: {
+                     side: 'top'
+                  }
+               }
+            };
+
+         layer._children = {
+            scrollContainer: {
+               scrollToBottom: () => {isScrollToBottom = true;}
+            }
+         };
+
+         layer._beforeUpdate({});
+         assert.isFalse(isScrollToBottom);
+
+         layer._beforeUpdate(optionsReverseList);
+         assert.isTrue(isScrollToBottom);
+      });
 
       it('afterUpdate', function() {
          var options = {
@@ -59,6 +83,25 @@ define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPop
          layer._positionFixed = false;
          layer._afterUpdate(oldOptions);
          assert.isFalse(resultSended);
+      });
+
+      it('resize', function() {
+         let
+            isScrollToBottom = false,
+            layer = new PopupContent.default();
+
+         layer._children = {
+            scrollContainer: {
+               scrollToBottom: () => {isScrollToBottom = true;}
+            }
+         };
+
+         layer.resize();
+         assert.isFalse(isScrollToBottom);
+
+         layer._reverseList = true;
+         layer.resize();
+         assert.isTrue(isScrollToBottom);
       });
 
       it('_private.getSuggestWidth', function() {

@@ -194,7 +194,11 @@ var _private = {
       for (item in valueModel) {
          if (valueModel.hasOwnProperty(item)) {
             if (!valueModel[item].valid) {
-               itemValue = parseInt(valueModel[item].str, 10);
+               itemValue = valueModel[item].str;
+               if (_private.reTimeMaskChars.test(item) && _private.isPartlyFilled(self, itemValue)) {
+                  itemValue = itemValue.replace(self._replacerRegExp, '0');
+               }
+               itemValue = parseInt(itemValue, 10);
                if (!isNaN(itemValue)) {
                   setValue(valueModel[item], itemValue);
                   if (item === 'month') {

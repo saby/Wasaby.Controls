@@ -19,8 +19,10 @@
  * @cfg {Array.<String>} Массив свойств, по которым происходит прилипание.
  * <a href="/materials/demo-ws4-grid-sticky">Example</a>
  * @example
- * Установите ladderProperties отобразите шаблон элемента через ladderWrapper:
+ * Пример 1. Шаблон лесенки задан в рамках шаблона родительского контрола.
+ * * WML
  * <pre>
+ *    <!-- MyControl.wml -->
  *    <div class="demoGrid">
  *       <Controls.grid:View
  *          ...
@@ -31,9 +33,9 @@
  *                   <ws:template>
  *                      <ws:partial template="Controls/grid:ColumnTemplate">
  *                         <ws:contentTemplate>
- *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
+ *                            <ws:partial template="{{template.ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
- *                                  {{itemData.item['date']}}
+ *                                  {{template.itemData.item['date']}}
  *                               </div>
  *                            </ws:partial>
  *                         </ws:contentTemplate>
@@ -44,6 +46,32 @@
  *          </ws:columns>
  *       </Controls.grid:View>
  *    </div>
+ * </pre>
+ *
+ * Пример 2. Шаблон ленесенки вынесен в отдельный шаблон.
+ * * WML
+ * <pre>
+ *    <!-- MyControl.wml -->
+ *    <div class="demoGrid">
+ *       <Controls.grid:View
+ *          ...
+ *          ladderProperties="{{ ['date'] }}">
+ *          <ws:columns>
+ *             <ws:Array>
+ *                <ws:Object width="1fr" template="wml!MyModule/MyControl" />
+ *             </ws:Array>
+ *          </ws:columns>
+ *       </Controls.grid:View>
+ *    </div>
+ * </pre>
+ * * WML
+ * <pre>
+ *    <!-- MyTemplate.wml -->
+ *    <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
+ *       <div class="demoGrid__date">
+ *          {{itemData.item['date']}}
+ *       </div>
+ *    </ws:partial>
  * </pre>
  */
 
@@ -108,6 +136,12 @@
  * @variant bottom Align content to bottom side.
  */
 
+/*
+ * @typedef {Object} cellPadding
+ * @property {enum('s'|'null')} left левый отступ ячейки.
+ * @property {enum('s'|'null')} right правый отступ ячейки.
+ */
+
 /**
  * @typedef {Object} HeaderCell Описывает ячейку заголовка строки.
  * @property {String} caption Текст заголовка ячейки.
@@ -120,6 +154,7 @@
  * @property {Number} startColumn Порядковый номер колонки на которой начинается ячейка.
  * @property {Number} endColumn Порядковый номер колонки на которой заканчивается ячейка.
  * @property {Object} templateOptions Опции, передаваемые в шаблон ячейки заголовка.
+ * @property {cellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
  */
 
 /*
@@ -168,7 +203,7 @@
  *       </ws:header>
  *    </Controls.grid:View>
  * </pre>
- * 
+ *
  * @example
  * Пример массива колонок многоуровневого заголовка:
  * <pre>
@@ -249,7 +284,7 @@
  * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в столбце.
  * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
  * По умолчанию используется базовый шаблон {@link Controls/grid:ColumnTemplate}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
- * 
+ *
  * На корневой элемент пользовательского шаблона следует задать CSS-класс "controls-Grid__row-cell__content_baseline_L". Это обеспечит выравнивание контента ячейки по базовой линии.
  * <pre>
  * <Controls.grid:View>
@@ -268,9 +303,9 @@
  *     </ws:columns>
  * </Controls.grid:View>
  * </pre>
- * 
+ *
  * Базовый шаблон поддерживает контентную опцию <code>contentTemplate</code>. Поместите в неё вёрстку, которая описывает отображение ячейки.
- * 
+ *
  * В области видимости базового шаблона доступна переменная <code>itemData</code> (тип <code>Object</code>) со следующими свойствами:
  * - <code>columnIndex</code> (тип Number) — порядковый номер колонки. Отсчет от 0.
  * - <code>index</code> (тип Number) — порядковый номер строки. Отсчет от 0.
@@ -279,11 +314,11 @@
  * - <code>column</code> (тип Object) — конфигурация колонки.
  * @property {String} resultTemplate Шаблон отображения ячейки в строке итогов.
  * Подробнее о работе со строкой итогов читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/result/">руководство разработчика</a>.
- * @property {GridCellAlign} [align=top] Выравнивание содержимого ячейки по горизонтали.
+ * @property {GridCellAlign} [align=left] Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} [valign=baseline] Выравнивание содержимого ячейки по вертикали.
  * По умолчанию содержимое выравнивается по базовой линии (см. {@link align-items https://developer.mozilla.org/ru/docs/Web/CSS/align-items}).
  * @property {String} stickyProperty Имя поля, которое используется для настройки прилипания данных столбца к верхней границе таблицы.
- * @property {TextOverflow} textOverflow Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
+ * @property {TextOverflow} [textOverflow=none] Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
  */
 
 /*

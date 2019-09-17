@@ -8,7 +8,7 @@ import {parse as load} from 'Core/library';
  *  Одновременно может быть открыто несколько окон уведомлений. В этом случае они выстраиваются в стек по вертикали.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ Подробнее}.
  *
- * <a href="/materials/demo-ws4-notification">Demo-example</a>.
+ * <a href="/materials/demo-ws4-notification">Демо-пример</a>.
  * @class Controls/_popup/Opener/Notification
  * @control
  * @public
@@ -45,8 +45,8 @@ const BASE_OPTIONS = {
 
 const _private = {
     clearPopupIds(self) {
-        if (!self.isOpened() && self._options.displayMode === 'single') {
-            self._popupId = null;
+        if (!self.isOpened()) {
+            self._notificationId = null;
         }
     },
     compatibleOpen(self, popupOptions): Promise<string> {
@@ -80,16 +80,16 @@ const _private = {
     compatibleClose(self) {
         // Close popup on old page
         if (!isNewEnvironment()) {
-            if (self._popupId && self._popupId.close) {
-                self._popupId.close();
+            if (self._notificationId && self._notificationId.close) {
+                self._notificationId.close();
             }
-            self._popupId = null;
+            self._notificationId = null;
         }
     }
 };
 
 const Notification = BaseOpener.extend({
-    _popupId: null,
+    _notificationId: null,
     /**
      * Метод открытия нотификационного окна.
      * Повторный вызов этого метода вызовет переририсовку контрола.
@@ -130,7 +130,7 @@ const Notification = BaseOpener.extend({
      */
 
     isOpened(): boolean {
-        return !!ManagerController.find(this._popupId);
+        return !!ManagerController.find(this._notificationId);
     },
 
     /*
@@ -142,13 +142,13 @@ const Notification = BaseOpener.extend({
     open(popupOptions) {
         const config = {...this._options, ...popupOptions};
         _private.clearPopupIds(this);
-        return Notification.openPopup(config, this._popupId).then((popupId) => {
-            this._popupId = popupId;
+        return Notification.openPopup(config, this._notificationId).then((popupId) => {
+            this._notificationId = popupId;
             return popupId;
         });
     },
     close() {
-        Notification.closePopup(this._popupId);
+        Notification.closePopup(this._notificationId);
         _private.compatibleClose(this);
     }
 });
@@ -170,12 +170,12 @@ const Notification = BaseOpener.extend({
  *          template: 'Example/MyStackTemplate',
  *          autoClose: true
  *        }).then((popupId) => {
- *          this._popupId = popupId;
+ *          this._notificationId = popupId;
  *        });
  *    },
  *
  *    closeNotification() {
- *       Notification.closePopup(this._popupId);
+ *       Notification.closePopup(this._notificationId);
  *    }
  * </pre>
  * @see closePopup
@@ -228,12 +228,12 @@ Notification.openPopup = (config: object, id: string): Promise<string> => {
  *          template: 'Example/MyStackTemplate',
  *          autoClose: true
  *        }).then((popupId) => {
- *          this._popupId = popupId;
+ *          this._notificationId = popupId;
  *        });
  *    },
  *
  *    closeNotification() {
- *       Notification.closePopup(this._popupId);
+ *       Notification.closePopup(this._notificationId);
  *    }
  * </pre>
  * @see openPopup

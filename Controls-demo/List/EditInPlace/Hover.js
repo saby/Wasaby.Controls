@@ -27,7 +27,7 @@ define('Controls-demo/List/EditInPlace/Hover', [
 
       _beforeMount: function() {
          this._viewSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: srcData
          });
       }

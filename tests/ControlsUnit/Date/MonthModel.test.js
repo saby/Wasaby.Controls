@@ -100,5 +100,33 @@ define([
             });
          });
       });
+
+      describe('_prepareClass', function() {
+         const month = new Date(2019, 0, 1);
+         [{
+            date: month,
+            options: {
+               month: month,
+               startValue: month,
+               endValue: month
+            },
+            cssClass: 'controls-MonthViewVDOM__item-selectedStartEnd'
+         }, {
+            date: month,
+            options: {
+               month: month,
+               startValue: month,
+               selectionProcessing: true
+            },
+            cssClass: 'controls-MonthViewVDOM__item-selectedStart'
+         }].forEach(function(test) {
+            it(`should return correct css class if options are equal to ${JSON.stringify(test.options)}.`, function () {
+               let model = new MonthModel(
+                     coreMerge({ month: month }, test.options, { preferSource: true })),
+                  css = model._prepareClass({ value: model._getDayObject(test.date) });
+               assert.include(css, test.cssClass);
+            });
+         });
+      });
    });
 });

@@ -1,1 +1,11 @@
-<Controls.popup:Sticky name="suggestPopup" _vdomOnOldPage="{{true}}" scope="{{_popupOptions}}"/>
+<Controls.popup:Sticky name="suggestPopup" _vdomOnOldPage="{{true}}" scope="{{_popupOptions}} ">
+   <ws:template>
+      <ws:partial template="Controls/_suggestPopup/Layer/__PopupContent"
+                  name="popupContent"
+                  target="{{_options.target}}"
+                  filter="{{_options.filter}}"
+                  searchValue="{{_options.searchValue}}"
+                  content="{{_options.content}}"
+                  showContent="{{_options.showContent}}"/>
+   </ws:template>
+</Controls.popup:Sticky>

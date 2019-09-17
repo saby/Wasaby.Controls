@@ -60,7 +60,7 @@ export default class SmallRow extends Control {
       this._source = new HierarchicalMemory({
          parentProperty: 'parent',
          nodeProperty: 'parent@',
-         idProperty: 'id',
+         keyProperty: 'id',
          data: [{
             id: 0,
             title: 'Домашняя птица',

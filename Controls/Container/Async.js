@@ -92,7 +92,7 @@ define('Controls/Container/Async',
                self._loadContentSync(options.templateName, options.templateOptions, true);
                result = new Promise(function(resolve, reject) {
                   if (self.error) {
-                     reject();
+                     reject(self.error);
                   } else {
                      resolve(true);
                   }
@@ -165,7 +165,7 @@ define('Controls/Container/Async',
             }, function(err) {
                self.canUpdate = true;
                self._setErrorState(true, err);
-               return false;
+               return err;
             });
             return promise;
          },

@@ -1,6 +1,18 @@
 import {TemplateFunction} from 'UI/Base';
 
+/**
+ * @typedef {String} TextAlign
+ * @variant left Текст выравнивается по левой стороне.
+ * @variant right Текст выравнивается по правой стороне.
+ */
 export type TextAlign = 'left' | 'right';
+/**
+ * @typedef {String} AutoComplete
+ * @variant off Отключить автозаполнение.
+ * @variant on Включить автозаполнение ранее введенными значениями.
+ * @variant username Включить автозаполнение сохраненными именами пользователей.
+ * @variant current-password Включить автозаполнение текущими паролями для учетной записи, указанной в поле для имени пользователя.
+ */
 export type AutoComplete = 'on' | 'off' | 'username' | 'current-password';
 
 /**
@@ -12,12 +24,7 @@ export type AutoComplete = 'on' | 'off' | 'username' | 'current-password';
 export interface IBaseOptions {
     /**
      * @name Controls/_input/interface/IBase#autoComplete
-     * @cfg {Enum} Управление браузерным автозаполнением в поле.
-     * @default off
-     * @variant off Отключить автозаполнение.
-     * @variant on Включить автозаполнение ранее введенными значениями.
-     * @variant username Включить автозаполнение сохраненными именами пользователей.
-     * @variant current-password Включить автозаполнение текущими паролями для учетной записи, указанной в поле для имени пользователя.
+     * @cfg {AutoComplete} Управление браузерным автозаполнением в поле.
      * @remark
      * Значения для автозаполнения берутся браузером из его хранилища.
      * Имя поля используется для доступа к ним. Поэтому, чтобы значения, хранящиеся в одном поле, не применялись к другому, поля должны иметь разные имена.
@@ -33,10 +40,7 @@ export interface IBaseOptions {
     autoComplete: AutoComplete;
     /**
      * @name Controls/_input/interface/IBase#textAlign
-     * @cfg {Enum} Выравнивание текста по горизонтали в поле.
-     * @default left
-     * @variant left Текст выравнивается по левой стороне.
-     * @variant right Текст выравнивается по правой стороне.
+     * @cfg {TextAlign} Выравнивание текста по горизонтали в поле.
      * @demo Controls-demo/Input/TextAlignments/Index
      */
     textAlign: TextAlign;
@@ -49,6 +53,15 @@ export interface IBaseOptions {
      * @demo Controls-demo/Input/SelectOnClick/Index
      */
     selectOnClick: boolean;
+    /**
+     * @name Controls/_input/interface/IBase#selectOnClick
+     * @cfg {Boolean} Определяет наличие браузерной проверки правописания и грамматики в тексте.
+     * @remark
+     * * false - Отсутствует проверка правописания и грамматики.
+     * * true - Браузер проверяет правописание и грамматику в тексте.
+     * @demo Controls-demo/Input/SpellCheck/Index
+     */
+    spellCheck: boolean;
     /**
      * @name Controls/_input/interface/IBase#placeholder
      * @cfg {String|TemplateFunction} Строка или шаблон, содержащие текст подсказки, который будет отображаться в пустом поле.
@@ -76,7 +89,7 @@ export interface IBaseOptions {
 }
 
 interface IBase {
-    readonly '[Controls/_interface/IBase]': boolean;
+    readonly '[Controls/_input/interface/IBase]': boolean;
 }
 
 export default IBase;

@@ -1,15 +1,13 @@
 import Control = require('Core/Control');
-import { ItemsViewModel } from 'Controls/list';
 import template = require('wml!Controls/_propertyGrid/PropertyGrid');
 import defaultGroupTemplate = require('wml!Controls/_propertyGrid/groupTemplate');
-import defaultItemTemplate = require('wml!Controls/_propertyGrid/itemTemplate');
 import PropertyGridItem = require('Controls/_propertyGrid/PropertyGridItem');
+import {ItemsViewModel} from 'Controls/list';
 
-import { factory } from 'Types/chain';
-import { object } from 'Types/util';
-import { RecordSet } from 'Types/collection';
+import {factory} from 'Types/chain';
+import {RecordSet} from 'Types/collection';
 
-import IPropertyGridOptions from 'Controls/_propertyGrid/IPropertyGridOptions';
+import {IPropertyGridOptions} from 'Controls/_propertyGrid/IPropertyGrid';
 import IProperty from 'Controls/_propertyGrid/IProperty';
 
 interface IPropertyGridItem extends IProperty {
@@ -69,7 +67,7 @@ function getPropertyGridItems(editingObject: Object, source: IProperty[]): Prope
     result = new RecordSet({
         rawData: itemsArray,
         model: PropertyGridItem,
-        idProperty: PROPERTY_NAME_FIELD
+        keyProperty: PROPERTY_NAME_FIELD
     });
     return result;
 }
@@ -90,12 +88,24 @@ function getGroupingKeyCallback(items: PropertyGridItems): Function|null {
 }
 
 /**
+ * Контрол, который позволяет пользователям просматривать и редактировать свойства объекта.
+ * Вы можете использовать стандартные редакторы PropertyGrid или специальные редакторы.
+ * По умолчанию propertyGrid будет автоматически генерировать все свойства для данного объекта.
+ * @class Controls/_propertyGrid/PropertyGrid
+ * @extends Core/Control
+ * @interface Controls/_propertyGrid/IPropertyGridOptions
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ */
+
+/*
  * Represents a control that allows users to inspect and edit the properties of an object.
  * You can use the standard editors that are provided with the PropertyGrid or you can use custom editors.
  * By default the propertyGrid will autogenerate all the properties for a given object
  * @class Controls/_propertyGrid/PropertyGrid
  * @extends Core/Control
- * @interface Controls/_propertyGrid/IPropertyGridOptions
+ * @interface Controls/_propertyGrid/IPropertyGrid
  * @control
  * @public
  * @author Герасимов А.М.

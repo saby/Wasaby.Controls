@@ -54,7 +54,7 @@ define('Controls-demo/BreadCrumbs/PathPG', [
                   items: employees.map(function(item) {
                      return new entity.Model({
                         rawData: item,
-                        idProperty: 'id'
+                        keyProperty: 'id'
                      });
                   })
                }, {
@@ -63,7 +63,7 @@ define('Controls-demo/BreadCrumbs/PathPG', [
                   items: contacts.map(function(item) {
                      return new entity.Model({
                         rawData: item,
-                        idProperty: 'id'
+                        keyProperty: 'id'
                      });
                   })
                }],
@@ -101,7 +101,7 @@ define('Controls-demo/BreadCrumbs/PathPG', [
             items: employees.map(function(item) {
                return new entity.Model({
                   rawData: item,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
             }),
             showActionButton: true

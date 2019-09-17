@@ -111,7 +111,7 @@ define(
          function createRecordSet(data) {
             return new collection.RecordSet({
                rawData: data,
-               idProperty: 'ObjectId',
+               keyProperty: 'ObjectId',
                adapter: new entity.adapter.Sbis()
             });
          }
@@ -123,7 +123,7 @@ define(
                recent: createRecordSet(recentData)
             },
             itemsProperty: '',
-            idProperty: 'ObjectId'
+            keyProperty: 'ObjectId'
          });
 
          let myItem = new entity.Model({
@@ -138,7 +138,7 @@ define(
                ]
             },
             adapter: new entity.adapter.Sbis(),
-            idProperty: 'id',
+            keyProperty: 'id',
             format: [
                { name: 'id', type: 'string' },
                { name: 'title', type: 'string' },
@@ -148,7 +148,7 @@ define(
          });
          let config = {
             originSource: new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             }),
             historySource: new historyMod.Service({
@@ -280,7 +280,7 @@ define(
                      recent: createRecordSet(recentData)
                   },
                   itemsProperty: '',
-                  idProperty: 'ObjectId'
+                  keyProperty: 'ObjectId'
                });
                let oldItems = [...items];
                oldItems = oldItems.map((item) => {
@@ -289,7 +289,7 @@ define(
                });
                hSource._oldItems = new collection.RecordSet({
                   rawData: oldItems,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
                historyMod.Source._private.initHistory(hSource, newData, hSource._oldItems);
                historyItems = hSource.getItems();
@@ -301,7 +301,7 @@ define(
             it('getItems', function(done) {
                let historyConfig = {
                   originSource: new sourceLib.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: items
                   }),
                   historySource: new historyMod.Service({
@@ -419,10 +419,10 @@ define(
                      recent: createRecordSet(recentData)
                   },
                   itemsProperty: '',
-                  idProperty: 'ObjectId'
+                  keyProperty: 'ObjectId'
                });
                let memorySource = new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: items
                });
                memorySource.query().addCallback(function(res) {
@@ -443,10 +443,10 @@ define(
                      recent: createRecordSet(recentData)
                   },
                   itemsProperty: '',
-                  idProperty: 'ObjectId'
+                  keyProperty: 'ObjectId'
                });
                let memorySource = new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: items
                });
                memorySource.query().addCallback(function(res) {
@@ -473,7 +473,7 @@ define(
                         recent: createRecordSet(recentData)
                      },
                      itemsProperty: '',
-                     idProperty: 'ObjectId'
+                     keyProperty: 'ObjectId'
                   });
                   historyMod.Source._private.initHistory(self, newData, sourceItems);
                   assert.equal(self._history.pinned.getCount(), 3);
@@ -490,11 +490,11 @@ define(
                      recent: createRecordSet(recentData)
                   },
                   itemsProperty: '',
-                  idProperty: 'ObjectId'
+                  keyProperty: 'ObjectId'
                });
                let itemsWithoutId = items.slice(1);
                let memorySource = new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: itemsWithoutId
                });
                memorySource.query().addCallback(function(res) {

@@ -12,7 +12,7 @@ import notifyHandler = require('Controls/Utils/tmplNotify');
          if (items) {
             self._oldToolbarWidth = toolbarWidth;
             self._toolbarSource = new sourceLib.Memory({
-               idProperty: self._options.keyProperty,
+               keyProperty: self._options.keyProperty,
                data: WidthUtils.fillItemsType(
                   self._options.keyProperty,
                   self._options.parentProperty,

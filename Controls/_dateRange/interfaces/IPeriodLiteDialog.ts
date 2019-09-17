@@ -5,6 +5,11 @@ import dateControlsUtils from './../Utils';
  * mixin Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @public
  */
+
+/*
+ * Миксин Controls/_dateRange/interfaces/IPeriodLiteDialog
+ * @public
+ */ 
 var EMPTY_CAPTIONS = {
     NOT_SPECIFIED: rk('Не указан'),
     NOT_SELECTED: rk('Не выбран'),

@@ -157,11 +157,11 @@ define('Controls-demo/List/Tree/TreeData', [
       ],
       tasksFoldersMemoryDefaultParams = {
          data: tasksFoldersMemoryData,
-         idProperty: 'id'
+         keyProperty: 'id'
       },
       tasksMemoryDefaultParams = {
          data: tasksMemoryData,
-         idProperty: 'id'
+         keyProperty: 'id'
       };
 
    function prepareParams(baseParams, additionalParams) {

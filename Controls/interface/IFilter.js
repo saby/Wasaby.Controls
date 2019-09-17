@@ -25,7 +25,7 @@ define('Controls/interface/IFilter', [
     * <pre>
     *    this._filter = {id: ['1', '2']};
     *    this._source = new Memory({
-    *      idProperty: 'id',
+    *      keyProperty: 'id',
     *      data: [
     *         {
     *            id: '1',
@@ -60,7 +60,7 @@ define('Controls/interface/IFilter', [
     * <pre>
     *    this._filter = {id: ['1', '2']};
     *    this._source = new Memory({
-    *      idProperty: 'id',
+    *      keyProperty: 'id',
     *      data: [
     *         {
     *            id: '1',

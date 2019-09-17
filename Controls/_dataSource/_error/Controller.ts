@@ -1,4 +1,5 @@
 /// <amd-module name="Controls/_dataSource/_error/Controller" />
+import { Confirmation } from 'Controls/popup';
 import { Controller as ParkingController } from 'Controls/_dataSource/parking';
 import {
     Handler,
@@ -59,15 +60,13 @@ let getDefault = <T extends Error = Error>(config: HandlerConfig<T>) => {
     let message = config.error.message;
     // @ts-ignore
     let details = config.error.details;
-    return {
-        mode: Mode.dialog,
-        template: "Controls/dataSource:error.DefaultTemplate",
-        options: {
-            message,
-            details
-        },
-        ...getIVersion()
-    }
+
+    Confirmation.openPopup({
+        type: "ok",
+        style: "danger",
+        message,
+        details
+    });
 };
 /// endregion helpers
 

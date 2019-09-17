@@ -2,15 +2,37 @@ import Control = require('Core/Control');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Clone = require('Core/core-clone');
+import Deferred = require('Core/Deferred');
+import ParallelDeferred = require('Core/ParallelDeferred');
 import _FilterPanelOptions = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions');
 import template = require('wml!Controls/_filterPopup/Panel/Panel');
 import Env = require('Env/Env');
 import {isEqual} from 'Types/object';
+import {RecordSet, factory} from 'Types/collection';
 import {HistoryUtils} from 'Controls/filter';
 import {List} from 'Types/collection';
 import 'css!theme?Controls/filterPopup';
 import 'Controls/form';
 /**
+    * Контрол для отображения шаблона панели фильтров. Отображает каждый фильтр по заданным шаблонам.
+    * Он состоит из трех блоков: Отбираются, Еще можно отобрать, Ранее отбирались.
+    * <a href="/materials/demo-ws4-filter-button">Демо-пример</a>.
+    *
+    *
+    * @class Controls/_filterPopup/DetailPanel
+    * @extends Core/Control
+    * @mixes Controls/interface/IFilterPanel
+    * @demo Controls-demo/Filter/Button/panelOptions/panelPG
+    * @control
+    * @public
+    * @author Золотова Э.Е.
+    *
+    * @cssModifier controls-FilterPanel__width-m Medium panel width.
+    * @cssModifier controls-FilterPanel__width-l Large panel width.
+    * @cssModifier controls-FilterPanel__width-xl Extra large panel width.
+    */
+
+   /*
     * Component for displaying a filter panel template. Displays each filters by specified templates.
     * It consists of three blocks: Selected, Also possible to select, Previously selected.
     * Here you can see <a href="/materials/demo-ws4-filter-button">demo-example</a>.
@@ -30,11 +52,16 @@ import 'Controls/form';
     */
 
    /**
+    * @event Controls/_filterPopup/DetailPanel#sendResult Происходит при клике по кнопке "Отобрать".
+    * @param {Object} filter Объект фильтра {'filter_id': 'filter_value'}.
+    * @param {Object} items Набор элементов.
+    */
+
+   /*
     * @event Controls/_filterPopup/DetailPanel#sendResult Happens when clicking the button "Select".
     * @param {Object} filter Filter object view {'filter_id': 'filter_value'}
     * @param {Object} items items
     */
-
 
 
    var getPropValue = Utils.object.getPropertyValue.bind(Utils);
@@ -63,19 +90,70 @@ import 'Controls/form';
          }
       },
 
-      loadHistoryItems: function(self, historyId) {
+      loadFavoriteItems: function(self, historyId) {
+         let loadDef = new Deferred();
+         require(['SBIS3.CONTROLS/History/HistoryList'], (HistoryStorage) => {
+            let pDef = new ParallelDeferred();
+            self._historyGlobalStorage = new HistoryStorage({
+               historyId: historyId,
+               isGlobalUserConfig: true
+            });
+            self._historyStorage = new HistoryStorage({
+               historyId: historyId
+            });
+            pDef.push(self._historyStorage.getHistory(true));
+            pDef.push(self._historyGlobalStorage.getHistory(true));
+            return pDef.done().getResult().addCallback((items) => {
+               self._favoriteList = items[0].clone();
+               self._favoriteList.prepend(items[1]);
+               loadDef.callback();
+            });
+         });
+         return loadDef;
+      },
+
+      loadHistoryItems: function(self, historyId, isReportPanel) {
          if (historyId) {
-            return HistoryUtils.loadHistoryItems(historyId).addCallback(function(items) {
-               self._historyItems = items;
-               return items;
+            let pDef = new ParallelDeferred();
+            if (isReportPanel) {
+               pDef.push(_private.loadFavoriteItems(self, historyId));
+            }
+            let config = {
+               historyId: historyId,
+
+                // the report filters panel uses favorite history, for it we don't request pinned items from the history service
+                pinned: !isReportPanel,
+               recent: isReportPanel ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY'
+            };
+            let historyLoad = HistoryUtils.loadHistoryItems(config).addCallback(function(items) {
+               self._historyItems = _private.filterHistoryItems(self, items);
+               return self._historyItems;
             }).addErrback(function() {
                self._historyItems = new List({ items: [] });
+            });
+            pDef.push(historyLoad);
+            return pDef.done().getResult().addCallback(() => {
+               return self._historyItems;
             });
          }
       },
 
+       filterHistoryItems: function(self,items) {
+           return chain.factory(items).filter(function(item) {
+               let history = JSON.parse(item.get('ObjectData')).items || JSON.parse(item.get('ObjectData'));
+               let itemHasData = false;
+               for (var i = 0, length = history.length; i < length; i++) {
+                   var textValue = getPropValue(history[i], 'textValue');
+                   if (textValue !== '' && textValue !== undefined) {
+                       itemHasData = true;
+                   }
+               }
+               return itemHasData;
+           }).value(factory.recordSet,{adapter: items.getAdapter()});
+       },
+
       reloadHistoryItems: function(self, historyId) {
-         self._historyItems = HistoryUtils.getHistorySource(historyId).getItems();
+         self._historyItems = HistoryUtils.getHistorySource({historyId: historyId}).getItems();
       },
 
       cloneItems: function(items) {
@@ -164,7 +242,8 @@ import 'Controls/form';
          this._hasAdditionalParams = (options.additionalTemplate || options.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
          this._isChanged = _private.isChangedValue(this._items);
          this._hasResetValue = _private.hasResetValue(this._items);
-         return _private.loadHistoryItems(this, this._historyId);
+         const isReportPanel = options.orientation === 'horizontal';
+         return _private.loadHistoryItems(this, this._historyId, isReportPanel);
       },
 
       _beforeUpdate: function(newOptions, context) {
@@ -189,29 +268,37 @@ import 'Controls/form';
          this._notify('itemsChanged', [this._items]);
       },
 
-      _applyHistoryFilter: function(event, items) {
-         var filter = _private.getFilter(items);
-         filter.$_history = true;
-         this._applyFilter(event, items);
+      _applyHistoryFilter: function(event, history) {
+         const items = history.items || history;
+         this._applyFilter(event, items, history);
       },
 
-      _applyFilter: function(event, items) {
+      _applyFilter: function(event, items, history) {
          var self = this,
-            curItems = items || this._items;
-         _private.validate(this).addCallback(function(result) {
-            if (_private.isPassedValidation(result)) {
+             curItems = items || this._items;
 
-               /*
+         let apply = () => {
+            /*
                Due to the fact that a bar can be created as you like (the bar will be not in the root, but a bit deeper)
                and the popup captures the sendResult operation from the root node, bubbling must be set in true.
-               */
-               self._notify('sendResult', [{
-                  filter: _private.getFilter(curItems),
-                  items: _private.prepareItems(curItems)
-               }], {bubbling: true});
-               self._notify('close', [], {bubbling: true});
-            }
-         });
+            */
+            self._notify('sendResult', [{
+               filter: _private.getFilter(curItems),
+               items: _private.prepareItems(curItems),
+               history
+            }], {bubbling: true});
+            self._notify('close', [], {bubbling: true});
+         };
+
+         if (history) {
+            apply();
+         } else {
+            _private.validate(this).addCallback(function (result) {
+               if (_private.isPassedValidation(result)) {
+                  apply();
+               }
+            });
+         }
       },
 
       _resetFilter: function(): void {

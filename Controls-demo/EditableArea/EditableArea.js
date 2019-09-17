@@ -80,15 +80,15 @@ define('Controls-demo/EditableArea/EditableArea', [
             }
          });
          this._tabSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: tabsData
          });
          this._tabSource2 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: tabsData2
          });
          this._toolbarSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: toolbarItems
          });
       }

@@ -3,18 +3,15 @@ import Env = require('Env/Env');
 import MenuItemsTpl = require('wml!Controls/_dropdownPopup/DropdownList');
 import DropdownViewModel = require('Controls/_dropdownPopup/DropdownViewModel');
 import groupTemplate = require('wml!Controls/_dropdownPopup/defaultGroupTemplate');
-import {ItemTemplate as itemTemplate} from 'Controls/dropdown';
 import defaultHeadTemplate = require('wml!Controls/_dropdownPopup/defaultHeadTemplate');
-import {debounce} from 'Types/function';
-import {isEqual} from 'Types/object';
 import Clone = require('Core/core-clone');
-import collection = require('Types/collection');
-import Merge = require('Core/core-merge');
 import chain = require('Types/chain');
+import {ItemTemplate as itemTemplate} from 'Controls/dropdown';
+import {debounce} from 'Types/function';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
 
-      //need to open subdropdowns with a delay
+//need to open subdropdowns with a delay
       //otherwise, the interface will slow down.
       //Popup/Opener method "open" is called on every "mouseenter" event on item with hierarchy.
       var SUB_DROPDOWN_OPEN_DELAY = 100;
@@ -194,7 +191,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
          _defaultHeadTemplate: defaultHeadTemplate,
          _hasHierarchy: false,
          _listModel: null,
-         _subDropdownOpened: false,
+         _subDropdownItem: null,
 
          _beforeMount: function(newOptions) {
             _private.checkDeprecated(newOptions);
@@ -258,13 +255,13 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
          _itemMouseEnter: function(event, item, hasChildren) {
             // Close the already opened sub menu. Installation of new data sets new size of the container.
             // If you change the size of the update, you will see the container twitch.
-            if (this._hasHierarchy && this._subDropdownOpened) {
+            if (this._hasHierarchy && this._subDropdownItem !== item) {
                this._children.subDropdownOpener.close();
-               this._subDropdownOpened = false;
+               this._subDropdownItem = null;
             }
 
             if (hasChildren && !item.get('readOnly')) {
-               this._subDropdownOpened = true;
+               this._subDropdownItem = item;
                this._openSubDropdown(event, item);
             }
          },
@@ -274,14 +271,14 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
 
             // _openSubDropdown is called by debounce and a function call can occur when the control is destroyed,
             // just check _children to make sure, that the control isnt destroyed
-            if (this._subDropdownOpened && this._children.subDropdownOpener) {
+            if (this._subDropdownItem && this._children.subDropdownOpener) {
                config = _private.getSubMenuOptions(this._options, this._popupOptions, event, item);
                this._children.subDropdownOpener.open(config, this);
             }
          },
 
          _subDropdownClose: function() {
-            this._subDropdownOpened = false;
+            this._subDropdownItem = null;
          },
 
          //TODO FOR COMPATIBLE. для чистого вдома этот метод излишен, но логику не ломает

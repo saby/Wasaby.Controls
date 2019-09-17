@@ -31,7 +31,7 @@ define(
          showHeader: true,
          source: new sourceLib.Memory({
             data: items,
-            idProperty: 'id'
+            keyProperty: 'id'
          })
       };
 
@@ -70,13 +70,13 @@ define(
             assert.equal(menu._offsetClassName, 'controls-MenuButton_button__m_popup');
             newConfig.size = 's';
             menu._beforeUpdate(newConfig);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_button__s_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button__default_popup');
          });
          it('_onPinClickHandler', function() {
             var newConfig = Clone(menuConfig);
             newConfig.source = new history.Source({
                originSource: new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: items
                }),
                historySource: new history.Service({

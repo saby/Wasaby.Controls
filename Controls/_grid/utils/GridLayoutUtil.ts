@@ -24,13 +24,13 @@ function _isFullGridSafari(): boolean {
 }
 
 function isFullGridSupport(): boolean {
-    return !detection.isWinXP && (!detection.isNotFullGridSupport || _isFullGridSafari());
+    return (!detection.isWinXP || detection.yandex) && (!detection.isNotFullGridSupport || _isFullGridSafari());
 }
 
 function isPartialGridSupport(): boolean {
     let
         isOldIE = detection.isIE && !detection.isModernIE,
-        noGridSupport = detection.isWinXP || isOldIE,
+        noGridSupport = (detection.isWinXP && !detection.yandex) || isOldIE,
         fullGridSupport = _isFullGridSafari();
 
     return detection.isNotFullGridSupport && !(noGridSupport || fullGridSupport);

@@ -30,7 +30,7 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
          _eventName: 'no event',
          _beforeMount: function() {
             this._iconStyleSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 'default'
@@ -47,7 +47,7 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
                ]
             });
             this._styleSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 'iconButtonBordered'
@@ -64,7 +64,7 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
                ]
             });
             this._sizeSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 's'
@@ -78,7 +78,7 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
                ]
             });
             this._captionsSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 'save/change',
@@ -99,7 +99,7 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
                ]
             });
             this._iconsSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 'list/tile',

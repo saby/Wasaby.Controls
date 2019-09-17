@@ -25,7 +25,7 @@ define('Controls-demo/List/TreeGrid/BasePG',
             this._componentOptions = {
                name: 'BasePG',
                source: new TSource.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: data.catalog
                }),
                markedKey: '2',

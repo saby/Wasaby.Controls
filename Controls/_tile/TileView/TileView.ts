@@ -131,6 +131,18 @@ var TileView = ListView.extend({
             hoveredItem.endPosition !== hoveredItem.position &&
             this._hasFixedItemInDOM()
         ) {
+
+            // TODO: KINGO
+            // Браузер устанавливает на элемент position: fixed, а изменение свойств top/left/bottom/right группирует в
+            // одну перерисовку. В итоге, первые стили не проставляются, получаем большой контейнер.
+            // Когда устанавливаются вторые стили, контейнер сжимается до нужных размеров.
+            // Такое поведение стало проявляться, видимо, после оптимизации и ускорения шаблонизатора.
+            // Перерисовки, которые раньше происходили в два кадра, теперь происходят в один.
+            // Поэтому нужно вызвать forced reflow, чтобы применились первые стили, перед применением вторых.
+
+            let container = this._container[0] || this._container;
+            container.getBoundingClientRect();
+
             this._listModel.setHoveredItem({
                 key: hoveredItem.key,
                 isAnimated: true,

@@ -1,5 +1,4 @@
 .controls-ListView__itemV {
-   cursor: pointer;
    position: relative;
 }
 
@@ -151,7 +150,7 @@
    opacity: @opacity_ListView-item_dragging;
 }
 
-.ws-is-no-touch {
+.ws-is-hover {
    .controls-ListView__item_showActions {
       &:hover {
          > .controls-itemActionsV {
@@ -203,10 +202,17 @@
    cursor: pointer;
 }
 
-.controls-ListView__groupExpander:before {
+.controls-ListView__groupExpander_left:before {
    width: @width_ListView-groupExpander;
    font-size: @font-size_ListView-groupExpander;
    padding-right: @spacing_ListView-group-between-text-expander;
+   content: '\e000';
+}
+
+.controls-ListView__groupExpander_right:after {
+   width: @width_ListView-groupExpander;
+   font-size: @font-size_ListView-groupExpander;
+   padding-left: @spacing_ListView-group-between-text-expander;
    content: '\e000';
 }
 
@@ -218,7 +224,11 @@
    color: @color_ListView-groupExpander_active;
 }
 
-.controls-ListView__groupExpander_collapsed:before {
+.controls-ListView__groupExpander_collapsed_left:before {
+   content: '\e013';
+}
+
+.controls-ListView__groupExpander_collapsed_right:after {
    content: '\e013';
 }
 
@@ -234,6 +244,7 @@
 .controls-ListView__empty {
    color: @color_ListView-empty;
    text-align: center;
+   font-size: @font-size_ListView-empty-template;
 }
 
 .controls-ListView__empty_topSpacing_null {
@@ -334,9 +345,17 @@
    cursor: default;
 }
 
+.controls-ListView__itemV_cursor-default {
+   cursor: default;
+}
+
+.controls-ListView__itemV_cursor-pointer {
+   cursor: pointer;
+}
+
 //Пока страница не ожила, мы не знаем тач устройство или нет, так что на мобильных устройствах нужно скрыть операции над записью
 //TODO: после этой задачи нужно убрать not https://online.sbis.ru/opendoc.html?guid=87ddbeeb-fa7e-4462-b69b-c15188df61da
-.ws-is-no-touch:not(.ws-is-mobile-platform) {
+.ws-is-hover:not(.ws-is-mobile-platform) {
    .controls-ListView__item_master {
       &:hover {
          background-color: @background-color_List-masterList-item_hover;

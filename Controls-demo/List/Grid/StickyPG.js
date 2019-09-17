@@ -59,7 +59,7 @@ define('Controls-demo/List/Grid/StickyPG',
                columns: data.stickyDataColumns,
                multiSelectVisibility: 'hidden',
                source: new source.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: data.stickyData
                }),
                 stickyColumn: undefined,

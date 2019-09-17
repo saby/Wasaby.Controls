@@ -215,13 +215,19 @@ class ModuleClass {
 
         periodType = getPeriodType(start, end);
         oldPeriodType = (oldStart && oldEnd) ? getPeriodType(oldStart, oldEnd) : null;
-        capacityChanged = oldPeriodType !== periodType;
 
         if (periodType === periodTypes.day || periodType === periodTypes.days) {
             selectionType = 'days';
             periodLength = dateRangeUtil.gePeriodLengthInDays(start, end);
         } else {
             periodLength = periodType ? dateRangeUtil.getPeriodLengthInMonths(start, end) : null;
+        }
+
+        if ((periodType === periodTypes.days || periodType === periodTypes.day) &&
+            (oldPeriodType === periodTypes.days || oldPeriodType === periodTypes.day)) {
+            capacityChanged = periodLength !== dateRangeUtil.gePeriodLengthInDays(oldStart, oldEnd);
+        } else {
+            capacityChanged = periodType !== oldPeriodType;
         }
 
         // iterate dates in the controls from the current to the first.

@@ -44,7 +44,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
             { id: 5, title: 'Sasha' }];
          listSource = new sourceLib.Memory({
             data: listSourceData,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          listPrefetchSource = new sourceLib.PrefetchProxy({
             target: listSource,
@@ -313,6 +313,15 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
          newOpts.reverseList = true;
          listLayout._beforeUpdate(newOpts, context);
          assert.deepEqual(listLayout._source._$target._$data, reversedData);
+
+         // reverseList changed with not origin source
+         listLayout._source = new sourceLib.PrefetchProxy({
+            target: listOptions.source
+         });
+         listLayout._beforeUpdate(newOpts, context);
+         assert.deepEqual(listLayout._source._$target._$data, reversedData);
+
+         listLayout._source = listOptions.source;
          newOpts.reverseList = false;
 
          /* SearchValue changed */
@@ -340,7 +349,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
             /* change source */
             var newSource = new sourceLib.Memory({
                data: listSourceData,
-               idProperty: 'id'
+               keyProperty: 'id'
             });
             newOpts = clone(listOptions);
             newOpts.source = newSource;
@@ -371,7 +380,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
                newOpts.navigation = newNavigation;
                newOpts.source = new sourceLib.Memory({
                   data: listSourceData,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
 
                listLayout._searchMode = true;

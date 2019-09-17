@@ -91,6 +91,20 @@ define([
             sinon.assert.calledWith(component._notify, 'positionChanged', [new Date(year.getFullYear() - 1, 0, 1)]);
          });
       });
+      describe('_swipeHandler', function() {
+         it('should should increase the year.', function() {
+            const component = calendarTestUtils.createComponent(DateRange, { position: year });
+            sandbox.stub(component, '_notify');
+            component._swipeHandler({ preventDefault: function(){}, nativeEvent: { direction: 'top' } });
+            sinon.assert.calledWith(component._notify, 'positionChanged', [new Date(year.getFullYear() + 1, 0, 1)]);
+         });
+         it('should should decrease the year.', function() {
+            const component = calendarTestUtils.createComponent(DateRange, { position: year });
+            sandbox.stub(component, '_notify');
+            component._swipeHandler({ preventDefault: function(){}, nativeEvent: { direction: 'bottom' } });
+            sinon.assert.calledWith(component._notify, 'positionChanged', [new Date(year.getFullYear() - 1, 0, 1)]);
+         });
+      });
 
       describe('_formatMonth', function() {
          [

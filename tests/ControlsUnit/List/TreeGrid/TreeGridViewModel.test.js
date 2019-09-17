@@ -39,7 +39,7 @@ define(['Controls/treeGrid',
             },
             ladderViewModel = new treeGrid.ViewModel({
                items: new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [
                      { id: 0, title: 'i0', date: '01 янв', parent: null, type: true },
                      { id: 1, title: 'i1', date: '03 янв', parent: 0, type: null },
@@ -144,7 +144,7 @@ define(['Controls/treeGrid',
              }],
              model = new treeGrid.ViewModel({
                 items: new collection.RecordSet({
-                   idProperty: 'id',
+                   keyProperty: 'id',
                    rawData: [
                       {id: 0, title: 'i0', parent: null, type: true},
                       {id: 1, title: 'i1', parent: null, type: false},
@@ -178,7 +178,7 @@ define(['Controls/treeGrid',
              }],
              model = new treeGrid.ViewModel({
                 items: new collection.RecordSet({
-                   idProperty: 'id',
+                   keyProperty: 'id',
                    rawData: [
                       {id: 0, title: 'i0', parent: null, type: true},
                       {id: 1, title: 'i1', parent: null, type: false},
@@ -221,7 +221,7 @@ define(['Controls/treeGrid',
              }],
              model = new treeGrid.ViewModel({
                 items: new collection.RecordSet({
-                   idProperty: 'id',
+                   keyProperty: 'id',
                    rawData: [
                       {id: 0, title: 'i0', parent: null, type: true},
                       {id: 1, title: 'i1', parent: null, type: false},
@@ -258,7 +258,7 @@ define(['Controls/treeGrid',
              }],
              model = new treeGrid.ViewModel({
                 items: new collection.RecordSet({
-                   idProperty: 'id',
+                   keyProperty: 'id',
                    rawData: [
                       {id: 0, title: 'i0', parent: null, type: true},
                       {id: 1, title: 'i1', parent: null, type: false},
@@ -284,7 +284,7 @@ define(['Controls/treeGrid',
              }],
              model = new treeGrid.ViewModel({
                 items: new collection.RecordSet({
-                   idProperty: 'id',
+                   keyProperty: 'id',
                    rawData: [
                       {id: 0, title: 'i0', parent: null, type: true},
                       {id: 1, title: 'i1', parent: null, type: false},
@@ -328,7 +328,7 @@ define(['Controls/treeGrid',
          const
              model = new treeGrid.ViewModel({
                 items: new collection.RecordSet({
-                   idProperty: 'id',
+                   keyProperty: 'id',
                    rawData: [
                       {id: 0, title: 'i0', parent: null, type: true},
                       {id: 1, title: 'i1', parent: null, type: false},
@@ -359,7 +359,7 @@ define(['Controls/treeGrid',
          let
             ladderViewModel = new treeGrid.ViewModel({
             items: new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: [
                   { id: 0, title: 'i0', date: '01 янв', parent: null, type: true },
                   { id: 1, title: 'i1', date: '03 янв', parent: 0, type: null },

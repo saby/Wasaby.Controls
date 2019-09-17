@@ -18,7 +18,7 @@ define('Controls-demo/Buttons/Close/CloseDemo', [
          _eventName: 'no event',
          _beforeMount: function() {
             this._closeStyleSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 'default'

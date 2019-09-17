@@ -1,5 +1,5 @@
 /**
- * Библиотека списка, элементы которого отображаются в виде плитки.
+ * Библиотека контролов, которые реализуют иерархический список с возможностью входить в раздел и отображать элементы в разных режимах.
  * @library Controls/explorer
  * @includes View Controls/_explorer/View
  * @includes SearchItemTemplate wml!Controls/_treeGrid/SearchView/Item

@@ -99,14 +99,14 @@ define([
          }];
          items = new collection.RecordSet({
             rawData: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          newItem = new entity.Model({
             rawData: {
                id: 4,
                title: 'Четвёртый'
             },
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          listModel = new lists.ListViewModel({
             items: items.clone(),
@@ -116,7 +116,7 @@ define([
          treeModel = new treeGrid.TreeViewModel({
             items: new collection.RecordSet({
                rawData: treeData,
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             keyProperty: 'id',
             columns: [{
@@ -268,7 +268,7 @@ define([
 
          it('afterBeginEdit', function(done) {
             var source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             });
             let afterBeginEditNotified = false;
@@ -324,7 +324,7 @@ define([
       describe('beginAdd', function() {
          it('new item should not take itemActions from existing items', async function() {
             var source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             });
 
@@ -344,7 +344,7 @@ define([
 
          it('Without handler', function(done) {
             var source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             });
 
@@ -363,10 +363,10 @@ define([
          it('Empty list', function(done) {
             listModel.setItems(new collection.RecordSet({
                rawData: [],
-               idProperty: 'id'
+               keyProperty: 'id'
             }));
             var source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: listModel._items
             });
 
@@ -385,7 +385,7 @@ define([
 
          it('Object without item', function(done) {
             var source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             });
             eip._notify = function(e) {
@@ -410,7 +410,7 @@ define([
 
          it('afterBeginEdit', function(done) {
             var source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             });
 
@@ -434,7 +434,7 @@ define([
 
          it('add item to a folder', function(done) {
             var source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: treeModel._items
             });
 
@@ -460,7 +460,7 @@ define([
 
          it('add item to the top of the list', function(done) {
             var source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             });
 
@@ -482,7 +482,7 @@ define([
 
          it('add item to a folder to the top of the list', function(done) {
             var source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: treeModel._items
             });
 
@@ -572,7 +572,7 @@ define([
 
          it('With source', function(done) {
             var source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data
             });
             eip.saveOptions({
@@ -595,7 +595,7 @@ define([
 
          it('Add item', function(done) {
             var source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data
             });
             eip.saveOptions({
@@ -647,7 +647,7 @@ define([
             it('Defered', function(done) {
                var
                    source = new sourceLib.Memory({
-                      idProperty: 'id',
+                      keyProperty: 'id',
                       data: data
                    }),
                    isIndicatorHasBeenShown = false,
@@ -687,7 +687,7 @@ define([
             it('Defered with cancel', function (done) {
                var
                    source = new sourceLib.Memory({
-                      idProperty: 'id',
+                      keyProperty: 'id',
                       data: data
                    }),
                    isIndicatorHasBeenShown = false,
@@ -727,7 +727,7 @@ define([
             it('Cancel', function(done) {
                var
                    source = new sourceLib.Memory({
-                      idProperty: 'id',
+                      keyProperty: 'id',
                       data: data
                    }),
                    isIndicatorHasBeenShown = false,
@@ -765,7 +765,7 @@ define([
          describe('afterEndEdit', function() {
             it('add item', function(done) {
                var source = new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: data
                });
                eip.saveOptions({
@@ -791,7 +791,7 @@ define([
 
             it('edit item', function(done) {
                var source = new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: data
                });
                eip.saveOptions({
@@ -1568,7 +1568,7 @@ define([
             let
                 isItemDataRegenerated = false,
                 source = new sourceLib.Memory({
-                   idProperty: 'id',
+                   keyProperty: 'id',
                    data: items
                 });
 
@@ -1612,7 +1612,7 @@ define([
 
       it('index of a new item should update if the list gets changed', async function() {
          const source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: items
          });
 

@@ -43,8 +43,9 @@ define('Controls/interface/IGroupedGrid', [
     * Базовый шаблон для контрола {@link Controls/Grid:View}: "Controls/grid:GroupTemplate".
     * Шаблон поддерживает следующие параметры:
     * <ul>
-    *    <li>separatorVisibility {Boolean} — аидимость горизонтальной линии-разделителя.</li>
-    *    <li>expanderVisibility {Boolean} — аидимость кнопки-экспандера.</li>
+    *    <li>separatorVisibility {Boolean} — ваидимость горизонтальной линии-разделителя.</li>
+    *    <li>expanderAlign {enum('hidden'|'right'|'left')} — расположение кнопки-экспандера. Стандартное расположение - слева.</li>
+    *    <li>expanderVisible {Boolean} — ваидимость кнопки-экспандера.</li>
     *    <li>textAlign {String} — горизонтальное выравнивание текста группы. Доступные значения опции: "left" и "right". По умолчанию используется выравнивание текста по центру.</li>
     *    <li>rightTemplate {Function} — шаблон, выводимый в правой части группы. Может использоваться, например, для вывода итогов по группе.</li>
     * </ul>
@@ -53,7 +54,7 @@ define('Controls/interface/IGroupedGrid', [
     * <pre>
     *    <Controls.grid:View>
     *       <ws:groupTemplate>
-    *          <ws:partial template="Controls/grid:GroupTemplate" expanderVisibility="{{ false }}" textAlign="left" />
+    *          <ws:partial template="Controls/grid:GroupTemplate" expanderVisible="{{ false }}" textAlign="left" />
     *       </ws:groupTemplate>
     *    </Controls.grid:View>
     * </pre>
@@ -80,6 +81,6 @@ define('Controls/interface/IGroupedGrid', [
     * @event Controls/interface/IGroupedGrid#groupCollapsed Происходит при сворачивании группы.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * <a href="/materials/demo-ws4-list-group">Example</a>.
-    */    
+    */
 
 });

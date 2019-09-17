@@ -27,16 +27,16 @@ define('Controls-demo/DragNDrop/Demo', [
             id: 0
          }];
          this._viewSourceFirst = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: cClone(DemoData.listItems)
          });
          this._viewSourceSecond = new source.HierarchicalMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: cClone(DemoData.tasks),
             parentProperty: 'parent'
          });
          this._viewSourceThird = new source.HierarchicalMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: cClone(DemoData.tile),
             parentProperty: 'parent'
          });

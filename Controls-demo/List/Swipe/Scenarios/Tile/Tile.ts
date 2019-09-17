@@ -62,7 +62,7 @@ export default class Tile extends Control {
          }
       ];
       this._source = new HierarchicalMemory({
-         idProperty: 'id',
+         keyProperty: 'id',
          parentProperty: 'parent',
          data: [
             {

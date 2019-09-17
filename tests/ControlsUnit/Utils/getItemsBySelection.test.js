@@ -16,11 +16,11 @@ define([
          ],
          recordSet = new collection.RecordSet({
             rawData: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          }),
          callSource = false,
          dataSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 

@@ -23,7 +23,7 @@
     * @remark
     * Для определения шаблона вызовите базовый шаблон - 'Controls/dropdownPopup:Template'.
     * Шаблон должен быть помещен в компонент с помощью тега <ws:partial> с атрибутом "template".
-    * Базовый шаблон 'Controls/dropdownPopup:Template' по умолчанию будет отображать заголовок и значок, если они установлены. 
+    * Базовый шаблон 'Controls/dropdownPopup:Template' по умолчанию будет отображать заголовок и значок, если они установлены.
     * Можно изменить следующие параметры:
     * <ul>
     *     <li>caption - текст заголовка,</li>
@@ -50,7 +50,7 @@
     *           { id: 1, title: 'Task in development' },
     *           { id: 2, title: 'Error in development' }
     *       ],
-    *       idProperty: 'id'
+    *       keyProperty: 'id'
     *    });
     * </pre>
     */
@@ -88,7 +88,7 @@
     *           { id: 1, title: 'Task in development' },
     *           { id: 2, title: 'Error in development' }
     *       ],
-    *       idProperty: 'id'
+    *       keyProperty: 'id'
     *    });
     * </pre>
     */

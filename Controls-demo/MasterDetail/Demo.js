@@ -15,10 +15,10 @@ define('Controls-demo/MasterDetail/Demo', [
       _beforeMount: function() {
          this._detail = {};
 
-         this._detailSource = new DemoSource({idProperty: 'id'});
+         this._detailSource = new DemoSource({keyProperty: 'id'});
 
          this._masterSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: cClone(data.master)
          });
       },

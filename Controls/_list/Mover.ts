@@ -6,6 +6,7 @@ import {ContextOptions as dataOptions} from 'Controls/context';
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 import template = require('wml!Controls/_list/Mover/Mover');
+import {Confirmation} from 'Controls/popup';
 
 var BEFORE_ITEMS_MOVE_RESULT = {
     CUSTOM: 'Custom',
@@ -308,13 +309,21 @@ var Mover = Control.extend({
         var self = this;
 
         _private.getItemsBySelection.call(this, items).addCallback(function (items) {
-            self._children.dialogOpener.open({
-                templateOptions: {
-                    movedItems: _private.prepareMovedItems(self, items),
-                    source: self._source,
-                    keyProperty: self._keyProperty
-                }
-            });
+            if (items.length > 0) {
+                self._children.dialogOpener.open({
+                    templateOptions: {
+                        movedItems: _private.prepareMovedItems(self, items),
+                        source: self._source,
+                        keyProperty: self._keyProperty
+                    }
+                });
+            } else {
+                Confirmation.openPopup({
+                    type: 'ok',
+                    message: rk('Нет записей для обработки команды'),
+                    style: 'danger'
+                });
+            }
         });
     }
 });

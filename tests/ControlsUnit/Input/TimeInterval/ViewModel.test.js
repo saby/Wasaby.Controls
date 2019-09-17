@@ -48,9 +48,12 @@ define([
          it('should auto complete display value in correct way', function() {
             let model = new ViewModel(_options),
                sandbox = sinon.createSandbox();
-            model.value = model._convertToValue('1 :  :  ');
+            model.value = model._convertToValue('1 :1 :1 ');
             model.autoComplete();
-            assert.strictEqual(model.displayValue, '01:00:00');
+            assert.strictEqual(model.displayValue, '10:10:10');
+            model.value = model._convertToValue(' 1: 1: 1');
+            model.autoComplete();
+            assert.strictEqual(model.displayValue, '01:01:01');
             sandbox.restore();
          });
       });

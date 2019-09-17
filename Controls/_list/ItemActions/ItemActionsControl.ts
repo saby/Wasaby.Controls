@@ -40,7 +40,7 @@ var _private = {
         var
             all = _private.fillItemAllActions(item, options),
 
-            showed = options.itemActionsPosition === 'outside'
+            showed = options.itemActionsPosition === 'outside' || all.length <= 1
                 ? all
                 : all.filter(function(action) {
                     return action.showType === showType.TOOLBAR || action.showType === showType.MENU_TOOLBAR;
@@ -85,7 +85,7 @@ var _private = {
         var
             hasActionInMenu = false;
 
-        actions && actions.forEach(function(action) {
+        actions && actions.length > 1 && actions.forEach(function(action) {
             if ((!action.showType || action.showType === showType.MENU_TOOLBAR || action.showType === showType.MENU)
                 && !action.parent) {
                 hasActionInMenu = true;
@@ -125,7 +125,7 @@ var ItemActionsControl = Control.extend({
         ItemActionsControl.superclass.constructor.apply(this, arguments);
         this._onCollectionChangeFn = this._onCollectionChange.bind(this);
         this._hierarchyRelation = new relation.Hierarchy({
-           idProperty: 'id',
+           keyProperty: 'id',
            parentProperty: 'parent',
            nodeProperty: 'parent@'
         });
@@ -217,7 +217,7 @@ var ItemActionsControl = Control.extend({
             this._hierarchyRelation,
             action.id,
             new RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: actions
             })
          )

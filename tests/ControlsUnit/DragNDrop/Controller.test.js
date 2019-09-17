@@ -4,14 +4,19 @@ define([
 ], function(dragnDrop, Vdom) {
    'use strict';
 
-
-   //mock method, because it works with DOM
-   dragnDrop.Container._private.preventClickEvent = function() {};
+   dragnDrop.Container._private.getSelection = function() {
+      return {};
+   };
 
    function createNativeEvent(type, pageX, pageY) {
       //mock dom event
       var result =  {
-         preventDefault: function() {},
+         preventDefault: function() {
+            // Check don't call preventDefault (preventDefault "mousedown" event stops closing popup windows).
+            if (type === 'mousedown') {
+               throw new Error('preventDefault called');
+            }
+         },
          type: type,
          buttons: 1
       };
@@ -155,6 +160,36 @@ define([
             it('dragEnd', function() {
                controller._onMouseUp(createSyntheticEvent('mouseup', 50, 45));
                assert.equal(events.join(', '), '_documentDragEnd, dragEnd, documentDragEnd, unregistermousemove, unregistertouchmove, unregistermouseup, unregistertouchend');
+               assert.isFalse(controller._documentDragging);
+               assert.isFalse(controller._insideDragging);
+               assert.isFalse(!!controller._startEvent);
+               assert.isFalse(!!controller._dragEntity);
+            });
+         });
+         describe('mouse with pageleave', function() {
+            it('dragStart', function() {
+               events = [];
+               controller.startDragNDrop(entity, startEvent);
+               assert.equal(startEvent.nativeEvent, controller._startEvent);
+               assert.equal(events.join(', '), 'registermousemove, registertouchmove, registermouseup, registertouchend');
+            });
+            it('start dragMove', function() {
+               controller._onMouseMove(createSyntheticEvent('mousemove', 25, 10));
+               assert.equal(events.join(', '), '_documentDragStart, dragStart, documentDragStart, dragMove, _updateDraggingTemplate');
+               assert.isTrue(controller._documentDragging);
+               assert.isTrue(controller._insideDragging);
+            });
+            it('dragMove', function() {
+               controller._onMouseMove(createSyntheticEvent('mousemove', 30, 15));
+               assert.equal(events.join(', '), 'dragMove, _updateDraggingTemplate');
+               assert.deepEqual(dragObject.offset, {x: 10, y: 5});
+               assert.deepEqual(dragObject.position, {x: 30, y: 15});
+            });
+            it('pageleave', function() {
+               controller._onMouseMove(createSyntheticEvent('mouseleave', 50, 45));
+               assert.equal(events.join(', '), 'dragMove, _updateDraggingTemplate, _documentDragEnd, dragEnd, documentDragEnd, unregistermousemove, unregistertouchmove, unregistermouseup, unregistertouchend');
+               assert.deepEqual(dragObject.offset, {x: 30, y: 35});
+               assert.deepEqual(dragObject.position, {x: 50, y: 45});
                assert.isFalse(controller._documentDragging);
                assert.isFalse(controller._insideDragging);
                assert.isFalse(!!controller._startEvent);

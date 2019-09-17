@@ -3,7 +3,7 @@
       name="scroll"
       attr:class="MonthList-ScrollContainer"
       scrollbarVisible="{{false}}"
-      on:scroll="_enrichItemsDebounced()">
+      on:scroll="_scrollHandler()">
       <Controls.list:View
          source="{{_viewSource}}"
          sourceExt="{{_options.source}}"
@@ -12,7 +12,7 @@
          keyProperty="id"
          markerVisibility="hidden"
          virtualScrolling="{{true}}"
-         virtualPageSize="{{4}}"
+         virtualPageSize="{{_options.virtualPageSize}}"
          on:drawItems="_drawItemsHandler()"
          >
          <ws:itemPadding left="null" right="null" bottom="null" top="null"/>

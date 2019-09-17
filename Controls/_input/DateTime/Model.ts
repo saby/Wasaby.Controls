@@ -31,16 +31,17 @@ import dateUtils = require('Controls/Utils/Date');
          }
       },
       updateValue: function(self, value) {
-         var oldValue = self._value;
+         const oldValue = self._value,
+            oldTextValue = self._textValue;
          self._value = value;
-
-         // если ничего не поменялось - не надо изменять версию
-         if (oldValue !== value) {
-            self._nextVersion();
-         }
 
          _private.updateLastValue(self);
          self._textValue = self._stringValueConverter.getStringByValue(value);
+
+         // если ничего не поменялось - не надо изменять версию
+         if (oldValue !== value || oldTextValue !== self._textValue) {
+            self._nextVersion();
+         }
       }
    };
 
@@ -137,6 +138,9 @@ import dateUtils = require('Controls/Utils/Date');
          this._nextVersion();
          this._textValue = textValue;
          this.value = this._stringValueConverter.getValueByString(textValue, this._lastValue, autocompleteType);
+         if (dateUtils.isValidDate(this.value)) {
+            this._textValue = this._stringValueConverter.getStringByValue(this.value);
+         }
       },
       setCurrentDate: function() {
          this.value = this._stringValueConverter.getCurrentDate(this._lastValue, this._mask);

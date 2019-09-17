@@ -88,7 +88,7 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
    ];
 
    var secondExampleLookupSource = new sourceLib.Memory({
-      idProperty: 'id',
+      keyProperty: 'id',
       data: [
          {
             id: 0,
@@ -239,19 +239,19 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
          }];
 
          this._viewSource = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: srcData
          });
          this._viewSource2 = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: srcData2
          });
          this._viewSource4 = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: srcData4
          });
          this._viewSource5 = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: srcData5
          });
          this._gridHeader = [

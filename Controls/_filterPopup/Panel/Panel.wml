@@ -5,7 +5,7 @@
                                               itemTemplate="{{_options.itemTemplate}}"
                                               itemTemplateProperty="{{_options.itemTemplateProperty}}"
                                               on:itemsChanged="_itemsChangedHandler()"
-                                              attr:class="controls-FilterPanel__PropertyGrid {{(!_hasAdditionalParams && (!_historyId || !_historyItems.getCount())) ? 'controls-FilterPanel_lastBlock'}}"/>
+                                              attr:class="controls-FilterPanel__PropertyGrid {{(!_hasAdditionalParams && (!_historyId || !_historyItems.getCount() || _options.orientation === 'horizontal')) ? 'controls-FilterPanel_lastBlock'}}"/>
    </Controls.validate:Controller>
    <ws:if data="{{_hasAdditionalParams}}">
       <Controls._filterPopup.Panel.AdditionalParams
@@ -18,11 +18,15 @@
 </ws:template>
 
 <ws:template name="history">
-   <ws:if data="{{_historyId && _historyItems.getCount()}}">
+   <ws:if data="{{_historyId && (_historyItems.getCount() || _favoriteList && _favoriteList.getCount())}}">
       <Controls._filterPopup.History.List
               items="{{_historyItems}}"
+              favoriteItems="{{_favoriteList}}"
+              historyStorage="{{_historyStorage}}"
+              historyGlobalStorage="{{_historyGlobalStorage}}"
               filterItems="{{_items}}"
               historyId="{{_historyId}}"
+              saveMode="{{_options.orientation === 'horizontal' ? 'favorite' : 'pinned'}}"
               orientation="{{_options.orientation}}"
               on:historyChanged="_historyItemsChanged()"
               attr:class="controls-HistoryList__{{_options.orientation}}"
@@ -36,24 +40,21 @@
                                                     attr:class="controls-PanelFilter
                                                     controls-FilterPanel__{{_options.orientation}}">
        <ws:headerContentTemplate>
-          <div class="controls-FilterPanel__header">
-             <ws:if data="{{_options.topTemplate}}">
-                <div class="controls-FilterPanel__header-topTemplate">
-                   <ws:partial template="{{_options.topTemplate}}"/>
-                </div>
-             </ws:if>
-             <ws:if data="{{_hasResetValue}}">
-                <Controls.buttons:Button viewMode="link" fontColorStyle="link" readOnly="{{!_isChanged || _options.readOnly}}" caption="{[По умолчанию]}"
-                                 on:click="_resetFilter()"
-                                 name="resetButton"
-                                 attr:tabindex="-1"
-                                 attr:class="controls-FilterPanel__resetButton"/>
-             </ws:if>
-
-             <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{{_options.applyButtonCaption}}" on:click="_applyFilter()"
+          <ws:if data="{{_options.topTemplate}}">
+             <div class="controls-FilterPanel__header-topTemplate">
+                <ws:partial template="{{_options.topTemplate}}"/>
+             </div>
+          </ws:if>
+          <ws:if data="{{_hasResetValue}}">
+             <Controls.buttons:Button viewMode="link" fontColorStyle="link" readOnly="{{!_isChanged || _options.readOnly}}" caption="{[По умолчанию]}"
+                              on:click="_resetFilter()"
+                              name="resetButton"
                               attr:tabindex="-1"
-                              attr:class="controls-FilterPanel__filterButton"/>
-          </div>
+                              attr:class="controls-FilterPanel__resetButton"/>
+          </ws:if>
+          <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{{_options.applyButtonCaption}}" on:click="_applyFilter()"
+                           attr:tabindex="-1"
+                           attr:class="controls-FilterPanel__filterButton"/>
        </ws:headerContentTemplate>
        <ws:bodyContentTemplate>
           <Controls.scroll:Container attr:class="controls-ScrollContainer__flex" attr:ws-autofocus="true">

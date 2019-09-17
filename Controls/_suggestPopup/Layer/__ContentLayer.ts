@@ -120,7 +120,7 @@ var __ContentLayer = BaseLayer.extend({
       }
    },
 
-   _close: function() {
+   close: function() {
       this._notify('close', [], {bubbling: true});
    }
 

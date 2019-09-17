@@ -1,5 +1,5 @@
 /**
- * Библиотека операций над записями.
+ * Библиотека контролов, которые служат для организации преобразования данных для нескольких элементов списка.
  * @library Controls/operations
  * @includes Panel Controls/_operations/Panel
  * @includes Button Controls/_operations/Button

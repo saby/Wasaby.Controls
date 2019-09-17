@@ -185,6 +185,12 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
          filterLayout._itemsChanged(null, items);
          assert.deepEqual(filterLayout._filter, {testKey: 'testValue'});
          assert.isTrue(filterChangedNotifyed);
+         assert.isTrue(!filterLayout._changedFilterItems);
+
+         filterLayout._filter = {testKey: 'testValue2', PrefetchSessionId: 'test'};
+         filterLayout._options.prefetchParams = {};
+         filterLayout._itemsChanged(null, items);
+         assert.deepEqual(filterLayout._filter, {testKey: 'testValue'});
       });
 
       it('_private.getItemsByOption::array', function () {
@@ -506,7 +512,6 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             id: 'testId',
             value: '',
             textValue: '',
-            visibility: undefined
          }, {
             id: 'testId2',
             value: 'testValue',
@@ -515,7 +520,6 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             id: 'testId3',
             value: 'testValue2',
             textValue: 'textTextValue',
-            visibility: undefined
          }, {
             id: 'testId4',
             value: 'testValue4',
@@ -590,20 +594,16 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             id: 'testId2',
             value: '',
             textValue: '',
-            visibility: undefined
          }, {
             id: 'testId3',
-            visibility: undefined
          }]);
          historyItems = Filter._private.prepareHistoryItems(fbItems, fastFilterItems);
          assert.deepEqual(historyItems, [{
             id: 'testId2',
             value: '',
             textValue: 'test2',
-            visibility: undefined
          }, {
             id: 'testId3',
-            visibility: undefined
          }]);
       });
 
@@ -701,11 +701,10 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             textValue: 'test2',
             resetValue: ''
          }];
-         assert.deepEqual(Filter._private.getHistoryData(filterButtonItems, fastFilterItems), [{
+         assert.deepEqual(Filter._private.getHistoryData(filterButtonItems, fastFilterItems).items, [{
             id: 'testId2',
             value: 'testValue',
             textValue: 'test2',
-            visibility: undefined
          }]);
          let filterButtonItems2 = [{
             id: 'testId2',
@@ -720,10 +719,9 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
             textValue: 'test2',
             resetTextValue: 'test2'
          }];
-         assert.deepEqual(Filter._private.getHistoryData(filterButtonItems2), [{
+         assert.deepEqual(Filter._private.getHistoryData(filterButtonItems2).items, [{
             id: 'testId2',
             value: 'testValue',
-            visibility: undefined
          }]);
       });
 
@@ -751,9 +749,9 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
 
          var filterButtonItems = [];
          let self = {};
-         Filter._private.updateHistory(self, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID_2');
+         Filter._private.addToHistory(self, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID_2');
          assert.isOk(self._sourceController);
-         Filter._private.updateHistory(self, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID');
+         Filter._private.addToHistory(self, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID');
          Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
             assert.deepEqual(items, {});
             done();
@@ -881,11 +879,28 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
                filterButtonSource: filterButtonItems,
                historyItems: historyItems
             }).addCallback(function(result) {
+               assert.equal(filterButtonItems[0].value, 'testValue');
+               assert.equal(filterButtonItems[0].textValue, '');
                assert.equal(result.filterButtonItems[0].value, 'testValueFromHistory');
                assert.equal(result.filterButtonItems[0].textValue, 'testTextValueFromHistory');
                resolve();
             });
          });
+      });
+
+      it('resetPrefetch', function() {
+         const controller = new Filter();
+         const filter = {
+            testField: 'testValue',
+            PrefetchSessionId: 'test'
+         };
+
+         controller._filter = filter;
+         controller._notify = () => {};
+
+         controller.resetPrefetch();
+         assert.isTrue(controller._filter !== filter);
+         assert.deepEqual(controller._filter, {testField: 'testValue'});
       });
    });
 

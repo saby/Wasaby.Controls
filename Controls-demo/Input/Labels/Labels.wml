@@ -11,4 +11,11 @@
       <Controls.input:Text attr:class="controlsDemo__input" bind:value="_requiredValue"
                            placeholder="{{_placeholder}}"/>
    </div>
+   <div class="controlsDemo__cell">
+      <div>
+         <Controls.input:Label caption="Label on top" required="{{false}}"/>
+      </div>
+      <Controls.input:Text attr:class="controlsDemo__input controls-Input_negativeOffset_theme_{{_options.theme}}" bind:value="_topValue"
+                           placeholder="{{_placeholder}}"/>
+   </div>
 </div>

@@ -68,6 +68,11 @@ var _private = {
    close: function(self) {
       this.setCloseState(self);
       this.suggestStateNotify(self, false);
+
+      if (self._dependenciesDeferred && !self._dependenciesDeferred.isReady()) {
+         self._dependenciesDeferred.cancel();
+         self._dependenciesDeferred = null;
+      }
    },
    open: function(self) {
       _private.loadDependencies(self).addCallback(function() {
@@ -76,6 +81,11 @@ var _private = {
             _private.suggestStateNotify(self, true);
          }
       });
+   },
+
+   closePopup: function(self) {
+      let layerOpener = self._children.layerOpener;
+      layerOpener && layerOpener.close();
    },
 
    openWithHistory: function(self) {
@@ -373,7 +383,7 @@ var SuggestLayout = Control.extend({
          _private.setFilter(this, newOptions.filter);
       }
 
-      if (this._options.emptyTemplate !== newOptions.emptyTemplate) {
+      if (!isEqual(this._options.emptyTemplate, newOptions.emptyTemplate)) {
          this._emptyTemplate = _private.getEmptyTemplate(newOptions.emptyTemplate);
          this._dependenciesDeferred = null;
       }
@@ -453,6 +463,7 @@ var SuggestLayout = Control.extend({
    _select: function(event, item) {
       item = item || event;
       _private.close(this);
+      _private.closePopup(this);
 
       // after select from the suggest, focus on input will lost
       // if the focus should be returned, the control (such Input/Suggest) should do it

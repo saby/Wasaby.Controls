@@ -1,13 +1,13 @@
 <ws:template name="block">
    <div class="ws-Block ws-Block_style_2">
       <Controls.scroll:StickyHeader attr:class="example-NotificationCenter__stickyHeader ws-flexbox ws-align-items-center">
-         <Controls.heading:Title caption="{{dataSource.getIdProperty()}}" style="primary" size="l"/>
+         <Controls.heading:Title caption="{{dataSource.getKeyProperty()}}" style="primary" size="l"/>
       </Controls.scroll:StickyHeader>
       <Controls.list:View source="{{dataSource}}"
-                     idProperty="{{dataSource.getIdProperty()}}">
+                     idProperty="{{dataSource.getKeyProperty()}}">
          <ws:itemTemplate>
             <ws:partial
-               template="{{'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/' + dataSource.getIdProperty()}}"
+               template="{{'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/' + dataSource.getKeyProperty()}}"
                attr:class="example-NotificationCenter__item"/>
          </ws:itemTemplate>
       </Controls.list:View>

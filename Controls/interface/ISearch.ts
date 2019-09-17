@@ -91,6 +91,30 @@ interface ISearch {
        * </pre>
        */
       searchDelay: number;
+
+      /**
+       * @name Controls/interface/ISearch#searchValueTrim
+       * @cfg {Boolean} Определяет, удалять ли пробелы у текста для поиска.
+       * @remark
+       * Пробелы удаляются только для текста, который отправляется в поисковой запрос,
+       * текст в поле ввода при этом будет продолжать содержать пробелы.
+       * @default false
+       * @example
+       * В этом примере в поисковой запрос будет отправлен текст "Ярославль".
+       * <pre>
+       *    <Controls.suggest:Input searchDelay="{{1000}}" searchParam="city" value="  Ярославль   "/>
+       * </pre>
+       */
+      /**
+       * @name Controls/interface/ISearch#searchValueTrim
+       * @cfg {Boolean} Determines whether search value is trimmed.
+       * @default false
+       * @example
+       * <pre>
+       *    <Controls.suggest:Input searchDelay="{{1000}}" searchParam="city" value="  Yaroslavl   "/>
+       * </pre>
+       */
+      searchValueTrim: boolean;
    };
 }
 

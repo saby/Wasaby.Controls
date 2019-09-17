@@ -2,11 +2,12 @@ define(
    [
       'Controls/filterPopup',
       'Controls/filter',
+      'Controls/history',
       'Types/collection',
       'Core/core-clone',
       'Core/Deferred'
    ],
-   function(filterPopup, filter, collection, Clone, Deferred) {
+   function(filterPopup, filter, history, collection, Clone, Deferred) {
       describe('FilterPanelVDom', function() {
          var template = 'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate';
          var config = {},
@@ -54,10 +55,20 @@ define(
             };
             var panel2 = getFilterPanel(config2);
             filterPopup.DetailPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function(items) {
-               assert.isOk(filter.HistoryUtils.getHistorySource('TEST_PANEL_HISTORY_ID')._history);
+               assert.isOk(filter.HistoryUtils.getHistorySource({historyId: 'TEST_PANEL_HISTORY_ID'})._history);
                assert.equal(items.getCount(), 2);
                done();
             });
+         });
+
+         it('Init::historyItems isReportPanel', function() {
+            let historyConfig = {
+               historyId: 'TEST_REPORT_PANEL_HISTORY_ID',
+               recent: 'MAX_HISTORY_REPORTS',
+               pinned: false
+            };
+            let hSource = filter.HistoryUtils.getHistorySource(historyConfig);
+            assert.strictEqual(hSource.historySource._recent, history.Constants.MAX_HISTORY_REPORTS + 1);
          });
 
          it('Init::historyItems fail loading', function(done) {
@@ -126,7 +137,7 @@ define(
 
          it('_applyHistoryFilter', function() {
             var panel = getFilterPanel(config),
-               isNotifyClose, filter;
+               isNotifyClose, filter, isValidated = false;
             panel._notify = (e, args) => {
                if (e == 'sendResult') {
                   filter = args[0].filter;
@@ -135,7 +146,7 @@ define(
                }
             };
             panel._beforeMount(config);
-            panel._children = { formController: { submit: ()=>{return Deferred.success([])} } };
+            panel._children = { formController: { submit: ()=>{isValidated = true; return Deferred.success([])} } };
             var historyItems = [
                {
                   id: 'text',
@@ -152,6 +163,7 @@ define(
             ];
             panel._applyHistoryFilter('applyHistoryFilter', historyItems);
             assert.deepEqual({ text: '123', bool: true }, filter);
+            assert.isFalse(isValidated);
             assert.isTrue(isNotifyClose);
          });
 
@@ -236,7 +248,7 @@ define(
          it('recordSet', function() {
 
             var rs = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: items
                }),
                options = {};
@@ -312,6 +324,45 @@ define(
             filterPopup.DetailPanel._private.resolveHistoryId(self, {}, self._contextOptions);
             assert.equal(self._historyId, 'testId');
          });
+			it('filterHistoryItems', function() {
+			   let self = {
+			 		_items: [
+			 			{
+			 			   id: 'PeriodFilter',
+			 			   value: 5,
+			 			   resetValue: {
+			 			 		'StartDate': '12.31.1233',
+			 			 		'LastDate': '13.31.1233',
+			 			 		'Period': 'За последний час',
+			 			   },
+			 			   textValue: 'listValue'
+			 			},
+			 			{
+			 			   id: 'Methods',
+			 			   value: '123',
+			 			   resetValue: '',
+			 			   visibility: true,
+			 			   textValue: null
+			 			},
+			 			{
+			 			   id: 'Faces',
+			 			   value: true,
+			 			   resetValue: false,
+			 			   visibility: false
+			 			}
+			 		]
+			   };
+			   var config2 = {
+			 		items: items,
+			 		historyId: 'TEST_PANEL_HISTORY_ID'
+			   };
+			   filter.HistoryUtils.loadHistoryItems('TEST_PANEL_HISTORY_ID').addCallback(function(items) {
+			 		let filteredHistoryItems = _private.filterHistoryItems(self,items);
+			 		assert.isUndefined(filteredHistoryItems);
+			 		done();
+			   });
+			});
+
 
          it('_private:prepareItems', function() {
             var changeItems = [

@@ -46,7 +46,8 @@
                                     on:collapsedItemsChanged="_notifyHandler('collapsedItemsChanged')"
                                     on:editArrowClick="_notifyHandler('editArrowClick')"
                                     itemsReadyCallback="{{_itemsReadyCallback}}"
-                                    dataLoadCallback="{{_dataLoadCallback}}"/>
+                                    dataLoadCallback="{{_dataLoadCallback}}"
+                                    itemsSetCallback="{{_itemsSetCallback}}"/>
       </Controls._explorer.PathController>
    </Controls.dragnDrop:Container>
 </div>

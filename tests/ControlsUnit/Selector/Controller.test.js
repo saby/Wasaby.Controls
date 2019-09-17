@@ -11,7 +11,7 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
                id: i,
                title: 'title-' + i
             },
-            idProperty: 'id'
+            keyProperty: 'id'
          }));
       }
 

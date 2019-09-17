@@ -24,7 +24,6 @@ import {constants, detection, IoC} from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import {ICrud} from "Types/source";
 import {TouchContextField} from 'Controls/context';
-import {focus} from 'UI/Focus';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
@@ -134,6 +133,7 @@ var _private = {
                 if (self._pagingNavigation) {
                     var hasMoreDataDown = list.getMetaData().more;
                     self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, cfg.navigation.sourceConfig.pageSize);
+                    self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDown, cfg.navigation.sourceConfig.pageSize, self._currentPage);
                 }
                 var
                     isActive,
@@ -188,7 +188,7 @@ var _private = {
 
                 // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                 if (!list.getCount()) {
-                    _private.checkLoadToDirectionCapability(self);
+                    _private.checkLoadToDirectionCapability(self, filter);
                 }
             }).addErrback(function(error) {
                 return _private.processError(self, {
@@ -354,7 +354,7 @@ var _private = {
         }
     },
 
-    loadToDirection: function(self, direction, userCallback, userErrback) {
+    loadToDirection: function(self, direction, userCallback, userErrback, receivedFilter) {
         const beforeAddItems = (addedItems) => {
             if (addedItems.getCount()) {
                 self._loadedItems = addedItems;
@@ -395,7 +395,7 @@ var _private = {
         _private.showIndicator(self, direction);
 
         if (self._sourceController) {
-            const filter = cClone(self._options.filter);
+            const filter = cClone(receivedFilter || self._options.filter);
             if (self._options.beforeLoadToDirectionCallback) {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }
@@ -454,15 +454,14 @@ var _private = {
                 top: self._virtualScroll.PlaceholdersSizes.top,
                 bottom: self._virtualScroll.PlaceholdersSizes.bottom
             }], { bubbling: true });
-            _private.updateShadowMode(self);
         }
     },
 
     updateShadowMode(self): void {
         self._notify('updateShadowMode', [{
-            top: self._virtualScroll.PlaceholdersSizes.top ||
+            top: self._virtualScroll && self._virtualScroll.PlaceholdersSizes.top ||
             self._sourceController && self._sourceController.hasMoreData('up') ? 'visible' : 'auto',
-            bottom: self._virtualScroll.PlaceholdersSizes.bottom ||
+            bottom: self._virtualScroll && self._virtualScroll.PlaceholdersSizes.bottom ||
             self._sourceController && self._sourceController.hasMoreData('down') ? 'visible' : 'auto'
         }], { bubbling: true });
     },
@@ -486,6 +485,7 @@ var _private = {
         self._virtualScroll.recalcToDirectionByScrollTop(params, self._loadOffset.top);
         if (_private.applyVirtualScrollIndexesToListModel(self)) {
             _private.applyPlaceholdersSizes(self);
+            _private.updateShadowMode(self);
         } else {
             // если индексы не поменялись, то зовем коллбэк, если поменялись он позовется в beforePaint
             self._applyScrollTopCallback();
@@ -501,13 +501,13 @@ var _private = {
         }
     },
 
-    checkLoadToDirectionCapability: function(self) {
+    checkLoadToDirectionCapability: function(self, filter) {
         if (self._needScrollCalculation) {
             if (self._loadTriggerVisibility.up) {
-                _private.onScrollLoadEdge(self, 'up');
+                _private.onScrollLoadEdge(self, 'up', filter);
             }
             if (self._loadTriggerVisibility.down) {
-                _private.onScrollLoadEdge(self, 'down');
+                _private.onScrollLoadEdge(self, 'down', filter);
             }
             _private.checkVirtualScrollCapability(self);
         }
@@ -550,6 +550,7 @@ var _private = {
                 self._saveAndRestoreScrollPosition = direction;
                 self._shouldRestoreScrollPosition = true;
                 _private.applyPlaceholdersSizes(self);
+                _private.updateShadowMode(self);
             }
         };
 
@@ -560,7 +561,7 @@ var _private = {
         }
     },
 
-    loadToDirectionIfNeed: function(self, direction) {
+    loadToDirectionIfNeed: function(self, direction, filter) {
         //source controller is not created if "source" option is undefined
         // todo возможно hasEnoughDataToDirection неправильная. Надо проверять startIndex +/- virtualSegmentSize
         if (!self._virtualScroll || !self._virtualScroll.hasEnoughDataToDirection(direction)) {
@@ -568,16 +569,17 @@ var _private = {
                 _private.loadToDirection(
                    self, direction,
                    self._options.dataLoadCallback,
-                   self._options.dataLoadErrback
+                   self._options.dataLoadErrback,
+                   filter
                 );
             }
         }
     },
 
     // Метод, вызываемый при прокрутке скролла до триггера
-    onScrollLoadEdge: function (self, direction) {
+    onScrollLoadEdge: function (self, direction, filter) {
         if (self._options.navigation && self._options.navigation.view === 'infinity') {
-            _private.loadToDirectionIfNeed(self, direction);
+            _private.loadToDirectionIfNeed(self, direction, filter);
         }
     },
 
@@ -912,7 +914,7 @@ var _private = {
         const target = context ? null : _private.mockTarget(childEvent.target);
         if (showActions && showActions.length) {
             var
-                rs = new collection.RecordSet({ rawData: showActions, idProperty: 'id' });
+                rs = new collection.RecordSet({ rawData: showActions, keyProperty: 'id' });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             self._listViewModel.setActiveItem(itemData);
@@ -947,7 +949,7 @@ var _private = {
                     },
                     closeOnOutsideClick: true,
                     targetPoint: {vertical: 'top', horizontal: 'right'},
-                    horizontalAlign: {side: context ? 'right' : 'left'},
+                    direction: {horizontal: context ? 'right' : 'left'},
                     className: 'controls-Toolbar__popup__list_theme-' + self._options.theme,
                     nativeEvent: context ? childEvent.nativeEvent : false
                 });
@@ -976,7 +978,7 @@ var _private = {
                 opener: self._children.listView,
                 target: childEvent.target,
                 templateOptions: {
-                   items: new collection.RecordSet({ rawData: children, idProperty: 'id' }),
+                   items: new collection.RecordSet({ rawData: children, keyProperty: 'id' }),
                    keyProperty: 'id',
                    parentProperty: 'parent',
                    nodeProperty: 'parent@',
@@ -1154,6 +1156,21 @@ var _private = {
         return newKnownPagesCount;
     },
 
+    getPagingLabelData: function(totalItemsCount, pageSize, currentPage) {
+        let pagingLabelData;
+        if (typeof totalItemsCount === 'number') {
+            pagingLabelData = {
+                totalItemsCount: totalItemsCount,
+                pageSize: pageSize,
+                firstItemNumber: (currentPage - 1) * pageSize + 1,
+                lastItemNumber: Math.min(currentPage * pageSize, totalItemsCount)
+            };
+        } else {
+            pagingLabelData = null;
+        }
+        return pagingLabelData;
+    },
+
     getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty:string}): SourceController {
         return new SourceController({
             source: source,
@@ -1175,12 +1192,12 @@ var _private = {
     isPagingNavigation: function(navigation) {
         return navigation && navigation.view === 'pages';
     },
-    resetPagingNavigation: function(self) {
+    resetPagingNavigation: function(self, navigation) {
         self._knownPagesCount = INITIAL_PAGES_COUNT;
-        self._currentPage = INITIAL_PAGES_COUNT;
+        self._currentPage = navigation && navigation.sourceConfig && navigation.sourceConfig.page || INITIAL_PAGES_COUNT;
     },
 
-    initializeNavigation: function(self, cfg, resetPaging) {
+    initializeNavigation: function(self, cfg) {
         self._needScrollCalculation = _private.needScrollCalculation(cfg.navigation);
         self._pagingNavigation = _private.isPagingNavigation(cfg.navigation);
 
@@ -1213,13 +1230,9 @@ var _private = {
             self._pagingVisible = false;
         }
 
-        if (self._pagingNavigation) {
-            if (resetPaging) {
-                _private.resetPagingNavigation(self);
-            }
-        } else {
+        if (!self._pagingNavigation) {
             self._pagingNavigationVisible = false;
-            _private.resetPagingNavigation(self);
+            _private.resetPagingNavigation(self, cfg.navigation);
         }
     },
     updateNavigation: function(self) {
@@ -1304,6 +1317,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _currentPage: INITIAL_PAGES_COUNT,
     _pagingNavigation: false,
     _pagingNavigationVisible: false,
+    _pagingLabelData: null,
 
     _canUpdateItemsActions: false,
     _blockItemActionsByScroll: false,
@@ -1382,6 +1396,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     if (self._pagingNavigation) {
                         var hasMoreData = self._items.getMetaData().more;
                         self._knownPagesCount = _private.calcPaging(self, hasMoreData, newOptions.navigation.sourceConfig.pageSize);
+                        self._pagingLabelData = _private.getPagingLabelData(hasMoreData, newOptions.navigation.sourceConfig.pageSize, self._currentPage);
                     }
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);
@@ -1450,8 +1465,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (this._virtualScroll) {
             this._setScrollItemContainer();
-            _private.updateShadowMode(this);
         }
+        _private.updateShadowMode(this);
     },
 
     _beforeUpdate: function(newOptions) {
@@ -1463,7 +1478,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items);
         if (!isEqual(newOptions.navigation, this._options.navigation)) {
-            _private.initializeNavigation(this, newOptions, resetPaging);
+            _private.initializeNavigation(this, newOptions);
         }
         _private.updateNavigation(this);
 
@@ -1498,7 +1513,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (newOptions.searchValue !== this._options.searchValue) {
             this._listViewModel.setSearchValue(newOptions.searchValue);
         }
-
+        if (newOptions.editingConfig !== this._options.editingConfig) {
+            this._listViewModel.setEditingConfig(newOptions.editingConfig);
+        }
         if (recreateSource) {
             this._recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
 
@@ -1521,7 +1538,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
-            _private.resetPagingNavigation(this);
+            _private.resetPagingNavigation(this, newOptions.navigation);
 
             //return result here is for unit tests
             return _private.reload(self, newOptions);
@@ -1620,6 +1637,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     toBottom: toBottom
                 };
                 _private.applyPlaceholdersSizes(this);
+                _private.updateShadowMode(this);
             } else {
                 _private.scrollToItem(this, key, toBottom);
             }
@@ -1668,6 +1686,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);
         }
+
+        _private.updateShadowMode(this);
 
         if (this._virtualScroll && this._applyScrollTopCallback) {
             this._applyScrollTopCallback();
@@ -1748,6 +1768,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.clearReloadedMarks();
             this._itemReloaded = false;
         }
+
+        this._emptyTemplateVisibility = this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel, this._loadingState);
     },
 
     __onPagingArrowClick: function(e, arrow) {
@@ -1821,7 +1843,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // в этот момент вызывают перезагрузку реестра (например поиском или фильтрацией)
         // и мы не должны показывать в этом случае заглушку, что нет данных,
         // пока реестр не загрузится
-        return this._emptyTemplateVisibility = newEmptyTemplateVisibility && (this._emptyTemplateVisibility || !loadingState);
+        return newEmptyTemplateVisibility && (this._emptyTemplateVisibility || !loadingState);
     },
 
     _onCheckBoxClick: function(e, key, status) {
@@ -1929,6 +1951,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._virtualScroll && this._virtualScroll.ItemsContainer) {
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);
+            _private.updateShadowMode(this);
         }
     },
     _setScrollItemContainer: function () {
@@ -1971,7 +1994,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _showActionsMenu: function(event, itemData, childEvent, showAll) {
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
-
+    _onAfterEndEdit: function(event, item, isAdd) {
+        this._canUpdateItemsActions = true;
+        return this._notify('afterEndEdit', [item, isAdd]);
+    },
     _onAfterBeginEdit: function (event, item, isAdd) {
 
         /*
@@ -2009,11 +2035,18 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             self = this,
             dragStartResult;
 
-        if (!this._options.readOnly && this._options.itemsDragNDrop && !domEvent.target.closest('.controls-DragNDrop__notDraggable')) {
+        if (!(domEvent.nativeEvent.button) && !this._options.readOnly && this._options.itemsDragNDrop && !domEvent.target.closest('.controls-DragNDrop__notDraggable')) {
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
             selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
             getItemsBySelection(selection, this._options.source, this._listViewModel.getItems(), this._options.filter).addCallback(function(items) {
+                const dragKeyPosition = items.indexOf(itemData.key);
+                // If dragged item is in the list, but it's not the first one, move
+                // it to the front of the array
+                if (dragKeyPosition > 0) {
+                    items.splice(dragKeyPosition, 1);
+                    items.unshift(itemData.key);
+                }
                 dragStartResult = self._notify('dragStart', [items]);
                 if (dragStartResult) {
                     if (self._options.dragControlId) {
@@ -2123,7 +2156,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData, nativeEvent]);
     },
-
+    _itemMouseLeave(event, itemData, nativeEvent) {
+        this._notify('itemMouseLeave', [itemData, nativeEvent]);
+    },
     _sortingChanged: function(event, propName, sortingType) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);
         event.stopPropagation();

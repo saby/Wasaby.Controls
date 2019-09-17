@@ -11,7 +11,7 @@ define(
    ],
    (popup, collection, Deferred) => {
       let dataRS = new collection.RecordSet({
-         idProperty: 'id',
+         keyProperty: 'id',
          rawData: [
             {
                id: 0,

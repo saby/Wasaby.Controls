@@ -45,7 +45,7 @@
     cursor: pointer;
 }
 
-.ws-is-no-touch {
+.ws-is-hover {
     .controls-SelectedCollection__counterItems:hover {
         color: @color_SelectedCollection-counter_hover;
         text-decoration: underline;
@@ -140,6 +140,12 @@
     .align-items(baseline);
     overflow: hidden;
     max-width: 100%;
+}
+
+.controls-SelectedCollection__collection-default:after,
+.controls-SelectedCollection__collection-oneRow:after {
+    content: '\200b';
+    line-height: @line-height_SelectedCollection-item;;
 }
 
 .controls-SelectedCollection__collection_singleLine {

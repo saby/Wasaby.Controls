@@ -18,11 +18,11 @@ define('Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
 
          _beforeMount: function(options) {
             this._source = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: options.items
             });
             this.rs = new collection.RecordSet({
-               idProperty: 'title',
+               keyProperty: 'title',
                rawData: options.items
             });
 

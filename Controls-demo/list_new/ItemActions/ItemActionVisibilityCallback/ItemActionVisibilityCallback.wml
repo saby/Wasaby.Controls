@@ -1,1 +1,7 @@
-<Controls-demo.list_new.WIP byTask="https://online.sbis.ru/opendoc.html?guid=d39c25fd-3b40-45d3-9143-2bd868492f4a"/>
+<div class="controlsDemo__wrapper">
+    <Controls.list:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            itemActions="{{_itemActions}}"
+            itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"/>
+</div>

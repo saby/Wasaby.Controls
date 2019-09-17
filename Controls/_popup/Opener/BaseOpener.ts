@@ -6,14 +6,13 @@ import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
-import Indicator = require('Core/Indicator');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import {parse as parserLib, load} from 'Core/library';
 
 var _private = {
-    clearPopupIds: function (popupIds, opened, displayMode) {
-        if (!opened && displayMode === 'single') {
-            popupIds.length = 0;
+    clearPopupIds: function (self) {
+        if (!self.isOpened()) {
+            self._popupId = null;
         }
     },
     compatibleOpen: function (self, cfg, controller): Promise<string | undefined> {
@@ -39,13 +38,9 @@ var _private = {
 var Base = Control.extend({
     _template: Template,
     _actionOnScroll: 'none',
-    _showOldIndicator: false,
 
     _beforeMount: function (options) {
-        this._popupIds = [];
-        if (options.displayMode && options.displayMode !== 'single') {
-            Env.IoC.resolve('ILogger').error(this._moduleName, 'Вместо опции displayMode используйте открытие окна через статический метод openPopup');
-        }
+        this._popupId = null;
     },
 
     _afterMount: function () {
@@ -58,9 +53,7 @@ var Base = Control.extend({
         this._toggleIndicator(false);
         if (this._options.closePopupBeforeUnmount) {
             if (this._useVDOM()) {
-                this._popupIds.forEach(function (popupId) {
-                    ManagerController.remove(popupId);
-                });
+                ManagerController.remove(this._popupId);
             } else if (this._action) { // todo Compatible
                 this._action.destroy();
                 this._action = null;
@@ -70,6 +63,7 @@ var Base = Control.extend({
     open: function (popupOptions, controller): Promise<string | undefined> {
         return new Promise((resolve => {
             var cfg = this._getConfig(popupOptions || {});
+            _private.clearPopupIds(this);
             this._toggleIndicator(true);
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                 _private.compatibleOpen(this, cfg, controller).then(popupId => resolve(popupId));
@@ -79,41 +73,24 @@ var Base = Control.extend({
         }));
     },
 
-    // Сейчас ядро не умеет обновлять контрол, если другой контрол находится в ожидании построения
-    // (на beforeMount вернул Promise). Поэтому сделан этот костыль, который открывает старый индикатор по опции.
-    // Иначе при долгом построении индикатора загрузики вообще не будет
-    // После того как ядро полечит проблему, костыль нужно удалить
-    // TODO: https://online.sbis.ru/opendoc.html?guid=13e4d473-5b91-485b-8d9d-fcd2f1f80f72
-    _compatibleCreatingDef(config, isCreating: boolean): void {
-        if (isCreating) {
-            if (this._showOldIndicator) {
-                config.creatingDef = new Deferred();
-                config.creatingDef.addCallback(() => {
-                    this._toggleIndicator(false);
-                });
-            }
-        }
-    },
-
     _openPopup: function (cfg, controller): Promise<string | undefined> {
         return new Promise((resolve => {
             this._requireModules(cfg, controller).addCallback((result) => {
-                _private.clearPopupIds(this._popupIds, this.isOpened(), this._options.displayMode);
-                const popupId = this._options.displayMode === 'single' ? this._getCurrentPopupId() : null;
+                _private.clearPopupIds(this);
+                const popupId = this._getCurrentPopupId();
 
                 cfg._vdomOnOldPage = this._options._vdomOnOldPage;
-                this._compatibleCreatingDef(cfg, !popupId);
                 Base.showDialog(result.template, cfg, result.controller, popupId, this).addCallback((popupId) => {
-                    if (!cfg.creatingDef) {
-                        this._toggleIndicator(false);
-                    }
                     if (this._useVDOM()) {
-                        if (this._popupIds.indexOf(popupId) === -1) {
-                            this._popupIds.push(popupId);
-                        }
+                        this._popupId = popupId;
                         // Call redraw to create emitter on scroll after popup opening
                         this._forceUpdate();
                     } else {
+                        // if old environment and old template, then we haven't compatible layer =>
+                        // hide indicator immediately
+                        if (!isNewEnvironment() && !Base.isVDOMTemplate(result.template)) {
+                            this._toggleIndicator(false);
+                        }
                         this._action = popupId;
                     }
                     resolve(popupId);
@@ -146,7 +123,6 @@ var Base = Control.extend({
         if (!baseConfig.hasOwnProperty('opener')) {
             baseConfig.opener = DefaultOpenerFinder.find(this) || this;
         }
-        this._showOldIndicator = baseConfig.showOldIndicator;
         if (baseConfig.actionOnScroll) {
             this._actionOnScroll = baseConfig.actionOnScroll;
         }
@@ -155,41 +131,41 @@ var Base = Control.extend({
     },
 
     _prepareNotifyConfig: function (cfg) {
-        this._notifyEvent = this._notifyEvent.bind(this);
+        this._popupHandler = this._popupHandler.bind(this);
 
         // Handlers for popup events
         cfg._events = {
-            onOpen: this._notifyEvent,
-            onResult: this._notifyEvent,
-            onClose: this._notifyEvent
+            onOpen: this._popupHandler,
+            onResult: this._popupHandler,
+            onClose: this._popupHandler
         };
     },
 
-    _notifyEvent: function (eventName, args) {
+    _popupHandler(eventName: string, args: any[]): void {
         // Trim the prefix "on" in the event name
-        var event = eventName.substr(2);
+        const event = eventName.substr(2).toLowerCase();
+
+        if (event === 'close' || event === 'open') {
+            this._toggleIndicator(false);
+        }
+
         this._notify(event, args);
     },
 
     _toggleIndicator: function (visible) {
-        let message =  rk('Загрузка');
-        if(!this._showOldIndicator) {
-            if (visible) {
-                var cfg = {
-                    id: this._indicatorId,
-                    message: message
-                };
-                this._indicatorId = this._notify('showIndicator', [cfg], {bubbling: true});
-            } else if (this._indicatorId) {
-                this._notify('hideIndicator', [this._indicatorId], {bubbling: true});
-                this._indicatorId = null;
+        if (visible) {
+            // if popup was opened, then don't show indicator, because we don't have async phase
+            if (this._getCurrentPopupId()) {
+                return;
             }
-        } else {
-            if(visible){
-                Indicator.setMessage(message,true)
-            } else {
-                Indicator.hide();
-            }
+            const cfg = {
+                id: this._indicatorId,
+                message: rk('Загрузка')
+            };
+            this._indicatorId = this._notify('showIndicator', [cfg], {bubbling: true});
+        } else if (this._indicatorId) {
+            this._notify('hideIndicator', [this._indicatorId], {bubbling: true});
+            this._indicatorId = null;
         }
     },
 
@@ -201,10 +177,7 @@ var Base = Control.extend({
         const popupId: string = id || this._getCurrentPopupId();
         if (popupId) {
             Base.closeDialog(popupId).addCallback(() => {
-                // todo: Перейти с массива на collection.list
-                if (this._popupIds.indexOf(popupId) > -1) {
-                    this._popupIds.splice(this._popupIds.indexOf(popupId), 1);
-                }
+                this._popupId = null;
             });
         } else if (!Base.isNewEnvironment() && this._action) {
             this._action.closeDialog();
@@ -229,8 +202,8 @@ var Base = Control.extend({
         this.close();
     },
 
-    _getCurrentPopupId: function () {
-        return this._popupIds[this._popupIds.length - 1];
+    _getCurrentPopupId(): string {
+        return this._popupId;
     },
 
     /**
@@ -334,9 +307,11 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
                 }
 
                 var action;
+                let openedDialog = null;
                 if (!opener || !opener._action) {
                     action = new Action({
                         closeByFocusOut: true,
+                        dialogCreatedCallback: (newDialog) => openedDialog = newDialog
                     });
                 } else {
                     action = opener._action;
@@ -352,14 +327,26 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
                     compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
                     dialog.setTarget && dialog.setTarget($(newCfg.target));
 
-                    // Обновляем опцию для старого окна и зовем завершение обработки, т.к. окно уже открыто и просто
-                    // перерисовывает шаблон
-                    dialog._options.creatingDef = newCfg.creatingDef;
                     dialog._finishPopupOpenedDeferred && dialog._finishPopupOpenedDeferred();
                 } else {
+                    openedDialog = null;
                     action.closeDialog();
                     action._isExecuting = false;
-                    action.execute(newCfg);
+                    action.execute(newCfg).addCallback(() => {
+                        // Защита от утечки. проверяем, что закрылось окно, которое открывали последним. в этом случае дестроим action.
+                        // Т.к. мы создаем его динамически, никто кроме baseOpener его не задестроит
+                        if (action.getDialog() === openedDialog) {
+                            // Этот дестрой не должен звать за собой дестрой панели, т.к. она уже в состоянии закрытия
+                            // Если action позовет дестрой панели в этом обработчике, то все остальные обработчики на onAfterClose не вызовутся
+                            // т.к. в системе событий есть провека на isDestroyed();
+                            action._closeDialogAfterDestroy = false;
+                            action.destroy();
+                            if (opener && opener._action) {
+                                opener._action = null;
+                            }
+                            openedDialog = null;
+                        }
+                    });
                 }
                 def.callback(action);
             } catch (err) {
@@ -461,6 +448,7 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'maxWidth',
         'maximize',
         'width',
+        'propStorageId',
         'resizable',
         'top',
         'autoHide',
@@ -501,22 +489,6 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         delete baseCfg.templateOptions.opener;
     }
 
-    if (baseCfg.hasOwnProperty('closeOnTargetScroll')) {
-        Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Use option "actionOnScroll" instead of "closeOnTargetScroll"');
-        if (baseCfg.closeOnTargetScroll) {
-            baseCfg.actionOnScroll = 'close';
-        }
-    }
-    if (baseCfg.hasOwnProperty('targetTracking')) {
-        Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Use option "actionOnScroll" instead of "targetTracking"');
-        if (baseCfg.targetTracking) {
-            baseCfg.actionOnScroll = 'track';
-        }
-    }
-
-    if (baseCfg.hasOwnProperty('corner')) {
-        Env.IoC.resolve('ILogger').error(Base.prototype._moduleName, 'Используется устаревшая опция corner, используйте опцию targetPoint');
-    }
     if (baseCfg.hasOwnProperty('verticalAlign') || baseCfg.hasOwnProperty('horizontalAlign')) {
         Env.IoC.resolve('ILogger').warn(Base.prototype._moduleName, 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
     }
@@ -554,7 +526,6 @@ Base.getDefaultOptions = function () {
     return {
         closePopupBeforeUnmount: true,
         actionOnScroll: 'none',
-        displayMode: 'single',
         _vdomOnOldPage: false // Always open vdom panel
     };
 };

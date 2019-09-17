@@ -31,7 +31,7 @@ define('Controls-demo/List/Tree/ExpandedItemsBinding', [
          ];
          this.gridData = GridData;
          this._viewSource = new Source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: GridData.catalog,
 
             filter: memorySourceFilter()

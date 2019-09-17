@@ -86,6 +86,19 @@ import {delay} from 'Types/function';
     * @cfg {Object} Outer data for tagResolver.
     */
 
+
+   /**
+    * @typedef {Object}
+    * @name ValidHtml
+    * @property {Object} validNodes Набор тегов, которые будут вставляться версткой. Формат: {tagName: true, ...}. Набор по умолчанию расположен в модуле Core/validHtml.
+    * @property {Object} validAttributes Набор разрешенных атрибутов, которые попадут в результат. Формат: {attributeName: true, ...}. Набор по умолчанию расположен в модуле Core/validHtml.
+    */
+
+   /**
+    * @name Controls/_decorator/Markup#validHtml
+    * @cfg {ValidHtml}
+    */
+
    class MarkupDecorator extends Control<IControlOptions> {
       _template: TemplateFunction = template;
 

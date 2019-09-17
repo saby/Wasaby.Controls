@@ -6,12 +6,14 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {IMonthListSource, IMonthListSourceOptions} from './interfaces/IMonthListSource';
 import {IMonthList, IMonthListOptions} from './interfaces/IMonthList';
+import {IMonthListVirtualPageSize, IMonthListVirtualPageSizeOptions} from './interfaces/IMonthListVirtualPageSize';
 import ExtDataModel from './MonthList/ExtDataModel';
 import YearsSource from './MonthList/YearsSource';
 import MonthsSource from './MonthList/MonthsSource';
 import monthListUtils from './MonthList/Utils';
 import {IntersectionObserverSyntheticEntry} from 'Controls/scroll';
 import dateUtils = require('Controls/Utils/Date');
+import getDimensions = require("Controls/Utils/getDimensions");
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
@@ -50,7 +52,11 @@ import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
  * </pre>
  */
 
-interface IModuleComponentOptions extends IControlOptions, IMonthListSourceOptions, IMonthListOptions {
+interface IModuleComponentOptions extends
+    IControlOptions,
+    IMonthListSourceOptions,
+    IMonthListOptions,
+    IMonthListVirtualPageSizeOptions {
 }
 
 const
@@ -63,9 +69,11 @@ const
         month: '.controls-MonthList__month-body'
     };
 
-class  ModuleComponent extends Control<IModuleComponentOptions> implements IMonthListSource, IMonthList {
+class  ModuleComponent extends Control<IModuleComponentOptions> implements
+        IMonthListSource, IMonthList, IMonthListVirtualPageSize {
     readonly '[Controls/_calendar/interface/IMonthListSource]': true;
     readonly '[Controls/_calendar/interface/IMonthList]': true;
+    readonly '[Controls/_calendar/interface/IMonthListVirtualPageSize]': true;
 
     protected _template: TemplateFunction = template;
 
@@ -80,6 +88,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
 
     private _displayedDates: number[] = [];
     private _extData: ExtDataModel;
+
+    private _scrollTop: number = 0;
 
     _enrichItemsDebounced: Function;
 
@@ -114,7 +124,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
         }
     }
 
-    protected _beforePaint(): void {
+    protected _afterRender(): void {
         this._updateScrollAfterViewModification();
     }
 
@@ -151,7 +161,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
 
         this._positionToScroll = newPosition;
 
-        if (this._container && this._findElementByDate(newPosition)) {
+        if (this._container && this._canScroll(newPosition)) {
             // Update scroll position without waiting view modification
             this._updateScrollAfterViewModification();
         } else {
@@ -237,7 +247,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
     }
 
     private _updateScrollAfterViewModification(): void {
-        if (this._positionToScroll) {
+        if (this._positionToScroll && this._canScroll(this._positionToScroll)) {
             if (this._scrollToDate(this._positionToScroll)) {
                 this._positionToScroll = null;
             }
@@ -252,6 +262,33 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
             return true;
         }
         return false;
+    }
+
+    private _canScroll(date: Date): boolean {
+        const itemContainer: HTMLElement = this._findElementByDate(date);
+
+        let itemDimensions: ClientRect,
+            containerDimensions: ClientRect,
+            scrollTop: number;
+
+        if (!itemContainer) {
+            return false;
+        }
+
+        //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+        const container = this._container.get ? this._container.get(0) : this._container;
+
+        itemDimensions = getDimensions(itemContainer);
+        containerDimensions = getDimensions(container);
+
+        scrollTop = this._scrollTop + (itemDimensions.top - containerDimensions.top);
+        return this._children.scroll.canScrollTo(scrollTop);
+
+    }
+
+    private _scrollHandler(event: SyntheticEvent, scrollTop: number) {
+        this._scrollTop = scrollTop;
+        this._enrichItemsDebounced();
     }
 
     private _findElementByDate(date: Date): HTMLElement {
@@ -285,7 +322,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements IMont
         return {
             viewMode: 'year',
             yearTemplate,
-            monthTemplate
+            monthTemplate,
+            // In most places where control is used, no more than 4 elements are displayed at the visible area.
+            // Draw the elements above and below.
+            virtualPageSize: 6
         };
     }
 }

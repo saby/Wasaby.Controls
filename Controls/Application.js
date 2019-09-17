@@ -11,7 +11,8 @@ define('Controls/Application',
       'Controls/scroll',
       'Core/helpers/getResourceUrl',
       'Controls/decorator',
-      'css!theme?Controls/Application/Application'
+      'Controls/Application/SettingsController',
+      'css!theme?Controls/Application/oldCss'
    ],
 
    /**
@@ -39,7 +40,7 @@ define('Controls/Application',
     * @control
     * @public
     * @author Белотелов Н.В.
-    */    
+    */
 
    /**
     * @name Controls/Application#staticDomains
@@ -69,11 +70,48 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#headJson
-    * @cfg {Content} Разметка, которая будет встроена в содержимое тега head. 
+    * @deprecated Используйте одну из опций {@link scripts}, {@link styles}, {@link meta} или {@link links}.
+    * @cfg {Content} Разметка, которая будет встроена в содержимое тега head.
     * Используйте эту опцию, чтобы подключить на страницу внешние библиотеки (скрипты), стили или шрифты.
     * @remark
     * Список разрешённых тегов: link, style, script, meta, title.
-    * Список разрешённых атрибутов: rel, as, name, sizes, crossorigin, type, href, property, http-equiv, content, id, class. 
+    * Список разрешённых атрибутов: rel, as, name, sizes, crossorigin, type, href, property, http-equiv, content, id, class.
+    */
+
+   /**
+    * @name Controls/Application#scripts
+    * @cfg {Content} Описание скриптов, которые будут вставлены в head страницы
+    * <pre class="brush:xml">
+    *     <ws:scripts>
+    *        <ws:Array>
+    *           <ws:Object type="text/javascript" src="/cdn/Maintenance/1.0.1/js/checkSoftware.js" data-pack-name="skip" async=""/>
+    *        </ws:Array>
+    *     </ws:scripts>
+    * </pre>
+    */
+
+   /**
+    * @name Controls/Application#meta
+    * @cfg {Content} Позволяет описывать meta информацию страницы.
+    * <pre class="brush:xml">
+    *     <ws:meta>
+    *        <ws:Array>
+    *           <ws:Object name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE"/>
+    *        </ws:Array>
+    *     </ws:meta>
+    * </pre>
+    */
+
+   /**
+    * @name Controls/Application#links
+    * @cfg {Content} Позволяет описывать ссылки на дополнительные ресурсы, которые необходимы при загрузке страницы.
+    * <pre class="brush:xml">
+    *     <ws:links>
+    *        <ws:Array>
+    *           <ws:Object rel="shortcut icon" href="{{_options.wsRoot}}img/themes/wi_scheme/favicon.ico?v=2" type="image/x-icon"/>
+    *        </ws:Array>
+    *     </ws:links>
+    * </pre>
     */
 
    /**
@@ -140,7 +178,7 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#beforeScripts
-    * @cfg {Boolean} В значении true скрипты из опции {@link scripts} будут вставлены до других скриптов, созданных приложением. 
+    * @cfg {Boolean} В значении true скрипты из опции {@link scripts} будут вставлены до других скриптов, созданных приложением.
     * @default false
     */
 
@@ -244,7 +282,8 @@ define('Controls/Application',
       UIBase,
       scroll,
       getResourceUrl,
-      decorator) {
+      decorator,
+      SettingsController) {
       'use strict';
 
       var _private;
@@ -269,6 +308,26 @@ define('Controls/Application',
             var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
 
             return bodyClasses;
+         },
+
+         // Generates JML from options array of objects
+         translateJML: function JMLTranslator(type, objects) {
+            var result = [];
+            for (var i = 0; i < objects.length; i++) {
+               result[i] = [type, objects[i]];
+            }
+            return result;
+         },
+         generateJML: function(links, styles, meta, scripts) {
+            var jml = [];
+            jml = jml.concat(_private.translateJML('link', links || []));
+            jml = jml.concat(_private.translateJML('style', styles || []));
+            jml = jml.concat(_private.translateJML('meta', meta || []));
+            jml = jml.concat(_private.translateJML('script', scripts || []));
+            return jml;
+         },
+         isHover: function(touchClass, dragClass) {
+            return touchClass === 'ws-is-no-touch' && dragClass === 'ws-is-no-drag';
          }
       };
 
@@ -314,6 +373,8 @@ define('Controls/Application',
           */
          _scrollingClass: 'controls-Scroll_webkitOverflowScrollingTouch',
 
+         _dragClass: 'ws-is-no-drag',
+
          _getChildContext: function() {
             return {
                ScrollData: this._scrollData
@@ -354,14 +415,26 @@ define('Controls/Application',
              */
             this._children.mousemoveDetect.start(ev);
          },
-         _touchclass: function() {
-            // Данный метод вызывается из вёрстки, и при первой отрисовке еще нет _children (это нормально)
+         _updateClasses: function() {
+            // Данный метод вызывается до построения вёрстки, и при первой отрисовке еще нет _children (это нормально)
             // поэтому сами детектим touch с помощью compatibility
-            return this._children.touchDetector
-               ? this._children.touchDetector.getClass()
-               : Env.compatibility.touch
-                  ? 'ws-is-touch'
-                  : 'ws-is-no-touch';
+            if (this._children.touchDetector) {
+               this._touchClass = this._children.touchDetector.getClass();
+            } else {
+               this._touchClass = Env.compatibility.touch ? 'ws-is-touch' : 'ws-is-no-touch';
+            }
+
+            this._hoverClass = _private.isHover(this._touchClass, this._dragClass) ? 'ws-is-hover' : 'ws-is-no-hover';
+         },
+
+         _dragStartHandler: function() {
+            this._dragClass = 'ws-is-drag';
+            this._updateClasses();
+         },
+
+         _dragEndHandler: function() {
+            this._dragClass = 'ws-is-no-drag';
+            this._updateClasses();
          },
 
          /**
@@ -403,9 +476,15 @@ define('Controls/Application',
          },
 
          _beforeMount: function(cfg) {
+            this.headTagResolver = this._headTagResolver.bind(this);
             this.BodyClasses = _private.calculateBodyClasses;
-            this._scrollData = new scroll._scrollContext({pagingVisible: cfg.pagingVisible});
-            this.headJson = cfg.headJson;
+            this._scrollData = new scroll._scrollContext({ pagingVisible: cfg.pagingVisible });
+
+            // translate arrays of links, styles, meta and scripts from options to JsonML format
+            this.headJson = _private.generateJML(cfg.links, cfg.styles, cfg.meta, cfg.scripts);
+            if (Array.isArray(cfg.headJson)) {
+               this.headJson = this.headJson.concat(cfg.headJson);
+            }
             this.headValidHtml = generateHeadValidHtml();
 
             var appData = UIBase.AppData.getAppData();
@@ -420,6 +499,9 @@ define('Controls/Application',
                   this.headValidHtml = undefined;
                }
             }
+            this._updateClasses();
+
+            SettingsController.setController(cfg.settingsController);
          },
 
          _beforeUpdate: function(cfg) {
@@ -427,6 +509,7 @@ define('Controls/Application',
                this._scrollData.pagingVisible = cfg.pagingVisible;
                this._scrollData.updateConsumers();
             }
+            this._updateClasses();
          },
 
          _afterUpdate: function(oldOptions) {
@@ -442,7 +525,11 @@ define('Controls/Application',
             }
          },
 
-         headTagResolver: function(value, parent) {
+         _getResourceUrl: function(str) {
+            return getResourceUrl(str);
+         },
+
+         _headTagResolver: function(value, parent) {
             var newValue = decorator.noOuterTag(value, parent),
                attributes = Array.isArray(newValue) && typeof newValue[1] === 'object' &&
                   !Array.isArray(newValue[1]) && newValue[1];
@@ -451,7 +538,7 @@ define('Controls/Application',
                   if (attributes.hasOwnProperty(attributeName)) {
                      var attributeValue = attributes[attributeName];
                      if (typeof attributeValue === 'string' && linkAttributes[attributeName]) {
-                        attributes[attributeName] = getResourceUrl(attributeValue);
+                        attributes[attributeName] = this._getResourceUrl(attributeValue);
                      }
                   }
                }
@@ -479,6 +566,8 @@ define('Controls/Application',
             pagingVisible: false
          };
       };
+
+      Page._theme = ['Controls/application'];
 
       return Page;
    });

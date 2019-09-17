@@ -46,9 +46,12 @@
                       bind:selectedKey='SelectedKey4'
                       keyProperty="id"
                       style="secondary"
-                      tabSpaceTemplate="{{_spaceTemplate}}"
                       source="{{_source4}}"
-        />
+        >
+            <ws:tabSpaceTemplate>
+                <ws:partial template="{{_spaceTemplate}}" dropDownSource="{{_source8}}"/>
+            </ws:tabSpaceTemplate>
+        </Controls.tabs:Buttons>
     </div>
     <div class="separator">Style="primary", with main item template</div>
     <div class="demo-TabButtons">

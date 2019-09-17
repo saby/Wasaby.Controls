@@ -1,13 +1,24 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/SimplePanel/SimplePanel');
+import CoreClone = require('Core/core-clone');
 import * as defaultItemTemplate from 'wml!Controls/_filterPopup/SimplePanel/itemTemplate';
 
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
-import coreMerge = require('Core/core-merge');
-import CoreClone = require('Core/core-clone');
 
 /**
+ * Панель "быстрых фильтров" для {@link Controls/filter:View}.
+ *
+ * @class Controls/_filterPopup/SimplePanel
+ * @extends Core/Control
+ * @mixes Controls/_filterPopup/SimplePanel/SimplePanelStyles
+ * @control
+ * @public
+ * @author Золотова Э.Е.
+ *
+ */
+
+/*
  * Control dropdown list for {@link Controls/filter:View}.
  *
  * @class Controls/_filterPopup/SimplePanel
@@ -20,6 +31,7 @@ import CoreClone = require('Core/core-clone');
  */
 
 var _private = {
+
     getItems: function(self, initItems) {
         var items = [];
         factory(initItems).each(function(item, index) {
@@ -32,13 +44,10 @@ var _private = {
 
     isEqualKeys: function(oldKeys, newKeys) {
         let result;
-        if (oldKeys[0] === null && !newKeys.length || newKeys.length !== oldKeys.length) {
+        if (oldKeys[0] === null && !newKeys.length) {
             result = false;
         } else {
-            const diffKeys = newKeys.filter((i) => {
-                return !oldKeys.includes(i);
-            });
-            result = !diffKeys.length;
+            result = isEqual(oldKeys, newKeys);
         }
         return result;
     },

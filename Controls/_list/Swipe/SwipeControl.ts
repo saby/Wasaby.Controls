@@ -79,8 +79,10 @@ export default class SwipeControl extends Control {
 
    private _updateModel(newOptions: ISwipeControlOptions): void {
       this.closeSwipe();
-      newOptions.listModel.subscribe('onListChange', () => {
-         this.closeSwipe();
+      newOptions.listModel.subscribe('onListChange', (event, changesType, action) => {
+         if (changesType !== 'itemActionsUpdated' && action !== 'ch') {
+            this.closeSwipe();
+         }
       });
    }
 

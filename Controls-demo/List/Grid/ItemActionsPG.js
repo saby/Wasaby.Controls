@@ -86,7 +86,7 @@ define('Controls-demo/List/Grid/ItemActionsPG', [
          this._componentOptions = {
             name: 'ItemActionsGridPG',
             source: new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data.catalog
             }),
             keyProperty: 'id',

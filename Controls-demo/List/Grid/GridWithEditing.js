@@ -83,7 +83,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
             }
          ];
          this._viewSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: cClone(GridData.catalog)
          });
          this.gridColumns = [

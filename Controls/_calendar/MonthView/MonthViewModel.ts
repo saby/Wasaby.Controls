@@ -157,11 +157,15 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
          if (scope.selectedUnfinishedEnd) {
             css.push('controls-MonthViewVDOM__item-selectedEnd-unfinished');
          }
-         if (scope.selected && scope.selectedStart && !scope.selectedUnfinishedStart) {
-            css.push('controls-MonthViewVDOM__item-selectedStart');
-         }
-         if (scope.selected && scope.selectedEnd && (!scope.selectionProcessing || (scope.selectedEnd !== scope.selectedStart && !scope.selectedUnfinishedEnd))) {
-            css.push('controls-MonthViewVDOM__item-selectedEnd');
+         if (scope.selected) {
+            if (scope.selectedStart && scope.selectedEnd && !scope.selectionProcessing) {
+               css.push('controls-MonthViewVDOM__item-selectedStartEnd');
+            } else if (scope.selectedStart && !scope.selectedUnfinishedStart) {
+               css.push('controls-MonthViewVDOM__item-selectedStart');
+            } else if (scope.selectedEnd && (!scope.selectionProcessing ||
+                (scope.selectedEnd !== scope.selectedStart && !scope.selectedUnfinishedEnd))) {
+               css.push('controls-MonthViewVDOM__item-selectedEnd');
+            }
          }
          if (scope.selectedInner) {
             css.push('controls-MonthViewVDOM__item-selectedInner');

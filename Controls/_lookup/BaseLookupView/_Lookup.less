@@ -51,6 +51,16 @@
   display: inline-flex;
 }
 
+/* toDO !KINGO В Safari выравнивание по базовой линии inline-flex элементов и 
+   inline элементов в две строки не работает. Даже без наших стилей. Даже с line-height. */
+.ws-is-mobile-safari,
+.ws-is-desktop-safari {
+  .controls-Lookup__fieldWrapper_content_width_custom {
+    display: inline-block;
+  }
+}
+
+
 .controls-Lookup__fieldWrapper_content_width_default {
   width: auto;
 }
@@ -103,7 +113,7 @@
   color: @color_Lookup-showSelector;
 }
 
-.ws-is-no-touch {
+.ws-is-hover {
   .controls-Lookup__showSelector_theme_@{themeName}:hover {
     color: @color_Lookup-showSelector_hovered;
   }
@@ -120,7 +130,7 @@
   color: @color_Lookup-clearRecords;
 }
 
-.ws-is-no-touch {
+.ws-is-hover {
   .controls-Lookup__clearRecords_theme_@{themeName}:hover {
     color: @color_Lookup-clearRecords_hovered;
   }

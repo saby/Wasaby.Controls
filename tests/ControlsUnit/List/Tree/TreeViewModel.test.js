@@ -106,7 +106,7 @@ define([
          nodeProperty: 'parent@',
          items: new collection.RecordSet({
             rawData: treeData,
-            idProperty: 'id'
+            keyProperty: 'id'
          })
       };
 
@@ -273,7 +273,35 @@ define([
                   'Invalid value "shouldDrawExpander(...)" for step ' + i + '.');
             });
          });
-         it('should redraw list if once folder was deleted', function() {
+          it('shouldDrawExpanderPadding', function() {
+              var
+                  shouldDrawExpanderPadding = treeGrid.TreeViewModel._private.shouldDrawExpanderPadding;
+              assert.isTrue(shouldDrawExpanderPadding({
+                  expanderVisibility: 'visible',
+                  thereIsChildItem: true
+              }, 'node'));
+              assert.isTrue(shouldDrawExpanderPadding({
+                  expanderVisibility: 'visible',
+                  thereIsChildItem: false
+              }, 'node'));
+              assert.isTrue(shouldDrawExpanderPadding({
+                  expanderVisibility: 'hasChildren',
+                  thereIsChildItem: true
+              }, 'node'));
+              assert.isFalse(shouldDrawExpanderPadding({
+                  expanderVisibility: 'visible',
+                  thereIsChildItem: true
+              }, 'none'));
+              assert.isFalse(shouldDrawExpanderPadding({
+                  expanderVisibility: 'hasChildren',
+                  thereIsChildItem: true
+              }, 'none'));
+              assert.isFalse(shouldDrawExpanderPadding({
+                  expanderVisibility: 'hasChildren',
+                  thereIsChildItem: false
+              }, 'node'));
+          });
+          it('should redraw list if once folder was deleted', function() {
             var
                rs = new collection.RecordSet({
                   rawData: [
@@ -284,7 +312,7 @@ define([
                         type: null
                      }
                   ],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                treeViewModel = new treeGrid.TreeViewModel({
                   items: rs,
@@ -303,6 +331,20 @@ define([
             assert.isTrue(updated);
 
 
+         });
+         it('getExpanderPaddingClasses', function() {
+            let expectation = [
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_default',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_s',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_m',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_l',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_xl',
+            ];
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses(), expectation[0]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('s'), expectation[1]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('m'), expectation[2]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('l'), expectation[3]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('xl'), expectation[4]);
          });
          it('prepareExpanderClasses', function() {
             var
@@ -366,7 +408,7 @@ define([
                         { id: 2, parent: null, type: true },
                         { id: 3, parent: 2, type: true }
                      ],
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   parentProperty: 'parent',
                   keyProperty: 'id',
@@ -411,9 +453,18 @@ define([
             assert.deepEqual(['123', '234'], treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after expand "123" and "234".');
             treeViewModel.setItems(new collection.RecordSet({
                rawData: treeData,
-               idProperty: 'id'
+               keyProperty: 'id'
             }));
             assert.deepEqual(['123', '234'], treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after setItems.');
+
+            treeViewModel._draggingItemData = {};
+            treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), false);
+            let dragItemIndexUpdated = false;
+            treeViewModel.updateDragItemIndex = function() {
+               dragItemIndexUpdated = true;
+            }
+            treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), true);
+            assert.isTrue(dragItemIndexUpdated);
          });
 
          it('singleExpand toggleExpanded', function() {
@@ -450,7 +501,7 @@ define([
                         'title': '21'
                      },
                   ],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                })
             };
             var SETVM = new treeGrid.TreeViewModel(singleExpangConfig);
@@ -479,6 +530,7 @@ define([
                123: true,
                234: true
             });
+            let getExpanderPaddingClasses = treeGrid.TreeViewModel._private.getExpanderPaddingClasses;
             assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(0)).nodeFooter, undefined, 'Incorrect nodeFooter for displayItem[0].');
             assert.deepEqual(treeViewModel.getItemDataByItem(treeViewModel._display.at(1)).nodeFooter, {
                dispItem: treeViewModel._display.at(0),
@@ -486,6 +538,7 @@ define([
                item: treeViewModel._items.at(0),
                key: treeViewModel._items.at(0).getId(),
                template: "footer",
+               getExpanderPaddingClasses: getExpanderPaddingClasses,
                level: 1,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[1].');
@@ -496,6 +549,7 @@ define([
                item: treeViewModel._items.at(1),
                template: "footer",
                key: treeViewModel._items.at(1).getId(),
+               getExpanderPaddingClasses: getExpanderPaddingClasses,
                level: 2,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[4].');
@@ -504,6 +558,7 @@ define([
                item: treeViewModel._items.at(5),
                template: "footer",
                key: treeViewModel._items.at(5).getId(),
+               getExpanderPaddingClasses: getExpanderPaddingClasses,
                level: 1,
                multiSelectVisibility: cfg.multiSelectVisibility
             }, 'Incorrect nodeFooter for displayItem[5].');
@@ -520,7 +575,7 @@ define([
                         { id: 21, title: 'item 2-1', type: null, parent: 2 },
                         { id: 31, title: 'item 3-1', type: null, parent: 3 }
                      ],
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   keyProperty: 'id',
                   displayProperty: 'title',
@@ -622,7 +677,7 @@ define([
             var
                items = new collection.RecordSet({
                   rawData: params.items,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                model = new treeGrid.TreeViewModel({
                   items: items,

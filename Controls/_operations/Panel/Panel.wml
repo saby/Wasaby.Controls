@@ -2,6 +2,7 @@
    <Controls._operations.MultiSelector selectedKeys="{{ _options.selectedKeys }}"
                                        excludedKeys="{{ _options.excludedKeys }}"
                                        size="{{_options.multiSelectSize}}"
+                                       fontSize="{{_options.multiSelectFontSize}}"
                                        selectedKeysCount="{{ _options.selectedKeysCount }}"
                                        root="{{ _options.root }}"
                                        attr:class="{{ _initialized ? '' : 'ws-invisible' }}" />

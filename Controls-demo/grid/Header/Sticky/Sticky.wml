@@ -1,0 +1,9 @@
+<div class="controlsDemo__wrapper">
+    <Controls.scroll:Container attr:style="height: 400px">
+        <Controls.grid:View
+                keyProperty="id"
+                source="{{_viewSource}}"
+                header="{{_header}}"
+                columns="{{_columns}}"/>
+    </Controls.scroll:Container>
+</div>

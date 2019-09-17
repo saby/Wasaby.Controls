@@ -1,0 +1,2 @@
+<ws:partial template="{{_options.content}}" scope="{{_options}}" value="{{_value}}"
+            on:valueChanged="_notifyHandler('valueChanged')"/>

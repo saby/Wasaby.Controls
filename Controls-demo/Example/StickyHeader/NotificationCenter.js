@@ -85,7 +85,7 @@ define('Controls-demo/Example/StickyHeader/NotificationCenter',
                   time: '27 Oct 23:00'
                }
             ],
-            idProperty: 'News'
+            keyProperty: 'News'
          },
          {
             data: [
@@ -108,7 +108,7 @@ define('Controls-demo/Example/StickyHeader/NotificationCenter',
                   content: 'Time of arrival: 16:23'
                }
             ],
-            idProperty: 'Violations'
+            keyProperty: 'Violations'
          },
          {
             data: [
@@ -153,7 +153,7 @@ define('Controls-demo/Example/StickyHeader/NotificationCenter',
                   icon: 'EmoiconTongue'
                }
             ],
-            idProperty: 'Employees'
+            keyProperty: 'Employees'
          }
       ];
 

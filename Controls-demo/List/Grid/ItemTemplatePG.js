@@ -62,7 +62,7 @@ define('Controls-demo/List/Grid/ItemTemplatePG',
                name: 'ItemTemplateGridPG',
                keyProperty: 'id',
                source: new source.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: data.catalog
                }),
                columns: data.fullColumns,

@@ -18,20 +18,20 @@ function destroyHistorySource(historyId) {
    HISTORY_SOURCE[historyId] = null;
 }
 
-function createHistorySource(historyId) {
+function createHistorySource(cfg) {
    var historySourceData = {
-      historyId: historyId,
-      pinned: true,
+      historyId: cfg.historyId,
+      pinned: cfg.pinned !== undefined ? cfg.pinned : true,
 
       /* A record about resets filters is stored in the history, but it is not necessary to display it in the history list.
          We request one more record, so that the number of records remains equal to 10 */
-      recent: Constants.MAX_HISTORY + 1,
+      recent: (Constants[cfg.recent] || Constants.MAX_HISTORY) + 1,
 
       dataLoaded: true
    };
    return new HistorySource({
       originSource: new sourceLib.Memory({
-         idProperty: 'id',
+         keyProperty: 'id',
          data: []
       }),
       historySource: Di.isRegistered('demoSourceHistory') ? Di.resolve('demoSourceHistory', historySourceData)
@@ -39,17 +39,17 @@ function createHistorySource(historyId) {
    });
 }
 
-function getHistorySource(historyId) {
+function getHistorySource(cfg) {
    if (Env.constants.isBuildOnServer) {
-      return createHistorySource(historyId);
+      return createHistorySource(cfg);
    } else {
-      HISTORY_SOURCE[historyId] = HISTORY_SOURCE[historyId] || createHistorySource(historyId);
+      HISTORY_SOURCE[cfg.historyId] = HISTORY_SOURCE[cfg.historyId] || createHistorySource(cfg);
    }
-   return HISTORY_SOURCE[historyId];
+   return HISTORY_SOURCE[cfg.historyId];
 }
 
-function loadHistoryItems(historyId) {
-   var source = getHistorySource(historyId);
+function loadHistoryItems(historyConfig) {
+   var source = getHistorySource(historyConfig);
    var sourceController = new SourceController({
       source: source
    });
@@ -67,20 +67,29 @@ function isHistorySource(source) {
    return coreInstance.instanceOfModule(source, 'Controls/history:Source');
 }
 
-function prependNewItems(oldItems, newItems, sourceController) {
+function prependNewItems(oldItems, newItems, sourceController, keyProperty) {
+   let getUniqItems = (items) => {
+      let uniqItems = factory(items).filter((item) => {
+         if (!newItems.getRecordById(item.get(keyProperty))) {
+            return item;
+         }
+      }).value();
+      newItems.append(uniqItems);
+   };
+
    if (sourceController.hasMoreData('down')) {
       const allCount = oldItems.getCount();
       const firstItems = factory(oldItems).first(allCount - newItems.getCount()).value();
-      newItems.append(firstItems);
+      getUniqItems(firstItems);
    } else {
-      newItems.append(oldItems);
+      getUniqItems(oldItems);
    }
    newItems.setMetaData(oldItems.getMetaData());
 }
 
-function getItemsWithHistory(oldItems, newItems, sourceController, source) {
+function getItemsWithHistory(oldItems, newItems, sourceController, source, keyProperty) {
    let itemsWithHistory;
-   prependNewItems(oldItems, newItems, sourceController);
+   prependNewItems(oldItems, newItems, sourceController, keyProperty);
    if (isHistorySource(source)) {
       itemsWithHistory = source.prepareItems(newItems);
    } else {

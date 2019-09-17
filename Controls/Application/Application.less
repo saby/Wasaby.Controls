@@ -15,15 +15,16 @@ html {
 
    //В мобильных браузерах для удобства чтения бразуер увеличивает размер шрифта, необходимо это блокировать
    text-size-adjust: none;
-   -webkit-text-size-adjust: 100%;
+   -webkit-text-size-adjust: none;
    -moz-text-size-adjust: none;
-   -ms-text-size-adjust: 100%;
+   -ms-text-size-adjust: none;
 }
 
 body {
    font-family: @font-family_text_default;
    font-size: @font-size_App__body;
    color: @color_text_default;
+   text-decoration-skip: none;
    text-decoration-skip-ink: none;
 
    /* Better Font Rendering =========== */
@@ -42,6 +43,10 @@ table {
 
 img {
    border: none;
+}
+
+.ws-is-drag {
+   user-select: none;
 }
 
 // На iPad, в сафари и хроме, в пустой textarea, курсор встает на 3px правее, чем нужно,
@@ -147,111 +152,4 @@ html>body .clearfix {
    background-color: rgb(255, 255, 255); /* Black background with opacity */
    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
    cursor: pointer; /* Add a pointer on hover */
-}
-
-/*import basic style to application.less*/
-@import "Controls-theme/themes/default/fonts/TensorFont";
-@import "Controls-theme/themes/default/fonts/cbus-icons";
-@import "Controls-theme/themes/default/helpers/_new-mixins";
-@import "Controls-theme/themes/default/helpers/_mixins";
-
-//
-//Удаляю всякие старые классы из VDOM согласно новости https://online.sbis.ru/news/711232e7-7c9c-4800-bcb4-5c71a9d68da5
-//все эти класcы есть в старых темах и должны прилетать со слоем совместимости
-//для всех кто по каким то причинам их использует в VDOM я выписываю задачи и оставляю временно классы в этом блоке
-//пока что достоверно известно что asLink используют в новостях на главной
-
-//action-hover тоже
-.asLink {
-   cursor: pointer;
-   text-decoration: none;
-   background-color: transparent;
-   color: @color_App-link;
-}
-
-.ws-is-no-touch .asLink:hover,
-.asLink:active {
-   text-decoration: underline;
-   color: @color_App-link_hover;
-}
-
-.ws-is-desktop-platform {
-   .action-hover:not(.ws-disabled):hover {
-      color: @color_link-hover;
-   }
-}
-
-@import "Controls-theme/themes/default/helpers/_flex";
-
-//icons compatibility with new params
-//тут определяю только размеры иконок. Делаю это через новые алиасы, чтоб работала темизация. Вообще от этих иконок избавлюсь по проекту
-//иконки на старых страницах будут работать чеоез стили определенные в теме, в oldIcons.less
-.icon-small, .icon-16  {
-   .icon-size(@size_icon_s, @font-family_icon_size-s);
-}
-.icon-medium, .icon-24 {
-   .icon-size(@size_icon_m, @font-family_icon_size-m);
-}
-.icon-default {
-   .icon-size(@size_icon_default, @font-family_icon_size-default);
-}
-.icon-large, .icon-32 {
-   .icon-size(@size_icon_l, @font-family_icon_size-l);
-}
-/* ATTENTION styles */
-.icon-attention
-{
-   color: @color_warning;
-}
-
-/* DONE styles */
-.icon-done
-{
-   color: @color_success;
-}
-
-/* ERROR styles */
-.icon-error
-{
-   color: @color_danger;
-}
-
-/* PRIMARY styles */
-.icon-primary
-{
-   color: @color_secondary;
-   fill: @color_secondary;
-}
-
-/* DISABLED styles */
-.icon-disabled
-{
-   color: @color_readOnly;
-   fill: @color_readOnly;
-}
-.icon-hover{
-   color: @color_primary;
-}
-/* Для тех, кто поддерживает... */
-.icon-small, .icon-medium, .icon-large, .icon-size, .icon-16, .icon-24, .icon-32, .icon-default {
-   speak: none;
-   font-style: normal;
-   font-weight: normal;
-   font-variant: normal;
-   text-transform: none;
-   line-height: 1;
-   display: inline-block;
-}
-
-.ws-link {
-   cursor: pointer;
-   text-decoration: none;
-   background-color: transparent;
-   color: @color_App-link;
-}
-
-.ws-is-no-touch .ws-link:hover,
-.ws-link:active {
-   text-decoration: underline;
-   color: @color_App-link_hover;
 }

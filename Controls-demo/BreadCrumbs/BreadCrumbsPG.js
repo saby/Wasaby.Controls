@@ -53,7 +53,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbsPG', [
                   items: employees.map(function(item) {
                      return new entity.Model({
                         rawData: item,
-                        idProperty: 'id'
+                        keyProperty: 'id'
                      });
                   })
                }, {
@@ -62,7 +62,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbsPG', [
                   items: contacts.map(function(item) {
                      return new entity.Model({
                         rawData: item,
-                        idProperty: 'id'
+                        keyProperty: 'id'
                      });
                   })
                }],
@@ -100,7 +100,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbsPG', [
             items: employees.map(function(item) {
                return new entity.Model({
                   rawData: item,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
             })
          };

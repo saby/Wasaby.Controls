@@ -109,7 +109,7 @@
  *       { name: 'type', value: ['1'], resetValue: ['1'], textValue: '', viewMode: 'frequent',
  *          editorOptions: {
  *                 source: new sourceLib.Memory({
- *                    idProperty: 'id',
+ *                    keyProperty: 'id',
  *                    data: [
  *                       { id: '1', title: 'Yaroslavl' },
  *                       { id: '2', title: 'Moscow' },
@@ -157,7 +157,7 @@
  *       { name: 'type', value: ['1'], resetValue: ['1'], textValue: '', viewMode: 'frequent',
  *          editorOptions: {
  *                 source: new sourceLib.Memory({
- *                    idProperty: 'id',
+ *                    keyProperty: 'id',
  *                    data: [
  *                       { id: '1', title: 'Yaroslavl' },
  *                       { id: '2', title: 'Moscow' },
@@ -177,7 +177,7 @@
 
 /**
  * @name Controls/_filter/View/interface/IFilterView#detailPanelTemplateName
- * @cfg {String} Шаблон всплывающей панели быстрых фильтров, которая открывается после клика по кнопке.
+ * @cfg {String} Шаблон всплывающей панели, которая открывается после клика по кнопке.
  * @remark
  * В качестве шаблона рекомендуется использовать контрол {@link Controls/filterPopup:DetailPanel}
  * Подробнее о настройке панели фильтров читайте <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>здесь</a>.
@@ -198,7 +198,7 @@
  *    <Controls.filterPopup:DetailPanel>
  *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
  *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
- *    </Controls.filterPopup:Panel>
+ *    </Controls.filterPopup:DetailPanel>
  * </pre>
  *
  * JS:
@@ -251,7 +251,7 @@
 
 /**
  * @name Controls/_filter/View/interface/IFilterView#panelTemplateName
- * @cfg {String} Шаблон всплывающей панели, которая открывается после клика.
+ * @cfg {String} Шаблон всплывающей панели быстрых фильтров, которая открывается после клика по параметрам быстрого фильтра.
  * @remark
  * В качестве шаблона ркомендуется использовать {@link Controls/filterPopup:SimplePanel}
  * При указании panelTemplateName, параметр items должен быть передан в шаблон.
@@ -275,7 +275,7 @@
  *       { name: 'type', value: ['1'], resetValue: ['1'], viewMode: 'frequent',
  *          editorOptions: {
  *                 source: new sourceLib.Memory({
- *                    idProperty: 'id',
+ *                    keyProperty: 'id',
  *                    data: [
  *                       { id: '1', title: 'Yaroslavl' },
  *                       { id: '2', title: 'Moscow' },
@@ -317,7 +317,7 @@
  *       { name: 'type', value: ['1'], resetValue: ['1'], viewMode: 'frequent',
  *          editorOptions: {
  *                 source: new sourceLib.Memory({
- *                    idProperty: 'id',
+ *                    keyProperty: 'id',
  *                    data: [
  *                       { id: '1', title: 'Yaroslavl' },
  *                       { id: '2', title: 'Moscow' },
@@ -432,3 +432,83 @@
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Object} items New items.
  */
+
+/**
+ * Открыть панель фильтрации с шабоном переданным в опции {@link Controls/_filter/View/interface/IFilterView#detailPanelTemplateName detailPanelTemplateName}.
+ * @example
+ * TS:
+ * <pre>
+ *    private _openFilter():void {
+ *       this._children.filterView.openDetailPanel();
+ *    }
+ * </pre>
+ *
+ * WML:
+ * <pre>
+ *    <Controls.buttons:Button caption='Open filter' on:click='_openFilter()'/>
+ *    <Controls.filter:View name='filterView'>
+ *       ...
+ *    </Controls.filter:View>
+ * </pre>
+ * @function Controls/_list/interface/IList#reset
+ */
+/**
+ * Сбрасывает фильтрацию к значениям "по-умолчанию".
+ * Для всех свойств переданных в опции {@link Controls/_filter/View/interface/IFilterView#source source} в значение value будет установлено значение из resetValue.
+ * @example
+ * TS:
+ * <pre>
+ *    private _resetFilter():void {
+ *       this._children.filterView.reset();
+ *    }
+ * </pre>
+ *
+ * WML:
+ * <pre>
+ *    <Controls.buttons:Button caption='Reset filter' on:click='_resetFilter()'/>
+ *    <Controls.filter:View name='filterView'>
+ *       ...
+ *    </Controls.filter:View>
+ * </pre>
+ * @function Controls/_list/interface/IList#reset
+ */
+
+/*
+ * Open filter panel with template from option {@link Controls/_filter/View/interface/IFilterView#detailPanelTemplateName detailPanelTemplateName}.
+ * @example
+ * TS:
+ * <pre>
+ *    private _openFilter():void {
+ *       this._children.filterView.openDetailPanel();
+ *    }
+ * </pre>
+ *
+ * WML:
+ * <pre>
+ *    <Controls.buttons:Button caption='Open filter' on:click='_openFilter()'/>
+ *    <Controls.filter:View name='filterView'>
+ *       ...
+ *    </Controls.filter:View>
+ * </pre>
+ * @function Controls/_list/interface/IList#reset
+ */
+/*
+ * Reset filter.
+ * @example
+ * TS:
+ * <pre>
+ *    private _resetFilter():void {
+ *       this._children.filterView.reset();
+ *    }
+ * </pre>
+ *
+ * WML:
+ * <pre>
+ *    <Controls.buttons:Button caption='Reset filter' on:click='_resetFilter()'/>
+ *    <Controls.filter:View name='filterView'>
+ *       ...
+ *    </Controls.filter:View>
+ * </pre>
+ * @function Controls/_list/interface/IList#reset
+ */
+

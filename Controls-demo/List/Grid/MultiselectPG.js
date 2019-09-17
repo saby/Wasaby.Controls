@@ -30,7 +30,7 @@ define('Controls-demo/List/Grid/MultiselectPG',
                   columns: data.partialColumns,
                   header: data.partialHeader,
                   source: new source.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: data.catalog
                   }),
                   displayProperty: 'title',

@@ -25,7 +25,7 @@ class MemoryAndNoNavigation extends Control {
 
     protected _beforeMount() {
         this._viewSource = new Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: createItems(this._itemsCount)
         });
     }

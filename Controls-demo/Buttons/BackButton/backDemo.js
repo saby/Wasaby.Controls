@@ -20,7 +20,7 @@ define('Controls-demo/Buttons/BackButton/backDemo', [
          _eventName: 'no event',
          _beforeMount: function() {
             this._backStyleSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 'primary'
@@ -31,7 +31,7 @@ define('Controls-demo/Buttons/BackButton/backDemo', [
                ]
             });
             this._backSizeSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 's'

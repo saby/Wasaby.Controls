@@ -6,13 +6,14 @@ import {IoC} from 'Env/Env';
  * Всплывающее окно располагается в правой части контентной области приложения и растянуто на всю высоту экрана.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ Подробнее}.
  *
- *  <a href="/materials/demo-ws4-stack-dialog">Demo-example</a>.
+ *  <a href="/materials/demo-ws4-stack-dialog">Демо-пример</a>.
  * @class Controls/_popup/Opener/Stack
  * @extends Controls/_popup/Opener/BaseOpener
  * @control
  * @author Красильников А.С.
  * @category Popup
  * @mixes Controls/interface/IOpener
+ * @mixes Controls/_interface/IPropStorage
  * @demo Controls-demo/Popup/Opener/StackPG
  * @public
  */
@@ -214,6 +215,7 @@ export = Stack;
  * @property {Number} minWidth Минимально допустимая ширина всплывающего окна
  * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна
  * @property {Number} width Текущая ширина всплывающего окна
+ * @property {Node} opener Логический инициатор открытия всплывающего окна
  */
 
 
@@ -293,13 +295,7 @@ export = Stack;
  */
 
 /**
- * @name Controls/_popup/Opener/Stack#resizable
- * @cfg {Number} Определяет, будет ли окно изменять свои размеры с помощью d'n'd.
+ * @name Controls/_popup/Opener/Stack#propStorageId
+ * @cfg {String} Уникальный идентификатор
  * Для работы этой опции необходимо задать опции {@link width}, {@link minWidth}, {@link maxWidth}.
- */
-
-/**
- * @name Controls/_popup/Opener/Stack#resizable
- * @cfg {Number} Determines whether the popup will be resized using D'n'd.
- * To use this option, you must specify the {@link width}, {@link minWidth}, {@link maxWidth} options.
  */

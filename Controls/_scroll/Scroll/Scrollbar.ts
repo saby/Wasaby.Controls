@@ -4,6 +4,7 @@ import * as ScrollBarTemplate from 'wml!Controls/_scroll/Scroll/Scrollbar/Scroll
 import 'Controls/event';
 import 'css!theme?Controls/scroll';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import * as newEnv from 'Core/helpers/isNewEnvironment';
 
 type TDirection = 'vertical' | 'horizontal';
 
@@ -79,6 +80,12 @@ class Scrollbar extends Control<IScrollBarOptions> {
         this._forceUpdate();
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
             this._thumbSize, this._options.position);
+
+        //TODO Compatibility на старых страницах нет Register, который скажет controlResize
+        this._resizeHandler = this._resizeHandler.bind(this);
+        if (!newEnv() && window) {
+            window.addEventListener('resize', this._resizeHandler);
+        }
     }
 
     protected _afterUpdate(oldOptions: IScrollBarOptions): void {
@@ -92,6 +99,13 @@ class Scrollbar extends Control<IScrollBarOptions> {
             this._setPosition(this._options.position);
             this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
                                                                 this._thumbSize, this._options.position);
+        }
+    }
+
+    protected _beforeUnmount(): void {
+        //TODO Compatibility на старых страницах нет Register, который скажет controlResize
+        if (!newEnv() && window) {
+            window.removeEventListener('resize', this._resizeHandler);
         }
     }
 
@@ -279,7 +293,14 @@ class Scrollbar extends Control<IScrollBarOptions> {
      * @param {SyntheticEvent} event дескриптор события.
      */
     private _wheelHandler(event: SyntheticEvent<Event>): void {
-        const newPosition = this._position + Scrollbar._calcWheelDelta(detection.firefox, event.nativeEvent.deltaY);
+        let newPosition = this._position + Scrollbar._calcWheelDelta(detection.firefox, event.nativeEvent.deltaY);
+        const minPosition = 0;
+        const maxPosition = this._options.contentSize - this._scrollBarSize;
+        if (newPosition < 0) {
+            newPosition = 0;
+        } else if (newPosition > maxPosition) {
+            newPosition = maxPosition;
+        }
         this._setPosition(newPosition, true);
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
             this._thumbSize, newPosition);

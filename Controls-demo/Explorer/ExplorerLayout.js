@@ -9,7 +9,7 @@ define('Controls-demo/Explorer/ExplorerLayout', [
          _beforeMount: function() {
             ModuleClass.superclass._beforeMount.apply(this, arguments);
             this._viewSource = new MemorySource({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [{
                   id: 1,
                   'parent': null,

@@ -58,7 +58,7 @@ import chain = require('Types/chain');
  *               {id: 'Yaroslavl', title: 'Ярославль'},
  *               {id: 'Moscow', title: 'Москва'}
  *            ],
- *            idProperty: 'id'
+ *            keyProperty: 'id'
  *       });
  *       this._children.stackOpener.open({
  *          templateOptions: {
@@ -99,7 +99,7 @@ import chain = require('Types/chain');
  *               {id: 'Yaroslavl', title: 'Ярославль'},
  *               {id: 'Moscow', title: 'Москва'}
  *            ],
- *            idProperty: 'id'
+ *            keyProperty: 'id'
  *       });
  *       this._children.stackOpener.open({
  *          templateOptions: {

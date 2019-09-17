@@ -1,5 +1,6 @@
 //background color of filterPanel
 @background-color_FilterPanel:                                @background-color_FilterPanel_val;
+@background-color_FilterPanel_horizontal:                     @background-color_FilterPanel-history_vertical;
 
 //specific filterPanel width
 @width_FilterPanel-size_m:                                    @width_FilterPanel-size_m_val;
@@ -25,7 +26,7 @@
 @spacing_FilterPanel-content-bottomBorder:                    @spacing_default_l;
 
 //PropertyGrid
-@spacing_FilterPanel-between-leftBorder-propertyGrid:         @spacing_default_l + @spacing_default_xl + @spacing_default_s;//spacing between left side content + icon spacing + between icon content spacing;
+@spacing_FilterPanel-between-leftBorder-propertyGrid:         @spacing_default_xxl;
 @spacing_FilterPanel-between-rightBorder-propertyGrid:        @spacing_default_l;
 @spacing_FilterPanel-between-topBorder-propertyGrid:          @spacing_FilterPanel-between-topBorder-propertyGrid_val;
 @spacing_FilterPanel-between-bottomBorder-propertyGrid:       @spacing_FilterPanel-between-bottomBorder-propertyGrid_val;
@@ -43,13 +44,15 @@
 
 @background-color_FilterPanel-history_vertical:               @background-color_FilterPanel-history_vertical_val;
 
+@height_FilterPanel-separator:                                @size-BigSeparator__icon;
+
 //History horizontal
-@spacing_FilterPanel-between-topBorder-history_horizontal:    @spacing_default_s;
+@spacing_FilterPanel-between-topBorder-history_horizontal:    @spacing_FilterPanel-between-topBorder-history_horizontal_val;
 @spacing_FilterPanel-between-leftBorder-history_horizontal:   @spacing_default_l;
 @spacing_FilterPanel-between-rightBorder-history_horizontal:  @spacing_default_l;
 @spacing_FilterPanel-between-bottomBorder-history_horizontal: @spacing_default_l;
 
-@border-left_FilterPanel-history_horizontal:                  @thickness_border_default @border-style_solid @color_border;
+@border-left_FilterPanel-history_horizontal:                  @thickness_border_default @border-style_solid @color_border_FilterPanel_horizontal_val;
 
 //Expandable block's
 @max-height_FilterPanel-expandable-block:                     @height_control_default*5; //max height depends on default control height. By control standard must be visible only 5 rows.

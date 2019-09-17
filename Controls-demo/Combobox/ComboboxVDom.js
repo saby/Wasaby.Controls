@@ -94,7 +94,7 @@ define('Controls-demo/Combobox/ComboboxVDom',
 
          _createMemory: function(items) {
             return new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             });
          },

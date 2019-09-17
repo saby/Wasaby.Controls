@@ -23,7 +23,7 @@ define('Controls-demo/List/Tree/MultiSelection/MultiSelection', [
             ];
             this.gridData = Data;
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: Data.catalog
             });
          }

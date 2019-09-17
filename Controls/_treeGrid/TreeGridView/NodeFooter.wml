@@ -7,7 +7,7 @@
         <ws:for data="i in itemData.level">
             <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
         </ws:for>
-        <div class="controls-TreeGrid__row-expanderPadding"></div>
+        <div class="{{itemData.getExpanderPaddingClasses(expanderSize)}}"></div>
         <ws:if data="{{itemData.hasMoreStorage}}">
             <Controls.buttons:Button fontSize="xs" attr:class="controls-TreeGrid__nodeFooterLoadMore" viewMode="link" fontColorStyle="link" caption="{{rk('Еще') + '...'}}" on:click="_onLoadMoreClick(itemData.dispItem)" readOnly="{{false}}"/>
         </ws:if>

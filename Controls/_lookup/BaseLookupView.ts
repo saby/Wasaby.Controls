@@ -108,6 +108,10 @@ var BaseLookupView = Control.extend({
         if (isNeedUpdate) {
             this._calculatingSizes(newOptions);
         }
+
+        if (!this._isInputActive(newOptions)) {
+            this._suggestState = false;
+        }
     },
 
     _afterUpdate: function():void {
@@ -118,10 +122,6 @@ var BaseLookupView = Control.extend({
             if (this._active) {
                 this.activate();
             }
-        }
-
-        if (!this._isInputActive(this._options)) {
-            this._suggestState = false;
         }
     },
 
@@ -139,12 +139,11 @@ var BaseLookupView = Control.extend({
     },
 
     _crossClick: function (event, item) {
-        this._notify('removeItem', [item]);
-
-        /* move focus to input after remove, because focus will be lost after removing dom element */
+        /* move focus to input, because focus will be lost after removing dom element */
         if (!this._infoboxOpened) {
             _private.activate(this);
         }
+        this._notify('removeItem', [item]);
     },
 
     _getFieldWrapperWidth: function (recount) {

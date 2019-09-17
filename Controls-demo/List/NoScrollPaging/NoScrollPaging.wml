@@ -3,7 +3,6 @@
       <Controls.scroll:Container attr:class="cDemo-ScrollContainer">
          <ws:content>
             <Controls.list:View
-                  stickyFooter = "{{true}}"
                   source = "{{_viewSource}}"
                   markedKey = "{{4}}"
                   displayProperty="title"
@@ -15,7 +14,7 @@
                   keyProperty="id">
                <ws:navigation source="page" view="pages">
                   <ws:sourceConfig pageSize="{{9}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
-                  <ws:viewConfig pagingMode="direct"></ws:viewConfig>
+                  <ws:viewConfig pagingMode="direct" totalInfo="extended"></ws:viewConfig>
                </ws:navigation>
             </Controls.list:View>
          </ws:content>
@@ -34,14 +33,14 @@
                        displayProperty="title"
                        resultsPosition="top"
                        itemActions="{{_itemActions}}"
-                       itemActionsPosition="{{'outside'}}"
+                       itemActionsPosition="{{'inside'}}"
                        rowSeparatorVisibility="{{true}}"
                        itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                        columns="{{gridColumns2}}"
                        bind:sorting="_sorting">
                   <ws:navigation source="page" view="pages">
                      <ws:sourceConfig pageSize="{{4}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
-                     <ws:viewConfig pagingMode="direct"></ws:viewConfig>
+                     <ws:viewConfig pagingMode="direct" totalInfo="basic"></ws:viewConfig>
                   </ws:navigation>
                   <ws:header>
                      <ws:Array>

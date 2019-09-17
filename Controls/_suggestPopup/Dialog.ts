@@ -7,7 +7,7 @@ import 'css!theme?Controls/suggestPopup';
 import 'Controls/popupTemplate';
 
       /**
-       * Dialog for list in Suggest component.
+       * Диалоговое окно для списка в контроле Suggest.
        * @class Controls/_suggestPopup/List
        * @extends Controls/Control
        * @author Герасимов Александр
@@ -15,7 +15,14 @@ import 'Controls/popupTemplate';
        * @public
        */
 
-
+      /*
+       * Dialog for list in Suggest component.
+       * @class Controls/_suggestPopup/List
+       * @extends Controls/Control
+       * @author Герасимов Александр
+       * @control
+       * @public
+       */
 
       var List = Control.extend({
 

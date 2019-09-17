@@ -181,7 +181,6 @@ const _private = {
         const popupOptions = {
             template: 'Controls/popupTemplate:ConfirmationDialog',
             modal: true,
-            opener: null,
             className: 'controls-Confirmation_popup',
             templateOptions
         };

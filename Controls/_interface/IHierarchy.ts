@@ -29,7 +29,7 @@ export default interface IHierarchy {
  * В данном примере элемент с id: 4 является родителем для элементов с id: 5, 6, 7.
  * TMPL:
  * <pre>
- *    <Controls.Tree
+ *    <Controls.treeGrid:View
  *       keyProperty="id"
  *       source="{{_source}}"
  *       parentProperty="parent"
@@ -47,7 +47,7 @@ export default interface IHierarchy {
  *           { id: 6, title: 'Assignment for delivery', parent: 4, 'parent@': false },
  *           { id: 7, title: 'Assignment for logisticians', parent: 4, 'parent@': false }
  *       ],
- *       idProperty: 'id'
+ *       keyProperty: 'id'
  *    });
  * </pre>
  */
@@ -59,7 +59,7 @@ export default interface IHierarchy {
  * In this example, item with id: 4 is parent for items with id: 5, 6, 7.
  * TMPL:
  * <pre>
- *    <Controls.Tree
+ *    <Controls.treeGrid:View
  *       keyProperty="id"
  *       source="{{_source}}"
  *       parentProperty="parent"
@@ -77,7 +77,7 @@ export default interface IHierarchy {
  *           { id: 6, title: 'Assignment for delivery', parent: 4, 'parent@': false },
  *           { id: 7, title: 'Assignment for logisticians', parent: 4, 'parent@': false }
  *       ],
- *       idProperty: 'id'
+ *       keyProperty: 'id'
  *    });
  * </pre>
  */
@@ -89,7 +89,7 @@ export default interface IHierarchy {
  * В данном примере элемент с id: 4 является родителем для элементов с id: 5, 6, 7.
  * TMPL:
  * <pre>
- *    <Controls.Tree
+ *    <Controls.treeGrid:View
  *       keyProperty="id"
  *       source="{{_source}}"
  *       parentProperty="parent"
@@ -107,7 +107,7 @@ export default interface IHierarchy {
  *           { id: 6, title: 'Assignment for delivery', parent: 4, 'parent@': false },
  *           { id: 7, title: 'Assignment for logisticians', parent: 4, 'parent@': false }
  *       ],
- *       idProperty: 'id'
+ *       keyProperty: 'id'
  *    });
  * </pre>
  */
@@ -119,7 +119,7 @@ export default interface IHierarchy {
  * In this example, item with id: 4 is parent for items with id: 5, 6, 7.
  * TMPL:
  * <pre>
- *    <Controls.Tree
+ *    <Controls.treeGrid:View
  *       keyProperty="id"
  *       source="{{_source}}"
  *       parentProperty="parent"
@@ -137,7 +137,7 @@ export default interface IHierarchy {
  *           { id: 6, title: 'Assignment for delivery', parent: 4, 'parent@': false },
  *           { id: 7, title: 'Assignment for logisticians', parent: 4, 'parent@': false }
  *       ],
- *       idProperty: 'id'
+ *       keyProperty: 'id'
  *    });
  * </pre>
  */

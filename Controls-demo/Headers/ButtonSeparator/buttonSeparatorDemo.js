@@ -19,7 +19,7 @@ define('Controls-demo/Headers/ButtonSeparator/buttonSeparatorDemo', [
          _eventName: 'no event',
          _beforeMount: function() {
             this._separatorStyleSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 'secondary'

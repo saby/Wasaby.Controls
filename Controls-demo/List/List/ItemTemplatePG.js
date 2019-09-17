@@ -28,7 +28,7 @@ define('Controls-demo/List/List/ItemTemplatePG',
          _beforeMount: function() {
 
             this._sourceGadgets = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data.gadgets,
                filter: memorySourceFilter()
             });

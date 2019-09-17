@@ -21,7 +21,7 @@ define('Controls-demo/Previewer/Previewer', [
          this._images = ['Andrey', 'Valera', 'Maksim'];
          this._resourceRoot = Env.constants.resourceRoot;
          this._triggerSource = new source.Memory({
-            idProperty: 'title',
+            keyProperty: 'title',
             data: [
                { title: 'hoverAndClick' },
                { title: 'hover' },

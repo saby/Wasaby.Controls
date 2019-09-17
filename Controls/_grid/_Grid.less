@@ -53,6 +53,11 @@
    min-width: auto;
 }
 
+.controls-Grid_columnScroll_wrapper {
+   z-index: 4;
+   position: sticky;
+}
+
 .controls-Grid__header-cell_spacing_money:after {
    content: ".99";
    visibility: hidden;
@@ -114,7 +119,6 @@
 }
 
 .controls-Grid__row-cell {
-   min-height: @min-height_Grid-row;
    position: relative;
    border-top: @height_Grid-row-separator solid;
    font-size: @font-size_Grid-cell_m;
@@ -173,13 +177,28 @@
    display: grid;
    display: -ms-grid;
 }
+.ws-is-hover {
+   .controls-Grid__row_highlightOnHover_default:hover .controls-Grid__row-cell-background-hover {
+      background-color: @background-color_Grid-row_hover;
+   }
+
+   .controls-Grid__row:hover .controls-itemActionsV {
+      display: inline-block;
+   }
+}
 .ws-is-no-touch {
-   .controls-Grid__row_highlightOnHover_default:hover .controls-Grid__row-cell-background-hover,
    .controls-Grid__row_highlightOnHover_default.controls-Grid_row-cell_hovered {
       background-color: @background-color_Grid-row_hover;
    }
 
-   .controls-Grid__row:hover .controls-itemActionsV,
+   .controls-Grid_row-cell_hovered,
+   .controls-Grid__row:hover {
+      .controls-Grid__editArrow-blur,
+      .controls-Grid__editArrow-wrapper {
+         visibility: visible;
+      }
+   }
+
    .controls-Grid_row-cell_hovered .controls-itemActionsV {
       display: inline-block;
    }
@@ -228,6 +247,23 @@
    padding-right: @spacing_Grid-column-between-content-borderRight;
 }
 
+.controls-Grid__cell_spacingLeft_s {
+   padding-left: @spacing_Grid-row-between-content-borderTop_s;
+}
+
+.controls-Grid__cell_spacingRight_s {
+   padding-right: @spacing_Grid-row-between-content-borderBottom_s;
+}
+
+.controls-Grid__cell_spacingLeft_null {
+   padding-left: 0;
+}
+
+.controls-Grid__cell_spacingRight_null {
+   padding-right: 0;
+}
+
+
 .controls-Grid__row-cell__content_hiddenForLadder {
    visibility: hidden;
 }
@@ -246,6 +282,7 @@
 .controls-Grid__row-cell_withoutRowSeparator {
    border-top-color: transparent;
    border-bottom-color: transparent;
+   min-height: @min-height_Grid-row;
 }
 
 .controls-Grid__row-cell_lastRow {
@@ -260,8 +297,13 @@
    border-top-color: @border-color_Grid-firstRow-separator;
 }
 
+.controls-Grid__row-cell_withRowSeparator_notLastRow {
+   min-height: @min-height_Grid-row;
+}
+
 .controls-Grid__row-cell_withRowSeparator_lastRow {
    border-bottom-color: @border-color_Grid-lastRow-separator;
+   min-height: @min-height_Grid-row + @height_Grid-row-separator;
 }
 
 .controls-Grid__row-cell_withRowSeparator {
@@ -449,9 +491,12 @@
       z-index: 1;
    }
 }
-
+.ws-is-hover {
+   .controls-Grid__row_master:hover .controls-Grid__row-cell-background-hover {
+      background-color: @background-color_List-masterList-item_hover;
+   }
+}
 .ws-is-no-touch {
-   .controls-Grid__row_master:hover .controls-Grid__row-cell-background-hover,
    .controls-Grid__row_master.controls-Grid_row-cell_hovered {
       background-color: @background-color_List-masterList-item_hover;
    }
@@ -464,6 +509,11 @@
    // Нужен отдельный стек z-index, иначе при скролле колонок из-за transform опции оказываются ниже данных таблицы и неправильно обрабатывается ховер
    // https://online.sbis.ru/opendoc.html?guid=6059b335-dad3-4458-b022-0260680d5c27
    z-index: 1;
+
+   pointer-events: none;
+   .controls-itemActionsV {
+      pointer-events: auto;
+   }
 }
 
 .controls-Grid__cell_header-content_border-bottom {
@@ -504,20 +554,14 @@
    align-items: center;
 }
 
-.controls-Grid__row:hover {
-   .controls-Grid__editArrow-blur,
-   .controls-Grid__editArrow-wrapper {
-      visibility: visible;
-   }
+.controls-Grid__editArrow-blur,
+.controls-Grid__editArrow-wrapper {
+   visibility: hidden;
 }
-.controls-Grid__row {
-   .controls-Grid__editArrow-blur,
-   .controls-Grid__editArrow-wrapper {
-      visibility: hidden;
-   }
-}
+
 .controls-Grid__editArrow-wrapper {
    flex-shrink:0;
+   background: @background-color_Grid-row_hover;
 }
 .controls-Grid__editArrow-cellContent {
    flex-shrink:0;

@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/Button/Button');
 import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 import tmplNotify = require('Controls/Utils/tmplNotify');
+import ActualApi from 'Controls/_buttons/ActualApi';
 
 /**
  * Кнопка с меню.
@@ -65,14 +66,36 @@ var Button = Control.extend({
    _tmplNotify: tmplNotify,
    _filter: null,
 
+   constructor: function () {
+      Button.superclass.constructor.apply(this, arguments);
+      this._dataLoadCallback = this._dataLoadCallback.bind(this);
+   },
+
    _beforeMount: function (options) {
       this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+      this._updateState(options);
    },
 
    _beforeUpdate: function (options) {
       if (this._options.size !== options.size || this._options.icon !== options.icon ||
          this._options.viewMode !== options.viewMode) {
          this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+      }
+      this._updateState(options);
+   },
+
+   _updateState: function (options) {
+      const currentButtonClass = ActualApi.styleToViewMode(options.style);
+
+      this._fontSizeButton = ActualApi.fontSize(options);
+      this._viewModeButton = ActualApi.viewMode(currentButtonClass.viewMode, options.viewMode).viewMode;
+   },
+
+   _dataLoadCallback: function (items) {
+      this._hasItems = items.getCount() > 0;
+
+      if (this._options.dataLoadCallback) {
+         this._options.dataLoadCallback(items);
       }
    },
 
@@ -102,7 +125,8 @@ Button.getDefaultOptions = function () {
       viewMode: 'button',
       size: 'm',
       iconStyle: 'secondary',
-      transparent: true
+      transparent: true,
+      lazyItemsLoading: false
    };
 };
 
@@ -123,4 +147,34 @@ export = Button;
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Event object.
  * @remark If the menu has items with hierarchy and item with hierarchy was selected, you can return processing result from event handler,
  * if result will equals false, dropdown will not close. By default dropdown will close, when item with hierarchy was selected.
+ */
+
+/**
+ * @name Controls/_dropdown/Button#lazyItemsLoading
+ * @cfg {Boolean} Определяет, будут ли элементы меню загружаться лениво, только после первого клика по кнопке.
+ * @default false
+ * @remark Устанавливать опцию в значение true имеет смысл для локальных данных или
+ * при полной уверенности, что источник вернёт данные для меню.
+ * @example
+ * В данном примере данные для меню будут загружены лениво, после первого клика по кнопке.
+ * WML:
+ * <pre>
+ * <Controls.dropdown:Button
+ *       bind:selectedKeys="_selectedKeys"
+ *       keyProperty="id"
+ *       displayProperty="title"
+ *       source="{{_source)}}"
+ *       lazyItemsLoading="{{true}}">
+ * </Controls.dropdown:Input>
+ * </pre>
+ * JS:
+ * <pre>
+ * this._source = new Memory({
+ *    idProperty: 'id',
+ *    data: [
+ *       {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
+ *       {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
+ *    ]
+ * });
+ * </pre>
  */

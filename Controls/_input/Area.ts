@@ -257,6 +257,16 @@ import 'Controls/decorator';
          _inputHandler: function() {
             Area.superclass._inputHandler.apply(this, arguments);
 
+            /**
+             * Значение в textarea меняется в обработчике события input, а значение в fakeField в шаблоне на момент перестроения.
+             * На MacOS иногда между выпонением обработчика и перерестроением успевает перерисоваться страница. Так как размеры
+             * textarea зависят от fakeField, поэтому их значения на момент перерисовки страници должны быть одинаковыми. Иначе
+             * будут скачки. Чтобы избежать проблем меняем значение fakeField в обработчике.
+             */
+            if (Env.detection.isMacOSDesktop) {
+               this._children.fakeField.innerText = this._viewModel.displayValue + this._field.scope.emptySymbol;
+            }
+
             this._recalculateLocationVisibleArea(this._getField(), this._viewModel.displayValue, this._viewModel.selection);
          },
 

@@ -25,7 +25,7 @@ define('Controls-demo/List/Tree/SingleExpand', [
          ];
          this.gridData = GridData;
          this._viewSource = new MemorySource({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: GridData.catalog
          });
       }

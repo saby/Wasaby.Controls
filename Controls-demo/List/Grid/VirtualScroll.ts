@@ -30,7 +30,7 @@ class GridVirtualScroll extends Control {
 
     protected _beforeMount() {
         this._viewSource = new Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: dataArray
         });
     }

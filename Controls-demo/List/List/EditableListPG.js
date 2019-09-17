@@ -33,7 +33,7 @@ define('Controls-demo/List/List/EditableListPG',
                keyProperty: 'id',
                name: 'EditableListPG',
                source: new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: data.gadgets
                }),
                itemTemplate: ItemTemplate,

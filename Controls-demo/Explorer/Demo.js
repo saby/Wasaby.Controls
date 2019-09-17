@@ -16,7 +16,7 @@ define('Controls-demo/Explorer/Demo', [
          _excludedKeys: [],
          _beforeMount: function() {
             this._viewSource = new source.HierarchicalMemory({
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'parent',
                data: [{
                   id: 1,
@@ -107,7 +107,7 @@ define('Controls-demo/Explorer/Demo', [
                }]
             });
             this._viewSourceDynamic = new source.HierarchicalMemory({
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'parent',
                data: [{
                   id: 1,

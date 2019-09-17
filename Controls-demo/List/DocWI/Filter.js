@@ -47,7 +47,7 @@ define('Controls-demo/List/DocWI/Filter', [
 
          _beforeMount: function(newOptions) {
             this._viewSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: srcData
             });
             this._filter = {

@@ -6,8 +6,8 @@ function getRootModel(root, keyProperty) {
 
    rawData[keyProperty] = root;
    return new Model({
-      idProperty: keyProperty,
-      rawData: rawData
+      keyProperty,
+      rawData
    });
 }
 

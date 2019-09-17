@@ -1,5 +1,5 @@
 /**
- * Библиотека контролов, предоставляющий функционал фильтрации данных.
+ * Библиотека контролов, которые служат для организации фильтрации в списках.
  * @library Controls/filter
  * @includes Selector Controls/_filter/Button
  * @includes Fast Controls/_filter/Fast

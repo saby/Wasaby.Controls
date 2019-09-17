@@ -5,6 +5,16 @@ import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 import IEditor from 'Controls/_propertyGrid/IEditor';
 
 /**
+ * Редактор для строкового типа данных.
+ * @class Controls/_propertyGrid/defaultEditors/String
+ * @extends Core/Control
+ * @interface Controls/_propertyGrid/IEditor
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ */
+
+/*
  * Editor for string type.
  * @class Controls/_propertyGrid/defaultEditors/String
  * @extends Core/Control

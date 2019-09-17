@@ -27,7 +27,7 @@ define('Controls-demo/Popup/TestFormController/TestFormController', [
                mode: 'floatArea',
                source: new sourceLib.Memory({
                   data: ListView1._options.items, // Передаём в качестве данных созданный массив
-                  idProperty: 'key' // Устанавливаем поле первичного ключа
+                  keyProperty: 'key' // Устанавливаем поле первичного ключа
                }),
                template: 'Controls-demo/Popup/TestFormController/FormController',
                dialogOptions: {

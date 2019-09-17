@@ -22,5 +22,6 @@
       daysData="{{_options.daysData}}"
       monthViewModel="{{_monthViewModel}}"
       mode="{{_options.mode}}"
+      selectionType="{{_options.selectionType}}"
    />
 </Controls.dateRange:DateRangeSelectionController>

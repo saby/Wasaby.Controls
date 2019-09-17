@@ -15,7 +15,7 @@ import entity = require('Types/entity');
        * В один момент времени на странице может отображаться только одна всплывающая подсказка.
        * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ Подробнее}.
        *
-       * <a href="/materials/demo-ws4-infobox">Demo-example</a>.
+       * <a href="/materials/demo-ws4-infobox">Демо-пример</a>.
        * @class Controls/_popup/InfoBox
        *
        * @public
@@ -93,7 +93,8 @@ import entity = require('Types/entity');
 
 /**
  * @name Controls/_popup/InfoBox#hideDelay
- * @cfg {Number} Определяет задержку перед началом закрытия всплывающей подсказки. ( измеряется в миллисекундах)
+ * @cfg {Number} Определяет задержку перед началом закрытия всплывающей подсказки. 
+ * Значение задаётся в миллисекундах.
  * @default 300
  */
 
@@ -105,7 +106,8 @@ import entity = require('Types/entity');
 
 /**
  * @name Controls/_popup/InfoBox#showDelay
- * @cfg {Number} Определяет задержку перед началом открытия всплывающей подсказки. ( измеряется в миллисекундах)
+ * @cfg {Number} Определяет задержку перед началом открытия всплывающей подсказки.
+ * Значение задаётся в миллисекундах.
  * @default 300
  */
 
@@ -188,6 +190,7 @@ import entity = require('Types/entity');
  * @variant secondary
  * @variant success
  * @variant primary
+ * @default secondary
  */
 
       /*
@@ -224,8 +227,12 @@ import entity = require('Types/entity');
             };
          },
          resetTimeOut: function(self) {
-            clearTimeout(self._openId);
-            clearTimeout(self._closeId);
+            if (self._openId) {
+               clearTimeout(self._openId);
+            }
+            if (self._closeId) {
+               clearTimeout(self._closeId);
+            }
             self._openId = null;
             self._closeId = null;
          }
@@ -243,12 +250,6 @@ import entity = require('Types/entity');
          _beforeMount: function(options) {
             this._resultHandler = this._resultHandler.bind(this);
             this._closeHandler = this._closeHandler.bind(this);
-            if (options.float) {
-               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
-            }
-            if (options.templateName) {
-               Env.IoC.resolve('ILogger').error('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
-            }
          },
 
          /**
@@ -335,6 +336,7 @@ import entity = require('Types/entity');
             _private.resetTimeOut(this);
 
             this._openId = setTimeout(function() {
+               self._openId = null;
                self._open();
                self._forceUpdate();
             }, self._options.showDelay);
@@ -345,6 +347,7 @@ import entity = require('Types/entity');
                this._clearWaitTimer();
                clearTimeout(this._openId);
                this._closeId = setTimeout(() => {
+                  this._closeId = null;
                   this._close();
                   this._forceUpdate();
                }, this._options.hideDelay);
@@ -433,7 +436,7 @@ InfoBox.getDefaultOptions = function() {
          return {
             targetSide: 'top',
             alignment: 'start',
-            style: 'default',
+            style: 'secondary',
             showDelay: 300,
             hideDelay: 300,
             trigger: 'hover'

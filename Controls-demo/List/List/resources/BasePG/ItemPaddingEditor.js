@@ -25,7 +25,7 @@ define('Controls-demo/List/List/resources/BasePG/ItemPaddingEditor', [
                   { id: 'null', title: 'null'},
                   { id: 's', title: 's'}
                ],
-               idProperty: 'id'
+               keyProperty: 'id'
             });
 
             this._leftRightSource = new TSource.Memory({
@@ -38,7 +38,7 @@ define('Controls-demo/List/List/resources/BasePG/ItemPaddingEditor', [
                   { id: 'xl', title: 'xl' },
                   { id: 'xxl', title: 'xxl' }
                ],
-               idProperty: 'id'
+               keyProperty: 'id'
             });
 
             this._left = cfg.value.left;

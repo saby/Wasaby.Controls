@@ -32,7 +32,7 @@ define('Controls-demo/List/Multiselect', [
       constructor: function() {
          ModuleClass.superclass.constructor.apply(this, arguments);
          this._viewSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: srcData
          });
          this._selectedKeys = [1, 3];

@@ -48,7 +48,8 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
          _convertToDisplayValue(value) {
             this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
             this._nextVersion();
-            const fDate = Formatter.getFormatterData(this._format, { value: value, position: 0 });
+            const fValue = value === null ? '' : value;
+            const fDate = Formatter.getFormatterData(this._format, { value: fValue, position: 0 });
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
             if (fDate && fDate.value) {
                return fDate.value;

@@ -171,6 +171,25 @@ define(
             });
          });
 
+         it('search, trim: true', function() {
+            var searchController = new searchLib._SearchController({
+               minSearchLength: 3,
+               source: source,
+               filter: {},
+               searchValueTrim: true,
+               searchDelay: 0,
+               searchParam: 'name'
+            });
+
+            return new Promise(function(resolve) {
+               searchController.search('   Sasha   ').then(function(result) {
+                  assert.equal(result.data.getCount(), 1);
+                  assert.equal(result.data.at(0).get('name'), 'Sasha');
+                  resolve();
+               });
+            });
+         });
+
          it('minSearchLength is null', async function() {
             var searchController = new searchLib._SearchController({
                minSearchLength: null,
@@ -182,6 +201,7 @@ define(
 
             var searched = false;
             var forced = false;
+            var reseted = false;
 
             let originalSearch = searchController._search.search;
             searchController._search.search = function(value, force) {
@@ -193,17 +213,30 @@ define(
                return originalSearch.apply(searchController._search, arguments);
             };
 
+            let originalAbort = searchController._search.abort;
+            searchController._search.abort = function() {
+               reseted = true;
+               return originalAbort.apply(searchController._search, arguments);
+            };
+
             searchController.search('t');
             assert.isFalse(searched);
             assert.isFalse(forced);
+            assert.isFalse(reseted);
 
             searchController.search('test');
             assert.isFalse(searched);
             assert.isFalse(forced);
+            assert.isFalse(reseted);
 
             searchController.search('t', true);
             assert.isTrue(searched);
             assert.isTrue(forced);
+
+            searchController.abort(true);
+            reseted = false;
+            searchController.search('');
+            assert.isTrue(reseted);
          });
       });
    });

@@ -82,7 +82,7 @@ define('Controls-demo/Popup/Opener/Compatible/demoOpener',
 
          _createMemory: function(items) {
             return new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: items
             });
          },

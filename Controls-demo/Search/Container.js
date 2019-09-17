@@ -32,7 +32,7 @@ define('Controls-demo/Search/Container', [
          this._source = new sourceLib.Memory({
             data: memorySourceData.departments,
             filter: this._filterFunc,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
       },
       _filterFunc: function(item, query) {

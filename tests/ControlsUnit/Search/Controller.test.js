@@ -102,7 +102,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          var rs = new collection.RecordSet({
             rawData: [],
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          rs.setMetaData({
             results: new entity.Model({
@@ -243,9 +243,14 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
       });
 
       it('_private.needUpdateSearchController', function() {
+         let originSource = new sourceLib.Memory();
+         let prefetchSource = new sourceLib.PrefetchProxy({ target: originSource });
+         let newPrefetchSource = new sourceLib.PrefetchProxy({ target: originSource });
+
          assert.isFalse(searchMod.Controller._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test'}}));
          assert.isFalse(searchMod.Controller._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test1'}}));
          assert.isTrue(searchMod.Controller._private.needUpdateSearchController({minSearchLength: 3}, {minSearchLength: 2}));
+         assert.isFalse(searchMod.Controller._private.needUpdateSearchController({source: prefetchSource}, {source: newPrefetchSource}));
       });
 
       it('_private.getSearchController', function() {
@@ -325,6 +330,17 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             searchMod.Controller._private.getSearchController(searchController);
             searchController._beforeUpdate({searchValue: '', sorting: []}, {dataOptions: defaultOptions});
             assert.isNull(searchController._searchController);
+         });
+
+         it('source is changed', function() {
+            var options = getDefaultOptions();
+            options.source = new sourceLib.Memory();
+            searchMod.Controller._private.getSearchController(searchController);
+            searchController._inputSearchValue = 'test';
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+
+            assert.isNull(searchController._searchController);
+            assert.isTrue(searchController._inputSearchValue === '');
          });
 
          it('filter is changed', function() {

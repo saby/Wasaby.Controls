@@ -5,7 +5,8 @@
  * @includes Listener Controls/_event/Listener
  * @public
  * @author Крайнов Д.О.
- * @deprecated Механизм является устаревшим и его не рекомендуется использовать, поскольку это неконтролируемый поток распространения данных.
+ * @deprecated Использование библиотеки допускается только для <a href="/doc/platform/developmentapl/interface-development/controls/tools/autoresize/">авторесайза</a>.
+ * В остальных случаях использовать библиотеку не рекомендуется, поскольку это приведёт к неконтролируемому потоку распространения данных. 
  */
 
 /*
@@ -20,10 +21,12 @@
 import Register = require('Controls/_event/Register');
 import Listener = require('Controls/_event/Listener');
 import Registrar = require('Controls/_event/Registrar');
+import {register as RegisterUtil,unregister as UnregisterUtil} from 'Controls/_event/ListenerUtils'
 
 export {
    Register,
    Listener,
-
-   Registrar
+   Registrar,
+   RegisterUtil,
+    UnregisterUtil
 }

@@ -64,7 +64,7 @@ define([
                      {id: 2, title: 'Ilya', text: 'Ilya'},
                      {id: 3, title: 'Mike', text: 'Mike'}
                   ],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                keyProperty: 'id'
             }
@@ -196,7 +196,7 @@ define([
             selectedKeys: selectedKeys,
             source: new sourceLib.Memory({
                data: [ {id: 1} ],
-               idProperty: 'id'
+               keyProperty: 'id'
             })
          });
 
@@ -208,12 +208,12 @@ define([
             selectedKeys: selectedKeys,
             source: new sourceLib.Memory({
                data: [ {id: 1} ],
-               idProperty: 'id'
+               keyProperty: 'id'
             })
          }, null, new collection.List({
             items: [new entity.Model({
                rawData: {id: 1},
-               idProperty: 'id'
+               keyProperty: 'id'
             })]
          }));
          assert.deepEqual(collectionWithReceivedState._selectedKeys, selectedKeys);
@@ -232,7 +232,7 @@ define([
                {id: 2, title: 'Ilya', text: 'Ilya'},
                {id: 3, title: 'Mike', text: 'Mike'}
             ],
-            idProperty: 'id'
+            keyProperty: 'id'
          });
 
          selectedCollection._options.selectedKeys = selectedKeys;
@@ -248,7 +248,7 @@ define([
             selectedKeys: [],
             source: new sourceLib.Memory({
                data: [ {id: 1} ],
-               idProperty: 'id'
+               keyProperty: 'id'
             })
          });
          assert.equal(result, undefined);
@@ -257,7 +257,7 @@ define([
             selectedKeys: [1],
             source: new sourceLib.Memory({
                data: [ {id: 1} ],
-               idProperty: 'id'
+               keyProperty: 'id'
             })
          });
          assert.notEqual(result, undefined);
@@ -292,7 +292,7 @@ define([
                data: [
                   {id: 1, title: 'Alex', text: 'Alex'}
                ],
-               idProperty: 'id'
+               keyProperty: 'id'
             })
          });
          assert.deepEqual(selectedCollection._selectedKeys, [1]);

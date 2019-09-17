@@ -52,7 +52,7 @@ define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
             return actionVisibility;
          };
          var itemNode = new entity.Model({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: {
                id: 'test',
                'Раздел@': true
@@ -60,7 +60,7 @@ define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
          });
 
          var itemLeaf = new entity.Model({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: {
                id: 'test',
                'Раздел@': false
@@ -160,14 +160,14 @@ define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
          var selectCompleted = false;
          var selectionResult = null;
          var selectedItem = new entity.Model({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: {
                id: 'test',
                'Раздел@': false,
             }
          });
          var otherSelectedItem = new entity.Model({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: {
                id: 'test1',
                'Раздел@': false

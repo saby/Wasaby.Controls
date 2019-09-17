@@ -76,7 +76,7 @@ define([
             ],
             source = new sourceLib.Memory({
                data: data,
-               idProperty: 'id'
+               keyProperty: 'id'
             });
 
          tabsMod.Buttons._private.initItems(source, tabInstance).addCallback(function(result) {
@@ -180,7 +180,7 @@ define([
             ],
             source = new sourceLib.Memory({
                data: data,
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             options = {
                source: source
@@ -202,7 +202,7 @@ define([
             ],
             source = new sourceLib.Memory({
                data: data,
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             options = {
                source: source
