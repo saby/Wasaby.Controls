@@ -298,7 +298,7 @@ var moduleClass = CompoundControl.extend({
 
       // todo https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
       item.popupOptions.width = this._maximized ? item.popupOptions.maxWidth : (item.popupOptions.minimizedWidth || item.popupOptions.minWidth);
-      const width = StackStrategy.getPosition(coords, item).stackWidth;
+      const width = StackStrategy.getPosition(coords, item).width;
 
       this._panel._options.maximized = this._maximized;
       this._panel._options.width = width;
