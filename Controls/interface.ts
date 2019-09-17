@@ -21,6 +21,8 @@
  * @includes ISorting Controls/_interface/ISorting
  * @includes ISorting Controls/_interface/ILookup
  * @includes IDateMask Controls/_interface/IDateMask
+ * @includes ITextValue Controls/_interface/ITextValue
+ * @includes IPropStorage Controls/_interface/IPropStorage
  * @public
  * @author Крайнов Д.О.
  */
