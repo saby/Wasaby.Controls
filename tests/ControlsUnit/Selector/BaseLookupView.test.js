@@ -435,5 +435,20 @@ define([
             assert.equal(lookup._getContainer(), container[0]);
          }
       });
+
+      it('_crossClick', () => {
+         const lookup = new Lookup();
+         const sandbox = sinon.createSandbox();
+
+         sandbox.stub(lookup, '_notify');
+         lookup.saveOptions({
+            multiSelect: false
+         });
+
+         lookup._crossClick({}, 'testItem');
+
+         sinon.assert.calledWith(lookup._notify, 'removeItem');
+         assert.isTrue(lookup._needSetFocusInInput);
+      });
    });
 });

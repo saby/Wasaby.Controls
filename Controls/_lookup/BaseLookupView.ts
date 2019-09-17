@@ -139,12 +139,11 @@ var BaseLookupView = Control.extend({
     },
 
     _crossClick: function (event, item) {
-        this._notify('removeItem', [item]);
-
-        /* move focus to input after remove, because focus will be lost after removing dom element */
+        /* move focus to input, because focus will be lost after removing dom element */
         if (!this._infoboxOpened) {
             _private.activate(this);
         }
+        this._notify('removeItem', [item]);
     },
 
     _getFieldWrapperWidth: function (recount) {
