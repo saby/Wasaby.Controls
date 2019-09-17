@@ -96,7 +96,7 @@ import {delay} from 'Types/function';
 
    /**
     * @name Controls/_decorator/Markup#validHtml
-    * @cfg {ValidHtml}
+    * @cfg {ValidHtml} Опция для переопределения разрешённых тегов и атрибутов. Набор по умолчанию расположен в модуле Core/validHtml.
     */
 
    class MarkupDecorator extends Control<IControlOptions> {
