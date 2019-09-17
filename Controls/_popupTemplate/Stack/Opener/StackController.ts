@@ -203,7 +203,7 @@ const _private = {
             templateClass = template;
         }
 
-        return templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
+        return templateClass && templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
     },
     getPopupWidth(item): Promise<undefined> {
         return new Promise((resolve) => {
@@ -275,6 +275,12 @@ const _private = {
                 }
                 _private.updatePopupOptions(item);
             }
+        }
+    },
+    preparePropStorageId(item): void {
+        if (!item.popupOptions.propStorageId) {
+            const defaultOptions = _private.getDefaultOptions(item);
+            item.popupOptions.propStorageId = defaultOptions.propStorageId;
         }
     },
     updatePopup(self, item, container) {
@@ -407,6 +413,7 @@ const StackController = BaseController.extend({
     },
 
     getDefaultConfig(item) {
+        _private.preparePropStorageId(item);
         if (item.popupOptions.propStorageId) {
             return _private.getPopupWidth(item).then(() => {
                 _private.getDefaultConfig(this, item);
