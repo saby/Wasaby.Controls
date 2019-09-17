@@ -1152,7 +1152,7 @@ define([
 
             for (i = 1; i < parentNode.length; ++i) {
                checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
-               assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i], `fail in needDecorate[${i}]`);
             }
          });
          it('br tag as end of paragraph', function() {
@@ -1175,9 +1175,40 @@ define([
 
             for (i = 1; i < parentNode.length; ++i) {
                checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
-               assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i], `fail in needDecorate[${i}]`);
             }
          });
+
+         it('string with "\\n" in the beginning as end of paragraph', function() {
+            var i,
+               parentNode = ['pre',
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  '\nsome text\n',
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  '        \nsome text\n',
+                  ['a', { href: 'http://a' }, 'http://a'],
+                  'some text'
+               ],
+               expectedNeedDecorate = [undefined,
+                  true,
+                  true,
+                  false,
+                  true,
+                  true,
+                  false,
+                  false,
+                  false
+               ],
+               checkNeedDecorate;
+
+            for (i = 1; i < parentNode.length; ++i) {
+               checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i], `fail in needDecorate[${i}]`);
+            }
+         });
+
          it('two links before text and two links after', function() {
             var i,
                parentNode = ['p',
@@ -1198,7 +1229,7 @@ define([
 
             for (i = 1; i < parentNode.length; ++i) {
                checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
-               assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i], `fail in needDecorate[${i}]`);
             }
          });
          it('two links before tag with text and two links after', function() {
@@ -1221,7 +1252,7 @@ define([
 
             for (i = 1; i < parentNode.length; ++i) {
                checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
-               assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i], `fail in needDecorate[${i}]`);
             }
          });
          it('good link, space, bad link, good link', function() {
@@ -1242,7 +1273,7 @@ define([
 
             for (i = 1; i < parentNode.length; ++i) {
                checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
-               assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i], `fail in needDecorate[${i}]`);
             }
          });
          it('spaces after link', function() {
@@ -1259,7 +1290,7 @@ define([
 
             for (i = 1; i < parentNode.length; ++i) {
                checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
-               assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i], `fail in needDecorate[${i}]`);
             }
          });
          it('spaces with style after link', function() {
@@ -1281,7 +1312,7 @@ define([
 
             for (i = 1; i < parentNode.length; ++i) {
                checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
-               assert.equal(checkNeedDecorate, expectedNeedDecorate[i]);
+               assert.equal(checkNeedDecorate, expectedNeedDecorate[i], `fail in needDecorate[${i}]`);
             }
          });
 

@@ -2,7 +2,7 @@
  * Created by rn.kondakov on 06.12.2018.
  */
 
-   
+
 
    /**
     *
@@ -13,7 +13,7 @@
     * @public
     * @author Кондаков Р.Н.
     */
-   export = function noOuterTag(value, parent) {
+   export default function noOuterTag(value, parent) {
       if (!parent && value[0] === 'div') {
          value[0] = [];
       }
