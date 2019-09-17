@@ -588,8 +588,8 @@ const BaseOpener = {
       if (cfg.minWidth || optFromTmpl.minWidth) {
          newCfg.dialogOptions.minWidth = cfg.minWidth || optFromTmpl.minWidth;
       }
-      if (cfg.width) {
-         newCfg.dialogOptions.width = cfg.width;
+      if (cfg.width || optFromTmpl.width) {
+         newCfg.dialogOptions.width = cfg.width || optFromTmpl.width;
       }
 
       if (cfg.maxWidth || optFromTmpl.maxWidth) {
