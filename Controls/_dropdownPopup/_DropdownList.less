@@ -362,3 +362,13 @@
 .ws-is-mobile-safari .controls-DropdownList__popup{
    transform: translateZ(0);
 }
+
+// align-item:center with min-height problem
+// https://stackoverflow.com/questions/19371626/flexbox-not-centering-vertically-in-ie
+.ws-is-ie11 {
+   .controls-DropdownList__footer:after {
+      content: '';
+      min-height: inherit;
+      font-size: 0;
+   }
+}
