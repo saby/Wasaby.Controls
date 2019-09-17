@@ -26,11 +26,11 @@ const innerText = function innerText(value, parent) {
       return parent ? value : [[], value];
    }
    if (Array.isArray(value)) {
-      var newValue = '';
+      let newValue: string|any[] = '';
       if (Array.isArray(value[0])) {
          newValue = innerText(value[0], value);
       }
-      for (var i = 1; i < value.length; ++i) {
+      for (let i = 1; i < value.length; ++i) {
          newValue += innerText(value[i], value);
       }
       if (value[0] === 'p' || value[0] === 'br') {
@@ -43,4 +43,4 @@ const innerText = function innerText(value, parent) {
 // @ts-ignore
 innerText.__noNeedEscapeString = true;
 
-export = innerText;
+export default innerText;

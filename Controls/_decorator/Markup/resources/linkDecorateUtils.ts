@@ -227,7 +227,7 @@ function needDecorate(jsonNode, parentNode) {
       const tagName = getTagName(nodeToCheck);
       if (tagName === 'a') {
          const attributes = getAttributes(nodeToCheck);
-         canBeDecorated = canBeDecorated && isLinkGoodForDecorating(nodeToCheck);
+         canBeDecorated = canBeDecorated && isLinkGoodForDecorating(nodeToCheck) || nodeToCheck[0] === '\n';
          attributes[fakeNeedDecorateAttribute] = canBeDecorated;
       } else {
          // Tag br is the end of paragraph.
