@@ -48,17 +48,17 @@ define(
             assert.isTrue(panel._isChanged);
          });
 
-			it('Init::historyItems', function(done) {
-				var config2 = {
-					items: items,
-					historyId: 'TEST_PANEL_HISTORY_ID'
-				};
-				var panel2 = getFilterPanel(config2);
-				filterPopup.DetailPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function(items) {
-					assert.isOk(filter.HistoryUtils.getHistorySource(config2.historyId)._history);
-					assert.equal(items.getCount(), 2);
-					done();
-				});
+         it('Init::historyItems', function(done) {
+            var config2 = {
+               items: items,
+               historyId: 'TEST_PANEL_HISTORY_ID'
+            };
+            var panel2 = getFilterPanel(config2);
+            filterPopup.DetailPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function(items) {
+               assert.isOk(filter.HistoryUtils.getHistorySource(config2.historyId)._history);
+               assert.equal(items.getCount(), 2);
+               done();
+            });
 			});
 
          it('Init::historyItems isReportPanel', function() {
