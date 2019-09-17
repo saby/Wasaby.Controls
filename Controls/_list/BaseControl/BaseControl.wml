@@ -166,7 +166,8 @@
                 itemActions="{{_options.itemActions}}"
                 itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
                 itemActionsProperty="{{_options.itemActionsProperty}}"
-                itemActionsPosition="{{_options.itemActionsPosition}}"/>
+                itemActionsPosition="{{_options.itemActionsPosition}}"
+                useNewModel="{{ _options.useNewModel }}"/>
             <Controls._list.Swipe.SwipeControl
             ws:content="listView"
             on:menuActionsClick="_showActionsMenu()"

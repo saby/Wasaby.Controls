@@ -6,14 +6,12 @@ import ControlsConstants = require('Controls/Constants');
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { relation } from 'Types/entity';
-import { RecordSet, IObservable } from 'Types/collection';
+import { RecordSet } from 'Types/collection';
 import { Object as EventObject } from 'Env/Event';
 import 'css!theme?Controls/list';
-import { CollectionItem } from 'Types/display';
+import { CollectionItem } from 'Controls/display';
 
-var
-    ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
-
+const ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
 const ACTION_TYPE = 'itemActionsUpdated';
 
 var _private = {
@@ -37,14 +35,18 @@ var _private = {
     },
 
     updateItemActions: function(self, item, options) {
-        var
-            all = _private.fillItemAllActions(item, options),
+        const all = _private.fillItemAllActions(
+            options.useNewModel ? item.getContents() : item,
+            options
+        );
 
-            showed = options.itemActionsPosition === 'outside' || all.length <= 1
-                ? all
-                : all.filter(function(action) {
-                    return action.showType === showType.TOOLBAR || action.showType === showType.MENU_TOOLBAR;
-                });
+        let showed = all;
+        if (showed.length > 1 && options.itemActionsPosition !== 'outside') {
+            // TODO: any => action type
+            showed = showed.filter((action: any) => {
+                return action.showType === showType.TOOLBAR || action.showType === showType.MENU_TOOLBAR;
+            });
+        }
 
         if (_private.needActionsMenu(all, options.itemActionsPosition)) {
             showed.push({
@@ -56,23 +58,30 @@ var _private = {
         }
 
         options.listModel.setItemActions(item, {
-            all: all,
-            showed: showed
+            all,
+            showed
         });
     },
 
     updateActions: function(self, options, collectionChanged: boolean = false): void {
         if (options.itemActions) {
-            for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
-                var
-                    itemData = options.listModel.getCurrent(),
-                    item = itemData.actionsItem;
-                if (item !== ControlsConstants.view.hiddenGroup && item.get) {
-                    _private.updateItemActions(self, item, options);
+            if (options.useNewModel) {
+                options.listModel.each((collectionItem: CollectionItem<unknown>) => {
+                    // TODO groups and whatnot
+                    _private.updateItemActions(self, collectionItem, options);
+                });
+            } else {
+                for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
+                    var
+                        itemData = options.listModel.getCurrent(),
+                        item = itemData.actionsItem;
+                    if (item !== ControlsConstants.view.hiddenGroup && item.get) {
+                        _private.updateItemActions(self, item, options);
+                    }
                 }
+                self._isActual = true;
+                options.listModel.nextModelVersion(collectionChanged, ACTION_TYPE);
             }
-            self._isActual = true;
-            options.listModel.nextModelVersion(collectionChanged, ACTION_TYPE);
         }
     },
 
@@ -156,8 +165,13 @@ var ItemActionsControl = Control.extend({
 
     _onItemActionsClick: function(event, action, itemData) {
         aUtil.itemActionsClick(this, event, action, itemData, this._options.listModel);
-        this.updateItemActions(itemData.actionsItem);
-        this._options.listModel.setMarkedKey(itemData.key);
+        if (this._options.useNewModel) {
+            this.updateItemActions(itemData); // TODO actionsItem only in Search in SearchGrid
+            this._options.listModel.setMarkedItem(itemData);
+        } else {
+            this.updateItemActions(itemData.actionsItem);
+            this._options.listModel.setMarkedKey(itemData.key);
+        }
     },
 
     _applyEdit: function(item) {

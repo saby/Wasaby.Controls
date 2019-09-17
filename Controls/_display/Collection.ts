@@ -491,6 +491,9 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    protected _$searchValue: string;
 
+   // TODO: Пока unknown, потом нужно тип переопределить
+   protected _$editingConfig: unknown;
+
    /**
     * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
     * игнорироваться). Работает только если задано {@link idProperty}.
@@ -582,6 +585,9 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
     */
    protected _oEventRaisingChange: Function;
 
+   protected _startIndex: number;
+   protected _stopIndex: number;
+
    protected _markerManager: MarkerManager;
    protected _editInPlaceManager: EditInPlaceManager;
    protected _itemActionsManager: ItemActionsManager;
@@ -625,6 +631,8 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
          (this._$collection as ObservableMixin).subscribe('onEventRaisingChange', this._oEventRaisingChange);
       }
+
+      this._stopIndex = this.getCount();
 
       this._markerManager = new MarkerManager();
       this._editInPlaceManager = new EditInPlaceManager();
@@ -1939,6 +1947,14 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       this._nextVersion();
    }
 
+   // TODO: Пока unknown, потом нужно определить тип
+   setEditingConfig(config: unknown): void {
+      if (this._$editingConfig !== config) {
+         this._$editingConfig = config;
+         this._nextVersion();
+      }
+   }
+
    setEditingItem(item: CollectionItem<S>): void {
       this._editInPlaceManager.beginEdit(item);
       this._nextVersion();
@@ -1955,6 +1971,14 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
 
    getSearchValue(): string {
       return this._$searchValue;
+   }
+
+   getStartIndex(): number {
+      return this._startIndex;
+   }
+
+   getStopIndex(): number {
+      return this._stopIndex;
    }
 
    getItemCounters(): ICollectionCounters[] {
@@ -3048,6 +3072,7 @@ Object.assign(Collection.prototype, {
    _$rightSpacing: '',
    _$rowSpacing: '',
    _$searchValue: '',
+   _$editingConfig: null,
    _$unique: false,
    _$importantItemProperties: null,
    _localize: false,
@@ -3063,7 +3088,9 @@ Object.assign(Collection.prototype, {
    _oEventRaisingChange: null,
    _markerManager: null,
    _editInPlaceManager: null,
-   _itemActionsManager: null
+   _itemActionsManager: null,
+   _startIndex: 0,
+   _stopIndex: 0
 });
 
 register('Controls/display:Collection', Collection);

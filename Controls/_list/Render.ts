@@ -21,7 +21,10 @@ export default class Render extends Control {
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
     }
 
-    private _onItemClick(e: SyntheticEvent<MouseEvent> & { preventItemEvent?: boolean }, item: CollectionItem<unknown>): void {
+    private _onItemClick(
+        e: SyntheticEvent<MouseEvent> & { preventItemEvent?: boolean },
+        item: CollectionItem<unknown>
+    ): void {
         if (!e.preventItemEvent) {
             this._notify('itemClick', [item.getContents(), e], { bubbling: true });
         }
