@@ -248,7 +248,7 @@ var moduleClass = CompoundControl.extend({
    },
    _onFocusOutHandler: function(event, destroyed, focusedControl) {
       // если фокус уходит со старой панели на новый контрол, старых механизм не будет вызван, нужно вручную звать onaActivateWindow
-      if (focusedControl._template) {
+      if (focusedControl && focusedControl._template) {
          WindowManager.onActivateWindow(focusedControl);
       }
    },
