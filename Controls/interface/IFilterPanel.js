@@ -186,15 +186,30 @@ define('Controls/interface/IFilterPanel', [], function() {
     *
     * JS:
     * <pre>
-    *    this._items = [
-    *       { id: 'type', value: ['1'], resetValue: ['1'], source: new MemorySource({
-    *         data: [{ id: '1', title: 'All types' },
-    *         { id: '2', title: 'Meeting' },
-    *         { id: 3, title: 'Videoconference' }],
-    *         keyProperty: 'id'
-    *       })},
-    *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted' }
-    *    ];
+    *    import {Memory} from 'Types/source';
+    *
+    *    protected _items: array;
+    *    protected _beforeMount():void {
+    *       this._items = [
+    *          {
+    *            id: 'type',
+    *            value: ['1'],
+    *            resetValue: ['1'],
+    *            source: new MemorySource({
+    *               data: [{ id: '1', title: 'All types' },
+    *                      { id: '2', title: 'Meeting' },
+    *                      { id: 3, title: 'VideoConference' }],
+    *               keyProperty: 'id'
+    *             })
+    *          },
+    *          {
+    *             id: 'deleted',
+    *             value: true,
+    *             resetValue: false,
+    *             textValue: 'Deleted'
+    *          }
+    *       ];
+    *    }
     * </pre>
     * @see itemTemplateProperty
     * @see <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filterbutton-and-fastfilters/'>Руководство по настройке кнопки фильтров и быстрого фильтра.</a>
