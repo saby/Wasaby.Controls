@@ -96,6 +96,13 @@ var ListView = BaseControl.extend(
                 this._listModel.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandler.bind(this));
             }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
+            // todo Костыль, т.к. построение ListView зависит от SelectionController.
+            // Будет удалено при выполнении одного из пунктов:
+            // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
+            // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
+            if (newOptions.multiSelectReady) {
+               return newOptions.multiSelectReady;
+            }
         },
 
         _beforeUpdate: function(newOptions) {
