@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_operations/__MultiSelector');
 import source = require('Types/source');
 
-   var _defaultItems = [{
+var _defaultItems = [{
       id: 'selectAll',
       title: rk('Всё')
    }, {
@@ -45,7 +45,7 @@ import source = require('Types/source');
       },
 
       _updateSelection: function(selectedKeys, excludedKeys, count, root) {
-         if (count > 0) {
+         if (count > 0 && selectedKeys.length) {
             this._menuCaption = rk('Отмечено') + ': ' + count;
          } else if (selectedKeys[0] === root && (!excludedKeys.length || excludedKeys[0] === root && excludedKeys.length === 1)) {
             this._menuCaption = rk('Отмечено всё');
