@@ -1,12 +1,10 @@
 /**
  * Created by rn.kondakov on 30.10.2018.
  */
-import 'css!theme?Controls/decorator';
-
 
    // Find all indexes if search value in string.
    function allIndexesOf(str, searchValue) {
-      var i = str.indexOf(searchValue),
+      let i = str.indexOf(searchValue),
          result = [];
       while (i !== -1) {
          result.push(i);
@@ -26,26 +24,26 @@ import 'css!theme?Controls/decorator';
     * @public
     * @author Кондаков Р.Н.
     */
-   export = function highlight(value, parent, resolverParams) {
+   export default function highlight(value, parent, resolverParams) {
       // Resolve only strings and only if text to highlight exists and not empty.
       if ((typeof value !== 'string' && !(value instanceof String)) || !resolverParams.textToHighlight) {
          return value;
       }
 
-      var textToHighlight = resolverParams.textToHighlight,
-         allIndexesOfTextToHighlight = allIndexesOf(value.toLowerCase(), textToHighlight.toLowerCase());
+      const textToHighlight = resolverParams.textToHighlight;
+      const allIndexesOfTextToHighlight = allIndexesOf(value.toLowerCase(), textToHighlight.toLowerCase());
 
       // Text to highlight not found.
       if (!allIndexesOfTextToHighlight.length) {
          return value;
       }
 
-      var newValue = [[]],
-         j = 0,
-         substringNotToHighlight,
-         substringToHighlight;
+      let newValue = [[]];
+      let j = 0;
+      let substringNotToHighlight;
+      let substringToHighlight;
 
-      for (var i = 0; i < allIndexesOfTextToHighlight.length; ++i) {
+      for (let i = 0; i < allIndexesOfTextToHighlight.length; ++i) {
          substringNotToHighlight = value.substring(j, allIndexesOfTextToHighlight[i]);
          j = allIndexesOfTextToHighlight[i] + textToHighlight.length;
          substringToHighlight = value.substr(allIndexesOfTextToHighlight[i], textToHighlight.length);
