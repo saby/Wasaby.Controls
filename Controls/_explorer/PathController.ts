@@ -15,10 +15,8 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
                template: HeadingPathBack,
                templateOptions: {
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
-
-                  //TODO: убрать task1177860157 по https://online.sbis.ru/opendoc.html?guid=9e44fc5b-b2a8-4733-ae50-91e1cbd691ed
-                  showActionButton: options.task1177860157,
-                  showArrowOutsideOfBackButton: options.task1177860157,
+                  showActionButton: options.showActionButton !== false && !!options.task1177860157,
+                  showArrowOutsideOfBackButton: true && !!options.task1177860157,
                   backButtonStyle: options.backButtonStyle,
                   backButtonCaption: ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty),
                   counterCaption: options.items[options.items.length - 1].get('counterCaption')
