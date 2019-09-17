@@ -56,7 +56,7 @@ define(
 				  var panel2 = getFilterPanel(config2);
 				  filterPopup.DetailPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function(items) {
 						assert.isOk(filter.HistoryUtils.getHistorySource(config2.historyId)._history);
-						assert.equal(items.getCount(), 0);
+						assert.equal(items.getCount(), 2);
 						done();
 				  });
 			 });
@@ -324,44 +324,6 @@ define(
             filterPopup.DetailPanel._private.resolveHistoryId(self, {}, self._contextOptions);
             assert.equal(self._historyId, 'testId');
          });
-			 it('getResetValues', function() {
-				  let items = [
-						{
-							 id: 'PeriodFilter',
-							 value: 5,
-							 resetValue: {
-								  'StartDate': '12.31.1233',
-								  'LastDate': '13.31.1233',
-								  'Period': 'За последний час',
-							 },
-							 textValue: 'listValue'
-						},
-						{
-							 id: 'Methods',
-							 value: '123',
-							 resetValue: '',
-							 visibility: true,
-							 textValue: null
-						},
-						{
-							 id: 'Faces',
-							 value: true,
-							 resetValue: false,
-							 visibility: false
-						}
-				  ];
-				  let expectedResult = {
-						'PeriodFilter': {
-							 'StartDate': '12.31.1233',
-							 'LastDate': '13.31.1233',
-							 'Period': 'За последний час',
-						},
-						'Methods': '',
-						'Faces': false,
-				  }
-				  let validItems = filterPopup.DetailPanel._private.getResetValues(items);
-				  assert.deepEqual(validItems, expectedResult);
-			 });
 			 it('filterHistoryItems', function() {
 				  let self = {
 						_items: [

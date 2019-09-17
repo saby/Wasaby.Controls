@@ -3,6 +3,7 @@ import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
+import find = require('Core/helpers/Object/find');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import _FilterPanelOptions = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions');
 import template = require('wml!Controls/_filterPopup/Panel/Panel');
@@ -138,33 +139,30 @@ import 'Controls/form';
          }
       },
 
-       getResetValues: function(items) {
-           var result = {};
-           items.forEach((item) => {
-               result[getPropValue(item, 'id')] = getPropValue(item, 'resetValue');
-           });
-           return result;
+       getOriginalItem: function(self, historyItem) {
+          return find(self._items, (originalItem) => {
+             return originalItem.id === historyItem.id || originalItem.periodField == historyItem.id;
+          });
        },
 
        filterHistoryItems: function(self,items) {
-           let resetValues = _private.getResetValues(self._items);
-           return chain.factory(items).filter(function(item) {
+          return chain.factory(items).filter(function(item) {
                let history = JSON.parse(item.get('ObjectData')).items || JSON.parse(item.get('ObjectData'));
-               let itemHasData = false, itemHasResetValue = false;
+
+               let itemHasData = false;
                for (var i = 0, length = history.length; i < length; i++) {
                    var textValue = getPropValue(history[i], 'textValue'),
-                       value = getPropValue(history[i], 'value'),
-                       id = getPropValue(history[i], 'id');
+                       value = getPropValue(history[i], 'value');
                    if (textValue !== '' && textValue !== undefined) {
-                       if (resetValues[id] === value && (!itemHasData || itemHasResetValue)) {
-                           itemHasResetValue = true;
-                       } else {
-                           itemHasResetValue = false;
+                      let originalItem = _private.getOriginalItem(self, history[i]);
+                       if (originalItem && (originalItem.resetValue === value)) {
+                          console.log(originalItem, originalItem.resetValue,value);
+                          return false;
                        }
                        itemHasData = true;
                    }
                }
-               return itemHasData && !itemHasResetValue;
+               return itemHasData;
            }).value(factory.recordSet,{adapter: items.getAdapter()});
        },
 
