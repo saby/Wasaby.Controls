@@ -401,7 +401,11 @@ var _private = {
         const drawItemsUp = (countCurrentItems, addedItems) => {
             beforeAddItems(addedItems);
             self._saveAndRestoreScrollPosition = 'up';
-            self._listViewModel.prependItems(addedItems);
+            if (self._options.useNewModel) {
+                self._listViewModel.getCollection().prepend(addedItems);
+            } else {
+                self._listViewModel.prependItems(addedItems);
+            }
             afterAddItems(countCurrentItems, addedItems);
         };
 
@@ -423,7 +427,11 @@ var _private = {
 
                 if (direction === 'down') {
                     beforeAddItems(addedItems);
-                    self._listViewModel.appendItems(addedItems);
+                    if (self._options.useNewModel) {
+                        self._listViewModel.getCollection().append(addedItems);
+                    } else {
+                        self._listViewModel.appendItems(addedItems);
+                    }
                     afterAddItems(countCurrentItems, addedItems);
                 } else if (direction === 'up') {
                     /**
@@ -1406,6 +1414,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
             } else if (newOptions.useNewModel && receivedData) {
                 self._listViewModel = Abstract.getDefaultDisplay(receivedData, viewModelConfig);
+                if (newOptions.itemsReadyCallback) {
+                    newOptions.itemsReadyCallback(self._listViewModel.getCollection());
+                }
             }
             if (self._listViewModel) {
                 _private.initListViewModelHandler(self, self._listViewModel);
@@ -1450,6 +1461,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 return _private.reload(self, newOptions).addCallback((result) => {
                     if (newOptions.useNewModel && !self._listViewModel && result.data) {
                         self._listViewModel = Abstract.getDefaultDisplay(result.data, viewModelConfig);
+                        if (newOptions.itemsReadyCallback) {
+                            newOptions.itemsReadyCallback(self._listViewModel.getCollection());
+                        }
                     }
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
