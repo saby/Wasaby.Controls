@@ -176,6 +176,7 @@ var CompoundArea = CompoundContainer.extend([
          self._fixIos();
          runDelayed(function() {
             self._childControl._notifyOnSizeChanged();
+            self._notifyManagerPopupCreated();
             runDelayed(function() {
                self._isPopupCreated = true;
                if (!self._waitReadyDeferred) { // Если попап создан и отработал getReadyDeferred - начинаем показ
@@ -186,6 +187,15 @@ var CompoundArea = CompoundContainer.extend([
       });
 
       return rebuildDeferred;
+   },
+
+   _notifyManagerPopupCreated(): void {
+      // Слой совместимости нотифаит событие manager'a за него, т.к. только он знает, когда будет построен старый шаблон
+      const item = this._getManagerConfig();
+      const popupItems = Controller.getContainer()._popupItems;
+      this._setCustomHeaderAsync();
+      // Нотифай события делаю в следующий цикл синхронизации после выставления позиции окну.
+      this._notifyVDOM('managerPopupCreated', [item, popupItems], {bubbling: true});
    },
 
    _getDialogClasses: function() {
@@ -249,10 +259,6 @@ var CompoundArea = CompoundContainer.extend([
          this._waitClose = false;
          this.close();
       } else {
-         // Слой совместимости нотифаит событие manager'a за него, т.к. только он знает, когда будет построен старый шаблон
-         const item = this._getManagerConfig();
-         const popupItems = Controller.getContainer()._popupItems;
-         self._setCustomHeaderAsync();
          runDelayed(function() {
             // Перед автофокусировкой нужно проверить, что фокус уже не находится внутри
             // панели, т. к. этот callback вызывается уже после полного цикла создания
@@ -261,8 +267,6 @@ var CompoundArea = CompoundContainer.extend([
             // В таком случае, если мы позовем автофокус, мы можем сбить правильно поставленный
             // фокус.
 
-            // Нотифай события делаю в следующий цикл синхронизации после выставления позиции окну.
-            self._notifyVDOM('managerPopupCreated', [item, popupItems], {bubbling: true});
             if (
                self._options.catchFocus &&
                self._container.length &&
