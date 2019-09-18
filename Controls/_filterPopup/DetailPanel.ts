@@ -125,7 +125,7 @@ import 'Controls/form';
                 pinned: !isReportPanel,
                recent: isReportPanel ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY'
             };
-            let historyLoad = HistoryUtils.loadHistoryItems(config.historyId).addCallback(function(items) {
+            let historyLoad = HistoryUtils.loadHistoryItems(config).addCallback(function(items) {
                self._historyItems = _private.filterHistoryItems(self, items);
                return self._historyItems;
             }).addErrback(function() {
