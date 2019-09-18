@@ -58,6 +58,11 @@ define(
             button._openSelectorDialog();
             assert.deepStrictEqual(actualOptions.templateOptions.selectedItems.getCount(), 0);
 
+            // nonexistent keys
+            button._options.selectedKeys = ['1', '2', '1000'];
+            button._openSelectorDialog();
+            assert.deepStrictEqual(actualOptions.templateOptions.selectedItems.getCount(), 2);
+
          });
       });
    }
