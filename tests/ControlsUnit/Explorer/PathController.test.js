@@ -74,6 +74,7 @@ define([
                   backButtonCaption: 'second',
                   counterCaption: 2
                },
+               align: 'right',
                width: '100px',
                isBreadCrumbs: true
             }, {
@@ -163,6 +164,7 @@ define([
                   backButtonCaption: 'second',
                   counterCaption: 2
                },
+               align: 'right',
                width: '100px',
                isBreadCrumbs: true
             }, {
