@@ -260,8 +260,6 @@ var moduleClass = CompoundControl.extend({
          } else {
             // должно само работать!
          }
-      } else {
-         this._onCloseHandler();
       }
    },
    _onResultHandler: function() {
