@@ -20,20 +20,15 @@ export default class extends Control {
         this._children.list.reload();
     }
 
-    private _slowReload(): void {
-        this._slowDownSource(this._viewSource, 300000000);
-        this._children.list.reload();
-    }
-
     private _slowDownSource(source: Memory, timeMs: number) {
-        const ariginalQuery = source.query;
+        const originalQuery = source.query;
         const self = this;
 
         source.query = function() {
             const args = arguments;
             return new Promise(function(success) {
                 setTimeout(function() {
-                    success(ariginalQuery.apply(source, args));
+                    success(originalQuery.apply(source, args));
                 }, timeMs);
             });
         };

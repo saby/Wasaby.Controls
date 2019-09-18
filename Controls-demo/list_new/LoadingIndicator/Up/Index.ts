@@ -19,17 +19,17 @@ export default class extends Control {
             keyProperty: 'id',
             data: this._dataArray
         });
-        this._slowDownSource(this._viewSource, 5000);
+        this._slowDownSource(this._viewSource, 3000);
     }
 
     private _slowDownSource(source: Memory, timeMs: number) {
-        const ariginalQuery = source.query;
+        const originalQuery = source.query;
 
         source.query = function() {
             const args = arguments;
             return new Promise(function(success) {
                 setTimeout(function() {
-                    success(ariginalQuery.apply(source, args));
+                    success(originalQuery.apply(source, args));
                 }, timeMs);
             });
         };
