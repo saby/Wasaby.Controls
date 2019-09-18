@@ -55,7 +55,7 @@ define(
             };
             var panel2 = getFilterPanel(config2);
             filterPopup.DetailPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function(items) {
-               assert.isOk(filter.HistoryUtils.getHistorySource(config2.historyId)._history);
+               assert.isOk(filter.HistoryUtils.getHistorySource({historyId: 'TEST_PANEL_HISTORY_ID'})._history);
                assert.equal(items.getCount(), 2);
                done();
             });
