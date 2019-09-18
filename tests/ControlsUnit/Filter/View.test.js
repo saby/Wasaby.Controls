@@ -580,6 +580,31 @@ define(
             };
             filter.View._private.setValue(view, [null], 'document');
             assert.strictEqual(view._source[0].value, null);
+
+            // emptyKey is not set
+            view._source = [
+               {
+                  name: 'document',
+                  value: '',
+                  resetValue: false,
+                  emptyText: 'Test'
+               }
+            ];
+            view._configs = {
+               document: {
+                  items: Clone(defaultItems[0]),
+                  displayProperty: 'title',
+                  keyProperty: 'id',
+                  emptyText: 'Test',
+                  emptyKey: null,
+                  source: new sourceLib.Memory({
+                     idProperty: 'id',
+                     data: defaultItems[0]
+                  })
+               }
+            };
+            filter.View._private.setValue(view, [null], 'document');
+            assert.strictEqual(view._source[0].value, false);
          });
 
          it('_private:setPopupConfig', function() {
@@ -784,7 +809,7 @@ define(
                assert.deepStrictEqual(view._source[1].value, 'Sander123');
                assert.deepStrictEqual(view._source[3].textValue, 'new document');
                assert.deepStrictEqual(filterChanged, {'document': '11111', 'sender': 'Sander123'});
-               assert.deepStrictEqual(view._displayText, {document: {}});
+               assert.deepStrictEqual(view._displayText, {document: { hasMoreText: '', text: '', title: ''}});
                assert.isTrue(historyEventFired);
             });
 

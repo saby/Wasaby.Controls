@@ -216,20 +216,19 @@ var _private = {
    },
 
    findItem: function (self, items, data) {
-      var myself = this;
       var item = null;
       var objectData;
-      var deserialize = myself.getSerialize(self).deserialize;
-      
+      var serialize = _private.getSerialize().serialize;
+
       items.forEach(function (element) {
          objectData = element.get('ObjectData');
-         if (objectData && isEqual(JSON.parse(objectData, deserialize), data)) {
+         if (objectData && isEqual(objectData, JSON.stringify(data, serialize))) {
             item = element;
          }
       });
       return item;
    },
-   
+
    // Serializer при сериализации кэширует инстансы по идентификаторам,
    // и при десериализации, если идентификатор есть в кэше, берёт инстанс оттуда
    // Поэтому, когда применяем фильтр из истории,
