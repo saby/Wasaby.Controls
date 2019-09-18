@@ -167,13 +167,9 @@ var _private = {
 
                     // [ [selectedKeysList1], [selectedKeysList2] ] in hierarchy list
                     const flatSelectedKeys = configs[item.name].nodeProperty ? factory(selectedKeys).flatten().value() : selectedKeys;
-                    const isSelectedKeysChanged = !_private.getKeysUnloadedItems(configs[item.name], flatSelectedKeys).length;
-
-                    if (isSelectedKeysChanged) {
-                        self._displayText[item.name] = _private.getFastText(configs[item.name], flatSelectedKeys);
-                        if (item.textValue !== undefined) {
-                            item.textValue = self._displayText[item.name].text + self._displayText[item.name].hasMoreText;
-                        }
+                    self._displayText[item.name] = _private.getFastText(configs[item.name], flatSelectedKeys);
+                    if (item.textValue !== undefined) {
+                        item.textValue = self._displayText[item.name].text + self._displayText[item.name].hasMoreText;
                     }
                 }
             }
@@ -226,10 +222,9 @@ var _private = {
         let queryFilter;
         if (instance.nodeProperty) {
             queryFilter = Merge(filter, {historyId: instance.historyId});
-        } else {
+        }
             // As the data source can be history source, then you need to merge the filter
             queryFilter = historyUtils.getSourceFilter(filter, source);
-        }
         return _private.getSourceController(instance, source, navigation).load(queryFilter).addCallback(function(items) {
             instance.items = items;
             if (dataLoadCallback) {
@@ -419,11 +414,9 @@ var _private = {
                 curConfig._sourceController = null;
             }
             _private.updateHistory(this, result.id, factory(result.data).toArray());
-            _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
-        } else {
-            curConfig.items.prepend(newItems);
-            _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
         }
+        curConfig.items.prepend(newItems);
+        _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
         _private.updateText(this, this._source, this._configs);
     },
 
