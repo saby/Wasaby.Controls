@@ -245,6 +245,11 @@ const StickyController = BaseController.extend({
         _private.prepareConfig(this, item, sizes);
     },
 
+    pageScrolled(): boolean {
+        // don't recalculate position on page scroll (only on ios with visible keyboard);
+        return false;
+    },
+
     needRecalcOnKeyboardShow() {
         return true;
     },
