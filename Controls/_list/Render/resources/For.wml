@@ -10,6 +10,8 @@
       attr:key="{{ keyPrefix }}-{{ item.getUid() }}"
 
       on:click="_onItemClick(item)"
+      on:contextmenu="_onItemContextMenu(item)"
+      on:swipe="_onItemSwipe(item)"
 
       itemActionsPosition="{{ itemActionsPosition }}"
       itemActionsTemplate="{{ itemActionsTemplate }}"

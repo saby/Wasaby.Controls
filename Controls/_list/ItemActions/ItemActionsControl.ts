@@ -11,6 +11,9 @@ import { Object as EventObject } from 'Env/Event';
 import 'css!theme?Controls/list';
 import { CollectionItem } from 'Controls/display';
 
+import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
+import * as renderActionsTemplate from 'wml!Controls/_list/Render/resources/ItemActionsTemplate';
+
 const ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
 const ACTION_TYPE = 'itemActionsUpdated';
 
@@ -128,6 +131,7 @@ var _private = {
 var ItemActionsControl = Control.extend({
 
     _template: template,
+    _itemActionsTemplate: itemActionsTemplate,
     _isActual: false,
 
     constructor: function() {
@@ -144,6 +148,9 @@ var ItemActionsControl = Control.extend({
         if (typeof window === 'undefined') {
             this.serverSide = true;
             return;
+        }
+        if (newOptions.useNewModel) {
+            this._itemActionsTemplate = renderActionsTemplate;
         }
     },
 
@@ -184,7 +191,9 @@ var ItemActionsControl = Control.extend({
 
     updateItemActions: function(item) {
         _private.updateItemActions(this, item, this._options);
-        this._options.listModel.nextModelVersion(false, ACTION_TYPE);
+        if (!this._options.useNewModel) {
+            this._options.listModel.nextModelVersion(false, ACTION_TYPE);
+        }
     },
 
     _beforeUnmount: function() {

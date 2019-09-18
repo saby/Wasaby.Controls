@@ -164,15 +164,16 @@
                 itemActionsPosition="{{_options.itemActionsPosition}}"
                 useNewModel="{{ _options.useNewModel }}"/>
             <Controls._list.Swipe.SwipeControl
-            ws:content="listView"
-            on:menuActionsClick="_showActionsMenu()"
-            on:closeSwipe="_closeSwipe()"
-            actionAlignment="{{_options.actionAlignment}}"
-            actionCaptionPosition="{{_options.actionCaptionPosition}}"
-            viewName="{{ _options.viewName }}"
-            listModel="{{_listViewModel}}"
-            itemActions="{{_options.itemActions}}"
-            name="swipeControl"/>
+                ws:content="listView"
+                on:menuActionsClick="_showActionsMenu()"
+                on:closeSwipe="_closeSwipe()"
+                actionAlignment="{{_options.actionAlignment}}"
+                actionCaptionPosition="{{_options.actionCaptionPosition}}"
+                viewName="{{ _options.viewName }}"
+                listModel="{{_listViewModel}}"
+                itemActions="{{_options.itemActions}}"
+                name="swipeControl"
+                useNewModel="{{ _options.useNewModel }}"/>
         </ws:if>
 
         <ws:if data="{{_needScrollCalculation}}">

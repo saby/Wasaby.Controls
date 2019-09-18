@@ -1969,6 +1969,14 @@ export default class Collection<S, T = CollectionItem<S>> extends mixin<
       this._nextVersion();
    }
 
+   setActiveItem(item: CollectionItem<S>): void {
+      this._itemActionsManager.setActiveItem(item);
+   }
+
+   getActiveItem(): CollectionItem<S> {
+      return this._itemActionsManager.getActiveItem() as CollectionItem<S>;
+   }
+
    getSearchValue(): string {
       return this._$searchValue;
    }
