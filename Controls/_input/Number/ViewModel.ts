@@ -2,7 +2,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
 
 import {format} from 'Controls/_input/Number/format';
-import {IText, paste} from 'Controls/_input/Base/Util';
+import {IText, paste, replaceWithRepositioning} from 'Controls/_input/Base/Util';
 import {IParsedNumber, parse} from 'Controls/_input/Number/parse';
 import {decimalSplitter, decimalSplitters} from 'Controls/_input/Number/constant';
 
@@ -93,13 +93,10 @@ const _private = {
         return {value, carriagePosition};
     },
 
-    pasteInFractionalPart: function ({value, carriagePosition}: IText, parsedNumber: IParsedNumber) {
+    pasteInFractionalPart: function (original: IText, parsedNumber: IParsedNumber): IText {
         const pastedValue: string = parsedNumber.integer + parsedNumber.fractional;
 
-        value = paste(value, pastedValue, carriagePosition);
-        carriagePosition += pastedValue.length;
-
-        return {value, carriagePosition};
+        return replaceWithRepositioning(original, pastedValue, original.carriagePosition);
     }
 };
 
