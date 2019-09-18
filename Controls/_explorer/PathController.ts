@@ -12,6 +12,7 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
          if (options.items && options.header && options.header.length && !options.header[0].title && !options.header[0].template) {
             newHeader = options.header.slice();
             newHeader[0] = {
+               ...options.header[0],
                template: HeadingPathBack,
                templateOptions: {
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
@@ -21,7 +22,6 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
                   backButtonCaption: ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty),
                   counterCaption: options.items[options.items.length - 1].get('counterCaption')
                },
-               width: options.header[0].width,
 
                // TODO: удалить эту опцию после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
                isBreadCrumbs: true
