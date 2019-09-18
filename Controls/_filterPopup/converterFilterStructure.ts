@@ -10,7 +10,8 @@ import Utils = require('Types/util');
          caption: 'internalCaptionField',
          value: 'value',
          resetValue: 'resetValue',
-         textValue: 'caption'
+         textValue: 'caption',
+         visibility: 'visibilityValue'
       };
       
       /* Мапинг старой стрктуры в новую */
@@ -39,7 +40,7 @@ import Utils = require('Types/util');
               .each(function(item) {
                   var rsItem = {};
                   for (var i in recordToSructureElemMap) {
-                      if (Utils.object.getPropertyValue(item, recordToSructureElemMap[i]) && recordToSructureElemMap.hasOwnProperty(i)) {
+                      if (Utils.object.getPropertyValue(item, recordToSructureElemMap[i]) !== undefined && recordToSructureElemMap.hasOwnProperty(i)) {
                           rsItem[i] = Utils.object.getPropertyValue(item, recordToSructureElemMap[i]);
                       }
                   }
