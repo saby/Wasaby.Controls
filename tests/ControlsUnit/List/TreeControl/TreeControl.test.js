@@ -36,6 +36,7 @@ define([
       });
       baseControl = new listMod.BaseControl(cfgBaseControl);
       baseControl.saveOptions(cfgBaseControl);
+      baseControl.cancelEdit = function() {};
       baseControl._beforeMount(cfgBaseControl);
       treeControl._children = {
          baseControl: baseControl
