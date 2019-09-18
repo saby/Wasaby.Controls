@@ -20,7 +20,6 @@
       <Controls.explorer:View
          keyProperty="id"
          parentProperty="parent"
-         showActionButton="{{true}}"
          nodeProperty="parent@"
          displayProperty="title"
          columns="{{_columns1}}"
