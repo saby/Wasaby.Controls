@@ -30,6 +30,7 @@ var _private = {
 
             //save last right order
             rightOrder--;
+            instance._lastRightOrder = rightOrder;
 
             return {
                items,
@@ -42,7 +43,7 @@ var _private = {
          self._items = data.items;
          self._itemsOrder = data.itemsOrder;
          self._lastRightOrder = data.lastRightOrder;
-         },
+      },
       prepareItemOrder: function(order) {
          return '-ms-flex-order:' + order + '; order:' + order;
       },
