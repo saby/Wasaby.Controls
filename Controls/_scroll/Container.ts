@@ -458,7 +458,10 @@ var
       },
 
       setShadowMode: function(shadowVisibleObject) {
-         this._shadowVisiblityMode = shadowVisibleObject;
+         this._shadowVisiblityMode = {
+            top: shadowVisibleObject.top,
+            bottom : shadowVisibleObject.bootom
+         };
       },
 
       setOverflowScrolling: function(value: string) {
