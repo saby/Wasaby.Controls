@@ -353,6 +353,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
             this._root = newOptions.root;
             this._updatedRoot = true;
+            this._children.baseControl.cancelEdit();
         }
         if (this._needResetExpandedItems) {
             this._children.baseControl.getViewModel().resetExpandedItems();

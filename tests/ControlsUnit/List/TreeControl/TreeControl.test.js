@@ -36,6 +36,7 @@ define([
       });
       baseControl = new listMod.BaseControl(cfgBaseControl);
       baseControl.saveOptions(cfgBaseControl);
+      baseControl.cancelEdit = function() {};
       baseControl._beforeMount(cfgBaseControl);
       treeControl._children = {
          baseControl: baseControl
@@ -1076,6 +1077,27 @@ define([
                result = treeControl.commitEdit();
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
+         });
+
+         it('cancelEdit on change root', function() {
+            var
+               treeControl = correctCreateTreeControl({
+                  columns: [],
+                  source: new sourceLib.Memory(),
+                  items: new collection.RecordSet({
+                     rawData: [],
+                     idProperty: 'id'
+                  }),
+                  root: 'test'
+               }),
+               cancelEditCalled = false;
+            treeControl._children.baseControl.cancelEdit = function() {
+               cancelEditCalled = true;
+            };
+            treeControl._beforeUpdate({
+               root: 'test2'
+            });
+            assert.isTrue(cancelEditCalled);
          });
       });
       it('All items collapsed after reload', function() {
