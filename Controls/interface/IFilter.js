@@ -12,6 +12,8 @@ define('Controls/interface/IFilter', [
    /**
     * @name Controls/interface/IFilter#filter
     * @cfg {Object} Конфигурация объекта фильтра. Фильтр отправляется в запрос к источнику для получения данных.
+    * @remark
+    * При изменении фильтра важно передавать новый объект фильтра, изменение объекта по ссылке не приведет к желаемому результату.
     * @example
     * В данном примере в списке будет отображаться 2 элемента.
     * TMPL:
@@ -47,6 +49,8 @@ define('Controls/interface/IFilter', [
    /*
     * @name Controls/interface/IFilter#filter
     * @cfg {Object} Filter configuration - object with field names and their values.
+    * @remark
+    * You must pass a new filter object when you change the filter. You won't get the desired result if you change the object by reference.
     * @example
     * In this example, the list will be displayed 2 items.
     * TMPL:
