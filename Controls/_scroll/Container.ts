@@ -13,6 +13,7 @@ import 'Controls/_scroll/Scroll/Watcher';
 import 'Controls/event';
 import 'Controls/_scroll/Scroll/Scrollbar';
 import 'css!theme?Controls/scroll';
+import * as newEnv from 'Core/helpers/isNewEnvironment';
 
 
 /**
@@ -389,6 +390,12 @@ var
          if (needUpdate) {
             this._forceUpdate();
          }
+
+          //TODO Compatibility на старых страницах нет Register, который скажет controlResize
+          this._resizeHandler = this._resizeHandler.bind(this);
+          if (!newEnv() && window) {
+              window.addEventListener('resize', this._resizeHandler);
+          }
       },
 
       _beforeUpdate: function(options, context) {
@@ -409,6 +416,13 @@ var
             this._forceUpdate();
          }
       },
+
+       _beforeUnmount(): void {
+           //TODO Compatibility на старых страницах нет Register, который скажет controlResize
+           if (!newEnv() && window) {
+               window.removeEventListener('resize', this._resizeHandler);
+           }
+       },
 
       _isShadowVisibleMode: function() {
          return this._shadowVisiblityMode.top === 'visible' || this._shadowVisiblityMode.bottom === 'visible';
