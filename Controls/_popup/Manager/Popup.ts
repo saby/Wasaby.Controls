@@ -207,14 +207,6 @@ class Popup extends Control<IPopupOptions> {
         this._notify('popupResult', popupResultArgs, {bubbling: true});
     }
 
-    protected _swipeHandler(event: SyntheticEvent<TouchEvent>): void {
-        // close popup by swipe only for vdom, cause ws3 controls use differ system of swipe,
-        // we can't stop it on vdom controls.
-        if (event.nativeEvent.direction === 'right' && !this._options.isCompoundTemplate) {
-            this._close();
-        }
-    }
-
     /**
      * key up handler
      * @function Controls/_popup/Manager/Popup#_keyUp
