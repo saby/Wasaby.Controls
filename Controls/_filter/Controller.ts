@@ -170,6 +170,28 @@ const _private = {
             }
          },
 
+         getHistoryByItems(historyId: string, items: Array) {
+             const historySource = historyUtils.getHistorySource({historyId});
+             const history = historySource.getItems();
+
+             let result;
+             let historyItem;
+
+             if (history && history.getCount()) {
+                 history.each((item) => {
+                     if (!result) {
+                         historyItem = historySource.getDataObject(item.get('ObjectData'));
+
+                         if (isEqual(_private.minimizeFilterItems(items), historyItem.items || historyItem)) {
+                             result = historyItem;
+                         }
+                     }
+                 });
+             }
+
+             return result;
+         },
+
          itemsIterator: function(filterButtonItems, fastDataItems, differentCallback, equalCallback) {
             function processItems(items) {
                chain.factory(items).each(function(elem) {
@@ -684,7 +706,16 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             _private.applyItemsToFilter(this, this._filter, items);
 
              if (this._options.prefetchParams) {
-                 this._filter = Prefetch.clearPrefetchSession(this._filter);
+                 const history = _private.getHistoryByItems(this._options.historyId, this._filterButtonItems);
+
+                 if (history) {
+                     if (!Prefetch.getPrefetchFromHistory(history) || Prefetch.needInvalidatePrefetch(history)) {
+                         this._filter = Prefetch.clearPrefetchSession(this._filter);
+                     } else {
+                         this._filter = Prefetch.applyPrefetchFromHistory(this._filter, history);
+                     }
+                 }
+
                  this._changedFilterItems = items;
              } else if (this._options.historyId) {
                  _private.addToHistory(this, this._filterButtonItems, this._fastFilterItems, this._options.historyId);
