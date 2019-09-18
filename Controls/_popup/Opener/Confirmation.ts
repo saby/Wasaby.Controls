@@ -181,6 +181,7 @@ const _private = {
         const popupOptions = {
             template: 'Controls/popupTemplate:ConfirmationDialog',
             modal: true,
+            autofocus: templateOptions.autofocus, // TODO: в 700 безусловно без опции, для того, чтобы можно было работать с клавиатуры
             className: 'controls-Confirmation_popup',
             templateOptions
         };
