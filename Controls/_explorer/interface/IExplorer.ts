@@ -72,12 +72,12 @@
  * @name Controls/_explorer/interface/IExplorer#showActionButton
  * @cfg {Boolean} Определяет, должна ли отображаться стрелка рядом с кнопкой «назад».
  * @default
- * true
+ * false
  */
 
 /*
  * @name Controls/_explorer/interface/IExplorer#showActionButton
  * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
  * @default
- * true
+ * false
  */
