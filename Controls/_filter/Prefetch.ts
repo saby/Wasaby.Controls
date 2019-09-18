@@ -101,5 +101,6 @@ export {
     addPrefetchToHistory,
     needInvalidatePrefetch,
     prepareFilter,
-    clearPrefetchSession
+    clearPrefetchSession,
+    getPrefetchFromHistory
 };
