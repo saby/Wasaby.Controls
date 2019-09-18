@@ -18,6 +18,9 @@ import { IItemData, IListModel } from 'Controls/_list/interface/IListViewModel';
 import HorizontalMeasurer from 'Controls/_list/Swipe/HorizontalMeasurer';
 import VerticalMeasurer from 'Controls/_list/Swipe/VerticalMeasurer';
 
+import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate';
+import * as renderSwipeTemplate from 'wml!Controls/_list/Render/resources/SwipeTemplate';
+
 const MEASURER_NAMES: Record<ISwipeControlOptions['actionAlignment'], IMeasurer> = {
    horizontal: HorizontalMeasurer,
    vertical: VerticalMeasurer
@@ -30,6 +33,7 @@ export default class SwipeControl extends Control {
    private _swipeConfig: ISwipeConfig;
    private _animationState: 'close' | 'open' = 'close';
    private _actionAlignment: 'horizontal' | 'vertical';
+   private _swipeTemplate = swipeTemplate;
 
    constructor(options: ISwipeControlOptions) {
       super();
@@ -170,6 +174,9 @@ export default class SwipeControl extends Control {
    _beforeMount(newOptions: ISwipeControlOptions): void {
       this._updateModel(newOptions);
       this._setMeasurer(newOptions.actionAlignment);
+      if (newOptions.useNewModel) {
+         this._swipeTemplate = renderSwipeTemplate;
+      }
    }
 
    _beforeUpdate(

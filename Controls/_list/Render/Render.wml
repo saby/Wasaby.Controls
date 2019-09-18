@@ -7,8 +7,8 @@
             keyPrefix="{{ _templateKeyPrefix }}"
 
             itemActionsPosition="{{ _options.itemActionsPosition }}"
-            itemActionsTemplate="{{ _itemActionsTemplate }}"
-            swipeTemplate="{{ _swipeTemplate }}"
+            itemActionsTemplate="{{ _options.itemActionsTemplate }}"
+            swipeTemplate="{{ _options.swipeTemplate }}"
             multiSelectTpl="{{ _options.multiSelectTpl }}"
             editingItemData="{{ _options.editingItemData }}"
             isAdd="{{ _options.isAdd }}"

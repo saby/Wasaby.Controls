@@ -22,7 +22,8 @@
             template="{{ contentTemplate }}"
             item="{{ item }}"
             useNewModel="{{ true }}"
-            searchValue="{{ searchValue }}" />
+            searchValue="{{ searchValue }}"
+            itemActionsTemplate="{{ itemActionsTemplate }}" />
       </div>
    </ws:if>
    <ws:else>
@@ -36,16 +37,7 @@
          <ws:partial
             template="{{ swipeTemplate }}"
             item="{{ item }}"
-            itemActionsTemplate="{{ itemActionsTemplate }}"
-
-            style="default"
-            highlightOnHover="{{ true }}"
-            itemActionsPosition="inside"
-            actionAlignment="horizontal"
-            actionCaptionPosition="bottom"
-            needSeparator="{{ true }}"
-            needIcon="{{ item.isSwiped.bind(item) }}"
-            needTitle="{{ item.isSwiped }}">
+            itemActionsTemplate="{{ itemActionsTemplate }}">
             <ws:swipeConfig itemActionsSize="m" paddingSize="s"/>
          </ws:partial>
       </ws:if>
@@ -53,15 +45,7 @@
          <ws:partial
             template="{{ itemActionsTemplate }}"
             itemActionsClass="{{ itemActionsClass }}"
-            item="{{ item }}"
-
-            style="default"
-            highlightOnHover="{{ true }}"
-            size="m"
-            itemActionsPosition="inside"
-            toolbarVisibility="{{ true }}"
-            actionMenuIsShown="{{ true }}"
-            itemActionsContainerStyles="" />
+            item="{{ item }}" />
       </ws:else>
    </ws:if>
 </div>

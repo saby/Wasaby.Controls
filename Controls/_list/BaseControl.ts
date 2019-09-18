@@ -902,17 +902,16 @@ var _private = {
     },
 
     showActionsMenu: function(self, event, itemData, childEvent, showAll) {
-        var
-            context = event.type === 'itemcontextmenu',
-            showActions;
-        if ((context && self._isTouch) || !itemData.itemActions) {
+        const context = event.type === 'itemcontextmenu';
+        const itemActions = self._options.useNewModel ? itemData.getActions() : itemData.itemActions;
+        if ((context && self._isTouch) || !itemActions) {
             return false;
         }
-        showActions = showAll && itemData.itemActions.all
-            ? itemData.itemActions.all
-            : itemData.itemActions && itemData.itemActions.all.filter(function(action) {
-                return action.showType !== showType.TOOLBAR;
-            });
+        const showActions = showAll && itemActions.all
+            ? itemActions.all
+            : itemActions && itemActions.all.filter(
+                (action) => action.showType !== showType.TOOLBAR
+            );
         /**
          * During an opening of a menu, a row can get wrapped in a HoC and it would cause a full redraw of the row,
          * which would remove the target from the DOM.
@@ -921,13 +920,15 @@ var _private = {
          */
         const target = context ? null : _private.mockTarget(childEvent.target);
         if (showActions && showActions.length) {
-            var
-                rs = new collection.RecordSet({ rawData: showActions, keyProperty: 'id' });
+            const rs = new collection.RecordSet({ rawData: showActions, keyProperty: 'id' });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             self._listViewModel.setActiveItem(itemData);
-            self._listViewModel.setMenuState('shown');
-            self._itemWithShownMenu = itemData.item;
+            if (!self._options.useNewModel) {
+                // TODO Do we need this in new model?
+                self._listViewModel.setMenuState('shown');
+            }
+            self._itemWithShownMenu = self._options.useNewModel ? itemData.getContents() : itemData.item;
             require(['css!theme?Controls/toolbars'], function() {
                 const defaultMenuConfig = {
                    items: rs,
@@ -969,7 +970,7 @@ var _private = {
 
     showActionMenu(
        self: Control,
-       itemData: object,
+       itemData,
        childEvent: Event,
        action: object
     ): void {
@@ -977,10 +978,14 @@ var _private = {
         * For now, BaseControl opens menu because we can't put opener inside ItemActionsControl, because we'd get 2 root nodes.
         * When we get fragments or something similar, it would be possible to move this code where it really belongs.
         */
-       const children = self._children.itemActions.getChildren(action, itemData.itemActions.all);
+       const itemActions = self._options.useNewModel ? itemData.getActions() : itemData.itemActions;
+       const children = self._children.itemActions.getChildren(action, itemActions.all);
        if (children.length) {
           self._listViewModel.setActiveItem(itemData);
-          self._listViewModel.setMenuState('shown');
+          if (!self._options.useNewModel) {
+             // TODO Do we need this in new model?
+             self._listViewModel.setMenuState('shown');
+          }
           require(['css!Controls/input'], () => {
              self._children.itemActionsOpener.open({
                 opener: self._children.listView,
@@ -1018,7 +1023,10 @@ var _private = {
 
         function closeMenu() {
             self._listViewModel.setActiveItem(null);
-            self._listViewModel.setMenuState('hidden');
+            if (!self._options.useNewModel) {
+                // TODO Do we need this in new model?
+                self._listViewModel.setMenuState('hidden');
+            }
             self._children.swipeControl.closeSwipe();
             self._menuIsShown = false;
             self._itemWithShownMenu = null;
@@ -2036,7 +2044,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _onItemContextMenu: function(event, itemData) {
         this._showActionsMenu.apply(this, arguments);
-        this._listViewModel.setMarkedKey(itemData.key);
+        if (this._options.useNewModel) {
+            this._listViewModel.setMarkedItem(itemData);
+        } else {
+            this._listViewModel.setMarkedKey(itemData.key);
+        }
     },
 
     _closeActionsMenu: function(args) {
