@@ -40,12 +40,12 @@
 
 /**
  * @name Controls/_explorer/interface/IExplorer#root
- * @cfg {Number} Идентификатор корневого узла.
+ * @cfg {Number|String} Идентификатор корневого узла.
  */
 
 /*
  * @name Controls/_explorer/interface/IExplorer#root
- * @cfg {Number} Identifier of the root node.
+ * @cfg {Number|String} Identifier of the root node.
  */
 
 /**
