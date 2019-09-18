@@ -21,9 +21,7 @@ define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPop
 
    describe('Controls._suggestPopup.Layer.__PopupContent', function() {
       it('_beforeUpdate', function() {
-         let
-            isScrollToBottom = false,
-            layer = new PopupContent.default(),
+         let layer = new PopupContent.default(),
             optionsReverseList = {
                stickyPosition: {
                   verticalAlign: {
@@ -32,17 +30,11 @@ define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPop
                }
             };
 
-         layer._children = {
-            scrollContainer: {
-               scrollToBottom: () => {isScrollToBottom = true;}
-            }
-         };
-
          layer._beforeUpdate({});
-         assert.isFalse(isScrollToBottom);
+         assert.isFalse(layer._shouldScrollToBottom);
 
          layer._beforeUpdate(optionsReverseList);
-         assert.isTrue(isScrollToBottom);
+         assert.isTrue(layer._shouldScrollToBottom);
       });
 
       it('afterUpdate', function() {
@@ -117,7 +109,25 @@ define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPop
 
          assert.equal(PopupContent.default._private.getSuggestWidth(target, container), 48);
          PopupContent.default._private.getBorderWidth = originGetBorderWidth;
-      })
+      });
+
+      it('_beforePaint', function() {
+         const layer = new PopupContent.default();
+         let isScrollToBottom = false;
+
+         layer._children = {
+            scrollContainer: {
+               scrollToBottom: () => {isScrollToBottom = true;}
+            }
+         };
+
+         layer._beforePaint();
+         assert.isFalse(isScrollToBottom);
+
+         layer._shouldScrollToBottom = true;
+         layer._beforePaint();
+         assert.isTrue(isScrollToBottom);
+      });
 
    });
 
