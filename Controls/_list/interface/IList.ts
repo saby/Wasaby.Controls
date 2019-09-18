@@ -572,23 +572,23 @@
 
 /**
  * @event Controls/_list/interface/IList#itemClick Происходит при клике на элемент списка.
- * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
- * @param {Types/entity:Record} item Элемент, по которому производим клик.
+ * @param {Types/entity:Record} item Элемент, по которому кликнули.
+ * @param {Object} nativeEvent Объект нативного события браузера.
  */
 
  /*
  * @event Controls/_list/interface/IList#itemClick Occurs when list item is clicked.
- * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @param {Vdom/Vdom:SyntheticEvent} event Event object.
  * @param {Types/entity:Record} item Clicked item.
+ * @param {Object} nativeEvent Native event object.
  */
 
 /**
  * @event Controls/_list/interface/IList#itemSwipe Происходит при жесте "swipe" на элементе списка.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Экземпляр элемента списка, по которому производим swipe.
- * @param {Vdom/Vdom:SyntheticEvent} originalEvent Дескриптор исходного события.
+ * @param {Object} nativeEvent Объект нативного события браузера.
  * @remark
  * Событие срабатывает, только если со списком ничего не происходит при жесте "swipe" (например, если список поддерживает выбор, он будет только устанавливать флаг). Это поведение схоже с {@link Controls/_list/interface/IList#itemClick itemClick}.
  */
@@ -597,7 +597,7 @@
  * @event Controls/_list/interface/IList#itemSwipe Occurs when list item is swiped.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the swiped item.
- * @param {Vdom/Vdom:SyntheticEvent} originalEvent Descriptor of the original event. It is useful if you want to get direction or target.
+ * @param {Object} nativeEvent Descriptor of the original event. It is useful if you want to get direction or target.
  * @remark
  * This event fires only if the list doesn't do anything on swipe (e.g., if the list supports selection - it will toggle checkbox and that's it). This behavior is in line with the {@link Controls/_list/interface/IList#itemClick itemClick}.
  */
