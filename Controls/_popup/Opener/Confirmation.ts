@@ -146,7 +146,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  */
 
 /**
- * @name Controls/_popup/Opener/Confirmation#PrimaryAction
+ * @name Controls/_popup/Opener/Confirmation#primaryAction
  * @cfg {String} Определяет, какая кнопка будет активирована по нажатию ctrl+enter
  * @variant yes
  * @variant no
@@ -154,7 +154,7 @@ import isNewEnvironment = require('Core/helpers/isNewEnvironment');
  */
 
 /*
- * @name Controls/_popup/Opener/Confirmation#PrimaryAction
+ * @name Controls/_popup/Opener/Confirmation#primaryAction
  * @cfg {String} Determines which button is activated when ctrl+enter is pressed
  * @variant yes
  * @variant no
