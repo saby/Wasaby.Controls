@@ -649,6 +649,11 @@ var CompoundArea = CompoundContainer.extend([
       const compoundArea = target.closest('.controls-CompoundArea');
       let opener;
 
+      // don't check overlay
+      if (target.hasClass('controls-Container__overlay')) {
+         return true;
+      }
+
       if (compoundArea.length) {
          opener = compoundArea[0].controlNodes[0].control.getOpener();
       }
