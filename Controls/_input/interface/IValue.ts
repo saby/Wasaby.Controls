@@ -168,7 +168,7 @@ export interface IValueOptions<T> {
 
 /**
  * @name Controls/_input/interface/IValue#inputCompleted 
- * @event Происходит при завершении ввода. Завершение ввода - это контрол потерял фокус, или пользователь нажал "enter".
+ * @event Происходит при завершении ввода. Завершение ввода — это контрол потерял фокус, или пользователь нажал клавишу "Enter".
  * @param {String} value Значение контрола ввода.
  * @param {String} displayValue Отображаемое значение контрола ввода.
  * @remark
