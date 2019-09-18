@@ -73,7 +73,8 @@ var
            columnsLength: number,
 
            // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-           isHeaderBreadCrumbs: boolean = false
+           isHeaderBreadCrumbs: boolean = false,
+           maxEndRow: number
         ): string {
             let
                 multiselectOffset = (multiSelectVisibility === 'hidden' ? 0 : 1);
@@ -89,7 +90,7 @@ var
                     // перебивание стилей будет убрано по https://online.sbis.ru/opendoc.html?guid=a0c4964a-2474-4fb6-ab8c-ffab9db62dd0
                     return ` -ms-grid-column: 1; -ms-grid-column-span: ${multiselectOffset + 1}; grid-column: 1 / ${multiselectOffset + 2};`;
                  } else {
-                    return ` grid-column: 1 / ${multiselectOffset + 2};`;
+                    return ` grid-column: 1 / ${multiselectOffset + 2};` + ((maxEndRow > 2) ? ` grid-row: 1 / ${maxEndRow};` : '');
                  }
               } else {
                   if (GridLayoutUtil.isNoGridSupport()) {
@@ -714,7 +715,8 @@ var
         },
         _prepareHeaderColumns: function(columns, multiSelectVisibility) {
             if (columns && columns.length) {
-                this._headerRows = getRowsArray(columns, multiSelectVisibility);
+                this._isMultyHeader = this.isMultyHeader(columns);
+                this._headerRows = getRowsArray(columns, multiSelectVisibility, this._isMultyHeader);
                 [this._maxEndRow, this._maxEndColumn] = getMaxEndRow(this._headerRows);
                 if (multiSelectVisibility && columns[0] && columns[0].isBreadCrumbs) {
                     this._headerRows[0][0].hiddenForBreadCrumbs = true;
@@ -867,7 +869,8 @@ var
                   this._options.multiSelectVisibility,
                   columnIndex,
                   this._headerRows[0].length,
-                  true
+                  true,
+                  this._maxEndRow,
                );
                headerColumn.colSpan = _private.getColspanForNoGridSupport(this._options.multiSelectVisibility, true);
             }
