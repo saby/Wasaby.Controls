@@ -193,7 +193,6 @@ var CompoundArea = CompoundContainer.extend([
       // Слой совместимости нотифаит событие manager'a за него, т.к. только он знает, когда будет построен старый шаблон
       const item = this._getManagerConfig();
       const popupItems = Controller.getContainer()._popupItems;
-      this._setCustomHeaderAsync();
       // Нотифай события делаю в следующий цикл синхронизации после выставления позиции окну.
       this._notifyVDOM('managerPopupCreated', [item, popupItems], {bubbling: true});
    },
@@ -259,7 +258,8 @@ var CompoundArea = CompoundContainer.extend([
          this._waitClose = false;
          this.close();
       } else {
-         runDelayed(function() {
+          self._setCustomHeaderAsync();
+          runDelayed(function() {
             // Перед автофокусировкой нужно проверить, что фокус уже не находится внутри
             // панели, т. к. этот callback вызывается уже после полного цикла создания
             // старой области, и фокус могли проставить с прикладной стороны (в onInit,
