@@ -556,5 +556,49 @@ define([
          model.setCollapsedGroups(['1']);
          assert.isFalse(model.isAllGroupsCollapsed());
       });
+
+       it('updatePrefix should notify collectionChanged', function () {
+           const cfg = {
+               keyProperty: 'id',
+               items: new collection.RecordSet({
+                   rawData: [
+                       {id: 0},
+                       {id: 1}
+                   ],
+                   idProperty: 'id'
+               }),
+           };
+
+           const model = new list.ItemsViewModel(cfg);
+           const orNotify = model._notify;
+           const orNMV = model._nextModelVersion;
+           let isUpdated = false;
+
+
+           model._notify = (name) => {
+               if (name === 'onCollectionChange') {
+                   return 'updatePrefix';
+               }
+               orNotify.apply(model, arguments);
+           };
+
+           model._nextModelVersion = (notUpdatePrefixItemVersion, changesType) => {
+               assert.equal(changesType, 'collectionChanged');
+               assert.isFalse(notUpdatePrefixItemVersion);
+               isUpdated = true;
+               orNMV.apply(model, arguments);
+           };
+
+           model.appendItems(new collection.RecordSet({
+               rawData: [
+                   {id: 10},
+                   {id: 11}
+               ],
+               idProperty: 'id'
+           }));
+
+           assert.isTrue(isUpdated);
+
+       });
    })
 });
