@@ -23,12 +23,9 @@ define([
          var
             instance = new PathBack.default(),
             notifyCalled = false;
-         instance._notify = function(eventName, eventArgs, eventOpts) {
+         instance._notify = function(eventName, eventArgs) {
             assert.equal('arrowClick', eventName);
             assert.deepEqual([], eventArgs);
-            assert.deepEqual({
-               bubbling: true
-            }, eventOpts);
             notifyCalled = true;
          };
          instance._onArrowClick();
