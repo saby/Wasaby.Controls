@@ -114,6 +114,7 @@ var _private = {
             sorting = cClone(cfg.sorting),
             navigation = cClone(cfg.navigation),
             resDeferred = new Deferred();
+        self._noDataBeforeReload = self._isMounted && (!self._listViewModel || !self._listViewModel.getCount());
         if (cfg.beforeReloadCallback) {
             // todo parameter cfg removed by task: https://online.sbis.ru/opendoc.html?guid=f5fb685f-30fb-4adc-bbfe-cb78a2e32af2
             cfg.beforeReloadCallback(filter, sorting, navigation, cfg);
@@ -1321,7 +1322,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _blockItemActionsByScroll: false,
 
     _needBottomPadding: false,
-    _emptyTemplateVisibility: true,
+    _noDataBeforeReload: null,
     _intertialScrolling: null,
     _checkLoadToDirectionTimeout: null,
 
@@ -1767,8 +1768,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.clearReloadedMarks();
             this._itemReloaded = false;
         }
-
-        this._emptyTemplateVisibility = this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel, this._loadingState);
     },
 
     __onPagingArrowClick: function(e, arrow) {
@@ -1832,17 +1831,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    __needShowEmptyTemplate: function(emptyTemplate: Function | null, listViewModel: ListViewModel, loadingState: LoadingState): boolean {
-        const newEmptyTemplateVisibility = emptyTemplate &&
-                                           !listViewModel.getCount() && !listViewModel.getEditingItemData() &&
-                                           (!loadingState || loadingState === 'all');
-
-        // TODO: KINGO
-        // Загружаются данные по скролу, первые несколько страниц оказываются пустыми (как в реестре контакы),
-        // в этот момент вызывают перезагрузку реестра (например поиском или фильтрацией)
-        // и мы не должны показывать в этом случае заглушку, что нет данных,
-        // пока реестр не загрузится
-        return newEmptyTemplateVisibility && (this._emptyTemplateVisibility || !loadingState);
+    __needShowEmptyTemplate: function(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
+        // Described in this document: https://docs.google.com/spreadsheets/d/1fuX3e__eRHulaUxU-9bXHcmY9zgBWQiXTmwsY32UcsE
+        const noData = !listViewModel.getCount();
+        const noEdit = !listViewModel.getEditingItemData();
+        const isLoading = this._sourceController.isLoading();
+        const hasMore = this._sourceController.hasMoreData('down') || this._sourceController.hasMoreData('up');
+        const noDataBeforeReload = this._noDataBeforeReload;
+        return noEdit && (isLoading || hasMore ? noData && noDataBeforeReload : noData);
     },
 
     _onCheckBoxClick: function(e, key, status) {
