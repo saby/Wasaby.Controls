@@ -262,11 +262,11 @@ function getContactsCatalogWithActions() {
     return catalog;
 }
 
-interface  IGenerateDataOptions {
+interface  IGenerateDataOptions<TEntityData = {}> {
     count: number,
     keyProperty?: string,
     entityTemplate?: Record<string, 'number'|'string'|'lorem'>,
-    beforeCreateItemCallback?: (item) => void | false
+    beforeCreateItemCallback?: (item: TEntityData) => void | false
 }
 
 /**
@@ -277,9 +277,9 @@ interface  IGenerateDataOptions {
  * @returns {Array<TEntityData extends Record<string, any>>}
  */
 function generateData<
-    TEntityData extends Record<string, any> = {id: number, title: string}
+    TEntityData extends Record<string, any> = {}
     >(
-        {count, entityTemplate = {id: 'number', title: 'string'}, keyProperty = 'id', beforeCreateItemCallback = () => {}}: IGenerateDataOptions
+        {count, entityTemplate = {id: 'number', title: 'string'}, keyProperty = 'id', beforeCreateItemCallback = () => {}}: IGenerateDataOptions<TEntityData>
     ): Array<TEntityData> {
 
     const items: Array<TEntityData> = [];
