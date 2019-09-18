@@ -35,7 +35,7 @@ var _private = {
             return {
                items: items,
                itemsOrder: itemsOrder,
-               rightOrder: rightOrder
+               lastRightOrder: instance._lastRightOrder
             };
          });
       },
@@ -452,7 +452,7 @@ var _private = {
       _template: TabButtonsTpl,
       _items: null,
       _itemsOrder: null,
-      _rightOrder: null,
+      _lastRightOrder: null,
       _defaultItemTemplate: ItemTemplate,
 
       /* Функции, передаваемые с сервера на клиент в receivedState, не могут корректно десериализоваться.
@@ -478,12 +478,12 @@ var _private = {
          if (receivedState && !this.checkHasFunction(receivedState)) {
             this._items = receivedState.items;
             this._itemsOrder = receivedState.itemsOrder;
-            this._rightOrder = receivedState.rightOrder;
+            this._lastRightOrder = receivedState.lastRightOrder;
          } else if (options.source) {
             return _private.initItems(options.source, this).addCallback(function(result) {
                this._items = result.items;
                this._itemsOrder = result.itemsOrder;
-               this._rightOrder = result.rightOrder;
+               this._lastRightOrder = result.lastRightOrder;
                return result;
             }.bind(this));
          }
@@ -493,7 +493,7 @@ var _private = {
             return _private.initItems(newOptions.source, this).addCallback(function(result) {
                this._items = result.items;
                this._itemsOrder = result.itemsOrder;
-               this._rightOrder = result.rightOrder;
+               this._lastRightOrder = result.lastRightOrder;
                this._forceUpdate();
             }.bind(this));
          }
