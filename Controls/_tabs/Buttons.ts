@@ -30,15 +30,19 @@ var _private = {
 
             //save last right order
             rightOrder--;
-            instance._lastRightOrder = rightOrder;
 
             return {
-               items: items,
-               itemsOrder: itemsOrder,
-               lastRightOrder: instance._lastRightOrder
+               items,
+               itemsOrder,
+               lastRightOrder: rightOrder
             };
          });
       },
+      prepareState(self, data): void {
+         self._items = data.items;
+         self._itemsOrder = data.itemsOrder;
+         self._lastRightOrder = data.lastRightOrder;
+         },
       prepareItemOrder: function(order) {
          return '-ms-flex-order:' + order + '; order:' + order;
       },
@@ -476,26 +480,20 @@ var _private = {
 
       _beforeMount: function(options, context, receivedState) {
          if (receivedState && !this.checkHasFunction(receivedState)) {
-            this._items = receivedState.items;
-            this._itemsOrder = receivedState.itemsOrder;
-            this._lastRightOrder = receivedState.lastRightOrder;
+            _private.prepareState(this, receivedState);
          } else if (options.source) {
-            return _private.initItems(options.source, this).addCallback(function(result) {
-               this._items = result.items;
-               this._itemsOrder = result.itemsOrder;
-               this._lastRightOrder = result.lastRightOrder;
+            return _private.initItems(options.source, this).addCallback((result) => {
+               _private.prepareState(this, result);
                return result;
-            }.bind(this));
+            });
          }
       },
       _beforeUpdate: function(newOptions) {
          if (newOptions.source && newOptions.source !== this._options.source) {
-            return _private.initItems(newOptions.source, this).addCallback(function(result) {
-               this._items = result.items;
-               this._itemsOrder = result.itemsOrder;
-               this._lastRightOrder = result.lastRightOrder;
+            return _private.initItems(newOptions.source, this).addCallback((result) => {
+               _private.prepareState(this, result);
                this._forceUpdate();
-            }.bind(this));
+            });
          }
       },
       _onItemClick: function(event, key) {
