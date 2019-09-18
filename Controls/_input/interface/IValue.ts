@@ -24,6 +24,7 @@ export type ICallback<T> = (data: ICallbackData<T>) => IFieldData;
  * Интерфейс управления значением поля ввода.
  *
  * @interface Controls/_input/interface/IValue
+ * @author Журавлёв М.С.
  * @public
  */
 export interface IValueOptions<T> {
