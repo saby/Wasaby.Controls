@@ -999,7 +999,7 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '1 234.7856',
+                     value: '1 234.78',
                      position: 8
                   },
                   inputType: 'insert'
@@ -1163,7 +1163,7 @@ define(
             it(item.testName, function() {
                var numberViewModel = new NumberViewModel(item.controlConfig, 0);
 
-               numberViewModel.handleInput(item.splitValue, item.inputType)
+               numberViewModel.handleInput(item.splitValue, item.inputType);
                assert.equal(numberViewModel.displayValue, item.result.value);
             });
          });
