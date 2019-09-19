@@ -295,7 +295,7 @@ var _Controller = Control.extend({
    _beforeMount: function (options, context, receivedState) {
       this._onResult = _private.onResult.bind(this);
       _private.setHandlers(this, options);
-      if (!options.lazyItemsLoad) {
+      if (!options.lazyItemsLoading) {
          if (receivedState) {
             let self = this;
             this._setItems(receivedState);
@@ -327,7 +327,7 @@ var _Controller = Control.extend({
          !isEqual(newOptions.filter, this._options.filter)) {
          this._source = null;
          this._sourceController = null;
-         if (newOptions.lazyItemsLoad && !this._children.DropdownOpener.isOpened()) {
+         if (newOptions.lazyItemsLoading && !this._children.DropdownOpener.isOpened()) {
             /* source changed, items is not actual now */
             this._setItems(null);
          } else {
