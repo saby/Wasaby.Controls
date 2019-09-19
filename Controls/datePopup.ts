@@ -467,7 +467,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
         if (!isNaN(key)) {
              const startField = this._children.startValueField._container.querySelector('input');
              const endField = this._children.endValueField._container.querySelector('input');
-             if (startField.selectionStart === this._options.mask.length) {
+             if (startField.selectionStart === this._mask.length) {
                 this._children.endValueField.activate();
                 endField.setSelectionRange(0, 0);
              }
