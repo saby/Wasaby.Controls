@@ -144,8 +144,24 @@ const _private = {
 
     addStackClasses(popupOptions) {
         const className = popupOptions.className || '';
+
+        /**
+         * Класс в переменной STACK_CLASS добавляет overflow: hidden на контейнер.
+         * При увеличении размеров контрола пользователем, через механизм перетаскивания границ, в safari не видно области увеличения.
+         * В случае, если прикладники все настроили верно, то этот класс больше не нужен. Защитимся от ошибок прикладников.
+         * в 610 версии. Для этого избавляемся от класса в 610 и при наличии перетаскивания границ (определено свойство propStorageId),
+         * потому что все прикладные места с перетаскиванием настроены правильно. В 710 избавляемся полностью.
+         */
+        const needClass: boolean = !popupOptions.propStorageId;
+
         if (className.indexOf(STACK_CLASS) < 0) {
-            popupOptions.className = className + ' ' + STACK_CLASS;
+            if (needClass) {
+                popupOptions.className = className + ' ' + STACK_CLASS;
+            }
+        } else {
+            if (!needClass) {
+                popupOptions.className = popupOptions.className.replace(new RegExp(`(^|\\s)(${STACK_CLASS})(\\s|$)`), ' ');
+            }
         }
     },
 
