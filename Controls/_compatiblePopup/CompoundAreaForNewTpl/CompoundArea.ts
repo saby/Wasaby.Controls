@@ -440,7 +440,10 @@ var moduleClass = CompoundControl.extend({
 
          // активируем только тот контрол CompoundArea, в который ушел фокус. Родительским панелям не зовем setActive,
          // потому что тогда FloatAreaManager решит, что фокус ушел туда и закроет текущую панель
-         if (curContainer.contains(toContainer)) {
+
+         // активируем только если фокус уходит в wasaby-контрол. если в панели лежит старый контрол и фокус уходит на
+         // него, он сам позовет setActive для предков. а если здесь звать setActive система позовет setActive(false) для контрола получившего фокус
+         if (curContainer.contains(toContainer) && activationTarget._$to._template) {
             this.setActive(true, activationTarget.isShiftKey, true, activationTarget._$to);
          }
       }
