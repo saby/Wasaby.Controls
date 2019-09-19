@@ -35,8 +35,9 @@ define('Controls/interface/IPrinter', [], function() {
     */    
 
    /**
+    * @execute Выгружает реестр в соответствующий формат.
     * Prints items.
-    * @function Controls/interface/IPrinter# Выгружает реестр в соответствующий формат.
+    * @function Controls/interface/IPrinter# 
     * @param {Object} params Дополнительная информация.
     * @param {String} params.name Имя файла, используемого для экспорта.
     * @param {Boolean} params.pageLandscape Определяет, какую ориентацию будет иметь страница - книжную или альбомную.
@@ -48,7 +49,7 @@ define('Controls/interface/IPrinter', [], function() {
     *    var params = {
     *       name: 'myFile',
     *       pageLandscape: true,
-    *       columns: [{ field: 'Name', name: 'Name' }, { field: 'Date', name: 'Date' }],
+    *       columns: [{ field: 'Name', title: 'Name' }, { field: 'Date', title: 'Date' }],
     *       parentProperty: 'parent'
     *    };
     *    this._children.printer.execute(params);
