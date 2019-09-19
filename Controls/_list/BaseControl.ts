@@ -1838,7 +1838,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const isLoading = this._sourceController.isLoading();
         const hasMore = this._sourceController.hasMoreData('down') || this._sourceController.hasMoreData('up');
         const noDataBeforeReload = this._noDataBeforeReload;
-        return noEdit && (isLoading || hasMore ? noData && noDataBeforeReload : noData);
+        return emptyTemplate && noEdit && (isLoading || hasMore ? noData && noDataBeforeReload : noData);
     },
 
     _onCheckBoxClick: function(e, key, status) {

@@ -1725,7 +1725,7 @@ define([
             },
             viewName: 'Controls/List/ListView',
             source: source,
-            emptyTemplate: null
+            emptyTemplate: {}
          };
 
          let baseControl = new lists.BaseControl(baseControlOptions);
