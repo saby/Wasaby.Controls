@@ -461,10 +461,12 @@ const module = Control.extend(/** @lends Controls/Container/LoadingIndicator.pro
         // что влечет за собой вызов обработчиков на mouseout + визуально дергается ховер таргета.
         // Делаю небольшую задержку, если окно не имеет в себе асинхронного кода, то оно успеет показаться раньше
         // чем покажется оверлей. Актуально для инфобокса, превьюера и выпадающего списка.
+        // Увеличил до 100мс, за меньшее время не во всех браузерах успевает отрсиоваться окно даже без асинхронных фаз
         this._clearOverlayTimerId();
+        const delay = Math.min(this._getDelay(config), 100);
         this._toggleOverlayTimerId = setTimeout(() => {
             this._toggleOverlay(toggle, config);
-        }, 10);
+        }, delay);
     },
     _toggleOverlay(toggle: boolean, config): void {
         this._isOverlayVisible = toggle && config.overlay !== 'none';
