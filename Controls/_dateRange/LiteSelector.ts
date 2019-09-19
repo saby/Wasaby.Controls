@@ -13,6 +13,7 @@ import componentTmpl = require('wml!Controls/_dateRange/LiteSelector/LiteSelecto
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/IPeriodLiteDialog
+ * @mixes Controls/_dateRange/interfaces/IInput
  * @control
  * @public
  * @category Input
@@ -20,6 +21,27 @@ import componentTmpl = require('wml!Controls/_dateRange/LiteSelector/LiteSelecto
  * @demo Controls-demo/Input/Date/RangeLinkLite
  *
  */
+
+/**
+ * @event Событие происходит при верхней даты диапазона.
+ * @name Controls/_dateRange/Selector#startValueChanged
+ * @param {Date} startValue верхняя граница диапазона дат
+ * @param {Date} endValue нижняя граница диапазона дат
+*/
+
+/**
+ * @event Событие происходит при изменении нижней даты диапазона.
+ * @name Controls/_dateRange/Selector#endValueChanged
+ * @param {Date} startValue верхняя граница диапазона дат
+ * @param {Date} endValue нижняя граница диапазона дат
+*/
+
+/**
+ * @event Событие происходит при смещении диапазона.
+ * @name Controls/_dateRange/Selector#rangeChanged
+ * @param {Date} startValue верхняя граница диапазона дат
+ * @param {Date} endValue нижняя граница диапазона дат
+*/
 
 /*
  * A link button that displays the period. Supports the change of periods to adjacent.
