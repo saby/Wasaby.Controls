@@ -158,7 +158,7 @@ var _private = {
         return textArr.join(', ');
     },
 
-    updateText: function(self, items, configs) {
+    updateText: function(self, items, configs, needUpdateTextValue = true) {
         factory(items).each(function(item) {
             if (configs[item.name]) {
                 self._displayText[item.name] = {};
@@ -167,13 +167,9 @@ var _private = {
 
                     // [ [selectedKeysList1], [selectedKeysList2] ] in hierarchy list
                     const flatSelectedKeys = configs[item.name].nodeProperty ? factory(selectedKeys).flatten().value() : selectedKeys;
-                    const isSelectedKeysChanged = !_private.getKeysUnloadedItems(configs[item.name], flatSelectedKeys).length;
-
-                    if (isSelectedKeysChanged) {
-                        self._displayText[item.name] = _private.getFastText(configs[item.name], flatSelectedKeys);
-                        if (item.textValue !== undefined) {
-                            item.textValue = self._displayText[item.name].text + self._displayText[item.name].hasMoreText;
-                        }
+                    self._displayText[item.name] = _private.getFastText(configs[item.name], flatSelectedKeys);
+                    if (item.textValue !== undefined && needUpdateTextValue) {
+                        item.textValue = self._displayText[item.name].text + self._displayText[item.name].hasMoreText;
                     }
                 }
             }
@@ -226,10 +222,9 @@ var _private = {
         let queryFilter;
         if (instance.nodeProperty) {
             queryFilter = Merge(filter, {historyId: instance.historyId});
-        } else {
+        }
             // As the data source can be history source, then you need to merge the filter
             queryFilter = historyUtils.getSourceFilter(filter, source);
-        }
         return _private.getSourceController(instance, source, navigation).load(queryFilter).addCallback(function(items) {
             instance.items = items;
             if (dataLoadCallback) {
@@ -293,7 +288,9 @@ var _private = {
         const item = _private.getItemByName(self._source, name);
         let value;
         let resetValue = object.getPropertyValue(item, 'resetValue');
-        if (!selectedKeys.length || selectedKeys.includes(resetValue) || isEqual(selectedKeys, resetValue)) {
+        if (!selectedKeys.length || selectedKeys.includes(resetValue) || isEqual(selectedKeys, resetValue)
+            // empty item is selected, but emptyKey not set
+            || item.emptyText && !item.hasOwnProperty('emptyKey') && selectedKeys.includes(null)) {
             value = object.getPropertyValue(item, 'resetValue');
         } else if (self._configs[name].multiSelect) {
             value = selectedKeys;
@@ -373,22 +370,24 @@ var _private = {
     prepareHierarchySelection: function(selectedKeys, curConfig, resetValue) {
         let folderIds = _private.getFolderIds(curConfig.items, curConfig.nodeProperty, curConfig.keyProperty);
         let isEmptySelection = true;
+        let onlyFoldersSelected = true;
 
         let resultSelectedKeys = [];
         folderIds.forEach((parentKey, index) => {
-        // selectedKeys - [ [selected keys for folder] , [selected keys for folder], ... ]
+            // selectedKeys - [ [selected keys for folder] , [selected keys for folder], ... ]
             let nodeSelectedKeys = selectedKeys[index];
             // if folder is selected, delete other keys
             if (nodeSelectedKeys.includes(parentKey)) {
                 resultSelectedKeys[index] = [parentKey];
             } else {
+                onlyFoldersSelected = false;
                 resultSelectedKeys[index] = nodeSelectedKeys;
             }
             if (nodeSelectedKeys.length && !nodeSelectedKeys.includes(curConfig.emptyKey)) {
                 isEmptySelection = false;
             }
         });
-        if (isEmptySelection) {
+        if (isEmptySelection || onlyFoldersSelected) {
             resultSelectedKeys = resetValue;
         }
         return resultSelectedKeys;
@@ -419,11 +418,13 @@ var _private = {
                 curConfig._sourceController = null;
             }
             _private.updateHistory(this, result.id, factory(result.data).toArray());
-            _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
-        } else {
-            curConfig.items.prepend(newItems);
-            _private.setValue(this, _private.getSelectedKeys(result.data, curConfig), result.id);
         }
+        curConfig.items.prepend(newItems);
+        let selectedKeys = _private.getSelectedKeys(result.data, curConfig);
+        if (curConfig.nodeProperty) {
+            selectedKeys = _private.prepareHierarchySelection(selectedKeys, curConfig, curItem.resetValue);
+        }
+        _private.setValue(this, selectedKeys, result.id);
         _private.updateText(this, this._source, this._configs);
     },
 
@@ -457,7 +458,7 @@ var _private = {
             let nodeItems = [];
 
             factory(selectedItems).each((item) => {
-                if (item.get(currentFilter.parentProperty) === parentKey || item.get(currentFilter.keyProperty) === parentKey) {
+                if (item.get(currentFilter.parentProperty) === parentKey) {
                     nodeItems.push(item);
                 }
             });
@@ -616,7 +617,7 @@ var Filter = Control.extend({
         if (!result.action) {
             var filterSource = converterFilterItems.convertToFilterSource(result.items);
             _private.prepareItems(this, filterSource);
-            _private.updateText(this, this._source, this._configs);
+            _private.updateText(this, this._source, this._configs, false);
         } else {
             _private[result.action].call(this, result);
         }

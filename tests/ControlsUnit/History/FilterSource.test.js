@@ -154,6 +154,26 @@ define(
             let result = JSON.parse(serializeData, historyMod.FilterSource._private.getSerialize().deserialize);
             assert.deepStrictEqual(data, result);
          });
+
+         it('findItem', function() {
+            let newItem = {
+               configs: undefined,
+               items: [1,2,3]
+            };
+            let historyItems = new  collection.RecordSet({
+               rawData: [
+                  { ObjectData: 'test' }
+               ]
+            });
+            let result = historyMod.FilterSource._private.findItem({}, historyItems, newItem);
+            assert.isNull(result);
+
+            historyItems.add(new entity.Model({
+               rawData: {ObjectData: JSON.stringify(newItem, historyMod.FilterSource._private.getSerialize().serialize)}
+            }));
+            result = historyMod.FilterSource._private.findItem({}, historyItems, newItem);
+            assert.isOk(result);
+         });
       });
    }
 );
