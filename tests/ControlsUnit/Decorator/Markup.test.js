@@ -179,6 +179,12 @@ define([
             var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
             assert.equal(goodResultHtml, checkResultHtml);
          });
+         it('with protocol in brackets', function() {
+            var originHtml = '<p>(https://ya.ru)</p>';
+            var goodResultHtml = '<p>(<a class="asLink" rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>)</p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
          it('with protocol with capital letters', function() {
             var originHtml = '<p>HtTpS://ya.ru</p>';
             var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="HtTpS://ya.ru" target="_blank">HtTpS://ya.ru</a></p>';
@@ -218,6 +224,12 @@ define([
          it('without protocol - 6', function() {
             var originHtml = '<p>www.google.com</p>';
             var goodResultHtml = '<p><a class="asLink" rel="noreferrer" href="http://www.google.com" target="_blank">www.google.com</a></p>';
+            var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
+            assert.equal(goodResultHtml, checkResultHtml);
+         });
+         it('without protocol in brackets', function() {
+            var originHtml = '<p>(www.google.com)</p>';
+            var goodResultHtml = '<p>(<a class="asLink" rel="noreferrer" href="http://www.google.com" target="_blank">www.google.com</a>)</p>';
             var checkResultHtml = decorator.Converter.wrapUrl(originHtml);
             assert.equal(goodResultHtml, checkResultHtml);
          });
