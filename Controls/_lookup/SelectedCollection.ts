@@ -8,6 +8,8 @@ import utils = require('Types/util');
 import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
 import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTemplate');
 import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {Model} from 'Types/entity';
 import 'css!theme?Controls/lookup';
 
 /**
@@ -118,11 +120,18 @@ var Collection = Control.extend({
       }
    },
 
-   _itemClick: function (event, item) {
+   _itemClick(event: SyntheticEvent, item: Model): void {
+      let eventName: string;
+
       if (event.target.closest(JS_CLASS_CAPTION_ITEM)) {
-         this._notify('itemClick', [item]);
+         eventName = 'itemClick';
       } else if (event.target.closest(JS_CLASS_CROSS_ITEM)) {
-         this._notify('crossClick', [item]);
+         eventName = 'crossClick';
+      }
+
+      if (eventName) {
+         event.stopPropagation();
+         this._notify(eventName, [item]);
       }
    },
 
