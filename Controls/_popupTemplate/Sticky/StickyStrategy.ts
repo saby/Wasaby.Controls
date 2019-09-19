@@ -23,7 +23,7 @@ interface IPosition {
       getWindowSizes: function() {
          return {
             width: window.innerWidth,
-            height: window.innerHeight
+            height: window.innerHeight - TouchKeyboardHelper.getKeyboardHeight(true)
          };
       },
 
@@ -68,9 +68,9 @@ interface IPosition {
          // Над клавой в ios может быть показана управляющая панель высотой 30px (задается в настройках ios).
          // У нас нет никакой инфы про ее наличие и/или высоту.
          // Единственное решение учитывать ее всегда и поднимать окно от низа экрана на 30px.
-         // if (!isHorizontal && TouchKeyboardHelper.isKeyboardVisible(true)) {
-         //    taskBarKeyboardIosHeight = 30;
-         // }
+         if (!isHorizontal && TouchKeyboardHelper.isKeyboardVisible(true)) {
+            taskBarKeyboardIosHeight = 30;
+         }
          return position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
       },
 
