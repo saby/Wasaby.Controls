@@ -9,7 +9,6 @@ import StackContent = require('Controls/_popupTemplate/Stack/Opener/StackContent
 import {detection} from 'Env/Env';
 import 'css!theme?Controls/popupTemplate';
 
-const STACK_CLASS = 'controls-Stack';
 const _private = {
 
     prepareSizes(item, container) {
@@ -139,25 +138,7 @@ const _private = {
     },
 
     prepareUpdateClassses(item) {
-        _private.addStackClasses(item.popupOptions);
         _private.updatePopupOptions(item);
-    },
-
-    addStackClasses(popupOptions) {
-        const className = popupOptions.className || '';
-
-        /**
-         * Класс в переменной STACK_CLASS добавляет overflow: hidden на контейнер.
-         * При увеличении размеров контрола пользователем, через механизм перетаскивания границ, в safari не видно области увеличения.
-         * В случае, если прикладники все настроили верно, то этот класс больше не нужен. Защитимся от ошибок прикладников.
-         * в 610 версии. Для этого избавляемся от класса в 610 и при наличии перетаскивания границ (определено свойство propStorageId),
-         * потому что все прикладные места с перетаскиванием настроены правильно. В 710 избавляемся полностью.
-         */
-        const needClass: boolean = (!popupOptions.propStorageId || (!detection.isMobileIOS && !detection.isMacOSDesktop)) && className.indexOf(STACK_CLASS) < 0;
-
-        if (needClass) {
-            popupOptions.className = className + ' ' + STACK_CLASS;
-        }
     },
 
     updatePopupOptions(item) {
@@ -238,7 +219,7 @@ const _private = {
         }
     },
     addLastStackClass(item): void {
-        item.popupOptions.className += ' controls-Stack__last-item';
+        item.popupOptions.className = (item.popupOptions.className || '') + ' controls-Stack__last-item';
     },
 
     removeLastStackClass(item): void {
@@ -247,7 +228,6 @@ const _private = {
     getDefaultConfig(self, item): void {
         _private.prepareSizeWithoutDOM(item);
         _private.setStackContent(item);
-        _private.addStackClasses(item.popupOptions);
         if (StackStrategy.isMaximizedPanel(item)) {
             // set default values
             item.popupOptions.templateOptions.showMaximizedButton = undefined; // for vdom dirtyChecking
