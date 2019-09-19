@@ -188,7 +188,7 @@ const _private = {
         _private.compatibleOptions(popupOptions);
         return popupOptions;
     },
-    compatibleOptions(popupOptions) {
+    compatibleOptions(popupOptions: object): void {
         popupOptions.zIndex = popupOptions.zIndex || popupOptions.templateOptions.zIndex;
         if (!isNewEnvironment()) {
             // For the old page, set the zIndex manually
@@ -206,7 +206,7 @@ class Confirmation extends BaseOpener {
         Confirmation.superclass._beforeMount.apply(this, arguments);
     }
 
-    private _closeHandler(res) {
+    private _closeHandler(res): void {
         if (this._resultDef) {
             this._resultDef.callback(res);
             this._resultDef = null;
