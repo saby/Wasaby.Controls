@@ -19,13 +19,15 @@ define('Controls/Utils/getItemsBySelection', [
             result = new entity.Record({
                adapter: adapter,
                format: [
-                  {name: 'marked', type: 'array', kind: 'string'},
-                  {name: 'excluded', type: 'array', kind: 'string'}
+                  { name: 'marked', type: 'array', kind: 'string' },
+                  { name: 'excluded', type: 'array', kind: 'string' },
+                  { name: 'recursive', type: 'boolean' }
                ]
             });
 
          result.set('marked', prepareArray(selection.selected));
          result.set('excluded', prepareArray(selection.excluded));
+         result.set('recursive', selection.recursive === undefined ? true : selection.recursive);
 
          return result;
       };
