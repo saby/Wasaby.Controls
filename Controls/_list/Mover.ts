@@ -214,7 +214,7 @@ var _private = {
     getItemsBySelection: function (selection) {
         //Support moving with mass selection.
         //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
-        selection.recursive = this._options.recursiveMove === undefined ? true : this._options.recursiveMove;
+        selection.recursive = false;
         return selection instanceof Array ? Deferred.success(selection) : getItemsBySelection(selection, this._source, this._items, this._filter);
     },
 
