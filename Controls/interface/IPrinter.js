@@ -35,9 +35,7 @@ define('Controls/interface/IPrinter', [], function() {
     */    
 
    /**
-    * @execute Выгружает реестр в соответствующий формат.
-    * Prints items.
-    * @function Controls/interface/IPrinter# 
+    * @function Controls/interface/IPrinter# @execute Выгружает реестр в соответствующий формат.
     * @param {Object} params Дополнительная информация.
     * @param {String} params.name Имя файла, используемого для экспорта.
     * @param {Boolean} params.pageLandscape Определяет, какую ориентацию будет иметь страница - книжную или альбомную.
