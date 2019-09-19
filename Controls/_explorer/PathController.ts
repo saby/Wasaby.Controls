@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_explorer/PathController/PathController');
-import {HeadingPathBack, HeadingPathCommon} from 'Controls/breadcrumbs';
 import {ItemsUtil} from 'Controls/list';
 import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
 
@@ -13,7 +12,7 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
             newHeader = options.header.slice();
             newHeader[0] = {
                ...options.header[0],
-               template: HeadingPathBack,
+               template: 'Controls/breadcrumbs:HeadingPathBack',
                templateOptions: {
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
                   showActionButton: !!options.showActionButton,
@@ -64,7 +63,11 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
       _notifyHandler: tmplNotify,
 
       _onBackButtonClick: function(e) {
-         HeadingPathCommon.onBackButtonClick.call(this, e);
+         const self = this;
+         require(['Controls/breadcrumbs'], function (breadcrumbs) {
+            breadcrumbs.HeadingPathCommon.onBackButtonClick.call(self, e);
+         });
+
       },
 
    });

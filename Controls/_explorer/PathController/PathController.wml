@@ -1,13 +1,16 @@
 <ws:template name="headingPath">
-   <Controls.breadcrumbs:HeadingPath scope="{{_options}}"
-                                     name="Path"
-                                     header="{{_header}}"
-                                     attr:class="controls-Explorer__Path"
-                                     on:backButtonClick="_notifyHandler('backButtonClick')"
-                                     on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
-                                     on:arrowActivated="_notifyHandler('arrowActivated')"
-                                     on:itemClick="_notifyHandler('itemClick')"
-                                     on:arrowClick="_notifyHandler('arrowClick')"/>
+   <Controls.Container.Async templateName="Controls/breadcrumbs:HeadingPath">
+      <ws:partial template="{{ content.resolvedTemplate }}"
+                  scope="{{_options}}"
+                  name="Path"
+                  header="{{_header}}"
+                  attr:class="controls-Explorer__Path"
+                  on:backButtonClick="_notifyHandler('backButtonClick')"
+                  on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+                  on:arrowActivated="_notifyHandler('arrowActivated')"
+                  on:itemClick="_notifyHandler('itemClick')"
+                  on:arrowClick="_notifyHandler('arrowClick')"/>
+   </Controls.Container.Async>
 </ws:template>
 <div>
 <ws:if data="{{_needCrumbs}}">

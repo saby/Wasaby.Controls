@@ -11,7 +11,6 @@ import keysHandler = require('Controls/Utils/keysHandler');
 import randomId = require('Core/helpers/Number/randomId');
 import 'css!theme?Controls/explorer';
 import 'Types/entity';
-import 'Controls/breadcrumbs';
 
 
    var

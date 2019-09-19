@@ -54,6 +54,8 @@ var
          // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
          data.breadCrumbs = !!data.item.forEach;
          data.actionsItem = this.getActionsItem(data.item);
+         data.breadCrumbsItemTemplate = "Controls/breadcrumbs:ItemTemplate";
+
          data.resolveItemTemplate = function(itemData) {
             if (!itemData.breadCrumbs && self._options.itemTemplate) {
                return self._options.itemTemplate;
