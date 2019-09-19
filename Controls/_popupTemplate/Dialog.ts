@@ -194,10 +194,10 @@ DialogTemplate.getDefaultOptions = function() {
         headingSize: '3xl',
         closeButtonVisibility: true,
         closeButtonViewMode: 'popup',
-        closeButtonTransparent: true
+        closeButtonTransparent: true,
+        closeButtonCompatible: false
     };
 };
 DialogTemplate._theme = ['Controls/popupTemplate'];
 
 export = DialogTemplate;
-
