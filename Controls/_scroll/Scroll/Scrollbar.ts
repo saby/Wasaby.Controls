@@ -225,18 +225,21 @@ class Scrollbar extends Control<IScrollBarOptions> {
         this._setPosition(position, true);
     }
 
-    private _thumbMouseDownHandler(event): void {
+    private _thumbMouseDownHandler(event: Event): void {
+        // to disable selection while dragging
+        event.preventDefault();
+
         event.stopPropagation();
         this._scrollbarBeginDragHandler(event);
     }
 
-    private _scrollbarTouchStartHandler(event): void {
+    private _scrollbarTouchStartHandler(event: Event): void {
         if (this._options.direction === 'horizontal') {
             this._scrollbarBeginDragHandler(event);
         }
     }
 
-    private _thumbTouchStartHandler(event): void {
+    private _thumbTouchStartHandler(event: Event): void {
         event.stopPropagation();
         this._scrollbarBeginDragHandler(event);
     }
