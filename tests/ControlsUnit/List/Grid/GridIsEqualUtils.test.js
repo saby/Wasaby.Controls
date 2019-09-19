@@ -21,6 +21,25 @@ define(['Controls/_grid/utils/GridIsEqualUtil'], function(GridIsEqualUtil) {
       }
    ];
 
+   var Data1 = [
+      {},
+      {
+         template: 'String',
+         title: 'By'
+      }
+   ];
+
+   var Data2 = [
+      {
+         template: () => {},
+         title: 'hello'
+      },
+      {
+         template: 'String',
+         title: 'By'
+      }
+   ]
+
    describe('Controls.List.Grid.GridIsEqualUtils', function() {
       it('GridIsEqualUtils', function() {
          var isDataChanged = false;
@@ -34,6 +53,13 @@ define(['Controls/_grid/utils/GridIsEqualUtil'], function(GridIsEqualUtil) {
             isDataChanged = true;
          }
          assert.equal(true, isDataChanged, 'GridIsEqualUtils template ~ String');
+      })
+      it('GridIsEqualUtils with empty object', function() {
+         var isDataChanged = false;
+         if (!GridIsEqualUtil.isEqualWithSkip(Data1, Data2, { template: true })) {
+            isDataChanged = true;
+         }
+         assert.equal(true, isDataChanged);
       })
    })
 })
