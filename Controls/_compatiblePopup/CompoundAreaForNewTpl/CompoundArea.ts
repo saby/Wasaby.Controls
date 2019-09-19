@@ -9,6 +9,7 @@ import WindowManager = require('Core/WindowManager');
 import ComponentWrapper from './ComponentWrapper';
 import control = require('Core/Control');
 import clone = require('Core/core-clone');
+import makeInstanceCompatible = require('Core/helpers/Hcontrol/makeInstanceCompatible');
 import Vdom = require('Vdom/Vdom');
 import Deferred = require('Core/Deferred');
 import {IoC, constants} from 'Env/Env';
@@ -46,7 +47,6 @@ var moduleClass = CompoundControl.extend({
       this._panel = this.getParent();
       this._panel.subscribe('onBeforeClose', this._beforeCloseHandler);
       this._panel.subscribe('onAfterClose', this._callCloseHandler.bind(this));
-      this._panel.subscribe('onFocusOut', this._onFocusOutHandler.bind(this));
       this._maximized = !!this._options.templateOptions.maximized;
 
       // Если внутри нас сработал вдомный фокус (активация), нужно активироваться
@@ -62,6 +62,9 @@ var moduleClass = CompoundControl.extend({
       // чтобы старый контрол-родитель мог об этом узнать.
       this._deactivatedHandler = this._deactivatedHandler.bind(this);
       this.subscribe('deactivated', this._deactivatedHandler);
+
+      // фокус уходит, нужно попробовать закрыть ненужные панели
+      this.subscribe('onFocusOut', this._onFocusOutHandler.bind(this));
 
       this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
          var def = new Deferred();
@@ -248,8 +251,15 @@ var moduleClass = CompoundControl.extend({
    },
    _onFocusOutHandler: function(event, destroyed, focusedControl) {
       // если фокус уходит со старой панели на новый контрол, старых механизм не будет вызван, нужно вручную звать onaActivateWindow
-      if (focusedControl && focusedControl._template) {
-         WindowManager.onActivateWindow(focusedControl);
+      if (focusedControl) {
+         if (focusedControl._template) {
+            if (!focusedControl._doneCompat) {
+               makeInstanceCompatible(focusedControl);
+            }
+            WindowManager.onActivateWindow(focusedControl);
+         } else {
+            // должно само работать!
+         }
       }
    },
    _onResultHandler: function() {
