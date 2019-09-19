@@ -640,6 +640,11 @@ const BaseOpener = {
       if (newCfg.hasOwnProperty('maximized')) {
          newCfg.dialogOptions.maximized = newCfg.maximized;
          newCfg.componentOptions.maximized = newCfg.maximized;
+         // Если окно максимизировано, то открываем его на всю ширину, игнорируя то, что лежит в width,
+         // т.к. floatArea в режиме maximized работает только с maxWidth и minWidth
+         if (newCfg.maximized && newCfg.dialogOptions.maxWidth) {
+            newCfg.dialogOptions.width = newCfg.dialogOptions.maxWidth;
+         }
       }
 
       return newCfg;
