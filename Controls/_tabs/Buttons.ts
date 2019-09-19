@@ -472,6 +472,10 @@ var _private = {
                 for (const key in value) {
                     if (typeof value[key] === 'function') {
                         hasFunction = true;
+                        Env.IoC.resolve('ILogger').warn(this._moduleName, `
+                         Из источника данных вернулся набор записей с функцией в поле ${key}.
+                         В наборе данных должны быть простые типы.
+                         Для задания шаблона - нужно указать имя этого шаблона.`);
                     }
                 }
             }
