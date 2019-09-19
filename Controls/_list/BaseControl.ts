@@ -2012,6 +2012,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
             selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
+            selection.recursive = this._options.recursiveMove !== undefined ? this._options.recursiveMove : true;
             getItemsBySelection(selection, this._options.source, this._listViewModel.getItems(), this._options.filter).addCallback(function(items) {
                 const dragKeyPosition = items.indexOf(itemData.key);
                 // If dragged item is in the list, but it's not the first one, move
