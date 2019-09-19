@@ -1,6 +1,5 @@
 import {GridView} from 'Controls/grid';
 import SearchItemTpl = require('wml!Controls/_treeGrid/SearchView/Item');
-import 'Controls/breadcrumbs';
 import 'Controls/decorator';
 import 'wml!Controls/_treeGrid/SearchView/SearchBreadCrumbsContent';
 

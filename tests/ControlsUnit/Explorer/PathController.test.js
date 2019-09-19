@@ -67,7 +67,7 @@ define([
                displayProperty: 'title'
             });
             assert.deepEqual(instance._header, [{
-               template: PathBack.default,
+					template: 'Controls/breadcrumbs:HeadingPathBack',
                templateOptions: {
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
                   backButtonStyle: undefined,
@@ -159,7 +159,7 @@ define([
                displayProperty: 'title'
             });
             assert.deepEqual(instance._header, [{
-               template: PathBack.default,
+					template: 'Controls/breadcrumbs:HeadingPathBack',
                templateOptions: {
                   backButtonStyle: undefined,
                   showArrowOutsideOfBackButton: false,
