@@ -6,6 +6,7 @@ import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import Deferred = require('Core/Deferred');
 import {parse as parserLib} from 'Core/library';
 import StackContent = require('Controls/_popupTemplate/Stack/Opener/StackContent');
+import {detection} from 'Env/Env';
 import 'css!theme?Controls/popupTemplate';
 
 const STACK_CLASS = 'controls-Stack';
@@ -152,16 +153,10 @@ const _private = {
          * в 610 версии. Для этого избавляемся от класса в 610 и при наличии перетаскивания границ (определено свойство propStorageId),
          * потому что все прикладные места с перетаскиванием настроены правильно. В 710 избавляемся полностью.
          */
-        const needClass: boolean = !popupOptions.propStorageId;
+        const needClass: boolean = (!popupOptions.propStorageId || (!detection.isMobileIOS && !detection.isMacOSDesktop)) && className.indexOf(STACK_CLASS) < 0;
 
-        if (className.indexOf(STACK_CLASS) < 0) {
-            if (needClass) {
-                popupOptions.className = className + ' ' + STACK_CLASS;
-            }
-        } else {
-            if (!needClass) {
-                popupOptions.className = popupOptions.className.replace(new RegExp(`(^|\\s)(${STACK_CLASS})(\\s|$)`), ' ');
-            }
+        if (needClass) {
+            popupOptions.className = className + ' ' + STACK_CLASS;
         }
     },
 
