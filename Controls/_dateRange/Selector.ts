@@ -24,11 +24,11 @@ import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
  *
  */
 
- /**
+/**
  * @event Событие происходит при изменении диапазона.
- *@name Controls/dateRange:IInput#rangeChanged
- *@param {Date} startValue верхняя граница диапазона дат
- *@param {Date} endValue нижняя граница диапазона дат
+ * @name Controls/dateRange:IInput#rangeChanged
+ * @param {Date} startValue верхняя граница диапазона дат
+ * @param {Date} endValue нижняя граница диапазона дат
  */
 
 /*
