@@ -101,8 +101,7 @@
  */
 
  /**
- * @event Событие происходит при смещении диапазона.
- * @name Controls/_dateRange/Selector#rangeChanged
+ * @event Controls/_dateRange/Selector#rangeChanged Событие происходит при смещении диапазона.
  * @param {Date} startValue верхняя граница диапазона дат
  * @param {Date} endValue нижняя граница диапазона дат
 */
