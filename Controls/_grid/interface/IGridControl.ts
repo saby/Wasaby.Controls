@@ -165,7 +165,7 @@
  * - <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
  * @remark
  * По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
- *Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
+ * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
  *
  * 
  *
