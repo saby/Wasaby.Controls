@@ -54,12 +54,23 @@ var _private = {
            selectedItems.push(self._items.getRecordById(null));
          }
       } else {
-         chain.factory(self._items).each(function (item) {
-            // fill the array of selected items from the array of selected keys
-            if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
-               selectedItems.push(item);
-            }
-         });
+         if (selectedKeys instanceof Array ) {
+            chain.factory(selectedKeys).each(function (key) {
+               // fill the array of selected items from the array of selected keys
+               if (self._items.getRecordById(key)) {
+                  selectedItems.push(self._items.getRecordById(key));
+               }
+            });
+         }
+         if (!selectedItems.length) {
+            // Костыль для тестов в 610, удаляю в 700. В 700 тесты поправлены
+             chain.factory(self._items).each(function (item) {
+                 // fill the array of selected items from the array of selected keys
+                 if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
+                     selectedItems.push(item);
+                 }
+             });
+         }
       }
       if (selectedItemsChangedCallback) {
          selectedItemsChangedCallback(selectedItems);
