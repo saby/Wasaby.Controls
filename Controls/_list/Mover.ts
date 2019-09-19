@@ -1,11 +1,10 @@
 import Control = require('Core/Control');
 import Deferred = require('Core/Deferred');
 import cInstance = require('Core/core-instance');
-import sourceLib = require('Types/source');
-import {ContextOptions as dataOptions} from 'Controls/context';
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 import template = require('wml!Controls/_list/Mover/Mover');
+import {ContextOptions as dataOptions} from 'Controls/context';
 import {Confirmation} from 'Controls/popup';
 
 var BEFORE_ITEMS_MOVE_RESULT = {
@@ -215,6 +214,7 @@ var _private = {
     getItemsBySelection: function (selection) {
         //Support moving with mass selection.
         //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+        selection.recursive = this._options.recursiveMove === undefined ? true : this._options.recursiveMove;
         return selection instanceof Array ? Deferred.success(selection) : getItemsBySelection(selection, this._source, this._items, this._filter);
     },
 
