@@ -35,8 +35,10 @@ define('Controls/interface/IPrinter', [], function() {
     */    
 
    /**
-    * Prints items.
-    * @function Controls/interface/IPrinter# Выгружает реестр в соответствующий формат.
+    * 
+    * @name Controls/interface/IPrinter#execute
+    * @function
+    * @description Выгружает реестр в соответствующий формат.
     * @param {Object} params Дополнительная информация.
     * @param {String} params.name Имя файла, используемого для экспорта.
     * @param {Boolean} params.pageLandscape Определяет, какую ориентацию будет иметь страница - книжную или альбомную.
@@ -44,14 +46,17 @@ define('Controls/interface/IPrinter', [], function() {
     * @param {String} params.parentProperty Имя поля, содержащего идентификатор родительского элемента.
     * @example
     * В следующем примере показано, как произвести печать.
-    * <pre>
-    *    var params = {
+    * <pre class="brush: js">
+    * params: null,
+    * _beforeMount: function() {
+    *    this.params = {
     *       name: 'myFile',
     *       pageLandscape: true,
-    *       columns: [{ field: 'Name', name: 'Name' }, { field: 'Date', name: 'Date' }],
+    *       columns: [{ field: 'Name', title: 'Name' }, { field: 'Date', title: 'Date' }],
     *       parentProperty: 'parent'
     *    };
     *    this._children.printer.execute(params);
+    * }
     * </pre>
     */
 
