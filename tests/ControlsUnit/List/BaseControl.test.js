@@ -1741,6 +1741,8 @@ define([
 
          assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
 
+         assert.isFalse(!!baseControl.__needShowEmptyTemplate(null, baseControl._listViewModel));
+
          baseControl._sourceController.isLoading = function() {
             return true;
          };
@@ -1755,6 +1757,12 @@ define([
             return {};
          };
          assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
+
+         baseControl._listViewModel.getEditingItemData = function() {
+            return null;
+         };
+         baseControl._sourceController = null;
+         assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
       });
 
       it('reload with changing source/navig/filter should call scroll to start', function() {
