@@ -79,7 +79,10 @@ class ResizingLine extends Control<IContainerOptions, void> {
         return minOffset !== 0 || maxOffset !== 0;
     }
 
-    protected _beginDragHandler(event: SyntheticEvent): void {
+    protected _beginDragHandler(event: Event): void {
+        // to disable selection while dragging
+        event.preventDefault();
+
         this._width = this._container.get ? this._container.get(0).clientWidth : this._container.clientWidth;
         this._height = this._container.get ? this._container.get(0).clientHeight : this._container.clientHeight;
         this._children.dragNDrop.startDragNDrop(new Entity({
