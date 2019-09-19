@@ -7,8 +7,8 @@ import coreClone = require('Core/core-clone');
 import Env = require('Env/Env');
 
 var STORAGES = {};
+
 var STORAGES_USAGE = {};
-var STORAGES_DATA_LOAD = {};
 
 var _private = {
    getHistoryDataSource: function (self) {
@@ -234,18 +234,14 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
       return {};
    },
 
-   query(): Deferred<source.DataSet> {
-      const self = this;
-      const historyId = self._historyId;
+   query: function () {
+      var self = this;
+      var getValueDef = new Deferred();
 
-      let resultDef;
-
-      if (STORAGES_DATA_LOAD[historyId] && !Env.constants.isBuildOnServer) {
-         resultDef = STORAGES_DATA_LOAD[historyId];
-      } else if (!STORAGES[historyId] || Env.constants.isBuildOnServer) {
-         resultDef = _private.getHistoryDataSource(this).call('UnionMultiHistoryIndexesList', {
+      if (!STORAGES[self._historyId] || Env.constants.isBuildOnServer) {
+         getValueDef = _private.getHistoryDataSource(this).call('UnionMultiHistoryIndexesList', {
             params: {
-               historyIds: historyId ? [historyId] : this._historyIds,
+               historyIds: this._historyId ? [this._historyId] : this._historyIds,
                pinned: {
                   count: this._pinned ? Constants.MAX_HISTORY : 0
                },
@@ -258,18 +254,15 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
                getObjectData: this._dataLoaded
             }
          });
-         STORAGES_DATA_LOAD[historyId] = resultDef;
-         resultDef.addCallback((res) => {
-            delete STORAGES_DATA_LOAD[historyId];
-            return res;
-         });
       } else {
-         resultDef = Deferred.success(new source.DataSet({
-            rawData: self.getHistory(historyId)
-         }));
+         getValueDef.callback(
+            new source.DataSet({
+               rawData: self.getHistory(self._historyId)
+            })
+         );
       }
       _private.incrementUsage(this);
-      return resultDef;
+      return getValueDef;
    },
 
    destroy: function () {
@@ -300,5 +293,4 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
    }
 });
 
-Service._private = _private;
 export = Service;
