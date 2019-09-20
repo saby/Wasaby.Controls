@@ -20,7 +20,6 @@ class Back extends Control {
    }
 
    static _theme: string[] = ['Controls/crumbs'];
-   static _styles: string[] = ['Controls/Utils/FontLoadUtil'];
 }
 
 export default Back;
