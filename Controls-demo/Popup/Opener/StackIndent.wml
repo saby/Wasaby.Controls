@@ -1,16 +1,18 @@
-<div class="popup-page controls-Stack__content-wrapper">
-    <Controls.popup:Dialog name="dialog"
-                           template="Controls-demo/Popup/Opener/resources/DialogTpl">
-    </Controls.popup:Dialog>
-    <Controls.popup:Stack name="stack">
-    </Controls.popup:Stack>
-    <Controls.popup:Sticky name="sticky"
-                           template="Controls-demo/Popup/Opener/resources/DialogTpl">
-        <ws:direction
-                vertical = 'bottom'
-                horizontal = 'left'/>
-        <ws:targetPoint vertical="bottom" horizontal="left"/>
-    </Controls.popup:Sticky>
+<div class="popup-page">
+    <div class="controls-Popup__stack-target-container">
+        <Controls.popup:Dialog name="dialog"
+                               template="Controls-demo/Popup/Opener/resources/DialogTpl">
+        </Controls.popup:Dialog>
+        <Controls.popup:Stack name="stack">
+        </Controls.popup:Stack>
+        <Controls.popup:Sticky name="sticky"
+                               template="Controls-demo/Popup/Opener/resources/DialogTpl">
+            <ws:direction
+                    vertical = 'bottom'
+                    horizontal = 'left'/>
+            <ws:targetPoint vertical="bottom" horizontal="left"/>
+        </Controls.popup:Sticky>
+    </div>
     <div>
         <Controls.buttons:Button attr:class="demo-StackDemo__stack" name="button1" caption="Open Stack with a right indent" on:click="openStack()"/>
     </div>
