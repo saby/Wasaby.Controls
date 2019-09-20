@@ -97,7 +97,9 @@ var moduleClass = CompoundControl.extend({
                   // могла понять, где находятся вложенные компоненты
                   parent: self
                };
+               wrapperOptions.iWantBeWS3 = true;
                self._vDomTemplate = control.createControl(ComponentWrapper, wrapperOptions, wrapper);
+               makeInstanceCompatible(self._vDomTemplate);
                self._afterMountHandler();
                self._afterUpdateHandler();
             } else {

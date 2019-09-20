@@ -161,6 +161,9 @@ var
          if (Env.detection.isIE) {
             scrollHeight--;
          }
+         if (self._isShadowVisibleMode()) {
+            return true;
+         }
 
          return scrollHeight > containerHeight;
       },
@@ -408,9 +411,6 @@ var
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
-            if (this._isShadowVisibleMode()) {
-               this._displayState.hasScroll = true;
-            }
             this._updateStickyHeaderContext();
 
             this._forceUpdate();
@@ -493,9 +493,6 @@ var
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
-            if (this._isShadowVisibleMode()) {
-               this._displayState.hasScroll = true;
-            }
          }
 
          _private.calcPagingStateBtn(this);

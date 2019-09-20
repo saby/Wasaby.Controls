@@ -66,7 +66,7 @@ define(
          };
 
          let configLazyLoad = {
-            lazyItemsLoad: true,
+            lazyItemsLoading: true,
             selectedKeys: [2],
             keyProperty: 'id',
             source: new sourceLib.Memory({
@@ -454,7 +454,7 @@ define(
                }
             };
             dropdownController._beforeUpdate({
-               lazyItemsLoad: true,
+               lazyItemsLoading: true,
                selectedKeys: [2],
                keyProperty: 'id',
                source: new sourceLib.Memory({
@@ -467,7 +467,7 @@ define(
 
             opened = true;
             dropdownController._beforeUpdate({
-               lazyItemsLoad: true,
+               lazyItemsLoading: true,
                selectedKeys: [2],
                keyProperty: 'id',
                source: new sourceLib.Memory({
