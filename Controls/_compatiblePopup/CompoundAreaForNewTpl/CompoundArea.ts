@@ -182,6 +182,7 @@ var moduleClass = CompoundControl.extend({
       self._baseAfterMount = self._vDomTemplate._afterMount;
       self._vDomTemplate._afterMount = function() {
          self._options.onOpenHandlerEvent && self._options.onOpenHandlerEvent('onOpen');
+         self._options.onOpenHandler && self._options.onOpenHandler('onOpen');
          self._baseAfterMount.apply(this, arguments);
          if (self._options._initCompoundArea) {
             self._notifyOnSizeChanged(self, self);
