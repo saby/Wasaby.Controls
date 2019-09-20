@@ -828,64 +828,82 @@ var _private = {
         return self._listViewModel ? self._listViewModel.getCount() : 0;
     },
 
-    initListViewModelHandler: function(self, model) {
-        model.subscribe('onListChange', function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
-            if (changesType === 'collectionChanged') {
-
-                //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
-                if (self._options.navigation && self._options.navigation.source) {
-                    self._sourceController.setState(self._listViewModel);
+    onListChange: function(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+        // TODO Понять, какое ускорение мы получим, если будем лучше фильтровать
+        // изменения по changesType в новой модели
+        const newModelChanged = self._options.useNewModel && action && action !== 'ch';
+        if (changesType === 'collectionChanged' || newModelChanged) {
+            //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
+            if (self._options.navigation && self._options.navigation.source) {
+                self._sourceController.setState(self._listViewModel);
+            }
+            if (action === collection.IObservable.ACTION_REMOVE && self._menuIsShown) {
+                if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
+                    self._closeActionsMenu();
+                    self._children.itemActionsOpener.close();
                 }
-                if (action === collection.IObservable.ACTION_REMOVE && self._menuIsShown) {
-                    if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
-                        self._closeActionsMenu();
-                        self._children.itemActionsOpener.close();
-                    }
-                }
+            }
 
-                if (!!action && self._virtualScroll) {
-                    let
-                       newCount = self.getViewModel().getCount();
-                    self._virtualScroll.ItemsCount = newCount;
-                    if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
-                        self._virtualScroll.insertItemsHeights(newItemsIndex - 1, newItems.length);
-                        const
-                           direction = newItemsIndex <= self._listViewModel.getStartIndex() ? 'up' : 'down';
-                        if (direction === 'down') {
-                            // если это не подгрузка с БЛ по скролу и
-                            // если мы были в конце списка (отрисована последняя запись и виден нижний триггер)
-                            // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
-                            if (self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
-                               self._virtualScrollTriggerVisibility.down && !self._itemsFromLoadToDirection) {
-                               self._virtualScroll.recalcToDirection(direction, self._scrollParams, self._loadOffset.top);
-                            } else {
-                                // если данные добавились сверху - просто обновляем индексы видимых записей
-                                self._virtualScroll.recalcItemsIndexes(direction, self._scrollParams, self._loadOffset.top);
-                            }
+            if (!!action && self._virtualScroll) {
+                let
+                   newCount = self.getViewModel().getCount();
+                self._virtualScroll.ItemsCount = newCount;
+                if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
+                    self._virtualScroll.insertItemsHeights(newItemsIndex - 1, newItems.length);
+                    const
+                       direction = newItemsIndex <= self._listViewModel.getStartIndex() ? 'up' : 'down';
+                    if (direction === 'down') {
+                        // если это не подгрузка с БЛ по скролу и
+                        // если мы были в конце списка (отрисована последняя запись и виден нижний триггер)
+                        // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
+                        if (self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
+                           self._virtualScrollTriggerVisibility.down && !self._itemsFromLoadToDirection) {
+                           self._virtualScroll.recalcToDirection(direction, self._scrollParams, self._loadOffset.top);
                         } else {
-                            if (self._itemsFromLoadToDirection) {
-                                // если элементы были подгружены с БЛ, то увеличиваем стартовый индекс на кол-во
-                                // загруженных элементов. работаем именно через проекцию, т.к. может быть группировка и
-                                // кол-во загруженных элементов может отличаться от кол-ва рисуемых элементов
-                                self._savedStartIndex += newItems.length;
-                                self._savedStopIndex += newItems.length;
-                                self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + newItems.length;
-                            }
+                            // если данные добавились сверху - просто обновляем индексы видимых записей
                             self._virtualScroll.recalcItemsIndexes(direction, self._scrollParams, self._loadOffset.top);
                         }
+                    } else {
+                        if (self._itemsFromLoadToDirection) {
+                            // если элементы были подгружены с БЛ, то увеличиваем стартовый индекс на кол-во
+                            // загруженных элементов. работаем именно через проекцию, т.к. может быть группировка и
+                            // кол-во загруженных элементов может отличаться от кол-ва рисуемых элементов
+                            self._savedStartIndex += newItems.length;
+                            self._savedStopIndex += newItems.length;
+                            self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + newItems.length;
+                        }
+                        self._virtualScroll.recalcItemsIndexes(direction, self._scrollParams, self._loadOffset.top);
                     }
-                    if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
-                        self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
-                        self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down', self._scrollParams, self._loadOffset.top);
-                    }
-                    _private.applyVirtualScrollIndexesToListModel(self);
                 }
+                if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
+                    self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
+                    self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down', self._scrollParams, self._loadOffset.top);
+                }
+                _private.applyVirtualScrollIndexesToListModel(self);
             }
-            if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
-                self._itemsChanged = true;
-            }
-            self._forceUpdate();
-        });
+        }
+        if (changesType === 'collectionChanged' || changesType === 'indexesChanged' || newModelChanged) {
+            self._itemsChanged = true;
+        }
+        self._forceUpdate();
+    },
+
+    initListViewModelHandler: function(self, model, useNewModel: boolean) {
+        if (useNewModel) {
+            model.subscribe('onCollectionChange', (...args: any[]) => {
+                _private.onListChange.apply(
+                    null,
+                    [
+                        self,
+                        args[0], // event
+                        null, // changes type
+                        ...args.slice(1) // the rest of the arguments
+                    ]
+                );
+            });
+        } else {
+            model.subscribe('onListChange', _private.onListChange.bind(null, self));
+        }
 
         model.subscribe('onGroupsExpandChange', function(event, changes) {
             _private.groupsExpandChangeHandler(self, changes);
@@ -1397,7 +1415,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 }
             }
             if (self._listViewModel) {
-                _private.initListViewModelHandler(self, self._listViewModel);
+                _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
             }
 
             if (newOptions.source) {
@@ -1509,7 +1527,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
                 items: this._listViewModel.getItems()
             }));
-            _private.initListViewModelHandler(this, this._listViewModel);
+            _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
         }
 
         if (newOptions.groupMethod !== this._options.groupMethod) {

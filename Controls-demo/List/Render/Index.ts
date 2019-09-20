@@ -9,7 +9,7 @@ interface IListItem {
     title: string;
 }
 
-const LIST_ITEMS_COUNT = 100;
+const LIST_ITEMS_COUNT = 1000;
 
 export default class RenderDemo extends Control {
     protected _template: TemplateFunction = template;
@@ -18,34 +18,41 @@ export default class RenderDemo extends Control {
     private _viewSource: Memory;
     private _multiSelectVisibility: string = 'hidden';
 
+    private _itemActions: any;
+    private _navigation: any;
+
     protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'key',
             data: this._generateListItems(LIST_ITEMS_COUNT)
         });
+        this._itemActions = [
+            {
+                id: 1,
+                icon: 'icon-PhoneNull',
+                title: 'phone',
+                style: 'success',
+                iconStyle: 'success',
+                showType: 0,
+                handler: (item) => alert(`phone clicked at ${item.getId()}`)
+            }
+        ];
+        this._navigation = {
+            source: 'page',
+            view: 'infinity',
+            sourceConfig: {
+                page: 0,
+                pageSize: 25,
+                hasMore: false
+            }
+        };
     }
 
     protected _afterMount(): void {
         // remove all after debugging
         window.model = this._children.listView._children.listControl._children.baseControl.getViewModel();
-
-        // setup item action
-        const itemAction = {
-            id: 1,
-            icon: 'icon-PhoneNull controls-itemActionsV__action_icon  icon-size',
-            title: 'phone',
-            style: 'success',
-            iconStyle: 'success',
-            showType: 0
-        };
-        window.model.each((item) => { window.model.setItemActions(item, { all: [itemAction], showed: [itemAction] }) });
-
         // fix for multiselect breaking
         window.model.updateSelection = function() {};
-
-        setTimeout(() => {
-            window.model._nextVersion();
-        }, 5);
     }
 
     private _changeMultiselect(e: SyntheticEvent<null>, visibility: string): void {

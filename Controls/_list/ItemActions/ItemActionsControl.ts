@@ -69,10 +69,12 @@ var _private = {
     updateActions: function(self, options, collectionChanged: boolean = false): void {
         if (options.itemActions) {
             if (options.useNewModel) {
+                options.listModel.setEventRaising(false, true);
                 options.listModel.each((collectionItem: CollectionItem<unknown>) => {
                     // TODO groups and whatnot
                     _private.updateItemActions(self, collectionItem, options);
                 });
+                options.listModel.setEventRaising(true, true);
             } else {
                 for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                     var
@@ -90,7 +92,10 @@ var _private = {
 
     updateModel: function(self, newOptions) {
         _private.updateActions(self, newOptions);
-        newOptions.listModel.subscribe('onListChange', self._onCollectionChangeFn);
+        newOptions.listModel.subscribe(
+            self._options.useNewModel ? 'onCollectionChange' : 'onListChange',
+            self._onCollectionChangeFn
+        );
     },
 
     needActionsMenu: function(actions, itemActionsPosition) {
@@ -165,7 +170,10 @@ var ItemActionsControl = Control.extend({
             this._options.itemActionsPosition !== newOptions.itemActionsPosition ||
             !this._isActual && newOptions.canUpdateItemsActions
         ) {
-            this._options.listModel.unsubscribe('onListChange', this._onCollectionChangeFn);
+            this._options.listModel.unsubscribe(
+                this._options.useNewModel ? 'onCollectionChange' : 'onListChange',
+                this._onCollectionChangeFn
+            );
             _private.updateModel.apply(null, args);
         }
     },
@@ -197,14 +205,23 @@ var ItemActionsControl = Control.extend({
     },
 
     _beforeUnmount: function() {
-        this._options.listModel.unsubscribe('onListChange', this._onCollectionChangeFn);
+        this._options.listModel.unsubscribe(
+            this._options.useNewModel ? 'onCollectionChange' : 'onListChange',
+            this._onCollectionChangeFn
+        );
     },
 
     _onCollectionChange(
        e: EventObject,
        type: string
     ): void {
-        if (type === 'collectionChanged' || type === 'indexesChanged') {
+        // TODO Нужно подумать, как правильно фильтровать тип изменений модели
+        // Возможно после вынесения этого в менеджер, он будет сам слушать нужные
+        // методы, и это не понадобится
+        if (
+            type === 'collectionChanged' || type === 'indexesChanged' ||
+            (this._options.useNewModel && type !== 'ch')
+        ) {
            this._isActual = false;
            /**
             * In general, we don't know what we should update.

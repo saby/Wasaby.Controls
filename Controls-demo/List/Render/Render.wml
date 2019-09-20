@@ -5,6 +5,8 @@
          displayProperty="title"
          source="{{ _viewSource }}"
          multiSelectVisibility="{{ _multiSelectVisibility }}"
+         itemActions="{{ _itemActions }}"
+         navigation="{{ _navigation }}"
 
          name="listView"
          useNewModel="{{ true }}">
