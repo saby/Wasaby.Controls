@@ -4,6 +4,7 @@ define([
    'Controls/calendar',
    'SBIS3.CONTROLS/Utils/DateUtil',
    'ControlsUnit/Calendar/Utils',
+   'Controls/_calendar/MonthList/ItemTypes',
    'wml!Controls/_calendar/MonthList/MonthTemplate',
    'wml!Controls/_calendar/MonthList/YearTemplate'
 ], function(
@@ -12,6 +13,7 @@ define([
    calendar,
    DateUtil,
    calendarTestUtils,
+   ItemTypes,
    MonthTemplate,
    YearTemplate
 ) {
@@ -19,6 +21,8 @@ define([
    let config = {
       startPosition: new Date(2018, 0, 1)
    };
+
+   ItemTypes = ItemTypes.default;
 
    describe('Controls/_calendar/MonthList', function() {
       describe('_beforeMount', function() {
@@ -141,7 +145,10 @@ define([
                   boundingClientRect: { top: 10, bottom: 30 },
                   rootBounds: { top: 20 }
                },
-               data: new Date(2019, 0)
+               data: {
+                  date: new Date(2019, 0),
+                  type: ItemTypes.body
+               }
             }],
             options: {},
             date: new Date(2019, 0)
@@ -153,7 +160,10 @@ define([
                   rootBounds: { top: 60 },
                   target: { offsetHeight: 50 }
                },
-               data: new Date(2019, 0)
+               data: {
+                  date: new Date(2019, 0),
+                  type: ItemTypes.body
+               }
             }],
             options: {},
             date: new Date(2020, 0)
@@ -165,7 +175,10 @@ define([
                   rootBounds: { top: 60 },
                   target: { offsetHeight: 50 }
                },
-               data: new Date(2019, 0)
+               data: {
+                  date: new Date(2019, 0),
+                  type: ItemTypes.body
+               }
             }],
             options: { viewMode: 'month' },
             date: new Date(2019, 1)
@@ -192,7 +205,10 @@ define([
                   rootBounds: { top: 20 },
                   isIntersecting: true
                },
-               data: new Date(2019, 0)
+               data: {
+                  date: new Date(2019, 0),
+                  type: ItemTypes.body
+               }
             }],
             displayedDates: [],
             options: { source: {} },
@@ -206,7 +222,10 @@ define([
                   rootBounds: { top: 20 },
                   isIntersecting: false
                },
-               data: new Date(2019, 0)
+               data: {
+                  date: new Date(2019, 0),
+                  type: ItemTypes.body
+               }
             }],
             displayedDates: [(new Date(2019, 0)).getTime(), 123],
             options: { source: {} },
