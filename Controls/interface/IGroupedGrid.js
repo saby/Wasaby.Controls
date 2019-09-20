@@ -37,15 +37,14 @@ define('Controls/interface/IGroupedGrid', [
 
    /**
     * @name Controls/interface/IGroupedGrid#groupTemplate
-    * @cfg {Function} groupTemplate шаблон группировки списка.
+    * @cfg {Function} Шаблон группировки списка.
     * <a href="/materials/demo-ws4-grid-group">Example</a>.
     * @remark
     * Базовый шаблон для контрола {@link Controls/Grid:View}: "Controls/grid:GroupTemplate".
     * Шаблон поддерживает следующие параметры:
     * <ul>
-    *    <li>separatorVisibility {Boolean} — ваидимость горизонтальной линии-разделителя.</li>
     *    <li>expanderAlign {enum('hidden'|'right'|'left')} — расположение кнопки-экспандера. Стандартное расположение - слева.</li>
-    *    <li>expanderVisible {Boolean} — ваидимость кнопки-экспандера.</li>
+    *    <li>expanderVisible {Boolean} — видимость кнопки-экспандера.</li>
     *    <li>textAlign {String} — горизонтальное выравнивание текста группы. Доступные значения опции: "left" и "right". По умолчанию используется выравнивание текста по центру.</li>
     *    <li>rightTemplate {Function} — шаблон, выводимый в правой части группы. Может использоваться, например, для вывода итогов по группе.</li>
     * </ul>
