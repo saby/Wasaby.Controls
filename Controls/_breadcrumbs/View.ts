@@ -6,6 +6,7 @@ import itemTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemTemp
 import itemsTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemsTemplate');
 import menuItemTemplate = require('wml!Controls/_breadcrumbs/resources/menuItemTemplate');
 import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
+import BreadCrumbsPath from "./HeadingPath";
 
 /**
  * BreadCrumbs/View.
@@ -87,5 +88,6 @@ BreadCrumbsView.getDefaultOptions = function getDefaultOptions() {
 };
 
 BreadCrumbsView._theme = ['Controls/crumbs'];
+BreadCrumbsView._styles = ['Controls/Utils/FontLoadUtil'];
 
 export default BreadCrumbsView;

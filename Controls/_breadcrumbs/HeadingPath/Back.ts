@@ -1,5 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_breadcrumbs/HeadingPath/Back');
+import BreadCrumbsView from "../View";
 
 class Back extends Control {
    private _template = template;
@@ -20,6 +21,7 @@ class Back extends Control {
    }
 
    static _theme: string[] = ['Controls/crumbs'];
+   static _styles: string[] = ['Controls/Utils/FontLoadUtil'];
 }
 
 export default Back;
