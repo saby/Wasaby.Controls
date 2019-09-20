@@ -3,6 +3,7 @@ import * as Template from "wml!Controls-demo/grid/Header/AddButton/AddButton"
 import {Memory} from "Types/source"
 import {getCountriesStats} from "../../DemoHelpers/DataCatalog"
 import 'wml!Controls-demo/grid/Header/AddButton/FirstHeaderCellTemplate'
+import 'wml!Controls-demo/grid/Header/AddButton/Cell'
 import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
@@ -11,9 +12,12 @@ export default class extends Control {
     private _gridCaption = 'Характеристики стран';
     private _header = getCountriesStats().getDefaultHeader().slice(1);
     private _columns = getCountriesStats().getColumnsWithWidths().slice(1);
-    private _caption: string = 'Характеристики стран';
 
     protected _beforeMount() {
+
+        this._header.forEach((hColumn) => {
+            hColumn.template = 'wml!Controls-demo/grid/Header/AddButton/Cell';
+        });
 
         this._header[0] = {
             ...this._header[0],

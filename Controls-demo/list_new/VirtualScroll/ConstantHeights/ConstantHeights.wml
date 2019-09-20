@@ -1,0 +1,8 @@
+<div class="controlsDemo__wrapper">
+    <Controls.scroll:Container attr:class="controlsDemo__maxWidth500 controlsDemo__height500">
+        <Controls.list:View source="{{_viewSource}}"
+                            keyProperty="id"
+                            navigation="{{_navigation}}"
+                            virtualScrolling="{{true}}"/>
+    </Controls.scroll:Container>
+</div>
