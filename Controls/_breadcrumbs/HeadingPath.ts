@@ -262,7 +262,6 @@ BreadCrumbsPath.getDefaultOptions = function () {
 };
 
 BreadCrumbsPath._theme = ['Controls/crumbs'];
-BreadCrumbsPath._styles = ['Controls/Utils/FontLoadUtil'];
 BreadCrumbsPath._private = _private;
 
 export default BreadCrumbsPath;

@@ -87,6 +87,5 @@ BreadCrumbsView.getDefaultOptions = function getDefaultOptions() {
 };
 
 BreadCrumbsView._theme = ['Controls/crumbs'];
-BreadCrumbsView._styles = ['Controls/Utils/FontLoadUtil'];
 
 export default BreadCrumbsView;
