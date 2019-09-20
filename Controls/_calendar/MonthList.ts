@@ -11,6 +11,7 @@ import ExtDataModel from './MonthList/ExtDataModel';
 import YearsSource from './MonthList/YearsSource';
 import MonthsSource from './MonthList/MonthsSource';
 import monthListUtils from './MonthList/Utils';
+import ITEM_TYPES from './MonthList/ItemTypes';
 import {IntersectionObserverSyntheticEntry} from 'Controls/scroll';
 import dateUtils = require('Controls/Utils/Date');
 import getDimensions = require("Controls/Utils/getDimensions");
@@ -82,7 +83,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     private _positionToScroll: Date;
     private _displayedPosition: Date;
 
-    private _itemTemplate: Function;
+    private _itemTemplate: TemplateFunction;
+    private _itemHeaderTemplate: TemplateFunction;
 
     private _lastNotifiedPositionChangedDate: Date;
 
@@ -91,7 +93,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     private _scrollTop: number = 0;
 
-    _enrichItemsDebounced: Function;
+    private _enrichItemsDebounced: Function;
+
+    private _virtualPageSize: number;
 
     protected _beforeMount(options: IModuleComponentOptions): void {
         const position = options.startPosition || options.position || new Date();
@@ -103,6 +107,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
         this._updateItemTemplate(options);
         this._updateSource(options);
+        this._updateVirtualPageSize(options);
         this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
         this._positionToScroll = position;
         this._displayedPosition = position;
@@ -118,6 +123,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     protected _beforeUpdate(options: IModuleComponentOptions): void {
         this._updateItemTemplate(options);
         this._updateSource(options);
+        this._updateVirtualPageSize(options, this._options);
         if (options.position !== this._displayedPosition) {
             this._displayedPosition = options.position;
             this._scrollToPosition(options.position);
@@ -137,13 +143,23 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     private _updateItemTemplate(options: IModuleComponentOptions): void {
-        this._itemTemplate = options.viewMode === 'year' ?
-            options.yearTemplate : this._itemTemplate = options.monthTemplate;
+        this._itemHeaderTemplate = options.viewMode === 'year' ?
+            options.yearHeaderTemplate : options.monthHeaderTemplate;
 
+        this._itemTemplate = options.viewMode === 'year' ?
+            options.yearTemplate : options.monthTemplate;
     }
+    private _getTemplate(data): TemplateFunction {
+        if (data.get('type') === ITEM_TYPES.header) {
+            return this._itemHeaderTemplate;
+        } else {
+            return this._itemTemplate;
+        }
+    }
+
     private _updateSource(options: IModuleComponentOptions): void {
         if (options.viewMode !== this._options.viewMode) {
-            this._viewSource = new sourceMap[options.viewMode]();
+            this._viewSource = new sourceMap[options.viewMode]({ header: Boolean(this._itemHeaderTemplate) });
         }
         if (options.viewMode !== this._options.viewMode || options.source !== this._options.source) {
             this._extData = new ExtDataModel({
@@ -152,6 +168,14 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             });
         }
     }
+    private _updateVirtualPageSize(options: IModuleComponentOptions, oldOptions?: IModuleComponentOptions): void {
+        if (!oldOptions || options.virtualPageSize !== oldOptions.virtualPageSize) {
+            // If we draw the headers as a separate element, then the virtual page should be 2 times larger,
+            // because instead of one element, we draw two. Header and body.
+            this._virtualPageSize = this._itemHeaderTemplate ? options.virtualPageSize * 2 : options.virtualPageSize;
+        }
+    }
+
     private _scrollToPosition(position: Date): void {
         if (!position) {
             return;
@@ -185,15 +209,19 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     private _updateDisplayedPosition(entry: IntersectionObserverSyntheticEntry): void {
+        if (entry.data.type !== ITEM_TYPES.body) {
+            return;
+        }
+        const entryDate = entry.data.date;
         let date;
         if (entry.nativeEntry.boundingClientRect.top - entry.nativeEntry.rootBounds.top <= 0) {
             if (entry.nativeEntry.boundingClientRect.bottom - entry.nativeEntry.rootBounds.top >= 0) {
-                date = entry.data;
+                date = entryDate;
             } else if (entry.nativeEntry.rootBounds.top - entry.nativeEntry.boundingClientRect.bottom < entry.nativeEntry.target.offsetHeight) {
                 if (this._options.viewMode === 'year') {
-                    date = new Date(entry.data.getFullYear() + 1, entry.data.getMonth());
+                    date = new Date(entryDate.getFullYear() + 1, entryDate.getMonth());
                 } else {
-                    date = new Date(entry.data.getFullYear(), entry.data.getMonth() + 1);
+                    date = new Date(entryDate.getFullYear(), entryDate.getMonth() + 1);
                 }
             }
         }
@@ -210,7 +238,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
 
         const
-            time = entry.data.getTime(),
+            time = entry.data.date.getTime(),
             index = this._displayedDates.indexOf(time),
             isDisplayed = index !== -1;
 

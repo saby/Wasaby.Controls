@@ -5,7 +5,7 @@ export default {
         return formatDate(date, 'YYYY-MM-DD');
     },
     idToDate: function(str: string): Date {
-        const d: Array<string> = str.split('-');
+        const d: Array<string> = str.replace('h', '').split('-');
         return new Date(d[0], (parseInt(d[1], 10) || 1) - 1);
     }
 };
