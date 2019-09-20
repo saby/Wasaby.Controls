@@ -20,6 +20,27 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
 
    describe('Controls/_lookupPopup/Container', function() {
 
+      it('_private::getSelectedItems', () => {
+          const options = {
+             selectedItems: 'testOptionsItems'
+          };
+          const emptyOptions = {};
+
+          const context = {
+             selectorControllerContext: {
+                selectedItems: 'testContextItems'
+             }
+          };
+
+          const emptyContext = {
+             selectorControllerContext: {}
+          };
+
+          assert.equal(lookupPopup.Container._private.getSelectedItems(options, emptyContext), 'testOptionsItems');
+          assert.equal(lookupPopup.Container._private.getSelectedItems(emptyOptions, context), 'testContextItems');
+          assert.equal(lookupPopup.Container._private.getSelectedItems(emptyOptions, emptyContext).getCount(), 0);
+      });
+
       it('getFilteredItems', function() {
          var items = ['toRemoveItem', 'toSaveItem', 'toSaveItem'];
          var filterFunc = function(item) {

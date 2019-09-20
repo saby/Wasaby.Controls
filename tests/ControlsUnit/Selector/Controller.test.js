@@ -54,8 +54,14 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
 
       it('removeFromSelected', function() {
          var selectedItems = getSelectedItems();
+         var itemToRemove = new entity.Model({
+            rawData: {
+               id: 0,
+               title: 'test'
+            }
+         });
 
-        lookupPopup.Controller._private.removeFromSelected(0, selectedItems, 'id');
+        lookupPopup.Controller._private.removeFromSelected(itemToRemove, selectedItems, 'id');
 
          assert.equal(selectedItems.getCount(), 4);
          assert.equal(selectedItems.at(0).get('id'), 1);
@@ -67,7 +73,7 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
                selectedItems = getSelectedItems(),
                newSelected = getSelectedItems(),
                result = {
-                  initialSelection: [0, 1, 2, 3, 4],
+                  initialSelection: getSelectedItems().clone(),
                   resultSelection: newSelected,
                   keyProperty: 'id'
                };
