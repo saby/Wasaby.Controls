@@ -445,25 +445,6 @@ const module = Control.extend(/** @lends Controls/Container/LoadingIndicator.pro
                 this.delayTimeout = setTimeout(() => {
                     this._toggleIndicatorVisible(true, config);
                     this._forceUpdate();
-
-                   // сразу отрисовываем индикатор. только в 610. в старом синхронизаторе сложно решить отрисовку индикатора.
-                   var container = this._container && this._container.hasOwnProperty('length') ? this._container[0] : this._container;
-                   if (container) {
-                      var indicator = this._container.querySelector('.controls-loading-indicator');
-                      if (indicator) {
-                         var indicatorIn = indicator.querySelector('.controls-loading-indicator-in');
-                         if (!indicatorIn) {
-                            indicator.classList.add('controls-loading-indicator_text');
-                            indicator.classList.remove('controls-loading-indicator_overlay-default');
-                            indicator.classList.add('controls-loading-indicator_overlay-' + this.overlay);
-                            var div = document.createElement('div');
-                            div.classList.add('controls-loading-indicator-in');
-                            div.innerText = this.message;
-                            indicator.appendChild(div);
-                         }
-                      }
-                   }
-
                 }, this._getDelay(config));
             }
         } else {
