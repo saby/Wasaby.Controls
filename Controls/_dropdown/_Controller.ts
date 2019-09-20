@@ -55,10 +55,10 @@ var _private = {
            selectedItems.push(self._items.getRecordById(null));
          }
       } else {
-         chain.factory(self._items).each(function (item) {
+         chain.factory(selectedKeys).each(function (key) {
             // fill the array of selected items from the array of selected keys
-            if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
-               selectedItems.push(item);
+            if (self._items.getRecordById(key)) {
+               selectedItems.push(self._items.getRecordById(key));
             }
          });
       }
