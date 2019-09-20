@@ -13,6 +13,7 @@ import componentTmpl = require('wml!Controls/_dateRange/LiteSelector/LiteSelecto
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/IPeriodLiteDialog
+ * @mixes Controls/_dateRange/interfaces/IInput
  * @control
  * @public
  * @category Input

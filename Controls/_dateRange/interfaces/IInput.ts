@@ -100,6 +100,12 @@
  * </pre>
  */
 
+ /**
+ * @event Controls/_dateRange/interfaces/IInput#rangeChanged Событие происходит при смещении диапазона.
+ * @param {Date} startValue верхняя граница диапазона дат
+ * @param {Date} endValue нижняя граница диапазона дат
+*/
+
 /**
  * @event Controls/_dateRange/interfaces/IInput#startValueChanged Происходит при изменении начального значения поля.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
