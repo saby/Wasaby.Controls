@@ -1,4 +1,4 @@
-<div class="popup-page">
+<div class="popup-page controls-Stack__content-wrapper">
     <Controls.popup:Dialog name="dialog"
                            template="Controls-demo/Popup/Opener/resources/DialogTpl">
     </Controls.popup:Dialog>
