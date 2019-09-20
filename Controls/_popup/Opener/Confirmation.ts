@@ -2,6 +2,30 @@ import * as BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import * as Deferred from 'Core/Deferred';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 
+import {IHrefOptions} from './interface/IHref';
+import {ITooltipOptions, ICaptionOptions,
+    IIconOptions,
+    IIconStyleOptions,
+    IIconSizeOptions,
+    IFontColorStyleOptions,
+    IFontSizeOptions,
+    IHeightOptions
+} from 'Controls/interface';
+
+export interface IButtonOptions extends IHrefOptions, ICaptionOptions, IIconOptions,
+    IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions {
+    type?: string;
+    style?: string;
+    size?: string;
+    message?: string;
+    details?: string;
+    yesCaption?: string;
+    noCaption?: string;
+    cancelCaption?: string;
+    PrimaryAction?: string;
+    okCaption?: string;
+}
+
 /**
  * Контрол, открывающий диалог подтверждения.
  * Окно блокирует работу пользователя с родительским приложением.
@@ -201,9 +225,9 @@ class Confirmation extends BaseOpener {
     private _resultDef: null;
     private _openerResultHandler: null;
 
-    protected _beforeMount() {
+    protected _beforeMount(opts) {
         this._closeHandler = this._closeHandler.bind(this);
-        Confirmation.superclass._beforeMount.apply(this, arguments);
+        super._beforeMount(opts);
     }
 
     private _closeHandler(res): void {
@@ -272,7 +296,7 @@ class Confirmation extends BaseOpener {
     open(templateOptions: object): Promise<boolean> {
         this._resultDef = new Deferred();
         const popupOptions = _private.getConfirmationConfig(templateOptions, this._closeHandler);
-        Confirmation.superclass.open.call(this, popupOptions, POPUP_CONTROLLER);
+        super.open.call(this, popupOptions, POPUP_CONTROLLER);
         return this._resultDef;
     }
 }
@@ -321,7 +345,7 @@ Confirmation.getDefaultOptions = () => {
     };
 };
 
-export default Confirmation;
+export = Confirmation;
 
 /**
  * @typedef {Object} popupOptions
