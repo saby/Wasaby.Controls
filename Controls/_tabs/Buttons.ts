@@ -464,13 +464,14 @@ var _private = {
       Поэтому, если есть функции в receivedState, заново делаем запрос за данными. */
       checkHasFunction: function(receivedState) {
           let hasFunction = false;
-         factory(receivedState.items).each((item) => {
+         factory(receivedState && receivedState.items).each((item) => {
             const value = cInstance.instanceOfModule(item, 'Types/entity:Record') ?
                 item.getRawData() : item;
 
             if (!hasFunction) {
                 for (const key in value) {
-                    if (typeof value[key] === 'function') {
+                    // При рекваере шаблона, он возвращает массив, в 0 индексе которого лежит объект с функцией
+                    if (typeof value[key] === 'function' || value[key] instanceof Array && typeof value[key][0].func === 'function') {
                         hasFunction = true;
                         Env.IoC.resolve('ILogger').warn(this._moduleName, `
                          Из источника данных вернулся набор записей с функцией в поле ${key}.
