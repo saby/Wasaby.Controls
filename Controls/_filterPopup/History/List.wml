@@ -46,7 +46,7 @@
    <ws:if data="{{ _options.saveMode === 'favorite' }}">
       <Controls.popup:Dialog name="dialogOpener"
                              closeOnOutsideClick="{{true}}"
-                             isCompoundTemplate="{{true}}"
-                             template="SBIS3.CONTROLS/Filter/FavoriteEditDialog"/>
+                             on:result="_editDialogResult()"
+                             template="Controls/_filterPopup/History/_EditDialog"/>
    </ws:if>
 </div>

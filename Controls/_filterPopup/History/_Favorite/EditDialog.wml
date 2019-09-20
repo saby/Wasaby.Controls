@@ -1,0 +1,61 @@
+<ws:template name="checkboxTpl">
+   <ws:partial template="Controls/toggle:CheckboxItemTemplate">
+      <ws:contentTemplate>
+         <span>
+            <span class="controls-FavoriteEditDialog__itemCaption">{{itemTemplate.item.caption}}</span>&nbsp;
+            <span>{{itemTemplate.item.textValue}}</span>
+         </span>
+      </ws:contentTemplate>
+   </ws:partial>
+</ws:template>
+
+<Controls.form:PrimaryAction on:triggered="_apply()">
+   <Controls.popupTemplate:Dialog headingCaption="{[Параметры]}"
+                                  headingStyle="info"
+                                  draggable="{{true}}"
+                                  attr:class="controls-FilterPanel__FavoriteEditDialog">
+
+      <ws:headerContentTemplate>
+         <Controls.source:SelectedKey bind:selectedKey="_globalKey">
+            <Controls.dropdown:Input
+                    displayProperty="title"
+                    keyProperty="key"
+                    source="{{_globalSource}}"
+                    itemTemplate="wml!Controls/_filterPopup/History/_Favorite/ddlItemTemplate">
+            </Controls.dropdown:Input>
+         </Controls.source:SelectedKey>
+
+         <ws:if data="{{_options.isFavorite}}">
+            <Controls.buttons:Button viewMode="link" fontColorStyle="link"
+                                     icon="icon-Erase" iconStyle="error"
+                                     on:click="_delete()"
+                                     attr:tabindex="-1"
+                                     attr:class="controls-FavoriteEditDialog__deleteButton"/>
+         </ws:if>
+
+         <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{[Сохранить]}"
+                                  on:click="_apply()"
+                                  attr:tabindex="-1"
+                                  attr:class="controls-FavoriteEditDialog__saveButton"/>
+      </ws:headerContentTemplate>
+
+      <ws:bodyContentTemplate>
+         <div class="controls-FavoriteEditDialog__content">
+            <Controls.input:Text bind:value="_textValue"
+                                 placeholder="{{_placeholder}}"
+                                 attr:class="controls-FavoriteEditDialog__textField"/>
+
+            <Controls.scroll:Container attr:class="controls-ScrollContainer__flex">
+               <Controls.toggle:CheckboxGroup bind:selectedKeys="_selectedFilters"
+                                              source="{{_source}}">
+                  <ws:itemTemplate>
+                     <ws:partial template="checkboxTpl" />
+                  </ws:itemTemplate>
+               </Controls.toggle:CheckboxGroup>
+            </Controls.scroll:Container>
+
+         </div>
+      </ws:bodyContentTemplate>
+
+   </Controls.popupTemplate:Dialog>
+</Controls.form:PrimaryAction>

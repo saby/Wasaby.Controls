@@ -63,6 +63,8 @@ import _HierarchyList = require('Controls/_filterPopup/SimplePanel/_HierarchyLis
 
 import _FilterPanelWrapper = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelWrapper');
 
+export {default as _EditDialog} from 'Controls/_filterPopup/History/_EditDialog';
+
 export {
    Panel,
    DetailPanel,
