@@ -99,6 +99,7 @@ var moduleClass = CompoundControl.extend({
                };
                wrapperOptions.iWantBeWS3 = true;
                self._vDomTemplate = control.createControl(ComponentWrapper, wrapperOptions, wrapper);
+               makeInstanceCompatible(self._vDomTemplate);
                self._afterMountHandler();
                self._afterUpdateHandler();
             } else {
