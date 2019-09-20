@@ -415,6 +415,10 @@ const BaseOpener = {
          cfg.componentOptions.onResultHandlerEvent = cfg.onResultHandlerEvent;
       }
 
+      if (cfg.onOpenHandler) {
+         cfg.componentOptions.onOpenHandler = cfg.onOpenHandler;
+      }
+
       if (cfg.onOpenHandlerEvent) {
          cfg.componentOptions.onOpenHandlerEvent = cfg.onOpenHandlerEvent;
       }
@@ -615,6 +619,10 @@ const BaseOpener = {
 
       if (cfg.hasOwnProperty('autofocus')) {
          newCfg.dialogOptions.catchFocus = cfg.autofocus;
+      }
+
+      if (newCfg.eventHandlers && newCfg.eventHandlers.onOpen) {
+         newCfg.dialogOptions.onOpenHandler = newCfg.eventHandlers.onOpen;
       }
 
       if (newCfg.eventHandlers && newCfg.eventHandlers.onResult) {
