@@ -97,9 +97,10 @@ var moduleClass = CompoundControl.extend({
                   // могла понять, где находятся вложенные компоненты
                   parent: self
                };
-               wrapperOptions.iWantBeWS3 = true;
+               // todo откатил потому что упала ошибка https://online.sbis.ru/opendoc.html?guid=d8cc1098-3d3a-4fed-800c-81b4e6ed2319
+               //wrapperOptions.iWantBeWS3 = true;
                self._vDomTemplate = control.createControl(ComponentWrapper, wrapperOptions, wrapper);
-               makeInstanceCompatible(self._vDomTemplate);
+               //makeInstanceCompatible(self._vDomTemplate);
                self._afterMountHandler();
                self._afterUpdateHandler();
             } else {
