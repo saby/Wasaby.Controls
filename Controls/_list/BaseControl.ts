@@ -462,9 +462,11 @@ var _private = {
     updateShadowMode(self): void {
         self._notify('updateShadowMode', [{
             top: self._virtualScroll && self._virtualScroll.PlaceholdersSizes.top ||
-            self._listViewModel.getCount() && self._sourceController && self._sourceController.hasMoreData('up') ? 'visible' : 'auto',
+                self._listViewModel && self._listViewModel.getCount() &&
+                self._sourceController && self._sourceController.hasMoreData('up') ? 'visible' : 'auto',
             bottom: self._virtualScroll && self._virtualScroll.PlaceholdersSizes.bottom ||
-            self._listViewModel.getCount() && self._sourceController && self._sourceController.hasMoreData('down') ? 'visible' : 'auto'
+                self._listViewModel && self._listViewModel.getCount() &&
+                self._sourceController && self._sourceController.hasMoreData('down') ? 'visible' : 'auto'
         }], { bubbling: true });
     },
 
