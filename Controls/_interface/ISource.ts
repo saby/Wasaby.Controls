@@ -107,7 +107,7 @@ export default interface ISource {
  *
  *     _source: null,
  *     _beforeMount: function() {
- *         this._source = new Memory({
+ *         this._source = new sbis.Memory({
  *             keyProperty: 'key',
  *             data: [
  *                {
@@ -138,14 +138,14 @@ export default interface ISource {
  * @example
  * <pre class="brush: html">
  *     <Controls.list:View
- *       source = "{{_source}}"
+ *       source="{{_source}}"
  *       keyProperty="key">
  *    </Controls.list:View>
  * </pre>
  * <pre class="brush: js">
- * _source:null,
+ * _source: null,
  * _beforeMount: function(){
- *    this._source: new source({
+ *    this._source = new sbis.Memory({
  *       keyProperty: 'key',
  *       data: [
  *            {
