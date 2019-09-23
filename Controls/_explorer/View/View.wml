@@ -7,6 +7,7 @@
                                  highlighter="{{[_breadCrumbsDragHighlighter]}}"
                                  on:hoveredItemChanged="_hoveredCrumbChanged()"
                                  on:arrowActivated="_notifyHandler('arrowActivated')"
+                                 on:arrowClick="_notifyHandler('arrowClick')"
                                  on:itemClick="_onBreadCrumbsClick()">
          <Controls.treeGrid:TreeControl root="{{_getRoot()}}"
                                     scope="{{_options}}"
