@@ -40,6 +40,7 @@
                mask="{{_mask}}"
                autocompleteMode="start"
                value="{{_rangeModel.startValue}}"
+               attr:ws-autofocus="true"
                attr:class="controls-PeriodDialog__header-datePickerStart"
                on:valueChanged="_startValuePickerChanged()"
                on:keyup="_startValueFieldKeyUpHandler()"
