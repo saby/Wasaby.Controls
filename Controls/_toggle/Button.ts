@@ -5,6 +5,7 @@ import ToggleButtonTemplate = require('wml!Controls/_toggle/Button/Button');
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {ITooltip, ITooltipOptions, IButton, IButtonOptions, IIconStyle, IIconStyleOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {constants} from 'Env/Env';
 
 export interface IToggleButtonOptions extends
    IControlOptions, ICheckableOptions, ITooltipOptions, IButtonOptions, IIconStyleOptions {
@@ -200,7 +201,7 @@ class ToggleButton extends Control<IToggleButtonOptions> implements ICheckable {
    }
 
    private _keyUpHandler(e: SyntheticEvent): void {
-      if (e.nativeEvent.keyCode === 13 && !this._options.readOnly) {
+      if (e.nativeEvent.keyCode === constants.key.enter && !this._options.readOnly) {
          this._notify('click');
       }
    }
