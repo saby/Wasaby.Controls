@@ -1889,7 +1889,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     __needShowEmptyTemplate: function(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
         // Described in this document: https://docs.google.com/spreadsheets/d/1fuX3e__eRHulaUxU-9bXHcmY9zgBWQiXTmwsY32UcsE
         const noData = !listViewModel.getCount();
-        const noEdit = !listViewModel.getEditingItemData();
+        const noEdit = this._options.useNewModel ? !listViewModel.isEditing() : !listViewModel.getEditingItemData();
         const isLoading = this._sourceController && this._sourceController.isLoading();
         const hasMore = this._sourceController && (this._sourceController.hasMoreData('down') || this._sourceController.hasMoreData('up'));
         const noDataBeforeReload = this._noDataBeforeReload;
