@@ -9,7 +9,8 @@ import {ContextOptions} from 'Controls/context';
 import {Controller as SourceController} from 'Controls/source';
 import {selectionToRecord} from 'Controls/operations';
 import {adapter} from 'Types/entity';
-import {IData, IDecorator} from "Types/source";
+import {IData, IDecorator} from 'Types/source';
+import {List, RecordSet} from 'Types/collection';
 
 /**
  * Контейнер принимает опцию selectedItems от Controls/lookupPopup:Controller и устанавливает опцию selectedKeys для дочернего списка.
@@ -157,8 +158,13 @@ import {IData, IDecorator} from "Types/source";
          },
 
          getSelectedKeys: function(options, context) {
-            var items = _private.getFilteredItems(options.selectedItems || context.selectorControllerContext.selectedItems, _private.getFilterFunction(options.selectionFilter));
+            const selectedItems = _private.getSelectedItems(options, context);
+            const items = _private.getFilteredItems(selectedItems, _private.getFilterFunction(options.selectionFilter));
             return _private.getKeysByItems(items, context.dataOptions.keyProperty);
+         },
+
+         getSelectedItems(options, context): List|RecordSet  {
+            return options.selectedItems || context.selectorControllerContext.selectedItems || new List();
          },
 
          getSourceController: function(source) {
@@ -186,11 +192,11 @@ import {IData, IDecorator} from "Types/source";
             return type;
          },
 
-         getSourceAdapter: function(source:IData):adapter.IAdapter {
-            let adapter:adapter.IAdapter;
+         getSourceAdapter: function(source:IData): adapter.IAdapter {
+            let adapter: adapter.IAdapter;
 
             if (cInstance.instanceOfMixin(source, 'Types/_source/IDecorator')) {
-               adapter = (<IData>(source as IDecorator).getOriginal()).getAdapter();
+               adapter = ((source as IDecorator).getOriginal() as IData).getAdapter();
             } else {
                adapter = source.getAdapter();
             }
@@ -219,13 +225,31 @@ import {IData, IDecorator} from "Types/source";
             return filter;
          },
 
-         prepareResult: function(result, selectedKeys, keyProperty, selectCompleteInitiator) {
+         prepareResult: function(result, initialSelection, keyProperty, selectCompleteInitiator) {
             return {
                resultSelection: result,
-               initialSelection: selectedKeys,
+               initialSelection: initialSelection,
                keyProperty: keyProperty,
                selectCompleteInitiator: selectCompleteInitiator
             };
+         },
+
+         getInitialSelectedItems(self, options, context): List|RecordSet {
+            const selectedItems = _private.getSelectedItems(options, context).clone();
+            const itemsToRemove = [];
+            const keyProp = context.dataOptions.keyProperty;
+
+            selectedItems.each((item) => {
+               if (!self._selectedKeys.includes(item.get(keyProp))) {
+                  itemsToRemove.push(item);
+               }
+            });
+
+            itemsToRemove.forEach((item) => {
+               selectedItems.remove(item);
+            });
+
+            return selectedItems;
          }
       };
 
@@ -240,7 +264,7 @@ import {IData, IDecorator} from "Types/source";
          _beforeMount: function(options, context) {
             this._selectedKeys = _private.getSelectedKeys(options, context);
             this._excludedKeys = [];
-            this._initialSelectedKeys = this._selectedKeys.slice();
+            this._initialSelection = _private.getInitialSelectedItems(this, options, context);
          },
 
          _beforeUpdate: function(newOptions, context) {
@@ -273,7 +297,7 @@ import {IData, IDecorator} from "Types/source";
                const selectedItem = items.getRecordById(this._selectedKeys[0]);
 
                if (!multiSelect && selectedItem) {
-                  let selectedItems = _private.getEmptyItems(items);
+                  const selectedItems = _private.getEmptyItems(items);
 
                   selectedItems.add(selectedItem);
                   loadDef = Deferred.success(selectedItems);
@@ -296,7 +320,7 @@ import {IData, IDecorator} from "Types/source";
                   self._notify('hideIndicator', [indicatorId], {bubbling: true});
                }
 
-               return _private.prepareResult(result, self._initialSelectedKeys, keyProperty, self._selectCompleteInitiator);
+               return _private.prepareResult(result, self._initialSelection, keyProperty, self._selectCompleteInitiator);
             });
 
             this._notify('selectionLoad', [loadDef], {bubbling: true});
