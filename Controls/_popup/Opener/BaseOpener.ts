@@ -467,7 +467,8 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'targetTracking',
         'locationStrategy',
         'fittingMode',
-        'actionOnScroll'
+        'actionOnScroll',
+        'iWantBeWS3'
     ];
 
     // merge _options to popupOptions
