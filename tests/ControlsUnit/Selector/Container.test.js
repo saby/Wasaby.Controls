@@ -41,6 +41,22 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
           assert.equal(lookupPopup.Container._private.getSelectedItems(emptyOptions, emptyContext).getCount(), 0);
       });
 
+      it('_private::getInitialSelectedItems', () => {
+         const self = {};
+         self._selectedKeys = [1];
+         const options = {
+            selectedItems: new collection.List({items: getItems()})
+         };
+         const context = {
+            selectorControllerContext: {},
+            dataOptions: {
+               keyProperty: 'id'
+            }
+         };
+
+         assert.equal(lookupPopup.Container._private.getInitialSelectedItems(self, options, context).getCount(), 1);
+      });
+
       it('getFilteredItems', function() {
          var items = ['toRemoveItem', 'toSaveItem', 'toSaveItem'];
          var filterFunc = function(item) {

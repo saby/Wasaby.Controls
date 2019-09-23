@@ -232,6 +232,24 @@ import {List, RecordSet} from 'Types/collection';
                keyProperty: keyProperty,
                selectCompleteInitiator: selectCompleteInitiator
             };
+         },
+
+         getInitialSelectedItems(self, options, context): List|RecordSet {
+            const selectedItems = _private.getSelectedItems(options, context).clone();
+            const itemsToRemove = [];
+            const keyProp = context.dataOptions.keyProperty;
+
+            selectedItems.each((item) => {
+               if (!self._selectedKeys.includes(item.get(keyProp))) {
+                  itemsToRemove.push(item);
+               }
+            });
+
+            itemsToRemove.forEach((item) => {
+               selectedItems.remove(item);
+            });
+
+            return selectedItems;
          }
       };
 
@@ -246,7 +264,7 @@ import {List, RecordSet} from 'Types/collection';
          _beforeMount: function(options, context) {
             this._selectedKeys = _private.getSelectedKeys(options, context);
             this._excludedKeys = [];
-            this._initialSelection = _private.getSelectedItems(options, context).clone();
+            this._initialSelection = _private.getInitialSelectedItems(this, options, context);
          },
 
          _beforeUpdate: function(newOptions, context) {
