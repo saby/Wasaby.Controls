@@ -313,6 +313,7 @@ const StackController = BaseController.extend({
     },
 
     elementUpdateOptions(item, container) {
+        _private.preparePropStorageId(item);
         if (!item.popupOptions.propStorageId) {
             return _private.updatePopup(this, item, container);
         } else {
