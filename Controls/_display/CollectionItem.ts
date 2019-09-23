@@ -1,31 +1,35 @@
 import {
-   DestroyableMixin,
-   OptionsToPropertyMixin,
-   InstantiableMixin,
-   SerializableMixin,
-   IInstantiable,
-   IVersionable
+    DestroyableMixin,
+    OptionsToPropertyMixin,
+    InstantiableMixin,
+    SerializableMixin,
+    IInstantiable,
+    IVersionable
 } from 'Types/entity';
 import Collection, {ISourceCollection} from './Collection';
 import {ISerializableState as IDefaultSerializableState} from 'Types/entity';
 import {IList} from 'Types/collection';
 import {register} from 'Types/di';
 import {mixin} from 'Types/util';
-import IItemActions from './interface/IItemActions';
 
 export interface IOptions<T> {
-   contents: T;
-   owner: Collection<T>;
+    contents?: T;
+    selected?: boolean;
+    marked?: boolean;
+    editing?: boolean;
+    actions?: any;
+    swiped?: boolean;
+    owner?: Collection<T>;
 }
 
 export interface ISerializableState<T> extends IDefaultSerializableState {
-   $options: IOptions<T>;
-   ci: number;
-   iid: string;
+    $options: IOptions<T>;
+    ci: number;
+    iid: string;
 }
 
 export interface ICollectionItemCounters {
-   [key: string]: number;
+    [key: string]: number;
 }
 
 /**
@@ -33,360 +37,354 @@ export interface ICollectionItemCounters {
  * @class Controls/_display/CollectionItem
  * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/OptionsMixin
- * @implements Types/_entity/IInstantiable
  * @mixes Types/_entity/InstantiableMixin
  * @mixes Types/_entity/SerializableMixin
  * @public
  * @author Мальцев А.А.
  */
 export default class CollectionItem<T> extends mixin<
-   DestroyableMixin,
-   OptionsToPropertyMixin,
-   InstantiableMixin,
-   SerializableMixin
+    DestroyableMixin,
+    OptionsToPropertyMixin,
+    InstantiableMixin,
+    SerializableMixin
 >(
-   DestroyableMixin,
-   OptionsToPropertyMixin,
-   InstantiableMixin,
-   SerializableMixin
-) implements IInstantiable {
+    DestroyableMixin,
+    OptionsToPropertyMixin,
+    InstantiableMixin,
+    SerializableMixin
+) implements IInstantiable, IVersionable {
 
-   // region IInstantiable
+    // region IInstantiable
 
-   readonly '[Types/_entity/IInstantiable]': boolean;
+    readonly '[Types/_entity/IInstantiable]': boolean;
 
-   getInstanceId: () => string;
+    getInstanceId: () => string;
 
-   /**
-    * Коллекция, которой принадлежит элемент
-    */
-   protected _$owner: Collection<T>;
+    /**
+     * Коллекция, которой принадлежит элемент
+     */
+    protected _$owner: Collection<T>;
 
-   /**
-    * Содержимое элемента коллекции
-    */
-   protected _$contents: T;
+    /**
+     * Содержимое элемента коллекции
+     */
+    protected _$contents: T;
 
-   /**
-    * Элемент выбран
-    */
-   protected _$selected: boolean;
+    /**
+     * Элемент выбран
+     */
+    protected _$selected: boolean;
 
-   /**
-    * Элемент отмечен маркером
-    */
-   protected _$marked: boolean;
+    protected _$marked: boolean;
 
-   /**
-    * Элемент находится в режиме редактирования
-    */
-   protected _$editing: boolean;
+    protected _$editing: boolean;
 
-   /**
-    * Операции над записью
-    */
-   protected _$actions: IItemActions;
+    protected _$actions: any;
 
-   /**
-    * Элемент находится в режиме отображения операций над записью по свайпу
-    */
-   protected _$swiped: boolean;
+    protected _$swiped: boolean;
 
-   protected _instancePrefix: string;
+    protected _instancePrefix: string;
 
-   /**
-    * Индекс содержимого элемента в коллекции (используется для сериализации)
-    */
-   protected _contentsIndex: number;
+    /**
+     * Индекс содержимого элемента в коллекции (используется для сериализации)
+     */
+    protected _contentsIndex: number;
 
-   protected _version: number;
+    readonly '[Types/_entity/IVersionable]': boolean;
 
-   protected _counters: ICollectionItemCounters;
+    protected _version: number;
 
-   constructor(options: IOptions<T>) {
-      super();
-      OptionsToPropertyMixin.call(this, options);
-      SerializableMixin.call(this);
+    protected _counters: ICollectionItemCounters;
 
-      this._counters = {};
-   }
+    constructor(options?: IOptions<T>) {
+        super();
+        OptionsToPropertyMixin.call(this, options);
+        SerializableMixin.call(this);
+        this._counters = {};
+    }
 
-   // endregion
+    // endregion
 
-   // region Public
+    // region IVersionable
 
-   /**
-    * Возвращает коллекцию, которой принадлежит элемент
-    */
-   getOwner(): Collection<T> {
-      return this._$owner;
-   }
+    getVersion(): number {
+        const contents = this._$contents as unknown;
+        if (contents && typeof (contents as IVersionable).getVersion === 'function') {
+            return this._version + (contents as IVersionable).getVersion();
+        }
+        return this._version;
+    }
 
-   /**
-    * Устанавливает коллекцию, которой принадлежит элемент
-    * @param owner Коллекция, которой принадлежит элемент
-    */
-   setOwner(owner: Collection<T>): void {
-      this._$owner = owner;
-   }
+    protected _nextVersion(): void {
+        this._version++;
+    }
 
-   /**
-    * Возвращает содержимое элемента коллекции
-    */
-   getContents(): T {
-      if (this._contentsIndex !== undefined) {
-         // Ленивое восстановление _$contents по _contentsIndex после десериализации
-         const collection = this.getOwner().getCollection();
-         if (collection['[Types/_collection/IList]']) {
-            this._$contents = (collection as any as IList<T>).at(this._contentsIndex);
-            this._contentsIndex = undefined;
-         }
-      }
-      return this._$contents;
-   }
+    // endregion
 
-   // TODO: обсудить, по идее это костыль для бинда. Нужно либо перейти на
-   // реактивный объект, либо придумать что-то другое
-   get contents(): T {
-      return this.getContents();
-   }
+    // region Public
 
-   /**
-    * Устанавливает содержимое элемента коллекции
-    * @param contents Новое содержимое
-    * @param [silent=false] Не уведомлять владельца об изменении содержимого
-    */
-   setContents(contents: T, silent?: boolean): void {
-      if (this._$contents === contents) {
-         return;
-      }
-      this._$contents = contents;
-      if (!silent) {
-         this._notifyItemChangeToOwner('contents');
-      }
-   }
+    /**
+     * Возвращает коллекцию, которой принадлежит элемент
+     */
+    getOwner(): Collection<T> {
+        return this._$owner;
+    }
 
-   getVersion(): number {
-      const contents = this._$contents as unknown as IVersionable;
-      if (contents && typeof contents.getVersion === 'function') {
-         return this._version + contents.getVersion();
-      }
-      return this._version;
-   }
+    /**
+     * Устанавливает коллекцию, которой принадлежит элемент
+     * @param owner Коллекция, которой принадлежит элемент
+     */
+    setOwner(owner: Collection<T>): void {
+        this._$owner = owner;
+    }
 
-   /**
-    * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции {@link contents}.
-    */
-   getUid(): string {
-      if (!this._$owner) {
-         return;
-      }
-      return this._$owner.getItemUid(this);
-   }
+    /**
+     * Возвращает содержимое элемента коллекции
+     */
+    getContents(): T {
+        if (this._contentsIndex !== undefined) {
+            // Ленивое восстановление _$contents по _contentsIndex после десериализации
+            const collection = this.getOwner().getCollection();
+            if (collection['[Types/_collection/IList]']) {
+                this._$contents = (collection as any as IList<T>).at(this._contentsIndex);
+                this._contentsIndex = undefined;
+            }
+        }
+        return this._$contents;
+    }
 
-   /**
-    * Возвращает признак, что элемент выбран
-    */
-   isSelected(): boolean {
-      return this._$selected;
-   }
+    // TODO Временный тестовый костыль для бинда. По итогу прикладник будет передавать
+    // список опций, которые нужны для его шаблона (contents, marked и т. д.), и будет
+    // в автоматическом режиме генерироваться подпроекция с нужными полями
+    get contents(): T {
+        return this.getContents();
+    }
 
-   /**
-    * Устанавливает признак, что элемент выбран
-    * @param selected Элемент выбран
-    * @param [silent=false] Не уведомлять владельца об изменении признака выбранности
-    */
-   setSelected(selected: boolean, silent?: boolean): void {
-      if (this._$selected === selected) {
-         return;
-      }
-      this._$selected = selected;
-      if (!silent) {
-         this._notifyItemChangeToOwner('selected');
-      }
-   }
+    /**
+     * Устанавливает содержимое элемента коллекции
+     * @param contents Новое содержимое
+     * @param [silent=false] Не уведомлять владельца об изменении содержимого
+     */
+    setContents(contents: T, silent?: boolean): void {
+        if (this._$contents === contents) {
+            return;
+        }
+        this._$contents = contents;
+        if (!silent) {
+            this._notifyItemChangeToOwner('contents');
+        }
+    }
 
-   // endregion
+    /**
+     * Возвращает псевдоуникальный идентификатор элемента коллекции, основанный на значении опции {@link contents}.
+     */
+    getUid(): string {
+        if (!this._$owner) {
+            return;
+        }
+        return this._$owner.getItemUid(this);
+    }
 
-   getMultiSelectClasses(): string {
-      let classes = 'controls-ListView__checkbox controls-ListView__notEditable';
-      if (this.getOwner().getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
-         classes += ' controls-ListView__checkbox-onhover';
-      }
-      return classes;
-   }
+    /**
+     * Возвращает признак, что элемент выбран
+     */
+    isSelected(): boolean {
+        return this._$selected;
+    }
 
-   getDisplayProperty(): string {
-      return this.getOwner().getDisplayProperty();
-   }
+    /**
+     * Устанавливает признак, что элемент выбран
+     * @param selected Элемент выбран
+     * @param [silent=false] Не уведомлять владельца об изменении признака выбранности
+     */
+    setSelected(selected: boolean, silent?: boolean): void {
+        if (this._$selected === selected) {
+            return;
+        }
+        this._$selected = selected;
+        if (!silent) {
+            this._notifyItemChangeToOwner('selected');
+        }
+    }
 
-   isMarked(): boolean {
-      return this._$marked;
-   }
+    // endregion
 
-   setMarked(marked: boolean, silent?: boolean): void {
-      if (this._$marked === marked) {
-         return;
-      }
-      this._$marked = marked;
-      this._nextVersion();
-      if (!silent) {
-         this._notifyItemChangeToOwner('marked');
-      }
-   }
+    getDisplayProperty(): string {
+        return this.getOwner().getDisplayProperty();
+    }
 
-   isEditing(): boolean {
-      return this._$editing;
-   }
+    isMarked(): boolean {
+        return this._$marked;
+    }
 
-   setEditing(editing: boolean, silent?: boolean): void {
-      if (this._$editing === editing) {
-         return;
-      }
-      this._$editing = editing;
-      this._nextVersion();
-      if (!silent) {
-         this._notifyItemChangeToOwner('editing');
-      }
-   }
+    setMarked(marked: boolean, silent?: boolean): void {
+        if (this._$marked === marked) {
+            return;
+        }
+        this._$marked = marked;
+        this._nextVersion();
+        if (!silent) {
+            this._notifyItemChangeToOwner('marked');
+        }
+    }
 
-   isSwiped(): boolean {
-      return this._$swiped;
-   }
+    increaseCounter(name: string): number {
+        if (typeof this._counters[name] === 'undefined') {
+            this._counters[name] = 0;
+        }
+        return ++this._counters[name];
+    }
 
-   setSwiped(swiped: boolean, silent?: boolean): void {
-      if (this._$swiped === swiped) {
-         return;
-      }
-      this._$swiped = swiped;
-      this._nextVersion();
-      if (!silent) {
-         this._notifyItemChangeToOwner('swiped');
-      }
-   }
+    getCounters(): ICollectionItemCounters {
+        return this._counters;
+    }
 
-   setActions(actions: IItemActions, silent?: boolean): void {
-      if (this._$actions === actions) {
-         return;
-      }
-      this._$actions = actions;
-      this._nextVersion();
-      if (!silent) {
-         this._notifyItemChangeToOwner('actions');
-      }
-   }
+    getMultiSelectClasses(): string {
+        let classes = 'controls-ListView__checkbox controls-ListView__notEditable';
+        if (this.getOwner().getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
+            classes += ' controls-ListView__checkbox-onhover';
+        }
+        return classes;
+    }
 
-   getActions(): IItemActions {
-      return this._$actions;
-   }
+    isEditing(): boolean {
+        return this._$editing;
+    }
 
-   hasVisibleActions(): boolean {
-      return this._$actions && this._$actions.showed && this._$actions.showed.length > 0;
-   }
+    setEditing(editing: boolean, silent?: boolean): void {
+        if (this._$editing === editing) {
+            return;
+        }
+        this._$editing = editing;
+        this._nextVersion();
+        if (!silent) {
+            this._notifyItemChangeToOwner('editing');
+        }
+    }
 
-   hasActionWithIcon(): boolean {
-      return this.hasVisibleActions() && this._$actions.showed.some((action) => !!action.icon);
-   }
+    setActions(actions: any, silent?: boolean): void {
+        if (this._$actions === actions) {
+            return;
+        }
+        this._$actions = actions;
+        this._nextVersion();
+        if (!silent) {
+            this._notifyItemChangeToOwner('actions');
+        }
+    }
 
-   shouldDisplayActions(): boolean {
-      return this.hasVisibleActions() || this.isEditing();
-   }
+    getActions(): any {
+        return this._$actions;
+    }
 
-   increaseCounter(name: string): number {
-      if (typeof this._counters[name] === 'undefined') {
-         this._counters[name] = 0;
-      }
-      return ++this._counters[name];
-   }
+    hasVisibleActions(): boolean {
+        return this._$actions && this._$actions.showed && this._$actions.showed.length > 0;
+    }
 
-   getCounters(): ICollectionItemCounters {
-      return this._counters;
-   }
+    shouldDisplayActions(): boolean {
+        return this.hasVisibleActions() || this.isEditing();
+    }
 
-   // region SerializableMixin
+    hasActionWithIcon(): boolean {
+        return this.hasVisibleActions() && this._$actions.showed.some((action: any) => !!action.icon);
+    }
 
-   _getSerializableState(state: IDefaultSerializableState): ISerializableState<T> {
-      const resultState = SerializableMixin.prototype._getSerializableState.call(this, state) as ISerializableState<T>;
+    isSwiped(): boolean {
+        return this._$swiped;
+    }
 
-      if (resultState.$options.owner) {
-         // save element index if collections implements Types/_collection/IList
-         const collection = resultState.$options.owner.getCollection();
-         const index = collection['[Types/_collection/IList]']
-            ? (collection as any as IList<T>).getIndex(resultState.$options.contents)
-            : -1;
-         if (index > -1) {
-            resultState.ci = index;
-            delete resultState.$options.contents;
-         }
-      }
+    setSwiped(swiped: boolean, silent?: boolean): void {
+        if (this._$swiped === swiped) {
+            return;
+        }
+        this._$swiped = swiped;
+        this._nextVersion();
+        if (!silent) {
+            this._notifyItemChangeToOwner('swiped');
+        }
+    }
 
-      // By performance reason. It will be restored at Collection::_setSerializableState
-      // delete resultState.$options.owner;
+    // region SerializableMixin
 
-      resultState.iid = this.getInstanceId();
+    _getSerializableState(state: IDefaultSerializableState): ISerializableState<T> {
+        const resultState = SerializableMixin.prototype._getSerializableState.call(
+            this, state
+        ) as ISerializableState<T>;
 
-      return resultState;
-   }
+        if (resultState.$options.owner) {
+            // save element index if collections implements Types/_collection/IList
+            const collection = resultState.$options.owner.getCollection();
+            const index = collection['[Types/_collection/IList]']
+                ? (collection as any as IList<T>).getIndex(resultState.$options.contents)
+                : -1;
+            if (index > -1) {
+                resultState.ci = index;
+                delete resultState.$options.contents;
+            }
+        }
 
-   _setSerializableState(state: ISerializableState<T>): Function {
-      const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
-      return function(): void {
-         fromSerializableMixin.call(this);
-         if (state.hasOwnProperty('ci')) {
-            this._contentsIndex = state.ci;
-         }
-         this._instanceId = state.iid;
-      };
-   }
+        // By performance reason. It will be restored at Collection::_setSerializableState
+        // delete resultState.$options.owner;
 
-   // endregion
+        resultState.iid = this.getInstanceId();
 
-   // region Protected
+        return resultState;
+    }
 
-   /**
-    * Возвращает коллекцию проекции
-    * @protected
-    */
-   protected _getSourceCollection(): ISourceCollection<T> {
-      return this.getOwner().getCollection();
-   }
+    _setSerializableState(state: ISerializableState<T>): Function {
+        const fromSerializableMixin = SerializableMixin.prototype._setSerializableState(state);
+        return function(): void {
+            fromSerializableMixin.call(this);
+            if (state.hasOwnProperty('ci')) {
+                this._contentsIndex = state.ci;
+            }
+            this._instanceId = state.iid;
+        };
+    }
 
-   /**
-    * Генерирует событие у владельца об изменении свойства элемента
-    * @param property Измененное свойство
-    * @protected
-    */
-   protected _notifyItemChangeToOwner(property: string): void {
-      if (this._$owner) {
-         this._$owner.notifyItemChange(
-            this,
-            // @ts-ignore fix argument type
-            property
-         );
-      }
-   }
+    // endregion
 
-   // endregion
+    // region Protected
 
-   protected _nextVersion(): void {
-      this._version++;
-   }
+    /**
+     * Возвращает коллекцию проекции
+     * @protected
+     */
+    protected _getSourceCollection(): ISourceCollection<T> {
+        return this.getOwner().getCollection();
+    }
+
+    /**
+     * Генерирует событие у владельца об изменении свойства элемента
+     * @param property Измененное свойство
+     * @protected
+     */
+    protected _notifyItemChangeToOwner(property: string): void {
+        if (this._$owner) {
+            this._$owner.notifyItemChange(
+                this,
+                property as any
+            );
+        }
+    }
+
+    // endregion
 }
 
 Object.assign(CollectionItem.prototype, {
-   '[Controls/_display/CollectionItem]': true,
-   _moduleName: 'Controls/display:CollectionItem',
-   _$owner: null,
-   _$contents: null,
-   _$selected: false,
-   _$marked: false,
-   _$editing: false,
-   _$actions: null,
-   _$swiped: false,
-   _instancePrefix: 'collection-item-',
-   _contentsIndex: undefined,
-   _counters: null,
-   _version: 0
+    '[Controls/_display/CollectionItem]': true,
+    _moduleName: 'Controls/display:CollectionItem',
+    _$owner: null,
+    _$contents: null,
+    _$selected: false,
+    _$marked: false,
+    _$editing: false,
+    _$actions: null,
+    _$swiped: false,
+    _instancePrefix: 'collection-item-',
+    _contentsIndex: undefined,
+    _version: 0,
+    _counters: null
 });
 
 register('Controls/display:CollectionItem', CollectionItem);

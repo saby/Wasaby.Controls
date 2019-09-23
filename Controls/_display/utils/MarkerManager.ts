@@ -3,7 +3,7 @@ import CollectionItem from '../CollectionItem';
 export default class MarkerManager {
     private _lastMarkedItem: CollectionItem<unknown>;
 
-    public markItem(item: CollectionItem<unknown>): void {
+    markItem(item: CollectionItem<unknown>): void {
         if (item === this._lastMarkedItem) {
             return;
         }

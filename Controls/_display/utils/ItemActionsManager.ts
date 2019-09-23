@@ -1,10 +1,9 @@
 import CollectionItem from '../CollectionItem';
-import IItemActions from '../interface/IItemActions';
 
 export default class ItemActionsManager {
     private _activeItem: CollectionItem<unknown> = null;
 
-    setItemActions(item: CollectionItem<unknown>, actions: IItemActions): void {
+    setItemActions(item: CollectionItem<unknown>, actions: any): void {
         item.setActions(actions);
     }
 
