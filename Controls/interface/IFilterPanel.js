@@ -195,7 +195,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *            id: 'type',
     *            value: ['1'],
     *            resetValue: ['1'],
-    *            source: new MemorySource({
+    *            source: new Memory({
     *               data: [{ id: '1', title: 'All types' },
     *                      { id: '2', title: 'Meeting' },
     *                      { id: 3, title: 'VideoConference' }],
