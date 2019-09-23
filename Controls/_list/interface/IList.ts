@@ -169,7 +169,7 @@
  * @name Controls/_list/interface/IList#itemActions
  * @cfg {Array.<ItemAction>} Конфигурация кнопок, которые будут отображаться при наведении указателя мыши на элемент.
  * <a href="/materials/demo-ws4-list-item-actions">См. демо-</a>.
- * Внимание: обязательно установите значение в опции <a href="/docs/js/Controls/list/DataContainer/options/keyProperty/">keyProperty</a>, чтобы операции над записью работали корректно. 
+ * Внимание: обязательно установите значение в опции <a href="/docs/js/Controls/grid/View/options/keyProperty/">keyProperty</a>, чтобы операции над записью работали корректно. 
  */
 
 /*
