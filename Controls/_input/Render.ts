@@ -4,6 +4,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 import {default as IValidationStatus, IValidationStatusOptions} from 'Controls/_input/interface/IValidationStatus';
+import {default as IBorderStyle, IBorderStyleOptions} from 'Controls/_input/interface/IBorderStyle';
 import {
    IHeight, IHeightOptions, IFontColorStyle,
    IFontColorStyleOptions, IFontSize, IFontSizeOptions
@@ -11,10 +12,10 @@ import {
 
 import * as template from 'wml!Controls/_input/Render/Render';
 
-type State = 'valid' | 'valid-active' | 'invalid' | 'invalid-active' | 'readonly' | 'readonly-multiline';
+type State = 'valid' | 'valid-active' | 'invalid' | 'invalid-active' | 'readonly' | 'readonly-multiline' | 'success' | 'secondary' | 'warning';
 
 interface IRenderOptions extends IControlOptions, IHeightOptions,
-IFontColorStyleOptions, IFontSizeOptions, IValidationStatusOptions {
+IFontColorStyleOptions, IFontSizeOptions, IValidationStatusOptions, IBorderStyleOptions {
    /**
     * @name Controls/_input/Render#multiline
     * @cfg {Boolean} Определяет режим рендеринга текстового поля.
@@ -60,11 +61,12 @@ IFontColorStyleOptions, IFontSizeOptions, IValidationStatusOptions {
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_input/interface/ITag
  * @mixes Controls/_input/interface/IValidationStatus
+ * @mixes Controls/_input/interface/IBorderStyle
  *
  * @author Красильников А.С.
  */
 
-class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle, IFontSize, IValidationStatus {
+class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle, IFontSize, IValidationStatus, IBorderStyle {
    private _tag: SVGElement | null = null;
    private _contentActive: boolean = false;
 
@@ -80,6 +82,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
    readonly '[Controls/_interface/IFontSize]': true;
    readonly '[Controls/_interface/IFontColorStyle]': true;
    readonly '[Controls/_input/interface/IValidationStatus]': true;
+   readonly '[Controls/_input/interface/IBorderStyle]': true;
 
    private updateState(options: IRenderOptions): void {
       this._fontSize = ActualAPI.fontSize(options.fontStyle, options.fontSize);
@@ -96,6 +99,9 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
 
          return 'readonly';
       }
+      if(options.borderStyle && this._validationStatus === 'valid') {
+         return options.borderStyle;
+      }
 
       /**
        * Only for ie and edge. Other browsers can work with :focus-within pseudo selector.
@@ -103,7 +109,6 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
       if (this._contentActive && detection.isIE) {
          return this._validationStatus + '-active';
       }
-
       return this._validationStatus;
    }
    private _tagClickHandler(event: SyntheticEvent<MouseEvent>) {
