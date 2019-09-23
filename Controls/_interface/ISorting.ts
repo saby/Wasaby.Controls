@@ -25,10 +25,19 @@ export default interface ISorting {
  * @cfg {Array.<Object>} Определяет сортировку контрола. Допустимы значения ASD/DESC.
  * @example
  * В шапке столбца необходимо задать свойство sortingProperty:
- * <pre>
- * _header = null,
- * _columns = null,
+ * <pre class="brush: js; highlight: [10, 14]">
+ * _sorting: null
+ * _header: null,
+ * _columns: null,
  * _beforeMount: function(options) {
+ *    this._sorting = [
+ *        {
+ *           price: 'DESC'
+ *        },
+ *        { 
+ *           balance: 'ASC'
+ *        }
+ *    ];
  *    this._header = [
  *       {
  *          caption: ''
