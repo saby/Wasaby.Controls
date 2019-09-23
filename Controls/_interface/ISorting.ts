@@ -25,7 +25,7 @@ export default interface ISorting {
  * @cfg {Array.<Object>} Определяет сортировку контрола. Допустимы значения ASD/DESC.
  * @example
  * В шапке столбца необходимо задать свойство sortingProperty:
- * <pre class="brush: js; highlight: [10, 14]">
+ * <pre class="brush: js; highlight: [19, 23]">
  * _sorting: null
  * _header: null,
  * _columns: null,
