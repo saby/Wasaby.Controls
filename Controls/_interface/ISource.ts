@@ -49,7 +49,7 @@ export default interface ISource {
  *
  *     _source: null,
  *     _beforeMount: function() {
- *         this._source = new Memory({
+ *         this._source=new Memory({
  *             keyProperty: 'key',
  *             data: [
  *                {
@@ -137,29 +137,26 @@ export default interface ISource {
  * @remark Например, идентификатор может быть первичным ключом записи в базе данных.
  * @example
  * <pre>
- *    <Controls.list:View
- *       source = "{{_source}}"
- *       keyProperty="key">
- *    </Controls.list:View>
- * </pre>
- * <pre>
- *    _source: new Memory({
+ * _source:null,
+ * _beforeMount: function(){
+ *    this._source: new source.Memory({
  *       keyProperty: 'key',
  *       data: [
- *       {
- *          key: '1',
- *          title: 'Yaroslavl'
- *       },
- *       {
- *          key: '2',
- *          title: 'Moscow'
- *       },
- *       {
- *          key: '3',
- *          title: 'St-Petersburg'
- *       }
- *       ]
- *    })
+ *            {
+ *               key: '1',
+ *                title: 'Yaroslavl'
+ *            },
+ *            {
+ *               key: '2',
+ *                title: 'Moscow'
+ *            },
+ *            {
+ *                key: '3',
+ *                title: 'St-Petersburg'
+ *            }
+ *            ]
+ *        })
+ * }
  * </pre>
  *
  */
