@@ -179,6 +179,10 @@ class Scrollbar extends Control<IScrollBarOptions> {
         }
     }
 
+    public recalcSizes(): void {
+        this._resizeHandler();
+    }
+
     /**
      * Изменить свойства контрола отвечающего за размеры.
      * @param contentSize размер контента.
