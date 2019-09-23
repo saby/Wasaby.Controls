@@ -49,7 +49,7 @@ export default interface ISource {
  *
  *     _source: null,
  *     _beforeMount: function() {
- *         this._source = new Memory({
+ *         this._source = new source.Memory({
  *             keyProperty: 'key',
  *             data: [
  *                {
@@ -145,7 +145,7 @@ export default interface ISource {
  * <pre class="brush: js">
  * _source:null,
  * _beforeMount: function(){
- *    this._source: new source.Memory({
+ *    this._source: new source({
  *       keyProperty: 'key',
  *       data: [
  *            {
