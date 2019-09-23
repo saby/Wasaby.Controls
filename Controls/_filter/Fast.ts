@@ -1,6 +1,5 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filter/Fast/Fast');
-import {Controller as SourceController} from 'Controls/source';
 import chain = require('Types/chain');
 import collection = require('Types/collection');
 import cInstance = require('Core/core-instance');
@@ -8,12 +7,13 @@ import clone = require('Core/core-clone');
 import pDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import Utils = require('Types/util');
-import {isEqual} from 'Types/object';
 import Merge = require('Core/core-merge');
+import {Controller as SourceController} from 'Controls/source';
+import {isEqual} from 'Types/object';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
 
-      /**
+/**
        * Контрол "Быстрый фильтр".
        * Использует выпадающие списки для фильтрации данных.
        *
@@ -117,8 +117,11 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
             if (properties.items) {
                _private.prepareItems(self._configs[index], properties.items);
                return Deferred.success(self._configs[index]._items);
-            } if (properties.source) {
-               self._configs[index]._sourceController = null;
+            } else if (properties.source) {
+               if (self._configs[index]._sourceController) {
+                  self._configs[index]._sourceController.cancelLoading();
+                  self._configs[index]._sourceController = null;
+               }
                self._configs[index]._source = null;
                return _private.loadItemsFromSource(self._configs[index], properties);
             }

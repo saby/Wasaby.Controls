@@ -184,6 +184,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ? _private.getMultiSelectClassList(itemsModelCurrent) : '';
         itemsModelCurrent.showEditArrow = this._options.showEditArrow;
+        itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
 
         itemsModelCurrent.shouldDrawMarker = function (markerVisibility: boolean) {
             const canDrawMarker = markerVisibility !== false && itemsModelCurrent.markerVisibility !== 'hidden';
@@ -224,6 +225,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             }
         }
         return itemsModelCurrent;
+    },
+
+    _calcCursorClasses: function(clickable) {
+        return ` controls-ListView__itemV ${clickable === false ? 'controls-ListView__itemV_cursor-default' : 'controls-ListView__itemV_cursor-pointer'}`;
     },
 
     _calcItemVersion: function(item, key) {
@@ -575,7 +580,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                this.resetCachedItemData(this._convertItemKeyToCacheKey(id));
             } else if (this._editingItemData && this._editingItemData.key === id) {
                 this._editingItemData.itemActions = actions;
-                this._editingItemData.drawActions = !!actions;
+                this._editingItemData.drawActions = !!(actions && actions.all.length) ||
+                   !!(this._options.editingConfig && this._options.editingConfig.toolbarVisibility);
             }
         }
     },

@@ -13,8 +13,8 @@
                                 icon="Admin"></ws:templateOptions>
       </Controls.popup:Notification>
    </ws:for>
-   <Controls.buttons:Button caption="Кликни чтобы открыть опенер c кастомным шаблоном" on:click="_openNotification('Custom')"/>
-   <Controls.buttons:Button caption="Кликни чтобы закрыть опенер c кастомным шаблоном" on:click="_closeNotification('Custom')"/>
+   <Controls.buttons:Button caption="Кликни чтобы открыть опенер с кастомным шаблоном" on:click="_openNotification('Custom')"/>
+   <Controls.buttons:Button caption="Кликни чтобы закрыть опенер с кастомным шаблоном" on:click="_closeNotification('Custom')"/>
    <Controls.popup:Notification name="myOpenerCustom"
                                        template="wml!Controls-demo/Popup/Opener/resources/CustomNotification">
       <ws:templateOptions value="It is custom template"></ws:templateOptions>

@@ -2,6 +2,7 @@
    icons="{{['icon-small icon-ConnectionPeriod controls-DateRangeRelationButton_normal', 'icon-small icon-ConnectionPeriod controls-DateRangeRelationButton_byCapacity']}}"
    iconStyle="{{ _value ? 'secondary' : 'info' }}"
    viewMode="link"
+   tooltip="{{_value ? rk('Выключить связь') : rk('Включить связь')}}"
    value="{{_value}}"
    on:valueChanged="_onValueChanged()"
 />

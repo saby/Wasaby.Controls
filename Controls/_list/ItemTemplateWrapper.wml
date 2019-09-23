@@ -4,6 +4,7 @@
             groupTemplate="{{groupTemplate}}"
             swipeTemplate="{{swipeTemplate}}"
             multiSelectTpl="{{multiSelectTpl}}"
+            editArrowTemplate="{{editArrowTemplate}}"
             template="{{itemTemplate}}"
             itemData="{{itemData}}"/>
 </ws:template>

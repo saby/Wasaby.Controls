@@ -1,5 +1,5 @@
 /**
- * Библиотека переключателей.
+ * Библиотека контролов, которые позволяют организовать выбор из одного или нескольких значений.
  * @library Controls/toggle
  * @includes Button Controls/_toggle/Button
  * @includes Switch Controls/_toggle/Switch
@@ -18,6 +18,7 @@
  * @includes SeparatorStyles Controls/_toggle/Separator/SeparatorStyles
  * @includes SwitchStyles Controls/_toggle/Switch/SwitchStyles
  * @includes SwitchCircleStyles Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
+ * @includes switchCircleTemplate Controls/_toggle/resources/SwitchCircle/SwitchCircle
  * @public
  * @author Крайнов Д.О. 
  */
@@ -42,6 +43,7 @@
  * @includes SeparatorStyles Controls/_toggle/Separator/SeparatorStyles
  * @includes SwitchStyles Controls/_toggle/Switch/SwitchStyles
  * @includes SwitchCircleStyles Controls/_toggle/resources/SwitchCircle/SwitchCircleStyles
+ * @includes switchCircleTemplate Controls/_toggle/resources/SwitchCircle/SwitchCircle
  * @public
  * @author Крайнов Д.О.
  */

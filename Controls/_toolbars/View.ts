@@ -7,6 +7,24 @@ import {getMenuItems, showType} from 'Controls/Utils/Toolbar';
 import {ActualApi as ButtonActualApi} from 'Controls/buttons';
 
 /**
+ * Графический контрол, отображаемый в виде панели с размещенными на ней кнопками, клик по которым вызывает соответствующие им команды.
+ * <a href="/materials/demo/demo-ws4-toolbar">Демо-пример</a>.
+ *
+ * @class Controls/_toolbars/View
+ * @extends Core/Control
+ * @mixes Controls/_interface/ITooltip
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IItemTemplate
+ * @mixes Controls/_interface/IHierarchy
+ * @mixes Controls/interface/IIconSize
+ * @control
+ * @public
+ * @category Toolbar
+ * @author Красильников А.С.
+ * @demo Controls-demo/Toolbar/ToolbarPG
+ */
+
+/*
  * Graphical control element on which buttons, menu and other input or output elements are placed.
  * <a href="/materials/demo/demo-ws4-toolbar">Demo-example</a>.
  *
@@ -38,7 +56,6 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * @property {String} [item.buttonStyle] Определяет стиль отображения кнопки элемента.{@link Controls/_buttons/Button#buttonStyle Подробнее}
  * @property {String} [item.buttonViewMode] Определяет стиль отображения кнопки элемента.{@link Controls/_buttons/Button#viewMode Подробнее }
  */
-
 /*
  * @typedef {Object} Item
  * @property {Boolean} [item.readOnly] Determines item readOnly state.
@@ -56,10 +73,60 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
 
 /**
  * @typedef {Object} SourceCfg
+ * @property {Item} [SourceCfg.item] Формат исходной записи.
+ */
+
+/*
+ * @typedef {Object} SourceCfg
  * @property {Item} [SourceCfg.item] Format of source record.
  */
 
 /**
+ * @name Controls/_toolbars/View#source
+ * @cfg {SourceCfg} Объект, который реализует интерфейс ISource, необходимый для работы с источником данных.
+ * @default undefined
+ * @remark
+ * Может иметь свойства 'title' и 'showType':
+ * * 'title' определяет заголовок элемента.
+ * * 'showType' определяет, где отображается элемент:
+ *     * 0 - в меню.
+ *     * 1 - в меню и тулбаре.
+ *     * 2 - в тулбаре.
+ * Для readOnly элемента, установите значение 'true' в поле readOnly.
+ * @example
+ * Кнопки будут отображены из источника _source. Первый элемент выравнен по левому краю, другие элементы выравнены по правому краю по умолчанию.
+ * <pre>
+ *    <Controls.toolbars:View keyProperty="key" source="{{_source}}" />
+ * </pre>
+ * <pre>
+ *    _source: new source.Memory({
+ *        keyProperty: 'key',
+ *        data: [
+ *        {
+ *           id: '1',
+ *           showType: 2,
+ *           icon: 'icon-Time',
+ *           '@parent': false,
+ *           parent: null
+ *        },
+ *        {
+ *           id: '2',
+ *           title: 'Moscow',
+ *           '@parent': false,
+ *           parent: null
+ *        },
+ *        {
+ *           id: '3',
+ *           title: 'St-Petersburg',
+ *           '@parent': false,
+ *           parent: null
+ *        }
+ *        ]
+ *    })
+ * </pre>
+ */
+
+/*
  * @name Controls/_toolbars/View#source
  * @cfg {SourceCfg} Object that implements ISource interface for data access.
  * @default undefined
@@ -70,40 +137,55 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * @example
  * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
  * <pre>
- *    <Controls.toolbars:View
- *              keyProperty="key"
- *              source="{{_source}}"
- *    />
+ * <Controls.toolbars:View
+ *           keyProperty="key"
+ *           source="{{_source}}"
+ * />
  * </pre>
  * <pre>
- *    _source: new Memory({
-    *        idProperty: 'key',
-    *        data: [
-    *        {
-    *           id: '1',
-    *           showType: 2,
-    *           icon: 'icon-Time',
-    *           '@parent': false,
-    *           parent: null
-    *        },
-    *        {
-    *           id: '2',
-    *           title: 'Moscow',
-    *           '@parent': false,
-    *           parent: null
-    *        },
-    *        {
-    *           id: '3',
-    *           title: 'St-Petersburg',
-    *           '@parent': false,
-    *           parent: null
-    *        }
-    *        ]
-    *    })
+ *    _source: new source.Memory({
+ *        keyProperty: 'key',
+ *        data: [
+ *        {
+ *           id: '1',
+ *           showType: 2,
+ *           icon: 'icon-Time',
+ *           '@parent': false,
+ *           parent: null
+ *        },
+ *        {
+ *           id: '2',
+ *           title: 'Moscow',
+ *           '@parent': false,
+ *           parent: null
+ *        },
+ *        {
+ *           id: '3',
+ *           title: 'St-Petersburg',
+ *           '@parent': false,
+ *           parent: null
+ *        }
+ *        ]
+ *    })
  * </pre>
  */
 
 /**
+ * @name Controls/_toolbars/View#itemsSpacing
+ * @cfg {String} Тип интервала между элементами.
+ * @default medium
+ * @example
+ * Кнопки будут отображены из источника _source. Первый элемент выравнен по левому краю, другие элементы выравнены по правому краю по умолчанию.
+ * <pre>
+ *    <Controls.toolbars:View
+ *              keyProperty="key"
+ *              source="{{_source}}"
+ *              itemsSpacing="big"
+ *    />
+ * </pre>
+ */
+
+/*
  * @name Controls/_toolbars/View#itemsSpacing
  * @cfg {String} Type of spacing between items.
  * @default medium
@@ -119,6 +201,53 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  */
 
 /**
+ * @event Controls/_toolbars/View#itemClick Происходит при клике по элементу.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Record} item Элемент, по которому производим клик.
+ * @example
+ * TMPL:
+ * <pre>
+ *    <Controls.toolbars:View on:itemClick="onToolbarItemClick()" />
+ * </pre>
+ * JS:
+ * <pre>
+ *    onToolbarItemClick: function(e, selectedItem) {
+ *       var itemId = selectedItem.get('id');
+ *       switch (itemId) {
+ *          case 'remove':
+ *             this._removeItems();
+ *             break;
+ *          case 'move':
+ *             this._moveItems();
+ *             break;
+ *    }
+ * </pre>
+ */
+
+/*
+ * @event Controls/_toolbars/View#itemClick Происходит при клике по элементу.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Record} item Элемент, по которому произвели клик.
+ * @example
+ * WML
+ * <pre>
+ *    <Controls.toolbars:View on:itemClick="onToolbarItemClick()" />
+ * </pre>
+ * JavaScript
+ * <pre>
+ *    onToolbarItemClick: function(e, selectedItem) {
+ *       var itemId = selectedItem.get('id');
+ *       switch (itemId) {
+ *          case 'remove':
+ *             this._removeItems();
+ *             break;
+ *          case 'move':
+ *             this._moveItems();
+ *             break;
+ *    }
+ * </pre>
+ */
+/*
  * @event Controls/_toolbars/View#itemClick Occurs when item was clicked.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Record} item Clicked item.
@@ -130,19 +259,55 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * JS:
  * <pre>
  *    onToolbarItemClick: function(e, selectedItem) {
-    *       var itemId = selectedItem.get('id');
-    *       switch (itemId) {
-    *          case 'remove':
-    *             this._removeItems();
-    *             break;
-    *          case 'move':
-    *             this._moveItems();
-    *             break;
-    *    }
-    * </pre>
-    */
+ *       var itemId = selectedItem.get('id');
+ *       switch (itemId) {
+ *          case 'remove':
+ *             this._removeItems();
+ *             break;
+ *          case 'move':
+ *             this._moveItems();
+ *             break;
+ *    }
+ * </pre>
+ */
 
 /**
+ * @name Controls/_toolbars/View#itemTemplate
+ * @cfg {Function} Шаблон отображения элементов.
+ * @remark
+ * Для определения шаблона вызовите базовый шаблон 'Controls/toolbars:ItemTemplate'.
+ * Шаблон помещается в компонент с помощью тега ws:partial с атрибутом template.
+ * Вы можете изменить формат отображение записей, настроив параметры кнопки:
+ * <ul>
+ *    <li>buttonReadOnly</li>
+ *    <li>buttonTransparent</li>
+ *    <li>buttonStyle</li>
+ *    <li>buttonCaption</li>
+ *    <li>buttonViewMode</li>
+ *    <li>displayProperty - имя отображаемого текстового поля, значение по умолчанию - "title" </li>
+ * <ul>
+ * @example
+ * <pre>
+ *    <Controls.toolbars:View
+ *       source="{{_source}}"
+ *       on:itemClick="_itemClick()"
+ *    >
+ *       <ws:itemTemplate>
+ *          <ws:partial
+ *             template="Controls/toolbars:ItemTemplate"
+ *             buttonStyle="{{myStyle}}"
+ *             buttonReadOnly="{{readOnlyButton}}"
+ *             buttonTransparent="{{myButtonTransparent}}"
+ *             buttonViewMode="{{myButtonViewMode}}"
+ *             displayProperty="title"
+ *             iconStyleProperty="iconStyle"
+ *             iconProperty="icon"
+ *          />
+ *      </ws:itemTemplate>
+ * </pre>
+ */
+
+/*
  * @name Controls/_toolbars/View#itemTemplate
  * @cfg {Function} Template for item render.
  * @remark
@@ -180,7 +345,30 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
 
 /**
  * @name Controls/_toolbars/View#popupClassName
+ * @cfg {String} Класс для выпадающего списка в меню тулбара.
+ * @example
+ * <pre>
+ *    <Controls.toolbars:View
+ *       popupClassName="your-custom-class"
+ *       source="{{_source}}"
+ *       on:itemClick="_itemClick()"/>
+ * </pre>
+ */
+/*
+ * @name Controls/_toolbars/View#popupClassName
  * @cfg {String} Class for drop-down list in toolbar menu.
+ * @example
+ * <pre>
+ *    <Controls.toolbars:View
+ *       popupClassName="your-custom-class"
+ *       source="{{_source}}"
+ *       on:itemClick="_itemClick()"/>
+ * </pre>
+ */
+
+/*
+ * @name Controls/_toolbars/View#popupClassName
+ * @cfg {String} Класс для выпадающего списка в меню тулбара.
  * @example
  * <pre>
  *    <Controls.toolbars:View
@@ -212,7 +400,7 @@ var _private = {
     getMenuItems: function (items) {
         return getMenuItems(items).value(factory.recordSet, {
             adapter: items.getAdapter(),
-            idProperty: items.getIdProperty(),
+            keyProperty: items.getKeyProperty(),
             format: items.getFormat()
         });
     },
@@ -275,6 +463,11 @@ var _private = {
     },
 
     generateMenuConfig: function (self) {
+        //Todo: https://online.sbis.ru/opendoc.html?guid=c010823c-cdd7-4f1c-8d3a-25b0e711ecea
+        self._menuItems.each((item) => {
+            item.set('icon', item.get('icon') || item.get('buttonIcon'));
+            item.set('iconStyle', item.get('iconStyle') || item.get('buttonIconStyle'));
+        });
         return {
             className: 'controls-Toolbar__popup__list_theme-' + self._options.theme + ' ' + (self._options.popupClassName || ''),
             templateOptions: {

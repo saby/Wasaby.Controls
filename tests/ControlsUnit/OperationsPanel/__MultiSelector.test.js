@@ -27,22 +27,33 @@ define([
             selectedKeys = [null],
             excludedKeys = [],
             selectedKeysCount = 0;
+
          instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
          assert.equal(instance._menuCaption, 'Отмечено всё');
+
          selectedKeys = [];
          instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
          assert.equal(instance._menuCaption, 'Отметить');
+
          selectedKeys = [1, 2];
          selectedKeysCount = 2;
          instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
          assert.equal(instance._menuCaption, 'Отмечено: 2');
+
          selectedKeys = [null];
          excludedKeys = [1, 2, 3];
          selectedKeysCount = 1;
          instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
          assert.equal(instance._menuCaption, 'Отмечено: 1');
+
          excludedKeys = [1, 2, 3, 4];
          selectedKeysCount = 0;
+         instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
+         assert.equal(instance._menuCaption, 'Отметить');
+
+         excludedKeys = [];
+         selectedKeys = [];
+         selectedKeysCount = 1;
          instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
          assert.equal(instance._menuCaption, 'Отметить');
       });

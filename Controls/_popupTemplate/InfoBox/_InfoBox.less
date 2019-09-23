@@ -26,11 +26,12 @@
 .controls-InfoBoxTemplate__arrow {
    width: @size_Infobox-arrow;
    height: @size_Infobox-arrow;
-   border: @border-width_Infobox solid;
+   border-right-width: @border-width_Infobox;
+   border-bottom-width: @border-width_Infobox;
+   border-top-width: 0;
+   border-left-width: 0;
+   border-style: solid;
    background: @background-color_Infobox_default;
-   border-color: @border-color_Infobox_default;
-   border-top: none;
-   border-left: none;
    content: '';
    box-sizing: border-box;
    position: relative;
@@ -40,7 +41,8 @@
   @variants: default, danger, info, secondary, warning, success, primary;
   .for(@variants, {
     &-@{_item} {
-      border-color: ~"@{border-color_Infobox_@{_item}}";
+      border-right-color: ~"@{border-color_Infobox_@{_item}}";
+      border-bottom-color: ~"@{border-color_Infobox_@{_item}}";
     }
   });
 }

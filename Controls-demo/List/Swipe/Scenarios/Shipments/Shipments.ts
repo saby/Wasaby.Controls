@@ -88,7 +88,7 @@ export default class Shipments extends Control {
       this._source = new HierarchicalMemory({
          parentProperty: 'parent',
          nodeProperty: 'parent@',
-         idProperty: 'id',
+         keyProperty: 'id',
          data
       });
    }

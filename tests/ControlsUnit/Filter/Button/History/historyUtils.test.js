@@ -12,17 +12,17 @@ define(
          var historyId = 'TEST_HISTORY_ID_UTILS';
 
          it('getHistorySource', function() {
-            var hSource = filter.HistoryUtils.getHistorySource(historyId);
+            var hSource = filter.HistoryUtils.getHistorySource({historyId: historyId});
             assert.isTrue(hSource instanceof history.FilterSource);
-            var hSource2 = filter.HistoryUtils.getHistorySource(historyId);
+            var hSource2 = filter.HistoryUtils.getHistorySource({historyId: historyId});
             assert.isTrue(hSource === hSource2);
          });
 
          it('getHistorySource isBuildOnServer', function() {
             var isBuildOnServer = Env.constants.isBuildOnServer;
             Env.constants.isBuildOnServer = true;
-            var hSource = filter.HistoryUtils.getHistorySource(historyId);
-            var hSource2 = filter.HistoryUtils.getHistorySource(historyId);
+            var hSource = filter.HistoryUtils.getHistorySource({historyId: historyId});
+            var hSource2 = filter.HistoryUtils.getHistorySource({historyId: historyId});
             assert.isTrue(hSource !== hSource2);
             Env.constants.isBuildOnServer = isBuildOnServer;
          });
@@ -37,7 +37,7 @@ define(
             ];
             let hasMoreData = true;
             let items = new collection.RecordSet({
-                  idProperty: 'key',
+                  keyProperty: 'key',
                   rawData: initItems,
                   metaData: {test: true}
                }),
@@ -47,7 +47,7 @@ define(
                   data: initItems
                });
             let newItems = new collection.RecordSet({
-               idProperty: 'key',
+               keyProperty: 'key',
                rawData: [{ key: 18, title: '18 record' }]
             });
             let expectedItems = [{ key: 18, title: '18 record' }].concat(initItems.slice(0, 3));
@@ -58,7 +58,7 @@ define(
             assert.deepStrictEqual(resultItems.getMetaData(), {test: true});
 
             newItems = new collection.RecordSet({
-               idProperty: 'key',
+               keyProperty: 'key',
                rawData: [{ key: 20, title: '20 record' }, {key: 1, title: 'Россия'}]
             });
             expectedItems = [{ key: 20, title: '20 record' }, {key: 1, title: 'Россия'}].concat(initItems.slice(0, 1));

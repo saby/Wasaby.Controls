@@ -61,7 +61,7 @@ define('Controls-demo/DragNDrop/Notes', [
             }
          }];
          this._viewSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: this._items
          });
       },

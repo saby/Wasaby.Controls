@@ -17,7 +17,7 @@ import IDateRangeSelectable = require('Controls/_dateRange/interfaces/IDateRange
 export {IDateRangeSelectable};
 
 /**
- * Библиотека диапазона дат.
+ * Библиотека контролов, которые служат для отображения диапазона дат и выбора дат из выпадающей панели.
  * @library Controls/dateRange
  * @includes Input Controls/_dateRange/Input
  * @includes Selector Controls/_dateRange/Selector

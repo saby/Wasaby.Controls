@@ -43,7 +43,8 @@ define('Controls/interface/IPromisedSelectable', [
     * <a href="/materials/demo-ws4-list-multiselect">Example</a>.
     * @default []
     * @remark
-    * Вы можете передать свойство {@link Controls/_interface/ISource#keyProperty key property}, чтобы выбрать каждый элемент внутри этого узла, для этого необходимо передать значение [null].
+    * Чтобы выбрать все элементы внутри узла, необходимо в selectedKeys передать значение {@link Controls/_interface/ISource#keyProperty keyProperty} этого узла.
+    * Чтобы выбрать все элементы, необходимо в selectedKeys передать [null].
     * @example
     * В следующем примере создается список и выбираются все элементы, кроме двух. Последующие изменения, внесенные в selectedKeys и excludedKeys, будут синхронизированы посредством биндинга.
     * TMPL:

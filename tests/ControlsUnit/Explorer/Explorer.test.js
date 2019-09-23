@@ -167,7 +167,7 @@ define([
             rawData: {
                parent: 'rootFromBreadCrumbs'
             },
-            idProperty: 'id'
+            keyProperty: 'id'
          })];
          assert.equal(explorerMod.View._private.getDataRoot(explorer), 'rootFromBreadCrumbs');
 
@@ -192,6 +192,29 @@ define([
          explorerMod.View._private.itemsReadyCallback(explorer, items);
          assert.equal(itemsReadyCallbackArgs, items);
          assert.equal(explorer._items, items);
+      });
+
+      it('itemsSetCallback', function() {
+         let markedKey = '';
+         const cfg = {};
+         const explorer = new explorerMod.View(cfg);
+         explorer.saveOptions(cfg);
+
+         explorer._isGoingBack = true;
+         explorer._root = null;
+         explorer._restoredMarkedKeys = {
+            [null]: { markedKey: 'test' }
+         };
+         explorer._children = {
+            treeControl: {
+               setMarkedKey: (key) => markedKey = key
+            }
+         };
+
+         explorerMod.View._private.itemsSetCallback(explorer);
+
+         assert.strictEqual(markedKey, 'test');
+         assert.isFalse(explorer._isGoingBack);
       });
 
       it('setViewMode', function() {
@@ -249,7 +272,7 @@ define([
             rawData: [
                { id: 1, title: 'item1' }
             ],
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          instance._options.searchStartingWith = 'root';
          instance._options.root = 'test';
@@ -291,7 +314,7 @@ define([
             rawData: [
                { id: 1, title: 'item1' }
             ],
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          let cfg = {
             items: {
@@ -320,7 +343,7 @@ define([
                   { id: 2, title: 'item2', parent: 1 },
                   { id: 3, title: 'item3', parent: 2 }
                ],
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             instance = new explorerMod.View();
             instance._children = {
@@ -418,7 +441,7 @@ define([
                   id: 2,
                   parent: 1
                },
-               idProperty: 'id'
+               keyProperty: 'id'
             })];
 
             explorerMod.View._private.backByPath(explorer);
@@ -432,7 +455,7 @@ define([
                   id: 3,
                   parent: 2
                },
-               idProperty: 'id'
+               keyProperty: 'id'
             }));
 
             explorerMod.View._private.backByPath(explorer);
@@ -730,7 +753,7 @@ define([
                      { id: 2, title: 'item2', parent: 1 },
                      { id: 3, title: 'item3', parent: 2 }
                   ],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                })
 
             explorer = new explorerMod.View(explorerCfg);
@@ -745,7 +768,7 @@ define([
                   rawData: {
                      id: 1
                   },
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                 explorer = new explorerMod.View({});
 

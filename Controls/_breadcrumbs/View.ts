@@ -37,7 +37,7 @@ var BreadCrumbsView = Control.extend({
                     });
                     return newItem;
                 }),
-                idProperty: this._options.items[0].getIdProperty()
+                keyProperty: this._options.items[0].getKeyProperty()
             });
             rs.each(function (item, index) {
                 item.set('indentation', index);
@@ -87,5 +87,6 @@ BreadCrumbsView.getDefaultOptions = function getDefaultOptions() {
 };
 
 BreadCrumbsView._theme = ['Controls/crumbs'];
+BreadCrumbsView._styles = ['Controls/Utils/FontLoadUtil'];
 
 export default BreadCrumbsView;

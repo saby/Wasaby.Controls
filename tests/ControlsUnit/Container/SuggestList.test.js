@@ -1,12 +1,10 @@
 define(
    ['Controls/suggestPopup', 'Env/Env', 'Types/entity', 'Types/collection'],
    function(suggestPopup, Env, entity, collection) {
-      
-      'use strict';
-      
-      describe('Controls.Container.Suggest.List', function() {
-         suggestPopup.ListContainer._private.scrollToLastItem = function(){};
 
+      'use strict';
+
+      describe('Controls.Container.Suggest.List', function() {
          describe('_beforeUpdate', function() {
             var suggestList = new suggestPopup.ListContainer();
             var contextObject = {
@@ -23,25 +21,14 @@ define(
                   }
                }
             };
-            var contextObjectWithStickyPosition = {
-               suggestOptionsField: {
-                  options: {
-                     stickyPosition: {
-                        verticalAlign: {
-                           side: 'top'
-                        }
-                     }
-                  }
-               }
-            };
 
             var eventFired = false;
             var tab = null;
-   
+
             suggestList._suggestListOptions = {
                tabsSelectedKey: null
             };
-            
+
             suggestList._notify = function(event, id) {
                eventFired = true;
                tab = id[0];
@@ -53,21 +40,15 @@ define(
                assert.isFalse(eventFired);
                assert.equal(tab, null);
             });
-   
+
             it('with new tab key', function() {
                suggestList._beforeUpdate({}, contextObjectWithNewKey);
 
                assert.isTrue(eventFired);
                assert.equal(tab, 'test');
             });
-   
-            it('with stickyPosition reverse', function() {
-               suggestList._reverseList = false;
-               suggestList._beforeUpdate({}, contextObjectWithStickyPosition);
-               assert.isTrue(suggestList._reverseList);
-            });
          });
-         
+
          it('_tabsSelectedKeyChanged', function() {
             var suggestList = new suggestPopup.ListContainer();
             var tab = null;
@@ -76,11 +57,11 @@ define(
                   tab = newtab;
                }
             };
-            
+
             suggestList._tabsSelectedKeyChanged(null, 'test');
             assert.equal(tab, 'test');
          });
-   
+
          it('isTabChanged', function() {
             assert.isTrue(suggestPopup.ListContainer._private.isTabChanged({tabsSelectedKey: 1}, 2));
             assert.isFalse(suggestPopup.ListContainer._private.isTabChanged({tabsSelectedKey: 1}, 1));
@@ -108,7 +89,7 @@ define(
                   }
                }
             };
-      
+
             assert.equal(suggestPopup.ListContainer._private.getTabKeyFromContext(emptyContext), null);
             assert.equal(suggestPopup.ListContainer._private.getTabKeyFromContext(contextWithValue), 1);
          });
@@ -129,26 +110,17 @@ define(
                items: [
                   new entity.Model({
                      rawData: {id: 'first'},
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   new entity.Model({
                      rawData: {id: 'last'},
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   })
                ]
             });
 
-            it('list is not reverse', function() {
-               suggestList._inputKeydown(null, domEvent);
-               assert.equal(suggestList._markedKey, 'last');
-            });
-
-            it('list is reverse', function() {
-               suggestList._reverseList = true;
-               suggestList._markedKey = null;
-               suggestList._inputKeydown(null, domEvent);
-               assert.equal(suggestList._markedKey, 'first');
-            });
+            suggestList._inputKeydown(null, domEvent);
+            assert.equal(suggestList._markedKey, 'last');
          });
 
          it('_searchEndCallback', function() {
@@ -162,23 +134,6 @@ define(
             });
 
             assert.equal(suggestList._items, items);
-         });
-
-         it('_drawItems', function() {
-            let
-               callSrollToLastItem = false,
-               suggestList = new suggestPopup.ListContainer();
-
-            suggestPopup.ListContainer._private.scrollToLastItem = function() {
-               callSrollToLastItem = true;
-            };
-
-            suggestList._drawItems();
-            assert.isFalse(callSrollToLastItem);
-
-            suggestList._reverseList = true;
-            suggestList._drawItems();
-            assert.isTrue(callSrollToLastItem);
          });
 
          it('_private:checkContext', function() {

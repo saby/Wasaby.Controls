@@ -7,6 +7,7 @@ import * as objectMerge from 'Core/core-merge';
 
 const hrefMaxLength = 1499;
 const onlySpacesRegExp = /^\s+$/;
+const startsWIthNewlineRegExp = /^\s*\n/;
 const paragraphTagNameRegExp = /^(p(re)?|div)$/;
 const charsToScreenRegExp = /([\\"])/g;
 const classes = {
@@ -221,7 +222,8 @@ function needDecorate(jsonNode, parentNode) {
    for (let i = parentNode.length - 1; parentNode[i] !== jsonNode; --i) {
       const nodeToCheck = parentNode[i];
       if (isTextNode(nodeToCheck)) {
-         canBeDecorated = canBeDecorated && onlySpacesRegExp.test(nodeToCheck);
+         canBeDecorated = (canBeDecorated && onlySpacesRegExp.test(nodeToCheck)) ||
+             startsWIthNewlineRegExp.test(nodeToCheck);
          continue;
       }
       const tagName = getTagName(nodeToCheck);

@@ -1,6 +1,5 @@
 <ws:partial template="Controls/grid:RowEditor" scope="{{_options}}">
     <div>
-        {{debug()}}
         <div class="demo-EditableGrid__editor-flexWrapper" style="width: 100%;">
             <div class="demo-EditableGrid__editor-flexWrapper">
                 <span class="demo-EditableGrid__editor-description">Признак ТД</span>

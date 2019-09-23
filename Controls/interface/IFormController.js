@@ -270,5 +270,29 @@ define('Controls/interface/IFormController', [
     * @event Controls/interface/IFormController#isNewRecordChanged Happens when the record is initialized in the data source
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Boolean} isNewRecord
-    */    
+    */
+
+   /**
+    * @event Controls/interface/IFormController#requestCustomUpdate Происходит перед сохранением записи. В обработчике события можно отменить базовую логику сохранения или отложить ее для выполнения пользовательских действий перед сохранением. Используется, например, для асинхронной валидации или пользовательского сохранения записи.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+    * @example
+    * Проверяет данные на сервере перед сохранением.
+    * <pre>
+    *    _requestCustomUpdateHandler(): Promise<boolean> {
+    *       return this._checkDataOnServer();
+    *    }
+    * </pre>
+    */
+
+   /*
+    * @event Controls/interface/IFormController#requestCustomUpdate Happens before saving a record. In the event handler the basic saving logic can be canceled or deferred for user actions before saving. It's used, for example, for asynchronous validation or user saving of a record.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
+    * @example
+    * Check the data on the server before saving.
+    * <pre>
+    *    _requestCustomUpdateHandler(): Promise<boolean> {
+    *       return this._checkDataOnServer();
+    *    }
+    * </pre>
+    */
 });

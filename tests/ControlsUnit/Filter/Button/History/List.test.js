@@ -4,9 +4,10 @@ define(
       'Core/Serializer',
       'Types/chain',
       'ControlsUnit/Filter/Button/History/testHistorySource',
-      'Controls/filter'
+      'Controls/filter',
+      'Types/entity'
    ],
-   function(List, Serializer, chain, HistorySourceDemo, filter) {
+   function(List, Serializer, chain, HistorySourceDemo, filter, entity) {
       describe('FilterHistoryList', function() {
          var items2 = [
             {id: 'period', value: [3], resetValue: [1], textValue: 'Past month'},
@@ -49,7 +50,8 @@ define(
          var list = new List();
 
          var config = {
-            historyId: 'TEST_HISTORY_ID'
+            historyId: 'TEST_HISTORY_ID',
+            orientation: 'vertical'
          };
 
          var items = [
@@ -63,7 +65,7 @@ define(
             list.destroy();
          });
 
-         filter.HistoryUtils.loadHistoryItems('TEST_HISTORY_ID').addCallback(function(items) {
+         filter.HistoryUtils.loadHistoryItems({historyId: 'TEST_HISTORY_ID'}).addCallback(function(items) {
             config.items = items;
             config.filterItems = items;
          });
@@ -73,7 +75,7 @@ define(
          it('get text', function() {
             var textArr = [];
             list._beforeMount(config);
-            textArr = list._getText(list._options.items, items, filter.HistoryUtils.getHistorySource(config.historyId));
+            textArr = list._getText(list._options.items, items, filter.HistoryUtils.getHistorySource({historyId: config.historyId}));
             assert.equal(textArr[0], 'Past month, Due date, Ivanov K.K., Unread, On department');
             assert.equal(textArr[1], 'Past month, Ivanov K.K.');
 
@@ -99,7 +101,7 @@ define(
             assert.isFalse(list._isMaxHeight);
          });
 
-         it('content click', function() {
+         it('_clickHandler', function() {
             var histItems = [];
             list._notify = (e, args) => {
                if (e == 'applyHistoryFilter') {
@@ -109,7 +111,7 @@ define(
             var savedList = list;
             chain.factory(list._options.items).each(function(item, index) {
                if (item) {
-                  savedList._contentClick('click', item);
+                  savedList._clickHandler('click', item);
                   assert.deepEqual(histItems, itemsHistory[index]);
                }
             });
@@ -124,20 +126,47 @@ define(
             });
          });
 
-         it('_private::getResetValues', function() {
-            var filterItems = [
-               {id: 'period', value: [2], resetValue: [1], textValue: 'Today'},
-               {id: 'sender', value: '', resetValue: 'test_sender', textValue: ''},
-               {id: 'author', value: 'Ivanov K.K.', resetValue: true, textValue: 'Ivanov K.K.', visibility: true},
-               {id: 'responsible', value: '', resetValue: '', textValue: 'Petrov T.T.', visibility: false}
-            ];
-            var resetValues = List._private.getResetValues(filterItems);
-            assert.deepEqual(resetValues, {
-               'period': [1],
-               'sender': 'test_sender',
-               'author': true,
-               'responsible': ''
+         describe('_private::mapByField', function() {
+
+            it('map by resetValues', function() {
+               var filterItems = [
+                  {id: 'period', value: [2], resetValue: [1], textValue: 'Today'},
+                  {id: 'sender', value: '', resetValue: 'test_sender', textValue: ''},
+                  {id: 'author', value: 'Ivanov K.K.', resetValue: true, textValue: 'Ivanov K.K.', visibility: true},
+                  {id: 'responsible', value: '', resetValue: '', textValue: 'Petrov T.T.', visibility: false}
+               ];
+               var resetValues = List._private.mapByField(filterItems, 'resetValue');
+               assert.deepEqual(resetValues, {
+                  'period': [1],
+                  'sender': 'test_sender',
+                  'author': true,
+                  'responsible': ''
+               });
             });
+
+            it('map by value', function() {
+               var byValue = List._private.mapByField(items1, 'value');
+               var result = {
+                  period: [3],
+                  state: [1],
+                  limit: [1],
+                  sender: '',
+                  author: 'Ivanov K.K.',
+                  responsible: '',
+                  tagging: '',
+                  operation: '',
+                  group: [1],
+                  unread: true,
+                  loose: true,
+                  own: [2],
+                  'our organisation': '',
+                  document: '',
+                  activity: [1]
+               };
+
+               assert.deepEqual(byValue, result);
+            });
+
          });
 
 
@@ -156,6 +185,28 @@ define(
             ];
             let historyString = List._private.getStringHistoryFromItems(historyItems, resetValues);
             assert.strictEqual(historyString, 'Today, Ivanov K.K.');
+         });
+
+         it('_private::getFavoriteDialogRecord', function() {
+            var favoriteItem = new entity.Model({
+               rawData: {
+                  id: 'testId',
+                  data: new entity.Model({
+                     rawData: {
+                        linkText: 'testLinkText',
+                        filterPanelItems: items1,
+                        globalParams: 0
+                     }
+                  })
+               }
+            });
+            var self = {
+               _options: {
+                  filterItems: items1
+               }
+            };
+            var editableRecord = List._private.getFavoriteDialogRecord(self, favoriteItem, null, 'savedText');
+            assert.equal(editableRecord.get('editedTextValue'), 'savedText');
          });
       });
    });

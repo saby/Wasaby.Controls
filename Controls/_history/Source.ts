@@ -13,6 +13,30 @@ import clone = require('Core/core-clone');
 import cInstance = require('Core/core-instance');
 
 /**
+ * Источник, который возвращает из исходного источника отсортированные данные с учётом истории.
+ * @class Controls/_history/Source
+ * @extends Core/core-extend
+ * @mixes Types/_entity/OptionsToPropertyMixin
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ * @category Menu
+ * @example
+ * <pre>
+ *    var source = new history.Source({
+ *        originSource: new source.Memory({
+ *           keyProperty: 'id',
+ *           data: items
+ *        }),
+ *        historySource: new history.Service({
+ *           historyId: 'TEST_HISTORY_ID'
+ *        }),
+ *        parentProperty: 'parent'
+ *    });
+ * </pre>
+ */
+
+/*
  * Source
  * Proxy source adding history data to the original source
  * @class Controls/_history/Source
@@ -24,12 +48,12 @@ import cInstance = require('Core/core-instance');
  * @category Menu
  * @example
  * <pre>
- *    var source = new historySource({
- *        originSource: new Memory({
- *           idProperty: 'id',
+ *    var source = new history.Source({
+ *        originSource: new source.Memory({
+ *           keyProperty: 'id',
  *           data: items
  *        }),
- *        historySource: new historyService({
+ *        historySource: new history.Service({
  *           historyId: 'TEST_HISTORY_ID'
  *        }),
  *        parentProperty: 'parent'
@@ -39,10 +63,21 @@ import cInstance = require('Core/core-instance');
 
 /**
  * @name Controls/_history/Source#originSource
+ * @cfg {Source} Источник данных.
+ */
+
+/*
+ * @name Controls/_history/Source#originSource
  * @cfg {Source} A data source
  */
 
 /**
+ * @name Controls/_history/Source#historySource
+ * @cfg {Source} Источник, который работает с историей.
+ * @see {Controls/_history/Service} Источник работает с сервисом истории ввода.
+ */
+
+/*
  * @name Controls/_history/Source#historySource
  * @cfg {Source} A source which work with history
  * @see {Controls/_history/Service} Source working with the service of InputHistory
@@ -207,7 +242,7 @@ var _private = {
                newItem.set('pinned', true);
             }
             if (filteredHistory.pinned.indexOf(id) !== -1 || filteredHistory.recent.indexOf(id) !== -1 || filteredHistory.frequent.indexOf(id) !== -1) {
-               _private.setHistoryFields(newItem, item.getIdProperty(), id);
+               _private.setHistoryFields(newItem, item.getKeyProperty(), id);
             }
             items.add(newItem);
          }
@@ -269,7 +304,7 @@ var _private = {
    fillFrequentItems: function (self, history, oldItems, items) {
       var config = {
          adapter: items.getAdapter(),
-         idProperty: items.getIdProperty(),
+         keyProperty: items.getKeyProperty(),
          format: items.getFormat()
       };
       var frequentItems = new collection.RecordSet(config);
@@ -477,7 +512,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
                }
                result = new sourceLib.DataSet({
                   rawData: newItems.getRawData(),
-                  idProperty: newItems.getIdProperty(),
+                  keyProperty: newItems.getKeyProperty(),
                   adapter: newItems.getAdapter()
                });
             } else {

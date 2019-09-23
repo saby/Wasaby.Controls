@@ -16,7 +16,7 @@ define('Controls-demo/Switch/SwitchDemo', [
          _eventName: 'no event',
          _beforeMount: function() {
             this._captionPositionSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 'left'

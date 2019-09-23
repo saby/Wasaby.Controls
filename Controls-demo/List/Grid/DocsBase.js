@@ -45,11 +45,11 @@ define('Controls-demo/List/Grid/DocsBase', [
             this._header = data.fullHeaderForBase;
             this._columnsDemo2 = data.fullColumnsForBase;
             this._headerSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data.catalog
             });
             this._source = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 1,

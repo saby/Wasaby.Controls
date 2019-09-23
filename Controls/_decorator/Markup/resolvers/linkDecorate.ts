@@ -1,8 +1,8 @@
 /**
  * Created by rn.kondakov on 23.10.2018.
  */
-import utils = require('Controls/_decorator/Markup/resources/linkDecorateUtils');
-   
+import * as utils from './../resources/linkDecorateUtils';
+
 
    /**
     *
@@ -13,8 +13,8 @@ import utils = require('Controls/_decorator/Markup/resources/linkDecorateUtils')
     * @public
     * @author Кондаков Р.Н.
     */
-   export = function linkDecorate(value, parent) {
-      var result;
+   export default function linkDecorate(value, parent) {
+      let result;
       if (utils.needDecorate(value, parent)) {
          result = utils.getDecoratedLink(value);
       } else {

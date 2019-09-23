@@ -51,7 +51,7 @@ define([
       beforeEach(function() {
          sandbox = sinon.createSandbox();
          rs = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: items
          });
          cfg = {
@@ -112,7 +112,7 @@ define([
             await instance._beforeMount(cfg);
             instance._afterMount();
             var newItems = new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: items.slice(0)
             });
             var newCfg = Object.assign({}, cfg);

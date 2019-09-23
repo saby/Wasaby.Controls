@@ -87,7 +87,7 @@ var StickyHeader = Control.extend({
    _cssClassName: null,
 
    constructor: function() {
-      StickyHeader.superclass.constructor.call(this);
+      StickyHeader.superclass.constructor.apply(this, arguments);
       this._observeHandler = this._observeHandler.bind(this);
       this._index = stickyUtils.getNextId();
       this._stickyHeadersHeight = {
@@ -294,6 +294,11 @@ var StickyHeader = Control.extend({
             style += 'margin-' + fixedPosition + ': -' + offset + 'px;';
          }
 
+         style += 'z-index: ' + this._options.fixedZIndex + ';';
+      }
+
+      //убрать по https://online.sbis.ru/opendoc.html?guid=ede86ae9-556d-4bbe-8564-a511879c3274
+      if (this._options.task1177692247 && this._options.fixedZIndex) {
          style += 'z-index: ' + this._options.fixedZIndex + ';';
       }
 

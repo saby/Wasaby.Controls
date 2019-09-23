@@ -7,9 +7,9 @@ interface IPosition {
     right: Number;
     top: Number;
     bottom: Number;
-    stackWidth?: Number;
-    stackMinWidth?: Number;
-    stackMaxWidth?: Number;
+    width?: Number;
+    minWidth?: Number;
+    maxWidth?: Number;
     position?: String;
 }
 
@@ -23,7 +23,7 @@ const _private = {
         let minWidth = parseInt(item.popupOptions.minWidth, 10);
         const maxWidth = parseInt(item.popupOptions.maxWidth, 10);
 
-        if (_private.isMaximizedPanel(item)) { // todo:https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
+        if (_private.isMaximizedPanel(item) && !item.popupOptions.propStorageId) { // todo:https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
             if (!_private.isMaximizedState(item)) {
                 panelWidth = item.popupOptions.minimizedWidth;
             } else {
@@ -53,7 +53,7 @@ const _private = {
     },
 
     isMaximizedPanel(item) {
-        return !!item.popupOptions.minimizedWidth;
+        return !!item.popupOptions.minimizedWidth && !item.popupOptions.propStorageId;
     },
 
     isMaximizedState(item) {
@@ -88,7 +88,7 @@ export = {
         const maxPanelWidth = this.getMaxPanelWidth();
         const width = _private.getPanelWidth(item, tCoords, maxPanelWidth);
         const position: IPosition = {
-            stackWidth: width,
+            width,
             right: item.hasMaximizePopup ? 0 : tCoords.right,
             top: tCoords.top,
             bottom: 0
@@ -101,9 +101,9 @@ export = {
 
         if (item.popupOptions.minWidth) {
             // todo: Удалить minimizedWidth https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
-            position.stackMinWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
+            position.minWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
         }
-        position.stackMaxWidth = _private.calculateMaxWidth(this, item.popupOptions, tCoords);
+        position.maxWidth = _private.calculateMaxWidth(this, item.popupOptions, tCoords);
 
         return position;
     },

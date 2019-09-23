@@ -49,8 +49,8 @@ var _private = {
 };
 
 /**
- * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки. 
- * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию закрыто. 
+ * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки.
+ * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию закрыто.
  * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
  * <a href="/materials/demo-ws4-input-dropdown">Демо-пример</a>.
  * Руководство разработчика {@link /doc/platform/developmentapl/interface-development/controls/dropdown-menu/index/ Меню и выпадающий список}.
@@ -130,7 +130,7 @@ var _private = {
  * JS:
  * <pre>
  * this._source = new Memory({
- *    idProperty: 'id',
+ *    keyProperty: 'id',
  *    data: [
  *       {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
  *       {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
@@ -164,7 +164,7 @@ var _private = {
  * JS:
  * <pre>
  * this._source = new Memory({
- *    idProperty: 'id',
+ *    keyProperty: 'id',
  *    data: [
  *       {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
  *       {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
@@ -176,6 +176,7 @@ var _private = {
 /**
  * @name Controls/_dropdown/Input#multiSelect
  * @cfg {Boolean} Определяет, установлен ли множественный выбор.
+ * @default false
  * @example
  * Множественный выбор установлен.
  * WML:
@@ -191,7 +192,7 @@ var _private = {
  * JS:
  * <pre>
  * this._source = new Memory({
- *    idProperty: 'id',
+ *    keyProperty: 'id',
  *    data: [
  *       {id: 1, title: 'Yaroslavl'},
  *       {id: 2, title: 'Moscow'},
@@ -205,6 +206,7 @@ var _private = {
 /*
  * @name Controls/_dropdown/Input#multiSelect
  * @cfg {Boolean} Determines whether multiple selection is set.
+ * @default false
  * @example
  * Multiple selection is set.
  * WML:
@@ -220,7 +222,7 @@ var _private = {
  * JS:
  * <pre>
  * this._source = new Memory({
- *    idProperty: 'id',
+ *    keyProperty: 'id',
  *    data: [
  *       {id: 1, title: 'Yaroslavl'},
  *       {id: 2, title: 'Moscow'},
@@ -239,6 +241,7 @@ var Input = Control.extend({
 
    _beforeMount: function () {
       this._setText = this._setText.bind(this);
+      this._dataLoadCallback = this._dataLoadCallback.bind(this);
    },
 
    _afterMount: function (options) {
@@ -254,8 +257,15 @@ var Input = Control.extend({
       return this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
    },
 
-   _selectedKeysChangedHandler: function (event, selectedKeys) {
-      return this._notify('selectedKeysChanged', [selectedKeys]);
+   _dataLoadCallback: function (items) {
+      this._countItems = items.getCount();
+      if (this._options.emptyText) {
+         this._countItems += 1;
+      }
+
+      if (this._options.dataLoadCallback) {
+         this._options.dataLoadCallback(items);
+      }
    },
 
    _setText: function (items) {

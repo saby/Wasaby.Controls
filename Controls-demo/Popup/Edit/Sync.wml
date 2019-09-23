@@ -1,0 +1,34 @@
+<Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
+    <div>
+        <div class="demo-Grid__container" on:itemClick="_itemClick()" attr:style="margin-top: 20px;">
+
+            <div style="margin: 8px">
+                <Controls.buttons:Button caption="Добавить запись" on:click="_addRecord()" class="demo-PopupEditOpener__addRecord"/>
+            </div>
+
+            <Controls.scroll:Container attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
+                <Controls.list:Container>
+                    <Controls.grid:View
+                            attr:class="demo-Grid__control demo-PopupEditOpener__grid"
+                            itemPadding="{{ _itemPadding }}"
+                            displayProperty="title"
+                            dataLoadCallback="{{_dataLoadCallback}}"
+                            rowSeparatorVisibility="{{true}}"
+                            header="{{gridHeader}}"
+                            itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
+                            itemActions="{{_itemActions}}"
+                            columns="{{gridColumns}}">
+                    </Controls.grid:View>
+                </Controls.list:Container>
+            </Controls.scroll:Container>
+        </div>
+
+        <Controls.toggle:Checkbox bind:value="_errorUpdate" caption="Выпадает ошибка на бизнес-логике" class="demo-PopupEditSync__cancelEdit"/>
+
+        <Controls.popup:EditContainer on:beforeItemEndEdit="_beforeSyncRecord()">
+            <Controls.popup:Edit name="EditOpener" template="Controls-demo/Popup/Edit/MyFormController">
+                <ws:templateOptions source="{{_viewSource}}" width="{{400}}" isFormControllerDemo="{{true}}" errorUpdate="{{_errorUpdate}}"/>
+            </Controls.popup:Edit>
+        </Controls.popup:EditContainer>
+    </div>
+</Controls.list:DataContainer>

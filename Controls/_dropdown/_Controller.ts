@@ -1,12 +1,13 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/_Controller');
-import {Controller as SourceController} from 'Controls/source';
 import chain = require('Types/chain');
-import {isEqual} from 'Types/object';
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
-import * as mStubs from 'Core/moduleStubs';
 import Env = require('Env/Env');
+import {Controller as SourceController} from 'Controls/source';
+import {isEqual} from 'Types/object';
+import * as mStubs from 'Core/moduleStubs';
+import {descriptor} from 'Types/entity';
 
 // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 var
@@ -54,10 +55,10 @@ var _private = {
            selectedItems.push(self._items.getRecordById(null));
          }
       } else {
-         chain.factory(self._items).each(function (item) {
+         chain.factory(selectedKeys).each(function (key) {
             // fill the array of selected items from the array of selected keys
-            if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
-               selectedItems.push(item);
+            if (self._items.getRecordById(key)) {
+               selectedItems.push(self._items.getRecordById(key));
             }
          });
       }
@@ -294,7 +295,7 @@ var _Controller = Control.extend({
    _beforeMount: function (options, context, receivedState) {
       this._onResult = _private.onResult.bind(this);
       _private.setHandlers(this, options);
-      if (!options.lazyItemsLoad) {
+      if (!options.lazyItemsLoading) {
          if (receivedState) {
             let self = this;
             this._setItems(receivedState);
@@ -326,7 +327,7 @@ var _Controller = Control.extend({
          !isEqual(newOptions.filter, this._options.filter)) {
          this._source = null;
          this._sourceController = null;
-         if (newOptions.lazyItemsLoad && !this._children.DropdownOpener.isOpened()) {
+         if (newOptions.lazyItemsLoading && !this._children.DropdownOpener.isOpened()) {
             /* source changed, items is not actual now */
             this._setItems(null);
          } else {
@@ -438,6 +439,12 @@ _Controller.getDefaultOptions = function getDefaultOptions() {
    return {
       filter: defaultFilter,
       selectedKeys: defaultSelectedKeys
+   };
+};
+
+_Controller.getOptionTypes = function getOptionTypes() {
+   return {
+      selectedKeys: descriptor(Array)
    };
 };
 

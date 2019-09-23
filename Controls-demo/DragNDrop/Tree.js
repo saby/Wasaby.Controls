@@ -17,7 +17,7 @@ define('Controls-demo/DragNDrop/Tree', [
          this._selectedKeys = [];
          this._itemsReadyCallback = this._itemsReady.bind(this);
          this._viewSource = new source.HierarchicalMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: DemoData,
             parentProperty: 'Раздел'
          });

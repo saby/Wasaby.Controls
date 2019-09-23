@@ -85,8 +85,21 @@ define([
             'Раздел': null,
             'Раздел@': false
          }],
+         rootItems = [{
+            'id': 1,
+            'Раздел': null,
+            'Раздел@': true
+         }, {
+            'id': 6,
+            'Раздел': null,
+            'Раздел@': true
+         }, {
+            'id': 7,
+            'Раздел': null,
+            'Раздел@': false
+         }],
          hiddenNodeWithChildren,
-         allData, flatData;
+         allData, flatData, rootData;
 
       /*
          1
@@ -100,10 +113,18 @@ define([
       beforeEach(function() {
          allData = new collection.RecordSet({
             rawData: items.slice(),
-            idProperty: 'id'
+            keyProperty: 'id'
          });
          flatData = new collection.RecordSet({
             rawData: flatItems.slice(),
+            keyProperty: 'id'
+         });
+         rootData = new collection.RecordSet({
+            rawData: rootItems.slice(),
+            keyProperty: 'id'
+         });
+         rootData = new collection.RecordSet({
+            rawData: rootItems.slice(),
             idProperty: 'id'
          });
          hiddenNodeWithChildren = new collection.RecordSet({
@@ -120,7 +141,7 @@ define([
                'Раздел': 1,
                'Раздел@': null
             }],
-            idProperty: 'id'
+            keyProperty: 'id'
          });
       });
       afterEach(function() {
@@ -572,7 +593,7 @@ define([
                excludedKeys: [],
                items: new collection.RecordSet({
                   rawData: itemsWithDuplicateIds,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                keyProperty: 'id'
             };
@@ -594,7 +615,7 @@ define([
                   'Раздел': 1,
                   'Раздел@': true
                }],
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             keyProperty: 'id',
             listModel: getListModel()
@@ -618,7 +639,14 @@ define([
             selection = selectionInstance.getSelection();
 
             assert.deepEqual([null], selection.selected);
-            assert.deepEqual([1, 6, 7], selection.excluded);
+            assert.deepEqual([null, 1, 6, 7], selection.excluded);
+
+            selectionInstance.toggleAll();
+            selection = selectionInstance.getSelection();
+
+            // '2', '4', '5' не попали т.к являются дочерними '1' и будут выбраны
+            assert.deepEqual([1, 6, 7], selection.selected);
+            assert.deepEqual([], selection.excluded);
          });
 
          /* toDo До исправления https://online.sbis.ru/opendoc.html?guid=0606ed47-453c-415e-90b5-51e34037433e
@@ -698,6 +726,23 @@ define([
             assert.deepEqual([], selection.selected);
             assert.deepEqual([], selection.excluded);
          });
+
+         it('selectAll in root with not loaded selected items', function() {
+            cfg = {
+               selectedKeys: [1, 2, 3, 4, 6],
+               excludedKeys: [],
+               items: rootData,
+               keyProperty: 'id',
+               listModel: getListModel()
+            };
+
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selectionInstance.selectAll();
+            selection = selectionInstance.getSelection();
+
+            assert.deepEqual([null], selection.selected);
+            assert.deepEqual([null], selection.excluded);
+         });
       });
 
       it('if an item is in selectedKeys, it should get counted even if it is not loaded', function() {
@@ -710,6 +755,39 @@ define([
          };
          selectionInstance = new operations.HierarchySelection(cfg);
          assert.equal(null, selectionInstance.getCount());
+      });
+
+
+
+      describe('_getSelectionStatus', function() {
+         it('without entry path', function() {
+            cfg = {
+               selectedKeys: [4],
+               excludedKeys: [],
+               items: rootData,
+               keyProperty: 'id',
+               listModel: getListModel()
+            };
+            selectionInstance = new operations.HierarchySelection(cfg);
+
+            assert.isFalse(selectionInstance._getSelectionStatus(selectionInstance._items.at(0)));
+         });
+
+         it('with entry path', function() {
+            cfg = {
+               selectedKeys: [4],
+               excludedKeys: [],
+               items: rootData,
+               keyProperty: 'id',
+               listModel: getListModel()
+            };
+            selectionInstance = new operations.HierarchySelection(cfg);
+            selectionInstance._items.setMetaData({
+               ENTRY_PATH: [1, 2]
+            });
+
+            assert.equal(selectionInstance._getSelectionStatus(selectionInstance._items.at(0)), null);
+         });
       });
    });
 });

@@ -27,7 +27,7 @@ define('Controls-demo/List/Mover', [
          this._private = {
             createSource: function(items) {
                return new source.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: cClone(items)
                });
             }
@@ -54,7 +54,7 @@ define('Controls-demo/List/Mover', [
             'ВидДерева': 'Только узлы'
          };
          this._treeSource = new TreeMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: GridData.catalog
          });
          this._itemActionsTree = [{

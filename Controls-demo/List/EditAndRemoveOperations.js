@@ -166,23 +166,23 @@ define('Controls-demo/List/EditAndRemoveOperations', [
          ];
 
          this._viewSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: this.srcData
          });
          this._viewSource2 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: this.srcData2
          });
          this._viewSource3 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: this.srcData3
          });
          this._viewSource4 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: this.srcData4
          });
          this._viewSource5 = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: this.srcData5
          });
       },

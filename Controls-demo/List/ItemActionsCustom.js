@@ -168,15 +168,15 @@ define('Controls-demo/List/ItemActionsCustom', [
                });
             }
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: srcData
             });
             this._viewSource2 = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: srcMore
             });
             this._viewSource3 = new source.Memory({
-              idProperty: 'id',
+              keyProperty: 'id',
               data: newsData
             });
          },
@@ -191,7 +191,7 @@ define('Controls-demo/List/ItemActionsCustom', [
                });
             }
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: srcMore
             });
          }

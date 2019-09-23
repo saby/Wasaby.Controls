@@ -20,7 +20,7 @@ define('Controls-demo/Headers/Counter/counterDemo', [
          _eventName: 'no event',
          _beforeMount: function() {
             this._counterSizeSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 's'
@@ -34,7 +34,7 @@ define('Controls-demo/Headers/Counter/counterDemo', [
                ]
             });
             this._counterStyleSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 'secondary'

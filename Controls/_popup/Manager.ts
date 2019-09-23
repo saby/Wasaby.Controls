@@ -169,6 +169,7 @@ const _private = {
         const element = _private.find(id);
         if (element) {
             element.controller.popupResizingLine(element, offset);
+            this._notify('managerPopupUpdated', [element, _private.popupItems], {bubbling: true});
             return true;
         }
         return false;
@@ -367,13 +368,21 @@ const _private = {
             popupCallback && popupCallback();
 
             if (registrator) {
-                if (registrator._hasRegisteredPendings()) {
+                const hasRegisterPendings = registrator._hasRegisteredPendings();
+                if (hasRegisterPendings) {
                     pendingCallback && pendingCallback();
                 }
                 if (item.removePending) {
                     return item.removePending;
                 }
                 item.removePending = registrator.finishPendingOperations();
+
+                // TODO: Compatible Пендинги от совместимости старого FormController'a не попадают в _hasRegisteredPendings,
+                // но вызываются в finishPendingOperations не завершаясь. (приходит только информация, нужно стопать закрытие или нет)
+                // Сдедал правку, чтобы мы не ждали завершения пендинга от совместимости
+                if (!hasRegisterPendings) {
+                    item.removePending = (new Deferred()).callback();
+                }
                 item.removePending.addCallbacks(function() {
                     item.removePending = null;
                     pendingsFinishedCallback && pendingsFinishedCallback();
@@ -425,6 +434,19 @@ const _private = {
     // у compoundArea вызовется сразу destroy. такую логику прервать нельзя
     _getCompoundArea(popupContainer) {
         return $('.controls-CompoundArea', popupContainer)[0].controlNodes[0].control;
+    },
+    updatePopupOptions(id, item, oldOptions, result) {
+        if (result) {
+            _private.updateOverlay();
+            _private.redrawItems();
+
+            // wait, until popup will be update options
+            runDelayed(function() {
+                ManagerController.getContainer().activatePopup(id);
+            });
+        } else {
+            item.popupOptions = oldOptions;
+        }
     }
 };
 
@@ -560,20 +582,17 @@ const Manager = Control.extend({
      * @param options new options of popup
      */
     update(id, options) {
-        const element = this.find(id);
-        if (element) {
-            const oldOptions = element.popupOptions;
-            element.popupOptions = options;
-            if (element.controller._elementUpdated(element, _private.getItemContainer(id))) {
-                _private.updateOverlay();
-                _private.redrawItems();
-
-                // wait, until popup will be update options
-                runDelayed(function() {
-                    ManagerController.getContainer().activatePopup(id);
+        const item = this.find(id);
+        if (item) {
+            const oldOptions = item.popupOptions;
+            item.popupOptions = options;
+            const updateOptionsResult = item.controller.elementUpdateOptions(item, _private.getItemContainer(id));
+            if (updateOptionsResult instanceof Promise) {
+                updateOptionsResult.then((result) => {
+                    return _private.updatePopupOptions(id, item, oldOptions, result);
                 });
             } else {
-                element.popupOptions = oldOptions;
+                _private.updatePopupOptions(id, item, oldOptions, updateOptionsResult);
             }
             return id;
         }

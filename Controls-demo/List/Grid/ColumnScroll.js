@@ -169,7 +169,7 @@ define('Controls-demo/List/Grid/ColumnScroll', [
          _stickyColumnsCount: 1,
          _beforeMount: function() {
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: GridData.catalog
             });
             this._gridColumns = columns;

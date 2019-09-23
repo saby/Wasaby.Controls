@@ -35,6 +35,7 @@ define(
             assert.deepEqual(inputMod.Number.getDefaultOptions(), {
                tooltip: '',
                style: 'info',
+               spellCheck: true,
                size: 'default',
                placeholder: '',
                useGrouping: true,
@@ -56,6 +57,7 @@ define(
                'precision',
                'textAlign',
                'fontStyle',
+               'spellCheck',
                'useGrouping',
                'onlyPositive',
                'selectOnClick',
@@ -172,32 +174,6 @@ define(
                      arguments: ['valueChanged', [-123, '-123.0']]
                   }
                ]);
-            });
-         });
-         describe('Focus in event.', function() {
-            it('In the field 123. Focus the field.', function() {
-               ctrl._beforeMount({
-                  value: 123,
-                  useGrouping: true
-               });
-               ctrl._focusInHandler();
-
-               assert.deepEqual(calls, [{
-                  name: 'notify',
-                  arguments: ['valueChanged', [123, '123.0']]
-               }]);
-            });
-            it('In the field 1234. Focus the field.', function() {
-               ctrl._beforeMount({
-                  value: 1234,
-                  useGrouping: true
-               });
-               ctrl._focusInHandler();
-
-               assert.deepEqual(calls, [{
-                  name: 'notify',
-                  arguments: ['valueChanged', [1234, '1 234.0']]
-               }]);
             });
          });
       });

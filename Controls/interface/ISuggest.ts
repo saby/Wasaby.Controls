@@ -16,7 +16,7 @@ export interface ISuggestTemplateProp {
 
 /**
  * @typedef {Object} IEmptyTemplateProp
- * @property {String} templateName Имя шаблона пустого автодополнения, которое будет отображаться, когда результат не найден. 
+ * @property {String} templateName Имя шаблона пустого автодополнения, которое будет отображаться, когда результат не найден.
  * @property {Object} templateOptions Параметры шаблона, которые указаны в поле templateName.
  */
 
@@ -294,7 +294,7 @@ interface ISuggest {
        *                   {id: 0, city: 'Yaroslavl'},
        *                   {id: 1, city: 'Moscow'}
        *                ]
-       *                idProperty: 'id'
+       *                keyProperty: 'id'
        *             });
        *          },
        *
@@ -333,7 +333,7 @@ interface ISuggest {
        *                   {id: 0, city: 'Yaroslavl'},
        *                   {id: 1, city: 'Moscow'}
        *                ]
-       *                idProperty: 'id'
+       *                keyProperty: 'id'
        *             });
        *          },
        *

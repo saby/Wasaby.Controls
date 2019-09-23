@@ -168,6 +168,8 @@ var Component = BaseControl.extend({
    }
 });
 
+Component._theme = ['Controls/dateRange'];
+
 Component.EMPTY_CAPTIONS = IDateLinkView.EMPTY_CAPTIONS;
 
 Component.getDefaultOptions = IDateLinkView.getDefaultOptions;

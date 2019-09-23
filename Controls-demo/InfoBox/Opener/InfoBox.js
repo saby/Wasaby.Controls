@@ -245,6 +245,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                         size: 'medium',
                         targetSide: 'left',
                         alignment: 'center',
+                        style: 'warning',
                         message: 'Medium left-center'
                      }
                   },
@@ -253,6 +254,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                         size: 'medium',
                         targetSide: 'top',
                         alignment: 'center',
+                        style: 'success',
                         message: 'Medium top-center'
                      }
                   },
@@ -261,6 +263,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                         size: 'medium',
                         targetSide: 'bottom',
                         alignment: 'center',
+                        style: 'danger',
                         message: 'Medium bottom-center'
                      }
                   },
@@ -269,6 +272,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                         size: 'medium',
                         targetSide: 'right',
                         alignment: 'center',
+                        style: 'info',
                         message: 'Medium right-center'
                      }
                   },

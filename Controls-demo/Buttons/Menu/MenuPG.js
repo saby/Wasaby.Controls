@@ -63,7 +63,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
                      parent: 5,
                      myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateComment'
                   }],
-               idProperty: 'id'
+               keyProperty: 'id'
             });
             this._hierarchyItems = new sourceLib.Memory({
                data: [
@@ -100,7 +100,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
                      id: 10, title: 'Coordination of change prices', parent: 4, myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateSub'
                   },
                   { id: 11, title: 'Matching new dish', parent: 4 }],
-               idProperty: 'id'
+               keyProperty: 'id'
             });
             this._dataObject = {
                style: {

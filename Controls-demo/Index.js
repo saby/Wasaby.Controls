@@ -22,7 +22,6 @@ define('Controls-demo/Index', [
          _template: template,
          backClickHdl: function() {
             window.history.back();
-            this._forceUpdate();
          },
          changeTheme: function(event, theme) {
             this._notify('themeChanged', [theme], { bubbling: true });
@@ -30,11 +29,17 @@ define('Controls-demo/Index', [
          _beforeMount: function() {
             this._title = this._getTitle();
             this._settigsController = {
-               getSettings: function() {
-                  return (new Deferred()).callback(1000);
+               getSettings: function(ids) {
+                  var storage = {};
+                  storage[ids[0]] = 1000;
+                  if (ids[0] === 'master111') {
+                     storage[ids[0]] = 300;
+                  }
+                  return (new Deferred()).callback(storage);
                },
-               setSettings: function() {
-                  //'Сохранили панель с шириной ' + a['123']
+               setSettings: function(settings) {
+                  //'Сохранили панель с шириной ' + settings['123']
+                  //'Сохранили masterDetail с шириной ' + settings['master111']
                }
             };
          },

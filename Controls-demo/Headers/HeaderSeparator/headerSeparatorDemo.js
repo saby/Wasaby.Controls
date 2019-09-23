@@ -17,7 +17,7 @@ define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
          _eventName: 'no event',
          _beforeMount: function() {
             this._iconStyleSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 'secondary'

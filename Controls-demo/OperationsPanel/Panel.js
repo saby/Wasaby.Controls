@@ -64,7 +64,7 @@ define('Controls-demo/OperationsPanel/Panel', [
             data = data.concat(PANEL_ITEMS_SECOND);
          }
          return new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
       }
@@ -96,11 +96,11 @@ define('Controls-demo/OperationsPanel/Panel', [
       _beforeMount: function() {
          this._rightTemplateTpl = RightTemplate;
          this._viewSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: DEMO_ITEMS
          });
          this._sourceConfig = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: DEMO_ITEMS
          });
          this._source = _private.getPanelSource(1);

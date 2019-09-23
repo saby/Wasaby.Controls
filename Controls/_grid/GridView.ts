@@ -16,6 +16,7 @@ import 'wml!Controls/_grid/ColGroup';
 import 'css!theme?Controls/grid';
 import {ScrollEmitter} from 'Controls/list';
 import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
+import {TouchContextField as isTouch} from "Controls/context";
 
 var
     _private = {
@@ -32,30 +33,6 @@ var
         getGridTemplateColumns: function(columns, hasMultiselect: boolean): string {
             let columnsWidths: Array<string> = (hasMultiselect ? ['max-content'] : []).concat(columns.map((column => column.width || '1fr')));
             return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
-        },
-
-        prepareHeaderAndResultsIfFullGridSupport: function(resultsPosition, header, container) {
-            var
-                resultsPadding,
-                cells;
-
-            //FIXME remove container[0] after fix https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-            container = container[0] || container;
-            if (resultsPosition) {
-                if (resultsPosition === 'top') {
-                    if (header) {
-                        resultsPadding = container.getElementsByClassName('controls-Grid__header-cell')[0].getBoundingClientRect().height + 'px';
-                    } else {
-                        resultsPadding = '0';
-                    }
-                } else {
-                    resultsPadding = 'calc(100% - ' + container.getElementsByClassName('controls-Grid__results-cell')[0].getBoundingClientRect().height + 'px)';
-                }
-                cells = container.getElementsByClassName('controls-Grid__results-cell');
-                Array.prototype.forEach.call(cells, function(elem) {
-                    elem.style.top = resultsPadding;
-                });
-            }
         },
 
         calcFooterPaddingClass: function(params) {
@@ -126,8 +103,8 @@ var
         getColumnsWidthForEditingRow: function (self, itemData): Array<string> {
             let
                 container = (self._container[0] || self._container),
-                hasHeader = !!self._listModel.getHeader(),
                 hasItems = self._listModel.getCount(),
+                hasHeader = !!self._listModel.getHeader() && (hasItems || self._listModel.isDrawHeaderWithEmptyList()),
                 hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
                 cells,
                 columnsWidths = [];
@@ -224,16 +201,10 @@ var
             // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                 this._listModel.setColumns(newCfg.columns);
-                if (!Env.detection.isNotFullGridSupport) {
-                    _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
-                }
             }
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._isHeaderChanged = true;
                 this._listModel.setHeader(newCfg.header);
-                if (!Env.detection.isNotFullGridSupport) {
-                    _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
-                }
             }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {
                 this._listModel.setStickyColumn(newCfg.stickyColumn);
@@ -252,6 +223,9 @@ var
             }
             if (this._options.resultsTemplate !== newCfg.resultsTemplate) {
                 this._resultsTemplate = newCfg.resultsTemplate || DefaultResultsTemplate;
+            }
+            if (this._options.header && this._options.items === null && newCfg.items) {
+               this._isHeaderChanged = true;
             }
         },
 
@@ -273,7 +247,8 @@ var
 
         _onItemMouseEnter: function (event, itemData) {
             // In partial grid supporting browsers hovered item calculates in code
-            if (GridLayoutUtil.isPartialGridSupport() && (itemData.item !== this._listModel.getHoveredItem())) {
+            if (!this._context.isTouch.isTouch && GridLayoutUtil.isPartialGridSupport() &&
+                (itemData.item !== this._listModel.getHoveredItem())) {
                 this._listModel.setHoveredItem(itemData.item);
             }
             GridView.superclass._onItemMouseEnter.apply(this, arguments);
@@ -281,7 +256,7 @@ var
 
         _onItemMouseLeave: function (event, itemData) {
             // In partial grid supporting browsers hovered item calculates in code
-            if (GridLayoutUtil.isPartialGridSupport()) {
+            if (!this._context.isTouch.isTouch && GridLayoutUtil.isPartialGridSupport()) {
                 this._listModel.setHoveredItem(null);
             }
             GridView.superclass._onItemMouseLeave.apply(this, arguments);
@@ -301,7 +276,7 @@ var
         },
 
         _beforePaint: function() {
-            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._isHeaderChanged && this._listModel.isDrawHeaderWithEmtyList()) {
+            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._isHeaderChanged && this._listModel.isDrawHeaderWithEmptyList()) {
                 const newHeader = this._setHeaderWithHeight();
                 this._listModel.setHeaderCellMinHeight(newHeader);
                 this._isHeaderChanged = false;
@@ -326,7 +301,7 @@ var
                     `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`
                     )
                     const height = curEl.offsetHeight;
-                    const offset = Math.abs(curEl.offsetTop - container.offsetTop);
+                    const offset = curEl.offsetTop;
                     return {
                         ...cur,
                         offsetTop: offset,
@@ -334,7 +309,7 @@ var
                     };
                 }
                 const curElHeight = stickyHeaderCells[i].offsetHeight
-                if (curElHeight > resultOffset) {
+                if (curElHeight > resultOffset && !cur.isBreadCrumbs) {
                     resultOffset = curElHeight;
                 }
                 return {
@@ -361,11 +336,8 @@ var
         },
         _afterMount: function() {
             GridView.superclass._afterMount.apply(this, arguments);
-            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._listModel.isDrawHeaderWithEmtyList()) {
+            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._listModel.isDrawHeaderWithEmptyList()) {
                 this._listModel.setHeaderCellMinHeight(this._setHeaderWithHeight());
-            }
-            if (!Env.detection.isNotFullGridSupport) {
-                _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
             }
             if (this._options.columnScroll) {
                 this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
@@ -374,10 +346,21 @@ var
 
         _getColumnsWidthForEditingRow: function (itemData) {
             return _private.getColumnsWidthForEditingRow(this, itemData);
+        },
+        _onEditArrowClick: function(e, item) {
+            this._notify('editArrowClick', [item]);
+
+            //we do not need to fire itemClick on clicking on editArrow
+            e.stopPropagation();
         }
     });
 
 GridView._private = _private;
+GridView.contextTypes = () => {
+    return {
+        isTouch
+    };
+};
 
 
 export = GridView;

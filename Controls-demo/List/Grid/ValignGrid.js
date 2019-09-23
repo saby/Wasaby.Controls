@@ -59,13 +59,13 @@ define('Controls-demo/List/Grid/ValignGrid', [
          _selectedKeys: null,
          _beforeMount: function() {
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data.catalog
             });
             this.gridColumns = fullColumns;
             this._selectedKeys = ['3']
             this._dropDownItems = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: '1',

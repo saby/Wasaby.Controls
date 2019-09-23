@@ -109,6 +109,11 @@ define('Controls/interface/IOpener', [], function() {
     * @cfg {String|Function} Template options inside popup.
     */
 
+   /**
+    * @name Controls/interface/IOpener#opener
+    * @cfg {Node} opener Логический инициатор открытия всплывающего окна
+    */
+
 
    /**
     * @event Controls/interface/IOpener#close Происходит при закрытии всплывающего окна

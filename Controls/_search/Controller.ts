@@ -2,10 +2,12 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_search/Controller');
 import clone = require('Core/core-clone');
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
+import cInstance = require('Core/core-instance');
 import {ContextOptions as DataOptions} from 'Controls/context';
 import _SearchController from './_SearchController';
 import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
+import {ICrud} from 'Types/source';
 
 const SERVICE_FILTERS = {
    HIERARCHY: {
@@ -23,6 +25,7 @@ var _private = {
             searchParam: self._options.searchParam,
             minSearchLength: self._options.minSearchLength,
             searchDelay: self._options.searchDelay,
+            searchValueTrim: self._options.searchValueTrim,
             filter: clone(options.filter),
             source: options.source,
             sorting: options.sorting,
@@ -35,6 +38,10 @@ var _private = {
       }
 
       return self._searchController;
+   },
+
+   getOriginSource: function(source: ICrud): ICrud {
+      return cInstance.instanceOfModule(source, 'Types/_source/IDecorator') ? source.getOriginal() : source;
    },
 
    searchCallback: function (self, result, filter) {
@@ -107,7 +114,7 @@ var _private = {
    needUpdateSearchController: function (options, newOptions) {
       return !isEqual(options.navigation, newOptions.navigation) ||
          options.searchDelay !== newOptions.searchDelay ||
-         options.source !== newOptions.source ||
+         _private.getOriginSource(options.source) !== _private.getOriginSource(newOptions.source) ||
          options.searchParam !== newOptions.searchParam ||
          options.minSearchLength !== newOptions.minSearchLength;
    },
@@ -156,6 +163,32 @@ var _private = {
 };
 
 /**
+ * Контрол-контроллер поиска позволяет осуществлять поиск данных в {@link Controls/list:View}
+ * с помощью любого компонента с интерфейсом {@link Controls/interface/IInputField}.
+ * Контроллер поиска позволяет:
+ * 1) установить задержку перед поиском;
+ * 2) установить количество символов;
+ * 3) установить параметры поиска;
+ * 4) изменить раскладку клавиатуры для случаев неудачного поиска.
+ * Следует запомнить: Контрол с интерфейсом {@link Controls/interface/IInputField} должен быть обернут в {@link Controls/_search/Input/Container}.
+ *
+ * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
+ *
+ * <a href="/materials/demo/demo-ws4-explorer-with-search">Демо-пример</a>. 
+ *
+ * @class Controls/_search/Controller
+ * @extends Core/Control
+ * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IFilter
+ * @mixes Controls/interface/INavigation
+ * @mixes Controls/interface/IHierarchySearch
+ * @author Герасимов А.М.
+ * @control
+ * @public
+ */
+
+/*
  * The search controller allows you to search data in a {@link Controls/list:View}
  * using any component with {@link Controls/interface/IInputField} interface.
  * Search controller allows you:
@@ -179,7 +212,7 @@ var _private = {
  * @author Герасимов А.М.
  * @control
  * @public
- */
+ */ 
 
 var Container = Control.extend(/** @lends Controls/_search/Container.prototype */{
 

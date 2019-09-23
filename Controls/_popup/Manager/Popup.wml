@@ -11,6 +11,7 @@
          opener="{{null}}"
          on:sendResult="_sendResult()"
          on:close="_close()"
+         on:popupDragEnd="_popupDragEnd()"
          on:popupDragStart="_popupDragStart()"
          on:popupResizingLine="_popupResizingLine()"
          on:popupMouseEnter="_popupMouseEnter()"
@@ -19,7 +20,6 @@
          on:registerOpenerUpdateCallback="_registerOpenerUpdateCallback()"
          on:unregisterOpenerUpdateCallback="_unregisterOpenerUpdateCallback()"
          on:controlResize="_controlResize()"
-         on:swipe="_swipeHandler()"
          on:showIndicator="_showIndicatorHandler()">
       </ws:partial>
    </Controls.event:Register>

@@ -23,6 +23,11 @@ define(
                },
             }, ''), result;
 
+         describe('_convertToDisplayValue', function() {
+            it('value = null', function() {
+               assert.equal(viewModel._convertToDisplayValue(null), '  .  .  ');
+            });
+         });
          describe('handleInput', function() {
             var splitValue = {
                after: '  .  .  ',

@@ -17,23 +17,22 @@
 /**
  * @name Controls/_grid/interface/IGridControl#ladderProperties
  * @cfg {Array.<String>} Массив свойств, по которым происходит прилипание.
- * <a href="/materials/demo-ws4-grid-sticky">Example</a>
+ * Работу лесенки можно проверить на <a href="/materials/demo-ws4-grid-sticky">демо-примере</a>.
  * @example
- * Установите ladderProperties отобразите шаблон элемента через ladderWrapper:
- * <pre>
+ * Пример 1. Шаблон лесенки задан в рамках шаблона родительского контрола.
+ * <pre class="brush: html">
+ *    <!-- MyControl.wml -->
  *    <div class="demoGrid">
- *       <Controls.grid:View
- *          ...
- *          ladderProperties="{{ ['date'] }}">
+ *       <Controls.grid:View ladderProperties="{{ ['date'] }}">
  *          <ws:columns>
  *             <ws:Array>
  *                <ws:Object width="1fr">
  *                   <ws:template>
- *                      <ws:partial template="Controls/grid:Columns">
+ *                      <ws:partial template="Controls/grid:ColumnTemplate">
  *                         <ws:contentTemplate>
- *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
+ *                            <ws:partial template="{{template.ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
- *                                  {{itemData.item['date']}}
+ *                                  {{template.itemData.item['date']}}
  *                               </div>
  *                            </ws:partial>
  *                         </ws:contentTemplate>
@@ -44,6 +43,30 @@
  *          </ws:columns>
  *       </Controls.grid:View>
  *    </div>
+ * </pre>
+ *
+ * Пример 2. Шаблон лесенки вынесен в отдельный шаблон.
+ * <pre class="brush: html">
+ *    <!-- MyControl.wml -->
+ *    <div class="demoGrid">
+ *       <Controls.grid:View
+ *          ...
+ *          ladderProperties="{{ ['date'] }}">
+ *          <ws:columns>
+ *             <ws:Array>
+ *                <ws:Object width="1fr" template="wml!MyModule/MyTemplate" />
+ *             </ws:Array>
+ *          </ws:columns>
+ *       </Controls.grid:View>
+ *    </div>
+ * </pre>
+ * <pre class="brush: html">
+ *    <!-- MyTemplate.wml -->
+ *    <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
+ *       <div class="demoGrid__date">
+ *          {{itemData.item['date']}}
+ *       </div>
+ *    </ws:partial>
  * </pre>
  */
 
@@ -62,7 +85,7 @@
  *             <ws:Array>
  *                <ws:Object width="1fr">
  *                   <ws:template>
- *                      <ws:partial template="Controls/grid:Columns">
+ *                      <ws:partial template="Controls/grid:ColumnTemplate">
  *                         <ws:contentTemplate>
  *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
  *                               <div class="demoGrid__date">
@@ -108,6 +131,12 @@
  * @variant bottom Align content to bottom side.
  */
 
+/*
+ * @typedef {Object} cellPadding
+ * @property {enum('s'|'null')} left левый отступ ячейки.
+ * @property {enum('s'|'null')} right правый отступ ячейки.
+ */
+
 /**
  * @typedef {Object} HeaderCell Описывает ячейку заголовка строки.
  * @property {String} caption Текст заголовка ячейки.
@@ -120,6 +149,7 @@
  * @property {Number} startColumn Порядковый номер колонки на которой начинается ячейка.
  * @property {Number} endColumn Порядковый номер колонки на которой заканчивается ячейка.
  * @property {Object} templateOptions Опции, передаваемые в шаблон ячейки заголовка.
+ * @property {cellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
  */
 
 /*
@@ -141,9 +171,10 @@
  * - <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
  * - <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
  * @remark
- * По умолчанию используется базовый шаблон {@link Controls/grid:HeaderContent}.
- * Базовый шаблон поддерживает следующие css-модификаторы:
- * - controls-Grid__header-cell_spacing_money — используется для добавления отступа в заголовке столбца при рендере денежных данных в самом столбце.
+ * По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
+ * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
+ *
+ * 
  *
  * @example
  * Пример добавления пользовательскогого шаблона:
@@ -168,7 +199,7 @@
  *       </ws:header>
  *    </Controls.grid:View>
  * </pre>
- * 
+ *
  * @example
  * Пример массива колонок многоуровневого заголовка:
  * <pre>
@@ -247,9 +278,9 @@
  * В значении "auto" ширина столбца устанавливается исходя из типа и содержимого элемента.
  * В значении "minmax(,)" устанавливаются минимальная и максимальная ширина столбца, например "minmax(600px, 1fr)".
  * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в столбце.
- * @property {String} [template=Controls/grid:Columns] Шаблон отображения ячейки.
- * По умолчанию используется базовый шаблон {@link Controls/grid:Columns}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
- * 
+ * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
+ * По умолчанию используется базовый шаблон {@link Controls/grid:ColumnTemplate}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
+ *
  * На корневой элемент пользовательского шаблона следует задать CSS-класс "controls-Grid__row-cell__content_baseline_L". Это обеспечит выравнивание контента ячейки по базовой линии.
  * <pre>
  * <Controls.grid:View>
@@ -257,7 +288,7 @@
  *         <ws:Array>
  *             <ws:Object displayProperty="Name" width="200px">
  *                 <ws:template>
- *                     <ws:partial template="Controls/grid:Columns" attr:class="controls-Grid__row-cell__content_baseline_L">
+ *                     <ws:partial template="Controls/grid:ColumnTemplate" attr:class="controls-Grid__row-cell__content_baseline_L">
  *                         <ws:contentTemplate>
  *                           <!-- контент шаблона -->
  *                         </ws:contentTemplate>
@@ -268,9 +299,9 @@
  *     </ws:columns>
  * </Controls.grid:View>
  * </pre>
- * 
+ *
  * Базовый шаблон поддерживает контентную опцию <code>contentTemplate</code>. Поместите в неё вёрстку, которая описывает отображение ячейки.
- * 
+ *
  * В области видимости базового шаблона доступна переменная <code>itemData</code> (тип <code>Object</code>) со следующими свойствами:
  * - <code>columnIndex</code> (тип Number) — порядковый номер колонки. Отсчет от 0.
  * - <code>index</code> (тип Number) — порядковый номер строки. Отсчет от 0.

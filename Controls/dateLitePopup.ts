@@ -18,7 +18,7 @@ import 'css!theme?Controls/_dateLitePopup/DateLitePopup';
  *
  * @class Controls/dateLitePopup
  * @extends Core/Control
- * @mixes Controls/_dateLitePopup/IDateLitePopup
+ * @mixes Controls/dateLitePopup/IDateLitePopup
  * @control
  * @public
  * @author Красильников А.С.
@@ -31,7 +31,7 @@ import 'css!theme?Controls/_dateLitePopup/DateLitePopup';
  *
  * @class Controls/dateLitePopup
  * @extends Core/Control
- * @mixes Controls/_dateLitePopup/IDateLitePopup
+ * @mixes Controls/dateLitePopup/IDateLitePopup
  * @control
  * @public
  * @author Красильников А.С.

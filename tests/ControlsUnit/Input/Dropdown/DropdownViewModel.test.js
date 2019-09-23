@@ -10,7 +10,7 @@ define(
    (DropdownViewModel, collectionLib, ControlsConstants, entity, list, clone) => {
       describe('DropdownViewModel', () => {
          let rs = new collectionLib.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: [
                {
                   id: '1',
@@ -59,7 +59,7 @@ define(
             ]
          });
          const rs2 = new collectionLib.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: [
                {
                   id: '1',
@@ -197,7 +197,7 @@ define(
                   return item.get('group');
                };
                newConfig.items = new collectionLib.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [
                      {id: '1', title: 'Запись 1', parent: null, '@parent': false, recent: true},
                      {id: '2', title: 'Запись 2', parent: null, '@parent': false, pinned: true},
@@ -246,7 +246,7 @@ define(
                   },
                   getItems: () => {
                      return new collectionLib.RecordSet({
-                        idProperty: 'id',
+                        keyProperty: 'id',
                         rawData: [{id: '1'}, {id: '2'}]
                      });
                   }
@@ -257,7 +257,7 @@ define(
 
                self.getItems = () => {
                   return new collectionLib.RecordSet({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      rawData: [{id: '1', parent: '1'}]
                   });
                };
@@ -269,7 +269,7 @@ define(
             let newConfig = {
                keyProperty: 'id',
                items: new collectionLib.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [
                      { id: 'first', title: 'Запись 1', group: '1' },
                      { id: 'second', title: 'Запись 2', group: '1' },

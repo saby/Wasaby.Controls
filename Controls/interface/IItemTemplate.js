@@ -15,7 +15,7 @@ define('Controls/interface/IItemTemplate', [
     * @interface Controls/interface/IItemTemplate
     * @public
     * @author Герасимов А.М.
-    */    
+    */
 
    /**
     * @name Controls/interface/IItemTemplate#itemTemplate
@@ -23,13 +23,14 @@ define('Controls/interface/IItemTemplate', [
     * <a href="/materials/demo-ws4-list-item-template">Демо-пример</a>.
     * @remark
     * По умолчанию используется шаблон "Controls/list:ItemTemplate".
-    * 
+    *
     * Базовый шаблон itemTemplate поддерживает следующие параметры:
     * - contentTemplate {Function} — Шаблон содержимого элемента;
     * - highlightOnHover {Boolean} — Выделять элемент при наведении на него курсора мыши.
-    * 
+    * - clickable {Boolean} - Тип курсора (false - default или true - pointer) По умолчанию true.
+    *
     * В области видимости шаблона доступен объект itemData, позволяющий получить доступ к данным рендеринга (например, элемент, ключ и т.д.).
-    * 
+    *
     * Подробнее о работе с шаблоном читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/">руководстве разработчика</a>.
     * @example
     * <pre>
@@ -56,6 +57,7 @@ define('Controls/interface/IItemTemplate', [
     * <ul>
     *    <li>contentTemplate {Function} - Template for render item content.</li>
     *    <li>highlightOnHover {Boolean} - Enable highlighting item by hover.</li>
+    *    <li>clickable {Boolean} - Cursor type (false - default or true - pointer) By default: true.</li>
     * </ul>
     * @example
     * Using custom template for item rendering:

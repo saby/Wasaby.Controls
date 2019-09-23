@@ -13,7 +13,7 @@ const DEFAULT_EDITORS: object = {
 };
 
 class PropertyGridItem extends Model {
-    _$idProperty: string = 'name';
+    _$keyProperty: string = 'name';
     _$properties: object = {
         editorTemplateName: {
             get(value: string|void): string {

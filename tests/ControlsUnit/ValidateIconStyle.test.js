@@ -22,7 +22,7 @@ define(['Controls/buttons', 'Types/collection'], function(buttons, collection) {
       });
       it('itemsSetOldIconStyle', function() {
          var items = new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: [
                   { id: 1, iconStyle: 'test', icon: 'icon-Send icon-error icon-small' },
                   { id: 2, icon: 'icon-Send icon-error icon-small' },

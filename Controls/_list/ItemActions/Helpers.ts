@@ -11,7 +11,7 @@ function getDisplay(items, parentProperty, nodeProperty, root) {
    //Кешируем проекцию, т.к. её создание тежеловесная операция, а данный метод будет вызываться для каждой записи в списке.
    if (!cachedDisplay || cachedDisplay.getCollection() !== items || cachedDisplay.getCollection().getVersion() !== items.getVersion()) {
       cachedDisplay = TreeItemsUtil.getDefaultDisplayTree(items, {
-         keyProperty: items.getIdProperty(),
+         keyProperty: items.getKeyProperty(),
          parentProperty: parentProperty,
          nodeProperty: nodeProperty
       }, {});

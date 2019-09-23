@@ -60,7 +60,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
       _beforeMount: function() {
          this.allTagResolvers = [decorator.linkDecorate, decorator._highlightResolver, this._combineResolver];
          this._resolversMemorySource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: [
                {
                   id: 1000000,

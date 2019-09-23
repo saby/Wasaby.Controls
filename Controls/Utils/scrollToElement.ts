@@ -53,14 +53,39 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
 }
 
 /**
+ * Модуль возвращает функцию, которая позволяет проскроллить содержимое, находящееся внутри родительского скролл-контейнера, к выбранному элементу, сделав его видимым.
+ *
+ * <h2>Аргументы функции</h2>
+ * 
+ * * element: HTMLElement — DOM-элемент, к которому нужно проскроллить содержимое
+ * * toBottom: boolean — определяет, должен ли быть виден нижний край контейнера
+ * * force: boolean:
+ *     * true — позволяет прокручивать элемент вверх/вниз в области прокрутки, безоговорочно.
+ *     * false — элемент будет прокручиваться только в случае, если он частично или полностью скрыт за пределами области прокрутки.
+ *
+ * <h3>Пример использования</h3>
+ * <pre>
+ * require(['Controls/Utils/scrollToElement'], function(scrollToElement) {
+ *    class Component extends Control {
+ *       _onClick() {
+ *          scrollToElement(this._children.child, true);
+ *       }
+ *    }
+ * });
+ * </pre>
+ * @class Controls/Utils/scrollToElement
+ * @public
+ * @author Красильников А.С.
+ */
+/*
  * The module returns a function that allows scrolling content in parent scrollable containers
  * so that the passed dom element becomes visible.
  *
  * <h2>Function arguments</h2>
  *
- * <h3>element: HTMLElement - The dom element to be made visible</h3>
- * <h3>toBottom: boolean - Determines if bottom edge should be visible</h3>
- * <h3>force: boolean - If true, then it will scroll the element to the top or to the bottom
+ * <h3>element: HTMLElement — The dom element to be made visible</h3>
+ * <h3>toBottom: boolean — Determines if bottom edge should be visible</h3>
+ * <h3>force: boolean — If true, then it will scroll the element to the top or to the bottom
  * of the scrolled area unconditionally. If false, it will scroll only if the element
  * is completely or partially hidden outside the scrolled area.</h3>
  *
@@ -84,6 +109,7 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
  * @public
  * @author Красильников А.С.
  */
+
 function scrollToElement(element: HTMLElement, toBottom?: Boolean, force?: Boolean) {
    getScrollableParents(element).forEach(parent => {
       const

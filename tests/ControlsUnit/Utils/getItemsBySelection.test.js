@@ -16,16 +16,18 @@ define([
          ],
          recordSet = new collection.RecordSet({
             rawData: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          }),
          callSource = false,
+         callQuery,
          dataSource = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: data
          });
 
       dataSource.query = function(query) {
          callSource = true;
+         callQuery = query;
          return Deferred.success({
             getAll: function() {
                var
@@ -81,6 +83,28 @@ define([
             assert.equal(items.length, 0);
             done();
          });
+      });
+
+      it('recursive', function() {
+         getItemsBySelection({
+            selected: [1, 5],
+            excluded: [],
+            recursive: true
+         }, dataSource, recordSet, {});
+         assert.isTrue(callQuery._where.selection.get('recursive'));
+
+         getItemsBySelection({
+            selected: [1, 5],
+            excluded: [],
+            recursive: false
+         }, dataSource, recordSet, {});
+         assert.isFalse(callQuery._where.selection.get('recursive'));
+
+         getItemsBySelection({
+            selected: [1, 5],
+            excluded: [],
+         }, dataSource, recordSet, {});
+         assert.isTrue(callQuery._where.selection.get('recursive'));
       });
    });
 });

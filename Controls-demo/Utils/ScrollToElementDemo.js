@@ -24,7 +24,7 @@ define('Controls-demo/Utils/ScrollToElementDemo', [
          }
          this._viewSource = new source.Memory({
             data: data,
-            idProperty: 'id'
+            keyProperty: 'id'
          });
       },
 

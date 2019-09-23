@@ -8,7 +8,7 @@ define(
 
       describe('Controls.source:SelectedKey', function() {
          let items = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: [
                {id: null, title: 'first'},
                {id: true, title: 'second'},

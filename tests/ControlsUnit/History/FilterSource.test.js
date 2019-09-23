@@ -82,7 +82,7 @@ define(
          function createRecordSet(data) {
             return new collection.RecordSet({
                rawData: data,
-               idProperty: 'ObjectId',
+               keyProperty: 'ObjectId',
                adapter: new entity.adapter.Sbis()
             });
          }
@@ -95,34 +95,84 @@ define(
          it('fillRecent', () => {
             let itemsRecent = new collection.RecordSet({
                adapter: new entity.adapter.Sbis(),
-               idProperty: 'ObjectId'
+               keyProperty: 'ObjectId'
             });
-            historyMod.FilterSource._private.fillRecent({}, historyInstance, itemsRecent);
+
+            let self = {
+               historySource: {
+                  _recent: 11
+               }
+            };
+            historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
+
             assert.equal(itemsRecent.getCount(), 9);
 
             itemsRecent.clear();
             historyInstance.recent.add(getItem('11', null, 'TEST_HISTORY_ID_V1'));
-            historyMod.FilterSource._private.fillRecent({}, historyInstance, itemsRecent);
+            historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
             assert.equal(itemsRecent.getCount(), 9);
 
             itemsRecent.clear();
             historyInstance.pinned.clear();
-            historyMod.FilterSource._private.fillRecent({}, historyInstance, itemsRecent);
+            historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
             assert.equal(itemsRecent.getCount(), 10);
 
             itemsRecent.clear();
             historyInstance.recent.removeAt(10);
-            historyMod.FilterSource._private.fillRecent({}, historyInstance, itemsRecent);
+            historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
             assert.equal(itemsRecent.getCount(), 10);
 
             itemsRecent.clear();
             historyInstance.recent.removeAt(9);
             historyInstance.recent.add(getItem('11', '{}', 'TEST_HISTORY_ID_V1'));
             historyInstance.recent.add(getItem('11', null, 'TEST_HISTORY_ID_V1'));
-            historyMod.FilterSource._private.fillRecent({}, historyInstance, itemsRecent);
+            historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
             assert.equal(itemsRecent.getCount(), 10);
 
+            itemsRecent.clear();
+            self.historySource._recent = 5;
+            historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
+            assert.equal(itemsRecent.getCount(), 4);
 
+            itemsRecent.clear();
+            historyInstance.pinned.add(getItem('12', '{title: 123}', 'TEST_HISTORY_ID_V1'));
+            historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
+            assert.equal(itemsRecent.getCount(), 3);
+
+            itemsRecent.clear();
+            self.historySource._pinned = false;
+            historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
+            assert.equal(itemsRecent.getCount(), 4);
+         });
+
+         it('serialize', function() {
+            let instValue = new entity.Date();
+            let data = {id: '1', value: instValue, resetValue: null};
+            JSON.stringify({value: instValue}, historyMod.FilterSource._private.getSerialize().serialize);
+
+            let serializeData = JSON.stringify(data, historyMod.FilterSource._private.getSerialize().serialize);
+            let result = JSON.parse(serializeData, historyMod.FilterSource._private.getSerialize().deserialize);
+            assert.deepStrictEqual(data, result);
+         });
+
+         it('findItem', function() {
+            let newItem = {
+               configs: undefined,
+               items: [1,2,3]
+            };
+            let historyItems = new  collection.RecordSet({
+               rawData: [
+                  { ObjectData: 'test' }
+               ]
+            });
+            let result = historyMod.FilterSource._private.findItem({}, historyItems, newItem);
+            assert.isNull(result);
+
+            historyItems.add(new entity.Model({
+               rawData: {ObjectData: JSON.stringify(newItem, historyMod.FilterSource._private.getSerialize().serialize)}
+            }));
+            result = historyMod.FilterSource._private.findItem({}, historyItems, newItem);
+            assert.isOk(result);
          });
       });
    }

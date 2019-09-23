@@ -33,7 +33,7 @@ define(['Controls/_tile/TileView/TileView',
                      'parent': null,
                      'parent@': null
                   }],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                })
             });
 
@@ -410,6 +410,9 @@ define(['Controls/_tile/TileView/TileView',
             if (eventName === 'controlResize') {
                controlResizeFired = true;
             }
+         };
+         tileView._container = {
+            getBoundingClientRect: function(){}
          };
          tileView._afterUpdate();
          hoveredItem = tileView._listModel.getHoveredItem();

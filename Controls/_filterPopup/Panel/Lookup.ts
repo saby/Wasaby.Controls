@@ -25,6 +25,12 @@ import 'css!theme?Controls/filterPopup';
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
+ * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputStyle
  * @mixes Controls/_lookup/BaseLookupView/LookupStyles
  * @control
  * @public
@@ -50,6 +56,12 @@ import 'css!theme?Controls/filterPopup';
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
+ * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputStyle
  * @mixes Controls/_lookup/BaseLookupView/LookupStyles
  * @control
  * @public
@@ -66,9 +78,25 @@ import 'css!theme?Controls/filterPopup';
  * @cfg {String} Текст ссылки, который отображается до первого выбора записи в контролле.
  */
 
-/* !KONGO
- Текст ссылки, который отображается до первого выбора записи в контролле - ???
- */
+   /**
+    * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
+    * @cfg {String} Имя контрола с тем же интерфейсом, что и Lookup.
+    * @default Controls/_lookup/Lookup
+    * @example
+    * <pre>
+    *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup"/>
+    * </pre>
+    */
+
+   /*
+    * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
+    * @cfg {String} Name of the control with same interface as Lookup.
+    * @default Controls/_lookup/Lookup
+    * @example
+    * <pre>
+    *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup"/>
+    * </pre>
+    */
 
 /**
  * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
@@ -77,6 +105,16 @@ import 'css!theme?Controls/filterPopup';
  * @example
  * <pre>
  *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/Lookup#lookupClassName
+ * @cfg {String} Класс, который вешается на корневой элемент шаблона lookupTemplateName
+ * @example
+ * На корневой элемент шаблона "namePace/Lookup" навешивается класс "myClass"
+ * <pre>
+ *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup" lookupClassName="myClass"/>
  * </pre>
  */
 

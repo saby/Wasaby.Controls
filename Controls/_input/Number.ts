@@ -131,14 +131,6 @@ var NumberInput = Base.extend({
         NumberInput.superclass._changeHandler.apply(this, arguments);
     },
 
-    _focusInHandler: function () {
-        if (this._viewModel.addTrailingZero()) {
-            this._notifyValueChanged();
-        }
-
-        NumberInput.superclass._focusInHandler.apply(this, arguments);
-    },
-
     _focusOutHandler: function () {
         if (this._viewModel.trimTrailingZeros(false)) {
             this._notifyValueChanged();

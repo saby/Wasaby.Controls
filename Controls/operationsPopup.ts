@@ -1,5 +1,5 @@
 /**
- * Библиотека с диалогами, отображающими результаты выполнения массовых операций.
+ * Библиотека контролов, содержащая всплывающие окна, которые используются при работе с массовыми операциями над записями.
  * @library Controls/operationsPopup
  * @includes ReportDialog Controls/_operationsPopup/ReportDialog
  * @public

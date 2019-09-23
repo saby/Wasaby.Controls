@@ -18,7 +18,7 @@ define('Controls-demo/Container/Scroll',
 
          _beforeMount: function() {
             this._scrollStyleSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [{
                   title: 'normal'
                }, {

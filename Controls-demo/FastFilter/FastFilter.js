@@ -23,7 +23,7 @@ define('Controls-demo/FastFilter/FastFilter',
          dataSourceDemoItems: null,
          _beforeMount: function() {
             this.dataSourceDemoSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: 'filter1',
@@ -138,7 +138,7 @@ define('Controls-demo/FastFilter/FastFilter',
          },
          _createMemory: function(items) {
             return new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             });
          },

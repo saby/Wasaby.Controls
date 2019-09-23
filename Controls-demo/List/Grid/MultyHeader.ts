@@ -261,7 +261,7 @@ define('Controls-demo/List/Grid/MultyHeader', [
               TOOLBAR: 2
            };
            this._viewSource = new source.Memory({
-              idProperty: 'id',
+              keyProperty: 'id',
               data: GridData.catalog
            });
            this.gridColumns = fullColumns;
@@ -272,7 +272,7 @@ define('Controls-demo/List/Grid/MultyHeader', [
                  { key: 'price', title: 'Цена' },
                  { key: 'costPrice', title: 'Себестоимость' }
               ],
-              idProperty: 'key'
+              keyProperty: 'key'
            });
            this.gridColumns2 = partialColumns;
 

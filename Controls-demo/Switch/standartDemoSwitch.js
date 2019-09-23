@@ -23,7 +23,7 @@ define('Controls-demo/Switch/standartDemoSwitch', [
       _customCaptionTemplate: customCaptionTemplate,
       _beforeMount: function() {
          this._source = new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             displayProperty: 'caption',
             data: [
                {

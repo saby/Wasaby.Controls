@@ -20,7 +20,7 @@ export interface IValidationStatusOptions {
 }
 
 interface IValidationStatus {
-    readonly '[Controls/_interface/IValidationStatus]': boolean;
+    readonly '[Controls/_input/interface/IValidationStatus]': boolean;
 }
 
 export default IValidationStatus;

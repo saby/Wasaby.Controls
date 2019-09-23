@@ -162,13 +162,13 @@ define('Controls-demo/Menu/MenuVdom', [
                   recent: this._createRecordSet( this.recordData.recent)
                },
                itemsProperty: '',
-               idProperty: 'ObjectId'
+               keyProperty: 'ObjectId'
             });
 
             // возвращаем historySource
             var hs = new history.Source({
                originSource: new source.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: items
                }),
 
@@ -233,7 +233,7 @@ define('Controls-demo/Menu/MenuVdom', [
          _createRecordSet: function(data) {
             return new collection.RecordSet({
                rawData: data,
-               idProperty: 'ObjectId',
+               keyProperty: 'ObjectId',
                adapter: new entity.adapter.Sbis()
             });
          },

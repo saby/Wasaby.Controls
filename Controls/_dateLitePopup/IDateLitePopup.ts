@@ -2,7 +2,7 @@ import {descriptor} from 'Types/entity';
 import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
    /**
-    * mixin Controls/_dateLitePopup/IDateLitePopup
+    * mixin Controls/dateLitePopup/IDateLitePopup
     * @public
     */
    var EMPTY_CAPTIONS = {
@@ -17,36 +17,62 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
          return {
 
             /**
+             * @name Controls/dateLitePopup/IDateLitePopup#year
+             * @cfg {Date} Отображаемый год.
+             */
+
+            /*
              * @name Controls/_dateLitePopup/IDateLitePopup#year
              * @cfg {Date} Displayed period
              */
             year: undefined,
 
             /**
+             * @name Controls/dateLitePopup/IDateLitePopup#chooseMonths
+             * @cfg {Boolean} Устанавливает возможность выбора месяца.
+             * @default true
+             */
+
+            /*
              * @name Controls/_dateLitePopup/IDateLitePopup#chooseMonths
              * @cfg {Boolean} Sets the option to choose a month
+             * @default true
              */
             chooseMonths: true,
 
             /**
+             * @name Controls/dateLitePopup/IDateLitePopup#chooseQuarters
+             * @cfg {Boolean} Устанавливает возможность выбора квартала.
+             * @default true
+             */
+
+            /*
              * @name Controls/_dateLitePopup/IDateLitePopup#chooseQuarters
              * @cfg {Boolean} Sets the option to choose a quarter
+             * @default true
              */
             chooseQuarters: true,
 
             /**
-             * @name Controls/_dateLitePopup/IDateLitePopup#chooseHalfyears
-             * @cfg {Boolean} Sets the option to choose a half-year
+             * @name Controls/dateLitePopup/IDateLitePopup#chooseHalfyears
+             * @cfg {Boolean} Устанавливает возможность выбора полугодия.
+             * @default true
              */
             chooseHalfyears: true,
 
             /**
-             * @name Controls/_dateLitePopup/IDateLitePopup#chooseYears
+             * @name Controls/dateLitePopup/IDateLitePopup#chooseYears
              * @cfg {Boolean} Sets the option to choose a year
+             * @default true
              */
             chooseYears: true,
 
             /**
+             * @name Controls/dateLitePopup/IDateLitePopup#emptyCaption
+             * @cfg {String} Текст, который отображается, если период не выбран.
+             */
+        
+            /*
              * @name Controls/_dateLitePopup/IDateLitePopup#emptyCaption
              * @cfg {String} Text that is used if the period is not selected
              */
@@ -54,49 +80,49 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
             // TODO: Доделать полноценную поддержку следующих опций. Пока не показываем их в документации.
             /**
-             * @name Controls/_dateLitePopup/IDateLitePopup#checkedStart
+             * @name Controls/dateLitePopup/IDateLitePopup#checkedStart
              * @cfg {Date} The date (month) of the beginning of the checked period
              * @noshow
              */
             checkedStart: undefined,
 
             /**
-             * @name Controls/_dateLitePopup/IDateLitePopup#checkedEnd
+             * @name Controls/dateLitePopup/IDateLitePopup#checkedEnd
              * @cfg {Date} The date(month) of the end of the checked period
              * @noshow
              */
             checkedEnd: undefined,
 
             /**
-             * @name Controls/_dateLitePopup/IDateLitePopup#checkedIconCssClass
+             * @name Controls/dateLitePopup/IDateLitePopup#checkedIconCssClass
              * @cfg {String} The CSS class that will be set on the selected icons. The default is a green tick.
              * @noshow
              */
             checkedIconCssClass: 'icon-Yes icon-done',
 
             /**
-             * @name Controls/_dateLitePopup/IDateLitePopup#uncheckedIconCssClass
+             * @name Controls/dateLitePopup/IDateLitePopup#uncheckedIconCssClass
              * @cfg {String} A CSS class that will be set on unselected icons. The default is a gray tick.
              * @noshow
              */
             uncheckedIconCssClass: 'icon-Yes icon-disabled',
 
             /**
-             * @name Controls/_dateLitePopup/IDateLitePopup#checkedIconTitle
+             * @name Controls/dateLitePopup/IDateLitePopup#checkedIconTitle
              * @cfg {String} A hint that will be displayed on the selected icons. By default, there is no tooltip.
              * @noshow
              */
             checkedIconTitle: undefined,
 
             /**
-             * @name Controls/_dateLitePopup/IDateLitePopup#uncheckedIconTitle
+             * @name Controls/dateLitePopup/IDateLitePopup#uncheckedIconTitle
              * @cfg {String} A hint that will be displayed on the unselected icons. By default, there is no tooltip.
              * @noshow
              */
             uncheckedIconTitle: undefined,
 
             /**
-             * @name Controls/_dateLitePopup/IDateLitePopup#iconsHandler
+             * @name Controls/dateLitePopup/IDateLitePopup#iconsHandler
              * @cfg {Function} Sets the function to be called when the component is repainted.
              * @remark
              * Function Arguments:
@@ -120,29 +146,58 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
             // iconsHandler: undefined,
 
             /**
+             * @name Controls/dateLitePopup/IDateLitePopup#itemTemplate
+             * @cfg {String} Шаблон отображения года. Может принимать опцию monthCaptionTemplate как шаблон заголовка месяца.
+             * Дата первого дня месяца и функция форматирования даты передаются в шаблон месяца {@link Types/formatter:date}.
+             * @example
+             * <pre>
+             *    <ws:itemTemplate>
+             *       <ws:partial template="{{itemTemplate.defaultTemplate}}">
+             *          <ws:monthCaptionTemplate>
+             *             <ws:if data="{{month.getMonth() % 2 === 0}}">
+             *                <div class="controls-PeriodLiteDialog__vLayoutItem-caption"
+             *                     style="{{ (month.getMonth() % 4 === 0) ? 'color: red;' }}">
+             *                   {{ formatDate(month, "MMMM") }} !
+             *                </div>
+             *             </ws:if>
+             *          </ws:monthCaptionTemplate>
+             *       </ws:partial>
+             *    </ws:itemTemplate>
+             * </pre>
+             */
+
+            /*
              * @name Controls/_dateLitePopup/IDateLitePopup#itemTemplate
              * @cfg {String} Template of the year. Can accept the option monthCaptionTemplate - template header
              * of the month. The date of the first day of the month and date formatting function are passed
              * to the template of the month {@link Types/formatter:date}.
              * @example
-             * <ws:itemTemplate>
-             *    <ws:partial template="{{itemTemplate.defaultTemplate}}">
-             *       <ws:monthCaptionTemplate>
-             *          <ws:if data="{{month.getMonth() % 2 === 0}}">
-             *             <div class="controls-PeriodLiteDialog__vLayoutItem-caption"
-             *                  style="{{ (month.getMonth() % 4 === 0) ? 'color: red;' }}">
-             *                {{ formatDate(month, "MMMM") }} !
-             *             </div>
-             *          </ws:if>
-             *        </ws:monthCaptionTemplate>
-             *    </ws:partial>
-             * </ws:itemTemplate>
+             * <pre>
+             *    <ws:itemTemplate>
+             *       <ws:partial template="{{itemTemplate.defaultTemplate}}">
+             *          <ws:monthCaptionTemplate>
+             *             <ws:if data="{{month.getMonth() % 2 === 0}}">
+             *                <div class="controls-PeriodLiteDialog__vLayoutItem-caption"
+             *                     style="{{ (month.getMonth() % 4 === 0) ? 'color: red;' }}">
+             *                   {{ formatDate(month, "MMMM") }} !
+             *                </div>
+             *             </ws:if>
+             *          </ws:monthCaptionTemplate>
+             *       </ws:partial>
+             *    </ws:itemTemplate>
+             * </pre>
              */
+
             /* That not to drag dependence on a template in all, the default value we set only in the PeriodLiteDialog
              * itemTemplate: undefined,
              */
 
             /**
+             * @name Controls/dateLitePopup/IDateLitePopup#captionFormatter
+             * @cfg {Function} Функция форматирования заголовка.
+             */
+
+            /*
              * @name Controls/_dateLitePopup/IDateLitePopup#captionFormatter
              * @cfg {Function} Caption formatting function.
              */

@@ -70,7 +70,7 @@ define('ControlsUnit/Filter/Button/History/testHistorySource',
 
       var config = {
          originSource: new source.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: items
          }),
          historySource: new history.Service({
@@ -129,7 +129,7 @@ define('ControlsUnit/Filter/Button/History/testHistorySource',
       function createRecordSet(data) {
          return new collection.RecordSet({
             rawData: data,
-            idProperty: 'ObjectId',
+            keyProperty: 'ObjectId',
             adapter: new entity.adapter.Sbis()
          });
       }
@@ -141,12 +141,16 @@ define('ControlsUnit/Filter/Button/History/testHistorySource',
             recent: createRecordSet(recentData)
          },
          itemsProperty: '',
-         idProperty: 'ObjectId'
+         keyProperty: 'ObjectId'
       });
 
       config.historySource.saveHistory = function() {};
 
       var histSource = Control.extend({
+         constructor: function(cfg) {
+            this._recent = cfg.recent;
+         },
+
          getHistoryId: function() {
             return 'DEMO_HISTORY_ID';
          },
@@ -163,7 +167,7 @@ define('ControlsUnit/Filter/Button/History/testHistorySource',
                   recent: createRecordSet(recentData)
                },
                itemsProperty: '',
-               idProperty: 'ObjectId'
+               keyProperty: 'ObjectId'
             });
             return Deferred.success(data);
          },

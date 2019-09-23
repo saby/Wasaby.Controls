@@ -1,7 +1,6 @@
-
 import BaseLayer from './__BaseLayer';
-import template = require('wml!Controls/_suggestPopup/Layer/__PopupContent');
 import 'css!theme?Controls/suggest';
+import template = require('wml!Controls/_suggestPopup/Layer/__PopupContent');
 
 var _private = {
    getBorderWidth: function(container) {
@@ -18,9 +17,24 @@ var __PopupContent = BaseLayer.extend({
    _positionFixed: false,
    _popupOptions: null,
    _suggestWidth: null,
+   _reverseList: false,
+   _shouldScrollToBottom: false,
 
-   _afterUpdate: function(oldOptions) {
-      //need to notify resize after show content, that the popUp recalculated its position
+   _beforeUpdate(newOptions): void {
+      __PopupContent.superclass._beforeUpdate.apply(this, arguments);
+
+      const isPopupOpenedToTop = newOptions.stickyPosition && newOptions.stickyPosition.verticalAlign.side === 'top';
+
+      if (!this._reverseList && isPopupOpenedToTop) {
+          // scroll after list render in  _beforePaint hook
+         this._shouldScrollToBottom = true;
+      }
+
+      this._reverseList = isPopupOpenedToTop;
+   },
+
+   _afterUpdate(oldOptions): void {
+      // need to notify resize after show content, that the popUp recalculated its position
       if (this._options.showContent !== oldOptions.showContent) {
          this._notify('controlResize', [], {bubbling: true});
       }
@@ -31,10 +45,17 @@ var __PopupContent = BaseLayer.extend({
       }
    },
 
-   _afterMount: function() {
-      // fix _options.target[0] || _options.target after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-      var target = this._options.target[0] || this._options.target;
-      var container = this._container[0] || this._container;
+   _beforePaint(): void {
+      if (this._shouldScrollToBottom) {
+         this._children.scrollContainer.scrollToBottom();
+      }
+   },
+
+   _afterMount(): void {
+      // fix _options.target[0] || _options.target
+      // after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+      const target: HTMLElement = this._options.target[0] || this._options.target;
+      const container: HTMLElement = this._container[0] || this._container;
 
       /* Width of the suggestion popup should setted for template from suggestTemplate option,
          this is needed to make it possible to set own width for suggestions popup by user of control.
@@ -46,6 +67,12 @@ var __PopupContent = BaseLayer.extend({
          <Controls.suggest:Input/> */
       this._suggestWidth = _private.getSuggestWidth(target, container);
       this._forceUpdate();
+   },
+
+   resize: function() {
+      if (this._reverseList) {
+         this._children.scrollContainer.scrollToBottom();
+      }
    }
 });
 

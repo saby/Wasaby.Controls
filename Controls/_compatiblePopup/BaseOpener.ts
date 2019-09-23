@@ -415,6 +415,10 @@ const BaseOpener = {
          cfg.componentOptions.onResultHandlerEvent = cfg.onResultHandlerEvent;
       }
 
+      if (cfg.onOpenHandler) {
+         cfg.componentOptions.onOpenHandler = cfg.onOpenHandler;
+      }
+
       if (cfg.onOpenHandlerEvent) {
          cfg.componentOptions.onOpenHandlerEvent = cfg.onOpenHandlerEvent;
       }
@@ -588,8 +592,8 @@ const BaseOpener = {
       if (cfg.minWidth || optFromTmpl.minWidth) {
          newCfg.dialogOptions.minWidth = cfg.minWidth || optFromTmpl.minWidth;
       }
-      if (cfg.width) {
-         newCfg.dialogOptions.width = cfg.width;
+      if (cfg.width || optFromTmpl.width) {
+         newCfg.dialogOptions.width = cfg.width || optFromTmpl.width;
       }
 
       if (cfg.maxWidth || optFromTmpl.maxWidth) {
@@ -617,6 +621,10 @@ const BaseOpener = {
          newCfg.dialogOptions.catchFocus = cfg.autofocus;
       }
 
+      if (newCfg.eventHandlers && newCfg.eventHandlers.onOpen) {
+         newCfg.dialogOptions.onOpenHandler = newCfg.eventHandlers.onOpen;
+      }
+
       if (newCfg.eventHandlers && newCfg.eventHandlers.onResult) {
          newCfg.dialogOptions.onResultHandler = newCfg.eventHandlers.onResult;
       }
@@ -640,6 +648,11 @@ const BaseOpener = {
       if (newCfg.hasOwnProperty('maximized')) {
          newCfg.dialogOptions.maximized = newCfg.maximized;
          newCfg.componentOptions.maximized = newCfg.maximized;
+         // Если окно максимизировано, то открываем его на всю ширину, игнорируя то, что лежит в width,
+         // т.к. floatArea в режиме maximized работает только с maxWidth и minWidth
+         if (newCfg.maximized && newCfg.dialogOptions.maxWidth) {
+            newCfg.dialogOptions.width = newCfg.dialogOptions.maxWidth;
+         }
       }
 
       return newCfg;

@@ -22,13 +22,13 @@ define('Controls/Application/Compatible', [
       _wasPatched: false,
       _beforeMount: function() {
          try {
-            /*TODO: set to presentation service*/
+            /* TODO: set to presentation service */
             process.domain.req.compatible = true;
          } catch (e) {
          }
          var rightsInitialized = new Deferred();
          this._forceUpdate = function() {
-            return;
+
          };
          if (typeof window !== 'undefined') {
             Env.constants.rights = true;
@@ -41,14 +41,14 @@ define('Controls/Application/Compatible', [
       _afterMount: function() {
          for (var i in this._children) {
             this._children[i]._forceUpdate = function() {
-               return;
+
             };
             this._children[i]._shouldUpdate = function() {
                return false;
             };
          }
          require(['Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator'], function() {
-            EnvEvent.Bus.globalChannel().notify('bootupReady', {error: ''});
+            EnvEvent.Bus.globalChannel().notify('bootupReady', { error: '' });
          });
       },
       _shouldUpdate: function() {

@@ -49,14 +49,16 @@ var _private = {
    getItemsWithHistory: function (self, history) {
       var items = new collection.RecordSet({
          adapter: new entity.adapter.Sbis(),
-         idProperty: 'ObjectId'
+         keyProperty: 'ObjectId'
       });
 
       this.addProperty(this, items, 'ObjectId', 'string', '');
       this.addProperty(this, items, 'ObjectData', 'string', '');
       this.addProperty(this, items, 'pinned', 'boolean', false);
 
-      this.fillPinned(self, history, items);
+      if (self.historySource._pinned !== false) {
+         this.fillPinned(self, history, items);
+      }
       this.fillRecent(self, history, items);
 
       return items;
@@ -106,7 +108,8 @@ var _private = {
       var config = {
          adapter: new entity.adapter.Sbis()
       };
-      var maxLength = Constants.MAX_HISTORY - history.pinned.getCount();
+      let pinnedCount = self.historySource._pinned !== false ? history.pinned.getCount() : 0;
+      var maxLength = self.historySource._recent - pinnedCount - 1;
       var currentCount = 0;
       var item, rawData, isPinned;
 
@@ -213,24 +216,27 @@ var _private = {
    },
 
    findItem: function (self, items, data) {
-      var myself = this;
       var item = null;
       var objectData;
+      var serialize = _private.getSerialize().serialize;
 
       items.forEach(function (element) {
          objectData = element.get('ObjectData');
-         if (objectData && isEqual(JSON.parse(objectData, myself.getSerialize(self).deserialize), data)) {
+         if (objectData && isEqual(objectData, JSON.stringify(data, serialize))) {
             item = element;
          }
       });
       return item;
    },
 
-   getSerialize: function (self) {
-      if (!self._serialize) {
-         self._serialize = new Serializer();
-      }
-      return self._serialize;
+   // Serializer при сериализации кэширует инстансы по идентификаторам,
+   // и при десериализации, если идентификатор есть в кэше, берёт инстанс оттуда
+   // Поэтому, когда применяем фильтр из истории,
+   // идентификатор в сериалайзере на клиенте может совпасть с идентификатором сохранённым в истории
+   // и мы по итогу получим некорректный результат
+   // Для этого всегда создаём новый инстанс Serializer'a
+   getSerialize: function () {
+      return new Serializer();
    }
 };
 
@@ -240,14 +246,14 @@ var _private = {
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
  * @control
- * @public
+ * @private
  * @author Герасимов А.М.
  * @category Menu
  * @example
  * <pre>
  *    var source = new filterSource({
  *           originSource: new Memory({
- *               idProperty: 'id',
+ *               keyProperty: 'id',
  *               data: []
  *           }),
  *           historySource: new historyService({
@@ -260,10 +266,21 @@ var _private = {
 
 /**
  * @name Controls/_history/FilterSource#originSource
+ * @cfg {Source} Источник данных.
+ */
+
+/*
+ * @name Controls/_history/FilterSource#originSource
  * @cfg {Source} A data source
  */
 
 /**
+ * @name Controls/_history/FilterSource#historySource
+ * @cfg {Source} Источник, который работает с историей.
+ * @see {Controls/_history/Service} Источник, который работает с <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервисом истории ввода</a>.
+ */
+
+/*
  * @name Controls/_history/FilterSource#historySource
  * @cfg {Source} A source which work with history
  * @see {Controls/_history/Service} Source working with the service of InputHistory
@@ -336,7 +353,7 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
             self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
             return new sourceLib.DataSet({
                rawData: newItems.getRawData(),
-               idProperty: newItems.getIdProperty()
+               keyProperty: newItems.getKeyProperty()
             });
          });
       }

@@ -34,7 +34,7 @@ define('Controls-demo/List/Grid/Ladder', [
             this._selectedKeys = [];
 
             this._viewSource = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: GridData.tasks
             });
 

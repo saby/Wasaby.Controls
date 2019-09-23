@@ -114,5 +114,13 @@ define([
             arguments: ['offset', [100]]
          }]);
       });
+      it('_isResizing', function() {
+         var ctrl = new dragnDrop.ResizingLine({});
+
+         assert.isFalse(ctrl._isResizing(0, 0));
+         assert.isTrue(ctrl._isResizing(100, 0));
+         assert.isTrue(ctrl._isResizing(0, 100));
+         assert.isTrue(ctrl._isResizing(100, 100));
+      });
    });
 });

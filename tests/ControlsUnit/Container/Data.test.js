@@ -27,7 +27,7 @@ define(
          ];
 
          var source = new sourceLib.Memory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: sourceData
          });
 
@@ -40,7 +40,7 @@ define(
          it('update source', function(done) {
             var data = getDataWithConfig({source: source, keyProperty: 'id'});
             var newSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: sourceDataEdited
             });
             data._dataOptionsContext = new contexts.ContextOptions();
@@ -57,7 +57,7 @@ define(
          it('_beforeMount with receivedState', function() {
             var data = getDataWithConfig({source: source, keyProperty: 'id'});
             var newSource = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: sourceData
             });
             data._beforeMount({source: newSource, idProperty: 'id'}, {}, sourceData);
@@ -68,7 +68,7 @@ define(
 
          it('_beforeMount with receivedState and prefetchProxy', function() {
             let memory = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: sourceData
             });
             let prefetchSource = new sourceLib.PrefetchProxy({
@@ -95,7 +95,7 @@ define(
                items = data._items;
 
                data._beforeUpdate({source: new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: sourceDataEdited
                }), idProperty: 'id'}).addCallback(function() {
                   assert.isTrue(data._items === items);
@@ -114,7 +114,7 @@ define(
                items = data._items;
 
                data._beforeUpdate({source: new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   model: 'Types/entity:Record',
                   data: sourceDataEdited
                }), idProperty: 'id'}).addCallback(function() {

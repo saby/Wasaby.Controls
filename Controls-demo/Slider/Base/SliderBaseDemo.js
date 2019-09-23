@@ -28,7 +28,7 @@ define('Controls-demo/Slider/Base/SliderBaseDemo',
             this._value = 80;
             this._size = 'm';
             this._sizeSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   {
                      title: 's'

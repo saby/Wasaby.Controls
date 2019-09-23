@@ -57,7 +57,7 @@ define([
                   setShadowMode: sinon.fake()
                }
             };
-            sandbox.stub(control, '_findElementByDate').returns([true]);
+            sandbox.stub(control, '_canScroll').returns([true]);
             sandbox.stub(control, '_scrollToDate');
             control._afterMount();
             sinon.assert.called(control._children.scroll.setShadowMode);
@@ -73,7 +73,7 @@ define([
                position = new Date(2018, 0, 1),
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
 
-            sandbox.stub(ml, '_findElementByDate');
+            sandbox.stub(ml, '_canScroll');
             ml._children.months = { reload: sinon.fake() };
             ml._container = {};
 
@@ -91,6 +91,7 @@ define([
                position = new Date(2018, 0, 1),
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
 
+            sandbox.stub(ml, '_canScroll').returns([true]);
             sandbox.stub(ml, '_findElementByDate').returns([true]);
             ml._children.months = { reload: sinon.fake() };
             ml._container = {};
@@ -104,9 +105,9 @@ define([
          });
       });
 
-      describe('_beforePaint, _drawItemsHandler', function() {
+      describe('_afterRender, _drawItemsHandler', function() {
          [
-            '_beforePaint',
+            '_afterRender',
             '_drawItemsHandler'
          ].forEach(function(test) {
             it('should scroll to item after position changed', function() {
@@ -114,12 +115,13 @@ define([
                   sandbox = sinon.createSandbox(),
                   position = new Date(2018, 0, 1),
                   ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
-               sandbox.stub(ml, '_findElementByDate').returns([true]);
+               sandbox.stub(ml, '_canScroll').returns([true]);
                ml._container = {};
                sandbox.stub(ml, '_scrollToDate');
                ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position }));
                ml[test]();
                sinon.assert.called(ml._scrollToDate);
+               sandbox.restore();
             });
          });
       });

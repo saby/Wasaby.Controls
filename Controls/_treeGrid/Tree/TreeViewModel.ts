@@ -149,8 +149,16 @@ var
             return (itemData.expanderVisibility !== 'hasChildren' || itemData.thereIsChildItem && itemData.hasChildItem);
         },
         shouldDrawExpanderPadding: function(itemData, expanderIcon, expanderSize) {
-            return (itemData.expanderVisibility !== 'hasChildren' || itemData.thereIsChildItem) &&
-                !expanderSize && expanderIcon !== 'none';
+            if (itemData.expanderVisibility === 'hasChildren') {
+                return itemData.thereIsChildItem && expanderIcon !== 'none';
+            } else {
+                return !expanderSize && expanderIcon !== 'none';
+            }
+        },
+        getExpanderPaddingClasses: function(expanderSize) {
+            let expanderPaddingClasses = 'controls-TreeGrid__row-expanderPadding';
+            expanderPaddingClasses += ' controls-TreeGrid__row-expanderPadding_size_' + (expanderSize || 'default');
+            return expanderPaddingClasses;
         },
         prepareExpanderClasses: function(itemData, expanderIcon, expanderSize) {
             var
@@ -246,6 +254,7 @@ var
                         item: current.dispItem.getContents(),
                         dispItem: current.dispItem,
                         multiSelectVisibility: current.multiSelectVisibility,
+                        getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                         level: current.dispItem.getLevel()
                     }) - 1;
                     if (self._options.nodeFooterTemplate) {
@@ -258,13 +267,15 @@ var
             if (itemParentKey !== self._display.getRoot().getContents() && (self._options.nodeFooterTemplate || self._hasMoreStorage && self._hasMoreStorage[itemParentKey])) {
                 var itemParentChilds = self._hierarchyRelation.getChildren(itemParentKey, self._items);
                 if (itemParentChilds && itemParentChilds[itemParentChilds.length - 1].getId() === current.key) {
-                    if ((self._hasMoreStorage && self._hasMoreStorage[itemParentKey] && self._hierarchyRelation.getChildren(current.key, self._items).length === 0)) {
+                    if ((self._hasMoreStorage && self._hasMoreStorage[itemParentKey] &&
+                       (!current.isExpanded || self._hierarchyRelation.getChildren(current.key, self._items).length === 0))) {
                         let idx = current.nodeFooter.push({
                             key: itemParentKey,
                             item: itemParent.getContents(),
                             dispItem: itemParent,
                             task1177672941: true,
                             multiSelectVisibility: current.multiSelectVisibility,
+                            getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                             level: itemParent.getLevel()
                         }) - 1;
                         if (self._options.nodeFooterTemplate) {
@@ -290,6 +301,7 @@ var
                             item: dadDispItem.getContents(),
                             dispItem: dadDispItem,
                             multiSelectVisibility: current.multiSelectVisibility,
+                            getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                             level: dadDispItem.getLevel()
                         }) - 1;
                         if (self._options.nodeFooterTemplate) {
@@ -311,6 +323,7 @@ var
                         key: current.key,
                         item: current.dispItem.getContents(),
                         dispItem: current.dispItem,
+                        getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                         multiSelectVisibility: current.multiSelectVisibility,
                         level: current.dispItem.getLevel()
                     };
@@ -329,6 +342,7 @@ var
                         item: itemParent.getContents(),
                         dispItem: itemParent,
                         multiSelectVisibility: current.multiSelectVisibility,
+                        getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                         level: itemParent.getLevel()
                     };
                     if (self._options.nodeFooterTemplate) {
@@ -354,7 +368,7 @@ var
             this._expandedItems = cfg.expandedItems ? cClone(cfg.expandedItems) : [];
             this._collapsedItems = _private.prepareCollapsedItems(this._expandedItems, cfg.collapsedItems);
             this._hierarchyRelation = new _entity.relation.Hierarchy({
-                idProperty: cfg.keyProperty || 'id',
+                keyProperty: cfg.keyProperty || 'id',
                 parentProperty: cfg.parentProperty || 'Раздел',
                 nodeProperty: cfg.nodeProperty || 'Раздел@'
             });
@@ -504,6 +518,7 @@ var
             current.hasChildItem = !current.isGroup && _private.hasChildItem(this, current.key);
             current.shouldDrawExpander = _private.shouldDrawExpander;
             current.shouldDrawExpanderPadding = _private.shouldDrawExpanderPadding;
+            current.getExpanderPaddingClasses = _private.getExpanderPaddingClasses;
             current.prepareExpanderClasses = _private.prepareExpanderClasses;
 
             // todo https://online.sbis.ru/opendoc.html?guid=0649e69a-d507-4024-9f99-c70205f535ef

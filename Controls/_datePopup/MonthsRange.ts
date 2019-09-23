@@ -47,7 +47,11 @@ class Component extends Control {
         if (options.position.getFullYear() !== this._position.getFullYear()) {
             this._position = dateUtils.getStartOfYear(options.position);
         }
-        this._updateSelectionType(options);
+        // If the user selects the period using this control,
+        // then we have already set the selection type and do not need to update it.
+        if (!options.selectionProcessing) {
+            this._updateSelectionType(options);
+        }
     }
 
     _beforeUnmount() {

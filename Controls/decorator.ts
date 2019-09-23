@@ -1,5 +1,5 @@
 /**
- * Библиотека декораторов.
+ * Библиотека контролов, которые предназначены для преобразования данных к какому-либо внешнему виду.
  * @library Controls/decorator
  * @includes Highlight Controls/_decorator/Highlight
  * @includes Markup Controls/_decorator/Markup
@@ -42,11 +42,11 @@ import PhoneNumber = require('Controls/_decorator/PhoneNumber');
 import {default as WrapURLs, IWrapURLsOptions} from 'Controls/_decorator/WrapURLs';
 import {Highlight, SearchMode, IHighlightOptions} from 'Controls/_decorator/Highlight';
 
-import Converter = require('Controls/_decorator/Markup/Converter');
-import InnerText = require('Controls/_decorator/Markup/resolvers/innerText');
-import _highlightResolver = require('Controls/_decorator/Markup/resolvers/highlight');
-import noOuterTag = require('Controls/_decorator/Markup/resolvers/noOuterTag');
-import linkDecorate = require('Controls/_decorator/Markup/resolvers/linkDecorate');
+import * as Converter from './_decorator/Markup/Converter';
+import {default as InnerText}  from './_decorator/Markup/resolvers/innerText';
+import {default as _highlightResolver} from './_decorator/Markup/resolvers/highlight';
+import {default as noOuterTag} from './_decorator/Markup/resolvers/noOuterTag';
+import {default as linkDecorate}  from './_decorator/Markup/resolvers/linkDecorate';
 
 export {
     Highlight,

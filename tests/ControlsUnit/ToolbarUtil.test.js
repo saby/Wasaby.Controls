@@ -33,7 +33,7 @@ define(
             let rawItems = new collection.RecordSet({rawData: defaultItems});
             let filtetedItems = ToolbarUtil.getMenuItems(rawItems).value(collection.factory.recordSet, {
                adapter: new entity.adapter.Json(),
-               idProperty: 'id'
+               keyProperty: 'id'
             });
             let hasOnlyToolbarItem = false;
             assert.equal(filtetedItems.getCount(), 3);

@@ -9,7 +9,7 @@ define('Controls-demo/Explorer/DemoLayout', [
          _beforeMount: function() {
             ModuleClass.superclass._beforeMount.apply(this, arguments);
             this._viewSource = new source.HierarchicalMemory({
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'parent',
                data: [{
                   id: 1,
@@ -100,7 +100,7 @@ define('Controls-demo/Explorer/DemoLayout', [
                }]
             });
             this._viewSourceDynamic = new source.HierarchicalMemory({
-               idProperty: 'id',
+               keyProperty: 'id',
                parentProperty: 'parent',
                data: [{
                   id: 1,
@@ -175,7 +175,7 @@ define('Controls-demo/Explorer/DemoLayout', [
                   isDocument: true,
                   width: 200
                }]
-            });            
+            });
          }
       });
 

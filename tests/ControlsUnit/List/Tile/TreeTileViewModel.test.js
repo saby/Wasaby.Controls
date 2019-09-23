@@ -37,7 +37,7 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
                   'parent@': null,
                   'group': '1'
                }],
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             expandedItems: [1, 2, 3],
             collapsedItems: [4, 5]

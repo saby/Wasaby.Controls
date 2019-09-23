@@ -24,27 +24,31 @@ var _private = {
    },
 
    search: function(self, value, force) {
-      _private.getSearch(self).addCallback(function(search) {
-         var filter = self._options.filter;
+      return new Promise((resolve) => {
+         _private.getSearch(self).addCallback(function (search) {
+            var filter = self._options.filter;
 
-         filter = clone(filter);
-         filter[self._options.searchParam] = value;
+            filter = clone(filter);
+            filter[self._options.searchParam] = self._options.searchValueTrim ? value.trim() : value;
 
-         search.search(filter, force)
-            .addCallback(function(result) {
-               if (self._options.searchCallback) {
-                  self._options.searchCallback(result, filter);
-               }
-               return result;
-            })
-            .addErrback(function(result) {
-               if (self._options.searchErrback) {
-                  self._options.searchErrback(result, filter);
-               }
-               return result;
-            });
+            search.search(filter, force)
+                .addCallback((result) => {
+                   if (self._options.searchCallback) {
+                      self._options.searchCallback(result, filter);
+                   }
+                   resolve(result);
+                   return result;
+                })
+                .addErrback((result) => {
+                   if (self._options.searchErrback) {
+                      self._options.searchErrback(result, filter);
+                   }
+                   resolve(result);
+                   return result;
+                });
 
-         return search;
+            return search;
+         });
       });
    },
 
@@ -87,11 +91,17 @@ var SearchController = extend({
    },
 
    search: function(value, force) {
-      if ((this._options.minSearchLength !== null && value.length >= this._options.minSearchLength) || (force && value.length)) {
-         _private.search(this, value, force);
-      } else {
-         _private.abort(this);
+      const valueLength = value.length;
+      const searchByValueChanged = this._options.minSearchLength !== null;
+      let result;
+
+      if ((searchByValueChanged && valueLength >= this._options.minSearchLength) || (force && valueLength)) {
+         result = _private.search(this, value, force);
+      } else if (searchByValueChanged || !valueLength) {
+         result = _private.abort(this);
       }
+
+      return result;
    },
 
    setFilter: function(filter) {

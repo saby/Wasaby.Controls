@@ -230,6 +230,7 @@ import Deferred = require('Core/Deferred');
             if (data && data.formControllerEvent) {
                /**
                 * @event Controls/_popup/Opener/Edit#beforeItemEndEdit The event is called before the synchronization with the recordset.
+                * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
                 * @param {String} formControllerEvent Name of event from formController(update, create, delete)
                 * @param {Object} record Data from formController
                 * @param {additionalData} additionalData Additional data from formController

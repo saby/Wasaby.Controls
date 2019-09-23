@@ -19,6 +19,8 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
  * @cfg {String} Name of the field that contains information about parent node.
  */
 
+const FIELD_ENTRY_PATH = 'ENTRY_PATH';
+
 var
    SELECTION_STATUS = {
       NOT_SELECTED: false,
@@ -176,6 +178,22 @@ var
          return firstCollection.filter(function(key) {
             return secondCollection.indexOf(key) !== -1;
          });
+      },
+
+      hasNotLoadedSelectedChildren: function(hierarchyRelation, itemId, items, entryPath) {
+         let
+            hasChildren = false,
+            loadedChildrenIds = _private.getChildrenIds(hierarchyRelation, itemId, items);
+
+         if (loadedChildrenIds.length) {
+            loadedChildrenIds.forEach(function(currentItemId) {
+               hasChildren = hasChildren || _private.hasNotLoadedSelectedChildren(hierarchyRelation, currentItemId, items, entryPath);
+            });
+         } else {
+            hasChildren = entryPath.indexOf(itemId) !== -1;
+         }
+
+         return hasChildren;
       }
    };
 
@@ -186,7 +204,7 @@ var HierarchySelection = Selection.extend({
       HierarchySelection.superclass.constructor.apply(this, arguments);
 
       this._hierarchyRelation = new relation.Hierarchy({
-         idProperty: options.keyProperty || 'id',
+         keyProperty: options.keyProperty || 'id',
          parentProperty: options.parentProperty || 'Раздел',
          nodeProperty: options.nodeProperty || 'Раздел@'
       });
@@ -249,13 +267,20 @@ var HierarchySelection = Selection.extend({
    },
 
    selectAll: function() {
-      this.select([this._getRoot()]);
+      let root = this._getRoot();
+
+      if (root === null) {
+         HierarchySelection.superclass.selectAll.apply(this, arguments);
+      } else {
+         this.select([root]);
+      }
+
       ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
    },
 
    /* toDo Когда пытаются снять выделение, надо его снимать полностью для всех разделов
     Иначе сейчас люди в окнах выбора не могут снять выделение. Запись может быть выделена глубоко в иерархии
-    Поправится после задачи https://online.sbis.ru/opendoc.html?guid=0606ed47-453c-415e-90b5-51e34037433e
+    Поправится после задачи https://online.sbis.ru/opendoc.html?guid=55997d61-2076-49eb-bd6d-5429ec5f5661
 
    unselectAll: function() {
       this.unselect([this._getRoot()]);
@@ -270,10 +295,12 @@ var HierarchySelection = Selection.extend({
          childrensIdsRoot = _private.getChildrenIds(this._hierarchyRelation, rootId, this._items);
 
       if (this._isAllSelection(this._getParams(rootId))) {
+         // toDO после решения https://online.sbis.ru/opendoc.html?guid=55997d61-2076-49eb-bd6d-5429ec5f5661 перейти на unselectAll
          this.unselect([rootId]);
+         ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [rootId]);
          this.select(_private.getIntersection(childrensIdsRoot, excludedKeys));
       } else {
-         this.select([rootId]);
+         this.selectAll([rootId]);
          this.unselect(_private.getIntersection(childrensIdsRoot, selectedKeys));
       }
    },
@@ -306,28 +333,31 @@ var HierarchySelection = Selection.extend({
    },
 
    _getSelectionStatus: function(item) {
-      var
+      let
+         status = false,
+         hasExcludedChildren,
          itemId = item.get(this._options.keyProperty),
+         entryPath = this._items.getMetaData()[FIELD_ENTRY_PATH] || [],
          isParentSelected = _private.isParentSelected(this._hierarchyRelation, itemId, this._selectedKeys, this._excludedKeys, this._items),
-         hasSelectedChildren = _private.getSelectedChildrenCount(this._hierarchyRelation, itemId, this._selectedKeys, this._excludedKeys, this._items) > 0,
-         hasExcludedChildren;
+         hasSelectedChildren = _private.getSelectedChildrenCount(this._hierarchyRelation, itemId, this._selectedKeys, this._excludedKeys, this._items) > 0 ||
+            _private.hasNotLoadedSelectedChildren(this._hierarchyRelation, itemId, this._items, entryPath);
 
       if (this._excludedKeys.indexOf(itemId) !== -1) {
-         return hasSelectedChildren ? null : false;
-      }
-
-      if (this._selectedKeys.indexOf(itemId) !== -1 || isParentSelected || hasSelectedChildren) {
+         status = hasSelectedChildren ? null : false;
+      } else if (this._selectedKeys.indexOf(itemId) !== -1 || isParentSelected || hasSelectedChildren) {
          if (this._hierarchyRelation.isNode(item) !== null) {
             hasExcludedChildren = _private.hasExcludedChildren(this._hierarchyRelation, itemId, this._excludedKeys, this._items);
-            if (hasExcludedChildren) {
-               return null;
+            if (!hasExcludedChildren && (this._selectedKeys.indexOf(itemId) !== -1 || isParentSelected)) {
+               status = true;
+            } else {
+               status = null;
             }
-            return this._selectedKeys.indexOf(itemId) !== -1 || isParentSelected ? true : null;
+         } else {
+            status = true;
          }
-         return true;
       }
 
-      return false;
+      return status;
    },
 
    _getParams: function(rootId) {

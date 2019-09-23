@@ -24,7 +24,7 @@ define('Controls-demo/Suggest/Suggest', [
 
       return data;
    }
-   
+
    var VDomSuggest = Control.extend({
       _template: template,
       _suggestDownValue: '',
@@ -53,13 +53,13 @@ define('Controls-demo/Suggest/Suggest', [
          });
 
          this._suggestTabSource = new SearchMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: this._companiesData.concat(this._departmentsData),
             searchParam: 'title',
             filter: memorySourceFilter()
          });
          this._suggestSource = new SearchMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: this._departmentsData,
             searchParam: 'title',
             filter: memorySourceFilter()
@@ -70,13 +70,13 @@ define('Controls-demo/Suggest/Suggest', [
          });
 
          this._suggestSourceLong = new SearchMemory({
-            idProperty: 'id',
+            keyProperty: 'id',
             data: this._departmentsDataLong,
             searchParam: 'title',
             filter: memorySourceFilter()
          });
       }
    });
-   
+
    return VDomSuggest;
 });

@@ -24,7 +24,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
          _beforeMount: function() {
             this._source2 = new sourceLib.Memory({
                title: 'source1',
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [
                   {
                      id: '1',
@@ -86,7 +86,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
             });
             this._source = new sourceLib.Memory({
                title: 'source2',
-               idProperty: 'id',
+               keyProperty: 'id',
                displayProperty: 'caption',
                data: [
                   {

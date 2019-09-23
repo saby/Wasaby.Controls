@@ -50,7 +50,7 @@ define(
    });
    let config = {
       items: new sourceLib.Memory({
-         idProperty: 'id',
+         keyProperty: 'id',
          data: defaultItems
       }),
       parentProperty: 'parent',
@@ -161,7 +161,7 @@ define(
                   toolbar._beforeUpdate({
                      size: 's',
                      source: new sourceLib.Memory({
-                        idProperty: 'id',
+                        keyProperty: 'id',
                         data: defaultItems
                      })
                   });
@@ -244,6 +244,20 @@ define(
                assert.deepEqual(toolbars.View._private.generateItemPopupConfig(testItem, testEvent, testSelf), config);
             });
             it('menu popup config generation', function() {
+               let itemsForMenu = [
+                  {
+                     id: '1',
+                     buttonIcon: 'myIcon'
+                  },
+                  {
+                     id: '2',
+                     buttonIconStyle: 'secondary'
+                  }
+               ];
+
+               let recordForMenu = new collection.RecordSet({
+                  rawData: itemsForMenu
+               });
                var
                   testSelf = {
                      _options: {
@@ -257,13 +271,13 @@ define(
                      _children: {
                         popupTarget: 'popupTarget'
                      },
-                     _menuItems: 'menuItems'
+                     _menuItems: recordForMenu
                   },
                   config = {
                      className: 'controls-Toolbar__popup__list_theme-default popupClassName',
                      target: 'popupTarget',
                      templateOptions: {
-                        items: 'menuItems',
+                        items: recordForMenu,
                         itemTemplateProperty: 'itp',
                         groupTemplate: 'groupTemplate',
                         groupingKeyCallback: 'groupingKeyCallback'

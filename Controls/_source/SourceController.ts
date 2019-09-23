@@ -32,7 +32,7 @@ var _private = {
 
       queryDef = dataSource.query(queryIns).addCallback((function(dataSet) {
          if (keyProperty && keyProperty !== dataSet.idProperty) {
-            dataSet.setIdProperty(keyProperty);
+            dataSet.setKeyProperty(keyProperty);
          }
          return dataSet.getAll ? dataSet.getAll() : dataSet;
       }));

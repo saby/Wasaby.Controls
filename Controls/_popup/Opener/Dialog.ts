@@ -268,4 +268,5 @@ export default Dialog;
  * @property {Number} minWidth Минимально допустимая ширина всплывающего окна
  * @property {Number} top Расстояние от всплывающего окна до верхнего края экрана.
  * @property {Number} left Расстояние от всплывающего окна до левого края экрана.
+ * @property {Node} opener Логический инициатор открытия всплывающего окна
  */

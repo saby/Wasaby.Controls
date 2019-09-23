@@ -57,14 +57,14 @@ define([
          }],
          cfg = {
             source: new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: data
             }),
             keyProperty: 'id'
          },
          cfgWithOneItem = {
             source: new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: [data[0]]
             }),
             keyProperty: 'id'
@@ -177,7 +177,7 @@ define([
                forceUpdateCalled = false,
                newCfg = {
                   source: new sourceLib.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: data
                   }),
                   keyProperty: 'id'
@@ -227,7 +227,7 @@ define([
                forceUpdateCalled = false,
                newCfg = {
                   source: new sourceLib.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: data
                   }),
                   keyProperty: 'id'
@@ -431,10 +431,10 @@ define([
          let items = new collection.List({
             items: [new entity.Model({
                rawData: {id: 1},
-               idProperty: 'id'
+               keyProperty: 'id'
             }), new entity.Model({
                rawData: {id: 2},
-               idProperty: 'id'
+               keyProperty: 'id'
             })]
          });
 

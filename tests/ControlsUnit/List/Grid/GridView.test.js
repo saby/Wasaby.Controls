@@ -134,7 +134,7 @@ define(['Controls/grid'], function(gridMod) {
                isStickyHeader: () => true,
                setHeaderCellMinHeight: (header) => header.length,
                _isMultyHeader: true,
-               isDrawHeaderWithEmtyList: () => true
+               isDrawHeaderWithEmptyList: () => true
             }
             gridView._setHeaderWithHeight = () => {
                setHeightWasCalled = true;
@@ -209,7 +209,8 @@ define(['Controls/grid'], function(gridMod) {
             },
             _listModel: {
                getHeader: () => [],
-               getCount: () => 1
+               getCount: () => 1,
+               isDrawHeaderWithEmptyList: () => true
             },
             _container: {
                getElementsByClassName: function (className) {
@@ -504,6 +505,33 @@ define(['Controls/grid'], function(gridMod) {
          assert.isTrue(controlResizeNotified);
          assert.isTrue(columnScrollResizeHandlerCalled);
          assert.isTrue(columnScrollUpdateShadowStyleCalled);
+      });
+
+      describe('editArrowClick', function() {
+         it('click on editArrow stops click event', function() {
+            let cfg = {
+                   columns: [
+                      { displayProperty: 'field1', template: 'column1' },
+                      { displayProperty: 'field2', template: 'column2' }
+                   ]
+                };
+            let gridView = new gridMod.GridView(cfg);
+            let clickEvent = {
+               stopped: false,
+               stopPropagation: function() {
+                  this.stopped = true;
+               }
+            };
+            let editArrowClickNotified = false;
+            gridView._notify = function (e) {
+               if (e === 'editArrowClick') {
+                  editArrowClickNotified = true;
+               }
+            }
+            gridView._onEditArrowClick(clickEvent);
+            assert.isTrue(clickEvent.stopped);
+            assert.isTrue(editArrowClickNotified);
+         });
       });
    });
 });

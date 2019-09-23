@@ -43,7 +43,7 @@
             <ws:partial template="textTemplate"
                         text="{{_filterText}}"
                         title="{{_filterText}}"
-                        on:click="_openDetailPanel()"/>
+                        on:click="openDetailPanel()"/>
             <ws:partial template="cross" on:click="_resetFilterText()" />
       </ws:if>
    </div>
@@ -52,7 +52,7 @@
                                            controls-FilterView-button-{{_options.alignment}}_theme_{{_options.theme}}
                                            controls-FilterView__icon_state_{{_options.readOnly ? 'disabled' : 'enabled' }}_theme_{{_options.theme}}
                                            icon-FilterBig"
-           on:click="_openDetailPanel()">
+           on:click="openDetailPanel()">
       </div>
    </ws:if>
    <Controls.popup:Sticky

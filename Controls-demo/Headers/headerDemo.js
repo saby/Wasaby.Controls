@@ -21,7 +21,7 @@ define('Controls-demo/Headers/headerDemo', [
          _eventName: 'no event',
          _beforeMount: function() {
             this._headerSizeSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   { title: 'xs' },
                   { title: 's' },
@@ -35,7 +35,7 @@ define('Controls-demo/Headers/headerDemo', [
                ]
             });
             this._headerStyleSource = new source.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: [
                   { title: 'primary' },
                   { title: 'secondary' },

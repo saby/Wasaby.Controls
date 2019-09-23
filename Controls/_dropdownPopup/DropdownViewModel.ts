@@ -76,7 +76,7 @@ var _private = {
                self._nextVersion();
             });
             this._hierarchy = new entity.relation.Hierarchy({
-               idProperty: cfg.keyProperty,
+               keyProperty: cfg.keyProperty,
                parentProperty: cfg.parentProperty,
                nodeProperty: cfg.nodeProperty
             });

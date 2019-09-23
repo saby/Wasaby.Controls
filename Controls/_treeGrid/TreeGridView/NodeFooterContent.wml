@@ -3,7 +3,7 @@
     <ws:for data="i in itemData.level">
         <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
     </ws:for>
-    <div class="controls-TreeGrid__row-expanderPadding"></div>
+    <div class="{{itemData.getExpanderPaddingClasses(expanderSize)}}"></div>
     <ws:if data="{{itemData.hasMoreStorage}}">
         <Controls.buttons:Button
                 fontSize="xs"

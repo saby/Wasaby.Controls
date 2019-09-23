@@ -124,7 +124,7 @@ define([
          getRecordSetTree = function() {
             var rs = new RecordSet({
                rawData: getData(),
-               idProperty: 'id'
+               keyProperty: 'id'
             });
             return getObservableTree(rs);
          },
@@ -1547,7 +1547,7 @@ define([
                   ],
                   items = new RecordSet({
                      rawData: data,
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   tree = new Tree({
                      collection: items,

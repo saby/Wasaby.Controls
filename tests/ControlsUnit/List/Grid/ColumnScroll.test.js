@@ -11,6 +11,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             multiSelectVisibility: 'visible',
             stickyColumnsCount: 1,
             listModel: {
+               isFullGridSupport: () => true,
                getResultsPosition: () => undefined,
                getItems: () => ({
                   getCount: () => 3
@@ -54,6 +55,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          Entity.Guid.create = function() {
             return '1234567890';
          };
+         cfg.listModel.isFullGridSupport = () => true;
          cfg.listModel.isNoGridSupport = () => false;
          columnScroll._beforeMount(cfg);
          Entity.Guid.create = baseCreateGuid;
@@ -141,6 +143,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                stickyColumnsCount: 1,
                columnScrollStartPosition: 'end',
                listModel: {
+                  isFullGridSupport: () => true,
                   getResultsPosition: () => undefined
                }
             },
@@ -327,15 +330,14 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
          assert.equal(clearColumnScroll._offsetForHScroll, 50);
          assert.equal(clearColumnScroll._leftOffsetForHScroll, 100);
+         assert.equal(clearColumnScroll._contentSize, 500);
+         assert.equal(clearColumnScroll._contentSizeForHScroll, 400);
 
          assert.isTrue(clearColumnScroll._isColumnScrollVisible());
 
          clearColumnScroll._afterUpdate({...cfg, root: '123'});
          assert.isFalse(clearColumnScroll._isColumnScrollVisible());
 
-         clearColumnScroll._children.content.offsetTop = 50;
-         clearColumnScroll._setOffsetForHScroll();
-         assert.isTrue(clearColumnScroll._isColumnScrollVisible());
       });
 
       it('no sticky columns', function() {
@@ -616,14 +618,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
          assert.equal(columnScroll._offsetForHScroll, 100);
 
-         columnScroll._children.content.offsetTop = 25;
-         columnScroll._setOffsetForHScroll();
-         assert.equal(columnScroll._offsetForHScroll, 125)
-
          columnScroll._leftOffsetForHScroll = 0;
          columnScroll._offsetForHScroll = 0;
 
-         columnScroll._isNotGridSupport = true;
+         columnScroll._isFullGridSupport = false;
          columnScroll._setOffsetForHScroll();
          assert.equal(columnScroll._leftOffsetForHScroll, 0);
          assert.equal(columnScroll._offsetForHScroll, 0);

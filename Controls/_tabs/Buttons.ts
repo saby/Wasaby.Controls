@@ -2,12 +2,14 @@
  * Created by kraynovdo on 25.01.2018.
  */
 import Control = require('Core/Control');
-import {Controller as SourceController} from 'Controls/source';
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 import Env = require('Env/Env');
+import {Controller as SourceController} from 'Controls/source';
+import {factory} from 'Types/chain';
+import * as cInstance from 'Core/core-instance';
 
-   var _private = {
+var _private = {
       initItems: function(source, instance) {
          instance._sourceController = new SourceController({
             source: source
@@ -29,18 +31,25 @@ import Env = require('Env/Env');
             //save last right order
             rightOrder--;
             instance._lastRightOrder = rightOrder;
+
             return {
-               items: items,
-               itemsOrder: itemsOrder
+               items,
+               itemsOrder,
+               lastRightOrder: rightOrder
             };
          });
+      },
+      prepareState(self, data): void {
+         self._items = data.items;
+         self._itemsOrder = data.itemsOrder;
+         self._lastRightOrder = data.lastRightOrder;
       },
       prepareItemOrder: function(order) {
          return '-ms-flex-order:' + order + '; order:' + order;
       },
       prepareItemClass: function(item, order, options, lastRightOrder) {
          var
-            classes = ['controls-Tabs__item controls-Tabs__item_theme_'+ options.theme],
+            classes = ['controls-Tabs__item controls-Tabs__item_theme_' + options.theme],
             modifyToNewStyle = '';
          if (options.style === 'default') {
             modifyToNewStyle = 'primary';
@@ -259,7 +268,7 @@ import Env = require('Env/Env');
     * <pre>
     *    _selectedKey: '1',
     *    _source: new Memory({
-    *        idProperty: 'key',
+    *        keyProperty: 'key',
     *        data: [
     *        {
     *           key: '1',
@@ -298,7 +307,7 @@ import Env = require('Env/Env');
     * <pre>
     *    _selectedKey: '1',
     *    _source: new Memory({
-    *        idProperty: 'key',
+    *        keyProperty: 'key',
     *        data: [
     *        {
     *           key: '1',
@@ -399,7 +408,7 @@ import Env = require('Env/Env');
     * </pre>
     * <pre>
     *    _source: new Memory({
-    *              idProperty: 'id',
+    *              keyProperty: 'id',
     *              data: [
     *                     {id: 1, title: 'I agree'},
     *                     {id: 2, title: 'I not decide'},
@@ -434,7 +443,7 @@ import Env = require('Env/Env');
     * </pre>
     * <pre>
     *    _source: new Memory({
-    *              idProperty: 'id',
+    *              keyProperty: 'id',
     *              data: [
     *                     {id: 1, title: 'I agree'},
     *                     {id: 2, title: 'I not decide'},
@@ -448,26 +457,49 @@ import Env = require('Env/Env');
       _template: TabButtonsTpl,
       _items: null,
       _itemsOrder: null,
+      _lastRightOrder: null,
+      _defaultItemTemplate: ItemTemplate,
+
+      /* Функции, передаваемые с сервера на клиент в receivedState, не могут корректно десериализоваться.
+      Поэтому, если есть функции в receivedState, заново делаем запрос за данными. */
+      checkHasFunction: function(receivedState) {
+          let hasFunction = false;
+         factory(receivedState && receivedState.items).each((item) => {
+            const value = cInstance.instanceOfModule(item, 'Types/entity:Record') ?
+                item.getRawData() : item;
+
+            if (!hasFunction) {
+                for (const key in value) {
+                    // При рекваере шаблона, он возвращает массив, в 0 индексе которого лежит объект с функцией
+                    if (typeof value[key] === 'function' || value[key] instanceof Array && typeof value[key][0].func === 'function') {
+                        hasFunction = true;
+                        Env.IoC.resolve('ILogger').warn(this._moduleName, `
+                         Из источника данных вернулся набор записей с функцией в поле ${key}.
+                         В наборе данных должны быть простые типы.
+                         Для задания шаблона - нужно указать имя этого шаблона.`);
+                    }
+                }
+            }
+         });
+         return hasFunction;
+      },
+
       _beforeMount: function(options, context, receivedState) {
-         if (receivedState) {
-            this._items = receivedState.items;
-            this._itemsOrder = receivedState.itemsOrder;
-         }
-         if (options.source) {
-            return _private.initItems(options.source, this).addCallback(function(result) {
-               this._items = result.items;
-               this._itemsOrder = result.itemsOrder;
+         if (receivedState && !this.checkHasFunction(receivedState)) {
+            _private.prepareState(this, receivedState);
+         } else if (options.source) {
+            return _private.initItems(options.source, this).addCallback((result) => {
+               _private.prepareState(this, result);
                return result;
-            }.bind(this));
+            });
          }
       },
       _beforeUpdate: function(newOptions) {
          if (newOptions.source && newOptions.source !== this._options.source) {
-            return _private.initItems(newOptions.source, this).addCallback(function(result) {
-               this._items = result.items;
-               this._itemsOrder = result.itemsOrder;
+            return _private.initItems(newOptions.source, this).addCallback((result) => {
+               _private.prepareState(this, result);
                this._forceUpdate();
-            }.bind(this));
+            });
          }
       },
       _onItemClick: function(event, key) {
@@ -483,7 +515,6 @@ import Env = require('Env/Env');
 
    TabsButtons.getDefaultOptions = function() {
       return {
-         itemTemplate: ItemTemplate,
          style: 'primary',
          displayProperty: 'title',
          theme: 'default'

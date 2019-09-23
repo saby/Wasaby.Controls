@@ -45,7 +45,7 @@ let InfoBoxId;
 
 // Default popup configuration
 const DEFAULT_CONFIG = {
-    style: 'default',
+    style: 'secondary',
     position: 'tl',
     targetSide: 'top',
     alignment: 'start',
@@ -94,7 +94,7 @@ const _private = {
                 templateOptions: newCfg.templateOptions, // for user template: newCfg.template
                 message: newCfg.message,
                 styleType: newCfg.styleType || 'marker',
-                style: newCfg.style || 'default',
+                style: newCfg.style || 'secondary',
                 floatCloseButton: newCfg.floatCloseButton
             },
             template: 'Controls/popupTemplate:templateInfoBox'

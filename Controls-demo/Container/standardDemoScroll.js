@@ -68,7 +68,7 @@ define('Controls-demo/Container/standardDemoScroll', [
                     'Calendar', 'My Page', 'Our Company'],
                 viewSource = new source.Memory({
                     data: _getDemoData(),
-                    idProperty: 'id'
+                    keyProperty: 'id'
                 }),
                 gridColumns = [{
                     width: '40%',

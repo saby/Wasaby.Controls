@@ -58,7 +58,7 @@ define('Controls/interface/ISelectedCollection', [
     * @name Controls/interface/ISelectedCollection#multiSelect
     * @cfg {Boolean} Enables multiple value selection mode.
     * @default false
-    * @variant true You can select as many values ​​as you want.
+    * @variant true You can select as many values as you want.
     * @variant false After selecting the first value, the input field disappears. When you select a new value from the directory, it grinds the old.
     *
     * @example

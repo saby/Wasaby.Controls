@@ -1,5 +1,5 @@
 /**
- * Библиотека базовых шаблонов всплывающих окон и диалогов.
+ * Библиотека контролов, которые реализуют содержимое всплывающих окон.
  * @library Controls/popupTemplate
  * @includes CloseButton Controls/_popupTemplate/CloseButton
  * @includes Stack Controls/_popupTemplate/Stack

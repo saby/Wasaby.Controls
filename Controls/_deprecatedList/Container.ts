@@ -68,7 +68,7 @@ var _private = {
       _private.cachedSourceFix(self);
       const memorySource = new Memory({
          model: data.getModel(),
-         idProperty: data.getIdProperty(),
+         keyProperty: data.getKeyProperty(),
          data: items,
          adapter: source.getAdapter()
       });
@@ -89,7 +89,7 @@ var _private = {
       const recordSet = new RecordSet({
          rawData: clone(data), // clone origin data
          adapter: source.getAdapter(),
-         idProperty: source.getIdProperty()
+         keyProperty: source.getKeyProperty()
       });
 
       const recordSetToReverse = recordSet.clone();
@@ -139,22 +139,14 @@ var _private = {
       if (!error || !error.canceled) {
          self._source = new Memory({
             model: source.getModel(),
-            idProperty: source.getIdProperty()
+            keyProperty: source.getKeyProperty()
          });
       }
    },
 
    searchCallback: function(self, result, filter) {
       if (self._options.searchEndCallback) {
-
-         /* FIXME
-            Когда отдаёшь memory источник с данными,
-            запрос искуственно делаем асинхронным в BaseControl, поэтому и список строится асинхронным. Но, т.к. в VDOM'е
-            асинхронное построение контролов сейчас работает с ошибками, тоже эмулирую асинхронность.
-            Правится по ошибке в плане Зуева https://online.sbis.ru/opendoc.html?guid=fb08b40e-f2ac-4dd2-9a84-dfbfc404da02 */
-         Deferred.fromTimer(10).addCallback(function() {
-            self._options.searchEndCallback(result, filter);
-         });
+         self._options.searchEndCallback(result, filter);
       }
 
       if (!isEqual(filter, _private.getFilterFromContext(self, self._context)) || !isEqual(filter, self._filter)) {
@@ -272,7 +264,9 @@ var _private = {
    },
 
    reverseSourceData: function(self) {
-      if (self._source.data) {
+      let source = _private.getOriginSource(self._source);
+
+      if (source.data) {
          /* toDO !KONGO Вынуждены использовать PrefetchProxy до перевода саггеста на search/Controller
            https://online.sbis.ru/opendoc.html?guid=ab4d807e-9e1a-4a0a-b95b-f0c3f6250f63
            Использовать приходится, т.к. мы не можем просто пересоздать выпадашку с новыми данными,
@@ -280,10 +274,10 @@ var _private = {
            из-за которой моргают данные */
          self._source = new PrefetchProxy({
             target: new Memory({
-               model: self._source.getModel(),
-               idProperty: self._source.getIdProperty(),
-               data: _private.reverseData(self._source.data, self._source),
-               adapter: self._source.getAdapter()
+               model: source.getModel(),
+               keyProperty: source.getIdProperty(),
+               data: _private.reverseData(source.data, source),
+               adapter: source.getAdapter()
             })
          });
       }
@@ -315,7 +309,7 @@ var List = Control.extend({
          var originSource = _private.getOriginSource(options.source);
          this._source = new Memory({
             model: originSource.getModel(),
-            idProperty: originSource.getIdProperty()
+            keyProperty: originSource.getKeyProperty()
          });
       }
 

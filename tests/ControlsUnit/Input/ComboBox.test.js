@@ -3,9 +3,10 @@ define(
       'Controls/dropdown',
       'Core/core-clone',
       'Types/source',
-      'Types/collection'
+      'Types/collection',
+      'Types/entity'
    ],
-   (dropdown, Clone, sourceLib, collection) => {
+   (dropdown, Clone, sourceLib, collection, entity) => {
       describe('Input.Combobox', () => {
          let items = [
             {
@@ -23,7 +24,7 @@ define(
          ];
 
          let itemsRecords = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: items
          });
 
@@ -34,7 +35,7 @@ define(
             value: 'New text',
             placeholder: 'This is placeholder',
             source: new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             })
          };
@@ -53,12 +54,17 @@ define(
             combobox._setText([]);
             assert.strictEqual('', combobox._value);
             assert.strictEqual('This is placeholder', combobox._placeholder);
+
+            combobox._setText([new entity.Model({
+               rawData: { id: '1', title: 123 }
+            })]);
+            assert.strictEqual('123', combobox._value);
          });
 
          it('_setText empty item', function() {
             let emptyConfig = Clone(config),
                emptyItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{ id: null, title: 'Не выбрано' }]
                });
             emptyConfig.emptyText = 'Не выбрано';
@@ -83,10 +89,10 @@ define(
 
          it('popupVisibilityChanged', function() {
             let combobox = getCombobox(config);
-   
+
             dropdown.Combobox._private.popupVisibilityChanged.call(combobox, true);
             assert.isTrue(combobox._isOpen);
-   
+
             dropdown.Combobox._private.popupVisibilityChanged.call(combobox, false);
             assert.isFalse(combobox._isOpen);
          });

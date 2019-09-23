@@ -49,7 +49,7 @@ define(
          ];
 
          let itemsRecords = new collection.RecordSet({
-            idProperty: 'id',
+            keyProperty: 'id',
             rawData: items
          });
 
@@ -58,7 +58,7 @@ define(
             keyProperty: 'id',
             emptyText: true,
             source: new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             }),
             nodeProperty: 'node',
@@ -66,11 +66,11 @@ define(
          };
 
          let configLazyLoad = {
-            lazyItemsLoad: true,
-            selectedKeys: '[2]',
+            lazyItemsLoading: true,
+            selectedKeys: [2],
             keyProperty: 'id',
             source: new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             })
          };
@@ -195,7 +195,7 @@ define(
                   selectedItemsChangeCalled = true;
                },
                source: new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: items
                })
             };
@@ -216,7 +216,7 @@ define(
                   selectedItemsChangeCalled = true;
                },
                source: new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: items
                })
             };
@@ -269,10 +269,10 @@ define(
             };
             return new Promise((resolve) => {
                dropdownController._beforeUpdate({
-                  selectedKeys: '[2]',
+                  selectedKeys: [2],
                   keyProperty: 'id',
                   source: new sourceLib.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: updatedItems
                   })
                }).addCallback(() => {
@@ -305,10 +305,10 @@ define(
             };
             return new Promise((resolve) => {
                dropdownController._beforeUpdate({
-                  selectedKeys: '[2]',
+                  selectedKeys: [2],
                   keyProperty: 'id',
                   source: new sourceLib.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: updatedItems
                   })
                }).addCallback(() => {
@@ -356,7 +356,7 @@ define(
             dropdownController._items = null;
             var newConfig = Clone(configItems);
             newConfig.source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             });
             newConfig.selectedKeys = ['4'];
@@ -454,11 +454,11 @@ define(
                }
             };
             dropdownController._beforeUpdate({
-               lazyItemsLoad: true,
-               selectedKeys: '[2]',
+               lazyItemsLoading: true,
+               selectedKeys: [2],
                keyProperty: 'id',
                source: new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: items
                })
             });
@@ -467,11 +467,11 @@ define(
 
             opened = true;
             dropdownController._beforeUpdate({
-               lazyItemsLoad: true,
-               selectedKeys: '[2]',
+               lazyItemsLoading: true,
+               selectedKeys: [2],
                keyProperty: 'id',
                source: new sourceLib.Memory({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   data: items
                })
             }).addCallback(function(loadedItems) {
@@ -489,7 +489,7 @@ define(
             };
             dropdownController._items = itemsRecords;
             dropdownController._beforeUpdate({
-               selectedKeys: '[6]',
+               selectedKeys: [6],
                keyProperty: 'id',
                filter: config.filter,
                selectedItemsChangedCallback: selectedItemsChangedCallback
@@ -514,7 +514,7 @@ define(
 
             // selectedKeys = []
             let newItems = new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: [
                   {id: null, title: 'All'},
                   {id: '1', title: 'first'}
@@ -559,7 +559,7 @@ define(
          it('_private::requireTemplates', (done) => {
             let dropdownController = getDropdownController(config);
             dropdownController._items = new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: []
             });
             dropdown._Controller._private.requireTemplates(dropdownController, config).addCallback(() => {
@@ -572,7 +572,7 @@ define(
             let dropdownController = getDropdownController(config);
 
             dropdownController._items = new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: [
                   {
                      id: 1,
@@ -600,7 +600,7 @@ define(
             oneItemConfig.emptyText = undefined;
             let dropdownController = getDropdownController(oneItemConfig);
             let item = new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: [ {id: 1, title: 'Запись 1'} ]
             });
             dropdownController._items = item;
@@ -646,7 +646,7 @@ define(
                }
             };
             let curItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{
                      id: '1',
                      title: 'Запись 1'
@@ -659,7 +659,7 @@ define(
                   }]
                }),
                selectedItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{
                      id: '1',
                      title: 'Запись 1'
@@ -717,7 +717,7 @@ define(
             };
 
             let curItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{
                      id: '1',
                      title: 'Запись 1'
@@ -730,7 +730,7 @@ define(
                   }]
                }),
                selectedItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{
                      id: '1',
                      title: 'Запись 1'
@@ -763,7 +763,7 @@ define(
             dropdownController._beforeMount(configLazyLoad);
             let opened = false;
             let items2 = new collection.RecordSet({
-               idProperty: 'id',
+               keyProperty: 'id',
                rawData: [ {id: 1, title: 'Запись 1'}, {id: 2, title: 'Запись 2'} ]
             });
             dropdownController._items = items2;
@@ -800,7 +800,7 @@ define(
 
          it('_private::getNewItems', function() {
             let curItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{
                      id: '1',
                      title: 'Запись 1'
@@ -813,7 +813,7 @@ define(
                   }]
                }),
                selectedItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{
                      id: '1',
                      title: 'Запись 1'
@@ -834,7 +834,7 @@ define(
          it('_private::onSelectorResult', function() {
             let dropdownController = getDropdownController(config);
             let curItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{
                      id: '1',
                      title: 'Запись 1'
@@ -847,7 +847,7 @@ define(
                   }]
                }),
                selectedItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{
                      id: '1',
                      title: 'Запись 1'
@@ -911,7 +911,7 @@ define(
             beforeEach(function() {
                historySource = new history.Source({
                   originSource: new sourceLib.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: items
                   }),
                   historySource: new history.Service({
@@ -993,7 +993,7 @@ define(
                   rawData: {
                      id: '6', title: 'title 6'
                   },
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
                item.set('originalId', item.getId());
                item.set('id', item.getId() + '_history');
@@ -1008,7 +1008,7 @@ define(
                   rawData: {
                      id: '5', title: 'title 5'
                   },
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
                dropdownController._onResult(null, {action: 'itemClick', data: [item]});
                assert.equal(resultItems[0].getId(), '5');
@@ -1041,7 +1041,7 @@ define(
                   rawData: {
                      id: '6', title: 'title 6'
                   },
-                  idProperty: 'id'
+                  keyProperty: 'id'
                });
                item.set('originalId', item.getId());
                item.set('id', item.getId() + '_history');

@@ -37,7 +37,7 @@ define([
             cfg = {
                items: new collection.RecordSet({
                   rawData: data,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                keyProperty: 'id',
                displayProperty: 'title'
@@ -53,7 +53,7 @@ define([
             cfg = {
                items: new collection.RecordSet({
                   rawData: data,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                keyProperty: 'id',
                displayProperty: 'title'
@@ -100,7 +100,7 @@ define([
          var cfg = {
             items: new collection.RecordSet({
                rawData: data,
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             keyProperty: 'id',
             displayProperty: 'title',
@@ -125,7 +125,7 @@ define([
              cfg = {
                 items: new collection.RecordSet({
                    rawData: data,
-                   idProperty: 'id'
+                   keyProperty: 'id'
                 }),
                 keyProperty: 'id',
                 displayProperty: 'title',
@@ -145,7 +145,7 @@ define([
              cfg = {
                 items: new collection.RecordSet({
                    rawData: data,
-                   idProperty: 'id'
+                   keyProperty: 'id'
                 }),
                 keyProperty: 'id',
                 displayProperty: 'title',
@@ -177,7 +177,7 @@ define([
              cfg = {
                 items: new collection.RecordSet({
                    rawData: data,
-                   idProperty: 'id'
+                   keyProperty: 'id'
                 }),
                 markedKey: 1,
                 keyProperty: 'id',
@@ -258,13 +258,13 @@ define([
                   { id: 3, title: 'item 3' },
                   { id: 4, title: 'item 4' }
                ],
-               idProperty: 'id'
+               keyProperty: 'id'
             }),
             model = new lists.ListViewModel({
                keyProperty: 'id',
                items: new collection.RecordSet({
                   rawData: [],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                virtualScrolling: true
             });
@@ -293,13 +293,13 @@ define([
                 rawData: [
                    { id: 1, title: 'item 1' }
                 ],
-                idProperty: 'id'
+                keyProperty: 'id'
              }),
              model = new lists.ListViewModel({
                 keyProperty: 'id',
                 items: new collection.RecordSet({
                    rawData: [],
-                   idProperty: 'id'
+                   keyProperty: 'id'
                 }),
                 markedKey: null
              }),
@@ -349,7 +349,7 @@ define([
                    { id: 2, title: 'item 2' },
                    { id: 3, title: 'item 3' }
                 ],
-                idProperty: 'id'
+                keyProperty: 'id'
              }),
              model = new lists.ListViewModel({
                 keyProperty: 'id',
@@ -357,7 +357,7 @@ define([
                    rawData: [
                       { id: 1, title: 'item 1' }
                    ],
-                   idProperty: 'id'
+                   keyProperty: 'id'
                 }),
                 markerVisibility: 'visible',
                 markedKey: 1
@@ -379,7 +379,7 @@ define([
                       {id: 2, title: 'item 2'},
                       {id: 3, title: 'item 3'}
                    ],
-                   idProperty: 'id'
+                   keyProperty: 'id'
                 }),
                 markedKey: null
              },
@@ -444,7 +444,7 @@ define([
                      { id: 5, title: 'item 5', type: 1 },
                      { id: 6, title: 'item 6', type: 3 }
                   ],
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
             groupingKeyCallback: function(item) {
                return item.get('type');
@@ -541,7 +541,7 @@ define([
             assert.equal(key, 1);
             markedKeyChangedFired = true;
          });
-         listModel.setItems(new collection.RecordSet({rawData: data, idProperty: 'id'}));
+         listModel.setItems(new collection.RecordSet({rawData: data, keyProperty: 'id'}));
          assert.equal(listModel._markedKey, 1, 'Incorrect _markedKey value after setItems.');
          assert.equal(listModel.getMarkedItem(), listModel._display.at(0), 'Incorrect _markedItem after setItems.');
          assert.isTrue(markedKeyChangedFired, 'onMarkedKeyChanged event should fire after setItems');
@@ -562,7 +562,7 @@ define([
                id: 'test',
                title: 'test'
             },
-            idProperty: 'id'
+            keyProperty: 'id'
          }), {
             all: [],
             showed: []
@@ -575,12 +575,37 @@ define([
                id: 'test',
                title: 'test'
             },
+            keyProperty: 'id'
+         }), {
+            all: [],
+            showed: []
+         });
+         assert.isFalse(editingItem.drawActions, "shoud not draw actions on editing item if actions array is empty");
+         listModel.setItemActions(new entity.Record({
+            rawData: {
+               id: 'test',
+               title: 'test'
+            },
+            idProperty: 'id'
+         }), {
+            all: [1,2,3],
+            showed: [1,2,3]
+         });
+         assert.isTrue(editingItem.drawActions, "shoud draw actions on editing item if actions array is not empty");
+         listModel.setEditingConfig({
+            toolbarVisibility: true
+         });
+         listModel.setItemActions(new entity.Record({
+            rawData: {
+               id: 'test',
+               title: 'test'
+            },
             idProperty: 'id'
          }), {
             all: [],
             showed: []
          });
-         assert.isOk(editingItem, "shoud set itemActions for editing item");
+         assert.isTrue(editingItem.drawActions, 'should draw actions on editing item if actions array is empty and toolbarVisibility = true');
       });
 
       it('Clear itemActions for removed items', function() {
@@ -591,7 +616,7 @@ define([
                markedKey: null,
                items: new collection.RecordSet({
                   rawData: data,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                })
             },
             listModel = new lists.ListViewModel(cfg);
@@ -747,7 +772,7 @@ define([
             lvm = new lists.ListViewModel({
                items: new collection.RecordSet({
                   rawData: data,
-                  idProperty: 'id'
+                  keyProperty: 'id'
                }),
                keyProperty: 'id',
                markedKey: null
@@ -971,6 +996,21 @@ define([
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'after');
             });
+            it('_calcCursorClasses', function() {
+               var
+                  cfg = {
+                     items: new collection.RecordSet({
+                        rawData: data,
+                        keyProperty: 'id'
+                     }),
+                     keyProperty: 'id',
+                     displayProperty: 'title'
+                  },
+                  model = new lists.ListViewModel(cfg);
+               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-default', model._calcCursorClasses(false));
+               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-pointer', model._calcCursorClasses(true));
+               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-pointer', model._calcCursorClasses());
+            })
          });
       });
    });

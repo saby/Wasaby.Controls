@@ -8,6 +8,7 @@
                                           excludedKeys="{{ _options.excludedKeys }}"
                                           selectedKeysCount="{{ _options.selectedKeysCount }}"
                                           size="{{_options.size}}"
+                                          fontSize="{{_options.fontSize}}"
                                           root="{{_options.root}}"/>
     <div class="controls-operationsPanelV__multiSelector_separator"></div>
 </div>

@@ -17,7 +17,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
             } else {
                cfg.data = self._customItems;
             }
-            cfg.idProperty = 'id';
+            cfg.keyProperty = 'id';
             self._source = new sourceLib.Memory(cfg);
          }
       };
@@ -116,7 +116,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
          },
          _props: function() { // keyProperty, displayProperty
             return new sourceLib.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: this._parameters,
                filter: function(record, filter) {
                   if (record.get('title').indexOf(filter.title) !== -1) {
@@ -127,7 +127,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
          },
          _mainSource: function() { // source
             return new sourceLib.Memory({
-               idProperty: 'title',
+               keyProperty: 'title',
                data: this._sourceData,
                filter: function(record, filter) {
                   if (record.get('title').indexOf(filter.title) !== -1) {
@@ -138,7 +138,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
          },
          _kindsOfBox: function() { // itemTemplate
             return new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: this._itemTemp,
                filter: function(record, filter) {
                   if (record.get('title').indexOf(filter.title) !== -1) {

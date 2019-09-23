@@ -13,6 +13,7 @@ import 'Controls/_scroll/Scroll/Watcher';
 import 'Controls/event';
 import 'Controls/_scroll/Scroll/Scrollbar';
 import 'css!theme?Controls/scroll';
+import * as newEnv from 'Core/helpers/isNewEnvironment';
 
 
 /**
@@ -25,6 +26,8 @@ import 'css!theme?Controls/scroll';
  * @public
  * @author Красильников А.С.
  * @category Container
+ * @remark
+ * Контрол работает как нативный скролл: скроллбар появляется, когда высота контента больше высоты контрола. Для корректной работы контрола необходимо ограничить его высоту.
  * @demo Controls-demo/Container/Scroll
  *
  */
@@ -157,6 +160,9 @@ var
           */
          if (Env.detection.isIE) {
             scrollHeight--;
+         }
+         if (self._isShadowVisibleMode()) {
+            return true;
          }
 
          return scrollHeight > containerHeight;
@@ -387,6 +393,12 @@ var
          if (needUpdate) {
             this._forceUpdate();
          }
+
+          //TODO Compatibility на старых страницах нет Register, который скажет controlResize
+          this._resizeHandler = this._resizeHandler.bind(this);
+          if (!newEnv() && window) {
+              window.addEventListener('resize', this._resizeHandler);
+          }
       },
 
       _beforeUpdate: function(options, context) {
@@ -399,14 +411,18 @@ var
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
-            if (this._isShadowVisibleMode()) {
-               this._displayState.hasScroll = true;
-            }
             this._updateStickyHeaderContext();
 
             this._forceUpdate();
          }
       },
+
+       _beforeUnmount(): void {
+           //TODO Compatibility на старых страницах нет Register, который скажет controlResize
+           if (!newEnv() && window) {
+               window.removeEventListener('resize', this._resizeHandler);
+           }
+       },
 
       _isShadowVisibleMode: function() {
          return this._shadowVisiblityMode.top === 'visible' || this._shadowVisiblityMode.bottom === 'visible';
@@ -435,7 +451,7 @@ var
          if (Env.detection.isMobileIOS && position === 'top' && _private.getScrollTop(this, this._children.content) < 0) {
             return false;
          }
-         
+
          return this._displayState.shadowPosition.indexOf(position) !== -1;
       },
 
@@ -477,9 +493,6 @@ var
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
-            if (this._isShadowVisibleMode()) {
-               this._displayState.hasScroll = true;
-            }
          }
 
          _private.calcPagingStateBtn(this);
@@ -633,8 +646,11 @@ var
             shadowVisible = { top: false, bottom: false };
 
          if ((shadowVisible || this._options.shadowVisible) && this._displayState.hasScroll) {
-            shadowVisible.top = this._displayState.shadowPosition.indexOf('top') !== -1;
-            shadowVisible.bottom = this._displayState.shadowPosition.indexOf('bottom') !== -1;
+            // в before/afterMount this._displayState.shadowPosition еще не задан
+            if (this._displayState.shadowPosition) {
+                shadowVisible.top = this._displayState.shadowPosition.indexOf('top') !== -1;
+                shadowVisible.bottom = this._displayState.shadowPosition.indexOf('bottom') !== -1;
+            }
 
             if (this._shadowVisiblityMode.top === 'visible') {
                shadowVisible.top = true;
@@ -680,6 +696,16 @@ var
        */
       scrollTo: function(offset) {
          _private.setScrollTop(this, offset);
+      },
+
+      /**
+       * Возвращает true если есть возможность вроскролить к позиции offset.
+       * @function Controls/_scroll/Container#canScrollTo
+       * @param offset Позиция в пикселях
+       * @noshow
+       */
+      canScrollTo: function(offset: number): boolean {
+         return offset < this._children.content.scrollHeight - this._children.content.clientHeight;
       },
 
       /**

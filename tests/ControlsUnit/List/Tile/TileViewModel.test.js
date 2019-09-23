@@ -14,7 +14,7 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection'], function(T
                }, {
                   'id': 2
                }],
-               idProperty: 'id'
+               keyProperty: 'id'
             })
          });
 

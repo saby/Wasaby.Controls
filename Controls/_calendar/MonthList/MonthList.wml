@@ -3,7 +3,7 @@
       name="scroll"
       attr:class="MonthList-ScrollContainer"
       scrollbarVisible="{{false}}"
-      on:scroll="_enrichItemsDebounced()">
+      on:scroll="_scrollHandler()">
       <Controls.list:View
          source="{{_viewSource}}"
          sourceExt="{{_options.source}}"

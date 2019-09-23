@@ -42,7 +42,7 @@ define(
                emptyText: 'All documents',
                editorOptions: {
                   source: new sourceLib.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: defaultItems[0]
                   }),
                   displayProperty: 'title',
@@ -57,7 +57,7 @@ define(
                emptyText: 'all state',
                editorOptions: {
                   source: new sourceLib.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: defaultItems[1]
                   }),
                   displayProperty: 'title',
@@ -81,16 +81,23 @@ define(
             return view;
          };
 
+         let getItems = function (items) {
+            return new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: items
+            });
+         };
+
          it('_beforeMount from receivedState', function() {
             let view = getView(defaultConfig);
             let receivedState = {
                configs: {
                   document: {
-                     items: Clone(defaultItems[0]),
+                     items: getItems(Clone(defaultItems[0])),
                      displayProperty: 'title',
                      keyProperty: 'id'},
                   state: {
-                     items: Clone(defaultItems[1]),
+                     items: getItems(Clone(defaultItems[1])),
                      displayProperty: 'title',
                      keyProperty: 'id',
                      multiSelect: true}
@@ -140,7 +147,7 @@ define(
             let newConfig = Clone(defaultConfig);
             newConfig.source[0].value = 1;
             newConfig.source[0].editorOptions.source = new sourceLib.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: defaultItems[0]
             });
             view._configs = {};
@@ -165,7 +172,29 @@ define(
             });
          });
 
-         it('_openDetailPanel', function() {
+         it('_beforeUpdate new items length', function() {
+            let view = getView(defaultConfig);
+            view._beforeUpdate(defaultConfig);
+
+            let expectedDisplayText = {
+               document: {text: 'My', title: 'My', hasMoreText: ''}
+            };
+
+            let newConfig = Clone(defaultConfig);
+            newConfig.source[0].value = 1;
+            newConfig.source[0].editorOptions.source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: defaultItems[0]
+            });
+            view._configs = {};
+            view._displayText = {};
+            newConfig.source.splice(1,1);
+            view._beforeUpdate(newConfig).addCallback(() => {
+               assert.deepStrictEqual(view._displayText, expectedDisplayText);
+            });
+         });
+
+         it('openDetailPanel', function() {
             let view = getView(defaultConfig),
                popupOptions;
             view._children = {
@@ -175,13 +204,13 @@ define(
             view._options.detailPanelTemplateName = 'detailPanelTemplateName.wml';
             view._source = defaultConfig.source;
 
-            view._openDetailPanel();
+            view.openDetailPanel();
 
             assert.strictEqual(popupOptions.template, 'detailPanelTemplateName.wml');
             assert.strictEqual(popupOptions.templateOptions.items.length, 5);
 
             view._options.detailPanelTemplateName = null;
-            view._openDetailPanel();
+            view.openDetailPanel();
          });
 
          it('_openPanel', function() {
@@ -287,6 +316,12 @@ define(
             assert.deepStrictEqual(item.value, [null]);
             assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.'});
             assert.deepStrictEqual(view._displayText, {document: {}, state: {}});
+
+            item = view._source[0];
+            view._displayText = {};
+            view._reset('clearClick', item);
+            assert.deepStrictEqual(item.value, null);
+            assert.deepStrictEqual(view._displayText, {document: {}, state: {}});
          });
 
          it('_resetFilterText', function() {
@@ -307,11 +342,11 @@ define(
             view._source = Clone(defaultConfig.source);
             view._configs = {
                document: {
-                  items: Clone(defaultItems[0]),
+                  items: getItems(Clone(defaultItems[0])),
                   displayProperty: 'title',
                   keyProperty: 'id'},
                state: {
-                  items: Clone(defaultItems[1]),
+                  items: getItems(Clone(defaultItems[1])),
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}
@@ -402,6 +437,49 @@ define(
             assert.strictEqual(self._filterText, 'Author: Ivanov K.K., test_extended');
          });
 
+         it('_private:getFastText', function() {
+            let config = {
+               displayProperty: 'title',
+               keyProperty: 'id',
+               emptyText: 'empty text',
+               emptyKey: 'empty',
+               items: new collection.RecordSet({
+                  rawData: [
+                     {id: null, title: 'Reset'},
+                     {id: '1', title: 'Record 1'},
+                     {id: '2', title: 'Record 2'},
+                     {id: '3', title: 'Record 3'}
+                  ]
+               })
+            };
+            let display = filter.View._private.getFastText(config, [null]);
+            assert.strictEqual(display.text, 'Reset');
+
+            display = filter.View._private.getFastText(config, ['empty']);
+            assert.strictEqual(display.text, 'empty text');
+         });
+
+         it('_private:getKeysUnloadedItems', function() {
+            let config = {
+               displayProperty: 'title',
+               keyProperty: 'id',
+               emptyText: 'empty text',
+               emptyKey: 'empty',
+               items: new collection.RecordSet({
+                  rawData: [
+                     {id: '1', title: 'Record 1'},
+                     {id: '2', title: 'Record 2'},
+                     {id: '3', title: 'Record 3'}
+                  ]
+               })
+            };
+            let keys = filter.View._private.getKeysUnloadedItems(config, null);
+            assert.strictEqual(keys[0], null);
+
+            keys = filter.View._private.getKeysUnloadedItems(config, 'empty');
+            assert.isFalse(!!keys.length);
+         });
+
          it('_private:prepareItems', function() {
             let date = new Date();
             date.setSQLSerializationMode(Date.SQL_SERIALIZE_MODE_TIME);
@@ -412,7 +490,7 @@ define(
 
          it('_private:updateHistory', function() {
             let view = getView(defaultConfig);
-            view._source = defaultConfig.source;
+            view._source = Clone(defaultConfig.source);
             let resultHistoryItems, resultMeta;
             let source = new history.Source({
                originSource: new sourceLib.Memory({
@@ -448,17 +526,21 @@ define(
                document: {
                   items: new collection.RecordSet({
                      rawData: defaultItems[0],
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   source: source[0].editorOptions.source,
+                  emptyText: 'All documents',
+                  emptyKey: null,
                   displayProperty: 'title',
                   keyProperty: 'id'},
                state: {
                   items: new collection.RecordSet({
                      rawData: defaultItems[1].slice(1),
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   source: source[1].editorOptions.source,
+                  emptyText: 'all state',
+                  emptyKey: null,
                   _sourceController: {hasMoreData: () => {return true;}},
                   displayProperty: 'title',
                   keyProperty: 'id',
@@ -472,7 +554,58 @@ define(
             });
          });
 
+         it('_private:setValue', function() {
+            let view = getView(defaultConfig);
+            view._source = [
+               {
+                  name: 'document',
+                  value: '',
+                  resetValue: false,
+                  emptyText: 'Test',
+                  emptyKey: null
+               }
+            ];
+            view._configs = {
+               document: {
+                  items: Clone(defaultItems[0]),
+                  displayProperty: 'title',
+                  keyProperty: 'id',
+                  emptyText: 'Test',
+                  emptyKey: null,
+                  source: new sourceLib.Memory({
+                     keyProperty: 'id',
+                     data: defaultItems[0]
+                  })
+               }
+            };
+            filter.View._private.setValue(view, [null], 'document');
+            assert.strictEqual(view._source[0].value, null);
 
+            // emptyKey is not set
+            view._source = [
+               {
+                  name: 'document',
+                  value: '',
+                  resetValue: false,
+                  emptyText: 'Test'
+               }
+            ];
+            view._configs = {
+               document: {
+                  items: Clone(defaultItems[0]),
+                  displayProperty: 'title',
+                  keyProperty: 'id',
+                  emptyText: 'Test',
+                  emptyKey: null,
+                  source: new sourceLib.Memory({
+                     idProperty: 'id',
+                     data: defaultItems[0]
+                  })
+               }
+            };
+            filter.View._private.setValue(view, [null], 'document');
+            assert.strictEqual(view._source[0].value, false);
+         });
 
          it('_private:setPopupConfig', function() {
             let isLoading = false;
@@ -483,7 +616,7 @@ define(
                   displayProperty: 'title',
                   keyProperty: 'id',
                   source: new sourceLib.Memory({
-                     idProperty: 'id',
+                     keyProperty: 'id',
                      data: defaultItems[0]
                   })
                },
@@ -516,17 +649,19 @@ define(
                document: {
                   items: new collection.RecordSet({
                      rawData: defaultItems[0],
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   source: source[0].editorOptions.source,
+                  _sourceController: {hasMoreData: () => {return false;}},
                   displayProperty: 'title',
                   keyProperty: 'id'},
                state: {
                   items: new collection.RecordSet({
                      rawData: defaultItems[1].slice(1),
-                     idProperty: 'id'
+                     keyProperty: 'id'
                   }),
                   source: source[1].editorOptions.source,
+                  _sourceController: {hasMoreData: () => {return false;}},
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}
@@ -548,11 +683,11 @@ define(
                view._source = Clone(defaultConfig.source);
                view._configs = {
                   document: {
-                     items: Clone(defaultItems[0]),
+                     items: getItems(Clone(defaultItems[0])),
                      displayProperty: 'title',
                      keyProperty: 'id'},
                   state: {
-                     items: Clone(defaultItems[1]),
+                     items: getItems(Clone(defaultItems[1])),
                      displayProperty: 'title',
                      keyProperty: 'id',
                      multiSelect: true}
@@ -611,11 +746,11 @@ define(
                   }
                };
                view._configs.state.items = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: defaultItems[1]
                });
                let newItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{id: 3, title: 'Completed'}, {id: 20, title: 'new item'}, {id: 28, title: 'new item 2'}]
                });
                let eventResult = {
@@ -637,12 +772,12 @@ define(
                   }
                };
                view._configs.state.items = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: defaultItems[1]
                });
                view._idOpenSelector = 'state';
                let newItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{id: 3, title: 'Completed'}, {id: 20, title: 'new item'}, {id: 28, title: 'new item 2'}]
                });
                view._onSelectorTemplateResult('event', newItems);
@@ -652,20 +787,30 @@ define(
 
             it('_resultHandler filterDetailPanelResult', function() {
                let filterChanged;
+               let historyEventFired;
+
                view._notify = (event, data) => {
                   if (event === 'filterChanged') {
                      filterChanged = data[0];
+                  }
+                  if (event === 'historyApply') {
+                     historyEventFired = true;
                   }
                };
                let eventResult = {
                   id: 'state',
                   items: [{id: 'author', value: '', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic'},
                         {id: 'sender', value: 'Sander123', resetValue: '', viewMode: 'extended', visibility: false},
-                        {id: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false}]
+                        {id: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false},
+                     {id: 'document', value: '11111', resetValue: '', textValue: 'new document', viewMode: 'frequent', visibility: false}],
+                  history: [{ test: 'test' }]
                };
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[1].value, 'Sander123');
-               assert.deepStrictEqual(filterChanged, {'sender': 'Sander123'});
+               assert.deepStrictEqual(view._source[3].textValue, 'new document');
+               assert.deepStrictEqual(filterChanged, {'document': '11111', 'sender': 'Sander123'});
+               assert.deepStrictEqual(view._displayText, {document: { hasMoreText: '', text: '', title: ''}});
+               assert.isTrue(historyEventFired);
             });
 
             it('_onSelectorTemplateResult', function() {
@@ -676,11 +821,11 @@ define(
                   }
                };
                view._configs.state.items = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: defaultItems[1]
                });
                let newItems = new collection.RecordSet({
-                  idProperty: 'id',
+                  keyProperty: 'id',
                   rawData: [{id: 3, title: 'Completed'}, {id: 20, title: 'new item'}, {id: 28, title: 'new item 2'}]
                });
                view._idOpenSelector = 'state';
@@ -712,7 +857,7 @@ define(
                      emptyText: 'All documents',
                      editorOptions: {
                         source: new sourceLib.Memory({
-                           idProperty: 'id',
+                           keyProperty: 'id',
                            data: documentItems
                         }),
                         displayProperty: 'title',
@@ -730,7 +875,7 @@ define(
                view._configs = {
                   document: {
                      items: new collection.RecordSet({
-                        idProperty: 'id',
+                        keyProperty: 'id',
                         rawData: documentItems
                      }),
                      displayProperty: 'title',
@@ -765,6 +910,14 @@ define(
                assert.deepStrictEqual(view._source[0].value, [[1, 2], [-2]]);
                assert.deepStrictEqual(view._displayText.document, {text: 'Folder 2', title: 'Folder 2, In any state, In progress', hasMoreText: ', еще 2' });
                assert.deepStrictEqual(filterChanged, {document: [[1, 2], [-2]]});
+
+               eventResult = {
+                  action: 'applyClick',
+                  selectedKeys: { document: [[], []] }
+               };
+               view._resultHandler('resultEvent', eventResult);
+               assert.deepStrictEqual(view._source[0].value, []);
+               assert.deepStrictEqual(view._displayText.document, {});
             });
          });
       });

@@ -3,11 +3,21 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
 import {descriptor} from 'Types/entity';
 
 /**
+ * Интерфейс для отображения календарного периода в виде ссылки.
+ *
  * @interface Controls/interface/ILinkView
  * @public
  */
 interface ILinkView {
     /**
+     * @name Controls/interface/ILinkView#style
+     * @cfg {String} Стиль отображения контрола.
+     * @variant default Стиль по умолчанию.
+     * @variant linkMain Основной стиль ссылки.
+     * @variant linkMain2 Первый неакцентный стиль ссылки.
+     * @variant linkAdditional Третий неакцентный стиль ссылки.
+     */
+    /*
      * @name Controls/interface/ILinkView#style
      * @cfg {String} Display style of component.
      * @variant default Component display as default style.
@@ -20,11 +30,19 @@ interface ILinkView {
 
     /**
      * @name Controls/interface/ILinkView#showNextArrow
+     * @cfg {Boolean} Отображает стрелку перехода к следующему периоду.
+     */
+    /*
+     * @name Controls/interface/ILinkView#showNextArrow
      * @cfg {Boolean} Display the control arrow to switch to the next period
      */
     showNextArrow: boolean;
 
     /**
+     * @name Controls/interface/ILinkView#showPrevArrow
+     * @cfg {Boolean} Отображает стрелку перехода к предыдущему периоду.
+     */
+    /*
      * @name Controls/interface/ILinkView#showPrevArrow
      * @cfg {Boolean} Display the control arrow to switch to the previous period
      */
@@ -32,17 +50,29 @@ interface ILinkView {
 
     /**
      * @name Controls/interface/ILinkView#showDeleteButton
+     * @cfg {Boolean} Включает/отключает отображение кнопки "очистить период".
+     */
+    /*
+     * @name Controls/interface/ILinkView#showDeleteButton
      * @cfg {Boolean} Enables or disables the display of the period clear button.
      */
     showDeleteButton: boolean;
 
     /**
      * @name Controls/interface/ILinkView#emptyCaption
+     * @cfg {String} Текст, отображаемый в контроле, когда период не выбран.
+     */
+    /*
+     * @name Controls/interface/ILinkView#emptyCaption
      * @cfg {String} Text that is used if the period is not selected.
      */
     emptyCaption: string;
 
     /**
+     * @name Controls/interface/ILinkView#captionFormatter
+     * @cfg {Function} Функция форматирования заголовка.
+     */
+    /*
      * @name Controls/interface/ILinkView#captionFormatter
      * @cfg {Function} Caption formatting function.
      */

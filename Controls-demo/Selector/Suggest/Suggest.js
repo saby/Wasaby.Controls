@@ -20,7 +20,7 @@ define('Controls-demo/Selector/Suggest/Suggest',
 
          _beforeMount: function() {
             this._source = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                searchParam: 'title',
                filter: memorySourceFilter(),
                data: [
@@ -51,7 +51,7 @@ define('Controls-demo/Selector/Suggest/Suggest',
                ]
             });
             this._sourceAutoDropDown = new source.Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                searchParam: 'title',
                filter: memorySourceFilter(),
                data: [

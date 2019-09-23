@@ -38,6 +38,7 @@ define(
 
             assert.deepEqual(callPendingFail, [1, 3]);
 
+            Registrator._beforeUnmount();
             Registrator.destroy();
          });
          it('register/unregister pending', () => {
@@ -67,6 +68,7 @@ define(
 
             assert.equal(Object.keys(Registrator._pendings).length, 0);
 
+            Registrator._beforeUnmount();
             Registrator.destroy();
          });
 
@@ -82,6 +84,7 @@ define(
             Registrator._registerPendingHandler(null, new Deferred(), {});
             assert.equal(Registrator._hasRegisteredPendings(), true);
 
+            Registrator._beforeUnmount();
             Registrator.destroy();
          });
       });
