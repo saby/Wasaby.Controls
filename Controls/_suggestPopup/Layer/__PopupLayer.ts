@@ -4,8 +4,8 @@
 
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggestPopup/Layer/__PopupLayer');
-import {detection} from 'Env/Env';
 import getZIndex = require('Controls/Utils/getZIndex');
+import {detection} from 'Env/Env';
 import 'css!theme?Controls/suggest';
 
 var POPUP_CLASS_NAME = 'controls-Suggest__suggestionsContainer_popup';
@@ -15,6 +15,7 @@ var _private = {
       opener.open({
          target: options.target,
          opener: self,
+         closeOnOutsideClick: true,
          actionOnScroll: detection.isMobileIOS ? 'none' : 'close',
          zIndex: getZIndex(self), // _vdomOnOldPage для слоя совместимости, уйдёт с удалением опции.
          resizeCallback: self._resizeCallback
