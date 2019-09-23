@@ -104,7 +104,7 @@ var _private = {
      */
     updateField: function (self, value: string, selection) {
         _private.updateValue(self, value);
-        _private.updateSelection(self, selection);
+        self._updateSelection(selection);
     },
 
     updateValue: function (self, value) {
@@ -112,26 +112,6 @@ var _private = {
 
         if (field.value !== value) {
             field.value = value;
-        }
-    },
-
-    updateSelection: function (self, selection) {
-        const field = self._getField();
-
-        /**
-         * In IE, change the selection leads to the automatic focusing of the field.
-         * Therefore, we change it only if the field is already focused.
-         */
-        if (_private.hasSelectionChanged(field, selection) && _private.isFieldFocused(self)) {
-            /**
-             * After calling setSelectionRange the select event is triggered and saved the selection in model.
-             * Bug detected in all browsers except IE. Can check with the demo https://jsfiddle.net/xcnmbg9e/
-             * Do not need to do this because the model is now the actual selection.
-             */
-            if (!self._isIE) {
-                self._numberSkippedSaveSelection++;
-            }
-            field.setSelectionRange(selection.start, selection.end);
         }
     },
 
@@ -493,6 +473,26 @@ var Base = Control.extend({
      * @private
      */
     _displayValueAfterFocusIn: '',
+
+    _updateSelection: function (selection) {
+        const field: HTMLInputElement = this._getField();
+
+        /**
+         * In IE, change the selection leads to the automatic focusing of the field.
+         * Therefore, we change it only if the field is already focused.
+         */
+        if (_private.hasSelectionChanged(field, selection) && _private.isFieldFocused(this)) {
+            /**
+             * After calling setSelectionRange the select event is triggered and saved the selection in model.
+             * Bug detected in all browsers except IE. Can check with the demo https://jsfiddle.net/xcnmbg9e/
+             * Do not need to do this because the model is now the actual selection.
+             */
+            if (!this._isIE) {
+                this._numberSkippedSaveSelection++;
+            }
+            field.setSelectionRange(selection.start, selection.end);
+        }
+    },
 
     /**
      * @type {Controls/Utils/getTextWidth}
@@ -879,7 +879,7 @@ var Base = Control.extend({
          */
         if (this._firstFocus) {
             this._firstFocus = false;
-            _private.updateSelection(this, this._viewModel.selection);
+            this._updateSelection(this._viewModel.selection);
         }
     },
 
