@@ -16,12 +16,11 @@ class Back extends Control {
    }
 
    _onArrowClick() {
-      this._notify('arrowClick', [], {
-         bubbling: true
-      });
+      this._notify('arrowClick', []);
    }
-   
+
    static _theme: string[] = ['Controls/crumbs'];
+   static _styles: string[] = ['Controls/Utils/FontLoadUtil'];
 }
 
 export default Back;

@@ -25,7 +25,7 @@
       showHeader="{{_options.showHeader}}"
       navigation="{{_options.navigation}}"
       filter="{{_options.filter}}"
-      lazyItemsLoad="{{_options.lazyItemsLoading}}"
+      lazyItemsLoading="{{_options.lazyItemsLoading}}"
       theme="{{_options.theme}}"
       on:selectedItemsChanged="_onItemClickHandler()"
       on:pinClick="_onPinClickHandler()"

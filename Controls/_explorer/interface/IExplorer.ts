@@ -40,18 +40,18 @@
 
 /**
  * @name Controls/_explorer/interface/IExplorer#root
- * @cfg {String} Идентификатор корневого узла.
+ * @cfg {Number|String} Идентификатор корневого узла.
  */
 
 /*
  * @name Controls/_explorer/interface/IExplorer#root
- * @cfg {String} Identifier of the root node.
+ * @cfg {Number|String} Identifier of the root node.
  */
 
 /**
  * @event Controls/_explorer/interface/IExplorer#rootChanged Происходит при изменении корня иерархии (например, при переходе пользователя по хлебным крошкам).
  * @param event {eventObject} Дескриптор события.
- * @param root {String} Идентификатор корневой записи.
+ * @param root {String|Number} Идентификатор корневой записи.
  */
 
 /**
@@ -72,12 +72,12 @@
  * @name Controls/_explorer/interface/IExplorer#showActionButton
  * @cfg {Boolean} Определяет, должна ли отображаться стрелка рядом с кнопкой «назад».
  * @default
- * true
+ * false
  */
 
 /*
  * @name Controls/_explorer/interface/IExplorer#showActionButton
  * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
  * @default
- * true
+ * false
  */

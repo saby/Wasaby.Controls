@@ -14,7 +14,12 @@
                 <div class="controls-StackTemplate__maximized_button controls-StackTemplate__maximized_button_theme_{{_options.theme}}" on:click="changeMaximizedState()" attr:title="{{_maximizeButtonTitle}}"></div>
             </ws:if>
             <ws:if data="{{_options.closeButtonVisibility}}">
-                <Controls._popupTemplate.CloseButton attr:class="controls-StackTemplate__close_button controls-StackTemplate__close_button_theme_{{_options.theme}}" viewMode="{{_options.closeButtonViewMode}}" transparent="{{_options.closeButtonTransparent}}" on:click="close()"/>
+                <Controls._popupTemplate.CloseButton
+                    attr:class="controls-StackTemplate__close_button controls-StackTemplate__close_button_theme_{{_options.theme}}"
+                    viewMode="{{_options.closeButtonViewMode}}"
+                    transparent="{{_options.closeButtonTransparent}}"
+                    compatibleFocus="{{ _options.closeButtonCompatible }}"
+                    on:click="close()"/>
             </ws:if>
         </div>
     </ws:else>

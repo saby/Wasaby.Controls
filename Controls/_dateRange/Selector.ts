@@ -15,12 +15,20 @@ import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/ISelector
+ * @mixes Controls/_dateRange/interfaces/IInput
  * @control
  * @public
  * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/RangeLink
  *
+ */
+
+/**
+ * @event Событие происходит при изменении диапазона.
+ * @name Controls/_dateRange/Selector#rangeChanged
+ * @param {Date} startValue верхняя граница диапазона дат
+ * @param {Date} endValue нижняя граница диапазона дат
  */
 
 /*

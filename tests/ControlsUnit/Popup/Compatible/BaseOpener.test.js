@@ -358,7 +358,7 @@ define(
             config.autofocus = false;
             let newConfig = compatiblePopup.BaseOpener._prepareConfigFromNewToOld(config);
             assert.isFalse(newConfig.dialogOptions.flipWindow);
-            assert.equal(newConfig.dialogOptions.width, 100);
+            assert.equal(newConfig.dialogOptions.width, 1000);
             assert.equal(newConfig.templateOptions, config.templateOptions);
             assert.equal(newConfig.dialogOptions._isCompatibleArea, true);
             assert.equal(newConfig.componentOptions, config.templateOptions);

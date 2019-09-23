@@ -169,6 +169,7 @@ const _private = {
         const element = _private.find(id);
         if (element) {
             element.controller.popupResizingLine(element, offset);
+            this._notify('managerPopupUpdated', [element, _private.popupItems], {bubbling: true});
             return true;
         }
         return false;
@@ -367,13 +368,21 @@ const _private = {
             popupCallback && popupCallback();
 
             if (registrator) {
-                if (registrator._hasRegisteredPendings()) {
+                const hasRegisterPendings = registrator._hasRegisteredPendings();
+                if (hasRegisterPendings) {
                     pendingCallback && pendingCallback();
                 }
                 if (item.removePending) {
                     return item.removePending;
                 }
                 item.removePending = registrator.finishPendingOperations();
+
+                // TODO: Compatible Пендинги от совместимости старого FormController'a не попадают в _hasRegisteredPendings,
+                // но вызываются в finishPendingOperations не завершаясь. (приходит только информация, нужно стопать закрытие или нет)
+                // Сдедал правку, чтобы мы не ждали завершения пендинга от совместимости
+                if (!hasRegisterPendings) {
+                    item.removePending = (new Deferred()).callback();
+                }
                 item.removePending.addCallbacks(function() {
                     item.removePending = null;
                     pendingsFinishedCallback && pendingsFinishedCallback();

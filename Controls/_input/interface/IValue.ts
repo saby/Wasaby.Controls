@@ -24,6 +24,7 @@ export type ICallback<T> = (data: ICallbackData<T>) => IFieldData;
  * Интерфейс управления значением поля ввода.
  *
  * @interface Controls/_input/interface/IValue
+ * @author Журавлёв М.С.
  * @public
  */
 export interface IValueOptions<T> {
@@ -125,7 +126,8 @@ export interface IValueOptions<T> {
 }
 
 /**
- * @event Controls/_input/interface/IValue#valueChanged Происходит при изменении отображаемого значения контрола ввода.
+ * @name Controls/_input/interface/IValue#valueChanged 
+ * @event Происходит при изменении отображаемого значения контрола ввода.
  * @param {String} value Значение контрола ввода.
  * @param {String} displayValue Отображаемое значение контрола ввода.
  * @remark
@@ -166,7 +168,8 @@ export interface IValueOptions<T> {
  */
 
 /**
- * @event Controls/_input/interface/IValue#inputCompleted Происходит при завершении ввода. Завершение ввода - это контрол потерял фокус, или пользователь нажал "enter".
+ * @name Controls/_input/interface/IValue#inputCompleted 
+ * @event Происходит при завершении ввода. Завершение ввода — это контрол потерял фокус, или пользователь нажал клавишу "Enter".
  * @param {String} value Значение контрола ввода.
  * @param {String} displayValue Отображаемое значение контрола ввода.
  * @remark

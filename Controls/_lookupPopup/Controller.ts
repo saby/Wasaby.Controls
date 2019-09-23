@@ -5,6 +5,8 @@ import SelectorContext = require('Controls/_lookupPopup/__ControllerContext');
 import collection = require('Types/collection');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import chain = require('Types/chain');
+import {Model} from 'Types/entity';
+import {List, RecordSet} from 'Types/collection';
 
 /**
  *
@@ -130,8 +132,8 @@ var _private = {
       return items ? Utils.object.clone(items) : new collection.List();
    },
 
-   addItemToSelected: function(item, selectedItems, keyProperty) {
-      var index = selectedItems.getIndexByValue(keyProperty, item.get(keyProperty));
+   addItemToSelected(item: Model, selectedItems: List|RecordSet, keyProperty: string): void {
+      const index = selectedItems.getIndexByValue(keyProperty, item.get(keyProperty));
 
       if (index === -1) {
          selectedItems.add(item);
@@ -140,31 +142,31 @@ var _private = {
       }
    },
 
-   removeFromSelected: function(itemId, selectedItems, keyProperty) {
-      var index = selectedItems.getIndexByValue(keyProperty, itemId);
+   removeFromSelected(item: Model, selectedItems: List|RecordSet, keyProperty: string): void {
+      const index = selectedItems.getIndexByValue(keyProperty, item.get(keyProperty));
 
       if (index !== -1) {
          selectedItems.removeAt(index);
       }
    },
 
-   processSelectionResult: function(result, selectedItems, multiSelect) {
-      var i;
-      var initialSelection;
-      var resultSelection;
-      var keyProperty;
+   processSelectionResult(result, selectedItems: List|RecordSet, multiSelect: boolean, keyProp: string|undefined): void {
+      let i;
+      let initialSelection;
+      let resultSelection;
+      let keyProperty;
 
       if (result) {
          for (i in result) {
             if (result.hasOwnProperty(i) && (multiSelect !== false || result[i].selectCompleteInitiator)) {
                initialSelection = result[i].initialSelection;
                resultSelection = result[i].resultSelection;
-               keyProperty = result[i].keyProperty;
+               keyProperty = keyProp || result[i].keyProperty;
 
-               chain.factory(initialSelection).each(function(itemId) {
-                  _private.removeFromSelected(itemId, selectedItems, keyProperty);
+               chain.factory(initialSelection).each((item) => {
+                  _private.removeFromSelected(item, selectedItems, keyProperty);
                });
-               chain.factory(resultSelection).each(function(item) {
+               chain.factory(resultSelection).each((item) => {
                   _private.addItemToSelected(item, selectedItems, keyProperty);
                });
             }
@@ -205,7 +207,7 @@ var Controller = Control.extend({
                // то очистим список выбранных элементов и возьмем только запись из этого справочника
                self._selectedItems.clear();
             }
-            _private.processSelectionResult(result, self._selectedItems, multiSelect);
+            _private.processSelectionResult(result, self._selectedItems, multiSelect, self._options.keyProperty);
             selectCallback();
             self._selectionLoadDef = null;
             return result;

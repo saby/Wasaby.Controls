@@ -67,13 +67,16 @@ define([
                displayProperty: 'title'
             });
             assert.deepEqual(instance._header, [{
-               template: PathBack.default,
+					template: 'Controls/breadcrumbs:HeadingPathBack',
                templateOptions: {
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
                   backButtonStyle: undefined,
+                  showArrowOutsideOfBackButton: false,
+                  showActionButton: false,
                   backButtonCaption: 'second',
                   counterCaption: 2
                },
+               align: 'right',
                width: '100px',
                isBreadCrumbs: true
             }, {
@@ -156,13 +159,16 @@ define([
                displayProperty: 'title'
             });
             assert.deepEqual(instance._header, [{
-               template: PathBack.default,
+					template: 'Controls/breadcrumbs:HeadingPathBack',
                templateOptions: {
                   backButtonStyle: undefined,
+                  showArrowOutsideOfBackButton: false,
+                  showActionButton: false,
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
                   backButtonCaption: 'second',
                   counterCaption: 2
                },
+               align: 'right',
                width: '100px',
                isBreadCrumbs: true
             }, {

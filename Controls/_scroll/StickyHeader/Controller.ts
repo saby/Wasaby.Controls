@@ -106,11 +106,17 @@ class Component extends Control {
             return;
         }
         //TODO https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-        let container = (this._container && this._container.get) ? this._container.get(0) : this._container;
-        let index = this._headersStack[position].findIndex((headerId) => {
-            return this._headers[headerId].inst.getOffset(container, position) <= this._headers[id].inst.getOffset(container, position);
+        const container = (this._container && this._container.get) ? this._container.get(0) : this._container,
+            headersStack = this._headersStack[position];
+
+        // We are looking for the position of the first element whose offset is greater than the current one.
+        // Insert a new header at this position.
+        let index = headersStack.findIndex((headerId) => {
+            return this._headers[headerId].inst.getOffset(container, position) > this._headers[id].inst.getOffset(container, position);
         });
-        this._headersStack[position].splice(index + 1, 0, id);
+        index = index === -1 ? headersStack.length : index;
+        headersStack.splice(index, 0, id);
+
         this._updateTopBottom();
     }
 

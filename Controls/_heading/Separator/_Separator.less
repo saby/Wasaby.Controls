@@ -1,11 +1,6 @@
-.controls-HeaderSeparator_size_theme-@{themeName} {
-   width: @width-HeaderSeparator;
-   height: @height-HeaderSeparator;
-   padding-left: @spacing-HeaderSeparator_between_headerSeparator_Header;
-}
-//in ie click to svg not bubble without it
-.controls-HeaderSeparator__svg_click {
-   pointer-events: none;
+.controls-HeaderSeparator {
+   display: inline-block;
+   cursor: pointer;
 }
 
 .controls-HeaderSeparator__wrapper {
@@ -13,37 +8,31 @@
    align-items: center;
 }
 
-.controls-HeaderSeparator__wrapper:before {
-   content: '\200b';
+.controls-HeaderSeparator__arrow_theme-@{themeName} {
+   width: @width-HeaderSeparator;
+   height: @height-HeaderSeparator;
+   padding-left: @spacing-HeaderSeparator_between_headerSeparator_Header;
 }
 
-.controls-HeaderSeparator {
-   display: inline-block;
-   cursor: pointer;
-}
-
-.controls-HeaderSeparator__icon_style-secondary_theme-@{themeName} {
-   fill: @color_HeaderSeparator_secondary;
-}
-
-.controls-HeaderSeparator__icon_style-primary_theme-@{themeName} {
+.controls-HeaderSeparator__arrow_style-primary_theme-@{themeName} {
    fill: @color_HeaderSeparator_primary;
+   &:active {
+      fill: @color_HeaderSeparator_primary_hovered;
+   }
 }
 
-.controls-HeaderSeparator__icon_style-secondary_theme-@{themeName}:active {
-   fill: @color_HeaderSeparator_secondary_hovered;
-}
-
-.controls-HeaderSeparator__icon_style-primary_theme-@{themeName}:active {
-   fill: @color_HeaderSeparator_primary_hovered;
+.controls-HeaderSeparator__arrow_style-secondary_theme-@{themeName} {
+   fill: @color_HeaderSeparator_secondary;
+   &:active {
+      fill: @color_HeaderSeparator_secondary_hovered;
+   }
 }
 
 .ws-is-hover {
-   .controls-HeaderSeparator__icon_style-secondary_theme-@{themeName}:hover {
-      fill: @color_HeaderSeparator_secondary_hovered;
-   }
-
-   .controls-HeaderSeparator__icon_style-primary_theme-@{themeName}:hover {
+   .controls-HeaderSeparator__arrow_style-primary_theme-@{themeName}:hover {
       fill: @color_HeaderSeparator_primary_hovered;
+   }
+   .controls-HeaderSeparator__arrow_style-secondary_theme-@{themeName}:hover {
+      fill: @color_HeaderSeparator_secondary_hovered;
    }
 }

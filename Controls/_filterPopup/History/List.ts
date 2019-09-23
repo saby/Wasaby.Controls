@@ -12,7 +12,7 @@ import {Constants} from 'Controls/history';
 import {convertToFilterStructure, convertToSourceDataArray} from 'Controls/_filterPopup/converterFilterStructure';
 import 'css!theme?Controls/filterPopup';
 
-   var MAX_NUMBER_ITEMS = 5;
+var MAX_NUMBER_ITEMS = 5;
 
    const FILTER_STATUS = {
       FOR_ME: 0,
@@ -51,19 +51,18 @@ import 'css!theme?Controls/filterPopup';
          return textArr.join(', ');
       },
 
-      getResetValues: function(items) {
-         var result = {};
-         factory(items).each(function(item) {
-            result[_private.getItemId(item)] = getPropValue(item, 'resetValue');
-         });
-         return result;
-      },
+      mapByField: function(items: Array, field: string): object {
+         const result = {};
+         let value;
 
-      getCaptions: function(items) {
-         var result = {};
-         factory(items).each(function(item) {
-            result[_private.getItemId(item)] = getPropValue(item, 'caption');
+         factory(items).each((item) => {
+            value = getPropValue(item, field);
+
+            if (value !== undefined) {
+               result[_private.getItemId(item)] = getPropValue(item, field);
+            }
          });
+
          return result;
       },
 
@@ -109,7 +108,7 @@ import 'css!theme?Controls/filterPopup';
             let history = _private.getSource(historyId).getDataObject(item.get('ObjectData'));
             items = history.items || history;
          }
-         let captionsObject = _private.getCaptions(self._options.filterItems);
+         let captionsObject = _private.mapByField(self._options.filterItems, 'caption');
          items = factory(items).map((historyItem) => {
             historyItem.editable = historyItem.visibility;
             historyItem.caption = captionsObject[historyItem.id];
@@ -173,7 +172,9 @@ import 'css!theme?Controls/filterPopup';
                      record.set('linkText', linkText);
 
                      // convert items to old structure
-                     record.set('filter', convertToFilterStructure(record.get('filterPanelItems')));
+                     const filterPanelItems = record.get('filterPanelItems');
+                     record.set('filter', convertToFilterStructure(filterPanelItems));
+                     record.set('viewFilter', _private.mapByField(filterPanelItems, 'value'));
 
                      record.removeField('editedTextValue');
                      record.removeField('toSaveFields');
@@ -267,7 +268,7 @@ import 'css!theme?Controls/filterPopup';
       _getText: function(items, filterItems, historySource) {
          const itemsText = {};
          // the resetValue is not stored in history, we take it from the current filter items
-         const resetValues = _private.getResetValues(filterItems);
+         const resetValues = _private.mapByField(filterItems, 'resetValue');
 
          factory(items).each((item, index) => {
             let text = '';

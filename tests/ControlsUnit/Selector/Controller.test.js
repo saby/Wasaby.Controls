@@ -9,6 +9,7 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          items.add(new entity.Model({
             rawData: {
                id: i,
+               otherId: 'otherId-' + i,
                title: 'title-' + i
             },
             keyProperty: 'id'
@@ -53,8 +54,14 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
 
       it('removeFromSelected', function() {
          var selectedItems = getSelectedItems();
+         var itemToRemove = new entity.Model({
+            rawData: {
+               id: 0,
+               title: 'test'
+            }
+         });
 
-        lookupPopup.Controller._private.removeFromSelected(0, selectedItems, 'id');
+        lookupPopup.Controller._private.removeFromSelected(itemToRemove, selectedItems, 'id');
 
          assert.equal(selectedItems.getCount(), 4);
          assert.equal(selectedItems.at(0).get('id'), 1);
@@ -66,7 +73,7 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
                selectedItems = getSelectedItems(),
                newSelected = getSelectedItems(),
                result = {
-                  initialSelection: [0, 1, 2, 3, 4],
+                  initialSelection: getSelectedItems().clone(),
                   resultSelection: newSelected,
                   keyProperty: 'id'
                };
@@ -79,6 +86,13 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
             assert.equal(selectedItems.getCount(), 2);
             assert.equal(selectedItems.at(0).get('id'), 2);
             assert.equal(selectedItems.at(1).get('id'), 3);
+
+            selectedItems.clear();
+            lookupPopup.Controller._private.processSelectionResult([result], selectedItems, true, 'otherId');
+
+            assert.equal(selectedItems.getCount(), 2);
+            assert.equal(selectedItems.at(0).get('otherId'), 'otherId-2');
+            assert.equal(selectedItems.at(1).get('otherId'), 'otherId-3');
 
          });
 
