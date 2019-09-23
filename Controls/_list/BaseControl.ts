@@ -224,7 +224,7 @@ var _private = {
             //because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
             //otherwise empty template will shown
             if ((hasMoreDataDown || hasMoreDataUp) && self._needScrollCalculation) {
-                if (self._listViewModel.getCount()) {
+                if (self._listViewModel && self._listViewModel.getCount()) {
                     _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
                 } else {
                     _private.showIndicator(self);
