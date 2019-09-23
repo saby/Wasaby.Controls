@@ -278,6 +278,7 @@ define(
                      target: 'popupTarget',
                      templateOptions: {
                         items: recordForMenu,
+                        additionalProperty: 'additional',
                         itemTemplateProperty: 'itp',
                         groupTemplate: 'groupTemplate',
                         groupingKeyCallback: 'groupingKeyCallback'
