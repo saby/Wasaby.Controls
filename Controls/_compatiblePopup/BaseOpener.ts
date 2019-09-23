@@ -403,6 +403,10 @@ const BaseOpener = {
 
       cfg.componentOptions.catchFocus = cfg.hasOwnProperty('catchFocus') ? cfg.catchFocus : true;
 
+      if (cfg.iWantBeWS3) {
+         cfg.componentOptions.iWantBeWS3 = cfg.iWantBeWS3;
+      }
+
       if (cfg.onCloseHandler) {
          cfg.componentOptions.onCloseHandler = cfg.onCloseHandler;
       }
@@ -494,6 +498,10 @@ const BaseOpener = {
 
       if (cfg.hasOwnProperty('nativeEvent')) {
          newCfg.dialogOptions.nativeEvent = cfg.nativeEvent;
+      }
+
+      if (cfg.hasOwnProperty('iWantBeWS3')) {
+         newCfg.dialogOptions.iWantBeWS3 = cfg.iWantBeWS3;
       }
 
       // из новых преобразуем
