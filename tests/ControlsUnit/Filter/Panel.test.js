@@ -423,6 +423,54 @@ define(
             assert.deepEqual(filterPopup.DetailPanel._private.prepareItems(changeItems), resetItems);
          });
 
+         it('_private:prepareItems without resetValue', function() {
+            var changeItems = [
+                  {
+                     id: 'list',
+                     value: 1,
+                     visibility: true
+                  },
+                  {
+                     id: 'text',
+                     value: '123',
+                     visibility: true
+                  },
+                  {
+                     id: 'bool',
+                     value: false,
+                     visibility: true
+                  },
+                  {
+                     id: 'testObject',
+                     value: [],
+                     visibility: true
+                  }
+               ],
+               resetItems = [
+                  {
+                     id: 'list',
+                     value: 1,
+                     visibility: true
+                  },
+                  {
+                     id: 'text',
+                     value: '123',
+                     visibility: true
+                  },
+                  {
+                     id: 'bool',
+                     value: false,
+                     visibility: false
+                  },
+                  {
+                     id: 'testObject',
+                     value: [],
+                     visibility: false
+                  }
+               ];
+            assert.deepEqual(filterPopup.DetailPanel._private.prepareItems(changeItems), resetItems);
+         });
+
          it('_historyItemsChanged', function() {
             var panel = getFilterPanel(config);
             filterPopup.DetailPanel._private.loadHistoryItems = (self, historyId) => {assert.equal(historyId, 'TEST_PANEL_HISTORY_ID')};
