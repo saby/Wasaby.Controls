@@ -22,6 +22,7 @@ export interface IPopupOptions {
     modal?: Boolean;
     autofocus?: Boolean;
     className?: String;
+    _vdomOnOldPage?: Boolean;
 }
 
 /**
@@ -291,7 +292,7 @@ class Confirmation extends BaseOpener<IConfirmationOptions> {
      */
     protected open(templateOptions: IConfirmationOptions): Promise<boolean> {
         this._resultDef = new Deferred();
-        const popupOptions = Confirmation.getConfirmationConfig(templateOptions, this._closeHandler);
+        const popupOptions: IPopupOptions = Confirmation.getConfirmationConfig(templateOptions, this._closeHandler);
         super.open.call(this, popupOptions, POPUP_CONTROLLER);
         return this._resultDef;
     }
@@ -303,7 +304,7 @@ class Confirmation extends BaseOpener<IConfirmationOptions> {
     }
     static openPopup (templateOptions: IConfirmationOptions) : Promise<boolean>  {
         return new Promise((resolve) => {
-            const config = Confirmation.getConfirmationConfig(templateOptions, resolve);
+            const config: IPopupOptions = Confirmation.getConfirmationConfig(templateOptions, resolve);
             config._vdomOnOldPage = true;
             return BaseOpener.requireModules(config, POPUP_CONTROLLER).then((result) => {
                 BaseOpener.showDialog(result[0], config, result[1]);
