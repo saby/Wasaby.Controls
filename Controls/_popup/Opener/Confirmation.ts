@@ -18,7 +18,7 @@ export interface IConfirmationOptions {
 export interface IPopupOptions {
     template?: String | Function;
     zIndex?: Number;
-    templateOptions?: Object;
+    templateOptions?: IConfirmationOptions;
     modal?: Boolean;
     autofocus?: Boolean;
     className?: String;
@@ -222,7 +222,7 @@ class Confirmation extends BaseOpener<IConfirmationOptions> {
 
     private static getConfirmationConfig(templateOptions: IConfirmationOptions, closeHandler: Function): IPopupOptions {
         templateOptions.closeHandler = closeHandler;
-        const popupOptions = {
+        const popupOptions: IPopupOptions = {
             template: 'Controls/popupTemplate:ConfirmationDialog',
             modal: true,
             autofocus: templateOptions.autofocus, // TODO: в 700 безусловно без опции, для того, чтобы можно было работать с клавиатуры
@@ -289,7 +289,7 @@ class Confirmation extends BaseOpener<IConfirmationOptions> {
      * @remark
      * If you want use custom layout in the dialog you need to open popup via {@link dialog opener} using the basic template {@link ConfirmationTemplate}.
      */
-    protected open(templateOptions: object): object {
+    protected open(templateOptions: IConfirmationOptions): Promise<boolean> {
         this._resultDef = new Deferred();
         const popupOptions = Confirmation.getConfirmationConfig(templateOptions, this._closeHandler);
         super.open.call(this, popupOptions, POPUP_CONTROLLER);
@@ -301,7 +301,7 @@ class Confirmation extends BaseOpener<IConfirmationOptions> {
             _vdomOnOldPage: true // Open vdom popup in the old environment
         };
     }
-    static openPopup (templateOptions: object): object  {
+    static openPopup (templateOptions: IConfirmationOptions) : Promise<boolean>  {
         return new Promise((resolve) => {
             const config = Confirmation.getConfirmationConfig(templateOptions, resolve);
             config._vdomOnOldPage = true;
