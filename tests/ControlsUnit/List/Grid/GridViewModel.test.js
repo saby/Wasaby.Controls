@@ -1339,6 +1339,22 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isFalse(newGridModel.isDrawResults())
          });
 
+         it('isDrawResults if empty data', function() {
+            const newGridModel = new gridMod.GridViewModel({
+               keyProperty: 'id',
+               displayProperty: 'title',
+               header: gridHeader,
+               columns: gridColumns,
+               items: new collection.RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               }),
+               resultsPosition: 'top',
+               resultsVisibility: 'visible'
+            });
+            assert.isTrue(newGridModel.isDrawResults());
+         });
+
          it('is multiheader', function() {
 
             let gridViewModel = new gridMod.GridViewModel(cfg);
