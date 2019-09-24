@@ -62,7 +62,7 @@ var _private = {
     },
 
     updateActions: function(self, options, collectionChanged: boolean = false): void {
-        if (options.itemActions && options.itemActions.length) {
+        if (options.itemActionsProperty || options.itemActions && options.itemActions.length) {
             for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                 var
                     itemData = options.listModel.getCurrent(),
