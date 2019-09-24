@@ -6,6 +6,13 @@ define([
    'Controls/Application'
 ], function(Env, Application) {
    describe('Controls.Application2', function() {
+      const trueMobileIOS = Env.detection.isMobileIOS;
+
+      if (typeof window === 'undefined') {
+         Env.detection['test::isMobileIOS'] = true;
+      } else {
+         Env.detection.isMobileIOS = true;
+      }
 
       describe('popup logic', function() {
          it('not mobile', function () {
@@ -29,14 +36,7 @@ define([
          });
 
          it('ios', function () {
-            let ctrl = new Application({}),
-               oldIsMobileIOS = Env.detection.isMobileIOS;
-
-            if (typeof window === 'undefined') {
-               Env.detection['test::isMobileIOS'] = true;
-            } else {
-               Env.detection.isMobileIOS = true;
-            }
+            let ctrl = new Application({});
 
             ctrl._popupCreatedHandler();
             assert.equal(ctrl._scrollingClass, 'controls-Scroll_webkitOverflowScrollingAuto');
@@ -52,14 +52,13 @@ define([
             assert.equal(ctrl._scrollingClass, 'controls-Scroll_webkitOverflowScrollingAuto');
             ctrl._suggestStateChangedHandler(null, false);
             assert.equal(ctrl._scrollingClass, 'controls-Scroll_webkitOverflowScrollingTouch');
-
-
-            if (typeof window === 'undefined') {
-               Env.detection['test::isMobileIOS'] = undefined;
-            } else {
-               Env.detection.isMobileIOS = oldIsMobileIOS;
-            }
          });
       });
+
+      if (typeof window === 'undefined') {
+         Env.detection['test::isMobileIOS'] = undefined;
+      } else {
+         Env.detection.isMobileIOS = trueMobileIOS;
+      }
    });
 });
