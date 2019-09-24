@@ -12,10 +12,10 @@ var POPUP_CLASS_NAME = 'controls-Suggest__suggestionsContainer_popup';
 
 var _private = {
    openPopup: function(self, opener, options) {
+       // !!closeOnOutsideClick не добавлять, иначе саггест закрывается при клике на саггест
       opener.open({
          target: options.target,
          opener: self,
-         closeOnOutsideClick: true,
          actionOnScroll: detection.isMobileIOS ? 'none' : 'close',
          zIndex: getZIndex(self), // _vdomOnOldPage для слоя совместимости, уйдёт с удалением опции.
          resizeCallback: self._resizeCallback
