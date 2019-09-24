@@ -10,6 +10,7 @@
                         placeholder="{{_options.placeholder}}"
                         fontSize="{{_options.fontSize}}"
                         fontColorStyle="{{_options.fontColorStyle}}"
+                        borderStyle="{{_options.borderStyle}}"
                         on:mouseenter="_mouseEnterHandler()"
                         on:tagClick="_notifyHandler('tagClick')"
                         on:tagHover="_notifyHandler('tagHover')">
