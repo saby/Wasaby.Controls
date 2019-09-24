@@ -51,7 +51,6 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * @property {String} [item.icon] Определяет иконку элемента. {@link Controls/_interface/IIcon#icon Подробнее}
  * @property {String} [item.title] Определеяет текст элемента.
  * @property {Boolean} [item.showHeader] Определяет, будет ли отображаться шапка у выпадающего списка элемента.
- * @property {Boolean} [item.additional] Определяет, будет ли отображаться запись в меню отображаться как дополнительная.
  * @property {String} [item.tooltip] Текст подсказки, при наведении на элемент тулбара. {@link Controls/_interface/ITooltip#tooltip Подробнее}
  * @property {Number} [item.showType] Определяет, где будет отображаться элемент( 0 - только в меню,1 - в меню и в тулбаре, 2 - только в тулбаре)
  * @property {String} [item.buttonStyle] Определяет стиль отображения кнопки элемента.{@link Controls/_buttons/Button#buttonStyle Подробнее}
@@ -379,6 +378,43 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * </pre>
  */
 
+/**
+ * @name Controls/_toolbars/View#additionalProperty
+ * @cfg {String} Позволяет отобразить дополнительные элементы в меню.
+ * @example
+ * Дополнительные элементы конфигурируются с помощью опции additionalProperty и дополнительного свойства additional в объекте конфигурации элементов меню.
+ *<pre>
+ * <Controls.toolbars:View
+ *           keyProperty="key"
+ *           source="{{_source}}"
+ *           additionalProperty="additional"
+ * />
+ * </pre>
+ * <pre>
+ *    _source: new source.Memory({
+ *        keyProperty: 'key',
+ *        data: [
+ *        {
+ *           id: '1',
+ *           showType: 0,
+ *           icon: 'icon-Time',
+ *        },
+ *        {
+ *           id: '2',
+ *           showType: 0,
+ *           title: 'Moscow',
+ *        },
+ *        {
+ *           id: '3',
+ *           showType: 0,
+ *           title: 'St-Petersburg',
+ *           additional: true
+ *        }
+ *        ]
+ *    })
+ * </pre>
+ */
+
 var _private = {
     loadItems: function (instance, source) {
         var self = this;
@@ -473,7 +509,7 @@ var _private = {
             className: 'controls-Toolbar__popup__list_theme-' + self._options.theme + ' ' + (self._options.popupClassName || ''),
             templateOptions: {
                 items: self._menuItems,
-                additionalProperty: 'additional',
+                additionalProperty: self._options.additionalProperty,
                 itemTemplateProperty: self._options.itemTemplateProperty,
                 groupTemplate: self._options.groupTemplate,
                 groupingKeyCallback: self._options.groupingKeyCallback
