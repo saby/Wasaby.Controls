@@ -18,40 +18,41 @@
 
    /**
     * @name Controls/_dropdown/interface/IHeaderTemplate#headerTemplate
-    * @cfg {Function | String} Шаблон, который будет отображаться над списком.
+    * @cfg {Function | String} Шаблон отображения для шапки меню.
     * @default "Controls/dropdownPopup:Template"
     * @remark
-    * Для определения шаблона вызовите базовый шаблон - 'Controls/dropdownPopup:Template'.
-    * Шаблон должен быть помещен в компонент с помощью тега <ws:partial> с атрибутом "template".
-    * Базовый шаблон 'Controls/dropdownPopup:Template' по умолчанию будет отображать заголовок и значок, если они установлены.
-    * Можно изменить следующие параметры:
-    * <ul>
-    *     <li>caption - текст заголовка,</li>
-    *     <li>icon - икнока заголовка.</li>
-    * </ul>
+    * По умолчанию для отрисовки шапки меню используется базовый шаблон Controls/dropdownPopup:Template.
+    * Изменяя параметры базового шаблона вы можете задать собственное отображение шапки меню.
+    * Параметры шаблона:
+    * * caption — текст заголовка. Когда значение параметра не задано, оно наследуется из опции {@link Controls/_interface/ICaption#caption caption}.
+    * * icon — иконка. Когда значение параметра не задано, оно наследуется из опции {@link Controls/_interface/IIcon#icon icon}.
+    * * headContentTemplate — пользовательский контент шапки. Контентная опция. В области видимости доступны параметры caption и icon.
     * @example
-    * Меню с текстом заголовка - "Add".
-    * TMPL:
+    * Меню с текстом заголовка — "Add".
+    * * WML
     * <pre>
-    *    <Controls.Button.Menu
+    *    <Controls.dropdown:Button
     *          keyProperty="id"
     *          icon="icon-medium icon-AddButtonNew"
     *          source="{{_source)}}"
     *          tooltip="Add">
     *       <ws:headerTemplate>
-    *          <ws:partial template="Controls/dropdownPopup:Template" caption="Add"/>
+    *          <ws:partial template="Controls/dropdownPopup:Template" caption="Add" />
     *       </ws:headerTemplate>
-    *    </Controls.Button.Menu>
+    *    </Controls.dropdown:Button>
     * </pre>
-    * JS:
+    * * JavaScript
     * <pre>
-    *    this._source = new Memory ({
+    * _source: null,
+    * _beforeMount: function() {
+    *    this._source = new source.Memory ({
     *       data: [
-    *           { id: 1, title: 'Task in development' },
-    *           { id: 2, title: 'Error in development' }
+    *          { id: 1, title: 'Task in development' },
+    *          { id: 2, title: 'Error in development' }
     *       ],
     *       keyProperty: 'id'
     *    });
+    * }
     * </pre>
     */
 
