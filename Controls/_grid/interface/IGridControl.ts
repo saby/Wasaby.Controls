@@ -489,6 +489,14 @@
  */
 
 /**
+ * @name Controls/_grid/interface/IGridControl#resultsVisibility
+ * @cfg {String} Режим отображения строки итогов.
+ * @variant hasdata Строка итогов отображается при наличии более 1 записи в списке.
+ * @variant visible Строка итогов отображается всегда, вне зависимости от количества данных в списке.
+ * @default hasData
+ */
+
+/**
  * @name Controls/_grid/interface/IGridControl#showEditArrow
  * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке
  * <a href="/materials/demo-ws4-edit-arrow">Example</a>
