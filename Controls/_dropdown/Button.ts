@@ -6,6 +6,7 @@ import ActualApi from 'Controls/_buttons/ActualApi';
 
 /**
  * Кнопка с меню.
+ * Руководство разработчика {@link /doc/platform/developmentapl/interface-development/controls/dropdown-menu/ Меню и выпадающий список}.
  *
  * <a href="/materials/demo-ws4-button-menu">Демо-пример</a>.
  *
