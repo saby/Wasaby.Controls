@@ -269,12 +269,12 @@ define('Controls-demo/Buttons/Menu/Menu', [
                { id: 4, title: 'Hospital', icon: 'icon-small icon-Sick', group: '2' },
                { id: 5, title: 'Business trip', icon: 'icon-small icon-statusDeparted', group: '2' },
                { id: 6, title: 'Task', icon: 'icon-small icon-TFTask', group: '3', additional: true },
-               { id: 6, title: 'Incident', icon: 'icon-small icon-Alert', group: '3', additional: true },
-               { id: 6, title: 'Outfit', icon: 'icon-small icon-PermittedBuyers', group: '3', additional: true },
-               { id: 6, title: 'Project', icon: 'icon-small icon-Document', group: '3', additional: true },
-               { id: 6, title: 'Check', icon: 'icon-small icon-Statistics', group: '3', additional: true },
-               { id: 6, title: 'Meeting', icon: 'icon-small icon-Groups', group: '3', additional: true },
-               { id: 6, title: 'Treaties', icon: 'icon-small icon-Report', group: '3', additional: true }
+               { id: 7, title: 'Incident', icon: 'icon-small icon-Alert', group: '3', additional: true },
+               { id: 8, title: 'Outfit', icon: 'icon-small icon-PermittedBuyers', group: '3', additional: true },
+               { id: 9, title: 'Project', icon: 'icon-small icon-Document', group: '3', additional: true },
+               { id: 10, title: 'Check', icon: 'icon-small icon-Statistics', group: '3', additional: true },
+               { id: 11, title: 'Meeting', icon: 'icon-small icon-Groups', group: '3', additional: true },
+               { id: 12, title: 'Treaties', icon: 'icon-small icon-Report', group: '3', additional: true }
             ];
             this._multilevelHierarchyItems = [
                { id: 1, title: 'Task', '@parent': true, parent: null },

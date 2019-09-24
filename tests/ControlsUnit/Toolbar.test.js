@@ -263,6 +263,7 @@ define(
                      _options: {
                         theme: 'default',
                         size: 'size',
+                        additionalProperty: 'additional',
                         popupClassName: 'popupClassName',
                         itemTemplateProperty: 'itp',
                         groupTemplate: 'groupTemplate',
@@ -278,6 +279,7 @@ define(
                      target: 'popupTarget',
                      templateOptions: {
                         items: recordForMenu,
+                        additionalProperty: 'additional',
                         itemTemplateProperty: 'itp',
                         groupTemplate: 'groupTemplate',
                         groupingKeyCallback: 'groupingKeyCallback'
