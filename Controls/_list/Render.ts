@@ -27,7 +27,7 @@ export default class Render extends Control<IRenderOptions> {
         e: SyntheticEvent<MouseEvent> & { preventItemEvent?: boolean },
         item: CollectionItem<unknown>
     ): void {
-        if (!e.preventItemEvent) {
+        if (!e.preventItemEvent && !item.isEditing()) {
             this._notify('itemClick', [item.getContents(), e], { bubbling: true });
         }
     }

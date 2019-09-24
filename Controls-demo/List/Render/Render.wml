@@ -10,6 +10,7 @@
 
          name="listView"
          useNewModel="{{ true }}">
+         <ws:editingConfig toolbarVisibility="{{ true }}" />
          <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate">
                <ws:contentTemplate>
