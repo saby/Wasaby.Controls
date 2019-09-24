@@ -34,7 +34,6 @@
  * @includes PreviewerTemplate wml!Controls/_popup/Global/Global
  */
 
-import Confirmation = require('Controls/_popup/Opener/Confirmation');
 import Stack = require('Controls/_popup/Opener/Stack');
 import Edit = require('Controls/_popup/Opener/Edit');
 import Notification = require('Controls/_popup/Opener/Notification');
@@ -54,9 +53,9 @@ export {default as Global} from './_popup/Global';
 export {default as Dialog} from './_popup/Opener/Dialog';
 export {default as Infobox} from './_popup/Opener/InfoBox';
 export {default as Previewer} from './_popup/Opener/Previewer';
+export {default as Confirmation} from './_popup/Opener/Confirmation';
 
 export {
-    Confirmation,
     Stack,
     Edit,
     Notification,

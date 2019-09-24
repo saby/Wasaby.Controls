@@ -2,18 +2,7 @@ import * as BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import * as Deferred from 'Core/Deferred';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 
-import {IHrefOptions} from './interface/IHref';
-import {ITooltipOptions, ICaptionOptions,
-    IIconOptions,
-    IIconStyleOptions,
-    IIconSizeOptions,
-    IFontColorStyleOptions,
-    IFontSizeOptions,
-    IHeightOptions
-} from 'Controls/interface';
-
-export interface IButtonOptions extends IHrefOptions, ICaptionOptions, IIconOptions,
-    IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions {
+export interface IConfirmationOptions {
     type?: string;
     style?: string;
     size?: string;
@@ -22,7 +11,7 @@ export interface IButtonOptions extends IHrefOptions, ICaptionOptions, IIconOpti
     yesCaption?: string;
     noCaption?: string;
     cancelCaption?: string;
-    PrimaryAction?: string;
+    primaryAction?: string;
     okCaption?: string;
 }
 
@@ -200,8 +189,22 @@ export interface IButtonOptions extends IHrefOptions, ICaptionOptions, IIconOpti
 
 const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';
 
-const _private = {
-    getConfirmationConfig(templateOptions: object, closeHandler: Function): object {
+class Confirmation extends BaseOpener<IConfirmationOptions> {
+    private _resultDef: null;
+
+    protected _beforeMount(options: IConfirmationOptions): void {
+        this._closeHandler = this._closeHandler.bind(this);
+        super._beforeMount(options);
+    }
+
+    private _closeHandler(result): void {
+        if (this._resultDef) {
+            this._resultDef.callback(result);
+            this._resultDef = null;
+        }
+    }
+
+    private  getConfirmationConfig(templateOptions: object, closeHandler: Function): object {
         templateOptions.closeHandler = closeHandler;
         const popupOptions = {
             template: 'Controls/popupTemplate:ConfirmationDialog',
@@ -210,31 +213,14 @@ const _private = {
             className: 'controls-Confirmation_popup',
             templateOptions
         };
-        _private.compatibleOptions(popupOptions);
+        this.compatibleOptions(popupOptions);
         return popupOptions;
-    },
-    compatibleOptions(popupOptions: object): void {
+    }
+    private compatibleOptions(popupOptions: object): void {
         popupOptions.zIndex = popupOptions.zIndex || popupOptions.templateOptions.zIndex;
         if (!isNewEnvironment()) {
             // For the old page, set the zIndex manually
             popupOptions.zIndex = 5000;
-        }
-    }
-};
-
-class Confirmation extends BaseOpener {
-    private _resultDef: null;
-    private _openerResultHandler: null;
-
-    protected _beforeMount(opts) {
-        this._closeHandler = this._closeHandler.bind(this);
-        super._beforeMount(opts);
-    }
-
-    private _closeHandler(res): void {
-        if (this._resultDef) {
-            this._resultDef.callback(res);
-            this._resultDef = null;
         }
     }
 
@@ -294,12 +280,20 @@ class Confirmation extends BaseOpener {
      * @remark
      * If you want use custom layout in the dialog you need to open popup via {@link dialog opener} using the basic template {@link ConfirmationTemplate}.
      */
-    open(templateOptions: object): Promise<boolean> {
+    protected open(templateOptions: object): Promise<boolean> {
         this._resultDef = new Deferred();
-        const popupOptions = _private.getConfirmationConfig(templateOptions, this._closeHandler);
+        const popupOptions = this.getConfirmationConfig(templateOptions, this._closeHandler);
         super.open.call(this, popupOptions, POPUP_CONTROLLER);
         return this._resultDef;
     }
+
+    static getDefaultOptions(): object {
+        return {
+            _vdomOnOldPage: true // Open vdom popup in the old environment
+        };
+    }
+
+
 }
 
 /**
@@ -332,7 +326,7 @@ class Confirmation extends BaseOpener {
  */
 Confirmation.openPopup = (templateOptions: object) => {
     return new Promise((resolve) => {
-        const config = _private.getConfirmationConfig(templateOptions, resolve);
+        const config = this.getConfirmationConfig(templateOptions, resolve);
         config._vdomOnOldPage = true;
         return BaseOpener.requireModules(config, POPUP_CONTROLLER).then((result) => {
             BaseOpener.showDialog(result[0], config, result[1]);
@@ -340,13 +334,7 @@ Confirmation.openPopup = (templateOptions: object) => {
     });
 };
 
-Confirmation.getDefaultOptions = () => {
-    return {
-        _vdomOnOldPage: true // Open vdom popup in the old environment
-    };
-};
-
-export = Confirmation;
+export default Confirmation;
 
 /**
  * @typedef {Object} popupOptions
@@ -359,4 +347,5 @@ export = Confirmation;
  * @property {String} noCaption Текст кнопки отрицания.
  * @property {String} cancelCaption Текст кнопки отмены.
  * @property {String} okCaption Текст кнопки "принять".
+ * @property {String} primaryAction Определяет, какая кнопка будет активирована по нажатию ctrl+enter
  */
