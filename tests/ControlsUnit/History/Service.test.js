@@ -10,8 +10,15 @@ define(['Controls/history', 'Core/Deferred'], (history, Deferred) => {
 
          let queryDef = service.query();
          assert.isTrue(queryDef === loadDeferred);
-         //the same query on next call
-         assert.isTrue(service.query() === queryDef);
+
+         let nextQuery = service.query();
+         let loadData, expectedData = 'test';
+         service.saveHistory('testId', expectedData);
+         nextQuery.addCallback((data) => {
+            loadData = data;
+         });
+         loadDeferred.callback();
+         assert.equal(loadData, expectedData);
       });
 
    });
