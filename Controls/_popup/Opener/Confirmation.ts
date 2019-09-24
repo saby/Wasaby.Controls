@@ -149,7 +149,7 @@ export interface IConfirmationOptions {
 
 /**
  * @name Controls/_popup/Opener/Confirmation#cancelCaption
- * @cfg {String} Текс кнопки отмены
+ * @cfg {String} Текст кнопки отмены
  * @default Отмена
  */
 
@@ -203,8 +203,15 @@ class Confirmation extends BaseOpener<IConfirmationOptions> {
             this._resultDef = null;
         }
     }
+    private static compatibleOptions(popupOptions: object): void {
+        popupOptions.zIndex = popupOptions.zIndex || popupOptions.templateOptions.zIndex;
+        if (!isNewEnvironment()) {
+            // For the old page, set the zIndex manually
+            popupOptions.zIndex = 5000;
+        }
+    }
 
-    private  getConfirmationConfig(templateOptions: object, closeHandler: Function): object {
+    private static getConfirmationConfig(templateOptions: object, closeHandler: Function): object {
         templateOptions.closeHandler = closeHandler;
         const popupOptions = {
             template: 'Controls/popupTemplate:ConfirmationDialog',
@@ -213,15 +220,8 @@ class Confirmation extends BaseOpener<IConfirmationOptions> {
             className: 'controls-Confirmation_popup',
             templateOptions
         };
-        this.compatibleOptions(popupOptions);
+        Confirmation.compatibleOptions(popupOptions);
         return popupOptions;
-    }
-    private compatibleOptions(popupOptions: object): void {
-        popupOptions.zIndex = popupOptions.zIndex || popupOptions.templateOptions.zIndex;
-        if (!isNewEnvironment()) {
-            // For the old page, set the zIndex manually
-            popupOptions.zIndex = 5000;
-        }
     }
 
     /**
@@ -282,7 +282,7 @@ class Confirmation extends BaseOpener<IConfirmationOptions> {
      */
     protected open(templateOptions: object): Promise<boolean> {
         this._resultDef = new Deferred();
-        const popupOptions = this.getConfirmationConfig(templateOptions, this._closeHandler);
+        const popupOptions = Confirmation.getConfirmationConfig(templateOptions, this._closeHandler);
         super.open.call(this, popupOptions, POPUP_CONTROLLER);
         return this._resultDef;
     }
@@ -292,8 +292,15 @@ class Confirmation extends BaseOpener<IConfirmationOptions> {
             _vdomOnOldPage: true // Open vdom popup in the old environment
         };
     }
-
-
+    static openPopup (templateOptions: object): Promise<string>  {
+        return new Promise((resolve) => {
+            const config = Confirmation.getConfirmationConfig(templateOptions, resolve);
+            config._vdomOnOldPage = true;
+            return BaseOpener.requireModules(config, POPUP_CONTROLLER).then((result) => {
+                BaseOpener.showDialog(result[0], config, result[1]);
+            });
+        });
+    };
 }
 
 /**
@@ -324,15 +331,6 @@ class Confirmation extends BaseOpener<IConfirmationOptions> {
  *    }
  * </pre>
  */
-Confirmation.openPopup = (templateOptions: object) => {
-    return new Promise((resolve) => {
-        const config = this.getConfirmationConfig(templateOptions, resolve);
-        config._vdomOnOldPage = true;
-        return BaseOpener.requireModules(config, POPUP_CONTROLLER).then((result) => {
-            BaseOpener.showDialog(result[0], config, result[1]);
-        });
-    });
-};
 
 export default Confirmation;
 
