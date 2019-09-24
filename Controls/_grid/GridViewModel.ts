@@ -957,6 +957,9 @@ var
         },
 
         isDrawResults: function() {
+            if (this._options.resultsVisibility === 'visible') {
+                return true;
+            }
             const items = this.getItems();
             return items && items.getCount() > 1;
         },
