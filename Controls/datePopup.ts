@@ -13,6 +13,7 @@ import componentTmpl = require('wml!Controls/_datePopup/DatePopup');
 import headerTmpl = require('wml!Controls/_datePopup/header');
 import 'css!theme?Controls/datePopup';
 import {Controller as ManagerController} from 'Controls/popup';
+import {_scrollContext as ScrollData} from "./scroll";
 
 /**
  * Диалоговое окно, которое позволяет выбрать даты и периоды произвольной длительности.
@@ -449,6 +450,28 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _closeClick: function () {
         this._notify('close');
+    },
+    _getChildContext: function() {
+        return {
+            ScrollData: new ScrollData({pagingVisible: false})
+        };
+    },
+
+    // TODO Переделать по готовности задачи по доработке InputRender
+    //  https://online.sbis.ru/opendoc.html?guid=d4bdb7cc-c324-4b4b-bda5-db6f8a46bc60
+    _startValueFieldKeyUpHandler: function(event) {
+        // Move the focus only if the digit was pressed. Without this check, we see a bug in the following scenario.
+        // The cursor is in a different input field. Click tab. By pressing the focus goes to this input field.
+        // Release tab. Switches the focus in the field at the end of the period.
+        const key = parseInt(event.nativeEvent.key, 10);
+        if (!isNaN(key)) {
+             const startField = this._children.startValueField._container.querySelector('input');
+             const endField = this._children.endValueField._container.querySelector('input');
+             if (startField.selectionStart === this._mask.length) {
+                this._children.endValueField.activate();
+                endField.setSelectionRange(0, 0);
+             }
+        }
     }
 });
 

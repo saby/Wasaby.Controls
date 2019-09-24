@@ -105,10 +105,19 @@ var _private = {
 var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/SelectionController.prototype */{
     _template: template,
     _beforeMount: function (options) {
+        // todo Костыль, т.к. построение ListView зависит от SelectionController.
+        // Будет удалено при выполнении одного из пунктов:
+        // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
+        // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
+        const multiSelectReady = new Deferred();
+        if (options.multiSelectReadyCallback) {
+            options.multiSelectReadyCallback(multiSelectReady);
+        }
         var self = this;
         return _private.getMultiselection(options).addCallback(function (multiselectionInstance) {
             self._multiselection = multiselectionInstance;
             options.listModel.updateSelection(self._multiselection.getSelectedKeysForRender());
+            multiSelectReady.callback();
         });
     },
 

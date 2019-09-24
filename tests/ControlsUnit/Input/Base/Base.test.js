@@ -42,6 +42,27 @@ define(
             };
          });
 
+         describe('hasAutoFill', function() {
+            it('Yes', function() {
+               ctrl._beforeMount({
+                  value: ''
+               });
+               ctrl._getField().value = 'fill';
+               ctrl._afterMount();
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['valueChanged', ['fill', 'fill']]
+               }]);
+            });
+            it('No', function() {
+               ctrl._beforeMount({
+                  value: 'fill'
+               });
+               ctrl._getField().value = 'fill';
+               ctrl._afterMount();
+               assert.deepEqual(calls.length, 0);
+            });
+         });
          it('getDefault', function() {
             inputMod.Base.getOptionTypes();
             inputMod.Base.getDefaultOptions();
@@ -372,7 +393,7 @@ define(
                });
                ctrl._isIE = false;
 
-               _private.updateSelection(ctrl, {
+               ctrl._updateSelection({
                   start: 3,
                   end: 3
                });
@@ -388,7 +409,7 @@ define(
                });
                ctrl._isIE = true;
 
-               _private.updateSelection(ctrl, {
+               ctrl._updateSelection({
                   start: 3,
                   end: 3
                });

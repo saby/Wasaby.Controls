@@ -435,5 +435,30 @@ define([
             assert.equal(lookup._getContainer(), container[0]);
          }
       });
+
+      it('_crossClick', () => {
+         const lookup = new Lookup();
+         const sandbox = sinon.createSandbox();
+
+         sandbox.stub(lookup, '_notify');
+         sandbox.stub(lookup, 'activate');
+         lookup.saveOptions({
+            multiSelect: false
+         });
+
+         lookup._crossClick({}, 'testItem');
+
+         sinon.assert.calledWith(lookup._notify, 'removeItem');
+         assert.isTrue(lookup._needSetFocusInInput);
+
+         lookup.saveOptions({
+            multiSelect: true
+         });
+         lookup._needSetFocusInInput = false;
+         
+         lookup._crossClick({}, 'testItem');
+         sinon.assert.calledWith(lookup.activate, { enableScreenKeyboard: false });
+         assert.isFalse(lookup._needSetFocusInInput);
+      });
    });
 });

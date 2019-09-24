@@ -176,6 +176,7 @@ var CompoundArea = CompoundContainer.extend([
          self._fixIos();
          runDelayed(function() {
             self._childControl._notifyOnSizeChanged();
+            self._notifyManagerPopupCreated();
             runDelayed(function() {
                self._isPopupCreated = true;
                if (!self._waitReadyDeferred) { // Если попап создан и отработал getReadyDeferred - начинаем показ
@@ -186,6 +187,14 @@ var CompoundArea = CompoundContainer.extend([
       });
 
       return rebuildDeferred;
+   },
+
+   _notifyManagerPopupCreated(): void {
+      // Слой совместимости нотифаит событие manager'a за него, т.к. только он знает, когда будет построен старый шаблон
+      const item = this._getManagerConfig();
+      const popupItems = Controller.getContainer()._popupItems;
+      // Нотифай события делаю в следующий цикл синхронизации после выставления позиции окну.
+      this._notifyVDOM('managerPopupCreated', [item, popupItems], {bubbling: true});
    },
 
    _getDialogClasses: function() {
@@ -249,11 +258,8 @@ var CompoundArea = CompoundContainer.extend([
          this._waitClose = false;
          this.close();
       } else {
-         // Слой совместимости нотифаит событие manager'a за него, т.к. только он знает, когда будет построен старый шаблон
-         const item = this._getManagerConfig();
-         const popupItems = Controller.getContainer()._popupItems;
-         self._setCustomHeaderAsync();
-         runDelayed(function() {
+          self._setCustomHeaderAsync();
+          runDelayed(function() {
             // Перед автофокусировкой нужно проверить, что фокус уже не находится внутри
             // панели, т. к. этот callback вызывается уже после полного цикла создания
             // старой области, и фокус могли проставить с прикладной стороны (в onInit,
@@ -261,8 +267,6 @@ var CompoundArea = CompoundContainer.extend([
             // В таком случае, если мы позовем автофокус, мы можем сбить правильно поставленный
             // фокус.
 
-            // Нотифай события делаю в следующий цикл синхронизации после выставления позиции окну.
-            self._notifyVDOM('managerPopupCreated', [item, popupItems], {bubbling: true});
             if (
                self._options.catchFocus &&
                self._container.length &&
@@ -331,6 +335,11 @@ var CompoundArea = CompoundContainer.extend([
       self.__openerFromCfg = self._options.__openerFromCfg;
       self._parent = self._options.parent;
       self._logicParent = self._options.parent;
+
+      // Чтобы после применения makeInstanceCompatible BaseCompatible не стирал self._logicParent,
+      // нужно в оставить его в опциях в поле _logicParent, logicParent или parent.
+      // https://git.sbis.ru/sbis/ws/blob/rc-19.610/WS.Core/lib/Control/BaseCompatible/BaseCompatible.js#L956
+      self._options._logicParent = self._options.parent;
       self._options.parent = null;
 
       self._notifyVDOM = self._notify;
@@ -648,6 +657,11 @@ var CompoundArea = CompoundContainer.extend([
       const target = $(event.nativeEvent.relatedTarget);
       const compoundArea = target.closest('.controls-CompoundArea');
       let opener;
+
+      // don't check overlay
+      if (target.hasClass('controls-Container__overlay')) {
+         return true;
+      }
 
       if (compoundArea.length) {
          opener = compoundArea[0].controlNodes[0].control.getOpener();

@@ -187,10 +187,29 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
          assert.isTrue(filterChangedNotifyed);
          assert.isTrue(!filterLayout._changedFilterItems);
 
+         var sandbox = sinon.createSandbox();
+         var history = {
+            items: []
+         };
          filterLayout._filter = {testKey: 'testValue2', PrefetchSessionId: 'test'};
          filterLayout._options.prefetchParams = {};
+         sandbox.replace(Filter._private, 'getHistoryByItems', function() {
+            return history;
+         });
+
          filterLayout._itemsChanged(null, items);
          assert.deepEqual(filterLayout._filter, {testKey: 'testValue'});
+
+         history = {
+            items: [],
+            prefetchParams: {
+               PrefetchSessionId: 'test'
+            }
+         };
+         filterLayout._itemsChanged(null, items);
+         assert.deepEqual(filterLayout._filter, {testKey: 'testValue', PrefetchSessionId: 'test'});
+
+         sandbox.restore();
       });
 
       it('_private.getItemsByOption::array', function () {

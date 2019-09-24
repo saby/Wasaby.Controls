@@ -114,6 +114,7 @@ var _private = {
             sorting = cClone(cfg.sorting),
             navigation = cClone(cfg.navigation),
             resDeferred = new Deferred();
+        self._noDataBeforeReload = self._isMounted && (!self._listViewModel || !self._listViewModel.getCount());
         if (cfg.beforeReloadCallback) {
             // todo parameter cfg removed by task: https://online.sbis.ru/opendoc.html?guid=f5fb685f-30fb-4adc-bbfe-cb78a2e32af2
             cfg.beforeReloadCallback(filter, sorting, navigation, cfg);
@@ -1009,7 +1010,7 @@ var _private = {
         function closeMenu() {
             self._listViewModel.setActiveItem(null);
             self._listViewModel.setMenuState('hidden');
-            self._children.swipeControl.closeSwipe();
+            self._children.swipeControl && self._children.swipeControl.closeSwipe();
             self._menuIsShown = false;
             self._itemWithShownMenu = null;
             self._actionMenuIsShown = false;
@@ -1321,7 +1322,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _blockItemActionsByScroll: false,
 
     _needBottomPadding: false,
-    _emptyTemplateVisibility: true,
+    _noDataBeforeReload: null,
     _intertialScrolling: null,
     _checkLoadToDirectionTimeout: null,
 
@@ -1344,6 +1345,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      */
     _beforeMount: function(newOptions, context, receivedState: ReceivedState = {}) {
         var self = this;
+
+        // todo Костыль, т.к. построение ListView зависит от SelectionController.
+        // Будет удалено при выполнении одного из пунктов:
+        // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
+        // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
+        this._multiSelectReadyCallback = this._multiSelectReadyCallbackFn.bind(this);
 
         let receivedError = receivedState.errorConfig;
         let receivedData = receivedState.data;
@@ -1417,6 +1424,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         });
 
+    },
+
+    // todo Костыль, т.к. построение ListView зависит от SelectionController.
+    // Будет удалено при выполнении одного из пунктов:
+    // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
+    // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
+    _multiSelectReadyCallbackFn: function(multiSelectReady) {
+        this._multiSelectReady = multiSelectReady;
     },
 
     getViewModel: function() {
@@ -1753,8 +1768,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.clearReloadedMarks();
             this._itemReloaded = false;
         }
-
-        this._emptyTemplateVisibility = this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel, this._loadingState);
     },
 
     __onPagingArrowClick: function(e, arrow) {
@@ -1818,17 +1831,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    __needShowEmptyTemplate: function(emptyTemplate: Function | null, listViewModel: ListViewModel, loadingState: LoadingState): boolean {
-        const newEmptyTemplateVisibility = emptyTemplate &&
-                                           !listViewModel.getCount() && !listViewModel.getEditingItemData() &&
-                                           (!loadingState || loadingState === 'all');
-
-        // TODO: KINGO
-        // Загружаются данные по скролу, первые несколько страниц оказываются пустыми (как в реестре контакы),
-        // в этот момент вызывают перезагрузку реестра (например поиском или фильтрацией)
-        // и мы не должны показывать в этом случае заглушку, что нет данных,
-        // пока реестр не загрузится
-        return newEmptyTemplateVisibility && (this._emptyTemplateVisibility || !loadingState);
+    __needShowEmptyTemplate: function(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
+        // Described in this document: https://docs.google.com/spreadsheets/d/1fuX3e__eRHulaUxU-9bXHcmY9zgBWQiXTmwsY32UcsE
+        const noData = !listViewModel.getCount();
+        const noEdit = !listViewModel.getEditingItemData();
+        const isLoading = this._sourceController && this._sourceController.isLoading();
+        const hasMore = this._sourceController && (this._sourceController.hasMoreData('down') || this._sourceController.hasMoreData('up'));
+        const noDataBeforeReload = this._noDataBeforeReload;
+        return emptyTemplate && noEdit && (isLoading || hasMore ? noData && noDataBeforeReload : noData);
     },
 
     _onCheckBoxClick: function(e, key, status) {
@@ -2020,6 +2030,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
             selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
+            selection.recursive = false;
             getItemsBySelection(selection, this._options.source, this._listViewModel.getItems(), this._options.filter).addCallback(function(items) {
                 const dragKeyPosition = items.indexOf(itemData.key);
                 // If dragged item is in the list, but it's not the first one, move

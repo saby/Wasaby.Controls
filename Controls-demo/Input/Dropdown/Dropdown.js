@@ -37,6 +37,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _groupItems: null,
       _groupTextItems: null,
       _groupHierarchyItems: null,
+      _oneItem: null,
       _selectedKeysSimple: null,
       _selectedKeysSub: null,
       _selectedKeysHierarchy: null,
@@ -61,12 +62,18 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _selectedKeysGroup: null,
       _selectedKeysGroupText: null,
       _selectedKeysGroupHierarchy: null,
+      _selectedKeyOneItem: null,
+      _selectedKeysOneEmpty: null,
+
 
       _beforeMount: function() {
          this._simpleItems = [
             {id: 1, title: 'All directions'},
             {id: 2, title: 'Incoming'},
             {id: 3, title: 'Outgoing'}
+         ];
+         this._oneItem = [
+            {id: 1, title: 'All directions'}
          ];
 
          this._subItems = [
@@ -269,6 +276,8 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          this._selectedKeysGroup = [1];
          this._selectedKeysGroupText = [1];
          this._selectedKeysGroupHierarchy = [1];
+         this._selectedKeyOneItem = [1];
+         this._selectedKeysOneEmpty = [1];
       },
       _createMemory: function(items) {
          return new source.Memory({

@@ -108,7 +108,8 @@ var _private = {
       var config = {
          adapter: new entity.adapter.Sbis()
       };
-      var maxLength = self.historySource._recent - history.pinned.getCount() - 1;
+      let pinnedCount = self.historySource._pinned !== false ? history.pinned.getCount() : 0;
+      var maxLength = self.historySource._recent - pinnedCount - 1;
       var currentCount = 0;
       var item, rawData, isPinned;
 
@@ -215,14 +216,13 @@ var _private = {
    },
 
    findItem: function (self, items, data) {
-      var myself = this;
       var item = null;
       var objectData;
-      var deserialize = myself.getSerialize(self).deserialize;
+      var serialize = _private.getSerialize().serialize;
 
       items.forEach(function (element) {
          objectData = element.get('ObjectData');
-         if (objectData && isEqual(JSON.parse(objectData, deserialize), data)) {
+         if (objectData && isEqual(objectData, JSON.stringify(data, serialize))) {
             item = element;
          }
       });

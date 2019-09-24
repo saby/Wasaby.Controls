@@ -104,7 +104,21 @@ define(
             assert.strictEqual(text, 'Запись 6');
          });
 
-         it('dataLoadCallback empty items', () => {
+         it('_dataLoadCallback', () => {
+            let ddl = getDropdown(config);
+            ddl._dataLoadCallback(new collection.RecordSet({
+               rawData: [1, 2, 3]
+            }));
+            assert.equal(ddl._countItems, 3);
+
+            ddl._options.emptyText = 'empty text';
+            ddl._dataLoadCallback(new collection.RecordSet({
+               rawData: [1, 2, 3]
+            }));
+            assert.equal(ddl._countItems, 4);
+         });
+
+         it('_setText empty items', () => {
             let ddl = getDropdown(config);
             ddl._setText([]);
             assert.equal(ddl._text, '');

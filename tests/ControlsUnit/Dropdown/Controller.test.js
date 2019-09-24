@@ -66,8 +66,8 @@ define(
          };
 
          let configLazyLoad = {
-            lazyItemsLoad: true,
-            selectedKeys: '[2]',
+            lazyItemsLoading: true,
+            selectedKeys: [2],
             keyProperty: 'id',
             source: new sourceLib.Memory({
                keyProperty: 'id',
@@ -269,7 +269,7 @@ define(
             };
             return new Promise((resolve) => {
                dropdownController._beforeUpdate({
-                  selectedKeys: '[2]',
+                  selectedKeys: [2],
                   keyProperty: 'id',
                   source: new sourceLib.Memory({
                      keyProperty: 'id',
@@ -305,7 +305,7 @@ define(
             };
             return new Promise((resolve) => {
                dropdownController._beforeUpdate({
-                  selectedKeys: '[2]',
+                  selectedKeys: [2],
                   keyProperty: 'id',
                   source: new sourceLib.Memory({
                      keyProperty: 'id',
@@ -454,8 +454,8 @@ define(
                }
             };
             dropdownController._beforeUpdate({
-               lazyItemsLoad: true,
-               selectedKeys: '[2]',
+               lazyItemsLoading: true,
+               selectedKeys: [2],
                keyProperty: 'id',
                source: new sourceLib.Memory({
                   keyProperty: 'id',
@@ -467,8 +467,8 @@ define(
 
             opened = true;
             dropdownController._beforeUpdate({
-               lazyItemsLoad: true,
-               selectedKeys: '[2]',
+               lazyItemsLoading: true,
+               selectedKeys: [2],
                keyProperty: 'id',
                source: new sourceLib.Memory({
                   keyProperty: 'id',
@@ -489,7 +489,7 @@ define(
             };
             dropdownController._items = itemsRecords;
             dropdownController._beforeUpdate({
-               selectedKeys: '[6]',
+               selectedKeys: [6],
                keyProperty: 'id',
                filter: config.filter,
                selectedItemsChangedCallback: selectedItemsChangedCallback

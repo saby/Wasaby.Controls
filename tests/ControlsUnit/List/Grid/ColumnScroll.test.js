@@ -8,6 +8,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             items: {
                getCount: () => 1
             },
+            header: [{}, {}, {}],
             multiSelectVisibility: 'visible',
             stickyColumnsCount: 1,
             listModel: {
@@ -139,6 +140,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                items: {
                   getCount: () => 1
                },
+               header: [{}, {}, {}],
                multiSelectVisibility: 'visible',
                stickyColumnsCount: 1,
                columnScrollStartPosition: 'end',

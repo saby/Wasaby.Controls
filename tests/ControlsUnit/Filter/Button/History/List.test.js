@@ -126,20 +126,47 @@ define(
             });
          });
 
-         it('_private::getResetValues', function() {
-            var filterItems = [
-               {id: 'period', value: [2], resetValue: [1], textValue: 'Today'},
-               {id: 'sender', value: '', resetValue: 'test_sender', textValue: ''},
-               {id: 'author', value: 'Ivanov K.K.', resetValue: true, textValue: 'Ivanov K.K.', visibility: true},
-               {id: 'responsible', value: '', resetValue: '', textValue: 'Petrov T.T.', visibility: false}
-            ];
-            var resetValues = List._private.getResetValues(filterItems);
-            assert.deepEqual(resetValues, {
-               'period': [1],
-               'sender': 'test_sender',
-               'author': true,
-               'responsible': ''
+         describe('_private::mapByField', function() {
+
+            it('map by resetValues', function() {
+               var filterItems = [
+                  {id: 'period', value: [2], resetValue: [1], textValue: 'Today'},
+                  {id: 'sender', value: '', resetValue: 'test_sender', textValue: ''},
+                  {id: 'author', value: 'Ivanov K.K.', resetValue: true, textValue: 'Ivanov K.K.', visibility: true},
+                  {id: 'responsible', value: '', resetValue: '', textValue: 'Petrov T.T.', visibility: false}
+               ];
+               var resetValues = List._private.mapByField(filterItems, 'resetValue');
+               assert.deepEqual(resetValues, {
+                  'period': [1],
+                  'sender': 'test_sender',
+                  'author': true,
+                  'responsible': ''
+               });
             });
+
+            it('map by value', function() {
+               var byValue = List._private.mapByField(items1, 'value');
+               var result = {
+                  period: [3],
+                  state: [1],
+                  limit: [1],
+                  sender: '',
+                  author: 'Ivanov K.K.',
+                  responsible: '',
+                  tagging: '',
+                  operation: '',
+                  group: [1],
+                  unread: true,
+                  loose: true,
+                  own: [2],
+                  'our organisation': '',
+                  document: '',
+                  activity: [1]
+               };
+
+               assert.deepEqual(byValue, result);
+            });
+
          });
 
 

@@ -224,6 +224,9 @@ var
             if (this._options.resultsTemplate !== newCfg.resultsTemplate) {
                 this._resultsTemplate = newCfg.resultsTemplate || DefaultResultsTemplate;
             }
+            if (this._options.header && this._options.items === null && newCfg.items) {
+               this._isHeaderChanged = true;
+            }
         },
 
         _afterUpdate() {
@@ -298,7 +301,7 @@ var
                     `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`
                     )
                     const height = curEl.offsetHeight;
-                    const offset = Math.abs(curEl.offsetTop - container.offsetTop);
+                    const offset = curEl.offsetTop;
                     return {
                         ...cur,
                         offsetTop: offset,
@@ -306,7 +309,7 @@ var
                     };
                 }
                 const curElHeight = stickyHeaderCells[i].offsetHeight
-                if (curElHeight > resultOffset) {
+                if (curElHeight > resultOffset && !cur.isBreadCrumbs) {
                     resultOffset = curElHeight;
                 }
                 return {

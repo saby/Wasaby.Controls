@@ -4,8 +4,6 @@
 import BaseControl = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/History/List');
 import Utils = require('Types/util');
-import ParallelDeferred = require('Core/ParallelDeferred');
-import Deferred = require('Core/Deferred');
 import {isEqual} from 'Types/object';
 import {HistoryUtils} from 'Controls/filter';
 import {Model} from 'Types/entity';
@@ -53,19 +51,18 @@ var MAX_NUMBER_ITEMS = 5;
          return textArr.join(', ');
       },
 
-      getResetValues: function(items) {
-         var result = {};
-         factory(items).each(function(item) {
-            result[_private.getItemId(item)] = getPropValue(item, 'resetValue');
-         });
-         return result;
-      },
+      mapByField: function(items: Array, field: string): object {
+         const result = {};
+         let value;
 
-      getCaptions: function(items) {
-         var result = {};
-         factory(items).each(function(item) {
-            result[_private.getItemId(item)] = getPropValue(item, 'caption');
+         factory(items).each((item) => {
+            value = getPropValue(item, field);
+
+            if (value !== undefined) {
+               result[_private.getItemId(item)] = getPropValue(item, field);
+            }
          });
+
          return result;
       },
 
@@ -81,15 +78,14 @@ var MAX_NUMBER_ITEMS = 5;
          }
       },
 
-      removeRecord: function(self, item, record) {
+      removeRecord: function(self, item, record, needSave?) {
          let storage = self._historyStorage;
          if (item.get('data') && item.get('data').get('globalParams')) {
             storage = self._historyGlobalStorage;
          }
          let recordIndex = storage.getIndexByValue('id', item.get('id'));
          if (recordIndex !== -1) {
-            // if globalParams have changed, then we need to re-save the item
-            storage.removeAt(recordIndex, record.get('globalParams') !== item.get('data').get('globalParams'));
+            storage.removeAt(recordIndex, needSave);
          }
       },
 
@@ -103,26 +99,6 @@ var MAX_NUMBER_ITEMS = 5;
          record.set('filterPanelItems', historyItems);
       },
 
-      loadFavoriteItems: function(self, HistoryStorage, historyId) {
-         let pDef = new ParallelDeferred();
-         self._historyGlobalStorage = new HistoryStorage({
-            historyId: historyId,
-            isGlobalUserConfig: true
-         });
-         self._historyStorage = new HistoryStorage({
-            historyId: historyId
-         });
-         pDef.push(self._historyStorage.getHistory(true));
-         pDef.push(self._historyGlobalStorage.getHistory(true));
-         return pDef.done().getResult().addCallback((items) => {
-            self._favoriteList = items[0].clone();
-            self._favoriteList.prepend(items[1]);
-            _private.convertToItems(self._favoriteList);
-            self._historyCount = Constants.MAX_HISTORY - self._favoriteList.getCount();
-            return items;
-         });
-      },
-
       getFavoriteDialogRecord: function(self, item, historyId, savedTextValue) {
          let editItem = item.get('data');
          let items;
@@ -132,7 +108,7 @@ var MAX_NUMBER_ITEMS = 5;
             let history = _private.getSource(historyId).getDataObject(item.get('ObjectData'));
             items = history.items || history;
          }
-         let captionsObject = _private.getCaptions(self._options.filterItems);
+         let captionsObject = _private.mapByField(self._options.filterItems, 'caption');
          items = factory(items).map((historyItem) => {
             historyItem.editable = historyItem.visibility;
             historyItem.caption = captionsObject[historyItem.id];
@@ -196,13 +172,14 @@ var MAX_NUMBER_ITEMS = 5;
                      record.set('linkText', linkText);
 
                      // convert items to old structure
-                     record.set('filter', convertToFilterStructure(record.get('filterPanelItems')));
+                     const filterPanelItems = record.get('filterPanelItems');
+                     record.set('filter', convertToFilterStructure(filterPanelItems));
+                     record.set('viewFilter', _private.mapByField(filterPanelItems, 'value'));
 
                      record.removeField('editedTextValue');
                      record.removeField('toSaveFields');
                      record.removeField('filterPanelItems');
-
-                     _private.removeRecord(self, item, record);
+                     _private.removeRecord(self, item, record, isFavorite && record.get('globalParams') !== editItemData.get('globalParams'));
 
                      if (record.get('globalParams')) {
                         self._historyGlobalStorage.prepend(record);
@@ -241,14 +218,11 @@ var MAX_NUMBER_ITEMS = 5;
             this._itemsText = this._getText(options.items, options.filterItems, _private.getSource(options.historyId));
          }
          if (options.saveMode === 'favorite') {
-            let self = this;
-            let loadDef = new Deferred();
-            require(['SBIS3.CONTROLS/History/HistoryList'], (HistoryStorage) => {
-               _private.loadFavoriteItems(self, HistoryStorage, options.historyId).addCallback(() => {
-                  loadDef.callback();
-               });
-            });
-            return loadDef;
+             this._favoriteList = options.favoriteItems;
+             this._historyStorage = options.historyStorage;
+             this._historyGlobalStorage = options.historyGlobalStorage;
+             _private.convertToItems(this._favoriteList);
+             this._historyCount = Constants.MAX_HISTORY_REPORTS - this._favoriteList.getCount();
          }
       },
 
@@ -258,7 +232,7 @@ var MAX_NUMBER_ITEMS = 5;
             this._itemsText = this._getText(newOptions.items, newOptions.filterItems, _private.getSource(newOptions.historyId));
          }
          if (newOptions.saveMode === 'favorite') {
-            this._historyCount = Constants.MAX_HISTORY - this._favoriteList.getCount();
+            this._historyCount = Constants.MAX_HISTORY_REPORTS - this._favoriteList.getCount();
          }
       },
 
@@ -294,7 +268,7 @@ var MAX_NUMBER_ITEMS = 5;
       _getText: function(items, filterItems, historySource) {
          const itemsText = {};
          // the resetValue is not stored in history, we take it from the current filter items
-         const resetValues = _private.getResetValues(filterItems);
+         const resetValues = _private.mapByField(filterItems, 'resetValue');
 
          factory(items).each((item, index) => {
             let text = '';

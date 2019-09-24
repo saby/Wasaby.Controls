@@ -55,10 +55,10 @@ var _private = {
            selectedItems.push(self._items.getRecordById(null));
          }
       } else {
-         chain.factory(self._items).each(function (item) {
+         chain.factory(selectedKeys).each(function (key) {
             // fill the array of selected items from the array of selected keys
-            if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
-               selectedItems.push(item);
+            if (self._items.getRecordById(key)) {
+               selectedItems.push(self._items.getRecordById(key));
             }
          });
       }
@@ -295,7 +295,7 @@ var _Controller = Control.extend({
    _beforeMount: function (options, context, receivedState) {
       this._onResult = _private.onResult.bind(this);
       _private.setHandlers(this, options);
-      if (!options.lazyItemsLoad) {
+      if (!options.lazyItemsLoading) {
          if (receivedState) {
             let self = this;
             this._setItems(receivedState);
@@ -327,7 +327,7 @@ var _Controller = Control.extend({
          !isEqual(newOptions.filter, this._options.filter)) {
          this._source = null;
          this._sourceController = null;
-         if (newOptions.lazyItemsLoad && !this._children.DropdownOpener.isOpened()) {
+         if (newOptions.lazyItemsLoading && !this._children.DropdownOpener.isOpened()) {
             /* source changed, items is not actual now */
             this._setItems(null);
          } else {

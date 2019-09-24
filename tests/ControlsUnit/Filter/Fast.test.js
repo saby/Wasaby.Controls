@@ -337,7 +337,20 @@ define(
                sourceController = fastData._configs[0]._sourceController;
 
                filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0);
-               assert.isFalse(!!sourceController.isLoading());
+               assert.isFalse(sourceController === fastData._configs[0]._sourceController);
+               resolve();
+            });
+         });
+
+         it('reload call while loading', function() {
+            return new Promise(function(resolve) {
+               let isCanceled = false;
+               fastData._loadDeferred = new Deferred({
+                  cancelCallback: () => {isCanceled = true}
+               });
+
+               filterMod.Fast._private.reload(fastData);
+               assert.isTrue(isCanceled);
                resolve();
             });
          });

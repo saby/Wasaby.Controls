@@ -2,7 +2,6 @@ import Control = require('Core/Control');
 import tmpl = require('wml!Controls/_LoadingIndicator/LoadingIndicator');
 import randomId = require('Core/helpers/Number/randomId');
 import collection = require('Types/collection');
-import Env = require('Env/Env');
 import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
 
 /**
@@ -437,7 +436,7 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         clearTimeout(this.delayTimeout);
         this._updateZIndex(config);
         if (visible) {
-            this._toggleOverlay(true, config);
+            this._toggleOverlayAsync(true, config);
             if (force) {
                 this._toggleIndicatorVisible(true, config);
             } else {
@@ -452,17 +451,36 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
             // if we dont't have indicator in stack, then hide overlay
             if (this._stack.getCount() === 0) {
                 this._toggleIndicatorVisible(false);
-                this._toggleOverlay(false, {});
+                this._toggleOverlayAsync(false, {});
             }
         }
         this._forceUpdate();
     },
+    _toggleOverlayAsync(toggle: boolean, config) {
+        // контролы, которые при ховере показывают окно, теряют свой ховер при показе оверлея,
+        // что влечет за собой вызов обработчиков на mouseout + визуально дергается ховер таргета.
+        // Делаю небольшую задержку, если окно не имеет в себе асинхронного кода, то оно успеет показаться раньше
+        // чем покажется оверлей. Актуально для инфобокса, превьюера и выпадающего списка.
+        // Увеличил до 100мс, за меньшее время не во всех браузерах успевает отрсиоваться окно даже без асинхронных фаз
+        this._clearOverlayTimerId();
+        const delay = Math.min(this._getDelay(config), 100);
+        this._toggleOverlayTimerId = setTimeout(() => {
+            this._toggleOverlay(toggle, config);
+        }, delay);
+    },
     _toggleOverlay(toggle: boolean, config): void {
         this._isOverlayVisible = toggle && config.overlay !== 'none';
+        this._forceUpdate();
+    },
+    _clearOverlayTimerId() {
+        if (this._toggleOverlayTimerId) {
+            clearTimeout(this._toggleOverlayTimerId);
+        }
     },
 
     _toggleIndicatorVisible(toggle: boolean, config?: object): void {
         if (toggle) {
+            this._clearOverlayTimerId();
             this._isMessageVisible = true;
             this._isOverlayVisible = true;
             this._updateProperties(config);

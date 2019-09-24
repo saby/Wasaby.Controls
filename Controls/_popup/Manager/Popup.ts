@@ -1,7 +1,6 @@
 import * as Env from 'Env/Env';
-import {debounce} from 'Types/function';
+import {debounce, delay as runDelayed} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {delay as runDelayed} from 'Types/function';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 
 import * as template from 'wml!Controls/_popup/Manager/Popup';
@@ -191,11 +190,6 @@ class Popup extends Control<IPopupOptions> {
 
     protected _controlResize(): void {
         this._notify('popupControlResize', [this._options.id], {bubbling: true});
-
-        //toDO Временное решение, выписана задача https://online.sbis.ru/opendoc.html?guid=79cdc24c-cf4c-45da-97b4-7353540a2b1b
-        if (this._options.resizeCallback instanceof Function) {
-            this._options.resizeCallback();
-        }
     }
 
     /**
@@ -205,14 +199,6 @@ class Popup extends Control<IPopupOptions> {
     protected _sendResult(event: SyntheticEvent<Event>, ...args: any[]): void {
         const popupResultArgs = [this._options.id].concat(args);
         this._notify('popupResult', popupResultArgs, {bubbling: true});
-    }
-
-    protected _swipeHandler(event: SyntheticEvent<TouchEvent>): void {
-        // close popup by swipe only for vdom, cause ws3 controls use differ system of swipe,
-        // we can't stop it on vdom controls.
-        if (event.nativeEvent.direction === 'right' && !this._options.isCompoundTemplate) {
-            this._close();
-        }
     }
 
     /**

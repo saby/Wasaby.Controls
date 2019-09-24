@@ -5,7 +5,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import clearRecordsTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/clearRecordsTemplate');
 import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/showSelectorTemplate');
 import {isEqual} from 'Types/object';
-import {constants, IoC} from 'Env/Env';
+import {constants, detection, IoC} from 'Env/Env';
 
 
 const KEY_CODE_F2 = 113;
@@ -31,9 +31,9 @@ var _private = {
         }
     },
 
-    activate: function(self) {
+    activate: function(self, enableScreenKeyboard = true) {
         if (self._options.multiSelect) {
-            self.activate({enableScreenKeyboard: true});
+            self.activate({enableScreenKeyboard: enableScreenKeyboard});
         } else {
             // activate method is focusing input.
             // for lookup with multiSelect: false input will be hidden after select item,
@@ -121,6 +121,15 @@ var BaseLookupView = Control.extend({
             /* focus can be moved in choose event */
             if (this._active) {
                 this.activate();
+
+                // На айпаде иногда курсор не восстанавливается в начало поля ввода когда выборка становится пустой
+                // чтобы это пофиксить нужно позвать рекалк стилей, но также там имеется оптимизация, которая
+                // не проводит рекалк, если при выполнении синхронного кода, начальное и конечное состояние стилей
+                // не отличается, поэтому нужно восстановить исходный вид асинхронно
+                if (detection.isMobileIOS) {
+                    this._getContainer().style.transform = 'translate(1px)';
+                    setTimeout(() => this._getContainer().style.transform = '', 0);
+                }
             }
         }
     },
@@ -139,12 +148,11 @@ var BaseLookupView = Control.extend({
     },
 
     _crossClick: function (event, item) {
-        this._notify('removeItem', [item]);
-
-        /* move focus to input after remove, because focus will be lost after removing dom element */
+        /* move focus to input, because focus will be lost after removing dom element */
         if (!this._infoboxOpened) {
-            _private.activate(this);
+            _private.activate(this, false);
         }
+        this._notify('removeItem', [item]);
     },
 
     _getFieldWrapperWidth: function (recount) {

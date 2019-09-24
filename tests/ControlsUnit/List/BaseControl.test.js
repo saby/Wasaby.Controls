@@ -1725,7 +1725,7 @@ define([
             },
             viewName: 'Controls/List/ListView',
             source: source,
-            emptyTemplate: null
+            emptyTemplate: {}
          };
 
          let baseControl = new lists.BaseControl(baseControlOptions);
@@ -1733,29 +1733,36 @@ define([
 
          await baseControl._beforeMount(baseControlOptions);
 
-         assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
-         assert.isTrue(baseControl._emptyTemplateVisibility);
-         baseControl._emptyTemplateVisibility = false;
+         assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
 
-         baseControl._listViewModel.getItems().clear();
-         baseControl._options.emptyTemplate = {};
-         assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
-         assert.isFalse(baseControl._emptyTemplateVisibility);
-         baseControl._emptyTemplateVisibility = true;
+         baseControl._listViewModel.getCount = function() {
+            return 0;
+         };
 
-         baseControl._loadingState = 'down';
-         assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
-         assert.isTrue(baseControl._emptyTemplateVisibility);
-         baseControl._emptyTemplateVisibility = false;
+         assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
 
-         baseControl._loadingState = 'all';
-         assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+         assert.isFalse(!!baseControl.__needShowEmptyTemplate(null, baseControl._listViewModel));
 
-         baseControl._emptyTemplateVisibility = true;
-         assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+         baseControl._sourceController.isLoading = function() {
+            return true;
+         };
 
-         baseControl._listViewModel._editingItemData = {};
-         assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel, baseControl._loadingState));
+         baseControl._noDataBeforeReload = false;
+         assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
+
+         baseControl._noDataBeforeReload = true;
+         assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
+
+         baseControl._listViewModel.getEditingItemData = function() {
+            return {};
+         };
+         assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
+
+         baseControl._listViewModel.getEditingItemData = function() {
+            return null;
+         };
+         baseControl._sourceController = null;
+         assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
       });
 
       it('reload with changing source/navig/filter should call scroll to start', function() {

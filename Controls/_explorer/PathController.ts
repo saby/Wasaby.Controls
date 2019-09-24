@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_explorer/PathController/PathController');
-import {HeadingPathBack, HeadingPathCommon} from 'Controls/breadcrumbs';
 import {ItemsUtil} from 'Controls/list';
 import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
 
@@ -12,14 +11,16 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
          if (options.items && options.header && options.header.length && !options.header[0].title && !options.header[0].template) {
             newHeader = options.header.slice();
             newHeader[0] = {
-               template: HeadingPathBack,
+               ...options.header[0],
+               template: 'Controls/breadcrumbs:HeadingPathBack',
                templateOptions: {
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
+                  showActionButton: !!options.showActionButton,
+                  showArrowOutsideOfBackButton: !!options.showActionButton,
                   backButtonStyle: options.backButtonStyle,
                   backButtonCaption: ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty),
                   counterCaption: options.items[options.items.length - 1].get('counterCaption')
                },
-               width: options.header[0].width,
 
                // TODO: удалить эту опцию после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
                isBreadCrumbs: true
@@ -62,7 +63,11 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
       _notifyHandler: tmplNotify,
 
       _onBackButtonClick: function(e) {
-         HeadingPathCommon.onBackButtonClick.call(this, e);
+         const self = this;
+         require(['Controls/breadcrumbs'], function (breadcrumbs) {
+            breadcrumbs.HeadingPathCommon.onBackButtonClick.call(self, e);
+         });
+
       },
 
    });

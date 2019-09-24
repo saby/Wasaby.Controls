@@ -2,6 +2,7 @@
    display: -ms-grid;
    display: grid;
    width: 100%;
+   position: relative;
 }
 
 .controls-GridView__itemV_marker {
@@ -569,11 +570,12 @@
 }
 .controls-Grid__editArrow-blur {
    height: 100%;
+   top: 0;
    right: @spacing_Grid-column-between-content-borderRight + @width_Grid-editArrow;
    display: inline-block;
    width: @spacing_Grid-editArrow_left;
    position: absolute;
-   background: linear-gradient(90deg, transparent, @background-color_Grid-row_hover);
+   background: linear-gradient(90deg, @background-color_Grid-row_hover-transparent, @background-color_Grid-row_hover);
    z-index: 0;
 }
 

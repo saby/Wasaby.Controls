@@ -133,6 +133,16 @@ define(
             self.historySource._recent = 5;
             historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
             assert.equal(itemsRecent.getCount(), 4);
+
+            itemsRecent.clear();
+            historyInstance.pinned.add(getItem('12', '{title: 123}', 'TEST_HISTORY_ID_V1'));
+            historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
+            assert.equal(itemsRecent.getCount(), 3);
+
+            itemsRecent.clear();
+            self.historySource._pinned = false;
+            historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
+            assert.equal(itemsRecent.getCount(), 4);
          });
 
          it('serialize', function() {
@@ -143,6 +153,26 @@ define(
             let serializeData = JSON.stringify(data, historyMod.FilterSource._private.getSerialize().serialize);
             let result = JSON.parse(serializeData, historyMod.FilterSource._private.getSerialize().deserialize);
             assert.deepStrictEqual(data, result);
+         });
+
+         it('findItem', function() {
+            let newItem = {
+               configs: undefined,
+               items: [1,2,3]
+            };
+            let historyItems = new  collection.RecordSet({
+               rawData: [
+                  { ObjectData: 'test' }
+               ]
+            });
+            let result = historyMod.FilterSource._private.findItem({}, historyItems, newItem);
+            assert.isNull(result);
+
+            historyItems.add(new entity.Model({
+               rawData: {ObjectData: JSON.stringify(newItem, historyMod.FilterSource._private.getSerialize().serialize)}
+            }));
+            result = historyMod.FilterSource._private.findItem({}, historyItems, newItem);
+            assert.isOk(result);
          });
       });
    }

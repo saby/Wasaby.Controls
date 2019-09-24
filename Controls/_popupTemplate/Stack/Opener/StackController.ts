@@ -6,9 +6,9 @@ import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import Deferred = require('Core/Deferred');
 import {parse as parserLib} from 'Core/library';
 import StackContent = require('Controls/_popupTemplate/Stack/Opener/StackContent');
+import {detection} from 'Env/Env';
 import 'css!theme?Controls/popupTemplate';
 
-const STACK_CLASS = 'controls-Stack';
 const _private = {
 
     prepareSizes(item, container) {
@@ -42,10 +42,7 @@ const _private = {
         item.popupOptions.maxWidth = _private.prepareSize([item.popupOptions, defaultOptions, templateStyle], 'maxWidth');
         item.popupOptions.width = _private.prepareSize([item.popupOptions, defaultOptions], 'width');
 
-        // Validate the configuration
-        if (item.popupOptions.maxWidth < item.popupOptions.minWidth) {
-            item.popupOptions.maxWidth = item.popupOptions.minWidth;
-        }
+        _private.validateConfiguration(item);
 
         if (!item.popupOptions.hasOwnProperty('minimizedWidth')) {
             item.popupOptions.minimizedWidth = defaultOptions.minimizedWidth;
@@ -67,7 +64,21 @@ const _private = {
                 return parseInt(optionsSet[i][property], 10);
             }
         }
-        return null;
+        return undefined;
+    },
+
+    validateConfiguration(item): void {
+        if (item.popupOptions.maxWidth < item.popupOptions.minWidth) {
+            item.popupOptions.maxWidth = item.popupOptions.minWidth;
+        }
+
+        if (item.popupOptions.width > item.popupOptions.maxWidth) {
+            item.popupOptions.width = item.popupOptions.maxWidth;
+        }
+
+        if (item.popupOptions.width < item.popupOptions.minWidth) {
+            item.popupOptions.width = item.popupOptions.minWidth;
+        }
     },
 
     prepareSizeWithoutDOM(item) {
@@ -127,15 +138,7 @@ const _private = {
     },
 
     prepareUpdateClassses(item) {
-        _private.addStackClasses(item.popupOptions);
         _private.updatePopupOptions(item);
-    },
-
-    addStackClasses(popupOptions) {
-        const className = popupOptions.className || '';
-        if (className.indexOf(STACK_CLASS) < 0) {
-            popupOptions.className = className + ' ' + STACK_CLASS;
-        }
     },
 
     updatePopupOptions(item) {
@@ -192,7 +195,7 @@ const _private = {
             templateClass = template;
         }
 
-        return templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
+        return templateClass && templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
     },
     getPopupWidth(item): Promise<undefined> {
         return new Promise((resolve) => {
@@ -216,7 +219,7 @@ const _private = {
         }
     },
     addLastStackClass(item): void {
-        item.popupOptions.className += ' controls-Stack__last-item';
+        item.popupOptions.className = (item.popupOptions.className || '') + ' controls-Stack__last-item';
     },
 
     removeLastStackClass(item): void {
@@ -225,7 +228,6 @@ const _private = {
     getDefaultConfig(self, item): void {
         _private.prepareSizeWithoutDOM(item);
         _private.setStackContent(item);
-        _private.addStackClasses(item.popupOptions);
         if (StackStrategy.isMaximizedPanel(item)) {
             // set default values
             item.popupOptions.templateOptions.showMaximizedButton = undefined; // for vdom dirtyChecking
@@ -253,10 +255,8 @@ const _private = {
             } else {
                 self._stack.replace(item, itemIndex);
             }
-
-            if (self._stack.getCount() > 1) {
-                self._update();
-            } else {
+            item.position = _private.getItemPosition(item, self);
+            if (self._stack.getCount() <= 1) {
                 item.position = _private.getItemPosition(item, self);
                 _private.showPopup(item);
                 if (StackStrategy.isMaximizedPanel(item)) {
@@ -264,6 +264,12 @@ const _private = {
                 }
                 _private.updatePopupOptions(item);
             }
+        }
+    },
+    preparePropStorageId(item): void {
+        if (!item.popupOptions.propStorageId) {
+            const defaultOptions = _private.getDefaultOptions(item);
+            item.popupOptions.propStorageId = defaultOptions.propStorageId;
         }
     },
     updatePopup(self, item, container) {
@@ -307,6 +313,7 @@ const StackController = BaseController.extend({
     },
 
     elementUpdateOptions(item, container) {
+        _private.preparePropStorageId(item);
         if (!item.popupOptions.propStorageId) {
             return _private.updatePopup(this, item, container);
         } else {
@@ -396,6 +403,7 @@ const StackController = BaseController.extend({
     },
 
     getDefaultConfig(item) {
+        _private.preparePropStorageId(item);
         if (item.popupOptions.propStorageId) {
             return _private.getPopupWidth(item).then(() => {
                 _private.getDefaultConfig(this, item);

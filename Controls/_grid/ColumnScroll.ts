@@ -10,17 +10,16 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 
 const
    _private = {
-      calculateFixedColumnWidth(container, multiSelectVisibility, stickyColumnsCount) {
+      calculateFixedColumnWidth(container, multiSelectVisibility, stickyColumnsCount, firstCell) {
          if (!stickyColumnsCount) {
             return 0;
          }
 
-         const
-            hasMultiSelect = multiSelectVisibility !== 'hidden',
-            columnOffset = hasMultiSelect ? 1 : 0,
-            lastStickyColumnIndex = stickyColumnsCount + columnOffset,
-            lastStickyColumnSelector = `.controls-Grid__cell_fixed:nth-child(${lastStickyColumnIndex})`,
-            stickyCellContainer = container.querySelector(lastStickyColumnSelector);
+         const hasMultiSelect = multiSelectVisibility !== 'hidden';
+         const columnOffset = hasMultiSelect && !firstCell.isBreadCrumbs ? 1 : 0;
+         const lastStickyColumnIndex = stickyColumnsCount + columnOffset;
+         const lastStickyColumnSelector = `.controls-Grid__cell_fixed:nth-child(${lastStickyColumnIndex})`;
+         const stickyCellContainer = container.querySelector(lastStickyColumnSelector);
          if (!stickyCellContainer) {
             return 0;
          }
@@ -64,7 +63,8 @@ const
          self._fixedColumnsWidth = _private.calculateFixedColumnWidth(
             self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0],
             self._options.multiSelectVisibility,
-            self._options.stickyColumnsCount
+            self._options.stickyColumnsCount,
+            self._options.header[0]
          );
          self._scrollWidth = self._options.listModel.isFullGridSupport() ?
               self._children.content.offsetWidth - self._fixedColumnsWidth :
@@ -101,7 +101,8 @@ const
          if (position === 'start' && _private.isShadowVisible(self._shadowState, position)) {
             shadowStyles = 'left: ' + self._fixedColumnsWidth + 'px;';
          }
-         let emptyTemplate = self._container.getElementsByClassName('controls-BaseControl__emptyTemplate')[0];
+         const container = self._container[0] || self._container;
+         const emptyTemplate = container.getElementsByClassName('controls-BaseControl__emptyTemplate')[0];
          if (emptyTemplate) {
             shadowStyles += 'height: ' + emptyTemplate.offsetTop + 'px;';
          }

@@ -95,6 +95,53 @@ define([
             });
          });
 
+         describe('getRowsArray', function () {
+            it('getRowsArray without multiheader', function () {
+               gridModel = createModel({resultsPosition: 'top', columnScroll: true});
+               var headerRows = RowUtil.getRowsArray(gridHeader, false, false)
+               assert.deepEqual([gridHeader], headerRows)
+            });
+            it('getRowsArray with multiheader', function () {
+               gridModel = createModel({resultsPosition: 'top', columnScroll: true});
+               var header = [
+                  {
+                     align: "center",
+                     endColumn: 2,
+                     endRow: 2,
+                     startColumn: 1,
+                     startRow: 1,
+                     title: "Наименование",
+                  },
+                  {
+                     align: "center",
+                     endColumn: 3,
+                     endRow: 2,
+                     startColumn: 2,
+                     startRow: 1,
+                     title: "Price",
+                  },
+                  {
+                     align: "center",
+                     endColumn: 2,
+                     endRow: 3,
+                     startColumn: 1,
+                     startRow: 2,
+                     title: "Cell",
+                  },
+                  {
+                     align: "center",
+                     endColumn: 3,
+                     endRow: 3,
+                     startColumn: 2,
+                     startRow: 2,
+                     title: "Общие",
+                  }
+               ]
+               var headerRows = RowUtil.getRowsArray(header, false, true)
+               assert.deepEqual([[header[0], header[1]], [header[2], header[3]]], headerRows)
+            });
+         });
+
          describe('results in top', function () {
 
             beforeEach(function () {

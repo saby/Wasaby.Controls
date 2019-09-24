@@ -12,12 +12,12 @@
          keyProperty="id"
          markerVisibility="hidden"
          virtualScrolling="{{true}}"
-         virtualPageSize="{{_options.virtualPageSize}}"
+         virtualPageSize="{{_virtualPageSize}}"
          on:drawItems="_drawItemsHandler()"
          >
          <ws:itemPadding left="null" right="null" bottom="null" top="null"/>
          <ws:navigation source="position" view="infinity">
-            <ws:sourceConfig limit="{{4}}" position="{{_startPositionId}}" direction="both" field="id"></ws:sourceConfig>
+            <ws:sourceConfig limit="{{8}}" position="{{_startPositionId}}" direction="both" field="id"></ws:sourceConfig>
          </ws:navigation>
 
          <ws:itemTemplate>
@@ -26,18 +26,20 @@
                         highlightOnHover="{{false}}"
                         attr:class="controls-MonthList__item">
                <ws:contentTemplate>
-                  <ws:partial
-                     template="{{_itemTemplate}}"
-                     date="{{itemTemplate.itemData.item.date}}"
-                     extData="{{ _extData.getData(itemTemplate.itemData.item.id) }}"
-                     _extDataVersion="{{_extData._version}}"
-                     monthTemplate="{{_options.monthTemplate}}"
-                     dayTemplate="{{_options.dayTemplate}}"
-                     _formatMonth="{{_formatMonth}}"
-                     _options="{{_options}}"
-                     _getMonth="{{_getMonth}}"
-                     _dateToDataString="{{_dateToDataString}}"
-                  />
+                  <Controls.scroll:IntersectionObserverContainer data="{{ itemTemplate.itemData.item.getRawData() }}">
+                     <ws:partial
+                           template="{{_getTemplate(itemTemplate.itemData.item)}}"
+                           date="{{itemTemplate.itemData.item.date}}"
+                           extData="{{ _extData.getData(itemTemplate.itemData.item.id) }}"
+                           _extDataVersion="{{_extData._version}}"
+                           monthTemplate="{{_options.monthTemplate}}"
+                           dayTemplate="{{_options.dayTemplate}}"
+                           _formatMonth="{{_formatMonth}}"
+                           _options="{{_options}}"
+                           _getMonth="{{_getMonth}}"
+                           _dateToDataString="{{_dateToDataString}}"
+                        />
+                  </Controls.scroll:IntersectionObserverContainer>
                </ws:contentTemplate>
             </ws:partial>
          </ws:itemTemplate>

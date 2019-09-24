@@ -296,9 +296,9 @@ function getMaxEndRow(array): number[] {
  *  ) -> [[{}, {title: 'name', startRow: 1, endRow: 2...}}], [{{title: 'Price', startRow: 2, endRow: 3...}}], ...]
  */
 
-function getRowsArray(array, hasMultiselect) {
+function getRowsArray(array, hasMultiselect, isMultiHeader) {
     let result = [];
-    if (!array[0].startRow) {
+    if (!isMultiHeader) {
         result.push(array);
     } else {
         let sortedArray = array.sort((a, b) => {
@@ -311,7 +311,7 @@ function getRowsArray(array, hasMultiselect) {
             return 0;
         });
         for (let i = 1, rows = getRowsCount(sortedArray); i <= rows; i++) {
-            const odd = (x) => x.startRow === i;
+            const odd = (x) => x.startRow === i || x.isBreadCrumbs;
             const row = takeWhile(odd, sortedArray);
             result.push(row);
             sortedArray = sortedArray.slice(row.length);

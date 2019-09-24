@@ -88,7 +88,7 @@ function getCountriesStats() {
                 id: 8,
                 number: 9,
                 country: 'Казахстан',
-                capital: 'Нур-Султан (бывш. Астана)',
+                capital: 'Нур-Султан',
                 population: 15185000,
                 square: 2717300,
                 populationDensity: 6.00
@@ -204,6 +204,32 @@ function getCountriesStats() {
                 displayProperty: 'populationDensity',
             }
         ],
+        getColumnsWithFixedWidths: () => [
+            {
+                displayProperty: 'number',
+                width: '30px'
+            },
+            {
+                displayProperty: 'country',
+                width: '200px'
+            },
+            {
+                displayProperty: 'capital',
+                width: '100px'
+            },
+            {
+                displayProperty: 'population',
+                width: '150px'
+            },
+            {
+                displayProperty: 'square',
+                width: '100px'
+            },
+            {
+                displayProperty: 'populationDensity',
+                width: '120px'
+            }
+        ],
         getColumnsWithWidths: () => [
             {
                 displayProperty: 'number',
@@ -308,6 +334,26 @@ function getCountriesStats() {
                 title: 'Плотность населения чел/км2'
             }
         ],
+        getLongHeader: () => [
+            {
+                title: '#'
+            },
+            {
+                title: 'Страна'
+            },
+            {
+                title: 'Столица строны из рейтинга'
+            },
+            {
+                title: 'Население страны по данным на 2018г.'
+            },
+            {
+                title: 'Площадь км2'
+            },
+            {
+                title: 'Плотность населения чел/км2'
+            }
+        ],
         getMultiHeader: () => [
             {
                 title: '#',
@@ -365,6 +411,51 @@ function getCountriesStats() {
                 endRow: 3,
                 startColumn: 6,
                 endColumn: 7
+            }
+        ],
+        getMultiHeaderVar2: () => [
+            {
+                title: 'Географические характеристики стран',
+                startRow: 1,
+                endRow: 3,
+                startColumn: 1,
+                endColumn: 2
+            },
+            {
+                title: 'Столица',
+                startRow: 1,
+                endRow: 3,
+                startColumn: 2,
+                endColumn: 3
+            },
+            {
+                title: 'Цифры',
+                startRow: 1,
+                endRow: 2,
+                startColumn: 3,
+                endColumn: 6,
+                align: 'center'
+            },
+            {
+                title: 'Население',
+                startRow: 2,
+                endRow: 3,
+                startColumn: 3,
+                endColumn: 4
+            },
+            {
+                title: 'Площадь км2',
+                startRow: 2,
+                endRow: 3,
+                startColumn: 4,
+                endColumn: 5
+            },
+            {
+                title: 'Плотность населения чел/км2',
+                startRow: 2,
+                endRow: 3,
+                startColumn: 5,
+                endColumn: 6
             }
         ],
         getHeaderWithSorting: () => [

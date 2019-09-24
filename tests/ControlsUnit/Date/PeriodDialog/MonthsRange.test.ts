@@ -40,11 +40,21 @@ describe('Controls/_datePopup/MonthsRange', function() {
    });
 
    describe('_beforeUpdate', function() {
-      selectionViewTypeTests.forEach(function(test) {
+      [...selectionViewTypeTests, {
+         options: {
+            startValue: new Date(2019, 0),
+            endValue: new Date(2019, 0, 1),
+            selectionProcessing: true
+         },
+         selectionViewType: MonthsRangeItem.SELECTION_VEIW_TYPES.months
+      }].forEach(function(test) {
          it(`should set proper _selectionViewType for options ${JSON.stringify(test.options)}.`, function() {
-            const component = calendarTestUtils.createComponent(MonthsRange, {});
+            const component = calendarTestUtils.createComponent(
+                MonthsRange, {startValue: new Date(2019, 0), endValue: new Date(2019, 1, 0)});
+
             component._beforeUpdate(calendarTestUtils.prepareOptions(
                 MonthsRange, { ...{ position: new Date(2019, 0)}, ...test.options }));
+
             assert.strictEqual(component._selectionViewType, test.selectionViewType);
          });
       });

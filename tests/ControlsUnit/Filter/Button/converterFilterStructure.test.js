@@ -21,6 +21,13 @@ define(
                   value: 'value',
                   resetValue: 'resetValue',
                   textValue: undefined
+               },
+               {
+                  id: '3',
+                  caption: 'filter3',
+                  value: '',
+                  resetValue: null,
+                  textValue: ''
                }
             ]
          });
@@ -37,6 +44,13 @@ define(
                internalCaptionField: 'filter2',
                value: 'value',
                resetValue: 'resetValue'
+            },
+            {
+               internalValueField: '3',
+               internalCaptionField: 'filter3',
+               value: '',
+               resetValue: null,
+               caption: ''
             }
          ];
          it('Перевод в filterStructure', function () {

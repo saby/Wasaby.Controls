@@ -1,8 +1,8 @@
 import Deferred = require('Core/Deferred');
 import { Memory, Query, DataSet } from 'Types/source';
 import { date as formatDate } from 'Types/formatter';
+import ITEM_TYPES from './ItemTypes';
 import monthListUtils from './Utils';
-import dateUtils = require('Controls/Utils/Date');
 // import Query from "Types/source/Query";
 // import DataSet from "../../../application/Types/_source/DataSet";
 
@@ -25,6 +25,13 @@ export default class MonthsSource extends Memory {
 
     _$keyProperty: 'id';
 
+    _header: boolean = false;
+
+    constructor(options) {
+        super(options);
+        this._header = options.header;
+    }
+
     query(query: Query)/*: ExtendPromise<DataSet>*/ {
         let
             offset = query.getOffset(),
@@ -32,7 +39,7 @@ export default class MonthsSource extends Memory {
             limit = query.getLimit() || 1,
             executor;
 
-        executor = (function() {
+        executor = (() => {
             let
                 adapter = this.getAdapter().forTable(),
                 items = [],
@@ -55,10 +62,19 @@ export default class MonthsSource extends Memory {
             for (let i = 0; i < limit; i++) {
                 items.push({
                     id: monthListUtils.dateToId(month),
-                    date: month
+                    date: month,
+                    type: ITEM_TYPES.body
                 });
                 month = new Date(month);
                 month.setMonth(month.getMonth() + 1);
+
+                if (this._header) {
+                    items.push({
+                        id: 'h' + monthListUtils.dateToId(month),
+                        date: month,
+                        type: ITEM_TYPES.header
+                    });
+                }
             }
 
             this._each(
@@ -73,7 +89,7 @@ export default class MonthsSource extends Memory {
             });
 
             return items;
-        }).bind(this);
+        });
 
         if (this._loadAdditionalDependencies) {
             return this._loadAdditionalDependencies().addCallback(executor);

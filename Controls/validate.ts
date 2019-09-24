@@ -8,6 +8,7 @@
  * @includes isRequired Controls/_validate/Validators/IsRequired
  * @includes isValidDate Controls/_validate/Validators/IsValidDate
  * @includes Selection Controls/_validate/Selection
+ * @includes IsValidDateRange Controls/_validate/Validators/IsValidDateRange
  * @public
  * @author Красильников А.С.
  */
@@ -21,6 +22,7 @@
  * @includes isRequired Controls/_validate/Validators/IsRequired
  * @includes isValidDate Controls/_validate/Validators/IsValidDate
  * @includes Selection Controls/_validate/Selection
+ * includes IsValidDateRange Controls/_validate/Validators/IsValidDateRange
  * @public
  * @author Красильников А.С.
  */
@@ -32,8 +34,8 @@ import DateRangeContainer = require('Controls/_validate/DateRange');
 import isEmail = require('Controls/_validate/Validators/IsEmail');
 import isRequired = require('Controls/_validate/Validators/IsRequired');
 import isValidDate = require('Controls/_validate/Validators/IsValidDate');
-import isValidDateRange from 'Controls/_validate/Validators/IsValidDateRange';
 import Selection = require('Controls/_validate/Selection');
+import isValidDateRange from 'Controls/_validate/Validators/IsValidDateRange';
 
 export {
     Controller,

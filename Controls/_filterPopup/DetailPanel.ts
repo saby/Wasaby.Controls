@@ -2,13 +2,15 @@ import Control = require('Core/Control');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Clone = require('Core/core-clone');
+import Deferred = require('Core/Deferred');
+import find = require('Core/helpers/Object/find');
+import ParallelDeferred = require('Core/ParallelDeferred');
 import _FilterPanelOptions = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions');
 import template = require('wml!Controls/_filterPopup/Panel/Panel');
 import Env = require('Env/Env');
 import {isEqual} from 'Types/object';
-import {RecordSet, factory} from 'Types/collection';
+import {factory, List} from 'Types/collection';
 import {HistoryUtils} from 'Controls/filter';
-import {List} from 'Types/collection';
 import 'css!theme?Controls/filterPopup';
 import 'Controls/form';
 /**
@@ -88,8 +90,34 @@ import 'Controls/form';
          }
       },
 
+      loadFavoriteItems: function(self, historyId) {
+         let loadDef = new Deferred();
+         require(['SBIS3.CONTROLS/History/HistoryList'], (HistoryStorage) => {
+            let pDef = new ParallelDeferred();
+            self._historyGlobalStorage = new HistoryStorage({
+               historyId: historyId,
+               isGlobalUserConfig: true
+            });
+            self._historyStorage = new HistoryStorage({
+               historyId: historyId
+            });
+            pDef.push(self._historyStorage.getHistory(true));
+            pDef.push(self._historyGlobalStorage.getHistory(true));
+            return pDef.done().getResult().addCallback((items) => {
+               self._favoriteList = items[0].clone();
+               self._favoriteList.prepend(items[1]);
+               loadDef.callback();
+            });
+         });
+         return loadDef;
+      },
+
       loadHistoryItems: function(self, historyId, isReportPanel) {
          if (historyId) {
+            let pDef = new ParallelDeferred();
+            if (isReportPanel) {
+               pDef.push(_private.loadFavoriteItems(self, historyId));
+            }
             let config = {
                historyId: historyId,
 
@@ -97,28 +125,50 @@ import 'Controls/form';
                 pinned: !isReportPanel,
                recent: isReportPanel ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY'
             };
-            return HistoryUtils.loadHistoryItems(config).addCallback(function(items) {
+            let historyLoad = HistoryUtils.loadHistoryItems(config).addCallback(function(items) {
                self._historyItems = _private.filterHistoryItems(self, items);
                return self._historyItems;
             }).addErrback(function() {
                self._historyItems = new List({ items: [] });
             });
+            pDef.push(historyLoad);
+            return pDef.done().getResult().addCallback(() => {
+               return self._historyItems;
+            });
          }
       },
 
-       filterHistoryItems: function(self,items) {
-           return chain.factory(items).filter(function(item) {
-               let history = JSON.parse(item.get('ObjectData')).items || JSON.parse(item.get('ObjectData'));
-               let itemHasData = false;
-               for (var i = 0, length = history.length; i < length; i++) {
-                   var textValue = getPropValue(history[i], 'textValue');
-                   if (textValue !== '' && textValue !== undefined) {
-                       itemHasData = true;
-                   }
+      filterHistoryItems: function(self, items: Array): void {
+         function getOriginalItem(self, historyItem: object): object {
+            return find(self._items, (originalItem) => {
+               return originalItem.id === historyItem.id;
+            });
+         }
+
+         let originalItem;
+         let hasResetValue;
+
+         return chain.factory(items).filter((item) => {
+            const history = JSON.parse(item.get('ObjectData')).items || JSON.parse(item.get('ObjectData'));
+            let result = false;
+
+            for (let i = 0, length = history.length; i < length; i++) {
+               const textValue = getPropValue(history[i], 'textValue');
+               const value = getPropValue(history[i], 'value');
+
+               if (textValue !== '' && textValue !== undefined) {
+                  originalItem = getOriginalItem(self, history[i]);
+                  hasResetValue = originalItem && originalItem.hasOwnProperty('resetValue');
+
+                  if (!hasResetValue || hasResetValue && !isEqual(value, getPropValue(originalItem, 'resetValue'))) {
+                     result = true;
+                     break;
+                  }
                }
-               return itemHasData;
-           }).value(factory.recordSet,{adapter: items.getAdapter()});
-       },
+            }
+            return result;
+          }).value(factory.recordSet, {adapter: items.getAdapter()});
+      },
 
       reloadHistoryItems: function(self, historyId) {
          self._historyItems = HistoryUtils.getHistorySource({historyId: historyId}).getItems();

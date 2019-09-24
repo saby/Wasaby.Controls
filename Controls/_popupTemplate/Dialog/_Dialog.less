@@ -62,6 +62,7 @@
    position: relative;
    z-index: 2; // The close button is above the content
    align-self: flex-start;
+   flex-shrink: 0;
 }
 .controls-DialogTemplate__close_button_theme_@{themeName} {
    margin-top: @close-button_padding-top_dialog;
@@ -75,13 +76,14 @@
 }
 .controls-DialogTemplate__caption {
    align-items: baseline;
-   flex-shrink: 1;
+   flex-shrink: 10;
    display: flex;
    overflow: hidden;
    cursor: default;
 }
 
 .controls-DialogTemplate__caption_theme_@{themeName} {
+   min-width: @header_min-width_dialog;
    height: @header-min-height_dialog;
    margin-left: @header_padding-left_dialog;
    line-height: @line-height_dialogTemplate_caption; // the baseline is not centered

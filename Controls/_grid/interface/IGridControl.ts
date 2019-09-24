@@ -17,16 +17,13 @@
 /**
  * @name Controls/_grid/interface/IGridControl#ladderProperties
  * @cfg {Array.<String>} Массив свойств, по которым происходит прилипание.
- * <a href="/materials/demo-ws4-grid-sticky">Example</a>
+ * Работу лесенки можно проверить на <a href="/materials/demo-ws4-grid-sticky">демо-примере</a>.
  * @example
  * Пример 1. Шаблон лесенки задан в рамках шаблона родительского контрола.
- * * WML
- * <pre>
+ * <pre class="brush: html">
  *    <!-- MyControl.wml -->
  *    <div class="demoGrid">
- *       <Controls.grid:View
- *          ...
- *          ladderProperties="{{ ['date'] }}">
+ *       <Controls.grid:View ladderProperties="{{ ['date'] }}">
  *          <ws:columns>
  *             <ws:Array>
  *                <ws:Object width="1fr">
@@ -48,9 +45,8 @@
  *    </div>
  * </pre>
  *
- * Пример 2. Шаблон ленесенки вынесен в отдельный шаблон.
- * * WML
- * <pre>
+ * Пример 2. Шаблон лесенки вынесен в отдельный шаблон.
+ * <pre class="brush: html">
  *    <!-- MyControl.wml -->
  *    <div class="demoGrid">
  *       <Controls.grid:View
@@ -58,14 +54,13 @@
  *          ladderProperties="{{ ['date'] }}">
  *          <ws:columns>
  *             <ws:Array>
- *                <ws:Object width="1fr" template="wml!MyModule/MyControl" />
+ *                <ws:Object width="1fr" template="wml!MyModule/MyTemplate" />
  *             </ws:Array>
  *          </ws:columns>
  *       </Controls.grid:View>
  *    </div>
  * </pre>
- * * WML
- * <pre>
+ * <pre class="brush: html">
  *    <!-- MyTemplate.wml -->
  *    <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
  *       <div class="demoGrid__date">
@@ -176,9 +171,10 @@
  * - <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
  * - <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
  * @remark
- * По умолчанию используется базовый шаблон {@link Controls/grid:HeaderContent}.
- * Базовый шаблон поддерживает следующие css-модификаторы:
- * - controls-Grid__header-cell_spacing_money — используется для добавления отступа в заголовке столбца при рендере денежных данных в самом столбце.
+ * По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
+ * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
+ *
+ * 
  *
  * @example
  * Пример добавления пользовательскогого шаблона:
