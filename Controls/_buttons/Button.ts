@@ -1,21 +1,32 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import ButtonTemplate = require('wml!Controls/_buttons/Button');
 import ActualApi from './ActualApi';
 import {IHref, IHrefOptions} from './interface/IHref';
+import {IViewMode, IViewModeOptions} from './interface/IViewMode';
 import {IClick} from './interface/IClick';
-import {ITooltip, ITooltipOptions,
-   ICaption, ICaptionOptions,
-   IIcon, IIconOptions,
-   IIconStyle, IIconStyleOptions,
-   IIconSize, IIconSizeOptions,
-   IFontColorStyle, IFontColorStyleOptions,
-   IFontSize, IFontSizeOptions,
-   IHeight, IHeightOptions
+import {
+    ICaption,
+    ICaptionOptions,
+    IFontColorStyle,
+    IFontColorStyleOptions,
+    IFontSize,
+    IFontSizeOptions,
+    IHeight,
+    IHeightOptions,
+    IIcon,
+    IIconOptions,
+    IIconSize,
+    IIconSizeOptions,
+    IIconStyle,
+    IIconStyleOptions,
+    ITooltip,
+    ITooltipOptions
 } from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import ButtonTemplate = require('wml!Controls/_buttons/Button');
 
 export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
-   IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions {
+   IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions,
+   IViewModeOptions {
    contrastBackground?: boolean;
    buttonStyle?: string;
    viewMode?: string;
@@ -32,6 +43,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @class Controls/_buttons/Button
  * @extends Core/Control
  * @mixes Controls/_buttons/interface/IHref
+ * @mixes Controls/_buttons/interface/IViewMode
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_buttons/interface/IClick
  * @mixes Controls/_interface/IIcon
@@ -60,6 +72,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @class Controls/_buttons/Button
  * @extends Core/Control
  * @mixes Controls/_buttons/interface/IHref
+ * @mixes Controls/_buttons/interface/IViewMode
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_buttons/interface/IClick
  * @mixes Controls/_interface/IIcon
@@ -74,53 +87,6 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @author Красильников А.С.
  * @category Button
  * @demo Controls-demo/Buttons/ButtonDemoPG
- */
-
-/**
- * @name Controls/_buttons/Button#viewMode
- * @cfg {Enum} Режим отображения кнопки.
- * @variant button В виде обычной кнопки по-умолчанию.
- * @variant link В виде гиперссылки.
- * @variant toolButton В виде кнопки для панели инструментов.
- * @default button
- * @demo Controls-demo/Buttons/ViewModes/Index
- * @example
- * Кнопка в режиме отображения 'link'.
- * <pre>
- *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
- * </pre>
- * Кнопка в режиме отображения 'toolButton'.
- * <pre>
- *    <Controls.breadcrumbs:Path caption="Send document" style="danger" viewMode="toolButton"/>
- * </pre>
- * Кнопка в режиме отображения 'button'.
- * <pre>
- *    <Controls.breadcrumbs:Path caption="Send document" style="success" viewMode="button"/>
- * </pre>
- * @see Size
- */
-
-/*
- * @name Controls/_buttons/Button#viewMode
- * @cfg {Enum} Button view mode.
- * @variant link Decorated hyperlink.
- * @variant button Default button.
- * @variant toolButton Toolbar button.
- * @default button
- * @example
- * Button with 'link' viewMode.
- * <pre>
- *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
- * </pre>
- * Button with 'toolButton' viewMode.
- * <pre>
- *    <Controls.breadcrumbs:Path caption="Send document" style="danger" viewMode="toolButton"/>
- * </pre>
- * Button with 'button' viewMode.
- * <pre>
- *    <Controls.breadcrumbs:Path caption="Send document" style="success" viewMode="button"/>
- * </pre>
- * @see Size
  */
 
 /**
@@ -191,7 +157,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * </pre>
  */
 class Button extends Control<IButtonOptions> implements
-      IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize, IClick, IFontColorStyle, IFontSize, IHeight {
+      IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize, IClick, IFontColorStyle, IFontSize, IHeight, IViewMode {
    protected _template: TemplateFunction = ButtonTemplate;
 
    // Называть _style нельзя, так как это состояние используется для темизации

@@ -27,6 +27,7 @@ import ActualApi from 'Controls/_buttons/ActualApi';
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_buttons/interface/IViewMode
  * @control
  * @public
  * @author Герасимов А.М.
