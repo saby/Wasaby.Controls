@@ -561,7 +561,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
            [],
            0
         );
-        this._nextModelVersion();
+        this._nextModelVersion(itemData === null);
     },
 
     getEditingItemData(): object | null {
