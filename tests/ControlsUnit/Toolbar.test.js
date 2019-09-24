@@ -263,6 +263,7 @@ define(
                      _options: {
                         theme: 'default',
                         size: 'size',
+                        additionalProperty: 'additional',
                         popupClassName: 'popupClassName',
                         itemTemplateProperty: 'itp',
                         groupTemplate: 'groupTemplate',
