@@ -35,6 +35,7 @@
               fontSize="{{_options.fontSize}}"
               inlineHeight="{{_options.inlineHeight}}"
               fontColorStyle="{{_options.fontColorStyle}}"
+              borderStyle="{{_options.borderStyle}}"
               on:tagClick="_notifyHandler('tagClick')"
               on:tagHover="_notifyHandler('tagHover')"
               placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"

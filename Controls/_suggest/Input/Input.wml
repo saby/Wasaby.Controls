@@ -35,6 +35,7 @@
             fontSize="{{_options.fontSize}}"
             inlineHeight="{{_options.inlineHeight}}"
             fontColorStyle="{{_options.fontColorStyle}}"
+            borderStyle="{{_options.borderStyle}}"
             placeholder="{{_options.placeholder}}"
             maxLength="{{_options.maxLength}}"
             constraint="{{_options.constraint}}"

@@ -4,10 +4,10 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 import {default as IValidationStatus, IValidationStatusOptions} from 'Controls/_input/interface/IValidationStatus';
-import {default as IBorderStyle, IBorderStyleOptions} from 'Controls/_input/interface/IBorderStyle';
 import {
    IHeight, IHeightOptions, IFontColorStyle,
-   IFontColorStyleOptions, IFontSize, IFontSizeOptions
+   IFontColorStyleOptions, IFontSize, IFontSizeOptions,
+   IBorderStyle, IBorderStyleOptions
 } from 'Controls/interface';
 
 import * as template from 'wml!Controls/_input/Render/Render';
@@ -61,7 +61,7 @@ IFontColorStyleOptions, IFontSizeOptions, IValidationStatusOptions, IBorderStyle
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_input/interface/ITag
  * @mixes Controls/_input/interface/IValidationStatus
- * @mixes Controls/_input/interface/IBorderStyle
+ * @mixes Controls/interface/IBorderStyle
  *
  * @author Красильников А.С.
  */
@@ -82,7 +82,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
    readonly '[Controls/_interface/IFontSize]': true;
    readonly '[Controls/_interface/IFontColorStyle]': true;
    readonly '[Controls/_input/interface/IValidationStatus]': true;
-   readonly '[Controls/_input/interface/IBorderStyle]': true;
+   readonly '[Controls/interface/IBorderStyle]': true;
 
    private updateState(options: IRenderOptions): void {
       this._fontSize = ActualAPI.fontSize(options.fontStyle, options.fontSize);

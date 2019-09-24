@@ -34,6 +34,7 @@
          fontSize="{{_options.fontSize}}"
          inlineHeight="{{_options.inlineHeight}}"
          fontColorStyle="{{_options.fontColorStyle}}"
+         borderStyle="{{_options.borderStyle}}"
          selectOnClick="{{_options.selectOnClick}}"
          constraint="{{_options.constraint}}"
          autoComplete="{{_options.autoComplete}}"

@@ -1,16 +1,16 @@
 export type BorderStyle = 'success' | 'secondary' | 'warning';
 
 /**
- * Интерфейс обводки полей ввода.
+ * Интерфейс для контролов, которые поддерживают разные цвета границы
  *
- * @interface Controls/_input/interface/IBorderStyle
+ * @interface Controls/interface/IBorderStyle
  * @public
  * @author Красильников А.С.
  */
 export interface IBorderStyleOptions {
     /**
-     * @name Controls/_input/interface#borderStyle
-     * @cfg {Enum} Цвет обводки поля ввода
+     * @name Controls/interface#borderStyle
+     * @cfg {Enum} Цвет обводки контрола
      * @variant success
      * @variant secondary
      * @variant warning
@@ -20,7 +20,7 @@ export interface IBorderStyleOptions {
 }
 
 interface IBorderStyle {
-    readonly '[Controls/_input/interface/IBorderStyle]': boolean;
+    readonly '[Controls/interface/IBorderStyle]': boolean;
 }
 
 export default IBorderStyle;
