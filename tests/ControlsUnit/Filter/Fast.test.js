@@ -742,6 +742,9 @@ define(
                      historyId: 'TEST_HISTORY_ID_FAST_FILTER'
                   })
                });
+               historySource.historySource._historyDataSource = () => {
+                  return new Deferred.success();
+               };
                historySource.getItems = () => {
                   return new collection.RecordSet({
                      keyProperty: 'id',

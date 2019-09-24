@@ -241,7 +241,11 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
       let resultDef;
 
       if (STORAGES_DATA_LOAD[historyId] && !Env.constants.isBuildOnServer) {
-         resultDef = STORAGES_DATA_LOAD[historyId];
+         resultDef = new Deferred();
+         // create new deferred, so in the first callback function, the result of the query will be changed
+         STORAGES_DATA_LOAD[historyId].addCallback(() => {
+            resultDef.callback(self.getHistory(historyId));
+         });
       } else if (!STORAGES[historyId] || Env.constants.isBuildOnServer) {
          resultDef = _private.getHistoryDataSource(this).call('UnionMultiHistoryIndexesList', {
             params: {
