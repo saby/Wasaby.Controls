@@ -32,7 +32,7 @@ export default class SwipeControl extends Control {
    private _actionAlignment: 'horizontal' | 'vertical';
 
    constructor(options: ISwipeControlOptions) {
-      super();
+      super(options);
       this._needTitle = this._needTitle.bind(this);
       this._needIcon = this._needIcon.bind(this);
    }

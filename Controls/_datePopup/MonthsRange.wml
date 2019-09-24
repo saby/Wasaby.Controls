@@ -5,12 +5,15 @@
    position="{{_options.position}}"
    on:itemClick="_onItemClick()"
 >
+   <ws:yearHeaderTemplate>
+      <div class="controls-PeriodDialog-MonthsRange__header">
+         {{ _formatDate(yearHeaderTemplate.date, 'YYYY') }}
+      </div>
+   </ws:yearHeaderTemplate>
    <ws:yearTemplate>
       <ws:partial template="Controls/calendar:MonthListYearTemplate">
          <ws:headerTemplate>
-            <div class="controls-PeriodDialog-MonthsRange__header">
-               {{ _formatDate(yearTemplate.date, 'YYYY') }}
-            </div>
+            <invisible-node />
          </ws:headerTemplate>
          <ws:bodyTemplate>
             <Controls._datePopup.MonthsRangeItem

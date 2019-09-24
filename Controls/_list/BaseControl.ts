@@ -1010,7 +1010,7 @@ var _private = {
         function closeMenu() {
             self._listViewModel.setActiveItem(null);
             self._listViewModel.setMenuState('hidden');
-            self._children.swipeControl.closeSwipe();
+            self._children.swipeControl && self._children.swipeControl.closeSwipe();
             self._menuIsShown = false;
             self._itemWithShownMenu = null;
             self._actionMenuIsShown = false;

@@ -403,6 +403,10 @@ const BaseOpener = {
 
       cfg.componentOptions.catchFocus = cfg.hasOwnProperty('catchFocus') ? cfg.catchFocus : true;
 
+      if (cfg.isWS3Compatible) {
+         cfg.componentOptions.isWS3Compatible = cfg.isWS3Compatible;
+      }
+
       if (cfg.onCloseHandler) {
          cfg.componentOptions.onCloseHandler = cfg.onCloseHandler;
       }
@@ -494,6 +498,10 @@ const BaseOpener = {
 
       if (cfg.hasOwnProperty('nativeEvent')) {
          newCfg.dialogOptions.nativeEvent = cfg.nativeEvent;
+      }
+
+      if (cfg.hasOwnProperty('isWS3Compatible')) {
+         newCfg.dialogOptions.isWS3Compatible = cfg.isWS3Compatible;
       }
 
       // из новых преобразуем

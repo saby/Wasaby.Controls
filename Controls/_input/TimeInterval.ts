@@ -67,6 +67,27 @@ class TimeInterval extends Base {
         super._changeHandler();
     }
 
+    protected _focusInHandler(...args) {
+        const isTab: boolean = !this._focusByMouseDown;
+
+        /**
+         * По стандарту "При получение фокуса по Tab в заполненном поле для ввода даты или времени курсор устанавливается
+         * перед первым символом, если поле не заполнено полностью, то после последнего введенного символа.". Контрол всегда
+         * либо не заполнен, либо заполнен. Потому что по уходу фокуса пустые места заполняются нулями. Получается при фокусе
+         * по tab курсор должен стоять в начале.
+         */
+        if (isTab) {
+            const selection = {
+                start: 0,
+                end: 0
+            };
+            this._viewModel.selection = selection;
+            this._updateSelection(selection);
+        }
+
+        super._focusInHandler.apply(this, args);
+    }
+
     static getDefaultOptions(): object {
         const defaultOptions = Base.getDefaultOptions();
 

@@ -7,8 +7,8 @@ import coreClone = require('Core/core-clone');
 import Env = require('Env/Env');
 
 var STORAGES = {};
-
 var STORAGES_USAGE = {};
+var STORAGES_DATA_LOAD = {};
 
 var _private = {
    getHistoryDataSource: function (self) {
@@ -234,14 +234,22 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
       return {};
    },
 
-   query: function () {
-      var self = this;
-      var getValueDef = new Deferred();
+   query(): Deferred<source.DataSet> {
+      const self = this;
+      const historyId = self._historyId;
 
-      if (!STORAGES[self._historyId] || Env.constants.isBuildOnServer) {
-         getValueDef = _private.getHistoryDataSource(this).call('UnionMultiHistoryIndexesList', {
+      let resultDef;
+
+      if (STORAGES_DATA_LOAD[historyId] && !Env.constants.isBuildOnServer) {
+         resultDef = new Deferred();
+         // create new deferred, so in the first callback function, the result of the query will be changed
+         STORAGES_DATA_LOAD[historyId].addCallback(() => {
+            resultDef.callback(self.getHistory(historyId));
+         });
+      } else if (!STORAGES[historyId] || Env.constants.isBuildOnServer) {
+         resultDef = _private.getHistoryDataSource(this).call('UnionMultiHistoryIndexesList', {
             params: {
-               historyIds: this._historyId ? [this._historyId] : this._historyIds,
+               historyIds: historyId ? [historyId] : this._historyIds,
                pinned: {
                   count: this._pinned ? Constants.MAX_HISTORY : 0
                },
@@ -254,15 +262,18 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
                getObjectData: this._dataLoaded
             }
          });
+         STORAGES_DATA_LOAD[historyId] = resultDef;
+         resultDef.addCallback((res) => {
+            delete STORAGES_DATA_LOAD[historyId];
+            return res;
+         });
       } else {
-         getValueDef.callback(
-            new source.DataSet({
-               rawData: self.getHistory(self._historyId)
-            })
-         );
+         resultDef = Deferred.success(new source.DataSet({
+            rawData: self.getHistory(historyId)
+         }));
       }
       _private.incrementUsage(this);
-      return getValueDef;
+      return resultDef;
    },
 
    destroy: function () {
@@ -293,4 +304,5 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
    }
 });
 
+Service._private = _private;
 export = Service;
