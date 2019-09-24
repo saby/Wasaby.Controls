@@ -468,7 +468,7 @@ Base.getConfig = function(baseConfig, options, popupOptions) {
         'locationStrategy',
         'fittingMode',
         'actionOnScroll',
-        'iWantBeWS3'
+        'isWS3Compatible'
     ];
 
     // merge _options to popupOptions
