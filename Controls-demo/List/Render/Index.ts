@@ -42,6 +42,15 @@ export default class RenderDemo extends Control {
                 title: 'edit',
                 showType: 0,
                 handler: (item) => this._children.listView.beginEdit({ item })
+            },
+            {
+                id: 3,
+                icon: 'icon-Erase',
+                style: 'error',
+                iconStyle: 'error',
+                title: 'delete',
+                showType: 0,
+                handler: (item) => window.model.getCollection().remove(item)
             }
         ];
         this._navigation = {
@@ -49,7 +58,7 @@ export default class RenderDemo extends Control {
             view: 'infinity',
             sourceConfig: {
                 page: 0,
-                pageSize: 25,
+                pageSize: 100,
                 hasMore: false
             }
         };
@@ -60,20 +69,6 @@ export default class RenderDemo extends Control {
         window.model = this._children.listView._children.listControl._children.baseControl.getViewModel();
         // fix for multiselect breaking
         window.model.updateSelection = function() {};
-    }
-
-    private _changeMultiselect(e: SyntheticEvent<null>, visibility: string): void {
-        this._multiSelectVisibility = visibility;
-    }
-
-    private _changeSwiped(e: SyntheticEvent<null>, swiped: boolean): void {
-        // no swipe controller yet
-        window.model.at(0).setSwiped(swiped);
-        window.model._nextVersion();
-    }
-
-    private _changeEditing(e: SyntheticEvent<null>, editing: boolean): void {
-        window.model.setEditingItem(editing ? window.model.at(0) : null);
     }
 
     private _generateListItems(count: number): IListItem[] {

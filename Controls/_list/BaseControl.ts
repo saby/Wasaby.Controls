@@ -171,12 +171,11 @@ var _private = {
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
                     }
-                }
-
-                if (self._virtualScroll) {
-                    self._virtualScroll.ItemsCount = listModel.getCount();
-                    self._virtualScroll.resetItemsIndexes();
-                    _private.applyVirtualScrollIndexesToListModel(self);
+                    if (self._virtualScroll) {
+                        self._virtualScroll.ItemsCount = listModel.getCount();
+                        self._virtualScroll.resetItemsIndexes();
+                        _private.applyVirtualScrollIndexesToListModel(self);
+                    }
                 }
 
                 _private.prepareFooter(self, navigation, self._sourceController);
@@ -466,7 +465,11 @@ var _private = {
     applyVirtualScrollIndexesToListModel(self): boolean {
         const newIndexes = self._virtualScroll.ItemsIndexes;
         const model = self._listViewModel;
-        return model.setIndexes(newIndexes.start, newIndexes.stop);
+        if (model.setViewIndices) {
+            return model.setViewIndices(newIndexes.start, newIndexes.stop);
+        } else {
+            return model.setIndexes(newIndexes.start, newIndexes.stop);
+        }
     },
 
     // Обновляет высоту распорок при виртуальном скроле
@@ -1471,7 +1474,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);
                     }
-
                     if (self._virtualScroll) {
                         // При серверной верстке применяем начальные значения
                         self._virtualScroll.ItemsCount = self._listViewModel.getCount();
@@ -1492,6 +1494,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         }
                         if (self._listViewModel) {
                             _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
+                            if (self._virtualScroll) {
+                                // При серверной верстке применяем начальные значения
+                                self._virtualScroll.ItemsCount = self._listViewModel.getCount();
+                                self._virtualScroll.resetItemsIndexes();
+                                _private.applyVirtualScrollIndexesToListModel(self);
+                            }
                         }
                     }
                     // TODO Kingo.

@@ -31,6 +31,7 @@ import {Object as EventObject} from 'Env/Event';
 import MarkerManager from './utils/MarkerManager';
 import EditInPlaceManager from './utils/EditInPlaceManager';
 import ItemActionsManager from './utils/ItemActionsManager';
+import VirtualScrollManager from './utils/VirtualScrollManager';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -503,6 +504,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$editingConfig: any;
 
+    protected _$virtualScrolling: boolean;
+
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
      * игнорироваться). Работает только если задано {@link keyProperty}.
@@ -600,6 +603,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _markerManager: MarkerManager;
     protected _editInPlaceManager: EditInPlaceManager;
     protected _itemActionsManager: ItemActionsManager;
+    protected _virtualScrollManager: VirtualScrollManager;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -651,6 +655,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._markerManager = new MarkerManager();
         this._editInPlaceManager = new EditInPlaceManager();
         this._itemActionsManager = new ItemActionsManager();
+        this._virtualScrollManager = new VirtualScrollManager(this);
     }
 
     destroy(): void {
@@ -2023,6 +2028,18 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._stopIndex;
     }
 
+    setViewIndices(startIndex: number, stopIndex: number) {
+        const newStart = Math.max(startIndex, 0);
+        const newStop = Math.min(stopIndex, this.getCount());
+        if (newStart !== this._startIndex || newStop !== this._stopIndex) {
+            this._startIndex = newStart;
+            this._stopIndex = newStop;
+            this._nextVersion();
+            return true;
+        }
+        return false;
+    }
+
     getItemBySourceId(id: string|number): CollectionItem<S> {
         if (this._$collection['[Types/_collection/RecordSet]']) {
             const record = (this._$collection as unknown as RecordSet).getRecordById(id);
@@ -2037,6 +2054,16 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getLastItem(): S {
         return this.getLast().getContents();
+    }
+
+    getViewIterator(): {
+        each: (callback: EnumeratorCallback<unknown>, context?: object) => void
+    } {
+        if (this._$virtualScrolling) {
+            return this._virtualScrollManager;
+        } else {
+            return this;
+        }
     }
 
     // region SerializableMixin
@@ -3121,6 +3148,7 @@ Object.assign(Collection.prototype, {
     _$editingConfig: null,
     _$unique: false,
     _$importantItemProperties: null,
+    _$virtualScrolling: false,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,
@@ -3135,6 +3163,7 @@ Object.assign(Collection.prototype, {
     _markerManager: null,
     _editInPlaceManager: null,
     _itemActionsManager: null,
+    _virtualScrollManager: null,
     _startIndex: 0,
     _stopIndex: 0,
     getIdProperty: Collection.prototype.getKeyProperty

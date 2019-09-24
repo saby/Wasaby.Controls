@@ -12,8 +12,13 @@ interface IRenderOptions {
     contextMenuVisibility?: boolean;
 }
 
+interface IRenderChildren {
+    itemsContainer?: HTMLDivElement;
+}
+
 export default class Render extends Control<IRenderOptions> {
     protected _template: TemplateFunction = template;
+    protected _children: IRenderChildren;
 
     private _templateKeyPrefix: string;
     private _itemTemplate: TemplateFunction;
@@ -21,6 +26,10 @@ export default class Render extends Control<IRenderOptions> {
     protected _beforeMount(options): void {
         this._templateKeyPrefix = `list-render-${this.getInstanceId()}`;
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
+    }
+
+    getItemsContainer(): HTMLDivElement {
+        return this._children.itemsContainer;
     }
 
     private _onItemClick(
