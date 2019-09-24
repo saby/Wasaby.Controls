@@ -18,4 +18,5 @@
    cssBundles="{{ cssBundles }}"
    servicesPath="{{ servicesPath }}"
    product="{{ product }}"
-   buildnumber="{{ buildnumber }}"/>
+   buildnumber="{{ buildnumber }}"
+   preInitScript="{{ preInitScript }}"/>

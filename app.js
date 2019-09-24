@@ -123,7 +123,8 @@ app.get('/:moduleName/*', function(req, res){
       wsRoot: '/WS.Core/',
       resourceRoot: '/',
       application: cmp,
-      appRoot: '/'
+      appRoot: '/',
+      preInitScript: 'window.wsConfig.debug = true;'
    });
 
    if (html.addCallback) {
