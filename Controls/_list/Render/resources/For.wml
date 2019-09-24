@@ -17,7 +17,6 @@
       itemActionsTemplate="{{ itemActionsTemplate }}"
       swipeTemplate="{{ swipeTemplate }}"
       multiSelectTpl="{{ multiSelectTpl }}"
-      editingItemData="{{ editingItemData }}"
       isAdd="{{ isAdd }}"
       itemActionsPosition="{{ itemActionsPosition }}"/>
 </ws:for>

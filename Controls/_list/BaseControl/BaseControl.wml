@@ -143,7 +143,7 @@
                 multiSelectVisibility="{{_options.multiSelectVisibility}}"
                 errorController="{{ __errorController }}"
                 source="{{_sourceController}}"
-                useNewModel="{{ true }}"/>
+                useNewModel="{{ _options.useNewModel }}"/>
             <Controls._list.ItemActions.ItemActionsControl
                 ws:content="listView"
                 on:commitActionClick="_commitEditActionHandler()"

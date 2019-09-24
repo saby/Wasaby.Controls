@@ -35,6 +35,13 @@ export default class RenderDemo extends Control {
                 iconStyle: 'success',
                 showType: 0,
                 handler: (item) => alert(`phone clicked at ${item.getId()}`)
+            },
+            {
+                id: 2,
+                icon: 'icon-Edit',
+                title: 'edit',
+                showType: 0,
+                handler: (item) => this._children.listView.beginEdit({ item })
             }
         ];
         this._navigation = {

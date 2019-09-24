@@ -20,7 +20,8 @@ import {
     IList,
     IObservable,
     EventRaisingMixin,
-    IEnumerableComparatorSession
+    IEnumerableComparatorSession,
+    RecordSet
 } from 'Types/collection';
 import {create, resolve, register} from 'Types/di';
 import {mixin, object} from 'Types/util';
@@ -1849,6 +1850,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             index
         );
         this._notifyAfterCollectionChange();
+
+        // TODO Make a list of properties that lead to version update
+        if (properties as String === 'editingContents') {
+            this._nextVersion();
+        }
     }
 
     // endregion
@@ -1983,8 +1989,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
-    setEditingItem(item: CollectionItem<S>): void {
-        this._editInPlaceManager.beginEdit(item);
+    setEditingItem(item: CollectionItem<S>, editingContents?: S): void {
+        this._editInPlaceManager.beginEdit(item, editingContents);
         this._nextVersion();
     }
 
@@ -2015,6 +2021,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getStopIndex(): number {
         return this._stopIndex;
+    }
+
+    getItemBySourceId(id: string|number): CollectionItem<S> {
+        if (this._$collection['[Types/_collection/RecordSet]']) {
+            const record = (this._$collection as unknown as RecordSet).getRecordById(id);
+            return this.getItemBySourceItem(record as unknown as S);
+        }
+        throw new Error('Collection#getItemBySourceId is implemented for RecordSet only');
     }
 
     // region SerializableMixin

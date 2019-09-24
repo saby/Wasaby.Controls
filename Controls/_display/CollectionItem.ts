@@ -4,7 +4,8 @@ import {
     InstantiableMixin,
     SerializableMixin,
     IInstantiable,
-    IVersionable
+    IVersionable,
+    ObservableMixin
 } from 'Types/entity';
 import Collection, {ISourceCollection} from './Collection';
 import {ISerializableState as IDefaultSerializableState} from 'Types/entity';
@@ -19,6 +20,7 @@ export interface IOptions<T> {
     editing?: boolean;
     actions?: any;
     swiped?: boolean;
+    editingContents?: T;
     owner?: Collection<T>;
 }
 
@@ -83,6 +85,8 @@ export default class CollectionItem<T> extends mixin<
 
     protected _$swiped: boolean;
 
+    protected _$editingContents: T;
+
     protected _instancePrefix: string;
 
     /**
@@ -108,15 +112,26 @@ export default class CollectionItem<T> extends mixin<
     // region IVersionable
 
     getVersion(): number {
+        let version = this._version;
+
         const contents = this._$contents as unknown;
-        if (contents && typeof (contents as IVersionable).getVersion === 'function') {
-            return this._version + (contents as IVersionable).getVersion();
-        }
-        return this._version;
+        const editingContents = this._$editingContents as unknown;
+
+        version += this._getVersionableVersion(contents);
+        version += this._getVersionableVersion(editingContents);
+
+        return version;
     }
 
     protected _nextVersion(): void {
         this._version++;
+    }
+
+    protected _getVersionableVersion(v: unknown): number {
+        if (v && typeof (v as IVersionable).getVersion === 'function') {
+            return (v as IVersionable).getVersion();
+        }
+        return 0;
     }
 
     // endregion
@@ -142,6 +157,9 @@ export default class CollectionItem<T> extends mixin<
      * Возвращает содержимое элемента коллекции
      */
     getContents(): T {
+        if (this.isEditing() && this._$editingContents) {
+            return this._$editingContents;
+        }
         if (this._contentsIndex !== undefined) {
             // Ленивое восстановление _$contents по _contentsIndex после десериализации
             const collection = this.getOwner().getCollection();
@@ -251,11 +269,12 @@ export default class CollectionItem<T> extends mixin<
         return this._$editing;
     }
 
-    setEditing(editing: boolean, silent?: boolean): void {
-        if (this._$editing === editing) {
+    setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
+        if (this._$editing === editing && this._$editingContents === editingContents) {
             return;
         }
         this._$editing = editing;
+        this._setEditingContents(editingContents);
         this._nextVersion();
         if (!silent) {
             this._notifyItemChangeToOwner('editing');
@@ -302,6 +321,25 @@ export default class CollectionItem<T> extends mixin<
         if (!silent) {
             this._notifyItemChangeToOwner('swiped');
         }
+    }
+
+    protected _setEditingContents(editingContents: T): void {
+        if (this._$editingContents === editingContents) {
+            return;
+        }
+        if (this._$editingContents && this._$editingContents['[Types/_entity/ObservableMixin]']) {
+            (this._$editingContents as unknown as ObservableMixin)
+                .unsubscribe('onPropertyChange', this._onEditingItemPropertyChange, this);
+        }
+        if (editingContents && editingContents['[Types/_entity/ObservableMixin]']) {
+            (editingContents as unknown as ObservableMixin)
+                .subscribe('onPropertyChange', this._onEditingItemPropertyChange, this);
+        }
+        this._$editingContents = editingContents;
+    }
+
+    protected _onEditingItemPropertyChange(): void {
+        this._notifyItemChangeToOwner('editingContents');
     }
 
     // region SerializableMixin
@@ -381,6 +419,7 @@ Object.assign(CollectionItem.prototype, {
     _$editing: false,
     _$actions: null,
     _$swiped: false,
+    _$editingContents: null,
     _instancePrefix: 'collection-item-',
     _contentsIndex: undefined,
     _version: 0,
