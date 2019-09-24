@@ -579,11 +579,13 @@ var Filter = Control.extend({
             });
             let popupOptions = {
                 template: this._options.panelTemplateName,
-                actionOnScroll: 'close',
-                className: 'controls-FilterView-SimplePanel-popup'
+                actionOnScroll: 'close'
             };
             if (name) {
                 popupOptions.target = this._children[name];
+                popupOptions.className = 'controls-FilterView-SimplePanel-popup';
+            } else {
+                popupOptions.className = 'controls-FilterView-SimplePanel__buttonTarget-popup';
             }
             popupOptions.templateOptions = this._options.panelTemplateOptions || {};
             this._open(items, popupOptions);
