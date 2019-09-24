@@ -26,11 +26,7 @@ import ButtonTemplate = require('wml!Controls/_buttons/Button');
 
 export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
    IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions,
-   IButtonOptions {
-   contrastBackground?: boolean;
-   buttonStyle?: string;
-   viewMode?: string;
-}
+   IButtonOptions {}
 
 /**
  * Графический контрол, который предоставляет пользователю возможность простого запуска события при нажатии на него.

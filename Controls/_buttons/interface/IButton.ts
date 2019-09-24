@@ -1,4 +1,6 @@
 export interface IButtonOptions {
+    contrastBackground?: boolean;
+    buttonStyle?: string;
     viewMode?: string;
 }
 /**
