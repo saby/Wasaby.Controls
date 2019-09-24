@@ -15,6 +15,15 @@ export interface IConfirmationOptions {
     okCaption?: string;
 }
 
+export interface IPopupOptions {
+    template?: String | Function;
+    zIndex?: Number;
+    templateOptions?: Object;
+    modal?: Boolean;
+    autofocus?: Boolean;
+    className?: String;
+}
+
 /**
  * Контрол, открывающий диалог подтверждения.
  * Окно блокирует работу пользователя с родительским приложением.
@@ -197,13 +206,13 @@ class Confirmation extends BaseOpener<IConfirmationOptions> {
         super._beforeMount(options);
     }
 
-    private _closeHandler(result): void {
+    private _closeHandler(result: boolean | undefined): void {
         if (this._resultDef) {
             this._resultDef.callback(result);
             this._resultDef = null;
         }
     }
-    private static compatibleOptions(popupOptions: object): void {
+    private static compatibleOptions(popupOptions: IPopupOptions): void {
         popupOptions.zIndex = popupOptions.zIndex || popupOptions.templateOptions.zIndex;
         if (!isNewEnvironment()) {
             // For the old page, set the zIndex manually
@@ -211,7 +220,7 @@ class Confirmation extends BaseOpener<IConfirmationOptions> {
         }
     }
 
-    private static getConfirmationConfig(templateOptions: object, closeHandler: Function): object {
+    private static getConfirmationConfig(templateOptions: IConfirmationOptions, closeHandler: Function): IPopupOptions {
         templateOptions.closeHandler = closeHandler;
         const popupOptions = {
             template: 'Controls/popupTemplate:ConfirmationDialog',
@@ -280,7 +289,7 @@ class Confirmation extends BaseOpener<IConfirmationOptions> {
      * @remark
      * If you want use custom layout in the dialog you need to open popup via {@link dialog opener} using the basic template {@link ConfirmationTemplate}.
      */
-    protected open(templateOptions: object): Promise<boolean> {
+    protected open(templateOptions: object): object {
         this._resultDef = new Deferred();
         const popupOptions = Confirmation.getConfirmationConfig(templateOptions, this._closeHandler);
         super.open.call(this, popupOptions, POPUP_CONTROLLER);
@@ -292,7 +301,7 @@ class Confirmation extends BaseOpener<IConfirmationOptions> {
             _vdomOnOldPage: true // Open vdom popup in the old environment
         };
     }
-    static openPopup (templateOptions: object): Promise<string>  {
+    static openPopup (templateOptions: object): object  {
         return new Promise((resolve) => {
             const config = Confirmation.getConfirmationConfig(templateOptions, resolve);
             config._vdomOnOldPage = true;
