@@ -98,11 +98,11 @@ var moduleClass = CompoundControl.extend({
                   parent: self
                };
                // todo откатил потому что упала ошибка https://online.sbis.ru/opendoc.html?guid=d8cc1098-3d3a-4fed-800c-81b4e6ed2319
-               if (self._options.iWantBeWS3) {
+               if (self._options.isWS3Compatible) {
                   wrapperOptions.iWantBeWS3 = true;
                }
                self._vDomTemplate = control.createControl(ComponentWrapper, wrapperOptions, wrapper);
-               if (self._options.iWantBeWS3) {
+               if (self._options.isWS3Compatible) {
                   makeInstanceCompatible(self._vDomTemplate);
                }
                self._afterMountHandler();
