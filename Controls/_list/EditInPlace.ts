@@ -310,6 +310,9 @@ var
 
 var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype */{
     _template: template,
+    _isAdd: null,
+    _originalItem: null,
+    _editingItem: null,
 
     constructor: function (options = {}) {
         EditInPlace.superclass.constructor.apply(this, arguments);
