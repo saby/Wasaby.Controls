@@ -2031,6 +2031,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         throw new Error('Collection#getItemBySourceId is implemented for RecordSet only');
     }
 
+    getFirstItem(): S {
+        return this.getFirst().getContents();
+    }
+
+    getLastItem(): S {
+        return this.getLast().getContents();
+    }
+
     // region SerializableMixin
 
     _getSerializableState(state: IDefaultSerializableState): ISerializableState<S, T> {

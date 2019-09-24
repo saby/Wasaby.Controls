@@ -1490,6 +1490,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         if (newOptions.itemsReadyCallback) {
                             newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                         }
+                        if (self._listViewModel) {
+                            _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
+                        }
                     }
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
