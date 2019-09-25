@@ -384,7 +384,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
             endValue = value;
         if (this._options.selectionType === IRangeSelectable.SELECTION_TYPES.single) {
             startValue = value;
-        } else if (!_private.isMaskWithDays(this._mask)) {
+        } else if (dateUtils.isValidDate(value) && !_private.isMaskWithDays(this._mask)) {
             endValue = dateUtils.getEndOfMonth(value);
         }
         _private.rangeChanged(this, startValue, endValue);
