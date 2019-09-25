@@ -44,6 +44,11 @@ define([
          scrollMod.Watcher._private.sendCanScroll(ins, clientHeight, scrollHeight);
          assert.deepEqual(['canScroll'], evType, 'Wrong can scroll value');
 
+         clientHeight = 200;
+         scrollHeight = 201;
+         evType = [];
+         scrollMod.Watcher._private.sendCanScroll(ins, clientHeight, scrollHeight);
+         assert.deepEqual(['cantScroll'], evType, 'Wrong scroll possibility');
       });
 
       it('sendEdgePositions', function () {

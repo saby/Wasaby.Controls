@@ -29,7 +29,11 @@ import {SyntheticEvent} from "Vdom/Vdom"
 
          sendCanScroll: function(self, clientHeight, scrollHeight) {
             var eventName;
-            if (clientHeight < scrollHeight) {
+            /**
+             * Свойство scrollHeight округляется в большую сторону, а clientHeight в меньшую, по сравнению с реальной дробной высотой.
+             * Чтобы избежать ошибок связанные с округлением нужно сравнивать их разность с единицей.
+             */
+            if (scrollHeight - clientHeight > 1) {
                if (self._canScrollCache !== true) {
                   self._canScrollCache = true;
                   eventName = 'canScroll';
