@@ -10,6 +10,7 @@ import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
 import {Constants} from 'Controls/history';
 import {convertToFilterStructure, convertToSourceDataArray} from 'Controls/_filterPopup/converterFilterStructure';
+import {Memory} from 'Types/source';
 import 'css!theme?Controls/filterPopup';
 
 var MAX_NUMBER_ITEMS = 5;
@@ -134,9 +135,11 @@ var MAX_NUMBER_ITEMS = 5;
          let record = _private.getFavoriteDialogRecord(self, item, self._options.historyId, isFavorite ? text : '');
 
          let popupOptions = {
+            initializingWay: 'local', // для корректной работы старого FormController'a
             opener: self,
             templateOptions: {
-               record: record,
+               record,
+               source: new Memory(), // просто заглушка для старого FormController'a
                textValue: text,
                editMode: isFavorite ? 'isFavorite' : '',
                handlers: {
