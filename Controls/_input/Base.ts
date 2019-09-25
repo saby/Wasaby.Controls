@@ -551,7 +551,7 @@ var Base = Control.extend({
      * @type {Controls/_input/Render#style}
      * @protected
      */
-    get _renderStyle() {
+    _renderStyle() {
         return '';
     },
 

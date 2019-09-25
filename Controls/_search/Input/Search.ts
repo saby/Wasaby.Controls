@@ -22,7 +22,7 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  *
  * @control
  * @public
- * @demo Controls-demo/Input/Search/SearchPG
+ * @demo Controls-demo/Search/Input/Base/Index
  *
  * @category Input
  * @author Золотова Э.Е.
@@ -84,7 +84,7 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
 /**
  * @event Controls/Input/resetClick#resetClick Происходит при клике на кнопку сброса.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- */ 
+ */
 
 /*
  * @event Controls/_suggest/Input/Search/Suggest#searchClick Occurs when search button is clicked.
@@ -109,7 +109,7 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
 /*
  * @event Controls/_search/Input/Search#searchClick Occurs when search button is clicked.
  * @event Controls/Input/resetClick#resetClick Occurs when reset button is clicked.
- */ 
+ */
 var _private = {
    isVisibleResetButton: function() {
       return !!this._options.value && !this._options.readOnly;
@@ -125,8 +125,14 @@ var Search = Base.extend({
 
    _wasActionUser: false,
 
-   get _renderStyle() {
-      return 'search-';
+   _renderStyle() {
+      let style: string;
+      if (this._options.contrastBackground) {
+         style = 'searchContrast-';
+      } else {
+         style = 'search-';
+      }
+      return style;
    },
 
    _getViewModelOptions: function(options) {
