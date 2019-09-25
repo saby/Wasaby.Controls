@@ -11,15 +11,24 @@ define([
             selectedKeys = [null],
             excludedKeys = [],
             selectedKeysCount = 0;
+
          instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
          assert.isTrue(instance._multiSelectStatus);
+
          selectedKeys = [];
          instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
          assert.isFalse(instance._multiSelectStatus);
+
          selectedKeys = [1, 2];
          selectedKeysCount = 2;
          instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
          assert.isNull(instance._multiSelectStatus);
+
+         selectedKeys = [];
+         excludedKeys = [];
+         selectedKeysCount = 2;
+         instance._updateSelection(selectedKeys, excludedKeys, selectedKeysCount, null);
+         assert.isFalse(instance._multiSelectStatus);
       });
       it('_onCheckBoxClick', function() {
          var instance = new MultiSelector();
