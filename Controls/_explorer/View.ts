@@ -273,6 +273,12 @@ import 'Types/entity';
     * </pre>
     */
 
+   /**
+    * @event arrowClick Происходит при клике на кнопку "Просмотр записи".
+    * @remark Кнопка отображается при наведении курсора на текущую папку хлебных крошек.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+    */ 
+
    var Explorer = Control.extend({
       _template: template,
       _breadCrumbsItems: null,
