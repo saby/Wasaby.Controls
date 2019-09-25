@@ -5,6 +5,7 @@
                 position="{{_options.position}}"
                 direction="horizontal"
                 contentSize="{{_options.contentSize}}"
+                gridSupport="{{_options.gridSupport}}"
                 attr:class="controls-ColumnScroll"
                 on:positionChanged="_localPositionHandler()"/>
     </div>
