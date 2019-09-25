@@ -1201,6 +1201,11 @@ define([
                       getCount: function() {
                          return 1;
                       }
+                  },
+                  _options: {
+                      navigation: {
+
+                      }
                   }
                };
 
@@ -1244,6 +1249,10 @@ define([
            lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
            lists.BaseControl._private.updateShadowMode(mockedControl);
            assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'visible' });
+
+           mockedControl._options.navigation.view = 'demand';
+           lists.BaseControl._private.updateShadowMode(mockedControl);
+           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'auto' });
        });
 
        it ('call updateShadowMode in afterMount', function() {
