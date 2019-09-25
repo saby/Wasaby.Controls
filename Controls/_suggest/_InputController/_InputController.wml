@@ -70,4 +70,5 @@
         </ws:templateOptions>
     </Controls.popup:Stack>
 
+    <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
 </div>

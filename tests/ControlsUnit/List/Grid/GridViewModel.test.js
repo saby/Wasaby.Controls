@@ -1451,7 +1451,21 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(0, gridViewModel._curResultsColumnIndex, 'Incorrect value "_curResultsColumnIndex" after "resetResultsColumns()".');
          });
 
-         it('_prepareColgroupColumns', function() {
+          it('first header cell with breadcrumbs should renders from first column', function () {
+              const originBreadcrumbsCell = gridViewModel._headerRows[0][1];
+              gridViewModel._headerRows[0][1] = {
+                  isBreadCrumbs: true,
+                  startColumn: 1,
+                  endColumn: 2
+              };
+              const firstHeaderCell = gridViewModel.getCurrentHeaderColumn(0, 1);
+              assert.equal(firstHeaderCell.cellStyles, 'grid-column: 1/3; grid-row: 1/2;');
+
+              gridViewModel._headerRows[0][1] = originBreadcrumbsCell;
+          });
+
+
+          it('_prepareColgroupColumns', function() {
             assert.deepEqual([{}].concat(gridColumns), gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" before "_prepareColgroupColumns([])" without multiselect.');
             gridViewModel._prepareColgroupColumns([], false);
             assert.deepEqual([], gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns([])" without multiselect.');

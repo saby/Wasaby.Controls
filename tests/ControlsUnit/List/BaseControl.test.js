@@ -1197,6 +1197,11 @@ define([
                            updateShadowModeParams = params[0];
                        }
                    },
+                  _listViewModel: {
+                      getCount: function() {
+                         return 1;
+                      }
+                  },
                   _options: {
                       navigation: {
 
@@ -1736,6 +1741,16 @@ define([
          };
          baseControl._sourceController = null;
          assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
+
+         baseControl._sourceController = {
+            hasMoreData: function() {
+               return true;
+            },
+            isLoading: function() {
+               return true;
+            }
+         };
+         assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
       });
 
       it('reload with changing source/navig/filter should call scroll to start', function() {
@@ -3872,6 +3887,11 @@ define([
          var baseControlMock = {
             _needScrollCalculation: true,
             _sourceController: {hasMoreData: () => {return true;}},
+            _listViewModel: {
+               getCount: function() {
+                  return 1;
+               }
+            },
             _notify: () => {},
             _isMounted: true
          };

@@ -49,7 +49,6 @@ const
             self._shadowState =
                _private.calculateShadowState(self._scrollPosition, self._contentContainerSize, self._contentSize);
             _private.updateFixedColumnWidth(self);
-            self._scrollVisible = true;
             self._forceUpdate();
          }
          if (newContentContainerSize + self._scrollPosition > newContentSize) {
@@ -111,12 +110,14 @@ const
       drawTransform (self, position) {
          // This is the fastest synchronization method scroll position and cell transform.
          // Scroll position synchronization via VDOM is much slower.
-         self._children.contentStyle.innerHTML =
-            '.' + self._transformSelector +
+         const newHTML = '.' + self._transformSelector +
             ' .controls-Grid__cell_transform { transform: translateX(-' + position + 'px); }';
+         if (self._children.contentStyle.innerHTML !== newHTML) {
+            self._children.contentStyle.innerHTML = newHTML;
+         }
+
       },
       setOffsetForHScroll (self) {
-          const prevOffset = self._offsetForHScroll;
           const container = self._children.content;
           self._offsetForHScroll = 0;
           self._leftOffsetForHScroll = 0;
@@ -138,9 +139,6 @@ const
                   self._offsetForHScroll += ResultsContainer[0].offsetHeight;
               }
           }
-          if (prevOffset !== self._offsetForHScroll) {
-              self._scrollVisible = true;
-          }
       }
    },
    ColumnScroll = Control.extend({
@@ -157,7 +155,6 @@ const
       _leftOffsetForHScroll: 0,
       _isNotGridSupport: false,
       _contentSizeForHScroll: 0,
-      _scrollVisible: true,
       _scrollWidth: 0,
       _isFullGridSupport: true,
 
@@ -193,9 +190,6 @@ const
             _private.updateFixedColumnWidth(this);
             this._setOffsetForHScroll();
          }
-         if (this._options.root !== oldOptions.root) {
-              this._scrollVisible = false;
-         }
       },
       updateShadowStyle() {
           if (this._children.startShadow) {
@@ -209,7 +203,7 @@ const
 
       _isColumnScrollVisible: function() {
          const items = this._options.listModel.getItems();
-         return this._scrollVisible && items && !!items.getCount() && (this._contentSize > this._contentContainerSize) ? true : false;
+         return items && !!items.getCount() && (this._contentSize > this._contentContainerSize) ? true : false;
       },
 
       _calculateShadowClasses(position) {
