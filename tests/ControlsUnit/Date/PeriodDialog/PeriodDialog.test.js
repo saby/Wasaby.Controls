@@ -19,7 +19,7 @@ define([
       end = new Date(2018, 0, 2);
 
    const formatDate = function(date) {
-      return formatter.date(date, formatter.date.FULL_DATE);
+      return date ? formatter.date(date, formatter.date.FULL_DATE) : 'null';
    };
 
    describe('Controls/Date/PeriodDialog', function() {
@@ -278,6 +278,14 @@ define([
             options: { mask: 'MM.YYYY' },
             date: new Date(2019, 6, 10),
             endValue: new Date(2019, 7, 0)
+         }, {
+            options: { mask: 'MM.YYYY' },
+            date: new Date('InvalidDate'),
+            endValue: new Date('InvalidDate')
+         }, {
+            options: { mask: 'MM.YYYY' },
+            date: null,
+            endValue: null
          }].forEach(function(test) {
             it(`should update end value to ${formatDate(test.endValue)} if ${formatDate(test.date)} is passed and options is equal ${JSON.stringify(test.options)}.`, function() {
                const component = calendarTestUtils.createComponent(PeriodDialog, test.options);
