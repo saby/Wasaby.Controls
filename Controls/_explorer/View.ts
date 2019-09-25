@@ -273,7 +273,7 @@ import 'Types/entity';
     * </pre>
     */
 
-    var Explorer = Control.extend({
+   var Explorer = Control.extend({
       _template: template,
       _breadCrumbsItems: null,
       _root: null,
