@@ -1,0 +1,20 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">default</div>
+        <Controls.search:Input attr:ws-autofocus="true" attr:class="controlsDemo__searchBase_field"></Controls.search:Input>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">readonly=true</div>
+        <Controls.search:Input readonly="{{true}}" attr:class="controlsDemo__searchBase_field"></Controls.search:Input>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">searchButtonVisible=false</div>
+        <Controls.search:Input searchButtonVisible="{{false}}" attr:class="controlsDemo__searchBase_field"></Controls.search:Input>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controlsDemo__background">
+            <div class="controls-text-label_theme-{{_options.theme}}">contrastBackground=true</div>
+            <Controls.search:Input contrastBackground="{{true}}" attr:class="controlsDemo__searchBase_field"></Controls.search:Input>
+        </div>
+    </div>
+</div>

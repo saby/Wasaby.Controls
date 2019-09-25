@@ -1,6 +1,6 @@
 <Controls._input.Render attr:title="{{_tooltip}}"
                         style="{{_options.style}}"
-                        state="{{_renderStyle}}"
+                        state="{{_renderStyle()}}"
                         viewModel="{{_viewModel}}"
                         size="{{_options.size}}"
                         multiline="{{_multiline}}"
