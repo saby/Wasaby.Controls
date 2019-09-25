@@ -119,7 +119,7 @@ var BaseLookupView = Control.extend({
             this._needSetFocusInInput = false;
 
             /* focus can be moved in choose event */
-            if (this._active) {
+            if (this._$active) {
                 this.activate();
 
                 // На айпаде иногда курсор не восстанавливается в начало поля ввода когда выборка становится пустой

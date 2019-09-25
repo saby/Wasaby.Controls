@@ -55,7 +55,7 @@ define([
          assert.isFalse(lookup._needSetFocusInInput);
 
          lookup._needSetFocusInInput = true;
-         lookup._active = true;
+         lookup._$active = true;
          lookup._afterUpdate();
          assert.isTrue(activated);
          assert.isFalse(lookup._needSetFocusInInput);
