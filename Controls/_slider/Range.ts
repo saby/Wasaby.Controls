@@ -42,7 +42,7 @@ const maxPercentValue = 100;
 
 /**
  * @name Controls/_slider/Range#size
- * @cfg {Boolean} Устанавливает размер ползунка слайдера. 
+ * @cfg {Boolean} Устанавливает размер ползунка слайдера.
  * @variant m
  * @variant s
  * @default m
@@ -81,7 +81,7 @@ const maxPercentValue = 100;
  * <pre class="brush:html">
  *   <Controls.slider:Base borderVisible="{{true}}"/>
  * </pre>
- */ 
+ */
 
 /**
  * @name Controls/_slider/Range#minValue
@@ -105,7 +105,7 @@ const maxPercentValue = 100;
  *   <Controls.slider:Base minValue="{{10}}"/>
  * </pre>
  * @see maxValue
- */ 
+ */
 
 /**
  * @name Controls/_slider/Range#maxValue
@@ -129,7 +129,7 @@ const maxPercentValue = 100;
  *   <Controls.slider:Base maxValue="{{100}}"/>
  * </pre>
  * @see minValue
- */ 
+ */
 
 /**
  * @name Controls/_slider/Range#scaleStep
@@ -151,7 +151,7 @@ const maxPercentValue = 100;
  * <pre class="brush:html">
  *   <Controls.slider:Base scaleStep="{{20}}"/>
  * </pre>
- */ 
+ */
 
 /**
  * @name Controls/_slider/Range#startValue
@@ -175,7 +175,7 @@ const maxPercentValue = 100;
  *   <Controls.slider:Base startValue="{{40}}"/>
  * </pre>
  * @see endValue
- */ 
+ */
 
 /**
  * @name Controls/_slider/Range#endValue
@@ -199,7 +199,7 @@ const maxPercentValue = 100;
  *   <Controls.slider:Base endValue="{{40}}"/>
  * </pre>
  * @see startValue
- */ 
+ */
 
 /**
  * @name Controls/_slider/Range#precision
@@ -221,7 +221,7 @@ const maxPercentValue = 100;
  * <pre class="brush:html">
  *   <Controls.slider:Base precision="{{0}}"/>
  * </pre>
- */ 
+ */
 class Range extends Control<ISliderRangeOptions> {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
@@ -305,10 +305,12 @@ class Range extends Control<ISliderRangeOptions> {
       }
    }
 
-   private _onMouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
+   private _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
+      let targetX = Utils.getNativeEventPageX(event);
+
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
-         const ratio = Utils.getRatio(event.nativeEvent.pageX, box.left + window.pageXOffset, box.width);
+         const ratio = Utils.getRatio(targetX, box.left + window.pageXOffset, box.width);
          this._value = Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
          const pointName = this._getClosestPoint(this._value, this._startValue, this._endValue);
          if (pointName === 'start') {

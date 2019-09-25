@@ -37,7 +37,7 @@ const maxPercentValue = 100;
  * @class Controls/_slider/Base
  * @author Колесов В.А.
  * @demo Controls-demo/Slider/Base/SliderBaseDemo
- */ 
+ */
 
 /**
  * @name Controls/_slider/Base#size
@@ -80,7 +80,7 @@ const maxPercentValue = 100;
  * <pre class="brush:html">
  *   <Controls.slider:Base borderVisible="{{true}}"/>
  * </pre>
- */ 
+ */
 
 /**
  * @name Controls/_slider/Base#minValue
@@ -104,7 +104,7 @@ const maxPercentValue = 100;
  *   <Controls.slider:Base minValue="{{10}}"/>
  * </pre>
  * @see maxValue
- */ 
+ */
 
 /**
  * @name Controls/_slider/Base#maxValue
@@ -128,7 +128,7 @@ const maxPercentValue = 100;
  *   <Controls.slider:Base maxValue="{{100}}"/>
  * </pre>
  * @see minValue
- */ 
+ */
 
 /**
  * @name Controls/_slider/Base#scaleStep
@@ -150,7 +150,7 @@ const maxPercentValue = 100;
  * <pre class="brush:html">
  *   <Controls.slider:Base scaleStep="{{20}}"/>
  * </pre>
- */ 
+ */
 
 /**
  * @name Controls/_slider/Base#value
@@ -172,7 +172,7 @@ const maxPercentValue = 100;
  * <pre class="brush:html">
  *   <Controls.slider:Base value="{{40}}"/>
  * </pre>
- */ 
+ */
 
 /**
  * @name Controls/_slider/Base#precision
@@ -194,7 +194,7 @@ const maxPercentValue = 100;
  * <pre class="brush:html">
  *   <Controls.slider:Base precision="{{0}}"/>
  * </pre>
- */ 
+ */
 class Base extends Control<ISliderBaseOptions> {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
@@ -244,10 +244,12 @@ class Base extends Control<ISliderBaseOptions> {
       this._render(options.minValue, options.maxValue, options.value);
    }
 
-   private _onMouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
+   private _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
+      let targetX = Utils.getNativeEventPageX(event);
+
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
-         const ratio = Utils.getRatio(event.nativeEvent.pageX, box.left + window.pageXOffset, box.width);
+         const ratio = Utils.getRatio(targetX, box.left + window.pageXOffset, box.width);
          this._value = Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
          this._setValue(this._value);
          this._children.dragNDrop.startDragNDrop(this._children.point, event);
