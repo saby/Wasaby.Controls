@@ -224,7 +224,11 @@ var _private = {
             //because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
             //otherwise empty template will shown
             if ((hasMoreDataDown || hasMoreDataUp) && self._needScrollCalculation) {
-                _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
+                if (self._listViewModel && self._listViewModel.getCount()) {
+                    _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
+                } else {
+                    _private.showIndicator(self);
+                }
             } else {
                 _private.hideIndicator(self);
             }
@@ -458,9 +462,11 @@ var _private = {
     updateShadowMode(self): void {
         self._notify('updateShadowMode', [{
             top: self._virtualScroll && self._virtualScroll.PlaceholdersSizes.top ||
-            self._sourceController && self._sourceController.hasMoreData('up') ? 'visible' : 'auto',
+                self._listViewModel && self._listViewModel.getCount() &&
+                self._sourceController && self._sourceController.hasMoreData('up') ? 'visible' : 'auto',
             bottom: self._virtualScroll && self._virtualScroll.PlaceholdersSizes.bottom ||
-            self._sourceController && self._sourceController.hasMoreData('down') ? 'visible' : 'auto'
+                self._listViewModel && self._listViewModel.getCount() &&
+                self._sourceController && self._sourceController.hasMoreData('down') ? 'visible' : 'auto'
         }], { bubbling: true });
     },
 
@@ -1818,9 +1824,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const noData = !listViewModel.getCount();
         const noEdit = !listViewModel.getEditingItemData();
         const isLoading = this._sourceController && this._sourceController.isLoading();
-        const hasMore = this._sourceController && (this._sourceController.hasMoreData('down') || this._sourceController.hasMoreData('up'));
+        const notHasMore = !(this._sourceController && (this._sourceController.hasMoreData('down') || this._sourceController.hasMoreData('up')));
         const noDataBeforeReload = this._noDataBeforeReload;
-        return emptyTemplate && noEdit && (isLoading || hasMore ? noData && noDataBeforeReload : noData);
+        return emptyTemplate && noEdit && notHasMore && (isLoading ? noData && noDataBeforeReload : noData);
     },
 
     _onCheckBoxClick: function(e, key, status) {
