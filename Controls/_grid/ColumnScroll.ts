@@ -111,9 +111,12 @@ const
       drawTransform (self, position) {
          // This is the fastest synchronization method scroll position and cell transform.
          // Scroll position synchronization via VDOM is much slower.
-         self._children.contentStyle.innerHTML =
-            '.' + self._transformSelector +
+         const newHTML = '.' + self._transformSelector +
             ' .controls-Grid__cell_transform { transform: translateX(-' + position + 'px); }';
+         if (self._children.contentStyle.innerHTML !== newHTML) {
+            self._children.contentStyle.innerHTML = newHTML;
+         }
+
       },
       setOffsetForHScroll (self) {
           const prevOffset = self._offsetForHScroll;
