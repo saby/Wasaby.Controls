@@ -6,16 +6,16 @@ define([
    'Controls/Application'
 ], function(Env, Application) {
    describe('Controls.Application2', function() {
-      const trueMobileIOS = Env.detection.isMobileIOS;
-
-      if (typeof window === 'undefined') {
-         Env.detection['test::isMobileIOS'] = true;
-      } else {
-         Env.detection.isMobileIOS = true;
-      }
-
       describe('popup logic', function() {
          it('not mobile', function () {
+            const trueMobileIOS = Env.detection.isMobileIOS;
+
+            if (typeof window === 'undefined') {
+               Env.detection['test::isMobileIOS'] = false;
+            } else {
+               Env.detection.isMobileIOS = false;
+            }
+
             let
                ctrl = new Application({});
 
@@ -33,9 +33,23 @@ define([
             assert.equal(ctrl._scrollingClass, '');
             ctrl._suggestStateChangedHandler(null, false);
             assert.equal(ctrl._scrollingClass, '');
+
+            if (typeof window === 'undefined') {
+               Env.detection['test::isMobileIOS'] = undefined;
+            } else {
+               Env.detection.isMobileIOS = trueMobileIOS;
+            }
          });
 
          it('ios', function () {
+            const trueMobileIOS = Env.detection.isMobileIOS;
+
+            if (typeof window === 'undefined') {
+               Env.detection['test::isMobileIOS'] = true;
+            } else {
+               Env.detection.isMobileIOS = true;
+            }
+
             let ctrl = new Application({});
 
             ctrl._popupCreatedHandler();
@@ -52,13 +66,14 @@ define([
             assert.equal(ctrl._scrollingClass, 'controls-Scroll_webkitOverflowScrollingAuto');
             ctrl._suggestStateChangedHandler(null, false);
             assert.equal(ctrl._scrollingClass, 'controls-Scroll_webkitOverflowScrollingTouch');
+
+            if (typeof window === 'undefined') {
+               Env.detection['test::isMobileIOS'] = undefined;
+            } else {
+               Env.detection.isMobileIOS = trueMobileIOS;
+            }
          });
       });
 
-      if (typeof window === 'undefined') {
-         Env.detection['test::isMobileIOS'] = undefined;
-      } else {
-         Env.detection.isMobileIOS = trueMobileIOS;
-      }
    });
 });
