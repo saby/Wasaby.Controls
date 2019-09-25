@@ -6,9 +6,9 @@ import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import Deferred = require('Core/Deferred');
 import {parse as parserLib} from 'Core/library';
 import StackContent = require('Controls/_popupTemplate/Stack/Opener/StackContent');
+import {detection} from 'Env/Env';
 import 'css!theme?Controls/popupTemplate';
 
-const STACK_CLASS = 'controls-Stack';
 const _private = {
 
     prepareSizes(item, container) {
@@ -138,15 +138,7 @@ const _private = {
     },
 
     prepareUpdateClassses(item) {
-        _private.addStackClasses(item.popupOptions);
         _private.updatePopupOptions(item);
-    },
-
-    addStackClasses(popupOptions) {
-        const className = popupOptions.className || '';
-        if (className.indexOf(STACK_CLASS) < 0) {
-            popupOptions.className = className + ' ' + STACK_CLASS;
-        }
     },
 
     updatePopupOptions(item) {
@@ -227,7 +219,7 @@ const _private = {
         }
     },
     addLastStackClass(item): void {
-        item.popupOptions.className += ' controls-Stack__last-item';
+        item.popupOptions.className = (item.popupOptions.className || '') + ' controls-Stack__last-item';
     },
 
     removeLastStackClass(item): void {
@@ -236,7 +228,6 @@ const _private = {
     getDefaultConfig(self, item): void {
         _private.prepareSizeWithoutDOM(item);
         _private.setStackContent(item);
-        _private.addStackClasses(item.popupOptions);
         if (StackStrategy.isMaximizedPanel(item)) {
             // set default values
             item.popupOptions.templateOptions.showMaximizedButton = undefined; // for vdom dirtyChecking
@@ -322,6 +313,7 @@ const StackController = BaseController.extend({
     },
 
     elementUpdateOptions(item, container) {
+        _private.preparePropStorageId(item);
         if (!item.popupOptions.propStorageId) {
             return _private.updatePopup(this, item, container);
         } else {

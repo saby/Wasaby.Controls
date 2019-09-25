@@ -429,7 +429,7 @@ const _private = {
       }
 
       /**
-       * Контрол-контроллер, который позволяет фильтровать данные в {@link Controls/list:View}, используя {@link Filter/Button} или {@link Filter/Fast}.
+       * Контрол-контроллер, который позволяет фильтровать данные в {@link Controls/list:View}, используя {@link Controls/filter:Selector} или {@link Controls/filter:Fast}.
        * Контроллер позволяет сохранять историю фильтра и восстанавливать страницу после перезагрузки с последним примененным фильтром.
        *
        * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/'>здесь</a>.

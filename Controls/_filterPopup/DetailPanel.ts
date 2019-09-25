@@ -138,36 +138,43 @@ import 'Controls/form';
          }
       },
 
-      filterHistoryItems: function(self, items: Array): void {
+      filterHistoryItems: function(self, items: object[]): object[] {
          function getOriginalItem(self, historyItem: object): object {
             return find(self._items, (originalItem) => {
                return originalItem.id === historyItem.id;
             });
          }
 
+         let result;
          let originalItem;
          let hasResetValue;
 
-         return chain.factory(items).filter((item) => {
-            const history = JSON.parse(item.get('ObjectData')).items || JSON.parse(item.get('ObjectData'));
-            let result = false;
+         if (items) {
+            result = chain.factory(items).filter((item) => {
+               const history = JSON.parse(item.get('ObjectData')).items || JSON.parse(item.get('ObjectData'));
+               let result = false;
 
-            for (let i = 0, length = history.length; i < length; i++) {
-               const textValue = getPropValue(history[i], 'textValue');
-               const value = getPropValue(history[i], 'value');
+               for (let i = 0, length = history.length; i < length; i++) {
+                  const textValue = getPropValue(history[i], 'textValue');
+                  const value = getPropValue(history[i], 'value');
 
-               if (textValue !== '' && textValue !== undefined) {
-                  originalItem = getOriginalItem(self, history[i]);
-                  hasResetValue = originalItem && originalItem.hasOwnProperty('resetValue');
+                  if (textValue !== '' && textValue !== undefined) {
+                     originalItem = getOriginalItem(self, history[i]);
+                     hasResetValue = originalItem && originalItem.hasOwnProperty('resetValue');
 
-                  if (!hasResetValue || hasResetValue && !isEqual(value, getPropValue(originalItem, 'resetValue'))) {
-                     result = true;
-                     break;
+                     if (!hasResetValue || hasResetValue && !isEqual(value, getPropValue(originalItem, 'resetValue'))) {
+                        result = true;
+                        break;
+                     }
                   }
                }
-            }
-            return result;
-          }).value(factory.recordSet, {adapter: items.getAdapter()});
+               return result;
+            }).value(factory.recordSet, {adapter: items.getAdapter()});
+         } else {
+            result = items;
+         }
+
+         return result;
       },
 
       reloadHistoryItems: function(self, historyId) {
@@ -239,8 +246,16 @@ import 'Controls/form';
       },
 
       prepareItems: function(items) {
+         let value, isValueReseted;
          chain.factory(items).each(function(item) {
-            if (getPropValue(item, 'visibility') === true && isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'))) {
+            value = getPropValue(item, 'value');
+            if (item.hasOwnProperty('resetValue')) {
+               isValueReseted = isEqual(value, getPropValue(item, 'resetValue'));
+            } else {
+               // if the missing resetValue field, by value field we determine that the filter should be moved
+               isValueReseted = !value || value.length === 0;
+            }
+            if (getPropValue(item, 'visibility') === true && isValueReseted) {
                setPropValue(item, 'visibility', false);
             }
          });

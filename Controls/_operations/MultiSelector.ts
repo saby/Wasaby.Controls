@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_operations/MultiSelector/MultiSelector');
 
 
-   var MultiSelector = Control.extend({
+var MultiSelector = Control.extend({
       _template: template,
       _multiSelectStatus: undefined,
 
@@ -17,7 +17,7 @@ import template = require('wml!Controls/_operations/MultiSelector/MultiSelector'
       _updateSelection: function(selectedKeys, excludedKeys, count, root) {
          if (selectedKeys[0] === root && (!excludedKeys.length || excludedKeys[0] === root && excludedKeys.length === 1)) {
             this._multiSelectStatus = true;
-         } else if (count > 0 || count === null) {
+         } else if (selectedKeys.length && (count > 0 || count === null)) {
             this._multiSelectStatus = null;
          } else {
             this._multiSelectStatus = false;

@@ -146,9 +146,9 @@ import Env = require('Env/Env');
       return {
          size: 'l',
          viewMode: 'toolButton',
-         transparent: true
+         transparent: true,
+         compatibleFocus: false
       };
    };
 
    export = CloseButton;
-

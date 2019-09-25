@@ -57,6 +57,10 @@ define([
       });
 
       describe('_stickyRegisterHandler', function() {
+         const event = {
+            stopImmediatePropagation: function() {}
+         };
+
          it('should stopImmediatePropagation event', function() {
             let event = {
                blockUpdate: false,
@@ -120,6 +124,23 @@ define([
                   assert.notInclude(component._headersStack[test.position], data.id);
                }
             });
+         });
+
+         it('should insert header in proper position', function() {
+            [0, 20, 10].forEach(function (offset, index) {
+               const header = {
+                  id: index,
+                  position: 'top',
+                  mode: 'stackable',
+                  inst: {
+                     getOffset: function() {
+                        return offset;
+                     }
+                  }
+               };
+               component._stickyRegisterHandler(event, header, true);
+            });
+            assert.deepEqual(component._headersStack.top, [0, 2, 1]);
          });
       });
 

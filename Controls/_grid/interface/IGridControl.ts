@@ -171,9 +171,10 @@
  * - <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
  * - <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
  * @remark
- * По умолчанию используется базовый шаблон {@link Controls/grid:HeaderContent https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/}.
- * Базовый шаблон поддерживает следующие css-модификаторы:
- * - controls-Grid__header-cell_spacing_money — используется для добавления отступа в заголовке столбца при рендере денежных данных в самом столбце.
+ * По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
+ * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
+ *
+ * 
  *
  * @example
  * Пример добавления пользовательскогого шаблона:
@@ -492,6 +493,14 @@
  * @cfg {String} Results row position.
  * @variant top Show results above the list.
  * @variant bottom Show results below the list.
+ */
+
+/**
+ * @name Controls/_grid/interface/IGridControl#resultsVisibility
+ * @cfg {String} Режим отображения строки итогов.
+ * @variant hasdata Строка итогов отображается при наличии более 1 записи в списке.
+ * @variant visible Строка итогов отображается всегда, вне зависимости от количества данных в списке.
+ * @default hasData
  */
 
 /**

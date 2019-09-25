@@ -222,6 +222,11 @@ const StickyController = BaseController.extend({
         container.style.height = height;
 
         /* end: Return all values to the node. Need for vdom synchronizer */
+
+        // toDO выписана задача https://online.sbis.ru/opendoc.html?guid=79cdc24c-cf4c-45da-97b4-7353540a2b1b
+        if (item.popupOptions.resizeCallback instanceof Function) {
+            item.popupOptions.resizeCallback();
+        }
         return true;
     },
 
@@ -250,11 +255,6 @@ const StickyController = BaseController.extend({
         _private.removeOrientationClasses(item);
         const sizes = this._getPopupSizes(item, container);
         _private.prepareConfig(this, item, sizes);
-    },
-
-    pageScrolled(): boolean {
-        // don't recalculate position on page scroll (only on ios with visible keyboard);
-        return false;
     },
 
     needRecalcOnKeyboardShow() {

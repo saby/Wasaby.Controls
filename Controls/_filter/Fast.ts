@@ -119,7 +119,6 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
                return Deferred.success(self._configs[index]._items);
             } else if (properties.source) {
                if (self._configs[index]._sourceController) {
-                  self._configs[index]._sourceController.cancelLoading();
                   self._configs[index]._sourceController = null;
                }
                self._configs[index]._source = null;
@@ -128,14 +127,18 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
          },
 
          reload: function(self) {
+            if (self._loadDeferred && !self._loadDeferred.isReady()) {
+               self._loadDeferred.cancel();
+               self._loadDeferred = null;
+            }
             var pDef = new pDeferred();
             chain.factory(self._items).each(function(item, index) {
                var result = _private.loadItems(self, item, index);
                pDef.push(result);
             });
-
+            self._loadDeferred = pDef.done().getResult();
             // At first, we will load all the lists in order not to cause blinking of the interface and many redraws.
-            return pDef.done().getResult().addCallback(function() {
+            return self._loadDeferred.addCallback(function() {
                return _private.loadNewItems(self, self._items, self._configs).addCallback(() => {
                   return {
                      configs: self._configs,

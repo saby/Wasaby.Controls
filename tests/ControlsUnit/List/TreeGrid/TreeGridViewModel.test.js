@@ -250,6 +250,49 @@ define(['Controls/treeGrid',
          );
       });
 
+      it('row index for node footer', function() {
+         let initialColumns = [{
+            width: '1fr',
+            displayProperty: 'title'
+            }],
+             model = new treeGrid.ViewModel({
+                items: new collection.RecordSet({
+                   idProperty: 'id',
+                   rawData: [
+                      {id: 0, title: 'i0', parent: null, type: true},
+                      {id: 1, title: 'i1', parent: null, type: false},
+                      {id: 2, title: 'i2', parent: null, type: null}
+                   ]
+                }),
+                keyProperty: 'id',
+                nodeProperty: 'type',
+                parentProperty: 'parent',
+                columns: initialColumns,
+                columnScroll: true
+             });
+
+         let originFn = treeGrid.ViewModel.superclass.getItemDataByItem;
+         treeGrid.ViewModel.superclass.getItemDataByItem = function() {
+            return {
+               item: {},
+               columns: initialColumns,
+               nodeFooter: {},
+               rowIndex: 1,
+               getCurrentColumn: function() {
+                  return {
+                     cellClasses: ''
+                  };
+               },
+               columnScroll: true
+            };
+         };
+
+         let nodeFooter = model.getItemDataByItem.call(model).nodeFooter;
+         assert.deepEqual([nodeFooter.rowIndex, nodeFooter.gridStyles],[2, 'grid-row: 3; -ms-grid-row: 3; grid-column: 2 / 1; -ms-grid-column: 2; -ms-grid-column-span: 0;'])
+
+         treeGrid.ViewModel.superclass.getItemDataByItem = originFn;
+      });
+
       it('calcRowIndex', function () {
          var
              initialColumns = [{

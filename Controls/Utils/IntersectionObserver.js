@@ -431,6 +431,30 @@ define('Controls/Utils/IntersectionObserver',
                      }
                      parent = getParentNode(parent);
                   }
+
+                  // TODO Kingo
+                  // Нативный IntersectionObserver например Хрома не сообщает об изменении
+                  // пересечения, если observable-элемент скрыт, или один из его родителей скрыт
+                  // через display: none.
+                  // Этот полифил проверяет display: none на всех родителях, но только до
+                  // observation-корня, в нашем случае это ScrollContainer. Поэтому если
+                  // ScrollContainer отображается, но какой-то из его родителей скрыт (например
+                  // если он лежит внутри SwitchableArea), то этот полифил все равно сообщит
+                  // об изменении intersection'a.
+                  //
+                  // Если нашли intersectionRect, проверяем, что элемент реально видим,
+                  // проверкой display на всех родителях до body.
+                  if (intersectionRect) {
+                     while (parent && parent !== document.body) {
+                        // Если какой-то из родителей скрыт, выходим и не сообщаем о пересечении
+                        // (как нативный IntersectionObserver)
+                        if (window.getComputedStyle(parent).display === 'none') {
+                           return;
+                        }
+                        parent = getParentNode(parent);
+                     }
+                  }
+
                   return intersectionRect;
                };
 

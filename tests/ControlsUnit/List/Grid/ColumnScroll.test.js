@@ -8,6 +8,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             items: {
                getCount: () => 1
             },
+            header: [{}, {}, {}],
             multiSelectVisibility: 'visible',
             stickyColumnsCount: 1,
             listModel: {
@@ -139,6 +140,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                items: {
                   getCount: () => 1
                },
+               header: [{}, {}, {}],
                multiSelectVisibility: 'visible',
                stickyColumnsCount: 1,
                columnScrollStartPosition: 'end',
@@ -332,11 +334,6 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(clearColumnScroll._leftOffsetForHScroll, 100);
          assert.equal(clearColumnScroll._contentSize, 500);
          assert.equal(clearColumnScroll._contentSizeForHScroll, 400);
-
-         assert.isTrue(clearColumnScroll._isColumnScrollVisible());
-
-         clearColumnScroll._afterUpdate({...cfg, root: '123'});
-         assert.isFalse(clearColumnScroll._isColumnScrollVisible());
 
       });
 

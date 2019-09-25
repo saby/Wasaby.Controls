@@ -20,6 +20,7 @@
                   parentProperty="parent"
                   nodeProperty="@parent"
                   keyProperty="id"
+                  additionalProperty="additional"
                   source="{{_getMemorySource(_defaultItems)}}"
                   popupClassName="controls-Toolbar_test_popupClassName"
                   on:itemClick="_itemClick()"

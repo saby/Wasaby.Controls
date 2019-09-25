@@ -125,6 +125,26 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                   title: 'Сообщение',
                   '@parent': false,
                   parent: '11'
+               },
+               {
+                  id: '14',
+                  showType: 0,
+                  buttonIcon: 'icon-medium icon-Groups',
+                  buttonStyle: 'secondary',
+                  title: 'Совещания',
+                  '@parent': true,
+                  parent: null,
+                  additional: true
+               },
+               {
+                  id: '2',
+                  showType: 0,
+                  buttonIcon: 'icon-medium icon-Report',
+                  buttonStyle: 'secondary',
+                  title: 'Список задач',
+                  '@parent': true,
+                  parent: null,
+                  additional: true
                }
             ];
             this._defaultItemsWithoutToolbutton = [

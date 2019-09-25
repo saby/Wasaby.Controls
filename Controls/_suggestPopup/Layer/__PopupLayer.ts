@@ -4,14 +4,15 @@
 
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggestPopup/Layer/__PopupLayer');
-import {detection} from 'Env/Env';
 import getZIndex = require('Controls/Utils/getZIndex');
+import {detection} from 'Env/Env';
 import 'css!theme?Controls/suggest';
 
 var POPUP_CLASS_NAME = 'controls-Suggest__suggestionsContainer_popup';
 
 var _private = {
    openPopup: function(self, opener, options) {
+       // !!closeOnOutsideClick не добавлять, иначе саггест закрывается при клике на саггест
       opener.open({
          target: options.target,
          opener: self,

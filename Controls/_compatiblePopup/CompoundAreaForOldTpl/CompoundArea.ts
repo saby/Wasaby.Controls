@@ -335,6 +335,11 @@ var CompoundArea = CompoundContainer.extend([
       self.__openerFromCfg = self._options.__openerFromCfg;
       self._parent = self._options.parent;
       self._logicParent = self._options.parent;
+
+      // Чтобы после применения makeInstanceCompatible BaseCompatible не стирал self._logicParent,
+      // нужно в оставить его в опциях в поле _logicParent, logicParent или parent.
+      // https://git.sbis.ru/sbis/ws/blob/rc-19.610/WS.Core/lib/Control/BaseCompatible/BaseCompatible.js#L956
+      self._options._logicParent = self._options.parent;
       self._options.parent = null;
 
       self._notifyVDOM = self._notify;

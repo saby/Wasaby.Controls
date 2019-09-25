@@ -30,6 +30,7 @@
       fontStyle="{{_options.fontStyle}}"
       fontSize="{{_options.fontSize}}"
       fontColorStyle="{{_options.fontColorStyle}}"
+      borderStyle="{{_options.borderStyle}}"
       inlineHeight="{{_options.inlineHeight}}"
       tagStyle="{{ _options.endTagStyle }}"
       selectOnClick="{{_options.selectOnClick}}"

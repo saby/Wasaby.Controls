@@ -19,7 +19,7 @@ define([
       end = new Date(2018, 0, 2);
 
    const formatDate = function(date) {
-      return formatter.date(date, formatter.date.FULL_DATE);
+      return date ? formatter.date(date, formatter.date.FULL_DATE) : 'null';
    };
 
    describe('Controls/Date/PeriodDialog', function() {
@@ -198,6 +198,36 @@ define([
          });
       });
 
+      describe('_afterUpdate', function() {
+         it('should not activate default autofocus field if _activateInputField is equal false.', function() {
+            const
+               sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(PeriodDialog, {});
+
+            sandbox.stub(component, 'activate');
+            component._afterUpdate();
+            assert.isFalse(component._activateInputField);
+            sinon.assert.notCalled(component.activate);
+
+            sandbox.restore();
+         });
+         it('should activate default autofocus field if _activateInputField is equal true.', function() {
+            const
+               sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(PeriodDialog, {});
+
+            component._activateInputField = true;
+            sandbox.stub(component, 'activate');
+
+            component._afterUpdate();
+
+            assert.isFalse(component._activateInputField);
+            sinon.assert.called(component.activate);
+
+            sandbox.restore();
+         });
+      });
+
       describe('_homeButtonClick', function() {
          it('should update _displayedDate.', function() {
             const
@@ -215,6 +245,7 @@ define([
             assert.strictEqual(component._headerType, PeriodDialog.HEADER_TYPES.link);
             component._headerLinkClick();
             assert.strictEqual(component._headerType, PeriodDialog.HEADER_TYPES.input);
+            assert.isTrue(component._activateInputField);
          });
       });
 
@@ -247,6 +278,14 @@ define([
             options: { mask: 'MM.YYYY' },
             date: new Date(2019, 6, 10),
             endValue: new Date(2019, 7, 0)
+         }, {
+            options: { mask: 'MM.YYYY' },
+            date: new Date('InvalidDate'),
+            endValue: new Date('InvalidDate')
+         }, {
+            options: { mask: 'MM.YYYY' },
+            date: null,
+            endValue: null
          }].forEach(function(test) {
             it(`should update end value to ${formatDate(test.endValue)} if ${formatDate(test.date)} is passed and options is equal ${JSON.stringify(test.options)}.`, function() {
                const component = calendarTestUtils.createComponent(PeriodDialog, test.options);
@@ -434,6 +473,13 @@ define([
             component._applyClick(null);
             sinon.assert.notCalled(component._notify);
             sandbox.restore();
+         });
+      });
+
+      describe('_startValueFieldKeyUpHandler', function() {
+         it('should not generate exceptions if there is no end value field.', function() {
+            const component = calendarTestUtils.createComponent(PeriodDialog, {});
+            component._startValueFieldKeyUpHandler(null);
          });
       });
    });

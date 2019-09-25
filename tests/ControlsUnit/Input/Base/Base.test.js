@@ -393,7 +393,7 @@ define(
                });
                ctrl._isIE = false;
 
-               _private.updateSelection(ctrl, {
+               ctrl._updateSelection({
                   start: 3,
                   end: 3
                });
@@ -409,7 +409,7 @@ define(
                });
                ctrl._isIE = true;
 
-               _private.updateSelection(ctrl, {
+               ctrl._updateSelection({
                   start: 3,
                   end: 3
                });

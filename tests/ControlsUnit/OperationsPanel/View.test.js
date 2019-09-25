@@ -1,12 +1,14 @@
 define([
    'Controls/operations',
+	'Controls/operationsPanel',
    'Types/source',
-   'Controls/_operations/Panel/Utils',
+	'Controls/_operationsPanel/OperationsPanel/Utils',
    'Controls/toolbars',
    'Types/entity',
    'Types/collection'
 ], function(
    View,
+	ViewPanel,
    sourceLib,
    WidthUtils,
    toolbars,
@@ -44,7 +46,7 @@ define([
       };
    }
 
-   describe('Controls/_operations/Panel', function() {
+	describe('Controls/_operationsPanel/OperationsPanel', function() {
       var
          instance,
          oldFillItemsType,
@@ -71,7 +73,7 @@ define([
          };
 
       beforeEach(function() {
-         instance = new View.Panel();
+			instance = new ViewPanel.OperationsPanel();
          instance._container = {
             offsetParent: 100
          };
@@ -386,7 +388,7 @@ define([
       });
    });
 
-   describe('Controls/_operations/Panel/Utils', () => {
+	describe('Controls/_operationsPanel/OperationsPanel/Utils', () => {
 
       describe('getContentTemplate', () => {
          it('returns itemTemplate from item if it has one', () => {

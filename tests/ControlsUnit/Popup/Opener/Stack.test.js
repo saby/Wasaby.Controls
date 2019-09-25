@@ -407,7 +407,7 @@ define(
 
             // класс обновился, потому что состояние было opened. После множ. update класс не задублировался
             assert.equal(itemConfig.popupState, BaseController.POPUP_STATE_UPDATING);
-            assert.equal(itemConfig.popupOptions.className, ' controls-Stack');
+            assert.equal(itemConfig.popupOptions.className, '');
 
             popupTemplate.StackController._elementAfterUpdated(itemConfig, {});
             assert.equal(itemConfig.popupState, BaseController.POPUP_STATE_UPDATED);

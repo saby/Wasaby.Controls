@@ -23,7 +23,7 @@ interface IPosition {
       getWindowSizes: function() {
          return {
             width: window.innerWidth,
-            height: window.innerHeight
+            height: window.innerHeight - TouchKeyboardHelper.getKeyboardHeight(true)
          };
       },
 
@@ -67,10 +67,11 @@ interface IPosition {
          let taskBarKeyboardIosHeight = 0;
          // Над клавой в ios может быть показана управляющая панель высотой 30px (задается в настройках ios).
          // У нас нет никакой инфы про ее наличие и/или высоту.
-         // Единственное решение учитывать ее всегда и поднимать окно от низа экрана на 30px.
-         // if (!isHorizontal && TouchKeyboardHelper.isKeyboardVisible(true)) {
-         //    taskBarKeyboardIosHeight = 30;
-         // }
+         // Единственное решение учитывать ее всегда и поднимать окно от низа экрана на 35px.
+         // С проектированием решили увеличить до 35.
+         if (!isHorizontal && TouchKeyboardHelper.isKeyboardVisible(true)) {
+            taskBarKeyboardIosHeight = 35;
+         }
          return position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
       },
 
@@ -232,7 +233,10 @@ interface IPosition {
          if (popupCfg.config.maxHeight) {
             position.maxHeight = Math.min(popupCfg.config.maxHeight, windowSizes.height);
          } else {
-            position.maxHeight = windowSizes.height;
+            // На ios возвращается неверная высота страницы, из-за чего накладывая maxWidth === windowSizes.height
+            // окно визуально обрезается. Делаю по body, у него высота правильная
+            position.maxHeight = _private.getBodyHeight();
+            // position.maxHeight = windowSizes.height;
          }
 
          if (popupCfg.config.minHeight) {
@@ -245,6 +249,10 @@ interface IPosition {
          if (popupCfg.config.height) {
             position.height = popupCfg.config.height;
          }
+      },
+
+      getBodyHeight(): number {
+         return document.body.clientHeight;
       }
    };
 

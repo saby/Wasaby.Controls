@@ -265,6 +265,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _HEADER_TYPES: HEADER_TYPES,
     _headerType: HEADER_TYPES.link,
+    _activateInputField: false,
 
     _homeButtonVisible: true,
 
@@ -329,6 +330,13 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._headerType = options.headerType;
     },
 
+    _afterUpdate: function(): void {
+        if (this._activateInputField) {
+            this.activate();
+            this._activateInputField = false;
+        }
+    },
+
     _beforeUnmount: function () {
         this._rangeModel.destroy();
         this._headerRangeModel.destroy();
@@ -353,6 +361,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
     _headerLinkClick: function (e) {
         if (this._headerType === this._HEADER_TYPES.link) {
             this._headerType = this._HEADER_TYPES.input;
+            this._activateInputField = true;
         } else {
             this._headerType = this._HEADER_TYPES.link;
         }
@@ -375,7 +384,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
             endValue = value;
         if (this._options.selectionType === IRangeSelectable.SELECTION_TYPES.single) {
             startValue = value;
-        } else if (!_private.isMaskWithDays(this._mask)) {
+        } else if (dateUtils.isValidDate(value) && !_private.isMaskWithDays(this._mask)) {
             endValue = dateUtils.getEndOfMonth(value);
         }
         _private.rangeChanged(this, startValue, endValue);
@@ -460,6 +469,9 @@ var Component = BaseControl.extend([EventProxyMixin], {
     // TODO Переделать по готовности задачи по доработке InputRender
     //  https://online.sbis.ru/opendoc.html?guid=d4bdb7cc-c324-4b4b-bda5-db6f8a46bc60
     _startValueFieldKeyUpHandler: function(event) {
+        if (!this._children.endValueField) {
+            return;
+        }
         // Move the focus only if the digit was pressed. Without this check, we see a bug in the following scenario.
         // The cursor is in a different input field. Click tab. By pressing the focus goes to this input field.
         // Release tab. Switches the focus in the field at the end of the period.
@@ -467,7 +479,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
         if (!isNaN(key)) {
              const startField = this._children.startValueField._container.querySelector('input');
              const endField = this._children.endValueField._container.querySelector('input');
-             if (startField.selectionStart === this._options.mask.length) {
+             if (startField.selectionStart === this._mask.length) {
                 this._children.endValueField.activate();
                 endField.setSelectionRange(0, 0);
              }

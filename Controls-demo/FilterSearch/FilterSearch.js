@@ -58,7 +58,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                         { id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.' },
                         { id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.' },
                      ],
-                     keyProperty: 'id'
+                     keyProperty: 'owner'
                   })
                }
             }
@@ -80,7 +80,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                         { id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.' },
                         { id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.' },
                      ],
-                     keyProperty: 'id'
+                     keyProperty: 'owner'
                   })
                }
             },
@@ -103,7 +103,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                         { id: 6, title: 'Федеральный центр продаж. Call-центр Ярославль' },
                         { id: 7, title: 'Сопровождение информационных систем' }
                      ],
-                     keyProperty: 'id'
+                     keyProperty: 'owner'
                   })
                }
             }
@@ -120,7 +120,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                   { id: 3, title: 'Субботин А.В.', lastName: 'Субботин А.В.' },
                   { id: 4, title: 'Чеперегин А.С.', lastName: 'Чеперегин А.С.' },
                ],
-               keyProperty: 'id'
+               keyProperty: 'lastName'
             })
          }];
          this._source = new sourceLib.Memory({

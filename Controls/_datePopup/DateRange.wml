@@ -39,10 +39,13 @@
          on:itemClick="_onItemClick()"
          on:positionChanged="_onPositionChanged()"
       >
+         <ws:yearHeaderTemplate>
+            <div class="controls-PeriodDialog-DateRangeItem__separator"></div>
+         </ws:yearHeaderTemplate>
          <ws:yearTemplate>
             <ws:partial template="Controls/calendar:MonthListYearTemplate">
                <ws:headerTemplate>
-                  <div class="controls-PeriodDialog-DateRangeItem__separator"></div>
+                  <invisible-node />
                </ws:headerTemplate>
                <ws:bodyTemplate>
                   <ws:partial
