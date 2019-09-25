@@ -1,6 +1,7 @@
 import {IoC} from 'Env/Env';
 import {ISliderBaseOptions} from './Base';
 import {ISliderRangeOptions} from './Range';
+import {SyntheticEvent} from '../../application/Vdom/Vdom';
 export interface IScaleData {
     value: number;
     position: number;
@@ -44,5 +45,16 @@ export default {
             scaleData.push({value: maxValue, position: 100});
         }
         return scaleData;
+    },
+    getNativeEventPageX(event: SyntheticEvent<MouseEvent | TouchEvent>) : number {
+        let targetX = 0;
+        if (event.type === "mousedown") {
+            targetX = event.nativeEvent.pageX;
+        } else if (event.type === "touchstart") {
+            targetX = event.nativeEvent.touches[0].pageX;
+        } else {
+            IoC.resolve('ILogger').error('Slider', 'Event type must be mousedown of touchstart.');
+        }
+        return targetX;
     }
 };

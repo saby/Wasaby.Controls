@@ -37,7 +37,7 @@ define([
          assert.equal(0.65, ratio, 'Case 4 getRatio: WrongResult');
          newValue = utils.default.calcValue(minValue, maxValue, ratio, precision);
          assert.equal(69, newValue, 'Case 4 calcValue: WrongResult');
-         
+
          var scaleStep = 20;
          var expectedScale = [{value: 10, position: 0},
                               {value: 30, position: 22.22222222222222},
@@ -62,5 +62,26 @@ define([
          scaleData = utils.default.getScaleData(minValue, maxValue, scaleStep);
          assert.deepEqual(expectedScale, scaleData, 'Case 3 getScaleData: WrongResult');
       });
-   })
+      it('getNativeEventPageX', function() {
+         let getNativeEventPageX = utils.default.getNativeEventPageX;
+         let mouseEvent = {
+            type: 'mousedown',
+            nativeEvent: {
+               pageX: 100
+            }
+         };
+         let touchEvent = {
+            type: 'touchstart',
+            nativeEvent: {
+               touches:[
+                  {
+                     pageX: 200
+                  }
+               ]
+            }
+         };
+         assert.equal(getNativeEventPageX(mouseEvent), 100, 'wrong x for mousedown event');
+         assert.equal(getNativeEventPageX(touchEvent), 200, 'wrong x for touchstart event');
+      });
+   });
 });
