@@ -265,6 +265,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _HEADER_TYPES: HEADER_TYPES,
     _headerType: HEADER_TYPES.link,
+    _activateInputField: false,
 
     _homeButtonVisible: true,
 
@@ -329,6 +330,13 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._headerType = options.headerType;
     },
 
+    _afterUpdate: function(): void {
+        if (this._activateInputField) {
+            this.activate();
+            this._activateInputField = false;
+        }
+    },
+
     _beforeUnmount: function () {
         this._rangeModel.destroy();
         this._headerRangeModel.destroy();
@@ -353,6 +361,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
     _headerLinkClick: function (e) {
         if (this._headerType === this._HEADER_TYPES.link) {
             this._headerType = this._HEADER_TYPES.input;
+            this._activateInputField = true;
         } else {
             this._headerType = this._HEADER_TYPES.link;
         }

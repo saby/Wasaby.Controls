@@ -198,6 +198,36 @@ define([
          });
       });
 
+      describe('_afterUpdate', function() {
+         it('should not activate default autofocus field if _activateInputField is equal false.', function() {
+            const
+               sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(PeriodDialog, {});
+
+            sandbox.stub(component, 'activate');
+            component._afterUpdate();
+            assert.isFalse(component._activateInputField);
+            sinon.assert.notCalled(component.activate);
+
+            sandbox.restore();
+         });
+         it('should activate default autofocus field if _activateInputField is equal true.', function() {
+            const
+               sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(PeriodDialog, {});
+
+            component._activateInputField = true;
+            sandbox.stub(component, 'activate');
+
+            component._afterUpdate();
+
+            assert.isFalse(component._activateInputField);
+            sinon.assert.called(component.activate);
+
+            sandbox.restore();
+         });
+      });
+
       describe('_homeButtonClick', function() {
          it('should update _displayedDate.', function() {
             const
@@ -215,6 +245,7 @@ define([
             assert.strictEqual(component._headerType, PeriodDialog.HEADER_TYPES.link);
             component._headerLinkClick();
             assert.strictEqual(component._headerType, PeriodDialog.HEADER_TYPES.input);
+            assert.isTrue(component._activateInputField);
          });
       });
 
