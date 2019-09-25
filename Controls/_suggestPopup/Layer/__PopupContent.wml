@@ -3,7 +3,8 @@
         <ws:content>
             <ws:partial template="{{_options.content}}"
                         suggestWidth="{{_suggestWidth}}"
-                        reverseList="{{_reverseList}}"/>
+                        reverseList="{{_reverseList}}"
+                        on:controlResize="resize()"/>
         </ws:content>
     </Controls.scroll:Container>
 </div>
