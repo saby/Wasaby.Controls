@@ -152,8 +152,7 @@ var Component = BaseControl.extend({
    },
 
    _clearDate: function() {
-      this._rangeModel.startValue = null;
-      this._rangeModel.endValue = null;
+      this._rangeModel.setRange(null, null);
       _private._updateCaption(this);
    },
 

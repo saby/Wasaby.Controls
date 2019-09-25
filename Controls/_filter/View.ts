@@ -5,7 +5,7 @@ import Merge = require('Core/core-merge');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import converterFilterItems = require('Controls/_filter/converterFilterItems');
-import getFormattedDateRange = require('Core/helpers/Date/getFormattedDateRange');
+import {Utils} from 'Controls/dateRange';
 import {isEqual} from 'Types/object';
 import {Controller as SourceController} from 'Controls/source';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
@@ -610,7 +610,8 @@ var Filter = Control.extend({
     _rangeChangedHandler: function(event, start, end) {
         let dateRangeItem = _private.getDateRangeItem(this._source);
         dateRangeItem.value = [start, end];
-        dateRangeItem.textValue = getFormattedDateRange(start, end);
+        dateRangeItem.textValue = Utils.formatDateRangeCaption(start, end,
+            this._dateRangeItem.editorOptions.emptyCaption || 'Не указан');
         _private.notifyChanges(this, this._source);
         this._dateRangeItem = object.clone(dateRangeItem);
     },
