@@ -397,6 +397,7 @@ define(
                }
             };
             view._source = source;
+            view._dateRangeItem = dateItem;
             view._rangeChangedHandler('rangeChanged', new Date(2019, 6, 1), new Date(2019, 6, 31));
             assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).value, [new Date(2019, 6, 1), new Date(2019, 6, 31)]);
             assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).textValue, "Июль'19");

@@ -237,6 +237,7 @@ define([
             assert.strictEqual(component._rangeModel.startValue, null);
             assert.strictEqual(component._rangeModel.endValue, null);
             assert.equal(component._caption, 'Не указан');
+            sinon.assert.callCount(component._notify, 3);
             sandbox.restore();
          });
       });
