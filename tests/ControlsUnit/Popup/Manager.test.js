@@ -415,7 +415,14 @@ define(
                testOption: 'created',
                autofocus: false
             }, new BaseController());
-            Manager._mouseDownHandler({});
+            let event = {
+               target: {
+                  classList: {
+                     contains: () => false
+                  }
+               }
+            }
+            Manager._mouseDownHandler(event);
             assert.equal(deactivatedCount, 2);
             Manager.destroy();
          });
