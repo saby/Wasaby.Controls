@@ -138,7 +138,7 @@
  */
 
 /**
- * @typedef {Object} HeaderCell Описывает ячейку заголовка строки.
+ * @typedef {Object} HeaderCell
  * @property {String} caption Текст заголовка ячейки.
  * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
