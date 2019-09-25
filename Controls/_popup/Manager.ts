@@ -290,9 +290,14 @@ const _private = {
     },
 
     popupControlResize(id) {
-        const element = _private.find(id);
-        if (element) {
-            return element.controller.popupResize(element, _private.getItemContainer(id));
+        const item = _private.find(id);
+        if (item) {
+            const parentItem = _private.find(item.parentId);
+            // Если над скрытым стековым окном позиционируются другие окна, то не даем им реагировать на внутренние ресайзы
+            // иначе позиция может сбиться, т.к. таргет в текущий момент невидим
+            if (!parentItem || parentItem.popupOptions.hidden !== true) {
+                return item.controller.popupResize(item, _private.getItemContainer(id));
+            }
         }
         return false;
     },
