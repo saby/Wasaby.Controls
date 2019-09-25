@@ -72,6 +72,8 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import TextViewModel = require('Controls/_input/Text/ViewModel');
 import MaskFormatBuilder = require('Controls/_input/Mask/FormatBuilder');
 import MaskInputProcessor = require('Controls/_input/Mask/InputProcessor');
+import MaskFormatter = require('Controls/_input/Mask/Formatter');
+import PhoneMaskBuilder = require('Controls/_input/Phone/MaskBuilder');
 import StringValueConverter = require('Controls/_input/DateTime/StringValueConverter');
 
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
@@ -110,5 +112,7 @@ export {
     StringValueConverter,
     InputCallback,
     INewLineKey,
-    ActualAPI
+    ActualAPI,
+    MaskFormatter,
+    PhoneMaskBuilder
 };
