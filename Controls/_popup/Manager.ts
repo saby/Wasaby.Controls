@@ -574,9 +574,11 @@ const Manager = Control.extend({
     _mouseDownHandler(event) {
         if (_private.popupItems && !_private.isIgnoreActivationArea(event.target)) {
             const deactivatedPopups = [];
-            _private.popupItems.each(function(item) {
+            // todo https://online.sbis.ru/opendoc.html?guid=ab4ffabb-20ba-4782-8c38-c4ab72b73a1a
+            const isResizingLine = event.target.classList.contains('controls-ResizingLine');
+            _private.popupItems.each((item) => {
                 // if we have deactivated popup
-                if (item && item.waitDeactivated) {
+                if (item && (item.waitDeactivated || isResizingLine)) {
                     const parentControls = _private.goUpByControlTree(event.target);
                     const popupInstance = ManagerController.getContainer().getPopupById(item.id);
 
