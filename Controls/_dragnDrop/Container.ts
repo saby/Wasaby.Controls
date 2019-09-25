@@ -915,7 +915,13 @@ import 'css!Controls/_dragnDrop/Container';
                }
             }
 
-            _private.onMove(this, event.nativeEvent);
+            // Не надо вызывать onMove если не нажата кнопка мыши.
+            // Кнопка мыши может быть не нажата в 2 случаях:
+            // 1) Мышь увели за пределы браузера, там отпустили и вернули в браузер
+            // 2) Баг IE, который подробнее описан в методе _onMouseMoveIEFix
+            if (event.nativeEvent.buttons) {
+               _private.onMove(this, event.nativeEvent);
+            }
 
             /**
              * Когда мышь покидает граници экрана, тогда перемещение элемента должно закончиться.
