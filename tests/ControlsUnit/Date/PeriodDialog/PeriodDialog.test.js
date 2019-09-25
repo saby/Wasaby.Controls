@@ -475,5 +475,12 @@ define([
             sandbox.restore();
          });
       });
+
+      describe('_startValueFieldKeyUpHandler', function() {
+         it('should not generate exceptions if there is no end value field.', function() {
+            const component = calendarTestUtils.createComponent(PeriodDialog, {});
+            component._startValueFieldKeyUpHandler(null);
+         });
+      });
    });
 });
