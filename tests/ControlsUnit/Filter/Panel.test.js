@@ -326,48 +326,66 @@ define(
          });
 
          it('filterHistoryItems', function() {
-         	let self = {
-         		_items: [
-         			{
-         				id: 'PeriodFilter',
-							value: 5,
-							resetValue: {
-         					'StartDate': '12.31.1233',
-								'LastDate': '13.31.1233',
-								'Period': 'За последний час',
-							},
-							textValue: 'listValue'
-						},
-						{
-							id: 'Methods',
-							value: '123',
-							resetValue: '',
-							visibility: true,
-							textValue: null
-						},
-						{
-							id: 'Faces',
-							value: true,
-							resetValue: false,
-							visibility: false
-						}
-					]
-				};
-         	var config2 = {
-         		items: items,
-					historyId: 'TEST_PANEL_HISTORY_ID'
-         	};
-         	filter.HistoryUtils.loadHistoryItems('TEST_PANEL_HISTORY_ID').addCallback(function(items) {
-         		let filteredHistoryItems = _private.filterHistoryItems(self,items);
-         		assert.isUndefined(filteredHistoryItems);
-         		done();
-         	});
-			});
+            let self = {
+               _items: [
+                  {
+                     id: 'Methods',
+                     value: '123',
+                     resetValue: '',
+                     visibility: true,
+                     textValue: null
+                  },
+                  {
+                     id: 'Faces',
+                     value: true,
+                     resetValue: false,
+                     visibility: false
+                  }
+               ]
+            };
+            let historyItems = new collection.RecordSet({
+               rawData: [
+                  {
+                     ObjectData: JSON.stringify([
+                        {
+                           id: 'Methods',
+                           value: '',
+                           resetValue: '',
+                           visibility: true,
+                           textValue: '123'
+                        },
+                        {
+                           id: 'Faces',
+                           value: true,
+                           resetValue: true,
+                           visibility: false
+                        }
+                     ])
+                  },
+                  {
+                     ObjectData: JSON.stringify([
+                        {
+                           id: 'Methods',
+                           value: '1234',
+                           resetValue: '',
+                           visibility: true,
+                           textValue: '123'
+                        },
+                        {
+                           id: 'Faces',
+                           value: true,
+                           resetValue: true,
+                           visibility: false
+                        }
+                     ])
+                  }
+               ]
+            });
 
+            assert.equal(filterPopup.DetailPanel._private.filterHistoryItems(self, historyItems).getCount(), 1);
+         });
 
-
-
-			it('_private:prepareItems', function() {
+         it('_private:prepareItems', function() {
             var changeItems = [
                   {
                      id: 'list',
