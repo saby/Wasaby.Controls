@@ -1196,7 +1196,12 @@ define([
                        if (eventName === 'updateShadowMode') {
                            updateShadowModeParams = params[0];
                        }
-                   }
+                   },
+                  _listViewModel: {
+                      getCount: function() {
+                         return 1;
+                      }
+                  }
                };
 
            lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
@@ -1239,42 +1244,6 @@ define([
            lists.BaseControl._private.applyPlaceholdersSizes(mockedControl);
            lists.BaseControl._private.updateShadowMode(mockedControl);
            assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'visible' });
-       });
-
-       it ('updateShadowMode', function() {
-           var
-               hasMoreData = {
-                   up: true,
-                   down: true
-               },
-               updateShadowModeParams,
-               mockedControl = {
-                   _sourceController: {
-                       hasMoreData: function(direction) {
-                           return hasMoreData[direction];
-                       }
-                   },
-                   _notify: function(eventName, params) {
-                       if (eventName === 'updateShadowMode') {
-                           updateShadowModeParams = params[0];
-                       }
-                   }
-               };
-
-           lists.BaseControl._private.updateShadowMode(mockedControl);
-           assert.deepEqual(updateShadowModeParams, { top: 'visible', bottom: 'visible' });
-
-           hasMoreData.up = false;
-           lists.BaseControl._private.updateShadowMode(mockedControl);
-           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'visible' });
-
-           hasMoreData.down = false;
-           lists.BaseControl._private.updateShadowMode(mockedControl);
-           assert.deepEqual(updateShadowModeParams, { top: 'auto', bottom: 'auto' });
-
-           hasMoreData.up = true;
-           lists.BaseControl._private.updateShadowMode(mockedControl);
-           assert.deepEqual(updateShadowModeParams, { top: 'visible', bottom: 'auto' });
        });
 
        it ('call updateShadowMode in afterMount', function() {
@@ -1763,6 +1732,16 @@ define([
          };
          baseControl._sourceController = null;
          assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
+
+         baseControl._sourceController = {
+            hasMoreData: function() {
+               return true;
+            },
+            isLoading: function() {
+               return true;
+            }
+         };
+         assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
       });
 
       it('reload with changing source/navig/filter should call scroll to start', function() {
@@ -3920,6 +3899,11 @@ define([
          var baseControlMock = {
             _needScrollCalculation: true,
             _sourceController: {hasMoreData: () => {return true;}},
+            _listViewModel: {
+               getCount: function() {
+                  return 1;
+               }
+            },
             _notify: () => {},
             _isMounted: true
          };
