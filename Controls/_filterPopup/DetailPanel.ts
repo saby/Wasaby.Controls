@@ -246,8 +246,16 @@ import 'Controls/form';
       },
 
       prepareItems: function(items) {
+         let value, isValueReseted;
          chain.factory(items).each(function(item) {
-            if (getPropValue(item, 'visibility') === true && isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'))) {
+            value = getPropValue(item, 'value');
+            if (item.hasOwnProperty('resetValue')) {
+               isValueReseted = isEqual(value, getPropValue(item, 'resetValue'));
+            } else {
+               // if the missing resetValue field, by value field we determine that the filter should be moved
+               isValueReseted = !value || value.length === 0;
+            }
+            if (getPropValue(item, 'visibility') === true && isValueReseted) {
                setPropValue(item, 'visibility', false);
             }
          });
