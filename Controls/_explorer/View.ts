@@ -423,7 +423,7 @@ import 'Types/entity';
 
    export = Explorer;
    
-     /**
+   /**
     * @event Controls/_explorer/View#arrowClick  Происходит при клике на кнопку "Просмотр записи".
     * @remark Кнопка отображается при наведении курсора на текущую папку хлебных крошек.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
