@@ -453,7 +453,11 @@ const module = Control.extend(/** @lends Controls/Container/LoadingIndicator.pro
                       if (indicator) {
                          var indicatorIn = indicator.querySelector('.controls-loading-indicator-in');
                          if (!indicatorIn) {
-                            indicator.classList.add('controls-loading-indicator_text');
+                            if (this.message) {
+                                indicator.classList.add('controls-loading-indicator_text');
+                            } else {
+                                indicator.classList.remove('controls-loading-indicator_text');
+                            }
                             indicator.classList.remove('controls-loading-indicator_overlay-default');
                             indicator.classList.add('controls-loading-indicator_overlay-' + this.overlay);
                             var div = document.createElement('div');
