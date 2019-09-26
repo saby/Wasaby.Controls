@@ -1,5 +1,5 @@
 <Controls.input:Render attr:title="{{_tooltip}}"
-                       state="{{_renderStyle}}"
+                       state="{{_renderStyle()}}"
                        viewModel="{{_viewModel}}"
                        size="{{_options.size}}"
                        style="{{_options.style}}"
