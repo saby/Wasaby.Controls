@@ -639,13 +639,12 @@ define([
             selection = selectionInstance.getSelection();
 
             assert.deepEqual([null], selection.selected);
-            assert.deepEqual([null, 1, 6, 7], selection.excluded);
+            assert.deepEqual([null, 1, 2, 4, 5, 6, 7], selection.excluded);
 
             selectionInstance.toggleAll();
             selection = selectionInstance.getSelection();
 
-            // '2', '4', '5' не попали т.к являются дочерними '1' и будут выбраны
-            assert.deepEqual([1, 6, 7], selection.selected);
+            assert.deepEqual([1, 6, 7, 4, 2, 5], selection.selected);
             assert.deepEqual([], selection.excluded);
          });
 

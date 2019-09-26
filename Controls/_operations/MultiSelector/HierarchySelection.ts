@@ -301,7 +301,7 @@ var HierarchySelection = Selection.extend({
          this.select(_private.getIntersection(childrensIdsRoot, excludedKeys));
       } else {
          this.selectAll([rootId]);
-         this.unselect(_private.getIntersection(childrensIdsRoot, selectedKeys));
+         this.unselect(selectedKeys);
       }
    },
 

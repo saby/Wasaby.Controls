@@ -73,7 +73,6 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private _currentCoords: IScrollBarCoords | null = null;
     // Координата точки на ползунке, за которую начинаем тащить
     private _dragPointOffset: number | null = null;
-    private _isIe: boolean = detection.isIE;
 
     protected _afterMount(): void {
         this._resizeHandler();
@@ -177,6 +176,10 @@ class Scrollbar extends Control<IScrollBarOptions> {
             }
             return true;
         }
+    }
+
+    public recalcSizes(): void {
+        this._resizeHandler();
     }
 
     /**

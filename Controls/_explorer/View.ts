@@ -422,3 +422,9 @@ import 'Types/entity';
    };
 
    export = Explorer;
+   
+   /**
+    * @event Controls/_explorer/View#arrowClick  Происходит при клике на кнопку "Просмотр записи".
+    * @remark Кнопка отображается при наведении курсора на текущую папку хлебных крошек. Отображение кнопки "Просмотр записи" задаётся с помощью опции {@link Controls/_explorer/interface/IExplorer#showActionButton}. По умолчанию кнопка показывается.
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+    */ 

@@ -4,7 +4,6 @@ import defaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/
 import Utils = require('Types/util');
 import chain = require('Types/chain');
 import dropdownUtils = require('Controls/_dropdown/Util');
-import {isEqual} from 'Types/object';
 
 var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
@@ -53,7 +52,7 @@ var _private = {
  * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию закрыто.
  * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
  * <a href="/materials/demo-ws4-input-dropdown">Демо-пример</a>.
- * Руководство разработчика {@link /doc/platform/developmentapl/interface-development/controls/dropdown-menu/index/ Меню и выпадающий список}.
+ * Руководство разработчика {@link /doc/platform/developmentapl/interface-development/controls/dropdown-menu/ Меню и выпадающий список}.
  *
  * @class Controls/_dropdown/Input
  * @extends Core/Control

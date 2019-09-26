@@ -36,7 +36,7 @@ export default class SwipeControl extends Control {
    private _swipeTemplate = swipeTemplate;
 
    constructor(options: ISwipeControlOptions) {
-      super();
+      super(options);
       this._needTitle = this._needTitle.bind(this);
       this._needIcon = this._needIcon.bind(this);
    }

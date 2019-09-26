@@ -378,6 +378,43 @@ import {ActualApi as ButtonActualApi} from 'Controls/buttons';
  * </pre>
  */
 
+/**
+ * @name Controls/_toolbars/View#additionalProperty
+ * @cfg {String} Позволяет отобразить дополнительные элементы в меню.
+ * @example
+ * Дополнительные элементы конфигурируются с помощью опции additionalProperty и дополнительного свойства additional в объекте конфигурации элементов меню.
+ *<pre>
+ * <Controls.toolbars:View
+ *           keyProperty="key"
+ *           source="{{_source}}"
+ *           additionalProperty="additional"
+ * />
+ * </pre>
+ * <pre>
+ *    _source: new source.Memory({
+ *        keyProperty: 'key',
+ *        data: [
+ *        {
+ *           id: '1',
+ *           showType: 0,
+ *           icon: 'icon-Time',
+ *        },
+ *        {
+ *           id: '2',
+ *           showType: 0,
+ *           title: 'Moscow',
+ *        },
+ *        {
+ *           id: '3',
+ *           showType: 0,
+ *           title: 'St-Petersburg',
+ *           additional: true
+ *        }
+ *        ]
+ *    })
+ * </pre>
+ */
+
 var _private = {
     loadItems: function (instance, source) {
         var self = this;
@@ -472,6 +509,7 @@ var _private = {
             className: 'controls-Toolbar__popup__list_theme-' + self._options.theme + ' ' + (self._options.popupClassName || ''),
             templateOptions: {
                 items: self._menuItems,
+                additionalProperty: self._options.additionalProperty,
                 itemTemplateProperty: self._options.itemTemplateProperty,
                 groupTemplate: self._options.groupTemplate,
                 groupingKeyCallback: self._options.groupingKeyCallback

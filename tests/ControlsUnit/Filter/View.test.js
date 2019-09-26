@@ -237,10 +237,12 @@ define(
 
             assert.strictEqual(popupOptions.template, 'panelTemplateName.wml');
             assert.strictEqual(popupOptions.templateOptions.items.getCount(), 2);
+            assert.strictEqual(popupOptions.className, 'controls-FilterView-SimplePanel__buttonTarget-popup');
 
             view._children['second_filter'] = 'div_second_filter';
             view._openPanel('click', 'second_filter');
             assert.strictEqual(popupOptions.target, 'div_second_filter');
+            assert.strictEqual(popupOptions.className, 'controls-FilterView-SimplePanel-popup');
 
             view._openPanel('click');
             assert.deepStrictEqual(popupOptions.target, 'filter_container');
@@ -397,6 +399,7 @@ define(
                }
             };
             view._source = source;
+            view._dateRangeItem = dateItem;
             view._rangeChangedHandler('rangeChanged', new Date(2019, 6, 1), new Date(2019, 6, 31));
             assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).value, [new Date(2019, 6, 1), new Date(2019, 6, 31)]);
             assert.deepStrictEqual(filter.View._private.getDateRangeItem(view._source).textValue, "Июль'19");

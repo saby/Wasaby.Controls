@@ -12,6 +12,7 @@ define('Controls/Application',
       'Core/helpers/getResourceUrl',
       'Controls/decorator',
       'Controls/Application/SettingsController',
+      'Controls/Utils/DOMUtil',
       'css!theme?Controls/Application/oldCss'
    ],
 
@@ -283,7 +284,8 @@ define('Controls/Application',
       scroll,
       getResourceUrl,
       decorator,
-      SettingsController) {
+      SettingsController,
+      DOMUtils) {
       'use strict';
 
       var _private;
@@ -443,6 +445,12 @@ define('Controls/Application',
           */
          _popupCreatedHandler: function() {
             this._isPopupShow = true;
+
+            // На Ipad необходимо вызывать reflow в момент открытия окон для решения проблем с z-index-ами
+            // https://online.sbis.ru/opendoc.html?guid=3f84a4bc-2973-497c-91ad-0165b5046bbc
+            if (Env.detection.isMobileIOS) {
+               DOMUtils.reflow();
+            }
 
             this._changeOverflowClass();
          },

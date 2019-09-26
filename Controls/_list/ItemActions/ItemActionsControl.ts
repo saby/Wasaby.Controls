@@ -72,7 +72,7 @@ var _private = {
     },
 
     updateActions: function(self, options, collectionChanged: boolean = false): void {
-        if (options.itemActions) {
+        if (options.itemActionsProperty || options.itemActions && options.itemActions.length) {
             if (options.useNewModel) {
                 options.listModel.setEventRaising(false, true);
                 options.listModel.each((collectionItem: CollectionItem<unknown>) => {
@@ -88,9 +88,9 @@ var _private = {
                     if (item !== ControlsConstants.view.hiddenGroup && item.get) {
                         _private.updateItemActions(self, item, options);
                     }
+                    self._isActual = true;
+                    options.listModel.nextModelVersion(collectionChanged, ACTION_TYPE);
                 }
-                self._isActual = true;
-                options.listModel.nextModelVersion(collectionChanged, ACTION_TYPE);
             }
         }
     },

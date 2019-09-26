@@ -25,6 +25,10 @@ define(
             height: 1040
          });
 
+         const BODY_HEIGHT = 999;
+
+         StickyStrategy._private.getBodyHeight = () => BODY_HEIGHT;
+
          function getPositionConfig() {
             return {
                corner: {
@@ -463,6 +467,11 @@ define(
             assert.equal(position.maxHeight, popupCfg.config.maxHeight);
             assert.equal(position.height, popupCfg.config.height);
             assert.equal(position.minHeight, popupCfg.config.minHeight);
+
+            popupCfg.config.maxHeight = undefined;
+            position = {};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxHeight, BODY_HEIGHT);
          });
 
          it('Centered corner sticky', () => {

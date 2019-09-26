@@ -891,6 +891,11 @@ var
 
             if (cell.startRow || cell.startColumn) {
                 let { endRow, startRow, endColumn, startColumn } = cell;
+
+                if (headerColumn.column.isBreadCrumbs) {
+                    startColumn = 0;
+                }
+
                 if (!startRow) {
                     startRow = 1;
                     endRow = 2;
@@ -957,6 +962,9 @@ var
         },
 
         isDrawResults: function() {
+            if (this._options.resultsVisibility === 'visible') {
+                return true;
+            }
             const items = this.getItems();
             return items && items.getCount() > 1;
         },

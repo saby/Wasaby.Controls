@@ -5,9 +5,11 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import ActualApi from 'Controls/_buttons/ActualApi';
 
 /**
- * Кнопка с меню.
- *
- * <a href="/materials/demo-ws4-button-menu">Демо-пример</a>.
+ * Контрол «Кнопка с меню».
+ * 
+ * Полезные ссылки:
+ * * <a href="/materials/demo-ws4-button-menu">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/button/">руководство разработчика</a>
  *
  * @class Controls/_dropdown/Button
  * @extends Core/Control
@@ -27,6 +29,7 @@ import ActualApi from 'Controls/_buttons/ActualApi';
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_buttons/interface/IButton
  * @control
  * @public
  * @author Герасимов А.М.
@@ -135,6 +138,12 @@ Button._theme = ['Controls/dropdown'];
 export = Button;
 
 /**
+ * @cfg {boolean} Конфигурация шапки меню.
+ * @name Controls/_dropdown/Button#headConfig
+ * @deprecated Используйте {@link Controls/_dropdown/interface/IHeaderTemplate#headerTemplate}.
+ */
+
+/**
  * @event Controls/_dropdown/Button#menuItemActivate Происходит при выборе элемента из списка.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Выбранный элемент.
@@ -169,12 +178,15 @@ export = Button;
  * </pre>
  * JS:
  * <pre>
- * this._source = new Memory({
- *    idProperty: 'id',
- *    data: [
- *       {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
- *       {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
- *    ]
- * });
+ * _source:null,
+ * _beforeMount: function() {
+ *    this._source = new source.Memory({
+ *       idProperty: 'id',
+ *       data: [
+ *          {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
+ *          {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
+ *       ]
+ *    });
+ * }
  * </pre>
  */

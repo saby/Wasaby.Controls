@@ -5,7 +5,6 @@ import randomId = require('Core/helpers/Number/randomId');
 import {delay as runDelayed} from 'Types/function';
 import collection = require('Types/collection');
 import Deferred = require('Core/Deferred');
-import ParallelDeferred = require('Core/ParallelDeferred');
 import EnvEvent = require('Env/Event');
 import Env = require('Env/Env');
 import { goUpByControlTree } from 'UI/Focus';
@@ -27,30 +26,43 @@ const _private = {
 
     remove(self, id) {
         const item = _private.find(id);
-        const removeDeferred = new Deferred();
         if (item) {
-            _private.closeChilds(self, item).addCallback(function() {
-                _private.finishPendings(id, null, null, function() {
-                    _private.removeElement.call(self, item, _private.getItemContainer(id), id).addCallback(function() {
-                        removeDeferred.callback();
+            return new Promise((resolve) => {
+                _private.closeChilds(self, item).then(() => {
+                    _private.finishPendings(id, null, null, () => {
+                        _private.removeElement.call(self, item, _private.getItemContainer(id), id).then(() => {
+                            resolve();
+                            const parentItem = _private.find(item.parentId);
+                            _private.closeChildHandler(parentItem);
+                        });
                     });
                 });
             });
         } else {
-            removeDeferred.callback();
+            return Promise.resolve();
         }
-        return removeDeferred;
     },
 
-    closeChilds(self, item) {
+    closeChilds(self, item): Promise<null> {
         if (!item.childs.length) {
-            return (new Deferred()).callback();
+            return Promise.resolve(null);
         }
-        const parallelDeferred = new ParallelDeferred();
         for (let i = 0; i < item.childs.length; i++) {
-            parallelDeferred.push(_private.remove(self, item.childs[i].id));
+            _private.remove(self, item.childs[i].id);
         }
-        return parallelDeferred.done().getResult();
+
+        return new Promise((resolve) => {
+            item.closeChildsPromiseResolver = resolve;
+        });
+    },
+
+    closeChildHandler(item): void {
+        // Если окно ожидает закрытия, то ждем, пока не закроются все дети
+        if (item && !item.childs.length) {
+            if (item.closeChildsPromiseResolver) {
+                item.closeChildsPromiseResolver();
+            }
+        }
     },
 
     removeElement(element, container, id) {
@@ -278,9 +290,14 @@ const _private = {
     },
 
     popupControlResize(id) {
-        const element = _private.find(id);
-        if (element) {
-            return element.controller.popupResize(element, _private.getItemContainer(id));
+        const item = _private.find(id);
+        if (item) {
+            const parentItem = _private.find(item.parentId);
+            // Если над скрытым стековым окном позиционируются другие окна, то не даем им реагировать на внутренние ресайзы
+            // иначе позиция может сбиться, т.к. таргет в текущий момент невидим
+            if (!parentItem || parentItem.popupOptions.hidden !== true) {
+                return item.controller.popupResize(item, _private.getItemContainer(id));
+            }
         }
         return false;
     },
@@ -557,9 +574,11 @@ const Manager = Control.extend({
     _mouseDownHandler(event) {
         if (_private.popupItems && !_private.isIgnoreActivationArea(event.target)) {
             const deactivatedPopups = [];
-            _private.popupItems.each(function(item) {
+            // todo https://online.sbis.ru/opendoc.html?guid=ab4ffabb-20ba-4782-8c38-c4ab72b73a1a
+            const isResizingLine = event.target.classList.contains('controls-ResizingLine');
+            _private.popupItems.each((item) => {
                 // if we have deactivated popup
-                if (item && item.waitDeactivated) {
+                if (item && (item.waitDeactivated || isResizingLine)) {
                     const parentControls = _private.goUpByControlTree(event.target);
                     const popupInstance = ManagerController.getContainer().getPopupById(item.id);
 

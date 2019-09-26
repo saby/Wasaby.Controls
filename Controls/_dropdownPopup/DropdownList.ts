@@ -271,7 +271,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
 
             // _openSubDropdown is called by debounce and a function call can occur when the control is destroyed,
             // just check _children to make sure, that the control isnt destroyed
-            if (this._subDropdownItem && this._children.subDropdownOpener) {
+            if (item && this._children.subDropdownOpener) {
                config = _private.getSubMenuOptions(this._options, this._popupOptions, event, item);
                this._children.subDropdownOpener.open(config, this);
             }

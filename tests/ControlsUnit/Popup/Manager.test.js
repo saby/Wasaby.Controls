@@ -68,7 +68,7 @@ define(
             assert.equal(element.popupOptions.testOption, 'created');
          });
 
-         it('getMaxZIndexPopupIdForActivate', function() {
+         it('getMaxZIndexPopupIdForActivate', function(done) {
             let Manager = getManager();
             let id1 = Manager.show({}, new BaseController());
             let id0 = Manager.show({}, new BaseController());
@@ -79,14 +79,15 @@ define(
 
             let maxPopupId = Manager._private.getMaxZIndexPopupIdForActivate();
             assert.equal(maxPopupId, id3);
-            Manager.remove(id3);
-
-            maxPopupId = Manager._private.getMaxZIndexPopupIdForActivate();
-            assert.equal(maxPopupId, id1);
-            Manager.remove(id1);
-
-            maxPopupId = Manager._private.getMaxZIndexPopupIdForActivate();
-            assert.equal(maxPopupId, null);
+            Manager.remove(id3).then(() => {
+               maxPopupId = Manager._private.getMaxZIndexPopupIdForActivate();
+               assert.equal(maxPopupId, id1);
+               Manager.remove(id1).then(() => {
+                  maxPopupId = Manager._private.getMaxZIndexPopupIdForActivate();
+                  assert.equal(maxPopupId, null);
+                  done();
+               });
+            });
          });
 
          it('find popup', () => {
@@ -165,16 +166,19 @@ define(
             Manager._private.fireEventHandler.call(Manager, id, 'onResult', '1', '2');
          });
 
-         it('remove popup', function() {
+         it('remove popup', function(done) {
             let Manager = getManager();
             id = Manager.show({
                testOption: 'created'
             }, new BaseController());
-            Manager.remove(id);
-            assert.equal(Manager._private.popupItems.getCount(), 0);
+            Manager.remove(id).then(() => {
+               assert.equal(Manager._private.popupItems.getCount(), 0);
+               done();
+            });
+
          });
 
-         it('remove popup with pendings', function() {
+         it('remove popup with pendings', function(done) {
             let Manager = getManager();
             let id1 = Manager.show({
                testOption: 'created'
@@ -199,25 +203,31 @@ define(
             });
 
             Manager.remove(id1);
-            assert.equal(Manager._private.popupItems.getCount(), 3);
+            // wait promise timeout
+            setTimeout(() => {
+               assert.equal(Manager._private.popupItems.getCount(), 3);
 
-            Pending = false;
-            Manager.remove(id2);
-            assert.equal(Manager._private.popupItems.getCount(), 2);
+               Pending = false;
+               Manager.remove(id2).then(() => {
+                  assert.equal(Manager._private.popupItems.getCount(), 2);
+                  Pending = {
+                     _hasRegisteredPendings: () => hasPending,
+                     finishPendingOperations: () => pendingDeferred
+                  };
 
-            Pending = {
-               _hasRegisteredPendings: () => hasPending,
-               finishPendingOperations: () => pendingDeferred
-            };
-
-            Manager.remove(id3);
-            assert.equal(Manager._private.popupItems.getCount(), 2);
-
-            pendingDeferred.callback();
-            assert.equal(Manager._private.popupItems.getCount(), 0);
+                  Manager.remove(id3);
+                  //wait promise timeout
+                  setTimeout(() => {
+                     assert.equal(Manager._private.popupItems.getCount(), 2);
+                     pendingDeferred.callback();
+                     assert.equal(Manager._private.popupItems.getCount(), 0);
+                     done();
+                  }, 10);
+               });
+            }, 10);
          });
 
-         it('remove popup and check event', function() {
+         it('remove popup and check event', function(done) {
             let Manager = getManager();
             let eventCloseFired = false;
             let eventOnCloseFired = false;
@@ -233,12 +243,14 @@ define(
                   }
                }
             }, new BaseController());
-            Manager.remove(id);
-            assert.equal(eventCloseFired, true);
-            assert.equal(eventOnCloseFired, true);
+            Manager.remove(id).then(() => {
+               assert.equal(eventCloseFired, true);
+               assert.equal(eventOnCloseFired, true);
+               done();
+            });
          });
 
-         it('add modal popup', function() {
+         it('add modal popup', function(done) {
             let Manager = getManager();
             let id1 = Manager.show({
                modal: false,
@@ -254,14 +266,15 @@ define(
             assert.equal(indices.length, 1);
             assert.equal(indices[0], 1);
 
-            Manager.remove(id1);
-
-            indices = Manager._private.popupItems.getIndicesByValue('modal', true);
-            assert.equal(indices.length, 1);
-            assert.equal(indices[0], 0);
+            Manager.remove(id1).then(() => {
+               indices = Manager._private.popupItems.getIndicesByValue('modal', true);
+               assert.equal(indices.length, 1);
+               assert.equal(indices[0], 0);
+               done();
+            });
          });
 
-         it('add maximized popup', function() {
+         it('add maximized popup', function(done) {
             let Manager = getManager();
             let id0 = Manager.show({
                modal: false,
@@ -278,16 +291,17 @@ define(
 
             assert.equal(Manager._private.popupItems.at(1).hasMaximizePopup, true);
 
-            Manager.remove(id0);
+            Manager.remove(id0).then(() => {
+               assert.equal(Manager._hasMaximizePopup, false);
 
-            assert.equal(Manager._hasMaximizePopup, false);
+               let id2 = Manager.show({
+                  modal: true,
+                  testOption: 'created'
+               }, new BaseController());
 
-            let id2 = Manager.show({
-               modal: true,
-               testOption: 'created'
-            }, new BaseController());
-
-            assert.equal(Manager._private.popupItems.at(1).hasMaximizePopup, false);
+               assert.equal(Manager._private.popupItems.at(1).hasMaximizePopup, false);
+               done();
+            });
          });
 
          it('popup deactivated', () => {
@@ -362,7 +376,7 @@ define(
             Manager._private.popupResizingLine(id0, {});
             assert.isTrue(isUpdateNotified);
          });
-         it('managerPopupDestroyed notified', function() {
+         it('managerPopupDestroyed notified', function(done) {
             let popupOptions = {
                testOption: 'created'
             };
@@ -377,8 +391,10 @@ define(
                assert.equal(params.hasOwnProperty('bubbling'), true);
             };
             id = Manager.show(popupOptions, new BaseController());
-            Manager.remove(id);
-            assert.isTrue(isDestroyNotified);
+            Manager.remove(id).then(() => {
+               assert.isTrue(isDestroyNotified);
+               done();
+            });
          });
          it('isIgnoreActivationArea', function() {
             let focusedContainer = {
@@ -415,11 +431,18 @@ define(
                testOption: 'created',
                autofocus: false
             }, new BaseController());
-            Manager._mouseDownHandler({});
+            let event = {
+               target: {
+                  classList: {
+                     contains: () => false
+                  }
+               }
+            }
+            Manager._mouseDownHandler(event);
             assert.equal(deactivatedCount, 2);
             Manager.destroy();
          });
-         it('Linked Popups', function() {
+         it('Linked Popups', function(done) {
             let Manager = getManager();
 
             let id1 = Manager.show({
@@ -450,11 +473,18 @@ define(
                return baseRemove.call(Manager._private, element, container, popupId);
             };
             Manager.remove(id1);
-            assert.equal(Manager._private.popupItems.getCount(), 2);
-            removeDeferred2.callback();
-            assert.equal(Manager._private.popupItems.getCount(), 0);
+            // wait promise timeout
+            setTimeout(() => {
+               assert.equal(Manager._private.popupItems.getCount(), 2);
+               removeDeferred2.callback();
+               // wait promise timeout
+               setTimeout(() => {
+                  assert.equal(Manager._private.popupItems.getCount(), 0);
+                  Manager.destroy();
+                  done();
+               }, 10);
+            }, 10)
 
-            Manager.destroy();
          });
 
          it('removeFromParentConfig', function() {
