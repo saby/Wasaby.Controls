@@ -894,8 +894,16 @@ var Base = Control.extend({
             this._getField().scrollLeft = 0;
         }
 
-        MobileFocusController.blurHandler(event);
+        if (!this._isMobileIOS) {
+            MobileFocusController.blurHandler(event);
+        }
         _private.callChangeHandler(this);
+    },
+
+    _blurHandler: function(event) {
+        if (this._isMobileIOS) {
+            MobileFocusController.blurHandler(event);
+        }
     },
 
     _touchStartHandler: function (event) {
