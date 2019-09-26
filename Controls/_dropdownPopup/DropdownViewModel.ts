@@ -174,6 +174,7 @@ var _private = {
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
             itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
+            itemsModelCurrent.iconSize = this._options.iconSize;
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem;
 
             //Draw the separator to split history and nohistory items.
