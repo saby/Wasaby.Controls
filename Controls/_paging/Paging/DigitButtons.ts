@@ -1,59 +1,91 @@
 /**
  * Created by kraynovdo on 01.11.2017.
  */
-import BaseControl = require('Core/Control');
-import template = require('wml!Controls/_paging/Paging/DigitButtons');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import dButtonsTemplate = require('wml!Controls/_paging/Paging/DigitButtons');
+import {SyntheticEvent} from 'Vdom/Vdom';
+
+export interface IDigitButtonsOptions extends IControlOptions {
+    count: number;
+    selectedKey?: number;
+}
+
 import 'css!theme?Controls/paging';
 
-var SUR_ELEMENTS_STEP = 3, _private, ModuleClass;
+const SUR_ELEMENTS_STEP = 3;
 
+type DigitElem = number | '...';
 
-_private = {
+interface ISurroundElements {
+    first: number;
+    last: number;
+}
 
-    //получаем граничные цифры, окружающие выбранный элемент, по условия +-3 в обе стороны (4 5 6 [7] 8 9 10)
-    getSurroundElemens: function (digitsCount, currentDigit) {
-        var first, last;
-        first = currentDigit - SUR_ELEMENTS_STEP;
-        last = currentDigit + SUR_ELEMENTS_STEP;
+class DigitButtons extends Control<IDigitButtonsOptions> {
+    protected _template: TemplateFunction = dButtonsTemplate;
+    _digits: DigitElem[] | null = null;
 
-        if (first < 1) {
-            first = 1;
+    protected _beforeMount(newOptions: IDigitButtonsOptions): void {
+        this._digits = DigitButtons._getDrawnDigits(newOptions.count, newOptions.selectedKey);
+    }
+
+    protected _beforeUpdate(newOptions: IDigitButtonsOptions): void {
+        if (newOptions.count !== this._options.count || newOptions.selectedKey !== this._options.selectedKey) {
+            this._digits = DigitButtons._getDrawnDigits(newOptions.count, newOptions.selectedKey);
         }
-        if (last > digitsCount) {
-            last = digitsCount;
+    }
+
+    private _digitClick(e: SyntheticEvent<Event>, digit: number): void {
+        this._notify('onDigitClick', [digit]);
+    }
+
+    // получаем граничные цифры, окружающие выбранный элемент, по условия +-3 в обе стороны (4 5 6 [7] 8 9 10)
+    private static _getSurroundElemens(digitsCount: number, currentDigit: number): ISurroundElements {
+        let firstElem: number;
+        let lastElem: number;
+        firstElem = currentDigit - SUR_ELEMENTS_STEP;
+        lastElem = currentDigit + SUR_ELEMENTS_STEP;
+
+        if (firstElem < 1) {
+            firstElem = 1;
+        }
+        if (lastElem > digitsCount) {
+            lastElem = digitsCount;
         }
         return {
-            first: first,
-            last: last
+            first: firstElem,
+            last: lastElem
         };
-    },
-    getDrawnDigits: function (digitsCount, currentDigit) {
-        var
-            surElements,
-            drawnDigits = [];
+    }
+
+    private static _getDrawnDigits(digitsCount: number, currentDigit: number): DigitElem[] {
+        const drawnDigits: DigitElem[] = [];
+        let surElements: ISurroundElements;
 
         if (digitsCount) {
 
-            surElements = _private.getSurroundElemens(digitsCount, currentDigit);
+            surElements = DigitButtons._getSurroundElemens(digitsCount, currentDigit);
 
             if (surElements.first > 1) {
-                //если левая граничная цифра больше единицы, то единицу точно рисуем
+                // если левая граничная цифра больше единицы, то единицу точно рисуем
                 drawnDigits.push(1);
 
-                //если левая граничная цифра больше 3, надо рисовать многоточие (1 ... 4 5 6 [7])
+                // если левая граничная цифра больше 3, надо рисовать многоточие (1 ... 4 5 6 [7])
                 if (surElements.first > 3) {
                     drawnDigits.push('...');
-                } else if (surElements.first == 3) {//а если 3, то надо рисовать двойку по правилу исключения, что многоточием не может заменяться одна цифра
+                    // а если равно шагу, то надо рисовать предыдущий по правилу исключения,
+                    // что многоточием не может заменяться одна цифра
+                } else if (surElements.first === 3) {
                     drawnDigits.push(2);
                 }
             }
 
-            //рисуем все граничные цифры
-            for (var i = surElements.first; i <= surElements.last; i++) {
+            // рисуем все граничные цифры
+            for (let i = surElements.first; i <= surElements.last; i++) {
                 drawnDigits.push(i);
             }
 
-            //и рисуем правый блок аналогично левому, но в противоположную строну
+            // и рисуем правый блок аналогично левому, но в противоположную строну
             if (surElements.last < digitsCount) {
                 if (surElements.last < digitsCount - 2) {
                     drawnDigits.push('...');
@@ -65,32 +97,6 @@ _private = {
         }
         return drawnDigits;
     }
-};
+}
 
-ModuleClass = BaseControl.extend({
-    _selectedKey: null,
-    _template: template,
-    _digits: null,
-
-    _beforeMount: function (newOptions) {
-        this._digits = _private.getDrawnDigits(newOptions.count, newOptions.selectedKey);
-    },
-
-    _beforeUpdate: function (newOptions) {
-        if (newOptions.count != this._options.count || newOptions.selectedKey != this._options.selectedKey) {
-            this._digits = _private.getDrawnDigits(newOptions.count, newOptions.selectedKey);
-        }
-    },
-
-    __digitClick: function (e, digit) {
-        this._notify('onDigitClick', [digit]);
-    }
-
-});
-
-//for unit test
-ModuleClass._private = _private;
-
-//
-
-export = ModuleClass;
+export default DigitButtons;
