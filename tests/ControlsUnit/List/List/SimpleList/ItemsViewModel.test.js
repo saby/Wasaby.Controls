@@ -582,10 +582,12 @@ define([
                orNotify.apply(model, arguments);
            };
 
-           model._nextModelVersion = (notUpdatePrefixItemVersion, changesType, action) => {
+           model._nextModelVersion = (notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) => {
                assert.equal(changesType, 'collectionChanged');
                assert.isFalse(notUpdatePrefixItemVersion);
                assert.equal(action, 'a');
+               assert.isTrue(!!newItems);
+               assert.equal(newItemsIndex, 2);
                isUpdated = true;
                orNMV.apply(model, arguments);
            };
