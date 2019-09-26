@@ -5,7 +5,7 @@ define('Controls-demo/Popup/Opener/StackIndent',
       'wml!Controls-demo/Popup/Opener/resources/footer',
       'wml!Controls-demo/Popup/Opener/DialogTpl',
       'css!Controls-demo/Popup/PopupPageOld',
-      'css!Controls-demo/Popup/Opener/resources/StackIndent'
+      'css!Controls-demo/Popup/PopupPage'
    ],
    function(Control, template) {
       'use strict';
