@@ -323,6 +323,43 @@ export default class CollectionItem<T> extends mixin<
         }
     }
 
+    getWrapperClassList(): string {
+        let classList = `controls-ListView__itemV
+            controls-ListView__item_highlightOnHover_default_theme_default
+            controls-ListView__item_default
+            controls-ListView__item_showActions
+            js-controls-SwipeControl__actionsContainer`;
+
+        if (this.isEditing()) {
+            classList += ' controls-ListView__item_editing';
+        }
+
+        return classList;
+    }
+
+    getContentClassList(): string {
+        return `controls-ListView__itemContent ${this._getSpacingClassList()}`;
+    }
+
+    protected _getSpacingClassList(): string {
+        let classList = '';
+
+        const rowSpacing = this._$owner.getRowSpacing().toLowerCase();
+        const rightSpacing = this._$owner.getRightSpacing().toLowerCase();
+
+        classList += ` controls-ListView__item-topPadding_${rowSpacing}`;
+        classList += ` controls-ListView__item-bottomPadding_${rowSpacing}`;
+        classList += ` controls-ListView__item-rightPadding_${rightSpacing}`;
+
+        if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
+           classList += ' controls-ListView__itemContent_withCheckboxes';
+        } else {
+           classList += ` controls-ListView__item-leftPadding_${this._$owner.getLeftSpacing().toLowerCase()}`;
+        }
+
+        return classList;
+    }
+
     protected _setEditingContents(editingContents: T): void {
         if (this._$editingContents === editingContents) {
             return;
