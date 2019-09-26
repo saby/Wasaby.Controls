@@ -84,10 +84,32 @@ define([
          let itemPadding = {
             test: 'test'
          };
+         let testData = [
+            ...data
+         ];
+         let testData2 = [
+            ...data2
+         ];
+         testData.at = function(key) {
+            return {
+               ...(testData[key]),
+               getId: function() {
+                  return this['id'];
+               }
+            }
+         }
+         testData2.at = function(key) {
+            return {
+               ...(testData2[key]),
+               getId: function() {
+                  return this['id'];
+               }
+            }
+         }
          let itemPaddingChanged = false;
 
          var model = new lists.ListViewModel({
-            items: data,
+            items: testData,
             keyProperty: 'id',
             markedKey: null,
             itemPadding: itemPadding
@@ -102,9 +124,13 @@ define([
          lv.saveOptions(cfg);
          lv._beforeMount(cfg);
 
+         lv._listModel.setMarkedKey(1);
+         assert.equal(lv._listModel.getMarkedKey(), 1);
+         lv._beforeUpdate(cfg);
+         assert.equal(lv._listModel.getMarkedKey(), 2);
 
          model = new lists.ListViewModel({
-            items: data2,
+            items: testData2,
             keyProperty: 'id',
             markedKey: null,
             itemPadding: itemPadding
