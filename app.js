@@ -67,11 +67,19 @@ global.require = global.requirejs = require = requirejs;
 
 console.log('start init');
 require(['Core/core-init'], function(){
+   initEnv();
    console.log('core init success');
 }, function(err){
    console.log(err);
    console.log('core init failed');
 });
+
+function initEnv(req) {
+   var Env = require('Env/Env');
+   Env.constants.resourceRoot = '/';
+   require('contents');
+   Env.constants.modules = contents.modules;
+}
 
 /*server side render*/
 app.get('/:moduleName/*', function(req, res){
@@ -115,8 +123,6 @@ app.get('/:moduleName/*', function(req, res){
 
       return;
    }
-
-   require('Env/Env').constants.resourceRoot = '/';
 
    const html = tpl({
       lite: true,
