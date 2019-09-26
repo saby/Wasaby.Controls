@@ -51,7 +51,7 @@ export = {
             width = this._calculateValue(popupOptions, containerSizes.width, windowData.width, popupOptions.width, popupOptions.maxWidth);
             height = this._calculateValue(popupOptions, containerSizes.height, windowData.height, popupOptions.height, popupOptions.maxHeight);
             left = this._getLeftCoord(windowData.width, width || containerSizes.width, popupOptions) + (windowData.scrollLeft || 0);
-            top = this._getTopCoord(windowData, height || containerSizes.height, popupOptions) + (windowData.scrollTop || 0);
+            top = this._getTopCoord(windowData, height || containerSizes.height, popupOptions);
         }
 
         return {
@@ -89,7 +89,7 @@ export = {
         if (popupOptions.maximize) {
             return 0;
         }
-        return Math.round((windowData.height - height) / 2);
+        return Math.round((windowData.height - height) / 2) + (windowData.scrollTop || 0);
     }
 };
 
