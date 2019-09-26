@@ -452,7 +452,7 @@ var ItemsViewModel = BaseViewModel.extend({
             this._nextModelVersion();
         }
         if (this._options.itemsSetCallback) {
-            this._options.itemsSetCallback(items);
+            this._options.itemsSetCallback(this._items);
         }
     },
 
