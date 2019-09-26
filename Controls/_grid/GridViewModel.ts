@@ -1706,13 +1706,6 @@ var
             return _private.getEmptyTemplateStyles(this);
         },
 
-        getContainerWidth: function() {
-            return this._containerWidth || 0;
-        },
-        setContainerWidth: function(containerWidth) {
-            this._containerWidth = containerWidth;
-        },
-
         getBottomPaddingStyles(): string {
             let styles = '';
 

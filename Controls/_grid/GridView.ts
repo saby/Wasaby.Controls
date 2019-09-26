@@ -229,12 +229,6 @@ var
             }
         },
 
-        _afterUpdate() {
-            if (this._options.columnScroll) {
-                this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
-            }
-        },
-
         _afterRender() {
             if (GridLayoutUtil.isPartialGridSupport()) {
                 // TODO Kingo
@@ -338,9 +332,6 @@ var
             GridView.superclass._afterMount.apply(this, arguments);
             if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._listModel.isDrawHeaderWithEmptyList()) {
                 this._listModel.setHeaderCellMinHeight(this._setHeaderWithHeight());
-            }
-            if (this._options.columnScroll) {
-                this._listModel.setContainerWidth(this._children.columnScroll.getContentContainerSize());
             }
         },
 
