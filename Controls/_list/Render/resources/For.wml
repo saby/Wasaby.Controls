@@ -4,7 +4,6 @@
       item="{{ item }}"
       itemTemplate="{{ itemTemplate }}"
       multiSelectVisibility="{{ collection.getMultiSelectVisibility() }}"
-      spacingClassList="{{ collection.getSpacingClassList() }}"
       searchValue="{{ collection.getSearchValue() }}"
 
       attr:key="{{ keyPrefix }}-{{ item.getUid() }}"

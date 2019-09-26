@@ -1,12 +1,4 @@
-<div
-   attr:class="
-      controls-ListView__itemV
-      controls-ListView__item_highlightOnHover_default_theme_default
-      controls-ListView__item_default
-      controls-ListView__item_showActions
-      {{ item.isEditing() ? 'controls-ListView__item_editing' }}
-      js-controls-SwipeControl__actionsContainer
-   ">
+<div attr:class="{{ item.getWrapperClassList() }}">
    <ws:if data="{{ multiSelectVisibility !== 'hidden' }}">
       <ws:partial template="{{ multiSelectTpl }}" attr:class="{{ item.getMultiSelectClasses() }}">
          <ws:templateOptions multiSelectStatus="{{ item.isSelected() }}" key="{{ item.getContents().getId() }}"/>
@@ -16,8 +8,7 @@
       <div class="controls-ListView__itemV_marker"></div>
    </ws:if>
    <ws:if data="{{ contentTemplate }}">
-      <div
-         attr:class="controls-ListView__itemContent {{ spacingClassList }}">
+      <div attr:class="{{ item.getContentClassList() }}">
          <ws:partial
             template="{{ contentTemplate }}"
             item="{{ item }}"
@@ -27,8 +18,7 @@
       </div>
    </ws:if>
    <ws:else>
-      <div
-         attr:class="controls-ListView__itemContent {{ spacingClassList }}">
+      <div attr:class="{{ item.getContentClassList() }}">
          {{ item.getContents()[item.getDisplayProperty() || 'title'] }}
       </div>
    </ws:else>

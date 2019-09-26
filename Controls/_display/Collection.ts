@@ -1970,20 +1970,16 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
-    getSpacingClassList(): string {
-        let classList = '';
+    getRowSpacing(): string {
+        return this._$rowSpacing;
+    }
 
-        classList += ' controls-ListView__item-topPadding_' + (this._$rowSpacing || 'default').toLowerCase();
-        classList += ' controls-ListView__item-bottomPadding_' + (this._$rowSpacing || 'default').toLowerCase();
-        classList += ' controls-ListView__item-rightPadding_' + (this._$rightSpacing || 'default').toLowerCase();
+    getLeftSpacing(): string {
+        return this._$leftSpacing;
+    }
 
-        if (this._$multiSelectVisibility !== 'hidden') {
-           classList += ' controls-ListView__itemContent_withCheckboxes';
-        } else {
-           classList += ' controls-ListView__item-leftPadding_' + (this._$leftSpacing || 'default').toLowerCase();
-        }
-
-        return classList;
+    getRightSpacing(): string {
+        return this._$rightSpacing;
     }
 
     setEditingConfig(config: any): void {
@@ -2028,7 +2024,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._stopIndex;
     }
 
-    setViewIndices(startIndex: number, stopIndex: number) {
+    setViewIndices(startIndex: number, stopIndex: number): boolean {
         const newStart = Math.max(startIndex, 0);
         const newStop = Math.min(stopIndex, this.getCount());
         if (newStart !== this._startIndex || newStop !== this._stopIndex) {
@@ -3141,9 +3137,9 @@ Object.assign(Collection.prototype, {
     _$keyProperty: '',
     _$displayProperty: '',
     _$multiSelectVisibility: 'hidden',
-    _$leftSpacing: '',
-    _$rightSpacing: '',
-    _$rowSpacing: '',
+    _$leftSpacing: 'default',
+    _$rightSpacing: 'default',
+    _$rowSpacing: 'default',
     _$searchValue: '',
     _$editingConfig: null,
     _$unique: false,
