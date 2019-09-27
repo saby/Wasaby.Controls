@@ -19,6 +19,7 @@ import 'css!theme?Controls/lookup';
  * @extends Core/Control
  * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
  * @control
+ * @public
  * @author Капустин И.А.
  */
 /*
