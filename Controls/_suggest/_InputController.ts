@@ -564,10 +564,6 @@ var SuggestLayout = Control.extend({
             }
          }
       }
-   },
-
-   _resizeHandler(): void {
-      _private.close(this);
    }
 
    // </editor-fold>
