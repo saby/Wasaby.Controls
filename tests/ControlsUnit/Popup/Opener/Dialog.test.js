@@ -140,6 +140,7 @@ define(
             assert.equal(position.height, 400);
 
             popupOptions.maximize = true;
+            windowData.scrollTop = 10;
             position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
             assert.equal(position.left, 0);
             assert.equal(position.top, 0);
