@@ -34,7 +34,8 @@
       <ws:if data="{{itemData.icon || (iconPadding[itemData.getPropValue(itemData.item, parentProperty)])}}">
          <div class="{{itemData.getPropValue(itemData.item, displayProperty || 'title') ? 'controls-DropdownList__icon'}}
                      controls-DropdownList__icon_style_{{itemData.iconStyle}}
-                     {{(iconPadding[itemData.getPropValue(itemData.item, parentProperty)])}} {{itemData.icon}} theme_{{_options.theme}}"></div>
+                     {{itemData.iconSize ? 'controls-icon_size-' + itemData.iconSize + '_theme-' + _options.theme}}
+                     {{iconPadding[itemData.getPropValue(itemData.item, parentProperty)]}} {{itemData.icon}} theme_{{_options.theme}}"></div>
       </ws:if>
       <div class="controls-DropdownList__content {{itemData.getPropValue(itemData.item, 'readOnly') ? 'controls-DropdownList__content-readOnly'}}
                   controls-DropdownList__content_{{multiLine ? 'multiLine' : 'singleLine'}} theme_{{_options.theme}}"

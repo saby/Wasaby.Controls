@@ -35,6 +35,7 @@
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysIcon"
                                   keyProperty="id"
                                   displayProperty="title"
+                                  iconSize="s"
                                   attr:class="ControlsDemo-iconLeft"
                                   source="{{_createMemory(_iconItems)}}"/>
       </div>
