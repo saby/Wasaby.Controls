@@ -182,17 +182,20 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     _nextModelVersion: function(notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+        let changedItems = [];
+
         if (!notUpdatePrefixItemVersion) {
             this._prefixItemVersion++;
         }
         this._nextVersion();
 
-        let changedItems = [];
-        if (Array.isArray(newItems) && newItems.length > 0) {
-            changedItems = changedItems.concat(newItems);
-        }
-        if (Array.isArray(removedItems) && removedItems.length > 0) {
-            changedItems = changedItems.concat(removedItems);
+        if (notUpdatePrefixItemVersion) {
+            if (Array.isArray(newItems) && newItems.length > 0) {
+                changedItems = changedItems.concat(newItems);
+            }
+            if (Array.isArray(removedItems) && removedItems.length > 0) {
+                changedItems = changedItems.concat(removedItems);
+            }
         }
         this._resetCacheOnChange(changesType, changedItems);
 
