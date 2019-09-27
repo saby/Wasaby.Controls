@@ -8,12 +8,26 @@ export = {
         } else {
             //TODO: self._container может быть не HTMLElement, а jQuery-элементом, убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
             var container = self._container.get ? self._container.get(0) : self._container;
+
+
+
+            let targetContainer;
+
+            // FIXME: https://online.sbis.ru/opendoc.html?guid=fad3d7db-3d16-4095-857c-f9c168b4aca2
+            if (self._options.fix1177894367) {
+                targetContainer = event.target.closest('.controls-Grid__row-cell');
+            } else {
+                targetContainer = Array.prototype.filter.call(container.querySelector('.controls-ListView__itemV').parentNode.children, function (item) {
+                    return item.className.indexOf('controls-ListView__itemV') !== -1;
+                })[itemData.index - listModel.getStartIndex()];
+            }
+
+
+
             const args = [
                 action,
                 itemData.breadCrumbs ? itemData.item[itemData.item.length - 1] : itemData.item,
-                Array.prototype.filter.call(container.querySelector('.controls-ListView__itemV').parentNode.children, function (item) {
-                    return item.className.indexOf('controls-ListView__itemV') !== -1;
-                })[itemData.index - listModel.getStartIndex()]
+                targetContainer
             ];
             self._notify('actionClick', args);
             action.handler && action.handler(args[1]);
