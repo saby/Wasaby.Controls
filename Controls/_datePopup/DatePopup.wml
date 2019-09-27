@@ -13,6 +13,7 @@
          _monthStateEnabled="{{_monthStateEnabled}}"
          _state="{{_state}}"
          _mask="{{_mask}}"
+         dateConstructor="{{_options.dateConstructor}}"
       />
 
       <div if="{{ _state === _STATES.year }}" class="controls-PeriodDialog__months controls-PeriodDialog__body">
@@ -29,6 +30,7 @@
 
             <Controls._datePopup.YearsRange
                year="{{_displayedDate}}"
+               dateConstructor="{{_options.dateConstructor}}"
             />
          </Controls.dateRange:DateRangeSelectionController>
 
@@ -46,6 +48,7 @@
                attr:class="controls-DateRangeBigChoose__months-month-wrapper"
                monthClickable="{{_monthStateEnabled}}"
                bind:position="_displayedDate"
+               dateConstructor="{{_options.dateConstructor}}"
                on:monthClick="_monthRangeMonthClick()"
                on:fixedPeriodClick="_monthRangeFixedPeriodClick()"
             />
@@ -71,6 +74,7 @@
             quantum="{{_options.quantum}}"
             calendarSource="{{_options.calendarSource}}"
             dayTemplate="{{_options.dayTemplate}}"
+            dateConstructor="{{_options.dateConstructor}}"
          />
       </Controls.dateRange:DateRangeSelectionController>
    </div>

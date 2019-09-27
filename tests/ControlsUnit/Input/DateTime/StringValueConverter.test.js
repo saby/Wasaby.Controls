@@ -142,6 +142,16 @@ define([
                assert(dateUtils.isDatesEqual(rDate, test.value), `${rDate} is not equal ${test.value}`);
             });
          });
+
+         it('should create date with proper class', function() {
+            let converter = new input.StringValueConverter({
+                  mask: 'HH.mm.ss',
+                  dateConstructor: Date
+               }),
+               rDate;
+            rDate = converter.getValueByString('10:10:80');
+            assert.instanceOf(rDate, Date);
+         });
       });
 
       describe('.getCurrentDate', function() {
@@ -228,6 +238,16 @@ define([
                let tested = converter.getCurrentDate(test.baseDate || baseDate, test.mask);
                assert(dateUtils.isDatesEqual(tested, test.value),`"${tested}" "${test.value}"`);
             });
+         });
+
+         it('should create date with proper class', function() {
+            let converter = new input.StringValueConverter({
+                  mask: 'HH.mm.ss',
+                  dateConstructor: Date
+               }),
+               rDate;
+            rDate = converter.getCurrentDate(new Date(), '10:10:80');
+            assert.instanceOf(rDate, Date);
          });
       });
    });

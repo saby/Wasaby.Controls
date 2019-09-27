@@ -1,4 +1,5 @@
 import Deferred = require('Core/Deferred');
+import {Date as WSDate} from 'Types/entity';
 import {Memory, Query} from 'Types/source';
 import dateUtils = require('Controls/Utils/Date');
 import monthListUtils from './Utils';
@@ -24,10 +25,12 @@ export default class YearsSource extends Memory {
     _$keyProperty: 'id';
 
     _header: boolean = false;
+    protected _dateConstructor: Function;
 
     constructor(options) {
         super(options);
         this._header = options.header;
+        this._dateConstructor = options.dateConstructor || WSDate;
     }
 
     query(query: Query) {
@@ -51,7 +54,7 @@ export default class YearsSource extends Memory {
             if (dateUtils.isValidDate(year)) {
                 year = year.getFullYear();
             } else if (typeof year === 'string') {
-                year = monthListUtils.idToDate(year).getFullYear();
+                year = monthListUtils.idToDate(year, this._dateConstructor).getFullYear();
             } else if (!year) {
                 year = 1900;
             }
@@ -65,13 +68,13 @@ export default class YearsSource extends Memory {
             }
 
             for (let i = 0; i < limit; i++) {
-                let date = new Date(year + i, 0);
+                let date = new this._dateConstructor(year + i, 0);
                 items.push({
                     id: monthListUtils.dateToId(date),
                     date,
                     type: ITEM_TYPES.body
                 });
-                date = new Date(year + i + 1, 0);
+                date = new this._dateConstructor(year + i + 1, 0);
                 if (this._header) {
                     items.push({
                         id: 'h' + monthListUtils.dateToId(date),

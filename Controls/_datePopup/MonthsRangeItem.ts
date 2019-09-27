@@ -1,5 +1,6 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
+import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import EventProxyMixin from './Mixin/EventProxy';
@@ -87,7 +88,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
         }
         this._months = [];
         for (let i = 0; i < 12; i++) {
-            this._months.push(new Date(year, i, 1));
+            this._months.push(new WSDate(year, i, 1));
         }
     },
 

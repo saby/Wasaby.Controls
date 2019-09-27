@@ -1,4 +1,5 @@
 import {date as formatDate} from 'Types/formatter';
+import {Date as WSDate} from 'Types/entity';
 import {debounce} from 'Types/function';
 import {Base as BaseSource} from 'Types/source';
 import {IoC} from 'Env/Env';
@@ -12,6 +13,7 @@ import YearsSource from './MonthList/YearsSource';
 import MonthsSource from './MonthList/MonthsSource';
 import monthListUtils from './MonthList/Utils';
 import ITEM_TYPES from './MonthList/ItemTypes';
+import {IDateConstructor, IDateConstructorOptions} from 'Controls/interface';
 import {IntersectionObserverSyntheticEntry} from 'Controls/scroll';
 import dateUtils = require('Controls/Utils/Date');
 import getDimensions = require("Controls/Utils/getDimensions");
@@ -57,7 +59,8 @@ interface IModuleComponentOptions extends
     IControlOptions,
     IMonthListSourceOptions,
     IMonthListOptions,
-    IMonthListVirtualPageSizeOptions {
+    IMonthListVirtualPageSizeOptions,
+    IDateConstructorOptions {
 }
 
 const
@@ -71,10 +74,11 @@ const
     };
 
 class  ModuleComponent extends Control<IModuleComponentOptions> implements
-        IMonthListSource, IMonthList, IMonthListVirtualPageSize {
+        IMonthListSource, IMonthList, IMonthListVirtualPageSize, IDateConstructor {
     readonly '[Controls/_calendar/interface/IMonthListSource]': true;
     readonly '[Controls/_calendar/interface/IMonthList]': true;
     readonly '[Controls/_calendar/interface/IMonthListVirtualPageSize]': true;
+    readonly '[Controls/_interface/IDateConstructor]': true;
 
     protected _template: TemplateFunction = template;
 
@@ -98,7 +102,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     private _virtualPageSize: number;
 
     protected _beforeMount(options: IModuleComponentOptions): void {
-        const position = options.startPosition || options.position || new Date();
+        const position = options.startPosition || options.position || new WSDate();
         if (options.startPosition) {
             IoC.resolve('ILogger').warn('MonthList', 'Используется устаревшая опция startPosition, используйте опцию position');
         }
@@ -135,7 +139,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     protected _getMonth(year: number, month: number): Date {
-        return new Date(year, month, 1);
+        return new WSDate(year, month, 1);
     }
 
     protected _drawItemsHandler(): void {
@@ -159,12 +163,16 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     private _updateSource(options: IModuleComponentOptions): void {
         if (options.viewMode !== this._options.viewMode) {
-            this._viewSource = new sourceMap[options.viewMode]({ header: Boolean(this._itemHeaderTemplate) });
+            this._viewSource = new sourceMap[options.viewMode]({
+                header: Boolean(this._itemHeaderTemplate),
+                dateConstructor: options.dateConstructor
+            });
         }
         if (options.viewMode !== this._options.viewMode || options.source !== this._options.source) {
             this._extData = new ExtDataModel({
                 viewMode: options.viewMode,
-                source: options.source
+                source: options.source,
+                dateConstructor: options.dateConstructor
             });
         }
     }
@@ -219,9 +227,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 date = entryDate;
             } else if (entry.nativeEntry.rootBounds.top - entry.nativeEntry.boundingClientRect.bottom < entry.nativeEntry.target.offsetHeight) {
                 if (this._options.viewMode === 'year') {
-                    date = new Date(entryDate.getFullYear() + 1, entryDate.getMonth());
+                    date = new this._options.dateConstructor(entryDate.getFullYear() + 1, entryDate.getMonth());
                 } else {
-                    date = new Date(entryDate.getFullYear(), entryDate.getMonth() + 1);
+                    date = new this._options.dateConstructor(entryDate.getFullYear(), entryDate.getMonth() + 1);
                 }
             }
         }
@@ -353,7 +361,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             monthTemplate,
             // In most places where control is used, no more than 4 elements are displayed at the visible area.
             // Draw the elements above and below.
-            virtualPageSize: 6
+            virtualPageSize: 6,
+            dateConstructor: WSDate
         };
     }
 }

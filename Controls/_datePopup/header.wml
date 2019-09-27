@@ -40,6 +40,7 @@
                mask="{{_mask}}"
                autocompleteMode="start"
                value="{{_rangeModel.startValue}}"
+               dateConstructor="{{_options.dateConstructor}}"
                attr:ws-autofocus="true"
                attr:class="controls-PeriodDialog__header-datePickerStart"
                on:valueChanged="_startValuePickerChanged()"
@@ -61,6 +62,7 @@
                   mask="{{_mask}}"
                   autocompleteMode="start"
                   value="{{_rangeModel.endValue}}"
+                  dateConstructor="{{_options.dateConstructor}}"
                   attr:class="controls-PeriodDialog__header-datePickerEnd"
                   on:valueChanged="_endValuePickerChanged()"
                />

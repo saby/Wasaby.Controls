@@ -9,7 +9,8 @@ define([
 
    const config = {
       startValue: new Date(2018, 0, 1),
-      endValue: new Date(2018, 1, 0)
+      endValue: new Date(2018, 1, 0),
+      dateConstructor: Date
    };
 
    describe('Controls/dateRange:LinkView', function() {

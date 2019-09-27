@@ -105,9 +105,11 @@ var Component = BaseControl.extend({
 
    _clearButtonVisible: null,
 
-   constructor: function() {
+   constructor: function(options) {
       Component.superclass.constructor.apply(this, arguments);
-      this._rangeModel = new DateRangeModel();
+      this._rangeModel = new DateRangeModel({
+         dateConstructor: options.dateConstructor
+      });
       CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged', 'rangeChanged']);
    },
 

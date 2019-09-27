@@ -2,7 +2,7 @@ import cExtend = require('Core/core-simpleExtend');
 import formatter = require('Types/formatter');
 import {dateMaskConstants} from 'Controls/interface';
 import dateUtils = require('Controls/Utils/Date');
-
+import {getMaskType, DATE_MASK_TYPE, DATE_TIME_MASK_TYPE, TIME_MASK_TYPE} from './Utils';
 
 var _private = {
    maskMap: {
@@ -10,8 +10,6 @@ var _private = {
    },
 
    reAllMaskChars: /[YMDHms]+|[. :-]/g,
-   reDateMaskChars: /[YMD]+/,
-   reTimeMaskChars: /[Hms]+/,
    reDateTimeMaskChars: /[YMDHms]+/,
    reNumbers: /\d/,
    maskRegExp: /^(?:(\d{1,2})(?:\.(\d{1,2})(?:\.((?:\d{2})|(?:\d{4})))?)?)?(?: ?(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?)?$/,
@@ -151,7 +149,7 @@ var _private = {
 
    autocomplete: function(self, valueModel, autocompleteType, required) {
       var now = new Date(),
-         maskType = _private.getMaskType(self._mask),
+         maskType = getMaskType(self._mask),
          item, itemValue, isZeroAtBeginning;
 
       var getDate = function(autocompliteDefaultDate) {
@@ -195,7 +193,7 @@ var _private = {
          if (valueModel.hasOwnProperty(item)) {
             if (!valueModel[item].valid) {
                itemValue = valueModel[item].str;
-               if (_private.reTimeMaskChars.test(item) && _private.isPartlyFilled(self, itemValue)) {
+               if (getMaskType(item) === TIME_MASK_TYPE && _private.isPartlyFilled(self, itemValue)) {
                   itemValue = itemValue.replace(self._replacerRegExp, '0');
                }
                itemValue = parseInt(itemValue, 10);
@@ -215,7 +213,7 @@ var _private = {
       //    return null;
       // }
 
-      if (maskType === 'date' || maskType === 'datetime') {
+      if (maskType === DATE_MASK_TYPE || maskType === DATE_TIME_MASK_TYPE) {
          if (required && !valueModel.year.valid && valueModel.month.valid && valueModel.date.valid) {
             setValue(valueModel.year, now.getFullYear());
             setValue(valueModel.month, now.getMonth());
@@ -251,7 +249,7 @@ var _private = {
             setValue(valueModel.month, now.getMonth());
             setValue(valueModel.year, now.getFullYear());
          }
-      } else if (maskType === 'time') {
+      } else if (maskType === TIME_MASK_TYPE) {
          if (valueModel.hours.valid) {
             setValue(valueModel.minutes, 0);
             setValue(valueModel.seconds, 0);
@@ -259,22 +257,6 @@ var _private = {
          if (valueModel.minutes.valid) {
             setValue(valueModel.seconds, 0);
          }
-      }
-   },
-
-   /**
-    * Get the type of displayed data: date / time / date and time.
-    * @returns (String) Data type ('date' || 'time' || 'datetime').
-    */
-   getMaskType: function(mask) {
-      if (_private.reDateMaskChars.test(mask)) {
-         if (_private.reTimeMaskChars.test(mask)) {
-            return 'datetime';
-         }
-         return 'date';
-      }
-      if (_private.reTimeMaskChars.test(mask)) {
-         return 'time';
       }
    },
 
@@ -292,7 +274,7 @@ var _private = {
     * @returns {Date}
     * @private
     */
-   createDate: function(year, month, date, hours, minutes, seconds, autoCorrect) {
+   createDate: function(year, month, date, hours, minutes, seconds, autoCorrect, dateConstructor) {
       var endDateOfMonth;
 
       if (autoCorrect) {
@@ -315,7 +297,7 @@ var _private = {
          return new Date('Invalid');
       }
 
-      return new Date(year, month, date, hours, minutes, seconds);
+      return new dateConstructor(year, month, date, hours, minutes, seconds);
    },
 
    isValidDate: function(year, month, date, hours, minutes, seconds) {
@@ -330,6 +312,7 @@ var ModuleClass = cExtend.extend({
    _replacer: null,
    _replacerRegExp: null,
    _replacerBetweenCharsRegExp: null,
+   _dateConstructor: null,
 
    constructor: function(options) {
       this.update(options || {});
@@ -341,6 +324,7 @@ var ModuleClass = cExtend.extend({
     */
    update: function(options) {
       this._mask = options.mask;
+      this._dateConstructor = options.dateConstructor || Date;
       if (this._replacer !== options.replacer) {
          this._replacer = options.replacer;
          this._replacerBetweenCharsRegExp = new RegExp('[^' + this._replacer + ']+' + this._replacer + '[^' + this._replacer + ']+');
@@ -391,7 +375,7 @@ var ModuleClass = cExtend.extend({
 
       if (_private.isValueModelFilled(valueModel)) {
          return _private.createDate(valueModel.year.value, valueModel.month.value, valueModel.date.value,
-            valueModel.hours.value, valueModel.minutes.value, valueModel.seconds.value, autoCompleteType);
+            valueModel.hours.value, valueModel.minutes.value, valueModel.seconds.value, autoCompleteType, this._dateConstructor);
       }
 
       return new Date('Invalid');
@@ -426,7 +410,7 @@ var ModuleClass = cExtend.extend({
       if (mask.indexOf('ss') > -1) {
          seconds = now.getSeconds();
       }
-      return new Date(year, month, date, hours, minutes, seconds);
+      return new this._dateConstructor(year, month, date, hours, minutes, seconds);
    }
 });
 

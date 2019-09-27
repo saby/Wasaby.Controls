@@ -1,5 +1,6 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
+import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import DateUtil = require('Controls/Utils/Date');
 
@@ -27,7 +28,7 @@ import 'css!theme?Controls/calendar'
 
 var _private = {
    _updateView: function(self, options) {
-      var newMonth = options.month || new Date();
+      var newMonth = options.month || new options.dateConstructor();
 
       // localization can change in runtime, take the actual translation of the months each time the component
       // is initialized. In the array, the days of the week are in the same order as the return values
@@ -95,9 +96,11 @@ var MonthView = BaseControl.extend({
 
 MonthView._private = _private;
 
-var defaultOptions = coreMerge({
+var defaultOptions = {
+   ...IMonth.getDefaultOptions(),
    dayTemplate: dayTemplate,
-}, IMonth.getDefaultOptions());
+   dateConstructor: WSDate
+};
 
 MonthView.getDefaultOptions = function() {
    return defaultOptions;
