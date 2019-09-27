@@ -1,4 +1,5 @@
 import BaseLayer from './__BaseLayer';
+import {detection} from 'Env/Env';
 import 'css!theme?Controls/suggest';
 import template = require('wml!Controls/_suggestPopup/Layer/__PopupContent');
 
@@ -28,6 +29,12 @@ var __PopupContent = BaseLayer.extend({
       if (!this._reverseList && isPopupOpenedToTop) {
           // scroll after list render in  _beforePaint hook
          this._shouldScrollToBottom = true;
+
+         // Для Ipad'a при появлении клавиатуры необходимо перепоизиционировать popup вверх,
+         // иначе он становится очень маленьким по высоте и оттуда становится невоозможно выбирать записи
+         if (detection.isMobileIOS) {
+            this._positionFixed = false;
+         }
       }
 
       this._reverseList = isPopupOpenedToTop;
