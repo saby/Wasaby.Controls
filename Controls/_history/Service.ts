@@ -276,8 +276,23 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
       return resultDef;
    },
 
-   destroy: function () {
-      _private.decrementUsage(this);
+   destroy(keys: number|string|Array<number|string>): Deferred<null> {
+      let  result;
+
+      if (keys) {
+         const key = keys instanceof Array ? keys[0] : keys;
+         result = _private.getHistoryDataSource(this).call('Delete', {
+            params: {
+               history_id: this._historyId,
+               object_id: key
+            }
+         });
+      } else {
+         _private.decrementUsage(this);
+         result = Deferred.success(null);
+      }
+
+      return result;
    },
 
    /**

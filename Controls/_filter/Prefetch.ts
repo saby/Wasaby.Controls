@@ -1,3 +1,25 @@
+/**
+ * Модуль, который экспортирует набор функций-хэлперов для работы с кэшированием данных на сервисе кэширования.
+ * Подробнее о кэшировании вы можете почитать <a href='/doc/platform/application-optimization/reports-caching/'>здесь</a>.
+ *
+ * @class Controls/_filter/Prefetch
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ */
+
+/**
+ * Возвращает дату создания кэша из метаданных переданного рекордсета
+ * @function Controls/_filter/Prefetch#getPrefetchDataCreatedFromItems
+ * @param {Types/collection:RecordSet} items
+ * @returns {Date|null}
+ * @example
+ * <pre>
+ *     import {Prefetch} from 'Controls/filter'
+ *     const createDate = Prefetch.getPrefetchDataCreatedFromItems(loadedItems);
+ * </pre>
+ */
+
 import {RecordSet} from 'Types/Collection';
 import {Record} from 'Types/entity';
 import {IPrefetchHistoryParams, IPrefetchParams} from './IPrefetch';
@@ -5,6 +27,7 @@ import {IPrefetchHistoryParams, IPrefetchParams} from './IPrefetch';
 const PREFETCH_SESSION_ERROR = '00000000-0000-0000-0000-000000000000';
 const PREFETCH_SESSION_FIELD = 'PrefetchSessionId';
 const PREFETCH_DATA_VALID_FIELD = 'PrefetchDataValidUntil';
+const PREFETCH_DATA_CREATED = 'PrefetchDataCreated';
 
 function isPrefetchParamsValid(items: RecordSet): boolean {
     let sessionId;
@@ -33,7 +56,7 @@ function getPrefetchFromHistory({prefetchParams}): IPrefetchHistoryParams|undefi
 }
 
 function addPrefetchToHistory<T>(history: T, prefetchParams: IPrefetchHistoryParams|undefined): T {
-    if (history) {
+    if (history && prefetchParams) {
         history.prefetchParams = prefetchParams;
     }
     return history;
@@ -94,7 +117,18 @@ function clearPrefetchSession(filter: object): object {
     return resultFilter;
 }
 
-export {
+function getPrefetchDataCreatedFromItems(items: RecordSet): Date|null {
+    const prefetchMeta = getPrefetchMeta(items);
+    let result = null;
+
+    if (prefetchMeta) {
+        result = prefetchMeta.get(PREFETCH_DATA_CREATED);
+    }
+
+    return result;
+}
+
+export default {
     applyPrefetchFromItems,
     applyPrefetchFromHistory,
     getPrefetchParamsForSave,
@@ -102,5 +136,6 @@ export {
     needInvalidatePrefetch,
     prepareFilter,
     clearPrefetchSession,
-    getPrefetchFromHistory
+    getPrefetchFromHistory,
+    getPrefetchDataCreatedFromItems
 };

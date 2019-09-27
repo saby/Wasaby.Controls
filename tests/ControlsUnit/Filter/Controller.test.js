@@ -1,4 +1,4 @@
-define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferred) {
+define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Controls/_filter/HistoryUtils'], function(Filter, Deferred, entity, HistoryUtils) {
 
    describe('Controls.Filter.Controller', function () {
 
@@ -189,10 +189,13 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
 
          var sandbox = sinon.createSandbox();
          var history = {
-            items: []
+            data: {
+               items: []
+            }
          };
          filterLayout._filter = {testKey: 'testValue2', PrefetchSessionId: 'test'};
          filterLayout._options.prefetchParams = {};
+         filterLayout._options.historyId = 'test';
          sandbox.replace(Filter._private, 'getHistoryByItems', function() {
             return history;
          });
@@ -201,13 +204,36 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
          assert.deepEqual(filterLayout._filter, {testKey: 'testValue'});
 
          history = {
-            items: [],
-            prefetchParams: {
-               PrefetchSessionId: 'test'
-            }
+            data: {
+               items: [],
+               prefetchParams: {
+                  PrefetchSessionId: 'test'
+               }
+            },
+            item: new entity.Model({
+               rawData: {
+                  id: 'test'
+               },
+               keyProperty: 'id'
+            })
          };
+
          filterLayout._itemsChanged(null, items);
          assert.deepEqual(filterLayout._filter, {testKey: 'testValue', PrefetchSessionId: 'test'});
+
+         var isHistoryItemDestroyed = false;
+         sandbox.replace(HistoryUtils, 'getHistorySource', () => {
+            return {
+               destroy: () => {
+                  isHistoryItemDestroyed = true;
+               },
+               update: () => {},
+               query: () => {}
+            };
+         });
+         history.data.prefetchParams.PrefetchDataValidUntil = new Date('December 17, 1995 03:24:00');
+         filterLayout._itemsChanged(null, items);
+         assert.isTrue(isHistoryItemDestroyed);
 
          sandbox.restore();
       });
@@ -745,8 +771,8 @@ define(['Controls/_filter/Controller', 'Core/Deferred'], function(Filter, Deferr
       });
 
       it('_private.getHistoryItems', function(done) {
-         Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
-            assert.deepEqual(items.length, 15);
+         Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(history) {
+            assert.deepEqual(history.items.length, 2);
 
             var self = {
                _sourceController: {
