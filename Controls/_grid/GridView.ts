@@ -135,6 +135,13 @@ var
             return columnsWidths;
         },
 
+        getQueryForHeaderCell: function(isSafari: boolean, cur, multyselectVisibility: number) {
+            return isSafari ?
+                `div[style*="grid-column-start: ${cur.startColumn + multyselectVisibility}; grid-column-end: ${cur.endColumn + multyselectVisibility}; grid-row-start: ${cur.startRow}; grid-row-end: ${cur.endRow}"]` :
+                `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`;
+        },
+
+
         // TODO Kingo
         // В IE для колонок строки редактирования в гриде нужно установить фиксированную ширину,
         // чтобы она отображалась правильно. Для этого мы измеряем текущую ширину колонок в другой
@@ -298,8 +305,8 @@ var
             const newColumns = this._options.header.map((cur, i) => {
                 if (cur.startRow && cur.endRow) {
                     const curEl = container.querySelector(
-                    `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`
-                    )
+                        _private.getQueryForHeaderCell(Env.detection.safari, cur, multyselectVisibility)
+                    );
                     const height = curEl.offsetHeight;
                     const offset = curEl.offsetTop;
                     return {
@@ -308,7 +315,7 @@ var
                         height
                     };
                 }
-                const curElHeight = stickyHeaderCells[i].offsetHeight
+                const curElHeight = stickyHeaderCells[i].offsetHeight;
                 if (curElHeight > resultOffset && !cur.isBreadCrumbs) {
                     resultOffset = curElHeight;
                 }
