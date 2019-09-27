@@ -151,24 +151,28 @@ import 'Controls/form';
 
          if (items) {
             result = chain.factory(items).filter((item) => {
-               const history = JSON.parse(item.get('ObjectData')).items || JSON.parse(item.get('ObjectData'));
-               let result = false;
+               let validResult = false;
 
-               for (let i = 0, length = history.length; i < length; i++) {
-                  const textValue = getPropValue(history[i], 'textValue');
-                  const value = getPropValue(history[i], 'value');
+               const objectData = JSON.parse(item.get('ObjectData'));
+               if (objectData) {
+                  const history = objectData.items || objectData;
 
-                  if (textValue !== '' && textValue !== undefined) {
-                     originalItem = getOriginalItem(self, history[i]);
-                     hasResetValue = originalItem && originalItem.hasOwnProperty('resetValue');
+                  for (let i = 0, length = history.length; i < length; i++) {
+                     const textValue = getPropValue(history[i], 'textValue');
+                     const value = getPropValue(history[i], 'value');
 
-                     if (!hasResetValue || hasResetValue && !isEqual(value, getPropValue(originalItem, 'resetValue'))) {
-                        result = true;
-                        break;
+                     if (textValue !== '' && textValue !== undefined) {
+                        originalItem = getOriginalItem(self, history[i]);
+                        hasResetValue = originalItem && originalItem.hasOwnProperty('resetValue');
+
+                        if (!hasResetValue || hasResetValue && !isEqual(value, getPropValue(originalItem, 'resetValue'))) {
+                           validResult = true;
+                           break;
+                        }
                      }
                   }
                }
-               return result;
+               return validResult;
             }).value(factory.recordSet, {adapter: items.getAdapter()});
          } else {
             result = items;
