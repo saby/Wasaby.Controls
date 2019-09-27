@@ -33,7 +33,6 @@
                 <ws:partial template="wml!Controls/_grid/_editArrowTemplate"></ws:partial>
             </ws:editArrowTemplate>
         </ws:partial>
-
     </div>
     <ws:if data="{{_options._needBottomPadding}}">
         <div  class="controls-itemActionsV_outside-spacing" attr:style="{{_listModel.getBottomPaddingStyles()}}"></div>
@@ -41,7 +40,7 @@
     <ws:if data="{{_options.emptyTemplate}}">
         <ws:if data="{{_options.columnScroll}}">
             <div style="{{'grid-column: 1 / span ' + (_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0)) + ';'}}">
-                <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{'max-width: ' + _listModel.getContainerWidth() + 'px;'}}"/>
+                <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{containerSize ? 'max-width: ' + containerSize + 'px;' : 'visibility: hidden;'}}"/>
             </div>
         </ws:if>
         <ws:else>
