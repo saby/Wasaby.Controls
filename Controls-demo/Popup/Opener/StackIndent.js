@@ -1,11 +1,11 @@
-define('Controls-demo/Popup/Opener/StackDemo',
+define('Controls-demo/Popup/Opener/StackIndent',
    [
       'Core/Control',
-      'wml!Controls-demo/Popup/Opener/StackDemo',
+      'wml!Controls-demo/Popup/Opener/StackIndent',
       'wml!Controls-demo/Popup/Opener/resources/footer',
       'wml!Controls-demo/Popup/Opener/DialogTpl',
       'css!Controls-demo/Popup/PopupPageOld',
-      'css!Controls-demo/Popup/Opener/resources/StackHeader'
+      'css!Controls-demo/Popup/PopupPage'
    ],
    function(Control, template) {
       'use strict';
@@ -26,43 +26,6 @@ define('Controls-demo/Popup/Opener/StackDemo',
                modal: true,
                template: 'Controls-demo/Popup/Opener/resources/StackTemplate',
                width: 600
-            });
-         },
-         openDialog: function() {
-            this._children.dialog.open({
-               opener: this._children.button3,
-               closeOnOutsideClick: true,
-               maxHeight: 700,
-               maxWidth: 700,
-               minWidth: 550
-            });
-         },
-         openModalDialog: function() {
-            this._children.dialog.open({
-               opener: this._children.button5,
-               templateOptions: {
-                  footerContentTemplate: 'wml!Controls-demo/Popup/Opener/resources/footer',
-               },
-               modal: true,
-               maxHeight: 700,
-               maxWidth: 700,
-               minWidth: 550
-            });
-         },
-         openSticky: function() {
-            this._children.sticky.open({
-               target: this._children.stickyButton2._container,
-               opener: this._children.stickyButton2,
-               actionOnScroll: 'track',
-               template: 'wml!Controls-demo/Popup/Opener/DialogTpl'
-            });
-         },
-         openStickyScroll: function() {
-            this._children.sticky.open({
-               target: this._children.stickyButton._container,
-               opener: this._children.stickyButton,
-               actionOnScroll: 'close',
-               template: 'wml!Controls-demo/Popup/Opener/DialogTpl'
             });
          },
          openMaximizedStack: function() {
