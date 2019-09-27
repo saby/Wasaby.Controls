@@ -3,12 +3,12 @@
  */
 import CoreExtend = require('Core/core-extend');
 import collection = require('Types/collection');
-import Constants = require('Controls/_history/Constants');
+import Deferred = require('Core/Deferred');
 import sourceLib = require('Types/source');
 import chain = require('Types/chain');
 import entity = require('Types/entity');
-import {isEqual} from 'Types/object';
 import Serializer = require('Core/Serializer');
+import {isEqual} from 'Types/object';
 
 var historyMetaFields = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
 var DEFAULT_FILTER = '{}';
@@ -337,7 +337,15 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
       return _private.getSourceByMeta(this, meta).update(data, meta);
    },
 
-   destroy: function (keys, meta) {
+   destroy(keys: number|string|Array<number|string>, meta?: object): Deferred<null> {
+      if (meta && meta.hasOwnProperty('$_history')) {
+         const recent = this._history && this._history.recent;
+
+         if (recent) {
+            recent.remove(recent.getRecordById(keys instanceof Array ? keys[0] : keys));
+         }
+      }
+
       return _private.getSourceByMeta(this, meta).destroy(keys, meta);
    },
 
