@@ -387,7 +387,7 @@ define(
                   },
 		          {
 					 ObjectData: null
-				  },
+				  }
                ]
             });
 
