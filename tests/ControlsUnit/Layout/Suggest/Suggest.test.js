@@ -888,18 +888,5 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          suggestMod._InputController._private.closePopup(suggestComponent);
          assert.isTrue(isClosePopup);
       });
-
-      it('Suggest::_resizeHandler', function() {
-         const suggestComponent = new suggestMod._InputController();
-         const sandbox = sinon.createSandbox();
-
-         sandbox.stub(suggestComponent, '_notify');
-         suggestComponent._resizeHandler();
-
-         sinon.assert.calledWith(
-            suggestComponent._notify,
-            'suggestStateChanged', [false]
-         );
-      });
    });
 });
