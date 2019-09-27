@@ -4,7 +4,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
       'wml!Controls-demo/Popup/Opener/StackDemo',
       'wml!Controls-demo/Popup/Opener/resources/footer',
       'wml!Controls-demo/Popup/Opener/DialogTpl',
-      'css!Controls-demo/Popup/PopupPageOld',
+      'css!Controls-demo/Popup/PopupPage',
       'css!Controls-demo/Popup/Opener/resources/StackHeader'
    ],
    function(Control, template) {
