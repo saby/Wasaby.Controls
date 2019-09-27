@@ -22,6 +22,7 @@ define('Controls/Application/TouchDetector', [
             this._touchObjectContext.setIsTouch(this.state);
             this.lastState = this.state;
             this._forceUpdate();
+            this._notify('changeTouchState', [this.lastState]);
          }
       },
 
