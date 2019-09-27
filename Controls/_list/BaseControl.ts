@@ -1254,6 +1254,15 @@ var _private = {
     },
     hasItemActions: function(itemActions, itemActionsProperty) {
         return !!(itemActions || itemActionsProperty);
+    },
+    setIndicatorContainerHeight(self, viewPortSize) {
+        const listBoundingRect = (self._container[0] || self._container).getBoundingClientRect();
+
+        if (listBoundingRect.bottom < viewPortSize) {
+            self._loadingIndicatorContainerHeight = listBoundingRect.height;
+        } else {
+            self._loadingIndicatorContainerHeight = viewPortSize - listBoundingRect.top;
+        }
     }
 
 };
@@ -1804,7 +1813,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._children.bottomVirtualScrollTrigger.style.bottom = Math.floor(this._loadOffset.bottom) + 'px';
         this._children.bottomLoadTrigger.style.bottom = Math.floor(this._loadOffset.bottom * 1.3) + 'px';
     },
-    _onViewPortResize: function(self, viewPortSize ) {
+    _onViewPortResize: function(self, viewPortSize) {
+        _private.setIndicatorContainerHeight(self, viewPortSize);
+
         if (self._needScrollCalculation) {
             let offset = Math.floor(viewPortSize / 3);
             self._setLoadOffset(offset, offset);
