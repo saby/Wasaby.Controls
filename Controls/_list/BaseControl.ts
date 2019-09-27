@@ -1242,10 +1242,10 @@ var _private = {
     setIndicatorContainerHeight(self, viewPortSize) {
         const listBoundingRect = (self._container[0] || self._container).getBoundingClientRect();
 
-        if (listBoundingRect.bootom < viewPortSize) {
+        if (listBoundingRect.bottom < viewPortSize) {
             self._loadingIndicatorContainerHeight = listBoundingRect.height;
         } else {
-            self._loadingIndicatorContainerHeight = viewPortSize;
+            self._loadingIndicatorContainerHeight = viewPortSize - listBoundingRect.top;
         }
     }
 
