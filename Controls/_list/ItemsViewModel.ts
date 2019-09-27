@@ -355,11 +355,11 @@ var ItemsViewModel = BaseViewModel.extend({
          */
         const collectionChangeResult =
            this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
-        if (collectionChangeResult === 'updatePrefix') {
-            this._nextModelVersion(false, 'collectionChanged', action);
-        } else {
-            this._nextModelVersion(action !== collection.IObservable.ACTION_RESET, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
-        }
+
+        const shouldNotUpdatePrefix =
+            collectionChangeResult === 'updatePrefix' ? false : action !== collection.IObservable.ACTION_RESET;
+
+        this._nextModelVersion(shouldNotUpdatePrefix, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
         this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     },
     _onBeginCollectionChange: function() {
