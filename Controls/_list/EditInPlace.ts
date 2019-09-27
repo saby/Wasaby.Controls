@@ -68,6 +68,11 @@ var
             if (!self._editingItem) {
                 return Deferred.success();
             }
+
+            if (self._endEditDeferred) {
+                return self._endEditDeferred;
+            }
+
             var eventResult = self._notify('beforeEndEdit', [
                 self._editingItem,
                 commit,
@@ -75,14 +80,17 @@ var
             ]);
             if (eventResult && eventResult.addBoth) {
                 var id = self._notify('showIndicator', [{}], { bubbling: true });
+                self._endEditDeferred = eventResult;
                 return eventResult.addBoth(function(resultOfDeferred) {
                     self._notify('hideIndicator', [id], { bubbling: true });
 
                     if (resultOfDeferred === Constants.editing.CANCEL) {
+                        self._endEditDeferred = null;
                         return Deferred.success({ cancelled: true });
                     }
 
                     return Deferred.success(resultOfDeferred).addCallback(function(res) {
+                        self._endEditDeferred = null;
                         _private.afterEndEdit(self, commit);
                         return res;
                     });
@@ -296,6 +304,7 @@ var
 
 var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype */{
     _template: template,
+    _endEditDeferred: null,
 
     constructor: function (options = {}) {
         EditInPlace.superclass.constructor.apply(this, arguments);
@@ -366,6 +375,10 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
 
     commitEdit: function () {
         var self = this;
+
+        if (self._endEditDeferred) {
+            return self._endEditDeferred;
+        }
 
         return _private.validate(this).addCallback(function (result) {
             for (var key in result) {
