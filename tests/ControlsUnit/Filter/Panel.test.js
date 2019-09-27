@@ -345,6 +345,9 @@ define(
             };
             let historyItems = new collection.RecordSet({
                rawData: [
+						{
+							ObjectData: null
+						},
                   {
                      ObjectData: JSON.stringify([
                         {
@@ -362,6 +365,9 @@ define(
                         }
                      ])
                   },
+						{
+							ObjectData: null
+						},
                   {
                      ObjectData: JSON.stringify([
                         {
@@ -378,7 +384,10 @@ define(
                            visibility: false
                         }
                      ])
-                  }
+                  },
+						{
+							ObjectData: null
+						}
                ]
             });
 
