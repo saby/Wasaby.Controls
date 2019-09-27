@@ -13,6 +13,7 @@ import 'css!theme?Controls/dateRange';
  * @mixes Controls/interface/ILinkView
  * @mixes Controls/_dateRange/interfaces/IInputSelectable
  * @control
+ * @public
  * @category Input
  * @author Водолазских А.А.
  * @demo Controls-demo/Input/Date/Link
