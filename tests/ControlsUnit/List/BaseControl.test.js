@@ -1438,22 +1438,26 @@ define([
       });
 
 
-      it('_onViewPortResize, setLoadOffset', function() {
+      it('_onViewPortResize, viewResize, setLoadOffset, updateLoadOffset', function() {
          let bc = new lists.BaseControl();
          bc._needScrollCalculation = true;
          bc._loadOffset = {top: 100, bottom: 100};
          bc._children = triggers;
          bc._container = {
-             getBoundingClientRect: () => ({})
+             getBoundingClientRect: () => ({}),
+             clientHeight: 480
          };
          lists.BaseControl._private.onScrollShow(bc);
          bc._onViewPortResize(bc, 600);
          assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200});
 
+         bc._viewResize();
+         assert.deepEqual(bc._loadOffset, {top: 160, bottom: 160});
+
          //Если контрол в состоянии ошибки, то не нужно ничего делать
          bc.__error = true;
          bc._setLoadOffset(100, 100);
-         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200});
+         assert.deepEqual(bc._loadOffset, {top: 160, bottom: 160});
 
       });
 
