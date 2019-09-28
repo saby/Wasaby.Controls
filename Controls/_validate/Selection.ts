@@ -1,4 +1,4 @@
-import Controller = require('Controls/_validate/Controller');
+import Controller = require('Controls/_validate/Container');
 import template = require('wml!Controls/_validate/Selection');
 
 /**
@@ -6,7 +6,7 @@ import template = require('wml!Controls/_validate/Selection');
  * Используется с контролами, поддерживающими интерфейс IMultiSelectable( {@link Controls/_interface/IMultiSelectable} )
  * Автоматически запускает валидацию при смене значения в контроле и при его деактивации.
  * @class Controls/_validate/Selection
- * @extends Controls/_validate/Controller
+ * @extends Controls/_validate/Container
  * @control
  * @public
  * @author Красильников А.С.

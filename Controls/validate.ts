@@ -1,9 +1,9 @@
 /**
  * Библиотека контролов, которые позволяют организовать валидацию данных на форме.
  * @library Controls/validate
- * @includes Controller Controls/_validate/FormController
- * @includes Container Controls/_validate/Controller
- * @includes InputContainer Controls/_validate/Input
+ * @includes Controller Controls/_validate/Controller
+ * @includes Container Controls/_validate/Container
+ * @includes InputContainer Controls/_validate/InputContainer
  * @includes isEmail Controls/_validate/Validators/IsEmail
  * @includes isRequired Controls/_validate/Validators/IsRequired
  * @includes isValidDate Controls/_validate/Validators/IsValidDate
@@ -15,8 +15,8 @@
 /*
  * validate library
  * @library Controls/validate
- * @includes Controller Controls/_validate/FormController
- * @includes Container Controls/_validate/Controller
+ * @includes Controller Controls/_validate/Controller
+ * @includes Container Controls/_validate/Container
  * @includes InputContainer Controls/_validate/Input
  * @includes isEmail Controls/_validate/Validators/IsEmail
  * @includes isRequired Controls/_validate/Validators/IsRequired
@@ -27,9 +27,9 @@
  * @author Красильников А.С.
  */
 
-import Controller = require('Controls/_validate/FormController');
-import Container = require('Controls/_validate/Controller');
-import InputContainer = require('Controls/_validate/Input');
+import Controller = require('Controls/_validate/Controller');
+import Container = require('Controls/_validate/Container');
+import InputContainer = require('Controls/_validate/InputContainer');
 import DateRangeContainer = require('Controls/_validate/DateRange');
 import isEmail = require('Controls/_validate/Validators/IsEmail');
 import isRequired = require('Controls/_validate/Validators/IsRequired');
