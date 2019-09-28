@@ -1308,7 +1308,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _loadOffsetTop: LOAD_TRIGGER_OFFSET,
     _loadOffsetBottom: LOAD_TRIGGER_OFFSET,
     _menuIsShown: null,
-
+    _viewSize: null,
+    _viewPortSize: null,
     _popupOptions: null,
 
     //Variables for paging navigation
