@@ -110,7 +110,7 @@ const _private = {
 
         return {
             top: Math.max(targetCoords.top, 0),
-            right: Math.max(document.documentElement.clientWidth - targetCoords.right, 0) // calc without scroll
+            right: document.documentElement.clientWidth - targetCoords.right + targetCoords.leftScroll //calc with scroll, because stack popup has fixed position and can scroll with page
         };
     },
 
