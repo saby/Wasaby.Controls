@@ -55,7 +55,7 @@ define('Controls/Utils/Date', [
        * @return {Date}
        */
       getStartOfWeek: function(date) {
-         var rDate = new Date(date),
+         var rDate = new date.constructor(date),
             day = date.getDay(),
             diff = date.getDate() - day + (day === 0 ? -6 : 1);
          rDate.setDate(diff);
@@ -68,7 +68,7 @@ define('Controls/Utils/Date', [
        * @return {Date}
        */
       getEndOfWeek: function(date) {
-         var rDate = new Date(date),
+         var rDate = new date.constructor(date),
             day = date.getDay(),
             diff = date.getDate() - day + (day === 0 ? 0 : 7);
          rDate.setDate(diff);
@@ -105,7 +105,7 @@ define('Controls/Utils/Date', [
        */
       getStartOfMonth: function(date) {
          date = date || new Date();
-         return new Date(date.getFullYear(), date.getMonth(), 1);
+         return new date.constructor(date.getFullYear(), date.getMonth(), 1);
       },
 
       /**
@@ -114,7 +114,7 @@ define('Controls/Utils/Date', [
        * @return {Date}
        */
       getEndOfMonth: function(date) {
-         return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+         return new date.constructor(date.getFullYear(), date.getMonth() + 1, 0);
       },
 
       /**
@@ -155,7 +155,7 @@ define('Controls/Utils/Date', [
        * @return {Date}
        */
       getStartOfQuarter: function(date) {
-         return new Date(date.getFullYear(), (Math.floor(date.getMonth() / 3)) * 3, 1);
+         return new date.constructor(date.getFullYear(), (Math.floor(date.getMonth() / 3)) * 3, 1);
       },
 
       /**
@@ -164,7 +164,7 @@ define('Controls/Utils/Date', [
        * @return {Date}
        */
       getEndOfQuarter: function(date) {
-         return new Date(date.getFullYear(), (Math.floor(date.getMonth() / 3) + 1) * 3, 0);
+         return new date.constructor(date.getFullYear(), (Math.floor(date.getMonth() / 3) + 1) * 3, 0);
       },
 
       /**
@@ -196,7 +196,7 @@ define('Controls/Utils/Date', [
        * @return {Date}
        */
       getStartOfHalfyear: function(date) {
-         return new Date(date.getFullYear(), (Math.floor(date.getMonth() / 6)) * 6, 1);
+         return new date.constructor(date.getFullYear(), (Math.floor(date.getMonth() / 6)) * 6, 1);
       },
 
       /**
@@ -205,7 +205,7 @@ define('Controls/Utils/Date', [
        * @return {Date}
        */
       getEndOfHalfyear: function(date) {
-         return new Date(date.getFullYear(), (Math.floor(date.getMonth() / 6) + 1) * 6, 0);
+         return new date.constructor(date.getFullYear(), (Math.floor(date.getMonth() / 6) + 1) * 6, 0);
       },
 
       /**
@@ -237,7 +237,7 @@ define('Controls/Utils/Date', [
        * @return {Date}
        */
       getStartOfYear: function(date) {
-         return new Date(date.getFullYear(), 0, 1);
+         return new date.constructor(date.getFullYear(), 0, 1);
       },
 
       /**
@@ -246,7 +246,7 @@ define('Controls/Utils/Date', [
        * @return {Date}
        */
       getEndOfYear: function(date) {
-         return new Date(date.getFullYear(), 12, 0);
+         return new date.constructor(date.getFullYear(), 12, 0);
       },
 
       /**
@@ -258,19 +258,19 @@ define('Controls/Utils/Date', [
          if (!(month instanceof Date)) {
             return null;
          }
-         return new Date(month.getFullYear(), month.getMonth(), 1);
+         return new month.constructor(month.getFullYear(), month.getMonth(), 1);
       },
 
       /**
        * Returns the date in normal form (with zero time).
-       * @param month {Date} Date on the basis of which a new Date will be created with updated time.
+       * @param date {Date} Date on the basis of which a new Date will be created with updated time.
        * @returns {Date} Date with zeroed time
        */
-      normalizeDate: function(month) {
-         if (!(month instanceof Date)) {
+      normalizeDate: function(date) {
+         if (!(date instanceof Date)) {
             return null;
          }
-         return new Date(month.getFullYear(), month.getMonth(), month.getDate());
+         return new date.constructor(date.getFullYear(), date.getMonth(), date.getDate());
       },
 
       getDaysByRange: function(date1, date2) {

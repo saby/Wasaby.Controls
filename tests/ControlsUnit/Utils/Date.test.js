@@ -1,6 +1,10 @@
 define([
+   'Core/core-instance',
+   'Types/entity',
    'Controls/Utils/Date'
 ], function(
+   cInstance,
+   entity,
    dateUtil
 ) {
    describe('Controls/Utils/Date', function () {
@@ -13,6 +17,29 @@ define([
          ].forEach(function(test) {
             it(`should return ${test.resp} for ${test.date}`, function() {
                assert.equal(dateUtil.getDaysInMonth(test.date), test.resp);
+            });
+         });
+      });
+
+      describe('The return date class must be the same as the passed date', function() {
+         [
+            'getStartOfWeek',
+            'getEndOfWeek',
+            'getStartOfMonth',
+            'getEndOfMonth',
+            'getStartOfQuarter',
+            'getEndOfQuarter',
+            'getStartOfHalfyear',
+            'getEndOfHalfyear',
+            'getStartOfYear',
+            'getEndOfYear',
+            'normalizeMonth',
+            'normalizeDate'
+         ].forEach(function (functionName) {
+            it(functionName, function () {
+               assert.isTrue(
+                  cInstance.instanceOfModule(dateUtil[functionName](new entity.DateTime()), 'Types/entity:DateTime')
+               );
             });
          });
       });

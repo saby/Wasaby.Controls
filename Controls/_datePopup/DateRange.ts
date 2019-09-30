@@ -1,4 +1,5 @@
 import BaseControl = require('Core/Control');
+import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import EventProxy from './Mixin/EventProxy';
@@ -65,9 +66,9 @@ var Component = BaseControl.extend([EventProxy], {
     _monthSelectionEnabled: true,
     _selectionProcessing: false,
 
-    constructor: function () {
+    constructor: function (options) {
         Component.superclass.constructor.apply(this, arguments);
-        this._rangeModel = new DateRangeModel();
+        this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
         DateControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged']);
     },
 
@@ -86,7 +87,7 @@ var Component = BaseControl.extend([EventProxy], {
     _monthCaptionClick: function(e: SyntheticEvent, yearDate: Date, month: number): void {
         let date;
         if (this._monthSelectionEnabled) {
-            date = new Date(yearDate.getFullYear(), month);
+            date = new this._options.dateConstructor(yearDate.getFullYear(), month);
             this._notify('fixedPeriodClick', [date, dateUtils.getEndOfMonth(date)]);
         }
     },
@@ -132,7 +133,7 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _scrollToMonth: function(e, year, month) {
-        _private.notifyPositionChanged(this, new Date(year, month));
+        _private.notifyPositionChanged(this, new this._options.dateConstructor(year, month));
     },
 
     _formatMonth: function(month) {
@@ -140,7 +141,7 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _getMonth: function(year, month) {
-        return new Date(year, month, 1);
+        return new this._options.dateConstructor(year, month, 1);
     },
 
     _onPositionChanged: function(e: Event, position: Date) {
@@ -153,9 +154,11 @@ Component._private = _private;
 
 // Component.EMPTY_CAPTIONS = IPeriodSimpleDialog.EMPTY_CAPTIONS;
 
-// Component.getDefaultOptions = function() {
-//    return coreMerge({}, {} /*IPeriodSimpleDialog.getDefaultOptions()*/);
-// };
+Component.getDefaultOptions = function() {
+   return {
+       dateConstructor: WSDate
+   };
+};
 
 // Component.getOptionTypes = function() {
 //    return coreMerge({}, IPeriodSimpleDialog.getOptionTypes());

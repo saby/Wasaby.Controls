@@ -1,10 +1,10 @@
 import cExtend = require('Core/core-simpleExtend');
-import {ObservableMixin, VersionableMixin} from 'Types/entity';
+import {ObservableMixin, VersionableMixin, DateTime} from 'Types/entity';
 import dateRangeUtil = require('Controls/Utils/DateRangeUtil');
 import DateUtil = require('Controls/Utils/Date');
 
 /**
- * Модель для контролов, предназначенных для ввода диапазона дат. 
+ * Модель для контролов, предназначенных для ввода диапазона дат.
  * @author Красильников А.С.
  * @public
  * @noShow
@@ -38,15 +38,22 @@ var _private = {
 
       // To compatible with validation container
       self._notify('valueChanged', [[start, end]]);
+   },
+   createDate: function(self, date: Date): void {
+      return new self._dateConstructor(date);
    }
 };
 
 var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], {
    _startValue: null,
    _endValue: null,
+   _dateConstructor: DateTime,
 
-   constructor: function() {
+   constructor: function(cfg) {
       ModuleClass.superclass.constructor.apply(this, arguments);
+      if (cfg && cfg.dateConstructor) {
+         this._dateConstructor = cfg.dateConstructor;
+      }
    },
 
    update: function(options) {
@@ -105,7 +112,7 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
     */
    shiftForward: function() {
       var range = dateRangeUtil.shiftPeriod(this.startValue, this.endValue, dateRangeUtil.SHIFT_DIRECTION.FORWARD);
-      this.setRange(range[0], range[1]);
+      this.setRange(_private.createDate(this, range[0]), _private.createDate(this, range[1]));
    },
 
    /**
@@ -114,7 +121,7 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
     */
    shiftBack: function() {
       var range = dateRangeUtil.shiftPeriod(this.startValue, this.endValue, dateRangeUtil.SHIFT_DIRECTION.BACK);
-      this.setRange(range[0], range[1]);
+      this.setRange(_private.createDate(this, range[0]), _private.createDate(this, range[1]));
    }
 });
 

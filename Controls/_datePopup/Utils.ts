@@ -1,4 +1,5 @@
 import {detection} from 'Env/Env';
+import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import isEmpty = require('Core/helpers/Object/isEmpty');
 
@@ -36,7 +37,7 @@ export default {
     },
     dataStringToDate: function (str) {
         var d = str.split('.');
-        return new Date(d[0], parseInt(d[1], 10) - 1);
+        return new WSDate(d[0], parseInt(d[1], 10) - 1);
     },
 
     isStickySupport: function() {

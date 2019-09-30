@@ -1,5 +1,6 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
+import {Date as WSDate} from 'Types/entity';
 import ILinkView from './interfaces/ILinkView';
 import IPeriodLiteDialog from './interfaces/IPeriodLiteDialog';
 import DateRangeModel from './DateRangeModel';
@@ -44,7 +45,7 @@ var Component = BaseControl.extend({
     _isMinWidth: null,
 
     _beforeMount: function (options) {
-        this._rangeModel = new DateRangeModel();
+        this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
         CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged', 'rangeChanged']);
         this._rangeModel.update(options);
 
@@ -89,7 +90,8 @@ var Component = BaseControl.extend({
                 emptyCaption: this._options.emptyCaption,
 
                 itemTemplate: this._options.itemTemplate,
-                captionFormatter: this._options.captionFormatter
+                captionFormatter: this._options.captionFormatter,
+                dateConstructor: this._options.dateConstructor
             }
         });
     },
@@ -111,7 +113,11 @@ var Component = BaseControl.extend({
 Component.EMPTY_CAPTIONS = ILinkView.EMPTY_CAPTIONS;
 
 Component.getDefaultOptions = function () {
-    return coreMerge(coreMerge({}, IPeriodLiteDialog.getDefaultOptions()), ILinkView.getDefaultOptions());
+    return {
+        ...IPeriodLiteDialog.getDefaultOptions(),
+        ...ILinkView.getDefaultOptions(),
+        dateConstructor: WSDate
+    };
 };
 
 Component.getOptionTypes = function () {

@@ -11,6 +11,7 @@ define([
       mask: 'DD.MM.YYYY',
       value: new Date(2018, 0, 1),
       replacer: ' ',
+      dateConstructor: Date
    };
 
    describe('Controls/_input/DateTime/Model', function() {
@@ -20,6 +21,7 @@ define([
 
             assert.strictEqual(model._mask, options.mask);
             assert.strictEqual(model.value, options.value);
+            assert.instanceOf(model.value, Date);
             assert.strictEqual(model._lastValue, options.value);
             assert.strictEqual(model.textValue, '01.01.2018');
          });
@@ -37,6 +39,7 @@ define([
 
             sinon.assert.notCalled(model._notify);
             assert.strictEqual(model.value, newDate);
+            assert.instanceOf(model.value, Date);
             assert.strictEqual(model._lastValue, newDate);
             assert.strictEqual(model.textValue, '02.02.2019');
             sandbox.restore();
@@ -69,6 +72,7 @@ define([
             model.textValue = newTextValue;
 
             assert.strictEqual(model.value.getTime(), newDate.getTime());
+            assert.instanceOf(model.value, Date);
             assert.strictEqual(model._lastValue.getTime(), newDate.getTime());
             assert.strictEqual(model.textValue, newTextValue);
          });
@@ -107,6 +111,7 @@ define([
             model.autocomplete(newTextValue);
 
             assert.strictEqual(model.value.getTime(), newDate.getTime());
+            assert.instanceOf(model.value, Date);
             assert.strictEqual(model._lastValue.getTime(), newDate.getTime());
             assert.strictEqual(model.textValue, newTextValue);
          });
@@ -120,6 +125,7 @@ define([
             let clock = sinon.useFakeTimers(new Date(2019, 0, 2, 3, 4, 5, 6), 'Date');
             model.setCurrentDate();
             assert.strictEqual((new Date(2019, 0, 2)).getTime(), model.value.getTime());
+            assert.instanceOf(model.value, Date);
             clock.restore();
          });
       });

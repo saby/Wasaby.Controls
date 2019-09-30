@@ -1,11 +1,13 @@
 define([
    'Core/core-merge',
+   'Core/core-instance',
    'Controls/_datePopup/DateRange',
    'Controls/_datePopup/Utils',
    'Controls/Utils/Date',
    'ControlsUnit/Calendar/Utils'
 ], function(
    coreMerge,
+   cInstance,
    DateRange,
    datePopupUtils,
    dateUtils,
@@ -126,6 +128,15 @@ define([
                const component = calendarTestUtils.createComponent(DateRange, { year: year });
                assert.equal(component._formatMonth(test.month), test.text);
             });
+         });
+      });
+
+      describe('_getMonth', function() {
+         it('should return proper date.', function() {
+            const component = calendarTestUtils.createComponent(DateRange, { year: year }),
+               rDate = component._getMonth(2019, 0);
+            assert.strictEqual(rDate.getTime(), (new Date(2019, 0)).getTime());
+            cInstance.instanceOfModule(rDate, 'Types/entity:Date');
          });
       });
    });

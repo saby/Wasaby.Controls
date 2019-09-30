@@ -1,11 +1,13 @@
 import {factory as chainFactory} from 'Types/chain';
+import {Date as WSDate} from 'Types/entity';
 import {ICrud, Query, DataSet} from 'Types/source';
 import {mixin} from 'Types/util';
 import {IVersionable, VersionableMixin} from 'Types/entity';
 import dateRangeUtil = require('Controls/Utils/DateRangeUtil');
 import monthListUtils from './Utils';
+import {IDateConstructorOptions} from 'Controls/interface';
 
-export interface IOptions {
+export interface IOptions extends IDateConstructorOptions {
    viewMode: string;
    source: ICrud;
 }
@@ -15,15 +17,19 @@ export default class ExtDataModel extends mixin<VersionableMixin>(VersionableMix
     protected _data: object = {};
     protected _viewMode: string;
     protected _source: ICrud;
+    protected _dateConstructor: Function;
 
     constructor(options: IOptions) {
         super(options);
         this._viewMode = options.viewMode;
         this._source = options.source;
+        this._dateConstructor = options.dateConstructor || WSDate;
     }
 
     invalidatePeriod(start: Date, end: Date): void {
-        const loadedDates = this._getLoadedDatesIds().map((dateId) =>  monthListUtils.idToDate(dateId));
+        const loadedDates = this._getLoadedDatesIds()
+            .map((dateId) =>  monthListUtils.idToDate(dateId, this._dateConstructor));
+
         for (const date of loadedDates) {
             if (date >= start && date <= end) {
                 delete this._data[monthListUtils.dateToId(date)];
@@ -44,8 +50,8 @@ export default class ExtDataModel extends mixin<VersionableMixin>(VersionableMix
             end: Date;
 
         if (newDatesIds.length) {
-            start = new Date(Math.min.apply(null, newDatesIds));
-            end = new Date(Math.max.apply(null, newDatesIds));
+            start = new this._dateConstructor(Math.min.apply(null, newDatesIds));
+            end = new this._dateConstructor(Math.max.apply(null, newDatesIds));
             this._source.query(this._getQuery(start, end)).addCallback(this._updateData.bind(this));
         }
     }

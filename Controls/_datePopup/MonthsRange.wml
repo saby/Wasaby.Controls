@@ -32,6 +32,7 @@
                hoveredEndValue="{{_options.hoveredEndValue}}"
 
                bind:selectionViewType="_selectionViewType"
+               dateConstructor="{{_options.dateConstructor}}"
 
                on:monthClick="_proxyEvent('monthClick')"
                on:fixedPeriodClick="_proxyEvent('fixedPeriodClick')"

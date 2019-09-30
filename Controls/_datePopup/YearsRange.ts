@@ -1,4 +1,5 @@
 import BaseControl = require('Core/Control');
+import {Date as WSDate} from 'Types/entity';
 import {DateRangeModel, rangeSelection as rangeSelectionUtils} from 'Controls/dateRange';
 import dateUtils = require('Controls/Utils/Date');
 import componentTmpl = require('wml!Controls/_datePopup/YearsRange');
@@ -43,9 +44,9 @@ var Component = BaseControl.extend({
             this._lastYear = this._year;
         }
 
-        this._rangeModel = new DateRangeModel();
+        this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
         this._rangeModel.update(options);
-        this._updateModel();
+        this._updateModel(options);
     },
 
     _beforeUpdate: function (options) {
@@ -87,9 +88,10 @@ var Component = BaseControl.extend({
         this._notify('itemMouseLeave', [date]);
     },
 
-    _updateModel: function () {
+    _updateModel: function (options) {
         var items = [],
             currentYear = (new Date()).getFullYear(),
+            ots = options || this._options,
             item, year;
 
         for (var i = 0; i < BUTTONS_COUNT; i++) {
@@ -98,7 +100,7 @@ var Component = BaseControl.extend({
                 caption: year,
                 isDisplayed: year === this._year,
                 isCurrent: year === currentYear,
-                date: new Date(year, 0),
+                date: new ots.dateConstructor(year, 0),
                 year: year
             };
 
@@ -138,9 +140,11 @@ var Component = BaseControl.extend({
 
 // Component.EMPTY_CAPTIONS = IPeriodSimpleDialog.EMPTY_CAPTIONS;
 
-// Component.getDefaultOptions = function() {
-//    return coreMerge({}, {} /*IPeriodSimpleDialog.getDefaultOptions()*/);
-// };
+Component.getDefaultOptions = function() {
+   return {
+       dateConstructor: WSDate
+   };
+};
 
 // Component.getOptionTypes = function() {
 //    return coreMerge({}, IPeriodSimpleDialog.getOptionTypes());

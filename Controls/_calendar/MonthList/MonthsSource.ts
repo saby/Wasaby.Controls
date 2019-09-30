@@ -1,4 +1,5 @@
 import Deferred = require('Core/Deferred');
+import {Date as WSDate} from 'Types/entity';
 import { Memory, Query, DataSet } from 'Types/source';
 import { date as formatDate } from 'Types/formatter';
 import ITEM_TYPES from './ItemTypes';
@@ -26,10 +27,12 @@ export default class MonthsSource extends Memory {
     _$keyProperty: 'id';
 
     _header: boolean = false;
+    protected _dateConstructor: Function;
 
     constructor(options) {
         super(options);
         this._header = options.header;
+        this._dateConstructor = options.dateConstructor || WSDate;
     }
 
     query(query: Query)/*: ExtendPromise<DataSet>*/ {
@@ -49,7 +52,7 @@ export default class MonthsSource extends Memory {
                 month = monthEqual || monthGt || monthLt
             ;
 
-            month = monthListUtils.idToDate(month);
+            month = monthListUtils.idToDate(month, this._dateConstructor);
 
             month.setMonth(month.getMonth() + offset);
 
@@ -65,7 +68,7 @@ export default class MonthsSource extends Memory {
                     date: month,
                     type: ITEM_TYPES.body
                 });
-                month = new Date(month);
+                month = new this._dateConstructor(month);
                 month.setMonth(month.getMonth() + 1);
 
                 if (this._header) {
