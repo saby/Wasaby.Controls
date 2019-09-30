@@ -99,6 +99,8 @@ const Dialog = BaseOpener.extend({
  * @function Controls/_popup/Opener/Dialog#openPopup
  * @param {PopupOptions[]} config Конфигурация диалогового окна
  * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
+ * @remark
+ * Для обновления уже открытого окна в config нужно передать св-во id с идентификатором открытого окна.
  * @static
  * @example
  * js
@@ -129,7 +131,7 @@ Dialog.openPopup = (config: object): Promise<string> => {
             IoC.resolve('ILogger').error(Dialog.prototype._moduleName, 'Для открытия окна через статический метод, обязательно нужно указать опцию opener');
         }
         BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
-            BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
+            BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id).then((popupId: string) => {
                 resolve(popupId);
             });
         });
