@@ -441,7 +441,7 @@ const _private = {
             try {
                calculatedFilter = _private.calculateFilterByItems(cfg.filter, tmpStorage._filterButtonItems, tmpStorage._fastFilterItems);
 
-               if (cfg.prefetchParams) {
+               if (cfg.prefetchParams && cfg.historyId) {
                    tmpStorage._filter = calculatedFilter;
                    calculatedFilter = _private.processPrefetchOnItemsChanged(tmpStorage, cfg);
                    calculatedFilter = Prefetch.prepareFilter(calculatedFilter, cfg.prefetchParams);
