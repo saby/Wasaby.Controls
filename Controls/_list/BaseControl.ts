@@ -482,8 +482,16 @@ var _private = {
     },
 
     updateVirtualWindow: function(self, direction) {
-        self._virtualScroll.recalcToDirection(direction, self._scrollParams, self._loadOffset.top);
-        _private.applyVirtualScrollIndexes(self, direction);
+        const recalculateIndexes = () => {
+            self._virtualScroll.recalcToDirection(direction, self._scrollParams, self._loadOffset.top);
+            _private.applyVirtualScrollIndexes(self, direction);
+        };
+
+        if (detection.isMobileIOS) {
+            _private.getIntertialScrolling(self).callAfterScrollStopped(recalculateIndexes);
+        } else {
+            recalculateIndexes();
+        }
     },
 
     throttledUpdateIndexesByVirtualScrollMove: throttle((self, params) => {
@@ -550,19 +558,11 @@ var _private = {
 
     // Обновляет стартовый и конечный индексы виртуального окна
     applyVirtualScrollIndexes(self, direction): void {
-        const updateIndexes = () => {
-            if (_private.applyVirtualScrollIndexesToListModel(self)) {
-                self._saveAndRestoreScrollPosition = direction;
-                self._shouldRestoreScrollPosition = true;
-                _private.applyPlaceholdersSizes(self);
-                _private.updateShadowMode(self);
-            }
-        };
-
-        if (detection.isMobileIOS) {
-            _private.getIntertialScrolling(self).callAfterScrollStopped(updateIndexes);
-        } else {
-            updateIndexes();
+        if (_private.applyVirtualScrollIndexesToListModel(self)) {
+            self._saveAndRestoreScrollPosition = direction;
+            self._shouldRestoreScrollPosition = true;
+            _private.applyPlaceholdersSizes(self);
+            _private.updateShadowMode(self);
         }
     },
 
