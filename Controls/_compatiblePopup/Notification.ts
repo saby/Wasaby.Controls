@@ -41,17 +41,17 @@ import 'css!theme?Controls/compatiblePopup';
  * @name Controls/Popup/Templates/Notification/Compatible#_def
  * @cfg {Core/Deferred} Deffered в callback которого приходит инстанс компонента.
  */
-var Compatible = Control.extend({
+const Compatible = Control.extend({
    _dotTplFn: template,
 
-   $constructor: function() {
+   $constructor(): void {
       /**
        * Поддерка комманды close брошеная из дочерних контролов.
        */
       CommandDispatcher.declareCommand(this, 'close', this.close.bind(this));
    },
 
-   init: function() {
+   init(): void {
       Compatible.superclass.init.apply(this, arguments);
 
       this._options._def.callback(this);
@@ -60,17 +60,19 @@ var Compatible = Control.extend({
    /**
     * Прикладники обращаются к методу open для открытия. Раньше они имели popup, а сейчас текущий компонент.
     */
-   open: function() {
+   open(): void {
       this._options._opener.open();
    },
 
    /**
     * Прикладники обращаются к методу close для закрытия. Раньше они имели popup, а сейчас текущий компонент.
     */
-   close: function() {
-      var compoundContainer = this.getParent();
-      var vdomNotificationTemplate = compoundContainer._logicParent;
-      vdomNotificationTemplate._notify('close', [], { bubbling: true });
+   close(): void {
+      if (!this.isDestroyed()) {
+         const compoundContainer = this.getParent();
+         const vdomNotificationTemplate = compoundContainer._logicParent;
+         vdomNotificationTemplate._notify('close', [], { bubbling: true });
+      }
    }
 });
 
