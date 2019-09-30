@@ -12,11 +12,28 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  * <a href="/materials/demo-ws4-search-container">Демо с контролами search:Input и List</a>.
  * <a href="/materials/demo-ws4-filter-search-new">Демо с контролами filter:Selector, search:Input и List</a>.
  *
- * @class Controls/_search/Input/Search
+ * @class Controls/_search/Input
  * @extends Controls/_input/Base
  *
  * @mixes Controls/interface/IInputField
  * @mixes Controls/_input/interface/IText
+ *
+ * @name Controls/_search/Input#contrastBackground
+ * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
+ * @default false
+ * @remark
+ * * true - контрастный фон.
+ * * false - фон, гармонично сочетающийся с окружением.
+ * Опция используется для визуального выделения контрола, относительно окружения.
+ * Например в ситуации когда цвет окружения, близкий к цвету самого контрола.
+ * @demo Controls-demo/Search/Input/Base/Index
+ * @example
+ * У кнопки контрастный фон.
+ * <pre>
+ *    <Controls.search:Input contrastBackground="{{true}}" bind:value="_searchValue"/>
+ * </pre>
+ * @see style
+ *
  *
  * @ignoreOptions style
  *
@@ -37,7 +54,7 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  * <a href="/materials/demo-ws4-search-container">Demo with Input/Search and List control</a>.
  * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List control</a>.
  *
- * @class Controls/_search/Input/Search
+ * @class Controls/_search/Input
  * @extends Controls/_input/Base
  *
  * @mixes Controls/interface/IInputField
@@ -77,12 +94,12 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  */
 
 /**
- * @event Controls/_search/Input/Search#searchClick Происходит при клике на кнопку поиска.
+ * @event Controls/_search/Input#searchClick Происходит при клике на кнопку поиска.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
 /**
- * @event Controls/Input/resetClick#resetClick Происходит при клике на кнопку сброса.
+ * @event Controls/_search/Input#resetClick Происходит при клике на кнопку сброса.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
@@ -107,8 +124,8 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  */
 
 /*
- * @event Controls/_search/Input/Search#searchClick Occurs when search button is clicked.
- * @event Controls/Input/resetClick#resetClick Occurs when reset button is clicked.
+ * @event Controls/_search/Input#searchClick Occurs when search button is clicked.
+ * @event Controls/_search/Input#resetClick Occurs when reset button is clicked.
  */
 var _private = {
    isVisibleResetButton: function() {
