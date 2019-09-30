@@ -187,7 +187,7 @@ define(
             assert.strictEqual(historyString, 'Today, Ivanov K.K.');
          });
 
-         it('_private::getFavoriteDialogRecord', function() {
+         it('_private::getEditDialogOptions', function() {
             var favoriteItem = new entity.Model({
                rawData: {
                   id: 'testId',
@@ -205,8 +205,8 @@ define(
                   filterItems: items1
                }
             };
-            var editableRecord = List._private.getFavoriteDialogRecord(self, favoriteItem, null, 'savedText');
-            assert.equal(editableRecord.get('editedTextValue'), 'savedText');
+            var editableOptions = List._private.getEditDialogOptions(self, favoriteItem, null, 'savedText');
+            assert.equal(editableOptions.editedTextValue, 'savedText');
          });
       });
    });

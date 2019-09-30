@@ -6,11 +6,9 @@ import template = require('wml!Controls/_filterPopup/History/List');
 import Utils = require('Types/util');
 import {isEqual} from 'Types/object';
 import {HistoryUtils} from 'Controls/filter';
-import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
 import {Constants} from 'Controls/history';
 import {convertToFilterStructure, convertToSourceDataArray} from 'Controls/_filterPopup/converterFilterStructure';
-import {Memory} from 'Types/source';
 import 'css!theme?Controls/filterPopup';
 
 var MAX_NUMBER_ITEMS = 5;
@@ -79,7 +77,7 @@ var MAX_NUMBER_ITEMS = 5;
          }
       },
 
-      removeRecord: function(self, item, record, needSave?) {
+      removeRecord: function(self, item, needSave?) {
          let storage = self._historyStorage;
          if (item.get('data') && item.get('data').get('globalParams')) {
             storage = self._historyGlobalStorage;
@@ -93,17 +91,16 @@ var MAX_NUMBER_ITEMS = 5;
       minimizeHistoryItems: function(record) {
          let historyItems = [];
          factory(record.get('filterPanelItems')).each((item) => {
-            delete item.editable;
             delete item.caption;
             historyItems.push(item);
          });
          record.set('filterPanelItems', historyItems);
       },
 
-      getFavoriteDialogRecord: function(self, item, historyId, savedTextValue) {
-         let editItem = item.get('data');
+      getEditDialogOptions: function(self, item, historyId, savedTextValue) {
+         let favoriteItem = item.get('data');
          let items;
-         if (editItem) {
+         if (favoriteItem) {
             items = item.get('data').get('filterPanelItems');
          } else {
             let history = _private.getSource(historyId).getDataObject(item.get('ObjectData'));
@@ -111,18 +108,56 @@ var MAX_NUMBER_ITEMS = 5;
          }
          let captionsObject = _private.mapByField(self._options.filterItems, 'caption');
          items = factory(items).map((historyItem) => {
-            historyItem.editable = historyItem.visibility;
             historyItem.caption = captionsObject[historyItem.id];
             return historyItem;
          }).value();
-         return new Model({
-            rawData: {
-               filterPanelItems: items,
-               toSaveFields: {},
-               editedTextValue: savedTextValue || '',
-               globalParams: item.get('data') && item.get('data').get('globalParams') ? FILTER_STATUS.FOR_ALL : FILTER_STATUS.FOR_ME
-            }
-         });
+         return {
+            items: items,
+            editedTextValue: savedTextValue || '',
+            globalParams: item.get('data') && item.get('data').get('globalParams') ? FILTER_STATUS.FOR_ALL : FILTER_STATUS.FOR_ME,
+            isFavorite: !!favoriteItem
+         };
+      },
+
+      deleteFavorite: function(self) {
+         _private.removeRecord(self, self._editItem);
+         _private.updateFavoriteList(self._favoriteList, self._historyStorage, self._historyGlobalStorage);
+         self._children.dialogOpener.close();
+         self._notify('historyChanged');
+      },
+
+      saveFavorite: function(self, record) {
+         let editItemData = self._editItem.get('data');
+         if (self._editItem.has('pinned')) {
+            _private.getSource(self._options.historyId).update(self._editItem, {
+               $_pinned: true
+            });
+         }
+
+         _private.minimizeHistoryItems(record);
+
+         if (!record.get('linkText')) {
+            let linkText = _private.getStringHistoryFromItems(record.get('filterPanelItems'), {});
+            record.set('linkText', linkText);
+         }
+
+         // TODO Remove after https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
+         // convert items to old structure
+         const filterPanelItems = record.get('filterPanelItems');
+         record.set('filter', convertToFilterStructure(filterPanelItems));
+         record.set('viewFilter', _private.mapByField(filterPanelItems, 'value'));
+
+         record.removeField('filterPanelItems');
+         _private.removeRecord(self, self._editItem, record, editItemData && record.get('globalParams') !== editItemData.get('globalParams'));
+
+         if (record.get('globalParams')) {
+            self._historyGlobalStorage.prepend(record);
+         } else {
+            self._historyStorage.prepend(record);
+         }
+         _private.updateFavoriteList(self._favoriteList, self._historyStorage, self._historyGlobalStorage);
+         record.acceptChanges();
+         self._notify('historyChanged');
       },
 
       updateFavoriteList: function(favoriteList, localStorage, globalStorage) {
@@ -131,70 +166,11 @@ var MAX_NUMBER_ITEMS = 5;
          _private.convertToItems(favoriteList);
       },
 
-      updateFavorite: function(self, item, text, isFavorite) {
-         let record = _private.getFavoriteDialogRecord(self, item, self._options.historyId, isFavorite ? text : '');
-
+      updateFavorite: function(self, item, text) {
+         let templateOptions = _private.getEditDialogOptions(self, item, self._options.historyId, text);
          let popupOptions = {
-            initializingWay: 'local', // для корректной работы старого FormController'a
             opener: self,
-            templateOptions: {
-               record,
-               source: new Memory(), // просто заглушка для старого FormController'a
-               textValue: text,
-               editMode: isFavorite ? 'isFavorite' : '',
-               handlers: {
-                  onDestroyModel: function() {
-                     _private.removeRecord(self, item, record);
-                     _private.updateFavoriteList(self._favoriteList, self._historyStorage, self._historyGlobalStorage);
-                     self._children.dialogOpener.close();
-                     self._notify('historyChanged');
-                  },
-                  onBeforeUpdateModel: function(event, record) {
-                     let editItemData = item.get('data');
-                     if (item.has('pinned')) {
-                        _private.getSource(self._options.historyId).update(item, {
-                           $_pinned: true
-                        });
-                     }
-
-                     let deleteFields = record.get('toSaveFields');
-                     if (deleteFields) {
-                        factory(record.get('filterPanelItems')).each((item) => {
-                           if (deleteFields[item.id] === false) {
-                              item.textValue = '';
-                              delete item.value;
-                           }
-                        });
-                     }
-
-                     _private.minimizeHistoryItems(record);
-
-                     let linkText = record.get('editedTextValue') ||
-                         editItemData && editItemData.get('editedTextValue')
-                         || _private.getStringHistoryFromItems(record.get('filterPanelItems'), {});
-                     record.set('linkText', linkText);
-
-                     // convert items to old structure
-                     const filterPanelItems = record.get('filterPanelItems');
-                     record.set('filter', convertToFilterStructure(filterPanelItems));
-                     record.set('viewFilter', _private.mapByField(filterPanelItems, 'value'));
-
-                     record.removeField('editedTextValue');
-                     record.removeField('toSaveFields');
-                     record.removeField('filterPanelItems');
-                     _private.removeRecord(self, item, record, isFavorite && record.get('globalParams') !== editItemData.get('globalParams'));
-
-                     if (record.get('globalParams')) {
-                        self._historyGlobalStorage.prepend(record);
-                     } else {
-                        self._historyStorage.prepend(record);
-                     }
-                     _private.updateFavoriteList(self._favoriteList, self._historyStorage, self._historyGlobalStorage);
-                     record.acceptChanges();
-                     self._notify('historyChanged');
-                  }
-               }
-            }
+            templateOptions: templateOptions
          };
          self._children.dialogOpener.open(popupOptions);
       },
@@ -213,6 +189,7 @@ var MAX_NUMBER_ITEMS = 5;
       _itemsText: null,
       _historyStorage: null,
       _historyGlobalStorage: null,
+      _editItem: null,
       _historyCount: Constants.MAX_HISTORY,
 
       // old "favorite" allows to save 10 records. We should show only 7 records, other records are not displayed
@@ -250,8 +227,17 @@ var MAX_NUMBER_ITEMS = 5;
            this._notify('historyChanged');
       },
 
-      _onFavoriteClick: function(event, item, text, isFavorite) {
-         _private.updateFavorite(this, item, text, isFavorite);
+      _onFavoriteClick: function(event, item, text) {
+         this._editItem = item;
+         _private.updateFavorite(this, item, text);
+      },
+
+      _editDialogResult: function(event, data) {
+         if (data.action === 'save') {
+            _private.saveFavorite(this, data.record);
+         } else if (data.action === 'delete') {
+            _private.deleteFavorite(this);
+         }
       },
 
       _clickHandler: function(event, item, isFavorite) {

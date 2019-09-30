@@ -9,6 +9,7 @@
  * @includes CheckboxGroup Controls/_toggle/CheckboxGroup
  * @includes Separator Controls/_toggle/Separator
  * @includes BigSeparator Controls/_toggle/BigSeparator
+ * @includes CheckboxItemTemplate Controls/_toggle/CheckboxGroup/resources/ItemTemplate
  * @includes BigSeparatorStyles Controls/_toggle/BigSeparator/BigSeparatorStyles
  * @includes ButtonStyles Controls/_toggle/Button/Styles
  * @includes CheckboxStyles Controls/_toggle/Checkbox/CheckboxStyles
@@ -57,6 +58,7 @@ import {default as Checkbox} from 'Controls/_toggle/Checkbox';
 import {default as Separator} from 'Controls/_toggle/Separator';
 import {default as BigSeparator} from 'Controls/_toggle/BigSeparator';
 import ItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
+import CheckboxItemTemplate = require('wml!Controls/_toggle/CheckboxGroup/resources/ItemTemplate');
 import switchCircleTemplate = require('wml!Controls/_toggle/resources/SwitchCircle/SwitchCircle');
 import {IToggleGroupOptions, IToggleGroup} from 'Controls/_toggle/interface/IToggleGroup';
 
@@ -70,6 +72,7 @@ export {
    Separator,
    BigSeparator,
    ItemTemplate,
+   CheckboxItemTemplate,
    switchCircleTemplate,
    IToggleGroupOptions,
    IToggleGroup
