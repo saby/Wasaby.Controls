@@ -264,7 +264,7 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
          });
 
          // необходимо кэшировать запрос только на клиенте
-         // на сервере возможны проблемы при посторении страниц, т.к. объект глобальный,
+         // на сервере возможны проблемы (утечки) при посторении страниц, т.к. объект глобальный,
          // как минимум, стэк очистится от вызова сборщика мусора
          // https://online.sbis.ru/opendoc.html?guid=37eb3bdd-19b1-4b36-b889-92e798fc2cf7
          if (!Env.constants.isBuildOnServer) {
