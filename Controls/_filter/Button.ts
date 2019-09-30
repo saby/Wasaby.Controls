@@ -167,7 +167,7 @@ var _private = {
       });
    },
    getPopupConfig: function(self) {
-      return {
+      let config = {
          templateOptions: {
             template: self._options.templateName,
             items: self._options.items,
@@ -177,6 +177,11 @@ var _private = {
          template: 'Controls/filterPopup:_FilterPanelWrapper',
          target: self._children.panelTarget
       };
+      if(self._options.__compatibleActivate) {
+         // @ts-ignore
+         config.__compatibleActivate = self._options.__compatibleActivate;
+      }
+      return config;
    }
 };
 
