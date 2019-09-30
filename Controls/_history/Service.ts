@@ -262,7 +262,15 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
                getObjectData: this._dataLoaded
             }
          });
-         STORAGES_DATA_LOAD[historyId] = resultDef;
+
+         // необходимо кэшировать запрос только на клиенте
+         // на сервере возможны проблемы при посторении страниц, т.к. объект глобальный,
+         // как минимум, стэк очистится от вызова сборщика мусора
+         // https://online.sbis.ru/opendoc.html?guid=37eb3bdd-19b1-4b36-b889-92e798fc2cf7
+         if (!Env.constants.isBuildOnServer) {
+            STORAGES_DATA_LOAD[historyId] = resultDef;
+         }
+
          resultDef.addCallback((res) => {
             delete STORAGES_DATA_LOAD[historyId];
             return res;
@@ -288,10 +296,10 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
             }
          });
       } else {
-         _private.decrementUsage(this);
          result = Deferred.success(null);
       }
 
+      _private.decrementUsage(this);
       return result;
    },
 
