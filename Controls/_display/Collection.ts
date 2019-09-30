@@ -652,9 +652,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         this._stopIndex = this.getCount();
 
-        this._markerManager = new MarkerManager();
-        this._editInPlaceManager = new EditInPlaceManager();
-        this._itemActionsManager = new ItemActionsManager();
+        this._markerManager = new MarkerManager(this);
+        this._editInPlaceManager = new EditInPlaceManager(this);
+        this._itemActionsManager = new ItemActionsManager(this);
         this._virtualScrollManager = new VirtualScrollManager(this);
     }
 

@@ -1,24 +1,31 @@
-import CollectionItem from '../CollectionItem';
+import BaseManager from './BaseManager';
 
-export default class EditInPlaceManager {
-    private _editModeItem: CollectionItem<unknown>;
-    private _isEditing: boolean = false;
+export interface IEditInPlaceManageableItem {
+    setEditing(editing: boolean, editingContents?: unknown): void;
+}
 
-    beginEdit(item: CollectionItem<unknown>, editingContents: unknown): void {
+export default class EditInPlaceManager extends BaseManager {
+    protected _editModeItem: IEditInPlaceManageableItem;
+
+    beginEdit(item: IEditInPlaceManageableItem, editingContents?: unknown): void {
         if (item === this._editModeItem) {
             return;
         }
-        if (this._editModeItem) {
-            this._editModeItem.setEditing(false, null);
-        }
+        this.endEdit();
         if (item) {
             item.setEditing(true, editingContents);
+            this._editModeItem = item;
         }
-        this._editModeItem = item;
-        this._isEditing = !!this._editModeItem;
+    }
+
+    endEdit(): void {
+        if (this._editModeItem) {
+            this._editModeItem.setEditing(false, null);
+            this._editModeItem = null;
+        }
     }
 
     isEditing(): boolean {
-        return this._isEditing;
+        return !!this._editModeItem;
     }
 }
