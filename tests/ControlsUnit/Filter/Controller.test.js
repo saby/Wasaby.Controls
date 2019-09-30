@@ -916,7 +916,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
       });
 
       it('getCalculatedFilter', function() {
-         let filterButtonItems = [{id: 'testId', value: 'testValue', resetValue: 'testReseNtValue', textValue: ''}];
+         let filterButtonItems = [{id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: ''}];
          let historyItems = [{id: 'testId', value: 'testValueFromHistory', textValue: 'testTextValueFromHistory'}];
 
          return new Promise(function(resolve) {
