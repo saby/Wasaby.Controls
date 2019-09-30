@@ -39,11 +39,17 @@ const
         moveMarkerToNext: constants.key.down,
         moveMarkerToPrevious: constants.key.up,
         toggleSelection: constants.key.space,
-        enterHandler: constants.key.enter
+        enterHandler: constants.key.enter,
+        keyDownHome: constants.key.home,
+        keyDownEnd: constants.key.end,
+        keyDownPageUp: constants.key.pageUp,
+        keyDownPageDown: constants.key.pageDown
     };
 
 const LOAD_TRIGGER_OFFSET = 100;
 const INITIAL_PAGES_COUNT = 1;
+const ITEMACTIONS_UNLOCK_DELAY = 200;
+const SET_MARKER_AFTER_SCROLL_DELAY = 250;
 /**
  * Object with state from server side rendering
  * @typedef {Object}
@@ -311,6 +317,22 @@ var _private = {
             _private.moveMarker(self, model.getPreviousItemKey(model.getMarkedKey()));
         }
     },
+    setMarkerAfterScroll(self, event) {
+       self._setMarkerAfterScroll = true;
+    },
+    keyDownHome: function(self, event) {
+        _private.setMarkerAfterScroll(self, event);
+    },
+    keyDownEnd:  function(self, event) {
+        _private.setMarkerAfterScroll(self, event);
+    },
+    keyDownPageUp:  function(self, event) {
+        _private.setMarkerAfterScroll(self, event);
+    },
+    keyDownPageDown:  function(self, event) {
+        _private.setMarkerAfterScroll(self, event);
+    },
+
     enterHandler: function(self) {
         if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
             return;
@@ -583,6 +605,7 @@ var _private = {
     },
 
     scrollToEdge: function(self, direction) {
+        _private.setMarkerAfterScroll(self);
         if (self._sourceController && self._sourceController.hasMoreData(direction)) {
             self._sourceController.setEdgeState(direction);
             _private.reload(self, self._options).addCallback(function() {
@@ -598,7 +621,10 @@ var _private = {
             self._notify('doScroll', ['bottom'], { bubbling: true });
         }
     },
-
+    scrollPage: function(self, direction) {
+        _private.setMarkerAfterScroll(self);
+        self._notify('doScroll', ['page' + direction], { bubbling: true });
+    },
     startScrollEmitter: function(self) {
         if (self.__error) {
             return;
@@ -779,7 +805,17 @@ var _private = {
         self._lockItemActionsByScroll = false;
         self._canUpdateItemsActions = self._savedCanUpdateItemsActions || self._canUpdateItemsActions;
         self._savedCanUpdateItemsActions = false;
-    }, 200),
+    }, ITEMACTIONS_UNLOCK_DELAY),
+
+    setMarkerAfterScrolling: function(self, scrollTop) {
+        if (self._children.listView) {
+            self._children.listView.setMarkedKeyAfterScroll(scrollTop);
+        }
+        self._setMarkerAfterScroll = false;
+    },
+    delayedSetMarkerAfterScrolling: debounce((self, scrollTop) => {
+        _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
+    }, SET_MARKER_AFTER_SCROLL_DELAY),
 
     handleListScrollSync(self, params) {
         if (self._hasItemActions){
@@ -796,6 +832,9 @@ var _private = {
                 scrollHeight: params.scrollHeight,
                 clientHeight: params.clientHeight
             };
+        }
+        if (self._setMarkerAfterScroll) {
+            _private.setMarkerAfterScrolling(self, params.scrollTop);
         }
     },
 
@@ -1772,8 +1811,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     __onPagingArrowClick: function(e, arrow) {
         switch (arrow) {
-            case 'Next': this._notify('doScroll', ['pageDown'], { bubbling: true }); break;
-            case 'Prev': this._notify('doScroll', ['pageUp'], { bubbling: true }); break;
+            case 'Next': _private.scrollPage(this, 'Down'); break;
+            case 'Prev': _private.scrollPage(this, 'Up'); break;
             case 'Begin': _private.scrollToEdge(this, 'up'); break;
             case 'End': _private.scrollToEdge(this, 'down'); break;
         }
@@ -2083,7 +2122,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _onViewKeyDown: function(event) {
-        keysHandler(event, HOT_KEYS, _private, this);
+        let key = event.nativeEvent.keyCode;
+        let dontStop = key === 33
+                    || key === 34
+                    || key === 35
+                    || key === 36;
+        keysHandler(event, HOT_KEYS, _private, this, dontStop);
     },
     _dragEnter: function(event, dragObject) {
         var

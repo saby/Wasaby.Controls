@@ -159,6 +159,24 @@ var
             } while (cells.length > 0 && cells.length < totalColumns);
 
             return cells;
+        },
+        getHeaderHeight: function (self) {
+            const container = self._container[0] || self._container;
+            let headerHeight = 0;
+            if (!container) {
+                return 0;
+            }
+            const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0] && container.getElementsByClassName('controls-Grid__header')[0].childNodes;
+            if (HeaderGroup && !!HeaderGroup.length) {
+                headerHeight += HeaderGroup[0].offsetHeight;
+            }
+            if (self._options.listModel.getResultsPosition() === 'top') {
+                const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0] && container.getElementsByClassName('controls-Grid__results')[0].childNodes;
+                if (ResultsContainer && !!ResultsContainer.length) {
+                    headerHeight += ResultsContainer[0].offsetHeight;
+                }
+            }
+            return headerHeight;
         }
     },
     GridView = ListView.extend({
@@ -352,7 +370,19 @@ var
 
             //we do not need to fire itemClick on clicking on editArrow
             e.stopPropagation();
-        }
+        },
+        _getItemHeight: function(items, index) {
+            return items[index].children[0].offsetHeight;
+        },
+        _getFirstVisibleItemIndex: function(itemsContainer, scrollTop) {
+            if (!this._options.stickyHeader) {
+                scrollTop -= _private.getHeaderHeight(this);
+            }
+            if (this._itemsContainerForPartialSupport) {
+                return GridView.superclass._getFirstVisibleItemIndex.call(this, this._itemsContainerForPartialSupport, scrollTop);
+            }
+            return GridView.superclass._getFirstVisibleItemIndex.call(this, itemsContainer, scrollTop);
+        },
     });
 
 GridView._private = _private;
