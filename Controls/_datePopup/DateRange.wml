@@ -13,7 +13,9 @@
    </div>
    <div class="controls-PeriodDialog-DateRange__body">
       <ws:if data="{{!_isStickySupport}}">
-         <div class="controls-PeriodDialog-DateRangeItem__months">
+         <div class="controls-PeriodDialog-DateRangeItem__months"
+               on:wheel="_wheelHandler()"
+               on:swipe="_swipeHandler()">
             <ws:for data="month in 12">
                <div class="controls-PeriodDialog-DateRangeItem__months-btn"
                     on:click="_scrollToMonth(_options.position.getFullYear(), month)"
