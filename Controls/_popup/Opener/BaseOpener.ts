@@ -8,6 +8,7 @@ import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import {parse as parserLib, load} from 'Core/library';
+import isEmpty = require('Core/helpers/Object/isEmpty');
 
 var _private = {
     clearPopupIds: function (self) {
@@ -396,10 +397,12 @@ Base.requireModules = (config, controller) => {
 Base.requireModule = function (module) {
     if (typeof module === 'string') {
         const parsedModule = parserLib(module);
-        if (!require.defined(parsedModule.name)) {
+        const isDefined = require.defined(parsedModule.name);
+        let mod = isDefined && require(parsedModule.name);
+        // Если кто-то позвал загрузку модуля, но она еще не отстрелила, require может вернуть пустой объект
+        if (!isDefined || isEmpty(mod)) {
             return load(module);
         }
-        let mod = require(parsedModule.name);
         if (parsedModule.path.length) {
             parsedModule.path.forEach((property) => {
                 if (mod && typeof mod === 'object' && property in mod) {
