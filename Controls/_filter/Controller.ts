@@ -218,6 +218,7 @@ const _private = {
                     self._filter = Prefetch.applyPrefetchFromHistory(self._filter, history.data);
                 }
             }
+            return self._filter;
         },
 
         processHistoryOnItemsChanged(self, items, options): void {
@@ -439,6 +440,12 @@ const _private = {
             var calculatedFilter;
             try {
                calculatedFilter = _private.calculateFilterByItems(cfg.filter, tmpStorage._filterButtonItems, tmpStorage._fastFilterItems);
+
+               if (cfg.prefetchParams) {
+                   tmpStorage._filter = calculatedFilter;
+                   calculatedFilter = _private.processPrefetchOnItemsChanged(tmpStorage, cfg);
+                   calculatedFilter = Prefetch.prepareFilter(calculatedFilter, cfg.prefetchParams);
+               }
             } catch (err) {
                def.errback(err);
                throw err;

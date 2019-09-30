@@ -918,16 +918,26 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
       it('getCalculatedFilter', function() {
          let filterButtonItems = [{id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: ''}];
          let historyItems = [{id: 'testId', value: 'testValueFromHistory', textValue: 'testTextValueFromHistory'}];
+         let prefetchParams = {
+            prefetchMethod: 'testMethod'
+         };
+         let resultFilter = {
+            testId: 'testValueFromHistory',
+            prefetchMethod: 'testMethod'
+         };
 
          return new Promise(function(resolve) {
             Filter.getCalculatedFilter({
                filterButtonSource: filterButtonItems,
-               historyItems: historyItems
+               historyItems: historyItems,
+               prefetchParams: prefetchParams,
+               historyId: 'TEST_HISTORY_ID'
             }).addCallback(function(result) {
                assert.equal(filterButtonItems[0].value, 'testValue');
                assert.equal(filterButtonItems[0].textValue, '');
                assert.equal(result.filterButtonItems[0].value, 'testValueFromHistory');
                assert.equal(result.filterButtonItems[0].textValue, 'testTextValueFromHistory');
+               assert.deepEqual(result.filter, resultFilter);
                resolve();
             });
          });
