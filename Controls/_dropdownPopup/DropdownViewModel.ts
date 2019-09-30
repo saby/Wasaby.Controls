@@ -3,6 +3,7 @@
  */
 import {BaseViewModel, getStyle, ItemsUtil, ItemsViewModel} from 'Controls/list';
 import {factory} from 'Types/chain';
+import {isEqual} from 'Types/object';
 import entity = require('Types/entity');
 
 var _private = {
@@ -192,11 +193,16 @@ var _private = {
             return itemsModelCurrent;
          },
          _isItemSelected: function(item) {
-            var keys = this._options.selectedKeys;
+            const keys = this._options.selectedKeys;
             if (keys instanceof Array) {
-               return keys.indexOf(item.get(this._options.keyProperty)) > -1;
+               let index = keys.findIndex((key) => {
+                  if (isEqual(key, item.get(this._options.keyProperty))) {
+                     return true;
+                  }
+               });
+               return index > -1;
             }
-            return keys !== undefined && keys === item.get(this._options.keyProperty);
+            return keys !== undefined && isEqual(keys, item.get(this._options.keyProperty));
          },
          _hasItemChildren: function(item) {
             return this._hierarchy.isNode(item) && !!this._hierarchy.getChildren(item, this._options.items).length;
