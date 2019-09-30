@@ -439,6 +439,10 @@ define('Controls/Application',
             this._updateClasses();
          },
 
+         _changeTouchStateHandler: function() {
+            this._updateClasses();
+         },
+
          /**
           * Код должен быть вынесен в отдельных контроллер в виде хока в 610.
           * https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec

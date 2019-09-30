@@ -23,7 +23,7 @@
                                  on:managerPopupCreated="_popupCreatedHandler()"
                                  on:managerPopupDestroyed="_popupDestroyedHandler()"
                                  stackRootWidth="{{_options.width}}">
-                                 <Controls.Application.TouchDetector name="touchDetector">
+                                 <Controls.Application.TouchDetector name="touchDetector" on:changeTouchState="_changeTouchStateHandler()">
                                     <Controls.dragnDrop:Controller name="dragNDropContainer"
                                                                    on:dragStart="_dragStartHandler()"
                                                                    on:dragEnd="_dragEndHandler()">
