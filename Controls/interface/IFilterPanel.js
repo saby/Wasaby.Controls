@@ -653,6 +653,11 @@ define('Controls/interface/IFilterPanel', [], function() {
     * @remark For the correct work of the history mechanism, you need to configure the items property on the control by the <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>instruction</a>.
     */
 
+  /**
+   * @name Controls/_filter/View/interface/IFilterView#source
+   * @cfg {Array.<FilterItem>} Специальная структура для визуального представления фильтра. Подробнее см. {@link Controls/_filter/View/interface/IFilterView#source}
+   */
+
    /**
     * @event Controls/interface/IFilterPanel#itemsChanged Событие возникает при изменении опции items.
     * @param {Event}
