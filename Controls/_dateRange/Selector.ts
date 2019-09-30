@@ -16,6 +16,7 @@ import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/ISelector
  * @mixes Controls/_dateRange/interfaces/IInput
+ * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @control
  * @public
  * @category Input
@@ -39,6 +40,7 @@ import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/ISelector
  * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @control
  * @public
  * @category Input
