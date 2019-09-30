@@ -1,10 +1,10 @@
-import Controller = require('Controls/_validate/Controller');
-import template = require('wml!Controls/_validate/Input');
+import Controller = require('Controls/_validate/Container');
+import template = require('wml!Controls/_validate/InputContainer');
 /**
  * Контрол, регулирующий валидацию своего контента. Используется с контролами, поддерживающими интерфейс IInputField( {@link Controls/interface/IInputField} )
  * Автоматически вызывает валидацию при потере фокуса.
- * @class Controls/_validate/Input
- * @extends Controls/_validate/Controller
+ * @class Controls/_validate/InputContainer
+ * @extends Controls/_validate/Container
  * @control
  * @public
  * @author Красильников А.С.
