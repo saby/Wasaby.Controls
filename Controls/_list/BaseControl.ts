@@ -162,6 +162,9 @@ var _private = {
                     if (isActive === true) {
                         self._children.listView.activate();
                     }
+                    if (self._sourceController && self._sourceController.hasMoreData) {
+                        _private.setHiddenDataForModel(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
+                    }
                 }
 
                 if (self._virtualScroll) {
@@ -401,6 +404,9 @@ var _private = {
             if (self._options.beforeLoadToDirectionCallback) {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }
+            if (self._sourceController.hasMoreData) {
+                _private.setHiddenDataForModel(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
+            }
             return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
                 //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 //до реализации функционала и проблемы из новости делаем решение по месту:
@@ -571,6 +577,7 @@ var _private = {
         // todo возможно hasEnoughDataToDirection неправильная. Надо проверять startIndex +/- virtualSegmentSize
         if (!self._virtualScroll || !self._virtualScroll.hasEnoughDataToDirection(direction)) {
             if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._loadedItems) {
+                _private.setHiddenDataForModel(self._listViewModel, self._sourceController.hasMoreData(direction));
                 _private.loadToDirection(
                    self, direction,
                    self._options.dataLoadCallback,
@@ -1246,6 +1253,12 @@ var _private = {
             self._loadingIndicatorContainerHeight = listBoundingRect.height;
         } else {
             self._loadingIndicatorContainerHeight = viewPortSize - listBoundingRect.top;
+        }
+    },
+
+    setHiddenDataForModel(model, isHidden: boolean) {
+        if (model && model.setHiddenData) {
+            model.setHiddenData(isHidden);
         }
     }
 

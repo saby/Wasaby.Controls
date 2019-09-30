@@ -597,6 +597,7 @@ var
 
         _eventHandlersForPartialSupport: {},
         _cachaedHeaderColumns: null,
+        _hiddenDataForResults: false,
 
         constructor: function(cfg) {
             this._options = cfg;
@@ -957,6 +958,14 @@ var
                 }
                 return this._options.resultsPosition;
             }
+        },
+
+        setHiddenData: function(value: boolean) {
+            this._hiddenDataForResults = value;
+        },
+
+        getHiddenData: function() {
+            return this._hiddenDataForResults;
         },
 
         isDrawResults: function() {
