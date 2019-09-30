@@ -1308,7 +1308,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _loadOffsetTop: LOAD_TRIGGER_OFFSET,
     _loadOffsetBottom: LOAD_TRIGGER_OFFSET,
     _menuIsShown: null,
-
+    _viewSize: null,
+    _viewPortSize: null,
     _popupOptions: null,
 
     //Variables for paging navigation
@@ -1776,6 +1777,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'End': _private.scrollToEdge(this, 'down'); break;
         }
     },
+    _updateLoadOffset: function(viewSize, viewPortSize) {
+        let minSize = viewSize && viewPortSize ? Math.min(viewSize, viewPortSize)
+                                               : viewSize || viewPortSize;
+        let offset = Math.floor(minSize / 3);
+        this._setLoadOffset(offset, offset);
+    },
 
     _setLoadOffset: function(top, bottom) {
         if (this.__error) {
@@ -1798,9 +1805,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onViewPortResize: function(self, viewPortSize) {
         _private.setIndicatorContainerHeight(self, viewPortSize);
 
+        self._viewPortSize = viewPortSize;
         if (self._needScrollCalculation) {
-            let offset = Math.floor(viewPortSize / 3);
-            self._setLoadOffset(offset, offset);
+            self._updateLoadOffset(self._viewSize, self._viewPortSize);
         }
         if (!self._isScrollShown) {
             self._setLoadOffset(0, 0);
@@ -1943,6 +1950,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);
             _private.updateShadowMode(this);
+        }
+        let viewSize = (this._container[0] || this._container).clientHeight;
+        this._viewSize = viewSize;
+        if (this._needScrollCalculation) {
+            this._updateLoadOffset(this._viewSize, this._viewPortSize);
         }
     },
     _setScrollItemContainer: function () {
