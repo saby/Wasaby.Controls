@@ -334,7 +334,6 @@ define('Controls/interface/IDropdown', [], function() {
      * </pre>
      */
 
-
    /**
     * @name Controls/interface/IDropdown#displayProperty
     * @cfg {String} Имя поля, значение которого будет отображаться.
