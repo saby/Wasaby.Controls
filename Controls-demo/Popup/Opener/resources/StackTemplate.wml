@@ -2,7 +2,7 @@
                               maximizeButtonVisibility="{{_options.showMaximizedButton}}"
                               stackWidth="{{_options.workspaceWidth}}"
                               stackMinWidth="{{_options.stackMinWidth}}"
-                              stackMaxWidth="{{_options.stackMaxWidth}}">>
+                              stackMaxWidth="{{_options.stackMaxWidth}}">
     <ws:headerContentTemplate>
         <div style="display: flex;justify-content: flex-end;flex-grow: 1;width: 100% ;overflow: hidden;">
             <Controls.buttons:Button attr:class="demo-Header__closeButton" caption="Закрыть задачу в разработку" on:click="_close()"/>
