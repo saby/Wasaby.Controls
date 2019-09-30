@@ -34,7 +34,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
                closeOnOutsideClick: true,
                maxHeight: 700,
                maxWidth: 700,
-               minWidth: 550
+               minWidth: 450
             });
          },
          openModalDialog: function() {

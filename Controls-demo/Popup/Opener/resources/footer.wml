@@ -1,2 +1,1 @@
-<div>
-</div>
+<div attr:class="mr-CreateMerge__bottom"><Controls.buttons:Button caption="Create Merge"/></div>
