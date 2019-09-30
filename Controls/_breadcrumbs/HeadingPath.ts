@@ -36,9 +36,10 @@ var _private = {
         }
     },
 
-   getBackButtonMinWidth(): number {
+   getBackButtonMinWidth(theme): number {
        return getWidthUtil.getWidth(backButtonTemplate({
           _options: {
+             theme: theme,
              backButtonCaption: '1',
              backButtonClass: 'controls-BreadCrumbsPath__backButton_short controls-BreadCrumbsPath__backButton_zeroWidth'
           }
@@ -60,6 +61,7 @@ var _private = {
            if (!options.header) {
               backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
                  _options: {
+                    theme: self._options.theme,
                     backButtonCaption: self._backButtonCaption,
                     counterCaption: self._getCounterCaption(options.items)
                  }
@@ -197,7 +199,7 @@ var BreadCrumbsPath = Control.extend({
         if (this._options.items && this._options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
                 FontLoadUtil.waitForFontLoad('controls-BreadCrumbsPath__backButtonMeasurer').addCallback(function () {
-                    this._backButtonMinWidth = _private.getBackButtonMinWidth();
+                    this._backButtonMinWidth = _private.getBackButtonMinWidth(this._options.theme);
                     _private.calculateItems(this, this._options, this._oldWidth);
                     this._forceUpdate();
                 }.bind(this));
@@ -207,7 +209,7 @@ var BreadCrumbsPath = Control.extend({
 
     _beforeUpdate: function (newOptions) {
         if (this._options.theme !== newOptions.theme) {
-           this._backButtonMinWidth = _private.getBackButtonMinWidth();
+           this._backButtonMinWidth = _private.getBackButtonMinWidth(this._options.theme);
         }
         const containerWidth = _private.getAvailableContainerWidth(this);
 
@@ -261,7 +263,7 @@ BreadCrumbsPath.getDefaultOptions = function () {
     };
 };
 
-BreadCrumbsPath._theme = ['Controls/crumbs'];
+BreadCrumbsPath._theme = ['Controls/crumbs', 'Controls/heading'];
 BreadCrumbsPath._styles = ['Controls/Utils/FontLoadUtil'];
 BreadCrumbsPath._private = _private;
 
