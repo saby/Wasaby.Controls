@@ -468,3 +468,32 @@
 .controls-inlineheight-default_theme-@{themeName}.controls-Button-inlineheight-default_theme-@{themeName} when not (@inline_height_default_button = @inline_height_default) {
    height: @inline_height_default_button;
 }
+
+//text colors
+.controls-text-default_theme-@{themeName}.controls-Button__text-default_viewMode-link_theme-@{themeName} when not (@default_text-color_button_link = @text-color){
+   color: @default_text-color_button_link;
+}
+.controls-text-primary_theme-@{themeName}.controls-Button__text-primary_viewMode-link_theme-@{themeName} when not (@primary_text-color_button_link = @primary_text-color){
+   color: @primary_text-color_button_link;
+}
+.controls-text-secondary_theme-@{themeName}.controls-Button__text-secondary_viewMode-link_theme-@{themeName} when not (@secondary_text-color_button_link = @secondary_text-color){
+   color: @secondary_text-color_button_link;
+}
+.controls-text-link_theme-@{themeName}.controls-Button__text-link_viewMode-link_theme-@{themeName} when not (@link_text-color_button_link = @link_text-color){
+   color: @link_text-color_button_link;
+}
+.controls-text-label_theme-@{themeName}.controls-Button__text_label_viewMode-link_theme-@{themeName} when not (@label_text-color_button_link = @label_text-color){
+   color: @label_text-color_button_link;
+}
+.controls-text-danger_theme-@{themeName}.controls-Button__text_danger_viewMode-link_theme-@{themeName} when not (@danger_text-color_button_link = @danger_color){
+   color: @danger_text-color_button_link;
+}
+.controls-text-success_theme-@{themeName}.controls-Button__text_success_viewMode-link_theme-@{themeName} when not (@success_text-color_button_link = @success_color){
+   color: @success_text-color_button_link;
+}
+.controls-text-warning_theme-@{themeName}.controls-Button__text_warning_viewMode-link_theme-@{themeName} when not (@warning_text-color_button_link = @warning_color){
+   color: @warning_text-color_button_link;
+}
+.controls-text-unaccented_theme-@{themeName}.controls-Button__text_unaccented_viewMode-link_theme-@{themeName} when not (@unaccented_text-color_button_link = @unaccented_color){
+   color: @unaccented_text-color_button_link;
+}
