@@ -289,6 +289,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     _updateMarker: function(markedKey):void {
+        if (markedKey === null) {
+            this._markedKey = markedKey;
+        }
         if (!this.getCount() || this._options.markerVisibility === 'hidden') {
             return;
         }
@@ -524,6 +527,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                     this.updateMarker(nextValidItem);
                 } else if (prevValidItem) {
                     this.updateMarker(prevValidItem);
+                } else {
+                    this.updateMarker(null);
                 }
             }
         }
