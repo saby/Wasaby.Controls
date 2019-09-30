@@ -1,6 +1,8 @@
 define('Controls-demo/Example/Input',
    [
+      'Env/Env',
       'Core/Control',
+      'Controls/Utils/scrollToElement',
       'wml!Controls-demo/Example/Input',
 
       'Controls/Application',
@@ -20,11 +22,21 @@ define('Controls-demo/Example/Input',
       'Controls-demo/Example/Input/TimeInterval',
       'css!Controls-demo/Example/resource/Base'
    ],
-   function(Control, template) {
+   function(Env, Control, scrollToElement, template) {
       'use strict';
 
       return Control.extend({
          _template: template,
+
+         _afterMount: function() {
+            if (Env.constants.isBrowserPlatform) {
+               var activeElement = window.location.hash.replace(/.*#/, '');
+
+               if (this._children[activeElement]) {
+                  scrollToElement(this._children[activeElement]._container);
+               }
+            }
+         },
 
          /**
           * @param demo
