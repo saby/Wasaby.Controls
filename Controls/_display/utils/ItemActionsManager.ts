@@ -1,8 +1,8 @@
 import BaseManager from './BaseManager';
 
 // TODO Написать реальный тип для action'ов
-export type TItemAction = any;
-export interface IItemActionsContainer {
+type TItemAction = any;
+interface IItemActionsContainer {
     all: TItemAction[];
     showed: TItemAction[];
 }
