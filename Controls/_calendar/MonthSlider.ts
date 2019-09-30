@@ -1,5 +1,6 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
+import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import IMonth from './interfaces/IMonth';
 import Slider from './MonthSlider/Slider';
@@ -14,7 +15,7 @@ var _private = {
         }
         self._animation = month < self._month ? Slider.ANIMATIONS.slideRight : Slider.ANIMATIONS.slideLeft;
         self._month = month;
-        self._isHomeVisible = !DateUtil.isMonthsEqual(month, new Date());
+        self._isHomeVisible = !DateUtil.isMonthsEqual(month, new self._options.dateConstructor());
         if (!silent) {
             self._notify('monthChanged', [month]);
         }
@@ -76,11 +77,12 @@ var Component = BaseControl.extend({
     },
 
     _slideMonth: function (event, delta) {
-        _private._setMonth(this, new Date(this._month.getFullYear(), this._month.getMonth() + delta, 1));
+        _private._setMonth(this,
+            new this._options.dateConstructor(this._month.getFullYear(), this._month.getMonth() + delta, 1));
     },
 
     _setCurrentMonth: function () {
-        _private._setMonth(this, DateUtil.normalizeDate(new Date()));
+        _private._setMonth(this, DateUtil.normalizeDate(new this._options.dateConstructor()));
     },
 
     _itemClickHandler: function (event, item) {
@@ -97,7 +99,10 @@ var Component = BaseControl.extend({
 });
 
 Component.getDefaultOptions = function () {
-    return coreMerge({}, IMonth.getDefaultOptions());
+    return {
+        ...IMonth.getDefaultOptions(),
+        dateConstructor: WSDate
+    };
 };
 
 Component.getOptionTypes = function () {

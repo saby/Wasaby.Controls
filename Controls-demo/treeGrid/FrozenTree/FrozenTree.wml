@@ -1,0 +1,9 @@
+<div class="controlsDemo__wrapper">
+    <Controls.treeGrid:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            expandedItems="{{ [1, 2] }}"
+            columns="{{_columns}}"
+            parentProperty="parent"
+            nodeProperty="type"/>
+</div>

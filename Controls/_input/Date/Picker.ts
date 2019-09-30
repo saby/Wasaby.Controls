@@ -81,7 +81,8 @@ import 'css!theme?Controls/input';
                mask: this._options.mask,
                selectionType: 'single',
                headerType: 'input',
-               closeButtonEnabled: true
+               closeButtonEnabled: true,
+               dateConstructor: this._options.dateConstructor
             }
          };
          if (!this._isVdomDialog()) {
@@ -104,7 +105,8 @@ import 'css!theme?Controls/input';
          var
             stringValueConverter = new StringValueConverter({
                mask: this._options.mask,
-               replacer: this._options.replacer
+               replacer: this._options.replacer,
+               dateConstructor: this._options.dateConstructor
             }),
             textValue = stringValueConverter.getStringByValue(startValue);
          this._notify('valueChanged', [startValue, textValue]);

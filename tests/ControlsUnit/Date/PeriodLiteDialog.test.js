@@ -204,7 +204,7 @@ define([
          ].forEach(function(test) {
             it(`should return ${test[1]} for ${test[0]}} year`, function() {
                assert.equal(
-                  PeriodLiteDialog._private._getDefaultYear({ startValue: new Date(test[0], 0, 1), chooseYears: true }),
+                  PeriodLiteDialog._private._getDefaultYear({ startValue: new Date(test[0], 0, 1), chooseYears: true }, Date),
                   test[1]
                );
             });

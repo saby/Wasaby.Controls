@@ -619,12 +619,16 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          };
          suggestMod._InputController._private.loadDependencies = function() {return Deferred.success(true)};
          var suggestComponent = new suggestMod._InputController(options);
+         var sandbox = sinon.createSandbox();
+
          suggestComponent.saveOptions(options);
          suggestComponent._loading = true;
          suggestComponent._showContent = true;
          suggestComponent._dependenciesDeferred = true;
          suggestComponent._inputActive = true;
-         suggestComponent._suggestMarkedKey = 'test'
+         suggestComponent._suggestMarkedKey = 'test';
+
+         sandbox.stub(suggestComponent, '_notify');
 
          suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl',  value: 'te'});
          assert.isFalse(suggestComponent._showContent, null);
@@ -642,10 +646,18 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
          assert.equal(suggestComponent._searchValue, 'test');
 
+         suggestComponent._options.suggestState = true;
          suggestComponent._options.value = 'test';
-         suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl',  value: ''});
+         suggestComponent._beforeUpdate({suggestState: true, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: ''});
+         assert.equal(suggestComponent._searchValue, '');
+         sinon.assert.calledWith(suggestComponent._notify, 'suggestStateChanged', [false]);
+
+         suggestComponent._searchValue = 'test';
+         suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: ''});
          assert.deepEqual(suggestComponent._filter, {testSearchParam: ''});
          assert.equal(suggestComponent._searchValue, '');
+
+         sandbox.restore();
       });
 
       it('Suggest::_updateSuggestState', function() {
@@ -875,19 +887,6 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
 
          suggestMod._InputController._private.closePopup(suggestComponent);
          assert.isTrue(isClosePopup);
-      });
-
-      it('Suggest::_resizeHandler', function() {
-         const suggestComponent = new suggestMod._InputController();
-         const sandbox = sinon.createSandbox();
-
-         sandbox.stub(suggestComponent, '_notify');
-         suggestComponent._resizeHandler();
-
-         sinon.assert.calledWith(
-            suggestComponent._notify,
-            'suggestStateChanged', [false]
-         );
       });
    });
 });

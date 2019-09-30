@@ -99,10 +99,10 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          ];
 
          this._iconItems = [
-            {id: 1, title: 'In the work', icon: 'icon-small icon-Trade'},
-            {id: 2, title: 'It is planned', icon: 'icon-16 icon-Sandclock'},
-            {id: 3, title: 'Completed', iconStyle: 'success', icon: 'icon-small icon-Successful'},
-            {id: 4, title: 'Not done', iconStyle: 'danger', icon: 'icon-small icon-Decline'}
+            {id: 1, title: 'In the work', icon: 'icon-Trade'},
+            {id: 2, title: 'It is planned', icon: 'icon-Sandclock'},
+            {id: 3, title: 'Completed', iconStyle: 'success', icon: 'icon-Successful'},
+            {id: 4, title: 'Not done', iconStyle: 'danger', icon: 'icon-Decline'}
          ];
 
          this._myTemplateItems = [

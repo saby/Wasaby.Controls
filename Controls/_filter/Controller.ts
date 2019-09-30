@@ -10,7 +10,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 import {isEqual} from 'Types/object';
 import {Controller as SourceController} from 'Controls/source';
 import {RecordSet} from 'Types/Collection';
-import * as Prefetch from 'Controls/_filter/Prefetch';
+import Prefetch from 'Controls/_filter/Prefetch';
 import {IPrefetchHistoryParams} from './IPrefetch';
 
 export interface IFilterHistoryData {
@@ -170,20 +170,23 @@ const _private = {
             }
          },
 
-         getHistoryByItems(historyId: string, items: Array) {
+         getHistoryByItems(historyId: string, items: Array): object|void {
              const historySource = historyUtils.getHistorySource({historyId});
              const history = historySource.getItems();
 
              let result;
-             let historyItem;
+             let historyData;
 
              if (history && history.getCount()) {
                  history.each((item) => {
                      if (!result) {
-                         historyItem = historySource.getDataObject(item.get('ObjectData'));
+                         historyData = historySource.getDataObject(item.get('ObjectData'));
 
-                         if (isEqual(_private.minimizeFilterItems(items), historyItem.items || historyItem)) {
-                             result = historyItem;
+                         if (isEqual(_private.minimizeFilterItems(items), historyData.items || historyData)) {
+                             result = {
+                                 item,
+                                 data: historyData
+                             };
                          }
                      }
                  });
@@ -191,6 +194,40 @@ const _private = {
 
              return result;
          },
+
+        processPrefetchOnItemsChanged(self, options): void {
+            // Меняют фильтр с помощью кнопки фильтров,
+            // но такой фильтр уже может быть сохранён в истории и по нему могут быть закэшированные данные,
+            // поэтому ищем в истории такой фильтр, если есть, смотрим валидны ли ещё закэшированные данные,
+            // если валидны, то просто добавляем идентификатор сессии в фильтр,
+            // если данные не валидны, то такую запись из истории надо удалить
+            const history = _private.getHistoryByItems(options.historyId, self._filterButtonItems);
+
+            if (history) {
+                const prefetchParams = Prefetch.getPrefetchFromHistory(history.data);
+                const needInvalidate = prefetchParams && Prefetch.needInvalidatePrefetch(history.data);
+
+                if (!prefetchParams || needInvalidate) {
+                    self._filter = Prefetch.clearPrefetchSession(self._filter);
+
+                    if (needInvalidate) {
+                        historyUtils.getHistorySource({historyId: options.historyId})
+                                    .destroy(history.item.getId(), { $_history: true });
+                    }
+                } else {
+                    self._filter = Prefetch.applyPrefetchFromHistory(self._filter, history.data);
+                }
+            }
+        },
+
+        processHistoryOnItemsChanged(self, items, options): void {
+            if (options.prefetchParams) {
+                _private.processPrefetchOnItemsChanged(self, options);
+                self._changedFilterItems = items;
+            } else if (options.historyId) {
+                _private.addToHistory(self, self._filterButtonItems, self._fastFilterItems, options.historyId);
+            }
+        },
 
          itemsIterator: function(filterButtonItems, fastDataItems, differentCallback, equalCallback) {
             function processItems(items) {
@@ -673,6 +710,10 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             } else {
                 return _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource, options.historyItems).addCallback((history) => {
                     _private.itemsReady(this, filter, history);
+
+                    if (options.historyItems && options.historyId) {
+                        _private.processHistoryOnItemsChanged(this, options.historyItems, options);
+                    }
                     return history;
                 });
             }
@@ -705,33 +746,11 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             _private.updateFilterItems(this, items);
             _private.applyItemsToFilter(this, this._filter, items);
 
-             if (this._options.prefetchParams) {
-                 const history = _private.getHistoryByItems(this._options.historyId, this._filterButtonItems);
+            if (this._options.historyId) {
+                _private.processHistoryOnItemsChanged(this, items, this._options);
+            }
 
-                 if (history) {
-                     if (!Prefetch.getPrefetchFromHistory(history) || Prefetch.needInvalidatePrefetch(history)) {
-                         this._filter = Prefetch.clearPrefetchSession(this._filter);
-                     } else {
-                         this._filter = Prefetch.applyPrefetchFromHistory(this._filter, history);
-                     }
-                 }
-
-                 this._changedFilterItems = items;
-             } else if (this._options.historyId) {
-                 _private.addToHistory(this, this._filterButtonItems, this._fastFilterItems, this._options.historyId);
-             }
             _private.notifyFilterChanged(this);
-         },
-
-         _historyApply(event: Event, history): void {
-             if (this._options.historyId && this._options.prefetchParams) {
-                 if (Prefetch.needInvalidatePrefetch(history)) {
-                     // invalidate
-                 } else {
-                     this._filter = Prefetch.applyPrefetchFromHistory(this._filter, history);
-                     _private.notifyFilterChanged(this);
-                 }
-             }
          },
 
          _filterChanged(event, filter) {

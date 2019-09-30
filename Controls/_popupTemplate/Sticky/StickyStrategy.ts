@@ -67,10 +67,14 @@ interface IPosition {
          let taskBarKeyboardIosHeight = 0;
          // Над клавой в ios может быть показана управляющая панель высотой 30px (задается в настройках ios).
          // У нас нет никакой инфы про ее наличие и/или высоту.
-         // Единственное решение учитывать ее всегда и поднимать окно от низа экрана на 35px.
-         // С проектированием решили увеличить до 35.
+         // Единственное решение учитывать ее всегда и поднимать окно от низа экрана на 45px.
+         // С проектированием решили увеличить до 45.
          if (!isHorizontal && TouchKeyboardHelper.isKeyboardVisible(true)) {
-            taskBarKeyboardIosHeight = 35;
+            taskBarKeyboardIosHeight = 45;
+            if (_private.isIOS13()) {
+               // На ios13 высота серой области на 5px больше
+               taskBarKeyboardIosHeight += 5;
+            }
          }
          return position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
       },
@@ -112,6 +116,11 @@ interface IPosition {
                return clonePosition.left < minValue || clonePosition.right < minValue || clonePosition.top < minValue || clonePosition.bottom < minValue;
            }
            return false;
+       },
+
+       isIOS13() {
+         // https://online.sbis.ru/opendoc.html?guid=ab98bd55-19b7-4ed6-869e-8252d88ea68b
+         return this._isMobileIOS() && (Env.detection.IOSVersion > 12 || Env.detection.IOSVersion === null);
        },
 
        _isMobileIOS() {

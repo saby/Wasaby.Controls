@@ -367,7 +367,8 @@ function getCountriesStats() {
                 startRow: 1,
                 endRow: 2,
                 startColumn: 2,
-                endColumn: 4
+                endColumn: 4,
+                align: 'center'
             },
             {
                 title: 'Страна',
@@ -507,7 +508,7 @@ function getCountriesStats() {
                 displayProperty: 'populationDensity',
                 width: 'max-content'
             }
-        ]
+        ],
     }
 }
 
@@ -712,8 +713,87 @@ function getPorts() {
         ]
     }
 }
+
+function forShowWidths() {
+    return {
+        getData() {
+            return [
+                {
+                    id: 1,
+                    px: 'Строго 150px',
+                    fr1of3: '1/3 свободного пространства. fr - гибкая ширина. fr расчитывается как доля от оставшегося свободного пространства внутри грида. Грубо говоря, сначала браузер просчитает ширины всех остальных колонок, потом fr',
+                    fr2of3: '2/3 свободного пространства. После этого доступная ширина будет разделена на сумму всех коэффициентов указаных у колонок с fr(в данном гриде - 3) и распределена между колонками, в соответствии с коэффициентами.',
+                    minMax: 'От 50px до 200px в зависимости от контента ячеек колонки',
+                    auto: 'Как работает auto подробно описано в спецификации, как и про все остальные ширины',
+                    maxContent: 'По ширине'
+                },
+                {
+                    id: 2,
+                    px: 'Ячейка 2/1',
+                    maxContent: 'самой широкой ячеки',
+                    fr1of3: 'Ячейка 2/3',
+                    fr2of3: 'Ячейка 2/4',
+                    auto: 'https://drafts.csswg.org/css-grid/#valdef-grid-template-columns-auto',
+                    minMax: 'Ячейка 2/6'
+                }
+            ]
+        },
+        getHeader() {
+            return [
+                {
+                    title: '150px'
+                },
+                {
+                    title: 'max-content'
+                },
+                {
+                    title: '1fr'
+                },
+                {
+                    title: '2fr'
+                },
+                {
+                    title: 'auto'
+                },
+                {
+                    title: 'minmax(50px, 200px)'
+                }
+            ]
+        },
+        getColumns1() {
+            return [
+                {
+                    displayProperty: 'px',
+                    width: '150px'
+                },
+                {
+                    displayProperty: 'maxContent',
+                    width: 'max-content'
+                },
+                {
+                    displayProperty: 'fr1of3',
+                    width: '1fr'
+                },
+                {
+                    displayProperty: 'fr2of3',
+                    width: '2fr'
+                },
+                {
+                    displayProperty: 'auto',
+                    width: 'auto'
+                },
+                {
+                    displayProperty: 'minMax',
+                    width: 'minmax(50px, 200px)'
+                }
+            ]
+        },
+    }
+}
+
 export {
     getCountriesStats,
     getTasks,
-    getPorts
+    getPorts,
+    forShowWidths
 }

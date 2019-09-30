@@ -1,4 +1,4 @@
-import Controller = require('Controls/_validate/Controller');
+import Controller = require('Controls/_validate/Container');
 import template = require('wml!Controls/_validate/DateRange');
 
 const DateRange = Controller.extend({

@@ -460,6 +460,12 @@ define(['Controls/grid'], function(gridMod) {
             {align: "right", endColumn: 4, endRow: 3, height: 20, offsetTop: 20, startColumn: 3, startRow: 2, style: "default", title: "еще"}
          ];
 
+         assert.equal(`div[style*="grid-area: ${gridHeader[0].startRow} / ${gridHeader[0].startColumn} / ${gridHeader[0].endRow} / ${gridHeader[0].endColumn}"]`,
+             gridMod.GridView._private.getQueryForHeaderCell(false, gridHeader[0], 0));
+         assert.equal(`div[style*="grid-column-start: ${gridHeader[0].startColumn}; grid-column-end: ${gridHeader[0].endColumn}; grid-row-start: ${gridHeader[0].startRow}; grid-row-end: ${gridHeader[0].endRow}"]`,
+             gridMod.GridView._private.getQueryForHeaderCell(true, gridHeader[0], 0));
+
+
          assert.deepEqual(gridView._setHeaderWithHeight(), [
             expectedResult,
             0

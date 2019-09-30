@@ -1,6 +1,7 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {date as formatDate} from 'Types/formatter';
+import {Date as WSDate} from 'Types/entity';
 import getCurrentPeriod = require('Core/helpers/Date/getCurrentPeriod');
 import IPeriodSimpleDialog from './_dateLitePopup/IDateLitePopup';
 import dateUtils = require('Controls/Utils/Date');
@@ -41,10 +42,10 @@ import 'css!theme?Controls/_dateLitePopup/DateLitePopup';
 
 var _private = {
 
-    _getDefaultYear: function (options) {
+    _getDefaultYear: function (options, dateConstructor) {
 
         var start = options.startValue,
-            currentYear = (new Date()).getFullYear(),
+            currentYear = (new dateConstructor()).getFullYear(),
             startValueYear;
 
         if (!options.chooseYears || options.chooseHalfyears || options.chooseQuarters || options.chooseMonths) {
@@ -72,27 +73,27 @@ var _private = {
             name: monthName
         };
     },
-    getYearModel: function (year) {
+    getYearModel: function (year, dateConstructor) {
         return [{
             name: 'I',
             quarters: [{
                 name: 'I',
-                months: [new Date(year, 0, 1), new Date(year, 1, 1), new Date(year, 2, 1)],
+                months: [new dateConstructor(year, 0, 1), new dateConstructor(year, 1, 1), new dateConstructor(year, 2, 1)],
                 number: 0
             }, {
                 name: 'II',
-                months: [new Date(year, 3, 1), new Date(year, 4, 1), new Date(year, 5, 1)],
+                months: [new dateConstructor(year, 3, 1), new dateConstructor(year, 4, 1), new dateConstructor(year, 5, 1)],
                 number: 1
             }]
         }, {
             name: 'II',
             quarters: [{
                 name: 'III',
-                months: [new Date(year, 6, 1), new Date(year, 7, 1), new Date(year, 8, 1)],
+                months: [new dateConstructor(year, 6, 1), new dateConstructor(year, 7, 1), new dateConstructor(year, 8, 1)],
                 number: 2
             }, {
                 name: 'IV',
-                months: [new Date(year, 9, 1), new Date(year, 10, 1), new Date(year, 11, 1)],
+                months: [new dateConstructor(year, 9, 1), new dateConstructor(year, 10, 1), new dateConstructor(year, 11, 1)],
                 number: 3
             }]
         }];
@@ -132,9 +133,9 @@ var Component = BaseControl.extend({
         if (options.year instanceof Date) {
             this._year = options.year.getFullYear();
         } else {
-            this._year = _private._getDefaultYear(options);
+            this._year = _private._getDefaultYear(options, options.dateConstructor);
             if (!this._year) {
-                this._year = (new Date()).getFullYear();
+                this._year = (new options.dateConstructor()).getFullYear();
             }
         }
         this._emptyCaption = options.emptyCaption;
@@ -148,7 +149,7 @@ var Component = BaseControl.extend({
 
         this._caption = options.captionFormatter(options.startValue, options.endValue, options.emptyCaption);
 
-        this._months = _private.getYearModel(this._year);
+        this._months = _private.getYearModel(this._year, options.dateConstructor);
     },
 
     _beforeUpdate: function (options) {
@@ -161,7 +162,7 @@ var Component = BaseControl.extend({
      */
     setYear: function (year) {
         this._year = year;
-        this._months = _private.getYearModel(this._year);
+        this._months = _private.getYearModel(this._year, this._options.dateConstructor);
         this._notify('yearChanged', [year]);
     },
 
@@ -235,19 +236,22 @@ var Component = BaseControl.extend({
 
     _onYearClick: function (event, year) {
         if (this._options.chooseYears) {
-            this._notify('sendResult', [new Date(year, 0, 1), new Date(year, 11, 31)], {bubbling: true});
+            this._notify(
+                'sendResult',
+                [new this._options.dateConstructor(year, 0, 1), new this._options.dateConstructor(year, 11, 31)],
+                {bubbling: true});
         }
     },
 
     _onHalfYearClick: function (event, halfYear) {
-        var start = new Date(this._year, halfYear * 6, 1),
-            end = new Date(this._year, (halfYear + 1) * 6, 0);
+        var start = new this._options.dateConstructor(this._year, halfYear * 6, 1),
+            end = new this._options.dateConstructor(this._year, (halfYear + 1) * 6, 0);
         this._notify('sendResult', [start, end], {bubbling: true});
     },
 
     _onQuarterClick: function (event, quarter) {
-        var start = new Date(this._year, quarter * 3, 1),
-            end = new Date(this._year, (quarter + 1) * 3, 0);
+        var start = new this._options.dateConstructor(this._year, quarter * 3, 1),
+            end = new this._options.dateConstructor(this._year, (quarter + 1) * 3, 0);
         this._notify('sendResult', [start, end], {bubbling: true});
     },
 
@@ -297,9 +301,11 @@ Component._private = _private;
 Component.EMPTY_CAPTIONS = IPeriodSimpleDialog.EMPTY_CAPTIONS;
 
 Component.getDefaultOptions = function () {
-    return coreMerge({
-        itemTemplate: ItemWrapper
-    }, IPeriodSimpleDialog.getDefaultOptions());
+    return {
+        ...IPeriodSimpleDialog.getDefaultOptions(),
+        itemTemplate: ItemWrapper,
+        dateConstructor: WSDate
+    };
 };
 
 Component.getOptionTypes = function () {

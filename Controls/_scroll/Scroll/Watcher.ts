@@ -27,13 +27,18 @@ import {SyntheticEvent} from "Vdom/Vdom"
             return element;
          },
 
-         sendCanScroll: function(self, clientHeight, scrollHeight) {
-            var eventName;
+         isCanScroll: function(clientHeight: number, scrollHeight: number): boolean {
             /**
              * Свойство scrollHeight округляется в большую сторону, а clientHeight в меньшую, по сравнению с реальной дробной высотой.
              * Чтобы избежать ошибок связанные с округлением нужно сравнивать их разность с единицей.
              */
-            if (scrollHeight - clientHeight > 1) {
+            return scrollHeight - clientHeight > 1;
+         },
+
+         sendCanScroll: function(self, clientHeight, scrollHeight) {
+            var eventName;
+
+            if (_private.isCanScroll(clientHeight, scrollHeight)) {
                if (self._canScrollCache !== true) {
                   self._canScrollCache = true;
                   eventName = 'canScroll';
@@ -247,7 +252,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
                _private.calcSizeCache(self, container);
                sizeCache = _private.getSizeCache(self, container);
             }
-            if (sizeCache.clientHeight < sizeCache.scrollHeight) {
+            if (_private.isCanScroll(sizeCache.clientHeight, sizeCache.scrollHeight)) {
                self._registrar.startOnceTarget(component, 'canScroll');
             } else {
                self._registrar.startOnceTarget(component, 'cantScroll');

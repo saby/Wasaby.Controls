@@ -106,7 +106,8 @@ define([
       describe('_onKeyDown', function() {
          it('should set current date on insert key press', function() {
             const sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(input.DateBase, options),
+               component = calendarTestUtils.createComponent(
+                  input.DateBase, cMerge({ dateConstructor: Date }, options, { preferSource: true })),
                event = {
                   nativeEvent: {
                      keyCode: constants.key.insert
@@ -117,6 +118,7 @@ define([
             const model = component._model;
             const converter = new input.StringValueConverter();
             assert.deepEqual(model.value, converter.getCurrentDate(model._lastValue, model._mask));
+            assert.instanceOf(model.value, Date);
             sandbox.restore();
          });
 

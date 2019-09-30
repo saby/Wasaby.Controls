@@ -1,6 +1,8 @@
 define([
+   'Core/core-instance',
    'Controls/dateRange'
 ], function(
+   cInstance,
    dateRange
 ) {
    'use strict';
@@ -105,7 +107,9 @@ define([
                model.shiftForward();
 
                assert.equal(model.startValue.getTime(), test.rStart.getTime());
+               cInstance.instanceOfModule(model.startValue, 'Types/entity:DateTime');
                assert.equal(model.endValue.getTime(), test.rEnd.getTime());
+               cInstance.instanceOfModule(model.endValue, 'Types/entity:DateTime');
             });
          });
       });
@@ -136,7 +140,9 @@ define([
                model.shiftBack();
 
                assert.equal(model.startValue.getTime(), test.rStart.getTime());
+               cInstance.instanceOfModule(model.startValue, 'Types/entity:DateTime');
                assert.equal(model.endValue.getTime(), test.rEnd.getTime());
+               cInstance.instanceOfModule(model.endValue, 'Types/entity:DateTime');
             });
          });
       });

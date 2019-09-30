@@ -182,17 +182,20 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     _nextModelVersion: function(notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+        let changedItems = [];
+
         if (!notUpdatePrefixItemVersion) {
             this._prefixItemVersion++;
         }
         this._nextVersion();
 
-        let changedItems = [];
-        if (Array.isArray(newItems) && newItems.length > 0) {
-            changedItems = changedItems.concat(newItems);
-        }
-        if (Array.isArray(removedItems) && removedItems.length > 0) {
-            changedItems = changedItems.concat(removedItems);
+        if (notUpdatePrefixItemVersion) {
+            if (Array.isArray(newItems) && newItems.length > 0) {
+                changedItems = changedItems.concat(newItems);
+            }
+            if (Array.isArray(removedItems) && removedItems.length > 0) {
+                changedItems = changedItems.concat(removedItems);
+            }
         }
         this._resetCacheOnChange(changesType, changedItems);
 
@@ -355,11 +358,11 @@ var ItemsViewModel = BaseViewModel.extend({
          */
         const collectionChangeResult =
            this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
-        if (collectionChangeResult === 'updatePrefix') {
-            this._nextModelVersion(false, 'collectionChanged', action);
-        } else {
-            this._nextModelVersion(action !== collection.IObservable.ACTION_RESET, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
-        }
+
+        const shouldNotUpdatePrefix =
+            collectionChangeResult === 'updatePrefix' ? false : action !== collection.IObservable.ACTION_RESET;
+
+        this._nextModelVersion(shouldNotUpdatePrefix, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
         this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     },
     _onBeginCollectionChange: function() {
@@ -452,7 +455,7 @@ var ItemsViewModel = BaseViewModel.extend({
             this._nextModelVersion();
         }
         if (this._options.itemsSetCallback) {
-            this._options.itemsSetCallback(items);
+            this._options.itemsSetCallback(this._items);
         }
     },
 

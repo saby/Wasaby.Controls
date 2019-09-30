@@ -361,10 +361,10 @@ var SuggestLayout = Control.extend({
       this._searchEnd = null;
       this._searchErrback = null;
    },
-   _beforeUpdate: function(newOptions) {
-      var valueChanged = this._options.value !== newOptions.value;
-      var valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
-      var needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, _private.prepareValue(this, newOptions.value));
+   _beforeUpdate(newOptions): void {
+      const valueChanged = this._options.value !== newOptions.value;
+      const valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
+      const needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, _private.prepareValue(this, newOptions.value));
 
       if (newOptions.suggestState !== this._options.suggestState) {
          if (newOptions.suggestState) {
@@ -375,8 +375,12 @@ var SuggestLayout = Control.extend({
          }
       }
 
-      if (needSearchOnValueChanged || valueCleared) {
+      if ((needSearchOnValueChanged || valueCleared) && this._searchValue !== newOptions.value) {
          this._searchValue = newOptions.value;
+
+         if (this._options.suggestState) {
+            _private.updateSuggestState(this);
+         }
       }
 
       if (needSearchOnValueChanged || valueCleared || !isEqual(this._options.filter, newOptions.filter)) {
@@ -564,10 +568,6 @@ var SuggestLayout = Control.extend({
             }
          }
       }
-   },
-
-   _resizeHandler(): void {
-      _private.close(this);
    }
 
    // </editor-fold>

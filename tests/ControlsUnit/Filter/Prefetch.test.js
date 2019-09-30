@@ -3,7 +3,8 @@ define(['Controls/_filter/Prefetch', 'Types/collection', 'Types/entity'], functi
    function getPrefetchParams() {
       return {
          PrefetchSessionId: 'test',
-         PrefetchDataValidUntil: new Date()
+         PrefetchDataValidUntil: new Date(),
+         PrefetchDataCreated: new Date('December 17, 1995 03:24:00')
       };
    }
    
@@ -31,22 +32,22 @@ define(['Controls/_filter/Prefetch', 'Types/collection', 'Types/entity'], functi
    describe('Controls.filter.Prefetch', function() {
       it('applyPrefetchFromItems', function() {
          var filter = {};
-         assert.deepEqual(Prefetch.applyPrefetchFromItems(filter, getRecordSetWithPrefetch()), { PrefetchSessionId: 'test' });
+         assert.deepEqual(Prefetch.default.applyPrefetchFromItems(filter, getRecordSetWithPrefetch()), { PrefetchSessionId: 'test' });
 
          filter = {};
-         assert.deepEqual(Prefetch.applyPrefetchFromItems(filter, getRecordSetWithoutPrefetch()), {});
+         assert.deepEqual(Prefetch.default.applyPrefetchFromItems(filter, getRecordSetWithoutPrefetch()), {});
       });
 
       it('applyPrefetchFromHistory', function() {
          var filter = {};
-         assert.deepEqual(Prefetch.applyPrefetchFromHistory(filter, getHistoryWithPrefetch()), { PrefetchSessionId: 'test' });
+         assert.deepEqual(Prefetch.default.applyPrefetchFromHistory(filter, getHistoryWithPrefetch()), { PrefetchSessionId: 'test' });
       });
 
       it('getPrefetchParamsForSave', function() {
-         var params = Prefetch.getPrefetchParamsForSave(getRecordSetWithPrefetch());
+         var params = Prefetch.default.getPrefetchParamsForSave(getRecordSetWithPrefetch());
          assert.equal(params.PrefetchSessionId, 'test');
 
-         params = Prefetch.getPrefetchParamsForSave(getRecordSetWithoutPrefetch());
+         params = Prefetch.default.getPrefetchParamsForSave(getRecordSetWithoutPrefetch());
          assert.equal(params, undefined);
       });
 
@@ -55,21 +56,21 @@ define(['Controls/_filter/Prefetch', 'Types/collection', 'Types/entity'], functi
             items: []
          };
 
-         Prefetch.addPrefetchToHistory(history, getPrefetchParams());
+         Prefetch.default.addPrefetchToHistory(history, getPrefetchParams());
          assert.equal(history.prefetchParams.PrefetchSessionId, 'test');
       });
 
       it('needInvalidatePrefetch', function() {
          var history = getHistoryWithPrefetch();
          history.prefetchParams.PrefetchDataValidUntil = new Date('December 17, 1995 03:24:00');
-         assert.isTrue(Prefetch.needInvalidatePrefetch(history));
+         assert.isTrue(Prefetch.default.needInvalidatePrefetch(history));
       });
 
       it('prepareFilter', function() {
          var prefetchOptions = {
             PrefetchMethod: 'testMethodName'
          };
-         assert.deepEqual(Prefetch.prepareFilter({}, prefetchOptions), {PrefetchMethod: 'testMethodName'})
+         assert.deepEqual(Prefetch.default.prepareFilter({}, prefetchOptions), {PrefetchMethod: 'testMethodName'})
       });
 
       it('clearPrefetchSession', function() {
@@ -78,7 +79,12 @@ define(['Controls/_filter/Prefetch', 'Types/collection', 'Types/entity'], functi
             anyField: 'anyValue'
          };
 
-         assert.deepEqual(Prefetch.clearPrefetchSession(filterWithSession), {anyField: 'anyValue'});
+         assert.deepEqual(Prefetch.default.clearPrefetchSession(filterWithSession), {anyField: 'anyValue'});
+      });
+
+      it('getPrefetchDataCreatedFromItems', function() {
+         let dataCreated = new Date('December 17, 1995 03:24:00');
+         assert.isTrue(Prefetch.default.getPrefetchDataCreatedFromItems(getRecordSetWithPrefetch()).getTime() === dataCreated.getTime());
       });
    });
 });

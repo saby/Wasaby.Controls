@@ -1,0 +1,11 @@
+<div class="controlsDemo__wrapper">
+    <Controls.treeGrid:View
+            source="{{_viewSource}}"
+            keyProperty="id"
+            columns="{{_columns}}"
+            parentProperty="Раздел"
+            nodeProperty="Раздел@"
+            hasChildrenProperty="hasChild"
+            expanderVisibility="hasChildren">
+    </Controls.treeGrid:View>
+</div>

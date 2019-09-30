@@ -65,7 +65,7 @@ var Component = Control.extend([], {
     _rangeModel: null,
 
     _beforeMount: function (options) {
-        this._rangeModel = new DateRangeModel();
+        this._rangeModel = new DateRangeModel({ dateConstructor: this._options.dateConstructor });
         this._rangeModel.update(options);
         CalendarControlsUtils.proxyModelEvents(
             this, this._rangeModel,
@@ -101,7 +101,8 @@ var Component = Control.extend([], {
                quantum: this._options.quantum,
                headerType: 'input',
                closeButtonEnabled: true,
-               rangeselect: true
+               rangeselect: true,
+               dateConstructor: this._options.dateConstructor
             }
         };
         if (!this._isVdomDialog()) {
@@ -151,7 +152,8 @@ var Component = Control.extend([], {
     _notifyInputCompleted: function() {
         const converter = new StringValueConverter({
                mask: this._options.mask,
-               replacer: this._options.replacer
+               replacer: this._options.replacer,
+               dateConstructor: this._options.dateConstructor
             });
         this._notify('inputCompleted', [
             this._rangeModel.startValue,

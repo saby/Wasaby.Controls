@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import coreMerge = require('Core/core-merge');
+import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {DateRangeModel, Utils as CalendarControlsUtils} from 'Controls/dateRange';
@@ -30,14 +30,14 @@ class Component extends Control {
 
     _selectionViewType: string;
 
-    constructor() {
+    constructor(options) {
         super();
-        this._rangeModel = new DateRangeModel();
+        this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
         CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged']);
     }
 
     _beforeMount(options) {
-        this._position = dateUtils.getStartOfYear(options.position || new Date());
+        this._position = dateUtils.getStartOfYear(options.position || new options.dateConstructor());
         this._rangeModel.update(options);
         this._updateSelectionType(options);
     }
@@ -77,10 +77,11 @@ class Component extends Control {
 
 Component.SELECTION_VEIW_TYPES = MonthsRangeItem.SELECTION_VEIW_TYPES;
 
-Component.getDefaultOptions = function () {
-    return coreMerge({
-        selectionViewType: MonthsRangeItem.SELECTION_VEIW_TYPES.days
-    }, {} /*IPeriodSimpleDialog.getDefaultOptions()*/);
+Component.getDefaultOptions = function() {
+    return {
+        selectionViewType: MonthsRangeItem.SELECTION_VEIW_TYPES.days,
+        dateConstructor: WSDate
+    };
 };
 
 // Component.getOptionTypes = function() {

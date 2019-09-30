@@ -68,6 +68,7 @@ var _private = {
  * @mixes Controls/interface/IDropdownEmptyText
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/_dropdown/interface/IGrouped
+ * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_interface/ITextValue
  * @control
  * @public

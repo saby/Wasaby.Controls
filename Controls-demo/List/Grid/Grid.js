@@ -133,6 +133,10 @@ define('Controls-demo/List/Grid/Grid', [
          gridColumns2: null,
          gridHeader: null,
          showType: null,
+         _markedKey1: 448390,
+         _markedKey2: 448390,
+         _markedKey3: 448390,
+         _markedKey4: 448390,
          _showAction: function(action, item) {
             if (item.get('id') === '471329') {
                if (action.id === 2 || action.id === 3) {
@@ -153,6 +157,11 @@ define('Controls-demo/List/Grid/Grid', [
             this._actionClicked = action.title;
          },
          _beforeMount: function() {
+
+            this._markedKey1 = '448390';
+            this._markedKey2 = '448390';
+            this._markedKey3 = '448390';
+            this._markedKey4 = '448390';
             this._firstSelectedKeys = ['448390'];
             this._secondSelectedKeys = ['448390'];
             this.showType = {

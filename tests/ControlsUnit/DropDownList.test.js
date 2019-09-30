@@ -293,7 +293,8 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                groupTemplate: undefined,
                groupingKeyCallback: undefined,
                itemTemplateProperty: undefined,
-               hasClose: undefined
+               hasClose: undefined,
+               iconSize: undefined
             };
             let actualConfig = Clone(expectedConfig);
             let dropDownList = getDropDownListWithConfig(expectedConfig);

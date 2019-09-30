@@ -88,9 +88,9 @@ var _private = {
                     if (item !== ControlsConstants.view.hiddenGroup && item.get) {
                         _private.updateItemActions(self, item, options);
                     }
-                    self._isActual = true;
-                    options.listModel.nextModelVersion(collectionChanged, ACTION_TYPE);
                 }
+                self._isActual = true;
+                options.listModel.nextModelVersion(collectionChanged, ACTION_TYPE);
             }
         }
     },

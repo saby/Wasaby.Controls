@@ -53,3 +53,4 @@ export {default as ILookup, ILookupOptions} from './_interface/ILookup';
 export {default as IDateMask, IDateMaskOptions, dateMaskConstants} from './_interface/IDateMask';
 export {default as IPropStorage, IPropStorageOptions} from './_interface/IPropStorage';
 export {default as IBorderStyle, IBorderStyleOptions} from './_interface/IBorderStyle';
+export {default as IDateConstructor, IDateConstructorOptions} from './_interface/IDateConstructor';

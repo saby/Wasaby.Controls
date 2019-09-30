@@ -186,6 +186,31 @@ define(
             viewModelSelection.updateSelection(rs.at(0));
             assert.deepEqual(viewModelSelection.getSelectedKeys(), expectedKeys);
          });
+
+         it('_isItemSelected', function() {
+            let configSelection = clone(config);
+            configSelection.selectedKeys = [ [1] ];
+            let viewModelSelection = new DropdownViewModel(configSelection);
+            let item = new entity.Model({
+               rawData: {id: [1], title: 'Id is array'}
+            });
+            let isSelected = viewModelSelection._isItemSelected(item);
+            assert.isTrue(isSelected);
+
+            item.set('id', [2]);
+            isSelected = viewModelSelection._isItemSelected(item);
+            assert.isFalse(isSelected);
+
+            viewModelSelection._options.selectedKeys = [1, 2];
+            item.set('id', 1);
+            isSelected = viewModelSelection._isItemSelected(item);
+            assert.isTrue(isSelected);
+
+            item.set('id', 12);
+            isSelected = viewModelSelection._isItemSelected(item);
+            assert.isFalse(isSelected);
+         });
+
          describe('Groups and separator', function() {
                let newConfig = {
                   keyProperty: 'id',

@@ -135,6 +135,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                headConfig = options.headConfig || {};
                headConfig.caption = headConfig.caption || options.caption;
                headConfig.icon = headConfig.icon || options.icon || '';
+               headConfig.iconSize = options.iconSize || '';
                headConfig.menuStyle = headConfig.menuStyle || 'defaultHead';
 
                let rootKey = options.parentProperty ? _private.getRootKey(options.rootKey) : options.parentProperty,
@@ -211,7 +212,8 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                   groupTemplate: newOptions.groupTemplate,
                   groupingKeyCallback: newOptions.groupingKeyCallback,
                   groupMethod: newOptions.groupMethod,
-                  hasClose: newOptions.showClose
+                  hasClose: newOptions.showClose,
+                  iconSize: newOptions.iconSize
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
                this._hasAdditional = this._listModel.hasAdditional();

@@ -592,6 +592,7 @@ define([
                item: 'test'
             },
             instance = {
+               _options: {},
                _notify: function(eventName, args) {
                   notifyCalled = true;
                   assert.equal(args[0], itemData);
@@ -617,7 +618,8 @@ define([
                item: 'test'
             },
             instance = {
-               _notify: sandbox.stub()
+               _notify: sandbox.stub(),
+               _options: {},
             };
 
          aUtil.itemActionsClick(instance, fakeEvent, action, itemData, {}, false);
@@ -641,6 +643,7 @@ define([
             },
             instance = {
                _notify: sandbox.stub(),
+               _options: {},
                _container: {
                   querySelector: sandbox.stub().withArgs('.controls-ListView__itemV').returns({
                      parentNode: {

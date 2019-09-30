@@ -71,7 +71,9 @@ var Component = BaseControl.extend({
     _isMinWidth: null,
 
     _beforeMount: function (options) {
-        this._rangeModel = new DateRangeModel();
+        this._rangeModel = new DateRangeModel({
+            dateConstructor: options.dateConstructor
+        });
         CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged', 'rangeChanged']);
         _private._updateRangeModel(this, options);
 
@@ -121,7 +123,8 @@ var Component = BaseControl.extend({
                 selectionType: this._options.selectionType,
                 quantum: this._options.ranges,
                 minRange: this._options.minRange,
-                clearButtonVisible: this._options.clearButtonVisible || this._options.clearButtonVisibility
+                clearButtonVisible: this._options.clearButtonVisible || this._options.clearButtonVisibility,
+                dateConstructor: this._options.dateConstructor
             }
         };
 

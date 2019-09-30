@@ -570,6 +570,27 @@ define([
             assert.isTrue(result.isSuccessful());
          });
 
+          it('Two deferreds', function() {
+             const deferred = new Deferred();
+              eip._notify = function(e) {
+                  if (e === 'beforeEndEdit') {
+                      return deferred;
+                  }
+              };
+              eip.saveOptions({
+                  listModel: listModel
+              });
+
+              eip.beginEdit({
+                  item: listModel.at(0).getContents()
+              });
+              eip.commitEdit();
+              assert.isTrue(!!eip._endEditDeferred);
+              var result = eip.commitEdit();
+              deferred.callback();
+              assert.isTrue(result.isSuccessful());
+          });
+
          it('With source', function(done) {
             var source = new sourceLib.Memory({
                keyProperty: 'id',

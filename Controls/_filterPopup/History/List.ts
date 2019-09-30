@@ -215,6 +215,10 @@ var MAX_NUMBER_ITEMS = 5;
       _historyGlobalStorage: null,
       _historyCount: Constants.MAX_HISTORY,
 
+      // old "favorite" allows to save 10 records. We should show only 7 records, other records are not displayed
+      // TODO https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
+      _favoriteCount: Constants.MAX_HISTORY_REPORTS,
+
       _beforeMount: function(options) {
          if (options.items) {
             this._items = options.items.clone();

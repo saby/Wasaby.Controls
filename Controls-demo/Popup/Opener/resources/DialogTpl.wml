@@ -1,39 +1,30 @@
 <div style="height: 100%;">
     <Controls.popupTemplate:Dialog headingCaption="Dialog" draggable="{{_options.draggable}}" footerContentTemplate="{{_options.footerContentTemplate}}">
         <ws:headerContentTemplate>
-            <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
-                <Controls.buttons:Button attr:class="demo-Header__closeButton" caption="Закрыть" on:click="_close()"/>
-            </div>
+            <Controls.buttons:Button attr:class="demo-Header__closeButton" caption="Закрыть" on:click="_close()"/>
         </ws:headerContentTemplate>
         <ws:bodyContentTemplate>
-            <div class="demo-Grid__container" attr:style="height:100%">
-                <Controls.list:DataContainer source="{{_viewSource}}"
-                                         keyProperty="id"
-                                         attr:class="ControlsDemo-Grid__Container" attr:style="height:100%">
-                    <Controls.operations:Controller>
-                        <Controls.scroll:Container attr:class="demo-Grid__wrapper">
-                            <Controls.list:Container>
-                                <Controls.operations:Container>
-                                    <Controls.treeGrid:View
-                                            attr:class="demo-Grid__control ControlsDemo-TreeDemo__groupsDefault"
-                                            parentProperty="Раздел"
-                                            groupingKeyCallback="{{_groupingKeyCallback}}"
-                                            nodeProperty="Раздел@"
-                                            columns="{{gridColumns}}"
-                                            multiSelectVisibility="visible"
-                                            itemActions="{{_itemActions}}"
-                                            itemActionsPosition="outside"
-                                            on:actionClick="_onActionClick()"
-                                            itemActionVisibilityCallback="{{_showAction}}">
-                                        <ws:nodeFooterTemplate>
-                                            <Controls.list:AddButton caption="Новая запись"/>
-                                        </ws:nodeFooterTemplate>
-                                    </Controls.treeGrid:View>
-                                </Controls.operations:Container>
-                            </Controls.list:Container>
-                        </Controls.scroll:Container>
-                    </Controls.operations:Controller>
-                </Controls.list:DataContainer>
+            <div>
+                <div class="mr-CreateMerge" tabindex="0">
+                    <div class="mr-CreateMerge__top">
+                        <div class="rowWithLabel">
+                            <Controls.input:Label caption="Ветка" required="{{true}}"/>
+                            <Controls.input:Text bind:value="_branch" attr:class="rowWithLabel__row"/>
+                        </div>
+                        <div class="rowWithLabel">
+                            <Controls.input:Label caption="Хранилище" required="{{false}}"/>
+                            <Controls.input:Text bind:value="_storage" attr:class="rowWithLabel__row"/>
+                        </div>
+                        <div class="rowWithLabel">
+                            <Controls.input:Label caption="Заголовок" required="{{false}}"/>
+                            <Controls.input:Text bind:value="_heading" attr:class="rowWithLabel__row"/>
+                        </div>
+                        <div class="rowWithLabel">
+                            <Controls.input:Label caption="Описание" required="{{false}}"/>
+                            <Controls.input:Area bind:value="_description" attr:class="rowWithLabel__row"/>
+                        </div>
+                    </div>
+                </div>
             </div>
         </ws:bodyContentTemplate>
     </Controls.popupTemplate:Dialog>

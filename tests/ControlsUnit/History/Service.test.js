@@ -21,6 +21,28 @@ define(['Controls/history', 'Core/Deferred'], (history, Deferred) => {
          assert.equal(loadData, expectedData);
       });
 
+      it('destroy', () => {
+         const service = new history.Service({ historyId: 'testId' });
+         let methodName;
+         let methodMeta;
+
+         service._historyDataSource = {call: (method, meta) => {
+            methodName = method;
+            methodMeta = meta;
+         }};
+
+
+         service.destroy('test');
+
+         assert.equal(methodName, 'Delete');
+         assert.deepEqual(methodMeta, {
+            params: {
+               history_id: 'testId',
+               object_id: 'test'
+            }
+         })
+      });
+
    });
 
 });

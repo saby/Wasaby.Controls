@@ -1438,19 +1438,26 @@ define([
       });
 
 
-      it('_onViewPortResize, setLoadOffset', function() {
+      it('_onViewPortResize, viewResize, setLoadOffset, updateLoadOffset', function() {
          let bc = new lists.BaseControl();
          bc._needScrollCalculation = true;
          bc._loadOffset = {top: 100, bottom: 100};
-         bc._children = triggers;;
+         bc._children = triggers;
+         bc._container = {
+             getBoundingClientRect: () => ({}),
+             clientHeight: 480
+         };
          lists.BaseControl._private.onScrollShow(bc);
-         bc._onViewPortResize(bc, 600)
+         bc._onViewPortResize(bc, 600);
          assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200});
+
+         bc._viewResize();
+         assert.deepEqual(bc._loadOffset, {top: 160, bottom: 160});
 
          //Если контрол в состоянии ошибки, то не нужно ничего делать
          bc.__error = true;
          bc._setLoadOffset(100, 100);
-         assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200});
+         assert.deepEqual(bc._loadOffset, {top: 160, bottom: 160});
 
       });
 
@@ -4163,17 +4170,51 @@ define([
       });
 
 
-      it('_getLoadingIndicatorClasses', function () {
+       it('_getLoadingIndicatorClasses', function () {
 
-         function testCaseWithArgs(indicatorState) {
-            return lists.BaseControl._private.getLoadingIndicatorClasses(indicatorState);
-         }
+           function testCaseWithArgs(indicatorState) {
+               return lists.BaseControl._private.getLoadingIndicatorClasses(indicatorState);
+           }
 
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all', testCaseWithArgs('all'));
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up', testCaseWithArgs('up'));
-         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down', testCaseWithArgs('down'));
+           assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all', testCaseWithArgs('all'));
+           assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up', testCaseWithArgs('up'));
+           assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down', testCaseWithArgs('down'));
 
-      });
+       });
+
+       it('setIndicatorContainerHeight: list bigger then scrollContainer', function () {
+
+          const fakeBaseControl = {
+              _loadingIndicatorContainerHeight: null,
+              _container: {
+                 getBoundingClientRect: () => ({
+                     top: 100,
+                     bottom: 1000
+                 })
+              }
+          };
+
+          lists.BaseControl._private.setIndicatorContainerHeight(fakeBaseControl, 500);
+          assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 400)
+       });
+
+       it('setIndicatorContainerHeight: list smaller then scrollContainer', function () {
+           const fakeBaseControl = {
+               _loadingIndicatorContainerHeight: null,
+               _container: {
+                   getBoundingClientRect: () => ({
+                       top: 100,
+                       bottom: 300,
+                       height: 200
+                   })
+               }
+           };
+
+           lists.BaseControl._private.setIndicatorContainerHeight(fakeBaseControl, 500);
+           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200)
+       });
+
+
 
       it('saveScrollOnToggleLoadingIndicator', async function () {
          let

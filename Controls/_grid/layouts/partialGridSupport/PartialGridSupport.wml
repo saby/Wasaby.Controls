@@ -37,7 +37,7 @@
     <ws:if data="{{_options.emptyTemplate}}">
         <ws:if data="{{_options.columnScroll}}">
             <div style="{{_listModel.getEmptyTemplateStyles()}}">
-                <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{'max-width: ' + _listModel.getContainerWidth() + 'px;'}}"/>
+                <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{containerSize ? 'max-width: ' + containerSize + 'px;' : 'visibility: hidden;'}}"/>
             </div>
         </ws:if>
         <ws:else>

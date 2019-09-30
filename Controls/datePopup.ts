@@ -1,6 +1,6 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
-import {descriptor} from 'Types/entity';
+import {descriptor, Date as WSDate} from 'Types/entity';
 import {dateMaskConstants} from 'Controls/interface';
 import IRangeSelectable from './_datePopup/IRangeSelectable';
 import {DateRangeModel, IDateRangeSelectable} from 'Controls/dateRange';
@@ -287,13 +287,13 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._displayedDate = dateUtils.getStartOfMonth(
             dateUtils.isValidDate(options.startValue) ? options.startValue : new Date());
 
-        this._rangeModel = new DateRangeModel();
+        this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
         this._rangeModel.update(options);
         this._prepareTheme();
-        this._headerRangeModel = new DateRangeModel();
+        this._headerRangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
         this._headerRangeModel.update(options);
 
-        this._yearRangeModel = new DateRangeModel();
+        this._yearRangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
         _private.updateYearsRangeModel(this, options.startValue, options.endValue);
 
         this._monthStateEnabled = periodDialogUtils.isMonthStateEnabled(options);
@@ -522,7 +522,9 @@ Component.getDefaultOptions = function () {
         headerType: HEADER_TYPES.link,
 
         minRange: IDateRangeSelectable.minRange.day,
-        mask: popupMask.auto
+        mask: popupMask.auto,
+
+        dateConstructor: WSDate
 
     }, IRangeSelectable.getDefaultOptions());
 };
