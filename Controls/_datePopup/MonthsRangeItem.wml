@@ -44,6 +44,7 @@
                   showWeekdays="{{false}}"
                   month="{{month}}"
                   captionFormat="%B"
+                  dayTemplate="{{_options.dayTemplate}}"
 
                   on:click="_onMonthBodyClick(month)"
                />

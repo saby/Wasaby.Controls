@@ -1,3 +1,4 @@
+import {SyntheticEvent} from 'Vdom/Vdom';
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {descriptor, Date as WSDate} from 'Types/entity';
@@ -11,9 +12,11 @@ import dateUtils = require('Controls/Utils/Date');
 import dateRangeUtil = require('Controls/Utils/DateRangeUtil');
 import componentTmpl = require('wml!Controls/_datePopup/DatePopup');
 import headerTmpl = require('wml!Controls/_datePopup/header');
+import dayTmpl = require('wml!Controls/_datePopup/day');
+import {MonthViewDayTemplate} from 'Controls/calendar';
 import 'css!theme?Controls/datePopup';
 import {Controller as ManagerController} from 'Controls/popup';
-import {_scrollContext as ScrollData} from "./scroll";
+import {_scrollContext as ScrollData, IntersectionObserverSyntheticEntry} from "./scroll";
 
 /**
  * Диалоговое окно, которое позволяет выбрать даты и периоды произвольной длительности.
@@ -256,6 +259,8 @@ var _private = {
 var Component = BaseControl.extend([EventProxyMixin], {
     _template: componentTmpl,
     _headerTmpl: headerTmpl,
+    _dayTmpl: dayTmpl,
+    _defaultDayTemplate: MonthViewDayTemplate,
 
     _rangeModel: null,
     _headerRangeModel: null,
@@ -352,6 +357,10 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _homeButtonClick: function () {
         this._displayedDate = dateUtils.getStartOfMonth(new Date());
+    },
+
+    _currentDayIntersectHandler: function(event: SyntheticEvent, entries: IntersectionObserverSyntheticEntry[]): void {
+        this._homeButtonVisible = !entries[entries.length - 1].nativeEntry.intersectionRatio;
     },
 
     _yearsRangeChanged: function (e, start, end) {
@@ -524,7 +533,9 @@ Component.getDefaultOptions = function () {
         minRange: IDateRangeSelectable.minRange.day,
         mask: popupMask.auto,
 
-        dateConstructor: WSDate
+        dateConstructor: WSDate,
+
+        dayTemplate: MonthViewDayTemplate
 
     }, IRangeSelectable.getDefaultOptions());
 };

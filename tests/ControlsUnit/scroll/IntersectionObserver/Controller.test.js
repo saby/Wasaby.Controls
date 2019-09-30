@@ -10,6 +10,7 @@ define([
    'use strict';
 
    const options = {
+      observerName: 'observerName',
    };
 
    describe('Controls/scroll:IntersectionObserverController', function() {
@@ -26,7 +27,7 @@ define([
             sandbox.stub(component, '_createObserver').returns({
                observe: sinon.fake()
             });
-            component._registerHandler(null, instId, element, data);
+            component._registerHandler(null, instId, options.observerName, element, data);
             assert.deepEqual(component._items, { id: { instId: instId, element: element, data: data } });
             sinon.assert.calledWith(component._observer.observe, element);
             sandbox.restore();
@@ -67,7 +68,7 @@ define([
                observe: sinon.fake()
             });
             sandbox.stub(component, '_notify');
-            component._registerHandler(null, instId, element, data);
+            component._registerHandler(null, instId, options.observerName, element, data);
             component._intersectionObserverHandler([entry]);
             sinon.assert.calledWith(
                component._notify,
