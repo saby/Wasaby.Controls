@@ -175,7 +175,8 @@ var _private = {
          },
          fittingMode: 'fixed',
          template: 'Controls/filterPopup:_FilterPanelWrapper',
-         target: self._children.panelTarget
+         target: self._children.panelTarget,
+         __compatibleActivate: self._options.__compatibleActivate
       };
    }
 };
