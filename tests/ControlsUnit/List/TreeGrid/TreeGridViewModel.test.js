@@ -435,7 +435,7 @@ define(['Controls/treeGrid',
                getContents: () => null
             })
          })
-         ladderViewModel.setHiddenData(true);
+         ladderViewModel.setHasMoreData(true);
          assert.isTrue(ladderViewModel.isDrawResults());
       });
    });

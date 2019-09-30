@@ -597,7 +597,7 @@ var
 
         _eventHandlersForPartialSupport: {},
         _cachaedHeaderColumns: null,
-        _hiddenDataForResults: false,
+        _hasMoreData: false,
 
         constructor: function(cfg) {
             this._options = cfg;
@@ -960,12 +960,12 @@ var
             }
         },
 
-        setHiddenData: function(value: boolean) {
-            this._hiddenDataForResults = value;
+        setHasMoreData: function(value: boolean) {
+            this._hasMoreData = value;
         },
 
-        getHiddenData: function() {
-            return this._hiddenDataForResults;
+        getHasMoreData: function() {
+            return this._hasMoreData;
         },
 
         isDrawResults: function() {

@@ -136,7 +136,7 @@ var
         isDrawResults: function() {
             var items = this.getDisplay();
             if (items) {
-                const isHiddenData = this.getHiddenData();
+                const isHiddenData = this.getHasMoreData();
                 var rootItems = this._model.getHierarchyRelation().getChildren(items.getRoot().getContents(), this.getItems());
                 return isHiddenData || rootItems && rootItems.length > 1;
             }
