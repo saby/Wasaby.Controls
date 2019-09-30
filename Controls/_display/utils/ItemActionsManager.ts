@@ -1,31 +1,43 @@
-import CollectionItem from '../CollectionItem';
+import BaseManager from './BaseManager';
 
-export default class ItemActionsManager {
-    private _activeItem: CollectionItem<unknown> = null;
+// TODO Написать реальный тип для action'ов
+export type TItemAction = any;
+export interface IItemActionsContainer {
+    all: TItemAction[];
+    showed: TItemAction[];
+}
 
-    setItemActions(item: CollectionItem<unknown>, actions: any): void {
+export interface IItemActionsManageableItem {
+    getActions(): IItemActionsContainer;
+    setActions(actions: IItemActionsContainer): void;
+}
+
+export default class ItemActionsManager extends BaseManager {
+    protected _activeItem: IItemActionsManageableItem;
+
+    setItemActions(item: IItemActionsManageableItem, actions: IItemActionsContainer): void {
         const oldActions = item.getActions();
         if (!oldActions || (actions && !this._isMatchingActions(oldActions, actions))) {
             item.setActions(actions);
         }
     }
 
-    setActiveItem(item: CollectionItem<unknown>): void {
+    setActiveItem(item: IItemActionsManageableItem): void {
         this._activeItem = item;
     }
 
-    getActiveItem(): CollectionItem<unknown> {
+    getActiveItem(): IItemActionsManageableItem {
         return this._activeItem;
     }
 
-    private _isMatchingActions(oldActionsObj: any, newActionsObj: any): boolean {
+    protected _isMatchingActions(oldContainer: IItemActionsContainer, newContainer: IItemActionsContainer): boolean {
         return (
-            this._isMatchingActionIds(oldActionsObj.all, newActionsObj.all) &&
-            this._isMatchingActionIds(oldActionsObj.showed, newActionsObj.showed)
+            this._isMatchingActionIds(oldContainer.all, newContainer.all) &&
+            this._isMatchingActionIds(oldContainer.showed, newContainer.showed)
         );
     }
 
-    private _isMatchingActionIds(aActions: any[], bActions: any[]): boolean {
+    protected _isMatchingActionIds(aActions: TItemAction[], bActions: TItemAction[]): boolean {
         if (!aActions || !bActions) {
             return false;
         }

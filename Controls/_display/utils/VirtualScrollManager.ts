@@ -1,17 +1,24 @@
-import Collection from '../Collection';
+import BaseManager from './BaseManager';
 import { EnumeratorCallback } from 'Types/collection';
 
-export default class VirtualScrollManager {
-    private _owner: Collection<unknown>;
+export interface IVirtualScrollEnumerator {
+    setPosition(position: number): void;
+    moveNext(): boolean;
+    getCurrentIndex(): number;
+    getCurrent(): unknown;
+}
 
-    constructor(owner: Collection<unknown>) {
-        this._owner = owner;
-    }
+export interface IVirtualScrollManageableCollection {
+    getStartIndex(): number;
+    getStopIndex(): number;
+    getEnumerator(): IVirtualScrollEnumerator;
+}
 
+export default class VirtualScrollManager extends BaseManager<IVirtualScrollManageableCollection> {
     each(callback: EnumeratorCallback<unknown>, context?: object): void {
-        const startIndex = this._owner.getStartIndex();
-        const stopIndex = this._owner.getStopIndex(), this._owner.getCount();
-        const enumerator = this._owner.getEnumerator();
+        const startIndex = this._collection.getStartIndex();
+        const stopIndex = this._collection.getStopIndex();
+        const enumerator = this._collection.getEnumerator();
 
         enumerator.setPosition(startIndex - 1);
 
