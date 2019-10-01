@@ -86,7 +86,7 @@
  * @name Controls/_dropdown/interface/IGrouped#groupTemplate
  * @cfg {Function | String} Шаблон группировки.
  * @remark
- * Для определения шаблона вызовите базовый шаблон - "wml!Controls/_dropdownPopup/defaultGroupTemplate".
+ * Для определения шаблона вызовите базовый шаблон - "Controls/dropdownPopup:GroupTemplate".
  * Шаблон должен быть помещен в компонент с помощью тега <ws:partial> с атрибутом "template".
  * Базовый шаблон wml!Controls/_dropdownPopup/defaultGroupTemplate по умолчанию отображает только разделитель.
  * Вы можете изменить отображение разделителя, установив опцию:
@@ -102,7 +102,7 @@
  *          groupingKeyCallback="{{_groupingKeyCallback}}"
  *          source="{{_source}}">
  *       <ws:groupTemplate>
- *          <ws:partial template="wml!Controls/_dropdownPopup/defaultGroupTemplate" showText="{{true}}" />
+ *          <ws:partial template="Controls/dropdownPopup:GroupTemplate" showText="{{true}}" />
  *       </ws:groupTemplate>
  *    </Controls.dropdown:Menu>
  * </pre>
@@ -132,7 +132,7 @@
  * @name Controls/_dropdown/interface/IGrouped#groupTemplate
  * @cfg {Function | String} Group template.
  * @remark
- * To determine the template, you should call the base template "wml!Controls/_dropdownPopup/defaultGroupTemplate".
+ * To determine the template, you should call the base template "Controls/dropdownPopup:GroupTemplate".
  * The template should be placed in the component using the <ws:partial> tag with the template attribute.
  * By default, the base template wml!Controls/_dropdownPopup/defaultGroupTemplate only displays a separator.  You can change the separator display by setting the option:
  *    -  showText - sets the display of the group name.
@@ -147,7 +147,7 @@
  *          groupingKeyCallback="{{_groupingKeyCallback}}"
  *          source="{{_source}}">
  *       <ws:groupTemplate>
- *          <ws:partial template="wml!Controls/_dropdownPopup/defaultGroupTemplate" showText="{{true}}" />
+ *          <ws:partial template="Controls/dropdownPopup:GroupTemplate" showText="{{true}}" />
  *       </ws:groupTemplate>
  *    </Controls.dropdown:Menu>
  * </pre>
