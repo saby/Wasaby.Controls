@@ -169,31 +169,31 @@ define('Controls-demo/Buttons/Menu/Menu', [
             this._groupItems = [
                { id: 1, title: 'Add', icon: 'icon-small icon-Bell icon-primary' },
                {
-                  id: 2, title: 'Vacation', iconStyle: 'green', icon: 'icon-small icon-Vacation', group: '2'
+                  id: 2, title: 'Vacation', icon: 'icon-small icon-Vacation', group: '2'
                },
                {
-                  id: 3, title: 'Time off', iconStyle: 'purple', icon: 'icon-small icon-SelfVacation', group: '2'
+                  id: 3, title: 'Time off', icon: 'icon-small icon-SelfVacation', group: '2'
                },
                {
                   id: 4, title: 'Hospital', icon: 'icon-small icon-Sick', group: '2'
                },
                {
-                  id: 5, title: 'Business trip', iconStyle: 'brown', icon: 'icon-small icon-statusDeparted', group: '2'
+                  id: 5, title: 'Business trip', icon: 'icon-small icon-statusDeparted', group: '2'
                }
             ];
             this._oneGroupItems = [
                { id: 1, title: 'Add', icon: 'icon-small icon-Bell icon-primary', group: '2' },
                {
-                  id: 2, title: 'Vacation', iconStyle: 'green', icon: 'icon-small icon-Vacation', group: '2'
+                  id: 2, title: 'Vacation', icon: 'icon-small icon-Vacation', group: '2'
                },
                {
-                  id: 3, title: 'Time off', iconStyle: 'purple', icon: 'icon-small icon-SelfVacation', group: '2'
+                  id: 3, title: 'Time off', icon: 'icon-small icon-SelfVacation', group: '2'
                },
                {
                   id: 4, title: 'Hospital', icon: 'icon-small icon-Sick', group: '2'
                },
                {
-                  id: 5, title: 'Business trip', iconStyle: 'brown', icon: 'icon-small icon-statusDeparted', group: '2'
+                  id: 5, title: 'Business trip', icon: 'icon-small icon-statusDeparted', group: '2'
                }
             ];
             this._groupTextItems = [
