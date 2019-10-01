@@ -1778,8 +1778,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _updateLoadOffset: function(viewSize, viewPortSize) {
-        let minSize = viewSize && viewPortSize ? Math.min(viewSize, viewPortSize)
-                                               : viewSize || viewPortSize;
+        let minSize = viewSize !== null && viewPortSize !== null ? Math.min(viewSize, viewPortSize) : 0;
         let offset = Math.floor(minSize / 3);
         this._setLoadOffset(offset, offset);
     },
