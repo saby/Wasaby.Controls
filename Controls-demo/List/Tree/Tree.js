@@ -89,6 +89,9 @@ define('Controls-demo/List/Tree/Tree', [
                return item.get('Группа');
             };
          },
+         _nodeFooterVisibilityCallback: function(item) {
+            return item.get('Наименование') !== 'Presto';
+         },
          _showAction: function(action, item) {
             if (action.id === 5) {
                return false;
