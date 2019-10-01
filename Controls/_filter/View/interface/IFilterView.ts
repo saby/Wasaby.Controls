@@ -97,7 +97,7 @@
  *
  * MyModule/detailPanelTemplate.wml
  * <pre>
- *    <Controls.filterPopup:DetailPanel>
+ *    <Controls.filterPopup:DetailPanel items="{{items}}">
  *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
  *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
  *    </Controls.filterPopup:DetailPanel>
