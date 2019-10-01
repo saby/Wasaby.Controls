@@ -1256,9 +1256,9 @@ var _private = {
         }
     },
 
-    setHasMoreData(model, isHidden: boolean) {
-        if (model && model.setHasMoreData) {
-            model.setHasMoreData(isHidden);
+    setHasMoreData(model, hasMoreData: boolean) {
+        if (model) {
+            model.setHasMoreData(hasMoreData);
         }
     }
 

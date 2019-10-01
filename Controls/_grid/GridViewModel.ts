@@ -597,7 +597,6 @@ var
 
         _eventHandlersForPartialSupport: {},
         _cachaedHeaderColumns: null,
-        _hasMoreData: false,
 
         constructor: function(cfg) {
             this._options = cfg;
@@ -952,7 +951,7 @@ var
         // -----------------------------------------------------------
 
         getResultsPosition: function() {
-            if (this.isDrawResults()) {
+            if (this.isDrawResults() || this._model.getHasMoreData()) {
                 if (this._options.results) {
                     return this._options.results.position;
                 }
@@ -960,13 +959,10 @@ var
             }
         },
 
-        setHasMoreData: function(value: boolean) {
-            this._hasMoreData = value;
+        setHasMoreData: function(hasMore: boolean) {
+            this._model.setHasMoreData(hasMore);
         },
 
-        getHasMoreData: function() {
-            return this._hasMoreData;
-        },
 
         isDrawResults: function() {
             const items = this.getItems();

@@ -6,6 +6,7 @@ define([
    'Types/collection',
    'Controls/list',
    'Controls/treeGrid',
+   'Controls/grid',
    'Controls/Utils/Toolbar',
    'Core/Deferred',
    'Core/core-instance',
@@ -13,7 +14,7 @@ define([
    'Core/core-clone',
    'Types/entity',
    'Core/polyfill/PromiseAPIDeferred'
-], function(sourceLib, collection, lists, treeGrid, tUtil, cDeferred, cInstance, Env, clone, entity) {
+], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
       beforeEach(function() {
@@ -203,6 +204,94 @@ define([
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(sortingASC, 'test'), emptySorting);
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(multiSorting, 'test', 'single'), sortingDESC);
       });
+
+      it('setHasMoreData', async function() {
+         var gridColumns = [
+            {
+               displayProperty: 'title',
+               width: '1fr',
+               valign: 'top',
+               style: 'default',
+               textOverflow: 'ellipsis'
+            },
+            {
+               displayProperty: 'price',
+               width: 'auto',
+               align: 'right',
+               valign: 'bottom',
+               style: 'default'
+            },
+            {
+               displayProperty: 'balance',
+               width: 'auto',
+               align: 'right',
+               valign: 'middle',
+               style: 'default'
+            }
+         ];
+         var gridData = [
+            {
+               'id': '123',
+               'title': 'Хлеб',
+               'price': 50,
+               'balance': 15
+            },
+         ];
+         var cfg = {
+            viewName: 'Controls/Grid/GridView',
+            source: new sourceLib.Memory({
+               idProperty: 'id',
+               data: gridData,
+            }),
+            displayProperty: 'title',
+            columns: gridColumns,
+            resultsPosition: 'top',
+            keyProperty: 'id',
+            navigation: {
+               view: 'infinity'
+            },
+            virtualScrolling: true,
+            viewModelConstructor: grid.GridViewModel,
+         };
+         var ctrl = new lists.BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         assert.equal(undefined, ctrl.getViewModel().getResultsPosition());
+         ctrl.getViewModel().setHasMoreData(true);
+         assert.equal('top', ctrl.getViewModel().getResultsPosition());
+         ctrl.getViewModel().setHasMoreData(false);
+         assert.equal(undefined, ctrl.getViewModel().getResultsPosition());
+
+         var newCgf = {
+            viewName: 'Controls/List/ListView',
+            source: new sourceLib.Memory({
+               idProperty: 'id',
+               data: gridData,
+            }),
+            viewModelConstructor: treeGrid.TreeGridViewModel,
+            displayProperty: 'title',
+            columns: gridColumns,
+            resultsPosition: 'top',
+            keyProperty: 'id',
+            navigation: {
+               view: 'infinity'
+            },
+            virtualScrolling: true,
+         };
+
+         var newCtrl = new lists.BaseControl(newCgf);
+         newCtrl.saveOptions(newCgf);
+         await newCtrl._beforeMount(newCgf);
+         assert.equal(undefined, newCtrl.getViewModel().getResultsPosition());
+         newCtrl.getViewModel().setHasMoreData(true);
+         assert.equal('top', newCtrl.getViewModel().getResultsPosition());
+         newCtrl.getViewModel().setHasMoreData(false);
+         assert.equal(undefined, newCtrl.getViewModel().getResultsPosition());
+
+         newCtrl._sourceController.hasMoreData = () => true;
+         await newCtrl.reload();
+         assert.equal('top', newCtrl.getViewModel().getResultsPosition());
+      })
 
 
       it('errback to callback', function() {
