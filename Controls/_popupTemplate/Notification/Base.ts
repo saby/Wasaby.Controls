@@ -1,6 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popupTemplate/Notification/Base/Base');
-import 'css!theme?Controls/popupTemplate';
 import {default as INotification, INotificationOptions} from './interface/INotification';
 import {INotificationSimpleOptions} from "./Simple";
 
