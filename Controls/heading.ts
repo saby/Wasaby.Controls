@@ -24,14 +24,7 @@
  * @author Крайнов Д.О.
  */
 
-import {default as Title} from './_heading/Heading';
-import Back = require('Controls/_heading/Back');
-import {default as Separator} from './_heading/Separator';
-import {default as Counter} from './_heading/Counter';
-
-export {
-    Title,
-    Back,
-    Separator,
-    Counter
-};
+export {default as Title} from './_heading/Heading';
+export {default as Back} from './_heading/Back';
+export {default as Separator} from './_heading/Separator';
+export {default as Counter} from './_heading/Counter';
