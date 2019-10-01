@@ -1339,6 +1339,26 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isFalse(newGridModel.isDrawResults())
          });
 
+         it('getResultsPosition with setHasMoreData', function() {
+           var newGrid = new gridMod.GridViewModel({
+              keyProperty: 'id',
+              displayProperty: 'title',
+              header: gridHeader,
+              columns: gridColumns,
+              items: new collection.RecordSet({
+                 rawData: gridData.slice(0, 1),
+                 idProperty: 'id'
+              }),
+              resultsPosition: 'top'
+           })
+
+            assert.equal(undefined, newGrid.getResultsPosition());
+            newGrid.setHasMoreData(true);
+            assert.equal('top', newGrid.getResultsPosition());
+            newGrid.setHasMoreData(false);
+            assert.equal(undefined, newGrid.getResultsPosition());
+         });
+
          it('is multiheader', function() {
 
             let gridViewModel = new gridMod.GridViewModel(cfg);

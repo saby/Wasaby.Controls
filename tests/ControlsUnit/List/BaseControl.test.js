@@ -257,40 +257,10 @@ define([
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          assert.equal(undefined, ctrl.getViewModel().getResultsPosition());
-         ctrl.getViewModel().setHasMoreData(true);
+
+         ctrl._sourceController.hasMoreData = () => true;
+         await ctrl.reload();
          assert.equal('top', ctrl.getViewModel().getResultsPosition());
-         ctrl.getViewModel().setHasMoreData(false);
-         assert.equal(undefined, ctrl.getViewModel().getResultsPosition());
-
-         var newCgf = {
-            viewName: 'Controls/List/ListView',
-            source: new sourceLib.Memory({
-               idProperty: 'id',
-               data: gridData,
-            }),
-            viewModelConstructor: treeGrid.TreeGridViewModel,
-            displayProperty: 'title',
-            columns: gridColumns,
-            resultsPosition: 'top',
-            keyProperty: 'id',
-            navigation: {
-               view: 'infinity'
-            },
-            virtualScrolling: true,
-         };
-
-         var newCtrl = new lists.BaseControl(newCgf);
-         newCtrl.saveOptions(newCgf);
-         await newCtrl._beforeMount(newCgf);
-         assert.equal(undefined, newCtrl.getViewModel().getResultsPosition());
-         newCtrl.getViewModel().setHasMoreData(true);
-         assert.equal('top', newCtrl.getViewModel().getResultsPosition());
-         newCtrl.getViewModel().setHasMoreData(false);
-         assert.equal(undefined, newCtrl.getViewModel().getResultsPosition());
-
-         newCtrl._sourceController.hasMoreData = () => true;
-         await newCtrl.reload();
-         assert.equal('top', newCtrl.getViewModel().getResultsPosition());
       })
 
 

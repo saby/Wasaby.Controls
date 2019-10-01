@@ -951,7 +951,7 @@ var
         // -----------------------------------------------------------
 
         getResultsPosition: function() {
-            if (this.isDrawResults() || this._model.getHasMoreData()) {
+            if (this.isDrawResults()) {
                 if (this._options.results) {
                     return this._options.results.position;
                 }
@@ -963,10 +963,13 @@ var
             this._model.setHasMoreData(hasMore);
         },
 
+        getHasMoreData: function() {
+          return this._model.getHasMoreData();
+        },
 
         isDrawResults: function() {
             const items = this.getItems();
-            return items && items.getCount() > 1;
+            return this.getHasMoreData() || items && items.getCount() > 1;
         },
 
         setResultsPosition: function(position) {

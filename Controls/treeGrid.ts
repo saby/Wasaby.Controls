@@ -20,7 +20,6 @@ import SearchGridViewModel = require('Controls/_treeGrid/SearchView/SearchGridVi
 import SearchView = require('Controls/_treeGrid/SearchView');
 import TreeGridView = require('Controls/_treeGrid/TreeGridView/TreeGridView');
 import RowEditor = require('wml!Controls/_treeGrid/TreeGrid/RowEditor');
-import TreeGridViewModel = require('Controls/_treeGrid/TreeGridView/TreeGridViewModel');
 
 export {
     View,
@@ -32,6 +31,5 @@ export {
     SearchGridViewModel,
     SearchView,
     TreeGridView,
-    TreeGridViewModel,
     RowEditor
 };

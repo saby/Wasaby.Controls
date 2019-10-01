@@ -162,7 +162,7 @@ var _private = {
                     if (isActive === true) {
                         self._children.listView.activate();
                     }
-                    if (self._sourceController && self._sourceController.hasMoreData) {
+                    if (self._sourceController) {
                         _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
                     }
                 }
@@ -404,9 +404,7 @@ var _private = {
             if (self._options.beforeLoadToDirectionCallback) {
                 self._options.beforeLoadToDirectionCallback(filter, self._options);
             }
-            if (self._sourceController.hasMoreData) {
-                _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
-            }
+            _private.setHasMoreData(self._listViewModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
             return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
                 //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 //до реализации функционала и проблемы из новости делаем решение по месту:

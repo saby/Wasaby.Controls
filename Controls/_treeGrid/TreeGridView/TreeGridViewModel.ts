@@ -137,7 +137,7 @@ var
             var items = this.getDisplay();
             if (items) {
                 var rootItems = this._model.getHierarchyRelation().getChildren(items.getRoot().getContents(), this.getItems());
-                return rootItems && rootItems.length > 1;
+                return this.getHasMoreData() || rootItems && rootItems.length > 1;
             }
         },
         getItemDataByItem: function(dispItem) {
