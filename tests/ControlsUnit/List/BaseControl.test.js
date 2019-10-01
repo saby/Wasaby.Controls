@@ -1441,6 +1441,7 @@ define([
       it('_onViewPortResize, viewResize, setLoadOffset, updateLoadOffset', function() {
          let bc = new lists.BaseControl();
          bc._needScrollCalculation = true;
+         bc._viewSize = 800;
          bc._loadOffset = {top: 100, bottom: 100};
          bc._children = triggers;
          bc._container = {
@@ -1459,6 +1460,10 @@ define([
          bc._setLoadOffset(100, 100);
          assert.deepEqual(bc._loadOffset, {top: 160, bottom: 160});
 
+         bc.__error = false;
+         bc._viewSize = 0;
+         bc._onViewPortResize(bc, 0);
+         assert.deepEqual(bc._loadOffset, {top: 0, bottom: 0});
       });
 
       it('scrollHide/scrollShow base control state', function() {
