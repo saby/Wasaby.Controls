@@ -701,7 +701,9 @@ var Base = Control.extend({
     _keyDownHandler: function (e) {
         const processedKeys: number[] = [
             Env.constants.key.end,
-            Env.constants.key.home
+            Env.constants.key.home,
+            Env.constants.key.left,
+            Env.constants.key.right
         ];
 
         /*
