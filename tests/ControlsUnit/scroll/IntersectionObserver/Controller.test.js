@@ -76,6 +76,22 @@ define([
             );
             sandbox.restore();
          });
+
+         it('should not generate "intersect" event on handle unregistered container', function() {
+            const
+               sandbox = sinon.createSandbox(),
+               component = calendarTestUtils.createComponent(scroll.IntersectionObserverController, options),
+               element = 'element',
+               entry = { target: element, entryData: 'data' };
+
+            sandbox.stub(component, '_createObserver').returns({
+               observe: sinon.fake()
+            });
+            sandbox.stub(component, '_notify');
+            component._intersectionObserverHandler([entry]);
+            sinon.assert.notCalled(component._notify);
+            sandbox.restore();
+         });
       });
 
    });
