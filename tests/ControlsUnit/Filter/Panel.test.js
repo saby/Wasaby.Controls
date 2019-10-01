@@ -325,73 +325,92 @@ define(
             assert.equal(self._historyId, 'testId');
          });
 
-         it('filterHistoryItems', function() {
-            let self = {
-               _items: [
-                  {
-                     id: 'Methods',
-                     value: '123',
-                     resetValue: '',
-                     visibility: true,
-                     textValue: null
-                  },
-                  {
-                     id: 'Faces',
-                     value: true,
-                     resetValue: false,
-                     visibility: false
-                  }
-               ]
-            };
-            let historyItems = new collection.RecordSet({
-               rawData: [
-				  {
-					 ObjectData: null
-				  },
-                  {
-                     ObjectData: JSON.stringify([
-                        {
-                           id: 'Methods',
-                           value: '',
-                           resetValue: '',
-                           visibility: true,
-                           textValue: '123'
-                        },
-                        {
-                           id: 'Faces',
-                           value: true,
-                           resetValue: true,
-                           visibility: false
-                        }
-                     ])
-                  },
-		          {
-					 ObjectData: null
-				  },
-                  {
-                     ObjectData: JSON.stringify([
-                        {
-                           id: 'Methods',
-                           value: '1234',
-                           resetValue: '',
-                           visibility: true,
-                           textValue: '123'
-                        },
-                        {
-                           id: 'Faces',
-                           value: true,
-                           resetValue: true,
-                           visibility: false
-                        }
-                     ])
-                  },
-		          {
-					 ObjectData: null
-				  }
-               ]
+         describe('Check history', function() {
+            let self, historyItems;
+            beforeEach(function() {
+               self = {
+                  _items: [
+                     {
+                        id: 'Methods',
+                        value: '123',
+                        resetValue: '',
+                        visibility: true,
+                        textValue: null
+                     },
+                     {
+                        id: 'Faces',
+                        value: true,
+                        resetValue: false,
+                        visibility: false
+                     }
+                  ]
+               };
+               historyItems = new collection.RecordSet({
+                  rawData: [
+                     { ObjectData: null },
+                     { ObjectData: JSON.stringify([
+                           {
+                              id: 'Methods',
+                              value: '',
+                              resetValue: '',
+                              visibility: true,
+                              textValue: '123'
+                           },
+                           {
+                              id: 'Faces',
+                              value: true,
+                              resetValue: true,
+                              visibility: false
+                           }
+                        ])
+                     },
+                     { ObjectData: null },
+                     { ObjectData: JSON.stringify([
+                           {
+                              id: 'Methods',
+                              value: '1234',
+                              resetValue: '',
+                              visibility: true,
+                              textValue: '123'
+                           },
+                           {
+                              id: 'Faces',
+                              value: true,
+                              resetValue: true,
+                              visibility: false
+                           }
+                        ])
+                     },
+                     { ObjectData: null },
+                     { ObjectData: JSON.stringify([
+                           {
+                              id: 'Methods',
+                              value: '1234',
+                              resetValue: '',
+                              textValue: ''
+                           },
+                           {
+                              id: 'Faces',
+                              value: true,
+                              resetValue: true
+                           }
+                        ])
+                     }
+                  ]
+               });
             });
 
-            assert.equal(filterPopup.DetailPanel._private.filterHistoryItems(self, historyItems).getCount(), 1);
+            it('filterHistoryItems', function() {
+               assert.equal(filterPopup.DetailPanel._private.filterHistoryItems(self, historyItems).getCount(), 1);
+            });
+
+            it('_private:reloadHistoryItems', function() {
+               filter.HistoryUtils.getHistorySource({historyId: 'TEST_RELOAD_ITEMS_HISTORY_ID'}).getItems = () => {
+                  return historyItems;
+               };
+               filterPopup.DetailPanel._private.reloadHistoryItems(self, 'TEST_RELOAD_ITEMS_HISTORY_ID');
+               assert.equal(self._historyItems.getCount(), 1);
+            });
          });
 
          it('_private:prepareItems', function() {
