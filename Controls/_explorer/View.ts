@@ -360,6 +360,7 @@ import 'Controls/breadcrumbs';
             }
          }
          event.stopPropagation();
+         return res;
       },
       _onBreadCrumbsClick: function(event, item) {
           _private.cleanRestoredKeyObject(this, item.getId());

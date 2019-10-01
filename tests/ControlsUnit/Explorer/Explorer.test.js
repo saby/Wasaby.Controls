@@ -423,6 +423,7 @@ define([
                   if (eArgs[1] && eArgs[1].nativeEvent) {
                      isNativeClickEventExists = true;
                   }
+                  return true;
                }
             };
 
@@ -494,6 +495,7 @@ define([
 
             var
                explorer = new explorerMod.View({}),
+               isEventResultReturns = false,
                isPropagationStopped = isNotified = isNativeClickEventExists = false;
 
             explorer.saveOptions({});
@@ -518,7 +520,7 @@ define([
             };
 
 
-            explorer._onItemClick({
+            isEventResultReturns = explorer._onItemClick({
                stopPropagation: function() {
                   isPropagationStopped = true;
                }
@@ -532,6 +534,7 @@ define([
             }, {
                nativeEvent: 123
             });
+            assert.isTrue(isEventResultReturns);
             assert.deepEqual({
                ...explorer._restoredMarkedKeys,
                itemId: {
