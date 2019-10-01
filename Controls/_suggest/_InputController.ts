@@ -37,9 +37,6 @@ var _private = {
    isEmptyData: function(searchResult) {
       return !(searchResult && searchResult.data.getCount());
    },
-   shouldShowFooter: function(self, searchResult) {
-      return (_private.hasMore(searchResult) || _private.isEmptyData(searchResult)) && self._options.footerTemplate;
-   },
    suggestStateNotify: function(self, state) {
       if (self._options.suggestState !== state) {
          self._notify('suggestStateChanged', [state]);
@@ -188,8 +185,6 @@ var _private = {
       }
       if (!_private.shouldShowSuggest(self, resultData)) {
          _private.close(self);
-      } else {
-         self._isFooterShown = _private.shouldShowFooter(self, resultData);
       }
    },
    prepareFilter: function(self, filter, searchValue, tabId, historyKeys) {

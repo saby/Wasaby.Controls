@@ -79,14 +79,6 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.isFalse(suggestMod._InputController._private.hasMore(getSearchResult(false)));
       });
 
-      it('Suggest::_private.shouldShowFooter', function () {
-         var self = getComponentObject();
-         self._options.footerTemplate = 'anyTemplate';
-         assert.isTrue(!!suggestMod._InputController._private.shouldShowFooter(self, getSearchResult(true)));
-         assert.isFalse(!!suggestMod._InputController._private.shouldShowFooter(self, getSearchResult(false, 1)));
-         assert.isTrue(!!suggestMod._InputController._private.shouldShowFooter(self, getSearchResult(false, 0)));
-      });
-
       it('Suggest::_private.suggestStateNotify', function () {
          var self = getComponentObject();
          var stateNotifyed = false;
