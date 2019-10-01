@@ -66,6 +66,7 @@
  * @property {String|Number} emptyKey Первичный ключ для пункта выпадающего списка, который создаётся при установке опции emptyText.
  * @property {EditorOptions} editorOptions Опции для редактора.
  * @property {FilterViewMode} viewMode Режим отображения фильтра.
+ * @property {Boolean} visibility Отображение параметра фильтрации в блоке "Еще можно отобрать". По умолчанию (visibility=true) параметры отображаются в основном блоке фильтра.
  */
 
 /*
