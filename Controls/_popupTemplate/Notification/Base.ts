@@ -60,6 +60,7 @@ class Notification extends Control<INotificationBaseOptions> implements INotific
             closeButtonVisibility: true
         };
     }
+    static _theme: string[] = ['Controls/popupTemplate'];
 }
 
 export default Notification;
