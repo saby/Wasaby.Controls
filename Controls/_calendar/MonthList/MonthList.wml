@@ -1,4 +1,7 @@
-<Controls.scroll:IntersectionObserverController on:intersect="_intersectHandler()" threshold="{{[0, 0.01, 0.99, 1]}}">
+<Controls.scroll:IntersectionObserverController
+      threshold="{{[0, 0.01, 0.99, 1]}}"
+      observerName="monthList"
+      on:intersect="_intersectHandler()">
    <Controls.scroll:Container
       name="scroll"
       attr:class="MonthList-ScrollContainer"
@@ -26,7 +29,9 @@
                         highlightOnHover="{{false}}"
                         attr:class="controls-MonthList__item">
                <ws:contentTemplate>
-                  <Controls.scroll:IntersectionObserverContainer data="{{ itemTemplate.itemData.item.getRawData() }}">
+                  <Controls.scroll:IntersectionObserverContainer
+                        observerName="monthList"
+                        data="{{ itemTemplate.itemData.item.getRawData() }}">
                      <ws:partial
                            template="{{_getTemplate(itemTemplate.itemData.item)}}"
                            date="{{itemTemplate.itemData.item.date}}"

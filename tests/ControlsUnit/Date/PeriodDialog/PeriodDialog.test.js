@@ -3,6 +3,7 @@ define([
    'Core/Deferred',
    'Types/formatter',
    'Controls/datePopup',
+   'Controls/scroll',
    'Controls/Utils/Date',
    'ControlsUnit/Calendar/Utils'
 ], function(
@@ -10,6 +11,7 @@ define([
    Deferred,
    formatter,
    PeriodDialog,
+   scroll,
    dateUtils,
    calendarTestUtils
 ) {
@@ -480,6 +482,35 @@ define([
          it('should not generate exceptions if there is no end value field.', function() {
             const component = calendarTestUtils.createComponent(PeriodDialog, {});
             component._startValueFieldKeyUpHandler(null);
+         });
+      });
+
+      describe('_currentDayIntersectHandler', function() {
+         [{
+            ratio: 0,
+            homeButtonVisible: true
+         }, {
+            ratio: 0.5,
+            homeButtonVisible: false
+         }, {
+            ratio: 1,
+            homeButtonVisible: false
+         }].forEach(function(test) {
+            it(`should set homeButtonVisible to ${test.homeButtonVisible} if ratio is equal ${test.ratio}.`, function() {
+               const
+                  component = calendarTestUtils.createComponent(PeriodDialog, {}),
+                  entries = [
+                     {},
+                     new scroll.IntersectionObserverSyntheticEntry({ intersectionRatio: test.ratio }, {})
+                  ];
+               component._currentDayIntersectHandler(null, entries);
+
+               if (test.homeButtonVisible) {
+                  assert.isTrue(component._homeButtonVisible);
+               } else {
+                  assert.isFalse(component._homeButtonVisible);
+               }
+            });
          });
       });
    });

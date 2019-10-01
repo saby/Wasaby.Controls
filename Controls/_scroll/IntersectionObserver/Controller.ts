@@ -6,6 +6,7 @@ import template = require('wml!Controls/_scroll/IntersectionObserver/Controller'
 import {descriptor} from "Types/entity";
 
 export interface IIntersectionObserverControllerOptions extends IControlOptions {
+   observerName: string;
    threshold: number[];
 }
 
@@ -16,6 +17,11 @@ export interface IIntersectionObserverControllerOptions extends IControlOptions 
  * @control
  * @author Красильников А.С.
  * @see Controls/_scroll/IntersectionObserver/Container
+ */
+
+/**
+ * @name Controls/_scroll/IntersectionObserver/Controller#observerName
+ * @cfg {String} Контроллер следит только за элементами с таким же именем.
  */
 
 /**
@@ -35,13 +41,15 @@ class  ModuleComponent extends Control<IIntersectionObserverControllerOptions> {
    protected _observer: IntersectionObserver;
    protected _items: object = {};
 
-   private _registerHandler(event: SyntheticEvent, instId: string, element: HTMLElement, data: object): void {
-      this._items[instId] = {
-         instId,
-         element,
-         data
-      };
-      this._observe(element);
+   private _registerHandler(event: SyntheticEvent, instId: string, observerName: string, element: HTMLElement, data: object): void {
+      if (observerName === this._options.observerName) {
+         this._items[instId] = {
+            instId,
+            element,
+            data
+         };
+         this._observe(element);
+      }
    }
 
    private _unregisterHandler(event: SyntheticEvent, instId: string): void {

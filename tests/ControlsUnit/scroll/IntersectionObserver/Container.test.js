@@ -10,7 +10,8 @@ define([
    'use strict';
 
    const options = {
-      data: 'some data'
+      data: 'some data',
+      observerName: 'observerName'
    };
 
    describe('Controls/scroll:IntersectionObserverContainer', function() {
@@ -26,7 +27,7 @@ define([
             sinon.assert.calledWith(
                component._notify,
                'intersectionObserverRegister',
-               [component.getInstanceId(), component._container, options.data],
+               [component.getInstanceId(), options.observerName, component._container, options.data],
                { bubbling: true }
             );
             sandbox.restore();
