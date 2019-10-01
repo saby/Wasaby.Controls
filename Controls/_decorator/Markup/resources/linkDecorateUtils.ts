@@ -44,6 +44,9 @@ const endingPattern = '([^.,:\\s()])';
 const characterRegExp = /[\wа-яёА-ЯЁ]/;
 const linkParseRegExp = new RegExp(`(?:(?:${emailPattern}|${linkPattern})${endingPattern})|(.+?)`, 'g');
 
+const needDecorateParentNodeSet: Set<Array<any[]|string>> = new Set();
+let stringReplacersArray: Array<any[]|string> = [];
+
 function isAttributes(value) {
    return typeof value === 'object' && !Array.isArray(value);
 }
@@ -245,17 +248,68 @@ export function needDecorate(jsonNode, parentNode) {
       return false;
    }
 
-   // Decorate tag "a" only.
-   if (getTagName(jsonNode) !== 'a') {
-      return false;
-   }
-
    // Decorate link right inside paragraph.
    if (!paragraphTagNameRegExp.test(getTagName(parentNode))) {
+      if (isTextNode(jsonNode)) {
+          stringReplacersArray.unshift(wrapLinksInString(jsonNode, parentNode));
+          return true;
+      }
       return false;
    }
 
-   // Link have already been checked, just return result.
+    // такая проверка, потому что первым ребёнком может оказаться строка, и проверка на === может ошибиться.
+    const isFirstChild = !needDecorateParentNodeSet.has(parentNode);
+    needDecorateParentNodeSet.add(parentNode);
+
+   if (isFirstChild) {
+      // Check all links in parentNode from the end to current, set attribute '__needDecorate' for all of them.
+      // Set it true if two conditions are met:
+      // 1. Link is good for decorating.
+      // 2. Between link and the end of paragraph there are only spaces and other good for decorating links.
+      let canBeDecorated = true;
+      const firstChildIndex = isAttributes(parentNode[1]) ? 2 : 1;
+      const localStringReplacersArray: Array<any[] | string> = [];
+      for (let i = parentNode.length - 1; i >= firstChildIndex; --i) {
+         const nodeToCheck = parentNode[i];
+         if (isTextNode(nodeToCheck)) {
+            let stringReplacer: any[] | string = wrapLinksInString(nodeToCheck, parentNode);
+            localStringReplacersArray.unshift(stringReplacer);
+            if (Array.isArray(stringReplacer) && canBeDecorated) {
+               for (let j = stringReplacer.length - 1; j > 0; --j) {
+                  let subNode = stringReplacer[j];
+                  if (isTextNode(subNode)) {
+                     canBeDecorated = (canBeDecorated && onlySpacesRegExp.test(subNode)) ||
+                        startsWIthNewlineRegExp.test(subNode);
+                  } else {
+                     canBeDecorated = canBeDecorated && isLinkGoodForDecorating(subNode);
+                     if (canBeDecorated) {
+                        stringReplacer[j] = getDecoratedLink(subNode);
+                     }
+                  }
+               }
+            } else {
+               canBeDecorated = (canBeDecorated && onlySpacesRegExp.test(nodeToCheck)) ||
+                  startsWIthNewlineRegExp.test(nodeToCheck);
+            }
+            continue;
+         }
+         const tagName = getTagName(nodeToCheck);
+         if (tagName === 'a') {
+            const attributes = getAttributes(nodeToCheck);
+            canBeDecorated = canBeDecorated && isLinkGoodForDecorating(nodeToCheck);
+            attributes[fakeNeedDecorateAttribute] = canBeDecorated;
+         } else {
+            // Tag br is the end of paragraph.
+            canBeDecorated = tagName === 'br';
+         }
+      }
+      stringReplacersArray = stringReplacersArray.concat(localStringReplacersArray);
+   }
+
+   if (isTextNode(jsonNode)) {
+      return true;
+   }
+
    const attributes = getAttributes(jsonNode);
    if (attributes.hasOwnProperty(fakeNeedDecorateAttribute)) {
       const result = attributes[fakeNeedDecorateAttribute];
@@ -263,31 +317,7 @@ export function needDecorate(jsonNode, parentNode) {
       return result;
    }
 
-   // Check all links in parentNode from the end to current, set attribute '__needDecorate' for all of them.
-   // Set it true if two conditions are met:
-   // 1. Link is good for decorating.
-   // 2. Between link and the end of paragraph there are only spaces and other good for decorating links.
-   let canBeDecorated = true;
-   for (let i = parentNode.length - 1; parentNode[i] !== jsonNode; --i) {
-      const nodeToCheck = parentNode[i];
-      if (isTextNode(nodeToCheck)) {
-         canBeDecorated = (canBeDecorated && onlySpacesRegExp.test(nodeToCheck)) ||
-             startsWIthNewlineRegExp.test(nodeToCheck);
-         continue;
-      }
-      const tagName = getTagName(nodeToCheck);
-      if (tagName === 'a') {
-         const attributes = getAttributes(nodeToCheck);
-         canBeDecorated = canBeDecorated && isLinkGoodForDecorating(nodeToCheck);
-         attributes[fakeNeedDecorateAttribute] = canBeDecorated;
-      } else {
-         // Tag br is the end of paragraph.
-         canBeDecorated = tagName === 'br';
-      }
-   }
-
-   // The last checked link is current jsonNode.
-   return canBeDecorated && isLinkGoodForDecorating(jsonNode);
+   return false;
 }
 
 /**
@@ -303,8 +333,12 @@ export function needDecorate(jsonNode, parentNode) {
  * @param linkNode {JsonML}
  * @returns {JsonML}
  */
-export function getDecoratedLink(linkNode) {
-   const linkAttributes = getAttributes(linkNode);
+export function getDecoratedLink(jsonNode): any[]|string {
+   if (isTextNode(jsonNode)) {
+      return stringReplacersArray.shift();
+   }
+
+   const linkAttributes = getAttributes(jsonNode);
    const newLinkAttributes = objectMerge({}, linkAttributes, { clone: true });
    const decoratedLinkClasses = getClasses();
 
@@ -338,7 +372,7 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
     let result: any[]|string = [];
     let hasAnyLink: boolean = false;
     result.push([]);
-    if (parentNode[0] === 'a') {
+    if (getTagName(parentNode) === 'a') {
         // Не нужно оборачивать ссылки внутри тега "a".
         result = stringNode;
     } else {
@@ -383,4 +417,9 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
         }
     }
     return hasAnyLink ? result : stringNode;
+}
+
+export function clearNeedDecorateGlobals() {
+    needDecorateParentNodeSet.clear();
+    stringReplacersArray = [];
 }

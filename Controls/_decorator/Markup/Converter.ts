@@ -131,7 +131,7 @@ import { IoC } from 'Env/Env';
     * @param resolverParams {Object} exactly like in {@link Controls/_decorator/Markup#resolverParams}.
     * @returns {String}
     */
-   var jsonToHtml = function(json, tagResolver, resolverParams) {
+   var jsonToHtml = function(json, tagResolver?, resolverParams?) {
       var result = template({
          _options: {
             value: json,

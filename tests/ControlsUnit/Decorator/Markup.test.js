@@ -136,8 +136,8 @@ define([
          });
       }
 
-      function equalsHtml(html1, html2) {
-         assert.equal(sortAttrs(html1), sortAttrs(html2));
+      function equalsHtml(html1, html2, message) {
+         assert.equal(sortAttrs(html1), sortAttrs(html2), message);
       }
 
    describe('Controls.Decorator.Markup.Converter', function() {
@@ -612,21 +612,25 @@ define([
                ['p', ['a', { href: longLink }, longLink]],
                ['p', ['a', { href: 'https://ya.ru' }, 'text']]
             ];
-            var html = '<div>' +
-               '<p>' + decoratedLinkHtml + '</p>' +
-               '<pre>' + decoratedLinkHtml + '</pre>' +
-               '<div>' + decoratedLinkHtml + '</div>' +
-               '<p>' + decoratedLinkHtml + '&nbsp;&nbsp;   </p>' +
-               '<p>' + decoratedLinkHtml + '   ' + decoratedLinkHtml + '</p>' +
-               '<p>' + linkHtml + 'text </p>' +
-               '<p>' + decoratedLinkHtml + '<br />text</p>' +
-               '<p>' + decoratedLinkHtml + '   <br />text</p>' +
-               '<p><strong>' + linkHtml + '</strong>text</p>' +
-               '<p><span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer noopener" href="https:\\\\ya.ru\\som&quot;e" target="_blank"><img class="LinkDecorator__image" alt="https:\\\\ya.ru\\som&quot;e" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6XFxcXHlhLnJ1XFxzb21cImUifQ%3D%3D&amp;id=0&amp;srv=1" /></a></span></p>' +
-               '<p><a href="' + longLink + '">' + longLink + '</a></p>' +
-               '<p><a href="https://ya.ru">text</a></p>' +
-            '</div>';
-            equalsHtml(decorator.Converter.jsonToHtml(json, decorator.linkDecorate), html);
+            var htmlArray = [
+               '<p>' + decoratedLinkHtml + '</p>',
+               '<pre>' + decoratedLinkHtml + '</pre>',
+               '<div>' + decoratedLinkHtml + '</div>',
+               '<p>' + decoratedLinkHtml + '&nbsp;&nbsp;   </p>',
+               '<p>' + decoratedLinkHtml + '   ' + decoratedLinkHtml + '</p>',
+               '<p>' + linkHtml + 'text </p>',
+               '<p>' + decoratedLinkHtml + '<br />text</p>',
+               '<p>' + decoratedLinkHtml + '   <br />text</p>',
+               '<p><strong>' + linkHtml + '</strong>text</p>',
+               '<p><span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer noopener" href="https:\\\\ya.ru\\som&quot;e" target="_blank"><img class="LinkDecorator__image" alt="https:\\\\ya.ru\\som&quot;e" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6XFxcXHlhLnJ1XFxzb21cImUifQ%3D%3D&amp;id=0&amp;srv=1" /></a></span></p>',
+               '<p><a href="' + longLink + '">' + longLink + '</a></p>',
+               '<p><a href="https://ya.ru">text</a></p>'
+            ];
+            for (var i = 0; i < json.length; ++i) {
+               var checkHtml = decorator.Converter.jsonToHtml(json[i], decorator.linkDecorate);
+               var goodHtml = '<div>' + htmlArray[i] + '</div>';
+               equalsHtml(checkHtml, goodHtml, 'fail in index ' + i);
+            }
          });
          it('with highlight resolver', function() {
             var json = [
@@ -995,6 +999,7 @@ define([
          beforeEach(function() {
             decoratedLinkService = Env.constants.decoratedLinkService;
             Env.constants.decoratedLinkService = '/test/';
+            linkDecorateUtils.clearNeedDecorateGlobals();
          });
          afterEach(function() {
             Env.constants.decoratedLinkService = decoratedLinkService;
@@ -1209,6 +1214,7 @@ define([
             var i,
                parentNode = ['p',
                   ['a', { href: 'http://a' }, 'http://a'],
+                  ' https://ya.ru ',
                   ['a', { href: 'http://a' }, 'http://a'],
                   ' ',
                   ['a', { href: 'http://a' }, 'http://a'],
@@ -1222,14 +1228,28 @@ define([
                expectedNeedDecorate = [undefined,
                   true,
                   true,
-                  false,
+                  true,
+                  true,
+                  true,
+                  true,
                   true,
                   false,
                   true,
-                  false,
                   true,
-                  false,
                   true
+               ],
+               expectedFromStringArray = [
+                  [[],
+                     ' ',
+                     ['span',
+                        { 'class': 'LinkDecorator__wrap' },
+                        decoratedLinkFirstChildNode
+                     ],
+                     ' '
+                  ],
+                  ' ',
+                  '   ' + nbsp + '\t',
+                  '      ',
                ],
                checkNeedDecorate;
 
@@ -1237,6 +1257,12 @@ define([
                checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
                assert.equal(checkNeedDecorate, expectedNeedDecorate[i], `fail in needDecorate[${i}]`);
             }
+            while (expectedFromStringArray.length) {
+               var checkFromString = linkDecorateUtils.getDecoratedLink('');
+               var expectedFromString = expectedFromStringArray.shift();
+               assert.deepEqual(checkFromString, expectedFromString);
+            }
+            assert.notOk(linkDecorateUtils.getDecoratedLink(''));
          });
          it('br tag as end of paragraph', function() {
             var i,
@@ -1245,14 +1271,21 @@ define([
                   ['a', { href: 'http://a' }, 'http://a'],
                   ['br'],
                   ['a', { href: 'http://a' }, 'http://a'],
-                  'some text'
+                  'some www.ya.ru link'
                ],
                expectedNeedDecorate = [undefined,
                   true,
                   true,
                   false,
                   false,
-                  false
+                  true
+               ],
+               expectedFromStringArray = [
+                  [[],
+                     'some ',
+                     wwwLinkNode,
+                     ' link'
+                  ]
                ],
                checkNeedDecorate;
 
@@ -1260,6 +1293,12 @@ define([
                checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
                assert.equal(checkNeedDecorate, expectedNeedDecorate[i], `fail in needDecorate[${i}]`);
             }
+            while (expectedFromStringArray.length) {
+               var checkFromString = linkDecorateUtils.getDecoratedLink('');
+               var expectedFromString = expectedFromStringArray.shift();
+               assert.deepEqual(checkFromString, expectedFromString);
+            }
+            assert.notOk(linkDecorateUtils.getDecoratedLink(''));
          });
 
          it('string with "\\n" in the beginning as end of paragraph', function() {
@@ -1277,12 +1316,17 @@ define([
                expectedNeedDecorate = [undefined,
                   true,
                   true,
-                  false,
+                  true,
+                  true,
                   true,
                   true,
                   false,
-                  false,
-                  false
+                  true
+               ],
+               expectedFromStringArray = [
+                  '\nsome text\n',
+                  '        \nsome text\n',
+                  'some text'
                ],
                checkNeedDecorate;
 
@@ -1290,6 +1334,12 @@ define([
                checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
                assert.equal(checkNeedDecorate, expectedNeedDecorate[i], `fail in needDecorate[${i}]`);
             }
+            while (expectedFromStringArray.length) {
+               var checkFromString = linkDecorateUtils.getDecoratedLink('');
+               var expectedFromString = expectedFromStringArray.shift();
+               assert.deepEqual(checkFromString, expectedFromString);
+            }
+            assert.notOk(linkDecorateUtils.getDecoratedLink(''));
          });
 
          it('two links before text and two links after', function() {
@@ -1304,9 +1354,12 @@ define([
                expectedNeedDecorate = [undefined,
                   false,
                   false,
-                  false,
+                  true,
                   true,
                   true
+               ],
+               expectedFromStringArray = [
+                  'some text'
                ],
                checkNeedDecorate;
 
@@ -1314,6 +1367,12 @@ define([
                checkNeedDecorate = linkDecorateUtils.needDecorate(parentNode[i], parentNode);
                assert.equal(checkNeedDecorate, expectedNeedDecorate[i], `fail in needDecorate[${i}]`);
             }
+            while (expectedFromStringArray.length) {
+               var checkFromString = linkDecorateUtils.getDecoratedLink('');
+               var expectedFromString = expectedFromStringArray.shift();
+               assert.deepEqual(checkFromString, expectedFromString);
+            }
+            assert.notOk(linkDecorateUtils.getDecoratedLink(''));
          });
          it('two links before tag with text and two links after', function() {
             var i,
@@ -1348,7 +1407,7 @@ define([
                ],
                expectedNeedDecorate = [undefined,
                   false,
-                  false,
+                  true,
                   false,
                   true
                ],
@@ -1367,7 +1426,7 @@ define([
                ],
                expectedNeedDecorate = [undefined,
                   true,
-                  false
+                  true
                ],
                checkNeedDecorate;
 
@@ -1433,6 +1492,7 @@ define([
          beforeEach(function() {
             decoratedLinkService = Env.constants.decoratedLinkService;
             Env.constants.decoratedLinkService = '/test/';
+            linkDecorateUtils.clearNeedDecorateGlobals();
          });
          afterEach(function() {
             Env.constants.decoratedLinkService = decoratedLinkService;
@@ -1442,6 +1502,16 @@ define([
                { 'class': 'LinkDecorator__wrap' },
                decoratedLinkFirstChildNode
             ]);
+         });
+         it('wrap link in string without decorating', function() {
+            var parentNode = ['span', 'see my link: https://ya.ru'];
+            var expectedFromString = [[],
+               'see my link: ',
+               linkNode
+            ];
+            assert.ok(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+            var checkFromString = linkDecorateUtils.getDecoratedLink(parentNode[1]);
+            assert.deepEqual(expectedFromString, checkFromString);
          });
       });
    });
