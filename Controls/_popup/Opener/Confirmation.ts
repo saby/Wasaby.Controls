@@ -31,7 +31,7 @@ export interface IPopupOptions {
 
 /**
  * @typedef {Object} popupOptions
- * @description Конфигурация окна подтверждения.
+ * @description Конфигурация окна подтверждения. Подробнее {@link Controls.popup:IConfirmation}
  * @property {String} type Тип окна подтверждения.
  * @property {String} style Внешний вид окна подтверждения.
  * @property {String} message Основной текст окна подтверждения

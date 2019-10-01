@@ -9,7 +9,6 @@
  * @includes Notification Controls/_popupTemplate/Notification/Base
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
  * @includes NotificationStyles Controls/_popupTemplate/Notification/NotificationStyles
- * @includes DialogStyles Controls/_popupTemplate/Dialog/DialogStyles
  * @includes ConfirmationStyles Controls/_popupTemplate/Confirmation/ConfirmationStyles
  * @includes CloseButtonStyles Controls/_popupTemplate/CloseButton/CloseButtonStyles
  * @public
@@ -26,7 +25,6 @@
  * @includes Notification Controls/_popupTemplate/Notification/Base
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
  * @includes NotificationStyles Controls/_popupTemplate/Notification/NotificationStyles
- * @includes DialogStyles Controls/_popupTemplate/Dialog/DialogStyles
  * @includes ConfirmationStyles Controls/_popupTemplate/Confirmation/ConfirmationStyles
  * @includes CloseButtonStyles Controls/_popupTemplate/CloseButton/CloseButtonStyles
  * @public
