@@ -10,6 +10,8 @@ import {ItemTemplate as itemTemplate} from 'Controls/dropdown';
 import {debounce} from 'Types/function';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
+import {Model} from 'Types/entity';
+import {SyntheticEvent} from 'Vdom/Vdom'
 
 //need to open subdropdowns with a delay
       //otherwise, the interface will slow down.
@@ -254,26 +256,28 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
             }
          },
 
-         _itemMouseEnter: function(event, item, hasChildren) {
+         _itemMouseEnter(event: SyntheticEvent<'mouseenter'>, item: Model, hasChildren: boolean): void {
+            const needOpenDropDown = hasChildren && !item.get('readOnly');
+            const needCloseDropDown = this._hasHierarchy && this._subDropdownItem !== item;
             // Close the already opened sub menu. Installation of new data sets new size of the container.
             // If you change the size of the update, you will see the container twitch.
-            if (this._hasHierarchy && this._subDropdownItem !== item) {
+            if (needCloseDropDown && !needOpenDropDown) {
                this._children.subDropdownOpener.close();
                this._subDropdownItem = null;
             }
 
-            if (hasChildren && !item.get('readOnly')) {
+            if (needOpenDropDown) {
                this._subDropdownItem = item;
                this._openSubDropdown(event, item);
             }
          },
 
-         _openSubDropdown: function(event, item) {
-            var config;
+         _openSubDropdown(event: SyntheticEvent<'mouseenter'>, item: Model): void {
+            let config;
 
             // _openSubDropdown is called by debounce and a function call can occur when the control is destroyed,
             // just check _children to make sure, that the control isnt destroyed
-            if (item && this._children.subDropdownOpener) {
+            if (item && this._children.subDropdownOpener && this._subDropdownItem) {
                config = _private.getSubMenuOptions(this._options, this._popupOptions, event, item);
                this._children.subDropdownOpener.open(config, this);
             }

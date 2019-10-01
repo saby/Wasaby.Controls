@@ -100,10 +100,17 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                   dropDownList._itemMouseEnter({}, items.at(4), true);
                   assert.isTrue(opened);
 
+                  dropDownList._itemMouseEnter({}, items.at(4), true);
+                  assert.isTrue(opened);
 
                   dropDownList._hasHierarchy = true;
                   dropDownList._subDropdownItem = items.at(3);
                   dropDownList._itemMouseEnter({}, items.at(4), false);
+                  assert.isFalse(opened);
+
+                  dropDownList._itemMouseEnter({}, items.at(4), true);
+                  assert.isFalse(opened);
+                  dropDownList._itemMouseEnter({}, items.at(3), true);
                   assert.isFalse(opened);
                   resolve();
                }, 120);
@@ -124,6 +131,10 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             dropDownList._hasHierarchy = true;
             dropDownList._mouseenterHandler();
             assert.isTrue(closed);
+         });
+
+         it('_openSubDropdown', function () {
+            
          });
 
          it('check hierarchy', function() {
