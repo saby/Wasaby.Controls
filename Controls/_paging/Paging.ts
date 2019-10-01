@@ -2,6 +2,9 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import pagingTemplate = require('wml!Controls/_paging/Paging/Paging');
 import {SyntheticEvent} from 'Vdom/Vdom';
 
+// TODO перевести на честную тему мешает наличие опции theme на scroll/Container
+import 'css!theme?Controls/paging';
+
 type TButtonState = 'normal' | 'disabled';
 
 export interface IPagingOptions extends IControlOptions {
@@ -104,8 +107,6 @@ class Paging extends Control<IPagingOptions> {
         }
         this._notify('onArrowClick', [btnName]);
     }
-
-    static _theme: string[] = ['Controls/paging'];
 }
 
 export default Paging;
