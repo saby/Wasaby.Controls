@@ -9,6 +9,7 @@
  * @includes Notification Controls/_popupTemplate/Notification/Base
  * @includes NotificationSimple Controls/_popupTemplate/Notification/Simple
  * @includes NotificationStyles Controls/_popupTemplate/Notification/NotificationStyles
+ * @includes INotification Controls/_popupTemplate/Notification/interface/INotification
  * @includes DialogStyles Controls/_popupTemplate/Dialog/DialogStyles
  * @includes ConfirmationStyles Controls/_popupTemplate/Confirmation/ConfirmationStyles
  * @includes CloseButtonStyles Controls/_popupTemplate/CloseButton/CloseButtonStyles
@@ -38,8 +39,8 @@ import Stack = require('Controls/_popupTemplate/Stack');
 import Dialog = require('Controls/_popupTemplate/Dialog');
 import Confirmation = require('Controls/_popupTemplate/Confirmation');
 import InfoBox = require('Controls/_popupTemplate/InfoBox');
-import Notification = require('Controls/_popupTemplate/Notification/Base');
-import NotificationSimple = require('Controls/_popupTemplate/Notification/Simple');
+export {default as Notification} from 'Controls/_popupTemplate/Notification/Base';
+export {default as NotificationSimple} from 'Controls/_popupTemplate/Notification/Simple';
 
 import BaseController = require('Controls/_popupTemplate/BaseController');
 import ConfirmationDialog = require('Controls/_popupTemplate/Confirmation/Opener/Dialog');
@@ -52,6 +53,7 @@ import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import NotificationController = require('Controls/_popupTemplate/Notification/Opener/NotificationController');
 import PreviewerController = require('Controls/_popupTemplate/Previewer/PreviewerController');
 import templateInfoBox = require('Controls/_popupTemplate/InfoBox/Opener/resources/template');
+import {default as INotification, INotificationOptions} from 'Controls/_popupTemplate/Notification/interface/INotification';
 
 import StackStrategy = require('Controls/_popupTemplate/Stack/Opener/StackStrategy');
 
@@ -61,8 +63,6 @@ export {
    Dialog,
    Confirmation,
    InfoBox,
-   Notification,
-   NotificationSimple,
 
    BaseController,
    ConfirmationDialog,
@@ -75,6 +75,8 @@ export {
    NotificationController,
    PreviewerController,
    templateInfoBox,
+    INotification,
+    INotificationOptions,
 
    StackStrategy
 };

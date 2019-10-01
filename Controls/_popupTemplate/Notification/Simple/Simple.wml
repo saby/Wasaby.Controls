@@ -5,13 +5,13 @@
     <ws:bodyContentTemplate>
         <div class="controls-Notification__simpleTemplate">
             <ws:if data="{{_options.icon}}">
-                <div class="controls-Notification__simpleTemplate-icon
-                            controls-Notification__simpleTemplate-icon-size
-                            icon-{{_iconStyle[_options.style]}}
+                <div class="controls-Notification__simpleTemplate-icon_theme-{{_options.theme}}
+                            controls-Notification__simpleTemplate-icon-size_theme-{{_options.theme}}
+                            controls-icon_style-{{_iconStyle}}_theme-{{_options.theme}}
                             icon-{{_options.icon}}">
                 </div>
             </ws:if>
-            <div class="controls-Notification__simpleTemplate-message">{{_options.text}}</div>
+            <div class="controls-Notification__simpleTemplate-message_theme-{{_options.theme}}">{{_options.text}}</div>
         </div>
     </ws:bodyContentTemplate>
 </ws:partial>
