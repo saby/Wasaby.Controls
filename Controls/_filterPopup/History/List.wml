@@ -9,7 +9,7 @@
 </ws:template>
 
 <ws:template name="itemContent">
-   <div class="controls-HistoryList__itemWrapper">
+   <div class="controls-HistoryList__itemWrapper controls-HistoryList_{{_options.orientation}}__itemWrapper">
       <div class="controls-HistoryList__item controls-HistoryList_{{_options.orientation}}__item {{isFavorite || item.get('pinned') ? 'controls-HistoryList__item_pinned'}}"
            on:click="_clickHandler(item, isFavorite)" title="{{text}}">{{text}}</div>
       <ws:partial template="{{iconTemplate}}" item="{{item}}" text="{{text}}" isFavorite="{{isFavorite}}"/>
