@@ -18,22 +18,6 @@
    font-size: @font-size_DoubleSwitch;
 }
 
-.controls-DoubleSwitch__line_vertical_checked_theme-@{themeName} {
-   bottom: @spacing-between-track-and-toggleCircle;
-}
-
-.controls-DoubleSwitch__line_vertical_notChecked_theme-@{themeName} {
-   top: @spacing-between-track-and-toggleCircle;
-}
-
-.controls-DoubleSwitch__line_horizontal_notChecked_theme-@{themeName} {
-   left: @spacing-between-track-and-toggleCircle;
-}
-
-.controls-DoubleSwitch__line_horizontal_checked_theme-@{themeName} {
-   right: @spacing-between-track-and-toggleCircle;
-}
-
 .controls-DoubleSwitch__toggle_enabled {
    cursor: pointer;
 }
@@ -77,18 +61,18 @@
 
 .controls-DoubleSwitch__line_horizontal_theme-@{themeName} {
    height: @thickness_Switch-track;
-   width: @length_Switch-track - @width_ToggleCircle + @spacing-between-track-and-toggleCircle;
+   width: @length_Switch-track - @width_ToggleCircle;
 }
 
 .controls-DoubleSwitch__line_vertical {
    position: relative;
 }
 .controls-DoubleSwitch__line_vertical_theme-@{themeName} {
-   height: @length_Switch-track - @height_ToggleCircle + @spacing-between-track-and-toggleCircle;
+   height: @length_Switch-track - @height_ToggleCircle;
    width: @thickness_Switch-track;
 }
 
-.controls-DoubleSwitch__line_vertical_checked {
+.controls-DoubleSwitch__line_vertical_checked_theme-@{themeName} {
    //Нельзя делать через column-reverse, т.к. иначе базовая линия начинает браться не с того элемента и всё едет
    order: 2;
 }
@@ -161,3 +145,39 @@
       stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
    }
 }
+
+/**
+ * TODO: holeFix
+ * Поробнее в проблема описана в Switch.less
+ */
+& {
+   @width_sticker: floor(@thickness_ToggleCircle-borderCircle-border / 2) * 2;
+   @offset_sticker: @length_Switch-track / 2 - @size_Switch__ToggleCircle;
+
+   .controls-DoubleSwitch__toggle_theme-@{themeName}::after {
+      content: '';
+      position: absolute;
+      width: @width_sticker;
+      height: @thickness_Switch-track;
+   }
+   .controls-DoubleSwitch__toggle_horizontal_notChecked_theme-@{themeName}::after {
+      margin-left: @offset_sticker;
+   }
+   .controls-DoubleSwitch__toggle_horizontal_checked_theme-@{themeName}::after {
+      margin-left: -@offset_sticker;
+   }
+   .controls-DoubleSwitch__toggle_vertical_checked_theme-@{themeName}::after {
+      margin-top: -@offset_sticker;
+   }
+   .controls-DoubleSwitch__toggle_vertical_notChecked_theme-@{themeName}::after {
+      margin-top: @offset_sticker;
+   }
+}
+.controls-DoubleSwitch__toggle_enabled_theme-@{themeName}::after {
+   background-color: @background-color_Switch-track__enabled;
+}
+.controls-DoubleSwitch__toggle_disabled_theme-@{themeName}::after {
+   background-color: @background-color_Switch-track__disabled;
+}
+
+// End holeFix
