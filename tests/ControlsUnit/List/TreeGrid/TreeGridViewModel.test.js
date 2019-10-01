@@ -392,6 +392,34 @@ define(['Controls/treeGrid',
              treeGrid.ViewModel._private.getExpandedItems(model.getDisplay(), model._model.getExpandedItems(), model._options.nodeProperty)
          );
       });
+
+      it('getResultsPosition with setHasMoreData', function() {
+         let initialColumns = [{
+            width: '1fr',
+            displayProperty: 'title'
+         }];
+
+         let treeGridView = new treeGrid.ViewModel({
+             items: new collection.RecordSet({
+                idProperty: 'id',
+                rawData: [
+                   { id: 0, title: 'i0', date: '01 янв', parent: null, type: true },
+                ]
+             }),
+             keyProperty: 'id',
+             nodeProperty: 'type',
+             parentProperty: 'parent',
+             columns: initialColumns,
+             resultsPosition: 'top'
+         });
+
+         assert.equal(undefined, treeGridView.getResultsPosition());
+         treeGridView.setHasMoreData(true);
+         assert.equal('top', treeGridView.getResultsPosition());
+         treeGridView.setHasMoreData(false);
+         assert.equal(undefined, treeGridView.getResultsPosition());
+      });
+
       it('isDrawResults()', function() {
 
          let initialColumns = [{
