@@ -833,7 +833,7 @@ define([
              baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         assert.equal(null, baseControl._listViewModel.getMarkedKey());
+         assert.equal(2, baseControl._listViewModel.getMarkedKey());
          baseControl._onViewKeyDown({
             target: {
                closest: function() {
@@ -846,7 +846,7 @@ define([
             },
             preventDefault: function() {},
          });
-         assert.equal(null, baseControl._listViewModel.getMarkedKey());
+         assert.equal(2, baseControl._listViewModel.getMarkedKey());
          baseControl._onViewKeyDown({
             target: {
                closest: function() {
@@ -859,7 +859,7 @@ define([
             },
             preventDefault: function() {},
          });
-         assert.equal(null, baseControl._listViewModel.getMarkedKey());
+         assert.equal(2, baseControl._listViewModel.getMarkedKey());
       });
 
       it('moveMarkerToNext && moveMarkerToPrevious while loading', async function() {
