@@ -160,7 +160,7 @@ class Confirmation extends BaseOpener<IConfirmationOptions> implements IConfirma
         const popupOptions: IPopupOptions = {
             template: 'Controls/popupTemplate:ConfirmationDialog',
             modal: true,
-            autofocus: templateOptions.autofocus, // TODO: в 700 безусловно без опции, для того, чтобы можно было работать с клавиатуры
+            autofocus: true,
             className: 'controls-Confirmation_popup',
             templateOptions
         };

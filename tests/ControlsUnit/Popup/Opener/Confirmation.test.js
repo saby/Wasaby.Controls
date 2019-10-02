@@ -6,8 +6,8 @@ define([
 ], (
    popup,
    popupTemplate,
-   Deferred
-) => {
+   Deferred ) =>
+   {
       'use strict';
 
       var popupOpener;
@@ -40,12 +40,27 @@ define([
             a = dialog._getSize();
             assert.equal(a, 'm');
          });
-
          it('open', () => {
             popupOpener._openPopup = () => {};
             let def = popupOpener.open({});
 
             assert.equal(def instanceof Deferred, true);
+         });
+         it('getConfirmationConfig', () => {
+            let templateOptions = {};
+            let popupOptions = popup.Confirmation._getConfirmationConfig(templateOptions, {});
+            let config = {
+               template: 'Controls/popupTemplate:ConfirmationDialog',
+               modal: true,
+               autofocus: true,
+               className: 'controls-Confirmation_popup',
+               templateOptions: {
+                  closeHandler: {}
+               },
+               zIndex: 5000
+            };
+
+            assert.deepEqual(popupOptions, config);
          });
       });
    }
