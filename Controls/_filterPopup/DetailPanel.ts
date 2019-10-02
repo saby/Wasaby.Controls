@@ -182,7 +182,7 @@ import 'Controls/form';
       },
 
       reloadHistoryItems: function(self, historyId) {
-         self._historyItems = HistoryUtils.getHistorySource({historyId: historyId}).getItems();
+         self._historyItems = _private.filterHistoryItems(self, HistoryUtils.getHistorySource({historyId: historyId}).getItems());
       },
 
       cloneItems: function(items) {
