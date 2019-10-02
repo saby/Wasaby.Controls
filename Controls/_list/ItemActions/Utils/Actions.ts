@@ -1,3 +1,12 @@
+function getActionContainer(event, action, itemData, container, listModel): Element {
+    if (action.showType === 2) {
+        return event.target.closest('.controls-Grid__row-cell');
+    } else {
+        const rowCells = container.querySelectorAll(`.controls-Grid__row-cell[data-r="${itemData.index - listModel.getStartIndex()}"]`);
+        return rowCells[itemData.columnIndex - 1];
+    }
+}
+
 export function itemActionsClick(self, event, action, itemData, listModel, showAll): void {
     event.stopPropagation();
     if (action._isMenu) {
@@ -29,8 +38,15 @@ export function itemActionsClick(self, event, action, itemData, listModel, showA
         * опцию спилит Егор при переходе на table-layout и отказе от partialGrid
         * https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
         * */
-        if (self._options.fix1177894367) {
-            targetContainer = event.target.closest('.controls-Grid__row-cell');
+        if (self._options.fix1177894367 && listModel.isPartialGridSupport()) {
+            /*
+            * При клике по операции над записью стреляет событие actionClick и одним из аргументов отдает HTML контейнер записи, в которой находится операция.
+            * В браузерах с частичной поддержкой гридов выводятся не строки, а сразу ячейки, поэтому невозможно вернуть контейнер строки.
+            * В таком случае отдаем контейнер ячейки в которой находится операция над записью.
+            * При переходе на table-layout и отказе от partialGrid данное поведение будет исправлено, и в любом браузере будет отдаваться контейнер строки.
+            * https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+            * */
+            targetContainer = getActionContainer(event, action, itemData, container, listModel);
         } else {
             targetContainer = Array.prototype.filter.call(container.querySelector('.controls-ListView__itemV').parentNode.children, function (item) {
                 return item.className.indexOf('controls-ListView__itemV') !== -1;
