@@ -17,4 +17,15 @@
             <Controls.search:Input contrastBackground="{{true}}" attr:class="controlsDemo__searchBase_field"></Controls.search:Input>
         </div>
     </div>
+
+    <div class="controlsDemo__cell">
+        <div class="controlsDemo__search-button">
+            <div class="controls-text-label_theme-{{_options.theme}}">search with button</div>
+            <Controls.search:Input searchButtonVisible="{{false}}" attr:class="controlsDemo__searchBase_field"/>
+            <Controls.buttons:Button caption="{[Найти]}"
+                                     viewMode="button"
+                                     buttonStyle="primary"
+                                     attr:class="controlsDemo__searchButton"/>
+        </div>
+   </div>
 </div>
