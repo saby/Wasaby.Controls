@@ -533,3 +533,11 @@
 .controls-inlineheight-default_theme-@{themeName}.controls-Button-inlineheight-default_theme-@{themeName} when not (@inline_height_default_button = @inline_height_default) {
    height: @inline_height_default_button;
 }
+
+//text colors
+.controls-text-primary_theme-@{themeName}.controls-Button__text-primary_viewMode-link_theme-@{themeName} when not (@primary_text-color_button_link = @primary_text-color){
+   color: @primary_text-color_button_link;
+}
+.controls-text-secondary_theme-@{themeName}.controls-Button__text-secondary_viewMode-link_theme-@{themeName} when not (@secondary_text-color_button_link = @secondary_text-color){
+   color: @secondary_text-color_button_link;
+}
