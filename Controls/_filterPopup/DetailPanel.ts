@@ -99,7 +99,8 @@ import 'Controls/form';
                isGlobalUserConfig: true
             });
             self._historyStorage = new HistoryStorage({
-               historyId: historyId
+               // to save old user favorites
+               historyId: historyId + '-favorite'
             });
             pDef.push(self._historyStorage.getHistory(true));
             pDef.push(self._historyGlobalStorage.getHistory(true));
