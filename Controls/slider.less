@@ -171,3 +171,30 @@
 .controls-Slider__segment_theme-@{themeName}:last-child:after {
   left: -@Slider-segment-after-width;
 }
+.controls-Slider__tooltip {
+  position: relative;
+  right: @Slider-tooltip_segment-right;
+  bottom: @Slider-tooltip_segment-bottom;
+  width: @Slider-tooltip_segment-width;
+  height: @Slider-tooltip_segment-height;
+}
+.controls-Slider__tooltip div {
+  display: table;
+  margin: auto;
+  padding-top: @Slider-tooltip_segment-padding / 2;
+  padding-right: @Slider-tooltip_segment-padding;
+  padding-bottom: @Slider-tooltip_segment-padding / 2;
+  padding-left: @Slider-tooltip_segment-padding;
+  background-color: @Slider-point-background-color;
+  border-radius: @Slider-tooltip_segment-padding / 2;
+  box-shadow: 0 0 6px 0 @Slider-segment-color;
+  font-size: @Slider-tooltip-font-size;
+}
+.controls-Slider__point_tooltip {
+  border: @Slider-point-border-thickness solid @Slider-segment-color;
+  background-color: @Slider-point-background-color;
+  z-index: 2;
+}
+.controls-Slider__point_tooltip:hover {
+  background-color: @Slider-point-background-color;
+}
