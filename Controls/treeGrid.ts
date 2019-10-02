@@ -31,6 +31,5 @@ export {
     SearchGridViewModel,
     SearchView,
     TreeGridView,
-
     RowEditor
 };

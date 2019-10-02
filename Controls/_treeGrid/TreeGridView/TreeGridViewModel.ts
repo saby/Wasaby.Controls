@@ -136,8 +136,8 @@ var
         isDrawResults: function() {
             var items = this.getDisplay();
             if (items) {
-                var items = this._model.getHierarchyRelation().getChildren(items.getRoot().getContents(), this.getItems());
-                return items && items.length > 1;
+                var rootItems = this._model.getHierarchyRelation().getChildren(items.getRoot().getContents(), this.getItems());
+                return this.getHasMoreData() || rootItems && rootItems.length > 1;
             }
         },
         getItemDataByItem: function(dispItem) {
