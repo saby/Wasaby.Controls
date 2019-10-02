@@ -64,15 +64,15 @@ import template = require('wml!Controls/_decorator/Money/Money');
 /**
  * @name Controls/_decorator/Money#style
  * @cfg {String} Стиль отображения числа в денежном формате.
- * @variant accentResults
- * @variant noAccentResults
- * @variant group
- * @variant basicRegistry
- * @variant noBasicRegistry
- * @variant accentRegistry
- * @variant noAccentRegistry
- * @variant error
- * @variant default
+ * @variant accentResults Акцентированная сумма в строке Итоги
+ * @variant noAccentResults Не акцентная сумма в строке Итоги
+ * @variant group Сумма в группировке
+ * @variant basicRegistry Основная сумма в реестре
+ * @variant noBasicRegistry Не основная сумма в реестре
+ * @variant accentRegistry Акцентная сумма в реестре
+ * @variant noAccentRegistry Не акцентная сумма в реестре
+ * @variant error Ошибка
+ * @variant default По умолчанию
  * @default default
  */
 
