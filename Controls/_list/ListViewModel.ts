@@ -289,22 +289,17 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     _updateMarker: function(markedKey):void {
-        let stop = false;
-        if (!this.getCount() && markedKey === null) {
-            this._markedKey = markedKey;
-            stop = true;
-        }
-
-        if (stop || this._options.markerVisibility === 'onactivated' && this._markedKey === null || this._options.markerVisibility === 'hidden') {
+        this._markedKey = markedKey;
+        if (this._options.markerVisibility === 'hidden' ||
+            this._options.markerVisibility === 'onactivated' && this._markedKey === null) {
             return;
         }
 
         // If record with key equal markedKey not found in recordSet, set markedKey equal key first record in recordSet
-        if (_private.getItemByMarkedKey(this, markedKey)) {
-            this._markedKey = markedKey;
-        } else {
+        if (!_private.getItemByMarkedKey(this, markedKey) && this.getCount()) {
             this._markedKey = this._items.at(0).getId();
         }
+
     },
 
 
