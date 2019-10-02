@@ -502,6 +502,23 @@ define([
             model = new lists.ListViewModel(cfg);
             model.getItems().removeAt(3); // remove item 6 (without markedKey)
             assert.equal(1, model.getMarkedKey());
+
+         //remove last item. marked key must be null
+         cfg = {
+            keyProperty: 'id',
+            items: new collection.RecordSet({
+               rawData: [
+                  { id: 1, title: 'item 1' },
+
+               ],
+               idProperty: 'id'
+            }),
+            markedKey: 1
+         };
+         model = new lists.ListViewModel(cfg);
+         // remove last item
+         model.getItems().removeAt(0);
+         assert.equal(null, model.getMarkedKey()); //marker must be null
       });
 
       it('Selection', function() {
