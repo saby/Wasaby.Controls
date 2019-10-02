@@ -144,6 +144,9 @@ var _private = {
             } else {
                 listViewModel.appendItems(list);
             }
+            if (self._options.task1177940587 && self._options.dataLoadCallback) {
+                self._options.dataLoadCallback(list);
+            }
         });
     },
     onNodeRemoved: function(self, nodeId) {
