@@ -933,12 +933,17 @@ define([
          var
             setHasMoreCalled = false,
             mergeItemsCalled = false,
+            dataLoadCallbackCalled = false,
             loadMoreSorting,
             mockedTreeControlInstance = {
                _options: {
                   filter: {
                      testParam: 11101989
                   },
+                  dataLoadCallback: function() {
+                     dataLoadCallbackCalled = true;
+                  },
+                  task1177940587: true,
                   sorting: [{'test': 'ASC'}],
                   parentProperty: 'parent',
                   uniqueKeys: true
@@ -980,6 +985,7 @@ define([
                   };
                }
             };
+         dataLoadCallbackCalled = false;
          treeGrid.TreeControl._private.loadMore(mockedTreeControlInstance, dispItem);
          assert.deepEqual({
             testParam: 11101989
@@ -987,6 +993,7 @@ define([
          'Invalid value "filter" after call "TreeControl._private.loadMore(...)".');
          assert.isTrue(setHasMoreCalled, 'Invalid call "setHasMore" by "TreeControl._private.loadMore(...)".');
          assert.isTrue(mergeItemsCalled, 'Invalid call "mergeItemsCalled" by "TreeControl._private.loadMore(...)".');
+         assert.isTrue(dataLoadCallbackCalled, 'Invalid call "dataLoadCallbackCalled" by "TreeControl._private.loadMore(...)".');
          assert.deepEqual(loadMoreSorting, [{'test': 'ASC'}]);
       });
       describe('EditInPlace', function() {
