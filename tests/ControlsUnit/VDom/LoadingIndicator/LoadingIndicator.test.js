@@ -151,8 +151,10 @@ define([
 
       it('LoadingIndicator - toggleIndicator', (done) => {
          let LoadingInd = new LoadingIndicator();
+         let isMessageVisible = true;
          LoadingInd._beforeMount({});
          let baseToggleIndicatorVisible = LoadingInd._toggleIndicatorVisible;
+         let baseToggleOverlayAsync = LoadingInd._toggleOverlayAsync;
          LoadingInd._toggleOverlayAsync = LoadingInd._toggleOverlay;
          let config = {
             delay: 1
@@ -183,10 +185,23 @@ define([
 
          LoadingInd._toggleIndicatorVisible = function() {
             baseToggleIndicatorVisible.apply(LoadingInd, arguments);
-            assert.equal(LoadingInd._isMessageVisible, true);
-            done();
+            assert.equal(LoadingInd._isMessageVisible, isMessageVisible);
+            if (isMessageVisible) {
+               done();
+            }
          };
-         Loading.destroy();
+
+         LoadingInd._toggleOverlayAsync = baseToggleOverlayAsync;
+         LoadingInd._stack.clear();
+         LoadingInd._stack.add({ delay: 2000 });
+         LoadingInd._stack.add({ delay: 2000 });
+         LoadingInd._isOverlayVisible = false;
+         isMessageVisible = false;
+         LoadingInd._toggleIndicator(true, config);
+
+         isMessageVisible = true;
+
+         LoadingInd.destroy();
 
       });
       after(() => {

@@ -441,7 +441,7 @@ const module = Control.extend(/** @lends Controls/Container/LoadingIndicator.pro
                 this._toggleIndicatorVisible(true, config);
             } else {
                 // if we have indicator in stack, then don't hide overlay
-                this._toggleIndicatorVisible(this._stack.getCount() > 1, config);
+                this._toggleIndicatorVisible(this._stack.getCount() > 1 && this._isOverlayVisible, config);
                 this.delayTimeout = setTimeout(() => {
                     this._toggleIndicatorVisible(true, config);
                     this._forceUpdate();
