@@ -83,6 +83,10 @@ class ResizingLine extends Control<IContainerOptions, void> {
         // to disable selection while dragging
         event.preventDefault();
 
+        // preventDefault for disable selection while dragging stopped the focus => active elements don't deactivated.
+        // activate control manually
+        this.activate();
+
         this._width = this._container.get ? this._container.get(0).clientWidth : this._container.clientWidth;
         this._height = this._container.get ? this._container.get(0).clientHeight : this._container.clientHeight;
         this._children.dragNDrop.startDragNDrop(new Entity({
