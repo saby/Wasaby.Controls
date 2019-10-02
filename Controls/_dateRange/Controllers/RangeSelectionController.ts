@@ -1,5 +1,6 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
+import coreClone = require('Core/core-clone');
 import RangeSelectrionControllerTmpl = require('wml!Controls/_dateRange/Controllers/RangeSelectionController');
 import IRangeSelectable from "./../interfaces/IInputSelectable";
 
@@ -87,6 +88,12 @@ var _private = {
       if (self._displayedStartValue !== range[0] || self._displayedEndValue !== range[1]) {
          return range;
       }
+   },
+   clone: function(obj) {
+      if (obj instanceof Date) {
+         return new obj.constructor(obj);
+      }
+      return coreClone(obj);
    }
 };
 
@@ -289,10 +296,10 @@ var Component = BaseControl.extend({
     */
    _getDisplayedRangeEdges: function(item) {
       if (this._selectionType === Component.SELECTION_TYPES.single) {
-         return [item, item];
+         return [item, _private.clone(item)];
       }
       if (!this._selectionBaseValue) {
-         return [item, item];
+         return [item, _private.clone(item)];
       } else if (item > this._selectionBaseValue) {
          return [this._selectionBaseValue, item];
       } else {
