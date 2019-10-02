@@ -67,6 +67,10 @@ define('Controls/Application/Core',
             }
 
             var headData = new HeadData([], true);
+            
+            // Временно положим это в HeadData, потом это переедет в константы реквеста
+            // Если запуск страницы начинается с Controls/Application/Core, значит мы находимся в новом окружении
+            headData.isNewEnvironment = true;
             AppEnv.setStore('HeadData', headData);
 
             AppCore.superclass.constructor.apply(this, arguments);
