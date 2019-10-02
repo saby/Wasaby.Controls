@@ -218,6 +218,15 @@ import 'css!theme?Controls/decorator';
          elements = [markupGenerator.createTag('invisible-node', { key: key + '0_' }, [], attrsToDecorate,
             defCollection, control, key + '0_')];
       }
+
+      // Избежим утечки из-за глобальных переменных.
+      defCollection = null;
+      control = null;
+      resolver = null;
+      resolverParams = null;
+      resolverMode = null;
+      currentValidHtml = null;
+
       return markupGenerator.joinElements(elements, key, defCollection);
    };
 
