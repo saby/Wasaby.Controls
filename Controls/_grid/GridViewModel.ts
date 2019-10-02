@@ -961,12 +961,20 @@ var
             }
         },
 
+        setHasMoreData: function(hasMore: boolean) {
+            this._model.setHasMoreData(hasMore);
+        },
+
+        getHasMoreData: function() {
+          return this._model.getHasMoreData();
+        },
+
         isDrawResults: function() {
             if (this._options.resultsVisibility === 'visible') {
                 return true;
             }
             const items = this.getItems();
-            return items && items.getCount() > 1;
+            return this.getHasMoreData() || items && items.getCount() > 1;
         },
 
         setResultsPosition: function(position) {
