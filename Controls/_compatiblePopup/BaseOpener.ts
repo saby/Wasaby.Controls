@@ -437,7 +437,8 @@ const BaseOpener = {
          minWidth: cfg.minWidth,
          maxWidth: cfg.maxWidth,
          width: cfg.width,
-         minimizedWidth: cfg.minimizedWidth
+         minimizedWidth: cfg.minimizedWidth,
+         propStorageId: cfg.propStorageId
       };
 
       // FloatArea opens with maxWidth, if maxWidth is set.
@@ -610,6 +611,9 @@ const BaseOpener = {
       if (cfg.minimizedWidth || optFromTmpl.minimizedWidth) {
          newCfg.dialogOptions.minimizedWidth = cfg.minimizedWidth || optFromTmpl.minimizedWidth;
       }
+      if (cfg.propStorageId || optFromTmpl.propStorageId) {
+         newCfg.dialogOptions.propStorageId = cfg.propStorageId || optFromTmpl.propStorageId;
+      }
 
       if (newCfg.target) {
          this._prepareTarget(newCfg);
@@ -653,7 +657,7 @@ const BaseOpener = {
          newCfg.dialogOptions.onOpenHandlerEvent = newCfg._events.onOpen;
       }
 
-      if (newCfg.hasOwnProperty('maximized')) {
+      if (newCfg.hasOwnProperty('maximized') && !newCfg.dialogOptions.propStorageId) {
          newCfg.dialogOptions.maximized = newCfg.maximized;
          newCfg.componentOptions.maximized = newCfg.maximized;
          // Если окно максимизировано, то открываем его на всю ширину, игнорируя то, что лежит в width,
