@@ -502,8 +502,22 @@ var _private = {
     },
 
     updateVirtualWindow: function(self, direction) {
-        self._virtualScroll.recalcToDirection(direction, self._scrollParams, self._loadOffset.top);
-        _private.applyVirtualScrollIndexes(self, direction);
+        const recalculateIndexes = () => {
+            self._virtualScroll.recalcToDirection(direction, self._scrollParams, self._loadOffset.top);
+            _private.applyVirtualScrollIndexes(self, direction);
+        };
+
+        // Необходимо индексы отображаемых записей пересчитывать одноврменно в виртуальном скроле и модели,
+        // раньше они менялись сначала в виртуальном скроле и по таймуту в модели,
+        // иначе во время асинхронности, которая есть перед отрисовкаой на IPad'e,
+        // могут ещё прилететь записи от подгрузки по скролу,
+        // они поменяют индексы в виртуальном скроле, ещё не применнёные к модели,
+        // и отрисовка произойдёт некорртекно.
+        if (detection.isMobileIOS) {
+            _private.getIntertialScrolling(self).callAfterScrollStopped(recalculateIndexes);
+        } else {
+            recalculateIndexes();
+        }
     },
 
     throttledUpdateIndexesByVirtualScrollMove: throttle((self, params) => {
@@ -570,29 +584,21 @@ var _private = {
 
     // Обновляет стартовый и конечный индексы виртуального окна
     applyVirtualScrollIndexes(self, direction): void {
-        const updateIndexes = () => {
-            let savedStart: number;
-            let savedStop: number;
+        let savedStart: number;
+        let savedStop: number;
+        if (self._options.useNewModel) {
+            savedStart = self._listViewModel.getStartIndex();
+            savedStop = self._listViewModel.getStopIndex();
+        }
+        if (_private.applyVirtualScrollIndexesToListModel(self)) {
             if (self._options.useNewModel) {
-                savedStart = self._listViewModel.getStartIndex();
-                savedStop = self._listViewModel.getStopIndex();
+                self._savedStartIndex = savedStart;
+                self._savedStopIndex = savedStop;
             }
-            if (_private.applyVirtualScrollIndexesToListModel(self)) {
-                if (self._options.useNewModel) {
-                    self._savedStartIndex = savedStart;
-                    self._savedStopIndex = savedStop;
-                }
-                self._saveAndRestoreScrollPosition = direction;
-                self._shouldRestoreScrollPosition = true;
-                _private.applyPlaceholdersSizes(self);
-                _private.updateShadowMode(self);
-            }
-        };
-
-        if (detection.isMobileIOS) {
-            _private.getIntertialScrolling(self).callAfterScrollStopped(updateIndexes);
-        } else {
-            updateIndexes();
+            self._saveAndRestoreScrollPosition = direction;
+            self._shouldRestoreScrollPosition = true;
+            _private.applyPlaceholdersSizes(self);
+            _private.updateShadowMode(self);
         }
     },
 
