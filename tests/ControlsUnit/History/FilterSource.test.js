@@ -162,12 +162,19 @@ define(
             };
             let historyItems = new  collection.RecordSet({
                rawData: [
-                  { ObjectData: 'test' }
+                  { ObjectData: JSON.stringify('test') }
                ]
             });
             let result = historyMod.FilterSource._private.findItem({}, historyItems, newItem);
             assert.isNull(result);
 
+            historyItems.add(new entity.Model({
+               rawData: {ObjectData: JSON.stringify(newItem, historyMod.FilterSource._private.getSerialize().serialize)}
+            }));
+            result = historyMod.FilterSource._private.findItem({}, historyItems, newItem);
+            assert.isOk(result);
+
+            newItem.items.push(new entity.Date(2019, 5, 1));
             historyItems.add(new entity.Model({
                rawData: {ObjectData: JSON.stringify(newItem, historyMod.FilterSource._private.getSerialize().serialize)}
             }));
