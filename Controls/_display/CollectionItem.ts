@@ -463,4 +463,4 @@ Object.assign(CollectionItem.prototype, {
     _counters: null
 });
 
-register('Controls/display:CollectionItem', CollectionItem);
+register('Controls/display:CollectionItem', CollectionItem, {instantiate: false});
