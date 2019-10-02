@@ -33,4 +33,4 @@ Object.assign(FlagsItem.prototype, {
     _moduleName: 'Controls/display:FlagsItem'
 });
 
-register('Controls/display:FlagsItem', FlagsItem);
+register('Controls/display:FlagsItem', FlagsItem, {instantiate: false});

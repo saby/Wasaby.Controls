@@ -684,4 +684,4 @@ Object.assign(Tree.prototype, {
     _root: null
 });
 
-register('Controls/display:Tree', Tree);
+register('Controls/display:Tree', Tree, {instantiate: false});

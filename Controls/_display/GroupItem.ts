@@ -60,4 +60,4 @@ Object.assign(GroupItem.prototype, {
     _$expanded: true
 });
 
-register('Controls/display:GroupItem', GroupItem);
+register('Controls/display:GroupItem', GroupItem, {instantiate: false});

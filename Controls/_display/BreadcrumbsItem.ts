@@ -83,4 +83,4 @@ Object.assign(BreadcrumbsItem.prototype, {
     _$last: null
 });
 
-register('Controls/display:BreadcrumbsItem', BreadcrumbsItem);
+register('Controls/display:BreadcrumbsItem', BreadcrumbsItem, {instantiate: false});
