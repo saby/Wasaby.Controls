@@ -37,6 +37,41 @@
    }
 }
 
+.controls-Button__wrapper_viewMode-button {
+   align-items: baseline;
+   .controls-Button__icon {
+      align-self: center;
+   }
+}
+
+.controls-Button__wrapper_button_xs_theme-@{themeName}:before {
+   line-height: @inline_height_xs_button - 2 * @border-thickness_button;
+}
+
+.controls-Button__wrapper_button_s_theme-@{themeName}:before {
+   line-height: @inline_height_s_button - 2 * @border-thickness_button;
+}
+
+.controls-Button__wrapper_button_m_theme-@{themeName}:before {
+   line-height: @inline_height_m_button - 2 * @border-thickness_button;
+}
+
+.controls-Button__wrapper_button_l_theme-@{themeName}:before {
+   line-height: @inline_height_l_button - 2 * @border-thickness_button;
+}
+
+.controls-Button__wrapper_button_xl_theme-@{themeName}:before {
+   line-height: @inline_height_xl_button - 2 * @border-thickness_button;
+}
+
+.controls-Button__wrapper_button_2xl_theme-@{themeName}:before {
+   line-height: @inline_height_2xl_button - 2 * @border-thickness_button;
+}
+
+.controls-Button__wrapper_button_default_theme-@{themeName}:before {
+   line-height: @inline_height_default_button - 2 * @border-thickness_button;
+}
+
 // баг ие10, дочерний элемент контейнера с флексом неправильно рассчитывает свои размеры
 // вследствии чего обрезание текста происходит неверно
 .ws-is-ie10 {
@@ -363,27 +398,35 @@
 .controls-fontsize-xs_theme-@{themeName}.controls-Button_button__wrapper-fontsize-xs_theme-@{themeName} when not (@font-size_xs_button_button = @font-size_xs) {
    font-size: @font-size_xs_button_button;
 }
+
 .controls-fontsize-s_theme-@{themeName}.controls-Button_button__wrapper-fontsize-s_theme-@{themeName} when not (@font-size_s_button_button = @font-size_s) {
    font-size: @font-size_s_button_button;
 }
+
 .controls-fontsize-m_theme-@{themeName}.controls-Button_button__wrapper-fontsize-m_theme-@{themeName} when not (@font-size_m_button_button = @font-size_m) {
    font-size: @font-size_m_button_button;
 }
+
 .controls-fontsize-l_theme-@{themeName}.controls-Button_button__wrapper-fontsize-l_theme-@{themeName} when not (@font-size_l_button_button = @font-size_l) {
    font-size: @font-size_l_button_button;
 }
+
 .controls-fontsize-xl_theme-@{themeName}.controls-Button_button__wrapper-fontsize-xl_theme-@{themeName} when not (@font-size_xl_button_button = @font-size_xl) {
    font-size: @font-size_xl_button_button;
 }
+
 .controls-fontsize-2xl_theme-@{themeName}.controls-Button_button__wrapper-fontsize-2xl_theme-@{themeName} when not (@font-size_2xl_button_button = @font-size_2xl) {
    font-size: @font-size_2xl_button_button;
 }
+
 .controls-fontsize-3xl_theme-@{themeName}.controls-Button_button__wrapper-fontsize-3xl_theme-@{themeName} when not (@font-size_3xl_button_button = @font-size_3xl) {
    font-size: @font-size_3xl_button_button;
 }
+
 .controls-fontsize-4xl_theme-@{themeName}.controls-Button_button__wrapper-fontsize-4xl_theme-@{themeName} when not (@font-size_4xl_button_button = @font-size_4xl) {
    font-size: @font-size_4xl_button_button;
 }
+
 .controls-fontsize-5xl_theme-@{themeName}.controls-Button_button__wrapper-fontsize-5xl_theme-@{themeName} when not (@font-size_5xl_button_button = @font-size_5xl) {
    font-size: @font-size_5xl_button_button;
 }
@@ -392,27 +435,35 @@
 .controls-fontsize-xs_theme-@{themeName}.controls-Button_link__wrapper-fontsize-xs_theme-@{themeName} when not (@font-size_xs_button_link = @font-size_xs) {
    font-size: @font-size_xs_button_link;
 }
+
 .controls-fontsize-s_theme-@{themeName}.controls-Button_link__wrapper-fontsize-s_theme-@{themeName} when not (@font-size_s_button_link = @font-size_s) {
    font-size: @font-size_s_button_link;
 }
+
 .controls-fontsize-m_theme-@{themeName}.controls-Button_link__wrapper-fontsize-m_theme-@{themeName} when not (@font-size_m_button_link = @font-size_m) {
    font-size: @font-size_m_button_link;
 }
+
 .controls-fontsize-l_theme-@{themeName}.controls-Button_link__wrapper-fontsize-l_theme-@{themeName} when not (@font-size_l_button_link = @font-size_l) {
    font-size: @font-size_l_button_link;
 }
+
 .controls-fontsize-xl_theme-@{themeName}.controls-Button_link__wrapper-fontsize-xl_theme-@{themeName} when not (@font-size_xl_button_link = @font-size_xl) {
    font-size: @font-size_xl_button_link;
 }
+
 .controls-fontsize-2xl_theme-@{themeName}.controls-Button_link__wrapper-fontsize-2xl_theme-@{themeName} when not (@font-size_2xl_button_link = @font-size_2xl) {
    font-size: @font-size_2xl_button_link;
 }
+
 .controls-fontsize-3xl_theme-@{themeName}.controls-Button_link__wrapper-fontsize-3xl_theme-@{themeName} when not (@font-size_3xl_button_link = @font-size_3xl) {
    font-size: @font-size_3xl_button_link;
 }
+
 .controls-fontsize-4xl_theme-@{themeName}.controls-Button_link__wrapper-fontsize-4xl_theme-@{themeName} when not (@font-size_4xl_button_link = @font-size_4xl) {
    font-size: @font-size_4xl_button_link;
 }
+
 .controls-fontsize-5xl_theme-@{themeName}.controls-Button_link__wrapper-fontsize-5xl_theme-@{themeName} when not (@font-size_5xl_button_link = @font-size_5xl) {
    font-size: @font-size_5xl_button_link;
 }
@@ -421,27 +472,35 @@
 .controls-fontsize-xs_theme-@{themeName}.controls-Button_toolButton__wrapper-fontsize-xs_theme-@{themeName} when not (@font-size_xs_button = @font-size_xs) {
    font-size: @font-size_xs_button;
 }
+
 .controls-fontsize-s_theme-@{themeName}.controls-Button_toolButton__wrapper-fontsize-s_theme-@{themeName} when not (@font-size_s_button = @font-size_s) {
    font-size: @font-size_s_button;
 }
+
 .controls-fontsize-m_theme-@{themeName}.controls-Button_toolButton__wrapper-fontsize-m_theme-@{themeName} when not (@font-size_m_button = @font-size_m) {
    font-size: @font-size_m_button;
 }
+
 .controls-fontsize-l_theme-@{themeName}.controls-Button_toolButton__wrapper-fontsize-l_theme-@{themeName} when not (@font-size_l_button = @font-size_l) {
    font-size: @font-size_l_button;
 }
+
 .controls-fontsize-xl_theme-@{themeName}.controls-Button_toolButton__wrapper-fontsize-xl_theme-@{themeName} when not (@font-size_xl_button = @font-size_xl) {
    font-size: @font-size_xl_button;
 }
+
 .controls-fontsize-2xl_theme-@{themeName}.controls-Button_toolButton__wrapper-fontsize-2xl_theme-@{themeName} when not (@font-size_2xl_button = @font-size_2xl) {
    font-size: @font-size_2xl_button;
 }
+
 .controls-fontsize-3xl_theme-@{themeName}.controls-Button_toolButton__wrapper-fontsize-3xl_theme-@{themeName} when not (@font-size_3xl_button = @font-size_3xl) {
    font-size: @font-size_3xl_button;
 }
+
 .controls-fontsize-4xl_theme-@{themeName}.controls-Button_toolButton__wrapper-fontsize-4xl_theme-@{themeName} when not (@font-size_4xl_button = @font-size_4xl) {
    font-size: @font-size_4xl_button;
 }
+
 .controls-fontsize-5xl_theme-@{themeName}.controls-Button_toolButton__wrapper-fontsize-5xl_theme-@{themeName} when not (@font-size_5xl_button = @font-size_5xl) {
    font-size: @font-size_5xl_button;
 }
@@ -450,21 +509,27 @@
 .controls-inlineheight-xs_theme-@{themeName}.controls-Button-inlineheight-xs_theme-@{themeName} when not (@inline_height_xs_button = @inline_height_xs) {
    height: @inline_height_xs_button;
 }
+
 .controls-inlineheight-s_theme-@{themeName}.controls-Button-inlineheight-s_theme-@{themeName} when not (@inline_height_s_button = @inline_height_s) {
    height: @inline_height_s_button;
 }
+
 .controls-inlineheight-m_theme-@{themeName}.controls-Button-inlineheight-m_theme-@{themeName} when not (@inline_height_m_button = @inline_height_m) {
    height: @inline_height_m_button;
 }
+
 .controls-inlineheight-l_theme-@{themeName}.controls-Button-inlineheight-l_theme-@{themeName} when not (@inline_height_l_button = @inline_height_l) {
    height: @inline_height_l_button;
 }
+
 .controls-inlineheight-xl_theme-@{themeName}.controls-Button-inlineheight-xl_theme-@{themeName} when not (@inline_height_xl_button = @inline_height_xl) {
    height: @inline_height_xl_button;
 }
+
 .controls-inlineheight-2xl_theme-@{themeName}.controls-Button-inlineheight-2xl_theme-@{themeName} when not (@inline_height_2xl_button = @inline_height_2xl) {
    height: @inline_height_2xl_button;
 }
+
 .controls-inlineheight-default_theme-@{themeName}.controls-Button-inlineheight-default_theme-@{themeName} when not (@inline_height_default_button = @inline_height_default) {
    height: @inline_height_default_button;
 }
