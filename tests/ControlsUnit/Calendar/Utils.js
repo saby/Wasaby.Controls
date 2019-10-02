@@ -20,7 +20,7 @@ define('ControlsUnit/Calendar/Utils', [
       },
 
       prepareOptions: function(Component, cfg) {
-         return coreMerge(coreClone(cfg), Component.getDefaultOptions(), { preferSource: true });
+         return coreMerge(coreClone(cfg || {}), Component.getDefaultOptions(), { preferSource: true });
       },
 
       assertMonthView: function(weeks, dayAssertFn) {
