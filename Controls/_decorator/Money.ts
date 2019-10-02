@@ -63,7 +63,7 @@ import template = require('wml!Controls/_decorator/Money/Money');
 
 /**
  * @name Controls/_decorator/Money#style
- * @cfg {String} Стиль отображения числа в денежном формате.
+ * @cfg {String} Стиль отображения числа в денежном формате. Посмотреть демо-пример можно в описании контрола Money.
  * @variant accentResults Акцентированная сумма в строке Итоги.
  * @variant noAccentResults Не акцентная сумма в строке Итоги.
  * @variant group Сумма в группировке.
