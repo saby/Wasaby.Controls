@@ -289,14 +289,13 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     _updateMarker: function(markedKey):void {
-        if (markedKey === null) {
+        let stop = false;
+        if (!this.getCount() && markedKey === null) {
             this._markedKey = markedKey;
-        }
-        if (!this.getCount() || this._options.markerVisibility === 'hidden') {
-            return;
+            stop = true;
         }
 
-        if (this._options.markerVisibility === 'onactivated' && this._markedKey === null) {
+        if (stop || this._options.markerVisibility === 'onactivated' && this._markedKey === null || this._options.markerVisibility === 'hidden') {
             return;
         }
 

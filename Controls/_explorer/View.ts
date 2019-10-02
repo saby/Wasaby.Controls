@@ -128,6 +128,11 @@ import 'Controls/breadcrumbs';
                }
                self._isGoingBack = false;
             }
+            if (self._isGoingFront) {
+               const curRoot = _private.getRoot(self, self._options.root);
+               self._children.treeControl.setMarkedKey(curRoot);
+               self._isGoingFront = false;
+            }
          },
          setVirtualScrolling(self, viewMode, cfg): void {
             // todo https://online.sbis.ru/opendoc.html?guid=7274717e-838d-46c4-b991-0bec75bd0162
@@ -357,6 +362,7 @@ import 'Controls/breadcrumbs';
             if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
                 _private.setRestoredKeyObject(this, item.getId());
                 _private.setRoot(this, item.getId());
+                this._isGoingFront = true;
             }
          }
          event.stopPropagation();
