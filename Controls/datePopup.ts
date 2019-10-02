@@ -493,6 +493,12 @@ var Component = BaseControl.extend([EventProxyMixin], {
                 endField.setSelectionRange(0, 0);
              }
         }
+    },
+
+    _inputFocusOutHandler: function(event): void {
+        if (!this._children.inputs.contains(event.nativeEvent.relatedTarget)) {
+            this._headerType = this._options.headerType;
+        }
     }
 });
 
