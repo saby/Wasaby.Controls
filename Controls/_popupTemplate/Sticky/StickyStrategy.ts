@@ -21,8 +21,10 @@ interface IPosition {
 
    var _private = {
       getWindowSizes: function() {
+         // Ширина берется по body специально. В случае, когда уменьшили окно браузера и появился горизонтальный скролл
+         // надо правильно вычислить координату right.
          return {
-            width: window.innerWidth,
+            width: document.body.clientWidth,
             height: window.innerHeight - TouchKeyboardHelper.getKeyboardHeight(true)
          };
       },

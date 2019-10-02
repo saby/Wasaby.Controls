@@ -18,8 +18,4 @@
  * @author Крайнов Д.О.
  */
 
-import Paging = require('Controls/_paging/Paging');
-
-export {
-   Paging
-};
+export {default as Paging} from './_paging/Paging';

@@ -1,44 +1,21 @@
-/**
- * Created by kraynovdo on 01.11.2017.
- * @author Крайнов Д.О.
- */
-import BaseControl = require('Core/Control');
-import template = require('wml!Controls/_paging/Paging/Paging');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import pagingTemplate = require('wml!Controls/_paging/Paging/Paging');
+import {SyntheticEvent} from 'Vdom/Vdom';
+
+// TODO перевести на честную тему мешает наличие опции theme на scroll/Container
 import 'css!theme?Controls/paging';
 
-var _private, ModuleClass;
+type TButtonState = 'normal' | 'disabled';
 
-_private = {
-    initArrowDefaultStates: function (self, config) {
-        self._stateBegin = config.stateBegin || 'disabled';
-        self._stateEnd = config.stateEnd || 'disabled';
-        self._stateNext = config.stateNext || 'disabled';
-        self._statePrev = config.statePrev || 'disabled';
-    },
-
-    initArrowStateBySelectedPage: function (self, page, config) {
-        if (page <= 1) {
-            self._stateBegin = 'disabled';
-            self._statePrev = 'disabled';
-        } else {
-            self._stateBegin = 'normal';
-            self._statePrev = 'normal';
-        }
-
-        if (page >= config.pagesCount) {
-            self._stateEnd = 'disabled';
-            self._stateNext = 'disabled';
-        } else {
-            self._stateEnd = 'normal';
-            self._stateNext = 'normal';
-        }
-    },
-    changePage: function (self, page) {
-        if (self._options.selectedPage !== page) {
-            self._notify('selectedPageChanged', [page]);
-        }
-    }
-};
+export interface IPagingOptions extends IControlOptions {
+    showDigits: boolean;
+    pagesCount: number;
+    selectedPage?: number;
+    stateBegin: TButtonState;
+    stateEnd: TButtonState;
+    stateNext: TButtonState;
+    statePrev: TButtonState;
+}
 
 /**
  *
@@ -46,35 +23,68 @@ _private = {
  * @mixes Controls/_paging/Paging/DigitButtons/Styles
  *
  */
-ModuleClass = BaseControl.extend({
-    _template: template,
-    _stateBegin: 'normal',
-    _stateEnd: 'normal',
-    _stateNext: 'normal',
-    _statePrev: 'normal',
+class Paging extends Control<IPagingOptions> {
+    protected _template: TemplateFunction = pagingTemplate;
+    private _stateBegin: TButtonState = 'normal';
+    private _stateEnd: TButtonState = 'normal';
+    private _stateNext: TButtonState = 'normal';
+    private _statePrev: TButtonState = 'normal';
 
-    _beforeMount: function (newOptions) {
-        if (newOptions.showDigits) {
-            _private.initArrowStateBySelectedPage(this, newOptions.selectedPage, newOptions);
+    private _initArrowDefaultStates(config: IPagingOptions): void {
+        this._stateBegin = config.stateBegin || 'disabled';
+        this._stateEnd = config.stateEnd || 'disabled';
+        this._stateNext = config.stateNext || 'disabled';
+        this._statePrev = config.statePrev || 'disabled';
+    }
+
+    private _initArrowStateBySelectedPage(config: IPagingOptions): void {
+        const page = config.selectedPage;
+        if (page <= 1) {
+            this._stateBegin = 'disabled';
+            this._statePrev = 'disabled';
         } else {
-            _private.initArrowDefaultStates(this, newOptions);
+            this._stateBegin = 'normal';
+            this._statePrev = 'normal';
         }
-    },
 
-    _beforeUpdate: function (newOptions) {
-        if (newOptions.showDigits) {
-            _private.initArrowStateBySelectedPage(this, newOptions.selectedPage, newOptions);
+        if (page >= config.pagesCount) {
+            this._stateEnd = 'disabled';
+            this._stateNext = 'disabled';
         } else {
-            _private.initArrowDefaultStates(this, newOptions);
+            this._stateEnd = 'normal';
+            this._stateNext = 'normal';
         }
-    },
+    }
 
-    __digitClick: function (e, digit) {
-        _private.changePage(this, digit);
-    },
+    private _initArrowState(newOptions: IPagingOptions): void {
+        const showDigits = newOptions.showDigits;
+        if (showDigits) {
+            this._initArrowStateBySelectedPage(newOptions);
+        } else {
+            this._initArrowDefaultStates(newOptions);
+        }
+    }
 
-    __arrowClick: function (e, btnName) {
-        var targetPage;
+    private _changePage(page: number): void {
+        if (this._options.selectedPage !== page) {
+            this._notify('selectedPageChanged', [page]);
+        }
+    }
+
+    protected _beforeMount(newOptions: IPagingOptions): void {
+        this._initArrowState(newOptions);
+    }
+
+    protected _beforeUpdate(newOptions: IPagingOptions): void {
+        this._initArrowState(newOptions);
+    }
+
+    private _digitClick(e: SyntheticEvent<Event>, digit: number): void {
+        this._changePage(digit);
+    }
+
+    private _arrowClick(e: SyntheticEvent<Event>, btnName: string): void {
+        let targetPage: number;
         if (this['_state' + btnName] !== 'normal') {
             return;
         }
@@ -93,13 +103,10 @@ ModuleClass = BaseControl.extend({
                     targetPage = this._options.selectedPage + 1;
                     break;
             }
-            _private.changePage(this, targetPage);
+            this._changePage(targetPage);
         }
-        this._notify('onArrowClick', btnName);
+        this._notify('onArrowClick', [btnName]);
     }
-});
+}
 
-//для тестов
-ModuleClass._private = _private;
-
-export = ModuleClass;
+export default Paging;

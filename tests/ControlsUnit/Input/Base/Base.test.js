@@ -535,6 +535,24 @@ define(
                   arguments: []
                }]);
             });
+            it('The left key', function() {
+               event.keyCode = Env.constants.key.left;
+               ctrl._keyDownHandler(new Vdom.SyntheticEvent(event));
+
+               assert.deepEqual(calls, [{
+                  name: 'stopPropagation',
+                  arguments: []
+               }]);
+            });
+            it('The right key', function() {
+               event.keyCode = Env.constants.key.right;
+               ctrl._keyDownHandler(new Vdom.SyntheticEvent(event));
+
+               assert.deepEqual(calls, [{
+                  name: 'stopPropagation',
+                  arguments: []
+               }]);
+            });
             it('The b key', function() {
                event.keyCode = Env.constants.key.b;
                ctrl._keyDownHandler(new Vdom.SyntheticEvent(event));

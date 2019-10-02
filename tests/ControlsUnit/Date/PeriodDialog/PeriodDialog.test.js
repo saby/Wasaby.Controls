@@ -513,5 +513,52 @@ define([
             });
          });
       });
+
+      describe('_inputFocusOutHandler', function() {
+         const event = {
+            nativeEvent: {}
+         };
+
+         it('should reset header type if the focus is not on the input fields.', function() {
+            const
+               sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(PeriodDialog, {}),
+               defaultOptions = calendarTestUtils.prepareOptions(PeriodDialog);
+
+            component._children = {
+               inputs: {
+                  contains: function() {
+                     return false;
+                  }
+               }
+            };
+
+            component._headerType = 'someHeaderType';
+            component._inputFocusOutHandler(event);
+            assert.strictEqual(component._headerType, defaultOptions.headerType);
+            sandbox.restore();
+         });
+
+         it('should\'t reset header type if the focus is on the input fields.', function() {
+            const
+               sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(PeriodDialog, {}),
+               headerType = 'someHeaderType';
+
+            component._children = {
+               inputs: {
+                  contains: function() {
+                     return true;
+                  }
+               }
+            };
+
+            component._headerType = headerType;
+            component._inputFocusOutHandler(event);
+            assert.strictEqual(component._headerType, headerType);
+            sandbox.restore();
+         });
+      });
+
    });
 });

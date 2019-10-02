@@ -83,9 +83,14 @@ class  ModuleComponent extends Control<IIntersectionObserverControllerOptions> {
       let itemId;
       for (const entry of entries) {
          itemId = Object.keys(this._items).find((key) => this._items[key].element === entry.target);
-         items.push(new SyntheticEntry(entry, this._items[itemId].data));
+         // don't handle unregistered containers
+         if (itemId) {
+            items.push(new SyntheticEntry(entry, this._items[itemId].data));
+         }
       }
-      this._notify('intersect', [items]);
+      if (items.length) {
+         this._notify('intersect', [items]);
+      }
    }
 
    protected _beforeUnmount(): void {

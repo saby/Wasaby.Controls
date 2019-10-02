@@ -19,7 +19,7 @@ class Back extends Control {
       this._notify('arrowClick', []);
    }
 
-   static _theme: string[] = ['Controls/crumbs'];
+   static _theme: string[] = ['Controls/crumbs', 'Controls/heading'];
    static _styles: string[] = ['Controls/Utils/FontLoadUtil'];
 }
 
