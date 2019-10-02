@@ -30,6 +30,9 @@ import 'Controls/form';
     * @cssModifier controls-FilterPanel__width-m Medium panel width.
     * @cssModifier controls-FilterPanel__width-l Large panel width.
     * @cssModifier controls-FilterPanel__width-xl Extra large panel width.
+    *
+    * @cssModifier controls-FilterPanel__DateRange Кастомизирует контрол DateRange для отображения на панели фильтров.
+    * Необходимо навесить на шаблон фильтра DateRange.
     */
 
    /*
