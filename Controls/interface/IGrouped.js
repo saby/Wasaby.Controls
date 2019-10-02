@@ -5,7 +5,6 @@ define('Controls/interface/IGrouped', [
     * Интерфейс для контролов, реализующих группировку элементов.
     *
     * @interface Controls/interface/IGrouped
-    * @public
     * @author Авраменко А.С.
     */
 
