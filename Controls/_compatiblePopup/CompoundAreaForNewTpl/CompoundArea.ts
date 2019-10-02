@@ -40,6 +40,7 @@ var moduleClass = CompoundControl.extend({
       this._beforeCloseHandler = this._beforeCloseHandler.bind(this);
       this._onRegisterHandler = this._onRegisterHandler.bind(this);
       this._onMaximizedHandler = this._onMaximizedHandler.bind(this);
+      this._onResizingLineHandler = this._onResizingLineHandler.bind(this);
       this._onCloseHandler.control = this._onResultHandler.control = this;
 
       this.getContainer().bind('keydown', this._keydownHandler);
@@ -95,7 +96,8 @@ var moduleClass = CompoundControl.extend({
 
                   // Нужно передать себя в качестве родителя, чтобы система фокусов
                   // могла понять, где находятся вложенные компоненты
-                  parent: self
+                  parent: self,
+                  popupOptions: self._options._popupOptions
                };
                // todo откатил потому что упала ошибка https://online.sbis.ru/opendoc.html?guid=d8cc1098-3d3a-4fed-800c-81b4e6ed2319
                if (self._options.isWS3Compatible) {
@@ -229,6 +231,7 @@ var moduleClass = CompoundControl.extend({
       innerOptions._onResizeHandler = this._onResizeHandler;
       innerOptions._onRegisterHandler = this._onRegisterHandler;
       innerOptions._onMaximizedHandler = this._onMaximizedHandler;
+      innerOptions._onResizingLineHandler = this._onResizingLineHandler;
    },
    _onResizeHandler: function() {
       this._notifyOnSizeChanged();
@@ -305,6 +308,27 @@ var moduleClass = CompoundControl.extend({
       return {top, right};
    },
 
+   _onResizingLineHandler(offset: number): void {
+      if (!this._panel._updateAreaWidth) {
+         return;
+      }
+      let width = this._options._popupOptions.width + offset;
+      const coords = this._getFloatAreaStackRootCoords();
+      const item = {
+         popupOptions: {
+            minWidth: this._options._popupOptions.minWidth,
+            maxWidth: this._options._popupOptions.maxWidth,
+            width,
+            containerWidth: this._container.width()
+         }
+      };
+
+      width = StackStrategy.getPosition(coords, item).width;
+      this._options._popupOptions.width = width;
+      const newOptions = clone(this._options.templateOptions);
+      this._updateFloatAreaWidth(width, newOptions);
+   },
+
    _onMaximizedHandler(): void {
       if (!this._panel._updateAreaWidth) {
          return;
@@ -326,20 +350,24 @@ var moduleClass = CompoundControl.extend({
       item.popupOptions.width = this._maximized ? item.popupOptions.maxWidth : (item.popupOptions.minimizedWidth || item.popupOptions.minWidth);
       const width = StackStrategy.getPosition(coords, item).width;
 
-      this._panel._options.maximized = this._maximized;
-      this._panel._options.width = width;
-      this._panel._options.maxWidth = width;
-      this._panel._updateAreaWidth(width);
-      this._panel._updateSideBarVisibility();
-      this._panel.getContainer()[0].style.maxWidth = '';
-      this._panel.getContainer()[0].style.minWidth = '';
-
       const newOptions = clone(this._options.templateOptions);
       newOptions.maximized = this._maximized;
+      this._panel._options.maximized = this._maximized;
 
-      this._updateVDOMTemplate(newOptions);
-      this._onResizeHandler();
+      this._updateFloatAreaWidth(width, newOptions);
    },
+
+    _updateFloatAreaWidth(width: number, newOptions: object): void {
+        this._panel._options.width = width;
+        this._panel._options.maxWidth = width;
+        this._panel._updateAreaWidth(width);
+        this._panel._updateSideBarVisibility();
+        this._panel.getContainer()[0].style.maxWidth = '';
+        this._panel.getContainer()[0].style.minWidth = '';
+
+        this._updateVDOMTemplate(newOptions);
+        this._onResizeHandler();
+    },
 
    _getRootContainer: function() {
       var container = this._vDomTemplate.getContainer();
