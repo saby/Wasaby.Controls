@@ -76,4 +76,4 @@ Object.assign(Flags.prototype, {
     _localize: true
 });
 
-register('Controls/display:Flags', Flags);
+register('Controls/display:Flags', Flags, {instantiate: false});

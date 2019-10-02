@@ -247,4 +247,4 @@ Object.assign(TreeItem.prototype, {
     _instancePrefix: 'tree-item-'
 });
 
-register('Controls/display:TreeItem', TreeItem);
+register('Controls/display:TreeItem', TreeItem, {instantiate: false});

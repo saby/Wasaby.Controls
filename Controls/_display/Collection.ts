@@ -23,7 +23,7 @@ import {
     IEnumerableComparatorSession,
     RecordSet
 } from 'Types/collection';
-import {create, resolve, register} from 'Types/di';
+import {create, register} from 'Types/di';
 import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
@@ -2345,7 +2345,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _getItemsFactory(): ItemsFactory<T> {
         return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): T {
             options.owner = this;
-            return resolve(this._itemModule, options);
+            return create(this._itemModule, options);
         };
     }
 
@@ -3165,4 +3165,4 @@ Object.assign(Collection.prototype, {
     getIdProperty: Collection.prototype.getKeyProperty
 });
 
-register('Controls/display:Collection', Collection);
+register('Controls/display:Collection', Collection, {instantiate: false});
