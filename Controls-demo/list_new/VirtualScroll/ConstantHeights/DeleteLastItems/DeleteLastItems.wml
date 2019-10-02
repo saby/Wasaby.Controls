@@ -1,0 +1,16 @@
+<div class="controlsDemo__wrapper">
+    <span class="controls-text-label_theme-default controlsDemo__mb1">Удаление последних десяти записей, pageSize 100, virtualPageSize не задан, показ с конца</span>
+    <Controls-demo.list_new.VirtualScroll.NavigationSwitcher.Index totalCount="{{_itemsCount}}" pageSize="{{25}}" page="{{40}}" direction="before">
+        <ws:content>
+            <Controls.scroll:Container attr:class="controlsDemo__maxWidth500 controlsDemo__height500">
+                <Controls.list:View source="{{_viewSource}}"
+                                    name="list"
+                                    keyProperty="id"
+                                    navigation="{{_options.navigation}}"
+                                    virtualPageSize="{{40}}"
+                                    virtualScrolling="{{true}}"/>
+            </Controls.scroll:Container>
+        </ws:content>
+    </Controls-demo.list_new.VirtualScroll.NavigationSwitcher.Index>
+    <a href="#" class="controls-text-link_theme-default" on:click="_removeItems()">Удалить последние 10 записей</a>
+</div>

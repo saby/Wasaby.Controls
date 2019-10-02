@@ -1,11 +1,42 @@
-<div class="controlsDemo__wrapper">
-    <Controls.scroll:Container attr:class="controlsDemo__maxWidth500 controlsDemo__height500">
-        <Controls.list:View source="{{_viewSource}}"
-                            keyProperty="id"
-                            virtualScrolling="{{true}}">
-            <ws:navigation source="page" view="infinity">
-                <ws:sourceConfig pageSize="{{200}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
-            </ws:navigation>
-        </Controls.list:View>
-    </Controls.scroll:Container>
+<div class="controlsDemo__wrapper controlsDemo__flexRow controlsDemo__childMinWidth400">
+    <div class="controlsDemo__cell controlsDemo__mr2">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/VirtualScroll/DifferentHeights/Default/Index' }}">
+            <a href="{{content.href}}">Стандартные значения опций</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.VirtualScroll.DifferentHeights.Default.Index/>
+    </div>
+
+
+    <div class="controlsDemo__cell controlsDemo__mr2">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/VirtualScroll/DifferentHeights/Contacts/Index' }}">
+            <a href="{{content.href}}">Эмуляция контактов</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.VirtualScroll.DifferentHeights.Contacts.Index/>
+    </div>
+
+
+    <div class="controlsDemo__cell controlsDemo__mr2">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/VirtualScroll/DifferentHeights/Tasks/Index' }}">
+            <a href="{{content.href}}">Эмуляция реестра задач</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.VirtualScroll.DifferentHeights.Tasks.Index/>
+    </div>
+
+
+    <div class="controlsDemo__cell controlsDemo__mr2">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/VirtualScroll/DifferentHeights/BigFirstItem/Index' }}">
+            <a href="{{content.href}}">Определенная запись занимает большую часть вьюпорта</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.VirtualScroll.DifferentHeights.BigFirstItem.Index/>
+    </div>
+
+
 </div>
