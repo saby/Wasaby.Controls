@@ -38,6 +38,12 @@ const
          }
 
          if (self._contentSize !== newContentSize || self._contentContainerSize !== newContentContainerSize) {
+             // if the table has increased and the scroll was at the end, it should stick at the end, with a new width
+            if (self._contentSize !== 0 &&
+               (self._scrollPosition ===  self._contentSize - self._contentContainerSize) &&
+               newContentSize > self._contentSize) {
+               self._scrollPosition = newContentSize - newContentContainerSize;
+            }
             self._contentSize = newContentSize;
             self._contentContainerSize = newContentContainerSize;
 
