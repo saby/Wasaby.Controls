@@ -255,6 +255,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                         },
                         offsetWidth: 50
                      };
+                  },
+                  style: {
+                     display: 'block',
+                     removeProperty: () => true
                   }
                }]
             }
@@ -299,6 +303,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                   ];
                } else {
                   return [{
+                     style: {
+                        display: 'block',
+                        removeProperty: () => true
+                     },
                      scrollWidth: 500,
                      offsetWidth: 250,
                      getBoundingClientRect: () => {
@@ -347,6 +355,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             content: {
                getElementsByClassName: () => {
                   return [{
+                     style: {
+                        display: 'block',
+                        removeProperty: () => true
+                     },
                      scrollWidth: 500,
                      offsetWidth: 250,
                      getBoundingClientRect: () => {
