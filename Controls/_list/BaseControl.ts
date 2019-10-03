@@ -144,6 +144,10 @@ var _private = {
                     cfg.afterReloadCallback(cfg);
                 }
 
+                if (cfg.serviceDataLoadCallback instanceof Function) {
+                    cfg.serviceDataLoadCallback(list);
+                }
+
                 if (cfg.dataLoadCallback instanceof Function) {
                     cfg.dataLoadCallback(list);
                 }
@@ -368,10 +372,12 @@ var _private = {
             if (addedItems.getCount()) {
                 self._loadedItems = addedItems;
             }
+            if (self._options.serviceDataLoadCallback instanceof Function) {
+                self._options.serviceDataLoadCallback(addedItems);
+            }
             if (userCallback && userCallback instanceof Function) {
                 userCallback(addedItems, direction);
             }
-
             _private.resolveIndicatorStateAfterReload(self, addedItems);
 
             if (self._virtualScroll) {
@@ -1490,6 +1496,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         var hasMoreData = self._items.getMetaData().more;
                         self._knownPagesCount = _private.calcPaging(self, hasMoreData, newOptions.navigation.sourceConfig.pageSize);
                         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, newOptions.navigation.sourceConfig.pageSize, self._currentPage);
+                    }
+
+                    if (newOptions.serviceDataLoadCallback instanceof Function) {
+                        newOptions.serviceDataLoadCallback(self._items);
                     }
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);

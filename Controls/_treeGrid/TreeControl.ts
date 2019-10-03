@@ -376,12 +376,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _afterMount: function() {
         _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
     },
-
-    _dataLoadCallback: function() {
-        if (this._options.dataLoadCallback) {
-            this._options.dataLoadCallback.apply(null, arguments);
-        }
-    },
     _onNodeRemoved: function(event, nodeId) {
         _private.onNodeRemoved(this, nodeId);
     },
