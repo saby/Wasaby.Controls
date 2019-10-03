@@ -122,6 +122,7 @@ var _private = {
  * @event Controls/_operationsPanel/OperationsPanel#itemClick Происходит при клике на элемент.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Record} item Элемент, по которому произвели клик.
+ * @param {Event} originalEvent Дескриптор исходного события.
  * @example
  * TMPL:
  * <pre>
