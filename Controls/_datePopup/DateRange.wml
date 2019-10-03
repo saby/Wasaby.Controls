@@ -42,7 +42,7 @@
          on:positionChanged="_onPositionChanged()"
       >
          <ws:yearHeaderTemplate>
-            <div class="controls-PeriodDialog-DateRangeItem__separator"></div>
+            <div class="{{_getSeparatorCssClass()}}"></div>
          </ws:yearHeaderTemplate>
          <ws:yearTemplate>
             <ws:partial template="Controls/calendar:MonthListYearTemplate">

@@ -72,9 +72,20 @@
       content: '';
       position: absolute;
       bottom: @height_PeriodDialog-dateRange-months-yearButton/2;
-      left: @width_PeriodDialog-dateRange-monthPanel + @width_MonthView/14;
       right: @width_MonthView/14;
       border-top: 1px solid @border-color_PeriodDialog-dateRange-months;
+   }
+}
+
+.controls-PeriodDialog-DateRangeItem__separator-sticky-support {
+   &:after {
+      left: @width_PeriodDialog-dateRange-monthPanel + @width_MonthView/14;
+   }
+}
+
+.controls-PeriodDialog-DateRangeItem__separator-not-sticky-support {
+   &:after {
+      left: @width_MonthView/14;
    }
 }
 
