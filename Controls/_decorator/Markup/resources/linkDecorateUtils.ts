@@ -4,6 +4,7 @@
 import base64 = require('Core/base64');
 import { constants } from 'Env/Env';
 import * as objectMerge from 'Core/core-merge';
+import {Set} from 'Types/shim';
 
 const hrefMaxLength = 1499;
 const onlySpacesRegExp = /^\s+$/;
