@@ -202,9 +202,8 @@ class Base extends Control<ISliderBaseOptions> {
    private _pointData: IPointDataList = undefined;
    private _scaleData: IScaleData[] = undefined;
 
-   private _tooltipValue: number = undefined;
-   private _isClick: boolean = false;
-   private _isTooltip: boolean = false;
+   private _tooltipValue: number | null = null;
+   private _isDrag: boolean = false;
 
    private _render(minValue: number, maxValue: number, value: number): void {
       const rangeLength = maxValue - minValue;
@@ -234,7 +233,8 @@ class Base extends Control<ISliderBaseOptions> {
    }
 
    private _getValue(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
-      let targetX = Utils.getNativeEventPageX(event);
+      let targetX = event.type === 'mousedown' || event.type === 'touchstart'
+          ? Utils.getNativeEventPageX(event) : event.nativeEvent.pageX;
       const box = this._children.area.getBoundingClientRect();
       const ratio = Utils.getRatio(targetX, box.left + window.pageXOffset, box.width);
       return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
@@ -264,24 +264,23 @@ class Base extends Control<ISliderBaseOptions> {
 
    private _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
       if (!this._options.readOnly) {
-         this._isClick = true;
+         this._isDrag = true;
          this._value = this._getValue(event);
          this._setValue(this._value);
          this._children.dragNDrop.startDragNDrop(this._children.point, event);
       }
    }
 
-   private _onMouseMoveAndTouchMoveHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
+   private _onMouseMove(event: SyntheticEvent<MouseEvent>): void {
       if (!this._options.readOnly) {
-         this._isClick = false;
-         this._isTooltip = true;
+         this._isDrag = false;
          this._tooltipValue = this._getValue(event);
       }
    }
 
-   private _onMouseOutAndTouchEndHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
-      if (!this._options.readOnly && !this._isClick) {
-         this._isTooltip = false;
+   private _onMouseOut(event: SyntheticEvent<MouseEvent>): void {
+      if (!this._options.readOnly && !this._isDrag) {
+         this._tooltipValue = null;
       }
    }
 
