@@ -149,14 +149,16 @@
  * _sorting: null,
  * _header: null,
  * _beforeMount: function(){
- *     this._sorting = [{
+ *     this._sorting = [
+ *     {
  *         price: 'desc'
  *     },
  *     {
  *         balance: 'asc'
  *     }
  *     ],
- *  this._header = [{
+ *     this._header = [
+ *     {
  *         title: 'Цена',
  *         sortingProperty: 'price'
  *     },
