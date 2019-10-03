@@ -1,6 +1,7 @@
 <Controls.suggest:_InputController
       name="layout"
       on:choose="_choose()"
+      on:activated="_activated()"
       on:deactivated="_deactivated()"
       on:suggestStateChanged="_suggestStateChanged()"
       bind:suggestState="_suggestState"
