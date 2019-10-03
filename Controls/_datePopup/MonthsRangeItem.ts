@@ -33,6 +33,9 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _SELECTION_VEIW_TYPES: SELECTION_VEIW_TYPES,
 
+    _FULL_HALF_YEAR: formatDate.FULL_HALF_YEAR,
+    _FULL_QUATER: formatDate.FULL_QUATER,
+
     _yearStructure: [{
         name: 'I',
         startMonth: 0,
