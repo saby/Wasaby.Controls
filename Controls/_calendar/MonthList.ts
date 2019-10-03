@@ -103,7 +103,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             IoC.resolve('ILogger').warn('MonthList', 'Используется устаревшая опция startPosition, используйте опцию position');
         }
 
-        this._enrichItemsDebounced = debounce(this._enrichItems, 300);
+        this._enrichItemsDebounced = debounce(this._enrichItems, 150);
 
         this._updateItemTemplate(options);
         this._updateSource(options);
