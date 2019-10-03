@@ -243,28 +243,35 @@ var
                 self._expandedItems.push(itemId);
             }
         },
+
+        isDrawNodeFooterTemplate(self, item) {
+            let nodeFooterVisibility = !!self._options.nodeFooterTemplate;
+            if (nodeFooterVisibility && self._options.nodeFooterVisibilityCallback) {
+                nodeFooterVisibility = self._options.nodeFooterVisibilityCallback(item) !== false;
+            }
+            return nodeFooterVisibility;
+        },
+
         setNodeFooterWithTask1177672941(self, current) {
             current.nodeFooter = [];
             if (current.item.get(current.nodeProperty) !== null && current.isExpanded) {
                 current.hasChildren = self._display.getChildren(current.dispItem).getCount() || (self._editingItemData && self._editingItemData.item.get(current.parentProperty) === current.key);
-                if (current.item.get(current.nodeProperty) && !current.hasChildren && self._options.nodeFooterTemplate) {
-                    let idx = current.nodeFooter.push({
+                if (current.item.get(current.nodeProperty) && !current.hasChildren && _private.isDrawNodeFooterTemplate(self, current.item)) {
+                    current.nodeFooter.push({
                         key: current.key,
                         task1177672941: true,
                         item: current.dispItem.getContents(),
                         dispItem: current.dispItem,
                         multiSelectVisibility: current.multiSelectVisibility,
                         getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
-                        level: current.dispItem.getLevel()
-                    }) - 1;
-                    if (self._options.nodeFooterTemplate) {
-                        current.nodeFooter[idx].template = self._options.nodeFooterTemplate;
-                    }
+                        level: current.dispItem.getLevel(),
+                        template: self._options.nodeFooterTemplate
+                    });
                 }
             }
             var itemParent = current.dispItem.getParent();
             var itemParentKey = current.item.get(current.parentProperty);
-            if (itemParentKey !== self._display.getRoot().getContents() && (self._options.nodeFooterTemplate || self._hasMoreStorage && self._hasMoreStorage[itemParentKey])) {
+            if (itemParentKey !== self._display.getRoot().getContents() && (_private.isDrawNodeFooterTemplate(self, current.item) || self._hasMoreStorage && self._hasMoreStorage[itemParentKey])) {
                 var itemParentChilds = self._hierarchyRelation.getChildren(itemParentKey, self._items);
                 if (itemParentChilds && itemParentChilds[itemParentChilds.length - 1].getId() === current.key) {
                     if ((self._hasMoreStorage && self._hasMoreStorage[itemParentKey] &&
@@ -278,7 +285,7 @@ var
                             getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                             level: itemParent.getLevel()
                         }) - 1;
-                        if (self._options.nodeFooterTemplate) {
+                        if (_private.isDrawNodeFooterTemplate(self, current.item)) {
                             current.nodeFooter[idx].template = self._options.nodeFooterTemplate;
                         }
                         if (self._hasMoreStorage && self._hasMoreStorage[itemParentKey]) {
@@ -294,7 +301,8 @@ var
                     const dadDispItem = itemParent.getParent();
                     const dadId = itemParent.getParent().getContents().getId();
                     const dadChildren = self._hierarchyRelation.getChildren(dadId, self._items);
-                    if (dadChildren && dadChildren[dadChildren.length - 1].getId() === itemParentKey) {
+                    if (dadChildren && dadChildren[dadChildren.length - 1].getId() === itemParentKey &&
+                       _private.isDrawNodeFooterTemplate(self, dadDispItem.getContents()) || self._hasMoreStorage && self._hasMoreStorage[dadId]) {
                         let idx = current.nodeFooter.push({
                             key: dadId,
                             task1177672941: true,
@@ -304,7 +312,7 @@ var
                             getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                             level: dadDispItem.getLevel()
                         }) - 1;
-                        if (self._options.nodeFooterTemplate) {
+                        if (_private.isDrawNodeFooterTemplate(self, dadDispItem.getContents())) {
                             current.nodeFooter[idx].template = self._options.nodeFooterTemplate;
                         }
                         if (self._hasMoreStorage && self._hasMoreStorage[dadId]) {
@@ -318,23 +326,23 @@ var
         setNodeFooterIfNeed(self, current) {
             if (current.item.get(current.nodeProperty) !== null && current.isExpanded) {
                 current.hasChildren = self._display.getChildren(current.dispItem).getCount() || (self._editingItemData && self._editingItemData.item.get(current.parentProperty) === current.key);
-                if (current.item.get(current.nodeProperty) && !current.hasChildren && self._options.nodeFooterTemplate) {
+                if (current.item.get(current.nodeProperty) && !current.hasChildren && _private.isDrawNodeFooterTemplate(self, current.item)) {
                     current.nodeFooter = {
                         key: current.key,
                         item: current.dispItem.getContents(),
                         dispItem: current.dispItem,
                         getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                         multiSelectVisibility: current.multiSelectVisibility,
-                        level: current.dispItem.getLevel()
+                        level: current.dispItem.getLevel(),
+                        template: self._options.nodeFooterTemplate
                     };
-                    if (self._options.nodeFooterTemplate) {
-                        current.nodeFooter.template = self._options.nodeFooterTemplate;
-                    }
                 }
             }
             var itemParent = current.dispItem.getParent();
             var itemParentKey = current.item.get(current.parentProperty);
-            if (itemParentKey !== self._display.getRoot().getContents() && (self._options.nodeFooterTemplate || self._hasMoreStorage && self._hasMoreStorage[itemParentKey])) {
+            // Запись не в корне и есть nodeFooterTemplate или hasMore
+            // вот тут добавить вызов каллбека после проверки на hasMoreStorage
+            if (itemParentKey !== self._display.getRoot().getContents() && (itemParent && _private.isDrawNodeFooterTemplate(self, itemParent.getContents()) || self._hasMoreStorage && self._hasMoreStorage[itemParentKey])) {
                 var itemParentChilds = self._hierarchyRelation.getChildren(itemParentKey, self._items);
                 if (itemParentChilds && itemParentChilds[itemParentChilds.length - 1].getId() === current.key) {
                     current.nodeFooter = {
@@ -345,7 +353,7 @@ var
                         getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                         level: itemParent.getLevel()
                     };
-                    if (self._options.nodeFooterTemplate) {
+                    if (_private.isDrawNodeFooterTemplate(self, itemParent.getContents())) {
                         current.nodeFooter.template = self._options.nodeFooterTemplate;
                     }
                     if (self._hasMoreStorage && self._hasMoreStorage[itemParentKey]) {
