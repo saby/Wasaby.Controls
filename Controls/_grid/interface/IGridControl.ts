@@ -150,6 +150,9 @@
  * @property {Number} endColumn Порядковый номер колонки на которой заканчивается ячейка.
  * @property {Object} templateOptions Опции, передаваемые в шаблон ячейки заголовка.
  * @property {cellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
+ * @remark
+ * По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
+ * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
  */
 
 /*
@@ -167,41 +170,26 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#header
- * @cfg {Array.<HeaderCell>} Описывает шапку таблицы.
+ * @cfg {Array.<HeaderCell>} Описывает шапку таблицы. В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки. Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки. Условная ячейки таблицы нумеруются слева направо. Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке. 
  * - <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
  * - <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
- * @remark
- * По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
- * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
- *
- * 
  *
  * @example
- * Пример добавления пользовательскогого шаблона:
+ * Пример 1. Для первой ячейки задаём пользовательский шаблон.
  * <pre>
  *    <Controls.grid:View>
- *       <ws:header>
- *           <ws:template>
- *             <Controls.buttons:Button caption="Description" />
- *           </ws:template>
+ *       <ws:header> 
+ *          <ws:Array>
+ *              <ws:template>
+ *                  <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
+ *              </ws:template>
+ *          <ws: Array>
  *       </ws:header>
  *    </Controls.grid:View>
  * </pre>
  *
  * @example
- * Пример добавления интервала между текстами заголовков для столбцов с денежными полями:
- * <pre>
- *    <Controls.grid:View>
- *       <ws:header>
- *           <ws:template>
- *              <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
- *           </ws:template>
- *       </ws:header>
- *    </Controls.grid:View>
- * </pre>
- *
- * @example
- * Пример массива колонок многоуровневого заголовка:
+ * Пример 2. Настройка опции задаётся в хуке и передаётся в шаблон.
  * <pre>
  * _header: null,
  * _beforeMount: function(options) {
