@@ -27,6 +27,7 @@ import {TouchContextField} from 'Controls/context';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
+import uDimension = require("Controls/Utils/getDimensions");
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -49,7 +50,7 @@ const
 const LOAD_TRIGGER_OFFSET = 100;
 const INITIAL_PAGES_COUNT = 1;
 const ITEMACTIONS_UNLOCK_DELAY = 200;
-const SET_MARKER_AFTER_SCROLL_DELAY = 250;
+const SET_MARKER_AFTER_SCROLL_DELAY = 100;
 /**
  * Object with state from server side rendering
  * @typedef {Object}
@@ -808,14 +809,45 @@ var _private = {
     }, ITEMACTIONS_UNLOCK_DELAY),
 
     setMarkerAfterScrolling: function(self, scrollTop) {
-        if (self._children.listView) {
-            self._children.listView.setMarkedKeyAfterScroll(scrollTop);
-        }
+        let itemsContainer = self._children.listView.getItemsContainer();
+        let topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
+        _private.setMarkerToFirstVisibleItem(self, itemsContainer, scrollTop - topOffset + self._headersHeight);
         self._setMarkerAfterScroll = false;
     },
+
+    // TODO KINGO: Задержка нужна, чтобы расчет видимой записи производился после фиксации заголовка
     delayedSetMarkerAfterScrolling: debounce((self, scrollTop) => {
         _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
+
+    getTopOffsetForItemsContainer: function(self, itemsContainer) {
+        let offsetTop = uDimension(itemsContainer.children[0]).top;
+        let container = self._container[0] || self._container;
+        offsetTop += container.offsetTop - uDimension(container).top;
+        return offsetTop;
+    },
+
+    setMarkerToFirstVisibleItem: function(self, itemsContainer, verticalOffset) {
+        let firstItemIndex = self._listViewModel.getStartIndex();
+        firstItemIndex += _private.getFirstVisibleItemIndex(itemsContainer, verticalOffset);
+        self._listViewModel.setMarkerOnValidItem(firstItemIndex);
+    },
+
+    getFirstVisibleItemIndex: function(itemsContainer, verticalOffset) {
+        let items = itemsContainer.children;
+        let itemsCount = items.length;
+        let itemsHeight = 0;
+        let i = 0;
+        if (verticalOffset <= 0) {
+            return 0;
+        }
+        itemsHeight += uDimension(items[0]).height;
+        while (itemsHeight <= verticalOffset && i++ < itemsCount) {
+            itemsHeight += uDimension(items[i]).height;
+        }
+        return i + 1;
+    },
+
 
     handleListScrollSync(self, params) {
         if (self._hasItemActions){
@@ -834,7 +866,7 @@ var _private = {
             };
         }
         if (self._setMarkerAfterScroll) {
-            _private.setMarkerAfterScrolling(self, params.scrollTop);
+            _private.delayedSetMarkerAfterScrolling(self, params.scrollTop);
         }
     },
 
@@ -1369,6 +1401,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _itemReloaded: false,
 
+    _headersHeight: 0,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1384,6 +1418,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      */
     _beforeMount: function(newOptions, context, receivedState: ReceivedState = {}) {
         var self = this;
+
+
+        this._headersHeight = newOptions.fixedHeadersHeights || 0;
 
         // todo Костыль, т.к. построение ListView зависит от SelectionController.
         // Будет удалено при выполнении одного из пунктов:
@@ -1520,6 +1557,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.initializeNavigation(this, newOptions);
         }
         _private.updateNavigation(this);
+
+        if (newOptions.fixedHeadersHeights !== this._options.fixedHeadersHeights) {
+            this._headersHeight = newOptions.fixedHeadersHeights || 0;
+        }
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;

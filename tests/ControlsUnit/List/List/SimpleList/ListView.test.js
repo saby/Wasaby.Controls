@@ -271,56 +271,6 @@ define([
          lv._onItemMouseDown({ preventItemEvent: true }, dispItem);
          assert.isNull(notifyResult, '_onItemMouseDown should ignore preventItemEvent events');
       });
-      describe('move marker after scroll', async function() {
-         var
-             model = new lists.ListViewModel({
-                items: data,
-                keyProperty: 'id',
-                markedKey: null
-             }),
-             cfg = {
-                listModel: model,
-                keyProperty: 'id',
-             },
-             lv = new lists.ListView(cfg);
-         lv.saveOptions(cfg);
-         lv._beforeMount(cfg);
-         lv._listModel.getItems = function() {
-            return {
-               at: function (i) {
-                  return {
-                     getId: function () {
-                        return i;
-                     }
-                  };
-               }
-            }
-         }
-         lv._children.itemsContainer = {
-            children:[
-               {offsetHeight: 30},
-               {offsetHeight: 30},
-               {offsetHeight: 30},
-            ]
-         };
-         it('_getFirstVisibleItemIndex', function() {
-            assert.equal(lv._getFirstVisibleItemIndex(lv._children.itemsContainer, 0), 0);
-            assert.equal(lv._getFirstVisibleItemIndex(lv._children.itemsContainer, 10), 1);
-            assert.equal(lv._getFirstVisibleItemIndex(lv._children.itemsContainer, 30), 2);
-            assert.equal(lv._getFirstVisibleItemIndex(lv._children.itemsContainer, 59), 2);
-         });
-         it('setMarkedKeyAfterScroll', function() {
-            lv.setMarkedKeyAfterScroll(0);
-            assert.equal(lv._listModel.getMarkedKey(), 0);
-            lv.setMarkedKeyAfterScroll(10);
-            assert.equal(lv._listModel.getMarkedKey(), 1);
-            lv.setMarkedKeyAfterScroll(30);
-            assert.equal(lv._listModel.getMarkedKey(), 2);
-            lv.setMarkedKeyAfterScroll(59);
-            assert.equal(lv._listModel.getMarkedKey(), 2);
-         });
-
-      });
       describe('_onItemContextMenu', function() {
          it('contextMenuVisibility: true', function() {
             var

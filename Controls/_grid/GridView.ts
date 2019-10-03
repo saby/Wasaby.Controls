@@ -159,24 +159,6 @@ var
             } while (cells.length > 0 && cells.length < totalColumns);
 
             return cells;
-        },
-        getHeaderHeight: function (self) {
-            const container = self._container[0] || self._container;
-            let headerHeight = 0;
-            if (!container) {
-                return 0;
-            }
-            const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0] && container.getElementsByClassName('controls-Grid__header')[0].childNodes;
-            if (HeaderGroup && !!HeaderGroup.length) {
-                headerHeight += HeaderGroup[0].offsetHeight;
-            }
-            if (self._options.listModel.getResultsPosition() === 'top') {
-                const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0] && container.getElementsByClassName('controls-Grid__results')[0].childNodes;
-                if (ResultsContainer && !!ResultsContainer.length) {
-                    headerHeight += ResultsContainer[0].offsetHeight;
-                }
-            }
-            return headerHeight;
         }
     },
     GridView = ListView.extend({

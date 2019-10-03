@@ -58,12 +58,6 @@ var _private = {
             var container = nativeEvent ? nativeEvent.target.closest('.controls-ListView__itemV') : null;
             self._notify('hoveredItemChanged', [item, container]);
         }
-    },
-    setMarkerToFirstVisibleItem: function(self, itemsContainer, scrollTop) {
-        let firstItemIndex = self._listModel.getStartIndex();
-        firstItemIndex += self._getFirstVisibleItemIndex(itemsContainer, scrollTop);
-        let firstItemId = self._listModel.getItems().at(firstItemIndex).getId();
-        self._listModel.setMarkedKey(firstItemId);
     }
 };
 
@@ -181,6 +175,10 @@ var ListView = BaseControl.extend(
             return this._children.itemsContainer;
         },
 
+        getItemsContatinerOffset: function() {
+
+        },
+
         _onItemClick: function(e, dispItem) {
             // Флаг preventItemEvent выставлен, если нужно предотвратить возникновение
             // событий itemClick, itemMouseDown по нативному клику, но по какой-то причине
@@ -258,27 +256,7 @@ var ListView = BaseControl.extend(
 
         getHoveredItem: function () {
             return this._listModel.getHoveredItem();
-        },
-        setMarkedKeyAfterScroll: function(scrollTop) {
-            _private.setMarkerToFirstVisibleItem(this, this._children.itemsContainer, scrollTop);
-        },
-        _getItemHeight: function(items, index) {
-            return items[index] ? items[index].offsetHeight : 0;
-        },
-        _getFirstVisibleItemIndex: function(itemsContainer, scrollTop) {
-            let items = itemsContainer.children;
-            let itemsCount = items.length;
-            let itemsHeight = 0;
-            let i = 0;
-            if (scrollTop === 0) {
-                return 0;
-            }
-            itemsHeight += this._getItemHeight(items, 0);
-            while (itemsHeight <= scrollTop && i++ < itemsCount) {
-                itemsHeight += this._getItemHeight(items, i);
-            }
-            return i + 1;
-        },
+        }
     });
 
 ListView.getDefaultOptions = function() {
