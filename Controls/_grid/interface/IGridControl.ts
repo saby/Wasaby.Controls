@@ -144,7 +144,34 @@
  * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
  * @property {String} template Шаблон заголовка ячейки. CSS-класс устанавливает правый отступ для заголовка ячейки в целях выравнивания по целым числам в полях ввода денег.  По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
  * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
- * @property {String} sortingProperty Свойство, по которому выполняется сортировка.
+ * @property {String} sortingProperty в качестве значения принимает имя поля. Если в конфигурации ячейки задать это свойство, то в шапке таблицы в конкретной ячейки будет отображаться кнопка для изменения сортировки. Клик по кнопке будет менять порядок сортировки элементов на противоположный. При этом элементы будут отсортированы по полю, имя которого указано в свойстве sortingProperty.
+ * <pre class="brush: js">
+ * _sorting: null,
+ * _header: null,
+ * _beforeMount: function(){
+ *     this._sorting = [{
+ *         price: 'desc'
+ *     },
+ *     {
+ *         balance: 'asc'
+ *     }
+ *     ],
+ *  this._header = [{
+ *         title: 'Цена',
+ *         sortingProperty: 'price'
+ *     },
+ *     {
+ *         title: 'Остаток',
+ *         sortingProperty: 'balance'
+ *     }
+ *     ];
+ * }
+ * </pre>
+ * <pre class="brush: html>"
+ * <Controls.grid:View bind:sorting="_sorting" header="{{_header}}">
+ *    ...
+ * </Controls.grid:View>
+ * </pre>
  * @property {Number} startRow Порядковый номер строки на которой начинается ячейка.
  * @property {Number} endRow Порядковый номер строки на которой заканчивается ячейка.
  * @property {Number} startColumn Порядковый номер колонки на которой начинается ячейка.
