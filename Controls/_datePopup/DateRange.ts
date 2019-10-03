@@ -146,6 +146,12 @@ var Component = BaseControl.extend([EventProxy], {
 
     _onPositionChanged: function(e: Event, position: Date) {
         _private.notifyPositionChanged(this, position);
+    },
+
+    _getSeparatorCssClass: function(): string {
+        return this._isStickySupport ?
+            'controls-PeriodDialog-DateRangeItem__separator controls-PeriodDialog-DateRangeItem__separator-sticky-support' :
+            'controls-PeriodDialog-DateRangeItem__separator controls-PeriodDialog-DateRangeItem__separator-not-sticky-support';
     }
 
 });
