@@ -501,6 +501,172 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.deepEqual(100, columnScroll._fixedColumnsWidth);
          assert.deepEqual(resultChangesInnerHTML, changesInnerHTML);
       });
+
+      it('borderScrollPosition(end) with changes table width', function() {
+         var newCfg = {
+            items: {
+               getCount: () => 1
+            },
+            header: [{}, {}, {}],
+            stickyColumnsCount: 1,
+            columnScrollStartPosition: 'end',
+            listModel: {
+               isFullGridSupport: () => true,
+               getResultsPosition: () => undefined,
+               getItems: () => ({
+                  getCount: () => 3
+               })
+            }
+         };
+         let newColumnScroll = new ColumnScroll(newCfg);
+
+         newColumnScroll._children = {
+            contentStyle: {},
+            content: {
+               getElementsByClassName: () => {
+                  return [{
+                     scrollWidth: 450,
+                     offsetWidth: 200,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 20
+                        }
+                     },
+                     querySelector: function () {
+                        return {
+                           getBoundingClientRect: () => {
+                              return {
+                                 left: 44
+                              }
+                           },
+                           offsetWidth: 76
+                        };
+                     }
+                  }]
+               }
+            }
+         };
+         newColumnScroll.saveOptions(newCfg);
+         newColumnScroll._afterMount(newCfg);
+
+         assert.equal(450, newColumnScroll._contentSize);
+         assert.equal(200, newColumnScroll._contentContainerSize);
+         assert.equal(newColumnScroll._contentSize - newColumnScroll._contentContainerSize, newColumnScroll._scrollPosition);
+
+         newColumnScroll._children = {
+            contentStyle: {},
+            content: {
+               getElementsByClassName: () => {
+                  return [{
+                     scrollWidth: 650,
+                     offsetWidth: 200,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 20
+                        }
+                     },
+                     querySelector: function () {
+                        return {
+                           getBoundingClientRect: () => {
+                              return {
+                                 left: 44
+                              }
+                           },
+                           offsetWidth: 76
+                        };
+                     }
+                  }]
+               }
+            }
+         };
+         newColumnScroll._resizeHandler();
+         assert.equal(650, newColumnScroll._contentSize);
+         assert.equal(200, newColumnScroll._contentContainerSize);
+         assert.equal(newColumnScroll._contentSize - newColumnScroll._contentContainerSize, newColumnScroll._scrollPosition);
+      });
+
+      it('borderScrollPosition(start) with changes table width', function() {
+         var newCfg = {
+            items: {
+               getCount: () => 1
+            },
+            header: [{}, {}, {}],
+            stickyColumnsCount: 1,
+            listModel: {
+               isFullGridSupport: () => true,
+               getResultsPosition: () => undefined,
+               getItems: () => ({
+                  getCount: () => 3
+               })
+            }
+         };
+         let newColumnScroll = new ColumnScroll(newCfg);
+
+         newColumnScroll._children = {
+            contentStyle: {},
+            content: {
+               getElementsByClassName: () => {
+                  return [{
+                     scrollWidth: 450,
+                     offsetWidth: 200,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 20
+                        }
+                     },
+                     querySelector: function () {
+                        return {
+                           getBoundingClientRect: () => {
+                              return {
+                                 left: 44
+                              }
+                           },
+                           offsetWidth: 76
+                        };
+                     }
+                  }]
+               }
+            }
+         };
+         newColumnScroll.saveOptions(newCfg);
+         newColumnScroll._afterMount(newCfg);
+
+         assert.equal(450, newColumnScroll._contentSize);
+         assert.equal(200, newColumnScroll._contentContainerSize);
+         assert.equal(0, newColumnScroll._scrollPosition);
+
+         newColumnScroll._children = {
+            contentStyle: {},
+            content: {
+               getElementsByClassName: () => {
+                  return [{
+                     scrollWidth: 650,
+                     offsetWidth: 200,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 20
+                        }
+                     },
+                     querySelector: function () {
+                        return {
+                           getBoundingClientRect: () => {
+                              return {
+                                 left: 44
+                              }
+                           },
+                           offsetWidth: 76
+                        };
+                     }
+                  }]
+               }
+            }
+         };
+         newColumnScroll._resizeHandler();
+         assert.equal(650, newColumnScroll._contentSize);
+         assert.equal(200, newColumnScroll._contentContainerSize);
+         assert.equal(0, newColumnScroll._scrollPosition);
+      });
+
       it('_positionChangedHandler', function() {
          // Scroll to 100px
          columnScroll._container = {
