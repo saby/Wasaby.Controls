@@ -1210,6 +1210,11 @@ define([
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
 
          lists.BaseControl._private.showIndicator(ctrl);
+         assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
+         assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
+         lists.BaseControl._private.hideIndicator(ctrl);
+
+         lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
          assert.isTrue(!!ctrl._loadingIndicatorTimer, 'all', 'Loading timer should created');
@@ -1220,6 +1225,7 @@ define([
          // искуственно покажем картинку
          ctrl._showLoadingIndicatorImage = true;
 
+         lists.BaseControl._private.hideIndicator(ctrl);
          lists.BaseControl._private.showIndicator(ctrl);
          assert.isTrue(ctrl._loadingIndicatorTimer === ctrl._loadingIndicatorTimer, 'all', 'Loading timer created one more tile');
 

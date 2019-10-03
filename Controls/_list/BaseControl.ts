@@ -720,7 +720,7 @@ var _private = {
     },
 
     showIndicator: function(self, direction = 'all') {
-        if (!self._isMounted) {
+        if (!self._isMounted || !!self._loadingState) {
             return
         }
 
