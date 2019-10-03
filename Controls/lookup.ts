@@ -12,6 +12,7 @@
  * @includes ButtonItemTemplate wml!Controls/_lookup/Button/itemTemplate
  * @includes Link Controls/_lookup/Lookup/Link
  * @includes PlaceholderChooser Controls/_lookup/PlaceholderChooser
+ * @includes Collection Controls/_lookup/SelectedCollection
  * @public
  * @author Крайнов Д.О.
  */
@@ -30,7 +31,7 @@
  * @includes ButtonItemTemplate wml!Controls/_lookup/Button/itemTemplate
  * @includes PlaceholderChooser Controls/_lookup/PlaceholderChooser
  * @includes Link Controls/_lookup/Lookup/Link
- * @includes PlaceholderChooser Controls/_lookup/PlaceholderChooser
+ * @includes Collection Controls/_lookup/SelectedCollection
  * @public
  * @author Крайнов Д.О.
  */
