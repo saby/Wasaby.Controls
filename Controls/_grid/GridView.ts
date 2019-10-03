@@ -353,18 +353,6 @@ var
             //we do not need to fire itemClick on clicking on editArrow
             e.stopPropagation();
         },
-        _getItemHeight: function(items, index) {
-            return items[index].children[0].offsetHeight;
-        },
-        _getFirstVisibleItemIndex: function(itemsContainer, scrollTop) {
-            if (!this._options.stickyHeader) {
-                scrollTop -= _private.getHeaderHeight(this);
-            }
-            if (this._itemsContainerForPartialSupport) {
-                return GridView.superclass._getFirstVisibleItemIndex.call(this, this._itemsContainerForPartialSupport, scrollTop);
-            }
-            return GridView.superclass._getFirstVisibleItemIndex.call(this, itemsContainer, scrollTop);
-        },
     });
 
 GridView._private = _private;
