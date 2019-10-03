@@ -198,7 +198,7 @@ const
              !isEqualWithSkip(this._options.columns, oldOptions.columns, { template: true, resultTemplate: true })
              || this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility
          ) {
-            // скрываем скролл, что-бы он не распирал таблицу при изменении ширины
+            // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл, что-бы он не распирал таблицу при изменении ширины
             _private.setDispalyNoneForScroll(this._children.content);
             _private.updateSizes(this);
             _private.removeDisplayFromScroll(this._children.content);
