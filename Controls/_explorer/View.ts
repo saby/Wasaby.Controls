@@ -106,12 +106,9 @@ import 'Controls/breadcrumbs';
 
             return breadCrumbs;
          },
-         dataLoadCallback: function(self, data) {
+         serviceDataLoadCallback: function(self, data) {
              self._breadCrumbsItems = _private.getPath(data);
              self._forceUpdate();
-             if (self._options.dataLoadCallback) {
-                self._options.dataLoadCallback(data);
-             }
          },
          itemsReadyCallback: function(self, items) {
             self._items = items;
@@ -292,7 +289,7 @@ import 'Controls/breadcrumbs';
       _dragControlId: null,
 
       _beforeMount: function(cfg) {
-         this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
+         this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
          this._itemsSetCallback = _private.itemsSetCallback.bind(null, this);
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
