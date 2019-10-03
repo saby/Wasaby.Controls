@@ -54,7 +54,9 @@ var _private = {
             homePathSpacing;
 
         self._backButtonCaption = ItemsUtil.getPropertyValue(options.items[options.items.length - 1], self._options.displayProperty);
-        if (options.items.length > 1) {
+
+        //containerWidth is equal to 0, if path is inside hidden node. (for example switchableArea)
+        if (options.items.length > 1 && containerWidth > 0) {
             self._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
            homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__homeContainer"><div class="controls-BreadCrumbsPath__home icon-Home3"></div></div>');
            homePathSpacing = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__breadCrumbs_home-path-spacing"></div>');
@@ -213,8 +215,7 @@ var BreadCrumbsPath = Control.extend({
         }
         const containerWidth = _private.getAvailableContainerWidth(this);
 
-        //containerWidth is less than 0, if path is inside hidden node. (for example switchableArea)
-        if (containerWidth > 0 && BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
+        if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
             this._oldWidth = containerWidth;
             _private.calculateItems(this, newOptions, containerWidth);
         }
