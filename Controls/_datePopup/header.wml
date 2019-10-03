@@ -25,6 +25,7 @@
          showUndefined="{{true}}"
          clearButtonVisible="{{_options.clearButtonVisible}}"
          clickable="{{_options.selectionType !== 'quantum'}}"
+         tooltip="{[Показать поля ввода]}"
          on:linkClick="_headerLinkClick()"
          on:rangeChanged="_onHeaderLinkRangeChanged()"
       />
@@ -94,9 +95,10 @@
       iconStyle="success"
       iconSize="m"
       height="l"
+      tooltip="{[Подтвердить]}"
       attr:class="controls-PeriodDialog__applyButton"
       on:click="_applyClick()"
    />
 
-   <Controls.popupTemplate:CloseButton on:click="_closeClick()"/>
+   <Controls.popupTemplate:CloseButton attr:title="{[Закрыть]}" on:click="_closeClick()"/>
 </div>

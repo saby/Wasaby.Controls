@@ -8,15 +8,29 @@
         </ws:if>
         <span class="controls-DateLinkView__value-wrapper {{_isMinWidth ? 'controls-DateLinkView__value-wrapper-minWidth'}}">
            <ws:if data="{{ _viewMode == 'selector' }}">
-              <span class="controls-DateLinkView__value {{ _styleClass }}_theme-{{_options.theme}} {{ _valueEnabledClass }}" on:click="_onClick()">
+              <span
+                    class="controls-DateLinkView__value {{ _styleClass }}_theme-{{_options.theme}} {{ _valueEnabledClass }}"
+                    title="{{_options.tooltip}}"
+                    on:click="_onClick()">
                  {{ _caption }}
               </span>
            </ws:if>
            <ws:else data="{{ _viewMode == 'link' }}">
-              <Controls.buttons:Button name="Link" caption="{{ _caption }}" style="{{_styleMode}}" fontSize="{{_options.fontSize}}" viewMode="link" on:click="_onClick()"/>
+              <Controls.buttons:Button
+                    name="Link" caption="{{ _caption }}"
+                    style="{{_styleMode}}"
+                    fontSize="{{_options.fontSize}}"
+                    viewMode="link"
+                    tootltip="{{_options.tooltip}}"
+                    on:click="_onClick()"/>
            </ws:else>
            <ws:else>
-              <Controls.input:Label name="Link" caption="{{ _caption }}" underline="hovered" on:click="_onClick()"/>
+              <Controls.input:Label
+                    name="Link"
+                    caption="{{ _caption }}"
+                    underline="hovered"
+                    tootltip="{{_options.tooltip}}"
+                    on:click="_onClick()"/>
            </ws:else>
         </span>
         <ws:if data="{{ _clearButtonVisible }}">
