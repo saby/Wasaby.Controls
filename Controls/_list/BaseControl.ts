@@ -1417,7 +1417,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     }
 
                     if (newOptions.serviceDataLoadCallback instanceof Function) {
-                        newOptions.serviceDataLoadCallback(self._list);
+                        newOptions.serviceDataLoadCallback(self._items);
                     }
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);
