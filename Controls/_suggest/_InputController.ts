@@ -468,11 +468,8 @@ var SuggestLayout = Control.extend({
       item = item || event;
       _private.close(this);
       _private.closePopup(this);
-
-      // after select from the suggest, focus on input will lost
-      // if the focus should be returned, the control (such Input/Suggest) should do it
-      this._inputActive = false;
       this._notify('choose', [item]);
+
       if (this._options.historyId) {
          _private.getHistoryService(this).addCallback(function(historyService) {
             historyService.update(item, {$_history: true});
