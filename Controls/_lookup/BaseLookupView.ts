@@ -47,6 +47,7 @@ var _private = {
 var BaseLookupView = Control.extend({
     _template: template,
     _notifyHandler: tmplNotify,
+    _active: false,
     _inputValue: '',
     _suggestState: false,
     _infoboxOpened: false,
@@ -119,7 +120,7 @@ var BaseLookupView = Control.extend({
             this._needSetFocusInInput = false;
 
             /* focus can be moved in choose event */
-            if (this._$active) {
+            if (this._active) {
                 this.activate();
             }
         }
@@ -174,7 +175,12 @@ var BaseLookupView = Control.extend({
         }
     },
 
-    _deactivated: function () {
+    private _activated: function(): void {
+        this._active = true;
+    },
+
+    private _deactivated: function(): void {
+        this._active = false;
         this._suggestState = false;
     },
 
