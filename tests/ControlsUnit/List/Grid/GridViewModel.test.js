@@ -1188,6 +1188,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._model._setEditingItemData = nativeFn;
          });
 
+          it('update prefix setEditingItemData with column scroll', function () {
+              const initialStatus = GridLayoutUtil.isPartialGridSupport;
+              GridLayoutUtil.isPartialGridSupport = () => false;
+              gridViewModel.getColumnsWidthForEditingRow = () => [];
+              const oldPrefixItemVersion = gridViewModel._model._prefixItemVersion;
+              gridViewModel._setEditingItemData({index: 1});
+              assert.equal(oldPrefixItemVersion+1, gridViewModel._model._prefixItemVersion);
+              GridLayoutUtil.isPartialGridSupport = initialStatus;
+          });
+
          it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
             gridViewModel._prepareHeaderColumns(gridHeader, true);
             const headerRow = gridViewModel.getCurrentHeaderRow();

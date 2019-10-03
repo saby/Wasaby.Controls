@@ -1369,7 +1369,7 @@ var
 
             if (GridLayoutUtil.isPartialGridSupport() || current.columnScroll) {
                 current.rowIndex = this._calcRowIndex(current);
-                if (this.getEditingItemData() && (current.rowIndex>=this.getEditingItemData().rowIndex)) {
+                if (this.getEditingItemData() && (current.rowIndex >= this.getEditingItemData().rowIndex)) {
                     current.rowIndex++;
                 }
             }
@@ -1562,6 +1562,19 @@ var
                 }
             }
             this._model._setEditingItemData(itemData);
+
+            /*
+            * https://online.sbis.ru/opendoc.html?guid=8a8dcd32-104c-4564-8748-2748af03b4f1
+            * Нужно пересчитать и перерисовать записи после начала и завершения редактирования.
+            * При старте редактирования индексы пересчитываются, и, в случе если началось добавление, индексы записей после добавляемой увеличиваются на 1.
+            * При отмене добавления индексы нужно вернуть в изначальное состояние.
+            *
+            * При переходе на table-layout и отказе от partialGrid данное поведение изменится на более оптимальное
+            * https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+            * */
+            if (GridLayoutUtil.isPartialGridSupport() || this._options.columnScroll) {
+                this._nextModelVersion();
+            }
         },
 
         getEditingItemData(): object | null {
