@@ -8,7 +8,7 @@ import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
       /**
-       * Контрол, который открывает всплывающее окно с {@link /doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ диалогом редактирования записи}.
+       * Контрол, который открывает всплывающее окно с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ диалогом редактирования записи}.
        * В зависимости от значения опции 'mode':
        * * 'stack' — используйте опции {@link Controls/popup:Stack}
        * * 'dialog' — используйте опции {@link Controls/popup:Dialog}
@@ -286,9 +286,9 @@ import Deferred = require('Core/Deferred');
 /**
  * @name Controls/_popup/Opener/Edit#mode
  * @cfg {Object} Устанавливает режим отображения диалога редактирования.
- * @variant stack Отображение диалога в {@link /doc/platform/developmentapl/interface-development/controls/openers/stack/ стековом окне}.
- * @variant dialog Отображение диалога в {@link /doc/platform/developmentapl/interface-development/controls/openers/dialog/ диалоговом окне}.
- * @variant sticky Отображение диалога в {@link /doc/platform/developmentapl/interface-development/controls/openers/sticky/ окне прилипающего блока}.
+ * @variant stack Отображение диалога в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ стековом окне}.
+ * @variant dialog Отображение диалога в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ диалоговом окне}.
+ * @variant sticky Отображение диалога в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ окне прилипающего блока}.
  */
 /*
  * @name Controls/_popup/Opener/Edit#mode
