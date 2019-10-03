@@ -166,6 +166,7 @@
                 listModel="{{_listViewModel}}"
                 canUpdateItemsActions="{{_canUpdateItemsActions}}"
                 menuIsShown="{{_menuIsShown}}"
+                fix1177894367="{{_options.fix1177894367}}"
                 actionMenuIsShown="{{_actionMenuIsShown}}"
                 itemActions="{{_options.itemActions}}"
                 itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
