@@ -811,7 +811,7 @@ var _private = {
     setMarkerAfterScrolling: function(self, scrollTop) {
         let itemsContainer = self._children.listView.getItemsContainer();
         let topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
-        _private.setMarkerToFirstVisibleItem(self, itemsContainer, scrollTop - topOffset + self._headersHeight);
+        _private.setMarkerToFirstVisibleItem(self, itemsContainer, scrollTop - topOffset + (self._options.fixedHeadersHeights || 0));
         self._setMarkerAfterScroll = false;
     },
 
@@ -1401,8 +1401,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _itemReloaded: false,
 
-    _headersHeight: 0,
-
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1418,9 +1416,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      */
     _beforeMount: function(newOptions, context, receivedState: ReceivedState = {}) {
         var self = this;
-
-
-        this._headersHeight = newOptions.fixedHeadersHeights || 0;
 
         // todo Костыль, т.к. построение ListView зависит от SelectionController.
         // Будет удалено при выполнении одного из пунктов:
@@ -1557,11 +1552,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.initializeNavigation(this, newOptions);
         }
         _private.updateNavigation(this);
-
-        if (newOptions.fixedHeadersHeights !== this._options.fixedHeadersHeights) {
-            this._headersHeight = newOptions.fixedHeadersHeights || 0;
-        }
-
+        
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
             this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
