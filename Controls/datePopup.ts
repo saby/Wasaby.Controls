@@ -322,14 +322,23 @@ var Component = BaseControl.extend([EventProxyMixin], {
                 this._yearRangeSelectionType = options.selectionType;
                 this._yearRangeQuantum = {'years': options.quantum.years};
             } else {
-                this._yearRangeSelectionType = 'disable';
+                this._yearRangeSelectionType = IDateRangeSelectable.SELECTION_TYPES.disable;
             }
             if ('months' in options.quantum) {
                 this._monthRangeSelectionType = options.selectionType;
                 this._monthRangeQuantum = {'months': options.quantum.months};
             } else {
-                this._monthRangeSelectionType = 'disable';
+                this._monthRangeSelectionType = IDateRangeSelectable.SELECTION_TYPES.disable;
             }
+        }
+
+        if (!this._yearStateEnabled) {
+            this._yearRangeSelectionType = IDateRangeSelectable.SELECTION_TYPES.disable;
+            this._monthRangeSelectionType = IDateRangeSelectable.SELECTION_TYPES.disable;
+        }
+
+        if (options.readOnly) {
+            this._yearRangeSelectionType = IDateRangeSelectable.SELECTION_TYPES.disable;
         }
 
         this._headerType = options.headerType;
@@ -419,6 +428,10 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _yearsRangeSelectionEnded: function (e, start, end) {
         _private.sendResult(this, start, dateUtils.getEndOfYear(end));
+    },
+
+    _onYearsItemClick: function(e: SyntheticEvent, item: Date): void {
+        this._displayedDate = item;
     },
 
     _monthsRangeChanged: function (e, start, end) {

@@ -4,7 +4,7 @@ import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import DateUtil = require('Controls/Utils/Date');
 
-import {Utils as calendarUtils} from 'Controls/dateRange';
+import {IDateRangeSelectable, Utils as calendarUtils} from 'Controls/dateRange';
 import MonthViewModel from './MonthView/MonthViewModel';
 import dotTplFn = require('wml!Controls/_calendar/MonthView/MonthView');
 import dayTemplate = require('wml!Controls/_calendar/MonthView/dayTemplate');
@@ -78,7 +78,9 @@ var MonthView = BaseControl.extend({
    },
 
    _dayClickHandler: function(event, item) {
-      this._notify('itemClick', [item]);
+      if (this._options.selectionType !== IDateRangeSelectable.SELECTION_TYPES.disable && !this._options.readOnly) {
+         this._notify('itemClick', [item]);
+      }
    },
 
    _mouseEnterHandler: function(event, item) {
