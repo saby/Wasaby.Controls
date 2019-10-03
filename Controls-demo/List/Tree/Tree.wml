@@ -22,6 +22,7 @@
                                 itemActions="{{_itemActions}}"
                                 itemActionsPosition="outside"
                                 on:actionClick="_onActionClick()"
+                                nodeFooterVisibilityCallback="{{_nodeFooterVisibilityCallback}}"
                                 itemActionVisibilityCallback="{{_showAction}}">
                            <ws:nodeFooterTemplate>
                               <Controls.list:AddButton caption="Новая запись"/>
@@ -58,6 +59,7 @@
                                 itemActionsPosition="inside"
                                 groupingKeyCallback="{{_groupingKeyCallback}}"
                                 on:actionClick="_onActionClick()"
+                                nodeFooterVisibilityCallback="{{_nodeFooterVisibilityCallback}}"
                                 itemActionVisibilityCallback="{{_showAction}}">
 
                            <ws:nodeFooterTemplate>

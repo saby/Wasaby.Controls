@@ -107,6 +107,36 @@
  */
 
 /**
+ * @name Controls/_treeGrid/interface/ITreeControl#nodeFooterVisibilityCallback
+ * @cfg {Function} Функция обратного вызова для определения видимости шаблона подвала раскрытого узла дерева.
+ * @remark
+ * Функция принимает единственный аргумент:
+ * <ol>
+ *    <li>item — модель (см. {@link Types/entity:Model}), содержащая данные узла, для которого определяется видимость шаблона подвала.</li>
+ * </ol>
+ * Для видимости шаблона подвала, из функции следует вернуть true.
+ * @example
+ * Шаблон подвал скрыт для узлов, у которых свойство footerVisible === false.
+ * WML:
+ * <pre>
+ * <Controls.treeGrid:View
+ *     attr:class="demo-Tree"
+ *     source="{{_source}}"
+ *     nodeFooterVisibilityCallback="{{_nodeFooterVisibilityCallback}}"
+ *     ...
+ * </Controls.list:View>
+ * </pre>
+ * TS:
+ * <pre>
+ *  ...
+ *  private _nodeFooterVisibilityCallback(item: Model): boolean {
+ *   return item.get('footerVisible') !== false;
+ *  }
+ *  ...
+ * </pre>
+ */
+
+/**
  * @name Controls/_treeGrid/interface/ITreeControl#hasChildrenProperty
  * @cfg {String} Имя свойства, содержащего информацию о наличии дочерних элементов в узле дерева.
  * <a href="/materials/demo-ws4-tree-grid-extended">Example</a>.
