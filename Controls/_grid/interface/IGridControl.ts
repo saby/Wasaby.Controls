@@ -142,7 +142,8 @@
  * @property {String} caption Текст заголовка ячейки.
  * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
- * @property {String} template Шаблон заголовка ячейки. CSS-класс устанавливает правый отступ для заголовка ячейки для выравнивания по целым числам в полях ввода денег.
+ * @property {String} template Шаблон заголовка ячейки. CSS-класс устанавливает правый отступ для заголовка ячейки для выравнивания по целым числам в полях ввода денег.  По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
+ * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
  * @property {String} sortingProperty Свойство, по которому выполняется сортировка.
  * @property {Number} startRow Порядковый номер строки на которой начинается ячейка.
  * @property {Number} endRow Порядковый номер строки на которой заканчивается ячейка.
@@ -150,9 +151,6 @@
  * @property {Number} endColumn Порядковый номер колонки на которой заканчивается ячейка.
  * @property {Object} templateOptions Опции, передаваемые в шаблон ячейки заголовка.
  * @property {cellPadding} cellPadding Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
- * @remark
- * По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
- * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
  */
 
 /*
@@ -171,9 +169,8 @@
 /**
  * @name Controls/_grid/interface/IGridControl#header
  * @cfg {Array.<HeaderCell>} Описывает шапку таблицы. В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки. Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки. Условная ячейки таблицы нумеруются слева направо. Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке. 
- * - <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
- * - <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
- *
+ * <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
+ * <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
  * @example
  * Пример 1. Для первой ячейки задаём пользовательский шаблон.
  * <pre>
@@ -183,52 +180,46 @@
  *              <ws:template>
  *                  <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
  *              </ws:template>
- *          <ws: Array>
+ *          </ws: Array>
  *       </ws:header>
  *    </Controls.grid:View>
  * </pre>
- *
  * @example
  * Пример 2. Настройка опции задаётся в хуке и передаётся в шаблон.
  * <pre>
  * _header: null,
  * _beforeMount: function(options) {
- *    this._header = [
- *       {
+ *      this._header = [
+ *      {
  *          caption: 'Name',
  *          startRow: 1,
  *          endRow: 3,
  *          startColumn: 1,
  *          endColumn: 2
- *       },
- *       {
+ *      },
+ *      {
  *          caption: 'Price',
  *          startRow: 1,
  *          endRow: 2,
  *          startColumn: 2,
  *          endColumn: 4
- *       },
- *       {
+ *      },
+ *      {
  *          caption: 'Cell',
  *          startRow: 2,
  *          endRow: 3,
  *          startColumn: 2,
  *          endColumn: 3
- *       },
- *       {
+ *      },
+ *      {
  *          caption: 'Residue',
  *          startRow: 2,
  *          endRow: 3,
  *          startColumn: 3,
  *          endColumn: 4
- *       }
- *    ]
+ *      }
+ *      ]
  * }
- * </pre>
- * <pre>
- * <Controls.grid:View header="{{ _header }}">
- *     ...
- * </Controls.grid:View>
  * </pre>
  */
 
