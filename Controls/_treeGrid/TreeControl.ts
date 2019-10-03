@@ -574,7 +574,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
 
     _onItemClick: function(e, item, originalEvent) {
         e.stopPropagation();
-        const eventResult = this._notify('itemClick', [item, originalEvent]);
+        const eventResult = this._notify('itemClick', [item, originalEvent], { bubbling: true });
         if (eventResult !== false && this._options.expandByItemClick && item.get(this._options.nodeProperty) !== null) {
             let display = this._children.baseControl.getViewModel().getDisplay();
             _private.toggleExpanded(this, display.getItemBySourceItem(item));
