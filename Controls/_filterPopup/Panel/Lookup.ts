@@ -10,6 +10,7 @@ import 'css!theme?Controls/filterPopup';
  * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-lookup">демо пример</a>.
  * Если вы используете внутри подсказки поля ввода ссылку на открытие справочника - вам понадобиться {@link Controls/lookup:Link}.
  * Если вы хотите сделать динамичную подсказку поля ввода, которая будет меняться в зависимости от выбранной коллекции, используйте {@link Controls/lookup:PlaceholderChooser}.
+ * Если хотите расположить поле связи с кнопкой-ссылкой в одну строку, необходимо на корневой элемет навесить класс 'ws-flexbox'.
  *
  * @class Controls/_filterPopup/Panel/Lookup
  * @extends Core/Control
@@ -35,6 +36,8 @@ import 'css!theme?Controls/filterPopup';
  * @control
  * @public
  * @author Капустин И.А.
+ *
+ * @css @spacing_FilterPanelLookup-between-lookup-link Отступ между полем связи и кнопкой-ссылкой, когда они расположены на одной строке.
  */
 /*
  * Label with a Lookup. While the collection is empty - the Lookup is hidden.
