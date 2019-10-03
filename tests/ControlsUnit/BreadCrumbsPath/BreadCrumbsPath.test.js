@@ -190,8 +190,8 @@ define([
             };
             path._beforeUpdate({ items: path._options.items });
 
-            assert.deepEqual(path._visibleItems, [1, 2, 3]);
-            assert.deepEqual(path._breadCrumbsItems, [2, 3]);
+            assert.deepEqual(path._visibleItems, null);
+            assert.deepEqual(path._breadCrumbsItems, null);
          });
       });
 
