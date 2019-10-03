@@ -175,10 +175,6 @@ var ListView = BaseControl.extend(
             return this._children.itemsContainer;
         },
 
-        getItemsContatinerOffset: function() {
-
-        },
-
         _onItemClick: function(e, dispItem) {
             // Флаг preventItemEvent выставлен, если нужно предотвратить возникновение
             // событий itemClick, itemMouseDown по нативному клику, но по какой-то причине
