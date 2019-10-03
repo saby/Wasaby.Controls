@@ -6,6 +6,7 @@
          icon="icon-MarkLeftBold"
          iconSize="m"
          fontSize="l"
+         tooltip="{[Предыдущий год]}"
          on:click="_onPrevClick()"
       />
    </div>
@@ -14,6 +15,7 @@
       <ws:for data="yearIndex, year in _model">
          <div class="controls-PeriodDialog-Years__rangeBtn {{
                      _prepareItemClass(year.year) }}"
+              attr:title="{[Выбрать год]}"
             on:click="_onItemClick(year.date)"
             on:mouseenter="_onItemMouseEnter(year.date)"
             on:mouseleave="_onItemMouseLeave(year.date)">
@@ -28,6 +30,7 @@
          viewMode="link"
          icon="icon-MarkRightBold"
          iconSize="m"
+         tooltip="{[Следующий год]}"
          on:click="_onNextClick()"
       />
    </div>
