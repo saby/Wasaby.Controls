@@ -215,7 +215,7 @@ const StickyController = BaseController.extend({
         // После того, как дочерние контролы меняют размеры, они кидают событие controlResize, окно отлавливает событие,
         // измеряет верстку и выставляет себе новую позицию и размеры. Т.к. это проходит минимум в 2 цикла синхронизации,
         // то визуально видны прыжки. Уменьшаю на 1 цикл синхронизации простановку размеров
-        container.style.height = item.position.height;
+        container.style.height = item.position.height ? item.position.height + 'px' : height;
 
         /* end: Return all values to the node. Need for vdom synchronizer */
 
