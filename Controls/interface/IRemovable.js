@@ -40,8 +40,8 @@ define('Controls/interface/IRemovable', [], function() {
 
    /*
     * @typedef {Object} Selection
-    * @property {Array.<Number|String>} selected Array of selected keys.
-    * @property {Array.<Number|String>} excluded Array of excluded keys.
+    * @property {Number[] | String[]} selected Array of selected keys.
+    * @property {Number[] | String[]} excluded Array of excluded keys.
     * @property {Selection} type Type of elements.
     */
 
