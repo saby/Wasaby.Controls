@@ -155,16 +155,26 @@ var _private = {
                     if (self._isActive) {
                         isActive = true;
                     }
-                    const curKey = listModel.getMarkedKey();
-                    listModel.setItems(list);
-                    const nextKey = listModel.getMarkedKey();
-                    if (nextKey && nextKey !== curKey
-                        && self._listViewModel.getCount() && self._isScrollShown
-                        && !self._options.task46390860 && !self._options.task1177182277
-                    ) {
-                        self._markedKeyForRestoredScroll = nextKey;
+                    if (self._options.useNewModel) {
+                        // TODO restore marker + maybe should recreate the model completely
+                        // instead of assigning items
+                        // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
+                        const modelCollection = listModel.getCollection();
+                        modelCollection.setMetaData(list.getMetaData());
+                        modelCollection.assign(list);
+                        self._items = listModel.getCollection();
+                    } else {
+                        const curKey = listModel.getMarkedKey();
+                        listModel.setItems(list);
+                        const nextKey = listModel.getMarkedKey();
+                        if (nextKey && nextKey !== curKey
+                            && self._listViewModel.getCount() && self._isScrollShown
+                            && !self._options.task46390860 && !self._options.task1177182277
+                        ) {
+                            self._markedKeyForRestoredScroll = nextKey;
+                        }
+                        self._items = listModel.getItems();
                     }
-                    self._items = listModel.getItems();
                     if (isActive === true) {
                         self._children.listView.activate();
                     }
