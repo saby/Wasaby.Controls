@@ -149,24 +149,24 @@
  * _sorting: null,
  * _header: null,
  * _beforeMount: function(){
- *     this._sorting = [
- *     {
- *         price: 'desc'
- *     },
- *     {
- *         balance: 'asc'
- *     }
- *     ],
- *     this._header = [
- *     {
- *         title: 'Цена',
- *         sortingProperty: 'price'
- *     },
- *     {
- *         title: 'Остаток',
- *         sortingProperty: 'balance'
- *     }
- *     ];
+ *    this._sorting = [
+ *       {
+ *          price: 'desc'
+ *       },
+ *       {
+ *          balance: 'asc'
+ *       }
+ *    ],
+ *    this._header = [
+ *       {
+ *          title: 'Цена',
+ *          sortingProperty: 'price'
+ *       },
+ *       {
+ *          title: 'Остаток',
+ *          sortingProperty: 'balance'
+ *       }
+ *    ];
  * }
  * </pre>
  * <pre class="brush: html>"
