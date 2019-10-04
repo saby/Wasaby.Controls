@@ -201,7 +201,6 @@ class Base extends Control<ISliderBaseOptions> {
    private _lineData: ILineData = undefined;
    private _pointData: IPointDataList = undefined;
    private _scaleData: IScaleData[] = undefined;
-
    private _tooltipValue: number | null = null;
    private _isDrag: boolean = false;
 
