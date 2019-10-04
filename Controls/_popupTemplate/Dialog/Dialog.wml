@@ -14,8 +14,7 @@
                     attr:class="controls-DialogTemplate__close_button controls-DialogTemplate__close_button_theme_{{_options.theme}}"
                     on:click="close()"
                     transparent="{{_options.closeButtonTransparent}}"
-                    viewMode="{{_options.closeButtonViewMode}}"
-                    compatibleFocus="{{ _options.closeButtonCompatible }}"/>
+                    viewMode="{{_options.closeButtonViewMode}}"/>
             </ws:if>
             </div>
         </ws:else>
