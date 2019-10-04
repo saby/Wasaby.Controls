@@ -506,6 +506,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$virtualScrolling: boolean;
 
+    protected _$hasMoreData: boolean;
+
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
      * игнорироваться). Работает только если задано {@link keyProperty}.
@@ -2062,6 +2064,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
+    getHasMoreData(): boolean {
+        return this._$hasMoreData;
+    }
+
+    setHasMoreData(hasMoreData: boolean): void {
+        this._$hasMoreData = hasMoreData;
+    }
+
     // region SerializableMixin
 
     _getSerializableState(state: IDefaultSerializableState): ISerializableState<S, T> {
@@ -3145,6 +3155,7 @@ Object.assign(Collection.prototype, {
     _$unique: false,
     _$importantItemProperties: null,
     _$virtualScrolling: false,
+    _$hasMoreData: false,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,
