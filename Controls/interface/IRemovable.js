@@ -18,15 +18,31 @@ define('Controls/interface/IRemovable', [], function() {
     */
 
    /**
+    * @typedef {String} SelectionType
+    * @variant {'all'} - все записи.
+    * @variant {'leaf'} - листья.
+    * @variant {'node'} - узлы.
+    */
+
+   /**
+    * @typedef {String} SelectionType
+    * @variant {'all'} - all records.
+    * @variant {'leaf'} - leaves.
+    * @variant {'node'} - nodes.
+    */
+
+   /**
     * @typedef {Object} Selection
-    * @property {Array.<Number|String>} selected Массив выбранных ключей.
-    * @property {Array.<Number|String>} excluded Массив исключенных из выборки ключей.
+    * @property {Number[] | String[]} selected Массив выбранных ключей.
+    * @property {Number[] | String[]} excluded Массив исключенных из выборки ключей.
+    * @property {SelectionType} type Тип элементов.
     */
 
    /*
     * @typedef {Object} Selection
     * @property {Array.<Number|String>} selected Array of selected keys.
     * @property {Array.<Number|String>} excluded Array of excluded keys.
+    * @property {Selection} type Type of elements.
     */
 
    /**
@@ -143,7 +159,7 @@ define('Controls/interface/IRemovable', [], function() {
     * </pre>
     * @see removeItems
     * @see beforeItemsRemove
-    */    
+    */
 
    /**
     * Удаляет элементы из источника данных по идентификаторам элементов коллекции.
@@ -195,5 +211,5 @@ define('Controls/interface/IRemovable', [], function() {
     * </pre>
     * @see afterItemsRemove
     * @see beforeItemsRemove
-    */    
+    */
 });
