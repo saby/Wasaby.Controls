@@ -48,7 +48,7 @@ export default {
     },
     getNativeEventPageX(event: SyntheticEvent<MouseEvent | TouchEvent>) : number {
         let targetX = 0;
-        if (event.type === "mousedown") {
+        if (event.type === "mousedown" || event.type === "mousemove") {
             targetX = event.nativeEvent.pageX;
         } else if (event.type === "touchstart") {
             targetX = event.nativeEvent.touches[0].pageX;
