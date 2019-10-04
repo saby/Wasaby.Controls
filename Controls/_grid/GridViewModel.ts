@@ -1746,7 +1746,7 @@ var
             let currentGroupItems;
 
             groupId = groupId || this._getItemGroup(item);
-            if (groupId === undefined && groupId === null) {
+            if (groupId === undefined || groupId === null) {
                 return false;
             }
 
