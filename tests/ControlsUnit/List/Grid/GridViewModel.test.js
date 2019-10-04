@@ -641,6 +641,75 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                expectedResultForOnlyItemInHiddenGroup
             );
          });
+
+         it('_isFirstInGroup', function() {
+            let newGridData = [
+               {
+                  id: 1,
+                  title: 'Неисключительные права использования "СБИС++ ЭО-...',
+                  price: '2 шт',
+                  balance: 1000,
+                  type: '1'
+               },
+               {
+                  id: 2,
+                  title: 'Неисключительные права использования "СБИС++ ЭО-...',
+                  price: '2 шт',
+                  balance: 1000,
+                  type: '1'
+               },
+               {
+                  id: 3,
+                  title: 'Неисключительные права использования "СБИС++ ЭО-...',
+                  price: '2 шт',
+                  balance: 1000,
+                  type: false
+               },
+               {
+                  id: 4,
+                  title: 'Неисключительные права использования "СБИС++ ЭО-...',
+                  price: '2 шт',
+                  balance: 1000,
+                  type: false
+               },
+               {
+                  id: 5,
+                  title: 'Неисключительные права использования "СБИС++ ЭО-...',
+                  price: '2 шт',
+                  balance: 1000,
+                  type: 0
+               },
+               {
+                  id: 6,
+                  title: 'Неисключительные права использования "СБИС++ ЭО-...',
+                  price: '2 шт',
+                  balance: 1000,
+                  type: 0
+               },
+            ]
+            const groupingKeyCallback = (item) => item.get('type');
+            const gridViewModel = new gridMod.GridViewModel({
+               ...cfg,
+               items: new collection.RecordSet({
+                  rawData: newGridData,
+                  keyProperty: 'id'
+               }),
+               groupingKeyCallback: groupingKeyCallback,
+            });
+            const item = gridViewModel.getItemById(1, 'id').getContents();
+            assert.equal(true, gridViewModel._isFirstInGroup(item));
+            const item2 = gridViewModel.getItemById(2, 'id').getContents();
+            assert.equal(false, gridViewModel._isFirstInGroup(item2));
+            const item3 = gridViewModel.getItemById(3, 'id').getContents();
+            assert.equal(true, gridViewModel._isFirstInGroup(item3));
+            const item4 = gridViewModel.getItemById(4, 'id').getContents();
+            assert.equal(false, gridViewModel._isFirstInGroup(item4));
+            const item5 = gridViewModel.getItemById(5, 'id').getContents();
+            assert.equal(true, gridViewModel._isFirstInGroup(item5));
+            const item6 = gridViewModel.getItemById(6, 'id').getContents();
+            assert.equal(false, gridViewModel._isFirstInGroup(item6));
+         });
+
          it('getItemColumnCellClasses for old browsers', function() {
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
