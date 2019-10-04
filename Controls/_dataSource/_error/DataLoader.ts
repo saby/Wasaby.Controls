@@ -15,7 +15,7 @@ interface IErrorContainerReceivedState {
 
 interface IErrorContainerOptions extends IControlOptions {
    sources: ISourceConfig[];
-   leastOneError: boolean;
+   errorHandlingEnabled: boolean;
    requestTimeout: number;
    errorController: Controller;
 }
@@ -38,7 +38,7 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
    private _errorViewConfig: ErrorViewConfig;
    private _errorController: Controller = new Controller({});
 
-   protected _beforeMount({sources, leastOneError, requestTimeout}: IErrorContainerOptions,
+   protected _beforeMount({sources, errorHandlingEnabled, requestTimeout}: IErrorContainerOptions,
                           ctx?: unknown,
                           receivedState?: IErrorContainerReceivedState): Promise<IErrorContainerReceivedState> | void {
       if (receivedState) {
@@ -48,7 +48,7 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
          return DataLoader.load(sources, requestTimeout).then(({sources, errors}) => {
             const errorsCount = errors.length;
 
-            if (errorsCount === sources.length || leastOneError && errorsCount !== 0) {
+            if (errorsCount === sources.length || errorHandlingEnabled && errorsCount !== 0) {
                return this._getErrorViewConfig(errors[0]).then((errorViewConfig: ErrorViewConfig) => {
                   this._errorViewConfig = errorViewConfig;
                   return {errorViewConfig};
@@ -125,7 +125,7 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
 
    static getDefaultOptions(): IErrorContainerOptions {
       return {
-         leastOneError: true,
+         errorHandlingEnabled: true,
          requestTimeout: 5000
       };
    }
@@ -148,8 +148,9 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
  */
 
 /**
- * @name Controls/_dataSource/_error/DataLoader#leastOneError
- * @cfg {Boolean} Показывать ошибку в случае возникновения проблем получения данных у любого из переданных истоников.
+ * @name Controls/_dataSource/_error/DataLoader#errorHandlingEnabled
+ * @cfg {Boolean} Автоматически показывать ошибку в случае возникновения проблем получения данных у любого из переданных
+ * истоников.
  * @default true
  */
 
