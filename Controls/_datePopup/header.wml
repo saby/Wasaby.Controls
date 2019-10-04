@@ -53,9 +53,9 @@
          </ws:content>
       </Controls.validate:InputContainer>
 
-      <div if="{{_options.selectionType !== 'single'}}" class="controls-PeriodDialog__dateInputEnd-wrapper">
+      <ws:if data="{{_options.selectionType !== 'single'}}">
          <div class="controls-PeriodDialog__header-rangeDash"></div>
-            <Controls.validate:InputContainer>
+         <Controls.validate:InputContainer>
             <ws:validators>
                <ws:Function value="{{_rangeModel.endValue}}">Controls/validate:isValidDate</ws:Function>
                <ws:Function startValue="{{_rangeModel.startValue}}" endValue="{{_rangeModel.endValue}}">Controls/validate:isValidDateRange</ws:Function>
@@ -72,7 +72,7 @@
                />
             </ws:content>
          </Controls.validate:InputContainer>
-      </div>
+      </ws:if>
    </div>
 
    <Controls.buttons:Button
