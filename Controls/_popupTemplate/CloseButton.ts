@@ -146,8 +146,7 @@ import Env = require('Env/Env');
       return {
          size: 'l',
          viewMode: 'toolButton',
-         transparent: true,
-         compatibleFocus: false
+         transparent: true
       };
    };
 
