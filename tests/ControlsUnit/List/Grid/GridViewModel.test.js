@@ -451,12 +451,15 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                expectedResultWithoutMultiselect = [
                   ' controls-Grid__cell_spacingRight controls-Grid__cell_spacingFirstCol_xl controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
                   ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
-                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l' ],
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
+                  ' controls-Grid__cell_spacingRight controls-Grid__cell_spacingFirstCol_null controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
+               ],
                expectedResultWithMultiselect = [
                   ' controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
                   ' controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
                   ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
-                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l' ];
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
+                  ' controls-Grid__cell_spacingRight controls-Grid__cell_spacingFirstCol_null controls-Grid__cell_spacingBackButton_with_multiSelection controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',               ];
             assert.equal(expectedResultWithoutMultiselect[0],
                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0, rowIndex: 0})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
@@ -465,6 +468,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
             assert.equal(expectedResultWithoutMultiselect[2],
                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 2, rowIndex: 0})),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
+            assert.equal(expectedResultWithoutMultiselect[3],
+               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0, rowIndex: 0, isBreadCrumbs: true})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
 
             assert.equal(expectedResultWithMultiselect[0],
@@ -479,6 +485,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(expectedResultWithMultiselect[3],
                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 3, rowIndex: 0})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
+            assert.equal(expectedResultWithMultiselect[4],
+               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0, rowIndex: 0, isBreadCrumbs: true})),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
+
          });
          it('getSortingDirectionByProp', function() {
             assert.equal(gridMod.GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test'), 'ASC');
@@ -1378,8 +1388,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.deepEqual([{}], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" with multiselect.');
             gridViewModel._prepareHeaderColumns(gridHeader, true);
             assert.deepEqual([[{}, ...gridHeader]], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" with multiselect.');
-            gridViewModel._prepareHeaderColumns([{isBreadCrumbs: true}], true);
-            assert.isTrue(gridViewModel._headerRows[0][0].hiddenForBreadCrumbs);
          });
 
          it('_prepareResultsColumns', function() {
@@ -1479,7 +1487,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   endColumn: 2
               };
               const firstHeaderCell = gridViewModel.getCurrentHeaderColumn(0, 1);
-              assert.equal(firstHeaderCell.cellStyles, 'grid-column: 1/3; grid-row: 1/2;');
+              assert.equal(firstHeaderCell.cellStyles, 'grid-column: 2/3; grid-row: 1/2;');
 
               gridViewModel._headerRows[0][1] = originBreadcrumbsCell;
           });
@@ -1628,7 +1636,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             assert.equal(
                gridMod.GridViewModel._private.getColspanStyles('visible', 1, 2, true),
-               ' grid-column: 1 / 3;'
+               ' grid-column: 2 / 3;'
             );
          });
          it('getItemDataByItem: hovered item should be compared by key', function () {
