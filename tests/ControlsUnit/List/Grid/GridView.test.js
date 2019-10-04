@@ -467,7 +467,7 @@ define(['Controls/grid'], function(gridMod) {
          assert.equal(`div[style*="grid-column-start: ${gridHeader[0].startColumn}; grid-column-end: ${gridHeader[0].endColumn}; grid-row-start: ${gridHeader[0].startRow}; grid-row-end: ${gridHeader[0].endRow}"]`,
              gridMod.GridView._private.getQueryForHeaderCell(true, gridHeader[0], 0));
 
-         assert.equal(`div[style*="grid-area: ${breadCrumbs.startRow} / ${breadCrumbs.startColumn} / ${breadCrumbs.endRow} / ${gridHeader[0].endColumn + 1}"]`,
+         assert.equal(`div[style*="grid-area: ${breadCrumbs.startRow} / ${breadCrumbs.startColumn} / ${breadCrumbs.endRow} / ${breadCrumbs.endColumn + 1}"]`,
             gridMod.GridView._private.getQueryForHeaderCell(false, breadCrumbs, 1));
 
          assert.deepEqual(gridView._setHeaderWithHeight(), [
