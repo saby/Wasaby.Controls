@@ -1,6 +1,7 @@
-<Controls.toggle:Checkbox triState="{{triState}}"
-                          readOnly="{{checkboxReadOnly || false}}"
-                          attr:class="js-controls-ListView__notEditable controls-DragNDrop__notDraggable js-controls-ListView__checkbox"
-                          value="{{multiSelectStatus}}"
-                          on:valueChanged="_onCheckBoxClick(key, multiSelectStatus)"
-/>
+<Controls.Container.Async templateName="Controls/toggle:Checkbox">
+   <ws:templateOptions triState="{{triState}}"
+                       readOnly="{{checkboxReadOnly || false}}"
+                       attr:class="js-controls-ListView__notEditable controls-DragNDrop__notDraggable js-controls-ListView__checkbox"
+                       value="{{multiSelectStatus}}"
+                       on:valueChanged="_onCheckBoxClick(key, multiSelectStatus)"/>
+</Controls.Container.Async>
