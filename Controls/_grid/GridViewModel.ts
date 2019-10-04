@@ -1385,7 +1385,7 @@ var
 
             const itemGroupId = !current.isGroup && this._getItemGroup(current.item);
             current.isInHiddenGroup = itemGroupId === ControlsConstants.view.hiddenGroup;
-            current.isFirstInGroup = itemGroupId && this._isFirstInGroup(current.item, itemGroupId);
+            current.isFirstInGroup = this._isFirstInGroup(current.item, itemGroupId);
 
             if (
                 current.isFirstInGroup &&
@@ -1759,7 +1759,7 @@ var
             let currentGroupItems;
 
             groupId = groupId || this._getItemGroup(item);
-            if (!groupId) {
+            if (groupId === undefined || groupId === null) {
                 return false;
             }
 
