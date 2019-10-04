@@ -247,6 +247,16 @@ var Component = BaseControl.extend({
       this._hoveredEndValue = null;
    },
 
+   _mouseleaveHandler: function(): void {
+      if (this._selectionProcessing) {
+         this._selectionHoveredValue = _private.clone(this._selectionBaseValue);
+         if (_private.updateDisplayedRange(this)) {
+            this._notify('selectionHoveredValueChanged', [this._selectionHoveredValue]);
+            this._notify('selectionChanged', [this._displayedStartValue, this._displayedEndValue]);
+         }
+      }
+   },
+
    /**
     * Подготавливает объект с оициями перед тем как обновлять состояние контроллера.
     * @param state

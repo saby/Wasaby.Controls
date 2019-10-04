@@ -37,4 +37,29 @@ describe('Controls/_dateRange/Controllers/RangeSelectionController', () => {
             });
         });
     });
+
+    describe('_mouseleaveHandler', () => {
+        [{
+            clickedItem: new Date(2019, 0, 10),
+            hoveredItem: new Date(2019, 0, 11)
+        }, {
+            clickedItem: new Date(2019, 0, 10),
+            hoveredItem: new Date(2019, 0, 9)
+        }].forEach((test) => {
+            it(`should reset hovered item ${JSON.stringify(test)}.`, () => {
+                const
+                    component: RangeSelectionController =
+                        calendarTestUtils.createComponent(RangeSelectionController, {});
+
+                component._itemClickHandler(null, test.clickedItem);
+                component._itemMouseEnterHandler(null, test.hoveredItem);
+
+                component._mouseleaveHandler();
+
+                assert.strictEqual(+component._selectionHoveredValue, +test.clickedItem);
+                assert.strictEqual(+component._displayedStartValue, +test.clickedItem);
+                assert.strictEqual(+component._displayedEndValue, +test.clickedItem);
+            });
+        });
+    });
 });
