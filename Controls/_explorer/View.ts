@@ -26,12 +26,12 @@ import 'Types/entity';
       DEFAULT_VIEW_MODE = 'table',
       VIEW_NAMES = {
          search: SearchView,
-         tile: 'Controls/tile:TreeView',
+         tile: null,
          table: TreeGridView
       },
       VIEW_MODEL_CONSTRUCTORS = {
          search: SearchGridViewModel,
-         tile: 'Controls/tile:TreeViewModel',
+         tile: null,
          table: TreeGridViewModel
       },
       _private = {
@@ -145,8 +145,18 @@ import 'Types/entity';
                _private.setRoot(self, dataRoot);
             }
             self._viewMode = viewMode;
-            self._viewName = VIEW_NAMES[viewMode];
-            self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
+
+            if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
+               require(['Controls/tile'], function (tile) {
+                  VIEW_NAMES.tile = tile.TreeView;
+                  VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
+                  self._viewName = VIEW_NAMES[viewMode];
+                  self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
+               });
+            } else {
+               self._viewName = VIEW_NAMES[viewMode];
+               self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
+            }
             _private.setVirtualScrolling(self, self._viewMode, cfg);
          },
          backByPath: function(self) {
