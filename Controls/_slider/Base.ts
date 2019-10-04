@@ -233,8 +233,7 @@ class Base extends Control<ISliderBaseOptions> {
    }
 
    private _getValue(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
-      let targetX = event.type === 'mousedown' || event.type === 'touchstart'
-          ? Utils.getNativeEventPageX(event) : event.nativeEvent.pageX;
+      let targetX = Utils.getNativeEventPageX(event);
       const box = this._children.area.getBoundingClientRect();
       const ratio = Utils.getRatio(targetX, box.left + window.pageXOffset, box.width);
       return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
@@ -273,14 +272,19 @@ class Base extends Control<ISliderBaseOptions> {
 
    private _onMouseMove(event: SyntheticEvent<MouseEvent>): void {
       if (!this._options.readOnly) {
-         this._isDrag = false;
          this._tooltipValue = this._getValue(event);
       }
    }
 
    private _onMouseOut(event: SyntheticEvent<MouseEvent>): void {
-      if (!this._options.readOnly && !this._isDrag) {
+      if (!this._options.readOnly) {
          this._tooltipValue = null;
+      }
+   }
+
+   private _onMouseUp(event: SyntheticEvent<MouseEvent>): void  {
+      if (!this._options.readOnly) {
+         this._isDrag = false;
       }
    }
 

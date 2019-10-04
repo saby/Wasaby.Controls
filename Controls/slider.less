@@ -171,22 +171,21 @@
 .controls-Slider__segment_theme-@{themeName}:last-child:after {
   left: -@Slider-segment-after-width;
 }
+
 .controls-Slider__tooltipContainer {
   display: flex;
   justify-content: center;
   position: relative;
-  right: @Slider-tooltip_segment-right;
-  bottom: @Slider-tooltip_segment-bottom;
-  width: @Slider-tooltip_segment-width;
+  bottom: @Slider-big_point-size + 12;
 }
 .controls-Slider__tooltipValue {
-  padding-top: @Slider-tooltip_segment-padding / 2;
-  padding-right: @Slider-tooltip_segment-padding;
-  padding-bottom: @Slider-tooltip_segment-padding / 2;
-  padding-left: @Slider-tooltip_segment-padding;
+  padding-top: @Slider-tooltip-padding-top-bottom;
+  padding-right: @Slider-tooltip-padding-left-right;
+  padding-bottom: @Slider-tooltip-padding-top-bottom;
+  padding-left: @Slider-tooltip-padding-left-right;
   background-color: @Slider-point-background-color;
-  border-radius: @Slider-tooltip_segment-padding / 2;
-  box-shadow: 0 0 6px 0 @Slider-segment-color;
+  border-radius: @Slider-tooltip-border-radius;
+  box-shadow: @Slider-tooltip-box-shadow;
   font-size: @Slider-tooltip-font-size;
 }
 .controls-Slider__point_tooltip {
@@ -196,4 +195,9 @@
 }
 .controls-Slider__point_tooltip:hover {
   background-color: @Slider-point-background-color;
+}
+.controls-Slider__point_hidden,
+.controls-Slider__point_hidden:hover {
+  border: @Slider-point-border-thickness solid transparent;
+  background: none;
 }
