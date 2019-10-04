@@ -1388,7 +1388,7 @@ var
             current.isFirstInGroup = itemGroupId && this._isFirstInGroup(current.item, itemGroupId);
 
             if (
-                current.isFirstInGroup &&
+                (current.isFirstInGroup || current.isFirstInGroup === 0) &&
                 !current.isInHiddenGroup &&
                 current.item !== self.getLastItem()
             ) {
