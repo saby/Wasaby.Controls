@@ -1975,13 +1975,13 @@
       }
     }
   },
-  "Controls/Button/Menu": {
-    "name": "Controls/Button/Menu",
+  "Controls/dropdown:Button": {
+    "name": "Controls/dropdown:Button",
     "title": "Control \"ButtonMenu\"",
-    "className": "Controls/Button/Menu",
+    "className": "Controls/dropdown:Button",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Button/Menu",
+    "fullname": "Controls/dropdown:Button",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
