@@ -122,6 +122,10 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(controller._misspellValue, 'testStr');
          assert.deepEqual(filter, {test: 'test'});
          assert.equal(controller._previousViewMode, 'tile');
+
+         rs.setMetaData({});
+         searchMod.Controller._private.searchCallback(controller, result, filter);
+         assert.isTrue(!controller._misspellValue);
       });
 
       it('_private.searchCallback with startingWith = "root"', () => {

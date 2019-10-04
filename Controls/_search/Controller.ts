@@ -61,10 +61,7 @@ var _private = {
       self._searchValue = filter[self._options.searchParam] || '';
       self._notify('filterChanged', [filter]);
       self._notify('itemsChanged', [result.data]);
-
-      if (switcherStr) {
-         self._misspellValue = switcherStr;
-      }
+      self._misspellValue = getSwitcherStrFromData(result.data);
    },
 
    abortCallback: function (self, filter) {
