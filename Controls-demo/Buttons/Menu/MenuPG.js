@@ -23,7 +23,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
       var MenuPG = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Button/Menu',
+         _content: 'Controls/dropdown:Button',
          _dataObject: null,
          _componentOptions: null,
 
