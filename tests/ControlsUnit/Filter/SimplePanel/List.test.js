@@ -76,6 +76,7 @@ define(
                }
             };
             list._beforeMount(defaultConfig);
+            list._options.emptyKey = '2';
 
             let isCheckBoxClick = false;
             let event = {target: {closest: () => {return isCheckBoxClick;}}};
@@ -87,17 +88,17 @@ define(
             // item click with selection
             let newConfig = {...defaultConfig, selectedKeys: ['1', '3']};
             list._beforeUpdate(newConfig);
-            list._itemClickHandler(event, defaultItems.at(2));
+            list._itemClickHandler(event, defaultItems.at(2)); // click on '3'
             assert.deepStrictEqual(checkBoxClickResult, ['1']);
 
-            //checkbox click
+            //checkbox click, current keys = ['1']
             isCheckBoxClick = true;
-            list._itemClickHandler(event, defaultItems.at(4));
+            list._itemClickHandler(event, defaultItems.at(4)); // click on '5'
             assert.deepStrictEqual(checkBoxClickResult, ['1', '5']);
 
-            //checkbox click
+            //checkbox click, current keys = ['1', '5']
             isCheckBoxClick = true;
-            list._itemClickHandler(event, defaultItems.at(1));
+            list._itemClickHandler(event, defaultItems.at(1)); // click on '2' = emptyKey
             assert.deepStrictEqual(itemClickResult, ['2']);
 
             //folder click

@@ -7,7 +7,7 @@ import {DropdownViewModel} from 'Controls/dropdownPopup';
 
 var _private = {
     isNeedUpdateSelectedKeys: function(self, target, item) {
-        var clickOnEmptyItem = item.get(self._options.keyProperty) === self._options.resetValue[0],
+        var clickOnEmptyItem = item.get(self._options.keyProperty) === self._options.emptyKey,
             clickOnCheckBox = target.closest('.controls-DropdownList__row-checkbox'),
             hasSelection = self._listModel.getSelectedKeys().length && !isEqual(self._listModel.getSelectedKeys(), self._options.resetValue),
             clickOnFolder = item.get(self._options.nodeProperty);

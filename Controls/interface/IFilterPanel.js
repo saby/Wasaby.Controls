@@ -654,7 +654,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     */
 
    /**
-    * @name Controls/_filter/View/interface/IFilterView#source
+    * @name Controls/interface/IFilterPanel#source
     * @cfg {Array.<FilterItem>} Специальная структура для визуального представления фильтра. Подробнее см. {@link Controls/_filter/View/interface/IFilterView#source}
     */
 
