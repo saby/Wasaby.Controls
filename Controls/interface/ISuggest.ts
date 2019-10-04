@@ -72,13 +72,13 @@ interface ISuggest {
        * @example
        * suggestTemplate.wml
        * <pre>
-       *    <Controls.Container.Suggest.List attr:class="myClass">
+       *    <Controls.suggestPopup:ListContainer attr:class="myClass">
        *       <Controls.list:View keyProperty="id">
        *          <ws:itemTemplate>
        *             <ws:partial template="Controls/list:ItemTemplate" displayProperty="city"/>
        *          </ws:itemTemplate>
        *       </Controls.list:View>
-       *    </Controls.Container.Suggest.List>
+       *    </Controls.suggestPopup:ListContainer>
        * </pre>
        *
        * suggestTemplate.css
