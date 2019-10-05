@@ -1,12 +1,4 @@
 <div>
-    <div class="content_tab_margin controls-Tabs__content_heading{{selected ? '_state_selected' : ''}}">{{item.get(displayProperty)}}</div>
-    <div class="content_tab_margin">
-       textBox was here
-    </div>
-    <div class="content_tab_margin">
-        dateRange was here
-    </div>
-    <div class=" content_tab_margin controls-Tabs__content_additionaltext">
-        small text
-    </div>
+    <div class="{{item.get('icon')}} icon-small content_tab_margin controls-icon_style-{{item.get('iconStyle')}}_theme-{{_options.theme}}"></div>
+    <div class="content_tab_margin">{{item.get('text')}}</div>
 </div>
