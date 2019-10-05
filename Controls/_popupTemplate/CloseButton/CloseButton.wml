@@ -1,5 +1,6 @@
 <span
     attr:class="controls-Button__close theme_{{_options.theme}}"
+    attr:ws-no-focus="true"
     attr:ws-creates-context="false">
     <span class="controls-Button__close__wrapper controls-Button__close_{{_options.viewMode}}
                  controls-Button__close_{{_options.viewMode}}_{{_options.transparent ? 'transparent' : 'untransparent'}}
