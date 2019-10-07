@@ -6,13 +6,13 @@ import defaultItemTemplate = require('wml!Controls/_list/Render/resources/ItemTe
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { CollectionItem, Collection } from 'Controls/display';
 
-interface IRenderOptions {
+export interface IRenderOptions {
     listModel: Collection<unknown>;
     contextMenuEnabled?: boolean;
     contextMenuVisibility?: boolean;
 }
 
-interface IRenderChildren {
+export interface IRenderChildren {
     itemsContainer?: HTMLDivElement;
 }
 
@@ -20,8 +20,8 @@ export default class Render extends Control<IRenderOptions> {
     protected _template: TemplateFunction = template;
     protected _children: IRenderChildren;
 
-    private _templateKeyPrefix: string;
-    private _itemTemplate: TemplateFunction;
+    protected _templateKeyPrefix: string;
+    protected _itemTemplate: TemplateFunction;
 
     protected _beforeMount(options): void {
         this._templateKeyPrefix = `list-render-${this.getInstanceId()}`;
@@ -32,7 +32,7 @@ export default class Render extends Control<IRenderOptions> {
         return this._children.itemsContainer;
     }
 
-    private _onItemClick(
+    protected _onItemClick(
         e: SyntheticEvent<MouseEvent> & { preventItemEvent?: boolean },
         item: CollectionItem<unknown>
     ): void {
@@ -41,7 +41,7 @@ export default class Render extends Control<IRenderOptions> {
         }
     }
 
-    private _onItemContextMenu(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>) {
+    protected _onItemContextMenu(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>) {
         if (
             this._options.contextMenuEnabled !== false &&
             this._options.contextMenuVisibility !== false &&
@@ -51,12 +51,12 @@ export default class Render extends Control<IRenderOptions> {
         }
     }
 
-    private _onItemSwipe(e: SyntheticEvent<null>, item: CollectionItem<unknown>) {
+    protected _onItemSwipe(e: SyntheticEvent<null>, item: CollectionItem<unknown>) {
         this._notify('itemSwipe', [item, e]);
         e.stopPropagation();
     }
 
-    private _canHaveMultiselect(options): boolean {
+    protected _canHaveMultiselect(options): boolean {
         const visibility = options.multiselectVisibility;
         return visibility === 'onhover' || visibility === 'visible';
     }

@@ -1,0 +1,59 @@
+
+<div
+   attr:class="controls-TileView__item controls-ListView__itemV controls-ListView__itemV_cursor-pointer"
+   attr:style="{{'-ms-flex-preferred-size: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; flex-basis: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; height: ' + itemData.itemsHeight + 'px; max-width: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
+   <div
+      attr:class="controls-TileView__itemContent
+         js-controls-SwipeControl__actionsContainer
+         {{!!itemData.isActive ? ' controls-TileView__item_active'}}
+         {{!!itemData.isSwiped ? ' controls-TileView__item_swiped'}}
+         {{itemData.isHovered ? ' controls-TileView__item_hovered'}}
+         {{itemData.isScaled ? ' controls-TileView__item_scaled'}}
+         {{itemData.isFixed ? ' controls-TileView__item_fixed'}}
+         {{itemData.isAnimated ? ' controls-TileView__item_animated'}}
+         {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility)}}
+         {{marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
+         {{itemData.isHovered ? ' controls-ListView__item_showActions'}}"
+      attr:style="{{itemData.position ? itemData.position}}">
+      <ws:if data="{{itemData.hasMultiSelect}}">
+         <ws:partial
+            template="{{multiSelectTpl}}"
+            checkboxReadOnly="{{checkboxReadOnly}}"
+            attr:class="{{itemData.multiSelectClassList}}">
+            <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" />
+         </ws:partial>
+      </ws:if>
+      <ws:if data="{{contentTemplate}}">
+         <ws:partial
+            template="{{contentTemplate}}"
+            itemData="{{itemData}}"
+            swipeTemplate="{{swipeTemplate}}"
+            itemActionsTemplate="{{itemActionsTemplate}}"
+            hasTitle="{{hasTitle}}"
+            width="{{width || itemData.defaultItemWidth}}"/>
+      </ws:if>
+      <ws:else>
+         <div
+            attr:class="controls-TileView__imageWrapper {{hasTitle ? 'controls-TileView__imageWrapper_reduced'}} {{itemData.isAnimated ? ' controls-TileView__item_animated'}}"
+            attr:style="{{'height: ' + (itemData.isAnimated && itemData.zoomCoefficient ? itemData.zoomCoefficient * itemData.itemsHeight : itemData.itemsHeight) + 'px;'}}">
+            <img attr:class="controls-TileView__image" src="{{itemData.item[itemData.imageProperty]}}"/>
+         </div>
+         <ws:if data="{{itemData.item[itemData.displayProperty] || itemData.drawActions}}">
+            <div class="controls-TileView__title {{!hasTitle ? 'controls-TileView__title_invisible'}}" title="{{itemData.item[itemData.displayProperty]}}">{{itemData.item[itemData.displayProperty]}}</div>
+         </ws:if>
+      </ws:else>
+      <ws:if data="{{ !itemData.isSwiped && itemData.drawActions }}">
+         <ws:partial
+            template="{{itemActionsTemplate}}"
+            highlightOnHover="{{highlightOnHover}}"
+            itemData="{{itemData}}"
+            itemActionsClass="controls-TileView__itemActions controls-TileView__itemActions_bottomRight" />
+      </ws:if>
+      <ws:if data="{{itemData.isSwiped && itemData.drawActions && itemData.itemActionsPosition !== 'custom'}}">
+         <ws:partial
+            template="{{swipeTemplate}}"
+            itemData="{{itemData}}"
+            itemActionsTemplate="{{itemActionsTemplate}}"/>
+      </ws:if>
+   </div>
+</div>

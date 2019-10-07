@@ -1,0 +1,15 @@
+<div attr:style="display: flex; justify-content: space-around;">
+   <Controls.scroll:Container scn="1" attr:style="width: 50%; height: 600px;">
+      <Controls.tile:View
+         keyProperty="key"
+         displayProperty="title"
+         imageProperty="image"
+         source="{{ _viewSource }}"
+         multiSelectVisibility="hidden"
+         tileMode="dynamic"
+
+         name="tileView"
+         useNewModel="{{ true }}">
+      </Controls.tile:View>
+   </Controls.scroll:Container>
+</div>
