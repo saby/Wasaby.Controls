@@ -1213,7 +1213,9 @@ var
         getNextItemKey: function() {
             return this._model.getNextItemKey.apply(this._model, arguments);
         },
-
+        setMarkerOnValidItem: function(index) {
+            this._model.setMarkerOnValidItem(index);
+        }
         setIndexes: function(startIndex, stopIndex) {
             return this._model.setIndexes(startIndex, stopIndex);
         },
