@@ -177,6 +177,7 @@ var
             }
 
             expanderClasses += expanderIconClass;
+            expanderClasses += ' controls-TreeGrid__row-expander' + (itemData.isExpanded ? '_expanded' : '_collapsed');
             expanderClasses += expanderIconClass + (itemData.isExpanded ? '_expanded' : '_collapsed');
 
             return expanderClasses;
