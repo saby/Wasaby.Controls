@@ -1,7 +1,12 @@
-import entity = require('Types/entity');
-import Env = require('Env/Env');
-import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
+import * as buttonsTemplate from 'wml!Controls/_search/Input/Buttons';
 import {Base, TextViewModel as ViewModel} from 'Controls/input';
+import {throttle} from 'Types/function';
+import {descriptor} from 'Types/entity';
+import {constants} from 'Env/Env';
+
+// timer for search, when user click on search button or pressed enter.
+// protect against clickjacking (https://en.wikipedia.org/wiki/Clickjacking)
+const SEARCH_BY_CLICK_THROTTLE = 300;
 
 /**
  * Контрол, позволяющий пользователю вводить однострочный текст.
@@ -142,6 +147,11 @@ var Search = Base.extend({
 
    _wasActionUser: false,
 
+   _beforeMount(): void {
+      this._notifySearchClick = throttle(this._notifySearchClick, SEARCH_BY_CLICK_THROTTLE, false);
+      return Search.superclass._beforeMount.apply(this, arguments);
+   },
+
    _renderStyle() {
       let style: string;
       if (this._options.contrastBackground) {
@@ -207,14 +217,18 @@ var Search = Base.extend({
          return;
       }
 
-      this._notify('searchClick');
+      this._notifySearchClick();
 
       // move focus from search button to input
       this.activate();
    },
 
+   _notifySearchClick(): void {
+      this._notify('searchClick');
+   },
+
    _keyUpHandler: function(event) {
-      if (event.nativeEvent.which === Env.constants.key.enter) {
+      if (event.nativeEvent.which === constants.key.enter) {
          this._searchClick();
       }
 
@@ -239,9 +253,9 @@ Search._theme = Base._theme.concat(['Controls/search']);
 Search.getOptionTypes = function getOptionsTypes() {
    var optionTypes = Base.getOptionTypes();
 
-   optionTypes.maxLength = entity.descriptor(Number, null);
-   optionTypes.trim = entity.descriptor(Boolean);
-   optionTypes.constraint = entity.descriptor(String);
+   optionTypes.maxLength = descriptor(Number, null);
+   optionTypes.trim = descriptor(Boolean);
+   optionTypes.constraint = descriptor(String);
 
    return optionTypes;
 };
