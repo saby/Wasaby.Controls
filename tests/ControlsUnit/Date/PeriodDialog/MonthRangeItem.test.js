@@ -42,6 +42,13 @@ define([
                date: start
             },
             eq: { months: true, quarters: true, halfYears: true, years: true }
+         }, {
+            options: {
+               selectionType: 'range',
+               readOnly: true,
+               date: start
+            },
+            eq: { months: false, quarters: false, halfYears: false, years: false }
          }].forEach(function(test) {
             it(`should set proper model for options ${JSON.stringify(test.options)}.`, function() {
                const component = calendarTestUtils.createComponent(MonthsRangeItem, test.options);

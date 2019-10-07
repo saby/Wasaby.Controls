@@ -6,6 +6,7 @@
       on:mouseleave="_mouseleaveHandler()"
       startValue="{{_displayedStartValue}}"
       endValue="{{_displayedEndValue}}"
+      selectionType="{{_options.selectionType}}"
       selectionProcessing="{{_selectionProcessing}}"
       selectionBaseValue="{{_selectionBaseValue}}"
       selectionHoveredValue="{{_selectionHoveredValue}}"

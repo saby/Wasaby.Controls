@@ -211,6 +211,9 @@ var Component = BaseControl.extend({
     * @param item {*} Объект соответствующий элементу.
     */
    _itemClickHandler: function(event, item) {
+      if (this._options.readOnly) {
+         return;
+      }
       if (this._state.selectionType === Component.SELECTION_TYPES.range) {
          this._processRangeSelection(item);
       } else if (this._state.selectionType === Component.SELECTION_TYPES.single) {
@@ -227,6 +230,9 @@ var Component = BaseControl.extend({
     */
    _itemMouseEnterHandler: function(event, item) {
       var range;
+      if (this._options.readOnly) {
+         return;
+      }
       if (this._selectionProcessing) {
          this._selectionHoveredValue = item;
          if (_private.updateDisplayedRange(this, item)) {
@@ -243,6 +249,9 @@ var Component = BaseControl.extend({
    },
 
    _itemMouseLeaveHandler: function(event, item) {
+      if (this._options.readOnly) {
+         return;
+      }
       this._hoveredStartValue = null;
       this._hoveredEndValue = null;
    },

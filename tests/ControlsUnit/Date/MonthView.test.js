@@ -47,6 +47,18 @@ define([
             sinon.assert.calledWith(mv._notify, 'itemClick', [item]);
             sandbox.restore();
          });
+         it('should\'t generate "itemClick" event', function() {
+            let sandbox = sinon.sandbox.create(),
+               item = 'item',
+               mv = calendarTestUtils.createComponent(
+                  calendar.MonthView, coreMerge({ readOnly: true }, config, { preferSource: true }));
+
+            sandbox.stub(mv, '_notify');
+            mv._dayClickHandler({}, item);
+
+            sinon.assert.notCalled(mv._notify);
+            sandbox.restore();
+         });
       });
 
       describe('_mouseEnterHandler', function() {

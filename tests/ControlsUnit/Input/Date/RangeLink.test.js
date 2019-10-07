@@ -67,7 +67,8 @@ define([
                   ranges: { days: [1] },
                   minRange: 'month',
                   emptyCaption: 'caption',
-                  captionFormatter: function(){}
+                  captionFormatter: function(){},
+                  readOnly: true
                },
                component = calendarTestUtils.createComponent(dateRange.Selector, cMerge(cClone(extOptions), options));
             component._children.opener = {
@@ -75,20 +76,27 @@ define([
             };
             component._openDialog();
             sinon.assert.calledWith(component._children.opener.open, sinon.match({
-               className: 'controls-DatePopup__selector-marginTop controls-DatePopup__selector-marginLeft-withoutModeBtn',
+               className: 'controls-DatePopup__selector-marginTop controls-DatePopup__selector-marginLeft',
                templateOptions: {
                   quantum: extOptions.ranges,
                   minRange: extOptions.minRange,
                   captionFormatter: extOptions.captionFormatter,
-                  emptyCaption: extOptions.emptyCaption
+                  emptyCaption: extOptions.emptyCaption,
+                  readOnly: extOptions.readOnly
                }
             }));
          });
          describe('open dialog with .controls-DatePopup__selector-marginLeft css class', function() {
             [{
+               selectionType: 'single'
+            }, {
                selectionType: 'range'
             }, {
                minRange: 'day'
+            }, {
+               ranges: { days: [1] }
+            }, {
+               ranges: { weeks: [1] }
             }, {
                ranges: { days: [1], months: [1] }
             }, {
@@ -115,13 +123,7 @@ define([
          });
          describe('open dialog with .controls-DatePopup__selector-marginLeft-withoutModeBtn css class', function() {
             [{
-               selectionType: 'single'
-            }, {
                minRange: 'month'
-            }, {
-               ranges: { days: [1] }
-            }, {
-               ranges: { weeks: [1] }
             }, {
                ranges: { months: [1] }
             }, {

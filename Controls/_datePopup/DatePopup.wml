@@ -26,6 +26,7 @@
                   bind:endValue="_yearRangeModel.endValue"
                   selectionType="{{_yearRangeSelectionType}}"
                   quantum="{{_yearRangeQuantum}}"
+                  readOnly="{{false}}"
                   on:rangeChanged="_yearsRangeChanged()"
                   on:selectionChanged="_yearsSelectionChanged()"
                   on:onBeforeSelectionStarted="_yearsSelectionStarted()"
@@ -35,6 +36,7 @@
             <Controls._datePopup.YearsRange
                year="{{_displayedDate}}"
                dateConstructor="{{_options.dateConstructor}}"
+               on:itemClick="_onYearsItemClick()"
             />
          </Controls.dateRange:DateRangeSelectionController>
 

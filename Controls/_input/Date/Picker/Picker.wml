@@ -29,6 +29,7 @@
       icon="icon-Calendar2"
       iconSize="s"
       iconStyle="secondary"
+      readOnly="{{false}}"
       on:click="_openDialog()"
    />
    <Controls.popup:Sticky name="opener"
