@@ -177,7 +177,10 @@ var
             }
 
             expanderClasses += expanderIconClass;
+
+            // добавляем класс свертнутости развернутости для тестов
             expanderClasses += ' controls-TreeGrid__row-expander' + (itemData.isExpanded ? '_expanded' : '_collapsed');
+            // добавляем класс свертнутости развернутости стилевой
             expanderClasses += expanderIconClass + (itemData.isExpanded ? '_expanded' : '_collapsed');
 
             return expanderClasses;
