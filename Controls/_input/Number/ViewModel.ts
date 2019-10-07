@@ -5,6 +5,7 @@ import {format} from 'Controls/_input/Number/format';
 import {IText, paste, replaceWithRepositioning} from 'Controls/_input/Base/Util';
 import {IParsedNumber, parse} from 'Controls/_input/Number/parse';
 import {decimalSplitter, decimalSplitters} from 'Controls/_input/Number/constant';
+import {startingPosition} from "./startingPosition";
 
 /**
  * @class Controls/_input/Number/ViewModel
@@ -144,13 +145,10 @@ var ViewModel = BaseViewModel.extend({
     },
 
     _getStartingPosition: function() {
-        const splitterPosition: number = this.displayValue.indexOf(decimalSplitter);
-
-        if (splitterPosition !== -1) {
-            return splitterPosition;
-        }
-
-        return ViewModel.superclass._getStartingPosition.call(this);
+        /**
+         * Каретка должна находится в конце целой части.
+         */
+        return `${this.displayValue}${decimalSplitter}`.indexOf(decimalSplitter);
     },
 
     handleInput: function (splitValue, inputType) {

@@ -403,7 +403,7 @@ import {SyntheticEvent} from 'Vdom/Vdom'
          };
       };
 
-      DropdownList._theme = ['Controls/dropdownPopup'];
+      DropdownList._theme = ['Controls/dropdownPopup', 'Controls/Classes'];
 
       export = DropdownList;
 
