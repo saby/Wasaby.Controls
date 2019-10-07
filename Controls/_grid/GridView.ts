@@ -135,12 +135,11 @@ var
             return columnsWidths;
         },
 
-        getQueryForHeaderCell: function(isSafari: boolean, cur, multyselectVisibility: number) {
+        getQueryForHeaderCell: function(isSafari: boolean, cur, multyselectVisibility: number): string {
             return isSafari ?
-                `div[style*="grid-column-start: ${cur.startColumn + multyselectVisibility}; grid-column-end: ${cur.endColumn + multyselectVisibility}; grid-row-start: ${cur.startRow}; grid-row-end: ${cur.endRow}"]` :
-                `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`;
+                `div[style*="grid-column-start: ${cur.startColumn + (cur.isBreadCrumbs ? 0 : multyselectVisibility)}; grid-column-end: ${cur.endColumn + multyselectVisibility}; grid-row-start: ${cur.startRow}; grid-row-end: ${cur.endRow}"]` :
+                `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + (cur.isBreadCrumbs ? 0 : multyselectVisibility)} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`;
         },
-
 
         // TODO Kingo
         // В IE для колонок строки редактирования в гриде нужно установить фиксированную ширину,
