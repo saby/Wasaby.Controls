@@ -109,7 +109,7 @@ interface IInputNumber {
 /**
  * @event Происходит при изменении отображаемого значения контрола ввода.
  * @name Controls/interface/IInputField#valueChanged
- * @param {Vdom/Vdom:SyntheticEvent} eventObject
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {String|Number} value Значение контрола ввода.
  * @param {String} displayValue Отображаемое значение контрола ввода.
  * @remark
