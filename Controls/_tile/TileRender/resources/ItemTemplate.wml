@@ -1,59 +1,56 @@
 
 <div
    attr:class="controls-TileView__item controls-ListView__itemV controls-ListView__itemV_cursor-pointer"
-   attr:style="{{'-ms-flex-preferred-size: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; flex-basis: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; height: ' + itemData.itemsHeight + 'px; max-width: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
+   attr:style="{{ item.getTileWrapperStyle(width) }}">
    <div
-      attr:class="controls-TileView__itemContent
-         js-controls-SwipeControl__actionsContainer
-         {{!!itemData.isActive ? ' controls-TileView__item_active'}}
-         {{!!itemData.isSwiped ? ' controls-TileView__item_swiped'}}
-         {{itemData.isHovered ? ' controls-TileView__item_hovered'}}
-         {{itemData.isScaled ? ' controls-TileView__item_scaled'}}
-         {{itemData.isFixed ? ' controls-TileView__item_fixed'}}
-         {{itemData.isAnimated ? ' controls-TileView__item_animated'}}
-         {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility)}}
-         {{marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
-         {{itemData.isHovered ? ' controls-ListView__item_showActions'}}"
-      attr:style="{{itemData.position ? itemData.position}}">
-      <ws:if data="{{itemData.hasMultiSelect}}">
+      attr:class="{{ item.getTileContentClasses(shadowVisibility, marker) }}"
+      attr:style="{{ item.getFixedPositionStyle() }}">
+      <ws:if data="{{ multiSelectVisibility !== 'hidden' }}">
          <ws:partial
-            template="{{multiSelectTpl}}"
-            checkboxReadOnly="{{checkboxReadOnly}}"
-            attr:class="{{itemData.multiSelectClassList}}">
-            <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" />
+            template="{{ multiSelectTpl }}"
+            checkboxReadOnly="{{ checkboxReadOnly }}"
+            attr:class="{{ item.getMultiSelectClasses() }}">
+            <ws:templateOptions multiSelectStatus="{{ itemData.multiSelectStatus }}" key="{{ item.getContents().getId() }}" />
          </ws:partial>
       </ws:if>
-      <ws:if data="{{contentTemplate}}">
+      <ws:if data="{{ contentTemplate }}">
          <ws:partial
-            template="{{contentTemplate}}"
-            itemData="{{itemData}}"
-            swipeTemplate="{{swipeTemplate}}"
-            itemActionsTemplate="{{itemActionsTemplate}}"
-            hasTitle="{{hasTitle}}"
-            width="{{width || itemData.defaultItemWidth}}"/>
+            template="{{ contentTemplate }}"
+            item="{{ item }}"
+            useNewModel="{{ true }}"
+            itemActionsTemplate="{{ itemActionsTemplate }}"
+            swipeTemplate="{{ swipeTemplate }}"
+            hasTitle="{{ hasTitle }}"
+            width="{{ width || item.getTileWidth() }}" />
       </ws:if>
       <ws:else>
          <div
-            attr:class="controls-TileView__imageWrapper {{hasTitle ? 'controls-TileView__imageWrapper_reduced'}} {{itemData.isAnimated ? ' controls-TileView__item_animated'}}"
-            attr:style="{{'height: ' + (itemData.isAnimated && itemData.zoomCoefficient ? itemData.zoomCoefficient * itemData.itemsHeight : itemData.itemsHeight) + 'px;'}}">
-            <img attr:class="controls-TileView__image" src="{{itemData.item[itemData.imageProperty]}}"/>
+            attr:class="{{ item.getImageWrapperClasses(hasTitle) }}"
+            attr:style="{{ item.getImageWrapperStyle() }}">
+            <img attr:class="controls-TileView__image" attr:src="{{ item.getContents()[item.getImageProperty()] }}"/>
          </div>
-         <ws:if data="{{itemData.item[itemData.displayProperty] || itemData.drawActions}}">
-            <div class="controls-TileView__title {{!hasTitle ? 'controls-TileView__title_invisible'}}" title="{{itemData.item[itemData.displayProperty]}}">{{itemData.item[itemData.displayProperty]}}</div>
+         <ws:if data="{{ item.getContents()[item.getDisplayProperty()] || item.shouldDisplayActions() }}">
+            <div
+               attr:class="{{ item.getTitleClasses(hasTitle) }}"
+               attr:title="{{ item.getContents()[item.getDisplayProperty()] }}">
+               {{ item.getContents()[item.getDisplayProperty()] }}
+            </div>
          </ws:if>
       </ws:else>
-      <ws:if data="{{ !itemData.isSwiped && itemData.drawActions }}">
-         <ws:partial
-            template="{{itemActionsTemplate}}"
-            highlightOnHover="{{highlightOnHover}}"
-            itemData="{{itemData}}"
-            itemActionsClass="controls-TileView__itemActions controls-TileView__itemActions_bottomRight" />
-      </ws:if>
-      <ws:if data="{{itemData.isSwiped && itemData.drawActions && itemData.itemActionsPosition !== 'custom'}}">
-         <ws:partial
-            template="{{swipeTemplate}}"
-            itemData="{{itemData}}"
-            itemActionsTemplate="{{itemActionsTemplate}}"/>
+      <ws:if data="{{ item.shouldDisplayActions() }}">
+         <ws:if data="{{ item.isSwiped() && itemActionsPosition !== 'custom' }}">
+            <ws:partial
+               template="{{ swipeTemplate }}"
+               item="{{ item }}"
+               itemActionsTemplate="{{ itemActionsTemplate }}"/>
+         </ws:if>
+         <ws:else>
+            <ws:partial
+               template="{{ itemActionsTemplate }}"
+               highlightOnHover="{{ highlightOnHover }}"
+               item="{{ item }}"
+               itemActionsClass="controls-TileView__itemActions controls-TileView__itemActions_bottomRight" />
+         </ws:else>
       </ws:if>
    </div>
 </div>

@@ -14,7 +14,8 @@
             item="{{ item }}"
             useNewModel="{{ true }}"
             searchValue="{{ searchValue }}"
-            itemActionsTemplate="{{ itemActionsTemplate }}" />
+            itemActionsTemplate="{{ itemActionsTemplate }}"
+            swipeTemplate="{{ swipeTemplate }}" />
       </div>
    </ws:if>
    <ws:else>

@@ -33,6 +33,10 @@ export default class TileCollection<S, T extends TileCollectionItem<S> = TileCol
     getCompressionCoefficient(): number {
         return DEFAULT_COMPRESSION_COEFF;
     }
+
+    getShadowVisibility(): string {
+        return 'visible';
+    }
 }
 
 Object.assign(TileCollection.prototype, {
