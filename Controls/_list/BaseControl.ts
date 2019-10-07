@@ -28,7 +28,8 @@ import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 
-import { Abstract } from 'Controls/display';
+import { create as diCreate } from 'Types/di';
+import 'Controls/display';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -1474,14 +1475,18 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 viewModelConfig = cMerge(viewModelConfig, { collapsedGroups });
             }
 
-            if (newOptions.viewModelConstructor) {
+            if (!newOptions.useNewModel && newOptions.viewModelConstructor) {
                 self._viewModelConstructor = newOptions.viewModelConstructor;
                 if (receivedData) {
                     viewModelConfig.items = receivedData;
                 }
                 self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
             } else if (newOptions.useNewModel && receivedData) {
-                self._listViewModel = Abstract.getDefaultDisplay(receivedData, viewModelConfig);
+                self._listViewModel = self._createNewModel(
+                    receivedData,
+                    viewModelConfig,
+                    newOptions.viewModelConstructor
+                );
                 if (newOptions.itemsReadyCallback) {
                     newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                 }
@@ -1528,7 +1533,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 }
                 return _private.reload(self, newOptions).addCallback((result) => {
                     if (newOptions.useNewModel && !self._listViewModel && result.data) {
-                        self._listViewModel = Abstract.getDefaultDisplay(result.data, viewModelConfig);
+                        self._listViewModel = self._createNewModel(
+                            result.data,
+                            viewModelConfig,
+                            newOptions.viewModelConstructor
+                        );
                         if (newOptions.itemsReadyCallback) {
                             newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                         }
@@ -1614,7 +1623,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         _private.updateNavigation(this);
 
-        if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
+        if (
+            !newOptions.useNewModel &&
+            (
+                newOptions.groupMethod !== this._options.groupMethod ||
+                newOptions.viewModelConstructor !== this._viewModelConstructor
+            )
+        ) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
             this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
                 items: this._listViewModel.getItems()
@@ -2358,7 +2373,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._notify('hoveredItemChanged', [item, container]);
     },
 
-
+    _createNewModel(items, modelConfig, modelName) {
+        if (typeof modelName !== 'string') {
+            throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
+        }
+        return diCreate(modelName, { ...modelConfig, collection: items });
+    }
 
 });
 

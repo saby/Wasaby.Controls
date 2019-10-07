@@ -92,7 +92,7 @@ var View = List.extend({
       }
    },
    _getModelConstructor: function(useNewModel: boolean) {
-      return !useNewModel ? TreeTileViewModel : null;
+      return !useNewModel ? TreeTileViewModel : 'Controls/display:TileCollection';
    }
 });
 

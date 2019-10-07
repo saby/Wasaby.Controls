@@ -97,7 +97,7 @@ var ListControl = Control.extend(/** @lends Controls/_list/List.prototype */{
     },
 
     _getModelConstructor: function(useNewModel: boolean) {
-        return !useNewModel ? ListViewModel : null;
+        return !useNewModel ? ListViewModel : 'Controls/display:Collection';
     },
 
     reload: function() {
