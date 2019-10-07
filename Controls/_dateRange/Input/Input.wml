@@ -49,6 +49,7 @@
       viewMode="link"
       icon="icon-Calendar2 controls-Input-DateRange__icon-size"
       iconStyle="secondary"
+      readOnly="{{false}}"
       on:click="_openDialog()"
    />
    <Controls.popup:Sticky

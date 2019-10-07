@@ -1,4 +1,4 @@
-import {Utils as calendarUtils} from 'Controls/dateRange';
+import {IDateRangeSelectable, Utils as calendarUtils} from 'Controls/dateRange';
 import {VersionableMixin, Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import cExtend = require('Core/core-simpleExtend');
@@ -42,7 +42,8 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
          mode: state.mode,
          enabled: state.enabled,
          daysData: state.daysData,
-         dateConstructor: state.dateConstructor || WSDate
+         dateConstructor: state.dateConstructor || WSDate,
+         readOnly: state.readOnly
       };
    },
 
@@ -62,6 +63,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
          firstDateOfMonth = DateUtil.getStartOfMonth(today),
          lastDateOfMonth = DateUtil.getEndOfMonth(today);
 
+      obj.readOnly = state.readOnly;
       obj.mode = state.mode;
       obj.date = date;
       obj.id = formatDate(date, 'YYYY-MM-DD');
@@ -73,8 +75,8 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       obj.firstDayOfMonth = DateUtil.isDatesEqual(date, firstDateOfMonth);
       obj.lastDayOfMonth = DateUtil.isDatesEqual(date, lastDateOfMonth);
 
-      // obj.selectionEnabled = this._state.selectionType === DateRangeSelectionController.SELECTION_TYPES.range ||
-      //    this._state.selectionType === DateRangeSelectionController.SELECTION_TYPES.single;
+      obj.selectionEnabled = this._state.selectionType !== IDateRangeSelectable.SELECTION_TYPES.disable &&
+          !this._state.readOnly;
 
       obj.weekend = obj.dayOfWeek === 5 || obj.dayOfWeek === 6;
       obj.enabled = state.enabled;
@@ -106,6 +108,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
 
       var textColorClass = 'controls-MonthViewVDOM__textColor',
          backgroundColorClass = 'controls-MonthViewVDOM__backgroundColor',
+         borderClass = 'controls-MonthViewVDOM__border',
          css = [];
 
       if (scope.isCurrentMonth) {
@@ -133,15 +136,23 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
          backgroundColorClass += '-unselected';
       }
 
-      css.push(textColorClass, backgroundColorClass);
+      if (scope.readOnly) {
+          backgroundColorClass += '-readOnly';
+          borderClass += '-readOnly';
+      }
+
+      css.push(textColorClass, backgroundColorClass, borderClass);
 
       // Оставляем старые классы т.к. они используются в большом выборе периода до его редизайна
       // TODO: Выпилить старые классы
       if (scope.isCurrentMonth) {
-         // if (scope.selectionEnabled) {
-         css.push('controls-MonthViewVDOM__cursor-item');
+         if (scope.selectionEnabled) {
+            css.push('controls-MonthViewVDOM__cursor-item');
+         }
          if (!scope.selected) {
-            css.push('controls-MonthViewVDOM__border-currentMonthDay-unselected');
+            if (scope.selectionEnabled) {
+               css.push('controls-MonthViewVDOM__border-currentMonthDay-unselected');
+            }
          }
          css.push('controls-MonthViewVDOM__selectableItem');
          if (scope.enabled && scope.selectionEnabled) {
@@ -170,8 +181,6 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
          if (scope.selectedInner) {
             css.push('controls-MonthViewVDOM__item-selectedInner');
          }
-
-         // }
 
          if (scope.today) {
             css.push('controls-MonthViewVDOM__today');

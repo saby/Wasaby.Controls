@@ -1,7 +1,7 @@
 <div class="controls-PeriodDialog__header">
    <!--<div class="controls-PeriodDialog__stateButton-wrapper">-->
       <Controls.toggle:Button
-         if="{{_yearStateEnabled && _monthStateEnabled}}"
+         if="{{_monthStateEnabled}}"
          attr:class="controls-PeriodDialog__stateButton"
          value="{{_state === 'year'}}"
          fontColorStyle="link"
@@ -11,6 +11,7 @@
          icon="icon-ArrangeList"
          iconStyle="secondary"
          iconSize="s"
+         readOnly="{{false}}"
          on:valueChanged="_toggleStateClick()"
       />
    <!--</div>-->
@@ -84,6 +85,7 @@
       iconSize="s"
       tooltip="{[Текущий период]}"
       icon="icon-Home3"
+      readOnly="{{false}}"
       on:click="_homeButtonClick()"
    />
    <!--<div class="controls-DateRangeBigChoose__header-date-pickers">-->

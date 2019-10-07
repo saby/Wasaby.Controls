@@ -24,9 +24,9 @@ import 'css!theme?Controls/datePopup';
 const _private = {
     updateView: function (self, options, dontUpdateScroll) {
         self._rangeModel.update(options);
-        self._monthSelectionEnabled = options.selectionType === 'range' ||
+        self._monthSelectionEnabled = !options.readOnly && (options.selectionType === 'range' ||
             (options.selectionType === 'quantum' && quantumUtils.monthSelectionEnabled(options.quantum) &&
-                options.quantum.months[0] === 1);
+                options.quantum.months[0] === 1));
     },
 
     notifyPositionChanged: function(self, date) {

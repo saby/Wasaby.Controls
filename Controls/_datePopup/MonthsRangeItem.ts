@@ -5,7 +5,7 @@ import {date as formatDate} from 'Types/formatter';
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import EventProxyMixin from './Mixin/EventProxy';
 import {MonthModel as modelViewModel} from 'Controls/calendar';
-import {rangeSelection as rangeSelectionUtils} from 'Controls/dateRange';
+import {IDateRangeSelectable, rangeSelection as rangeSelectionUtils} from 'Controls/dateRange';
 import dateUtils = require('Controls/Utils/Date');
 import componentTmpl = require('wml!Controls/_datePopup/MonthsRangeItem');
 
@@ -78,7 +78,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
     _beforeMount: function (options) {
         const year = options.date.getFullYear();
         this._selectionViewType = options.selectionViewType;
-        if (options.selectionType === 'single') {
+        if (options.readOnly || options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single ||
+                options.selectionType === IDateRangeSelectable.SELECTION_TYPES.disable) {
             this._monthsSelectionEnabled = false;
             this._quarterSelectionEnabled = false;
             this._halfyearSelectionEnabled = false;
@@ -217,7 +218,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
                 this._options.hoveredEndValue,
                 {periodQuantum: rangeSelectionUtils.PERIOD_TYPE.month}
             ));
-        } else {
+        } else if (this._options.selectionType !== IDateRangeSelectable.SELECTION_TYPES.disable) {
             css.push(rangeSelectionUtils.prepareHoveredClass(
                 itemValue,
                 this._options.hoveredStartValue,

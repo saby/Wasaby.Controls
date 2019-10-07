@@ -40,10 +40,10 @@
 
 .ws-is-no-touch {
    .controls-MonthViewVDOM__hover-selectableItem,
-   .controls-MonthViewVDOM__item-selectedStart,
-   .controls-MonthViewVDOM__item-selectedEnd,
-   .controls-MonthViewVDOM__item-selectedStartEnd,
-   .controls-MonthViewVDOM__item-selectedInner {
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected,
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected-startend-unfinished,
+   .controls-MonthViewVDOM__backgroundColor-otherMonthDay-selected,
+   .controls-MonthViewVDOM__backgroundColor-otherMonthDay-selected-startend-unfinished {
       &:hover {
          background: @background_MonthView-item-hover;
       }
@@ -174,15 +174,18 @@
       .setStyle(background-color, @border-color__item-selected-startEnd-hover);
    }
 
-   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected {
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected,
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected-readOnly {
       .setStyle(background, @background_item);
    }
 
-   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected {
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected,
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected-readOnly {
       .setStyle(background, @background_item-selected);
    }
 
-   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected-startend-unfinished {
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected-startend-unfinished,
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-selected-startend-unfinished-readOnly {
       .setStyle(background, @background_item-hover);
    }
 
@@ -195,7 +198,9 @@
    }
 
    .controls-MonthViewVDOM__backgroundColor-otherMonthDay-selected,
-   .controls-MonthViewVDOM__backgroundColor-otherMonthDay-unselected {
+   .controls-MonthViewVDOM__backgroundColor-otherMonthDay-selected-readOnly,
+   .controls-MonthViewVDOM__backgroundColor-otherMonthDay-unselected,
+   .controls-MonthViewVDOM__backgroundColor-otherMonthDay-unselected-readOnly {
       .setStyle(color, @color_item-other-month-day);
    }
 

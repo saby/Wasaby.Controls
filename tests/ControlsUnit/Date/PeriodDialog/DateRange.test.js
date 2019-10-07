@@ -52,7 +52,8 @@ define([
             { options: { selectionType: 'range' }, eq: true },
             { options: { selectionType: 'quantum', quantum: { months: [1] } }, eq: true },
             { options: { selectionType: 'quantum', quantum: { years: [1] } }, eq: false },
-            { options: { selectionType: 'single' }, eq: false }
+            { options: { selectionType: 'single' }, eq: false },
+            { options: { readonly: false }, eq: false }
          ].forEach(function(test) {
             it(`should set proper _monthSelectionEnabled for options ${JSON.stringify(test.options)}.`, function() {
                const component = calendarTestUtils.createComponent(DateRange, test.options);

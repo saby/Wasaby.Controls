@@ -95,11 +95,8 @@ var Component = BaseControl.extend({
         const ranges = this._options.ranges;
         let className = 'controls-DatePopup__selector-marginTop ';
 
-        if (this._options.selectionType !== 'single' &&
-            (!ranges || (isEmpty(ranges) ||
-                (('months' in ranges || 'quarters' in ranges || 'halfyears' in ranges || 'years' in ranges) &&
-                    ('days' in ranges || 'weeks' in ranges)))) &&
-            (!this._options.minRange || this._options.minRange  === 'day')) {
+        if ((ranges && ('days' in ranges || 'weeks' in ranges)) ||
+                ((!ranges || isEmpty(ranges)) && this._options.minRange === 'day')) {
             className += 'controls-DatePopup__selector-marginLeft';
         } else {
             className += 'controls-DatePopup__selector-marginLeft-withoutModeBtn';
@@ -126,7 +123,8 @@ var Component = BaseControl.extend({
                 quantum: this._options.ranges,
                 minRange: this._options.minRange,
                 clearButtonVisible: this._options.clearButtonVisible || this._options.clearButtonVisibility,
-                dateConstructor: this._options.dateConstructor
+                dateConstructor: this._options.dateConstructor,
+                readOnly: this._options.readOnly
             }
         };
 

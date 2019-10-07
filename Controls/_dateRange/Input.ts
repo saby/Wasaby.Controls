@@ -102,7 +102,8 @@ var Component = Control.extend([], {
                headerType: 'input',
                closeButtonEnabled: true,
                rangeselect: true,
-               dateConstructor: this._options.dateConstructor
+               dateConstructor: this._options.dateConstructor,
+               readOnly: this._options.readOnly
             }
         };
         if (!this._isVdomDialog()) {
