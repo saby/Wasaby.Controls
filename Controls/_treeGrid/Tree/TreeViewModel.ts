@@ -172,7 +172,8 @@ var
             if (expanderIcon) {
                 expanderIconClass = ' controls-TreeGrid__row-expander_' + expanderIcon;
             } else {
-                expanderIconClass = ' controls-TreeGrid__row-expander_' + (itemType === true ? 'node' : 'hiddenNode');
+                expanderIconClass = ' controls-TreeGrid__row-expander_' + (itemType === true ? 'node_' : 'hiddenNode_')
+                + (itemData.style === 'master' ? 'master' : 'default');
             }
 
             expanderClasses += expanderIconClass;
