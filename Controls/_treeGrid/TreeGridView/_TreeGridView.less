@@ -29,8 +29,7 @@
    padding-right: @spacing_TreeGridView-row-expander-between-content_borderRight_s;
 }
 .controls-TreeGrid__row-expander, .controls-TreeGrid__row-expanderPadding {
-   // Line-height description: https://habr.com/company/pt/blog/337450/
-   line-height: 1;
+   line-height: @height_TreeGridView-expander;
    display: inline-block;
    position: relative;
    min-height: @height_TreeGridView-expander;
@@ -65,7 +64,6 @@
    color: @color_TreeGridView-expander;
    font-family: @font-family-TreeGridView-icons;
    font-size: @font-size_TreeGridView-expander;
-   margin-top: -@font-size_TreeGridView-expander / 2;
 }
 
 .controls-TreeGrid__row-expander_node_default:hover:before {
@@ -76,7 +74,6 @@
    color: @color_TreeGridView-expander-hiddenNode;
    font-family: @font-family-TreeGridView-icons;
    font-size: @font-size_TreeGridView-expander;
-   margin-top: -@font-size_TreeGridView-expander / 2;
 }
 
 .controls-TreeGrid__row-expander_hiddenNode_default:hover:before {
@@ -87,7 +84,6 @@
    color: @color_TreeGridView-expander_master;
    font-family: @font-family-TreeGridView-icons;
    font-size: @font-size_TreeGridView-expander_master;
-   margin-top: -@font-size_TreeGridView-expander_master / 2;
 }
 
 .controls-TreeGrid__row-expander_node_master:hover:before {
@@ -98,7 +94,6 @@
    color: @color_TreeGridView-expander-hiddenNode_master;
    font-family: @font-family-TreeGridView-icons;
    font-size: @font-size_TreeGridView-expander_master;
-   margin-top: -@font-size_TreeGridView-expander_master / 2;
 }
 
 .controls-TreeGrid__row-expander_hiddenNode_master:hover:before {
@@ -112,7 +107,6 @@
    overflow: hidden;
    text-align: center;
    position: absolute;
-   top: 50%;
 }
 .controls-TreeGrid__row-expander_node_default_collapsed:before,
 .controls-TreeGrid__row-expander_node_master_collapsed:before {
