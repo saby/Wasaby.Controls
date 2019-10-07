@@ -28,6 +28,7 @@ define('Controls-demo/Tabs/Buttons', [
       SelectedKey6: '1',
       SelectedKey7: '3',
       SelectedKey8: '2',
+      SelectedKey9: '2',
       _source1: null,
       _sourceLeft: null,
       _source2: null,
@@ -37,6 +38,7 @@ define('Controls-demo/Tabs/Buttons', [
       _source6: null,
       _source7: null,
       _source8: null,
+       _source9: null,
       _spaceTemplate: spaceTemplate,
       _beforeMount: function() {
          this._source1 = new source.Memory({
@@ -105,6 +107,31 @@ define('Controls-demo/Tabs/Buttons', [
                {
                   id: '6',
                   title: 'Meetings'
+               }
+            ]
+         });
+         this._source9 = new source.Memory({
+            keyProperty: 'id',
+            data: [
+               {
+                  id: '1',
+                  title: 'Meetings',
+                  align: 'left',
+                  itemTemplate: mainTemplate
+               },
+               {
+                  id: '2',
+                  align: 'left',
+                  title: 'Photos'
+               },
+               {
+                  id: '3',
+                  align: 'left',
+                  title: 'Videos'
+               },
+               {
+                  id: '4',
+                  title: 'Groups'
                }
             ]
          });

@@ -24,6 +24,15 @@
                       source="{{_source2}}"
         />
      </div>
+    <div class="separator">Главная вкладка вместе с другими вкладками</div>
+    <div class="demo-TabButtons">
+        <Controls.tabs:Buttons
+                bind:selectedKey='SelectedKey9'
+                keyProperty="id"
+                itemTemplateProperty="itemTemplate"
+                source="{{_source9}}"
+        />
+    </div>
     <div class="separator">Вкладки с кастомным содержимым</div>
     <div class="demo-TabButtons">
         <Controls.tabs:Buttons
@@ -35,9 +44,8 @@
     </div>
     <div class="separator">Прикладной контент перед вкладками</div>
     <div class="demo-TabButtons">
-        <div class="demo-TabButtons-container">
-            <Controls.heading:Title caption="Бизнес" style="secondary"/>
-            <div class="controls-Tabs__item-underline_theme_{{_options.theme}}"></div>
+        <div class="demo-TabButtons-container controls-Tabs__item-underline_theme-{{_options.theme}}">
+                <Controls.heading:Title caption="Бизнес" style="secondary"/>
         </div>
         <Controls.tabs:Buttons
                 bind:selectedKey='SelectedKey8'
