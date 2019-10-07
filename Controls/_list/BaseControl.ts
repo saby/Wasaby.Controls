@@ -1539,7 +1539,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     // Т.к. и список и DataContainer из _beforeMount возвращают рекордсет
                     // то при построении на сервере и последующем оживлении на клиенте
                     // при сериализации это будет два разных рекордсета.
-                    if (!cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy')) {
+                    // Если при загрузке данных возникла ошибка, то ошибку надо вернуть, чтобы при оживлении на клиенте
+                    // не было перезапроса за данными.
+                    if (result.errorConfig || !cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy')) {
                         return getState(result);
                     }
                 });

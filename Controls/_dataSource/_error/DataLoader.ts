@@ -42,7 +42,6 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
                           ctx?: unknown,
                           receivedState?: IErrorContainerReceivedState): Promise<IErrorContainerReceivedState> | void {
       if (receivedState) {
-         this._sources = receivedState.sources;
          this._errorViewConfig = receivedState.errorViewConfig;
       } else {
          return DataLoader.load(sources, requestTimeout).then(({sources, errors}) => {
@@ -51,11 +50,13 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
             if (errorsCount === sources.length || errorHandlingEnabled && errorsCount !== 0) {
                return this._getErrorViewConfig(errors[0]).then((errorViewConfig: ErrorViewConfig) => {
                   this._errorViewConfig = errorViewConfig;
-                  return {errorViewConfig};
+                  return { errorViewConfig };
                });
             } else {
                this._sources = sources;
-               return {sources}
+               return {
+                  errorViewConfig: null
+               };
             }
          });
       }
@@ -84,15 +85,14 @@ export default class DataLoader extends Control<IErrorContainerOptions> {
       const waitSources = sources.map((sourceConfig: ISourceConfig, sourceIndex: number) => {
          let sourcePromise = sourcesPromises ? sourcesPromises[sourceIndex] : requestDataUtil(sourceConfig);
 
-         sourcePromise = wrapTimeout(sourcePromise, loadDataTimeout).catch(() => {
+         return wrapTimeout(sourcePromise, loadDataTimeout).catch((err) => {
             // Если данные не получены за отведенное время, сами сгенерируем 504 ошибку
-            return Promise.reject(new fetch.Errors.HTTP({
+            err = err instanceof Error ? err : new fetch.Errors.HTTP({
                httpError: ERROR_ON_TIMEOUT
-            }));
-         });
+            });
 
-         return sourcePromise.catch((err: Error) => {
             errorsResult.push(err);
+
             return {
                data: err
             };
