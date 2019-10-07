@@ -5,7 +5,7 @@ export interface IOperationsButtonOptions extends IControlOptions, IExpandableOp
 }
 
 /**
- * Контрол-кнопка, использующийся для показа и скрытия панели действий "Controls/_operations/Panel".
+ * Контрол-кнопка, использующийся для показа и скрытия панели действий {@link Controls/operations:Panel}.
  * Подробное описание и инструкцию по найстройке читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/operations/'>здесь</a>.
  *
  * @class Controls/_operations/Button
