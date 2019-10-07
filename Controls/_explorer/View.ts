@@ -5,6 +5,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
+import Deferred = require('Core/Deferred');
 import {constants} from 'Env/Env';
 import keysHandler = require('Controls/Utils/keysHandler');
 import randomId = require('Core/helpers/Number/randomId');
@@ -138,6 +139,7 @@ import 'Types/entity';
             self._virtualScrolling = viewMode === 'tile' ? false : cfg.virtualScrolling;
          },
          setViewMode: function(self, viewMode, cfg) {
+            console.log('viewMode', viewMode);
             var currentRoot = _private.getRoot(self, cfg.root);
             var dataRoot = _private.getDataRoot(self);
 
@@ -145,11 +147,8 @@ import 'Types/entity';
                _private.setRoot(self, dataRoot);
             }
             self._viewMode = viewMode;
-
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-               require(['Controls/tile'], function (tile) {
-                  VIEW_NAMES.tile = tile.TreeView;
-                  VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
+               _private.getTileViewMode(cfg).addCallback(function() {
                   self._viewName = VIEW_NAMES[viewMode];
                   self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
                });
@@ -190,6 +189,13 @@ import 'Types/entity';
             }
 
             return itemFromRoot;
+         },
+         getTileViewMode: function (options) {
+            var def = new Deferred();
+               require(['Controls/tile'], function (tile) {
+                  def.callback(tile);
+               });
+            return def;
          }
       };
 
@@ -303,23 +309,32 @@ import 'Types/entity';
          this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
          this._itemsSetCallback = _private.itemsSetCallback.bind(null, this);
-         this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
 
+         this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
          //process items from options to create a path
          //will be refactor after new scheme of a data receiving
          if (cfg.items) {
             this._breadCrumbsItems = _private.getPath(cfg.items);
          }
 
-         _private.setViewMode(this, cfg.viewMode, cfg);
+         const def = _private.getTileViewMode(cfg);
          const root = _private.getRoot(this, cfg.root);
          this._restoredMarkedKeys = {
          [root]: {
                markedKey: null
             }
          };
-
          this._dragControlId = randomId();
+         if (cfg.viewMode === 'tile') {
+            var self = this;
+            return _private.getTileViewMode(cfg).addCallback(function (tile) {
+               VIEW_NAMES.tile = tile.TreeView;
+               VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
+               _private.setViewMode(self, cfg.viewMode, cfg);
+            });
+         } else {
+            _private.setViewMode(this, cfg.viewMode, cfg);
+         }
       },
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
