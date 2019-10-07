@@ -435,6 +435,17 @@ define(
             assert.equal(dropdownController._items, undefined);
          });
 
+         it('getItemByKey', () => {
+            let itemsWithoutKeyProperty = new collection.RecordSet({
+               rawData: items
+            });
+            let error = false;
+
+            // eslint-disable-next-line no-return-assign
+            dropdown._Controller._private.getItemByKey(itemsWithoutKeyProperty, 'anyKeyTest', () => error = true);
+            assert.isTrue(error);
+         });
+
          it('before update source lazy load', (done) => {
             let dropdownController = getDropdownController(configLazyLoad),
                opened = false, open;
