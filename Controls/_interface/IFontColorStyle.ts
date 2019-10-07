@@ -7,6 +7,7 @@ export interface IFontColorStyleOptions {
  *
  * @interface Controls/_interface/IFontColorStyle
  * @public
+ * @author Герасимов А.М.
  */
 
 /*APPROVED
