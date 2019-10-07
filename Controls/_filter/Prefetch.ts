@@ -33,7 +33,7 @@ function getPrefetchFromHistory({prefetchParams}): IPrefetchHistoryParams|undefi
 }
 
 function addPrefetchToHistory<T>(history: T, prefetchParams: IPrefetchHistoryParams|undefined): T {
-    if (history) {
+    if (history && prefetchParams) {
         history.prefetchParams = prefetchParams;
     }
     return history;
