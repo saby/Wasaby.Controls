@@ -216,7 +216,7 @@ var _private = {
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/IIcon
  * @mixes Controls/_interface/IIconStyle
- * @mixes Controls/interface/IGrouped
+ * @mixes Controls/interface/IGroupedList
  * @author Красильников А.С.
  * @control
  * @private
@@ -237,7 +237,7 @@ var _private = {
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/IIcon
  * @mixes Controls/_interface/IIconStyle
- * @mixes Controls/interface/IGrouped
+ * @mixes Controls/interface/IGroupedList
  * @author Красильников А.С.
  * @control
  * @private
