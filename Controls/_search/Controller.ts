@@ -174,7 +174,7 @@ var _private = {
  *
  * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>здесь</a>.
  *
- * <a href="/materials/demo/demo-ws4-explorer-with-search">Демо-пример</a>. 
+ * <a href="/materials/demo/demo-ws4-explorer-with-search">Демо-пример</a>.
  *
  * @class Controls/_search/Controller
  * @extends Core/Control
