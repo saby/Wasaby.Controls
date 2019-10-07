@@ -2,6 +2,7 @@ import * as buttonsTemplate from 'wml!Controls/_search/Input/Buttons';
 import {Base, TextViewModel as ViewModel} from 'Controls/input';
 import {throttle} from 'Types/function';
 import {descriptor} from 'Types/entity';
+import {constants} from 'Env/Env';
 
 // timer for search, when user click on search button or pressed enter.
 // protect against clickjacking (https://en.wikipedia.org/wiki/Clickjacking)
@@ -216,7 +217,7 @@ var Search = Base.extend({
          return;
       }
 
-      this._notify('searchClick');
+      this._notifySearchClick();
 
       // move focus from search button to input
       this.activate();
@@ -227,7 +228,7 @@ var Search = Base.extend({
    },
 
    _keyUpHandler: function(event) {
-      if (event.nativeEvent.which === Env.constants.key.enter) {
+      if (event.nativeEvent.which === constants.key.enter) {
          this._searchClick();
       }
 
