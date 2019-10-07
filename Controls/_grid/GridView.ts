@@ -349,7 +349,7 @@ var
 
             //we do not need to fire itemClick on clicking on editArrow
             e.stopPropagation();
-        }
+        },
     });
 
 GridView._private = _private;
