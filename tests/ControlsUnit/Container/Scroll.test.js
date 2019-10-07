@@ -442,10 +442,14 @@ define(
                scrollTop: 0
             },
             scrollDetect: {
-               start: function() {}
-            }
+               start: function(e, scrollTop) {
+                  assert.equal(scrollTop, scrollContainer.__desiredScrollTop)
+               }
+            },
+            __desiredScrollTop: 0
          };
          scrollContainer._scrollTop = 0;
+         scrollContainer.__desiredScrollTop = 0;
          let scrollEventCallCount = 0;
          scrollContainer._notify = function(event, args) {
             if (event === 'scroll') {
@@ -457,7 +461,8 @@ define(
             assert.equal(scrollEventCallCount, 0);
          });
          it('scrollTop has changed. scroll should fire', function() {
-            scrollContainer._children.content = 10;
+            scrollContainer._children.content.scrollTop = 10;
+            scrollContainer.__desiredScrollTop = 10;
             scrollContainer._scrollHandler({});
             assert.equal(scrollEventCallCount, 1);
          });
