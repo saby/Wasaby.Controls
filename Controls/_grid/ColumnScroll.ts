@@ -16,7 +16,7 @@ const
          }
 
          const hasMultiSelect = multiSelectVisibility !== 'hidden';
-         const columnOffset = hasMultiSelect && !firstCell.isBreadCrumbs ? 1 : 0;
+         const columnOffset = hasMultiSelect ? 1 : 0;
          const lastStickyColumnIndex = stickyColumnsCount + columnOffset;
          const lastStickyColumnSelector = `.controls-Grid__cell_fixed:nth-child(${lastStickyColumnIndex})`;
          const stickyCellContainer = container.querySelector(lastStickyColumnSelector);
