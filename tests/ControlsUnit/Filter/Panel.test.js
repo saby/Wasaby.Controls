@@ -137,10 +137,11 @@ define(
 
          it('_applyHistoryFilter', function() {
             var panel = getFilterPanel(config),
-               isNotifyClose, filter, isValidated = false;
+               isNotifyClose, filter, items, isValidated = false;
             panel._notify = (e, args) => {
                if (e == 'sendResult') {
                   filter = args[0].filter;
+                  items = args[0].items;
                } else if (e == 'close') {
                   isNotifyClose = true;
                }
@@ -151,18 +152,22 @@ define(
                {
                   id: 'text',
                   value: '123',
-                  resetValue: '',
                   visibility: true
                },
                {
                   id: 'bool',
                   value: true,
-                  resetValue: false,
+                  visibility: true
+               },
+               {
+                  id: 'test',
+                  value: false,
                   visibility: true
                }
             ];
             panel._applyHistoryFilter('applyHistoryFilter', historyItems);
-            assert.deepEqual({ text: '123', bool: true }, filter);
+            assert.deepEqual({ text: '123', bool: true, test: false }, filter);
+            assert.deepEqual({ id: 'test', value: false, visibility: true }, items[2]);
             assert.isFalse(isValidated);
             assert.isTrue(isNotifyClose);
          });
