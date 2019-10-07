@@ -48,11 +48,16 @@ var _private = {
        });
    },
 
-   getItemByKey(items: RecordSet, key: string): void|Model {
+   getItemByKey(items: RecordSet, key: string, errorCallback: Function): void|Model {
       const item = items.getRecordById(key);
 
       if (!item && !items.getKeyProperty()) {
          IoC.resolve('ILogger').error('Controls/dropdown', 'keyProperty field is empty in item or keyProperty option does not setted for source');
+
+         // for tests
+         if (errorCallback) {
+            errorCallback();
+         }
       }
 
       return item;
