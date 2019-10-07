@@ -280,6 +280,6 @@ var Input = Control.extend({
    }
 });
 
-Input._theme = ['Controls/dropdown'];
+Input._theme = ['Controls/dropdown', 'Controls/Classes'];
 
 export = Input;
