@@ -80,7 +80,6 @@ var Base = Control.extend({
                 _private.clearPopupIds(this);
                 const popupId = this._getCurrentPopupId();
 
-                cfg._vdomOnOldPage = this._options._vdomOnOldPage;
                 Base.showDialog(result.template, cfg, result.controller, popupId, this).addCallback((popupId) => {
                     if (this._useVDOM()) {
                         this._popupId = popupId;
