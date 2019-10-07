@@ -161,9 +161,6 @@ var
          if (Env.detection.isIE) {
             scrollHeight--;
          }
-         if (self._isShadowVisibleMode()) {
-            return true;
-         }
 
          return scrollHeight > containerHeight;
       },
