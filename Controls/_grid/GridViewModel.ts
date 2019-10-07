@@ -88,9 +88,9 @@ var
                     // TODO: KINGO
                     // в edge, в отличие от ie воспринимаются стили grid-column, поэтому нужно для частичной поддержки грида задавать и их.
                     // перебивание стилей будет убрано по https://online.sbis.ru/opendoc.html?guid=a0c4964a-2474-4fb6-ab8c-ffab9db62dd0
-                    return ` -ms-grid-column: 1; -ms-grid-column-span: ${multiselectOffset + 1}; grid-column: 1 / ${multiselectOffset + 2};`;
+                    return ` -ms-grid-column: ${multiselectOffset + 1}; -ms-grid-column-span: 1; grid-column: ${multiselectOffset + 1} / ${multiselectOffset + 2};`;
                  } else {
-                    return ` grid-column: 1 / ${multiselectOffset + 2};` + ((maxEndRow > 2) ? ` grid-row: 1 / ${maxEndRow};` : '');
+                    return ` grid-column: ${multiselectOffset + 1} / ${multiselectOffset + 2};` + ((maxEndRow > 2) ? ` grid-row: 1 / ${maxEndRow};` : '');
                  }
               } else {
                   if (GridLayoutUtil.isNoGridSupport()) {
@@ -160,13 +160,16 @@ var
                 preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase();
             }
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
-            if (columnIndex === 0 && !multiSelectVisibility && rowIndex === 0) {
+            if (columnIndex === 0 && !multiSelectVisibility && rowIndex === 0 && !isBreadCrumbs) {
                 preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (itemPadding.left || 'default').toLowerCase();
             }
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             if (isBreadCrumbs) {
                 preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
+                if (params.multiSelectVisibility) {
+                    preparedClasses += ' controls-Grid__cell_spacingBackButton_with_multiSelection';
+                }
             }
             // Стиль колонки
             preparedClasses += ' controls-Grid__cell_' + (style || 'default');
@@ -718,9 +721,6 @@ var
                 this._isMultyHeader = this.isMultyHeader(columns);
                 this._headerRows = getRowsArray(columns, multiSelectVisibility, this._isMultyHeader);
                 [this._maxEndRow, this._maxEndColumn] = getMaxEndRow(this._headerRows);
-                if (multiSelectVisibility && columns[0] && columns[0].isBreadCrumbs) {
-                    this._headerRows[0][0].hiddenForBreadCrumbs = true;
-                }
             } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
             } else {
@@ -846,7 +846,7 @@ var
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0 && !cell.title) {
+            if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0) {
                 cellClasses += ' controls-Grid__header-cell-checkbox';
             } else {
                 cellClasses += _private.getPaddingHeaderCellClasses({
@@ -889,10 +889,6 @@ var
 
             if (cell.startRow || cell.startColumn) {
                 let { endRow, startRow, endColumn, startColumn } = cell;
-
-                if (headerColumn.column.isBreadCrumbs) {
-                    startColumn = 0;
-                }
 
                 if (!startRow) {
                     startRow = 1;
