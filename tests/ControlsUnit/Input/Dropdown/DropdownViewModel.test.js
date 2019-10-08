@@ -82,6 +82,7 @@ define(
             parentProperty: 'parent',
             nodeProperty: '@parent',
             selectedKeys: ['3'],
+            itemPadding: {},
             rootKey: null
          };
          const config2 = {
@@ -314,6 +315,54 @@ define(
             assert.isTrue(viewModel.isGroupNext());
             viewModel.goToNext();
             assert.isFalse(viewModel.isGroupNext());
+         });
+
+         it('_private.getSpacingClassList', () => {
+            let itemPadding = {}, multiSelect = true, itemData = { emptyText: 'test' };
+            let expectedClassList = 'controls-DropdownList__emptyItem-leftPadding_multiSelect controls-DropdownList__item-rightPadding_default';
+            let classList = DropdownViewModel._private.getSpacingClassList(itemPadding, multiSelect, itemData);
+            assert.equal(classList, expectedClassList);
+
+            multiSelect = false;
+            expectedClassList = 'controls-DropdownList__item-leftPadding_default controls-DropdownList__item-rightPadding_default';
+            classList = DropdownViewModel._private.getSpacingClassList(itemPadding, multiSelect, itemData);
+            assert.equal(classList, expectedClassList);
+
+            multiSelect = false;
+            itemPadding.left = 's';
+            expectedClassList = 'controls-DropdownList__item-leftPadding_s controls-DropdownList__item-rightPadding_default';
+            classList = DropdownViewModel._private.getSpacingClassList(itemPadding, multiSelect, itemData);
+            assert.equal(classList, expectedClassList);
+
+            itemData.hasChildren = true;
+            expectedClassList = 'controls-DropdownList__item-leftPadding_s controls-DropdownList__item-rightPadding_hierarchy';
+            classList = DropdownViewModel._private.getSpacingClassList(itemPadding, multiSelect, itemData);
+            assert.equal(classList, expectedClassList);
+
+            itemData.hasClose = true;
+            expectedClassList = 'controls-DropdownList__item-leftPadding_s controls-DropdownList__item-rightPadding_close';
+            classList = DropdownViewModel._private.getSpacingClassList(itemPadding, multiSelect, itemData);
+            assert.equal(classList, expectedClassList);
+
+            itemData.hasPinned = true;
+            expectedClassList = 'controls-DropdownList__item-leftPadding_s controls-DropdownList__item-rightPadding_history';
+            classList = DropdownViewModel._private.getSpacingClassList(itemPadding, multiSelect, itemData);
+            assert.equal(classList, expectedClassList);
+
+            expectedClassList = 'controls-DropdownList__item-leftPadding_s controls-DropdownList__item-rightPadding_multiSelect';
+            classList = DropdownViewModel._private.getSpacingClassList(itemPadding, multiSelect, itemData, true); // hasApplyButton = true
+            assert.equal(classList, expectedClassList);
+
+            itemData = {};
+            expectedClassList = 'controls-DropdownList__item-leftPadding_s controls-DropdownList__item-rightPadding_default';
+            classList = DropdownViewModel._private.getSpacingClassList(itemPadding, multiSelect, itemData);
+            assert.equal(classList, expectedClassList);
+
+            itemData = {};
+            itemPadding.right = 'm';
+            expectedClassList = 'controls-DropdownList__item-leftPadding_s controls-DropdownList__item-rightPadding_m';
+            classList = DropdownViewModel._private.getSpacingClassList(itemPadding, multiSelect, itemData);
+            assert.equal(classList, expectedClassList);
          });
 
          it('_private.isHistoryItem', () => {
