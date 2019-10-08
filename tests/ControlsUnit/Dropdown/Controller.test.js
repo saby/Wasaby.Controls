@@ -228,11 +228,10 @@ define(
 
          it('_beforeUpdate new templateOptions', function() {
             let dropdownController = getDropdownController(config),
-               opened = false, isOpen = false;
+               opened = false;
             dropdownController._children = {
                DropdownOpener: {
-                  open: () => { opened = true; },
-                  isOpened: () => { return isOpen; }
+                  open: () => { opened = true; }
                }
             };
             dropdownController._depsDeferred = {};
@@ -240,7 +239,7 @@ define(
             assert.isNull(dropdownController._depsDeferred);
             assert.isFalse(opened);
 
-            isOpen = true;
+            dropdownController._isOpened = true;
             dropdownController._items = itemsRecords;
             dropdownController._sourceController = {hasMoreData: ()=>{}};
             dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
@@ -297,12 +296,10 @@ define(
                DropdownOpener: {
                   open: function() {
                      opened = true;
-                  },
-                  isOpened: function() {
-                     return true;
                   }
                }
             };
+            dropdownController._isOpened = true;
             return new Promise((resolve) => {
                dropdownController._beforeUpdate({
                   selectedKeys: [2],
@@ -448,8 +445,7 @@ define(
          });
 
          it('before update source lazy load', (done) => {
-            let dropdownController = getDropdownController(configLazyLoad),
-               opened = false, open;
+            let dropdownController = getDropdownController(configLazyLoad), open;
             dropdownController._beforeMount(configLazyLoad);
             items.push({
                id: '5',
@@ -459,9 +455,6 @@ define(
                DropdownOpener: {
                   open: function() {
                      open = true;
-                  },
-                  isOpened: function() {
-                     return opened;
                   }
                }
             };
@@ -477,7 +470,7 @@ define(
             assert.isNull(dropdownController._sourceController);
             assert.equal(dropdownController._items, null);
 
-            opened = true;
+            dropdownController._isOpened = true;
             dropdownController._beforeUpdate({
                lazyItemsLoading: true,
                selectedKeys: [2],
