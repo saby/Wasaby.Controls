@@ -2,7 +2,7 @@
    <Controls.popup:Infobox name="IBOpener"></Controls.popup:Infobox>
 
    <ws:for data="block in _blocks">
-      <div class="controls-InfoBoxDemo-block">
+      <div class="controls-InfoBoxDemo-block demo-InfoBoxDemo__block{{block.header.toLowerCase().replace(' ', '')}}">
          <div class="controls-InfoBoxDemo-header">{{block.header}}</div>
       </div>
       <div class="controls-InfoBoxDemo-targets">
