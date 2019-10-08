@@ -1,8 +1,5 @@
-<Controls.toggle:Button
-   icons="{{['icon-small icon-ConnectionPeriod controls-DateRangeRelationButton_normal', 'icon-small icon-ConnectionPeriod controls-DateRangeRelationButton_byCapacity']}}"
-   iconStyle="{{ _value ? 'secondary' : 'info' }}"
-   viewMode="link"
-   tooltip="{{_value ? rk('Выключить связь') : rk('Включить связь')}}"
-   value="{{_value}}"
-   on:valueChanged="_onValueChanged()"
-/>
+<div attr:title ="{{_options.value === 'normal' ? rk('Выключить связь') : rk('Включить связь')}}"
+     attr:class="controls-DateRangeRelationButton controls-DateRangeRelationButton_{{_options.value}}_theme-{{_options.theme}}"
+     on:click="_valueChanged()">
+        <i attr:class="icon-small icon-ConnectionPeriod"/>
+</div>
