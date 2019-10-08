@@ -4,7 +4,8 @@ define('Controls-demo/InfoBox/InfoboxButtonHelp', [
     'tslib',
     'UI/Base',
     'wml!Controls-demo/InfoBox/InfoboxButtonHelp',
-    'css!Controls-demo/InfoBox/resources/InfoboxButtonHelp'
+    'css!Controls-demo/InfoBox/resources/InfoboxButtonHelp',
+    'css!Controls-demo/Controls-demo'
 ], function (require, exports, tslib_1, Base_1, controlTemplate) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
@@ -16,6 +17,7 @@ define('Controls-demo/InfoBox/InfoboxButtonHelp', [
             _this._template = controlTemplate;
             return _this;
         }
+        InfoboxButtonHelp._theme = ['Controls/Classes'];
         return InfoboxButtonHelp;
     }(Base_1.Control);
     exports.default = InfoboxButtonHelp;

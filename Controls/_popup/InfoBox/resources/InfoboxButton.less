@@ -1,25 +1,18 @@
 .controls-InfoboxButton{
   display: inline-block;
 }
-.controls-InfoboxButton__icon__m:hover {
-  fill: #313E78;
-}
-.controls-InfoboxButton__icon__s:hover {
-  fill: #313E78;
-}
 .controls-InfoboxButton__icon__m{
-  width:24px;
-  height: 24px;
-  fill: #CCCCCC;
-  vertical-align: middle;
+  width: @icon-size_m;
+  height: @icon-size_m;
 }
 .controls-InfoboxButton__icon__s{
-  width:16px;
-  height: 16px;
-  fill: #CCCCCC;
+  width: @icon-size_s;
+  height: @icon-size_s;
+}
+.controls-InfoboxButton__icon{
+  fill: @unaccented_icon-color;
   vertical-align: middle;
 }
-
-
-
-
+.controls-InfoboxButton__icon:hover{
+  fill: @secondary_text-color;
+}
