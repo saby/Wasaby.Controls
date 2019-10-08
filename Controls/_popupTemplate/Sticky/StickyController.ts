@@ -134,8 +134,18 @@ const _private = {
     },
 
     isTargetVisible(item) {
-        const targetCoords = _private._getTargetCoords(item, {});
-        return !!targetCoords.width;
+        if (!item.popupOptions._elementFromPoint || !item.popupOptions.target) {
+            const targetCoords = _private._getTargetCoords(item, {});
+            return !!targetCoords.width;
+        }
+        // определяю видимость таргета. Он может быть в доме, но скрыт под скроллом
+        const target = item.popupOptions.target[0] || item.popupOptions.target;
+        const targetRect = target.getBoundingClientRect();
+        let elemFromPoint = document.elementFromPoint(targetRect.x + 1, targetRect.y + 1);
+        while (elemFromPoint && elemFromPoint !== target) {
+            elemFromPoint = elemFromPoint.parentElement;
+        }
+        return !!elemFromPoint;
     },
 
     prepareStickyPosition(cfg) {
