@@ -14,6 +14,8 @@ export default class TileCollection<S, T extends TileCollectionItem<S> = TileCol
 
     protected _$imageProperty: string;
 
+    protected _$tileScalingMode: string;
+
     getTileMode(): string {
         return this._$tileMode;
     }
@@ -28,6 +30,10 @@ export default class TileCollection<S, T extends TileCollectionItem<S> = TileCol
 
     getImageProperty(): string {
         return this._$imageProperty;
+    }
+
+    getTileScalingMode(): string {
+        return this._$tileScalingMode;
     }
 
     getCompressionCoefficient(): number {
@@ -46,7 +52,8 @@ Object.assign(TileCollection.prototype, {
     _itemModule: 'Controls/display:TileCollectionItem',
     _$tileMode: 'static',
     _$tileHeight: DEFAULT_TILE_HEIGHT,
-    _$imageProperty: ''
+    _$imageProperty: '',
+    _$tileScalingMode: 'none'
 });
 
 register('Controls/display:TileCollection', TileCollection, {instantiate: false});

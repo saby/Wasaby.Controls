@@ -11,6 +11,9 @@
       on:click="_onItemClick(item)"
       on:contextmenu="_onItemContextMenu(item)"
       on:swipe="_onItemSwipe(item)"
+      on:mouseenter="_onItemMouseEnter(item)"
+      on:mousemove="_onItemMouseMove(item)"
+      on:mouseleave="_onItemMouseLeave(item)"
 
       itemActionsPosition="{{ itemActionsPosition }}"
       itemActionsTemplate="{{ itemActionsTemplate }}"

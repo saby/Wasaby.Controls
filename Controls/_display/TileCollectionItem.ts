@@ -27,6 +27,14 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         return this._$owner.getImageProperty();
     }
 
+    isScaled(): boolean {
+        const scalingMode = this._$owner.getTileScalingMode();
+        return (
+            (scalingMode !== 'none' || this.getDisplayProperty()) &&
+            (this.isHovered() || this.isActive() || this.isSwiped())
+        );
+    }
+
     getFixedPositionStyle(): string {
         return this._$fixedPosition;
     }
@@ -59,13 +67,16 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
 
     getTileContentClasses(templateShadowVisibility?: string, templateMarker?: boolean): string {
         // {{!!itemData.isActive ? ' controls-TileView__item_active'}}
-        // {{itemData.isHovered ? ' controls-TileView__item_hovered'}}
-        // {{itemData.isScaled ? ' controls-TileView__item_scaled'}}
         // {{itemData.isFixed ? ' controls-TileView__item_fixed'}}
         // {{itemData.isAnimated ? ' controls-TileView__item_animated'}}
-        // {{itemData.isHovered ? ' controls-ListView__item_showActions'}}
         let classes = 'controls-TileView__itemContent js-controls-SwipeControl__actionsContainer';
         classes += ` controls-ListView__item_shadow_${this.getShadowVisibility(templateShadowVisibility)}`;
+        if (this.isHovered()) {
+            classes += ' controls-TileView__item_hovered controls-ListView__item_showActions';
+        }
+        if (this.isScaled()) {
+            classes += ' controls-TileView__item_scaled';
+        }
         if (this.isSwiped()) {
             classes += ' controls-TileView__item_swiped';
         }
