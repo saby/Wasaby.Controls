@@ -42,8 +42,10 @@ define(
                itemTemplateProperty: defaultConfig.itemTemplateProperty,
                displayProperty: defaultConfig.displayProperty,
                emptyText: defaultConfig.emptyText,
-               emptyKey: defaultConfig.emptyKey
-            });
+               emptyKey: defaultConfig.emptyKey,
+               hasApplyButton: defaultConfig.hasApplyButton,
+               hasClose: true
+         });
             let list = getList(defaultConfig);
             list._beforeMount(defaultConfig);
             assert.deepStrictEqual(list._listModel._options, expectedListModel._options);
