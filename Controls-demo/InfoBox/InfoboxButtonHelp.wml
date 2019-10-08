@@ -1,11 +1,11 @@
-<div class="container">
-    <span class="container__name"> Демо кнопки для вызова подсказки </span>
+<div class="ControlsDemo-InfoboxButtonHelp">
+    <span class="ControlsDemo-InfoboxButtonHelp__name"> Демо кнопки для вызова подсказки </span>
 
 
-    <div class="container__item">
+    <div class="ControlsDemo-InfoboxButtonHelp__row">
         <div>
-              <div class="controls-InfoboxButtonHelp__title">Размер - "m"(size="m")</div>
-           <Controls.popup:InfoboxTarget trigger="click" targetSide="bottom" alignment="start" style="default" attr:class="controls-InfoboxButtonHelp__click">
+              <div class="ControlsDemo-InfoboxButtonHelp__title">Размер - "m"(size="m")</div>
+           <Controls.popup:InfoboxTarget trigger="click" targetSide="bottom" alignment="start" style="default" attr:class="ControlsDemo-InfoboxButtonHelp__click">
               <ws:content>
                  <Controls.popup:InfoboxButton size='m' />
               </ws:content>
@@ -16,8 +16,8 @@
            </div>
 
        <div>
-             <div class="controls-InfoboxButtonHelp__title">Нажмите на иконку</div>
-          <Controls.popup:InfoboxTarget trigger="click" targetSide="bottom" alignment="end" style="default" attr:class="controls-InfoboxButtonHelp__click">
+             <div class="ControlsDemo-InfoboxButtonHelp__title">Нажмите на иконку</div>
+          <Controls.popup:InfoboxTarget trigger="click" targetSide="bottom" alignment="end" style="default" attr:class="ControlsDemo-InfoboxButtonHelp__click">
              <ws:content>
                 <Controls.popup:InfoboxButton size='m' />
              </ws:content>
@@ -30,9 +30,9 @@
 
 
 
-    <div class="container__center">
-              <div class="controls-InfoboxButtonHelp__title">Нажмите на иконку</div>
-           <Controls.popup:InfoboxTarget trigger="click" alignment="center" style="default" attr:class="controls-InfoboxButtonHelp__click">
+    <div class="ControlsDemo-InfoboxButtonHelp__center">
+              <div class="ControlsDemo-InfoboxButtonHelp__title">Нажмите на иконку</div>
+           <Controls.popup:InfoboxTarget trigger="click" alignment="center" style="default" attr:class="ControlsDemo-InfoboxButtonHelp__click">
               <ws:content>
                  <Controls.popup:InfoboxButton size='m' />
               </ws:content>
@@ -43,10 +43,10 @@
      </div>
 
 
-     <div class="container__item">
+     <div class="ControlsDemo-InfoboxButtonHelp__row">
          <div>
-               <div class="controls-InfoboxButtonHelp__title">Размер - "s"(size="s")</div>
-            <Controls.popup:InfoboxTarget trigger="click" alignment="start" style="default" attr:class="controls-InfoboxButtonHelp__click">
+               <div class="ControlsDemo-InfoboxButtonHelp__title">Размер - "s"(size="s")</div>
+            <Controls.popup:InfoboxTarget trigger="click" alignment="start" style="default" attr:class="ControlsDemo-InfoboxButtonHelp__click">
                <ws:content>
                   <Controls.popup:InfoboxButton size='s' />
                </ws:content>
@@ -57,8 +57,8 @@
             </div>
 
             <div>
-                  <div class="controls-InfoboxButtonHelp__title">Нажмите на иконку</div>
-               <Controls.popup:InfoboxTarget trigger="click" alignment="end" style="default" attr:class="controls-InfoboxButtonHelp__click">
+                  <div class="ControlsDemo-InfoboxButtonHelp__title">Нажмите на иконку</div>
+               <Controls.popup:InfoboxTarget trigger="click" alignment="end" style="default" attr:class="ControlsDemo-InfoboxButtonHelp_click">
                   <ws:content>
                      <Controls.popup:InfoboxButton size='s' />
                   </ws:content>
