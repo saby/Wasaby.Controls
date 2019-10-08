@@ -15,6 +15,7 @@ import template = require('wml!Controls/_decorator/Money/Money');
  *
  * @public
  * @demo Controls-demo/Decorators/Money/Money
+ * @demo Controls-demo/Decorator/Money/Styles/Index
  *
  * @author Красильников А.С.
  */
@@ -74,6 +75,7 @@ import template = require('wml!Controls/_decorator/Money/Money');
  * @variant error Ошибка.
  * @variant default По умолчанию.
  * @default default
+ * @demo Controls-demo/Decorator/Money/Styles/Index
  */
 
 /*
