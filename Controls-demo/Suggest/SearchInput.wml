@@ -1,6 +1,6 @@
 <div class="demo-Suggest">
    <div class="demo-block-suggest">
-      <div class="demo-SearchSuggestWrapper">
+      <div class="demo-SearchSuggestWrapper demo-Suggest__search">
          <h3>Search suggest</h3>
          <Controls.suggest:SearchInput
                attr:class="ControlsDemo-Suggest__wideSearch ControlsDemo-Suggest__search"
@@ -22,7 +22,7 @@
       </div>
    </div>
    <div class="demo-block-suggest">
-      <div class="demo-SearchSuggestWrapper">
+      <div class="demo-SearchSuggestWrapper demo-Suggest__searchTabs">
          <h3>Search suggest with tabs</h3>
          <Controls.suggest:SearchInput
                attr:class="ControlsDemo-Suggest__wideSearch ControlsDemo-Suggest__searchTabs"
@@ -45,7 +45,7 @@
       </div>
    </div>
    <div class="demo-block-suggest">
-      <div class="demo-SearchSuggestWrapper">
+      <div class="demo-SearchSuggestWrapper demo-Suggest__wideSearch">
          <h3>Search suggest with button</h3>
          <Controls.suggest:SearchInput
                name="searhSuggestWithButton"
