@@ -49,6 +49,7 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
          parentProperty: 'parent',
          typeShadow: 'suggestionsContainer',
          itemTemplateProperty: 'myTemplate',
+         itemPadding: {},
          stickyPosition: {}
       };
    };
@@ -304,8 +305,10 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                groupTemplate: undefined,
                groupingKeyCallback: undefined,
                itemTemplateProperty: undefined,
+               itemPadding: {},
                hasClose: undefined,
-               iconSize: undefined
+               iconSize: undefined,
+               hasIconPin: false
             };
             let actualConfig = Clone(expectedConfig);
             let dropDownList = getDropDownListWithConfig(expectedConfig);
@@ -362,7 +365,9 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                   iconSize: dropDownList._options.iconSize,
                   showHeader: false,
                   defaultItemTemplate: dropDownList._options.defaultItemTemplate,
-                  dropdownClassName: dropDownList._options.dropdownClassName
+                  itemPadding: dropDownList._options.itemPadding,
+                  dropdownClassName: dropDownList._options.dropdownClassName,
+                  hasIconPin: dropDownList._options.hasIconPin
                },
                targetPoint: dropDownList._popupOptions.targetPoint,
                horizontalAlign: dropDownList._popupOptions.horizontalAlign,

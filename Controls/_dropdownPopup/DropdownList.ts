@@ -88,7 +88,9 @@ import {SyntheticEvent} from 'Vdom/Vdom'
                   iconSize: options.iconSize,
                   showHeader: false,
                   dropdownClassName: options.dropdownClassName,
-                  defaultItemTemplate: options.defaultItemTemplate
+                  itemPadding: options.itemPadding,
+                  defaultItemTemplate: options.defaultItemTemplate,
+                  hasIconPin: options.hasIconPin
                },
                targetPoint: subMenuPosition.targetPoint,
                horizontalAlign: subMenuPosition.horizontalAlign,
@@ -214,8 +216,10 @@ import {SyntheticEvent} from 'Vdom/Vdom'
                   groupTemplate: newOptions.groupTemplate,
                   groupingKeyCallback: newOptions.groupingKeyCallback,
                   groupMethod: newOptions.groupMethod,
+                  itemPadding: newOptions.itemPadding,
                   hasClose: newOptions.showClose,
-                  iconSize: newOptions.iconSize
+                  iconSize: newOptions.iconSize,
+                  hasIconPin: newOptions.hasIconPin
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
                this._hasAdditional = this._listModel.hasAdditional();
@@ -399,7 +403,8 @@ import {SyntheticEvent} from 'Vdom/Vdom'
          return {
             menuStyle: 'defaultHead',
             typeShadow: 'default',
-            moreButtonCaption: rk('Еще') + '...'
+            moreButtonCaption: rk('Еще') + '...',
+            itemPadding: {}
          };
       };
 

@@ -49,7 +49,8 @@ define(
                itemTemplateProperty: defaultConfig.itemTemplateProperty,
                displayProperty: defaultConfig.displayProperty,
                emptyText: defaultConfig.emptyText,
-               emptyKey: defaultConfig.emptyKey
+               emptyKey: defaultConfig.emptyKey,
+               hasApplyButton: defaultConfig.hasApplyButton
             });
             let list = getHierarchyList(defaultConfig);
             list._beforeMount(defaultConfig);
@@ -79,7 +80,8 @@ define(
                itemTemplateProperty: defaultConfig.itemTemplateProperty,
                displayProperty: defaultConfig.displayProperty,
                emptyText: defaultConfig.emptyText,
-               emptyKey: defaultConfig.emptyKey
+               emptyKey: defaultConfig.emptyKey,
+               hasApplyButton: defaultConfig.hasApplyButton
             });
             let config = {...defaultConfig, items: sbisItems};
             let list = getHierarchyList(config);

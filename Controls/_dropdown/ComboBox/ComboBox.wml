@@ -21,6 +21,7 @@
         theme="{{_options.theme}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
         attr:class="controls-ComboBox {{_isOpen ? 'controls-ComboBox__opened'}}">
+   <ws:itemPadding right="xs" left="xs"/>
    <ws:content>
       <Controls._dropdown.ComboBox.InputRender
               size="{{_options.size}}"
