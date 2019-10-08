@@ -1,5 +1,5 @@
 /**
- * Created by rn.kondakov on 08.10.2010.
+ * Created by rn.kondakov on 08.10.2019.
  */
 import { wrapLinksInString } from '../resources/linkDecorateUtils';
 
