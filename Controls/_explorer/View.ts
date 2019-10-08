@@ -139,7 +139,6 @@ import 'Types/entity';
             self._virtualScrolling = viewMode === 'tile' ? false : cfg.virtualScrolling;
          },
          setViewMode: function(self, viewMode, cfg) {
-            console.log('viewMode', viewMode);
             var currentRoot = _private.getRoot(self, cfg.root);
             var dataRoot = _private.getDataRoot(self);
 
@@ -148,7 +147,7 @@ import 'Types/entity';
             }
             self._viewMode = viewMode;
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-               _private.getTileViewMode(cfg).addCallback(function() {
+               _private.loadTileViewMode(cfg).addCallback(function() {
                   self._viewName = VIEW_NAMES[viewMode];
                   self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
                });
@@ -190,9 +189,11 @@ import 'Types/entity';
 
             return itemFromRoot;
          },
-         getTileViewMode: function (options) {
+         loadTileViewMode: function (options) {
             var def = new Deferred();
                require(['Controls/tile'], function (tile) {
+                  VIEW_NAMES.tile = tile.TreeView;
+                  VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
                   def.callback(tile);
                });
             return def;
@@ -317,24 +318,21 @@ import 'Types/entity';
             this._breadCrumbsItems = _private.getPath(cfg.items);
          }
 
-         const def = _private.getTileViewMode(cfg);
          const root = _private.getRoot(this, cfg.root);
          this._restoredMarkedKeys = {
          [root]: {
                markedKey: null
             }
          };
+
          this._dragControlId = randomId();
          if (cfg.viewMode === 'tile') {
             var self = this;
-            return _private.getTileViewMode(cfg).addCallback(function (tile) {
-               VIEW_NAMES.tile = tile.TreeView;
-               VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
+            return _private.loadTileViewMode(cfg).addCallback(function () {
                _private.setViewMode(self, cfg.viewMode, cfg);
             });
-         } else {
-            _private.setViewMode(this, cfg.viewMode, cfg);
          }
+         _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
