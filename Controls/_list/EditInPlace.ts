@@ -341,17 +341,27 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     beginEdit(options): Promise<{ cancelled: true } | { item: entity.Record } | void> {
         var self = this;
 
+        function beginEdit(self, options) {
+            return _private.beginEdit(self, options).addCallback((newOptions) => {
+                if (newOptions && newOptions.cancelled) {
+                    return Deferred.success({cancelled: true});
+                }
+                return _private.afterBeginEdit(self, newOptions);
+            });
+        }
+
+        if (this._editingItem && !this._editingItem.isChanged()) {
+            return this.cancelEdit().addCallback(() => {
+                return beginEdit(self, options);
+            });
+        }
+
         if (!this._editingItem || !this._editingItem.isEqual(options.item)) {
-            return this.commitEdit().addCallback(function (res) {
+            return this.commitEdit().addCallback(function(res) {
                 if (res && res.validationFailed) {
                     return Deferred.success();
                 }
-                return _private.beginEdit(self, options).addCallback(function (newOptions) {
-                    if (newOptions && newOptions.cancelled) {
-                        return Deferred.success({cancelled: true});
-                    }
-                    return _private.afterBeginEdit(self, newOptions);
-                });
+                return beginEdit(self, options);
             });
         } else {
             return Promise.resolve();
