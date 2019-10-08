@@ -1,5 +1,5 @@
 import * as Env from 'Env/Env';
-import {delay as runDelayed} from 'Types/function';
+import {debounce, delay as runDelayed} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 
@@ -23,27 +23,6 @@ interface IPosition {
     maxHeight: number;
     minHeight: number;
     hidden: boolean;
-}
-
-// TODO: Только в 610 https://online.sbis.ru/opendoc.html?guid=576de10c-e670-4b7e-9d62-30fb113ef401
-function debounce(original: Function, delay: number, first?: boolean): Function {
-    let timer;
-    const MIN_DELAY = 5;
-    return function(...args: any[]): void {
-        const self = this;
-        if (first && !timer && delay > MIN_DELAY) {
-            original.apply(self, args);
-        }
-
-        if (timer) {
-            clearTimeout(timer);
-        }
-
-        timer = setTimeout(() => {
-            original(...args);
-            timer = null;
-        }, delay);
-    };
 }
 
 interface IPopupOptions extends IControlOptions {
