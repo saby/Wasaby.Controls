@@ -657,6 +657,24 @@ define([
             equalsHtml(decorator.Converter.jsonToHtml(json, decorator.noOuterTag), html);
             assert.equal(decorator.Converter.jsonToHtml([], decorator.noOuterTag), '');
          });
+
+         it('with linkWrap resolver', function() {
+            var json = [
+               ['p', linkNode],
+               ['p', 'https://ya.ru'],
+               ['p', 'just text']
+            ];
+            var htmlArray = [
+               '<p>' + linkHtml + '</p>',
+               '<p>' + linkHtml + '</p>',
+               '<p>just text</p>'
+            ];
+            for (var i = 0; i < json.length; ++i) {
+               var checkHtml = decorator.Converter.jsonToHtml(json[i], decorator.linkWrapResolver);
+               var goodHtml = '<div>' + htmlArray[i] + '</div>';
+               equalsHtml(checkHtml, goodHtml, 'fail in index ' + i);
+            }
+         });
       });
    });
 
@@ -665,6 +683,13 @@ define([
          it('decorated link node', function() {
             assert.isTrue(linkDecorateUtils.isDecoratedLink('span', decoratedLinkFirstChildNode));
          });
+
+         it('decorated link node two classes', function() {
+            var decoratedLinkFirstChildNodeCopy = decorator.Converter.deepCopyJson(decoratedLinkFirstChildNode);
+            decoratedLinkFirstChildNodeCopy[1].class += ' anotherClass';
+            assert.ok(linkDecorateUtils.isDecoratedLink('span', decoratedLinkFirstChildNode));
+         });
+
          it('wrong tag name', function() {
             assert.isFalse(linkDecorateUtils.isDecoratedLink('div', decoratedLinkFirstChildNode));
             assert.isFalse(linkDecorateUtils.isDecoratedLink('', decoratedLinkFirstChildNode));
