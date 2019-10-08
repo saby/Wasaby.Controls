@@ -439,11 +439,12 @@ define(
             let itemsWithoutKeyProperty = new collection.RecordSet({
                rawData: items
             });
-            let error = false;
 
-            // eslint-disable-next-line no-return-assign
-            dropdown._Controller._private.getItemByKey(itemsWithoutKeyProperty, 'anyKeyTest', () => error = true);
-            assert.isTrue(error);
+            let item = dropdown._Controller._private.getItemByKey(itemsWithoutKeyProperty, '1', 'id');
+            assert.equal(item.get('title'), 'Запись 1');
+
+            item = dropdown._Controller._private.getItemByKey(itemsWithoutKeyProperty, 'anyTestId', 'id');
+            assert.isUndefined(item);
          });
 
          it('before update source lazy load', (done) => {
@@ -811,7 +812,6 @@ define(
 
          it('_private::getNewItems', function() {
             let curItems = new collection.RecordSet({
-                  keyProperty: 'id',
                   rawData: [{
                      id: '1',
                      title: 'Запись 1'
@@ -824,7 +824,6 @@ define(
                   }]
                }),
                selectedItems = new collection.RecordSet({
-                  keyProperty: 'id',
                   rawData: [{
                      id: '1',
                      title: 'Запись 1'
