@@ -46,6 +46,9 @@ define([
             },
             subscribe: function() {
 
+            },
+            getItemDataByItem(item){
+               return this.swipeItem;
             }
          };
       }
@@ -285,6 +288,30 @@ define([
             });
 
             assert.equal(instance._measurer, VerticalMeasurer.default);
+         });
+      });
+
+      describe('_beforeUpdate', function() {
+         it('updateItemActions', async function() {
+            let item = {};
+            let itemData = {
+               itemActions: {
+                  all: [1, 2, 3, 4, 5]
+               },
+               item: item,
+               actionsItem: item,
+               dispItem: {},
+            };
+            let cfg = {
+               listModel: mockListModel(itemData)
+            };
+            await instance._beforeMount(cfg);
+            instance.saveOptions(cfg);
+            instance._actionsHeight = 100;
+            instance._isActual = false;
+            instance._currentItemData = itemData;
+            instance._beforeUpdate(cfg);
+            assert.deepEqual(instance._swipeConfig.itemActions.all, itemData.itemActions.all);
          });
       });
 
