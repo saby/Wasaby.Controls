@@ -5,6 +5,7 @@
          displayProperty="title"
          imageProperty="image"
          source="{{ _viewSource }}"
+         itemActions="{{ _itemActions }}"
          multiSelectVisibility="hidden"
          tileMode="dynamic"
 

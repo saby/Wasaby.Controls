@@ -71,7 +71,10 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         // {{itemData.isAnimated ? ' controls-TileView__item_animated'}}
         let classes = 'controls-TileView__itemContent js-controls-SwipeControl__actionsContainer';
         classes += ` controls-ListView__item_shadow_${this.getShadowVisibility(templateShadowVisibility)}`;
-        if (this.isHovered()) {
+        if (this.isActive()) {
+            classes += ' controls-TileView__item_active';
+        }
+        if (this.isActive() || this.isHovered()) {
             classes += ' controls-TileView__item_hovered controls-ListView__item_showActions';
         }
         if (this.isScaled()) {

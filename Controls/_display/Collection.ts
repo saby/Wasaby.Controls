@@ -2011,6 +2011,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setActiveItem(item: CollectionItem<S>): void {
         this._itemActionsManager.setActiveItem(item);
+        this._nextVersion();
     }
 
     getActiveItem(): CollectionItem<S> {
