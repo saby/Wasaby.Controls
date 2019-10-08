@@ -8,7 +8,6 @@ import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import * as mStubs from 'Core/moduleStubs';
 import {descriptor, Model} from 'Types/entity';
-import {IoC} from 'Env/Env';
 import {RecordSet} from 'Types/collection';
 
 // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -48,16 +47,11 @@ var _private = {
        });
    },
 
-   getItemByKey(items: RecordSet, key: string, errorCallback: Function): void|Model {
-      const item = items.getRecordById(key);
+   getItemByKey(items: RecordSet, key: string, keyProperty: string): void|Model {
+      let item;
 
-      if (!item && !items.getKeyProperty()) {
-         IoC.resolve('ILogger').info('Controls/dropdown', 'keyProperty field is empty in item or keyProperty option does not setted for source');
-
-         // for tests
-         if (errorCallback) {
-            errorCallback();
-         }
+      if (items) {
+         item = items.at(items.getIndexByValue(keyProperty, key));
       }
 
       return item;
@@ -67,7 +61,7 @@ var _private = {
       const selectedItems = [];
 
       const addToSelected = (key: string) => {
-         const selectedItem = _private.getItemByKey(self._items, key);
+         const selectedItem = _private.getItemByKey(self._items, key, keyProperty);
 
          if (selectedItem) {
             selectedItems.push(selectedItem);
@@ -91,11 +85,11 @@ var _private = {
       }
    },
 
-   getNewItems: function (items, selectedItems, keyProperty) {
-      var newItems = [];
+   getNewItems(items: RecordSet, selectedItems: RecordSet, keyProperty: string): Model[] {
+      const newItems = [];
 
-      chain.factory(selectedItems).each(function (item) {
-         if (!items.getRecordById(item.get(keyProperty))) {
+      chain.factory(selectedItems).each((item) => {
+         if (!_private.getItemByKey(items, item.get(keyProperty), keyProperty)) {
             newItems.push(item);
          }
       });
