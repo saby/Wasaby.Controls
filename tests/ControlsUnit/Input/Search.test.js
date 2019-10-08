@@ -16,21 +16,31 @@ define(
                let searched = false;
                let activated = false;
 
+               search._beforeMount({});
                search._notify = (e, args) => {
-                  searched = true;
+                  if (e === 'searchClick') {
+                     searched = true;
+                  }
                };
                search.activate = () => {
                   activated = true;
                };
 
-               search._searchClick();
-               assert.isTrue(searched);
-               assert.isTrue(activated);
-               searched = activated = false;
                search._options.readOnly = true;
                search._searchClick();
                assert.isFalse(searched);
                assert.isFalse(activated);
+
+               search._options.readOnly = false;
+               search._searchClick();
+               assert.isTrue(searched);
+               assert.isTrue(activated);
+
+               searched = activated = false;
+               search._searchClick();
+               assert.isFalse(searched);
+               assert.isTrue(activated);
+
             });
 
             it('_resetClick', function() {

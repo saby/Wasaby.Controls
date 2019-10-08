@@ -289,20 +289,17 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     _updateMarker: function(markedKey):void {
-        if (!this.getCount() || this._options.markerVisibility === 'hidden') {
-            return;
-        }
-
-        if (this._options.markerVisibility === 'onactivated' && this._markedKey === null) {
+        this._markedKey = markedKey;
+        if (this._options.markerVisibility === 'hidden' ||
+            this._options.markerVisibility === 'onactivated' && this._markedKey === null) {
             return;
         }
 
         // If record with key equal markedKey not found in recordSet, set markedKey equal key first record in recordSet
-        if (_private.getItemByMarkedKey(this, markedKey)) {
-            this._markedKey = markedKey;
-        } else {
+        if (!_private.getItemByMarkedKey(this, markedKey) && this.getCount()) {
             this._markedKey = this._items.at(0).getId();
         }
+
     },
 
 
@@ -524,6 +521,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                     this.updateMarker(nextValidItem);
                 } else if (prevValidItem) {
                     this.updateMarker(prevValidItem);
+                } else {
+                    this.updateMarker(null);
                 }
             }
         }
@@ -549,6 +548,17 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                 return nextItem.getId();
             }
             nextIndex++;
+        }
+    },
+    setMarkerOnValidItem: function(index) {
+        const prevValidItem = this.getPreviousItem(index);
+        const nextValidItem = this.getNextItem(index);
+        if (nextValidItem !== undefined) {
+            this.setMarkedKey(nextValidItem);
+        } else if (prevValidItem !== undefined) {
+            this.setMarkedKey(prevValidItem);
+        } else {
+            this.setMarkedKey(null);
         }
     },
     _setEditingItemData: function(itemData) {

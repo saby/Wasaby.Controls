@@ -10,17 +10,31 @@
 
 .controls-StackTemplate_theme_@{themeName} {
    background-color: @background-color_stack;
-   &:before {
-      content: '';
-      position: absolute;
-      left: -@size_Stack-border-left;
-      top: 0;
-      bottom: 0;
-      width: @size_Stack-border-left;
-      background: @color_Stack-border-left;
-      box-shadow: @size_Stack-shadow @color_Stack-shadow;
-      z-index: -1; // shadow can't overlap a content
-   }
+}
+
+.controls-StackTemplate-shadow {
+   position: absolute;
+   height:100%;
+   overflow: hidden;
+}
+
+.controls-StackTemplate-shadow_theme_@{themeName} {
+   width: @padding_Stack-shadow;
+   left: -@padding_Stack-shadow;
+}
+
+.controls-StackTemplate-shadow__content {
+   position: absolute;
+   right: 0;
+   top: 0;
+   bottom: 0;
+   z-index: -1; // shadow can't overlap a content
+}
+
+.controls-StackTemplate-shadow__content_theme_@{themeName} {
+  width: @size_Stack-border-left;
+  background: @color_Stack-border-left;
+  box-shadow: @size_Stack-shadow @color_Stack-shadow;
 }
 
 .controls-StackTemplate__top-area_theme_@{themeName} {

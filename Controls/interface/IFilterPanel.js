@@ -654,6 +654,11 @@ define('Controls/interface/IFilterPanel', [], function() {
     */
 
    /**
+    * @name Controls/interface/IFilterPanel#source
+    * @cfg {Array.<FilterItem>} Специальная структура для визуального представления фильтра. Подробнее см. {@link Controls/_filter/View/interface/IFilterView#source}
+    */
+
+   /**
     * @event Controls/interface/IFilterPanel#itemsChanged Событие возникает при изменении опции items.
     * @param {Event}
     * @param {Controls/_filter/interface/IFilterView#source} items Конфигурация св-в фильтра,

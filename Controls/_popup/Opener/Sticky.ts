@@ -132,6 +132,8 @@ const Sticky = BaseOpener.extend({
  * @function Controls/_popup/Opener/Sticky#openPopup
  * @param {PopupOptions[]} config Конфигурация прилипающего блока.
  * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
+ * @remark
+ * Для обновления уже открытого окна в config нужно передать св-во id с идентификатором открытого окна.
  * @static
  * @example
  * js
@@ -174,7 +176,7 @@ Sticky.openPopup = (config: object): Promise<string> => {
             IoC.resolve('ILogger').error(Sticky.prototype._moduleName, 'Для открытия окна через статический метод, обязательно нужно указать опцию opener');
         }
         BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
-            BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
+            BaseOpener.showDialog(result[0], newCfg, result[1], newCfg.id).then((popupId: string) => {
                 resolve(popupId);
             });
         });

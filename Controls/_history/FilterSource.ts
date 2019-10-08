@@ -216,13 +216,18 @@ var _private = {
    },
 
    findItem: function (self, items, data) {
-      var item = null;
-      var objectData;
-      var serialize = _private.getSerialize().serialize;
+      let item = null;
+      let objectData;
+      const deserialize = _private.getSerialize().deserialize;
+
+      /* В значении фильтра могут быть сложные объекты (record, дата и т.д.)
+         При сериализации сложных объектов добавляется id инстанса и два одинаковых объекта сериализуются в разные строки,
+         поэтому сравниваем десериализованные объекты */
+      const itemData = JSON.parse(JSON.stringify(data, _private.getSerialize().serialize), deserialize);
 
       items.forEach(function (element) {
          objectData = element.get('ObjectData');
-         if (objectData && isEqual(objectData, JSON.stringify(data, serialize))) {
+         if (objectData && itemData && isEqual(JSON.parse(objectData, deserialize), itemData)) {
             item = element;
          }
       });

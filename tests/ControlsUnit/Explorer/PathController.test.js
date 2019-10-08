@@ -1,11 +1,13 @@
 define([
    'Controls/_explorer/PathController',
    'Controls/_breadcrumbs/HeadingPath/Back',
-   'Types/entity'
+   'Types/entity',
+   'wml!Controls/_explorer/PathController/HeadingPathBack'
 ], function(
    PathController,
    PathBack,
-   entity
+   entity,
+   HeadingPathBack
 ) {
    describe('Controls.Explorer._PathController', function() {
       var items = [{
@@ -67,7 +69,7 @@ define([
                displayProperty: 'title'
             });
             assert.deepEqual(instance._header, [{
-					template: 'Controls/breadcrumbs:HeadingPathBack',
+					template: HeadingPathBack,
                templateOptions: {
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
                   backButtonStyle: undefined,
@@ -159,7 +161,7 @@ define([
                displayProperty: 'title'
             });
             assert.deepEqual(instance._header, [{
-					template: 'Controls/breadcrumbs:HeadingPathBack',
+					template: HeadingPathBack,
                templateOptions: {
                   backButtonStyle: undefined,
                   showArrowOutsideOfBackButton: false,

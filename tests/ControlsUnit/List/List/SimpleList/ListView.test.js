@@ -297,7 +297,6 @@ define([
          lv._onItemMouseDown({ preventItemEvent: true }, dispItem);
          assert.isNull(notifyResult, '_onItemMouseDown should ignore preventItemEvent events');
       });
-
       describe('_onItemContextMenu', function() {
          it('contextMenuVisibility: true', function() {
             var

@@ -248,7 +248,8 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions> {
     static getDefaultOptions(): object {
         return {
             direction: 'vertical',
-            keyProperty: 'id'
+            keyProperty: 'id',
+            itemTemplate: defaultItemTemplate
         };
     }
 

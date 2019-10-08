@@ -6,14 +6,15 @@ import ControlsConstants = require('Controls/Constants');
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { relation } from 'Types/entity';
-import { RecordSet, IObservable } from 'Types/collection';
+import { RecordSet } from 'Types/collection';
 import { Object as EventObject } from 'Env/Event';
 import 'css!theme?Controls/list';
-import { CollectionItem } from 'Types/display';
+import { CollectionItem } from 'Controls/display';
 
-var
-    ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
+import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
+import * as renderActionsTemplate from 'wml!Controls/_list/Render/resources/ItemActionsTemplate';
 
+const ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
 const ACTION_TYPE = 'itemActionsUpdated';
 
 var _private = {
@@ -37,16 +38,25 @@ var _private = {
     },
 
     updateItemActions: function(self, item, options) {
-        var
-            all = _private.fillItemAllActions(item, options),
+        // TODO Remove this, compatibility between management controls
+        if (options.useNewModel && !item.getContents) {
+            item = options.listModel.getItemBySourceId(item.get(options.listModel.getKeyProperty()));
+        }
 
-            showed = options.itemActionsPosition === 'outside' || all.length <= 1
-                ? all
-                : all.filter(function(action) {
-                    return action.showType === showType.TOOLBAR || action.showType === showType.MENU_TOOLBAR;
-                });
+        const all = _private.fillItemAllActions(
+            options.useNewModel ? item.getContents() : item,
+            options
+        );
 
-        if (_private.needActionsMenu(all, options.itemActionsPosition)) {
+        let showed = all;
+        if (showed.length > 1) {
+            // TODO: any => action type
+            showed = showed.filter((action: any) => {
+                return action.showType === showType.TOOLBAR || action.showType === showType.MENU_TOOLBAR;
+            });
+        }
+
+        if (_private.needActionsMenu(all)) {
             showed.push({
                 icon: 'icon-ExpandDown ' + ACTION_ICON_CLASS,
                 style: 'secondary',
@@ -56,32 +66,44 @@ var _private = {
         }
 
         options.listModel.setItemActions(item, {
-            all: all,
-            showed: showed
+            all,
+            showed
         });
     },
 
     updateActions: function(self, options, collectionChanged: boolean = false): void {
         if (options.itemActionsProperty || options.itemActions && options.itemActions.length) {
-            for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
-                var
-                    itemData = options.listModel.getCurrent(),
-                    item = itemData.actionsItem;
-                if (item !== ControlsConstants.view.hiddenGroup && item.get) {
-                    _private.updateItemActions(self, item, options);
+            if (options.useNewModel) {
+                options.listModel.setEventRaising(false, true);
+                options.listModel.each((collectionItem: CollectionItem<unknown>) => {
+                    // TODO groups and whatnot
+                    _private.updateItemActions(self, collectionItem, options);
+                });
+                options.listModel.setEventRaising(true, true);
+            } else {
+                for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
+                    var
+                        itemData = options.listModel.getCurrent(),
+                        item = itemData.actionsItem;
+                    if (item !== ControlsConstants.view.hiddenGroup && item.get) {
+                        _private.updateItemActions(self, item, options);
+                    }
                 }
+                self._isActual = true;
+                options.listModel.nextModelVersion(collectionChanged, ACTION_TYPE);
             }
-            self._isActual = true;
-            options.listModel.nextModelVersion(collectionChanged, ACTION_TYPE);
         }
     },
 
     updateModel: function(self, newOptions) {
         _private.updateActions(self, newOptions);
-        newOptions.listModel.subscribe('onListChange', self._onCollectionChangeFn);
+        newOptions.listModel.subscribe(
+            self._options.useNewModel ? 'onCollectionChange' : 'onListChange',
+            self._onCollectionChangeFn
+        );
     },
 
-    needActionsMenu: function(actions, itemActionsPosition) {
+    needActionsMenu: function(actions) {
         var
             hasActionInMenu = false;
 
@@ -92,7 +114,7 @@ var _private = {
             }
         });
 
-        return hasActionInMenu && itemActionsPosition !== 'outside';
+        return hasActionInMenu;
     },
 
     getAllChildren(
@@ -119,6 +141,7 @@ var _private = {
 var ItemActionsControl = Control.extend({
 
     _template: template,
+    _itemActionsTemplate: itemActionsTemplate,
     _isActual: false,
 
     constructor: function() {
@@ -136,6 +159,9 @@ var ItemActionsControl = Control.extend({
             this.serverSide = true;
             return;
         }
+        if (newOptions.useNewModel) {
+            this._itemActionsTemplate = renderActionsTemplate;
+        }
     },
 
     _beforeUpdate: function(newOptions) {
@@ -149,15 +175,23 @@ var ItemActionsControl = Control.extend({
             this._options.itemActionsPosition !== newOptions.itemActionsPosition ||
             !this._isActual && newOptions.canUpdateItemsActions
         ) {
-            this._options.listModel.unsubscribe('onListChange', this._onCollectionChangeFn);
+            this._options.listModel.unsubscribe(
+                this._options.useNewModel ? 'onCollectionChange' : 'onListChange',
+                this._onCollectionChangeFn
+            );
             _private.updateModel.apply(null, args);
         }
     },
 
     _onItemActionsClick: function(event, action, itemData) {
         aUtil.itemActionsClick(this, event, action, itemData, this._options.listModel);
-        this.updateItemActions(itemData.actionsItem);
-        this._options.listModel.setMarkedKey(itemData.key);
+        if (this._options.useNewModel) {
+            this.updateItemActions(itemData); // TODO actionsItem only in Search in SearchGrid
+            this._options.listModel.setMarkedItem(itemData);
+        } else {
+            this.updateItemActions(itemData.actionsItem);
+            this._options.listModel.setMarkedKey(itemData.key);
+        }
     },
 
     _applyEdit: function(item) {
@@ -170,18 +204,29 @@ var ItemActionsControl = Control.extend({
 
     updateItemActions: function(item) {
         _private.updateItemActions(this, item, this._options);
-        this._options.listModel.nextModelVersion(false, ACTION_TYPE);
+        if (!this._options.useNewModel) {
+            this._options.listModel.nextModelVersion(false, ACTION_TYPE);
+        }
     },
 
     _beforeUnmount: function() {
-        this._options.listModel.unsubscribe('onListChange', this._onCollectionChangeFn);
+        this._options.listModel.unsubscribe(
+            this._options.useNewModel ? 'onCollectionChange' : 'onListChange',
+            this._onCollectionChangeFn
+        );
     },
 
     _onCollectionChange(
        e: EventObject,
        type: string
     ): void {
-        if (type === 'collectionChanged' || type === 'indexesChanged') {
+        // TODO Нужно подумать, как правильно фильтровать тип изменений модели
+        // Возможно после вынесения этого в менеджер, он будет сам слушать нужные
+        // методы, и это не понадобится
+        if (
+            type === 'collectionChanged' || type === 'indexesChanged' ||
+            (this._options.useNewModel && type !== 'ch')
+        ) {
            this._isActual = false;
            /**
             * In general, we don't know what we should update.

@@ -1,23 +1,23 @@
 import AbstractStrategy, {
-   IOptions as IAbstractOptions,
-   ISerializableState as IDefaultSerializableState
+    IOptions as IAbstractOptions,
+    ISerializableState as IDefaultSerializableState
 } from './AbstractStrategy';
 import CollectionItem from '../CollectionItem';
 import {object} from 'Types/util';
 import {Set} from 'Types/shim';
 
-interface IOptions<S, T> extends IAbstractOptions<S, T> {
-   unique: boolean;
-   idProperty: string;
+interface IOptions<S, T extends CollectionItem<S>> extends IAbstractOptions<S, T> {
+    unique?: boolean;
+    keyProperty?: string;
 }
 
 interface ISortOptions {
-   unique: boolean;
-   idProperty: string;
+    unique?: boolean;
+    keyProperty?: string;
 }
 
 interface ISerializableState<T> extends IDefaultSerializableState<T> {
-   _itemsOrder: number[];
+    _itemsOrder: number[];
 }
 
 /**
@@ -26,187 +26,187 @@ interface ISerializableState<T> extends IDefaultSerializableState<T> {
  * @extends Controls/_display/ItemsStrategy/Abstract
  * @author Мальцев А.А.
  */
-export default class Direct<S, T> extends AbstractStrategy<S, T> {
-   protected _options: IOptions<S, T>;
+export default class Direct<S, T extends CollectionItem<S> = CollectionItem<S>> extends AbstractStrategy<S, T> {
+    protected _options: IOptions<S, T>;
 
-   /**
-    * Индекс в в стратегии -> оригинальный индекс
-    */
-   protected _itemsOrder: number[];
+    /**
+     * Индекс в в стратегии -> оригинальный индекс
+     */
+    protected _itemsOrder: number[];
 
-   /**
-    * @typedef {Object} Options
-    * @property {Controls/_display/Collection} display Проекция
-    * @property {Boolean} unique Признак обеспечения униconstьности элементов
-    * @property constring} idProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
-    */
+    /**
+     * @typedef {Object} Options
+     * @property {Controls/_display/Collection} display Проекция
+     * @property {Boolean} unique Признак обеспечения униconstьности элементов
+     * @property constring} keyProperty Название свойства элемента коллекции, содержащего его уникальный идентификатор
+     */
 
-   constructor(options: IOptions<S, T>) {
-      super(options);
-   }
+    constructor(options: IOptions<S, T>) {
+        super(options);
+    }
 
-   /**
-    * Устанавливает признак обеспечения уникальности элементов
-    */
-   set unique(value: boolean) {
-      this._options.unique = value;
-   }
+    /**
+     * Устанавливает признак обеспечения уникальности элементов
+     */
+    set unique(value: boolean) {
+        this._options.unique = value;
+    }
 
-   // region IItemsStrategy
+    // region IItemsStrategy
 
-   get count(): number {
-      return this._getItemsOrder().length;
-   }
+    get count(): number {
+        return this._getItemsOrder().length;
+    }
 
-   get items(): T[] {
-      const items = this._getItems();
-      const itemsOrder = this._getItemsOrder();
+    get items(): T[] {
+        const items = this._getItems();
+        const itemsOrder = this._getItemsOrder();
 
-      return itemsOrder.map((position) => items[position]);
-   }
+        return itemsOrder.map((position) => items[position]);
+    }
 
-   at(index: number): T {
-      const items = this._getItems();
-      const itemsOrder = this._getItemsOrder();
-      const position = itemsOrder[index];
+    at(index: number): T {
+        const items = this._getItems();
+        const itemsOrder = this._getItemsOrder();
+        const position = itemsOrder[index];
 
-      if (position === undefined) {
-         throw new ReferenceError(`Display index ${index} is out of bounds.`);
-      }
+        if (position === undefined) {
+            throw new ReferenceError(`Display index ${index} is out of bounds.`);
+        }
 
-      return items[position];
-   }
+        return items[position];
+    }
 
-   splice(start: number, deleteCount: number, added?: S[]): T[] {
-      added = added || [];
+    splice(start: number, deleteCount: number, added?: S[]): T[] {
+        added = added || [];
 
-      const reallyAdded: T[] = added.map(
-         (contents) => contents instanceof CollectionItem ? contents as any as T : this._createItem(contents)
-      );
-      const result = this._getItems().splice(start, deleteCount, ...reallyAdded);
+        const reallyAdded: T[] = added.map(
+            (contents) => contents instanceof CollectionItem ? contents as any as T : this._createItem(contents)
+        );
+        const result = this._getItems().splice(start, deleteCount, ...reallyAdded);
 
-      this._itemsOrder = null;
+        this._itemsOrder = null;
 
-      return result;
-   }
+        return result;
+    }
 
-   reset(): void {
-      super.reset();
-      this._itemsOrder = null;
-   }
+    reset(): void {
+        super.reset();
+        this._itemsOrder = null;
+    }
 
-   invalidate(): void {
-      super.invalidate();
-      this._itemsOrder = null;
-   }
+    invalidate(): void {
+        super.invalidate();
+        this._itemsOrder = null;
+    }
 
-   getDisplayIndex(index: number): number {
-      const itemsOrder = this._getItemsOrder();
-      const itemIndex = itemsOrder.indexOf(index);
+    getDisplayIndex(index: number): number {
+        const itemsOrder = this._getItemsOrder();
+        const itemIndex = itemsOrder.indexOf(index);
 
-      return itemIndex === -1 ? itemsOrder.length : itemIndex;
-   }
+        return itemIndex === -1 ? itemsOrder.length : itemIndex;
+    }
 
-   getCollectionIndex(index: number): number {
-      const itemsOrder = this._getItemsOrder();
-      const itemIndex = itemsOrder[index];
-      return itemIndex === undefined ? -1 : itemIndex;
-   }
+    getCollectionIndex(index: number): number {
+        const itemsOrder = this._getItemsOrder();
+        const itemIndex = itemsOrder[index];
+        return itemIndex === undefined ? -1 : itemIndex;
+    }
 
-   // endregion
+    // endregion
 
-   // region SerializableMixin
+    // region SerializableMixin
 
-   _getSerializableState(state: IDefaultSerializableState<T>): ISerializableState<T> {
-      const resultState = super._getSerializableState(state) as ISerializableState<T>;
+    _getSerializableState(state: IDefaultSerializableState<T>): ISerializableState<T> {
+        const resultState = super._getSerializableState(state) as ISerializableState<T>;
 
-      resultState._itemsOrder = this._itemsOrder;
+        resultState._itemsOrder = this._itemsOrder;
 
-      return resultState;
-   }
+        return resultState;
+    }
 
-   _setSerializableState(state: ISerializableState<T>): Function {
-      const fromSuper = super._setSerializableState(state);
-      return function(): void {
-         this._itemsOrder = state._itemsOrder;
-         fromSuper.call(this);
-      };
-   }
+    _setSerializableState(state: ISerializableState<T>): Function {
+        const fromSuper = super._setSerializableState(state);
+        return function(): void {
+            this._itemsOrder = state._itemsOrder;
+            fromSuper.call(this);
+        };
+    }
 
-   // endregion
+    // endregion
 
-   // region Protected
+    // region Protected
 
-   protected _initItems(): void {
-      super._initItems();
+    protected _initItems(): void {
+        super._initItems();
 
-      const items = this._items;
-      const sourceItems = this._getSourceItems();
-      const count = items.length;
-      for (let index = 0; index < count; index++) {
-         items[index] = this._createItem(sourceItems[index]);
-      }
-   }
+        const items = this._items;
+        const sourceItems = this._getSourceItems();
+        const count = items.length;
+        for (let index = 0; index < count; index++) {
+            items[index] = this._createItem(sourceItems[index]);
+        }
+    }
 
-   /**
-    * Returns relation between internal and original indices
-    * @protected
-    */
-   protected _getItemsOrder(): number[] {
-      if (!this._itemsOrder) {
-         this._itemsOrder = this._createItemsOrder();
-      }
-      return this._itemsOrder;
-   }
+    /**
+     * Returns relation between internal and original indices
+     * @protected
+     */
+    protected _getItemsOrder(): number[] {
+        if (!this._itemsOrder) {
+            this._itemsOrder = this._createItemsOrder();
+        }
+        return this._itemsOrder;
+    }
 
-   protected _createItemsOrder(): number[] {
-      return Direct.sortItems<T>(this._getItems(), {
-         idProperty: this._options.idProperty,
-         unique: this._options.unique
-      });
-   }
+    protected _createItemsOrder(): number[] {
+        return Direct.sortItems<T>(this._getItems(), {
+            keyProperty: this._options.keyProperty,
+            unique: this._options.unique
+        });
+    }
 
-   // endregion
+    // endregion
 
-   // region Statics
+    // region Statics
 
-   /**
-    * Создает индекс сортировки в том же порядке, что и коллекция
-    * @param items Элементы проекции.
-    * @param options Опции
-    */
-   static sortItems<T>(items: T[], options: ISortOptions): number[] {
-      const idProperty = options.idProperty;
+    /**
+     * Создает индекс сортировки в том же порядке, что и коллекция
+     * @param items Элементы проекции.
+     * @param options Опции
+     */
+    static sortItems<T>(items: T[], options: ISortOptions): number[] {
+        const keyProperty = options.keyProperty;
 
-      if (!options.unique || !idProperty) {
-         return items.map((item, index) => index);
-      }
+        if (!options.unique || !keyProperty) {
+            return items.map((item, index) => index);
+        }
 
-      const processed = new Set();
-      const result = [];
-      let itemId;
+        const processed = new Set();
+        const result = [];
+        let itemId;
 
-      (items as any as Array<CollectionItem<any>>).forEach((item, index) => {
-         itemId = object.getPropertyValue(
-            item.getContents(),
-            idProperty
-         );
-         if (processed.has(itemId)) {
-            return;
-         }
+        (items as any as Array<CollectionItem<any>>).forEach((item, index) => {
+            itemId = object.getPropertyValue(
+                item.getContents(),
+                keyProperty
+            );
+            if (processed.has(itemId)) {
+                return;
+            }
 
-         processed.add(itemId);
-         result.push(index);
-      });
+            processed.add(itemId);
+            result.push(index);
+        });
 
-      return result;
-   }
+        return result;
+    }
 
-   // endregion
+    // endregion
 }
 
 Object.assign(Direct.prototype, {
-   '[Controls/_display/itemsStrategy/Direct]': true,
-   _moduleName: 'Controls/display:itemsStrategy.Direct',
-   _itemsOrder: null
+    '[Controls/_display/itemsStrategy/Direct]': true,
+    _moduleName: 'Controls/display:itemsStrategy.Direct',
+    _itemsOrder: null
 });

@@ -79,14 +79,6 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.isFalse(suggestMod._InputController._private.hasMore(getSearchResult(false)));
       });
 
-      it('Suggest::_private.shouldShowFooter', function () {
-         var self = getComponentObject();
-         self._options.footerTemplate = 'anyTemplate';
-         assert.isTrue(!!suggestMod._InputController._private.shouldShowFooter(self, getSearchResult(true)));
-         assert.isFalse(!!suggestMod._InputController._private.shouldShowFooter(self, getSearchResult(false, 1)));
-         assert.isTrue(!!suggestMod._InputController._private.shouldShowFooter(self, getSearchResult(false, 0)));
-      });
-
       it('Suggest::_private.suggestStateNotify', function () {
          var self = getComponentObject();
          var stateNotifyed = false;
@@ -728,17 +720,8 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
             },
             suggestComponent = new suggestMod._InputController();
 
-         suggestComponent._inputActive = true;
-         suggestComponent._notify = function(eventName) {
-            if (eventName === 'choose') {
-               assert.isFalse(suggestComponent._inputActive);
-            }
-         };
          suggestComponent._select(item);
          assert.isFalse(item._isUpdateHistory);
-         assert.isFalse(suggestComponent._inputActive);
-
-
          suggestComponent._options.historyId = 'testFieldHistoryId';
          suggestComponent._select(item);
          assert.isTrue(item._isUpdateHistory);

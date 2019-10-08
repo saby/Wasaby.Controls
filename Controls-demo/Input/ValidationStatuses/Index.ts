@@ -5,6 +5,7 @@ import 'css!Controls-demo/Controls-demo';
 class ValidationStatuses extends Control<IControlOptions> {
     private _validValue = ValidationStatuses._defaultValue;
     private _invalidValue = ValidationStatuses._defaultValue;
+    private _invalidAccentValue = ValidationStatuses._defaultValue;
     private _placeholder = 'Tooltip';
 
     protected _template: TemplateFunction = controlTemplate;

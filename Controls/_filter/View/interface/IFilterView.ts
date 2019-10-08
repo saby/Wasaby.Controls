@@ -57,6 +57,14 @@
  */
 
 /**
+ * @typedef {String} FilterType Тип значения в поле фильтра.
+ * Если тип поля не указан, он будет автоматически определяться по значению фильтра.
+ * Для кажого типа будет построент соответствующий редактор этого типа.
+ * На данный момент поддерживается только 1 значение - dataRange.
+ * @variant dateRange Период дат. При установке этого типа, будет построен контрол выбора периода в строке фильтра.
+ */
+
+/**
  * @typedef {Object} FilterItem
  * @property {String} name Имя поля фильтра.
  * @property {*} value Текущее значение поля фильтра.
@@ -66,6 +74,8 @@
  * @property {String|Number} emptyKey Первичный ключ для пункта выпадающего списка, который создаётся при установке опции emptyText.
  * @property {EditorOptions} editorOptions Опции для редактора.
  * @property {FilterViewMode} viewMode Режим отображения фильтра.
+ * @property {Boolean} visibility Отображение параметра фильтрации в блоке "Еще можно отобрать".
+ * @property {FilterType} type Тип значения в поле фильтра.
  */
 
 /*
@@ -97,7 +107,7 @@
  *
  * MyModule/detailPanelTemplate.wml
  * <pre>
- *    <Controls.filterPopup:DetailPanel>
+ *    <Controls.filterPopup:DetailPanel items="{{items}}">
  *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
  *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
  *    </Controls.filterPopup:DetailPanel>

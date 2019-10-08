@@ -1,17 +1,21 @@
-import CollectionItem from '../CollectionItem';
+import BaseManager from './BaseManager';
 
-export default class MarkerManager {
-    private _lastMarkedItem: CollectionItem<unknown>;
+export interface IMarkerManageableItem {
+    setMarked(marked: boolean): void;
+}
 
-    public markItem(item: CollectionItem<unknown>): void {
+export default class MarkerManager extends BaseManager {
+    protected _lastMarkedItem: IMarkerManageableItem;
+
+    markItem(item: IMarkerManageableItem): void {
         if (item === this._lastMarkedItem) {
             return;
         }
-        if (item) {
-            item.setMarked(true);
-        }
         if (this._lastMarkedItem) {
             this._lastMarkedItem.setMarked(false);
+        }
+        if (item) {
+            item.setMarked(true);
         }
         this._lastMarkedItem = item;
     }

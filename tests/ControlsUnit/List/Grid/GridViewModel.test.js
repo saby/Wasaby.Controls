@@ -451,12 +451,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                expectedResultWithoutMultiselect = [
                   ' controls-Grid__cell_spacingRight controls-Grid__cell_spacingFirstCol_xl controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
                   ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
-                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l' ],
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
+                  ' controls-Grid__cell_spacingRight controls-Grid__cell_spacingFirstCol_null controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l'],
                expectedResultWithMultiselect = [
                   ' controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
                   ' controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
                   ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
-                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l' ];
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
+                  ' controls-Grid__cell_spacingRight controls-Grid__cell_spacingFirstCol_null controls-Grid__cell_spacingBackButton_with_multiSelection controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l'];
             assert.equal(expectedResultWithoutMultiselect[0],
                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0, rowIndex: 0})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
@@ -465,6 +467,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
             assert.equal(expectedResultWithoutMultiselect[2],
                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 2, rowIndex: 0})),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
+            assert.equal(expectedResultWithoutMultiselect[3],
+               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0, rowIndex: 0, isBreadCrumbs: true})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
 
             assert.equal(expectedResultWithMultiselect[0],
@@ -479,6 +484,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(expectedResultWithMultiselect[3],
                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 3, rowIndex: 0})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
+            assert.equal(expectedResultWithMultiselect[4],
+               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 0, rowIndex: 0, isBreadCrumbs: true})),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
+
          });
          it('getSortingDirectionByProp', function() {
             assert.equal(gridMod.GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test'), 'ASC');
@@ -641,6 +650,75 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                expectedResultForOnlyItemInHiddenGroup
             );
          });
+
+         it('_isFirstInGroup', function() {
+            let newGridData = [
+               {
+                  id: 1,
+                  title: 'Неисключительные права использования "СБИС++ ЭО-...',
+                  price: '2 шт',
+                  balance: 1000,
+                  type: '1'
+               },
+               {
+                  id: 2,
+                  title: 'Неисключительные права использования "СБИС++ ЭО-...',
+                  price: '2 шт',
+                  balance: 1000,
+                  type: '1'
+               },
+               {
+                  id: 3,
+                  title: 'Неисключительные права использования "СБИС++ ЭО-...',
+                  price: '2 шт',
+                  balance: 1000,
+                  type: false
+               },
+               {
+                  id: 4,
+                  title: 'Неисключительные права использования "СБИС++ ЭО-...',
+                  price: '2 шт',
+                  balance: 1000,
+                  type: false
+               },
+               {
+                  id: 5,
+                  title: 'Неисключительные права использования "СБИС++ ЭО-...',
+                  price: '2 шт',
+                  balance: 1000,
+                  type: 0
+               },
+               {
+                  id: 6,
+                  title: 'Неисключительные права использования "СБИС++ ЭО-...',
+                  price: '2 шт',
+                  balance: 1000,
+                  type: 0
+               },
+            ]
+            const groupingKeyCallback = (item) => item.get('type');
+            const gridViewModel = new gridMod.GridViewModel({
+               ...cfg,
+               items: new collection.RecordSet({
+                  rawData: newGridData,
+                  keyProperty: 'id'
+               }),
+               groupingKeyCallback: groupingKeyCallback,
+            });
+            const item = gridViewModel.getItemById(1, 'id').getContents();
+            assert.equal(true, gridViewModel._isFirstInGroup(item));
+            const item2 = gridViewModel.getItemById(2, 'id').getContents();
+            assert.equal(false, gridViewModel._isFirstInGroup(item2));
+            const item3 = gridViewModel.getItemById(3, 'id').getContents();
+            assert.equal(true, gridViewModel._isFirstInGroup(item3));
+            const item4 = gridViewModel.getItemById(4, 'id').getContents();
+            assert.equal(false, gridViewModel._isFirstInGroup(item4));
+            const item5 = gridViewModel.getItemById(5, 'id').getContents();
+            assert.equal(true, gridViewModel._isFirstInGroup(item5));
+            const item6 = gridViewModel.getItemById(6, 'id').getContents();
+            assert.equal(false, gridViewModel._isFirstInGroup(item6));
+         });
+
          it('getItemColumnCellClasses for old browsers', function() {
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
@@ -1188,6 +1266,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._model._setEditingItemData = nativeFn;
          });
 
+          it('update prefix setEditingItemData with column scroll', function () {
+              const initialStatus = GridLayoutUtil.isPartialGridSupport;
+              GridLayoutUtil.isPartialGridSupport = () => false;
+              gridViewModel.getColumnsWidthForEditingRow = () => [];
+              const oldPrefixItemVersion = gridViewModel._model._prefixItemVersion;
+              gridViewModel._setEditingItemData({index: 1});
+              assert.equal(oldPrefixItemVersion+1, gridViewModel._model._prefixItemVersion);
+              GridLayoutUtil.isPartialGridSupport = initialStatus;
+          });
+
          it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
             gridViewModel._prepareHeaderColumns(gridHeader, true);
             const headerRow = gridViewModel.getCurrentHeaderRow();
@@ -1339,6 +1427,26 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isFalse(newGridModel.isDrawResults())
          });
 
+          it('getResultsPosition with setHasMoreData', function() {
+              var newGrid = new gridMod.GridViewModel({
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  header: gridHeader,
+                  columns: gridColumns,
+                  items: new collection.RecordSet({
+                      rawData: gridData.slice(0, 1),
+                      idProperty: 'id'
+                  }),
+                  resultsPosition: 'top'
+              })
+
+              assert.equal(undefined, newGrid.getResultsPosition());
+              newGrid.setHasMoreData(true);
+              assert.equal('top', newGrid.getResultsPosition());
+              newGrid.setHasMoreData(false);
+              assert.equal(undefined, newGrid.getResultsPosition());
+          });
+
          it('isDrawResults if empty data', function() {
             const newGridModel = new gridMod.GridViewModel({
                keyProperty: 'id',
@@ -1374,8 +1482,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.deepEqual([{}], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" with multiselect.');
             gridViewModel._prepareHeaderColumns(gridHeader, true);
             assert.deepEqual([[{}, ...gridHeader]], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" with multiselect.');
-            gridViewModel._prepareHeaderColumns([{isBreadCrumbs: true}], true);
-            assert.isTrue(gridViewModel._headerRows[0][0].hiddenForBreadCrumbs);
          });
 
          it('_prepareResultsColumns', function() {
@@ -1475,7 +1581,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   endColumn: 2
               };
               const firstHeaderCell = gridViewModel.getCurrentHeaderColumn(0, 1);
-              assert.equal(firstHeaderCell.cellStyles, 'grid-column: 1/3; grid-row: 1/2;');
+              assert.equal(firstHeaderCell.cellStyles, 'grid-column: 2/3; grid-row: 1/2;');
 
               gridViewModel._headerRows[0][1] = originBreadcrumbsCell;
           });
@@ -1624,7 +1730,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             assert.equal(
                gridMod.GridViewModel._private.getColspanStyles('visible', 1, 2, true),
-               ' grid-column: 1 / 3;'
+               ' grid-column: 2 / 3;'
             );
          });
          it('getItemDataByItem: hovered item should be compared by key', function () {

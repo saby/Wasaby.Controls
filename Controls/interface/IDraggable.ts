@@ -70,7 +70,7 @@
 
 /**
  * @name Controls/interface/IDraggable#draggingTemplate
- * @cfg {Function} Шаблон перемещаемого элемета.
+ * @cfg {Function} Шаблон перемещаемого элемента.
  * @default Controls/dragnDrop:DraggingTemplate
  * @remark В процессе перемещения рядом с курсором отображается эскиз перемещаемого объекта.
  * @example

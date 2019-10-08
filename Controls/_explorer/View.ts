@@ -105,12 +105,9 @@ import 'Types/entity';
 
             return breadCrumbs;
          },
-         dataLoadCallback: function(self, data) {
+         serviceDataLoadCallback: function(self, data) {
              self._breadCrumbsItems = _private.getPath(data);
              self._forceUpdate();
-             if (self._options.dataLoadCallback) {
-                self._options.dataLoadCallback(data);
-             }
          },
          itemsReadyCallback: function(self, items) {
             self._items = items;
@@ -126,6 +123,11 @@ import 'Types/entity';
                   self._children.treeControl.setMarkedKey(self._restoredMarkedKeys[curRoot].markedKey);
                }
                self._isGoingBack = false;
+            }
+            if (self._isGoingFront) {
+               const curRoot = _private.getRoot(self, self._options.root);
+               self._children.treeControl.setMarkedKey(curRoot);
+               self._isGoingFront = false;
             }
          },
          setVirtualScrolling(self, viewMode, cfg): void {
@@ -197,7 +199,7 @@ import 'Types/entity';
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList
-    * @mixes Controls/interface/IGrouped
+    * @mixes Controls/interface/IGroupedList
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
@@ -229,7 +231,7 @@ import 'Types/entity';
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList
-    * @mixes Controls/interface/IGrouped
+    * @mixes Controls/interface/IGroupedList
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
@@ -286,7 +288,7 @@ import 'Types/entity';
       _dragControlId: null,
 
       _beforeMount: function(cfg) {
-         this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
+         this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
          this._itemsSetCallback = _private.itemsSetCallback.bind(null, this);
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
@@ -356,9 +358,11 @@ import 'Types/entity';
             if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
                 _private.setRestoredKeyObject(this, item.getId());
                 _private.setRoot(this, item.getId());
+                this._isGoingFront = true;
             }
          }
          event.stopPropagation();
+         return res;
       },
       _onBreadCrumbsClick: function(event, item) {
           _private.cleanRestoredKeyObject(this, item.getId());

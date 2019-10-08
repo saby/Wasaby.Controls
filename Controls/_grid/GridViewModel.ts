@@ -88,9 +88,9 @@ var
                     // TODO: KINGO
                     // в edge, в отличие от ie воспринимаются стили grid-column, поэтому нужно для частичной поддержки грида задавать и их.
                     // перебивание стилей будет убрано по https://online.sbis.ru/opendoc.html?guid=a0c4964a-2474-4fb6-ab8c-ffab9db62dd0
-                    return ` -ms-grid-column: 1; -ms-grid-column-span: ${multiselectOffset + 1}; grid-column: 1 / ${multiselectOffset + 2};`;
+                    return ` -ms-grid-column: ${multiselectOffset + 1}; -ms-grid-column-span: 1; grid-column: ${multiselectOffset + 1} / ${multiselectOffset + 2};`;
                  } else {
-                    return ` grid-column: 1 / ${multiselectOffset + 2};` + ((maxEndRow > 2) ? ` grid-row: 1 / ${maxEndRow};` : '');
+                    return ` grid-column: ${multiselectOffset + 1} / ${multiselectOffset + 2};` + ((maxEndRow > 2) ? ` grid-row: 1 / ${maxEndRow};` : '');
                  }
               } else {
                   if (GridLayoutUtil.isNoGridSupport()) {
@@ -162,13 +162,16 @@ var
                 preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase();
             }
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
-            if (columnIndex === 0 && !multiSelectVisibility && rowIndex === 0) {
+            if (columnIndex === 0 && !multiSelectVisibility && rowIndex === 0 && !isBreadCrumbs) {
                 preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (itemPadding.left || 'default').toLowerCase();
             }
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             if (isBreadCrumbs) {
                 preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
+                if (params.multiSelectVisibility) {
+                    preparedClasses += ' controls-Grid__cell_spacingBackButton_with_multiSelection';
+                }
             }
             // Стиль колонки
             preparedClasses += ' controls-Grid__cell_' + (style || 'default');
@@ -720,9 +723,6 @@ var
                 this._isMultyHeader = this.isMultyHeader(columns);
                 this._headerRows = getRowsArray(columns, multiSelectVisibility, this._isMultyHeader);
                 [this._maxEndRow, this._maxEndColumn] = getMaxEndRow(this._headerRows);
-                if (multiSelectVisibility && columns[0] && columns[0].isBreadCrumbs) {
-                    this._headerRows[0][0].hiddenForBreadCrumbs = true;
-                }
             } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
             } else {
@@ -848,7 +848,7 @@ var
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0 && !cell.title) {
+            if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0) {
                 cellClasses += ' controls-Grid__header-cell-checkbox';
             } else {
                 cellClasses += _private.getPaddingHeaderCellClasses({
@@ -891,10 +891,6 @@ var
 
             if (cell.startRow || cell.startColumn) {
                 let { endRow, startRow, endColumn, startColumn } = cell;
-
-                if (headerColumn.column.isBreadCrumbs) {
-                    startColumn = 0;
-                }
 
                 if (!startRow) {
                     startRow = 1;
@@ -961,12 +957,20 @@ var
             }
         },
 
+        setHasMoreData: function(hasMore: boolean) {
+            this._model.setHasMoreData(hasMore);
+        },
+
+        getHasMoreData: function() {
+          return this._model.getHasMoreData();
+        },
+
         isDrawResults: function() {
             if (this._options.resultsVisibility === 'visible') {
                 return true;
             }
             const items = this.getItems();
-            return items && items.getCount() > 1;
+            return this.getHasMoreData() || items && items.getCount() > 1;
         },
 
         setResultsPosition: function(position) {
@@ -1209,7 +1213,9 @@ var
         getNextItemKey: function() {
             return this._model.getNextItemKey.apply(this._model, arguments);
         },
-
+        setMarkerOnValidItem: function(index) {
+            this._model.setMarkerOnValidItem(index);
+        }
         setIndexes: function(startIndex, stopIndex) {
             return this._model.setIndexes(startIndex, stopIndex);
         },
@@ -1361,7 +1367,7 @@ var
 
             if (GridLayoutUtil.isPartialGridSupport() || current.columnScroll) {
                 current.rowIndex = this._calcRowIndex(current);
-                if (this.getEditingItemData() && (current.rowIndex>=this.getEditingItemData().rowIndex)) {
+                if (this.getEditingItemData() && (current.rowIndex >= this.getEditingItemData().rowIndex)) {
                     current.rowIndex++;
                 }
             }
@@ -1377,7 +1383,7 @@ var
 
             const itemGroupId = !current.isGroup && this._getItemGroup(current.item);
             current.isInHiddenGroup = itemGroupId === ControlsConstants.view.hiddenGroup;
-            current.isFirstInGroup = itemGroupId && this._isFirstInGroup(current.item, itemGroupId);
+            current.isFirstInGroup = this._isFirstInGroup(current.item, itemGroupId);
 
             if (
                 current.isFirstInGroup &&
@@ -1554,6 +1560,19 @@ var
                 }
             }
             this._model._setEditingItemData(itemData);
+
+            /*
+            * https://online.sbis.ru/opendoc.html?guid=8a8dcd32-104c-4564-8748-2748af03b4f1
+            * Нужно пересчитать и перерисовать записи после начала и завершения редактирования.
+            * При старте редактирования индексы пересчитываются, и, в случе если началось добавление, индексы записей после добавляемой увеличиваются на 1.
+            * При отмене добавления индексы нужно вернуть в изначальное состояние.
+            *
+            * При переходе на table-layout и отказе от partialGrid данное поведение изменится на более оптимальное
+            * https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+            * */
+            if (GridLayoutUtil.isPartialGridSupport() || this._options.columnScroll) {
+                this._nextModelVersion();
+            }
         },
 
         getEditingItemData(): object | null {
@@ -1738,7 +1757,7 @@ var
             let currentGroupItems;
 
             groupId = groupId || this._getItemGroup(item);
-            if (!groupId) {
+            if (groupId === undefined || groupId === null) {
                 return false;
             }
 

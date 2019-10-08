@@ -936,12 +936,17 @@ define([
          var
             setHasMoreCalled = false,
             mergeItemsCalled = false,
+            dataLoadCallbackCalled = false,
             loadMoreSorting,
             mockedTreeControlInstance = {
                _options: {
                   filter: {
                      testParam: 11101989
                   },
+                  dataLoadCallback: function() {
+                     dataLoadCallbackCalled = true;
+                  },
+                  task1177940587: true,
                   sorting: [{'test': 'ASC'}],
                   parentProperty: 'parent',
                   uniqueKeys: true
@@ -983,6 +988,7 @@ define([
                   };
                }
             };
+         dataLoadCallbackCalled = false;
          treeGrid.TreeControl._private.loadMore(mockedTreeControlInstance, dispItem);
          assert.deepEqual({
             testParam: 11101989
@@ -990,6 +996,7 @@ define([
          'Invalid value "filter" after call "TreeControl._private.loadMore(...)".');
          assert.isTrue(setHasMoreCalled, 'Invalid call "setHasMore" by "TreeControl._private.loadMore(...)".');
          assert.isTrue(mergeItemsCalled, 'Invalid call "mergeItemsCalled" by "TreeControl._private.loadMore(...)".');
+         assert.isTrue(dataLoadCallbackCalled, 'Invalid call "dataLoadCallbackCalled" by "TreeControl._private.loadMore(...)".');
          assert.deepEqual(loadMoreSorting, [{'test': 'ASC'}]);
       });
       describe('EditInPlace', function() {
@@ -1470,42 +1477,108 @@ define([
          // Initial
          assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
 
+         const fakeEvent = {
+             stopPropagation: () => {}
+         };
 
          // Expanding. Child items has not loaded
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(0).getContents(), {});
+         treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(0).getContents(), {});
          assert.deepEqual(treeGridViewModel.getExpandedItems(), [0]);
 
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(1).getContents(), {});
+         treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(1).getContents(), {});
          assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
 
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(2).getContents(), {});
+         treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(2).getContents(), {});
          assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
 
 
          // Closing. Child items loaded
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(0).getContents(), {});
+         treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(0).getContents(), {});
          assert.deepEqual(treeGridViewModel.getExpandedItems(), [1]);
 
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(1).getContents(), {});
+         treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(1).getContents(), {});
          assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
 
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(2).getContents(), {});
+         treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(2).getContents(), {});
          assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
 
 
          // Expanding. Child items loaded
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(0).getContents(), {});
+         treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(0).getContents(), {});
          assert.deepEqual(treeGridViewModel.getExpandedItems(), [0]);
 
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(1).getContents(), {});
+         treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(1).getContents(), {});
          assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
 
-         treeControl._onItemClick({}, treeGridViewModel.getDisplay().at(2).getContents(), {});
+         treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(2).getContents(), {});
          assert.deepEqual(treeGridViewModel.getExpandedItems(), [0, 1]);
 
 
          treeGrid.TreeControl._private.createSourceController = savedMethod;
       });
+
+
+       it('don\'t toggle node by click if handler returns false', async function() {
+           const savedMethod = treeGrid.TreeControl._private.createSourceController;
+           const data = [
+               {id: 0, 'Раздел@': true, "Раздел": null},
+               {id: 1, 'Раздел@': false, "Раздел": null},
+               {id: 2, 'Раздел@': null, "Раздел": null}
+           ];
+           const source = new sourceLib.Memory({
+               idProperty: 'id',
+               rawData: data,
+           });
+           const cfg = {
+               source: source,
+               columns: [{}],
+               keyProperty: 'id',
+               parentProperty: 'Раздел',
+               nodeProperty: 'Раздел@',
+               filter: {},
+               expandByItemClick: true
+           };
+
+           const treeGridViewModel = new treeGrid.ViewModel(cfg);
+           let treeControl;
+
+           treeGridViewModel.setItems(new collection.RecordSet({
+               rawData: data,
+               idProperty: 'id'
+           }));
+
+           treeControl = new treeGrid.TreeControl(cfg);
+           treeControl.saveOptions(cfg);
+           treeControl._children = {
+               baseControl: {
+                   getViewModel: function() {
+                       return treeGridViewModel;
+                   }
+               }
+           };
+
+           treeGrid._notify = (eName) => {
+              if (eName === 'itemClick') {
+                 return false;
+              }
+           };
+
+           // Initial
+           assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
+
+           const fakeEvent = {
+               stopPropagation: () => {}
+           };
+
+           treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(0).getContents(), {});
+           assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
+
+           treeControl._onItemClick(fakeEvent, treeGridViewModel.getDisplay().at(1).getContents(), {});
+           assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
+
+           treeGrid.TreeControl._private.createSourceController = savedMethod;
+       });
+
 
       it('check deepReload after load', function() {
          let source = new sourceLib.Memory({

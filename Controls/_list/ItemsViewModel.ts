@@ -97,6 +97,7 @@ var ItemsViewModel = BaseViewModel.extend({
     _collapsedGroups: null,
     _prefixItemVersion: null,
     _updateIndexesCallback: null,
+    _hasMoreData: false,
 
     constructor: function(cfg) {
         this._prefixItemVersion = 0;
@@ -501,7 +502,15 @@ var ItemsViewModel = BaseViewModel.extend({
         this._itemDataCache = null;
         this._curIndex = null;
         this._onCollectionChangeFnc = null;
-    }
+    },
+
+    setHasMoreData: function(value: boolean) {
+        this._hasMoreData = value;
+    },
+
+    getHasMoreData: function() {
+        return this._hasMoreData;
+    },
 });
 
 export = ItemsViewModel;

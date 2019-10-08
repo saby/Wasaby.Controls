@@ -142,8 +142,42 @@
  * @property {String} caption Текст заголовка ячейки.
  * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
- * @property {String} template Шаблон заголовка ячейки. CSS-класс устанавливает правый отступ для заголовка ячейки для выравнивания по целым числам в полях ввода денег.
- * @property {String} sortingProperty Свойство, по которому выполняется сортировка.
+ * @property {String} template Шаблон заголовка ячейки. CSS-класс устанавливает правый отступ для заголовка ячейки в целях выравнивания по целым числам в полях ввода денег.  По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
+ * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
+ * @property {String} sortingProperty Свойство, по которому выполняется сортировка. 
+ * В качестве значения принимает имя поля. 
+ * Если в конфигурации ячейки задать это свойство, то в шапке таблицы в конкретной ячейки будет отображаться кнопка для изменения сортировки. 
+ * Клик по кнопке будет менять порядок сортировки элементов на противоположный. 
+ * При этом элементы будут отсортированы по полю, имя которого указано в свойстве sortingProperty.
+ * <pre class="brush: js">
+ * _sorting: null,
+ * _header: null,
+ * _beforeMount: function(){
+ *    this._sorting = [
+ *       {
+ *          price: 'desc'
+ *       },
+ *       {
+ *          balance: 'asc'
+ *       }
+ *    ],
+ *    this._header = [
+ *       {
+ *          title: 'Цена',
+ *          sortingProperty: 'price'
+ *       },
+ *       {
+ *          title: 'Остаток',
+ *          sortingProperty: 'balance'
+ *       }
+ *    ];
+ * }
+ * </pre>
+ * <pre class="brush: html>"
+ * <Controls.grid:View bind:sorting="_sorting" header="{{_header}}">
+ *    ...
+ * </Controls.grid:View>
+ * </pre>
  * @property {Number} startRow Порядковый номер строки на которой начинается ячейка.
  * @property {Number} endRow Порядковый номер строки на которой заканчивается ячейка.
  * @property {Number} startColumn Порядковый номер колонки на которой начинается ячейка.
@@ -167,80 +201,58 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#header
- * @cfg {Array.<HeaderCell>} Описывает шапку таблицы.
- * - <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
- * - <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
- * @remark
- * По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
- * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
- *
- * 
- *
+ * @cfg {Array.<HeaderCell>} Описывает шапку таблицы. В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки. Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки. Условно ячейки таблицы нумеруются слева направо. Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке. 
+ * <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
+ * <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
  * @example
- * Пример добавления пользовательскогого шаблона:
+ * Пример 1. Для первой ячейки задаём пользовательский шаблон.
  * <pre>
  *    <Controls.grid:View>
- *       <ws:header>
- *           <ws:template>
- *             <Controls.buttons:Button caption="Description" />
- *           </ws:template>
+ *       <ws:header> 
+ *          <ws:Array>
+ *              <ws:template>
+ *                  <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
+ *              </ws:template>
+ *          </ws: Array>
  *       </ws:header>
  *    </Controls.grid:View>
  * </pre>
- *
  * @example
- * Пример добавления интервала между текстами заголовков для столбцов с денежными полями:
- * <pre>
- *    <Controls.grid:View>
- *       <ws:header>
- *           <ws:template>
- *              <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
- *           </ws:template>
- *       </ws:header>
- *    </Controls.grid:View>
- * </pre>
- *
- * @example
- * Пример массива колонок многоуровневого заголовка:
+ * Пример 2. Настройка опции задаётся в хуке и передаётся в шаблон.
  * <pre>
  * _header: null,
  * _beforeMount: function(options) {
- *    this._header = [
- *       {
+ *      this._header = [
+ *      {
  *          caption: 'Name',
  *          startRow: 1,
  *          endRow: 3,
  *          startColumn: 1,
  *          endColumn: 2
- *       },
- *       {
+ *      },
+ *      {
  *          caption: 'Price',
  *          startRow: 1,
  *          endRow: 2,
  *          startColumn: 2,
  *          endColumn: 4
- *       },
- *       {
+ *      },
+ *      {
  *          caption: 'Cell',
  *          startRow: 2,
  *          endRow: 3,
  *          startColumn: 2,
  *          endColumn: 3
- *       },
- *       {
+ *      },
+ *      {
  *          caption: 'Residue',
  *          startRow: 2,
  *          endRow: 3,
  *          startColumn: 3,
  *          endColumn: 4
- *       }
- *    ]
+ *      }
+ *      ]
  * }
- * </pre>
- * <pre>
- * <Controls.grid:View header="{{ _header }}">
- *     ...
- * </Controls.grid:View>
  * </pre>
  */
 

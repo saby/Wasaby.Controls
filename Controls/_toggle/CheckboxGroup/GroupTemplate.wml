@@ -1,6 +1,6 @@
 <div class="controls-CheckboxGroup__group_{{_options.direction}} {{isChildGroup ? ('controls-CheckboxGroup__childGroup_theme_' + _options.theme)}}">
     <ws:for data="index, item in groups[parent]">
-        <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate || _options.defaultItemTemplate}}"
+        <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate}}"
                     selected="{{isSelected(item)}}"
                     triState = "{{triStateKeys.indexOf(item[keyProperty]) > -1}}"
                     on:valueChanged="_valueChangedHandler(item)"
@@ -9,7 +9,7 @@
                     readOnly="{{_options.readOnly}}"/>
         <ws:if data="{{item[_options.nodeProperty]}}">
             <ws:partial template="{{_options.groupTemplate}}"
-                        defaultItemTemplate="{{_options.defaultItemTemplate}}"
+                        itemTemplate="{{_options.itemTemplate}}"
                         groupTemplate="{{_options.groupTemplate}}"
                         groups="{{_options.groups}}"
                         isChildGroup="{{true}}"

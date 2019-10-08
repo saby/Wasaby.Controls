@@ -608,6 +608,10 @@ define(
             };
             filter.View._private.setValue(view, [null], 'document');
             assert.strictEqual(view._source[0].value, false);
+
+            view._source[0].resetValue = [];
+            filter.View._private.setValue(view, [null], 'document');
+            assert.deepEqual(view._source[0].value, []);
          });
 
          it('_private:setPopupConfig', function() {

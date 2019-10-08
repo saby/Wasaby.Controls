@@ -16,7 +16,7 @@ const
          }
 
          const hasMultiSelect = multiSelectVisibility !== 'hidden';
-         const columnOffset = hasMultiSelect && !firstCell.isBreadCrumbs ? 1 : 0;
+         const columnOffset = hasMultiSelect ? 1 : 0;
          const lastStickyColumnIndex = stickyColumnsCount + columnOffset;
          const lastStickyColumnSelector = `.controls-Grid__cell_fixed:nth-child(${lastStickyColumnIndex})`;
          const stickyCellContainer = container.querySelector(lastStickyColumnSelector);
@@ -25,6 +25,15 @@ const
          }
          const stickyCellOffsetLeft = stickyCellContainer.getBoundingClientRect().left - container.getBoundingClientRect().left;
          return stickyCellOffsetLeft + stickyCellContainer.offsetWidth;
+      },
+      setBorderScrollPosition(self, newContentSize: number, newContentContainerSize: number): void {
+          // if the table has increased and the scroll was at the end, it should stick at the end, with a new width.
+          // Если при расширении таблицы, скрол находился в конце, он должен остаться в конце.
+          if (self._contentSize !== 0 &&
+              (self._scrollPosition ===  self._contentSize - self._contentContainerSize) &&
+              newContentSize > self._contentSize) {
+              self._scrollPosition = newContentSize - newContentContainerSize;
+          }
       },
       updateSizes(self) {
          _private.drawTransform(self, 0);
@@ -38,6 +47,7 @@ const
          }
 
          if (self._contentSize !== newContentSize || self._contentContainerSize !== newContentContainerSize) {
+            _private.setBorderScrollPosition(self, newContentSize, newContentContainerSize);
             self._contentSize = newContentSize;
             self._contentContainerSize = newContentContainerSize;
 
@@ -139,7 +149,21 @@ const
                   self._offsetForHScroll += ResultsContainer[0].offsetHeight;
               }
           }
-      }
+      },
+
+      removeDisplayFromScroll: function(container) {
+         const scroll = container.getElementsByClassName('controls-Grid_columnScroll_wrapper')[0];
+         if (scroll) {
+            scroll.style.removeProperty('display');
+         }
+      },
+
+      setDispalyNoneForScroll: function(container) {
+         const scroll = container.getElementsByClassName('controls-Grid_columnScroll_wrapper')[0];
+         if (scroll) {
+            scroll.style.display = 'none';
+         }
+      },
    },
    ColumnScroll = Control.extend({
       _template: ColumnScrollTpl,
@@ -184,13 +208,17 @@ const
              !isEqualWithSkip(this._options.columns, oldOptions.columns, { template: true, resultTemplate: true })
              || this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility
          ) {
+            // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл, что-бы он не распирал таблицу при изменении ширины
+            _private.setDispalyNoneForScroll(this._children.content);
             _private.updateSizes(this);
+            _private.removeDisplayFromScroll(this._children.content);
          }
          if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
             _private.updateFixedColumnWidth(this);
             this._setOffsetForHScroll();
          }
       },
+
       updateShadowStyle() {
           if (this._children.startShadow) {
               this._children.startShadow.style = _private.calculateShadowStyles(this, 'start');

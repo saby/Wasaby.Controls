@@ -52,7 +52,7 @@ var _private = {
  * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию закрыто.
  * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
  * <a href="/materials/demo-ws4-input-dropdown">Демо-пример</a>.
- * Руководство разработчика {@link /doc/platform/developmentapl/interface-development/controls/dropdown-menu/ Меню и выпадающий список}.
+ * Руководство разработчика {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/dropdown-menu/ Меню и выпадающий список}.
  *
  * @class Controls/_dropdown/Input
  * @extends Core/Control
@@ -280,6 +280,6 @@ var Input = Control.extend({
    }
 });
 
-Input._theme = ['Controls/dropdown'];
+Input._theme = ['Controls/dropdown', 'Controls/Classes'];
 
 export = Input;

@@ -7,7 +7,9 @@ import Env = require('Env/Env');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import * as mStubs from 'Core/moduleStubs';
-import {descriptor} from 'Types/entity';
+import {descriptor, Model} from 'Types/entity';
+import {IoC} from 'Env/Env';
+import {RecordSet} from 'Types/collection';
 
 // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 var
@@ -46,20 +48,42 @@ var _private = {
        });
    },
 
+   getItemByKey(items: RecordSet, key: string, errorCallback: Function): void|Model {
+      const item = items.getRecordById(key);
+
+      if (!item && !items.getKeyProperty()) {
+         IoC.resolve('ILogger').info('Controls/dropdown', 'keyProperty field is empty in item or keyProperty option does not setted for source');
+
+         // for tests
+         if (errorCallback) {
+            errorCallback();
+         }
+      }
+
+      return item;
+   },
+
    updateSelectedItems: function (self, emptyText, selectedKeys, keyProperty, selectedItemsChangedCallback) {
-      var selectedItems = [];
+      const selectedItems = [];
+
+      const addToSelected = (key: string) => {
+         const selectedItem = _private.getItemByKey(self._items, key);
+
+         if (selectedItem) {
+            selectedItems.push(selectedItem);
+         }
+      };
+
       if (!selectedKeys.length || selectedKeys[0] === null) {
         if (emptyText) {
            selectedItems.push(null);
-        } else if (self._items.getRecordById(null)) {
-           selectedItems.push(self._items.getRecordById(null));
+        } else {
+           addToSelected(null);
          }
       } else {
-         chain.factory(selectedKeys).each(function (key) {
+         chain.factory(selectedKeys).each( (key) => {
             // fill the array of selected items from the array of selected keys
-            if (self._items.getRecordById(key)) {
-               selectedItems.push(self._items.getRecordById(key));
-            }
+            addToSelected(key);
          });
       }
       if (selectedItemsChangedCallback) {
@@ -216,7 +240,7 @@ var _private = {
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/IIcon
  * @mixes Controls/_interface/IIconStyle
- * @mixes Controls/interface/IGrouped
+ * @mixes Controls/interface/IGroupedList
  * @author Красильников А.С.
  * @control
  * @private
@@ -237,7 +261,7 @@ var _private = {
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/IIcon
  * @mixes Controls/_interface/IIconStyle
- * @mixes Controls/interface/IGrouped
+ * @mixes Controls/interface/IGroupedList
  * @author Красильников А.С.
  * @control
  * @private

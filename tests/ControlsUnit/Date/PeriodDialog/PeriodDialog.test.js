@@ -3,6 +3,7 @@ define([
    'Core/Deferred',
    'Types/formatter',
    'Controls/datePopup',
+   'Controls/scroll',
    'Controls/Utils/Date',
    'ControlsUnit/Calendar/Utils'
 ], function(
@@ -10,6 +11,7 @@ define([
    Deferred,
    formatter,
    PeriodDialog,
+   scroll,
    dateUtils,
    calendarTestUtils
 ) {
@@ -114,25 +116,29 @@ define([
          });
 
          [
-            {},
-            { selectionType: PeriodDialog.SELECTION_TYPES.quantum, quantum: { months: [1], days: [1] } }
+            { selectionType: PeriodDialog.SELECTION_TYPES.range },
+            { selectionType: PeriodDialog.SELECTION_TYPES.range, quantum: { months: [1], days: [1] } }
          ].forEach(function(options) {
             it(`should enable year and month modes if options are equals ${JSON.stringify(options)}.`, function () {
-               const component = calendarTestUtils.createComponent(PeriodDialog, {});
+               const component = calendarTestUtils.createComponent(PeriodDialog, options);
                assert.isTrue(component._monthStateEnabled);
                assert.isTrue(component._yearStateEnabled);
                assert.strictEqual(component._state, component._STATES.year);
+               assert.strictEqual(component._yearRangeSelectionType, options.selectionType);
+               assert.strictEqual(component._monthRangeSelectionType, options.selectionType);
             });
          });
 
          [
             { selectionType: PeriodDialog.SELECTION_TYPES.single },
-            { selectionType: PeriodDialog.SELECTION_TYPES.quantum, quantum: { days: [1] } }
+            { selectionType: PeriodDialog.SELECTION_TYPES.range, quantum: { days: [1] } }
          ].forEach(function(options) {
             it(`should enable only month mode if options are equals ${JSON.stringify(options)}.`, function() {
                const component = calendarTestUtils.createComponent(PeriodDialog, options);
                assert.isTrue(component._monthStateEnabled);
                assert.isFalse(component._yearStateEnabled);
+               assert.strictEqual(component._yearRangeSelectionType, PeriodDialog.SELECTION_TYPES.disable);
+               assert.strictEqual(component._monthRangeSelectionType, PeriodDialog.SELECTION_TYPES.disable);
             });
          });
 
@@ -169,6 +175,12 @@ define([
                   assert.equal(component._state, testGroup.state);
                });
             });
+         });
+
+
+         it("should initialize readOnly state.", function() {
+            const component = calendarTestUtils.createComponent(PeriodDialog, { readOnly: true });
+            assert.strictEqual(component._yearRangeSelectionType, PeriodDialog.SELECTION_TYPES.disable);
          });
 
          it('should set correct header type.', function() {
@@ -482,5 +494,81 @@ define([
             component._startValueFieldKeyUpHandler(null);
          });
       });
+
+      describe('_currentDayIntersectHandler', function() {
+         [{
+            ratio: 0,
+            homeButtonVisible: true
+         }, {
+            ratio: 0.5,
+            homeButtonVisible: false
+         }, {
+            ratio: 1,
+            homeButtonVisible: false
+         }].forEach(function(test) {
+            it(`should set homeButtonVisible to ${test.homeButtonVisible} if ratio is equal ${test.ratio}.`, function() {
+               const
+                  component = calendarTestUtils.createComponent(PeriodDialog, {}),
+                  entries = [
+                     {},
+                     new scroll.IntersectionObserverSyntheticEntry({ intersectionRatio: test.ratio }, {})
+                  ];
+               component._currentDayIntersectHandler(null, entries);
+
+               if (test.homeButtonVisible) {
+                  assert.isTrue(component._homeButtonVisible);
+               } else {
+                  assert.isFalse(component._homeButtonVisible);
+               }
+            });
+         });
+      });
+
+      describe('_inputFocusOutHandler', function() {
+         const event = {
+            nativeEvent: {}
+         };
+
+         it('should reset header type if the focus is not on the input fields.', function() {
+            const
+               sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(PeriodDialog, {}),
+               defaultOptions = calendarTestUtils.prepareOptions(PeriodDialog);
+
+            component._children = {
+               inputs: {
+                  contains: function() {
+                     return false;
+                  }
+               }
+            };
+
+            component._headerType = 'someHeaderType';
+            component._inputFocusOutHandler(event);
+            assert.strictEqual(component._headerType, defaultOptions.headerType);
+            sandbox.restore();
+         });
+
+         it('should\'t reset header type if the focus is on the input fields.', function() {
+            const
+               sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(PeriodDialog, {}),
+               headerType = 'someHeaderType';
+
+            component._children = {
+               inputs: {
+                  contains: function() {
+                     return true;
+                  }
+               }
+            };
+
+            component._headerType = headerType;
+            component._inputFocusOutHandler(event);
+            assert.strictEqual(component._headerType, headerType);
+            sandbox.restore();
+         });
+      });
+
    });
 });

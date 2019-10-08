@@ -315,6 +315,26 @@ define('Controls/interface/IDropdown', [], function() {
     */
 
    /**
+    * @name Controls/interface/IDropdown#popupClassName
+    * @cfg {String} Класс, который навешивается на всплывающее окно.
+    * @example
+    * Для всплывающего окна задается сдвиг вверх на 5px.
+    * TMPL:
+    * <pre>
+    *    <Controls.dropdown:Button
+    *        popupClassName="MyMenu_popupClassName"
+    *        ...
+    *        />
+    * </pre>
+    * CSS:
+    * <pre>
+    *    .MyMenu_popupClassName {
+    *       margin-top: -5px;
+    *    }
+    * </pre>
+    */
+
+   /**
     * @name Controls/interface/IDropdown#displayProperty
     * @cfg {String} Имя поля, значение которого будет отображаться.
     * @default title

@@ -1,5 +1,6 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
+import coreClone = require('Core/core-clone');
 import RangeSelectrionControllerTmpl = require('wml!Controls/_dateRange/Controllers/RangeSelectionController');
 import IRangeSelectable from "./../interfaces/IInputSelectable";
 
@@ -87,6 +88,12 @@ var _private = {
       if (self._displayedStartValue !== range[0] || self._displayedEndValue !== range[1]) {
          return range;
       }
+   },
+   clone: function(obj) {
+      if (obj instanceof Date) {
+         return new obj.constructor(obj);
+      }
+      return coreClone(obj);
    }
 };
 
@@ -204,6 +211,9 @@ var Component = BaseControl.extend({
     * @param item {*} Объект соответствующий элементу.
     */
    _itemClickHandler: function(event, item) {
+      if (this._options.readOnly) {
+         return;
+      }
       if (this._state.selectionType === Component.SELECTION_TYPES.range) {
          this._processRangeSelection(item);
       } else if (this._state.selectionType === Component.SELECTION_TYPES.single) {
@@ -220,6 +230,9 @@ var Component = BaseControl.extend({
     */
    _itemMouseEnterHandler: function(event, item) {
       var range;
+      if (this._options.readOnly) {
+         return;
+      }
       if (this._selectionProcessing) {
          this._selectionHoveredValue = item;
          if (_private.updateDisplayedRange(this, item)) {
@@ -236,8 +249,21 @@ var Component = BaseControl.extend({
    },
 
    _itemMouseLeaveHandler: function(event, item) {
+      if (this._options.readOnly) {
+         return;
+      }
       this._hoveredStartValue = null;
       this._hoveredEndValue = null;
+   },
+
+   _mouseleaveHandler: function(): void {
+      if (this._selectionProcessing) {
+         this._selectionHoveredValue = _private.clone(this._selectionBaseValue);
+         if (_private.updateDisplayedRange(this)) {
+            this._notify('selectionHoveredValueChanged', [this._selectionHoveredValue]);
+            this._notify('selectionChanged', [this._displayedStartValue, this._displayedEndValue]);
+         }
+      }
    },
 
    /**
@@ -289,10 +315,10 @@ var Component = BaseControl.extend({
     */
    _getDisplayedRangeEdges: function(item) {
       if (this._selectionType === Component.SELECTION_TYPES.single) {
-         return [item, item];
+         return [item, _private.clone(item)];
       }
       if (!this._selectionBaseValue) {
-         return [item, item];
+         return [item, _private.clone(item)];
       } else if (item > this._selectionBaseValue) {
          return [this._selectionBaseValue, item];
       } else {

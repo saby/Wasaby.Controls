@@ -68,7 +68,7 @@ import 'css!theme?Controls/input';
             opener: this,
             target: this._container,
             template: 'Controls/datePopup',
-            className: 'controls-PeriodDialog__picker-withoutModeBtn',
+            className: 'controls-PeriodDialog__picker',
             horizontalAlign: { side: 'right' },
             targetPoint: { horizontal: 'left' },
             fittingMode: 'overflow',
@@ -82,11 +82,13 @@ import 'css!theme?Controls/input';
                selectionType: 'single',
                headerType: 'input',
                closeButtonEnabled: true,
-               dateConstructor: this._options.dateConstructor
+               dateConstructor: this._options.dateConstructor,
+               readOnly: this._options.readOnly
             }
          };
          if (!this._isVdomDialog()) {
             cfg.template = 'SBIS3.CONTROLS/Date/RangeBigChoose';
+            cfg.className = 'controls-PeriodDialog__picker-withoutModeBtn';
             cfg.isCompoundTemplate = true;
             cfg.templateOptions.handlers = { onChoose: this._onResultWS3.bind(this) };
          }

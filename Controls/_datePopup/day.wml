@@ -1,0 +1,10 @@
+<ws:if data="{{value.today}}">
+   <Controls.scroll:IntersectionObserverContainer observerName="datePopup">
+      <div>
+         <ws:partial template="{{_dayTemplate}}" scope="{{_options}}"/>
+      </div>
+   </Controls.scroll:IntersectionObserverContainer>
+</ws:if>
+<ws:else>
+   <ws:partial template="{{_dayTemplate}}" scope="{{_options}}"/>
+</ws:else>

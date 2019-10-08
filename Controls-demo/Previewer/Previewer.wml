@@ -9,6 +9,7 @@
 		on:selectedKeyChanged="changeTrigger()"
 		attr:class="ControlsDemo-Previewer__trigger"
 	/>
+   <Controls.scroll:Container attr:style="height: 400px;">
    <ws:for data="image in _images">
       <div>
          <Controls.popup:PreviewerTarget attr:class="ControlsDemo-Previewer__previewer"
@@ -30,4 +31,6 @@
          </Controls.popup:PreviewerTarget>
       </div>
    </ws:for>
+   <div style="height: 400px;"></div>
+   </Controls.scroll:Container>
 </div>

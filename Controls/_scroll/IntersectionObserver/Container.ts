@@ -2,6 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_scroll/IntersectionObserver/Container');
 
 export interface IIntersectionObserverContainerOptions extends IControlOptions {
+   observerName: string;
    data: object;
 }
 
@@ -12,6 +13,11 @@ export interface IIntersectionObserverContainerOptions extends IControlOptions {
  * @control
  * @author Красильников А.С.
  * @see Controls/_scroll/IntersectionObserver
+ */
+
+/**
+ * @name Controls/_scroll/IntersectionObserver/Container#observerName
+ * @cfg {String} Контроллер следит только за элементами с таким же именем.
  */
 
 /**
@@ -28,7 +34,7 @@ class  ModuleComponent extends Control<IIntersectionObserverContainerOptions> {
       const container = this._container.get ? this._container.get(0) : this._container;
       this._notify(
           'intersectionObserverRegister',
-          [this.getInstanceId(), container, this._options.data],
+          [this.getInstanceId(), this._options.observerName, container, this._options.data],
           { bubbling: true });
    }
 

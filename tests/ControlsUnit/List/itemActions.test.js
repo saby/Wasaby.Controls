@@ -301,46 +301,89 @@ define([
       });
 
       it('_onItemActionClick', function() {
-         var cfg = {
-            listModel: listViewModel,
-            itemActions: actions
-         };
-         var instance = new lists.ItemActionsControl(cfg);
-         instance.saveOptions(cfg);
-         var item = {};
-         var fakeItemData = {
-            actionsItem: item,
-            item: item,
-            index: 0,
-            key: 2
-         };
-         var fakeHTMLElement = {
-            className: 'controls-ListView__itemV'
-         };
-         instance._container = {
-            querySelector: function(selector) {
-               if (selector === '.controls-ListView__itemV') {
-                  return {
-                     parentNode: {
-                        children: [fakeHTMLElement]
-                     }
-                  };
+           var cfg = {
+               listModel: listViewModel,
+               itemActions: actions
+           };
+           var instance = new lists.ItemActionsControl(cfg);
+           instance.saveOptions(cfg);
+           var item = {};
+           var fakeItemData = {
+               actionsItem: item,
+               item: item,
+               index: 0,
+               key: 2
+           };
+           var fakeHTMLElement = {
+               className: 'controls-ListView__itemV'
+           };
+           instance._container = {
+               querySelector: function(selector) {
+                   if (selector === '.controls-ListView__itemV') {
+                       return {
+                           parentNode: {
+                               children: [fakeHTMLElement]
+                           }
+                       };
+                   }
                }
-            }
-         };
-         const fakeEvent = {
-            stopPropagation: function() {}
-         };
-         const action = {
-            handler: sandbox.stub()
-         };
-         const notifyStub = sandbox.stub(instance, '_notify');
+           };
+           const fakeEvent = {
+               stopPropagation: function() {}
+           };
+           const action = {
+               handler: sandbox.stub()
+           };
+           const notifyStub = sandbox.stub(instance, '_notify');
 
-         instance._onItemActionsClick(fakeEvent, action, fakeItemData);
-         assert.isTrue(notifyStub.withArgs('actionClick', [action, fakeItemData.item, fakeHTMLElement]).calledOnce);
-         assert.isTrue(action.handler.withArgs(fakeItemData.item).calledOnce);
-         assert.equal(instance._options.listModel.getMarkedKey(), fakeItemData.key);
-      });
+           instance._onItemActionsClick(fakeEvent, action, fakeItemData);
+           assert.isTrue(notifyStub.withArgs('actionClick', [action, fakeItemData.item, fakeHTMLElement]).calledOnce);
+           assert.isTrue(action.handler.withArgs(fakeItemData.item).calledOnce);
+           assert.equal(instance._options.listModel.getMarkedKey(), fakeItemData.key);
+       });
+
+      it('_onItemActionClick in partialGridSupport', function() {
+           var cfg = {
+               listModel: listViewModel,
+               itemActions: actions,
+               fix1177894367: true
+           };
+           var instance = new lists.ItemActionsControl(cfg);
+           instance.saveOptions(cfg);
+           listViewModel.isPartialGridSupport = () => true;
+           var item = {};
+           var fakeItemData = {
+               actionsItem: item,
+               item: item,
+               index: 0,
+               key: 2,
+               columnIndex: 1
+           };
+           var fakeHTMLElement = {
+               className: 'controls-ListView__itemV'
+           };
+           instance._container = {
+               querySelectorAll: function(selector) {
+                   if (selector === '.controls-Grid__row-cell[data-r="0"]') {
+                       return [
+                           fakeHTMLElement
+                       ];
+                   }
+               }
+           };
+           const fakeEvent = {
+               stopPropagation: function() {}
+           };
+           const action = {
+               handler: sandbox.stub()
+           };
+           const notifyStub = sandbox.stub(instance, '_notify');
+
+           instance._onItemActionsClick(fakeEvent, action, fakeItemData);
+           assert.isTrue(notifyStub.withArgs('actionClick', [action, fakeItemData.item, fakeHTMLElement]).calledOnce);
+           assert.isTrue(action.handler.withArgs(fakeItemData.item).calledOnce);
+           assert.equal(instance._options.listModel.getMarkedKey(), fakeItemData.key);
+       });
 
       it('should update itemActions on click', function () {
          let
@@ -474,18 +517,16 @@ define([
          listViewModel.reset();
          ctrl.updateItemActions(listViewModel.getCurrent().item);
          assert.deepEqual([{
-            id: 0,
-            title: 'first',
-            iconStyle: 'secondary',
-            style: 'secondary',
-            showType: tUtil.showType.MENU
-         },
-         {
             id: 1,
             title: 'second',
             iconStyle: 'secondary',
             style: 'secondary',
             showType: tUtil.showType.TOOLBAR
+         }, {
+            icon: 'icon-ExpandDown controls-itemActionsV__action_icon  icon-size',
+            iconStyle: 'secondary',
+            style: 'secondary',
+            _isMenu: true
          }], listViewModel._actions[0].showed);
       });
       describe('needActionsMenu', function() {
@@ -562,7 +603,7 @@ define([
                   showType: tUtil.showType.MENU
                }
             ];
-            assert.isFalse(needActionsMenu(actions, 'outside'));
+            assert.isTrue(needActionsMenu(actions));
          });
 
       });

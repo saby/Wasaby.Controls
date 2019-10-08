@@ -86,7 +86,7 @@ define('Controls/interface/IFilter', [
    /**
     * @event Controls/interface/IFilter#filterChanged Событие filterChanged срабатывает, когда фильтр был изменён.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Object} Изменённый фильтр.
+    * @param {Object} filter Изменённый фильтр.
     * @remark
     * Важно помнить, что опции иммутабельны (https://ru.m.wikipedia.org/wiki/Неизменяемый_объект), поэтому фильтр в аргументах события отличается от фильтра в опциях контрола.
     * @example

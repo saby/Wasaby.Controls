@@ -40,6 +40,7 @@ var moduleClass = CompoundControl.extend({
       this._beforeCloseHandler = this._beforeCloseHandler.bind(this);
       this._onRegisterHandler = this._onRegisterHandler.bind(this);
       this._onMaximizedHandler = this._onMaximizedHandler.bind(this);
+      this._onResizingLineHandler = this._onResizingLineHandler.bind(this);
       this._onCloseHandler.control = this._onResultHandler.control = this;
 
       this.getContainer().bind('keydown', this._keydownHandler);
@@ -79,44 +80,89 @@ var moduleClass = CompoundControl.extend({
 
          this._modifyInnerOptionsByHandlers();
 
-         Promise.all([
-             this._loadTemplate(this._options.template),
-             import('Vdom/Vdom')
-         ]).then(function() {
-            // Пока грузили шаблон, компонент могли задестроить
-            if (self.isDestroyed()) {
-               return;
-            }
-            var wrapper = $('.vDomWrapper', self.getContainer());
-            if (wrapper.length) {
-               var wrapperOptions = {
-                  template: self._options.template,
-                  templateOptions: self._options.templateOptions,
+         let deps = [
+            this._loadTemplate(this._options.template),
+            import('Vdom/Vdom')
+         ];
 
-                  // Нужно передать себя в качестве родителя, чтобы система фокусов
-                  // могла понять, где находятся вложенные компоненты
-                  parent: self
-               };
-               // todo откатил потому что упала ошибка https://online.sbis.ru/opendoc.html?guid=d8cc1098-3d3a-4fed-800c-81b4e6ed2319
-               if (self._options.isWS3Compatible) {
-                  wrapperOptions.iWantBeWS3 = true;
-               }
-               self._vDomTemplate = control.createControl(ComponentWrapper, wrapperOptions, wrapper);
-               if (self._options.isWS3Compatible) {
-                  makeInstanceCompatible(self._vDomTemplate);
-               }
-               self._afterMountHandler();
-               self._afterUpdateHandler();
+         // Совместимость используется только на онлайне. Могу напрямую зарекваерить контроллер Лобастова для получения конфига
+         if (this._options._popupOptions.propStorageId) {
+            deps.push(import('ViewSettings/controller'));
+         }
+
+         Promise.all(deps).then((result) => {
+            this._settingsController = result[2] && result[2].Settings;
+            if (this._settingsController && this._settingsController.getSettings) {
+               this._getSettingsWidth().then((width) => {
+                  if (width) {
+                     this._updateFloatAreaWidth(width);
+                  }
+                  this._createTemplate(def);
+               });
             } else {
-               self._isVDomTemplateMounted = true;
-               self.sendCommand('close');
+               this._createTemplate(def);
             }
-
-            def.callback();
          });
 
          return def;
       });
+   },
+
+   _createTemplate(def): void {
+      // Пока грузили шаблон, компонент могли задестроить
+      if (this.isDestroyed()) {
+         return;
+      }
+      const wrapper = $('.vDomWrapper', this.getContainer());
+      if (wrapper.length) {
+         let wrapperOptions = {
+            template: this._options.template,
+            templateOptions: this._options.templateOptions,
+
+            // Нужно передать себя в качестве родителя, чтобы система фокусов
+            // могла понять, где находятся вложенные компоненты
+            parent: this,
+            popupOptions: this._options._popupOptions
+         };
+         // todo откатил потому что упала ошибка https://online.sbis.ru/opendoc.html?guid=d8cc1098-3d3a-4fed-800c-81b4e6ed2319
+         if (this._options.isWS3Compatible) {
+            wrapperOptions.iWantBeWS3 = true;
+         }
+         this._vDomTemplate = control.createControl(ComponentWrapper, wrapperOptions, wrapper);
+         if (this._options.isWS3Compatible) {
+            makeInstanceCompatible(this._vDomTemplate);
+         }
+         this._afterMountHandler();
+         this._afterUpdateHandler();
+      } else {
+         this._isVDomTemplateMounted = true;
+         this.sendCommand('close');
+      }
+
+      def.callback();
+   },
+
+   _getSettingsWidth(): Promise<null|number> {
+      return new Promise((resolve) => {
+         const propStorageId = this._options._popupOptions.propStorageId;
+         if (propStorageId) {
+            this._settingsController.getSettings([propStorageId]).then((storage) => {
+               if (storage && storage[propStorageId]) {
+                  this._options._popupOptions.width = storage[propStorageId];
+               }
+               resolve(storage[propStorageId]);
+            });
+         } else {
+            resolve();
+         }
+      });
+   },
+
+   _setSettingsWidth(width: number): void {
+      const propStorageId = this._options._popupOptions.propStorageId;
+      if (propStorageId && width && this._settingsController && this._settingsController.setSettings) {
+         this._settingsController.setSettings({[propStorageId]: width});
+      }
    },
 
    _loadTemplate(tpl: string|Function): Promise<Function> {
@@ -229,6 +275,7 @@ var moduleClass = CompoundControl.extend({
       innerOptions._onResizeHandler = this._onResizeHandler;
       innerOptions._onRegisterHandler = this._onRegisterHandler;
       innerOptions._onMaximizedHandler = this._onMaximizedHandler;
+      innerOptions._onResizingLineHandler = this._onResizingLineHandler;
    },
    _onResizeHandler: function() {
       this._notifyOnSizeChanged();
@@ -305,6 +352,28 @@ var moduleClass = CompoundControl.extend({
       return {top, right};
    },
 
+   _onResizingLineHandler(offset: number): void {
+      if (!this._panel._updateAreaWidth) {
+         return;
+      }
+      let width = this._options._popupOptions.width + offset;
+      const coords = this._getFloatAreaStackRootCoords();
+      const item = {
+         popupOptions: {
+            minWidth: this._options._popupOptions.minWidth,
+            maxWidth: this._options._popupOptions.maxWidth,
+            width,
+            containerWidth: this._container.width()
+         }
+      };
+
+      width = StackStrategy.getPosition(coords, item).width;
+      this._setSettingsWidth(width);
+      this._options._popupOptions.width = width;
+      const newOptions = clone(this._options.templateOptions);
+      this._updateFloatAreaWidth(width, newOptions);
+   },
+
    _onMaximizedHandler(): void {
       if (!this._panel._updateAreaWidth) {
          return;
@@ -326,20 +395,26 @@ var moduleClass = CompoundControl.extend({
       item.popupOptions.width = this._maximized ? item.popupOptions.maxWidth : (item.popupOptions.minimizedWidth || item.popupOptions.minWidth);
       const width = StackStrategy.getPosition(coords, item).width;
 
-      this._panel._options.maximized = this._maximized;
-      this._panel._options.width = width;
-      this._panel._options.maxWidth = width;
-      this._panel._updateAreaWidth(width);
-      this._panel._updateSideBarVisibility();
-      this._panel.getContainer()[0].style.maxWidth = '';
-      this._panel.getContainer()[0].style.minWidth = '';
-
       const newOptions = clone(this._options.templateOptions);
       newOptions.maximized = this._maximized;
+      this._panel._options.maximized = this._maximized;
 
-      this._updateVDOMTemplate(newOptions);
-      this._onResizeHandler();
+      this._updateFloatAreaWidth(width, newOptions);
    },
+
+    _updateFloatAreaWidth(width: number, newOptions?: object): void {
+        this._panel._options.width = width;
+        this._panel._options.maxWidth = width;
+        this._panel._updateAreaWidth(width);
+        this._panel._updateSideBarVisibility();
+        this._panel.getContainer()[0].style.maxWidth = '';
+        this._panel.getContainer()[0].style.minWidth = '';
+
+        if (newOptions) {
+           this._updateVDOMTemplate(newOptions);
+           this._onResizeHandler();
+        }
+    },
 
    _getRootContainer: function() {
       var container = this._vDomTemplate.getContainer();
@@ -367,7 +442,7 @@ var moduleClass = CompoundControl.extend({
       if (this._vDomTemplate) {
          var
             self = this,
-            Sync = require('Vdom/Vdom').Synchronizer;
+            Sync = Vdom.Synchronizer;
 
          Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);
 

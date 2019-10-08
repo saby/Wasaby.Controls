@@ -6,8 +6,9 @@ define('Controls-demo/MasterDetail/Demo', [
    'Types/source',
    'wml!Controls-demo/MasterDetail/itemTemplates/masterItemTemplate',
    'Controls-demo/MasterDetail/DemoSource',
+   'Env/Env',
    'css!Controls-demo/MasterDetail/Demo'
-], function(Control, template, data, cClone, source, itemTemplate, DemoSource) {
+], function(Control, template, data, cClone, source, itemTemplate, DemoSource, Env) {
    return Control.extend({
       _template: template,
 
@@ -16,6 +17,17 @@ define('Controls-demo/MasterDetail/Demo', [
          this._detail = {};
 
          this._detailSource = new DemoSource({keyProperty: 'id'});
+
+         this._itemActions = [
+            {
+               id: 1,
+               icon: 'icon-ExpandDown',
+               title: 'view',
+               handler: function(item) {
+                  Env.IoC.resolve('ILogger').info('action view Click ', item);
+               }
+            }
+         ];
 
          this._masterSource = new source.Memory({
             keyProperty: 'id',

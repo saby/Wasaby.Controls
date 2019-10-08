@@ -217,8 +217,7 @@ DialogTemplate.getDefaultOptions = function() {
         closeButtonVisibility: true,
         headingSize: 'l',
         closeButtonViewMode: 'popup',
-        closeButtonTransparent: true,
-        closeButtonCompatible: false
+        closeButtonTransparent: true
     };
 };
 DialogTemplate._theme = ['Controls/popupTemplate'];

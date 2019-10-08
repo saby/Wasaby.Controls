@@ -18,13 +18,32 @@ define([
    describe('Controls/_dateRange/Input', function() {
 
       describe('_openDialog', function() {
-         it('should open opener', function() {
+         it('should open opener with default options', function() {
             const component = calendarTestUtils.createComponent(dateRange.Input, options);
             component._children.opener = {
                open: sinon.fake()
             };
             component._openDialog();
             sinon.assert.called(component._children.opener.open);
+         });
+
+         it('should open dialog with passed dialog options', function() {
+            const
+               extOptions = {
+                  readOnly: true
+               },
+               component = calendarTestUtils.createComponent(dateRange.Input, extOptions);
+            component._children.opener = {
+               open: sinon.fake()
+            };
+            component._openDialog();
+            sinon.assert.called(component._children.opener.open);
+            sinon.assert.calledWith(component._children.opener.open, sinon.match({
+               className: 'controls-PeriodDialog__picker',
+               templateOptions: {
+                  readOnly: extOptions.readOnly
+               }
+            }));
          });
       });
 

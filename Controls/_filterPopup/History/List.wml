@@ -9,7 +9,7 @@
 </ws:template>
 
 <ws:template name="itemContent">
-   <div class="controls-HistoryList__itemWrapper">
+   <div class="controls-HistoryList__itemWrapper controls-HistoryList_{{_options.orientation}}__itemWrapper">
       <div class="controls-HistoryList__item controls-HistoryList_{{_options.orientation}}__item {{isFavorite || item.get('pinned') ? 'controls-HistoryList__item_pinned'}}"
            on:click="_clickHandler(item, isFavorite)" title="{{text}}">{{text}}</div>
       <ws:partial template="{{iconTemplate}}" item="{{item}}" text="{{text}}" isFavorite="{{isFavorite}}"/>
@@ -20,11 +20,13 @@
 <div class="controls-FilterPanel__caption">{[Ранее отбирались]}</div>
 <div class="controls-HistoryList__content {{_isMaxHeight && _options.orientation === 'vertical' ? 'controls-FilterPanel_block-maxHeight'}}">
    <ws:for data="index, item in _favoriteList">
-      <ws:partial template="itemContent"
-                  item="{{item}}"
-                  text="{{item.get('data').linkText}}"
-                  iconTemplate="favorite"
-                  isFavorite="{{true}}"/>
+      <ws:if data="{{index < _favoriteCount}}">
+         <ws:partial template="itemContent"
+                     item="{{item}}"
+                     text="{{item.get('data').linkText}}"
+                     iconTemplate="favorite"
+                     isFavorite="{{true}}"/>
+      </ws:if>
    </ws:for>
    <ws:for data="index, item in _items">
       <ws:if data="{{index < _historyCount}}">
@@ -46,7 +48,7 @@
    <ws:if data="{{ _options.saveMode === 'favorite' }}">
       <Controls.popup:Dialog name="dialogOpener"
                              closeOnOutsideClick="{{true}}"
-                             isCompoundTemplate="{{true}}"
-                             template="SBIS3.CONTROLS/Filter/FavoriteEditDialog"/>
+                             on:result="_editDialogResult()"
+                             template="Controls/_filterPopup/History/_EditDialog"/>
    </ws:if>
 </div>

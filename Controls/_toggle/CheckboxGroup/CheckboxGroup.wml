@@ -1,7 +1,7 @@
 <div class="controls-CheckboxGroup">
    <ws:partial template="{{_groupTemplate}}"
                groupTemplate="{{_groupTemplate}}"
-               defaultItemTemplate="{{_defaultItemTemplate}}"
+               itemTemplate="{{_options.itemTemplate}}"
                groups="{{_groups}}"
                parent="{{null}}"
                direction="{{_options.direction}}"

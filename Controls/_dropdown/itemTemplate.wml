@@ -1,7 +1,5 @@
 <div attr:class="controls-DropdownList__row controls-DropdownList__row_state_{{itemData.getPropValue(itemData.item, 'readOnly') ? 'readOnly' : 'default'}}
                  {{marker !== false && itemData.isSelected && (!itemData.multiSelect || itemData.emptyText) ? 'controls-DropdownList__selected'}}
-                 controls-DropdownList__item-right_{{showClose || itemData.hasClose ? 'close-padding' : hasPinned ? 'history-padding':
-                     itemData.hasChildren ? 'hierarchy-padding' : hasApplyButton ? 'multiSelect-padding' : 'default-padding'}}
                  {{itemData.spacingClassList}}
                  {{itemData.getPropValue(itemData.item, 'pinned') === true && !itemData.hasParent ?  'controls-DropdownList__row_pinned'}}
                  controls-DropdownList__row_{{multiLine ? 'multiLine' : 'singleLine'}} theme_{{_options.theme}}">
@@ -33,7 +31,7 @@
    <ws:else>
       <ws:if data="{{itemData.icon || (iconPadding[itemData.getPropValue(itemData.item, parentProperty)])}}">
          <div class="{{itemData.getPropValue(itemData.item, displayProperty || 'title') ? 'controls-DropdownList__icon'}}
-                     controls-DropdownList__icon_style_{{itemData.iconStyle}}
+                     controls-icon_style-{{(itemData.getPropValue(itemData.item, 'readOnly') ? 'readonly' : itemData.iconStyle) + '_theme-' + _options.theme}}
                      {{itemData.iconSize ? 'controls-icon_size-' + itemData.iconSize + '_theme-' + _options.theme}}
                      {{iconPadding[itemData.getPropValue(itemData.item, parentProperty)]}} {{itemData.icon}} theme_{{_options.theme}}"></div>
       </ws:if>
@@ -43,7 +41,7 @@
          {{itemData.getPropValue(itemData.item, displayProperty || 'title')}}
       </div>
    </ws:else>
-   <ws:if data="{{hasPinned && !itemData.hasChildren && !(itemData.getPropValue(itemData.item, 'pinned') === true && itemData.hasParent)}}">
+   <ws:if data="{{itemData.hasPinned && !itemData.hasChildren && !(itemData.getPropValue(itemData.item, 'pinned') === true && itemData.hasParent)}}">
       <div    class="controls-HistoryMenu__iconPin {{itemData.isSwiped ? 'controls-HistoryMenu__iconPin_swiped'}}
               {{itemData.getPropValue(itemData.item, 'pinned') === true ? 'controls-HistoryMenu__iconUnnpin icon-PinOff' : 'icon-PinNull'}} theme_{{_options.theme}}"></div>
    </ws:if>

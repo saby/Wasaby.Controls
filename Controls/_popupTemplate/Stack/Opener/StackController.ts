@@ -195,6 +195,11 @@ const _private = {
             templateClass = template;
         }
 
+        // library export
+        if (templateClass && templateClass.default) {
+            templateClass = templateClass.default;
+        }
+
         return templateClass && templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
     },
     getPopupWidth(item): Promise<undefined> {

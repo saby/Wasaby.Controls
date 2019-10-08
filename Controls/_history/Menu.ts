@@ -48,8 +48,8 @@ var _private = {
  */
 
 var HistoryMenu = Menu.extend({
-   _filter: null,
    _itemTemplate: itemTemplate,
+   _hasIconPin: true,
 
    _beforeMount: function (options) {
       this._offsetClassName = MenuUtils.cssStyleGeneration(options);
@@ -79,7 +79,6 @@ var HistoryMenu = Menu.extend({
    }
 });
 
-HistoryMenu._theme = HistoryMenu.superclass.constructor._theme.concat(['Controls/history']);
 HistoryMenu._private = _private;
 
 export = HistoryMenu;

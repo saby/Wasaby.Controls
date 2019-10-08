@@ -36,9 +36,10 @@ var _private = {
         }
     },
 
-   getBackButtonMinWidth(): number {
+   getBackButtonMinWidth(theme): number {
        return getWidthUtil.getWidth(backButtonTemplate({
           _options: {
+             theme: theme,
              backButtonCaption: '1',
              backButtonClass: 'controls-BreadCrumbsPath__backButton_short controls-BreadCrumbsPath__backButton_zeroWidth'
           }
@@ -53,13 +54,16 @@ var _private = {
             homePathSpacing;
 
         self._backButtonCaption = ItemsUtil.getPropertyValue(options.items[options.items.length - 1], self._options.displayProperty);
-        if (options.items.length > 1) {
+
+        //containerWidth is equal to 0, if path is inside hidden node. (for example switchableArea)
+        if (options.items.length > 1 && containerWidth > 0) {
             self._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
            homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__homeContainer"><div class="controls-BreadCrumbsPath__home icon-Home3"></div></div>');
            homePathSpacing = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__breadCrumbs_home-path-spacing"></div>');
            if (!options.header) {
               backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
                  _options: {
+                    theme: self._options.theme,
                     backButtonCaption: self._backButtonCaption,
                     counterCaption: self._getCounterCaption(options.items)
                  }
@@ -197,7 +201,7 @@ var BreadCrumbsPath = Control.extend({
         if (this._options.items && this._options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
                 FontLoadUtil.waitForFontLoad('controls-BreadCrumbsPath__backButtonMeasurer').addCallback(function () {
-                    this._backButtonMinWidth = _private.getBackButtonMinWidth();
+                    this._backButtonMinWidth = _private.getBackButtonMinWidth(this._options.theme);
                     _private.calculateItems(this, this._options, this._oldWidth);
                     this._forceUpdate();
                 }.bind(this));
@@ -207,12 +211,11 @@ var BreadCrumbsPath = Control.extend({
 
     _beforeUpdate: function (newOptions) {
         if (this._options.theme !== newOptions.theme) {
-           this._backButtonMinWidth = _private.getBackButtonMinWidth();
+           this._backButtonMinWidth = _private.getBackButtonMinWidth(this._options.theme);
         }
         const containerWidth = _private.getAvailableContainerWidth(this);
 
-        //containerWidth is less than 0, if path is inside hidden node. (for example switchableArea)
-        if (containerWidth > 0 && BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
+        if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
             this._oldWidth = containerWidth;
             _private.calculateItems(this, newOptions, containerWidth);
         }
@@ -261,7 +264,7 @@ BreadCrumbsPath.getDefaultOptions = function () {
     };
 };
 
-BreadCrumbsPath._theme = ['Controls/crumbs'];
+BreadCrumbsPath._theme = ['Controls/crumbs', 'Controls/heading'];
 BreadCrumbsPath._styles = ['Controls/Utils/FontLoadUtil'];
 BreadCrumbsPath._private = _private;
 

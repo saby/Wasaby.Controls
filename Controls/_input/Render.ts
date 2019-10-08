@@ -12,7 +12,7 @@ import {
 
 import * as template from 'wml!Controls/_input/Render/Render';
 
-type State = 'valid' | 'valid-active' | 'invalid' | 'invalid-active' | 'readonly' | 'readonly-multiline' | 'success' | 'secondary' | 'warning';
+type State = 'valid' | 'valid-active' | 'invalid' | 'invalid-active' | 'invalidAccent' | 'readonly' | 'readonly-multiline' | 'success' | 'secondary' | 'warning';
 
 interface IRenderOptions extends IControlOptions, IHeightOptions,
 IFontColorStyleOptions, IFontSizeOptions, IValidationStatusOptions, IBorderStyleOptions {

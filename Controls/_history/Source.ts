@@ -511,7 +511,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
                   newItems = self._oldItems;
                }
                result = new sourceLib.DataSet({
-                  rawData: newItems.getRawData(),
+                  rawData: newItems.getRawData(true),
                   keyProperty: newItems.getKeyProperty(),
                   adapter: newItems.getAdapter()
                });

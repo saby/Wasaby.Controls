@@ -27,12 +27,14 @@ define('Controls-demo/Example/Input/Tag',
 
          _primaryValue: '10 500.00',
 
-         _showInfoBox: function(event, target) {
+         _showInfoBox: function(event, style, target) {
             var cfg = {
                target: target,
                message: 'Tooltip text',
                targetSide: 'top',
-               alignment: 'end'
+               alignment: 'end',
+               style: style,
+
             };
 
             this._notify('openInfoBox', [cfg], {

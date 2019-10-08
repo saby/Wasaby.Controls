@@ -56,6 +56,9 @@ define(['Controls/_filter/Prefetch', 'Types/collection', 'Types/entity'], functi
             items: []
          };
 
+         Prefetch.default.addPrefetchToHistory(history);
+         assert.isTrue(!history.prefetchParams);
+
          Prefetch.default.addPrefetchToHistory(history, getPrefetchParams());
          assert.equal(history.prefetchParams.PrefetchSessionId, 'test');
       });

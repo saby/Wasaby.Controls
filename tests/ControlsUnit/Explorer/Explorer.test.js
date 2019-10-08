@@ -84,51 +84,14 @@ define([
             }
          }, self, 'Incorrect self data after "setRoot(self, testRoot)".');
          assert.isTrue(itemOpenHandlerCalled);
-         explorerMod.View._private.dataLoadCallback(self, testData1);
-         assert.deepEqual({
-            _root: 'testRoot',
-            _forceUpdate: forceUpdate,
-            _notify: notify,
-            _breadCrumbsItems: null,
-            _options: {
-               dataLoadCallback: dataLoadCallback,
-               itemOpenHandler: itemOpenHandler
-            }
-         }, self, 'Incorrect self data after "dataLoadCallback(self, testData1)".');
-         assert.deepEqual(dataLoadCallbackArgument, testData1, 'Incorrect "dataLoadCallback" arguments.');
-         explorerMod.View._private.dataLoadCallback(self, testData2);
-         assert.deepEqual({
-            _root: 'testRoot',
-            _forceUpdate: forceUpdate,
-            _notify: notify,
-            _breadCrumbsItems: chain.factory(testBreadCrumbs).toArray(),
-            _options: {
-               dataLoadCallback: dataLoadCallback,
-               itemOpenHandler: itemOpenHandler
-            }
-         }, self, 'Incorrect self data after "dataLoadCallback(self, testData2)".');
-         explorerMod.View._private.dataLoadCallback(self, testData1);
-         assert.deepEqual({
-            _root: 'testRoot',
-            _forceUpdate: forceUpdate,
-            _notify: notify,
-            _breadCrumbsItems: null,
-            _options: {
-               dataLoadCallback: dataLoadCallback,
-               itemOpenHandler: itemOpenHandler
-            }
-         }, self, 'Incorrect self data after "dataLoadCallback(self, testData1)".');
-         explorerMod.View._private.dataLoadCallback(self, testData3);
-         assert.deepEqual({
-            _root: 'testRoot',
-            _forceUpdate: forceUpdate,
-            _notify: notify,
-            _breadCrumbsItems: null,
-            _options: {
-               dataLoadCallback: dataLoadCallback,
-               itemOpenHandler: itemOpenHandler
-            }
-         }, self);
+         explorerMod.View._private.serviceDataLoadCallback(self, testData1);
+         assert.deepEqual(self._breadCrumbsItems, null, 'Incorrect "breadCrumbsItems"');
+         explorerMod.View._private.serviceDataLoadCallback(self, testData2);
+         assert.deepEqual(self._breadCrumbsItems, chain.factory(testBreadCrumbs).toArray(), 'Incorrect "breadCrumbsItems"');
+         explorerMod.View._private.serviceDataLoadCallback(self, testData1);
+         assert.deepEqual(self._breadCrumbsItems, null, 'Incorrect "breadCrumbsItems"');
+         explorerMod.View._private.serviceDataLoadCallback(self, testData3);
+         assert.deepEqual(self._breadCrumbsItems, null, 'Incorrect "breadCrumbsItems"');
       });
 
       it('_private.getRoot', function() {
@@ -423,6 +386,7 @@ define([
                   if (eArgs[1] && eArgs[1].nativeEvent) {
                      isNativeClickEventExists = true;
                   }
+                  return true;
                }
             };
 
@@ -494,6 +458,7 @@ define([
 
             var
                explorer = new explorerMod.View({}),
+               isEventResultReturns = false,
                isPropagationStopped = isNotified = isNativeClickEventExists = false;
 
             explorer.saveOptions({});
@@ -518,7 +483,7 @@ define([
             };
 
 
-            explorer._onItemClick({
+            isEventResultReturns = explorer._onItemClick({
                stopPropagation: function() {
                   isPropagationStopped = true;
                }
@@ -532,6 +497,7 @@ define([
             }, {
                nativeEvent: 123
             });
+            assert.isTrue(isEventResultReturns);
             assert.deepEqual({
                ...explorer._restoredMarkedKeys,
                itemId: {

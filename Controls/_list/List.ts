@@ -52,7 +52,7 @@ import viewTemplate = require('Controls/_list/ListControl');
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface/IGrouped
+ * @mixes Controls/interface/IGroupedList
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/IHighlighter
@@ -87,12 +87,17 @@ var ListControl = Control.extend(/** @lends Controls/_list/List.prototype */{
 
     _theme: ['Controls/list_multi'],
 
-    _beforeMount: function() {
-        this._viewModelConstructor = this._getModelConstructor();
+    _beforeMount: function(options) {
+        this._viewModelConstructor = this._getModelConstructor(options.useNewModel);
+        if (options.useNewModel) {
+            return import('Controls/_list/Render').then((Render) => {
+                this._viewName = Render.default;
+            });
+        }
     },
 
-    _getModelConstructor: function() {
-        return ListViewModel;
+    _getModelConstructor: function(useNewModel: boolean) {
+        return !useNewModel ? ListViewModel : null;
     },
 
     reload: function() {

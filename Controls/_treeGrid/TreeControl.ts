@@ -144,6 +144,9 @@ var _private = {
             } else {
                 listViewModel.appendItems(list);
             }
+            if (self._options.task1177940587 && self._options.dataLoadCallback) {
+                self._options.dataLoadCallback(list);
+            }
         });
     },
     onNodeRemoved: function(self, nodeId) {
@@ -373,12 +376,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _afterMount: function() {
         _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
     },
-
-    _dataLoadCallback: function() {
-        if (this._options.dataLoadCallback) {
-            this._options.dataLoadCallback.apply(null, arguments);
-        }
-    },
     _onNodeRemoved: function(event, nodeId) {
         _private.onNodeRemoved(this, nodeId);
     },
@@ -570,7 +567,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
 
     _onItemClick: function(e, item, originalEvent) {
-        if (this._options.expandByItemClick && item.get(this._options.nodeProperty) !== null) {
+        e.stopPropagation();
+        const eventResult = this._notify('itemClick', [item, originalEvent], { bubbling: true });
+        if (eventResult !== false && this._options.expandByItemClick && item.get(this._options.nodeProperty) !== null) {
             let display = this._children.baseControl.getViewModel().getDisplay();
             _private.toggleExpanded(this, display.getItemBySourceItem(item));
         }

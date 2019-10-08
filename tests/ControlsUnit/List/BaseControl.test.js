@@ -6,6 +6,7 @@ define([
    'Types/collection',
    'Controls/list',
    'Controls/treeGrid',
+   'Controls/grid',
    'Controls/Utils/Toolbar',
    'Core/Deferred',
    'Core/core-instance',
@@ -13,7 +14,7 @@ define([
    'Core/core-clone',
    'Types/entity',
    'Core/polyfill/PromiseAPIDeferred'
-], function(sourceLib, collection, lists, treeGrid, tUtil, cDeferred, cInstance, Env, clone, entity) {
+], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
       beforeEach(function() {
@@ -203,6 +204,64 @@ define([
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(sortingASC, 'test'), emptySorting);
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(multiSorting, 'test', 'single'), sortingDESC);
       });
+
+      it('setHasMoreData', async function() {
+         var gridColumns = [
+            {
+               displayProperty: 'title',
+               width: '1fr',
+               valign: 'top',
+               style: 'default',
+               textOverflow: 'ellipsis'
+            },
+            {
+               displayProperty: 'price',
+               width: 'auto',
+               align: 'right',
+               valign: 'bottom',
+               style: 'default'
+            },
+            {
+               displayProperty: 'balance',
+               width: 'auto',
+               align: 'right',
+               valign: 'middle',
+               style: 'default'
+            }
+         ];
+         var gridData = [
+            {
+               'id': '123',
+               'title': 'Хлеб',
+               'price': 50,
+               'balance': 15
+            },
+         ];
+         var cfg = {
+            viewName: 'Controls/Grid/GridView',
+            source: new sourceLib.Memory({
+               idProperty: 'id',
+               data: gridData,
+            }),
+            displayProperty: 'title',
+            columns: gridColumns,
+            resultsPosition: 'top',
+            keyProperty: 'id',
+            navigation: {
+               view: 'infinity'
+            },
+            virtualScrolling: true,
+            viewModelConstructor: grid.GridViewModel,
+         };
+         var ctrl = new lists.BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         assert.equal(undefined, ctrl.getViewModel().getResultsPosition());
+
+         ctrl._sourceController.hasMoreData = () => true;
+         await ctrl.reload();
+         assert.equal('top', ctrl.getViewModel().getResultsPosition());
+      })
 
 
       it('errback to callback', function() {
@@ -774,7 +833,7 @@ define([
              baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         assert.equal(null, baseControl._listViewModel.getMarkedKey());
+         assert.equal(2, baseControl._listViewModel.getMarkedKey());
          baseControl._onViewKeyDown({
             target: {
                closest: function() {
@@ -787,7 +846,7 @@ define([
             },
             preventDefault: function() {},
          });
-         assert.equal(null, baseControl._listViewModel.getMarkedKey());
+         assert.equal(2, baseControl._listViewModel.getMarkedKey());
          baseControl._onViewKeyDown({
             target: {
                closest: function() {
@@ -800,7 +859,7 @@ define([
             },
             preventDefault: function() {},
          });
-         assert.equal(null, baseControl._listViewModel.getMarkedKey());
+         assert.equal(2, baseControl._listViewModel.getMarkedKey());
       });
 
       it('moveMarkerToNext && moveMarkerToPrevious while loading', async function() {
@@ -1151,6 +1210,11 @@ define([
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
 
          lists.BaseControl._private.showIndicator(ctrl);
+         assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
+         assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading state');
+         lists.BaseControl._private.hideIndicator(ctrl);
+
+         lists.BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
          assert.isTrue(!!ctrl._loadingIndicatorTimer, 'all', 'Loading timer should created');
@@ -1161,6 +1225,7 @@ define([
          // искуственно покажем картинку
          ctrl._showLoadingIndicatorImage = true;
 
+         lists.BaseControl._private.hideIndicator(ctrl);
          lists.BaseControl._private.showIndicator(ctrl);
          assert.isTrue(ctrl._loadingIndicatorTimer === ctrl._loadingIndicatorTimer, 'all', 'Loading timer created one more tile');
 
@@ -1441,6 +1506,7 @@ define([
       it('_onViewPortResize, viewResize, setLoadOffset, updateLoadOffset', function() {
          let bc = new lists.BaseControl();
          bc._needScrollCalculation = true;
+         bc._viewSize = 800;
          bc._loadOffset = {top: 100, bottom: 100};
          bc._children = triggers;
          bc._container = {
@@ -1459,6 +1525,10 @@ define([
          bc._setLoadOffset(100, 100);
          assert.deepEqual(bc._loadOffset, {top: 160, bottom: 160});
 
+         bc.__error = false;
+         bc._viewSize = 0;
+         bc._onViewPortResize(bc, 0);
+         assert.deepEqual(bc._loadOffset, {top: 0, bottom: 0});
       });
 
       it('scrollHide/scrollShow base control state', function() {
@@ -1919,6 +1989,48 @@ define([
             assert.isTrue(doScrollNotified);
 
          });
+      });
+
+      describe('move marker after scroll', function() {
+         var lnSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel
+            },
+            lnBaseControl = new lists.BaseControl(lnCfg);
+         var getBCR = function (){
+            return {
+               height: 30
+            }
+         }
+         lnBaseControl.saveOptions(lnCfg);
+         lnBaseControl._beforeMount(lnCfg);
+         var itemsContainer = {
+            children:[
+               {getBoundingClientRect: getBCR},
+               {getBoundingClientRect: getBCR},
+               {getBoundingClientRect: getBCR},
+            ]
+         };
+         it('setMarkerToFirstVisibleItem', function() {
+            var expectedIndex = 0;
+            lnBaseControl._listViewModel.setMarkerOnValidItem = function(index){
+               assert.equal(index, expectedIndex);
+            }
+            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 0);
+            expectedIndex = 1;
+            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 1);
+            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 29);
+            expectedIndex = 2;
+            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 30);
+            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 31);
+         });
+
       });
 
       describe('_canUpdateItemsActions', function() {

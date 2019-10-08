@@ -163,7 +163,11 @@ var
 
         acceptChanges: function (self) {
             if (self._isAdd) {
-                self._options.listModel.appendItems([self._editingItem]);
+                if (self._options.useNewModel) {
+                    self._options.listModel.getCollection().append([self._editingItem]);
+                } else {
+                    self._options.listModel.appendItems([self._editingItem]);
+                }
             } else {
                 self._originalItem.merge(self._editingItem);
             }
@@ -184,7 +188,10 @@ var
         },
 
         hasParentInItems: function (item, listModel) {
-            return !!listModel._options.parentProperty && listModel.getItemById(item.get(listModel._options.parentProperty));
+            // TODO No parents in new model for now for now
+            if (!listModel['[Controls/_display/Collection']) {
+                return !!listModel._options.parentProperty && listModel.getItemById(item.get(listModel._options.parentProperty));
+            }
         },
 
         editNextRow: function (self, editNextRow) {
@@ -262,9 +269,16 @@ var
         getEditingItemIndex: function (self, editingItem, listModel, defaultIndex) {
             var
                 index = defaultIndex !== undefined ? defaultIndex : listModel.getCount(),
-                originalItem = listModel.getItemById(editingItem.get(listModel._options.keyProperty), listModel._options.keyProperty),
+                originalItem,
                 parentId,
                 parentIndex;
+
+            // TODO no hasParentInItems for new model at the moment
+            if (self._options.useNewModel) {
+                originalItem = listModel.getItemBySourceId(editingItem.get(listModel.getKeyProperty()));
+            } else {
+                originalItem = listModel.getItemById(editingItem.get(listModel._options.keyProperty), listModel._options.keyProperty);
+            }
 
             if (originalItem) {
                 index = listModel.getIndexBySourceItem(originalItem.getContents());
@@ -304,6 +318,9 @@ var
 
 var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype */{
     _template: template,
+    _isAdd: null,
+    _originalItem: null,
+    _editingItem: null,
     _endEditDeferred: null,
 
     constructor: function (options = {}) {
@@ -331,7 +348,11 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
                 this._editingItem = newOptions.editingConfig.item;
                 this._setEditingItemData(this._editingItem, newOptions.listModel, newOptions);
                 if (!this._isAdd) {
-                    this._originalItem = newOptions.listModel.getItemById(this._editingItem.get(newOptions.listModel._options.keyProperty), newOptions.listModel._options.keyProperty).getContents();
+                    if (newOptions.useNewModel) {
+                        this._originalItem = newOptions.listModel.getItemBySourceId(this._editingItem.get(newOptions.listModel.getKeyProperty())).getContents();
+                    } else {
+                        this._originalItem = newOptions.listModel.getItemById(this._editingItem.get(newOptions.listModel._options.keyProperty), newOptions.listModel._options.keyProperty).getContents();
+                    }
                 }
             }
         }
@@ -513,38 +534,67 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
 
     _setEditingItemData: function (item, listModel, options) {
         if (!item) {
-            listModel._setEditingItemData(null);
+            if (options.useNewModel) {
+                listModel.setEditingItem(null);
+            } else {
+                listModel._setEditingItemData(null);
+            }
             this._editingItemData = null;
             return;
         }
-        var editingItemProjection = listModel.getItemById(this._editingItem.get(listModel._options.keyProperty), listModel._options.keyProperty);
+
+        let editingItemProjection;
+        if (options.useNewModel) {
+            editingItemProjection = listModel.getItemBySourceId(this._editingItem.get(listModel.getKeyProperty()));
+        } else {
+            editingItemProjection = listModel.getItemById(this._editingItem.get(listModel._options.keyProperty), listModel._options.keyProperty);
+        }
 
         if (!editingItemProjection) {
             this._isAdd = true;
-            editingItemProjection = listModel._prepareDisplayItemForAdd(item);
+            if (options.useNewModel) {
+                editingItemProjection = listModel.createItem(item);
+            } else {
+                editingItemProjection = listModel._prepareDisplayItemForAdd(item);
+            }
         }
 
-        var actions = listModel.getItemActions(item);
-        this._editingItemData = listModel.getItemDataByItem(editingItemProjection);
-        if (this._isAdd && _private.hasParentInItems(this._editingItem, listModel)) {
-            this._editingItemData.level = listModel.getItemById(item.get(this._editingItemData.parentProperty)).getLevel() + 1;
+        if (options.useNewModel) {
+            this._editingItemData = editingItemProjection;
+            listModel.setEditingItem(this._editingItemData, item);
+        } else {
+            this._editingItemData = listModel.getItemDataByItem(editingItemProjection);
+
+            // TODO Make sure all of this is available in the new model
+            if (this._isAdd && _private.hasParentInItems(this._editingItem, listModel)) {
+                this._editingItemData.level = listModel.getItemById(item.get(this._editingItemData.parentProperty)).getLevel() + 1;
+            }
+
+            this._editingItemData.isEditing = true;
+            this._editingItemData.item = this._editingItem;
+            if (this._isAdd) {
+                this._editingItemData.isAdd = this._isAdd;
+                this._editingItemData.index = _private.getEditingItemIndex(this, item, listModel, _private.getAddPosition(options));
+                this._editingItemData.addPosition = options.editingConfig && options.editingConfig.addPosition;
+                this._editingItemData.drawActions = options.editingConfig && options.editingConfig.toolbarVisibility;
+            }
+
+            listModel._setEditingItemData(this._editingItemData);
         }
-        this._editingItemData.isEditing = true;
-        this._editingItemData.item = this._editingItem;
+
         if (this._isAdd) {
-            this._editingItemData.isAdd = this._isAdd;
-            this._editingItemData.index = _private.getEditingItemIndex(this, item, listModel, _private.getAddPosition(options));
-            this._editingItemData.addPosition = options.editingConfig && options.editingConfig.addPosition;
-            this._editingItemData.drawActions = options.editingConfig && options.editingConfig.toolbarVisibility;
+            if (options.useNewModel) {
+                listModel.setMarkedItem(this._editingItemData);
+            } else {
+                listModel.markAddingItem();
+            }
         }
-        listModel._setEditingItemData(this._editingItemData);
-        if (this._isAdd) {
-            listModel.markAddingItem();
-        }
+
         listModel.subscribe('onCollectionChange', this._updateIndex);
     },
 
     _updateIndex() {
+        // TODO How to do this in new model
        if (this._isAdd) {
           /**
            * If an item gets added to the list during editing we should update index of editing item to preserve its position.

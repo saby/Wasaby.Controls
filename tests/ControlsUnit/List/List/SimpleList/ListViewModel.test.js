@@ -431,6 +431,45 @@ define([
 
 
       });
+      it('setMarkerOnValidItem', function() {
+         var cfg = {
+            keyProperty: 'id',
+            items: new collection.RecordSet({
+               rawData: [
+                  { id: 1, title: 'item 1', type: 1 },
+                  { id: 2, title: 'item 2', type: 1 },
+                  { id: 3, title: 'item 3', type: 1 },
+                  { id: 4, title: 'item 4', type: 2 },
+                  { id: 5, title: 'item 5', type: 2 },
+                  { id: 6, title: 'item 6', type: 3 },
+                  { id: 7, title: 'item 7', type: 4 },
+               ],
+               keyProperty: 'id'
+            }),
+            groupingKeyCallback: function(item) {
+               return item.get('type');
+            }
+         };
+         var model = new lists.ListViewModel(cfg);
+
+         model.setCollapsedGroups([2,3,4]);
+
+         /*
+            ---------- 1 ----------
+            item 1
+            item 2
+            item 3
+            ---------- 2 ----------
+            ---------- 3 ----------
+            ---------- 4 ----------
+          */
+         model.setMarkerOnValidItem(0);
+         assert.equal(model.getMarkedKey(), 1);
+         model.setMarkerOnValidItem(1);
+         assert.equal(model.getMarkedKey(), 1);
+         model.setMarkerOnValidItem(4);
+         assert.equal(model.getMarkedKey(), 3);
+      });
 
       it('SetMarkerOnRemove', function() {
          var cfg = {
@@ -502,6 +541,23 @@ define([
             model = new lists.ListViewModel(cfg);
             model.getItems().removeAt(3); // remove item 6 (without markedKey)
             assert.equal(1, model.getMarkedKey());
+
+         //remove last item. marked key must be null
+         cfg = {
+            keyProperty: 'id',
+            items: new collection.RecordSet({
+               rawData: [
+                  { id: 1, title: 'item 1' },
+
+               ],
+               idProperty: 'id'
+            }),
+            markedKey: 1
+         };
+         model = new lists.ListViewModel(cfg);
+         // remove last item
+         model.getItems().removeAt(0);
+         assert.equal(null, model.getMarkedKey()); //marker must be null
       });
 
       it('Selection', function() {

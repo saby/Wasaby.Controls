@@ -2,9 +2,19 @@
    <Controls.popup:Global>
       <Controls.Pending name="PendingRegistrator" attr:class="controls-CompoundArea__pending">
          <div>
+            <ws:if data="{{_canResize(_options.popupOptions.propStorageId, _options.popupOptions.width, _options.popupOptions.minWidth, _options.popupOptions.maxWidth)}}">
+               <Controls.dragnDrop:ResizingLine attr:class="controls-CompoundArea__resizingLine"
+                                                direction="reverse"
+                                                minOffset="{{_minOffset}}"
+                                                maxOffset="{{_maxOffset}}"
+                                                on:offset="_offsetHandler()"/>
+            </ws:if>
             <ws:partial
                template="{{_options.template}}"
                scope="{{_templateOptions}}"
+               workspaceWidth="{{_options.popupOptions.width}}"
+               stackMinWidth="{{_options.popupOptions.minWidth}}"
+               stackMaxWidth="{{_options.popupOptions.maxWidth}}"
                on:close="_onCloseHandler()"
                on:controlresize="_onResizeHandler()"
                on:sendresult="_onResultHandler()"
