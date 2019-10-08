@@ -145,7 +145,7 @@ var _private = {
          case 'applyClick':
             this._notify('selectedItemsChanged', [result.data]);
             _private.updateHistory(this, result.data);
-            this._children.DropdownOpener.close();
+            _private.closeDropdownList(this);
             break;
          case 'itemClick':
             result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._source);
@@ -154,18 +154,23 @@ var _private = {
             // dropDown must close by default, but user can cancel closing, if returns false from event
             if (res !== false) {
                _private.updateHistory(this, result.data[0]);
-               this._children.DropdownOpener.close();
+               _private.closeDropdownList(this);
             }
             break;
          case 'selectorResult':
             _private.onSelectorResult(this, result.data);
             this._notify('selectedItemsChanged', [result.data]);
-            this._children.DropdownOpener.close();
+            _private.closeDropdownList(this);
             break;
          case 'footerClick':
             this._notify('footerClick', [result.event]);
-            this._children.DropdownOpener.close();
+            _private.closeDropdownList(this);
       }
+   },
+
+   closeDropdownList: function (self) {
+      self._children.DropdownOpener.close();
+      self._isOpened = false;
    },
 
    setHandlers: function (self, options) {
@@ -176,6 +181,7 @@ var _private = {
          }
       };
       self._onClose = function(event, args) {
+         self._isOpened = false;
          self._notify('dropDownClose');
          if (typeof (options.close) === 'function') {
             options.close(args);
@@ -339,7 +345,7 @@ var _Controller = Control.extend({
    _beforeUpdate: function (newOptions) {
       if (_private.templateOptionsChanged(newOptions, this._options)) {
          this._depsDeferred = null;
-         if (this._children.DropdownOpener.isOpened()) {
+         if (this._isOpened) {
             this._open();
          }
       }
@@ -351,13 +357,13 @@ var _Controller = Control.extend({
          !isEqual(newOptions.filter, this._options.filter)) {
          this._source = null;
          this._sourceController = null;
-         if (newOptions.lazyItemsLoading && !this._children.DropdownOpener.isOpened()) {
+         if (newOptions.lazyItemsLoading && !this._isOpened) {
             /* source changed, items is not actual now */
             this._setItems(null);
          } else {
             var self = this;
             return _private.loadItems(this, newOptions).addCallback(function(items) {
-               if (items && self._children.DropdownOpener.isOpened()) {
+               if (items && self._isOpened) {
                   self._open();
                }
             });
@@ -367,7 +373,7 @@ var _Controller = Control.extend({
 
    _keyDown: function(event) {
       if (event.nativeEvent.keyCode === Env.constants.key.esc && this._children.DropdownOpener.isOpened()) {
-         this._children.DropdownOpener.close();
+         _private.closeDropdownList(this);
          event.stopPropagation();
       }
    },
@@ -397,6 +403,7 @@ var _Controller = Control.extend({
             closeOnOutsideClick: true
          };
          _private.requireTemplates(self, self._options).addCallback(() => {
+            self._isOpened = true;
             self._children.DropdownOpener.open(config, self);
          });
       }
@@ -428,7 +435,7 @@ var _Controller = Control.extend({
 
    _afterSelectorOpenCallback: function(selectedItems) {
       this._initSelectorItems = selectedItems;
-      this._children.DropdownOpener.close();
+      _private.closeDropdownList(this);
    },
 
    _clickHandler: function(event) {
@@ -436,7 +443,7 @@ var _Controller = Control.extend({
       event.stopPropagation();
       var opener = this._children.DropdownOpener;
       if (opener.isOpened()) {
-         opener.close();
+         _private.closeDropdownList(this);
       } else {
          this._open();
       }
