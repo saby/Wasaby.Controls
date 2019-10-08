@@ -5,7 +5,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
-import Deferred = require('Core/Deferred');
+import {Ioc} from 'Env/Env';
 import {constants} from 'Env/Env';
 import keysHandler = require('Controls/Utils/keysHandler');
 import randomId = require('Core/helpers/Number/randomId');
@@ -147,7 +147,7 @@ import 'Types/entity';
             }
             self._viewMode = viewMode;
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-               _private.loadTileViewMode(cfg).addCallback(function() {
+               _private.loadTileViewMode(cfg).then((tile) => {
                   self._viewName = VIEW_NAMES[viewMode];
                   self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
                });
@@ -190,13 +190,15 @@ import 'Types/entity';
             return itemFromRoot;
          },
          loadTileViewMode: function (options) {
-            var def = new Deferred();
-               require(['Controls/tile'], function (tile) {
+            return new Promise((resolve) => {
+               import('Controls/tile').then((tile) => {
                   VIEW_NAMES.tile = tile.TreeView;
                   VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
-                  def.callback(tile);
+                  resolve(tile);
+               }).catch((err) => {
+                  IoC.resolve('ILogger').error('Controls/_explorer/View', err);
                });
-            return def;
+            });
          }
       };
 
@@ -328,11 +330,12 @@ import 'Types/entity';
          this._dragControlId = randomId();
          if (cfg.viewMode === 'tile') {
             var self = this;
-            return _private.loadTileViewMode(cfg).addCallback(function () {
+            return _private.loadTileViewMode(cfg).then((tile) => {
                _private.setViewMode(self, cfg.viewMode, cfg);
             });
+         } else {
+            _private.setViewMode(this, cfg.viewMode, cfg);
          }
-         _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
