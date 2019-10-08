@@ -47,6 +47,7 @@ import {default as InnerText}  from './_decorator/Markup/resolvers/innerText';
 import {default as _highlightResolver} from './_decorator/Markup/resolvers/highlight';
 import {default as noOuterTag} from './_decorator/Markup/resolvers/noOuterTag';
 import {default as linkDecorate}  from './_decorator/Markup/resolvers/linkDecorate';
+import {default as linkWrapResolver}  from './_decorator/Markup/resolvers/linkWrap';
 
 export {
     Highlight,
@@ -63,6 +64,7 @@ export {
     InnerText,
     noOuterTag,
     linkDecorate,
+    linkWrapResolver,
 
    _highlightResolver,
 }
