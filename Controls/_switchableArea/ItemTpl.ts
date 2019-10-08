@@ -15,11 +15,13 @@ var SwitchableAreaItem = Control.extend({
 
    _afterUpdate: function(oldOptions) {
       // if we select current item, then activate it, for focusing child controls
-      if (this._options.selectedKey !== oldOptions.selectedKey && this._options.selectedKey === this._options.key) {
-         this.activate();
-         this._executeKeyHooks('register');
-      } else {
-         this._executeKeyHooks('unregister');
+      if (this._options.selectedKey !== oldOptions.selectedKey) {
+         if (this._options.selectedKey === this._options.key) {
+            this.activate();
+            this._executeKeyHooks('register');
+         } else {
+            this._executeKeyHooks('unregister');
+         }
       }
    },
    _registerKeyHook(event: Event, keyHook: Control): void {
