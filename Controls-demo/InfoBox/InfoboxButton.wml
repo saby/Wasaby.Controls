@@ -1,0 +1,3 @@
+<div>
+    <Controls.popup:InfoboxButton size='{{size}}' />
+</div>
