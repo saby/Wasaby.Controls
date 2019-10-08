@@ -230,6 +230,8 @@ class Range extends Control<ISliderRangeOptions> {
    private _scaleData: IScaleData[] = undefined;
    private _startValue: number = undefined;
    private _endValue: number = undefined;
+   private _tooltipValue: number | null = null;
+   private _isDrag: boolean = false;
 
    private _render(minValue: number, maxValue: number, startValue: number, endValue: number): void {
       const rangeLength = maxValue - minValue;
@@ -240,6 +242,12 @@ class Range extends Control<ISliderRangeOptions> {
       this._pointData[0].position = left;
       this._lineData.position = left;
       this._lineData.width = width ;
+   }
+
+   private _renderTooltip(minValue: number, maxValue: number, value: number): void {
+      const rangeLength = maxValue - minValue;
+      this._pointData[2].position =
+          Math.min(Math.max(value - minValue, 0), rangeLength) / rangeLength * maxPercentValue;
    }
 
    private _checkOptions(opts: ISliderRangeOptions): void {
@@ -254,6 +262,13 @@ class Range extends Control<ISliderRangeOptions> {
          IoC.resolve('ILogger').error('Slider', 'startValue must be less than or equal to endValue.');
       }
    }
+
+   private _getValue(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
+      let targetX = Utils.getNativeEventPageX(event);
+      const box = this._children.area.getBoundingClientRect();
+      const ratio = Utils.getRatio(targetX, box.left + window.pageXOffset, box.width);
+      return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
+   };
 
    private _needUpdate(oldOpts: ISliderRangeOptions, newOpts: ISliderRangeOptions): boolean {
       return (oldOpts.scaleStep !== newOpts.scaleStep ||
@@ -270,7 +285,7 @@ class Range extends Control<ISliderRangeOptions> {
       this._startValue = options.startValue === undefined ?
                                                 options.minValue : Math.max(options.minValue, options.startValue);
       this._value = undefined;
-      this._pointData = [{name: 'pointStart', position: 0}, {name: 'pointEnd', position: 100}];
+      this._pointData = [{name: 'pointStart', position: 0}, {name: 'pointEnd', position: 100}, {name: 'tooltip', position: 0}];
       this._lineData = {position: 0, width: 100};
       this._render(options.minValue, options.maxValue, this._startValue, this._endValue);
    }
@@ -284,6 +299,7 @@ class Range extends Control<ISliderRangeOptions> {
       this._startValue = options.startValue === undefined ?
                                                 options.minValue : Math.max(options.minValue, options.startValue);
       this._render(options.minValue, options.maxValue, this._startValue, this._endValue);
+      this._renderTooltip(options.minValue, options.maxValue, this._tooltipValue);
    }
 
    private _setStartValue(val: number): void {
@@ -306,12 +322,9 @@ class Range extends Control<ISliderRangeOptions> {
    }
 
    private _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
-      let targetX = Utils.getNativeEventPageX(event);
-
       if (!this._options.readOnly) {
-         const box = this._children.area.getBoundingClientRect();
-         const ratio = Utils.getRatio(targetX, box.left + window.pageXOffset, box.width);
-         this._value = Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
+         this._isDrag = true;
+         this._value = this._getValue(event);
          const pointName = this._getClosestPoint(this._value, this._startValue, this._endValue);
          if (pointName === 'start') {
             this._setStartValue(this._value);
@@ -321,6 +334,24 @@ class Range extends Control<ISliderRangeOptions> {
          }
          const target = pointName === 'start' ? this._children.pointStart : this._children.pointEnd;
          this._children.dragNDrop.startDragNDrop(target, event);
+      }
+   }
+
+   private _onMouseMove(event: SyntheticEvent<MouseEvent>): void {
+      if (!this._options.readOnly) {
+         this._tooltipValue = this._getValue(event);
+      }
+   }
+
+   private _onMouseOut(event: SyntheticEvent<MouseEvent>): void {
+      if (!this._options.readOnly) {
+         this._tooltipValue = null;
+      }
+   }
+
+   private _onMouseUp(event: SyntheticEvent<MouseEvent>): void  {
+      if (!this._options.readOnly) {
+         this._isDrag = false;
       }
    }
 
