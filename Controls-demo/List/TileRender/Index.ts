@@ -9,7 +9,7 @@ interface ITileItem {
     image: string;
 }
 
-const LIST_ITEMS_COUNT = 100;
+const LIST_ITEMS_COUNT = 15;
 
 export default class TileRenderDemo extends Control {
     protected _template: TemplateFunction = template;
@@ -43,7 +43,15 @@ export default class TileRenderDemo extends Control {
                 iconStyle: 'error',
                 title: 'delete',
                 showType: 0,
-                handler: (item) => this._children.tileView._children.listControl._children.baseControl.getViewModel().getCollection().remove(item)
+                handler: (item) => {
+                    const model = this._children.tileView._children.listControl._children.baseControl.getViewModel();
+                    if (typeof model.getCollection === 'function') {
+                        model.getCollection().remove(item);
+                    } else {
+                        // for old model compatibility
+                        model.getItems().remove(item.getContents());
+                    }
+                }
             }
         ];
     }
@@ -61,7 +69,7 @@ export default class TileRenderDemo extends Control {
         return {
             key,
             title: `${key} list element`,
-            image: `https://picsum.photos/300/200?uniqueKey=${key}`
+            image: `https://picsum.photos/600/500?uniqueKey=${key}`
         };
     }
 }
