@@ -160,7 +160,9 @@ import 'Controls/decorator';
              * По другому до clientHeight не достучаться.
              * https://online.sbis.ru/opendoc.html?guid=1d24c04f-73d0-4e0f-9b61-4d0bc9c23e2f
              */
-            var sizeVisibleArea = scroll._container.clientHeight;
+            //TODO remove after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
+            const container = scroll._container.get ? scroll._container.get(0) : scroll._container;
+            var sizeVisibleArea = container.clientHeight;
 
             // По другому до scrollTop не достучаться.
             // https://online.sbis.ru/opendoc.html?guid=e1770341-9126-4480-8798-45b5c339a294
