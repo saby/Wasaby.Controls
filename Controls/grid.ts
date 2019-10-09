@@ -11,8 +11,8 @@
  * </ul>
  * @library Controls/grid
  * @includes View Controls/_grid/Grid
- * @includes ItemTemplate wml!Controls/_grid/Item
- * @includes ResultsTemplate wml!Controls/_grid/Results
+ * @includes ItemTemplate wml!Controls/_grid/ItemTemplateResolver
+ * @includes ResultsTemplate wml!Controls/_grid/ResultsTemplateResolver
  * @includes GroupTemplate wml!Controls/_grid/GroupTemplate
  * @includes LadderWrapper wml!Controls/_grid/LadderWrapper
  * @includes ColumnTemplate wml!Controls/_grid/Column
@@ -25,8 +25,8 @@
  */
 
 import View = require('Controls/_grid/Grid');
-import ItemTemplate = require('wml!Controls/_grid/Item');
-import ResultsTemplate = require('wml!Controls/_grid/Results');
+import ItemTemplate = require('wml!Controls/_grid/ItemTemplateResolver');
+import ResultsTemplate = require('wml!Controls/_grid/ResultsTemplateResolver');
 import GroupTemplate = require('wml!Controls/_grid/GroupTemplate');
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
 import ColumnTemplate = require('wml!Controls/_grid/Column');

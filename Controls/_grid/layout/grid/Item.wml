@@ -45,7 +45,7 @@
    <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
 </ws:template>
 <ws:template name="colTpl">
-   <ws:if data="{{!itemData.isNoGridSupport() && itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
+   <ws:if data="{{itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
       <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.gridCellStyles}}"/>
    </ws:if>
 
@@ -79,82 +79,7 @@
    </Controls.scroll:StickyHeader>
 </ws:template>
 
-<ws:template name="partialGridSupportItem">
 
-<!-- When using a custom item template, the scope of the base template becomes the same as the scope of custom template.-->
-<!-- Because of this, the base handlers are lost.-->
-<!-- To fix this, need to remember the handlers where the scope is still right and set them. -->
-<!-- But current event system prevent do this, because it looks for given event handler only on closest control (which can -->
-<!-- be Browser, Explorer or smth else because of template scope). -->
-<!-- Therefore it is required to create Cell as control with and subscribe on events in it. -->
-<!-- https://online.sbis.ru/opendoc.html?guid=9d0f8d1a-576d-471d-bf02-991cd02f92e4 -->
-<Controls._grid.layouts.partialGridSupport.Cell
-        eventHandlers="{{itemData.handlersForPartialSupport}}"
-        itemData="{{ itemData }}"
-        attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode)}}"
-        currentColumn="{{ currentColumn }}"
-        clickable="{{ clickable }}"
-        highlightOnHover="{{ highlightOnHover }}">
-   <ws:columnContentTpl>
-      <ws:partial template="colTpl" itemData="{{itemData}}" currentColumn="{{currentColumn}}" attr:class="{{className}}"/>
-   </ws:columnContentTpl>
-</Controls._grid.layouts.partialGridSupport.Cell>
-</ws:template>
-
-
-<ws:if data="{{itemData.isNoGridSupport()}}">
-   <tr attr:class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
-      <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(!itemData.hasMultiSelect ? 1 : 0)); itemData.goToNextColumn();">
-         <td attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer
-                         {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0)?' controls-Grid__row-cell_selected__first'}}"
-             attr:key="{{itemData.getCurrentColumnKey()}}"
-             attr:colspan="{{itemData.getColspan(colspan)}}"
-             attr:style="{{itemData.getCellStyle(itemData, itemData.getCurrentColumn(), colspan)}}">
-            <ws:partial template="columnContent" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="{{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
-         </td>
-      </ws:for>
-   </tr>
-</ws:if>
-<ws:else data="{{itemData.isPartialGridSupport()}}">
-
-   <ws:if data="{{itemData.styleLadderHeading}}">
-      <div attr:class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData)}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
-           attr:style="{{itemData.styleLadderHeading}}">
-         <ws:partial template="columnContent" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="controls-Grid__row-ladder-cell__content"/>
-      </div>
-   </ws:if>
-
-   <!-- Строка в режиме редактирования  -->
-   <ws:if data="{{itemData.isEditing}}">
-      <div attr:style="{{itemData.getEditingRowStyles()}}">
-         <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(!itemData.hasMultiSelect ? 1 : 0)); itemData.goToNextColumn();">
-            <!-- To avoid closures, need to give all generating in itemData as a template options. -->
-            <!-- For-loop creates it's own scope. In for scope itemData is always the same object. -->
-            <!-- The template engine first builds the first level templates located in the body of the loop and does not enter them. -->             <!-- Then it begins to build sub templates, for-iteration has been ended, so iterator will always give last column. -->
-            <ws:partial template="partialGridSupportItem"
-                        currentColumn="{{itemData.getCurrentColumn()}}"
-                        attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}"
-                        itemData="{{itemData}}" />
-         </ws:for>
-      </div>
-   </ws:if>
-
-   <!-- Строка в режиме просмотра -->
-   <ws:else>
-      <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(!itemData.hasMultiSelect ? 1 : 0)); itemData.goToNextColumn();">
-         <!-- To avoid closures, need to give all generating in itemData as a template options. -->
-         <!-- For-loop creates it's own scope. In for scope itemData is always the same object. -->
-         <!-- The template engine first builds the first level templates located in the body of the loop and does not enter them. -->
-         <ws:partial
-                 template="partialGridSupportItem"
-                 currentColumn="{{itemData.getCurrentColumn()}}"
-                 itemData="{{itemData}}"
-                 attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" />
-      </ws:for>
-   </ws:else>
-
-</ws:else>
-<ws:else>
    <ws:if data="{{itemData.styleLadderHeading}}">
       <div attr:class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData)}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
            attr:key="{{itemData.item.key + '_ladder'}}"
@@ -181,4 +106,3 @@
          </ws:for>
       </div>
    </ws:else>
-</ws:else>

@@ -1,8 +1,8 @@
 define([
-   'Controls/_grid/layouts/partialGridSupport/Cell'
+   'Controls/_grid/layout/partialGrid/Cell'
 ], function(Cell) {
 
-   describe('Controls/_grid/layouts/partialGridSupport/Cell', function() {
+   describe('Controls/_grid/layout/partialGrid/Cell', function() {
 
       it('getCellClasses', function() {
          let
