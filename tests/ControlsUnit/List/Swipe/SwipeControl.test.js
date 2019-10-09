@@ -312,9 +312,16 @@ define([
             instance._currentItemData = itemData;
             instance._beforeUpdate(cfg);
             assert.deepEqual(instance._swipeConfig.itemActions.all, itemData.itemActions.all);
+            assert.isTrue(instance._isActual);
          });
       });
-
+      describe('_onListChange', function() {
+         it('itemActionsUpdated', function() {
+            instance._isActual = true
+            instance._onListChange({}, 'itemActionsUpdated');
+            assert.isFalse(instance._isActual);
+         });
+      });
       describe('_listSwipe', function() {
          function mockChildEvent(direction, isActionsContainer) {
             return {
