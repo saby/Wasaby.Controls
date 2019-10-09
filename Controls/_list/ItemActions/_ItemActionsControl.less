@@ -10,7 +10,7 @@
    align-items: center;
 }
 
-.controls-itemActionsV__wrapper-isEditing {
+.controls-itemActionsV__wrapper-isEditing_spacing {
   margin-left: @spacing_ItemActions-between-actions;
 }
 
@@ -101,6 +101,8 @@
 .controls-itemActionsV__action {
   cursor: pointer;
   user-select: none;
+  min-width: @font-size_ItemActions-icon_size_m;
+  height: @font-size_ItemActions-icon_size_m;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -112,6 +114,9 @@
 }
 .controls-itemActionsV__action_padding {
   margin: 0 @spacing_ItemActions-between-actions;
+}
+.controls-itemActionsV__action_padding_first {
+  margin-right: @spacing_ItemActions-between-actions;
 }
 
 .controls-itemActionsV__action_iconStyle_danger {
