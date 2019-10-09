@@ -1,18 +1,10 @@
 .controls-InfoboxButton{
   display: inline-block;
 }
-.controls-InfoboxButton__icon__m{
-  width: @icon-size_m;
-  height: @icon-size_m;
-}
-.controls-InfoboxButton__icon__s{
-  width: @icon-size_s;
-  height: @icon-size_s;
-}
-.controls-InfoboxButton__icon{
+.controls-InfoboxButton__icon_theme-@{themeName}{
   fill: @icon-color_infoboxbutton;
   vertical-align: middle;
 }
-.controls-InfoboxButton__icon:hover{
+.controls-InfoboxButton__icon_theme-@{themeName}:hover{
   fill: @hover_icon-color_infoboxbutton;
 }
