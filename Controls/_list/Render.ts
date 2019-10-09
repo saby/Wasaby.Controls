@@ -85,6 +85,10 @@ export default class Render extends Control<IRenderOptions> {
         this._debouncedSetHoveredItem(null);
     }
 
+    protected _onItemWheel(e: SyntheticEvent<WheelEvent>, item: CollectionItem<unknown>): void {
+        // Empty handler
+    }
+
     protected _canHaveMultiselect(options: IRenderOptions): boolean {
         const visibility = options.multiselectVisibility;
         return visibility === 'onhover' || visibility === 'visible';

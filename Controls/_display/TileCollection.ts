@@ -6,6 +6,19 @@ import { register } from 'Types/di';
 const DEFAULT_TILE_HEIGHT = 200;
 const DEFAULT_TILE_WIDTH = 250;
 const DEFAULT_COMPRESSION_COEFF = 0.7;
+const DEFAULT_ZOOM_COEFF = 1.5;
+
+interface ITileCollectionItemSize {
+    width: number;
+    height: number;
+}
+
+interface ITileCollectionItemPosition {
+    left: number;
+    top: number;
+    right: number;
+    bottom: number;
+}
 
 export default class TileCollection<S, T extends TileCollectionItem<S> = TileCollectionItem<S>> extends Collection<S, T> {
     protected _$tileMode: string;
@@ -42,6 +55,100 @@ export default class TileCollection<S, T extends TileCollectionItem<S> = TileCol
 
     getShadowVisibility(): string {
         return 'visible';
+    }
+
+    getZoomCoefficient(): number {
+        if (this._$tileScalingMode !== 'none' && this._$tileScalingMode !== 'overlap') {
+            return DEFAULT_ZOOM_COEFF;
+        }
+        return 1;
+    }
+
+    getItemContainerSize(itemContainer: HTMLElement): ITileCollectionItemSize {
+        const zoomCoefficient = this.getZoomCoefficient();
+
+        const itemContent: HTMLElement = itemContainer.querySelector('.controls-TileView__itemContent');
+        const itemContentRect = itemContent.getBoundingClientRect();
+
+        itemContent.classList.add('controls-TileView__item_hovered');
+        itemContent.style.width = `${itemContentRect.width * zoomCoefficient}px`;
+
+        let imageWrapper: HTMLElement;
+        let imageWrapperRect: ClientRect | DOMRect;
+        if (this._$tileMode === 'dynamic') {
+            imageWrapper = itemContainer.querySelector('.controls-TileView__imageWrapper');
+            imageWrapperRect = imageWrapper.getBoundingClientRect();
+            imageWrapper.style.height = `${imageWrapperRect.height * zoomCoefficient}px`;
+        }
+
+        const afterZoomRect = itemContent.getBoundingClientRect();
+
+        const result = {
+            width: afterZoomRect.width,
+            height: afterZoomRect.height
+        };
+
+        if (this._$tileMode === 'dynamic') {
+            imageWrapper.style.height = `${imageWrapperRect.height}px`;
+        }
+
+        itemContent.style.width = '';
+        itemContent.classList.remove('controls-TileView__item_hovered');
+
+        return result;
+    }
+
+    getItemContainerPosition(
+        targetItemSize: ITileCollectionItemSize,
+        itemRect: ClientRect | DOMRect,
+        viewContainerRect: ClientRect | DOMRect
+    ): ITileCollectionItemPosition {
+        const additionalWidth = (targetItemSize.width - itemRect.width) / 2;
+        const additionalHeightBottom = targetItemSize.height - itemRect.height * this.getZoomCoefficient();
+        const additionalHeight = (targetItemSize.height - itemRect.height - additionalHeightBottom) / 2;
+
+        const leftOffset = itemRect.left - viewContainerRect.left - additionalWidth;
+        const topOffset = itemRect.top - viewContainerRect.top - additionalHeight;
+        const rightOffset = viewContainerRect.right - itemRect.right - additionalWidth;
+        const bottomOffset = viewContainerRect.bottom - itemRect.bottom - additionalHeight - additionalHeightBottom;
+
+        return this._createPositionInBounds(leftOffset, topOffset, rightOffset, bottomOffset);
+    }
+
+    getItemContainerPositionInDocument(
+        targetItemPosition: ITileCollectionItemPosition,
+        viewContainerRect: ClientRect | DOMRect,
+        documentRect: ClientRect | DOMRect
+    ): ITileCollectionItemPosition {
+        const left = targetItemPosition.left + viewContainerRect.left;
+        const top = targetItemPosition.top + viewContainerRect.top;
+        const right = targetItemPosition.right + documentRect.width - viewContainerRect.right;
+        const bottom = targetItemPosition.bottom + documentRect.height - viewContainerRect.bottom;
+
+        return this._createPositionInBounds(left, top, right, bottom);
+    }
+
+    protected _createPositionInBounds(left: number, top: number, right: number, bottom: number): ITileCollectionItemPosition {
+        if (left < 0) {
+            right += left;
+            left = 0;
+        } else if (right < 0) {
+            left += right;
+            right = 0;
+        }
+        if (top < 0) {
+            bottom += top;
+            top = 0;
+        } else if (bottom < 0) {
+            top += bottom;
+            bottom = 0;
+        }
+
+        if (left < 0 || right < 0 || top < 0 || bottom < 0) {
+            return null;
+        } else {
+            return { left, top, right, bottom };
+        }
     }
 }
 

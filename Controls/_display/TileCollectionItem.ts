@@ -36,22 +36,22 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
     }
 
     getFixedPositionStyle(): string {
-        return this._$fixedPosition;
+        return this.isScaled() ? this._$fixedPosition || undefined : undefined;
     }
 
     setFixedPositionStyle(position: string, silent?: boolean): void {
-        // _$fixedPosition should specifically by undefined when not set,
-        // because then the template engine will remove the attribute
-        // correctly
-        const converted = position || undefined;
-        if (this._$fixedPosition === converted) {
+        if (this._$fixedPosition === position) {
             return;
         }
-        this._$fixedPosition = converted;
+        this._$fixedPosition = position;
         this._nextVersion();
         if (!silent) {
             this._notifyItemChangeToOwner('fixedPosition');
         }
+    }
+
+    isFixed(): boolean {
+        return !!this.getFixedPositionStyle();
     }
 
     getTileWrapperStyle(templateWidth?: number): string {
@@ -66,8 +66,6 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
     }
 
     getTileContentClasses(templateShadowVisibility?: string, templateMarker?: boolean): string {
-        // {{!!itemData.isActive ? ' controls-TileView__item_active'}}
-        // {{itemData.isFixed ? ' controls-TileView__item_fixed'}}
         // {{itemData.isAnimated ? ' controls-TileView__item_animated'}}
         let classes = 'controls-TileView__itemContent js-controls-SwipeControl__actionsContainer';
         classes += ` controls-ListView__item_shadow_${this.getShadowVisibility(templateShadowVisibility)}`;
@@ -79,6 +77,9 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         }
         if (this.isScaled()) {
             classes += ' controls-TileView__item_scaled';
+        }
+        if (this.isFixed()) {
+            classes += ' controls-TileView__item_fixed';
         }
         if (this.isSwiped()) {
             classes += ' controls-TileView__item_swiped';
@@ -102,7 +103,9 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
 
     getImageWrapperStyle(): string {
         // {{'height: ' + (itemData.isAnimated && itemData.zoomCoefficient ? itemData.zoomCoefficient * itemData.itemsHeight : itemData.itemsHeight) + 'px;'}}
-        return `height: ${this.getTileHeight()}px;`;
+        const tileHeight = this.getTileHeight();
+        const height = this.isScaled() ? this._$owner.getZoomCoefficient() * tileHeight : tileHeight;
+        return `height: ${height}px;`;
     }
 
     getTitleClasses(templateHasTitle?: boolean): string {

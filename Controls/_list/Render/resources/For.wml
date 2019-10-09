@@ -14,6 +14,7 @@
       on:mouseenter="_onItemMouseEnter(item)"
       on:mousemove="_onItemMouseMove(item)"
       on:mouseleave="_onItemMouseLeave(item)"
+      on:wheel="_onItemWheel(item)"
 
       itemActionsPosition="{{ itemActionsPosition }}"
       itemActionsTemplate="{{ itemActionsTemplate }}"
