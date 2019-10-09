@@ -687,7 +687,13 @@ define([
          it('decorated link node two classes', function() {
             var decoratedLinkFirstChildNodeCopy = decorator.Converter.deepCopyJson(decoratedLinkFirstChildNode);
             decoratedLinkFirstChildNodeCopy[1].class += ' anotherClass';
-            assert.ok(linkDecorateUtils.isDecoratedLink('span', decoratedLinkFirstChildNode));
+            assert.ok(linkDecorateUtils.isDecoratedLink('span', decoratedLinkFirstChildNodeCopy));
+         });
+
+         it('decorated link node no classes', function() {
+            var decoratedLinkFirstChildNodeCopy = decorator.Converter.deepCopyJson(decoratedLinkFirstChildNode);
+            delete decoratedLinkFirstChildNodeCopy[1].class;
+            assert.notOk(linkDecorateUtils.isDecoratedLink('span', decoratedLinkFirstChildNodeCopy));
          });
 
          it('wrong tag name', function() {
