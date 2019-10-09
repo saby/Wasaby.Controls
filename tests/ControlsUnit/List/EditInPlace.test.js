@@ -226,6 +226,34 @@ define([
             assert.equal(listModel.at(0).getContents(), eip._originalItem);
          });
 
+         it('Without changes', async function() {
+            var validateCalled;
+            eip.saveOptions({
+               listModel: listModel
+            });
+            eip._children = {
+               formController: {
+                  submit: function() {
+                     validateCalled = true;
+                     return Deferred.success();
+                  }
+               }
+            };
+            await eip.beginEdit({
+               item: listModel.at(0).getContents()
+            });
+            validateCalled = false;
+            await eip.beginEdit({
+               item: listModel.at(1).getContents()
+            });
+            assert.isFalse(validateCalled);
+            eip._editingItem.set('title', 'test');
+            await eip.beginEdit({
+               item: listModel.at(2).getContents()
+            });
+            assert.isTrue(validateCalled);
+         });
+
          it('Deferred', function() {
             eip._notify = function(e) {
                if (e === 'beforeBeginEdit') {
