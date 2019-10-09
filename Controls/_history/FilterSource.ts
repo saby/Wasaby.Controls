@@ -181,7 +181,7 @@ var _private = {
       }
 
       records = new collection.RecordSet({
-         items: [this.getRawHistoryItem(self, item.getId(), item.get('ObjectData'), item.get('HistoryId'))]
+         rawData: this.getRawHistoryItem(self, item.getId(), item.get('ObjectData'), item.get('HistoryId')).getRawData()
       });
       recent.prepend(records);
       self.historySource.saveHistory(self._history);
