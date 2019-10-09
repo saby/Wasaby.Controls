@@ -9,6 +9,7 @@ define(
    ],
    (StackStrategy, popupMod, popupTemplate, TestMaximizedStack, BaseController, StackContent) => {
       'use strict';
+      BaseController = new BaseController.default();
 
       describe('Controls/_popupTemplate/Stack/Opener/StackContent', () => {
          it('canResize', () => {
@@ -397,7 +398,6 @@ define(
             // Зависит от того где запускаем тесты, под нодой или в браузере
             assert.isTrue(itemConfig.popupState === BaseController.POPUP_STATE_CREATED || itemConfig.popupState === BaseController.POPUP_STATE_CREATING);
 
-            popupTemplate.StackController.elementAnimated(itemConfig);
             assert.equal(itemConfig.popupState, BaseController.POPUP_STATE_CREATED);
 
             itemConfig.popupOptions.className = '';
@@ -427,7 +427,6 @@ define(
             itemConfig._destroyDeferred.addCallback(function() {
                assert.equal(itemConfig.popupState, BaseController.POPUP_STATE_DESTROYED);
             });
-            popupTemplate.StackController.elementAnimated(itemConfig, {});
          });
 
          it('stack from target container', () => {
