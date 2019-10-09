@@ -46,9 +46,11 @@ abstract class BaseController {
 
     abstract  elementUpdated(item: IPopupItem, container: HTMLDivElement): boolean;
 
-    abstract  elementAfterUpdated(item: IPopupItem, container: HTMLDivElement): boolean;
+    protected elementAfterUpdated(item: IPopupItem, container: HTMLDivElement): boolean {
+        return false;
+    }
 
-    abstract  elementMaximized(item: IPopupItem, state: boolean): boolean;
+    abstract  elementMaximized(item: IPopupItem, container: HTMLDivElement, state: boolean): boolean;
 
     abstract  popupResizingLine(item: IPopupItem, offset: object): boolean;
 
@@ -111,8 +113,8 @@ abstract class BaseController {
         return (new Deferred()).callback();
     }
 
-    _elementMaximized(item: IPopupItem, state: boolean): boolean {
-        return this.elementMaximized && this.elementMaximized(item, state);
+    _elementMaximized(item: IPopupItem, container: HTMLDivElement, state: boolean): boolean {
+        return this.elementMaximized && this.elementMaximized(item, container, state);
     }
 
     _popupResizingLine(item: IPopupItem, offset: object): boolean {
