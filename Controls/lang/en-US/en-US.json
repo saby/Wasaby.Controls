@@ -221,5 +221,6 @@
    "Перенести $count$d$ $records$s$ в": "Move $count$d$ $records$s$ to",
    "Нет данных": "No data",
    "Найти": "Find",
-   "Сбросить масштабирование": "Reset zoom"
+   "Сбросить масштабирование": "Reset zoom",
+   "Невозможно закрепить более 10 пунктов": "Can’t pin more than 10 points"
 }
