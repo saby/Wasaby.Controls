@@ -1,5 +1,5 @@
 export interface IIconSizeOptions {
-   iconStyle?: string;
+   iconSize?: string;
 }
 
 /**

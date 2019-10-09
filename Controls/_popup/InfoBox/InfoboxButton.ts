@@ -1,16 +1,31 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import InfoboxButtonTemplate = require('wml!Controls/_popup/InfoBox/resources/InfoboxButton');
+import {IIconSize, IIconSizeOptions} from 'Controls/interface';
 
-export interface IInfoboxButton extends IControlOptions  {
-    size: string;
-}
-class InfoboxButton extends Control<IInfoboxButton>{
+export interface IInfoboxButton extends IControlOptions,  IIconSizeOptions  {}
 
-    protected _template: TemplateFunction=InfoboxButtonTemplate;
+
+/**
+* Контрол, который представляет собой типовую кнопку для вызова подсказки.
+*
+* @class Controls/_popup/InfoBox/InfoboxButton
+* @extends Core/Control
+* @mixes Controls/_interface/IIconSize
+* @control
+* @public
+* @author Бондарь А.В.
+* @category Button
+* @demo Controls-demo/Infobox/InfoboxButtonHelp
+*/
+
+class InfoboxButton extends Control<IInfoboxButton> implements IIconSize{
+
+    protected _template: TemplateFunction = InfoboxButtonTemplate;
+    static _theme: string[] = ['Controls/popup'];
 
     static getDefaultOptions(): IInfoboxButton {
         return {
-            size: 'm'
+            iconSize: 'm'
         };
     }
 
