@@ -70,7 +70,7 @@ var HistoryMenu = Menu.extend({
                template: 'Controls/popupTemplate:NotificationSimple',
                templateOptions: {
                   style: 'danger',
-                  text: 'Невозможно закрепить более 10 пунктов',
+                  text: rk('Невозможно закрепить более 10 пунктов'),
                   icon: 'Alert'
                }
             });
