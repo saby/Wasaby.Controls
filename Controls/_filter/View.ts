@@ -100,8 +100,8 @@ var _private = {
             if (_private.isFrequentItem(item)) {
                 var popupItem = configs[item.name];
                 popupItem.id = item.name;
-                popupItem.selectedKeys = (item.value instanceof Array) ? item.value : [item.value];
-                popupItem.resetValue = (item.resetValue instanceof Array) ? item.resetValue : [item.resetValue];
+                popupItem.selectedKeys = (item.value instanceof Object) ? item.value : [item.value];
+                popupItem.resetValue = (item.resetValue instanceof Object) ? item.resetValue : [item.resetValue];
                 if (item.editorOptions.source) {
                     if (!configs[item.name].source) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
                         _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter);
@@ -288,9 +288,9 @@ var _private = {
         const item = _private.getItemByName(self._source, name);
         let value;
         let resetValue = object.getPropertyValue(item, 'resetValue');
-        if (!selectedKeys.length || selectedKeys.includes(resetValue) || isEqual(selectedKeys, resetValue)
+        if (selectedKeys instanceof Array && (!selectedKeys.length || selectedKeys.includes(resetValue) || isEqual(selectedKeys, resetValue)
             // empty item is selected, but emptyKey not set
-            || item.emptyText && !item.hasOwnProperty('emptyKey') && selectedKeys.includes(null)) {
+            || item.emptyText && !item.hasOwnProperty('emptyKey') && selectedKeys.includes(null))) {
             value = object.getPropertyValue(item, 'resetValue');
         } else if (self._configs[name].multiSelect) {
             value = selectedKeys;
@@ -314,16 +314,16 @@ var _private = {
     },
 
     getSelectedKeys: function(items, config) {
-        var selectedKeys = [];
+        var selectedKeys = {};
 
         let getHierarchySelectedKeys = () => {
-            // selectedKeys - [ [selected keys for folder 1] , [selected keys for folder 2], ... ]
+            // selectedKeys - { folderId1: [selected keys for folder] , folderId2: [selected keys for folder], ... }
             let folderIds = _private.getFolderIds(config.items, config.nodeProperty, config.keyProperty);
             factory(folderIds).each((folderId, index) => {
-                selectedKeys.push([]);
+                selectedKeys[folderId] = [];
                 factory(items).each((item) => {
                     if (folderId === item.get(config.keyProperty) || folderId === item.get(config.parentProperty)) {
-                        selectedKeys[index].push(item.get(config.keyProperty));
+                        selectedKeys[folderId].push(item.get(config.keyProperty));
                     }
                 });
             });
@@ -332,6 +332,7 @@ var _private = {
         if (config.nodeProperty) {
             getHierarchySelectedKeys();
         } else {
+            selectedKeys = [];
             factory(items).each(function (item) {
                 selectedKeys.push(object.getPropertyValue(item, config.keyProperty));
             });
@@ -372,16 +373,16 @@ var _private = {
         let isEmptySelection = true;
         let onlyFoldersSelected = true;
 
-        let resultSelectedKeys = [];
+        let resultSelectedKeys = {};
         folderIds.forEach((parentKey, index) => {
-            // selectedKeys - [ [selected keys for folder] , [selected keys for folder], ... ]
-            let nodeSelectedKeys = selectedKeys[index];
+            // selectedKeys - { folderId1: [selected keys for folder] , folderId2: [selected keys for folder], ... }
+            let nodeSelectedKeys = selectedKeys[parentKey];
             // if folder is selected, delete other keys
             if (nodeSelectedKeys.includes(parentKey)) {
-                resultSelectedKeys[index] = [parentKey];
+                resultSelectedKeys[parentKey] = [parentKey];
             } else {
                 onlyFoldersSelected = false;
-                resultSelectedKeys[index] = nodeSelectedKeys;
+                resultSelectedKeys[parentKey] = nodeSelectedKeys;
             }
             if (nodeSelectedKeys.length && !nodeSelectedKeys.includes(curConfig.emptyKey)) {
                 isEmptySelection = false;
