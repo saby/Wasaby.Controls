@@ -858,7 +858,7 @@ define(
                let hierarchySource = [
                   {
                      name: 'document',
-                     value: [[-1], []],
+                     value: {'-1': [-1], '-2': []},
                      resetValue: [],
                      textValue: '',
                      emptyText: 'All documents',
@@ -911,16 +911,16 @@ define(
                };
                let eventResult = {
                   action: 'applyClick',
-                  selectedKeys: { document: [[1, 2], [-2, 4]] }
+                  selectedKeys: { document: {'-1': [1, 2], '-2': [-2, 4]} }
                };
                view._resultHandler('resultEvent', eventResult);
-               assert.deepStrictEqual(view._source[0].value, [[1, 2], [-2]]);
+               assert.deepStrictEqual(view._source[0].value, {'-1': [1, 2], '-2': [-2]});
                assert.deepStrictEqual(view._displayText.document, {text: 'Folder 2', title: 'Folder 2, In any state, In progress', hasMoreText: ', еще 2' });
-               assert.deepStrictEqual(filterChanged, {document: [[1, 2], [-2]]});
+               assert.deepStrictEqual(filterChanged, {document: {'-1': [1, 2], '-2': [-2]}});
 
                eventResult = {
                   action: 'applyClick',
-                  selectedKeys: { document: [[], []] }
+                  selectedKeys: { document: {'-1': [], '-2': []} }
                };
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[0].value, []);
