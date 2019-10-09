@@ -29,7 +29,7 @@ const
       setBorderScrollPosition(self, newContentSize: number, newContentContainerSize: number): void {
           // if the table has increased and the scroll was at the end, it should stick at the end, with a new width.
           // Если при расширении таблицы, скрол находился в конце, он должен остаться в конце.
-          if (self._contentSize !== 0 &&
+          if (self._contentSize !== 0 && self._scrollPosition !== 0 &&
               (self._scrollPosition ===  self._contentSize - self._contentContainerSize) &&
               newContentSize > self._contentSize) {
               self._scrollPosition = newContentSize - newContentContainerSize;

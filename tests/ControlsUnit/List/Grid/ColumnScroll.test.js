@@ -595,6 +595,72 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(650, newColumnScroll._contentSize);
          assert.equal(200, newColumnScroll._contentContainerSize);
          assert.equal(newColumnScroll._contentSize - newColumnScroll._contentContainerSize, newColumnScroll._scrollPosition);
+
+         let startColumnScroll = new ColumnScroll(newCfg);
+
+         newColumnScroll._children = {
+            contentStyle: {},
+            content: {
+               getElementsByClassName: () => {
+                  return [{
+                     scrollWidth: 650,
+                     offsetWidth: 650,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 20
+                        }
+                     },
+                     querySelector: function () {
+                        return {
+                           getBoundingClientRect: () => {
+                              return {
+                                 left: 44
+                              }
+                           },
+                           offsetWidth: 76
+                        };
+                     }
+                  }]
+               }
+            }
+         };
+
+         newColumnScroll.saveOptions(newCfg);
+         newColumnScroll._afterMount(newCfg);
+         assert.equal(0, newColumnScroll._scrollPosition);
+
+         newColumnScroll._children = {
+            contentStyle: {},
+            content: {
+               getElementsByClassName: () => {
+                  return [{
+                     scrollWidth: 850,
+                     offsetWidth: 650,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 20
+                        }
+                     },
+                     querySelector: function () {
+                        return {
+                           getBoundingClientRect: () => {
+                              return {
+                                 left: 44
+                              }
+                           },
+                           offsetWidth: 76
+                        };
+                     }
+                  }]
+               }
+            }
+         };
+
+         newColumnScroll._resizeHandler();
+         assert.equal(850, newColumnScroll._contentSize);
+         assert.equal(650, newColumnScroll._contentContainerSize);
+         assert.equal(0, newColumnScroll._scrollPosition);
+
       });
 
       it('borderScrollPosition(start) with changes table width', function() {
