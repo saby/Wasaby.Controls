@@ -167,7 +167,7 @@ var _private = {
         const entries = _private.getEntries(cfg.selectedKeys, cfg.excludedKeys, cfg.source);
 
         let nodeSourceControllers = self._nodesSourceControllers;
-        let expandedItemsKeys: Array[number|string|null] = [];
+        let expandedItemsKeys: Array[number | string | null] = [];
         let isExpandAll: boolean;
 
         if (baseControl) {
@@ -216,8 +216,9 @@ var _private = {
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
 
             // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-            if (!_private.isDeepReload(options, self._deepReload)) {
+            if (!_private.isDeepReload(options, self._deepReload) || self._needResetExpandedItems) {
                 viewModel.resetExpandedItems();
+                self._needResetExpandedItems = false;
             }
 
             if (viewModelRoot !== root) {
@@ -384,10 +385,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._root = newOptions.root;
             this._updatedRoot = true;
             this._children.baseControl.cancelEdit();
-        }
-        if (this._needResetExpandedItems) {
-            this._children.baseControl.getViewModel().resetExpandedItems();
-            this._needResetExpandedItems = false;
         }
         //если expandedItems задана статично, то при обновлении в модель будет отдаваться всегда изначальная опция. таким образом происходит отмена разворота папок.
         if (newOptions.expandedItems) {
