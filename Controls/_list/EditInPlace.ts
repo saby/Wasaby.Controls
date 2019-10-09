@@ -290,6 +290,13 @@ var
         getAddPosition: function(options) {
             return options.editingConfig && options.editingConfig.addPosition === 'top' &&
                    !options.editingConfig.autoAdd ? 0 : undefined;
+        },
+
+        beginEditCallback(self, newOptions) {
+            if (newOptions && newOptions.cancelled) {
+                return Deferred.success({cancelled: true});
+            }
+            return _private.afterBeginEdit(self, newOptions);
         }
     };
 
@@ -341,27 +348,19 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     beginEdit(options): Promise<{ cancelled: true } | { item: entity.Record } | void> {
         var self = this;
 
-        function beginEdit(self, options) {
-            return _private.beginEdit(self, options).addCallback((newOptions) => {
-                if (newOptions && newOptions.cancelled) {
-                    return Deferred.success({cancelled: true});
-                }
-                return _private.afterBeginEdit(self, newOptions);
-            });
-        }
-
         if (this._editingItem && !this._editingItem.isChanged()) {
             return this.cancelEdit().addCallback(() => {
-                return beginEdit(self, options);
+                return _private.beginEdit(self, options).addCallback((newOptions) => {
+                    _private.beginEditCallback(self, newOptions);
+                });
             });
         }
 
         if (!this._editingItem || !this._editingItem.isEqual(options.item)) {
-            return this.commitEdit().addCallback(function(res) {
-                if (res && res.validationFailed) {
-                    return Deferred.success();
-                }
-                return beginEdit(self, options);
+            return this.commitEdit().addCallback(() => {
+                return _private.beginEdit(self, options).addCallback((newOptions) => {
+                    _private.beginEditCallback(self, newOptions);
+                });
             });
         } else {
             return Promise.resolve();
