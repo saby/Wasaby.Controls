@@ -351,15 +351,18 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         if (this._editingItem && !this._editingItem.isChanged()) {
             return this.cancelEdit().addCallback(() => {
                 return _private.beginEdit(self, options).addCallback((newOptions) => {
-                    _private.beginEditCallback(self, newOptions);
+                    return _private.beginEditCallback(self, newOptions);
                 });
             });
         }
 
         if (!this._editingItem || !this._editingItem.isEqual(options.item)) {
-            return this.commitEdit().addCallback(() => {
+            return this.commitEdit().addCallback((res) => {
+                if (res && res.validationFailed) {
+                    return Deferred.success();
+                }
                 return _private.beginEdit(self, options).addCallback((newOptions) => {
-                    _private.beginEditCallback(self, newOptions);
+                    return _private.beginEditCallback(self, newOptions);
                 });
             });
         } else {
