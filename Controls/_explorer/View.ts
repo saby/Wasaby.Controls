@@ -138,6 +138,12 @@ import 'Types/entity';
             // For viewMode === 'tile' disable virtualScrolling.
             self._virtualScrolling = viewMode === 'tile' ? false : cfg.virtualScrolling;
          },
+
+         setViewName: function (self, viewMode) {
+            self._viewName = VIEW_NAMES[viewMode];
+            self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
+         },
+
          setViewMode: function(self, viewMode, cfg) {
             var currentRoot = _private.getRoot(self, cfg.root);
             var dataRoot = _private.getDataRoot(self);
@@ -148,12 +154,10 @@ import 'Types/entity';
             self._viewMode = viewMode;
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
                _private.loadTileViewMode(cfg).then((tile) => {
-                  self._viewName = VIEW_NAMES[viewMode];
-                  self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
+                  _private.setViewName(self, viewMode);
                });
             } else {
-               self._viewName = VIEW_NAMES[viewMode];
-               self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
+               _private.setViewName(self, viewMode);
             }
             _private.setVirtualScrolling(self, self._viewMode, cfg);
          },
