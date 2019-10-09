@@ -1,3 +1,5 @@
+import * as CntTpl from 'wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto/content';
+
 export const Gadgets = {
     getDataSet() {
         return [
@@ -37,7 +39,8 @@ export const Gadgets = {
                 rating: '8.5',
                 parent: null,
                 type: true,
-                hasChild: true
+                hasChild: true,
+                photo: 'https://fakeimg.pl/250x100/'
             },
             {
                 id: 2,
@@ -45,14 +48,15 @@ export const Gadgets = {
                 parent: 1,
                 rating: '9.2',
                 type: true,
-                hasChild: true
+                hasChild: true,
+                photo: 'https://fakeimg.pl/250x100/'
             },
             {
                 id: 3,
                 title: 'iPhone 4s',
                 rating: '9.5',
                 parent: 2,
-                type: null
+                type: null,
             },
             {
                 id: 4,
@@ -167,7 +171,8 @@ export const Gadgets = {
                 rating: '8.0',
                 parent: null,
                 type: true,
-                hasChild: true
+                hasChild: true,
+                photo: 'https://fakeimg.pl/250x100/'
             },
             {
                 id: 18,
@@ -175,7 +180,8 @@ export const Gadgets = {
                 rating: '7.5',
                 country: 'КНР',
                 parent: null,
-                type: true
+                type: true,
+                photo: 'https://fakeimg.pl/250x100/'
             },
             {
                 id: 19,
@@ -183,7 +189,8 @@ export const Gadgets = {
                 rating: '7.3',
                 country: 'Тайвань',
                 parent: null,
-                type: false
+                type: false,
+                photo: 'https://fakeimg.pl/250x100/'
             },
             {
                 id: 20,
@@ -191,8 +198,9 @@ export const Gadgets = {
                 rating: '7.1',
                 country: 'Тайвань',
                 parent: null,
-                type: false
-            }
+                type: false,
+                photo: 'https://fakeimg.pl/250x100/'
+            },
 
         ];
     },
@@ -213,6 +221,45 @@ export const Gadgets = {
             },
             {
                 displayProperty: 'country'
+            }
+        ];
+    },
+    getGridColumnsWithPhoto(){
+        return [
+            {
+                displayProperty: 'title',
+                template: CntTpl
+            },
+            {
+                displayProperty: 'rating'
+            },
+            {
+                displayProperty: 'country'
+            }
+        ]
+    },
+    getGridColumnsWithCellPadding(){
+        return [
+            {
+                displayProperty: 'title',
+                cellPadding: {
+                    left: 'null',
+                    right: 's'
+                }
+            },
+            {
+                displayProperty: 'rating',
+                cellPadding: {
+                    left: 'null',
+                    right: 's'
+                }
+            },
+            {
+                displayProperty: 'country',
+                cellPadding: {
+                    left: 'null',
+                    right: 's'
+                }
             }
         ];
     },

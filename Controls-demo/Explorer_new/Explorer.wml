@@ -2,18 +2,18 @@
     <div class="controlsDemo__cell">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/treeGrid/VirtualScroll/HasMoreMany/Index' }}">
-            <a href="{{content.href}}">В узле детей больше, чем размер виртуальной страницы</a>
+                                 app="{{ 'Controls-demo/Explorer_new/Default/Index' }}">
+            <a href="{{content.href}}">Базовый Explorer</a>
         </Router.router:Reference>
-        <Controls-demo.treeGrid.VirtualScroll.HasMoreMany.Index/>
+        <Controls-demo.Explorer_new.Default.Index/>
     </div>
 
     <div class="controlsDemo__cell">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/treeGrid/VirtualScroll/Default/Index' }}">
-            <a href="{{content.href}}">Default</a>
+                                 app="{{ 'Controls-demo/Explorer_new/Search/Index' }}">
+            <a href="{{content.href}}">Search Explorer</a>
         </Router.router:Reference>
-        <Controls-demo.treeGrid.VirtualScroll.Default.Index/>
+        <Controls-demo.Explorer_new.Search.Index/>
     </div>
 </div>
