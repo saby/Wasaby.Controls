@@ -6,7 +6,9 @@
                  on:click="_onMonthClick(month)">
                <ws:partial template="{{monthCaptionTemplate}}" month="{{month}}" formatDate="{{formatDate}}"/>
                <ws:if data="{{ checkedStart || checkedEnd || iconsHandler }}">
-                  <div class="controls-PeriodLiteDialog-item__checkBox icon-16 icon-Yes icon-done"></div>
+                  <div class="controls-PeriodLiteDialog-item__checkBox">
+                     <div class="icon-16 icon-Yes icon-done"></div>
+                  </div>
                </ws:if>
             </div>
          </ws:for>
