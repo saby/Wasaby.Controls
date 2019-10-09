@@ -58,10 +58,11 @@
          <ws:for data="value in [0, 1, 2, 3, 4]">
             <div  class="controls-PeriodLiteDialog-item-years
                            controls-PeriodLiteDialog__vLayoutItem
-                           controls-PeriodLiteDialog__vLayoutItem-caption
                            {{_getYearItemCssClasses(_year - value)}}"
                on:click="_onYearClick(_year - value)">
-               {{ _year - value }}
+               <div class="controls-PeriodLiteDialog__vLayoutItem-caption">
+                  {{ _year - value }}
+               </div>
             </div>
          </ws:for>
       </div>

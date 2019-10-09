@@ -177,7 +177,7 @@
 }
 
 .controls-PeriodLiteDialog-item-years {
-   min-width: @min-width_PeriodLiteDialog-item-years
+   min-width: @min-width_PeriodLiteDialog-item-years;
 }
 
 .controls-PeriodLiteDialog__bodyWrapper {
@@ -240,7 +240,7 @@
    display: flex;
    position: absolute;
    top: 0;
-   right: @right_PeriodLiteDialog-checkbox;
+   right: @right_PeriodLiteDialog-checkbox - @border-width_PeriodLiteDialog_hovered;
    align-items: center;
    height: 100%;
 }
