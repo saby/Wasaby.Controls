@@ -201,6 +201,8 @@ class Base extends Control<ISliderBaseOptions> {
    private _lineData: ILineData = undefined;
    private _pointData: IPointDataList = undefined;
    private _scaleData: IScaleData[] = undefined;
+   private _tooltipValue: number | null = null;
+   private _isDrag: boolean = false;
 
    private _render(minValue: number, maxValue: number, value: number): void {
       const rangeLength = maxValue - minValue;
@@ -208,6 +210,12 @@ class Base extends Control<ISliderBaseOptions> {
       this._pointData[0].position = right;
       this._lineData.width = right;
    }
+
+    private _renderTooltip(minValue: number, maxValue: number, value: number): void {
+       const rangeLength = maxValue - minValue;
+       this._pointData[1].position =
+           Math.min(Math.max(value - minValue, 0), rangeLength) / rangeLength * maxPercentValue;
+    }
 
    private _needUpdate(oldOpts: ISliderBaseOptions, newOpts: ISliderBaseOptions): boolean {
       return (oldOpts.scaleStep !== newOpts.scaleStep ||
@@ -223,6 +231,13 @@ class Base extends Control<ISliderBaseOptions> {
       }
    }
 
+   private _getValue(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
+      let targetX = Utils.getNativeEventPageX(event);
+      const box = this._children.area.getBoundingClientRect();
+      const ratio = Utils.getRatio(targetX, box.left + window.pageXOffset, box.width);
+      return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
+   };
+
    private _setValue(val: number): void {
       this._notify('valueChanged', [val]);
    }
@@ -231,7 +246,7 @@ class Base extends Control<ISliderBaseOptions> {
       this._checkOptions(options);
       this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
       this._value = options.value === undefined ? options.maxValue : options.value;
-      this._pointData = [{name: 'point', position: 100}];
+      this._pointData = [{name: 'point', position: 100}, {name: 'tooltip', position: 0}];
       this._lineData = {position: 0, width: 100};
       this._render(options.minValue, options.maxValue, this._value);
    }
@@ -241,18 +256,34 @@ class Base extends Control<ISliderBaseOptions> {
          this._checkOptions(options);
          this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
       }
-      this._render(options.minValue, options.maxValue, options.value);
+      this._render(options.minValue, options.maxValue, this._value);
+      this._renderTooltip(options.minValue, options.maxValue, this._tooltipValue);
    }
 
    private _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
-      let targetX = Utils.getNativeEventPageX(event);
-
       if (!this._options.readOnly) {
-         const box = this._children.area.getBoundingClientRect();
-         const ratio = Utils.getRatio(targetX, box.left + window.pageXOffset, box.width);
-         this._value = Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
+         this._isDrag = true;
+         this._value = this._getValue(event);
          this._setValue(this._value);
          this._children.dragNDrop.startDragNDrop(this._children.point, event);
+      }
+   }
+
+   private _onMouseMove(event: SyntheticEvent<MouseEvent>): void {
+      if (!this._options.readOnly) {
+         this._tooltipValue = this._getValue(event);
+      }
+   }
+
+   private _onMouseOut(event: SyntheticEvent<MouseEvent>): void {
+      if (!this._options.readOnly) {
+         this._tooltipValue = null;
+      }
+   }
+
+   private _onMouseUp(event: SyntheticEvent<MouseEvent>): void  {
+      if (!this._options.readOnly) {
+         this._isDrag = false;
       }
    }
 

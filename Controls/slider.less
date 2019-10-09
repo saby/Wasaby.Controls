@@ -171,3 +171,38 @@
 .controls-Slider__segment_theme-@{themeName}:last-child:after {
   left: -@Slider-segment-after-width;
 }
+
+.controls-Slider__tooltipContainer {
+  display: flex;
+  justify-content: center;
+}
+.controls-Slider__tooltipValue {
+  padding-top: @Slider-tooltip-padding-top-bottom;
+  padding-right: @Slider-tooltip-padding-left-right;
+  padding-bottom: @Slider-tooltip-padding-top-bottom;
+  padding-left: @Slider-tooltip-padding-left-right;
+  background-color: @Slider-point-background-color;
+  border-radius: @Slider-tooltip-border-radius;
+  box-shadow: @Slider-tooltip-box-shadow;
+  font-size: @Slider-tooltip-font-size;
+  position: absolute;
+}
+.controls-Slider__point_big_tooltipValue {
+  bottom: @Slider-big_point-size + @Slider-tooltip-interval;
+}
+.controls-Slider__point_small_tooltipValue {
+  bottom: @Slider-point-size + @Slider-tooltip-interval;
+}
+.controls-Slider__point_tooltip {
+  border: @Slider-point-border-thickness solid @Slider-segment-color;
+  background-color: @Slider-point-background-color;
+  z-index: 2;
+}
+.controls-Slider__point_tooltip:hover {
+  background-color: @Slider-point-background-color;
+}
+.controls-Slider__point_hidden,
+.controls-Slider__point_hidden:hover {
+  border: @Slider-point-border-thickness solid transparent;
+  background: none;
+}
