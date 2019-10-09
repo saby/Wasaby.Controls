@@ -29,7 +29,7 @@
    padding-right: @spacing_TreeGridView-row-expander-between-content_borderRight_s;
 }
 .controls-TreeGrid__row-expander, .controls-TreeGrid__row-expanderPadding {
-   line-height: @height_TreeGridView-expander;
+   line-height: 1;
    display: inline-block;
    position: relative;
    min-height: @height_TreeGridView-expander;
@@ -64,6 +64,7 @@
    color: @color_TreeGridView-expander;
    font-family: @font-family-TreeGridView-icons;
    font-size: @font-size_TreeGridView-expander;
+   padding: @padding_TreeGridView-expander;
 }
 
 .controls-TreeGrid__row-expander_node_default:hover:before {
@@ -74,6 +75,7 @@
    color: @color_TreeGridView-expander-hiddenNode;
    font-family: @font-family-TreeGridView-icons;
    font-size: @font-size_TreeGridView-expander;
+   padding: @padding_TreeGridView-expander;
 }
 
 .controls-TreeGrid__row-expander_hiddenNode_default:hover:before {
@@ -84,16 +86,18 @@
    color: @color_TreeGridView-expander_master;
    font-family: @font-family-TreeGridView-icons;
    font-size: @font-size_TreeGridView-expander_master;
+   padding: @padding_TreeGridView-expander_master;
 }
 
 .controls-TreeGrid__row-expander_node_master:hover:before {
-   color: @color_TreeGridView-expander_hover;
+   color: @color_TreeGridView-expander_hover_master;
 }
 
 .controls-TreeGrid__row-expander_hiddenNode_master:before {
    color: @color_TreeGridView-expander-hiddenNode_master;
    font-family: @font-family-TreeGridView-icons;
    font-size: @font-size_TreeGridView-expander_master;
+   padding: @padding_TreeGridView-expander_master;
 }
 
 .controls-TreeGrid__row-expander_hiddenNode_master:hover:before {
