@@ -30,6 +30,8 @@ export default class SwipeControl extends Control {
    private _swipeConfig: ISwipeConfig;
    private _animationState: 'close' | 'open' = 'close';
    private _actionAlignment: 'horizontal' | 'vertical';
+   private _currentItemData: IItemData | null = null;
+   private _isActual: boolean = false;
 
    constructor(options: ISwipeControlOptions) {
       super(options);
@@ -72,6 +74,7 @@ export default class SwipeControl extends Control {
 
    private _notifyAndResetSwipe(): void {
       this._swipeConfig = null;
+      this._currentItemData = null;
       this._notify('closeSwipe', [this._options.listModel.getSwipeItem()]);
       this._options.listModel.setSwipeItem(null);
       this._options.listModel.setActiveItem(null);
@@ -79,13 +82,19 @@ export default class SwipeControl extends Control {
 
    private _updateModel(newOptions: ISwipeControlOptions): void {
       this.closeSwipe();
-      newOptions.listModel.subscribe('onListChange', (event, changesType, action) => {
-         if (changesType !== 'itemActionsUpdated' && action !== 'ch') {
-            this.closeSwipe();
-         }
-      });
+      newOptions.listModel.subscribe('onListChange', this._onListChange.bind(this));
    }
 
+   private _onListChange(event, changesType, action): void {
+      if (changesType !== 'itemActionsUpdated' && action !== 'ch') {
+         this.closeSwipe();
+      } else if (changesType === 'itemActionsUpdated') {
+
+         // TODO: KINGO
+         // Если обновились операции над записью, то запоминаем, что они не актуальны
+         this._isActual = false;
+      }
+   }
    private _getActionsHeight(target: HTMLElement): number {
       const listItem = target.closest('.controls-ListView__itemV');
 
@@ -119,34 +128,45 @@ export default class SwipeControl extends Control {
       return [[showedActions[0],showedActions[1]],
               [showedActions[2],showedActions[3]]];
    }
+   private _updateActionsOnCurrentItem(): void{
+      this._setMeasurer(this._options.actionAlignment);
+      this._swipeConfig = this._measurer.getSwipeConfig(
+          this._currentItemData.itemActions.all,
+          this._actionsHeight,
+          this._options.actionCaptionPosition
+      );
+      if (this._needHorizontalRecalc(this._swipeConfig)) {
+         this._setMeasurer('horizontal');
+         this._swipeConfig = this._measurer.getSwipeConfig(
+             this._currentItemData.itemActions.all,
+             this._actionsHeight,
+             this._options.actionCaptionPosition
+         );
+      }
+      this._options.listModel.setItemActions(this._currentItemData.actionsItem, this._swipeConfig.itemActions);
+      if (this._swipeConfig.twoColumns) {
+         this._swipeConfig.twoColumnsActions = this._prepareTwoColumns(this._swipeConfig.itemActions.showed);
+      }
 
+      //TODO: KINGO
+      // после обновления _swipeConfig становится актуальным.
+      this._isActual = true;
+   }
    private _initSwipe(
       listModel: IListModel,
       itemData: IItemData,
       childEvent: ISwipeEvent
    ): void {
-      const actionsHeight = this._getActionsHeight(childEvent.target);
+      this._actionsHeight = this._getActionsHeight(childEvent.target);
       listModel.setSwipeItem(itemData);
       listModel.setActiveItem(itemData);
+
+      //TODO: KINGO
+      // запоминаем текущий активный элемент, чтобы мы могли обновить опции на немпри необходимости
+      this._currentItemData = itemData;
+
       if (this._options.itemActionsPosition !== 'outside') {
-         this._setMeasurer(this._options.actionAlignment);
-         this._swipeConfig = this._measurer.getSwipeConfig(
-            itemData.itemActions.all,
-            actionsHeight,
-            this._options.actionCaptionPosition
-         );
-         if (this._needHorizontalRecalc(this._swipeConfig)) {
-            this._setMeasurer('horizontal');
-            this._swipeConfig = this._measurer.getSwipeConfig(
-                itemData.itemActions.all,
-                actionsHeight,
-                this._options.actionCaptionPosition
-            );
-         }
-         listModel.setItemActions(itemData.actionsItem, this._swipeConfig.itemActions);
-         if (this._swipeConfig.twoColumns) {
-            this._swipeConfig.twoColumnsActions = this._prepareTwoColumns(this._swipeConfig.itemActions.showed);
-         }
+         this._updateActionsOnCurrentItem();
       }
       this._animationState = 'open';
    }
@@ -200,12 +220,21 @@ export default class SwipeControl extends Control {
       if (this._options.actionAlignment !== newOptions.actionAlignment) {
          this._setMeasurer(newOptions.actionAlignment);
       }
+      if (!this._isActual && this._currentItemData) {
+
+         // TODO: KINGO
+         // Если текущие данные не актуальны, и у нас есть свайпнутая запись,
+         // то получаем из модели актуальную itemData для текущего элемента, и пересчитываем _swipeConfig для него
+         this._currentItemData = this._options.listModel.getItemDataByItem(this._currentItemData.dispItem);
+         this._updateActionsOnCurrentItem();
+      }
    }
 
    _beforeUnmount(): void {
       this._swipeConfig = null;
       this._measurer = null;
       this._actionAlignment = null;
+      this._currentItemData = null;
    }
 
    closeSwipe(withAnimation: boolean = false): void {
