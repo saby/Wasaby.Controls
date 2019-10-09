@@ -71,7 +71,7 @@
    </ws:if>
    <Controls.dropdown:Opener if="{{_hasHierarchy}}"
                              name="subDropdownOpener"
-                             on:result="_resultHandler()"
+                             on:result="_subMenuResultHandler()"
                              on:close="_subDropdownClose()"
                              scope="{{_popupOptions}}">
    </Controls.dropdown:Opener>

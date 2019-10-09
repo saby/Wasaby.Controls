@@ -306,15 +306,13 @@ import {SyntheticEvent} from 'Vdom/Vdom'
             }
          },
 
-         _resultHandler: function(event, result) {
-            switch (result.action) {
-               case 'itemClick':
-                  if (!result.data[0].get(this._options.nodeProperty)) {
-                     this._children.subDropdownOpener.close();
-                  }
-               case 'pinClick':
-                  this._notify('sendResult', [result]);
+         _subMenuResultHandler: function(event, result) {
+            if (result.action === 'itemClick') {
+               if (!result.data[0].get(this._options.nodeProperty)) {
+                  this._children.subDropdownOpener.close();
+               }
             }
+            this._notify('sendResult', [result]);
          },
 
          _onItemSwipe: function(event, itemData) {
