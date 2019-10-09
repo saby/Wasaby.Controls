@@ -180,9 +180,7 @@ var _private = {
          recent.remove(hItem);
       }
 
-      records = new collection.RecordSet({
-         items: [this.getRawHistoryItem(self, item.getId(), item.get('ObjectData'), item.get('HistoryId'))]
-      });
+      records = [this.getRawHistoryItem(self, item.getId(), item.get('ObjectData'), item.get('HistoryId'))];
       recent.prepend(records);
       self.historySource.saveHistory(self._history);
    },
