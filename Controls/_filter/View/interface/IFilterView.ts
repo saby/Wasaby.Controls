@@ -420,6 +420,33 @@
  */
 
 /**
+ * @name Controls/_filter/View/interface/IFilterView#itemTemplate
+ * @cfg {Function} Шаблон отображения элемента фильтра.
+ * @remark
+ * Для определения шаблона вызовите базовый шаблон - "Controls/filter:ViewItemTemplate".
+ * Шаблон должен быть помещен в контрол с помощью тега <ws:partial> с атрибутом "template".
+ * Содержимое можно переопределить с помощью параметра "contentTemplate".
+ * Базовый шаблон Controls/filter:ViewItemTemplate по умолчанию отображает иконку и текст.
+ * Для того, чтобы скрыть иконку определите опцию beforeContentTemplate = null.
+ * @example
+ * В примере показано как скрыть иконку рядом с текстом.
+ * WML:
+ * <pre>
+ *    <Controls.filter:View
+ *       source={{_source}}
+ *       detailPanelTemplateName="wml!MyModule/detailPanelTemplate"
+ *       panelTemplateName="Controls/filterPopup:SimplePanel">
+ *
+ *       <ws:itemTemplate>
+ *          <ws:partial template="Controls/filter:ViewItemTemplate"
+ *                      beforeContentTemplate="{{null}}">
+ *          </ws:partial>
+ *       </ws:itemTemplate>
+ *    </Controls.filter:View>
+ * </pre>
+ */
+
+/**
  * @event Controls/_filter/View/interface/IFilterView#filterChanged Происходит при изменении фильтра.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object} filter Новый фильтр.

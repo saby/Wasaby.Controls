@@ -224,11 +224,14 @@ define(
 
          it('_openPanel', function() {
             let view = getView(defaultConfig),
-               popupOptions;
+               popupOptions, filterClassName = '';
             view._children = {
                StickyOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} }
             };
-            view._container = ['filter_container'];
+            view._container = {
+               0: 'filter_container',
+               getElementsByClassName: () => [filterClassName]
+            };
             view._options.panelTemplateName = 'panelTemplateName.wml';
             view._source = defaultConfig.source;
             view._configs = {
@@ -248,7 +251,7 @@ define(
             assert.strictEqual(popupOptions.templateOptions.items.getCount(), 2);
             assert.strictEqual(popupOptions.className, 'controls-FilterView-SimplePanel__buttonTarget-popup');
 
-            view._children['second_filter'] = 'div_second_filter';
+            filterClassName = 'div_second_filter';
             view._openPanel('click', 'second_filter');
             assert.strictEqual(popupOptions.target, 'div_second_filter');
             assert.strictEqual(popupOptions.className, 'controls-FilterView-SimplePanel-popup');

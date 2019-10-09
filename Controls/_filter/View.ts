@@ -15,6 +15,7 @@ import {RecordSet} from 'Types/collection';
 import {getItemsWithHistory, isHistorySource} from 'Controls/_filter/HistoryUtils';
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
+import * as defaultItemTemplate from 'wml!Controls/_filter/View/ItemTemplate';
 
 /**
  * Контрол для фильтрации данных. Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
@@ -590,7 +591,7 @@ var Filter = Control.extend({
                 actionOnScroll: 'close'
             };
             if (name) {
-                popupOptions.target = this._children[name];
+                popupOptions.target = this._container.getElementsByClassName('js-controls-FilterView__target-' + name)[0];
                 popupOptions.className = 'controls-FilterView-SimplePanel-popup';
             } else {
                 popupOptions.className = 'controls-FilterView-SimplePanel__buttonTarget-popup';
@@ -695,7 +696,8 @@ var Filter = Control.extend({
 
 Filter.getDefaultOptions = function() {
     return {
-        alignment: 'right'
+        alignment: 'right',
+        itemTemplate: defaultItemTemplate
     };
 };
 
