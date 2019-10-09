@@ -16,6 +16,51 @@
    user-select: none;
 }
 
+/**
+ * TODO: holeFix
+ * Маркер и линия касаются друг друга. Пусть маркер находится слева от линии (случай, когда маркер справа можно получить зеркальным отображением).
+ * Тогда, если взять их границы, то границей маркера будет окружность, а линии прямоугольник.
+ * Они касаются друг друга только в одной точке. Точка является центром левой границы прямоугольника. Поэтому
+ * между верхним левым или нижним левым углами прямоугольника и окружностью имеется не нулевое расстояние. Чем больше
+ * размеры контрола, тем больше это расстояние. По мере увеличения контрола, расстояние в какой-то момент может стать больше
+ * пикселя или быть округлено в большую сторону (на IPad). Тогда визуально будут наблюдаться дырки между маркером и линией.
+ * Решаем данную проблему с помощью наложения дополнительного блока, который перекроет собой дырки.
+ * Высота блока должна быть равна высоте линии. Ширину берем как половину толщины обводки маркера с округлением в меньшую сторону, чтобы
+ * избавиться от дробных пикселей, и умноженную на 2, чтобы одна половина была на маркере, а другая на линии. Смещаем его так, чтобы
+ * точка пересечения маркера и линии была на вертикальной прямой проходящей через его центр.
+ * Демо: https://codepen.io/Horek/pen/GRKbdjR
+ */
+& {
+   // Ограничиваем область видимости переменных.
+   @width_sticker: floor(@thickness_ToggleCircle-borderCircle-border / 2) * 2;
+   @offset_sticker: @length_Switch-track / 2 - @size_Switch__ToggleCircle;
+
+   /**
+    * Чтобы не засорять верстку используем псевдоэлементы. Так как before используется для
+    * выравнивания текста, то используем after.
+    */
+   .controls-Switch__toggle__wrapper_theme-@{themeName}::after {
+      content: '';
+      position: absolute;
+      width: @width_sticker;
+      height: @thickness_Switch-track;
+   }
+   .controls-Switch__toggle__wrapper_left_theme-@{themeName}::after {
+      margin-left: -@offset_sticker;
+   }
+   .controls-Switch__toggle__wrapper_right_theme-@{themeName}::after {
+      margin-left: @offset_sticker;
+   }
+}
+.controls-Switch_enabled_theme-@{themeName}::after {
+   background-color: @background-color_Switch-track__enabled;
+}
+.controls-Switch_disabled_theme-@{themeName}::after {
+   background-color: @background-color_Switch-track__disabled;
+}
+
+// End holeFix
+
 .controls-Switch__toggle__wrapper_theme-@{themeName} {
    width: @width_Switch;
    height: @height_Switch;
@@ -42,15 +87,7 @@
 
 .controls-Switch__line_theme-@{themeName} {
    height: @thickness_Switch-track;
-   width: @length_Switch-track - @size_Switch__ToggleCircle + @spacing-between-track-and-toggleCircle;
-}
-
-.controls-Switch__line_right_toggle_theme-@{themeName} {
-   left: @spacing-between-track-and-toggleCircle;
-}
-
-.controls-Switch__line_left_toggle_theme-@{themeName} {
-   right: @spacing-between-track-and-toggleCircle;
+   width: @length_Switch-track - @size_Switch__ToggleCircle;
 }
 
 .controls-Switch__line_enabled_theme-@{themeName} {
