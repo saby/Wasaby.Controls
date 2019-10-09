@@ -754,6 +754,35 @@ define([
 
 
       });
+
+      it('TreeControl.afterReloadCallback resets expanded items on set root', function () {
+         const source = new sourceLib.Memory({
+            data: [],
+            idProperty: 'id'
+         });
+         const treeControl = correctCreateTreeControl({
+            columns: [],
+            root: null,
+            parentProperty: 'testParentProperty',
+            source: source
+         });
+         const treeViewModel = treeControl._children.baseControl.getViewModel();
+
+         // Mock TreeViewModel and TreeControl
+
+         treeViewModel._model._display = {
+            setFilter: () => undefined,
+            setRoot: (root) => {
+               treeViewModel._model._root = root;
+            },
+            getRoot: () => treeViewModel._model._root
+         };
+
+         treeControl._needResetExpandedItems = true;
+         treeGrid.TreeControl._private.afterReloadCallback(treeControl, treeControl._options);
+         assert.deepEqual([], treeViewModel.getExpandedItems());
+      });
+
       it('List navigation by keys', function(done) {
          // mock function working with DOM
          listMod.BaseControl._private.scrollToItem = function() {};
