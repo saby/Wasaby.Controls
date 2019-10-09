@@ -87,6 +87,7 @@ const _private = {
             maxWidth: newCfg.maxWidth,
             zIndex: newCfg.zIndex || getZIndex(newCfg.opener || this),
             eventHandlers: newCfg.eventHandlers,
+            _elementFromPoint: newCfg._elementFromPoint,
             closeOnOutsideClick: newCfg.closeOnOutsideClick,
             opener: newCfg.opener,
             templateOptions: { // for template: Opener/InfoBox/resources/template
