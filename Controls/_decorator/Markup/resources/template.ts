@@ -215,12 +215,11 @@ import 'css!theme?Controls/decorator';
       }
 
       if (!elements.length) {
-         elements = [markupGenerator.createTag('invisible-node', { key: key + '0_' }, [], attrsToDecorate,
-            defCollection, control, key + '0_')];
+         elements = [isVdom ? markupGenerator.createTag('div', { key: key + '0_' }, [], attrsToDecorate,
+            defCollection, control, key + '0_') : ''];
       }
 
       // Избежим утечки из-за глобальных переменных.
-      defCollection = null;
       control = null;
       resolver = null;
       resolverParams = null;
