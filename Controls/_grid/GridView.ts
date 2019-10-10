@@ -181,7 +181,7 @@ var
             self._isPartialGridSupport = GridLayoutUtil.isPartialGridSupport();
             self._isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
-            const canUseTableLayout = useTableInOldBrowsers !== false || self._isNoGridSupport;
+            const canUseTableLayout = !!useTableInOldBrowsers || self._isNoGridSupport;
             self._shouldUseTableLayout = canUseTableLayout && !self._isFullGridSupport;
         }
     },
