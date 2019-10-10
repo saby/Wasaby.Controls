@@ -182,7 +182,7 @@ var
         _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
             this._gridTemplate = _private.chooseGridTemplate();
-            GridView.superclass._beforeMount.apply(this, arguments);
+            const resultSuper = GridView.superclass._beforeMount.apply(this, arguments);
             _private.registerHandlersForPartialSupport(this, this._listModel);
             this._listModel.setColumnTemplate(ColumnTpl);
             if (GridLayoutUtil.isPartialGridSupport()) {
@@ -193,6 +193,7 @@ var
             }
             this._resultsTemplate = cfg.results && cfg.results.template ? cfg.results.template : (cfg.resultsTemplate || DefaultResultsTemplate);
             this._listModel.headerInEmptyListVisible = cfg.headerInEmptyListVisible;
+            return resultSuper;
         },
 
 
