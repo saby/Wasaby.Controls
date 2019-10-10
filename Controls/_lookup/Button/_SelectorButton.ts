@@ -1,6 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookup/Button/_SelectorButton');
 import itemTemplate = require('wml!Controls/_lookup/Button/itemTemplate');
+import {List} from 'Types/collection';
 import 'css!theme?Controls/lookup';
 
 
@@ -12,7 +13,7 @@ import 'css!theme?Controls/lookup';
       },
 
       _reset: function() {
-         this._notify('updateItems', [[]]);
+         this._notify('updateItems', [new List()]);
       },
 
       _crossClick: function(event, item) {

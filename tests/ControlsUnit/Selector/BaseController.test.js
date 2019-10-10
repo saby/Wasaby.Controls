@@ -335,6 +335,10 @@ define([
             ];
 
          selectedCollection._options.keyProperty = 'id';
+         selectedCollection._items = new collection.RecordSet({
+            rawData: [],
+            keyProperty: 'id'
+         });
 
          selectedCollection._setItems(
             new collection.List({
@@ -344,9 +348,11 @@ define([
 
          assert.deepEqual(selectedCollection._selectedKeys, [1, 2]);
          assert.equal(selectedCollection._items.getCount(), items.length);
+         assert.isFalse(selectedCollection._items instanceof collection.RecordSet);
+         assert.notEqual(selectedCollection._items.at(0), items[0]);
 
          selectedItems = selectedCollection._items;
-         selectedCollection._setItems([]);
+         selectedCollection._setItems(new collection.List());
          assert.deepEqual(selectedCollection._selectedKeys, []);
          assert.equal(selectedCollection._items.getCount(), 0);
          assert.notEqual(selectedItems, selectedCollection._items);
