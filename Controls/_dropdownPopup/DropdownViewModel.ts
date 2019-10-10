@@ -56,7 +56,7 @@ var _private = {
             return itemsGroup.length === 0 || itemsGroup.length === numberItemsCurrentRoot;
          },
 
-         getRightPadding: function(rightPadding, itemData, hasApplyButton) {
+         getRightPadding: function(rightPadding, itemData, hasHierarchy, hasApplyButton) {
             let result = rightPadding || 'default';
             if (hasApplyButton) {
                result = 'multiSelect';
@@ -64,13 +64,13 @@ var _private = {
                result = 'history';
             } else if (itemData.hasClose) {
                result = 'close';
-            } else if (itemData.hasChildren) {
+            } else if (hasHierarchy) {
                result = 'hierarchy';
             }
             return result;
          },
 
-         getSpacingClassList: function(itemPadding, multiSelect, itemData, hasApplyButton?) {
+         getSpacingClassList: function(itemPadding, multiSelect, itemData, hasHierarchy, hasApplyButton?) {
             const paddings = itemPadding || {};
             let classList = '';
             if (multiSelect && itemData.emptyText) {
@@ -78,7 +78,7 @@ var _private = {
             } else if (!multiSelect) {
                classList = 'controls-DropdownList__item-leftPadding_' + (paddings.left || 'default');
             }
-            classList += ' controls-DropdownList__item-rightPadding_' + _private.getRightPadding(paddings.right, itemData, hasApplyButton);
+            classList += ' controls-DropdownList__item-rightPadding_' + _private.getRightPadding(paddings.right, itemData, hasHierarchy, hasApplyButton);
             return classList;
          }
    };
@@ -216,7 +216,7 @@ var _private = {
             itemsModelCurrent.multiSelect = this._options.multiSelect;
             itemsModelCurrent.hasClose = this._options.hasClose;
             itemsModelCurrent.hasPinned = this._options.hasIconPin;
-            itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options.itemPadding, this._options.multiSelect, itemsModelCurrent);
+            itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options.itemPadding, this._options.multiSelect, itemsModelCurrent, this.hasHierarchy());
             return itemsModelCurrent;
          },
          _isItemSelected: function(item) {
@@ -294,7 +294,7 @@ var _private = {
                emptyItem.isSelected = this._options.selectedKeys.length ? this._isItemSelected(item) : true;
                emptyItem.getPropValue = ItemsUtil.getPropertyValue;
                emptyItem.emptyText = this._options.emptyText;
-               emptyItem.spacingClassList = _private.getSpacingClassList(this._options.itemPadding, this._options.multiSelect, emptyItem, this._options.hasApplyButton);
+               emptyItem.spacingClassList = _private.getSpacingClassList(this._options.itemPadding, this._options.multiSelect, emptyItem, this.hasHierarchy(), this._options.hasApplyButton);
                return emptyItem;
             }
          }
