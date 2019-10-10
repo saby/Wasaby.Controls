@@ -84,7 +84,7 @@ define('Controls/interface/IFilter', [
     */
 
    /**
-    * @event Controls/interface/IFilter#filterChanged Событие filterChanged срабатывает, когда фильтр был изменён.
+    * @event Controls/interface/IFilter#filterChanged Происходит при изменении фильтра.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Object} filter Изменённый фильтр.
     * @remark

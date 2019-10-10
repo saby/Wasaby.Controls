@@ -1,6 +1,6 @@
 import Deferred = require('Core/Deferred');
 import collection = require('Types/collection');
-import BaseController = require('Controls/_popupTemplate/BaseController');
+import {default as BaseController} from 'Controls/_popupTemplate/BaseController';
 import NotificationStrategy = require('Controls/_popupTemplate/Notification/Opener/NotificationStrategy');
 import NotificationContent = require('Controls/_popupTemplate/Notification/Opener/NotificationContent');
 
@@ -36,11 +36,9 @@ const _private = {
  * @category Popup
  * @extends Controls/_popupTemplate/BaseController
  */
-const NotificationController = BaseController.extend({
-    constructor(cfg) {
-        NotificationController.superclass.constructor.call(this, cfg);
-        this._stack = new collection.List();
-    },
+class NotificationController extends BaseController {
+    TYPE: string = 'Notification';
+    _stack = new collection.List();
 
     elementCreated(item, container) {
         item.height = container.offsetHeight;
@@ -50,40 +48,40 @@ const NotificationController = BaseController.extend({
         if (item.popupOptions.autoClose) {
             this._closeByTimeout(item);
         }
-    },
+    }
 
     elementUpdated(item, container) {
         _private.setNotificationContent(item);
         item.height = container.offsetHeight;
         this._updatePositions();
-    },
+    }
 
     elementDestroyed(item) {
         this._stack.remove(item);
         this._updatePositions();
 
-        NotificationController.superclass.elementDestroyed.call(item);
+        super.elementDestroyed.call(item);
 
         return new Deferred().callback();
-    },
+    }
 
     popupMouseEnter(item) {
         if (item.popupOptions.autoClose) {
             clearTimeout(item.closeId);
         }
-    },
+    }
 
     popupMouseLeave(item) {
         if (item.popupOptions.autoClose) {
             this._closeByTimeout(item);
         }
-    },
+    }
 
     _closeByTimeout(item) {
         item.closeId = setTimeout(function() {
             require('Controls/popup').Controller.remove(item.id);
         }, timeAutoClose);
-    },
+    }
 
     getCustomZIndex(popupItems, item): Number {
         // Notification windows must be above all popup windows
@@ -97,12 +95,12 @@ const NotificationController = BaseController.extend({
             }
         }
         return 100;
-    },
+    }
 
     getDefaultConfig(item) {
-        NotificationController.superclass.getDefaultConfig.apply(this, arguments);
+        super.getDefaultConfig.apply(this, arguments);
         _private.setNotificationContent(item);
-    },
+    }
 
     _updatePositions() {
         let height = 0;
@@ -116,9 +114,6 @@ const NotificationController = BaseController.extend({
             item.position = NotificationStrategy.getPosition(height);
             height += item.height;
         });
-    },
-    TYPE: 'Notification'
-});
-
+    }
+}
 export = new NotificationController();
-

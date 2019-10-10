@@ -1,4 +1,4 @@
-import BaseController = require('Controls/_popupTemplate/BaseController');
+import {default as BaseController} from 'Controls/_popupTemplate/BaseController';
 import StackStrategy = require('Controls/_popupTemplate/Stack/Opener/StackStrategy');
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 import collection = require('Types/collection');
@@ -57,7 +57,7 @@ const _private = {
         }
     },
 
-    prepareSize(optionsSet, property): number|void {
+    prepareSize(optionsSet, property): number | void {
         for (let i = 0; i < optionsSet.length; i++) {
             // get size, if it's not percentage value
             if (optionsSet[i][property] && (typeof optionsSet[i][property] !== 'string' || !optionsSet[i][property].includes('%'))) {
@@ -95,7 +95,7 @@ const _private = {
         return templateWidth;
     },
     updatePopupWidth(item, self) {
-        if (!item.containerWidth && !item.position.width && item.popupState !== BaseController.POPUP_STATE_INITIALIZING) {
+        if (!item.containerWidth && !item.position.width && item.popupState !== self.POPUP_STATE_INITIALIZING) {
             item.containerWidth = _private.getContainerWidth(item, self._getPopupContainer(item.id));
         }
     },
@@ -110,7 +110,7 @@ const _private = {
 
         return {
             top: Math.max(targetCoords.top, 0),
-            right: document.documentElement.clientWidth - targetCoords.right + targetCoords.leftScroll //calc with scroll, because stack popup has fixed position and can scroll with page
+            right: document.documentElement.clientWidth - targetCoords.right + targetCoords.leftScroll // calc with scroll, because stack popup has fixed position and can scroll with page
         };
     },
 
@@ -294,11 +294,10 @@ const _private = {
  * @category Popup
  */
 
-const StackController = BaseController.extend({
-    constructor(cfg) {
-        StackController.superclass.constructor.call(this, cfg);
-        this._stack = new collection.List();
-    },
+class StackController extends BaseController {
+    TYPE = 'Stack';
+    _private = _private;
+    _stack: collection.List = new collection.List();
 
     elementCreated(item, container) {
         const isSinglePopup = this._stack.getCount() < 2;
@@ -315,7 +314,7 @@ const StackController = BaseController.extend({
         } else if (!isSinglePopup) {
             this._update();
         }
-    },
+    }
 
     elementUpdateOptions(item, container) {
         _private.preparePropStorageId(item);
@@ -326,11 +325,11 @@ const StackController = BaseController.extend({
                 return _private.updatePopup(this, item, container);
             });
         }
-    },
+    }
 
     elementUpdated(item, container) {
         _private.updatePopup(this, item, container);
-    },
+    }
 
     elementMaximized(item, container, state) {
         _private.setMaximizedState(item, state);
@@ -339,17 +338,17 @@ const StackController = BaseController.extend({
         item.popupOptions.width = state ? item.popupOptions.maxWidth : (item.popupOptions.minimizedWidth || item.popupOptions.minWidth);
         _private.prepareSizes(item, container);
         this._update();
-    },
+    }
 
     popupResize(): boolean {
         return false;
-    },
+    }
 
     elementDestroyed(item) {
         this._stack.remove(item);
         this._update();
         return (new Deferred()).callback();
-    },
+    }
 
     popupResizingLine(item, offset): void {
         item.popupOptions.stackWidth += offset;
@@ -357,13 +356,13 @@ const StackController = BaseController.extend({
         item.popupOptions.workspaceWidth += offset;
         this._update();
         _private.savePopupWidth(item);
-        },
+    }
 
     _update(): void {
         const maxPanelWidth = StackStrategy.getMaxPanelWidth();
         let cache = [];
         this._stack.each((item) => {
-            if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
+            if (item.popupState !== this.POPUP_STATE_DESTROYING) {
                 item.position = _private.getItemPosition(item, this);
                 _private.updatePopupWidth(item, this);
                 _private.removeLastStackClass(item);
@@ -405,7 +404,7 @@ const StackController = BaseController.extend({
         if (lastItem) {
             _private.addLastStackClass(lastItem);
         }
-    },
+    }
 
     getDefaultConfig(item) {
         _private.preparePropStorageId(item);
@@ -416,10 +415,7 @@ const StackController = BaseController.extend({
         } else {
             return _private.getDefaultConfig(this, item);
         }
-    },
-
-    TYPE: 'Stack',
-    _private
-});
+    }
+}
 
 export = new StackController();

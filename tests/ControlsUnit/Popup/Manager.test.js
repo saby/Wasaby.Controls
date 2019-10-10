@@ -7,6 +7,7 @@ define(
 
    function(popupMod, BaseController, Deferred) {
       'use strict';
+      BaseController = BaseController.default;
 
       function getManager() {
          let Manager = new popupMod.Manager();

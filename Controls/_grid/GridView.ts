@@ -205,8 +205,8 @@ var
         _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
             _private.setGridSupportStatus(this, cfg.useTableInOldBrowsers);
-            this._gridTemplate = _private.chooseGridTemplate(this._isFullGridSupport, this._shouldUseTableLayout);
-            GridView.superclass._beforeMount.apply(this, arguments);
+            this._gridTemplate = _private.chooseGridTemplate();
+            const resultSuper = GridView.superclass._beforeMount.apply(this, arguments);
             _private.setGridSupportStatus(this._listModel, cfg.useTableInOldBrowsers);
             this._listModel.setColumnTemplate(ColumnTpl);
 
@@ -220,6 +220,7 @@ var
             }
             this._resultsTemplate = cfg.results && cfg.results.template ? cfg.results.template : (cfg.resultsTemplate || DefaultResultsTemplate);
             this._listModel.headerInEmptyListVisible = cfg.headerInEmptyListVisible;
+            return resultSuper;
         },
 
 

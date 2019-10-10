@@ -21,9 +21,7 @@ import 'css!theme?Controls/validate';
 
 let _private = {
 
-    /**
-     * Показывает Infobox с сообщением об ошибке
-     */
+    
     openInfoBox(self) {
         if (self._validationResult && self._validationResult.length && !self._isOpened) {
             self._isOpened = true;
@@ -75,9 +73,7 @@ let _private = {
         }
     },
 
-    /**
-     * Скрывает InfoBox с подсказкой
-     */
+    
     closeInfoBox(self) {
         self._closeId = setTimeout(function() {
             _private.forceCloseInfoBox(self);
