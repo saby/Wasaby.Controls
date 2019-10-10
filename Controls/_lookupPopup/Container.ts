@@ -402,6 +402,12 @@ import {ISelectionObject, TSelection, TSelectionType} from 'Controls/interface';
          };
       };
 
+      Container.getDefaultOptions = function() {
+         return {
+            recursiveSeleciton: true
+         };
+      };
+
       Container._private = _private;
 
       export = Container;
