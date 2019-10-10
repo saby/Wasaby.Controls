@@ -229,7 +229,11 @@ import dataSource = require('Controls/dataSource');
          let self = this;
          if (newOptions.dataSource || newOptions.source) {
             this._source = newOptions.source || newOptions.dataSource;
-            this._createMetaDataOnUpdate = null;
+            //Сбрасываем состояние, только если данные поменялись, иначе будет зацикливаться
+            // создание записи -> ошибка -> beforeUpdate
+            if (this._source !== this._options.source && this._source !== this._options.dataSource) {
+               this._createMetaDataOnUpdate = null;
+            }
          }
 
          if (newOptions.record && this._options.record !== newOptions.record) {
