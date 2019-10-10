@@ -9,7 +9,7 @@ import 'css!theme?Controls/suggest';
  * которое помогает пользователю ввести текст,
  * предлагая подходящие варианты по первым набранным символам.
  *
- * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+ * <a href="/materials/demo-suggest-input">Демо-пример</a>
  *
  * @class Controls/_suggest/Input
  * @extends Core/Control
