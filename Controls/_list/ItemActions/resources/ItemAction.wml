@@ -1,4 +1,4 @@
-<div attr:class="controls-itemActionsV__action controls-itemActionsV__action_padding
+<div attr:class="controls-itemActionsV__action controls-itemActionsV__action_padding{{isFirst ? '_first'}}
             controls-itemActionsV__action_style_{{action.style}}
             controls-itemActionsV__action_iconStyle_{{action.iconStyle}}"
       attr:title="{{!!action.title ? action.title}}"
