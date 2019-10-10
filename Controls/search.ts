@@ -20,9 +20,7 @@
  * @includes Misspell Controls/_search/Misspell
  * @includes MisspellContainer Controls/_search/Misspell/Container
  * @includes Controller Controls/_search/Controller
- * @includes Input Controls/_search/Input/Search
- * @includes _Search Controls/_search/_Search
- * @includes _SearchController Controls/_search/_SearchController
+ * @includes Input Controls/_search/Input
  * @includes Styles Controls/_search/Styles
  * @public
  * @author Крайнов Д.О.
