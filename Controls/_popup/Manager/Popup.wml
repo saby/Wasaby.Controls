@@ -3,7 +3,7 @@
      on:transitionend="_animated()"
      on:keyup="_keyUp()"
      on:keydown="_keyDown()"
-     template="{{_options.template}}">
+     template="{{ _stringTemplate ? _options.template}}">
    <Controls.event:Register name="resizeDetect" register="controlResize">
       <ws:partial
          attr:class="controls-Popup__template{{_options.hidden ? ' ws-hidden'}}"
