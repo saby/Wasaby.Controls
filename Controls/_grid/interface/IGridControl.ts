@@ -536,5 +536,5 @@
 /**
  * @event Controls/_grid/interface/IGridControl#editArrowClick Происходит при клике на "шеврон" элемента.
  * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
- * @param {Types/entity:Model} item Экземпляр записи, по которой был выполнен клик.
+ * @param {Types/entity:Model} item Элемент, по которому произвели клик.
  */
