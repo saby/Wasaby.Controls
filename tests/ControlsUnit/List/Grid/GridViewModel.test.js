@@ -1232,23 +1232,23 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
 
          it('should +1 on row index on rows after editting', function () {
-
-            let native = GridLayoutUtil.isPartialGridSupport;
-            GridLayoutUtil.isPartialGridSupport = ()=>true;
+            const native = gridViewModel._isPartialGridSupport;
+            gridViewModel._isPartialGridSupport = true;
             gridViewModel._model._editingItemData = { rowIndex: 1};
 
-            let iData = gridViewModel.getItemDataByItem(gridViewModel.getDisplay().at(2));
+            const iData = gridViewModel.getItemDataByItem(gridViewModel.getDisplay().at(2));
             assert.equal(iData.rowIndex, 4);
-            GridLayoutUtil.isPartialGridSupport = native;
+            gridViewModel._isPartialGridSupport = native;
          });
 
          it('setEditingItemData', function () {
-            let
-                called = false,
-                nativeFn = gridViewModel._model._setEditingItemData,
-                initialStatus = GridLayoutUtil.isPartialGridSupport;
 
-            GridLayoutUtil.isPartialGridSupport = function() { return true };
+            const nativeFn = gridViewModel._model._setEditingItemData;
+            const initialStatus = gridViewModel._isPartialGridSupport;
+
+            let called = false;
+
+            gridViewModel._isPartialGridSupport = true;
 
             gridViewModel._model._setEditingItemData = (iData) => {
                called = true;
@@ -1262,18 +1262,18 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             });
             assert.isTrue(called);
 
-            GridLayoutUtil.isPartialGridSupport = initialStatus;
+            gridViewModel._isPartialGridSupport = initialStatus;
             gridViewModel._model._setEditingItemData = nativeFn;
          });
 
           it('update prefix setEditingItemData with column scroll', function () {
-              const initialStatus = GridLayoutUtil.isPartialGridSupport;
-              GridLayoutUtil.isPartialGridSupport = () => false;
+              const initialStatus = gridViewModel._isPartialGridSupport;
+              gridViewModel._isPartialGridSupport = false;
               gridViewModel.getColumnsWidthForEditingRow = () => [];
               const oldPrefixItemVersion = gridViewModel._model._prefixItemVersion;
               gridViewModel._setEditingItemData({index: 1});
               assert.equal(oldPrefixItemVersion+1, gridViewModel._model._prefixItemVersion);
-              GridLayoutUtil.isPartialGridSupport = initialStatus;
+              gridViewModel._isPartialGridSupport = initialStatus;
           });
 
          it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
@@ -1529,7 +1529,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          it('getCurrentResultsColumn && goToNextResultsColumn && isEndResultsColumn && resetResultsColumns', function() {
             const offset = gridViewModel._maxEndRow ? (gridViewModel._maxEndRow - 1 ) * gridViewModel._headerCellMinHeight : 0;
-            console.log(gridViewModel.getCurrentResultsColumn());
             assert.deepEqual({
                column: {},
                cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell-checkbox',
@@ -1550,7 +1549,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.deepEqual({
                column: gridColumns[1],
-               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default',
+               cellClasses: 'controls-Grid__results-cell controls-Grid__row-cell__content_halign_right controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 2
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value third call "getCurrentResultsColumn()".');
 
@@ -1559,7 +1558,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.deepEqual({
                column: gridColumns[2],
-               cellClasses: 'controls-Grid__results-cell controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l',
+               cellClasses: 'controls-Grid__results-cell controls-Grid__row-cell__content_halign_right controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l',
                index: 3
             }, gridViewModel.getCurrentResultsColumn(), 'Incorrect value fourth call "getCurrentResultsColumn()".');
 
@@ -1588,16 +1587,81 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
 
           it('_prepareColgroupColumns', function() {
-            assert.deepEqual([{}].concat(gridColumns), gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" before "_prepareColgroupColumns([])" without multiselect.');
+            assert.deepEqual(gridViewModel._colgroupColumns, [
+               {
+                  classes: 'controls-Grid__colgroup-column controls-Grid__colgroup-columnMultiSelect',
+                  index: 0,
+                  style: '',
+               },
+               {
+                  classes: 'controls-Grid__colgroup-column',
+                  index: 1,
+                  style: 'width: auto;',
+               },
+               {
+                  classes: 'controls-Grid__colgroup-column',
+                  index: 2,
+                  style: 'width: auto;',
+               },
+               {
+                  classes: 'controls-Grid__colgroup-column',
+                  index: 3,
+                  style: 'width: auto;',
+               },
+            ], 'Incorrect value "_colgroupColumns" before "_prepareColgroupColumns([])" without multiselect.');
+
             gridViewModel._prepareColgroupColumns([], false);
             assert.deepEqual([], gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns([])" without multiselect.');
+
             gridViewModel._prepareColgroupColumns(gridColumns, false);
-            assert.deepEqual(gridColumns, gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns(gridColumns)" without multiselect.');
+            assert.deepEqual(gridViewModel._colgroupColumns, [
+               {
+                  classes: 'controls-Grid__colgroup-column',
+                  index: 0,
+                  style: 'width: auto;',
+               },
+               {
+                  classes: 'controls-Grid__colgroup-column',
+                  index: 1,
+                  style: 'width: auto;',
+               },
+               {
+                  classes: 'controls-Grid__colgroup-column',
+                  index: 2,
+                  style: 'width: auto;',
+               },
+            ], 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns(gridColumns)" without multiselect.');
 
             gridViewModel._prepareColgroupColumns([], true);
-            assert.deepEqual([{}], gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns([])" with multiselect.');
+            assert.deepEqual(gridViewModel._colgroupColumns, [{
+               classes: 'controls-Grid__colgroup-column controls-Grid__colgroup-columnMultiSelect',
+               style: '',
+               index: 0
+            }], 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns([])" with multiselect.');
+
             gridViewModel._prepareColgroupColumns(gridColumns, true);
-            assert.deepEqual([{}].concat(gridColumns), gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns(gridColumns)" with multiselect.');
+            assert.deepEqual(gridViewModel._colgroupColumns, [
+               {
+                  classes: 'controls-Grid__colgroup-column controls-Grid__colgroup-columnMultiSelect',
+                  index: 0,
+                  style: '',
+               },
+               {
+                  classes: 'controls-Grid__colgroup-column',
+                  index: 1,
+                  style: 'width: auto;',
+               },
+               {
+                  classes: 'controls-Grid__colgroup-column',
+                  index: 2,
+                  style: 'width: auto;',
+               },
+               {
+                  classes: 'controls-Grid__colgroup-column',
+                  index: 3,
+                  style: 'width: auto;',
+               },
+            ], 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns(gridColumns)" with multiselect.');
          });
 
          it('prepareColumnsWidth', function () {
@@ -1649,40 +1713,36 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          it('getCurrentColgroupColumn && goToNextColgroupColumn && isEndColgroupColumn && resetColgroupColumns', function () {
             assert.deepEqual({
-               column: {},
+               classes: 'controls-Grid__colgroup-column controls-Grid__colgroup-columnMultiSelect',
                index: 0,
-               style: '',
-               multiSelectVisibility: true
+               style: ''
             }, gridViewModel.getCurrentColgroupColumn(), 'Incorrect value first call "getCurrentColgroupColumn()".');
 
             assert.equal(true, gridViewModel.isEndColgroupColumn(), 'Incorrect value "isEndColgroupColumn()" after first call "getCurrentColgroupColumn()".');
             gridViewModel.goToNextColgroupColumn();
 
             assert.deepEqual({
-               column: gridColumns[0],
+               classes: 'controls-Grid__colgroup-column',
                index: 1,
-               style: 'width: 1fr',
-               multiSelectVisibility: true
+               style: 'width: auto;'
             }, gridViewModel.getCurrentColgroupColumn(), 'Incorrect value second call "getCurrentColgroupColumn()".');
 
             assert.equal(true, gridViewModel.isEndColgroupColumn(), 'Incorrect value "isEndColgroupColumn()" after second call "getCurrentColgroupColumn()".');
             gridViewModel.goToNextColgroupColumn();
 
             assert.deepEqual({
-               column: gridColumns[1],
+               classes: 'controls-Grid__colgroup-column',
                index: 2,
-               style: 'width: auto',
-               multiSelectVisibility: true
+               style: 'width: auto;'
             }, gridViewModel.getCurrentColgroupColumn(), 'Incorrect value third call "getCurrentColgroupColumn()".');
 
             assert.equal(true, gridViewModel.isEndColgroupColumn(), 'Incorrect value "isEndColgroupColumn()" after third call "getCurrentColgroupColumn()".');
             gridViewModel.goToNextColgroupColumn();
 
             assert.deepEqual({
-               column: gridColumns[2],
+               classes: 'controls-Grid__colgroup-column',
                index: 3,
-               style: 'width: auto',
-               multiSelectVisibility: true
+               style: 'width: auto;'
             }, gridViewModel.getCurrentColgroupColumn(), 'Incorrect value fourth call "getCurrentColgroupColumn()".');
 
             assert.equal(true, gridViewModel.isEndColgroupColumn(), 'Incorrect value "isEndColgroupColumn()" after fourth call "getCurrentColgroupColumn()".');
@@ -2255,6 +2315,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 notHoveredItem = model.getDisplay().at(1);
 
             model.setHoveredItem(hoveredItem);
+            model._isPartialGridSupport = true;
+            model._shouldUseTableLayout = false;
             assert.equal('HOVERED_', model._calcItemVersion(hoveredItem, hoveredItem.key));
 
             assert.equal('', model._calcItemVersion(notHoveredItem, notHoveredItem.key));
@@ -2315,6 +2377,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                {title: 'fourth', width: '12%', compatibleWidth: '12%'},
                {title: 'last', width: 'auto'}
             ];
+
+            model._isPartialGridSupport = false;
+            model._shouldUseTableLayout = true;
 
             for (let i = 0; i < initialColumns.length; i++) {
                assert.deepEqual(

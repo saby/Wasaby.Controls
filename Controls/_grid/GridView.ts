@@ -12,9 +12,9 @@ import * as TableLayout from 'wml!Controls/_grid/layout/table/GridView';
 import * as HeaderContentTpl from 'wml!Controls/_grid/HeaderContent';
 
 import * as DefaultItemTpl from 'wml!Controls/_grid/ItemTemplateResolver';
-import 'wml!Controls/_grid/layout/grid/Item';
-import 'wml!Controls/_grid/layout/partialGrid/Item';
-import 'wml!Controls/_grid/layout/table/Item';
+import * as GridItemTemplate from 'wml!Controls/_grid/layout/grid/Item';
+import * as PartialGridItemTemplate from 'wml!Controls/_grid/layout/partialGrid/Item';
+import * as TableItemTemplate from 'wml!Controls/_grid/layout/table/Item';
 
 import * as ColumnTpl from 'wml!Controls/_grid/Column';
 import * as GroupTemplate from 'wml!Controls/_grid/GroupTemplate';
@@ -94,7 +94,7 @@ var
         // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
         fillItemsContainerForPartialSupport(self): void {
             const columns = self._listModel.getColumns();
-            const columnsLength = columns.length + self._options.multiSelectVisibility === 'hidden' ? 0 : 1;
+            const columnsLength = columns.length + (self._options.multiSelectVisibility === 'hidden' ? 0 : 1);
             const cellsHTML = (self._container[0] || self._container).getElementsByClassName('controls-Grid__row-cell');
             const items = [];
 
@@ -205,9 +205,10 @@ var
         _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
             _private.setGridSupportStatus(this, cfg.useTableInOldBrowsers);
-            this._gridTemplate = _private.chooseGridTemplate();
+            this._gridTemplate = _private.chooseGridTemplate(this._isFullGridSupport, this._shouldUseTableLayout);
             const resultSuper = GridView.superclass._beforeMount.apply(this, arguments);
             _private.setGridSupportStatus(this._listModel, cfg.useTableInOldBrowsers);
+            this._listModel.setBaseItemTemplateResolver(this._resolveBaseItemTemplate.bind(this));
             this._listModel.setColumnTemplate(ColumnTpl);
 
             // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
@@ -371,6 +372,20 @@ var
             GridView.superclass._afterMount.apply(this, arguments);
             if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._listModel.isDrawHeaderWithEmptyList()) {
                 this._listModel.setHeaderCellMinHeight(this._setHeaderWithHeight());
+            }
+        },
+
+        _resolveItemTemplate(options): TemplateFunction {
+            return options.itemTemplate || this._resolveBaseItemTemplate();
+        },
+
+        _resolveBaseItemTemplate(): TemplateFunction {
+            if (this._isFullGridSupport) {
+                return GridItemTemplate;
+            } else if (this._shouldUseTableLayout) {
+                return TableItemTemplate;
+            } else {
+                return PartialGridItemTemplate;
             }
         },
 

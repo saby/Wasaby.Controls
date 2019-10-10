@@ -1318,6 +1318,7 @@ var
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.isPartialGridSupport = this.isPartialGridSupport.bind(this);
             current.isNoGridSupport = this.isNoGridSupport.bind(this);
+            current.resolveBaseItemTemplate = this._baseItemTemplateResolver;
 
             current.columnScroll = this._options.columnScroll;
             current.getColspanForColumnScroll = () => _private.getColspanForColumnScroll(self);
@@ -1505,6 +1506,10 @@ var
 
         setItemTemplateProperty: function(itemTemplateProperty) {
             this._model.setItemTemplateProperty(itemTemplateProperty);
+        },
+
+        setBaseItemTemplateResolver(baseItemTemplateResolver: () => TemplateFunction): void {
+            this._baseItemTemplateResolver = baseItemTemplateResolver;
         },
 
         getItems: function() {
