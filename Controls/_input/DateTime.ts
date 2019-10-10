@@ -133,7 +133,7 @@ var Component = Control.extend([], {
    },
    _onKeyDown: function(event) {
       var key = event.nativeEvent.keyCode;
-      if (key === Env.constants.key.insert) {
+      if (key === Env.constants.key.insert && !event.nativeEvent.shiftKey && !event.nativeEvent.ctrlKey) {
       // on Insert button press current date should be inserted in field
          this._model.setCurrentDate();
       }

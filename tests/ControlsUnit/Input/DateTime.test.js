@@ -11,11 +11,16 @@ define([
 ) {
    'use strict';
 
-   const options = {
-      mask: 'DD.MM.YYYY',
-      value: new Date(2018, 0, 1),
-      replacer: ' ',
-   };
+   const
+       options = {
+         mask: 'DD.MM.YYYY',
+         value: new Date(2018, 0, 1),
+         replacer: ' ',
+      },
+      optionsWithEmptyDate = {
+         mask: 'DD.MM.YYYY',
+         replacer: ' ',
+      };
 
    describe('Controls/_input/DateTime', function() {
       describe('Initialisation', function() {
@@ -120,6 +125,40 @@ define([
             assert.deepEqual(model.value, converter.getCurrentDate(model._lastValue, model._mask));
             assert.instanceOf(model.value, Date);
             sandbox.restore();
+         });
+
+         it('should not set date on insert + shift key press', function() {
+            const
+               component = calendarTestUtils.createComponent(
+                  input.DateBase, cMerge({ dateConstructor: Date }, optionsWithEmptyDate, { preferSource: true })),
+               event = {
+                  nativeEvent: {
+                     keyCode: constants.key.insert,
+                     ctrlKey: false,
+                     shiftKey: true
+                  },
+                  stopImmediatePropagation: sinon.fake()
+               };
+            component._onKeyDown(event);
+            const model = component._model;
+            assert.isUndefined(model.value);
+         });
+
+         it('should not set date on insert + ctrl key press', function() {
+            const
+               component = calendarTestUtils.createComponent(
+                  input.DateBase, cMerge({ dateConstructor: Date }, optionsWithEmptyDate, { preferSource: true })),
+               event = {
+                  nativeEvent: {
+                     keyCode: constants.key.insert,
+                     ctrlKey: true,
+                     shiftKey: false
+                  },
+                  stopImmediatePropagation: sinon.fake()
+               };
+            component._onKeyDown(event);
+            const model = component._model;
+            assert.isUndefined(model.value);
          });
 
          it('should increase current date on one day by plus key press', function() {
