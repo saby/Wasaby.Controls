@@ -11,10 +11,10 @@
    <ws:partial template="{{beforeContentTemplate !== undefined ? beforeContentTemplate : 'defaultBeforeTpl'}}" />
 
    <ws:if data="{{contentTemplate}}">
-      <ws:partial template="{{contentTemplate}}" scope="{{_options}}" attr:class="js-controls-FilterView__target-{{itemName}}"/>
+      <ws:partial template="{{contentTemplate}}" scope="{{_options}}" attr:class="js-controls-FilterView__target"/>
    </ws:if>
    <ws:else>
-      <div class="js-controls-FilterView__target-{{itemName}}
+      <div class="js-controls-FilterView__target
                   controls-FilterView__text-wrapper_theme_{{_options.theme}}
                   controls-FilterView__text_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}}"
            title="{{title}}">

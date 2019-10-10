@@ -16,6 +16,7 @@ import {getItemsWithHistory, isHistorySource} from 'Controls/_filter/HistoryUtil
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import * as defaultItemTemplate from 'wml!Controls/_filter/View/ItemTemplate';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  * Контрол для фильтрации данных. Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
@@ -97,7 +98,7 @@ var _private = {
         return dateRangeItem;
     },
 
-    setPopupConfig: function(self, configs, items) {
+    getPopupConfig: function(self, configs, items) {
         var popupItems = [];
         factory(items).each(function(item) {
             if (_private.isFrequentItem(item)) {
@@ -581,17 +582,19 @@ var Filter = Control.extend({
         }
     },
 
-    _openPanel: function(event, name) {
+    _openPanel(event: SyntheticEvent<'click'>, name?: string): void {
         if (this._options.panelTemplateName) {
-            let items = new RecordSet({
-                rawData: _private.setPopupConfig(this, this._configs, this._source)
+            const items = new RecordSet({
+                rawData: _private.getPopupConfig(this, this._configs, this._source)
             });
-            let popupOptions = {
+            const popupOptions = {
                 template: this._options.panelTemplateName,
                 actionOnScroll: 'close'
             };
+
             if (name) {
-                popupOptions.target = this._container.getElementsByClassName('js-controls-FilterView__target-' + name)[0];
+                const eventTarget =  event.nativeEvent.target;
+                popupOptions.target = eventTarget.getElementsByClassName('js-controls-FilterView__target')[0];
                 popupOptions.className = 'controls-FilterView-SimplePanel-popup';
             } else {
                 popupOptions.className = 'controls-FilterView-SimplePanel__buttonTarget-popup';
