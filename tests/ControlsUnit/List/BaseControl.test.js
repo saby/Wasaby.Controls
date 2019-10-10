@@ -4222,7 +4222,7 @@ define([
        it('_getLoadingIndicatorClasses', function () {
 
            function testCaseWithArgs(indicatorState) {
-               return lists.BaseControl._private.getLoadingIndicatorClasses(indicatorState);
+               return lists.BaseControl._private.getLoadingIndicatorClasses(true, indicatorState);
            }
 
            assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all', testCaseWithArgs('all'));
