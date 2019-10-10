@@ -180,7 +180,7 @@ const _private = {
     popupResizingLine(id, offset) {
         const element = _private.find(id);
         if (element) {
-            element.controller.popupResizingLine(element, offset);
+            element.controller._popupResizingLine(element, offset);
             this._notify('managerPopupUpdated', [element, _private.popupItems], {bubbling: true});
             return true;
         }
@@ -200,7 +200,7 @@ const _private = {
     popupMaximized(id, state) {
         const element = _private.find(id);
         if (element) {
-            element.controller.elementMaximized(element, _private.getItemContainer(id), state);
+            element.controller._elementMaximized(element, _private.getItemContainer(id), state);
             this._notify('managerPopupMaximized', [element, _private.popupItems], {bubbling: true});
             return true;
         }
