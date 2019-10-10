@@ -4,7 +4,7 @@ import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
-import collection = require('Types/collection');
+import {List, RecordSet} from 'Types/collection';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import ToSourceModel = require('Controls/Utils/ToSourceModel');
 
@@ -118,7 +118,7 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
 
       getItems: function(self) {
          if (!self._items) {
-            self._items = new collection.List();
+            self._items = new List();
          }
          return self._items;
       },
@@ -200,7 +200,7 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
          }
 
          if (!newOptions.multiSelect && this._selectedKeys.length > 1) {
-            this._setItems([]);
+            this._setItems(new List());
          } else if (sourceIsChanged || keysChanged) {
             if (this._selectedKeys.length) {
                return _private.loadItems(this, newOptions, this._selectedKeys, sourceIsChanged).addCallback(function(result) {
@@ -211,7 +211,7 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
                   return result;
                });
             } else if (keysChanged) {
-               this._setItems([]);
+               this._setItems(new List());
             }
          }
       },
@@ -220,13 +220,12 @@ import ToSourceModel = require('Controls/Utils/ToSourceModel');
          return _private.getItems(this);
       },
 
-      _setItems: function(items) {
+      _setItems: function(newItems: List|RecordSet): void {
          var
             selectedKeys = [],
             keyProperty = this._options.keyProperty,
-            selectedItems = _private.getItems(this).clone(true);
+            selectedItems = newItems.clone();
 
-         selectedItems.assign(items);
          _private.setItems(this, selectedItems);
          _private.prepareItems(this);
 
