@@ -1,4 +1,4 @@
-import BaseController = require('Controls/_popupTemplate/BaseController');
+import {default as BaseController} from 'Controls/_popupTemplate/BaseController';
 import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
 import cMerge = require('Core/core-merge');
 import cClone = require('Core/core-clone');
@@ -22,6 +22,8 @@ const DEFAULT_OPTIONS = {
         horizontal: 'left'
     }
 };
+
+let _fakeDiv;
 
 const _private = {
     prepareOriginPoint(config) {
@@ -168,6 +170,59 @@ const _private = {
     },
     setStickyContent(item) {
         item.popupOptions.content = StickyContent;
+    },
+    getMargins(item) {
+        // If the classes have not changed, then the indents remain the same
+        if (item.className === item.popupOptions.className) {
+            if (!item.margins) {
+                item.margins = {
+                    top: 0,
+                    left: 0
+                };
+            }
+        } else {
+            item.className = item.popupOptions.className;
+            item.margins = _private.getFakeDivMargins(item);
+        }
+
+        return {
+            top: item.margins.top,
+            left: item.margins.left
+        };
+    },
+
+    getFakeDivMargins(item) {
+        if (!document) {
+            return {
+                left: 0,
+                top: 0
+            };
+        }
+
+        const fakeDiv = _private.getFakeDiv();
+        fakeDiv.className = item.popupOptions.className;
+
+        const styles = fakeDiv.currentStyle || window.getComputedStyle(fakeDiv);
+        return {
+            top: parseInt(styles.marginTop, 10),
+            left: parseInt(styles.marginLeft, 10)
+        };
+    },
+
+    /**
+     * Creates fake div to calculate margins.
+     * Element is created with position absolute and far beyond the screen left position
+     */
+    getFakeDiv(): HTMLDivElement {
+        // create fake div on invisible part of window, cause user class can overlap the body
+        if (!_fakeDiv) {
+            _fakeDiv = document.createElement('div');
+            _fakeDiv.style.position = 'absolute';
+            _fakeDiv.style.left = '-10000px';
+            _fakeDiv.style.top = '-10000px';
+            document.body.appendChild(_fakeDiv);
+        }
+        return _fakeDiv;
     }
 };
 
@@ -178,7 +233,9 @@ const _private = {
  * @private
  * @category Popup
  */
-const StickyController = BaseController.extend({
+class StickyController extends BaseController {
+    TYPE = 'Sticky';
+    _private = _private;
 
     elementCreated(item, container) {
         if (_private.isTargetVisible(item)) {
@@ -188,7 +245,7 @@ const StickyController = BaseController.extend({
         } else {
             require('Controls/popup').Controller.remove(item.id);
         }
-    },
+    }
 
     elementUpdated(item, container) {
         _private.setStickyContent(item);
@@ -214,7 +271,7 @@ const StickyController = BaseController.extend({
         } else {
             require('Controls/popup').Controller.remove(item.id);
         }
-    },
+    }
 
     elementAfterUpdated(item, container) {
         /* start: We remove the set values that affect the size and positioning to get the real size of the content */
@@ -242,11 +299,11 @@ const StickyController = BaseController.extend({
             item.popupOptions.resizeCallback();
         }
         return true;
-    },
+    }
 
     popupResize(item, container): Boolean {
         return this.elementAfterUpdated(item, container);
-    },
+    }
 
     getDefaultConfig(item) {
         _private.setStickyContent(item);
@@ -263,17 +320,19 @@ const StickyController = BaseController.extend({
             // Treated position:fixed when positioning pop-up outside the screen
             position: 'fixed'
         };
-    },
+    }
 
     prepareConfig(item, container) {
         _private.removeOrientationClasses(item);
-        const sizes = this._getPopupSizes(item, container);
-        _private.prepareConfig(this, item, sizes);
-    },
+        this._getPopupSizes(item, container);
+        item.sizes.margins = _private.getMargins(item);
+        _private.prepareConfig(this, item, item.sizes);
+    }
 
     needRecalcOnKeyboardShow() {
         return true;
-    },
+    }
+
     _getPopupConfig(cfg, sizes) {
         return {
             corner: cMerge(cClone(DEFAULT_OPTIONS.corner), cfg.popupOptions.corner || {}),
@@ -292,10 +351,7 @@ const StickyController = BaseController.extend({
             sizes,
             fittingMode: cfg.popupOptions.fittingMode
         };
-    },
-    TYPE: 'Sticky',
-    _private
-});
+    }
+}
 
 export = new StickyController();
-
