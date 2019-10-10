@@ -254,7 +254,6 @@ export default Dialog;
 /**
  * @typedef {Object} PopupOptions
  * @description Конфигурация всплывающего окна.
- * Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}. 
  * @property {Boolean} autofocus Определяет, установится ли фокус на шаблон попапа после его открытия.
  * @property {Boolean} modal Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
  * @property {String} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
@@ -269,5 +268,5 @@ export default Dialog;
  * @property {Number} minWidth Минимально допустимая ширина всплывающего окна.
  * @property {Number} top Расстояние от всплывающего окна до верхнего края экрана.
  * @property {Number} left Расстояние от всплывающего окна до левого края экрана.
- * @property {Node} opener Логический инициатор открытия всплывающего окна.
+ * @property {Node} opener Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}. 
  */
