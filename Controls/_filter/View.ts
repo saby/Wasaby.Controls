@@ -593,7 +593,7 @@ var Filter = Control.extend({
             };
 
             if (name) {
-                const eventTarget =  event.nativeEvent.target;
+                const eventTarget =  event.currentTarget;
                 popupOptions.target = eventTarget.getElementsByClassName('js-controls-FilterView__target')[0];
                 popupOptions.className = 'controls-FilterView-SimplePanel-popup';
             } else {

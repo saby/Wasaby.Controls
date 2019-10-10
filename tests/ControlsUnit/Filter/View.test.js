@@ -226,10 +226,8 @@ define(
             let view = getView(defaultConfig),
                popupOptions, filterClassName = '';
             let event = {
-               nativeEvent: {
-                  target: {
-                     getElementsByClassName: () => [filterClassName]
-                  }
+               currentTarget: {
+                  getElementsByClassName: () => [filterClassName]
                }
             };
             view._children = {
