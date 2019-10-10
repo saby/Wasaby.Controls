@@ -975,7 +975,7 @@ var _private = {
          */
         const target = context ? null : _private.mockTarget(childEvent.target);
         if (showActions && showActions.length) {
-            const rs = new collection.RecordSet({ rawData: showActions, keyProperty: 'id' });
+            const rs = new collection.RecordSet({ rawData: showActions, idProperty: 'id' });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             self._listViewModel.setActiveItem(itemData);
