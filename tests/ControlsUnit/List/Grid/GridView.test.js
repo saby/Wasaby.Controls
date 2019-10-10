@@ -88,6 +88,21 @@ define(['Controls/grid'], function(gridMod) {
             gridMod.GridView._private.calcFooterPaddingClass({ }),
             'Incorrect result "calcFooterPaddingClass({ })".');
       });
+      it('beforeMount', function() {
+         var
+            cfg = {
+               columns: [],
+               multiSelectReady: function(){}
+            },
+            gridView = new gridMod.GridView(cfg),
+            mountResult;
+         gridView._listModel = {
+            setHandlersForPartialSupport: function(){},
+            setColumnTemplate: function(){}
+         };
+         mountResult = gridView._beforeMount(cfg);
+         assert.equal(mountResult, cfg.multiSelectReady);
+      });
       it('beforeUpdate', function() {
          var
             superclassBeforeUpdateCalled = false,
