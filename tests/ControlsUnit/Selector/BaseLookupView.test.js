@@ -468,6 +468,7 @@ define([
             newFieldWrapperWidth = 500,
             isCalculatingSizes = false;
 
+         lookupView._isNeedCalculatingSizes = () => true;
          lookupView._getFieldWrapperWidth = (recount) => {
             return recount ? newFieldWrapperWidth : oldFieldWrapperWidth;
          };
