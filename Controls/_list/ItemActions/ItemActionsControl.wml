@@ -15,7 +15,7 @@
                  toolbarVisibility="{{_options.toolbarVisibility}}"
                  style="{{_options.style}}"
                  size="{{_options.editingConfig ? 's' : 'm'}}"
-                 template="wml!Controls/_list/ItemActions/resources/ItemActionsTemplate"
+                 template="{{ _itemActionsTemplate }}"
                  itemActionsPosition="{{_options.itemActionsPosition}}"
                  actionMenuIsShown="{{_options.actionMenuIsShown}}"
                  scope="{{itemActionsTemplate}}"/>
