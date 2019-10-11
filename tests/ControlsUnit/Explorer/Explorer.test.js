@@ -248,8 +248,8 @@ define([
          resetExpandedItemsCalled = false;
          instance._beforeUpdate(newCfg2);
          assert.equal(instance._viewMode, 'tile');
-         assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.tile);
-         assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tile);
+         assert.isNull(explorerMod.View._constants.VIEW_NAMES.tile);
+         assert.isNull(explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tile);
          assert.isFalse(rootChanged);
          assert.isTrue(resetExpandedItemsCalled);
          assert.isFalse(instance._virtualScrolling);

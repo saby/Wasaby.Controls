@@ -1,12 +1,11 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_explorer/View/View');
 import {SearchGridViewModel, ViewModel as TreeGridViewModel, TreeGridView, SearchView} from 'Controls/treeGrid';
-import {TreeViewModel as TreeTileViewModel, TreeView as TreeTileView} from 'Controls/tile';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
-import {constants} from 'Env/Env';
+import {Ioc, constants} from 'Env/Env';
 import keysHandler = require('Controls/Utils/keysHandler');
 import randomId = require('Core/helpers/Number/randomId');
 import 'css!theme?Controls/explorer';
@@ -27,12 +26,12 @@ import 'Types/entity';
       DEFAULT_VIEW_MODE = 'table',
       VIEW_NAMES = {
          search: SearchView,
-         tile: TreeTileView,
+         tile: null,
          table: TreeGridView
       },
       VIEW_MODEL_CONSTRUCTORS = {
          search: SearchGridViewModel,
-         tile: TreeTileViewModel,
+         tile: null,
          table: TreeGridViewModel
       },
       _private = {
@@ -135,17 +134,33 @@ import 'Types/entity';
             // For viewMode === 'tile' disable virtualScrolling.
             self._virtualScrolling = viewMode === 'tile' ? false : cfg.virtualScrolling;
          },
-         setViewMode: function(self, viewMode, cfg) {
+
+         setViewConfig: function (self, viewMode) {
+            self._viewName = VIEW_NAMES[viewMode];
+            self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
+         },
+         setViewMode: function(self, viewMode, cfg): Promise<void> {
             var currentRoot = _private.getRoot(self, cfg.root);
             var dataRoot = _private.getDataRoot(self);
+            var result;
 
             if (viewMode === 'search' && cfg.searchStartingWith === 'root' && dataRoot !== currentRoot) {
                _private.setRoot(self, dataRoot);
             }
             self._viewMode = viewMode;
-            self._viewName = VIEW_NAMES[viewMode];
-            self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
             _private.setVirtualScrolling(self, self._viewMode, cfg);
+            if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
+               result = new Promise((resolve) => {
+                  _private.loadTileViewMode().then((tile) => {
+                     _private.setViewConfig(self, viewMode);
+                     resolve();
+                  })
+               })
+            } else {
+               _private.setViewConfig(self, viewMode);
+               result = Promise.resolve();
+            }
+            return result;
          },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
@@ -178,6 +193,17 @@ import 'Types/entity';
             }
 
             return itemFromRoot;
+         },
+         loadTileViewMode: function () {
+            return new Promise((resolve) => {
+               import('Controls/tile').then((tile) => {
+                  VIEW_NAMES.tile = tile.TreeView;
+                  VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
+                  resolve(tile);
+               }).catch((err) => {
+                  IoC.resolve('ILogger').error('Controls/_explorer/View', err);
+               });
+            });
          }
       };
 
@@ -291,15 +317,14 @@ import 'Types/entity';
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
          this._itemsSetCallback = _private.itemsSetCallback.bind(null, this);
-         this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
 
+         this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
          //process items from options to create a path
          //will be refactor after new scheme of a data receiving
          if (cfg.items) {
             this._breadCrumbsItems = _private.getPath(cfg.items);
          }
 
-         _private.setViewMode(this, cfg.viewMode, cfg);
          const root = _private.getRoot(this, cfg.root);
          this._restoredMarkedKeys = {
          [root]: {
@@ -308,6 +333,7 @@ import 'Types/entity';
          };
 
          this._dragControlId = randomId();
+         return _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
