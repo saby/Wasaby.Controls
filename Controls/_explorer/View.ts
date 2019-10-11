@@ -143,7 +143,7 @@ import 'Types/entity';
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
          },
 
-         setTileViewModeName(self, viewMode, cfg, isStartModeTile) {
+         setTileViewModeName: function (self, viewMode, cfg, isStartModeTile) {
             return _private.loadTileViewMode(cfg).then((tile) => {
                if (isStartModeTile) {
                   _private.setViewMode(self, viewMode, cfg);
