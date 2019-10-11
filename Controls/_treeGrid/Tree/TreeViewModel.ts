@@ -171,6 +171,11 @@ var
 
             if (expanderIcon) {
                 expanderIconClass = ' controls-TreeGrid__row-expander_' + expanderIcon;
+
+                // могут передать node или hiddenNode в этом случае добавляем наши классы для master/default
+                if ((expanderIcon === 'node') || (expanderIcon === 'hiddenNode')) {
+                    expanderIconClass += '_' + (itemData.style === 'master' ? 'master' : 'default');
+                }
             } else {
                 expanderIconClass = ' controls-TreeGrid__row-expander_' + (itemType === true ? 'node_' : 'hiddenNode_')
                 + (itemData.style === 'master' ? 'master' : 'default');
