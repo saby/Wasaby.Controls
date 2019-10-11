@@ -140,9 +140,7 @@ import { IoC } from 'Env/Env';
          },
          _moduleName: 'Controls/decorator:Converter'
       }, {}, {}, false);
-
-      // Invisible node in vdom equals empty string in html.
-      return result === '<invisible-node></invisible-node>' ? '' : result;
+      return result;
    };
 
    /**

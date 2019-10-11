@@ -6,6 +6,7 @@ import clearRecordsTemplate = require('wml!Controls/_lookup/BaseLookupView/resou
 import showSelectorTemplate = require('wml!Controls/_lookup/BaseLookupView/resources/showSelectorTemplate');
 import {isEqual} from 'Types/object';
 import {constants, IoC} from 'Env/Env';
+import {List} from 'Types/collection';
 
 
 const KEY_CODE_F2 = 113;
@@ -170,7 +171,8 @@ var BaseLookupView = Control.extend({
             oldFieldWrapperWidth = this._getFieldWrapperWidth(),
             newFieldWrapperWidth = this._getFieldWrapperWidth(true);
 
-        if (this._isNeedCalculatingSizes(this._options) && newFieldWrapperWidth !== oldFieldWrapperWidth) {
+        // if hidden, then there is no reason to recalc the sizes
+        if (newFieldWrapperWidth > 0 && this._isNeedCalculatingSizes(this._options) && newFieldWrapperWidth !== oldFieldWrapperWidth) {
             this._calculatingSizes(this._options);
         }
     },
@@ -224,7 +226,7 @@ var BaseLookupView = Control.extend({
     },
 
     _onClickClearRecords: function () {
-        this._notify('updateItems', [[]]);
+        this._notify('updateItems', [new List()]);
 
         // When click on the button, it disappears from the layout and the focus is lost, we return the focus to the input field.
         this.activate();
