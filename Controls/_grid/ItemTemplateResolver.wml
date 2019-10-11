@@ -1,0 +1,21 @@
+<!-- Конструкция вида
+ <ws:template name="callItemTemplate">......</>
+ <ws:partial template="callItemTemplate" itemTemplateName="wml!Controls/_grid/layout/table/Item"/>
+ невозможна при паковках на библиотеки, т.к. require получив строку попытается ее найти в библиотеке, но данный шаблон - приватный.
+ выходы:
+        отдавать шаблон как TemplateFunction;
+        делать шаблон публичным и обращаться по библиотечному пути;
+        звать partial со строкой-именем шаблона, а не с переменной, в которой лежит имя -->
+
+<ws:partial template="{{itemData.resolveBaseItemTemplate()}}"
+            itemData="{{itemData}}"
+            highlightOnHover="{{highlightOnHover}}"
+            marker="{{marker}}"
+            colspan="{{colspan}}"
+            colspanTemplate="{{colspanTemplate}}"
+            checkboxReadOnly="{{checkboxReadOnly}}"
+            editArrowTemplate="{{editArrowTemplate}}"
+            multiSelectTpl="{{multiSelectTpl}}"
+            itemActionsTemplate="{{itemActionsTemplate}}"
+            itemActionsContainerStyles="{{itemActionsContainerStyles}}"
+            className="{{className}}"/>
