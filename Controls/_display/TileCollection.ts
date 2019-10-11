@@ -115,6 +115,18 @@ export default class TileCollection<S, T extends TileCollectionItem<S> = TileCol
         return this._createPositionInBounds(leftOffset, topOffset, rightOffset, bottomOffset);
     }
 
+    getItemContainerStartPosition(
+        itemRect: ClientRect | DOMRect,
+        documentRect: ClientRect | DOMRect
+    ): ITileCollectionItemPosition {
+        return {
+            top: itemRect.top,
+            left: itemRect.left,
+            right: documentRect.width - itemRect.right,
+            bottom: documentRect.height - itemRect.bottom
+        };
+    }
+
     getItemContainerPositionInDocument(
         targetItemPosition: ITileCollectionItemPosition,
         viewContainerRect: ClientRect | DOMRect,

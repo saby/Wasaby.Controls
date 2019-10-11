@@ -1861,8 +1861,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         );
         this._notifyAfterCollectionChange();
 
-        // TODO Make a list of properties that lead to version update
-        if (properties as String === 'editingContents') {
+        // FIXME Make a list of properties that lead to version update
+        if (properties as String === 'editingContents' || properties as String === 'animated') {
             this._nextVersion();
         }
     }

@@ -7,6 +7,8 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
 
     protected _$fixedPosition: string;
 
+    protected _$animated: boolean;
+
     getTileWidth(templateWidth?: number): number {
         return templateWidth || this._$owner.getTileWidth();
     }
@@ -54,6 +56,26 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         return !!this.getFixedPositionStyle();
     }
 
+    setAnimated(animated: boolean, silent?: boolean): void {
+        if (this._$animated === animated) {
+            return;
+        }
+        this._$animated = animated;
+        this._nextVersion();
+        if (!silent) {
+            this._notifyItemChangeToOwner('animated');
+        }
+    }
+
+    isAnimated(): boolean {
+        if (this._$animated && !this.isScaled()) {
+            // FIXME This is REALLY BAD, think where to reset the animation state.
+            // Probably should be in that same animation manager
+            this.setAnimated(false, true);
+        }
+        return this._$animated;
+    }
+
     getTileWrapperStyle(templateWidth?: number): string {
         const width = this.getTileWidth(templateWidth);
         const compressedWidth = width * this.getCompressionCoefficient();
@@ -66,7 +88,6 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
     }
 
     getTileContentClasses(templateShadowVisibility?: string, templateMarker?: boolean): string {
-        // {{itemData.isAnimated ? ' controls-TileView__item_animated'}}
         let classes = 'controls-TileView__itemContent js-controls-SwipeControl__actionsContainer';
         classes += ` controls-ListView__item_shadow_${this.getShadowVisibility(templateShadowVisibility)}`;
         if (this.isActive()) {
@@ -84,6 +105,9 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         if (this.isSwiped()) {
             classes += ' controls-TileView__item_swiped';
         }
+        if (this.isAnimated()) {
+            classes += ' controls-TileView__item_animated';
+        }
         if (templateMarker !== false && this.isMarked()) {
             classes += ' controls-TileView__item_withMarker';
         } else {
@@ -93,8 +117,10 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
     }
 
     getImageWrapperClasses(templateHasTitle?: boolean): string {
-        // {{itemData.isAnimated ? ' controls-TileView__item_animated'}}
         let classes = 'controls-TileView__imageWrapper';
+        if (this.isAnimated()) {
+            classes += ' controls-TileView__item_animated';
+        }
         if (templateHasTitle) {
             classes += ' controls-TileView__imageWrapper_reduced';
         }
@@ -102,9 +128,10 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
     }
 
     getImageWrapperStyle(): string {
-        // {{'height: ' + (itemData.isAnimated && itemData.zoomCoefficient ? itemData.zoomCoefficient * itemData.itemsHeight : itemData.itemsHeight) + 'px;'}}
-        const tileHeight = this.getTileHeight();
-        const height = this.isScaled() ? this._$owner.getZoomCoefficient() * tileHeight : tileHeight;
+        let height = this._$owner.getTileHeight();
+        if (this.isScaled() && this.isAnimated()) {
+            height *= this._$owner.getZoomCoefficient();
+        }
         return `height: ${height}px;`;
     }
 
@@ -128,7 +155,8 @@ Object.assign(TileCollectionItem.prototype, {
     '[Controls/_display/TileCollectionItem]': true,
     _moduleName: 'Controls/display:TileCollectionItem',
     _instancePrefix: 'tile-item-',
-    _$fixedPosition: undefined
+    _$fixedPosition: undefined,
+    _$animated: false
 });
 
 register('Controls/display:TileCollectionItem', TileCollectionItem, {instantiate: false});

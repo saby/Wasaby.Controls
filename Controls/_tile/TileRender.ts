@@ -20,7 +20,11 @@ export default class TileRender extends BaseRender {
     protected _options: ITileRenderOptions;
     protected _template: TemplateFunction = template;
 
+    protected _animatedItem: TileCollectionItem<unknown> = null;
+    protected _animatedItemTargetPosition: string;
+
     protected _beforeMount(options: ITileRenderOptions): void {
+        // no super._beforeMount()
         this._templateKeyPrefix = `tile-render-${this.getInstanceId()}`;
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
     }
@@ -29,6 +33,22 @@ export default class TileRender extends BaseRender {
         super._afterMount(options);
         this._notify('register', ['controlResize', this, this._resetHoverState], { bubbling: true });
         this._notify('register', ['scroll', this, this._resetHoverState], { bubbling: true });
+    }
+
+    protected _afterUpdate(): void {
+        if (this._animatedItem) {
+            // FIXME This should probably be moved to some kind of animation manager
+            if (this._animatedItem.isFixed() && !this._animatedItem.isAnimated()) {
+                this._animatedItem.setAnimated(true);
+                this._animatedItem.setFixedPositionStyle(this._animatedItemTargetPosition);
+                this._animatedItem = null;
+            }
+        }
+    }
+
+    protected _beforeUnmount(): void {
+        super._beforeUnmount();
+        this._animatedItem = null;
     }
 
     protected _resetHoverState(): void {
@@ -57,14 +77,41 @@ export default class TileRender extends BaseRender {
 
         const itemContainer: HTMLElement = target.closest('.controls-TileView__item');
         const itemContainerRect = itemContainer.getBoundingClientRect();
-        const viewContainer = this._options.tileScalingMode === 'inside' ? this.getItemsContainer() : document.documentElement;
-        const viewContainerRect = viewContainer.getBoundingClientRect();
-        const targetItemSize = this._options.listModel.getItemContainerSize(itemContainer);
-        const targetItemPosition = this._options.listModel.getItemContainerPosition(targetItemSize, itemContainerRect, viewContainerRect);
-        const targetItemPositionInDocument = this._options.listModel.getItemContainerPositionInDocument(targetItemPosition, viewContainerRect, document.documentElement.getBoundingClientRect());
 
-        // TODO This should be done through the model/manager
-        item.setFixedPositionStyle(this._convertPositionToStyle(targetItemPositionInDocument));
+        const viewContainer = this._options.tileScalingMode === 'inside'
+            ? this.getItemsContainer()
+            : document.documentElement;
+        const viewContainerRect = viewContainer.getBoundingClientRect();
+
+        const targetItemSize = this._options.listModel.getItemContainerSize(itemContainer);
+        const targetItemPosition = this._options.listModel.getItemContainerPosition(
+            targetItemSize,
+            itemContainerRect,
+            viewContainerRect
+        );
+
+        const documentRect = document.documentElement.getBoundingClientRect();
+        const targetItemPositionInDocument = this._options.listModel.getItemContainerPositionInDocument(
+            targetItemPosition,
+            viewContainerRect,
+            documentRect
+        );
+
+        // FIXME This should probably be moved to some kind of animation manager
+        if (targetItemPositionInDocument) {
+            const targetPositionStyle = this._convertPositionToStyle(targetItemPositionInDocument);
+            if (this._options.tileScalingMode !== 'overlap') {
+                const startItemPositionInDocument = this._options.listModel.getItemContainerStartPosition(
+                    itemContainerRect,
+                    documentRect
+                );
+                item.setFixedPositionStyle(this._convertPositionToStyle(startItemPositionInDocument));
+                this._animatedItem = item;
+                this._animatedItemTargetPosition = targetPositionStyle;
+            } else {
+                item.setFixedPositionStyle(targetPositionStyle);
+            }
+        }
     }
 
     protected _convertPositionToStyle(position): string {
