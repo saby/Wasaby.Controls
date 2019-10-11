@@ -190,7 +190,7 @@ var _private = {
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
                     }
-
+                    
                     if (self._virtualScroll) {
                         self._virtualScroll.ItemsCount = listModel.getCount();
                         self._virtualScroll.resetItemsIndexes();
