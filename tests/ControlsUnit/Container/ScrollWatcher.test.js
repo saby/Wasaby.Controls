@@ -115,6 +115,34 @@ define([
          assert.deepEqual(['listBottom', 'loadTopStop', 'loadBottomStart'], evType, 'Not send edge positions without observer');
       });
 
+      it('onResizeContainer: notify \'viewPortResize\' if need', function () {
+         var ins = new scrollMod.Watcher();
+         ins._registrar = registrarMock;
+         const nativeMockStart = ins._registrar.start;
+         ins._registrar.start = (eType, params) => {
+            if (eType === 'viewPortResize') {
+               assert.equal(params[0], 300, 'Wrong new height of container');
+            }
+            nativeMockStart(eType);
+         };
+         ins._sizeCache = {
+            clientHeight: 500,
+            scrollHeight: 800
+         };
+         var containerMock = {
+            scrollTop: 10,
+            clientHeight: 300,
+            scrollHeight: 400
+         };
+
+         ins._scrollTopCache = 111;
+         evType = [];
+         scrollMod.Watcher._private.onResizeContainer(ins, containerMock, true);
+         assert.deepEqual({clientHeight: 300, scrollHeight: 400}, ins._sizeCache, 'Wrong size cache values');
+         assert.deepEqual(['canScroll', 'viewPortResize'], evType);
+         registrarMock.start = nativeMockStart;
+      });
+
       it('onScrollContainer', function() {
          return new Promise(function(resolve, reject) {
             var ins = new scrollMod.Watcher();
