@@ -138,35 +138,32 @@ import 'Types/entity';
             self._virtualScrolling = viewMode === 'tile' ? false : cfg.virtualScrolling;
          },
 
-         setViewName: function (self, viewMode) {
+         setViewConfig: function (self, viewMode) {
             self._viewName = VIEW_NAMES[viewMode];
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
          },
-
-         setTileViewModeName: function (self, viewMode, cfg, isStartModeTile) {
-            return _private.loadTileViewMode(cfg).then((tile) => {
-               if (isStartModeTile) {
-                  _private.setViewMode(self, viewMode, cfg);
-               } else {
-                  _private.setViewName(self, viewMode);
-               }
-            });
-         },
-
-         setViewMode: function(self, viewMode, cfg) {
+         setViewMode: function(self, viewMode, cfg): Promise<void> {
             var currentRoot = _private.getRoot(self, cfg.root);
             var dataRoot = _private.getDataRoot(self);
+            var result;
 
             if (viewMode === 'search' && cfg.searchStartingWith === 'root' && dataRoot !== currentRoot) {
                _private.setRoot(self, dataRoot);
             }
             self._viewMode = viewMode;
-            if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-               _private.setTileViewModeName(self, viewMode, cfg, false);
-            } else {
-               _private.setViewName(self, viewMode);
-            }
             _private.setVirtualScrolling(self, self._viewMode, cfg);
+            if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
+               result = new Promise((resolve) => {
+                  _private.loadTileViewMode().then((tile) => {
+                     _private.setViewConfig(self, viewMode);
+                     resolve();
+                  }
+               })
+            } else {
+               _private.setViewConfig(self, viewMode);
+               result = Promise.resolve();
+            }
+            return result;
          },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
@@ -200,7 +197,7 @@ import 'Types/entity';
 
             return itemFromRoot;
          },
-         loadTileViewMode: function (options) {
+         loadTileViewMode: function () {
             return new Promise((resolve) => {
                import('Controls/tile').then((tile) => {
                   VIEW_NAMES.tile = tile.TreeView;
@@ -339,11 +336,7 @@ import 'Types/entity';
          };
 
          this._dragControlId = randomId();
-         if (cfg.viewMode === 'tile') {
-            return _private.setTileViewModeName(this, cfg.viewMode, cfg, false);
-         } else {
-            _private.setViewMode(this, cfg.viewMode, cfg);
-         }
+         return _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
