@@ -107,6 +107,14 @@ var ComboBox = Control.extend({
          this._value = String(getPropValue(selectedItems[0], this._options.displayProperty) || '');
          this._placeholder = this._options.placeholder;
       }
+   },
+
+   openDropDown(popupOptions?: object): void {
+      this._children.controller.openDropDown(popupOptions);
+   },
+
+   closeDropDown(): void {
+      this._children.controller.closeDropDown();
    }
 
 });

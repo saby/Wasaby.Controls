@@ -277,6 +277,14 @@ var Input = Control.extend({
          this._hasMoreText = _private.getMoreText(items);
          this._tooltip = _private.getTooltip(items, this._options.displayProperty);
       }
+   },
+
+   openDropDown(popupOptions?: object): void {
+      this._children.controller.openDropDown(popupOptions);
+   },
+
+   closeDropDown(): void {
+      this._children.controller.closeDropDown();
    }
 });
 

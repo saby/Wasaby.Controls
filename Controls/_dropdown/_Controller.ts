@@ -9,6 +9,7 @@ import {isEqual} from 'Types/object';
 import * as mStubs from 'Core/moduleStubs';
 import {descriptor, Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 var
@@ -372,48 +373,50 @@ var _Controller = Control.extend({
       }
    },
 
-   _open: function (event) {
+   _open(event?: SyntheticEvent<'mousedown'>, popupOptions?: object): void {
       // Проверям что нажата левая кнопка мыши
       if (this._options.readOnly || event && event.nativeEvent.button !== 0) {
          return;
       }
-      var self = this;
 
-      function open() {
-         var config = {
+      const open = (): void => {
+         const config = {
             templateOptions: {
-               items: self._items,
-               //FIXME self._container[0] delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-               width: self._options.width !== undefined ? (self._container[0] || self._container).offsetWidth : undefined,
-               hasMoreButton: self._sourceController.hasMoreData('down'),
-               selectorOpener: self._children.selectorOpener,
-               selectorDialogResult: self._onSelectorTemplateResult.bind(self),
-               afterSelectorOpenCallback: self._afterSelectorOpenCallback.bind(self)
+               items: this._items,
+               // FIXME self._container[0] delete after
+               // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+               width: this._options.width !== undefined ?
+                        (this._container[0] || this._container).offsetWidth :
+                        undefined,
+               hasMoreButton: this._sourceController.hasMoreData('down'),
+               selectorOpener: this._children.selectorOpener,
+               selectorDialogResult: this._onSelectorTemplateResult.bind(this),
+               afterSelectorOpenCallback: this._afterSelectorOpenCallback.bind(this)
             },
-            target: self._container,
-            targetPoint: self._options.corner,
-            opener: self,
+            target: this._container,
+            targetPoint: this._options.corner,
+            opener: this,
             autofocus: false,
             closeOnOutsideClick: true
          };
-         _private.requireTemplates(self, self._options).addCallback(() => {
-            self._isOpened = true;
-            self._children.DropdownOpener.open(config, self);
+         _private.requireTemplates(this, this._options).addCallback(() => {
+            this._isOpened = true;
+            this._children.DropdownOpener.open({...config, ...popupOptions}, this);
          });
-      }
+      };
 
-      function itemsLoadCallback(items) {
-         if (items.getCount() > 1 || items.getCount() === 1 && self._options.emptyText) {
+      const itemsLoadCallback = (items: RecordSet): void => {
+         if (items.getCount() > 1 || items.getCount() === 1 && this._options.emptyText) {
             open();
          } else if (items.getCount() === 1) {
-            self._notify('selectedItemsChanged', [
+            this._notify('selectedItemsChanged', [
                [items.at(0)]
             ]);
          }
-      }
+      };
 
       if (this._options.source && !this._items) {
-         _private.loadItems(this, this._options).addCallback(function (items) {
+         _private.loadItems(this, this._options).addCallback((items) => {
             itemsLoadCallback(items);
             return items;
          });
@@ -457,6 +460,14 @@ var _Controller = Control.extend({
    _setItems: function(items) {
       this._items = items;
       this._depsDeferred = null;
+   },
+
+   openDropDown(popupOptions?: object): void {
+      this._open(null, popupOptions);
+   },
+
+   closeDropDown(): void {
+      _private.closeDropdownList(this);
    }
 });
 
