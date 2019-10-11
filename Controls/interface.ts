@@ -24,6 +24,7 @@
  * @includes ITextValue Controls/_interface/ITextValue
  * @includes IPropStorage Controls/_interface/IPropStorage
  * @includes IBorderStyle Controls/_interface/IBorderStyle
+ * @includes IDateConstructor Controls/_interface/IDateConstructor
  * @public
  * @author Крайнов Д.О.
  */
