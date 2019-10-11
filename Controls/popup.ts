@@ -56,6 +56,7 @@ export {default as Dialog} from './_popup/Opener/Dialog';
 export {default as Infobox} from './_popup/Opener/InfoBox';
 export {default as Previewer} from './_popup/Opener/Previewer';
 export {default as Confirmation} from './_popup/Opener/Confirmation';
+export {default as InfoboxButton} from './_popup/InfoBox/InfoboxButton';
 
 
 export {
