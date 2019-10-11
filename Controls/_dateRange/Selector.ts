@@ -22,6 +22,7 @@ import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
  * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/RangeLink
+ * @demo Controls-demo/Input/Date/RangeLinkView
  *
  */
 
@@ -46,6 +47,7 @@ import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
  * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/RangeLink
+ * @demo Controls-demo/Input/Date/RangeLinkView
  *
  */
 
