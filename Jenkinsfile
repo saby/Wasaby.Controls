@@ -26,7 +26,7 @@ if ( env.PRIVILEGE_USERS.split(",").contains(user) ) {
     }
 }
 node ('controls') {
-def version = "19.620"
+def version = "19.610"
 def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws (workspace){
         deleteDir()
