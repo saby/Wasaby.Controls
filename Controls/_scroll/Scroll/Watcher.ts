@@ -343,13 +343,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
 
          _resizeHandler: function (e) {
              const withObserver = this._canObserver;
-             const container = _private.getDOMContainer(this._container);
-             const oldClientHeight = _private.getSizeCache(this, container).clientHeight;
              _private.onResizeContainer(this, _private.getDOMContainer(this._container), withObserver);
-             const newClientHeight = _private.getSizeCache(this, container).clientHeight;
-             if (oldClientHeight !== newClientHeight) {
-                 _private.sendByRegistrar(this, 'viewPortResize', [newClientHeight]);
-             }
          },
 
          _registerIt: function(event, registerType, component, callback, triggers) {
