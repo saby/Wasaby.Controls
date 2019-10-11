@@ -143,6 +143,16 @@ import 'Types/entity';
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
          },
 
+         setTileViewModeName(self, viewMode, cfg, isStartModeTile) {
+            return _private.loadTileViewMode(cfg).then((tile) => {
+               if (isStartModeTile) {
+                  _private.setViewMode(self, viewMode, cfg);
+               } else {
+                  _private.setViewName(self, viewMode);
+               }
+            });
+         },
+
          setViewMode: function(self, viewMode, cfg) {
             var currentRoot = _private.getRoot(self, cfg.root);
             var dataRoot = _private.getDataRoot(self);
@@ -152,9 +162,7 @@ import 'Types/entity';
             }
             self._viewMode = viewMode;
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-               _private.loadTileViewMode(cfg).then((tile) => {
-                  _private.setViewName(self, viewMode);
-               });
+               _private.setTileViewModeName(self, viewMode, cfg, false);
             } else {
                _private.setViewName(self, viewMode);
             }
@@ -332,10 +340,7 @@ import 'Types/entity';
 
          this._dragControlId = randomId();
          if (cfg.viewMode === 'tile') {
-            var self = this;
-            return _private.loadTileViewMode(cfg).then((tile) => {
-               _private.setViewMode(self, cfg.viewMode, cfg);
-            });
+            return _private.setTileViewModeName(this, cfg.viewMode, cfg, false);
          } else {
             _private.setViewMode(this, cfg.viewMode, cfg);
          }
