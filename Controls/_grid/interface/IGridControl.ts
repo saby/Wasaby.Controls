@@ -143,7 +143,7 @@
  * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
  * @property {String} template Шаблон заголовка ячейки. По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
- * Для базового шаблона можно задать атрибут класса controls-Grid__header-cell_spacing_money, который используется для добавления отступа в заголовке столбца при рендере денежных данных.
+ * Для базового шаблона можно задать класс controls-Grid__header-cell_spacing_money, который добавляет отступ в заголовке столбца при рендере денежных данных.
  * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
  * @property {String} sortingProperty Свойство, по которому выполняется сортировка. 
  * В качестве значения принимает имя поля. 
