@@ -256,6 +256,9 @@ class Base extends Control<ISliderBaseOptions> {
          this._checkOptions(options);
          this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
       }
+      if (options.value !== undefined && options.value !== this._value) {
+         this._value = options.value;
+      }
       this._render(options.minValue, options.maxValue, this._value);
       this._renderTooltip(options.minValue, options.maxValue, this._tooltipValue);
    }

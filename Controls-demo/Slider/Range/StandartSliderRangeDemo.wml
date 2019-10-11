@@ -128,21 +128,6 @@
                     bind:startValue="_startValueI"
                     bind:endValue="_endValueI"
             />
-            <style>
-               .demo_slider_input-wrapper {
-                  display:flex;
-               margin-top: 3px;
-               }
-               .demo_slider_input-label_first {
-                  margin-left: 3px;
-               }
-               .demo_slider_input-label {
-                  margin-left: 8px;
-               }
-               .demo_slider_input-label_last {
-                  margin-right: -6px;
-               }
-            </style>
             <div class="demo_slider_input-wrapper">
                <Controls.input:Label class="demo_slider_input-label_first" caption="from"></Controls.input:Label>
                <Controls.input:Number class="demo_slider_input_field" name="inputStartValue" precision="{{0}}" bind:value="_inputStartValue" on:inputCompleted="_startInputCompleted()" on:keyDown="_inputKeyDown()"></Controls.input:Number>
