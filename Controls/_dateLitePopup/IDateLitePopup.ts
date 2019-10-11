@@ -1,10 +1,6 @@
 import {descriptor} from 'Types/entity';
 import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
-   /**
-    * mixin Controls/dateLitePopup/IDateLitePopup
-    * @public
-    */
    var EMPTY_CAPTIONS = {
       NOT_SPECIFIED: rk('Не указан'),
       NOT_SELECTED: rk('Не выбран'),
@@ -12,6 +8,10 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
       ALL_TIME: rk('Весь период')
    };
 
+/**
+ * @mixin Controls/dateLitePopup/IDateLitePopup
+ * @public
+ */
    export default {
       getDefaultOptions: function() {
          return {
@@ -22,7 +22,7 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
              */
 
             /*
-             * @name Controls/_dateLitePopup/IDateLitePopup#year
+             * @name Controls/dateLitePopup/IDateLitePopup#year
              * @cfg {Date} Displayed period
              */
             year: undefined,
@@ -34,7 +34,7 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
              */
 
             /*
-             * @name Controls/_dateLitePopup/IDateLitePopup#chooseMonths
+             * @name Controls/dateLitePopup/IDateLitePopup#chooseMonths
              * @cfg {Boolean} Sets the option to choose a month
              * @default true
              */
@@ -47,7 +47,7 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
              */
 
             /*
-             * @name Controls/_dateLitePopup/IDateLitePopup#chooseQuarters
+             * @name Controls/dateLitePopup/IDateLitePopup#chooseQuarters
              * @cfg {Boolean} Sets the option to choose a quarter
              * @default true
              */
@@ -71,9 +71,9 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
              * @name Controls/dateLitePopup/IDateLitePopup#emptyCaption
              * @cfg {String} Текст, который отображается, если период не выбран.
              */
-        
+
             /*
-             * @name Controls/_dateLitePopup/IDateLitePopup#emptyCaption
+             * @name Controls/dateLitePopup/IDateLitePopup#emptyCaption
              * @cfg {String} Text that is used if the period is not selected
              */
             emptyCaption: undefined,
@@ -167,7 +167,7 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
              */
 
             /*
-             * @name Controls/_dateLitePopup/IDateLitePopup#itemTemplate
+             * @name Controls/dateLitePopup/IDateLitePopup#itemTemplate
              * @cfg {String} Template of the year. Can accept the option monthCaptionTemplate - template header
              * of the month. The date of the first day of the month and date formatting function are passed
              * to the template of the month {@link Types/formatter:date}.
@@ -198,7 +198,7 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
              */
 
             /*
-             * @name Controls/_dateLitePopup/IDateLitePopup#captionFormatter
+             * @name Controls/dateLitePopup/IDateLitePopup#captionFormatter
              * @cfg {Function} Caption formatting function.
              */
             captionFormatter: dateControlsUtils.formatDateRangeCaption
