@@ -11,7 +11,7 @@ import {selectionToRecord} from 'Controls/operations';
 import {adapter} from 'Types/entity';
 import {IData, IDecorator} from 'Types/source';
 import {List, RecordSet} from 'Types/collection';
-import {ISelectionObject, TSelection, TSelectionType} from 'Controls/interface';
+import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/interface';
 
 /**
  * Контейнер принимает опцию selectedItems от Controls/lookupPopup:Controller и устанавливает опцию selectedKeys для дочернего списка.
@@ -27,7 +27,7 @@ import {ISelectionObject, TSelection, TSelectionType} from 'Controls/interface';
  * @extends Core/Control
  * @control
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/ISelection
+ * @mixes Controls/_interface/ISelectionType
  * @public
  * @author Герасимов Александр Максимович
  */
@@ -291,7 +291,7 @@ import {ISelectionObject, TSelection, TSelectionType} from 'Controls/interface';
             return selection;
          },
 
-         getSelection(selection: ISelectionObject, adapter, selectionType: TSelectionType, recursiveSelection: boolean): TSelection {
+         getSelection(selection: ISelectionObject, adapter, selectionType: TSelectionType, recursiveSelection: boolean): TSelectionRecord {
             const type = _private.getValidSelectionType(selectionType);
             return selectionToRecord(selection, adapter, type, recursiveSelection);
          }

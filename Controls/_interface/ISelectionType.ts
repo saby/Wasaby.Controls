@@ -1,6 +1,6 @@
 export type TSelectionType = 'all' | 'leaf' | 'node';
 
-export type TSelection = Record<{
+export type TSelectionRecord = Record<{
     marked: number[]|string[],
     excluded: number[]|string[],
     type: TSelectionType,
@@ -12,7 +12,7 @@ export interface ISelectionObject {
     excluded: string[]|number[];
 }
 
-export interface ISelectionOptions {
+export interface ISelectionTypeOptions {
     selectionType: TSelectionType;
     recursiveSelection: boolean;
 }
@@ -20,17 +20,17 @@ export interface ISelectionOptions {
 /**
  * Интерфейс для контролов, поддерживающих выбор записей определённого типа.
  *
- * @interface Controls/_interface/ISelection
+ * @interface Controls/_interface/ISelectionType
  * @public
  * @author Герасимов А.М.
  */
 
-export default interface ISelection {
-    readonly '[Controls/_interface/ISelection]': boolean;
+export default interface ISelectionType {
+    readonly '[Controls/_interface/ISelectionType]': boolean;
 }
 
 /**
- * @name Controls/_interface/ISelection#selectionType
+ * @name Controls/_interface/ISelectionType#selectionType
  * @cfg {String} Тип выбираемых записей.
  * @default all
  * @remark
@@ -56,7 +56,7 @@ export default interface ISelection {
  */
 
 /**
- * @name Controls/_interface/ISelection#recursiveSelection
+ * @name Controls/_interface/ISelectionType#recursiveSelection
  * @cfg {Boolean} Определяет, будут ли выбираться дочерние элементы при выборе папки.
  * @default true
  * @example

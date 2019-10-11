@@ -1,5 +1,5 @@
 import {adapter, Record} from 'Types/entity';
-import {ISelectionObject, TSelection, TSelectionType} from 'Controls/interface';
+import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/interface';
 
 const SELECTION_FORMAT = [
    {
@@ -30,7 +30,7 @@ function prepareArray(array: string[]|number[]): string[] {
    });
 }
 
-function getSelectionRecord(selection: ISelectionObject, adapter: adapter.IAdapter, selectionType?: TSelectionType = 'all', recursive?: boolean = true): TSelection {
+function getSelectionRecord(selection: ISelectionObject, adapter: adapter.IAdapter, selectionType?: TSelectionType = 'all', recursive?: boolean = true): TSelectionRecord {
    const result = new Record({
       adapter,
       format: SELECTION_FORMAT
