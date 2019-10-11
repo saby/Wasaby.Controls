@@ -19,6 +19,11 @@
                         parentProperty="parent"
                         nodeProperty="parent@"
                         columns="{{_viewColumns}}">
+                           <ws:emptyTemplate>
+                              <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xl" bottomSpacing="l">
+                                 <ws:contentTemplate>Не найдено</ws:contentTemplate>
+                              </ws:partial>
+                           </ws:emptyTemplate>
                      </Controls.explorer:View>
                   </Controls.operations:Container>
                </Controls.list:Container>
