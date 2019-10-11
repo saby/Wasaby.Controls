@@ -545,4 +545,49 @@ define('Controls/interface/IDropdown', [], function() {
     * </pre>
     */
 
+   /**
+    * Открывает выпадающий список.
+    * @function Controls/interface/IDropdown#openMenu
+    * @param {Object} popupOptions Конфигурация прилипающего блока {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
+    * @example
+    * WML:
+    * <pre>
+    *    <AnyControl on:showMenu="_showMenu()">
+    *       ...
+    *    </AnyControl>
+    *    <Controls.dropDown:Button name="dropDownButton">
+    *       ...
+    *    </Controls.dropDown:Button>
+    * </pre>
+    *
+    * ts:
+    * <pre>
+    *    _showMenu(): void {
+    *       this._children.dropDownButton.openMenu();
+    *    }
+    * </pre>
+    */
+
+   /**
+    * Закрывает выпадающий список.
+    * @function Controls/interface/IDropdown#closeMenu
+    * @example
+    * WML:
+    * <pre>
+    *    <AnyControl on:closeMenu="_closeMenu()">
+    *       ...
+    *    </AnyControl>
+    *    <Controls.dropDown:Button name="dropDownButton">
+    *       ...
+    *    </Controls.dropDown:Button>
+    * </pre>
+    *
+    * ts:
+    * <pre>
+    *    _closeMenu(): void {
+    *       this._children.dropDownButton.closeMenu();
+    *    }
+    * </pre>
+    */
+
 });
