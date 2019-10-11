@@ -157,7 +157,7 @@ import 'Types/entity';
                   _private.loadTileViewMode().then((tile) => {
                      _private.setViewConfig(self, viewMode);
                      resolve();
-                  }
+                  })
                })
             } else {
                _private.setViewConfig(self, viewMode);
