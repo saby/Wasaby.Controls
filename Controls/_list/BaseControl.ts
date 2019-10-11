@@ -1201,7 +1201,7 @@ var _private = {
     },
     resetPagingNavigation: function(self, navigation) {
         self._knownPagesCount = INITIAL_PAGES_COUNT;
-        self._currentPage = navigation && navigation.sourceConfig && navigation.sourceConfig.page || INITIAL_PAGES_COUNT;
+        self._currentPage = navigation && navigation.sourceConfig && navigation.sourceConfig.page + 1 || INITIAL_PAGES_COUNT;
     },
 
     initializeNavigation: function(self, cfg) {
