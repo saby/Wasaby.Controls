@@ -10,7 +10,7 @@
    align-items: center;
 }
 
-.controls-itemActionsV__wrapper-isEditing {
+.controls-itemActionsV__wrapper-isEditing_spacing {
   margin-left: @spacing_ItemActions-between-actions;
 }
 
@@ -39,7 +39,7 @@
    padding-right: @spacing_ItemActions-between-content-border-right_position_inside;
    padding-bottom: @spacing_ItemActions-between-content-border-bottom_position_inside;
    padding-left: @spacing_ItemActions-between-content-border-left_position_inside;
-  height: @height_ItemActions_inside;
+   height: @height_ItemActions_inside;
 }
 
 .controls-itemActionsV_style_default {
@@ -100,6 +100,8 @@
 
 .controls-itemActionsV__action {
   user-select: none;
+  min-width: @width_ItemActions-icon;
+  height: @height_ItemActions-icon;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -111,6 +113,9 @@
 }
 .controls-itemActionsV__action_padding {
   margin: 0 @spacing_ItemActions-between-actions;
+}
+.controls-itemActionsV__action_padding_first {
+  margin-right: @spacing_ItemActions-between-actions;
 }
 
 .controls-itemActionsV__action_iconStyle_danger {
