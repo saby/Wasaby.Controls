@@ -1,10 +1,11 @@
 import {Notification} from 'Controls/popupTemplate';
 import template = require('wml!Controls/_compatiblePopup/Notification/Base');
+import {TemplateFunction} from 'UI/Base';
 
-var NotificationBase = Notification.extend({
-   _template: template,
+class NotificationBase extends Notification {
+    protected _template: TemplateFunction = template;
 
-   _beforeMount: function(options) {
+   protected _beforeMount(options): void {
       var _this = this;
 
       _this._contentTemplateOptions = options.contentTemplateOptions;
@@ -13,13 +14,14 @@ var NotificationBase = Notification.extend({
        * После показа размеры контента изменяться, нужно сказать об этом потомкам.
        */
       _this._contentTemplateOptions.handlers = {
-         onAfterShow: function() {
-            _this._notify('controlResize', [], { bubbling: true });
+         onAfterShow(): void {
+            _this._notify('controlResize', [], {bubbling: true});
          }
       };
 
-      return NotificationBase.superclass._beforeMount.apply(_this, arguments);
+      return  super._beforeMount(options);
    }
-});
+   static _theme: string[] = ['Controls/popupTemplate'];
+}
 
 export default NotificationBase;
