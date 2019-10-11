@@ -8,6 +8,13 @@ enum CssTemplatesEnum {
     Grid = 'Grid'
 }
 
+const DEFAULT_COLUMN_WIDTH = '1fr';
+
+const RegExps = {
+    pxValue: new RegExp('^[0-9]+px$'),
+    percentValue: new RegExp('^[0-9]+%$')
+};
+
 type CssRule = {
     name: string;
     value: string | number | Array<string>
@@ -189,6 +196,9 @@ export {
     CssTemplatesEnum,
 
     isCompatibleWidth,
+
+    DEFAULT_COLUMN_WIDTH,
+    RegExps,
 
     isFullGridSupport,
     isPartialGridSupport,

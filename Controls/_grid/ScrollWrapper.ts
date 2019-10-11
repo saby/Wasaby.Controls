@@ -1,45 +1,59 @@
-import Control = require('Core/Control');
-import HorizontalScrollWrapperTpl = require('wml!Controls/_grid/ScrollWrapperTemplate');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import * as template from 'wml!Controls/_grid/ScrollWrapperTemplate';
+import Scrollbar from 'Controls/_scroll/Scroll/Scrollbar';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
-var HorizontalScrollWrapper = Control.extend({
-   _template: HorizontalScrollWrapperTpl,
-   _gridStyle: null,
+export interface IHorizontalScrollWrapperOptions extends IControlOptions {
+    positionChangeHandler: (e: SyntheticEvent<null>, position: number) => void;
+    topOffset: number;
+    scrollWidth: number;
+    listModel: IGridViewModel;
+    gridSupport: 'no' | 'full' | 'partial';
+}
 
-   _beforeMount: function(opt) {
-      this._localPositionHandler = opt.positionChangeHandler;
-      this._gridStyle = this._getGridStyles(opt);
-   },
+export default class HorizontalScrollWrapper extends Control<IControlOptions> {
+    protected _template: TemplateFunction = template;
 
-   _afterRender: function() {
-      if (this._needNotifyResize) {
-         this._children.columnScrollbar.recalcSizes();
-         this._needNotifyResize = false;
-      }
-   },
+    private _gridStyle: string = null;
+    private _localPositionHandler: IHorizontalScrollWrapperOptions['positionChangeHandler'];
+    private _needNotifyResize: boolean = false;
 
-   _beforeUpdate: function(opt) {
-      const newStyle = this._getGridStyles(opt);
-      if (this._gridStyle !== newStyle) {
-         this._gridStyle = newStyle;
-         this._needNotifyResize = true;
-      }
-   },
+    protected _beforeMount(options: IHorizontalScrollWrapperOptions): void {
+        this._localPositionHandler = options.positionChangeHandler;
+        this._gridStyle = this._getGridStyles(options);
+    }
 
-   _getGridStyles: function(opt) {
-      let style = '';
-      const { listModel } = opt;
-      const maxEndColumn = listModel.getMaxEndColumn();
-      const stickyColumnsCount = listModel.getStickyColumnsCount();
-      const header = listModel.getHeader();
-      let offset = 0;
-      if (listModel.getMultiSelectVisibility() !== 'hidden') {
-         offset += 1;
-      }
-      style += `grid-column:${stickyColumnsCount + 1 + offset} / ${(maxEndColumn ? maxEndColumn : header.length + 1) + offset};`;
-      style += `top:${opt.topOffset}px;`;
-      style += `width: ${opt.scrollWidth}px`;
-      return style;
-   }
-});
+    protected _afterRender(): void {
+        if (this._needNotifyResize) {
+            (this._children.columnScrollbar as Scrollbar).recalcSizes();
+            this._needNotifyResize = false;
+        }
+    }
 
-export = HorizontalScrollWrapper;
+    _beforeUpdate(options: IHorizontalScrollWrapperOptions): void {
+        const newStyle = this._getGridStyles(options);
+        if (this._gridStyle !== newStyle) {
+            this._gridStyle = newStyle;
+            this._needNotifyResize = true;
+        }
+    }
+
+    private _getGridStyles(options: IHorizontalScrollWrapperOptions): string {
+        if (options.listModel.shouldUseTableLayout()) {
+            return '';
+        }
+        let style = '';
+        const {listModel} = options;
+        const maxEndColumn = listModel.getMaxEndColumn();
+        const stickyColumnsCount = listModel.getStickyColumnsCount();
+        const header = listModel.getHeader();
+        let offset = 0;
+        if (listModel.getMultiSelectVisibility() !== 'hidden') {
+            offset += 1;
+        }
+        style += `grid-column:${stickyColumnsCount + 1 + offset} / ${(maxEndColumn ? maxEndColumn : header.length + 1) + offset};`;
+        style += `top:${options.topOffset}px;`;
+        style += `width: ${options.scrollWidth}px`;
+        return style;
+    }
+}

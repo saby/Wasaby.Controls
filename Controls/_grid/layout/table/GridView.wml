@@ -1,7 +1,8 @@
-<table attr:class="controls-Grid controls-Grid_layout_fixed {{_options.columnScroll ? ' controls-Grid_layout_auto'}} controls-Grid_{{_options.style}}">
-    <ws:partial template="wml!Controls/_grid/ColGroup" listModel="{{_listModel}}"/>
+<table class="controls-Grid controls-Grid_{{_options.style}} controls-Grid_table-layout
+              controls-Grid_table-layout_{{_listModel._isFixedLayout() ? 'fixed' : 'auto'}}">
+    <ws:partial template="wml!Controls/_grid/layout/table/ColGroup" listModel="{{_listModel}}"/>
     <ws:if data="{{_listModel.getHeader() && _listModel.isDrawHeaderWithEmptyList()}}">
-        <ws:partial template="wml!Controls/_grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
+        <ws:partial template="wml!Controls/_grid/layout/table/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
     </ws:if>
     <ws:if data="{{_listModel.getResultsPosition() === 'top'}}">
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
@@ -34,7 +35,11 @@
             </ws:editArrowTemplate>
         </ws:partial>
         <ws:if data="{{_options._needBottomPadding}}">
-            <div class="controls-itemActionsV_outside-spacing"></div>
+            <tr>
+                <td class="controls-itemActionsV_outside-spacing"
+                    colspan="{{(_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0))}}">
+                </td>
+            </tr>
         </ws:if>
         <ws:if data="{{_options.emptyTemplate}}">
             <tr>
@@ -52,7 +57,10 @@
     <ws:if data="{{_listModel.getResultsPosition() === 'bottom'}}">
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
     </ws:if>
-    <div attr:class="{{_calcFooterPaddingClass(_options)}}">
-        <ws:partial template="{{_options.footerTemplate}}"/>
-    </div>
+    <tr>
+        <td class="{{_calcFooterPaddingClass(_options)}}"
+            colspan="{{(_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0))}}">
+            <ws:partial template="{{_options.footerTemplate}}"/>
+        </td>
+    </tr>
 </table>

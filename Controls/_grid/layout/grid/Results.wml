@@ -20,6 +20,7 @@
       </Controls.scroll:StickyHeader>
 </ws:template>
 <ws:template name="results">
+<div class="controls-Grid__results">
 <ws:if data="{{contentTemplate}}">
     {{listModel.resetResultsColumns();}}
     <ws:if data="{{listModel.getMultiSelectVisibility() !== 'hidden'}}">
@@ -42,28 +43,15 @@
                   offset="{{listModel.getResultOffset() ? listModel.getResultOffset()}}"/>
    </ws:for>
 </ws:else>
-</ws:template>
-
-<ws:template name="templateChooser">
-   <ws:if data="{{listModel.isNoGridSupport()}}">
-      <ws:partial template="results"></ws:partial>
-</ws:if>
-<ws:else data="{{listModel.isPartialGridSupport()}}">
-   <ws:partial template="results"></ws:partial>
-</ws:else>
-<ws:else>
-   <div class="controls-Grid__results">
-       <ws:partial template="results"></ws:partial>
-   </div>
-</ws:else>
+</div>
 </ws:template>
 
 <ws:if data="{{listModel.isStickyHeader() && listModel.getResultsPosition() === 'top'}}">
-<Controls.scroll:Group>
-   <!-- Fix after complete https://online.sbis.ru/opendoc.html?guid=8758be7a-08df-42dc-b185-1b5592e23a64 -->
-   <ws:partial template="templateChooser" temp="{{ listModel.getVersion() }}"/>
-</Controls.scroll:Group>
+    <Controls.scroll:Group>
+       <!-- Fix after complete https://online.sbis.ru/opendoc.html?guid=8758be7a-08df-42dc-b185-1b5592e23a64 -->
+       <ws:partial template="results" temp="{{ listModel.getVersion() }}"/>
+    </Controls.scroll:Group>
 </ws:if>
 <ws:else>
-<ws:partial template="templateChooser"/>
+    <ws:partial template="results"/>
 </ws:else>
