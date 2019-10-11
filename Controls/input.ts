@@ -20,7 +20,7 @@
  * @includes IBase Controls/_input/interface/IBase
  * @includes ITag Controls/_input/interface/ITag
  * @includes IValue Controls/_input/interface/IValue
- *
+ * @includes IDateTimeMask Controls/_input/interface/IDateTimeMask
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  *
  * @public
@@ -47,6 +47,9 @@
  * @includes IValidationStatus Controls/_input/interface/IValidationStatus
  * @includes IText Controls/_input/interface/IText
  * @includes IBase Controls/_input/interface/IBase
+ * @includes ITag Controls/_input/interface/ITag
+ * @includes IValue Controls/_input/interface/IValue
+ * @includes IDateTimeMask Controls/_input/interface/IDateTimeMask
  * @includes INewLineKey Controls/_input/interface/INewLineKey
  *
  * @public
@@ -79,7 +82,7 @@ import StringValueConverter = require('Controls/_input/DateTime/StringValueConve
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
 import INewLineKey from 'Controls/_input/interface/INewLineKey';
-import * as MaskFormatterValue from 'Controls/_input/Mask/FormatterValue'
+import * as MaskFormatterValue from 'Controls/_input/Mask/FormatterValue';
 export {default as IText, ITextOptions} from 'Controls/_input/interface/IText';
 export {default as IBase, IBaseOptions, TextAlign, AutoComplete} from 'Controls/_input/interface/IBase';
 export {default as ITag, ITagOptions, TagStyle} from 'Controls/_input/interface/ITag';
