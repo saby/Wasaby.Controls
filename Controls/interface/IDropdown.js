@@ -547,7 +547,7 @@ define('Controls/interface/IDropdown', [], function() {
 
    /**
     * Открывает выпадающий список.
-    * @function Controls/interface/IDropdown#openDropDown
+    * @function Controls/interface/IDropdown#openMenu
     * @param {Object} popupOptions Конфигурация прилипающего блока {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
     * @example
     * WML:
@@ -563,14 +563,14 @@ define('Controls/interface/IDropdown', [], function() {
     * ts:
     * <pre>
     *    _showMenu(): void {
-    *       this._children.dropDownButton.openDropDown();
+    *       this._children.dropDownButton.openMenu();
     *    }
     * </pre>
     */
 
    /**
     * Закрывает выпадающий список.
-    * @function Controls/interface/IDropdown#closeDropDown
+    * @function Controls/interface/IDropdown#closeMenu
     * @example
     * WML:
     * <pre>
@@ -585,7 +585,7 @@ define('Controls/interface/IDropdown', [], function() {
     * ts:
     * <pre>
     *    _closeMenu(): void {
-    *       this._children.dropDownButton.closeDropDown();
+    *       this._children.dropDownButton.closeMenu();
     *    }
     * </pre>
     */

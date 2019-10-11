@@ -109,12 +109,12 @@ var ComboBox = Control.extend({
       }
    },
 
-   openDropDown(popupOptions?: object): void {
-      this._children.controller.openDropDown(popupOptions);
+   openMenu(popupOptions?: object): void {
+      this._children.controller.openMenu(popupOptions);
    },
 
-   closeDropDown(): void {
-      this._children.controller.closeDropDown();
+   closeMenu(): void {
+      this._children.controller.closeMenu();
    }
 
 });

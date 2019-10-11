@@ -803,7 +803,7 @@ define(
             assert.isFalse(!!dropdownController._sourceController);
          });
 
-         it('openDropDown', () => {
+         it('openMenu', () => {
             let dropdownController = getDropdownController(config);
             let openConfig;
 
@@ -818,11 +818,11 @@ define(
                }
             };
 
-            dropdownController.openDropDown({ testOption: 'testValue' });
+            dropdownController.openMenu({ testOption: 'testValue' });
             assert.equal(openConfig.testOption, 'testValue');
          });
 
-         it('closeDropDown', () => {
+         it('closeMenu', () => {
             let dropdownController = getDropdownController(config);
             let closed = false;
 
@@ -832,7 +832,7 @@ define(
                }
             };
 
-            dropdownController.closeDropDown();
+            dropdownController.closeMenu();
             assert.isTrue(closed);
          });
 

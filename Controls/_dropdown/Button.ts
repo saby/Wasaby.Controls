@@ -118,12 +118,12 @@ var Button = Control.extend({
       return handlerResult;
    },
 
-   openDropDown(popupOptions?: object): void {
-      this._children.controller.openDropDown(popupOptions);
+   openMenu(popupOptions?: object): void {
+      this._children.controller.openMenu(popupOptions);
    },
 
-   closeDropDown(): void {
-      this._children.controller.closeDropDown();
+   closeMenu(): void {
+      this._children.controller.closeMenu();
    }
 
 });

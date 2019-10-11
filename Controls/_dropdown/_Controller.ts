@@ -462,11 +462,11 @@ var _Controller = Control.extend({
       this._depsDeferred = null;
    },
 
-   openDropDown(popupOptions?: object): void {
+   openMenu(popupOptions?: object): void {
       this._open(null, popupOptions);
    },
 
-   closeDropDown(): void {
+   closeMenu(): void {
       _private.closeDropdownList(this);
    }
 });
