@@ -141,17 +141,23 @@ var
                 `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`;
         },
 
-        getUpperCells: function(header, cur) {
+        getHeaderCellOffset: function(header, cur) {
             const result = header.reduce((acc, el) => {
                 if (el.endRow < cur.endRow && el.startColumn <= cur.startColumn && el.endColumn >= cur.endColumn) {
                     acc.push(el);
                 }
                 return acc;
             }, []);
-            return result;
+            let upperCellsHeight = 0;
+            if (result && !!result.length) {
+                for (const el of result) {
+                    upperCellsHeight += el.height;
+                }
+            }
+            return upperCellsHeight;
         },
 
-        setCellsArray: function(header, container, multyselectVisibility) {
+        prepareHeaderCells: function(header, container, multyselectVisibility) {
             return header.map((cur) => ({...cur, height: container.querySelector(
                     _private.getQueryForHeaderCell(Env.detection.safari, cur, multyselectVisibility)
                 ).offsetHeight}));
@@ -307,18 +313,12 @@ var
             // toDO Такое получение контейнера до исправления этой ошибки https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
             const container = this._container.length !== undefined ? this._container[0] : this._container;
             const multyselectVisibility = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
-            const cellsArray = _private.setCellsArray(this._options.header, container, multyselectVisibility);
+            const cellsArray = _private.prepareHeaderCells(this._options.header, container, multyselectVisibility);
             const newColumns = cellsArray.map((cur) => {
-                    const upperCells = _private.getUpperCells(cellsArray, cur);
-                    let upperCellsHeight = 0;
-                    if (upperCells && !!upperCells.length) {
-                        for (const el of upperCells) {
-                            upperCellsHeight += el.height;
-                        }
-                    }
+                    const upperCellsOffset = _private.getHeaderCellOffset(cellsArray, cur);
                     return {
                         ...cur,
-                        offsetTop: upperCellsHeight,
+                        offsetTop: upperCellsOffset,
                     };
             });
             return [newColumns, resultOffset];
