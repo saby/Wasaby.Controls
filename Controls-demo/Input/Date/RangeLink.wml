@@ -60,13 +60,6 @@
             />
          </div>
       </div>
-      <div class="controlsDemo-RageLink__content">
-         <div class="controlsDemo-RageLink__componentWrap">
-            <span>With custom formatter: </span>
-            <Controls.dateRange:Selector
-                  captionFormatter="{{_captionFormatter}}"
-                  />
-         </div>
-      </div>
+
    </div>
 </div>
