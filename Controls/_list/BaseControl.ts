@@ -1297,9 +1297,10 @@ var _private = {
     isBlockedForLoading(loadingIndicatorState): boolean {
         return loadingIndicatorState === 'all';
     },
-    getLoadingIndicatorClasses(loadingIndicatorState): string {
+    getLoadingIndicatorClasses(hasItems: boolean, loadingIndicatorState: 'all' | 'down' | 'up'): string {
         return CssClassList.add('controls-BaseControl__loadingIndicator')
             .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
+            .add('controls-BaseControl_empty__loadingIndicator__state-down', !hasItems && loadingIndicatorState === 'down')
             .compile();
     },
     hasItemActions: function(itemActions, itemActionsProperty) {
@@ -2303,7 +2304,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _getLoadingIndicatorClasses(): string {
-        return _private.getLoadingIndicatorClasses(this._loadingIndicatorState);
+        const hasItems = !!this._items && !!this._items.getCount();
+        return _private.getLoadingIndicatorClasses(hasItems, this._loadingIndicatorState);
     },
     _onHoveredItemChanged: function(e, item, container) {
         if (this._hasItemActions){
