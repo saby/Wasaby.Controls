@@ -98,7 +98,8 @@ define(['Controls/grid'], function(gridMod) {
             mountResult;
          gridView._listModel = {
             setHandlersForPartialSupport: function(){},
-            setColumnTemplate: function(){}
+            setColumnTemplate: function(){},
+            setBaseItemTemplateResolver: () => {}
          };
          mountResult = gridView._beforeMount(cfg);
          assert.equal(mountResult, cfg.multiSelectReady);

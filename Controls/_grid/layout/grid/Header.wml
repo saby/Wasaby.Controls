@@ -13,6 +13,7 @@
          </ws:if>
       </ws:for>
 </ws:template>
+
 <ws:template name="cellContent">
    <ws:if data="{{ multiselect === 'hidden' || headerColumn.index !== 0 || headerColumn.column.title}}">
       <ws:if data="{{!!headerColumn.column.template}}">
@@ -30,29 +31,14 @@
       </ws:else>
    </ws:if>
 </ws:template>
-<ws:template name="cell">
-   <ws:if data="{{listModel.isNoGridSupport()}}">
-      <th
-              attr:class="{{headerColumn.cellClasses}}"
-              attr:style="{{headerColumn.style}}"
-              rowspan="{{headerColumn.rowSpan}}"
-              colspan="{{headerColumn.colSpan}}">
-         <ws:partial template="cellContent"/>
 
-      </th>
-   </ws:if>
-   <ws:else data="{{listModel.isPartialGridSupport()}}">
-      <div attr:style="{{headerColumn.cellStyles}}{{headerColumn.style}}" attr:class="{{headerColumn.cellClasses}}">
-         <ws:partial template="cellContent" />
-      </div>
-   </ws:else>
-   <ws:else>
+<ws:template name="cell">
       <div attr:class="{{headerColumn.cellClasses}}"
            attr:style="{{headerColumn.cellStyles}}{{headerColumn.style}}">
          <ws:partial template="cellContent"/>
       </div>
-   </ws:else>
 </ws:template>
+
 <ws:template name="stickyCell">
       <Controls.scroll:StickyHeader
               attr:class="{{headerColumn.cellClasses}}"
@@ -74,32 +60,16 @@
                      listModel="{{ listModel }}"/>
       </Controls.scroll:StickyHeader>
 </ws:template>
+
 <ws:template name="header">
-   <ws:if data="{{listModel.isNoGridSupport()}}">
-      <thead class="controls-Grid__header">
-         {{ listModel.resetHeaderRows() }}
-         <ws:for data="listModel.resetHeaderRows(); listModel.isEndHeaderRow(); listModel.goToNextHeaderRow();">
-           <tr>
-               <ws:partial template="headContent" headerRow="{{ listModel.getCurrentHeaderRow() }}" />
-           </tr>
-         </ws:for>
-      </thead>
-   </ws:if>
-   <ws:else data="{{listModel.isPartialGridSupport()}}">
-      {{ listModel.resetHeaderRows() }}
-      <ws:for data="listModel.resetHeaderRows(); listModel.isEndHeaderRow(); listModel.goToNextHeaderRow();">
-         <ws:partial template="headContent" headerRow="{{ listModel.getCurrentHeaderRow() }}"/>
-      </ws:for>
-   </ws:else>
-   <ws:else>
       <div class="controls-Grid__header">
          {{ listModel.resetHeaderRows() }}
          <ws:for data="listModel.resetHeaderRows(); listModel.isEndHeaderRow(); listModel.goToNextHeaderRow();">
             <ws:partial template="headContent" headerRow="{{ listModel.getCurrentHeaderRow() }}"/>
          </ws:for>
       </div>
-   </ws:else>
 </ws:template>
+
 <ws:if data="{{listModel.isStickyHeader()}}">
    <Controls.scroll:Group>
       <ws:partial template="header" listModel="{{ listModel }}" />

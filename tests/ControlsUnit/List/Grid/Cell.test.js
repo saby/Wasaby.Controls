@@ -1,8 +1,8 @@
 define([
-   'Controls/_grid/layouts/partialGridSupport/Cell'
+   'Controls/_grid/layout/partialGrid/Cell'
 ], function(Cell) {
 
-   describe('Controls/_grid/layouts/partialGridSupport/Cell', function() {
+   describe('Controls/_grid/layout/partialGrid/Cell', function() {
 
       it('getCellClasses', function() {
          let
@@ -13,7 +13,7 @@ define([
                 },
                 highlightOnHover: true
              },
-             cell = new Cell(options);
+             cell = new Cell.default(options);
 
          cell._beforeMount(options);
          cell.saveOptions(options);
@@ -70,7 +70,7 @@ define([
                }
             }
          }
-         cell = new Cell(mockOptions);
+         cell = new Cell.default(mockOptions);
          cell._beforeMount(mockOptions);
          cell.saveOptions(mockOptions);
 
@@ -98,7 +98,7 @@ define([
                    }
                 }
              },
-             cell = new Cell(options);
+             cell = new Cell.default(options);
          cell.saveOptions(options);
 
          cell._beforeMount(options);
@@ -119,7 +119,7 @@ define([
                   }
                }
             },
-            cell = new Cell(options),
+            cell = new Cell.default(options),
             propagationStopped = false,
             fakeItem = {getContents: function() {
                   return [{},{}];

@@ -58,6 +58,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          };
          cfg.listModel.isFullGridSupport = () => true;
          cfg.listModel.isNoGridSupport = () => false;
+         cfg.listModel.shouldUseTableLayout = () => false;
          columnScroll._beforeMount(cfg);
          Entity.Guid.create = baseCreateGuid;
          assert.equal(columnScroll._transformSelector, 'controls-ColumnScroll__transform-1234567890');
