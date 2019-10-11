@@ -50,7 +50,7 @@ define(
 
          let itemsRecords = new collection.RecordSet({
             keyProperty: 'id',
-            rawData: items
+            rawData: Clone(items)
          });
 
          let config = {
@@ -801,6 +801,39 @@ define(
             assert.isTrue(!!dropdownController._sourceController.isLoading());
             dropdownController._beforeUnmount();
             assert.isFalse(!!dropdownController._sourceController);
+         });
+
+         it('openMenu', () => {
+            let dropdownController = getDropdownController(config);
+            let openConfig;
+
+            dropdownController._beforeMount(config);
+            dropdownController._items = new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: items
+            });
+            dropdownController._children.DropdownOpener = {
+               open: (cfg) => {
+                  openConfig = cfg;
+               }
+            };
+
+            dropdownController.openMenu({ testOption: 'testValue' });
+            assert.equal(openConfig.testOption, 'testValue');
+         });
+
+         it('closeMenu', () => {
+            let dropdownController = getDropdownController(config);
+            let closed = false;
+
+            dropdownController._children.DropdownOpener = {
+               close: () => {
+                  closed = true;
+               }
+            };
+
+            dropdownController.closeMenu();
+            assert.isTrue(closed);
          });
 
          it('_private::getNewItems', function() {
