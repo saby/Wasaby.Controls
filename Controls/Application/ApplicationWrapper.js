@@ -12,7 +12,7 @@ define('Controls/Application/ApplicationWrapper', [
        * @return {String|null}
        */
       calculateVersion: function(search) {
-         var matchVersion = search.match(/(^\?|&)v=(.*)/);
+         var matchVersion = search.match(/(^\?|&)x_version=(.*)/);
 
          return matchVersion && matchVersion[2];
       }
