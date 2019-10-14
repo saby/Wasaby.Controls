@@ -129,7 +129,7 @@ import Deferred = require('Core/Deferred');
           * В зависимости от значения опции 'mode':
           * * 'stack' — смотреть {@link Controls/_popup/Opener/Stack/PopupOptions.typedef popupOptions стекового окна}
           * * 'dialog' — смотреть {@link Controls/_popup/Opener/Dialog/PopupOptions.typedef popupOptions диалогового окна}
-          * *'sticky' — смотреть {@link Controls/_popup/Opener/Sticky/PopupOptions.typedef popupOptions окна прилипающего блока}
+          * * 'sticky' — смотреть {@link Controls/_popup/Opener/Sticky/PopupOptions.typedef popupOptions окна прилипающего блока}
           * @returns {undefined}
           * @example
           * * WML
