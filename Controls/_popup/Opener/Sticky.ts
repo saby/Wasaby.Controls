@@ -128,7 +128,7 @@ const Sticky = BaseOpener.extend({
 
 /**
  * Статический метод для открытия всплывающего окна. При использовании метода не требуется создавать popup:Sticky в верстке.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ Подробнее}.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/#open-popup Подробнее}.
  * @function Controls/_popup/Opener/Sticky#openPopup
  * @param {PopupOptions[]} config Конфигурация прилипающего блока.
  * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
@@ -184,7 +184,7 @@ Sticky.openPopup = (config: object): Promise<string> => {
 };
 /**
  * Статический метод для закрытия окна по идентификатору.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ Подробнее}.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/#open-popup Подробнее}.
  * @function Controls/_popup/Opener/Sticky#closePopup
  * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
  * @static

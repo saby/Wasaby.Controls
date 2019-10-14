@@ -155,7 +155,7 @@ const Notification = BaseOpener.extend({
 
 /**
  * Статический метод для открытия нотификационного окна. При использовании метода не требуется создавать popup:Notification в верстке.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ Подробнее}.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/#open-popup Подробнее}.
  * @function Controls/_popup/Opener/Notification#openPopup
  * @param {PopupOptions[]} config Конфигурация нотификационного окна
  * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
@@ -214,7 +214,7 @@ Notification.openPopup = (config: object, id: string): Promise<string> => {
 
 /**
  * Статический метод для закрытия окна по идентификатору.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ Подробнее}.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/#open-popup Подробнее}.
  * @function Controls/_popup/Opener/Notification#closePopup
  * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
  * @static

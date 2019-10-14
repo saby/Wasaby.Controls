@@ -46,14 +46,14 @@ const Dialog = BaseOpener.extend({
      * If you call this method while the window is already opened, it will cause the redrawing of the window.
      * @function Controls/_popup/Opener/Dialog#open
      * @returns {Undefined}
-     * @param {PopupOptions[]} popupOptions Dialog popup options.
+     * @param {PopupOptions} popupOptions Dialog popup options.
      */
 
     /**
      * Метод открытия диалогового окна.
      * Повторный вызов этого метода инициирует перерисовку окна с новыми опциями.
      * @function Controls/_popup/Opener/Dialog#open
-     * @param {PopupOptions[]} popupOptions Конфигурация диалогового окна.
+     * @param {PopupOptions} popupOptions Конфигурация диалогового окна.
      * @remark
      * Если требуется открыть окно, без создания popup:Dialog в верстке, следует использовать статический метод {@link openPopup}.
      * @example
@@ -139,7 +139,7 @@ Dialog.openPopup = (config: object): Promise<string> => {
 
 /**
  * Статический метод для закрытия окна по идентификатору.
- * Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ здесь}.
+ * Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#open-popup здесь}.
  * @function Controls/_popup/Opener/Dialog#closePopup
  * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
  * @static
