@@ -14,7 +14,7 @@
  * @includes Button Controls/_buttons/Button
  * @includes IHref Controls/_buttons/interface/IHref
  * @includes IClick Controls/_buttons/interface/IClick
- * @includes Controls/_buttons/interface/IButton
+ * @includes IButton Controls/_buttons/interface/IButton
  * @author Красильников А.С.
  */
 
