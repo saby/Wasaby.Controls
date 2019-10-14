@@ -564,6 +564,7 @@ var _private = {
             // даже если триггеры не видны (если что, sourceController.hasMore нас остановит).
             // Но скорее всего это как-то по другому нужно решать, например на уровне стилей
             // (уменьшать отступ триггеров, когда список пуст???). Выписал задачу:
+            // https://online.sbis.ru/opendoc.html?guid=fb5a67de-b996-49a9-9312-349a7831f8f1
             const hasNoItems = self.getViewModel() && self.getViewModel().getCount() === 0;
             if (self._loadTriggerVisibility.up || hasNoItems) {
                 _private.onScrollLoadEdge(self, 'up', filter);
