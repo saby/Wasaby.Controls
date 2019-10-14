@@ -9,15 +9,15 @@ export interface IMonthListOptions {
 
 /**
  * Интерфейс для контролов основанных на Controls/calendar:MonthList.
- * @interface Controls/_calendar/interface/IMonthList
+ * @interface Controls/_calendar/interfaces/IMonthList
  * @public
  */
 export interface IMonthList {
-   readonly '[Controls/_calendar/interface/IMonthList]': boolean;
+   readonly '[Controls/_calendar/interfaces/IMonthList]': boolean;
 }
 
 /**
- * @name Controls/_calendar/interface/IMonthList#viewMode
+ * @name Controls/_calendar/interfaces/IMonthList#viewMode
  * @cfg {String} Режим отображения элементов. По годам или по месяцам.
  * @variant year Один отображаемый элемент - год.
  * @variant month Один отображаемый элемент - месяц.
@@ -27,12 +27,12 @@ export interface IMonthList {
  *     bind:month="_month"
  *     viewMode="month"/>
  * </pre>
- * @see Controls/_calendar/interface/IMonthList#yearTemplate
- * @see Controls/_calendar/interface/IMonthList#monthTemplate
+ * @see Controls/_calendar/interfaces/IMonthList#yearTemplate
+ * @see Controls/_calendar/interfaces/IMonthList#monthTemplate
  */
 
 /**
- * @name Controls/_calendar/interface/IMonthList#position
+ * @name Controls/_calendar/interfaces/IMonthList#position
  * @cfg {Date} Год или месяц который отображается первым в верху скролируемой области.
  * При изменении значения лента скролится к новому году\месяцу.
  *
@@ -43,7 +43,7 @@ export interface IMonthList {
  */
 
 /**
- * @name Controls/_calendar/interface/IMonthList#yearTemplate
+ * @name Controls/_calendar/interfaces/IMonthList#yearTemplate
  * @cfg {Function} Шаблон года.
  *
  * @remark
@@ -71,12 +71,12 @@ export interface IMonthList {
  *      </ws:yearTemplate>
  * </Controls.calendar:MonthList>
  * </pre>
- * @see Controls/_calendar/interface/IMonthList#monthTemplate
- * @see Controls/_calendar/interface/IMonthList#viewMode
+ * @see Controls/_calendar/interfaces/IMonthList#monthTemplate
+ * @see Controls/_calendar/interfaces/IMonthList#viewMode
  */
 
 /**
- * @name Controls/_calendar/interface/IMonthList#monthTemplate
+ * @name Controls/_calendar/interfaces/IMonthList#monthTemplate
  * @cfg {Function} Шаблон месяца.
  *
  * @remark
@@ -103,6 +103,6 @@ export interface IMonthList {
  *      </ws:monthTemplate>
  * </Controls.calendar:MonthList>
  * </pre>
- * @see Controls/_calendar/interface/IMonthList#yearTemplate
- * @see Controls/_calendar/interface/IMonthList#viewMode
+ * @see Controls/_calendar/interfaces/IMonthList#yearTemplate
+ * @see Controls/_calendar/interfaces/IMonthList#viewMode
  */

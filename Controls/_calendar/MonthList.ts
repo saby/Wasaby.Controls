@@ -22,38 +22,7 @@ import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
 import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
 
-/**
- * Прокручивающийся список с месяцами. Позволяет выбирать период.
- *
- * @class Controls/_calendar/MonthList
- * @extends Core/Control
- * @mixes Controls/_calendar/interface/IMonthListSource
- * @control
- * @public
- * @author Красильников А.С.
- * @demo Controls-demo/Date/MonthList
- */
 
-/**
- * @event Controls/_calendar/MonthList#positionChanged Происходит когда меняется год или месяц. Т.е. когда
- * год или месяц пересекают верхнюю границу.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {date} Date отображаемый в самом верху год или месяц.
- * @example
- * Обновляем заголовок в зависимости от отображаемого года.
- * <pre>
- *    <Controls.calendar:MonthList startPosition="_date" on:positionChanged="_positionChangedHandler()"/>
- * </pre>
- * <pre>
- *    class  ModuleComponent extends Control {
- *       ...
- *       _positionChangedHandler(e, date) {
- *          this.setTitle(date);
- *       }
- *       ...
- *    }
- * </pre>
- */
 
 interface IModuleComponentOptions extends
     IControlOptions,
@@ -73,6 +42,18 @@ const
         month: '.controls-MonthList__month-body'
     };
 
+
+/**
+ * Прокручивающийся список с месяцами. Позволяет выбирать период.
+ *
+ * @class Controls/_calendar/MonthList
+ * @extends Core/Control
+ * @mixes Controls/_calendar/interfaces/IMonthListSource
+ * @control
+ * @public
+ * @author Красильников А.С.
+ * @demo Controls-demo/Date/MonthList
+ */
 class  ModuleComponent extends Control<IModuleComponentOptions> implements
         IMonthListSource, IMonthList, IMonthListVirtualPageSize, IDateConstructor {
     readonly '[Controls/_calendar/interface/IMonthListSource]': true;
@@ -368,3 +349,25 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 }
 
 export default ModuleComponent;
+
+/**
+ * @event Происходит когда меняется год или месяц.
+ * Т.е. когда год или месяц пересекают верхнюю границу.
+ * @name Controls/_calendar/MonthList#positionChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {date} Date отображаемый в самом верху год или месяц.
+ * @example
+ * Обновляем заголовок в зависимости от отображаемого года.
+ * <pre>
+ *    <Controls.calendar:MonthList startPosition="_date" on:positionChanged="_positionChangedHandler()"/>
+ * </pre>
+ * <pre>
+ *    class  ModuleComponent extends Control {
+ *       ...
+ *       _positionChangedHandler(e, date) {
+ *          this.setTitle(date);
+ *       }
+ *       ...
+ *    }
+ * </pre>
+ */
