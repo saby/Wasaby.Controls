@@ -149,6 +149,28 @@ var
                 `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`;
         },
 
+        getHeaderCellOffset: function(header, cur) {
+            const result = header.reduce((acc, el) => {
+                if (el.endRow < cur.endRow && el.startColumn <= cur.startColumn && el.endColumn >= cur.endColumn) {
+                    acc.push(el);
+                }
+                return acc;
+            }, []);
+            let upperCellsHeight = 0;
+            if (result && !!result.length) {
+                for (const el of result) {
+                    upperCellsHeight += el.height;
+                }
+            }
+            return upperCellsHeight;
+        },
+
+        prepareHeaderCells: function(header, container, multyselectVisibility) {
+            return header.map((cur) => ({...cur, height: container.querySelector(
+                    _private.getQueryForHeaderCell(detection.safari, cur, multyselectVisibility)
+                ).offsetHeight}));
+        },
+
         // TODO Kingo
         // В IE для колонок строки редактирования в гриде нужно установить фиксированную ширину,
         // чтобы она отображалась правильно. Для этого мы измеряем текущую ширину колонок в другой
@@ -319,43 +341,22 @@ var
         _setHeaderWithHeight: function() {
             // todo Сейчас stickyHeader не умеет работать с многоуровневыми Grid-заголовками, это единственный вариант их фиксировать
             // поправим по задаче: https://online.sbis.ru/opendoc.html?guid=2737fd43-556c-4e7a-b046-41ad0eccd211
+
             let resultOffset = 0;
-            let resultsHeaderCells;
-            const resultPosition = this._listModel.getResultsPosition();
             // toDO Такое получение контейнера до исправления этой ошибки https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
             const container = this._container.length !== undefined ? this._container[0] : this._container;
-            const stickyHeaderCells = container.getElementsByClassName('controls-Grid__header')[0].childNodes;
-            if (resultPosition === 'top') {
-                resultsHeaderCells = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
-            }
             const multyselectVisibility = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
-            const newColumns = this._options.header.map((cur, i) => {
-                if (cur.startRow && cur.endRow) {
-                    const curEl = container.querySelector(
-                        _private.getQueryForHeaderCell(detection.safari, cur, multyselectVisibility)
-                    );
-                    const height = curEl.offsetHeight;
-                    const offset = curEl.offsetTop;
+            const cellsArray = _private.prepareHeaderCells(this._options.header, container, multyselectVisibility);
+            const newColumns = cellsArray.map((cur) => {
+                    const upperCellsOffset = _private.getHeaderCellOffset(cellsArray, cur);
                     return {
                         ...cur,
-                        offsetTop: offset,
-                        height
+                        offsetTop: upperCellsOffset,
                     };
-                }
-                const curElHeight = stickyHeaderCells[i].offsetHeight;
-                if (curElHeight > resultOffset && !cur.isBreadCrumbs) {
-                    resultOffset = curElHeight;
-                }
-                return {
-                    ...cur,
-                    offset: 0
-                };
             });
-            if (resultOffset === 0 && resultPosition === 'top') {
-                resultOffset = resultsHeaderCells[0].offsetTop;
-            }
             return [newColumns, resultOffset];
         },
+
         resizeNotifyOnListChanged: function(){
             GridView.superclass.resizeNotifyOnListChanged.apply(this, arguments);
             if (this._children.columnScroll) {
