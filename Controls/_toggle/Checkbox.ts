@@ -255,7 +255,7 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IIcon, ITo
    // Удалено в 20.1100
    private _isTemplate(icon: TemplateFunction | string): boolean {
       if (typeof icon === 'function') {
-         Env.IoC.resolve('ILogger').warn('Controls.toggle:Checkbox', 'Опция icon должна иметь тип string. После 710 поддержка шаблона будет отключена, и будут кидаться ошибки в консоль.');
+         Env.IoC.resolve('ILogger').error('Controls.toggle:Checkbox', 'Опция icon должна иметь тип string. После 710 поддержка шаблона будет отключена, и будут кидаться ошибки в консоль.');
          return true;
       }
 
