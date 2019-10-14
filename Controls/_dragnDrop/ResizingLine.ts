@@ -1,5 +1,6 @@
 import template = require('wml!Controls/_dragnDrop/ResizingLine/ResizingLine');
 
+import {descriptor} from 'Types/entity';
 import {Container} from 'Controls/dragnDrop';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -19,42 +20,40 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  */
 
 /**
- * @name Controls/_toggle/Checkbox#direction
- * @cfg {String} Задает направление оси для сдвига
- * @variant direct Прямое направление. Слева направо
- * @variant reverse Обратное направление. Справа налево
- * @remark
- * Влияет на то, каким будет результат события offset. Если сдвиг идет вдоль направления оси, offset положительный. Если против, то отрицательный
- * @see event offset()
- */
-type Direction = 'direct' | 'reverse';
-
-/**
- * @name Controls/_dragnDrop/ResizingLine#maxOffset
- * @cfg {Number} Максимальное значение сдвига при изменении значения размера
- * @default 1000
- * @remark
- * Сдвиг больше указанного визуально отображаться не будет. Для возможности сдвига вдоль направления оси maxOffset должен быть > 0
- */
-
-/**
- * @name Controls/_dragnDrop/ResizingLine#minOffset
- * @cfg {Number} Минимальное значение сдвига при изменении значения размера
- * @default 1000
- * @remark
- * Сдвиг меньше указанного визуально отображаться не будет. Для возможности сдвига против направления оси minOffset должен быть < 0
- */
-
-/**
  * @event Controls/_toggle/Checkbox#offset Происходит после перетаскивания мыши, когда клавиша мыши отпущена
  * @param {Number|null} Значение сдвига
  * @remark Зависит от направления оси
  * @see direction
  */
 
+type Direction = 'direct' | 'reverse';
+
 export interface IContainerOptions extends IControlOptions {
+    /**
+     * @name Controls/_dragnDrop/ResizingLine#maxOffset
+     * @cfg {Number} Максимальное значение сдвига при изменении значения размера
+     * @default 1000
+     * @remark
+     * Сдвиг больше указанного визуально отображаться не будет. Для возможности сдвига вдоль направления оси maxOffset должен быть > 0
+     */
     maxOffset: number;
+    /**
+     * @name Controls/_dragnDrop/ResizingLine#minOffset
+     * @cfg {Number} Минимальное значение сдвига при изменении значения размера
+     * @default 1000
+     * @remark
+     * Сдвиг меньше указанного визуально отображаться не будет. Для возможности сдвига против направления оси minOffset должен быть < 0
+     */
     minOffset: number;
+    /**
+     * @name Controls/_toggle/Checkbox#direction
+     * @cfg {String} Задает направление оси для сдвига
+     * @variant direct Прямое направление. Слева направо
+     * @variant reverse Обратное направление. Справа налево
+     * @remark
+     * Влияет на то, каким будет результат события offset. Если сдвиг идет вдоль направления оси, offset положительный. Если против, то отрицательный
+     * @see event offset()
+     */
     direction: Direction;
 }
 
@@ -147,11 +146,18 @@ class ResizingLine extends Control<IContainerOptions> {
 
     static _theme: string[] = ['Controls/dragnDrop'];
 
+    static getDefaultTypes() {
+        return {
+            minOffset: descriptor(Number),
+            maxOffset: descriptor(Number)
+        };
+    }
+
     static getDefaultOptions(): object {
         return {
             minOffset: 1000,
             maxOffset: 1000
-        };
+        }
     }
 }
 
