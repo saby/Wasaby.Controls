@@ -70,6 +70,13 @@ define([
                data: [data[0]]
             }),
             keyProperty: 'id'
+         },
+         cfgWithoutItems = {
+            source: new sourceLib.Memory({
+               keyProperty: 'id',
+               data: []
+            }),
+            keyProperty: 'id'
          };
 
       beforeEach(function() {
@@ -87,14 +94,26 @@ define([
       });
 
 
-      it('_beforeMount', function(done) {
-         assert.isFalse(instance._initialized);
-         instance._beforeMount(cfg).addCallback(function(items) {
+      describe('_beforeMount', function() {
+
+         it('several items', (done) => {
             assert.isFalse(instance._initialized);
-            assert.deepEqual(items.getRawData(), data);
-            assert.deepEqual(instance._items.getRawData(), data);
-            done();
+            instance._beforeMount(cfg).addCallback(function(items) {
+               assert.isFalse(instance._initialized);
+               assert.deepEqual(items.getRawData(), data);
+               assert.deepEqual(instance._items.getRawData(), data);
+               done();
+            });
          });
+
+         it('without items', (done) => {
+            assert.isFalse(instance._initialized);
+            instance._beforeMount(cfgWithoutItems).addCallback(function() {
+               assert.isTrue(instance._initialized);
+               done();
+            });
+         });
+
       });
 
       describe('_afterMount', function() {
@@ -170,7 +189,6 @@ define([
                };
                instance._beforeUpdate(cfg);
                assert.isFalse(forceUpdateCalled);
-               assert.isNotOk(instance._sourceChanged);
                done();
             });
          });
@@ -197,7 +215,6 @@ define([
                };
                instance._beforeUpdate(newCfg);
                assert.isFalse(forceUpdateCalled);
-               assert.isTrue(instance._sourceChanged);
                done();
             });
          });
@@ -217,10 +234,8 @@ define([
                instance._forceUpdate = function() {
                   forceUpdateCalled = true;
                };
-               instance._sourceChanged = false;
                instance._afterUpdate(cfg);
                assert.isFalse(forceUpdateCalled);
-               assert.isNotOk(instance._sourceChanged);
                done();
             });
          });
@@ -245,10 +260,8 @@ define([
                instance._forceUpdate = function() {
                   forceUpdateCalled = true;
                };
-               instance._sourceChanged = true;
                instance._afterUpdate(newCfg);
                assert.isTrue(forceUpdateCalled);
-               assert.isFalse(instance._sourceChanged);
                done();
             });
          });
@@ -264,7 +277,7 @@ define([
             };
             WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
             instance._beforeMount(cfg).addCallback(function() {
-               instance._afterUpdate();
+               instance._afterUpdate(cfg);
                instance._toolbarSource.query().addCallback(function(result) {
                   assert.equal(result.getAll().getRecordById(0).get('showType'), 2);
                   assert.equal(result.getAll().getRecordById(1).get('showType'), 2);
@@ -286,7 +299,7 @@ define([
             };
             WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
             instance._beforeMount(cfg).addCallback(function() {
-               instance._afterUpdate();
+               instance._afterUpdate(cfg);
                instance._toolbarSource.query().addCallback(function(result) {
                   assert.equal(result.getAll().getRecordById(0).get('showType'), 1);
                   assert.equal(result.getAll().getRecordById(1).get('showType'), 0);
@@ -308,7 +321,8 @@ define([
             };
             WidthUtils.fillItemsType = mockFillItemsType([80]);
             instance._beforeMount(cfgWithOneItem).addCallback(function() {
-               instance._afterUpdate();
+               instance._options = cfgWithOneItem;
+               instance._afterUpdate(cfgWithOneItem);
                instance._toolbarSource.query().addCallback(function(result) {
                   assert.equal(result.getAll().getRecordById(0).get('showType'), 2);
                   assert.isTrue(forceUpdateCalled);
