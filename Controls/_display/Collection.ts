@@ -2046,6 +2046,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         throw new Error('Collection#getItemBySourceId is implemented for RecordSet only');
     }
 
+    getIndexByKey(key: string|number): number {
+        return this.getIndex(this.getItemBySourceId(key) as T);
+    }
+
     getFirstItem(): S {
         return this.getFirst().getContents();
     }
