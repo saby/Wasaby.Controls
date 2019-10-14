@@ -4,6 +4,8 @@
       <div class="PageBlock__content">
          <div class="PageBlock__componentWrap">
             <Controls.dateRange:LiteSelector
+               checkedStart="{{_checkedStart}}"
+               checkedEnd="{{_checkedEnd}}"
 			   attr:test_name="default_range"/>
          </div>
          <div class="PageBlock__componentWrap ControlsDemo-RangeLinkLite_capture">
