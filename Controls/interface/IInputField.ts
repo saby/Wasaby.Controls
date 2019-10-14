@@ -204,7 +204,9 @@ interface IInputField {
  */
 
 /**
- * @event Controls/interface/IInputField#inputCompleted Происходит при завершении ввода. Завершение ввода - это контрол потерял фокус, или пользователь нажал "enter".
+ * @event  Происходит при завершении ввода. Завершение ввода - это контрол потерял фокус, или пользователь нажал "enter".
+ * @name Controls/interface/IInputField#inputCompleted
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {String} value Значение контрола ввода.
  * @param {String} displayValue Отображаемое значение контрола ввода.
  * @remark
