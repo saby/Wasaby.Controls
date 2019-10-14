@@ -191,7 +191,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
 
                curObserver = new IntersectionObserver(function (changes) {
                   /**
-                   * Баг IntersectionObserver на Mac OS: сallback может вызываться после описки от слежения. Отписка происходит в
+                   * Баг IntersectionObserver на Mac OS: сallback может вызываться после отписки от слежения. Отписка происходит в
                    * _beforeUnmount. Устанавливаем защиту.
                    */
                   if (self._observers === null) {
