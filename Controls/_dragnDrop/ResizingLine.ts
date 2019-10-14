@@ -1,24 +1,8 @@
 import template = require('wml!Controls/_dragnDrop/ResizingLine/ResizingLine');
 
-import * as Entity from './Entity';
+import {Container} from 'Controls/dragnDrop';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
-
-export interface IContainerOptions extends IControlOptions {
-    maxOffset?: number;
-    minOffset?: number;
-    direction?: string;
-}
-
-interface IResizingLineCoords {
-    cOffset: number;
-    cLeft: string;
-    cRight: string;
-    cWidth: string;
-    cTop: string;
-    cBottom: string;
-    cHeight: string;
-}
 
 /*TODO Kingo*/
 /**
@@ -43,6 +27,7 @@ interface IResizingLineCoords {
  * Влияет на то, каким будет результат события offset. Если сдвиг идет вдоль направления оси, offset положительный. Если против, то отрицательный
  * @see event offset()
  */
+type Direction = 'direct' | 'reverse';
 
 /**
  * @name Controls/_dragnDrop/ResizingLine#maxOffset
@@ -66,100 +51,98 @@ interface IResizingLineCoords {
  * @remark Зависит от направления оси
  * @see direction
  */
-class ResizingLine extends Control<IContainerOptions, void> {
-    protected _dragging: boolean = false;
-    protected _styleArea: string = '';
-    protected _template: TemplateFunction = template;
-    protected _offset: number;
-    protected _width: number;
-    protected _height: number;
-    protected _clientRect: ClientRect;
 
-    private _isResizing(minOffset: number, maxOffset: number): boolean {
-        return minOffset !== 0 || maxOffset !== 0;
-    }
+export interface IContainerOptions extends IControlOptions {
+    maxOffset: number;
+    minOffset: number;
+    direction: Direction;
+}
+
+interface IChildren {
+    dragNDrop: Container;
+}
+
+interface IOffset {
+    style: string;
+    value: number;
+}
+
+class ResizingLine extends Control<IContainerOptions> {
+    protected _children: IChildren;
+    protected _options: IContainerOptions;
+    protected _template: TemplateFunction = template;
+    protected _styleArea: string = '';
+    protected _dragging: boolean = false;
 
     protected _beginDragHandler(event: Event): void {
         // to disable selection while dragging
         event.preventDefault();
-
         // preventDefault for disable selection while dragging stopped the focus => active elements don't deactivated.
         // activate control manually
         this.activate();
 
-        this._width = this._container.get ? this._container.get(0).clientWidth : this._container.clientWidth;
-        this._height = this._container.get ? this._container.get(0).clientHeight : this._container.clientHeight;
-        this._children.dragNDrop.startDragNDrop(new Entity({
-            itemId: this.getInstanceId()
-        }), event);
+        this._children.dragNDrop.startDragNDrop({
+            offset: 0
+        }, event);
     }
 
     protected _onStartDragHandler(): void {
         this._dragging = true;
-        this._clientRect = this._container.getBoundingClientRect();
     }
 
-    private _calculateCoordinates(offsetX: number, maxOffset: number, minOffset: number,
-                                  controlWidth: number, controlHeight: number, direction: string): IResizingLineCoords {
-        let offset: number = null;
-        let left: string;
-        let top: string;
-        let height: string;
-        let width: string;
+    protected _onDragHandler(event: SyntheticEvent<MouseEvent>, dragObject): void {
+        const offset = this._offset(dragObject.offset.x);
+        const width = `${Math.abs(offset.value)}px`;
 
-        if (offsetX > 0) {
-            if (direction === 'reverse') {
-                offset = -Math.min(Math.abs(offsetX), Math.abs(minOffset));
-                left = this._clientRect.left + 'px';
-                width = Math.abs(offset) + 'px';
-            } else {
-                offset = Math.min(Math.abs(offsetX), Math.abs(maxOffset));
-                left = this._clientRect.left + controlWidth + 'px';
-                width = Math.abs(offset) + 'px';
-            }
-        } else {
-            if (direction === 'reverse') {
-                offset = Math.min(Math.abs(offsetX), Math.abs(maxOffset));
-                left = this._clientRect.left - offset + 'px';
-                width = Math.abs(offset) + 'px';
-            } else {
-                offset = -Math.min(Math.abs(offsetX), Math.abs(minOffset));
-                left = this._clientRect.left + offset + controlWidth + 'px';
-                width = Math.abs(offset) + 'px';
+        dragObject.entity.offset = offset.value;
+        this._styleArea = `width:${width};${offset.style};`;
+    }
+
+    protected _onEndDragHandler(event: SyntheticEvent<MouseEvent>, dragObject): void {
+        if (this._dragging) {
+            this._styleArea = '';
+            this._dragging = false;
+            this._notify('offset', [dragObject.entity.offset]);
+        }
+    }
+
+    private _offset(x: number): IOffset {
+        const {direction, minOffset, maxOffset} = this._options;
+
+        if (x > 0 && direction === 'direct') {
+            return {
+                style: 'left: 100%',
+                value: Math.min(x, Math.abs(maxOffset))
             }
         }
-        top = this._clientRect.top + 'px';
-        height = controlHeight + 'px';
+        if (x > 0 && direction === 'reverse') {
+            return {
+                style: 'left: 0',
+                value: -Math.min(x, Math.abs(minOffset))
+            }
+        }
+        if (x < 0 && direction === 'direct') {
+            return {
+                style: 'right: 0',
+                value: -Math.min(-x, Math.abs(minOffset))
+            }
+        }
+        if (x < 0 && direction === 'reverse') {
+            return {
+                style: 'right: 100%',
+                value: Math.min(-x, Math.abs(maxOffset))
+            }
+        }
+
         return {
-            cOffset: offset,
-            cLeft: left,
-            cRight: 'auto',
-            cWidth: width,
-            cTop: top,
-            cBottom: 'auto',
-            cHeight: height
+            style: '',
+            value: 0
         };
     }
 
-    protected _onDragHandler(event: SyntheticEvent, dragObject): void {
-        const coords: IResizingLineCoords = this._calculateCoordinates(
-            dragObject.offset.x,
-            this._options.maxOffset,
-            this._options.minOffset,
-            this._width, this._height, this._options.direction
-        );
-
-        this._offset = coords.cOffset;
-        this._styleArea = 'left:' + coords.cLeft + ';width:' + coords.cWidth + ';right:' + coords.cRight
-            + ';top:' + coords.cTop + ';height:' + coords.cHeight + ';bottom:' + coords.cBottom;
-    }
-
-    protected _onEndDragHandler(e: SyntheticEvent, dragObject): void {
-        this._dragging = false;
-        if (dragObject.entity && dragObject.entity instanceof Entity &&
-            dragObject.entity.getOptions().itemId === this.getInstanceId()) {
-            this._notify('offset', [this._offset]);
-        }
+    // Use in template.
+    private _isResizing(minOffset: number, maxOffset: number): boolean {
+        return minOffset !== 0 || maxOffset !== 0;
     }
 
     static _theme: string[] = ['Controls/dragnDrop'];

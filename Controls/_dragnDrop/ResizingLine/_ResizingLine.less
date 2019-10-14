@@ -1,14 +1,29 @@
-.controls-ResizingLine__border_theme_@{themeName} {
+.controls-ResizingLine__wrapper {
    height: 100%;
-   width: @size_DragBordersContainer-border;
-   cursor: ew-resize;
    position: relative;
 }
 
+.controls-ResizingLine__wrapper_theme-@{themeName} {
+   width: @size_DragBordersContainer-border;
+}
+
+.controls-ResizingLine__area {
+   position: absolute;
+   top: 0;
+   bottom: 0;
+}
 
 .controls-ResizingLine__area_theme_@{themeName} {
-   position: fixed;
    background: @background_DragBordersContainer-area;
+}
+
+.controls-ResizingLine__border {
+   height: 100%;
+   cursor: ew-resize;
+}
+
+.ws-is-desktop .controls-ResizingLine__border {
+   width: 100%;
 }
 
 .controls-ResizingLine__areaOverlay {
@@ -19,3 +34,4 @@
    left: -100px;
    right: -100px;
 }
+
