@@ -75,7 +75,7 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                },
                {
                   id: '7',
-                  showType: 0,
+                  showType: 1,
                   title: 'Проекту',
                   '@parent': false,
                   parent: '4'
@@ -89,12 +89,14 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                },
                {
                   id: '9',
+                  showType: 0,
                   title: 'Согласование',
                   '@parent': false,
                   parent: '2'
                },
                {
                   id: '10',
+                  showType: 0,
                   title: 'Задача',
                   '@parent': false,
                   parent: '2'
