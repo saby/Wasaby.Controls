@@ -1,10 +1,10 @@
 import Control = require('Core/Control');
 import TreeControlTpl = require('wml!Controls/_treeGrid/TreeControl/TreeControl');
-import {Controller as SourceController} from 'Controls/source';
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
 import keysHandler = require('Controls/Utils/keysHandler');
+import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 
 var
@@ -75,7 +75,7 @@ var _private = {
             !_private.isExpandAll(self._options.expandedItems) &&
             !self._nodesSourceControllers[nodeKey] &&
             !dispItem.isRoot() &&
-            _private.shouldLoadChildren(self, item)
+            (_private.shouldLoadChildren(self, item) || self._options.task1178031650)
         ) {
             self._nodesSourceControllers[nodeKey] = _private.createSourceController(self._options.source, self._options.navigation);
 
