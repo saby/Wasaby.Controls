@@ -798,6 +798,7 @@ define(
                      rawData: { key: 5, title: 'Китай' }
                   })]);
                   assert.isNull(fastFilter._configs[0]._sourceController);
+                  assert.strictEqual(fastFilter._configs[0]._items.getCount(), 2);
                   done();
                });
             });

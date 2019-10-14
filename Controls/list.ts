@@ -12,7 +12,7 @@
  * @includes Container Controls/_list/Container
  * @includes EmptyTemplate wml!Controls/_list/emptyTemplate
  * @includes GroupTemplate wml!Controls/_list/GroupTemplate
- * @includes ItemTemplate wml!Controls/_list/ItemTemplate
+ * @includes ItemTemplate wml!Controls/_list/ItemTemplateChooser
  * @includes View Controls/_list/List
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
@@ -65,7 +65,7 @@ import AddButton = require('Controls/_list/AddButton');
 import Container = require('Controls/_list/Container');
 import EmptyTemplate = require('wml!Controls/_list/emptyTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
-import ItemTemplate = require('wml!Controls/_list/ItemTemplate');
+import ItemTemplate = require('wml!Controls/_list/ItemTemplateChooser');
 import View = require('Controls/_list/List');
 import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
@@ -74,7 +74,7 @@ import DataContainer = require('Controls/_list/Data');
 import _forTemplate = require('wml!Controls/_list/resources/For');
 
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
-import EditingTemplate = require('wml!Controls/_list/EditInPlace/EditingTemplate');
+import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 import BaseViewModel = require('Controls/_list/BaseViewModel');
 import ItemActionsControl = require('Controls/_list/ItemActions/ItemActionsControl');

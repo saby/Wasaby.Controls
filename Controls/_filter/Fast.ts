@@ -223,9 +223,8 @@ import {getItemsWithHistory} from 'Controls/_filter/HistoryUtils';
                   curConfig._sourceController = null;
                }
                _private.updateHistory(curConfig, chain.factory(selectedItems).toArray());
-            } else {
-               curConfig._items.prepend(newItems);
             }
+            curConfig._items.prepend(newItems);
          },
 
          onResult: function(event, result) {

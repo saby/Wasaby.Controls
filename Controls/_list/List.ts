@@ -87,12 +87,17 @@ var ListControl = Control.extend(/** @lends Controls/_list/List.prototype */{
 
     _theme: ['Controls/list_multi'],
 
-    _beforeMount: function() {
-        this._viewModelConstructor = this._getModelConstructor();
+    _beforeMount: function(options) {
+        this._viewModelConstructor = this._getModelConstructor(options.useNewModel);
+        if (options.useNewModel) {
+            return import('Controls/_list/Render').then((Render) => {
+                this._viewName = Render.default;
+            });
+        }
     },
 
-    _getModelConstructor: function() {
-        return ListViewModel;
+    _getModelConstructor: function(useNewModel: boolean) {
+        return !useNewModel ? ListViewModel : null;
     },
 
     reload: function() {
