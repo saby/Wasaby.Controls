@@ -1278,7 +1278,22 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          it('getCurrentHeaderColumn && goToNextHeaderColumn && isEndHeaderColumn && resetHeaderColumns', function() {
             gridViewModel._prepareHeaderColumns(gridHeader, true);
-            const headerRow = gridViewModel.getCurrentHeaderRow();
+            gridViewModel._headerRows[0][0].title = '123';
+
+            let headerRow = gridViewModel.getCurrentHeaderRow();
+            assert.deepEqual({
+               column: {title : '123'},
+               cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_min-height controls-Grid__cell_spacingRight controls-Grid__cell_default',
+               index: 0,
+               cellContentClasses: '',
+               cellStyles: '',
+               shadowVisibility: 'visible',
+               offsetTop: 0,
+            }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
+
+            headerRow = gridViewModel.getCurrentHeaderRow();
+            delete gridViewModel._headerRows[0][0].title;
+
             assert.deepEqual({
                column: {},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_min-height controls-Grid__header-cell-checkbox',
@@ -1288,6 +1303,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                shadowVisibility: 'visible',
                offsetTop: 0,
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
+
 
             assert.equal(true, headerRow.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after first call "getCurrentHeaderColumn()".');
             headerRow.goToNextHeaderColumn();
