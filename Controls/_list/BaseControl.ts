@@ -581,10 +581,21 @@ var _private = {
 
     checkLoadToDirectionCapability: function(self, filter) {
         if (self._needScrollCalculation) {
-            if (self._loadTriggerVisibility.up) {
+            // TODO Когда список становится пустым (например после поиска или смены фильтра),
+            // если он находится вверху страницы, нижний загрузочный триггер может "вылететь"
+            // за пределы экрана (потому что у него статически задан отступ от низа списка,
+            // и при пустом списке этот отступ может вывести триггер выше верхней границы
+            // страницы).
+            // Сейчас сделал, что если список пуст, мы пытаемся сделать загрузку данных,
+            // даже если триггеры не видны (если что, sourceController.hasMore нас остановит).
+            // Но скорее всего это как-то по другому нужно решать, например на уровне стилей
+            // (уменьшать отступ триггеров, когда список пуст???). Выписал задачу:
+            // https://online.sbis.ru/opendoc.html?guid=fb5a67de-b996-49a9-9312-349a7831f8f1
+            const hasNoItems = self.getViewModel() && self.getViewModel().getCount() === 0;
+            if (self._loadTriggerVisibility.up || hasNoItems) {
                 _private.onScrollLoadEdge(self, 'up', filter);
             }
-            if (self._loadTriggerVisibility.down) {
+            if (self._loadTriggerVisibility.down || hasNoItems) {
                 _private.onScrollLoadEdge(self, 'down', filter);
             }
             _private.checkVirtualScrollCapability(self);
