@@ -971,34 +971,47 @@ var _private = {
                 self._virtualScroll.ItemsCount = newCount;
                 if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
                     self._virtualScroll.insertItemsHeights(newItemsIndex - 1, newItems.length);
-                    const
-                       direction = newItemsIndex <= self._listViewModel.getStartIndex() ? 'up' : 'down';
-                    if (direction === 'down') {
-                        // если это не подгрузка с БЛ по скролу и
-                        // если мы были в конце списка (отрисована последняя запись и виден нижний триггер)
-                        // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
-                        if (self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
-                           self._virtualScrollTriggerVisibility.down && !self._itemsFromLoadToDirection) {
-                           self._virtualScroll.recalcToDirection(direction, self._scrollParams, self._loadOffset.top);
+
+                    // Сдвигаем виртуальный скролл только если он уже проинициализирован. Если коллекция
+                    // изменилась после создания BaseControl'a, но до инициализации скролла, (или сразу
+                    // после уничтожения BaseControl), сдвинуть его мы все равно не можем.
+                    if (self._scrollParams) {
+                        const direction = newItemsIndex <= self._listViewModel.getStartIndex() ? 'up' : 'down';
+                        if (direction === 'down') {
+                            // если это не подгрузка с БЛ по скролу и
+                            // если мы были в конце списка (отрисована последняя запись и виден нижний триггер)
+                            // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
+                            if (
+                                self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
+                                self._virtualScrollTriggerVisibility.down && !self._itemsFromLoadToDirection
+                            ) {
+                                self._virtualScroll.recalcToDirection(direction, self._scrollParams, self._loadOffset.top);
+                            } else {
+                                // если данные добавились сверху - просто обновляем индексы видимых записей
+                                self._virtualScroll.recalcItemsIndexes(direction, self._scrollParams, self._loadOffset.top);
+                            }
                         } else {
-                            // если данные добавились сверху - просто обновляем индексы видимых записей
+                            if (self._itemsFromLoadToDirection) {
+                                // если элементы были подгружены с БЛ, то увеличиваем стартовый индекс на кол-во
+                                // загруженных элементов. работаем именно через проекцию, т.к. может быть группировка и
+                                // кол-во загруженных элементов может отличаться от кол-ва рисуемых элементов
+                                self._savedStartIndex += newItems.length;
+                                self._savedStopIndex += newItems.length;
+                                self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + newItems.length;
+                            }
                             self._virtualScroll.recalcItemsIndexes(direction, self._scrollParams, self._loadOffset.top);
                         }
-                    } else {
-                        if (self._itemsFromLoadToDirection) {
-                            // если элементы были подгружены с БЛ, то увеличиваем стартовый индекс на кол-во
-                            // загруженных элементов. работаем именно через проекцию, т.к. может быть группировка и
-                            // кол-во загруженных элементов может отличаться от кол-ва рисуемых элементов
-                            self._savedStartIndex += newItems.length;
-                            self._savedStopIndex += newItems.length;
-                            self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + newItems.length;
-                        }
-                        self._virtualScroll.recalcItemsIndexes(direction, self._scrollParams, self._loadOffset.top);
                     }
                 }
                 if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
                     self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
-                    self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down', self._scrollParams, self._loadOffset.top);
+
+                    // Сдвигаем виртуальный скролл только если он уже проинициализирован. Если коллекция
+                    // изменилась после создания BaseControl'a, но до инициализации скролла, (или сразу
+                    // после уничтожения BaseControl), сдвинуть его мы все равно не можем.
+                    if (self._scrollParams) {
+                        self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down', self._scrollParams, self._loadOffset.top);
+                    }
                 }
                 _private.applyVirtualScrollIndexesToListModel(self);
             }
