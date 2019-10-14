@@ -87,6 +87,9 @@ var Component = BaseControl.extend({
                 chooseHalfyears: this._options.chooseHalfyears,
                 chooseYears: this._options.chooseYears,
 
+                checkedStart: this._options.checkedStart,
+                checkedEnd: this._options.checkedEnd,
+
                 emptyCaption: this._options.emptyCaption,
 
                 itemTemplate: this._options.itemTemplate,
