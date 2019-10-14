@@ -5,6 +5,7 @@ import sourceLib = require('Types/source');
 import WidthUtils = require('Controls/_operationsPanel/OperationsPanel/Utils');
 import buttons = require('Controls/buttons');
 import notifyHandler = require('Controls/Utils/tmplNotify');
+import {RecordSet} from 'Types/collection';
 
 
 var _private = {
@@ -54,6 +55,14 @@ var _private = {
          });
       }
       return result;
+   },
+
+   initialized(self, options: object): void {
+      self._initialized = true;
+
+      if (options.operationsPanelOpenedCallback) {
+         options.operationsPanelOpenedCallback();
+      }
    }
 };
 
@@ -174,31 +183,27 @@ var OperationsPanel = Control.extend({
    _initialized: false,
    _notifyHandler: notifyHandler,
 
-   _beforeMount: function(options) {
-      return _private.loadData(this, options.source);
+   _beforeMount(options: object): Promise<RecordSet> {
+      return _private.loadData(this, options.source).then((items) => {
+         if (!items.getCount()) {
+            _private.initialized(this, options);
+         }
+         return items;
+      });
    },
 
-   _afterMount: function() {
+   _afterMount(): void {
       _private.checkToolbarWidth(this);
-      this._initialized = true;
+      _private.initialized(this, this._options);
       this._notify('operationsPanelOpened');
    },
 
-   _beforeUpdate: function(newOptions) {
-      if (newOptions.source !== this._options.source) {
-         // TODO: нельзя смотреть на то изменился ли source в _afterUpdate, т.к. в oldOptions приходит одно и то же значение, и _afterUpdate зацикливается
-         // TODO: будет исправляться по этой ошибке: https://online.sbis.ru/opendoc.html?guid=a48be8fb-7ee2-429a-ba8e-abd407436554
-         this._sourceChanged = true;
-      }
-   },
-
-   _afterUpdate: function() {
-      var self = this;
-      if (this._sourceChanged) {
-         // We should recalculate the size of the toolbar only when all the children have updated, otherwise available width may be incorrect.
-         this._sourceChanged = false;
-         _private.loadData(this, this._options.source).addCallback(function() {
-            _private.recalculateToolbarItems(self, self._items, self._children.toolbarBlock.clientWidth);
+   _afterUpdate(oldOptions: object): void {
+      if (this._options.source !== oldOptions.source) {
+         // We should recalculate the size of the toolbar only when all the children have updated,
+         // otherwise available width may be incorrect.
+         _private.loadData(this, this._options.source).addCallback(() => {
+            _private.recalculateToolbarItems(this, this._items, this._children.toolbarBlock.clientWidth);
          });
       } else {
          // TODO: размеры пересчитываются после каждого обновления, т.к. иначе нельзя понять что изменился rightTemplate (там каждый раз новая функция)
