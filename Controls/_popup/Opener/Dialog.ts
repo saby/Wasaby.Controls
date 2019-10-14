@@ -95,9 +95,9 @@ const Dialog = BaseOpener.extend({
 
 /**
  * Статический метод для открытия диалогового окна. При использовании метода не требуется создавать popup:Dialog в верстке.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ Подробнее}.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#open-popup Подробнее}.
  * @function Controls/_popup/Opener/Dialog#openPopup
- * @param {PopupOptions[]} config Конфигурация диалогового окна
+ * @param {PopupOptions} config Конфигурация диалогового окна
  * @return {Promise<string>} Метод возвращает Promise, который в качестве результата отдаёт идентификатор окна. Идентификатор используется для закрытия диалога с помощью метода {@link closePopup}.
  * @remark
  * Для обновления уже открытого окна в config нужно передать свойство id с идентификатором открытого окна.
