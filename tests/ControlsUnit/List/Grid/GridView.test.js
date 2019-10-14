@@ -386,6 +386,92 @@ define(['Controls/grid'], function(gridMod) {
          );
       });
 
+      it('getUpperCells', function () {
+         const cellsArray = [
+            { startColumn: 1, endColumn: 2, startRow: 1, endRow: 4, height: 90, cell: 1 },
+            { startColumn: 2, endColumn: 5, startRow: 1, endRow: 2, height: 31, cell: 2 },
+            { startColumn: 2, endColumn: 3, startRow: 2, endRow: 4, height: 60, cell: 3 },
+            { startColumn: 3, endColumn: 5, startRow: 2, endRow: 3, height: 32, cell: 4 },
+            { startColumn: 3, endColumn: 4, startRow: 3, endRow: 4, height: 33, cell: 5 },
+            { startColumn: 4, endColumn: 5, startRow: 3, endRow: 4, height: 34, cell: 6 }
+         ]
+
+         /*
+         _______________________________
+        |           |_________2_________|
+        |     1     |   3  |______4_____|
+        |___________|______|___5__|__6__|
+         */
+         // Для ячейки 6, функция вернет сумму высот ячеек 4 и 2
+         assert.equal(63,
+         gridMod.GridView._private.getHeaderCellOffset(cellsArray,
+            { startColumn: 4, endColumn: 5, startRow: 3, endRow: 4, height: 34, cell: 6 }));
+
+         // Для ячейки 5, функция вернет сумму высот ячеек 4 и 2
+         assert.equal(63,
+             gridMod.GridView._private.getHeaderCellOffset(cellsArray,
+                 { startColumn: 3, endColumn: 4, startRow: 3, endRow: 4, height: 33, cell: 5 }));
+
+         // Для ячейки 4, функция вернет высоту высоту ячейки 2
+         assert.equal(31,
+             gridMod.GridView._private.getHeaderCellOffset(cellsArray,
+                 { startColumn: 3, endColumn: 5, startRow: 2, endRow: 3, height: 32, cell: 4 }));
+
+         // Для ячейки 3, функция вернет высоту высоту ячейки 2
+         assert.equal(31,
+             gridMod.GridView._private.getHeaderCellOffset(cellsArray,
+                 { startColumn: 2, endColumn: 3, startRow: 2, endRow: 4, height: 60, cell: 3 }));
+
+         // Для ячейки 2, функция вернет 0
+         assert.equal(0,
+             gridMod.GridView._private.getHeaderCellOffset(cellsArray,
+                 { startColumn: 2, endColumn: 5, startRow: 1, endRow: 2, height: 31, cell: 2 }));
+
+         // Для ячейки 1, функция вернет 0
+         assert.equal(0,
+             gridMod.GridView._private.getHeaderCellOffset(cellsArray,
+                 { startColumn: 1, endColumn: 2, startRow: 1, endRow: 4, height: 90, cell: 1 }));
+
+         const newCellsArray = [
+            { startColumn: 1, endColumn: 2, startRow: 1, endRow: 3, height: 60, cell: 1 },
+            { startColumn: 2, endColumn: 5, startRow: 1, endRow: 2, height: 31, cell: 2 },
+            { startColumn: 5, endColumn: 8, startRow: 1, endRow: 2, height: 32, cell: 3 },
+            { startColumn: 2, endColumn: 3, startRow: 2, endRow: 3, height: 30, cell: 4 },
+            { startColumn: 3, endColumn: 4, startRow: 2, endRow: 3, height: 30, cell: 5 },
+            { startColumn: 4, endColumn: 5, startRow: 2, endRow: 3, height: 30, cell: 6 },
+            { startColumn: 5, endColumn: 6, startRow: 2, endRow: 3, height: 30, cell: 7 },
+            { startColumn: 6, endColumn: 7, startRow: 2, endRow: 3, height: 30, cell: 8 },
+            { startColumn: 7, endColumn: 8, startRow: 2, endRow: 3, height: 30, cell: 9 },
+         ]
+
+         /*
+         _______________________________________________________
+        |      1    |_________2_________|______________3________|
+        |___________|___4__|___5__|__6__|__7__|______8___|__9___|
+         */
+
+         // Для ячейки 9, функция вернет высоту ячейки 3
+         assert.equal(32,
+             gridMod.GridView._private.getHeaderCellOffset(newCellsArray,
+                 { startColumn: 7, endColumn: 8, startRow: 2, endRow: 3, height: 30, cell: 9 }));
+
+         // Для ячейки 8, функция вернет высоту ячейки 3
+         assert.equal(32,
+             gridMod.GridView._private.getHeaderCellOffset(newCellsArray,
+                 { startColumn: 6, endColumn: 7, startRow: 2, endRow: 3, height: 30, cell: 8 }));
+
+         // Для ячейки 5, функция вернет высоту ячейки 2
+         assert.equal(31,
+             gridMod.GridView._private.getHeaderCellOffset(newCellsArray,
+                 { startColumn: 3, endColumn: 4, startRow: 2, endRow: 3, height: 30, cell: 5 }));
+
+         // Для ячейки 2, функция вернет 0
+         assert.equal(0,
+             gridMod.GridView._private.getHeaderCellOffset(newCellsArray,
+                 { startColumn: 2, endColumn: 5, startRow: 1, endRow: 2, height: 31, cell: 2 }));
+
+      })
+
       it('_setHeaderWithHeight', function () {
          let
             cfg = {
@@ -487,16 +573,6 @@ define(['Controls/grid'], function(gridMod) {
          assert.deepEqual(gridView._setHeaderWithHeight(), [
             expectedResult,
             0
-         ]);
-         i = 0;
-         gridView. _listModel = {
-            getResultsPosition: function() {
-               return 'top';
-            }
-         };
-         assert.deepEqual(gridView._setHeaderWithHeight(), [
-            expectedResult,
-            40
          ]);
       });
       it('resize on list changed with column scroll', function() {
