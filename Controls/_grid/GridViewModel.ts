@@ -858,7 +858,7 @@ var
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0) {
+            if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0 && !cell.title) {
                 cellClasses += ' controls-Grid__header-cell-checkbox';
             } else {
                 cellClasses += _private.getPaddingHeaderCellClasses({
