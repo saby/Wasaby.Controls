@@ -4716,7 +4716,7 @@ define([
             lists.BaseControl._private.resetPagingNavigation(instance);
             assert.deepEqual(instance, {_currentPage: 1, _knownPagesCount: 1});
 
-            lists.BaseControl._private.resetPagingNavigation(instance, {sourceConfig: {page:2}});
+            lists.BaseControl._private.resetPagingNavigation(instance, {sourceConfig: {page:1}});
             assert.deepEqual(instance, {_currentPage: 2, _knownPagesCount: 1});
 
          });
