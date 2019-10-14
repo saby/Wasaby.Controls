@@ -76,7 +76,7 @@ var _private = {
             !_private.isExpandAll(self._options.expandedItems) &&
             !self._nodesSourceControllers[nodeKey] &&
             !dispItem.isRoot() &&
-            _private.shouldLoadChildren(self, item)
+            (_private.shouldLoadChildren(self, item) || self._options.task1178031650)
         ) {
             self._nodesSourceControllers[nodeKey] = _private.createSourceController(self._options.source, self._options.navigation);
 
