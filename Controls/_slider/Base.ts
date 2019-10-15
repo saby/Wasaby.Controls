@@ -275,7 +275,7 @@ class Base extends Control<ISliderBaseOptions> {
       }
    }
 
-   private _onMouseOut(event: SyntheticEvent<MouseEvent>): void {
+   private _onMouseLeave(event: SyntheticEvent<MouseEvent>): void {
       if (!this._options.readOnly) {
          this._tooltipValue = null;
       }
