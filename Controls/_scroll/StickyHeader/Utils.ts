@@ -29,7 +29,7 @@ import getDimensions = require('Controls/Utils/getDimensions');
          element = (element && element.get) ? element.get(0) : element;
 
          var
-            offset = getDimensions(element),
+            offset = getDimensions(element, true),
             parrentOffset = getDimensions(parentElement);
          if (position === 'top') {
             return offset.top - parrentOffset.top;
