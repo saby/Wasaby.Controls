@@ -12,20 +12,6 @@ import IMonth from './interfaces/IMonth';
 
 import 'css!theme?Controls/calendar'
 
-/**
- * Календарь отображающий 1 месяц. У меет только отображать представление месяца и поддерживает события
- * взаимодействия пользователя с днями. Есть возможность переопределить конструктор модели и шаблон дня.
- * С помощью этого механизма можно кастомизировать отображение дней.
- * @class Controls/_calendar/MonthView
- * @extends Core/Control
- * @mixes Controls/_calendar/interface/IMonth
- * @control
- * @private
- * @author Красильников А.С.
- * @demo Controls-demo/Date/MonthView
- *
- */
-
 var _private = {
    _updateView: function(self, options) {
       var newMonth = options.month || new options.dateConstructor();
@@ -46,6 +32,19 @@ var _private = {
    }
 };
 
+
+/**
+ * Календарь отображающий 1 месяц. Умеет только отображать представление месяца и поддерживает события
+ * взаимодействия пользователя с днями. Есть возможность переопределить конструктор модели и шаблон дня.
+ * С помощью этого механизма можно кастомизировать отображение дней.
+ * @class Controls/_calendar/MonthView
+ * @extends Core/Control
+ * @mixes Controls/_calendar/interface/IMonth
+ * @control
+ * @author Красильников А.С.
+ * @demo Controls-demo/Date/MonthView
+ *
+ */
 var MonthView = BaseControl.extend({
    _template: dotTplFn,
 
