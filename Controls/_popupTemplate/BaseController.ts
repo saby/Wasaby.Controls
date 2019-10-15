@@ -1,9 +1,11 @@
 import Deferred = require('Core/Deferred');
 import Utils = require('Types/util');
+import collection = require('Types/collection');
 import {Controller as ManagerController} from 'Controls/popup';
 
 export interface IPopupItem {
     id: string;
+    parentId: string;
     position: object;
     popupOptions: IPopupOptions;
     popupState: string;
@@ -16,7 +18,7 @@ interface ISizes {
     height: number;
 }
 
-interface IPopupOptions {
+export interface IPopupOptions {
     className: string;
     template: string;
     closeOnOutsideClick: boolean;
@@ -26,6 +28,7 @@ interface IPopupOptions {
     maxWidth: number;
     minHeight: number;
     maxHeight: number;
+    content: Function;
 }
 
 /**
@@ -58,9 +61,9 @@ abstract class BaseController {
 
     abstract popupDragEnd(item: IPopupItem): boolean;
 
-    abstract popupMouseEnter(item: IPopupItem): boolean;
+    abstract popupMouseEnter(item: IPopupItem): void;
 
-    abstract popupMouseLeave(item: IPopupItem): boolean;
+    abstract popupMouseLeave(item: IPopupItem): void;
 
     abstract elementAnimated(item: IPopupItem): boolean;
 
@@ -166,7 +169,7 @@ abstract class BaseController {
         return true;
     }
 
-    protected getCustomZIndex(): number | null {
+    protected getCustomZIndex(popupItems: collection.List<IPopupItem>, item: IPopupItem): number | null {
         return null;
     }
 
