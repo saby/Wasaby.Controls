@@ -12,6 +12,9 @@
 
          name="tileView"
          useNewModel="{{ true }}">
+         <ws:itemTemplate>
+            <ws:partial template="Controls/tile:ItemTemplate" hasTitle="{{ true }}" />
+         </ws:itemTemplate>
       </Controls.tile:View>
    </Controls.scroll:Container>
 </div>
