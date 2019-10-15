@@ -60,6 +60,7 @@
                </div>
             </ws:headerContentTemplate>
             <ws:bodyContentTemplate>
+            <Controls.scroll:Container>
                <Controls.explorer:View
                   keyProperty="id"
                   parentProperty="parent"
@@ -70,6 +71,7 @@
                   source="{{_viewSource3}}">
                   <ws:results position="top" />
                </Controls.explorer:View>
+            </Controls.scroll:Container>
             </ws:bodyContentTemplate>
          </Controls.popupTemplate:Stack>
       </div>
