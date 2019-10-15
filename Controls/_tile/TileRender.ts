@@ -24,7 +24,7 @@ export default class TileRender extends BaseRender {
     protected _animatedItemTargetPosition: string;
 
     protected _beforeMount(options: ITileRenderOptions): void {
-        // no super._beforeMount()
+        // not calling super._beforeMount(), this is sufficient
         this._templateKeyPrefix = `tile-render-${this.getInstanceId()}`;
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
     }
@@ -47,8 +47,12 @@ export default class TileRender extends BaseRender {
     }
 
     protected _beforeUnmount(): void {
-        super._beforeUnmount();
         this._animatedItem = null;
+
+        this._notify('unregister', ['controlResize', this], { bubbling: true });
+        this._notify('unregister', ['scroll', this], { bubbling: true });
+
+        super._beforeUnmount();
     }
 
     protected _resetHoverState(): void {
@@ -61,8 +65,10 @@ export default class TileRender extends BaseRender {
 
     protected _onItemMouseMove(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
         if (!item.isFixed() /* TODO && !_private.isTouch(this) && !this._listModel.getDragEntity() */) {
-            // TODO Inefficient, gets called multiple times per hover. Maybe some other
-            // event should be used, not mousemove
+            // TODO Might be inefficient, can get called multiple times per hover. Should
+            // be called immediately before or after the hovered item is set in the model,
+            // but then we can't get the hover target element.
+            // Doesn't look too bad in the demo profile, so leaving it as is for now.
             this._setHoveredItemPosition(e, item);
         }
         super._onItemMouseMove(e, item);

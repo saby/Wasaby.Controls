@@ -20,7 +20,10 @@ interface ITileCollectionItemPosition {
     bottom: number;
 }
 
-export default class TileCollection<S, T extends TileCollectionItem<S> = TileCollectionItem<S>> extends Collection<S, T> {
+export default class TileCollection<
+    S,
+    T extends TileCollectionItem<S> = TileCollectionItem<S>
+> extends Collection<S, T> {
     protected _$tileMode: string;
 
     protected _$tileHeight: number;
@@ -140,7 +143,12 @@ export default class TileCollection<S, T extends TileCollectionItem<S> = TileCol
         return this._createPositionInBounds(left, top, right, bottom);
     }
 
-    protected _createPositionInBounds(left: number, top: number, right: number, bottom: number): ITileCollectionItemPosition {
+    protected _createPositionInBounds(
+        left: number,
+        top: number,
+        right: number,
+        bottom: number
+    ): ITileCollectionItemPosition {
         if (left < 0) {
             right += left;
             left = 0;

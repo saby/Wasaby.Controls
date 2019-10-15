@@ -69,8 +69,9 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
 
     isAnimated(): boolean {
         if (this._$animated && !this.isScaled()) {
-            // FIXME This is REALLY BAD, think where to reset the animation state.
-            // Probably should be in that same animation manager
+            // FIXME This is bad, but there is no other obvious place to
+            // reset the animation state. Should probably be in that same
+            // animation manager
             this.setAnimated(false, true);
         }
         return this._$animated;
