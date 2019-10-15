@@ -252,8 +252,9 @@ import 'Types/entity';
     */
 
    /**
-    * @name Controls/_exploer/View#displayProperty
+    * @name Controls/_explorer/View#displayProperty
     * @cfg {string} Имя свойства элемента, содержимое которого будет отображаться.
+    * @remark Поле используется для вывода хлебных крошек. 
     * @example
     * <pre>
     * <Controls.explorers:View displayProperty="title">
@@ -263,7 +264,7 @@ import 'Types/entity';
     */
 
    /*
-    * @name Controls/_exploer/View#displayProperty
+    * @name Controls/_explorer/View#displayProperty
     * @cfg {string} sets the property to be displayed in search results
     * @example
     * <pre class="brush:html">
