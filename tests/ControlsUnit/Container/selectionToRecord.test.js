@@ -25,6 +25,7 @@ define(
             assert.deepEqual(selectionRec.get('marked'), ['1', '2']);
             assert.equal(selectionRec.get('type'), 'leaf');
             assert.equal(selectionRec.getFormat().at(0).getKind(), 'string');
+            assert.isTrue(selectionRec.get('recursive'));
 
             selection = {
                selected: ['2'],
@@ -32,14 +33,16 @@ define(
             };
             selectionType = 'node';
 
-            selectionRec = operations.selectionToRecord(selection, source.getAdapter(), selectionType);
+            selectionRec = operations.selectionToRecord(selection, source.getAdapter(), selectionType, false);
             assert.deepEqual(selectionRec.get('excluded'), ['2']);
             assert.deepEqual(selectionRec.get('marked'), ['2']);
             assert.equal(selectionRec.get('type'), 'node');
+            assert.isFalse(selectionRec.get('recursive'));
 
             selectionType = undefined;
             selectionRec = operations.selectionToRecord(selection, source.getAdapter(), selectionType);
             assert.equal(selectionRec.get('type'), 'all');
+            assert.isTrue(selectionRec.get('recursive'));
          });
 
       });
