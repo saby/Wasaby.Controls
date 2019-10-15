@@ -4,17 +4,20 @@
          <div if="{{_halfyearHovered === halfYearIndex}}" class="controls-PeriodLiteDialog__item-background-hovered"></div>
          <ws:for data="quarter in halfYear.quarters">
             <div class="controls-PeriodLiteDialog-item__quarter">
-               <div if="{{_quarterHovered === quarter.number}}" class="controls-PeriodLiteDialog__item-background-hovered"></div>
+               <div if="{{_quarterHovered === quarter.number}}"
+               title="{{ quarter.tooltip }}"
+               class="controls-PeriodLiteDialog__item-background-hovered"></div>
                <div class="controls-PeriodLiteDialog-item__month-wrapper{{ _yearHovered || _halfyearHovered === halfYearIndex ? ' controls-PeriodLiteDialog__background-transparent'}}">
                   <ws:for data="month in quarter.months">
                      <div class="controls-PeriodLiteDialog-item__month-caption controls-PeriodLiteDialog__vLayoutItem controls-PeriodLiteDialog__vLayoutItem-clickable"
-                          on:click="_onMonthClick(month)">
+                          on:click="_onMonthClick(month.name)"
+                          title="{{ month.tooltip }}">
                         <ws:if data="{{ checkedStart || checkedEnd || iconsHandler }}">
-                           <div class="controls-PeriodLiteDialog-item__checkBox">
+                           <div class="controls-PeriodLiteDialog-item__checkBox" title="{[Месяц закрыт]}">
                               <div class="icon-16 icon-Yes icon-done"></div>
                            </div>
                         </ws:if>
-                        <ws:partial template="{{monthCaptionTemplate}}" month="{{month}}" formatDate="{{formatDate}}"/>
+                        <ws:partial template="{{monthCaptionTemplate}}" month="{{month.name}}" formatDate="{{formatDate}}"/>
                      </div>
                   </ws:for>
                </div>
@@ -22,6 +25,7 @@
                   on:click="_onQuarterClick(quarter.number)"
                   on:mouseenter="_onQuarterMouseEnter(quarter.number)"
                   on:mouseleave="_onQuarterMouseLeave()"
+                  title="{{ quarter.tooltip }}"
                >
                   {{ quarter.name }}
                </div>
@@ -31,6 +35,7 @@
             on:click="_onHalfYearClick(halfYearIndex)"
             on:mouseenter="_onHalfYearMouseEnter(halfYearIndex)"
             on:mouseleave="_onHalfYearMouseLeave()"
+            title="{{ halfYear.tooltip }}"
          >
             {{ halfYear.name }}
          </div>

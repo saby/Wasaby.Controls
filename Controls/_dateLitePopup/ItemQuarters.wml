@@ -6,8 +6,8 @@
                on:mouseenter="_onQuarterMouseEnter(halfYearIndex*2 + quarterIndex)"
                on:mouseleave="_onQuarterMouseLeave()"
             >
-                <div class="controls-PeriodLiteDialog__vLayoutItem-caption">
-                    {{ quarter.name }} {{rk('квартал')}}
+                <div class="controls-PeriodLiteDialog__vLayoutItem-caption" title="{{ quarter.tooltip }}">
+                    {{ quarter.fullName }}
                 </div>
             </div>
       </ws:for>
