@@ -754,6 +754,35 @@ define([
 
 
       });
+
+      it('TreeControl.afterReloadCallback resets expanded items on set root', function () {
+         const source = new sourceLib.Memory({
+            data: [],
+            idProperty: 'id'
+         });
+         const treeControl = correctCreateTreeControl({
+            columns: [],
+            root: null,
+            parentProperty: 'testParentProperty',
+            source: source
+         });
+         const treeViewModel = treeControl._children.baseControl.getViewModel();
+
+         // Mock TreeViewModel and TreeControl
+
+         treeViewModel._model._display = {
+            setFilter: () => undefined,
+            setRoot: (root) => {
+               treeViewModel._model._root = root;
+            },
+            getRoot: () => treeViewModel._model._root
+         };
+
+         treeControl._needResetExpandedItems = true;
+         treeGrid.TreeControl._private.afterReloadCallback(treeControl, treeControl._options);
+         assert.deepEqual([], treeViewModel.getExpandedItems());
+      });
+
       it('List navigation by keys', function(done) {
          // mock function working with DOM
          listMod.BaseControl._private.scrollToItem = function() {};
@@ -1579,6 +1608,64 @@ define([
            treeGrid.TreeControl._private.createSourceController = savedMethod;
        });
 
+      it('don\'t toggle node by click on breadcrumbs', async function() {
+         const savedMethod = treeGrid.TreeControl._private.createSourceController;
+         const data = [
+            {id: 0, 'Раздел@': true, "Раздел": null},
+            {id: 1, 'Раздел@': false, "Раздел": null},
+            {id: 2, 'Раздел@': null, "Раздел": null}
+         ];
+         const source = new sourceLib.Memory({
+            keyProperty: 'id',
+            rawData: data,
+         });
+         const cfg = {
+            source: source,
+            columns: [{}],
+            keyProperty: 'id',
+            parentProperty: 'Раздел',
+            nodeProperty: 'Раздел@',
+            filter: {},
+            expandByItemClick: true
+         };
+         const fakeEvent = {
+            stopPropagation: () => {}
+         };
+
+         const treeGridViewModel = new treeGrid.ViewModel(cfg);
+         let treeControl;
+
+         treeGridViewModel.setItems(new collection.RecordSet({
+            rawData: data,
+            keyProperty: 'id'
+         }));
+
+         treeControl = new treeGrid.TreeControl(cfg);
+         treeControl.saveOptions(cfg);
+         treeControl._children = {
+            baseControl: {
+               getViewModel: () => treeGridViewModel
+            }
+         };
+
+         const breadcrumb = new collection.RecordSet({
+            rawData: [
+               {
+                  id: 1,
+                  title: 'Путь до его то',
+                  'Раздел@': true
+               }
+            ],
+            keyProperty: 'id'
+         }).at(0);
+
+         // Initial
+         assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
+         treeControl._onItemClick(fakeEvent, breadcrumb, {});
+         assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
+
+         treeGrid.TreeControl._private.createSourceController = savedMethod;
+      });
 
       it('check deepReload after load', function() {
          let source = new sourceLib.Memory({

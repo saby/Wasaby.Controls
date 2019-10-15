@@ -10,6 +10,8 @@ import template = require('wml!Controls/_dateRange/RelationButton/RelationButton
  *
  * @css @color_DateRangeRelationButton-normal_hovered Color of the button in normal hovered state.
  * @css @color_DateRangeRelationButton-byCapacity_hovered Color of the button in by capacity hovered state.
+ * @css @color_DateRangeRelationButton-normalColor of the button in normal state.
+ * @css @color_DateRangeRelationButton-byCapacity Color of the button in by capacity state.
  *
  * @control
  * @public
@@ -36,34 +38,18 @@ import template = require('wml!Controls/_dateRange/RelationButton/RelationButton
  *
  */
 
-const
-    valueMap = {
-        normal: true,
-        byCapacity: false
-    },
-    _private = {
-        update: function(self, options) {
-            self._value = valueMap[options.value];
-        }
-    }
+const valueMap = {
+    normal: 'byCapacity',
+    byCapacity: 'normal'
+};
 
 const Component = Control.extend({
     _template: template,
-    _value: true,
 
-    _beforeMount: function (options) {
-        _private.update(this, options);
-    },
-
-    _beforeUpdate: function (options) {
-        _private.update(this, options);
-    },
-
-    _onValueChanged: function (event, value) {
-        let bindType = value ? 'normal' : 'byCapacity';
+    _valueChanged: function (event) {
         event.stopImmediatePropagation();
-        this._notify('valueChanged', [bindType]);
-        this._notify('relationButtonBindTypeChanged', [bindType], { bubbling: true });
+        this._notify('valueChanged', [valueMap[this._options.value]]);
+        this._notify('relationButtonBindTypeChanged', [valueMap[this._options.value]], { bubbling: true });
     }
 });
 

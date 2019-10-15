@@ -2,7 +2,7 @@ import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import {IoC} from 'Env/Env';
 /**
  * Контрол, открывающий всплывающее окно, которое позиционнируется по центру экрана.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ Подробнее}
+ * Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#open-popup здесь}.
  * <a href="/materials/demo-ws4-stack-dialog">Демо-пример</a>.
  * @class Controls/_popup/Opener/Dialog
  * @extends Controls/_popup/Opener/BaseOpener
@@ -55,7 +55,7 @@ const Dialog = BaseOpener.extend({
      * @function Controls/_popup/Opener/Dialog#open
      * @param {PopupOptions[]} popupOptions Конфигурация диалогового окна.
      * @remark
-     * Если требуется открыть окно, без создания popup:Dialog в верстке, следует использовать статический метод {@link openPopup}
+     * Если требуется открыть окно, без создания popup:Dialog в верстке, следует использовать статический метод {@link openPopup}.
      * @example
      * wml
      * <pre>
@@ -98,12 +98,11 @@ const Dialog = BaseOpener.extend({
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ Подробнее}.
  * @function Controls/_popup/Opener/Dialog#openPopup
  * @param {PopupOptions[]} config Конфигурация диалогового окна
- * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
+ * @return {Promise<string>} Метод возвращает Promise, который в качестве результата отдаёт идентификатор окна. Идентификатор используется для закрытия диалога с помощью метода {@link closePopup}.
  * @remark
- * Для обновления уже открытого окна в config нужно передать св-во id с идентификатором открытого окна.
+ * Для обновления уже открытого окна в config нужно передать свойство id с идентификатором открытого окна.
  * @static
  * @example
- * js
  * <pre>
  *    import {Dialog} from 'Controls/popup';
  *    ...
@@ -140,12 +139,11 @@ Dialog.openPopup = (config: object): Promise<string> => {
 
 /**
  * Статический метод для закрытия окна по идентификатору.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ Подробнее}.
+ * Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ здесь}.
  * @function Controls/_popup/Opener/Dialog#closePopup
  * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
  * @static
  * @example
- * js
  * <pre>
  *    import {Dialog} from 'Controls/popup';
  *    ...
@@ -176,24 +174,24 @@ export default Dialog;
 
 /**
  * @name Controls/_popup/Opener/Dialog#height
- * @cfg {Number} Текущая высота всплывающего окна
+ * @cfg {Number} Текущая высота всплывающего окна.
  */
 
 /**
  * @name Controls/_popup/Opener/Dialog#maxHeight
- * @cfg {Number} Максимально допустимая высота всплывающего окна
+ * @cfg {Number} Максимально допустимая высота всплывающего окна.
  */
 /**
  * @name Controls/_popup/Opener/Dialog#minHeight
- * @cfg {Number} Минимально допустимая высота всплывающего окна
+ * @cfg {Number} Минимально допустимая высота всплывающего окна.
  */
 /**
  * @name Controls/_popup/Opener/Dialog#maxWidth
- * @cfg {Number} Максимально допустимая ширина всплывающего окна
+ * @cfg {Number} Максимально допустимая ширина всплывающего окна.
  */
 /**
  * @name Controls/_popup/Opener/Dialog#minWidth
- * @cfg {Number} Минимально допустимая ширина всплывающего окна
+ * @cfg {Number} Минимально допустимая ширина всплывающего окна.
  */
 /*
  * @name Controls/_popup/Opener/Dialog#top
@@ -255,20 +253,20 @@ export default Dialog;
 
 /**
  * @typedef {Object} PopupOptions
- * @description Dialog popup options.
+ * @description Конфигурация всплывающего окна.
  * @property {Boolean} autofocus Определяет, установится ли фокус на шаблон попапа после его открытия.
  * @property {Boolean} modal Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
  * @property {String} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
  * @property {Boolean} closeOnOutsideClick Определяет возможность закрытия всплывающего окна по клику вне.
- * @property {function|String} template Шаблон всплывающего окна
- * @property {function|String} templateOptions  Опции для котнрола, переданного в {@link template}
- * @property {Number} width Текущая ширина всплывающего окна
- * @property {Number} height Текущая высота всплывающего окна
- * @property {Number} maxHeight Максимально допустимая высота всплывающего окна
- * @property {Number} minHeight Минимально допустимая высота всплывающего окна
- * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна
- * @property {Number} minWidth Минимально допустимая ширина всплывающего окна
+ * @property {function|String} template Шаблон всплывающего окна.
+ * @property {function|String} templateOptions  Опции для котнрола, переданного в {@link template}.
+ * @property {Number} width Текущая ширина всплывающего окна.
+ * @property {Number} height Текущая высота всплывающего окна.
+ * @property {Number} maxHeight Максимально допустимая высота всплывающего окна.
+ * @property {Number} minHeight Минимально допустимая высота всплывающего окна.
+ * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна.
+ * @property {Number} minWidth Минимально допустимая ширина всплывающего окна.
  * @property {Number} top Расстояние от всплывающего окна до верхнего края экрана.
  * @property {Number} left Расстояние от всплывающего окна до левого края экрана.
- * @property {Node} opener Логический инициатор открытия всплывающего окна
+ * @property {Node} opener Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}. 
  */

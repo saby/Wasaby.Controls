@@ -7,6 +7,7 @@
          iconSize="m"
          fontSize="l"
          tooltip="{[Предыдущий год]}"
+         readOnly="{{false}}"
          on:click="_onPrevClick()"
       />
    </div>
@@ -31,6 +32,7 @@
          icon="icon-MarkRightBold"
          iconSize="m"
          tooltip="{[Следующий год]}"
+         readOnly="{{false}}"
          on:click="_onNextClick()"
       />
    </div>

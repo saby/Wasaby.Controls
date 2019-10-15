@@ -36,6 +36,8 @@
               iconSize="{{_options.iconSize}}"
               caption="{{_options.caption}}"
               typeShadow="{{_options.typeShadow}}"
+              itemPadding="{{_options.itemPadding}}"
+              hasIconPin="{{_options.hasIconPin}}"
               theme="{{_options.theme}}"/>
    </Controls._dropdown.Opener>
    <ws:if data="{{_options.selectorTemplate}}">

@@ -66,6 +66,7 @@ var _private = {
             const item = markedItem.getContents ? markedItem.getContents() : markedItem;
             return item.getId ? item.getId() === current.key : false;
         }
+        return false;
     },
     getMultiSelectClassList: function (current): string {
         let
@@ -186,8 +187,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.showEditArrow = this._options.showEditArrow;
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
 
-        itemsModelCurrent.shouldDrawMarker = function (markerVisibility: boolean) {
-            const canDrawMarker = markerVisibility !== false && itemsModelCurrent.markerVisibility !== 'hidden';
+        itemsModelCurrent.shouldDrawMarker = (marker: boolean) => {
+            const canDrawMarker = marker !== false && itemsModelCurrent.markerVisibility !== 'hidden';
             return canDrawMarker && (itemsModelCurrent.isAdd ? true : _private.isSelected(self, itemsModelCurrent));
         };
 
@@ -548,6 +549,17 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                 return nextItem.getId();
             }
             nextIndex++;
+        }
+    },
+    setMarkerOnValidItem: function(index) {
+        const prevValidItem = this.getPreviousItem(index);
+        const nextValidItem = this.getNextItem(index);
+        if (nextValidItem !== undefined) {
+            this.setMarkedKey(nextValidItem);
+        } else if (prevValidItem !== undefined) {
+            this.setMarkedKey(prevValidItem);
+        } else {
+            this.setMarkedKey(null);
         }
     },
     _setEditingItemData: function(itemData) {

@@ -50,7 +50,7 @@ define(
 
          let itemsRecords = new collection.RecordSet({
             keyProperty: 'id',
-            rawData: items
+            rawData: Clone(items)
          });
 
          let config = {
@@ -228,11 +228,10 @@ define(
 
          it('_beforeUpdate new templateOptions', function() {
             let dropdownController = getDropdownController(config),
-               opened = false, isOpen = false;
+               opened = false;
             dropdownController._children = {
                DropdownOpener: {
-                  open: () => { opened = true; },
-                  isOpened: () => { return isOpen; }
+                  open: () => { opened = true; }
                }
             };
             dropdownController._depsDeferred = {};
@@ -240,7 +239,7 @@ define(
             assert.isNull(dropdownController._depsDeferred);
             assert.isFalse(opened);
 
-            isOpen = true;
+            dropdownController._isOpened = true;
             dropdownController._items = itemsRecords;
             dropdownController._sourceController = {hasMoreData: ()=>{}};
             dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
@@ -297,12 +296,10 @@ define(
                DropdownOpener: {
                   open: function() {
                      opened = true;
-                  },
-                  isOpened: function() {
-                     return true;
                   }
                }
             };
+            dropdownController._isOpened = true;
             return new Promise((resolve) => {
                dropdownController._beforeUpdate({
                   selectedKeys: [2],
@@ -435,9 +432,20 @@ define(
             assert.equal(dropdownController._items, undefined);
          });
 
+         it('getItemByKey', () => {
+            let itemsWithoutKeyProperty = new collection.RecordSet({
+               rawData: items
+            });
+
+            let item = dropdown._Controller._private.getItemByKey(itemsWithoutKeyProperty, '1', 'id');
+            assert.equal(item.get('title'), 'Запись 1');
+
+            item = dropdown._Controller._private.getItemByKey(itemsWithoutKeyProperty, 'anyTestId', 'id');
+            assert.isUndefined(item);
+         });
+
          it('before update source lazy load', (done) => {
-            let dropdownController = getDropdownController(configLazyLoad),
-               opened = false, open;
+            let dropdownController = getDropdownController(configLazyLoad), open;
             dropdownController._beforeMount(configLazyLoad);
             items.push({
                id: '5',
@@ -447,9 +455,6 @@ define(
                DropdownOpener: {
                   open: function() {
                      open = true;
-                  },
-                  isOpened: function() {
-                     return opened;
                   }
                }
             };
@@ -465,7 +470,7 @@ define(
             assert.isNull(dropdownController._sourceController);
             assert.equal(dropdownController._items, null);
 
-            opened = true;
+            dropdownController._isOpened = true;
             dropdownController._beforeUpdate({
                lazyItemsLoading: true,
                selectedKeys: [2],
@@ -798,9 +803,41 @@ define(
             assert.isFalse(!!dropdownController._sourceController);
          });
 
+         it('openMenu', () => {
+            let dropdownController = getDropdownController(config);
+            let openConfig;
+
+            dropdownController._beforeMount(config);
+            dropdownController._items = new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: items
+            });
+            dropdownController._children.DropdownOpener = {
+               open: (cfg) => {
+                  openConfig = cfg;
+               }
+            };
+
+            dropdownController.openMenu({ testOption: 'testValue' });
+            assert.equal(openConfig.testOption, 'testValue');
+         });
+
+         it('closeMenu', () => {
+            let dropdownController = getDropdownController(config);
+            let closed = false;
+
+            dropdownController._children.DropdownOpener = {
+               close: () => {
+                  closed = true;
+               }
+            };
+
+            dropdownController.closeMenu();
+            assert.isTrue(closed);
+         });
+
          it('_private::getNewItems', function() {
             let curItems = new collection.RecordSet({
-                  keyProperty: 'id',
                   rawData: [{
                      id: '1',
                      title: 'Запись 1'
@@ -813,7 +850,6 @@ define(
                   }]
                }),
                selectedItems = new collection.RecordSet({
-                  keyProperty: 'id',
                   rawData: [{
                      id: '1',
                      title: 'Запись 1'

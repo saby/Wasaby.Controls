@@ -49,14 +49,14 @@ var _private = {
         );
 
         let showed = all;
-        if (showed.length > 1 && options.itemActionsPosition !== 'outside') {
+        if (showed.length > 1) {
             // TODO: any => action type
             showed = showed.filter((action: any) => {
                 return action.showType === showType.TOOLBAR || action.showType === showType.MENU_TOOLBAR;
             });
         }
 
-        if (_private.needActionsMenu(all, options.itemActionsPosition)) {
+        if (_private.needActionsMenu(all)) {
             showed.push({
                 icon: 'icon-ExpandDown ' + ACTION_ICON_CLASS,
                 style: 'secondary',
@@ -103,7 +103,7 @@ var _private = {
         );
     },
 
-    needActionsMenu: function(actions, itemActionsPosition) {
+    needActionsMenu: function(actions) {
         var
             hasActionInMenu = false;
 
@@ -114,7 +114,7 @@ var _private = {
             }
         });
 
-        return hasActionInMenu && itemActionsPosition !== 'outside';
+        return hasActionInMenu;
     },
 
     getAllChildren(

@@ -1,26 +1,19 @@
 <Controls._dropdown._Controller
-        source="{{_options.source}}"
-        keyProperty="{{_options.keyProperty}}"
-        displayProperty="{{_options.displayProperty}}"
-        itemTemplateProperty="{{_options.itemTemplateProperty}}"
-        itemTemplate="{{_options.itemTemplate}}"
+        name="controller"
+        scope="{{_options}}"
         selectedKeys="{{[_options.selectedKey]}}"
-        emptyText="{{_options.emptyText}}"
-        historyId="{{_options.historyId}}"
-        dataLoadCallback="{{_options.dataLoadCallback}}"
         corner="{{_corner}}"
         width="{{_width}}"
         marker="{{false}}"
-        dropdownClassName="{{_options.dropdownClassName}}"
         popupClassName="{{_options.popupClassName ? _options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup'}} controls-ComboBox-popup_theme-{{_options.theme}}"
         typeShadow="suggestionsContainer"
-        filter="{{_options.filter}}"
         close="{{_onClose}}"
         open="{{_onOpen}}"
         selectedItemsChangedCallback="{{_setText}}"
         theme="{{_options.theme}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
         attr:class="controls-ComboBox {{_isOpen ? 'controls-ComboBox__opened'}}">
+   <ws:itemPadding right="xs" left="xs"/>
    <ws:content>
       <Controls._dropdown.ComboBox.InputRender
               size="{{_options.size}}"

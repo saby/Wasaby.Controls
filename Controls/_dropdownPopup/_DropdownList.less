@@ -87,28 +87,40 @@
    padding-left: @spacing_DropdownList-item-between-leftBorder-content;
 }
 
-.controls-DropdownList__item-leftPadding-multiSelect.theme_@{themeName} {
+.controls-DropdownList__item-leftPadding_xs.theme_@{themeName} {
+   padding-left: @padding-horizontal_inputText;
+}
+
+.controls-DropdownList__emptyItem-leftPadding_multiSelect.theme_@{themeName} {
    padding-left: @width_CheckBox__clickArea + @border-width_DropdownList;
 }
 
-.controls-DropdownList__item-right_default-padding.theme_@{themeName} {
+.controls-DropdownList__item-rightPadding_default.theme_@{themeName} {
    padding-right: @spacing_DropdownList-item-between-rightBorder-content;
 }
 
-.controls-DropdownList__item-right_hierarchy-padding.theme_@{themeName} {
+.controls-DropdownList__item-rightPadding_hierarchy.theme_@{themeName} {
    padding-right: @spacing_DropdownList-withNodes-item-between-rightBorder-content;
 }
 
-.controls-DropdownList__item-right_close-padding.theme_@{themeName} {
+.controls-DropdownList__item-rightPadding_close.theme_@{themeName} {
    padding-right: @spacing_DropdownList_withClose-item-between-rightBorder-content;
 }
 
-.controls-DropdownList__item-right_history-padding.theme_@{themeName} {
+.controls-DropdownList__item-rightPadding_history.theme_@{themeName} {
    padding-right: @spacing_DropdownList-withPin-item-between-rightBorder-content;
+}
+
+.controls-DropdownList__item-rightPadding_xs.theme_@{themeName} {
+   padding-right:  @padding-horizontal_inputText;
 }
 
 .controls-DropdownList__row_pinned.theme_@{themeName} {
    font-weight: bold;
+}
+
+.controls-HistoryMenu__iconUnnpin.theme_@{themeName} {
+   font-weight: normal;
 }
 
 .controls-HistoryMenu__iconPin.theme_@{themeName} {

@@ -15,7 +15,7 @@ import {TreeControl} from 'Controls/treeGrid';
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface/IGrouped
+ * @mixes Controls/interface/IGroupedList
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/IHighlighter
@@ -52,7 +52,7 @@ import {TreeControl} from 'Controls/treeGrid';
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface/IGrouped
+ * @mixes Controls/interface/IGroupedList
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/IHighlighter

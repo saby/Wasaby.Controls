@@ -110,13 +110,17 @@ import {SyntheticEvent} from "Vdom/Vdom"
          },
 
          onResizeContainer: function(self, container, withObserver) {
-            var sizeCache = _private.getSizeCache(self, container);
+            let sizeCache = _private.getSizeCache(self, container);
+            const oldClientHeight = sizeCache.clientHeight;
 
             _private.calcSizeCache(self, container);
             sizeCache = _private.getSizeCache(self, container);
             _private.sendCanScroll(self, sizeCache.clientHeight, sizeCache.scrollHeight);
             if (!withObserver) {
                _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
+            }
+            if (oldClientHeight !== sizeCache.clientHeight) {
+                _private.sendByRegistrar(self, 'viewPortResize', [sizeCache.clientHeight]);
             }
 
          },
@@ -187,7 +191,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
 
                curObserver = new IntersectionObserver(function (changes) {
                   /**
-                   * Баг IntersectionObserver на Mac OS: сallback может вызываться после описки от слежения. Отписка происходит в
+                   * Баг IntersectionObserver на Mac OS: сallback может вызываться после отписки от слежения. Отписка происходит в
                    * _beforeUnmount. Устанавливаем защиту.
                    */
                   if (self._observers === null) {
@@ -330,21 +334,16 @@ import {SyntheticEvent} from "Vdom/Vdom"
                _private.calcSizeCache(this, _private.getDOMContainer(this._container));
                _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight);
             }
-            this._notify('register', ['controlResize', this, this._resizeHandlerOuter], {bubbling: true});
+            this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
          },
 
          _scrollHandler: function(e) {
             _private.onScrollContainer(this, _private.getDOMContainer(this._container), this._canObserver);
          },
 
-         _resizeHandler: function(e) {
-            var withObserver = this._canObserver;
-            _private.onResizeContainer(this, _private.getDOMContainer(this._container), withObserver);
-
-         },
-         _resizeHandlerOuter: function(e) {
-            this._resizeHandler(e);
-            _private.sendByRegistrar(this, 'viewPortResize', [this._sizeCache.clientHeight]);
+         _resizeHandler: function (e) {
+             const withObserver = this._canObserver;
+             _private.onResizeContainer(this, _private.getDOMContainer(this._container), withObserver);
          },
 
          _registerIt: function(event, registerType, component, callback, triggers) {

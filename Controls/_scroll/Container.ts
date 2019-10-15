@@ -161,9 +161,6 @@ var
          if (Env.detection.isIE) {
             scrollHeight--;
          }
-         if (self._isShadowVisibleMode()) {
-            return true;
-         }
 
          return scrollHeight > containerHeight;
       },
@@ -509,7 +506,7 @@ var
                this._scrollTop = scrollTop;
                this._notify('scroll', [this._scrollTop]);
             }
-            this._children.scrollDetect.start(ev);
+            this._children.scrollDetect.start(ev, this._scrollTop);
          }
       },
 

@@ -117,7 +117,7 @@ define('Controls/interface/IRemovable', [], function() {
     *    Control.extend({
     *       ...
     *       _afterItemsRemove: function(eventObject, idArray, result) {
-    *          if (result instanseof Error) {
+    *          if (result instanceof Error) {
     *             return this._children.popupOpener.open({
     *                message: 'Removing records failed.',
     *                style: 'error'
@@ -147,7 +147,7 @@ define('Controls/interface/IRemovable', [], function() {
     *    Control.extend({
     *       ...
     *       _afterItemsRemove: function(eventObject, idArray, result) {
-    *          if (result instanseof Error) {
+    *          if (result instanceof Error) {
     *             return this._children.popupOpener.open({
     *                message: 'Removing records failed.',
     *                style: 'error'

@@ -3,6 +3,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_explorer/PathController/PathController');
 import {ItemsUtil} from 'Controls/list';
 import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
+import HeadingPathBack = require('wml!Controls/_explorer/PathController/HeadingPathBack');
 
 
    var _private = {
@@ -12,7 +13,7 @@ import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
             newHeader = options.header.slice();
             newHeader[0] = {
                ...options.header[0],
-               template: 'Controls/breadcrumbs:HeadingPathBack',
+               template: HeadingPathBack,
                templateOptions: {
                   backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
                   showActionButton: !!options.showActionButton,

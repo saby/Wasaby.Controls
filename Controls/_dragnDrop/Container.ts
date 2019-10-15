@@ -119,7 +119,7 @@ import 'css!Controls/_dragnDrop/Container';
        * @example
        * В следующем примере показано, как настроить шаблон перемещения.
        * <pre>
-       *    <Controls.dragnDrop:Controller>
+       *    <Controls.dragnDrop:Container>
        *       <ws:draggingTemplate>
        *          <div class="demo-DraggingTemplate">CustomDraggingTemplate</div>
        *       </ws:draggingTemplate>
@@ -130,7 +130,7 @@ import 'css!Controls/_dragnDrop/Container';
        *             </ws:for>
        *          </div>
        *       </ws:content>
-       *    </Controls.dragnDrop:Controller>
+       *    </Controls.dragnDrop:Container>
        * </pre>
        *
        * <pre>

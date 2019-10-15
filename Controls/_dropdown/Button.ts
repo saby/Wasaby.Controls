@@ -116,6 +116,14 @@ var Button = Control.extend({
       }
 
       return handlerResult;
+   },
+
+   openMenu(popupOptions?: object): void {
+      this._children.controller.openMenu(popupOptions);
+   },
+
+   closeMenu(): void {
+      this._children.controller.closeMenu();
    }
 
 });

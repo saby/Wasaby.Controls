@@ -28,6 +28,7 @@
       </ws:if>
       <ws:else>
          <Controls.buttons:Button name="link"
+                                  attr:class="controls-Selectorbutton_link"
                                   viewMode="link"
                                   caption="{{_options.caption}}"
                                   fontColorStyle="{{_options.fontColorStyle}}"

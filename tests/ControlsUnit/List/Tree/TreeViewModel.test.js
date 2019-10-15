@@ -382,12 +382,32 @@ define([
                      }
                   },
                   expanderIcon: 'testIcon'
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return true;
+                        }
+                     }
+                  },
+                  expanderIcon: 'node'
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return true;
+                        }
+                     }
+                  },
+                  expanderIcon: 'hiddenNode'
                }],
                testsResultPrepareExpanderClasses = [
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode controls-TreeGrid__row-expander_hiddenNode_collapsed',
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_testIcon_collapsed',
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node controls-TreeGrid__row-expander_node_collapsed',
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_testIcon_collapsed'
+                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode_default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed',
+                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed',
+                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node_default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed',
+                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed',
+                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node_default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed',
+                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode_default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed'
                ];
             testsPrepareExpanderClasses.forEach(function(item, i) {
                assert.equal(treeGrid.TreeViewModel._private.prepareExpanderClasses(testsPrepareExpanderClasses[i].itemData, testsPrepareExpanderClasses[i].expanderIcon),

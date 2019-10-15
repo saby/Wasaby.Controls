@@ -26,7 +26,6 @@
  * @author Мальцев А.А.
  */
 
-
 export {default as Abstract} from './_display/Abstract';
 export {default as Collection} from './_display/Collection';
 export {default as CollectionItem} from './_display/CollectionItem';

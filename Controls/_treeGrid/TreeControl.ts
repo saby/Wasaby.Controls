@@ -76,7 +76,7 @@ var _private = {
             !_private.isExpandAll(self._options.expandedItems) &&
             !self._nodesSourceControllers[nodeKey] &&
             !dispItem.isRoot() &&
-            _private.shouldLoadChildren(self, item)
+            (_private.shouldLoadChildren(self, item) || self._options.task1178031650)
         ) {
             self._nodesSourceControllers[nodeKey] = _private.createSourceController(self._options.source, self._options.navigation);
 
@@ -167,7 +167,7 @@ var _private = {
         const entries = _private.getEntries(cfg.selectedKeys, cfg.excludedKeys, cfg.source);
 
         let nodeSourceControllers = self._nodesSourceControllers;
-        let expandedItemsKeys: Array[number|string|null] = [];
+        let expandedItemsKeys: Array[number | string | null] = [];
         let isExpandAll: boolean;
 
         if (baseControl) {
@@ -216,8 +216,9 @@ var _private = {
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
 
             // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-            if (!_private.isDeepReload(options, self._deepReload)) {
+            if (!_private.isDeepReload(options, self._deepReload) || self._needResetExpandedItems) {
                 viewModel.resetExpandedItems();
+                self._needResetExpandedItems = false;
             }
 
             if (viewModelRoot !== root) {
@@ -384,10 +385,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             this._root = newOptions.root;
             this._updatedRoot = true;
             this._children.baseControl.cancelEdit();
-        }
-        if (this._needResetExpandedItems) {
-            this._children.baseControl.getViewModel().resetExpandedItems();
-            this._needResetExpandedItems = false;
         }
         //если expandedItems задана статично, то при обновлении в модель будет отдаваться всегда изначальная опция. таким образом происходит отмена разворота папок.
         if (newOptions.expandedItems) {
@@ -570,8 +567,15 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         e.stopPropagation();
         const eventResult = this._notify('itemClick', [item, originalEvent], { bubbling: true });
         if (eventResult !== false && this._options.expandByItemClick && item.get(this._options.nodeProperty) !== null) {
-            let display = this._children.baseControl.getViewModel().getDisplay();
-            _private.toggleExpanded(this, display.getItemBySourceItem(item));
+            const display = this._children.baseControl.getViewModel().getDisplay();
+            const dispItem = display.getItemBySourceItem(item);
+
+            // Если в проекции нет такого элемента, по которому произошел клик, то это хлебная крошка, а не запись.
+            // После исправления ошибки событие itemClick не будет стрелять при клике на крошку.
+            // https://online.sbis.ru/opendoc.html?guid=4017725f-9e22-41b9-adab-0d79ad13fdc9
+            if (dispItem) {
+                _private.toggleExpanded(this, dispItem);
+            }
         }
     },
 

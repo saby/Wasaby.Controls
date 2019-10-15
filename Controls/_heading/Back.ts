@@ -122,14 +122,12 @@ class Back extends Control<IBackOptions> {
     private _style: TBackStyle;
 
     private _convertOldStyleToNew(options: IBackOptions): void {
-        if (options.style !== this._options.style) {
-            if (options.style === 'default') {
-                this._style = 'primary';
-                IoC.resolve('ILogger').warn('Heading.Back',
-                    'Используются устаревшие стили. Используйте style primary вместо style default');
-            } else {
-                this._style = options.style;
-            }
+        if (options.style === 'default') {
+            this._style = 'primary';
+            IoC.resolve('ILogger').warn('Heading.Back',
+                'Используются устаревшие стили. Используйте style primary вместо style default');
+        } else {
+            this._style = options.style;
         }
     }
 
@@ -139,7 +137,9 @@ class Back extends Control<IBackOptions> {
     }
 
     protected _beforeUpdate(newOptions: IBackOptions): void {
-        this._convertOldStyleToNew(newOptions);
+        if (newOptions.style !== this._options.style) {
+            this._convertOldStyleToNew(newOptions);
+        }
     }
 
     static _theme: string[] = ['Controls/heading'];

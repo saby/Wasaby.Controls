@@ -3,9 +3,10 @@ define(
       'Controls/filterPopup',
       'Controls/_dropdownPopup/DropdownViewModel',
       'Types/collection',
-      'Types/entity'
+      'Types/entity',
+      'Types/chain'
    ],
-   function(filterPopup, DropdownViewModel, collection, entity) {
+   function(filterPopup, DropdownViewModel, collection, entity, chain) {
       describe('SimplePanel:HierarchyList', function() {
 
          let defaultItems = new collection.RecordSet({
@@ -49,13 +50,14 @@ define(
                itemTemplateProperty: defaultConfig.itemTemplateProperty,
                displayProperty: defaultConfig.displayProperty,
                emptyText: defaultConfig.emptyText,
-               emptyKey: defaultConfig.emptyKey
+               emptyKey: defaultConfig.emptyKey,
+               hasApplyButton: defaultConfig.hasApplyButton
             });
             let list = getHierarchyList(defaultConfig);
             list._beforeMount(defaultConfig);
             assert.deepStrictEqual(list._listModel._options, expectedListModel._options);
-            assert.strictEqual(list._folders.length, 2);
-            assert.deepStrictEqual(list._selectedKeys, [[], []]);
+            assert.strictEqual(chain.factory(list._folders).count(), 2);
+            assert.deepStrictEqual(list._selectedKeys, {'0': [], '-1': []});
             assert.strictEqual(list._nodeItems[0].getCount(), 4);
          });
 
@@ -79,13 +81,14 @@ define(
                itemTemplateProperty: defaultConfig.itemTemplateProperty,
                displayProperty: defaultConfig.displayProperty,
                emptyText: defaultConfig.emptyText,
-               emptyKey: defaultConfig.emptyKey
+               emptyKey: defaultConfig.emptyKey,
+               hasApplyButton: defaultConfig.hasApplyButton
             });
             let config = {...defaultConfig, items: sbisItems};
             let list = getHierarchyList(config);
             list._beforeMount(config);
             assert.deepStrictEqual(list._listModel._options, expectedListModel._options);
-            assert.strictEqual(list._folders.length, 0);
+            assert.strictEqual(chain.factory(list._folders).count(), 0);
             assert.strictEqual(list._listModel.getItems().at(0).get('title'), 'first item');
          });
 
@@ -102,16 +105,16 @@ define(
             list._beforeMount(defaultConfig);
 
             // item click without selection
-            list._itemClickHandler({}, 0, ['1']);
-            assert.deepStrictEqual(itemClickResult, [['1'], []]);
+            list._itemClickHandler({}, '0', ['1']);
+            assert.deepStrictEqual(itemClickResult, {'0': ['1'], '-1': []});
 
             //checkbox click
-            list._itemClickHandler({}, 1, ['5']);
-            assert.deepStrictEqual(checkBoxClickResult, [['1'], ['5']]);
+            list._itemClickHandler({}, '-1', ['5']);
+            assert.deepStrictEqual(checkBoxClickResult, {'0': ['1'], '-1': ['5']});
 
             //checkbox click
-            list._itemClickHandler({}, 0, []);
-            assert.deepStrictEqual(checkBoxClickResult, [[], ['5']]);
+            list._itemClickHandler({}, '0', []);
+            assert.deepStrictEqual(checkBoxClickResult, {'0': [], '-1': ['5']});
          });
 
          it('_checkBoxClickHandler', function() {
@@ -126,29 +129,29 @@ define(
             };
             list._beforeMount(defaultConfig);
 
-            list._checkBoxClickHandler({}, 0, ['1']);
-            assert.deepStrictEqual(checkBoxClickResult, [['1'], []]);
+            list._checkBoxClickHandler({}, '0', ['1']);
+            assert.deepStrictEqual(checkBoxClickResult, {'0': ['1'], '-1': []});
 
             // folder click
-            list._checkBoxClickHandler({}, 0, ['-1']);
-            assert.deepStrictEqual(itemClickResult, [['-1'], []]);
+            list._checkBoxClickHandler({}, '0', ['-1']);
+            assert.deepStrictEqual(itemClickResult, {'0': ['-1'], '-1': []});
 
             // item click, folder was selected
-            list._checkBoxClickHandler({}, 0, ['1']);
-            assert.deepStrictEqual(itemClickResult, [['1'], []]);
+            list._checkBoxClickHandler({}, '0', ['1']);
+            assert.deepStrictEqual(itemClickResult, {'0': ['1'], '-1': []});
 
             // folder 1 was selected, click on another folder
-            list._selectedKeys = [['-1'], []];
-            list._checkBoxClickHandler({}, 1, ['0']);
-            assert.deepStrictEqual(itemClickResult, [[], ['0']]);
+            list._selectedKeys = {'0': ['0'], '-1': []};
+            list._checkBoxClickHandler({}, '-1', ['-1']);
+            assert.deepStrictEqual(itemClickResult, {'0': [], '-1': ['-1']});
 
             // folder 2 was selected, click on item from folder 1
-            list._checkBoxClickHandler({}, 0, ['1']);
-            assert.deepStrictEqual(checkBoxClickResult, [['1'], ['0']]);
+            list._checkBoxClickHandler({}, '0', ['1']);
+            assert.deepStrictEqual(checkBoxClickResult, {'0': ['1'], '-1': ['-1']});
 
             // folder 2 and item from folder 1 was selected, click on folder 1
-            list._checkBoxClickHandler({}, 0, ['-1']);
-            assert.deepStrictEqual(itemClickResult, [['-1'], []]);
+            list._checkBoxClickHandler({}, '0', ['0']);
+            assert.deepStrictEqual(itemClickResult, {'0': ['0'], '-1': []});
 
          });
 

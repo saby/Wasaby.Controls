@@ -20,14 +20,17 @@ define('Controls-demo/Tabs/Buttons', [
     var TabButtonsDemo = Control.extend({
       _template: template,
       SelectedKey1: '1',
-      SelectedKey2: '2',
+      SelectedKeyLeft: '2',
+      SelectedKey2: '1',
       SelectedKey3: '4',
       SelectedKey4: '2',
       SelectedKey5: '2',
       SelectedKey6: '1',
       SelectedKey7: '3',
       SelectedKey8: '2',
+      SelectedKey9: '2',
       _source1: null,
+      _sourceLeft: null,
       _source2: null,
       _source3: null,
       _source4: null,
@@ -35,6 +38,7 @@ define('Controls-demo/Tabs/Buttons', [
       _source6: null,
       _source7: null,
       _source8: null,
+       _source9: null,
       _spaceTemplate: spaceTemplate,
       _beforeMount: function() {
          this._source1 = new source.Memory({
@@ -42,39 +46,36 @@ define('Controls-demo/Tabs/Buttons', [
             data: [
                {
                   id: '1',
+                  title: 'Document'
+               },
+               {
+                  id: '2',
+                  title: 'Files'
+               },
+               {
+                  id: '3',
+                  title: 'Orders'
+               }
+            ]
+         });
+         this._sourceLeft = new source.Memory({
+            keyProperty: 'id',
+            data: [
+               {
+                  id: '1',
                   title: 'Document',
                   align: 'left',
-                  isMainTab: true
                },
                {
                   id: '2',
                   title: 'Files',
-                  align: 'left'
+                  isMainTab: true,
+                  align: 'left',
                },
                {
                   id: '3',
-                  title: 'Orders',
-                  align: 'left'
-               },
-               {
-                  id: '4',
-                  title: 'Productions'
-               },
-               {
-                  id: '5',
-                  title: 'Employees'
-               },
-               {
-                  id: '6',
-                  title: 'Groups'
-               },
-               {
-                  id: '7',
-                  title: 'Photos'
-               },
-               {
-                  id: '8',
-                  title: 'Videos'
+                  align: 'left',
+                  title: 'Orders'
                }
             ]
          });
@@ -83,7 +84,7 @@ define('Controls-demo/Tabs/Buttons', [
             data: [
                {
                   id: '1',
-                  title: 'Person card',
+                  title: 'Задача в разработку №1263182638123681268716831726837182368172631239999',
                   align: 'left',
                   itemTemplate: mainTemplate
                },
@@ -106,6 +107,31 @@ define('Controls-demo/Tabs/Buttons', [
                {
                   id: '6',
                   title: 'Meetings'
+               }
+            ]
+         });
+         this._source9 = new source.Memory({
+            keyProperty: 'id',
+            data: [
+               {
+                  id: '1',
+                  title: 'Meetings',
+                  align: 'left',
+                  itemTemplate: mainTemplate
+               },
+               {
+                  id: '2',
+                  align: 'left',
+                  title: 'Photos'
+               },
+               {
+                  id: '3',
+                  align: 'left',
+                  title: 'Videos'
+               },
+               {
+                  id: '4',
+                  title: 'Groups'
                }
             ]
          });
@@ -162,13 +188,27 @@ define('Controls-demo/Tabs/Buttons', [
             data: [
                {
                   id: '1',
-                  title: 'Documents',
                   align: 'left',
+                  text: 'Отпуск',
+                  icon: 'icon-Vacation',
+                  iconStyle: 'success',
                   itemTemplate: itemTemplate
                },
                {
                   id: '2',
-                  title: 'Meetings'
+                  align: 'left',
+                  text: 'Отгул',
+                  icon: 'icon-SelfVacation',
+                  iconStyle: 'warning',
+                  itemTemplate: itemTemplate
+               },
+               {
+                  id: '3',
+                  align: 'left',
+                  text: 'Больничный',
+                  icon: 'icon-Sick',
+                  iconStyle: 'secondary',
+                  itemTemplate: itemTemplate
                }
             ]
          });

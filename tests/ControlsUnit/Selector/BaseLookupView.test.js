@@ -460,5 +460,32 @@ define([
          sinon.assert.calledWith(lookup.activate, { enableScreenKeyboard: false });
          assert.isFalse(lookup._needSetFocusInInput);
       });
+
+      it('_resize', function() {
+         let
+            lookupView = new Lookup(),
+            oldFieldWrapperWidth = 500,
+            newFieldWrapperWidth = 500,
+            isCalculatingSizes = false;
+
+         lookupView._isNeedCalculatingSizes = () => true;
+         lookupView._getFieldWrapperWidth = (recount) => {
+            return recount ? newFieldWrapperWidth : oldFieldWrapperWidth;
+         };
+         lookupView._calculatingSizes = () => {
+            isCalculatingSizes = true;
+         };
+
+         lookupView._resize();
+         assert.isFalse(isCalculatingSizes);
+
+         newFieldWrapperWidth = 0;
+         lookupView._resize();
+         assert.isFalse(isCalculatingSizes);
+
+         newFieldWrapperWidth = 400;
+         lookupView._resize();
+         assert.isTrue(isCalculatingSizes);
+      });
    });
 });

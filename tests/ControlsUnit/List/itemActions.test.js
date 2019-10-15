@@ -517,18 +517,16 @@ define([
          listViewModel.reset();
          ctrl.updateItemActions(listViewModel.getCurrent().item);
          assert.deepEqual([{
-            id: 0,
-            title: 'first',
-            iconStyle: 'secondary',
-            style: 'secondary',
-            showType: tUtil.showType.MENU
-         },
-         {
             id: 1,
             title: 'second',
             iconStyle: 'secondary',
             style: 'secondary',
             showType: tUtil.showType.TOOLBAR
+         }, {
+            icon: 'icon-ExpandDown controls-itemActionsV__action_icon  icon-size',
+            iconStyle: 'secondary',
+            style: 'secondary',
+            _isMenu: true
          }], listViewModel._actions[0].showed);
       });
       describe('needActionsMenu', function() {
@@ -605,7 +603,7 @@ define([
                   showType: tUtil.showType.MENU
                }
             ];
-            assert.isFalse(needActionsMenu(actions, 'outside'));
+            assert.isTrue(needActionsMenu(actions));
          });
 
       });

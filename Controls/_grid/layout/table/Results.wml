@@ -1,0 +1,30 @@
+<ws:template name="cell">
+    <td class="{{currentResultsColumn.cellClasses}}">
+        <ws:if data="{{!!currentResultsColumn.column.resultTemplate && (multiSelectVisibility === 'hidden' || currentResultsColumn.index !== 0)}}">
+            <ws:partial template="{{currentResultsColumn.column.resultTemplate}}"
+                        listModel="{{listModel}}"
+                        column="{{currentResultsColumn.column}}" />
+        </ws:if>
+    </td>
+</ws:template>
+
+<tr class="controls-Grid__results">
+    <ws:if data="{{contentTemplate}}">
+        {{listModel.resetResultsColumns();}}
+        <ws:if data="{{listModel.getMultiSelectVisibility() !== 'hidden'}}">
+            <td>&nbsp;</td>
+        </ws:if>
+        <td class="{{listModel.getCurrentResultsColumn().cellClasses}}"
+            colspan="{{listModel._getColspanFor('customResults')}}">
+            <ws:partial template="{{contentTemplate}}" listModel="{{listModel}}"/>
+        </td>
+    </ws:if>
+    <ws:else>
+        <ws:for data="listModel.resetResultsColumns(); listModel.isEndResultsColumn(); listModel.goToNextResultsColumn();">
+            <ws:partial template="cell"
+                        listModel="{{ listModel }}"
+                        multiSelectVisibility="{{listModel.getMultiSelectVisibility()}}"
+                        currentResultsColumn="{{listModel.getCurrentResultsColumn()}}"/>
+        </ws:for>
+    </ws:else>
+</tr>

@@ -116,25 +116,29 @@ define([
          });
 
          [
-            {},
-            { selectionType: PeriodDialog.SELECTION_TYPES.quantum, quantum: { months: [1], days: [1] } }
+            { selectionType: PeriodDialog.SELECTION_TYPES.range },
+            { selectionType: PeriodDialog.SELECTION_TYPES.range, quantum: { months: [1], days: [1] } }
          ].forEach(function(options) {
             it(`should enable year and month modes if options are equals ${JSON.stringify(options)}.`, function () {
-               const component = calendarTestUtils.createComponent(PeriodDialog, {});
+               const component = calendarTestUtils.createComponent(PeriodDialog, options);
                assert.isTrue(component._monthStateEnabled);
                assert.isTrue(component._yearStateEnabled);
                assert.strictEqual(component._state, component._STATES.year);
+               assert.strictEqual(component._yearRangeSelectionType, options.selectionType);
+               assert.strictEqual(component._monthRangeSelectionType, options.selectionType);
             });
          });
 
          [
             { selectionType: PeriodDialog.SELECTION_TYPES.single },
-            { selectionType: PeriodDialog.SELECTION_TYPES.quantum, quantum: { days: [1] } }
+            { selectionType: PeriodDialog.SELECTION_TYPES.range, quantum: { days: [1] } }
          ].forEach(function(options) {
             it(`should enable only month mode if options are equals ${JSON.stringify(options)}.`, function() {
                const component = calendarTestUtils.createComponent(PeriodDialog, options);
                assert.isTrue(component._monthStateEnabled);
                assert.isFalse(component._yearStateEnabled);
+               assert.strictEqual(component._yearRangeSelectionType, PeriodDialog.SELECTION_TYPES.disable);
+               assert.strictEqual(component._monthRangeSelectionType, PeriodDialog.SELECTION_TYPES.disable);
             });
          });
 
@@ -171,6 +175,12 @@ define([
                   assert.equal(component._state, testGroup.state);
                });
             });
+         });
+
+
+         it("should initialize readOnly state.", function() {
+            const component = calendarTestUtils.createComponent(PeriodDialog, { readOnly: true });
+            assert.strictEqual(component._yearRangeSelectionType, PeriodDialog.SELECTION_TYPES.disable);
          });
 
          it('should set correct header type.', function() {

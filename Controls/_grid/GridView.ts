@@ -1,37 +1,44 @@
-import cDeferred = require('Core/Deferred');
-import {ListView, GridLayoutUtil} from 'Controls/list';
-import GridViewTemplateChooser = require('wml!Controls/_grid/GridViewTemplateChooser');
-import DefaultItemTpl = require('wml!Controls/_grid/Item');
-import ColumnTpl = require('wml!Controls/_grid/Column');
-import HeaderContentTpl = require('wml!Controls/_grid/HeaderContent');
-import Env = require('Env/Env');
-import GroupTemplate = require('wml!Controls/_grid/GroupTemplate');
-import FullGridSupportLayout = require('wml!Controls/_grid/layouts/FullGridSupport');
-import PartialGridSupportLayout = require('wml!Controls/_grid/layouts/partialGridSupport/PartialGridSupport');
-import NoGridSupportLayout = require('wml!Controls/_grid/layouts/NoGridSupport');
-import 'wml!Controls/_grid/Header';
-import DefaultResultsTemplate = require('wml!Controls/_grid/Results');
-import 'wml!Controls/_grid/Results';
-import 'wml!Controls/_grid/ColGroup';
-import 'css!theme?Controls/grid';
-import {ScrollEmitter} from 'Controls/list';
-import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
+import {TemplateFunction} from 'UI/Base';
+import {ListView} from 'Controls/list';
+import {IoC, detection} from 'Env/Env';
+import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
+import * as GridIsEqualUtil from 'Controls/_grid/utils/GridIsEqualUtil';
 import {TouchContextField as isTouch} from "Controls/context";
+
+import * as GridViewTemplateChooser from 'wml!Controls/_grid/GridViewTemplateChooser';
+import * as GridLayout from 'wml!Controls/_grid/layout/grid/GridView';
+import * as PartialGridLayout from 'wml!Controls/_grid/layout/partialGrid/GridView';
+import * as TableLayout from 'wml!Controls/_grid/layout/table/GridView';
+import * as HeaderContentTpl from 'wml!Controls/_grid/HeaderContent';
+
+import * as DefaultItemTpl from 'wml!Controls/_grid/ItemTemplateResolver';
+import * as GridItemTemplate from 'wml!Controls/_grid/layout/grid/Item';
+import * as PartialGridItemTemplate from 'wml!Controls/_grid/layout/partialGrid/Item';
+import * as TableItemTemplate from 'wml!Controls/_grid/layout/table/Item';
+
+import * as ColumnTpl from 'wml!Controls/_grid/Column';
+import * as GroupTemplate from 'wml!Controls/_grid/GroupTemplate';
+import * as DefaultResultsTemplate from 'wml!Controls/_grid/ResultsTemplateResolver';
+import 'wml!Controls/_grid/layout/grid/Results';
+import 'wml!Controls/_grid/layout/partialGrid/Results';
+import 'wml!Controls/_grid/layout/table/Results';
+import 'css!theme?Controls/grid';
 
 var
     _private = {
         checkDeprecated: function(cfg) {
             // TODO: https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             if (cfg.showRowSeparator !== undefined) {
-                Env.IoC.resolve('ILogger').warn('IGridControl', 'Option "showRowSeparator" is deprecated and removed in 19.200. Use option "rowSeparatorVisibility".');
+                IoC.resolve('ILogger').warn('IGridControl', 'Option "showRowSeparator" is deprecated and removed in 19.200. Use option "rowSeparatorVisibility".');
             }
             if (cfg.stickyColumn !== undefined) {
-                Env.IoC.resolve('ILogger').warn('IGridControl', 'Option "stickyColumn" is deprecated and removed in 19.200. Use "stickyProperty" option in the column configuration when setting up the columns.');
+                IoC.resolve('ILogger').warn('IGridControl', 'Option "stickyColumn" is deprecated and removed in 19.200. Use "stickyProperty" option in the column configuration when setting up the columns.');
             }
         },
 
-        getGridTemplateColumns: function(columns, hasMultiselect: boolean): string {
-            let columnsWidths: Array<string> = (hasMultiselect ? ['max-content'] : []).concat(columns.map((column => column.width || '1fr')));
+        getGridTemplateColumns(columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
+            // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+            const columnsWidths: string[] = (hasMultiSelect ? ['max-content'] : []).concat(columns.map(((column) => column.width || GridLayoutUtil.DEFAULT_COLUMN_WIDTH)));
             return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
         },
 
@@ -52,14 +59,14 @@ var
             return result;
         },
 
-        chooseGridTemplate: function (): Function {
-            if (GridLayoutUtil.isFullGridSupport()) {
-                return FullGridSupportLayout;
+        chooseGridTemplate(isFullGridSupport: boolean, shouldUseTableLayout: boolean): TemplateFunction {
+            if (isFullGridSupport) {
+                return GridLayout;
+            } else if (shouldUseTableLayout) {
+                return TableLayout;
+            } else {
+                return PartialGridLayout;
             }
-            if (GridLayoutUtil.isPartialGridSupport()) {
-                return PartialGridSupportLayout;
-            }
-            return NoGridSupportLayout;
         },
 
         /*
@@ -70,6 +77,7 @@ var
         * Therefore it is required to create Cell as control with and subscribe on events in it.
         * https://online.sbis.ru/opendoc.html?guid=9d0f8d1a-576d-471d-bf02-991cd02f92e4
         */
+        // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
         registerHandlersForPartialSupport: function (self, listModel) {
             listModel.setHandlersForPartialSupport({
                 'mouseenter': self._onItemMouseEnter.bind(self),
@@ -83,40 +91,39 @@ var
             });
         },
 
-        fillItemsContainerForPartialSupport: function (self): void {
-            let
-                multiselectOffset = self._options.multiSelectVisibility === 'hidden'?0:1,
-                columns = self._listModel.getColumns(),
-                itemsContainer = self._itemsContainerForPartialSupport,
-                columnslength = columns.length + multiselectOffset,
-                cellsHTML = (self._container[0] || self._container).getElementsByClassName('controls-Grid__row-cell'),
-                items = [];
+        // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+        fillItemsContainerForPartialSupport(self): void {
+            const columns = self._listModel.getColumns();
+            const columnsLength = columns.length + (self._options.multiSelectVisibility === 'hidden' ? 0 : 1);
+            const cellsHTML = (self._container[0] || self._container).getElementsByClassName('controls-Grid__row-cell');
+            const items = [];
 
-
-            for (let i = 0; i<cellsHTML.length;i+=columnslength) {
+            for (let i = 0; i < cellsHTML.length; i += columnsLength) {
                 items.push(cellsHTML[i]);
             }
 
-            itemsContainer.children = items;
+            self._itemsContainerForPartialSupport.children = items;
         },
 
-        getColumnsWidthForEditingRow: function (self, itemData): Array<string> {
-            let
-                container = (self._container[0] || self._container),
-                hasItems = self._listModel.getCount(),
-                hasHeader = !!self._listModel.getHeader() && (hasItems || self._listModel.isDrawHeaderWithEmptyList()),
-                hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
-                cells,
-                columnsWidths = [];
+        // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+        getColumnsWidthForEditingRow(self): string[] {
+            const hasItems = self._listModel.getCount();
+            const hasHeader = !!self._listModel.getHeader() && (hasItems || self._listModel.isDrawHeaderWithEmptyList());
+
 
             if (!hasItems && !hasHeader) {
-                return self._options.columns.map((column) => column.width || '1fr');
+                return self._options.columns.map((column) => column.width || GridLayoutUtil.DEFAULT_COLUMN_WIDTH);
             }
+
+            const container = (self._container[0] || self._container);
+            const hasMultiSelect = self._options.multiSelectVisibility !== 'hidden';
+            const columnsWidths = [];
+            let cells;
 
             if (hasHeader) {
                 cells = container.getElementsByClassName('controls-Grid__header-cell');
             } else {
-                cells = _private.getNoColspanRowCells(self, container, self._options.columns, hasMultiselect);
+                cells = _private.getNoColspanRowCells(self, container, self._options.columns, hasMultiSelect);
                 if (cells.length === 0) {
                     // If we were unable to find a row with no colspan cells, fallback to the previous
                     // getElementsByClassName solution
@@ -125,22 +132,44 @@ var
             }
 
             self._options.columns.forEach((column, index: number) => {
-                const realIndex = index + (hasMultiselect ? 1 : 0);
-                const isDynamicWidth = !GridLayoutUtil.isCompatibleWidth(column.width);
-                const cWidth = isDynamicWidth ? (cells[realIndex].getBoundingClientRect().width + 'px') : (column.width || '1fr');
-
-                columnsWidths.push(cWidth);
+                if (!GridLayoutUtil.isCompatibleWidth(column.width)) {
+                    const realIndex = index + (hasMultiSelect ? 1 : 0);
+                    columnsWidths.push(cells[realIndex].getBoundingClientRect().width + 'px');
+                } else {
+                    columnsWidths.push(column.width || GridLayoutUtil.DEFAULT_COLUMN_WIDTH);
+                }
             });
 
             return columnsWidths;
         },
 
-        getQueryForHeaderCell: function(isSafari: boolean, cur, multyselectVisibility: number) {
+        getQueryForHeaderCell: function(isSafari: boolean, cur, multyselectVisibility: number): string {
             return isSafari ?
                 `div[style*="grid-column-start: ${cur.startColumn + multyselectVisibility}; grid-column-end: ${cur.endColumn + multyselectVisibility}; grid-row-start: ${cur.startRow}; grid-row-end: ${cur.endRow}"]` :
                 `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`;
         },
 
+        getHeaderCellOffset: function(header, cur) {
+            const result = header.reduce((acc, el) => {
+                if (el.endRow < cur.endRow && el.startColumn <= cur.startColumn && el.endColumn >= cur.endColumn) {
+                    acc.push(el);
+                }
+                return acc;
+            }, []);
+            let upperCellsHeight = 0;
+            if (result && !!result.length) {
+                for (const el of result) {
+                    upperCellsHeight += el.height;
+                }
+            }
+            return upperCellsHeight;
+        },
+
+        prepareHeaderCells: function(header, container, multyselectVisibility) {
+            return header.map((cur) => ({...cur, height: container.querySelector(
+                    _private.getQueryForHeaderCell(detection.safari, cur, multyselectVisibility)
+                ).offsetHeight}));
+        },
 
         // TODO Kingo
         // В IE для колонок строки редактирования в гриде нужно установить фиксированную ширину,
@@ -150,6 +179,7 @@ var
         // их ширина будет отличаться, ее использовать нельзя.
         // getNoColspanRowCells ищет в гриде строку, в которой нет колонок с colspan'ом, и возвращает
         // ее колонки.
+        // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
         getNoColspanRowCells: function(self, container, columnsCfg, hasMultiselect) {
             const totalColumns = columnsCfg.length + (hasMultiselect ? 1 : 0);
             let currentRow = 0;
@@ -166,12 +196,21 @@ var
             } while (cells.length > 0 && cells.length < totalColumns);
 
             return cells;
+        },
+
+        setGridSupportStatus(self: GridView, useTableInOldBrowsers: boolean): void {
+            self._isNoGridSupport = GridLayoutUtil.isNoGridSupport();
+            self._isPartialGridSupport = GridLayoutUtil.isPartialGridSupport();
+            self._isFullGridSupport = GridLayoutUtil.isFullGridSupport();
+
+            const canUseTableLayout = !!useTableInOldBrowsers || self._isNoGridSupport;
+            self._shouldUseTableLayout = canUseTableLayout && !self._isFullGridSupport;
         }
     },
     GridView = ListView.extend({
         _gridTemplate: null,
         _resultsTemplate: null,
-        isNotFullGridSupport: Env.detection.isNotFullGridSupport,
+        isNotFullGridSupport: detection.isNotFullGridSupport,
         _template: GridViewTemplateChooser,
         _groupTemplate: GroupTemplate,
         _defaultItemTemplate: DefaultItemTpl,
@@ -180,13 +219,23 @@ var
         _itemsContainerForPartialSupport: null,
         _isHeaderChanged: false,
 
+        _isNoGridSupport: false,
+        _isPartialGridSupport: false,
+        _isFullGridSupport: false,
+        _shouldUseTableLayout: false,
+
         _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
-            this._gridTemplate = _private.chooseGridTemplate();
-            GridView.superclass._beforeMount.apply(this, arguments);
-            _private.registerHandlersForPartialSupport(this, this._listModel);
+            _private.setGridSupportStatus(this, cfg.useTableInOldBrowsers);
+            this._gridTemplate = _private.chooseGridTemplate(this._isFullGridSupport, this._shouldUseTableLayout);
+            const resultSuper = GridView.superclass._beforeMount.apply(this, arguments);
+            _private.setGridSupportStatus(this._listModel, cfg.useTableInOldBrowsers);
+            this._listModel.setBaseItemTemplateResolver(this._resolveBaseItemTemplate.bind(this));
             this._listModel.setColumnTemplate(ColumnTpl);
-            if (GridLayoutUtil.isPartialGridSupport()) {
+
+            // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+            if (this._isPartialGridSupport && !this._shouldUseTableLayout) {
+                _private.registerHandlersForPartialSupport(this, this._listModel);
                 this._listModel.getColumnsWidthForEditingRow = this._getColumnsWidthForEditingRow.bind(this);
                 this._itemsContainerForPartialSupport = {
                     children: null
@@ -194,6 +243,7 @@ var
             }
             this._resultsTemplate = cfg.results && cfg.results.template ? cfg.results.template : (cfg.resultsTemplate || DefaultResultsTemplate);
             this._listModel.headerInEmptyListVisible = cfg.headerInEmptyListVisible;
+            return resultSuper;
         },
 
 
@@ -237,7 +287,8 @@ var
         },
 
         _afterRender() {
-            if (GridLayoutUtil.isPartialGridSupport()) {
+            // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+            if (this._isPartialGridSupport && !this._shouldUseTableLayout) {
                 // TODO Kingo
                 // Для IE нужно обновить itemsContainer здесь, потому что виртуальный
                 // скролл вычисляет высоту строк сразу после _afterRender
@@ -246,29 +297,33 @@ var
             GridView.superclass._afterRender.apply(this, arguments);
         },
 
-        _onItemMouseEnter: function (event, itemData) {
+        _onItemMouseEnter(event, itemData): void {
+            // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
             // In partial grid supporting browsers hovered item calculates in code
-            if (!this._context.isTouch.isTouch && GridLayoutUtil.isPartialGridSupport() &&
-                (itemData.item !== this._listModel.getHoveredItem())) {
+            if (!this._context.isTouch.isTouch && this._isPartialGridSupport && !this._shouldUseTableLayout &&
+                (itemData.item !== this._listModel.getHoveredItem())
+            ) {
                 this._listModel.setHoveredItem(itemData.item);
             }
             GridView.superclass._onItemMouseEnter.apply(this, arguments);
         },
 
         _onItemMouseLeave: function (event, itemData) {
+            // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
             // In partial grid supporting browsers hovered item calculates in code
-            if (!this._context.isTouch.isTouch && GridLayoutUtil.isPartialGridSupport()) {
+            if (!this._context.isTouch.isTouch && this._isPartialGridSupport && !this._shouldUseTableLayout) {
                 this._listModel.setHoveredItem(null);
             }
             GridView.superclass._onItemMouseLeave.apply(this, arguments);
         },
 
-        _calcFooterPaddingClass: function(params) {
+        _calcFooterPaddingClass(params): string {
             return _private.calcFooterPaddingClass(params);
         },
 
-        getItemsContainer: function () {
-            if (GridLayoutUtil.isPartialGridSupport()) {
+        getItemsContainer(): HTMLDivElement | HTMLTableElement | { children: HTMLCollection } {
+            // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+            if (this._isPartialGridSupport && !this._shouldUseTableLayout) {
                 _private.fillItemsContainerForPartialSupport(this);
                 return this._itemsContainerForPartialSupport;
             } else {
@@ -286,43 +341,22 @@ var
         _setHeaderWithHeight: function() {
             // todo Сейчас stickyHeader не умеет работать с многоуровневыми Grid-заголовками, это единственный вариант их фиксировать
             // поправим по задаче: https://online.sbis.ru/opendoc.html?guid=2737fd43-556c-4e7a-b046-41ad0eccd211
+
             let resultOffset = 0;
-            let resultsHeaderCells;
-            const resultPosition = this._listModel.getResultsPosition();
             // toDO Такое получение контейнера до исправления этой ошибки https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
             const container = this._container.length !== undefined ? this._container[0] : this._container;
-            const stickyHeaderCells = container.getElementsByClassName('controls-Grid__header')[0].childNodes;
-            if (resultPosition === 'top') {
-                resultsHeaderCells = container.getElementsByClassName('controls-Grid__results')[0].childNodes;
-            }
             const multyselectVisibility = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
-            const newColumns = this._options.header.map((cur, i) => {
-                if (cur.startRow && cur.endRow) {
-                    const curEl = container.querySelector(
-                        _private.getQueryForHeaderCell(Env.detection.safari, cur, multyselectVisibility)
-                    );
-                    const height = curEl.offsetHeight;
-                    const offset = curEl.offsetTop;
+            const cellsArray = _private.prepareHeaderCells(this._options.header, container, multyselectVisibility);
+            const newColumns = cellsArray.map((cur) => {
+                    const upperCellsOffset = _private.getHeaderCellOffset(cellsArray, cur);
                     return {
                         ...cur,
-                        offsetTop: offset,
-                        height
+                        offsetTop: upperCellsOffset,
                     };
-                }
-                const curElHeight = stickyHeaderCells[i].offsetHeight;
-                if (curElHeight > resultOffset && !cur.isBreadCrumbs) {
-                    resultOffset = curElHeight;
-                }
-                return {
-                    ...cur,
-                    offset: 0
-                };
             });
-            if (resultOffset === 0 && resultPosition === 'top') {
-                resultOffset = resultsHeaderCells[0].offsetTop;
-            }
             return [newColumns, resultOffset];
         },
+
         resizeNotifyOnListChanged: function(){
             GridView.superclass.resizeNotifyOnListChanged.apply(this, arguments);
             if (this._children.columnScroll) {
@@ -342,15 +376,30 @@ var
             }
         },
 
-        _getColumnsWidthForEditingRow: function (itemData) {
-            return _private.getColumnsWidthForEditingRow(this, itemData);
+        _resolveItemTemplate(options): TemplateFunction {
+            return options.itemTemplate || this._resolveBaseItemTemplate();
+        },
+
+        _resolveBaseItemTemplate(): TemplateFunction {
+            if (this._isFullGridSupport) {
+                return GridItemTemplate;
+            } else if (this._shouldUseTableLayout) {
+                return TableItemTemplate;
+            } else {
+                return PartialGridItemTemplate;
+            }
+        },
+
+        // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+        _getColumnsWidthForEditingRow(): string[] {
+            return _private.getColumnsWidthForEditingRow(this);
         },
         _onEditArrowClick: function(e, item) {
             this._notify('editArrowClick', [item]);
 
-            //we do not need to fire itemClick on clicking on editArrow
+            // we do not need to fire itemClick on clicking on editArrow
             e.stopPropagation();
-        }
+        },
     });
 
 GridView._private = _private;

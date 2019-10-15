@@ -40,7 +40,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                alignment: 'start'
             };
             this._blocks = [{
-               header: 'POSITION',
+               header: 'Position',
                items: [{
                   text: 'TOP START',
                   cfg: {
@@ -128,7 +128,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   }
                }]
             }, {
-               header: 'STYLE',
+               header: 'Style',
                items: [{
                   text: 'DEFAULT',
                   cfg: {
@@ -170,7 +170,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   }
                }]
             }, {
-               header: 'FLOAT',
+               header: 'Float',
                items: [{
                   text: 'TRUE',
                   cfg: {
@@ -191,7 +191,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   }
                }]
             }, {
-               header: 'CONTENT',
+               header: 'Content',
                items: [{
                   text: 'CUSTOM',
                   cfg: {

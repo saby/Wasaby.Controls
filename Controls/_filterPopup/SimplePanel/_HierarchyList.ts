@@ -6,67 +6,65 @@ import emptyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_List/
 import clone = require('Core/core-clone');
 import {DropdownViewModel} from 'Controls/dropdownPopup';
 import hierarchyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_HierarchyList/hierarchyItemTemplate');
-import * as defaultItemTemplate from "wml!*";
 
 var _private = {
 
     getFolders: function(items, nodeProperty) {
-        return factory(items).filter((item) => { return item.get(nodeProperty); }).value();
+        let folders = {};
+        factory(items).each((item) => {
+            if (item.get(nodeProperty)) {
+                folders[item.getId()] = item;
+            }
+        });
+        return folders;
     },
 
     getItemsByFolder: function(items, folderId, parentProperty) {
         return factory(items).filter((item) => {
-           return item.get(parentProperty) === folderId;
+            return item.get(parentProperty) === folderId;
         }).value();
     },
 
     getViewModelSelectedKeys: function(selectedKeys, emptyKey) {
         let result = [];
         factory(selectedKeys).each((key) => {
-           if (!key.includes(emptyKey)) {
-               result = result.concat(key);
-           }
+            if (!key.includes(emptyKey)) {
+                result = result.concat(key);
+            }
         });
         return result;
     },
 
-    isFolderClick: function(folders, key, keyProperty) {
-        return folders.find((folder) => {
-            return key === folder.get(keyProperty);
-        });
-    },
-
     deleteSelectedFolders: function(self, keyProperty) {
-        self._folders.forEach((folder) => {
-            self._selectedKeys = self._selectedKeys.map((keys) => {
-                if (keys.includes(folder.get(keyProperty))) {
-                    return [];
-                }
-                return keys;
-            });
+        factory(self._folders).each((folder, index) => {
+            if (self._selectedKeys[index].includes(folder.get(keyProperty))) {
+                self._selectedKeys[index] = [];
+            }
         });
     },
 
     getSelectedKeys: function(selectedKeys, folders, emptyKey) {
-        let clonedKeys = clone(selectedKeys);
+        let clonedKeys = {};
         factory(folders).each((folder, index) => {
-            if (clonedKeys[index] === undefined || clonedKeys[index] === emptyKey) {
+            if (selectedKeys[index] === undefined || selectedKeys[index] === emptyKey) {
                 clonedKeys[index] = [];
+            } else {
+                clonedKeys[index] = selectedKeys[index];
             }
         });
         return clonedKeys;
     },
 
     getNodeItems: function(folders, {items, keyProperty, parentProperty}) {
-        let nodeItems = [];
-        factory(folders).each((folder) => {
+        let nodeItems = {};
+        factory(folders).each((folder, index) => {
             const records = new RecordSet({
                 keyProperty,
                 adapter: items.getAdapter()
             });
             records.add(folder);
             records.append(_private.getItemsByFolder(items, folder.get(keyProperty), parentProperty));
-            nodeItems.push(records);
+            nodeItems[index] = records;
         });
         return nodeItems;
     }
@@ -90,7 +88,8 @@ var HierarchyList = Control.extend({
             itemTemplateProperty: options.itemTemplateProperty,
             displayProperty: options.displayProperty,
             emptyText: options.emptyText,
-            emptyKey: options.emptyKey
+            emptyKey: options.emptyKey,
+            hasApplyButton: options.hasApplyButton
         });
     },
 
@@ -121,7 +120,7 @@ var HierarchyList = Control.extend({
             }
         };
 
-        if (_private.isFolderClick(this._folders, keys[0], this._options.keyProperty)) {
+        if (!!this._folders[keys[0]]) {
             _private.deleteSelectedFolders(this, this._options.keyProperty);
             setKeys();
             this._notify('itemClick', [this._selectedKeys]);

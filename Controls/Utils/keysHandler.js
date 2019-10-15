@@ -5,7 +5,7 @@ define('Controls/Utils/keysHandler', [], function() {
    /**
     * This used in control to handle keyDown events.
     */
-   return function(event, keys, handlerSet, scope) {
+   return function(event, keys, handlerSet, scope, dontStop) {
       for (var action in keys) {
          if (keys.hasOwnProperty(action)) {
             if (event.nativeEvent.keyCode === keys[action]) {
@@ -16,7 +16,7 @@ define('Controls/Utils/keysHandler', [], function() {
                // так как обработчики БТРа в таком случае не отработают, потому что
                // у события не будет bubbling фазы
                // TODO: Нужно поправить после исправления https://online.sbis.ru/opendoc.html?guid=cefa8cd9-6a81-47cf-b642-068f9b3898b7
-               if (!event.target.closest('.richEditor_TinyMCE')) {
+               if (!event.target.closest('.richEditor_TinyMCE') && !dontStop) {
                   event.stopImmediatePropagation();
                }
                return;

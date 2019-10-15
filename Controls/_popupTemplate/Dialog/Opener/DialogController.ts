@@ -1,4 +1,4 @@
-import BaseController = require('Controls/_popupTemplate/BaseController');
+import {default as BaseController} from 'Controls/_popupTemplate/BaseController';
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
 
 let _private = {
@@ -45,10 +45,10 @@ let _private = {
  * @category Popup
  * @extends Controls/_popupTemplate/BaseController
  */
-let DialogController = BaseController.extend({
+class DialogController extends BaseController {
     elementCreated(cfg, container) {
         this.prepareConfig(cfg, container);
-    },
+    }
 
     elementUpdated(cfg, container) {
         /* start: We remove the set values that affect the size and positioning to get the real size of the content */
@@ -81,7 +81,7 @@ let DialogController = BaseController.extend({
         container.style.maxHeight = '';
 
         /* end: Return all values to the node. Need for vdom synchronizer */
-    },
+    }
 
     getDefaultConfig(item) {
         // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
@@ -92,7 +92,7 @@ let DialogController = BaseController.extend({
         _private.prepareConfig(item, sizes);
         item.position.top = -10000;
         item.position.left = -10000;
-    },
+    }
 
     popupDragStart(item, container, offset) {
         if (!item.startPosition) {
@@ -107,28 +107,28 @@ let DialogController = BaseController.extend({
 
         // Take the size from cache, because they don't change when you move
         _private.prepareConfig(item, item.sizes);
-    },
+    }
 
     popupDragEnd(item) {
         delete item.startPosition;
-    },
+    }
 
     pageScrolled(): boolean {
         // Don't respond to page scrolling. The popup should remain where it originally positioned.
         return false;
-    },
+    }
 
     prepareConfig(cfg, container) {
         let sizes = this._getPopupSizes(cfg, container);
         cfg.sizes = sizes;
         _private.prepareConfig(cfg, sizes);
-    },
+    }
 
     needRecalcOnKeyboardShow() {
         return true;
-    },
-    TYPE: 'Dialog',
-    _private
-});
-export = new DialogController();
+    }
 
+    TYPE = 'Dialog';
+    _private = _private;
+}
+export = new DialogController();

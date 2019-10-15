@@ -7,7 +7,9 @@ import Env = require('Env/Env');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import * as mStubs from 'Core/moduleStubs';
-import {descriptor} from 'Types/entity';
+import {descriptor, Model} from 'Types/entity';
+import {RecordSet} from 'Types/collection';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 var
@@ -46,20 +48,37 @@ var _private = {
        });
    },
 
+   getItemByKey(items: RecordSet, key: string, keyProperty: string): void|Model {
+      let item;
+
+      if (items) {
+         item = items.at(items.getIndexByValue(keyProperty, key));
+      }
+
+      return item;
+   },
+
    updateSelectedItems: function (self, emptyText, selectedKeys, keyProperty, selectedItemsChangedCallback) {
-      var selectedItems = [];
+      const selectedItems = [];
+
+      const addToSelected = (key: string) => {
+         const selectedItem = _private.getItemByKey(self._items, key, keyProperty);
+
+         if (selectedItem) {
+            selectedItems.push(selectedItem);
+         }
+      };
+
       if (!selectedKeys.length || selectedKeys[0] === null) {
         if (emptyText) {
            selectedItems.push(null);
-        } else if (self._items.getRecordById(null)) {
-           selectedItems.push(self._items.getRecordById(null));
+        } else {
+           addToSelected(null);
          }
       } else {
-         chain.factory(selectedKeys).each(function (key) {
+         chain.factory(selectedKeys).each( (key) => {
             // fill the array of selected items from the array of selected keys
-            if (self._items.getRecordById(key)) {
-               selectedItems.push(self._items.getRecordById(key));
-            }
+            addToSelected(key);
          });
       }
       if (selectedItemsChangedCallback) {
@@ -67,11 +86,11 @@ var _private = {
       }
    },
 
-   getNewItems: function (items, selectedItems, keyProperty) {
-      var newItems = [];
+   getNewItems(items: RecordSet, selectedItems: RecordSet, keyProperty: string): Model[] {
+      const newItems = [];
 
-      chain.factory(selectedItems).each(function (item) {
-         if (!items.getRecordById(item.get(keyProperty))) {
+      chain.factory(selectedItems).each((item) => {
+         if (!_private.getItemByKey(items, item.get(keyProperty), keyProperty)) {
             newItems.push(item);
          }
       });
@@ -121,7 +140,7 @@ var _private = {
          case 'applyClick':
             this._notify('selectedItemsChanged', [result.data]);
             _private.updateHistory(this, result.data);
-            this._children.DropdownOpener.close();
+            _private.closeDropdownList(this);
             break;
          case 'itemClick':
             result.data[0] = _private.prepareItem(result.data[0], this._options.keyProperty, this._source);
@@ -130,18 +149,23 @@ var _private = {
             // dropDown must close by default, but user can cancel closing, if returns false from event
             if (res !== false) {
                _private.updateHistory(this, result.data[0]);
-               this._children.DropdownOpener.close();
+               _private.closeDropdownList(this);
             }
             break;
          case 'selectorResult':
             _private.onSelectorResult(this, result.data);
             this._notify('selectedItemsChanged', [result.data]);
-            this._children.DropdownOpener.close();
+            _private.closeDropdownList(this);
             break;
          case 'footerClick':
             this._notify('footerClick', [result.event]);
-            this._children.DropdownOpener.close();
+            _private.closeDropdownList(this);
       }
+   },
+
+   closeDropdownList: function (self) {
+      self._children.DropdownOpener.close();
+      self._isOpened = false;
    },
 
    setHandlers: function (self, options) {
@@ -152,6 +176,7 @@ var _private = {
          }
       };
       self._onClose = function(event, args) {
+         self._isOpened = false;
          self._notify('dropDownClose');
          if (typeof (options.close) === 'function') {
             options.close(args);
@@ -216,7 +241,7 @@ var _private = {
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/IIcon
  * @mixes Controls/_interface/IIconStyle
- * @mixes Controls/interface/IGrouped
+ * @mixes Controls/interface/IGroupedList
  * @author Красильников А.С.
  * @control
  * @private
@@ -237,7 +262,7 @@ var _private = {
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/IIcon
  * @mixes Controls/_interface/IIconStyle
- * @mixes Controls/interface/IGrouped
+ * @mixes Controls/interface/IGroupedList
  * @author Красильников А.С.
  * @control
  * @private
@@ -315,7 +340,7 @@ var _Controller = Control.extend({
    _beforeUpdate: function (newOptions) {
       if (_private.templateOptionsChanged(newOptions, this._options)) {
          this._depsDeferred = null;
-         if (this._children.DropdownOpener.isOpened()) {
+         if (this._isOpened) {
             this._open();
          }
       }
@@ -327,13 +352,13 @@ var _Controller = Control.extend({
          !isEqual(newOptions.filter, this._options.filter)) {
          this._source = null;
          this._sourceController = null;
-         if (newOptions.lazyItemsLoading && !this._children.DropdownOpener.isOpened()) {
+         if (newOptions.lazyItemsLoading && !this._isOpened) {
             /* source changed, items is not actual now */
             this._setItems(null);
          } else {
             var self = this;
             return _private.loadItems(this, newOptions).addCallback(function(items) {
-               if (items && self._children.DropdownOpener.isOpened()) {
+               if (items && self._isOpened) {
                   self._open();
                }
             });
@@ -343,52 +368,55 @@ var _Controller = Control.extend({
 
    _keyDown: function(event) {
       if (event.nativeEvent.keyCode === Env.constants.key.esc && this._children.DropdownOpener.isOpened()) {
-         this._children.DropdownOpener.close();
+         _private.closeDropdownList(this);
          event.stopPropagation();
       }
    },
 
-   _open: function (event) {
+   _open(event?: SyntheticEvent<'mousedown'>, popupOptions?: object): void {
       // Проверям что нажата левая кнопка мыши
       if (this._options.readOnly || event && event.nativeEvent.button !== 0) {
          return;
       }
-      var self = this;
 
-      function open() {
-         var config = {
+      const open = (): void => {
+         const config = {
             templateOptions: {
-               items: self._items,
-               //FIXME self._container[0] delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-               width: self._options.width !== undefined ? (self._container[0] || self._container).offsetWidth : undefined,
-               hasMoreButton: self._sourceController.hasMoreData('down'),
-               selectorOpener: self._children.selectorOpener,
-               selectorDialogResult: self._onSelectorTemplateResult.bind(self),
-               afterSelectorOpenCallback: self._afterSelectorOpenCallback.bind(self)
+               items: this._items,
+               // FIXME self._container[0] delete after
+               // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+               width: this._options.width !== undefined ?
+                        (this._container[0] || this._container).offsetWidth :
+                        undefined,
+               hasMoreButton: this._sourceController.hasMoreData('down'),
+               selectorOpener: this._children.selectorOpener,
+               selectorDialogResult: this._onSelectorTemplateResult.bind(this),
+               afterSelectorOpenCallback: this._afterSelectorOpenCallback.bind(this)
             },
-            target: self._container,
-            targetPoint: self._options.corner,
-            opener: self,
+            target: this._container,
+            targetPoint: this._options.corner,
+            opener: this,
             autofocus: false,
             closeOnOutsideClick: true
          };
-         _private.requireTemplates(self, self._options).addCallback(() => {
-            self._children.DropdownOpener.open(config, self);
+         _private.requireTemplates(this, this._options).addCallback(() => {
+            this._isOpened = true;
+            this._children.DropdownOpener.open({...config, ...popupOptions}, this);
          });
-      }
+      };
 
-      function itemsLoadCallback(items) {
-         if (items.getCount() > 1 || items.getCount() === 1 && self._options.emptyText) {
+      const itemsLoadCallback = (items: RecordSet): void => {
+         if (items.getCount() > 1 || items.getCount() === 1 && this._options.emptyText) {
             open();
          } else if (items.getCount() === 1) {
-            self._notify('selectedItemsChanged', [
+            this._notify('selectedItemsChanged', [
                [items.at(0)]
             ]);
          }
-      }
+      };
 
       if (this._options.source && !this._items) {
-         _private.loadItems(this, this._options).addCallback(function (items) {
+         _private.loadItems(this, this._options).addCallback((items) => {
             itemsLoadCallback(items);
             return items;
          });
@@ -404,7 +432,7 @@ var _Controller = Control.extend({
 
    _afterSelectorOpenCallback: function(selectedItems) {
       this._initSelectorItems = selectedItems;
-      this._children.DropdownOpener.close();
+      _private.closeDropdownList(this);
    },
 
    _clickHandler: function(event) {
@@ -412,7 +440,7 @@ var _Controller = Control.extend({
       event.stopPropagation();
       var opener = this._children.DropdownOpener;
       if (opener.isOpened()) {
-         opener.close();
+         _private.closeDropdownList(this);
       } else {
          this._open();
       }
@@ -432,6 +460,14 @@ var _Controller = Control.extend({
    _setItems: function(items) {
       this._items = items;
       this._depsDeferred = null;
+   },
+
+   openMenu(popupOptions?: object): void {
+      this._open(null, popupOptions);
+   },
+
+   closeMenu(): void {
+      _private.closeDropdownList(this);
    }
 });
 

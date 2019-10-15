@@ -198,8 +198,8 @@ export function isDecoratedLink(tagName, firstChildNode) {
       const firstChildTagName = getTagName(firstChildNode);
       const firstChildAttributes = getAttributes(firstChildNode);
 
-      result = firstChildTagName === 'a' && !!firstChildAttributes.href &&
-         firstChildAttributes.class === getClasses().link;
+      result = firstChildTagName === 'a' && !!firstChildAttributes.href && !!firstChildAttributes.class &&
+         firstChildAttributes.class.split(' ').indexOf(getClasses().link) !== -1;
    } else {
       result = false;
    }

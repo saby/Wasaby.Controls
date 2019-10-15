@@ -116,8 +116,8 @@ const _private = {
             return _private.getOffset(targetWidth, alignSide, constants.ARROW_H_OFFSET, constants.ARROW_WIDTH);
         }
     },
-    findItemById: function(popupItems, id) {
-        let index = popupItems && popupItems.getIndexByValue('id', id);
+    findItemById(popupItems, id) {
+        const index = popupItems && popupItems.getIndexByValue('id', id);
         if (index > -1) {
             return popupItems.at(index);
         }
@@ -132,8 +132,10 @@ const _private = {
  * @private
  * @category Popup
  */
-const InfoBoxController = StickyController.constructor.extend({
-    _openedPopupId: null,
+class InfoBoxController extends StickyController.constructor {
+    _openedPopupId = null;
+    TYPE = 'InfoBox';
+    _private = _private;
 
     elementCreated(cfg, container, id) {
         // Only one popup can be opened
@@ -145,31 +147,31 @@ const InfoBoxController = StickyController.constructor.extend({
         // Remove the width obtained in getDefaultOptions
         cfg.position.maxWidth = undefined;
 
-        return InfoBoxController.superclass.elementCreated.apply(this, arguments);
-    },
+        return super.elementCreated.apply(this, arguments);
+    }
 
     elementUpdated() {
         // Hide popup then page scroll or resize
         require('Controls/popup').Controller.remove(this._openedPopupId);
-    },
+    }
 
     popupResize(element, container) {
-        return InfoBoxController.superclass.elementUpdated.call(this, element, container);
-    },
+        return super.elementUpdated.call(this, element, container);
+    }
 
     elementDestroyed(item) {
         if (item.id === this._openedPopupId) {
             this._openedPopupId = null;
         }
         return (new Deferred()).callback();
-    },
+    }
 
     needRestoreFocus(isActive) {
         return isActive;
-    },
+    }
 
     getDefaultConfig(item) {
-        InfoBoxController.superclass.getDefaultConfig.apply(this, arguments);
+        super.getDefaultConfig.apply(this, arguments);
         const defaultPosition = {
             left: -10000,
             top: -10000,
@@ -186,14 +188,14 @@ const InfoBoxController = StickyController.constructor.extend({
             item.position.maxWidth = position.width;
         }
         item.position = {...item.position, ...defaultPosition};
-    },
+    }
 
     _getPopupConfig() {
-        const baseConfig = InfoBoxController.superclass._getPopupConfig.apply(this, arguments);
+        const baseConfig = super._getPopupConfig.apply(this, arguments);
         // Protection against incorrect page design
         baseConfig.checkNegativePosition = false;
         return baseConfig;
-    },
+    }
 
     getCustomZIndex(popupItems, item) {
         const parentItem = _private.findItemById(popupItems, item.parentId);
@@ -202,13 +204,11 @@ const InfoBoxController = StickyController.constructor.extend({
             return parentZIndex + 1;
         }
         return null;
-    },
+    }
 
     prepareConfig(cfg, sizes) {
         cMerge(cfg.popupOptions, _private.prepareConfig(cfg.popupOptions.position, cfg.popupOptions.target));
-        return InfoBoxController.superclass.prepareConfig.apply(this, arguments);
-    },
-    TYPE: 'InfoBox',
-    _private
-});
+        return super.prepareConfig.apply(this, arguments);
+    }
+}
 export = new InfoBoxController();

@@ -1991,6 +1991,48 @@ define([
          });
       });
 
+      describe('move marker after scroll', function() {
+         var lnSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel
+            },
+            lnBaseControl = new lists.BaseControl(lnCfg);
+         var getBCR = function (){
+            return {
+               height: 30
+            }
+         }
+         lnBaseControl.saveOptions(lnCfg);
+         lnBaseControl._beforeMount(lnCfg);
+         var itemsContainer = {
+            children:[
+               {getBoundingClientRect: getBCR},
+               {getBoundingClientRect: getBCR},
+               {getBoundingClientRect: getBCR},
+            ]
+         };
+         it('setMarkerToFirstVisibleItem', function() {
+            var expectedIndex = 0;
+            lnBaseControl._listViewModel.setMarkerOnValidItem = function(index){
+               assert.equal(index, expectedIndex);
+            }
+            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 0);
+            expectedIndex = 1;
+            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 1);
+            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 29);
+            expectedIndex = 2;
+            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 30);
+            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 31);
+         });
+
+      });
+
       describe('_canUpdateItemsActions', function() {
          var lnSource = new sourceLib.Memory({
                keyProperty: 'id',
@@ -4243,7 +4285,7 @@ define([
        it('_getLoadingIndicatorClasses', function () {
 
            function testCaseWithArgs(indicatorState) {
-               return lists.BaseControl._private.getLoadingIndicatorClasses(indicatorState);
+               return lists.BaseControl._private.getLoadingIndicatorClasses(true, indicatorState);
            }
 
            assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-all', testCaseWithArgs('all'));
@@ -4674,7 +4716,7 @@ define([
             lists.BaseControl._private.resetPagingNavigation(instance);
             assert.deepEqual(instance, {_currentPage: 1, _knownPagesCount: 1});
 
-            lists.BaseControl._private.resetPagingNavigation(instance, {sourceConfig: {page:2}});
+            lists.BaseControl._private.resetPagingNavigation(instance, {sourceConfig: {page:1}});
             assert.deepEqual(instance, {_currentPage: 2, _knownPagesCount: 1});
 
          });

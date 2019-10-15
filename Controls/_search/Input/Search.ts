@@ -1,7 +1,12 @@
-import entity = require('Types/entity');
-import Env = require('Env/Env');
-import buttonsTemplate = require('wml!Controls/_search/Input/Buttons');
+import * as buttonsTemplate from 'wml!Controls/_search/Input/Buttons';
 import {Base, TextViewModel as ViewModel} from 'Controls/input';
+import {throttle} from 'Types/function';
+import {descriptor} from 'Types/entity';
+import {constants} from 'Env/Env';
+
+// timer for search, when user click on search button or pressed enter.
+// protect against clickjacking (https://en.wikipedia.org/wiki/Clickjacking)
+const SEARCH_BY_CLICK_THROTTLE = 300;
 
 /**
  * Контрол, позволяющий пользователю вводить однострочный текст.
@@ -12,13 +17,13 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  * <a href="/materials/demo-ws4-search-container">Демо с контролами search:Input и List</a>.
  * <a href="/materials/demo-ws4-filter-search-new">Демо с контролами filter:Selector, search:Input и List</a>.
  *
- * @class Controls/_search/Input
+ * @class Controls/_search/Input/Search
  * @extends Controls/_input/Base
  *
  * @mixes Controls/interface/IInputField
  * @mixes Controls/_input/interface/IText
  *
- * @name Controls/_search/Input#contrastBackground
+ * @name Controls/_search/Input/Search#contrastBackground
  * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
  * @default false
  * @remark
@@ -54,7 +59,7 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  * <a href="/materials/demo-ws4-search-container">Demo with Input/Search and List control</a>.
  * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List control</a>.
  *
- * @class Controls/_search/Input
+ * @class Controls/_search/Input/Search
  * @extends Controls/_input/Base
  *
  * @mixes Controls/interface/IInputField
@@ -64,7 +69,7 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  *
  * @control
  * @public
- * @demo Controls-demo/Input/Search/SearchPG
+ * @demo Controls-demo/Search/Input/Base/Index
  *
  * @category Input
  * @author Золотова Э.Е.
@@ -94,12 +99,12 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  */
 
 /**
- * @event Controls/_search/Input#searchClick Происходит при клике на кнопку поиска.
+ * @event Controls/_search/Input/Search#searchClick Происходит при клике на кнопку поиска.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
 /**
- * @event Controls/_search/Input#resetClick Происходит при клике на кнопку сброса.
+ * @event Controls/_search/Input/Search#resetClick Происходит при клике на кнопку сброса.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
@@ -124,8 +129,8 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
  */
 
 /*
- * @event Controls/_search/Input#searchClick Occurs when search button is clicked.
- * @event Controls/_search/Input#resetClick Occurs when reset button is clicked.
+ * @event Controls/_search/Input/Search#searchClick Occurs when search button is clicked.
+ * @event Controls/_search/Input/Search#resetClick Occurs when reset button is clicked.
  */
 var _private = {
    isVisibleResetButton: function() {
@@ -141,6 +146,11 @@ var Search = Base.extend({
    _roundBorder: true,
 
    _wasActionUser: false,
+
+   _beforeMount(): void {
+      this._notifySearchClick = throttle(this._notifySearchClick, SEARCH_BY_CLICK_THROTTLE, false);
+      return Search.superclass._beforeMount.apply(this, arguments);
+   },
 
    _renderStyle() {
       let style: string;
@@ -207,14 +217,18 @@ var Search = Base.extend({
          return;
       }
 
-      this._notify('searchClick');
+      this._notifySearchClick();
 
       // move focus from search button to input
       this.activate();
    },
 
+   _notifySearchClick(): void {
+      this._notify('searchClick');
+   },
+
    _keyUpHandler: function(event) {
-      if (event.nativeEvent.which === Env.constants.key.enter) {
+      if (event.nativeEvent.which === constants.key.enter) {
          this._searchClick();
       }
 
@@ -239,9 +253,9 @@ Search._theme = Base._theme.concat(['Controls/search']);
 Search.getOptionTypes = function getOptionsTypes() {
    var optionTypes = Base.getOptionTypes();
 
-   optionTypes.maxLength = entity.descriptor(Number, null);
-   optionTypes.trim = entity.descriptor(Boolean);
-   optionTypes.constraint = entity.descriptor(String);
+   optionTypes.maxLength = descriptor(Number, null);
+   optionTypes.trim = descriptor(Boolean);
+   optionTypes.constraint = descriptor(String);
 
    return optionTypes;
 };

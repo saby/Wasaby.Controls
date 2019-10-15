@@ -1,31 +1,24 @@
-<ws:if data="{{serverSide}}">
-   <ws:partial template="{{_options.content}}"
-           scope="{{_options}}">
-      <ws:itemActionsTemplate>
+<!-- TODO: KINGO -->
+<!-- Флаг canUpdateItemsActions нужен только ItemActionsController. -->
+<!-- Опция является константой для предотвращения перерисовок вложенного контента из-за ее изменения. -->
+<ws:partial template="{{_options.content}}"
+            scope="{{_options}}"
+            canUpdateItemsActions="{{ null }}"
+            attr:class="{{_options.menuIsShown ? 'controls-itemActionsV_invisible'}}">
+   <ws:itemActionsTemplate>
+      <ws:if data="{{serverSide}}">
          <invisible-node />
-      </ws:itemActionsTemplate>
-   </ws:partial>
-</ws:if>
-<ws:else>
-   <!-- TODO: KINGO -->
-   <!-- Флаг canUpdateItemsActions нужен только ItemActionsController. -->
-   <!-- Опция является константой для предотвращения перерисовок вложенного контента из-за ее изменения. -->
-   <ws:partial
-      template="{{_options.content}}"
-      scope="{{_options}}"
-      canUpdateItemsActions="{{ null }}"
-      attr:class="{{_options.menuIsShown ? 'controls-itemActionsV_invisible'}}"
-   >
-      <ws:itemActionsTemplate>
-          {{ '' }}
+      </ws:if>
+      <ws:else>
+         {{ '' }}
          <ws:partial
-                  toolbarVisibility="{{_options.toolbarVisibility}}"
-                  style="{{_options.style}}"
-                  size="{{_options.editingConfig ? 's' : 'm'}}"
-                  template="{{_itemActionsTemplate}}"
-                  itemActionsPosition="{{_options.itemActionsPosition}}"
-                  actionMenuIsShown="{{_options.actionMenuIsShown}}"
-                  scope="{{itemActionsTemplate}}"/>
-      </ws:itemActionsTemplate>
-   </ws:partial>
-</ws:else>
+                 toolbarVisibility="{{_options.toolbarVisibility}}"
+                 style="{{_options.style}}"
+                 size="{{_options.editingConfig ? 's' : 'm'}}"
+                 template="{{ _itemActionsTemplate }}"
+                 itemActionsPosition="{{_options.itemActionsPosition}}"
+                 actionMenuIsShown="{{_options.actionMenuIsShown}}"
+                 scope="{{itemActionsTemplate}}"/>
+      </ws:else>
+   </ws:itemActionsTemplate>
+</ws:partial>

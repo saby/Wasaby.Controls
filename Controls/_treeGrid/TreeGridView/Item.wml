@@ -164,7 +164,7 @@
 <ws:else data="{{itemData.isPartialGridSupport()}}">
 
    <ws:template name="partialGridSupportItem">
-      <Controls._grid.layouts.partialGridSupport.Cell
+      <Controls._grid.layout.partialGrid.Cell
               eventHandlers="{{itemData.handlersForPartialSupport}}"
               itemData="{{ itemData }}"
               currentColumn="{{ currentColumn }}"
@@ -174,7 +174,7 @@
          <ws:columnContentTpl>
             <ws:partial template="colTpl" itemData="{{itemData}}" currentColumn="{{currentColumn}}" attr:class="{{className}}"/>
          </ws:columnContentTpl>
-      </Controls._grid.layouts.partialGridSupport.Cell>
+      </Controls._grid.layout.partialGrid.Cell>
    </ws:template>
 
    <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">

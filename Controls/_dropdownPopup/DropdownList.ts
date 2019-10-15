@@ -88,7 +88,9 @@ import {SyntheticEvent} from 'Vdom/Vdom'
                   iconSize: options.iconSize,
                   showHeader: false,
                   dropdownClassName: options.dropdownClassName,
-                  defaultItemTemplate: options.defaultItemTemplate
+                  itemPadding: options.itemPadding,
+                  defaultItemTemplate: options.defaultItemTemplate,
+                  hasIconPin: options.hasIconPin
                },
                targetPoint: subMenuPosition.targetPoint,
                horizontalAlign: subMenuPosition.horizontalAlign,
@@ -214,8 +216,10 @@ import {SyntheticEvent} from 'Vdom/Vdom'
                   groupTemplate: newOptions.groupTemplate,
                   groupingKeyCallback: newOptions.groupingKeyCallback,
                   groupMethod: newOptions.groupMethod,
+                  itemPadding: newOptions.itemPadding,
                   hasClose: newOptions.showClose,
-                  iconSize: newOptions.iconSize
+                  iconSize: newOptions.iconSize,
+                  hasIconPin: newOptions.hasIconPin
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
                this._hasAdditional = this._listModel.hasAdditional();
@@ -302,15 +306,13 @@ import {SyntheticEvent} from 'Vdom/Vdom'
             }
          },
 
-         _resultHandler: function(event, result) {
-            switch (result.action) {
-               case 'itemClick':
-                  if (!result.data[0].get(this._options.nodeProperty)) {
-                     this._children.subDropdownOpener.close();
-                  }
-               case 'pinClick':
-                  this._notify('sendResult', [result]);
+         _subMenuResultHandler: function(event, result) {
+            if (result.action === 'itemClick') {
+               if (!result.data[0].get(this._options.nodeProperty)) {
+                  this._children.subDropdownOpener.close();
+               }
             }
+            this._notify('sendResult', [result]);
          },
 
          _onItemSwipe: function(event, itemData) {
@@ -399,11 +401,12 @@ import {SyntheticEvent} from 'Vdom/Vdom'
          return {
             menuStyle: 'defaultHead',
             typeShadow: 'default',
-            moreButtonCaption: rk('Еще') + '...'
+            moreButtonCaption: rk('Еще') + '...',
+            itemPadding: {}
          };
       };
 
-      DropdownList._theme = ['Controls/dropdownPopup'];
+      DropdownList._theme = ['Controls/dropdownPopup', 'Controls/Classes'];
 
       export = DropdownList;
 

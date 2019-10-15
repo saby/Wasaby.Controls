@@ -514,6 +514,46 @@ define(
             StickyStrategy._private._fixBottomPositionForIos = baseFixBottomPositionForIos;
             StickyStrategy._private._isMobileIOS = () => false;
          });
+
+         it('getMargins', () => {
+            let margins = {
+               top: 1,
+               left: 2,
+            };
+            StickyController._private.getFakeDivMargins = () => margins;
+            let item = {
+               popupOptions: {
+                  maxWidth: 200,
+                  width: 150,
+                  maxHeight: 200
+               }
+            };
+            assert.deepEqual({
+               left: 0,
+               top: 0
+            }, StickyController._private.getMargins(item));
+
+            item.popupOptions.className = '1';
+            assert.deepEqual({
+               left: 2,
+               top: 1
+            }, StickyController._private.getMargins(item));
+
+            margins = {
+               top: 3,
+               left: 4,
+            };
+            assert.deepEqual({
+               left: 2,
+               top: 1
+            }, StickyController._private.getMargins(item));
+
+            item.popupOptions.className = '2';
+            assert.deepEqual({
+               left: 4,
+               top: 3
+            }, StickyController._private.getMargins(item));
+         });
       });
    }
 );

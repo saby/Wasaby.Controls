@@ -620,7 +620,7 @@ const BaseOpener = {
          if (cfg.mode === 'floatArea') {
             newCfg.dialogOptions.fitWindow = true;
          }
-         if (cfg.locationStrategy === 'fixed' || cfg.fittingMode === 'fixed') {
+         if (cfg.locationStrategy === 'fixed' || cfg.fittingMode === 'fixed' || cfg.fittingMode === 'overflow') {
             newCfg.dialogOptions.flipWindow = false;
          }
       }

@@ -3,15 +3,26 @@
             {{!_options.borderVisible ? (' controls-Slider' + (_options.size=='m'  ? '_big' : '_small') + '_withoutBorder_theme-'+_options.theme)}}">
    <div class="controls-Slider__wrapper{{_options.borderVisible ? ' controls-Slider__withBorder_theme-'+_options.theme}}"
         on:mousedown="_mouseDownAndTouchStartHandler()"
-        on:touchstart="_mouseDownAndTouchStartHandler()">
+        on:touchstart="_mouseDownAndTouchStartHandler()"
+        on:mousemove="_onMouseMove()"
+        on:mouseout="_onMouseOut()"
+        on:mouseup="_onMouseUp()">
       <div class="controls-Slider__mainSlider{{_options.size=='m' ? '_big' : '_small'}}_theme-{{_options.theme}}" name="area">
          <ws:for data="key, point in _pointData">
-            <div class="controls-Slider__point_theme-{{_options.theme}}
-                             controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_theme-{{_options.theme}}
-                             controls-Slider__point{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}"
-                 name="{{point.name}}"
-                 style="left:{{point.position}}%;">
-            </div>
+            <ws:if data="{{point.name=='tooltip' && (_tooltipValue || _tooltipValue==0) && !_options.readOnly || point.name!='tooltip'}}">
+               <div class="controls-Slider__point_theme-{{_options.theme}}
+                          controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_theme-{{_options.theme}}
+                          controls-Slider__point{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}
+                          {{point.name=='tooltip' ? (_isDrag ? 'controls-Slider__point_hidden' : 'controls-Slider__point_tooltip')}}"
+                    name="{{point.name}}"
+                    style="left:{{point.position}}%;">
+                  <ws:if data="{{point.name=='tooltip' && !_options.readOnly && (_tooltipValue || _tooltipValue==0)}}">
+                     <div class="controls-Slider__tooltipContainer">
+                        <div class="controls-Slider__tooltipValue controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_tooltipValue">{{_tooltipValue}}</div>
+                     </div>
+                  </ws:if>
+               </div>
+            </ws:if>
          </ws:for>
          <Controls.dragnDrop:Container name="dragNDrop"
                                        on:dragstart="_onDragNDropHandler()"

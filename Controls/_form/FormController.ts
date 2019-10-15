@@ -7,7 +7,7 @@ import dataSource = require('Controls/dataSource');
 
 
    /**
-    * Контроллер, в котором определена логика CRUD-методов, выполняемых над редактируемой записью. 
+    * Контроллер, в котором определена логика CRUD-методов, выполняемых над редактируемой записью.
     * В частном случае контрол применяется для создания <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">диалогов редактирования записи</a>. Может выполнять запросы CRUD-методов на БЛ.
     * @category FormController
     * @class Controls/_form/FormController
@@ -50,7 +50,7 @@ import dataSource = require('Controls/dataSource');
     * @name ReceivedState
     * @property {*} [data]
     * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
-    */    
+    */
 
    /**
     * @typedef {Object}
@@ -82,7 +82,7 @@ import dataSource = require('Controls/dataSource');
     * getting result from <CrudResult> wrapper
     * @param {CrudResult} [crudResult]
     * @return {Promise}
-    */    
+    */
    var getData = function(crudResult) {
       if (!crudResult) {
          return Promise.resolve();
@@ -165,6 +165,7 @@ import dataSource = require('Controls/dataSource');
       _template: tmpl,
       _record: null,
       _isNewRecord: false,
+      _createMetaDataOnUpdate: null,
       _errorContainer: dataSource.error.Container,
 
       constructor: function(options) {
@@ -228,6 +229,11 @@ import dataSource = require('Controls/dataSource');
          let self = this;
          if (newOptions.dataSource || newOptions.source) {
             this._source = newOptions.source || newOptions.dataSource;
+            //Сбрасываем состояние, только если данные поменялись, иначе будет зацикливаться
+            // создание записи -> ошибка -> beforeUpdate
+            if (this._source !== this._options.source && this._source !== this._options.dataSource) {
+               this._createMetaDataOnUpdate = null;
+            }
          }
 
          if (newOptions.record && this._options.record !== newOptions.record) {
@@ -254,11 +260,17 @@ import dataSource = require('Controls/dataSource');
          }
          // Если нет ключа и записи - то вызовем метод создать. Состояние isNewRecord обновим после того, как запись вычитается
          // Иначе можем удалить рекорд, к которому новое значение опции isNewRecord не относится
-         if (newOptions.key === undefined && !newOptions.record) {
+         const createMetaData = newOptions.initValues || newOptions.createMetaData;
+         // Добавил защиту от циклических вызовов: У контрола стреляет _beforeUpdate, нет рекорда и ключа => вызывается
+         // создание записи. Метод падает с ошибкой. У контрола стреляет _beforeUpdate, вызов метода создать повторяется бесконечно.
+         // Нельзя чтобы контрол ддосил БЛ.
+         if (newOptions.key === undefined && !newOptions.record && this._createMetaDataOnUpdate !== createMetaData) {
+            this._createMetaDataOnUpdate = createMetaData;
             this.create(newOptions.initValues || newOptions.createMetaData).addCallback(function() {
                if (newOptions.hasOwnProperty('isNewRecord')) {
                   self._isNewRecord = newOptions.isNewRecord;
                }
+               self._createMetaDataOnUpdate = null;
             });
          } else {
             if (newOptions.hasOwnProperty('isNewRecord')) {

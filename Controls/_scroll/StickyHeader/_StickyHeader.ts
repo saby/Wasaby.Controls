@@ -118,6 +118,7 @@ var StickyHeader = Control.extend({
 
    _beforeUnmount: function() {
       this._model.destroy();
+      this._stickyDestroy = true;
       this._observer.disconnect();
 
       //Let the listeners know that the element is no longer fixed before the unmount.
@@ -173,6 +174,13 @@ var StickyHeader = Control.extend({
     * @private
     */
    _observeHandler: function(entries) {
+      /**
+       * Баг IntersectionObserver на Mac OS: сallback может вызываться после отписки от слежения. Отписка происходит в
+       * _beforeUnmount. Устанавливаем защиту.
+       */
+      if (this._stickyDestroy) {
+         return;
+      }
       // FIXME: this._container - jQuery element in old controls envirmoment https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
       let container = this._container[0] || this._container;
       let popupContainer = container.closest('.controls-Popup__template');

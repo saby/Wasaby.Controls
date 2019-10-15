@@ -16,7 +16,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @extends Controls/_grid/Grid
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
-    * @mixes Controls/interface/IGrouped
+    * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
@@ -63,7 +63,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @extends Controls/_grid/Grid
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
-    * @mixes Controls/interface/IGrouped
+    * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter

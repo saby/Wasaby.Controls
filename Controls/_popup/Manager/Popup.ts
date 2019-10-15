@@ -57,6 +57,7 @@ class Popup extends Control<IPopupOptions> {
      */
 
     protected _template: TemplateFunction = template;
+    private _stringTemplate: boolean;
 
     // Register the openers that initializing inside current popup
     // After updating the position of the current popup, calls the repositioning of popup from child openers
@@ -74,6 +75,10 @@ class Popup extends Control<IPopupOptions> {
         this._notify('popupBeforePaintOnMount', [this._options.id], {bubbling: true});
     }
 
+    protected _beforeMount(options): void {
+        this._stringTemplate = typeof options.template === 'string';
+    }
+
     protected _afterMount(): void {
         /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
          * inside can be compoundArea and we have to wait for it, and there is an asynchronous phase. Look at the flag waitForPopupCreated */
@@ -89,6 +94,10 @@ class Popup extends Control<IPopupOptions> {
             this._notify('popupCreated', [this._options.id], {bubbling: true});
             this.activatePopup();
         }
+    }
+
+    protected _beforeUpdate(options): void {
+        this._stringTemplate = typeof options.template === 'string';
     }
 
     protected _afterUpdate(oldOptions: IPopupOptions): void {

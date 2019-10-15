@@ -27,6 +27,7 @@ import {TouchContextField} from 'Controls/context';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
+import uDimension = require("Controls/Utils/getDimensions");
 
 import { create as diCreate } from 'Types/di';
 import 'Controls/display';
@@ -42,11 +43,17 @@ const
         moveMarkerToNext: constants.key.down,
         moveMarkerToPrevious: constants.key.up,
         toggleSelection: constants.key.space,
-        enterHandler: constants.key.enter
+        enterHandler: constants.key.enter,
+        keyDownHome: constants.key.home,
+        keyDownEnd: constants.key.end,
+        keyDownPageUp: constants.key.pageUp,
+        keyDownPageDown: constants.key.pageDown
     };
 
 const LOAD_TRIGGER_OFFSET = 100;
 const INITIAL_PAGES_COUNT = 1;
+const ITEMACTIONS_UNLOCK_DELAY = 200;
+const SET_MARKER_AFTER_SCROLL_DELAY = 100;
 /**
  * Object with state from server side rendering
  * @typedef {Object}
@@ -184,7 +191,7 @@ var _private = {
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
                     }
-
+                    
                     if (self._virtualScroll) {
                         self._virtualScroll.ItemsCount = listModel.getCount();
                         self._virtualScroll.resetItemsIndexes();
@@ -336,6 +343,22 @@ var _private = {
             _private.moveMarker(self, model.getPreviousItemKey(model.getMarkedKey()));
         }
     },
+    setMarkerAfterScroll(self, event) {
+       self._setMarkerAfterScroll = true;
+    },
+    keyDownHome: function(self, event) {
+        _private.setMarkerAfterScroll(self, event);
+    },
+    keyDownEnd:  function(self, event) {
+        _private.setMarkerAfterScroll(self, event);
+    },
+    keyDownPageUp:  function(self, event) {
+        _private.setMarkerAfterScroll(self, event);
+    },
+    keyDownPageDown:  function(self, event) {
+        _private.setMarkerAfterScroll(self, event);
+    },
+
     enterHandler: function(self) {
         if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
             return;
@@ -559,10 +582,21 @@ var _private = {
 
     checkLoadToDirectionCapability: function(self, filter) {
         if (self._needScrollCalculation) {
-            if (self._loadTriggerVisibility.up) {
+            // TODO Когда список становится пустым (например после поиска или смены фильтра),
+            // если он находится вверху страницы, нижний загрузочный триггер может "вылететь"
+            // за пределы экрана (потому что у него статически задан отступ от низа списка,
+            // и при пустом списке этот отступ может вывести триггер выше верхней границы
+            // страницы).
+            // Сейчас сделал, что если список пуст, мы пытаемся сделать загрузку данных,
+            // даже если триггеры не видны (если что, sourceController.hasMore нас остановит).
+            // Но скорее всего это как-то по другому нужно решать, например на уровне стилей
+            // (уменьшать отступ триггеров, когда список пуст???). Выписал задачу:
+            // https://online.sbis.ru/opendoc.html?guid=fb5a67de-b996-49a9-9312-349a7831f8f1
+            const hasNoItems = self.getViewModel() && self.getViewModel().getCount() === 0;
+            if (self._loadTriggerVisibility.up || hasNoItems) {
                 _private.onScrollLoadEdge(self, 'up', filter);
             }
-            if (self._loadTriggerVisibility.down) {
+            if (self._loadTriggerVisibility.down || hasNoItems) {
                 _private.onScrollLoadEdge(self, 'down', filter);
             }
             _private.checkVirtualScrollCapability(self);
@@ -643,6 +677,7 @@ var _private = {
     },
 
     scrollToEdge: function(self, direction) {
+        _private.setMarkerAfterScroll(self);
         if (self._sourceController && self._sourceController.hasMoreData(direction)) {
             self._sourceController.setEdgeState(direction);
             _private.reload(self, self._options).addCallback(function() {
@@ -658,7 +693,10 @@ var _private = {
             self._notify('doScroll', ['bottom'], { bubbling: true });
         }
     },
-
+    scrollPage: function(self, direction) {
+        _private.setMarkerAfterScroll(self);
+        self._notify('doScroll', ['page' + direction], { bubbling: true });
+    },
     startScrollEmitter: function(self) {
         if (self.__error) {
             return;
@@ -839,7 +877,48 @@ var _private = {
         self._lockItemActionsByScroll = false;
         self._canUpdateItemsActions = self._savedCanUpdateItemsActions || self._canUpdateItemsActions;
         self._savedCanUpdateItemsActions = false;
-    }, 200),
+    }, ITEMACTIONS_UNLOCK_DELAY),
+
+    setMarkerAfterScrolling: function(self, scrollTop) {
+        let itemsContainer = self._children.listView.getItemsContainer();
+        let topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
+        _private.setMarkerToFirstVisibleItem(self, itemsContainer, scrollTop - topOffset + (self._options.fixedHeadersHeights || 0));
+        self._setMarkerAfterScroll = false;
+    },
+
+    // TODO KINGO: Задержка нужна, чтобы расчет видимой записи производился после фиксации заголовка
+    delayedSetMarkerAfterScrolling: debounce((self, scrollTop) => {
+        _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
+    }, SET_MARKER_AFTER_SCROLL_DELAY),
+
+    getTopOffsetForItemsContainer: function(self, itemsContainer) {
+        let offsetTop = uDimension(itemsContainer.children[0]).top;
+        let container = self._container[0] || self._container;
+        offsetTop += container.offsetTop - uDimension(container).top;
+        return offsetTop;
+    },
+
+    setMarkerToFirstVisibleItem: function(self, itemsContainer, verticalOffset) {
+        let firstItemIndex = self._listViewModel.getStartIndex();
+        firstItemIndex += _private.getFirstVisibleItemIndex(itemsContainer, verticalOffset);
+        self._listViewModel.setMarkerOnValidItem(firstItemIndex);
+    },
+
+    getFirstVisibleItemIndex: function(itemsContainer, verticalOffset) {
+        let items = itemsContainer.children;
+        let itemsCount = items.length;
+        let itemsHeight = 0;
+        let i = 0;
+        if (verticalOffset <= 0) {
+            return 0;
+        }
+        itemsHeight += uDimension(items[0]).height;
+        while (itemsHeight <= verticalOffset && i++ < itemsCount) {
+            itemsHeight += uDimension(items[i]).height;
+        }
+        return i + 1;
+    },
+
 
     handleListScrollSync(self, params) {
         if (self._hasItemActions){
@@ -856,6 +935,9 @@ var _private = {
                 scrollHeight: params.scrollHeight,
                 clientHeight: params.clientHeight
             };
+        }
+        if (self._setMarkerAfterScroll) {
+            _private.delayedSetMarkerAfterScrolling(self, params.scrollTop);
         }
     },
 
@@ -901,34 +983,47 @@ var _private = {
                 self._virtualScroll.ItemsCount = newCount;
                 if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
                     self._virtualScroll.insertItemsHeights(newItemsIndex - 1, newItems.length);
-                    const
-                       direction = newItemsIndex <= self._listViewModel.getStartIndex() ? 'up' : 'down';
-                    if (direction === 'down') {
-                        // если это не подгрузка с БЛ по скролу и
-                        // если мы были в конце списка (отрисована последняя запись и виден нижний триггер)
-                        // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
-                        if (self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
-                           self._virtualScrollTriggerVisibility.down && !self._itemsFromLoadToDirection) {
-                           self._virtualScroll.recalcToDirection(direction, self._scrollParams, self._loadOffset.top);
+
+                    // Сдвигаем виртуальный скролл только если он уже проинициализирован. Если коллекция
+                    // изменилась после создания BaseControl'a, но до инициализации скролла, (или сразу
+                    // после уничтожения BaseControl), сдвинуть его мы все равно не можем.
+                    if (self._scrollParams) {
+                        const direction = newItemsIndex <= self._listViewModel.getStartIndex() ? 'up' : 'down';
+                        if (direction === 'down') {
+                            // если это не подгрузка с БЛ по скролу и
+                            // если мы были в конце списка (отрисована последняя запись и виден нижний триггер)
+                            // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
+                            if (
+                                self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
+                                self._virtualScrollTriggerVisibility.down && !self._itemsFromLoadToDirection
+                            ) {
+                                self._virtualScroll.recalcToDirection(direction, self._scrollParams, self._loadOffset.top);
+                            } else {
+                                // если данные добавились сверху - просто обновляем индексы видимых записей
+                                self._virtualScroll.recalcItemsIndexes(direction, self._scrollParams, self._loadOffset.top);
+                            }
                         } else {
-                            // если данные добавились сверху - просто обновляем индексы видимых записей
+                            if (self._itemsFromLoadToDirection) {
+                                // если элементы были подгружены с БЛ, то увеличиваем стартовый индекс на кол-во
+                                // загруженных элементов. работаем именно через проекцию, т.к. может быть группировка и
+                                // кол-во загруженных элементов может отличаться от кол-ва рисуемых элементов
+                                self._savedStartIndex += newItems.length;
+                                self._savedStopIndex += newItems.length;
+                                self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + newItems.length;
+                            }
                             self._virtualScroll.recalcItemsIndexes(direction, self._scrollParams, self._loadOffset.top);
                         }
-                    } else {
-                        if (self._itemsFromLoadToDirection) {
-                            // если элементы были подгружены с БЛ, то увеличиваем стартовый индекс на кол-во
-                            // загруженных элементов. работаем именно через проекцию, т.к. может быть группировка и
-                            // кол-во загруженных элементов может отличаться от кол-ва рисуемых элементов
-                            self._savedStartIndex += newItems.length;
-                            self._savedStopIndex += newItems.length;
-                            self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + newItems.length;
-                        }
-                        self._virtualScroll.recalcItemsIndexes(direction, self._scrollParams, self._loadOffset.top);
                     }
                 }
                 if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
                     self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
-                    self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down', self._scrollParams, self._loadOffset.top);
+
+                    // Сдвигаем виртуальный скролл только если он уже проинициализирован. Если коллекция
+                    // изменилась после создания BaseControl'a, но до инициализации скролла, (или сразу
+                    // после уничтожения BaseControl), сдвинуть его мы все равно не можем.
+                    if (self._scrollParams) {
+                        self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down', self._scrollParams, self._loadOffset.top);
+                    }
                 }
                 _private.applyVirtualScrollIndexesToListModel(self);
             }
@@ -1279,7 +1374,10 @@ var _private = {
     },
     resetPagingNavigation: function(self, navigation) {
         self._knownPagesCount = INITIAL_PAGES_COUNT;
-        self._currentPage = navigation && navigation.sourceConfig && navigation.sourceConfig.page || INITIAL_PAGES_COUNT;
+
+        //TODO: KINGO
+        // нумерация страниц пейджинга начинается с 1, а не с 0 , поэтому текущая страница пейджига это страница навигации + 1
+        self._currentPage = navigation && navigation.sourceConfig && navigation.sourceConfig.page + 1 || INITIAL_PAGES_COUNT;
     },
 
     initializeNavigation: function(self, cfg) {
@@ -1326,9 +1424,10 @@ var _private = {
     isBlockedForLoading(loadingIndicatorState): boolean {
         return loadingIndicatorState === 'all';
     },
-    getLoadingIndicatorClasses(loadingIndicatorState): string {
+    getLoadingIndicatorClasses(hasItems: boolean, loadingIndicatorState: 'all' | 'down' | 'up'): string {
         return CssClassList.add('controls-BaseControl__loadingIndicator')
             .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
+            .add('controls-BaseControl_empty__loadingIndicator__state-down', !hasItems && loadingIndicatorState === 'down')
             .compile();
     },
     hasItemActions: function(itemActions, itemActionsProperty) {
@@ -1360,7 +1459,7 @@ var _private = {
  * @implements Controls/_interface/IErrorController
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface/IGrouped
+ * @mixes Controls/interface/IGroupedList
  * @mixes Controls/interface/INavigation
  * @mixes Controls/interface/IFilter
  * @mixes Controls/interface/IHighlighter
@@ -1558,7 +1657,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     // Т.к. и список и DataContainer из _beforeMount возвращают рекордсет
                     // то при построении на сервере и последующем оживлении на клиенте
                     // при сериализации это будет два разных рекордсета.
-                    if (!cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy')) {
+                    // Если при загрузке данных возникла ошибка, то ошибку надо вернуть, чтобы при оживлении на клиенте
+                    // не было перезапроса за данными.
+                    if (result.errorConfig || !cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy')) {
                         return getState(result);
                     }
                 });
@@ -1919,8 +2020,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     __onPagingArrowClick: function(e, arrow) {
         switch (arrow) {
-            case 'Next': this._notify('doScroll', ['pageDown'], { bubbling: true }); break;
-            case 'Prev': this._notify('doScroll', ['pageUp'], { bubbling: true }); break;
+            case 'Next': _private.scrollPage(this, 'Down'); break;
+            case 'Prev': _private.scrollPage(this, 'Up'); break;
             case 'Begin': _private.scrollToEdge(this, 'up'); break;
             case 'End': _private.scrollToEdge(this, 'down'); break;
         }
@@ -2250,7 +2351,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _onViewKeyDown: function(event) {
-        keysHandler(event, HOT_KEYS, _private, this);
+        let key = event.nativeEvent.keyCode;
+        let dontStop = key === 33
+                    || key === 34
+                    || key === 35
+                    || key === 36;
+        keysHandler(event, HOT_KEYS, _private, this, dontStop);
     },
     _dragEnter: function(event, dragObject) {
         var
@@ -2348,7 +2454,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _getLoadingIndicatorClasses(): string {
-        return _private.getLoadingIndicatorClasses(this._loadingIndicatorState);
+        const hasItems = !!this._items && !!this._items.getCount();
+        return _private.getLoadingIndicatorClasses(hasItems, this._loadingIndicatorState);
     },
     _onHoveredItemChanged: function(e, item, container) {
         if (this._hasItemActions){
