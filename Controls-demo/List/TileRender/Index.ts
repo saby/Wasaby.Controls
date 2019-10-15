@@ -37,21 +37,12 @@ export default class TileRenderDemo extends Control {
                 handler: (item) => alert(`phone clicked at ${item.getId()}`)
             },
             {
-                id: 3,
-                icon: 'icon-Erase',
-                style: 'error',
-                iconStyle: 'error',
-                title: 'delete',
-                showType: 0,
-                handler: (item) => {
-                    const model = this._children.tileView._children.listControl._children.baseControl.getViewModel();
-                    if (typeof model.getCollection === 'function') {
-                        model.getCollection().remove(item);
-                    } else {
-                        // for old model compatibility
-                        model.getItems().remove(item.getContents());
-                    }
-                }
+                id: 2,
+                icon: 'icon-Edit',
+                title: 'fake',
+                style: 'success',
+                iconStyle: 'success',
+                showType: 0
             }
         ];
     }

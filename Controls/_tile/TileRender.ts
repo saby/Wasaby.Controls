@@ -1,9 +1,6 @@
 import { TemplateFunction } from 'UI/Base';
 
-// FIXME FIXME FIXME
-// Import from the library, but think about how it can be loaded
-// only when actually used
-import BaseRender, { IRenderOptions } from 'Controls/_list/Render';
+import { Render as BaseRender, IRenderOptions } from 'Controls/listRender';
 
 import template = require('wml!Controls/_tile/TileRender/TileRender');
 import defaultItemTemplate = require('wml!Controls/_tile/TileRender/resources/ItemTemplate');

@@ -1,7 +1,7 @@
 import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
-import template = require('wml!Controls/_list/Render/Render');
+import template = require('wml!Controls/_listRender/Render/Render');
 
-import defaultItemTemplate = require('wml!Controls/_list/Render/resources/ItemTemplateWrapper');
+import defaultItemTemplate = require('wml!Controls/_listRender/Render/resources/ItemTemplateWrapper');
 
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { debounce } from 'Types/function';

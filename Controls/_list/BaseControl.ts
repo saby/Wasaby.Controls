@@ -30,7 +30,6 @@ import {CssClassList} from "../Utils/CssClassList";
 import uDimension = require("Controls/Utils/getDimensions");
 
 import { create as diCreate } from 'Types/di';
-import 'Controls/display';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -191,7 +190,7 @@ var _private = {
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
                     }
-                    
+
                     if (self._virtualScroll) {
                         self._virtualScroll.ItemsCount = listModel.getCount();
                         self._virtualScroll.resetItemsIndexes();
@@ -2481,6 +2480,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _createNewModel(items, modelConfig, modelName) {
+        // Подразумеваем, что Controls/display уже загружен. Он загружается при подключении
+        // библиотеки Controls/listRender
         if (typeof modelName !== 'string') {
             throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
         }
