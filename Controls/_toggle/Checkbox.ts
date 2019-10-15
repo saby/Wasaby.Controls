@@ -267,7 +267,9 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption, IIcon, ITo
    static getDefaultOptions(): object {
       return {
          value: false,
-         triState: false
+         triState: false,
+         iconSize: 'default',
+         iconStyle: 'secondary'
       };
    }
 
