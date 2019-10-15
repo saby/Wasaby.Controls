@@ -4,6 +4,7 @@ define([
    'Controls/dateLitePopup',
    'Controls/Utils/Date',
    'ControlsUnit/Calendar/Utils',
+   'Types/formatter',
    'wml!Controls/_dateLitePopup/ItemFull',
    'wml!Controls/_dateLitePopup/ItemMonths',
    'wml!Controls/_dateLitePopup/ItemQuarters'
@@ -12,6 +13,7 @@ define([
    PeriodLiteDialog,
    DateUtils,
    calendarTestUtils,
+   formatDate,
    itemTmpl,
    itemTmplMonths,
    itemTmplQuarters
@@ -46,24 +48,70 @@ define([
                year = (new Date()).getFullYear(),
                data = [{
                   name: 'I',
+                  tooltip: formatDate.date(new component._options.dateConstructor(year, 0, 1), formatDate.date.FULL_HALF_YEAR),
                   quarters: [{
                      name: 'I',
-                     months: [ new Date(year, 0, 1), new Date(year, 1, 1), new Date(year, 2, 1) ],
+                     fullName: formatDate.date(new component._options.dateConstructor(year, 0, 1), 'QQQQr'),
+                     tooltip: formatDate.date(new component._options.dateConstructor(year, 0, 1), formatDate.date.FULL_QUATER),
+                     months: [{
+                        name: new component._options.dateConstructor(year, 0, 1),
+                        tooltip: formatDate.date(new component._options.dateConstructor(year, 0, 1), formatDate.date.FULL_MONTH)
+                     }, {
+                        name: new component._options.dateConstructor(year, 1, 1),
+                        tooltip: formatDate.date(new component._options.dateConstructor(year, 1, 1), formatDate.date.FULL_MONTH)
+                     }, {
+                        name: new component._options.dateConstructor(year, 2, 1),
+                        tooltip: formatDate.date(new component._options.dateConstructor(year, 2, 1), formatDate.date.FULL_MONTH)
+                     }],
                      number: 0
                   }, {
                      name: 'II',
-                     months: [ new Date(year, 3, 1), new Date(year, 4, 1), new Date(year, 5, 1) ],
+                     fullName: formatDate.date(new component._options.dateConstructor(year, 3, 1), 'QQQQr'),
+                     tooltip: formatDate.date(new component._options.dateConstructor(year, 3, 1), formatDate.date.FULL_QUATER),
+                     months: [{
+                        name: new component._options.dateConstructor(year, 3, 1),
+                        tooltip: formatDate.date(new component._options.dateConstructor(year, 3, 1), formatDate.date.FULL_MONTH)
+                     }, {
+                        name: new component._options.dateConstructor(year, 4, 1),
+                        tooltip: formatDate.date(new component._options.dateConstructor(year, 4, 1), formatDate.date.FULL_MONTH)
+                     }, {
+                        name: new component._options.dateConstructor(year, 5, 1),
+                        tooltip: formatDate.date(new component._options.dateConstructor(year, 5, 1), formatDate.date.FULL_MONTH)
+                     }],
                      number: 1
                   }]
                }, {
                   name: 'II',
+                  tooltip: formatDate.date(new component._options.dateConstructor(year, 6, 1), formatDate.date.FULL_HALF_YEAR),
                   quarters: [{
                      name: 'III',
-                     months: [ new Date(year, 6, 1), new Date(year, 7, 1), new Date(year, 8, 1) ],
+                     fullName: formatDate.date(new component._options.dateConstructor(year, 6, 1), 'QQQQr'),
+                     tooltip: formatDate.date(new component._options.dateConstructor(year, 6, 1), formatDate.date.FULL_QUATER),
+                     months: [{
+                        name: new component._options.dateConstructor(year, 6, 1),
+                        tooltip: formatDate.date(new component._options.dateConstructor(year, 6, 1), formatDate.date.FULL_MONTH)
+                     }, {
+                        name: new component._options.dateConstructor(year, 7, 1),
+                        tooltip: formatDate.date(new component._options.dateConstructor(year, 7, 1), formatDate.FULL_MONTH)
+                     }, {
+                        name: new component._options.dateConstructor(year, 8, 1),
+                        tooltip: formatDate.date(new component._options.dateConstructor(year, 8, 1), formatDate.date.FULL_MONTH)
+                     }],
                      number: 2
                   }, {
                      name: 'IV',
-                     months: [ new Date(year, 9, 1), new Date(year, 10, 1), new Date(year, 11, 1) ],
+                     fullName: formatDate.date(new component._options.dateConstructor(year, 9, 1), 'QQQQr'),
+                     tooltip: formatDate.date(new component._options.dateConstructor(year, 9, 1), formatDate.date.FULL_QUATER),
+                     months: [{
+                        name: new component._options.dateConstructor(year, 9, 1),
+                        tooltip: formatDate.date(new component._options.dateConstructor(year, 9, 1), formatDate.date.FULL_MONTH)
+                     }, {
+                        name: new component._options.dateConstructor(year, 10, 1),
+                        tooltip: formatDate.date(new component._options.dateConstructor(year, 10, 1), formatDate.date.FULL_MONTH)
+                     }, {
+                        name: new component._options.dateConstructor(year, 11, 1),
+                        tooltip: formatDate.date(new component._options.dateConstructor(year, 11, 1), formatDate.date.FULL_MONTH)
+                     }],
                      number: 3
                   }]
                }];
@@ -75,12 +123,12 @@ define([
             );
 
             // And now let's check the month.
-            for (let [halhyearIndex, halhyear] of data.entries()) {
-               for (let [quarterIndex, quarter] of halhyear.quarters.entries()) {
+            for (let [halfyearIndex, halfyear] of data.entries()) {
+               for (let [quarterIndex, quarter] of halfyear.quarters.entries()) {
                   for (let [monthIndex, month] of quarter.months.entries()) {
                      assert(
                         DateUtils.isDatesEqual(
-                           component._months[halhyearIndex].quarters[quarterIndex].months[monthIndex], month
+                           component._months[halfyearIndex].quarters[quarterIndex].months[monthIndex].name, month.name
                         )
                      );
                   }
