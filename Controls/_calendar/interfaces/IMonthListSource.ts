@@ -8,22 +8,22 @@ export interface IMonthListSourceOptions {
 /*Eng
  * An interface for controls based on Controls/calendar:MonthList and allowing you to draw your data
  * on the cells of the month.
- * @interface Controls/_calendar/interface/IMonthListSource
+ * @interface Controls/_calendar/interfaces/IMonthListSource
  * @public
  */
 
 /**
  * Интерфейс для контролов основанных на Controls/calendar:MonthList. Позволяет настраивать отображение дней
  * в зависимости от прикладных данных.
- * @interface Controls/_calendar/interface/IMonthListSource
+ * @interface Controls/_calendar/interfaces/IMonthListSource
  * @public
  */
 export interface IMonthListSource {
-   readonly '[Controls/_calendar/interface/IMonthListSource]': boolean;
+   readonly '[Controls/_calendar/interfaces/IMonthListSource]': boolean;
 }
 
 /**
- * @name Controls/_calendar/interface/IMonthListSource#source
+ * @name Controls/_calendar/interfaces/IMonthListSource#source
  * @cfg {Types/source:ICrud} Источник данных которые используются для отображения дней.
  * @remark
  * Должен поддерживать списочный метод с навигацией по курсору. В качестве идентификатора используется
@@ -52,7 +52,7 @@ export interface IMonthListSource {
  */
 
 /*Eng
- * @name Controls/_calendar/interface/IMonthListSource#source
+ * @name Controls/_calendar/interfaces/IMonthListSource#source
  * @cfg {Types/source:Base} Object that implements ISource interface for data access.
  * @remark
  * Must support a list method with paging by cursor. Years are used as identifiers. Each item is a year.
@@ -65,7 +65,7 @@ export interface IMonthListSource {
  */
 
 /*Eng
- * @name Controls/_calendar/interface/IMonthListSource#dayTemplate
+ * @name Controls/_calendar/interfaces/IMonthListSource#dayTemplate
  * @cfg {Function} Day template.
  * @example
  * <pre>
@@ -81,5 +81,5 @@ export interface IMonthListSource {
  *     </ws:dayTemplate>
  * </Controls.calendar:MonthList>
  * </pre>
- * @see Controls/_calendar/interface/IMonthListSource#source
+ * @see Controls/_calendar/interfaces/IMonthListSource#source
  */
