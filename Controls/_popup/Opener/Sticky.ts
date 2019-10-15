@@ -6,7 +6,7 @@ const _private = {
     getStickyConfig(config) {
         config = config || {};
         config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
-        config._type = 'sticky'; // TODO: Compatible for compoundArea
+        config._vdomOnOldPage = true; // Открывается всегда вдомным
         return config;
     }
 };
@@ -223,7 +223,7 @@ Sticky.closePopup = (popupId: string): void => {
 
 Sticky.getDefaultOptions = function() {
     // На старом WindowManager пофиксили все известные баги, пробую все стики окна открывать всегда вдомными
-    return coreMerge(BaseOpener.getDefaultOptions(), {_vdomOnOldPage: true});
+    return coreMerge(BaseOpener.getDefaultOptions(), {});
 };
 export = Sticky;
 
