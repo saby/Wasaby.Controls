@@ -627,7 +627,7 @@ var _private = {
     needLoadByMaxCountNavigation(listViewModel, navigation): boolean {
         let result = false;
 
-        if (navigation.view === 'maxCount') {
+        if (navigation && navigation.view === 'maxCount') {
             if (!navigation.viewConfig || typeof navigation.viewConfig.maxCountValue !== 'number') {
                 IoC.resolve('ILogger')
                    .error('BaseControl', 'maxCountValue is required for "maxCount" navigation type.');
