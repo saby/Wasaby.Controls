@@ -17,6 +17,7 @@ interface ISizes {
 }
 
 interface IPopupOptions {
+    className: string;
     template: string;
     closeOnOutsideClick: boolean;
     width: number;
@@ -42,27 +43,26 @@ abstract class BaseController {
     POPUP_STATE_UPDATED: string = 'updated';
     POPUP_STATE_DESTROYING: string = 'destroying';
     POPUP_STATE_DESTROYED: string = 'destroyed';
+
     abstract elementCreated(item: IPopupItem, container: HTMLDivElement): boolean;
 
-    abstract  elementUpdated(item: IPopupItem, container: HTMLDivElement): boolean;
+    abstract elementUpdated(item: IPopupItem, container: HTMLDivElement): boolean;
 
-    protected elementAfterUpdated(item: IPopupItem, container: HTMLDivElement): boolean {
-        return false;
-    }
+    abstract elementAfterUpdated(item: IPopupItem, container: HTMLDivElement): boolean;
 
-    abstract  elementMaximized(item: IPopupItem, container: HTMLDivElement, state: boolean): boolean;
+    abstract elementMaximized(item: IPopupItem, container: HTMLDivElement, state: boolean): boolean;
 
-    abstract  popupResizingLine(item: IPopupItem, offset: object): boolean;
+    abstract popupResizingLine(item: IPopupItem, offset: object): boolean;
 
-    abstract  popupDragStart(item: IPopupItem, offset: object): boolean;
+    abstract popupDragStart(item: IPopupItem, offset: object): boolean;
 
-    abstract  popupDragEnd(item: IPopupItem): boolean;
+    abstract popupDragEnd(item: IPopupItem): boolean;
 
-    abstract  popupMouseEnter(item: IPopupItem): boolean;
+    abstract popupMouseEnter(item: IPopupItem): boolean;
 
-    abstract  popupMouseLeave(item: IPopupItem): boolean;
+    abstract popupMouseLeave(item: IPopupItem): boolean;
 
-    abstract  elementAnimated(item: IPopupItem): boolean;
+    abstract elementAnimated(item: IPopupItem): boolean;
 
     _elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {
         if (this._checkContainer(item, container, 'elementCreated')) {
@@ -119,6 +119,10 @@ abstract class BaseController {
 
     _popupResizingLine(item: IPopupItem, offset: object): boolean {
         return this.popupResizingLine && this.popupResizingLine(item, offset);
+    }
+
+    _elementAnimated(item: IPopupItem): boolean {
+        return this.elementAnimated && this.elementAnimated(item);
     }
 
     getDefaultConfig(item: IPopupItem): void {
