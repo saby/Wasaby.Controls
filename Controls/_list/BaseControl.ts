@@ -538,7 +538,7 @@ var _private = {
         if (_private.applyVirtualScrollIndexesToListModel(self)) {
             _private.applyPlaceholdersSizes(self);
             _private.updateShadowMode(self);
-        } else {
+        } else if (self._applyScrollTopCallback) {
             // если индексы не поменялись, то зовем коллбэк, если поменялись он позовется в beforePaint
             self._applyScrollTopCallback();
             self._applyScrollTopCallback = null;
