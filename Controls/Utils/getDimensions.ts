@@ -17,6 +17,22 @@ function getVisibleChildren(element : HTMLElement) : Array<HTMLElement> {
     });
 }
 
+function getBoundingClientRect(element: HTMLElement, clear?: boolean): ClientRect {
+    let position;
+
+    // To calculate the actual position of the 'position: sticky' element in the layout,
+    // set the style position to 'static'
+    if (clear && getComputedStyle(element).position === 'sticky') {
+        position = element.style.position;
+        element.style.position = 'static';
+    }
+    const clientRect: ClientRect = element.getBoundingClientRect();
+    if (clear) {
+        element.style.position = position;
+    }
+    return clientRect;
+}
+
 /**
  * Returns the size of an element and its position relative to the viewport. Should be used when the element may have display: contents, but you still want to get its real size and position.
  * The function makes certain assumptions about the element if it has display: contents:
@@ -24,10 +40,12 @@ function getVisibleChildren(element : HTMLElement) : Array<HTMLElement> {
  * 2) The children of the element have the same height.
  * 3) The element doesn't have absolutely or stickily positioned children.
  * @param {HTMLElement} element
+ * @param {Boolean} clear If the clear parameter is passed, then function returns the position of the element
+ * as if it were in layout and 'position: sticky' styles do not act on it.
  * @returns {ClientRect}
  */
-function getDimensions(element: HTMLElement) : ClientRect {
-    let dimensions : ClientRect = element.getBoundingClientRect();
+function getDimensions(element: HTMLElement, clear?: boolean): ClientRect {
+    let dimensions : ClientRect = getBoundingClientRect(element, clear);
 
     if (dimensions.width !== 0 || dimensions.height !== 0) {
         return dimensions;
@@ -39,8 +57,8 @@ function getDimensions(element: HTMLElement) : ClientRect {
         return dimensions;
     }
 
-    const firstChildDimensions = visibleChildren[0].getBoundingClientRect();
-    const lastChildDimensions = visibleChildren[visibleChildren.length - 1].getBoundingClientRect();
+    const firstChildDimensions = getBoundingClientRect(visibleChildren[0], clear);
+    const lastChildDimensions = getBoundingClientRect(visibleChildren[visibleChildren.length - 1], clear);
 
     dimensions = {
         width: lastChildDimensions.right - firstChildDimensions.left,

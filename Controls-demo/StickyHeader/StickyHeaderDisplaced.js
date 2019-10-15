@@ -10,7 +10,11 @@ define('Controls-demo/StickyHeader/StickyHeaderDisplaced',
       'use strict';
 
       var StickyHeader = Control.extend({
-         _template: template
+         _template: template,
+         _headerVisible: false,
+         _addButtonClickHandler: function() {
+            this._headerVisible = !this._headerVisible;
+         }
       });
 
       return StickyHeader;
