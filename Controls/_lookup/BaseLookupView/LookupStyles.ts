@@ -21,6 +21,7 @@
  * @css @spacing_Lookup-between-inputRender-rightBorder Интервал между контентом и правой границей.
  * @css @spacing_Lookup-between-input-beforeFieldWrapper Интервал между полем ввода и выбранной коллекцией.
  * @css @spacing_Lookup-between-input-afterFieldWrapper Интервал между полем ввода и иконками.
+ * @css @height_Lookup-counter Высота счетчика с количестом выбранных записей.
  */
 /*
  * @mixin Controls/_lookup/BaseLookupView/LookupStyles
