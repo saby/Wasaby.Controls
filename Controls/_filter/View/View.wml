@@ -48,7 +48,8 @@
       </ws:if>
    </div>
    <ws:if data="{{(_options.detailPanelTemplateName || _isFastReseted()) && !_options.readOnly}}">
-      <div name="detailPanelTarget" class="controls-FilterView__icon_theme_{{_options.theme}}
+      <div name="detailPanelTarget" class="controls-FilterView__icon
+                                           controls-FilterView__icon_theme_{{_options.theme}}
                                            controls-FilterView-button-{{_options.alignment}}_theme_{{_options.theme}}
                                            controls-FilterView__icon_state_{{_options.readOnly ? 'disabled' : 'enabled' }}_theme_{{_options.theme}}
                                            icon-FilterBig"
