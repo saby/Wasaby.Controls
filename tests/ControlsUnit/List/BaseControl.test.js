@@ -220,6 +220,45 @@ define([
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(multiSorting, 'test', 'single'), sortingDESC);
       });
 
+      it('_private::needLoadNextPageAfterLoad', function() {
+         let list = new collection.RecordSet({
+            rawData: [
+               {id: 0, title: 'test'}
+            ]
+         });
+         let emptyList = new collection.RecordSet({});
+         let metaMore = {
+            more: true
+         };
+         let infinityNavigation = {
+            view: 'infinity',
+            viewConfig: {}
+         };
+         let maxCountNaviation = {
+            view: 'maxCount',
+            viewConfig: {
+               maxCountValue: 10
+            }
+         };
+         let itemsCount = 1;
+         let listViewModel = {
+            getCount: () => itemsCount
+         };
+         emptyList.setMetaData(metaMore);
+         list.setMetaData(metaMore);
+
+         assert.isTrue(lists.BaseControl._private.needLoadNextPageAfterLoad(emptyList, listViewModel, infinityNavigation));
+         assert.isTrue(lists.BaseControl._private.needLoadNextPageAfterLoad(emptyList, listViewModel, maxCountNaviation));
+
+         assert.isFalse(lists.BaseControl._private.needLoadNextPageAfterLoad(list, listViewModel, infinityNavigation));
+         assert.isTrue(lists.BaseControl._private.needLoadNextPageAfterLoad(list, listViewModel, maxCountNaviation));
+
+
+         itemsCount = 20;
+         assert.isFalse(lists.BaseControl._private.needLoadNextPageAfterLoad(list, listViewModel, infinityNavigation));
+         assert.isFalse(lists.BaseControl._private.needLoadNextPageAfterLoad(list, listViewModel, maxCountNaviation));
+      });
+
       it('setHasMoreData', async function() {
          var gridColumns = [
             {
