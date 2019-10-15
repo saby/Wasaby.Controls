@@ -324,7 +324,7 @@ const _private = {
     popupAnimated(id) {
         const item = _private.findItemById(id);
         if (item) {
-            return item.controller.elementAnimated(item, _private.getItemContainer(id));
+            return item.controller._elementAnimated(item, _private.getItemContainer(id));
         }
         return false;
     },

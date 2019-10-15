@@ -1086,9 +1086,9 @@ var CompoundArea = CompoundContainer.extend([
             if (!popupConfig.controller._modifiedByCompoundArea) {
                popupConfig.controller._modifiedByCompoundArea = true;
                self._popupController = popupConfig.controller;
-               self._baseAfterUpdate = popupConfig.controller.elementAfterUpdated;
-               popupConfig.controller.elementAfterUpdated = callNext(
-                  popupConfig.controller.elementAfterUpdated,
+               self._baseAfterUpdate = popupConfig.controller._elementAfterUpdated;
+               popupConfig.controller._elementAfterUpdated = callNext(
+                  popupConfig.controller._elementAfterUpdated,
                   popupAfterUpdated
                );
             }
@@ -1144,7 +1144,7 @@ var CompoundArea = CompoundContainer.extend([
       }
 
       if (this._popupController && this._baseAfterUpdate) {
-         this._popupController.elementAfterUpdated = this._baseAfterUpdate;
+         this._popupController._elementAfterUpdated = this._baseAfterUpdate;
          this._popupController._modifiedByCompoundArea = false;
       }
 

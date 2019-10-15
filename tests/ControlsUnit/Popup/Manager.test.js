@@ -548,6 +548,16 @@ define(
             let element = Manager._private.popupResizingLine(id0, offset);
             assert.isTrue(element);
          });
+         it('managerPopupAnimated', () => {
+            let id0 = Manager.show({}, new BaseController());
+            let hasError = false;
+            try {
+               Manager._private.popupAnimated(id0);
+            } catch(err) {
+               hasError = true;
+            }
+            assert.equal(false, hasError, 'Не смогли вызвать обработку анимании на контроллере')
+         });
       });
    }
 );
