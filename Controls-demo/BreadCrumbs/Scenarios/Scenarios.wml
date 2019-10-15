@@ -37,6 +37,7 @@
          parentProperty="parent"
          nodeProperty="parent@"
          displayProperty="department"
+         rowSeparatorVisibility="{{true}}"
          columns="{{_columns2}}"
          header="{{_header2}}"
          source="{{_viewSource2}}">
@@ -59,6 +60,7 @@
                </div>
             </ws:headerContentTemplate>
             <ws:bodyContentTemplate>
+            <Controls.scroll:Container>
                <Controls.explorer:View
                   keyProperty="id"
                   parentProperty="parent"
@@ -69,6 +71,7 @@
                   source="{{_viewSource3}}">
                   <ws:results position="top" />
                </Controls.explorer:View>
+            </Controls.scroll:Container>
             </ws:bodyContentTemplate>
          </Controls.popupTemplate:Stack>
       </div>
