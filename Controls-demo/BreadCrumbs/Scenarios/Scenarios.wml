@@ -37,6 +37,7 @@
          parentProperty="parent"
          nodeProperty="parent@"
          displayProperty="department"
+         rowSeparatorVisibility="{{true}}"
          columns="{{_columns2}}"
          header="{{_header2}}"
          source="{{_viewSource2}}">
