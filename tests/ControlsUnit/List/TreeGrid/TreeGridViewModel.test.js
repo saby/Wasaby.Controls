@@ -230,23 +230,21 @@ define(['Controls/treeGrid',
                 }),
                 keyProperty: 'id',
                 nodeProperty: 'type',
+                multiSelectVisibility: 'hidden',
                 parentProperty: 'parent',
                 columns: initialColumns
-             }),
-             self = {
-                _options: {
-                   multiSelectVisibility: 'hidden'
-                }
-             };
+             });
 
-         assert.equal(treeGrid.ViewModel._private.getFooterStyles(self, 1, 2),
-             'grid-row: 2; -ms-grid-row: 2; grid-column: 1 / 2; -ms-grid-column: 1; -ms-grid-column-span: 1;'
+         model._isFullGridSupport = true;
+
+         assert.equal(model.getFooterStyles(),
+             'grid-column-start: 1; grid-column-end: 2;'
          );
 
-         self._options.multiSelectVisibility = 'visible';
+         model._options.multiSelectVisibility = 'visible';
 
-         assert.equal(treeGrid.ViewModel._private.getFooterStyles(self, 1, 2),
-             'grid-row: 2; -ms-grid-row: 2; grid-column: 2 / 2; -ms-grid-column: 2; -ms-grid-column-span: 1;'
+         assert.equal(model.getFooterStyles(),
+             'grid-column-start: 1; grid-column-end: 3;'
          );
       });
 
@@ -288,7 +286,8 @@ define(['Controls/treeGrid',
          };
 
          let nodeFooter = model.getItemDataByItem.call(model).nodeFooter;
-         assert.deepEqual([nodeFooter.rowIndex, nodeFooter.gridStyles],[2, 'grid-row: 3; -ms-grid-row: 3; grid-column: 2 / 1; -ms-grid-column: 2; -ms-grid-column-span: 0;'])
+         assert.equal(nodeFooter.rowIndex, 2);
+         assert.equal(nodeFooter.colspanStyles, 'grid-column-start: 2; grid-column-end: 3; grid-row-start: 3; grid-row-end: 4;');
 
          treeGrid.ViewModel.superclass.getItemDataByItem = originFn;
       });
