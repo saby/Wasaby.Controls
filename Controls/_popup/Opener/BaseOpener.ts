@@ -233,10 +233,11 @@ Base.showDialog = function (rootTpl, cfg, controller, popupId, opener) {
         if (!Base.isNewEnvironment()) {
             Base.getManager().addCallback(function () {
                 Base.getZIndexUtil().addCallback(function (getZIndex) {
-                    if (opener) {
+                    const popupOpener = opener || cfg.opener;
+                    if (popupOpener) {
                         // при открытии через статический метод открыватора в верстке нет, нужно взять то что передали в опции
-                        cfg.zIndex = cfg.zIndex || getZIndex(opener || cfg.opener);
-                        cfg.theme = opener._options.theme;
+                        cfg.zIndex = cfg.zIndex || getZIndex(popupOpener);
+                        cfg.theme = popupOpener._options.theme;
                     }
                     Base._openPopup(popupId, cfg, controller, def);
                 });
