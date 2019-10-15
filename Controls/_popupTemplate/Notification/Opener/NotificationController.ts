@@ -31,7 +31,7 @@ class NotificationController extends BaseController {
 
     elementCreated(item: INotificationItem, container: HTMLDivElement): boolean {
         item.height = container.offsetHeight;
-        this.setNotificationContent(item);
+        this._setNotificationContent(item);
         this._stack.add(item, 0);
         this._updatePositions();
         if (item.popupOptions.autoClose) {
@@ -41,7 +41,7 @@ class NotificationController extends BaseController {
     }
 
     elementUpdated(item: INotificationItem, container: HTMLDivElement): boolean {
-        this.setNotificationContent(item);
+        this._setNotificationContent(item);
         item.height = container.offsetHeight;
         this._updatePositions();
         return true;
@@ -75,7 +75,7 @@ class NotificationController extends BaseController {
         const baseZIndex: number = 100;
         for (let i = 0; i < count; i++) {
             // if popups are linked, then notification must be higher then parent
-            if (popupItems.at(i).popupOptions.maximize && !this.isLinkedPopup(popupItems, popupItems.at(i), item)) {
+            if (popupItems.at(i).popupOptions.maximize && !this._isLinkedPopup(popupItems, popupItems.at(i), item)) {
                 const maximizedPopupZIndex = (i + 1) * zIndexStep;
                 return maximizedPopupZIndex - 1;
             }
@@ -85,7 +85,7 @@ class NotificationController extends BaseController {
 
     getDefaultConfig(item: INotificationItem): void {
         super.getDefaultConfig.apply(this, arguments);
-        this.setNotificationContent(item);
+        this._setNotificationContent(item);
     }
 
     private _closeByTimeout(item: INotificationItem): void  {
@@ -108,21 +108,21 @@ class NotificationController extends BaseController {
         });
     }
 
-    private setNotificationContent(item: INotificationItem): void {
+    private _setNotificationContent(item: INotificationItem): void {
         item.popupOptions.content = NotificationContent;
     }
-    private findItemById(popupItems: collection.List<INotificationItem>, id: string): INotificationItem | null {
+    private _findItemById(popupItems: collection.List<INotificationItem>, id: string): INotificationItem | null {
         const index = popupItems && popupItems.getIndexByValue('id', id);
         if (index > -1) {
             return popupItems.at(index);
         }
         return null;
     }
-    private isLinkedPopup(popupItems: collection.List<INotificationItem>,
+    private _isLinkedPopup(popupItems: collection.List<INotificationItem>,
                           parentItem: INotificationItem,
                           item: INotificationItem): boolean {
         while (item && item.parentId) {
-            item = this.findItemById(popupItems, item.parentId);
+            item = this._findItemById(popupItems, item.parentId);
             if (item === parentItem) {
                 return true;
             }
