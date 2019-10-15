@@ -53,7 +53,7 @@ export interface IPopupOptions {
 /**
  * Метод открытия окна подтверждения.
  * @function Controls/_popup/Opener/Confirmation#open
- * @param {Controls/popup:IConfirmation} IConfirmationOptions Конфигурация диалога подтверждения. {@link Controls/popup:IConfirmation Подробнее}
+ * @param {Controls/popup:IConfirmation} IConfirmationOptions Конфигурация диалога подтверждения.
  * @returns {Deferred} Результат будет возвращен после того, как пользователь закроет всплывающее окно.
  * @remark
  * 1. Если требуется открыть окно, без создания popup:Confirmation в верстке, следует использовать статический метод {@link openPopup}
