@@ -1,5 +1,33 @@
 .controls-ValidateController__errorMessage {
    display: flex;
    flex-direction: column;
+}
+
+.controls-ValidateController__errorMessage_theme-@{themeName} {
    font-size: @font-size_Infobox-message;
+}
+
+.controls-ValidateContainer_style-invalid {
+   padding: 4px;
+   border: @border-thickness solid @danger_color;
+}
+
+.controls-ValidateContainer_style-invalid:focus-within {
+   background-color: rgba(208, 77, 77, 0.2);
+   padding: 4px;
+   border: @border-thickness solid @danger_color;
+}
+
+.border-invalid{
+   position: absolute;
+   border: 1px solid #D04D4D;
+   width: 100%;
+   height: 100%;
+   left: -4px;
+   pointer-events: none;
+   bottom: -4px;
+   padding: 4px;
+}
+.container{
+   position: relative;
 }

@@ -29,6 +29,7 @@
 
 import Controller = require('Controls/_validate/Controller');
 import Container = require('Controls/_validate/Container');
+import RedFrame = require('wml!Controls/_validate/RedFrame');
 import InputContainer = require('Controls/_validate/InputContainer');
 import DateRangeContainer = require('Controls/_validate/DateRange');
 import isEmail = require('Controls/_validate/Validators/IsEmail');
@@ -40,6 +41,7 @@ import isValidDateRange from 'Controls/_validate/Validators/IsValidDateRange';
 export {
     Controller,
     Container,
+    RedFrame,
     InputContainer,
     DateRangeContainer,
     isEmail,

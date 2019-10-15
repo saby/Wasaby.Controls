@@ -1,6 +1,6 @@
 <div>
     <ws:for data="item in content" >
-        <div class="controls-ValidateController__errorMessage">
+        <div class="controls-ValidateController__errorMessage controls-ValidateController__errorMessage_theme-{{_options.theme}}">
             <ws:partial template="{{item}}"></ws:partial>
         </div>
     </ws:for>
