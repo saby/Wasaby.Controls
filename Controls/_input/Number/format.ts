@@ -42,7 +42,9 @@ type NumberOptions = INumberLength & INumberDisplay & INumberSign;
 export function format(original: IParsedNumber, options: NumberOptions, carriagePosition: number): IText {
     let position: number = correctSign(original, options, carriagePosition);
     position = correctIntegerPart(original, options, position);
-    position = correctFractionalPart(original, options, position);
+    if (shouldBeFractional(original.fractional, options)) {
+        position = correctFractionalPart(original, options, position);
+    }
 
     return concat(original, options, position);
 }
@@ -58,7 +60,7 @@ function correctSign(original: IParsedNumber, {onlyPositive}: INumberSign, carri
     return position;
 }
 
-function correctIntegerPart(original: IParsedNumber, options: INumberLength, carriagePosition: number): number {
+function correctIntegerPart(original: IParsedNumber, options: INumberLength & INumberDisplay, carriagePosition: number): number {
     const needlessChars: number = calcNeedlessChars(original, 'integer', options);
     const positionRelativeIntegerPart: number = getPositionRelativePart(original, 'integer', carriagePosition);
 
@@ -67,10 +69,10 @@ function correctIntegerPart(original: IParsedNumber, options: INumberLength, car
         relative: positionRelativeIntegerPart
     }, needlessChars);
 
-    const position: number = moveIntegerToFractional(original, {
+    const position: number = shouldBeFractional(original.fractional, options) ? moveIntegerToFractional(original, {
         value: limitedValue.movedValue,
         carriagePosition: limitedValue.position
-    }, limitedValue.value);
+    }, limitedValue.value) : limitedValue.position;
 
     const processedData: IText = handleInsignificantZero(
         options, {
@@ -258,10 +260,14 @@ function concat(original: IParsedNumber, options: INumberDisplay & INumberLength
         position += countTriads - countTriadsAfterCarriage;
     }
 
-    value.push(integer);
+    if (!(original.negative && integer === '0' && !original.fractional)) {
+        value.push(integer);
+    }
 
     if (original.fractional) {
         value.push(decimalSplitter, original.fractional);
+    } else if (original.hasSplitter) {
+        value.push(decimalSplitter);
     }
 
     if (options.useAdditionToMaxPrecision) {
@@ -276,6 +282,10 @@ function concat(original: IParsedNumber, options: INumberDisplay & INumberLength
 
 function getCountTriads(valueLength: number): number {
     return Math.max(0, Math.floor((valueLength - 1) / numbersInTriad));
+}
+
+function shouldBeFractional(fractional: string, options: INumberDisplay): boolean {
+    return options.useAdditionToMaxPrecision || fractional !== '';
 }
 
 const numbersInTriad: number = 3;
