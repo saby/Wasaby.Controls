@@ -19,7 +19,7 @@
  * @includes INumberFormat Controls/_interface/INumberFormat
  * @includes IExpandable Controls/_interface/IExpandable
  * @includes ISorting Controls/_interface/ISorting
- * @includes ISorting Controls/_interface/ILookup
+ * @includes ILookup Controls/_interface/ILookup
  * @includes IDateMask Controls/_interface/IDateMask
  * @includes ITextValue Controls/_interface/ITextValue
  * @includes IPropStorage Controls/_interface/IPropStorage
