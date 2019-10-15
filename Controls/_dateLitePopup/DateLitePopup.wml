@@ -3,9 +3,13 @@
       <div class="controls-PeriodLiteDialog__currentValue" on:click="_onHeaderClick()">{{_caption}}</div>
       <div class="controls-PeriodLiteDialog__bodyWrapper">
          <div class="controls-PeriodLiteDialog__item-background-hovered{{ !_yearHovered ? ' ws-hidden'}}"></div>
-         <div class="controls-PeriodLiteDialog__yearWrapper{{ _yearHovered ? ' controls-PeriodLiteDialog__background-transparent'}}">
-            <div class="controls-PeriodLiteDialog__year-prev" on:click="_onPrevYearBtnClick()"></div>
-            <div class="controls-PeriodLiteDialog__home-wrapper{{ (!_options.chooseQuarters && !_options.chooseHalfyears) ? '-lite' }}">
+         <div class="controls-PeriodLiteDialog__yearWrapper{{ _yearHovered ? ' controls-PeriodLiteDialog__background-transparent'}}"
+              title="{[Выбрать год]}">
+            <div class="controls-PeriodLiteDialog__year-prev"
+                 title="{[Предыдущий год]}"
+                 on:click="_onPrevYearBtnClick()"></div>
+            <div class="controls-PeriodLiteDialog__home-wrapper{{ (!_options.chooseQuarters && !_options.chooseHalfyears) ? '-lite' }}"
+                 title="{[Поставить текущий период]}">
                <Controls.buttons:Button
                   class="controls-PeriodLiteDialog__homeButton"
                   fontColorStyle="link"
@@ -23,7 +27,9 @@
             >
                {{ _year }}
             </div>
-            <div class="controls-PeriodLiteDialog__year-next" on:click="_onNextYearBtnClick()"></div>
+            <div class="controls-PeriodLiteDialog__year-next"
+                 on:click="_onNextYearBtnClick()"
+                 title="{['Следующий год']}"></div>
          </div>
          <ws:partial
                class="controls-PeriodLiteDialog__body"
@@ -67,7 +73,7 @@
          </ws:for>
       </div>
       <div class="controls-PeriodLiteDialog__years-prev" on:click="_onPrevYearBtnClick()"></div>
-      <div class="controls-PeriodLiteDialog__years-home">
+      <div class="controls-PeriodLiteDialog__years-home" title="{[Поставить текущий диапазон]}">
          <Controls.buttons:Button
             style="secondary"
             viewMode="toolButton"
