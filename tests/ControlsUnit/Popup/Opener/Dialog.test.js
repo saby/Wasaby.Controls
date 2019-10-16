@@ -19,7 +19,7 @@ define(
             height: 960
          };
 
-         DialogController._private.getWindowSize = () => windowSize;
+         DialogController._getWindowSize = () => windowSize;
 
          it('Opener: getConfig', () => {
             let getDialogConfig = DialogOpener.default._private.getDialogConfig;
@@ -202,7 +202,7 @@ define(
             assert.equal(item.position.minHeight, 10);
             assert.equal(item.position.maxHeight, 100);
 
-            DialogController._private.getWindowSize = () => windowSize;
+            DialogController._getWindowSize = () => windowSize;
 
             item.popupOptions = {};
             DialogController.getDefaultConfig(item);
@@ -224,16 +224,16 @@ define(
                   height: 960,
                };
 
-            DialogController._private.getWindowSize = () => windowData;
-            DialogController._private.fixCompatiblePosition(item);
+            DialogController._getWindowSize = () => windowData;
+            DialogController._fixCompatiblePosition(item);
             assert.equal(item.position.left, 785);
 
             windowData = {
                width: 1080,
                height: 960,
             };
-            DialogController._private.getWindowSize = () => windowData;
-            DialogController._private.fixCompatiblePosition(item);
+            DialogController._getWindowSize = () => windowData;
+            DialogController._fixCompatiblePosition(item);
 
             let calculateLeft = item.popupOptions.left - ((item.popupOptions.left + item.popupOptions.width) - windowData.width);
             assert.equal(item.position.left, calculateLeft);
@@ -254,8 +254,8 @@ define(
                x: 10,
                y: 20
             };
-            let basePrepareConfig = DialogController._private.prepareConfig;
-            DialogController._private.prepareConfig = (item, sizes) => {
+            let basePrepareConfig = DialogController._prepareConfig;
+            DialogController._prepareConfig = (item, sizes) => {
                assert.equal(item.sizes, sizes);
             };
             DialogController.popupDragStart(item, null, offset);
@@ -263,7 +263,7 @@ define(
             assert.equal(item.startPosition.top, 50);
             assert.equal(item.position.left, 110);
             assert.equal(item.position.top, 70);
-            DialogController._private.prepareConfig = basePrepareConfig;
+            DialogController._prepareConfig = basePrepareConfig;
          });
 
          it('dialog draggable position', () => {

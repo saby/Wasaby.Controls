@@ -1,41 +1,25 @@
-import {default as BaseController} from 'Controls/_popupTemplate/BaseController';
+import {default as BaseController, IPopupItem, IPopupOptions,
+    IPopupSizes, IPopupPosition, IDragOffset} from 'Controls/_popupTemplate/BaseController';
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
 
-let _private = {
-    prepareConfig(item, sizes) {
-        // After popup will be transferred to the synchronous change of coordinates,
-        // we need to return the calculation of the position with the keyboard.
-        // Positioning relative to body
-        item.position = DialogStrategy.getPosition(_private.getWindowSize(), sizes, item);
-        _private.fixCompatiblePosition(item);
-    },
-    fixCompatiblePosition(cfg) {
-        // COMPATIBLE: for old windows user can set the coordinates relative to the body
-        if (!cfg.dragged) {
-            if (cfg.popupOptions.top) {
-                cfg.position.top = cfg.popupOptions.top;
-            }
-            if (cfg.popupOptions.left) {
-                // Calculating the left position when reducing the size of the browser window
-                const differenceWindowWidth =
-                    (cfg.popupOptions.left + cfg.popupOptions.width) - _private.getWindowSize().width;
-                if (differenceWindowWidth > 0) {
-                    cfg.position.left = cfg.popupOptions.left - differenceWindowWidth;
-                } else {
-                    cfg.position.left = cfg.popupOptions.left;
-                }
-            }
-        }
-    },
-    getWindowSize() {
-        return {
-            width: window.innerWidth,
-            height: window.innerHeight,
-            scrollTop: window.scrollY,
-            scrollLeft: window.scrollX
-        };
-    }
-};
+interface IDialogItem extends IPopupItem {
+    popupOptions: IDialogOptions;
+    startPosition: IPopupPosition;
+    dragged: boolean;
+}
+
+interface IDialogOptions extends IPopupOptions {
+    maximize: boolean;
+    top: number;
+    left: number;
+}
+
+interface IWindow {
+    width?: number;
+    height?: number;
+    scrollTop?: number;
+    scrollLeft?: number;
+}
 
 /**
  * Dialog Popup Controller
@@ -46,33 +30,36 @@ let _private = {
  * @extends Controls/_popupTemplate/BaseController
  */
 class DialogController extends BaseController {
-    elementCreated(cfg, container) {
-        this.prepareConfig(cfg, container);
+    TYPE: string = 'Dialog';
+
+    elementCreated(item: IDialogItem, container: HTMLDivElement): boolean {
+        this._prepareConfigWithSizes(item, container);
+        return true;
     }
 
-    elementUpdated(cfg, container) {
+    elementUpdated(item: IDialogItem, container: HTMLDivElement): boolean {
         /* start: We remove the set values that affect the size and positioning to get the real size of the content */
-        let width = container.style.width;
-        let height = container.style.height;
+        const width: string = container.style.width;
+        const height: string = container.style.height;
         // We won't remove width and height, if they are set explicitly or popup is maximize.
 
-        if (!cfg.popupOptions.maximize) {
-            if (!cfg.popupOptions.width) {
+        if (!item.popupOptions.maximize) {
+            if (!item.popupOptions.width) {
                 container.style.width = 'auto';
             }
-            if (!cfg.popupOptions.height) {
+            if (!item.popupOptions.height) {
                 container.style.height = 'auto';
             }
-            if (cfg.popupOptions.maxWidth) {
-                container.style.maxWidth = cfg.popupOptions.maxWidth + 'px';
+            if (item.popupOptions.maxWidth) {
+                container.style.maxWidth = item.popupOptions.maxWidth + 'px';
             }
-            if (cfg.popupOptions.maxHeight) {
-                container.style.maxHeight = cfg.popupOptions.maxHeight + 'px';
+            if (item.popupOptions.maxHeight) {
+                container.style.maxHeight = item.popupOptions.maxHeight + 'px';
             }
         }
 
         /* end: We remove the set values that affect the size and positioning to get the real size of the content */
-        this.prepareConfig(cfg, container);
+        this._prepareConfigWithSizes(item, container);
 
         /* start: Return all values to the node. Need for vdom synchronizer */
         container.style.width = width;
@@ -81,20 +68,23 @@ class DialogController extends BaseController {
         container.style.maxHeight = '';
 
         /* end: Return all values to the node. Need for vdom synchronizer */
+
+        return true;
     }
 
-    getDefaultConfig(item) {
+    getDefaultConfig(item: IDialogItem): void {
         // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
-        let sizes = {
+        const sizes: IPopupSizes = {
             width: 0,
             height: 0
         };
-        _private.prepareConfig(item, sizes);
-        item.position.top = -10000;
-        item.position.left = -10000;
+        const defaultCoordinate: number = -10000;
+        this._prepareConfig(item, sizes);
+        item.position.top = defaultCoordinate;
+        item.position.left = defaultCoordinate;
     }
 
-    popupDragStart(item, container, offset) {
+    popupDragStart(item: IDialogItem, container: HTMLDivElement, offset: IDragOffset): void {
         if (!item.startPosition) {
             item.startPosition = {
                 left: item.position.left,
@@ -106,10 +96,10 @@ class DialogController extends BaseController {
         item.position.top = item.startPosition.top + offset.y;
 
         // Take the size from cache, because they don't change when you move
-        _private.prepareConfig(item, item.sizes);
+        this._prepareConfig(item, item.sizes);
     }
 
-    popupDragEnd(item) {
+    popupDragEnd(item: IDialogItem): void {
         delete item.startPosition;
     }
 
@@ -118,17 +108,51 @@ class DialogController extends BaseController {
         return false;
     }
 
-    prepareConfig(cfg, container) {
-        let sizes = this._getPopupSizes(cfg, container);
-        cfg.sizes = sizes;
-        _private.prepareConfig(cfg, sizes);
-    }
-
-    needRecalcOnKeyboardShow() {
+    needRecalcOnKeyboardShow(): boolean {
         return true;
     }
 
-    TYPE = 'Dialog';
-    _private = _private;
+    _prepareConfigWithSizes(item: IDialogItem, container: HTMLDivElement): void {
+        const sizes: IPopupSizes = this._getPopupSizes(item, container);
+        item.sizes = sizes;
+        this._prepareConfig(item, sizes);
+    }
+
+    _prepareConfig(item: IDialogItem, sizes: IPopupSizes): void {
+        // After popup will be transferred to the synchronous change of coordinates,
+        // we need to return the calculation of the position with the keyboard.
+        // Positioning relative to body
+        item.position = DialogStrategy.getPosition(this._getWindowSize(), sizes, item);
+        this._fixCompatiblePosition(item);
+    }
+
+    _fixCompatiblePosition(item: IDialogItem): void {
+        // COMPATIBLE: for old windows user can set the coordinates relative to the body
+        if (!item.dragged) {
+            if (item.popupOptions.top) {
+                item.position.top = item.popupOptions.top;
+            }
+            if (item.popupOptions.left) {
+                // Calculating the left position when reducing the size of the browser window
+                const differenceWindowWidth: number =
+                    (item.popupOptions.left + item.popupOptions.width) - this._getWindowSize().width;
+                if (differenceWindowWidth > 0) {
+                    item.position.left = item.popupOptions.left - differenceWindowWidth;
+                } else {
+                    item.position.left = item.popupOptions.left;
+                }
+            }
+        }
+    }
+
+    private _getWindowSize(): IWindow {
+        return {
+            width: window.innerWidth,
+            height: window.innerHeight,
+            scrollTop: window.scrollY,
+            scrollLeft: window.scrollX
+        };
+    }
 }
+
 export = new DialogController();
