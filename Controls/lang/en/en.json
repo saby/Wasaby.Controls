@@ -47,6 +47,7 @@
    "Дата начала периода не может быть больше даты окончания": "Start date of the period can't exceed the end date",
    "Для графика-области надо определить 3 поля данных (ws-series.sourceField)": "For graphics-area need to define 3 data fields (ws-series.sourceField)",
    "Для завершения обработки команды вам необходимо указать количество записей": "To complete processing, you must specify the number of records",
+   "Для меня": "For me",
    "Добавить таблицу": "Add table",
    "Дополнительный текст": "Additional text",
    "Еще...": "More...",
