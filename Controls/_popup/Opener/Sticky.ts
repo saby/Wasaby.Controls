@@ -223,7 +223,7 @@ Sticky.closePopup = (popupId: string): void => {
 
 Sticky.getDefaultOptions = function() {
     // На старом WindowManager пофиксили все известные баги, пробую все стики окна открывать всегда вдомными
-    return coreMerge(BaseOpener.getDefaultOptions(), {});
+    return coreMerge(BaseOpener.getDefaultOptions(), {_vdomOnOldPage: true});
 };
 export = Sticky;
 
