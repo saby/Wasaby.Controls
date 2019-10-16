@@ -19,7 +19,6 @@ import HorizontalMeasurer from 'Controls/_list/Swipe/HorizontalMeasurer';
 import VerticalMeasurer from 'Controls/_list/Swipe/VerticalMeasurer';
 
 import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate';
-import * as renderSwipeTemplate from 'wml!Controls/_list/Render/resources/SwipeTemplate';
 
 const MEASURER_NAMES: Record<ISwipeControlOptions['actionAlignment'], IMeasurer> = {
    horizontal: HorizontalMeasurer,
@@ -191,11 +190,13 @@ export default class SwipeControl extends Control {
       this.closeSwipe();
    }
 
-   _beforeMount(newOptions: ISwipeControlOptions): void {
+   async _beforeMount(newOptions: ISwipeControlOptions): Promise<void> {
       this._updateModel(newOptions);
       this._setMeasurer(newOptions.actionAlignment);
       if (newOptions.useNewModel) {
-         this._swipeTemplate = renderSwipeTemplate;
+         return import('Controls/listRender').then((listRender) => {
+            this._swipeTemplate = listRender.swipeTemplate;
+         });
       }
    }
 

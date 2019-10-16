@@ -1,0 +1,56 @@
+
+<div
+   attr:class="{{ item.getWrapperClasses(clickable) }}"
+   attr:style="{{ item.getWrapperStyle(width) }}">
+   <div
+      attr:class="{{ item.getTileContentClasses(shadowVisibility, marker) }}"
+      attr:style="{{ item.getFixedPositionStyle() }}">
+      <ws:if data="{{ multiSelectVisibility !== 'hidden' }}">
+         <ws:partial
+            template="{{ multiSelectTpl }}"
+            checkboxReadOnly="{{ checkboxReadOnly }}"
+            attr:class="{{ item.getMultiSelectClasses() }}">
+            <ws:templateOptions multiSelectStatus="{{ item.isSelected() }}" key="{{ item.getContents().getId() }}" />
+         </ws:partial>
+      </ws:if>
+      <ws:if data="{{ contentTemplate }}">
+         <ws:partial
+            template="{{ contentTemplate }}"
+            item="{{ item }}"
+            useNewModel="{{ true }}"
+            itemActionsTemplate="{{ itemActionsTemplate }}"
+            swipeTemplate="{{ swipeTemplate }}"
+            hasTitle="{{ hasTitle }}"
+            width="{{ item.getTileWidth(width) }}" />
+      </ws:if>
+      <ws:else>
+         <div
+            attr:class="{{ item.getImageWrapperClasses(hasTitle) }}"
+            attr:style="{{ item.getImageWrapperStyle() }}">
+            <img attr:class="controls-TileView__image" attr:src="{{ item.getContents()[item.getImageProperty()] }}"/>
+         </div>
+         <ws:if data="{{ item.getContents()[item.getDisplayProperty()] || item.shouldDisplayActions() }}">
+            <div
+               attr:class="{{ item.getTitleClasses(hasTitle) }}"
+               attr:title="{{ item.getContents()[item.getDisplayProperty()] }}">
+               {{ item.getContents()[item.getDisplayProperty()] }}
+            </div>
+         </ws:if>
+      </ws:else>
+      <ws:if data="{{ item.shouldDisplayActions() }}">
+         <ws:if data="{{ item.isSwiped() && itemActionsPosition !== 'custom' }}">
+            <ws:partial
+               template="{{ swipeTemplate }}"
+               item="{{ item }}"
+               itemActionsTemplate="{{ itemActionsTemplate }}"/>
+         </ws:if>
+         <ws:else>
+            <ws:partial
+               template="{{ itemActionsTemplate }}"
+               highlightOnHover="{{ highlightOnHover }}"
+               item="{{ item }}"
+               itemActionsClass="controls-TileView__itemActions controls-TileView__itemActions_bottomRight" />
+         </ws:else>
+      </ws:if>
+   </div>
+</div>
