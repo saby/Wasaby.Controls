@@ -83,7 +83,7 @@ function getCellStyles(rowIndex: number, columnIndex: number, rowSpan: number = 
     return toCssString(rules);
 }
 
-function getMultyHeaderStyles(startColumn, endColumn, startRow, endRow, additionalColumn) {
+function getMultiHeaderStyles(startColumn, endColumn, startRow, endRow, additionalColumn) {
     let gridStyles = [
         {
             name: 'grid-column',
@@ -209,5 +209,5 @@ export {
     getTemplateColumnsStyle,
     getDefaultStylesFor,
     toCssString,
-    getMultyHeaderStyles
+    getMultiHeaderStyles
 };
