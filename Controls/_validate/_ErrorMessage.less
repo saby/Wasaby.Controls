@@ -18,9 +18,9 @@
    border: @border-thickness solid @danger_color;
 }
 
-.border-invalid{
+.controls-ValidateContainer__border-invalid{
    position: absolute;
-   border: 1px solid #D04D4D;
+   border: @border-thickness solid @danger_color;
    width: 100%;
    height: 100%;
    left: -4px;
@@ -28,6 +28,13 @@
    bottom: -4px;
    padding: 4px;
 }
-.container{
+
+.controls-ValidateContainer{
    position: relative;
+}
+
+.controls-ValidateContainer:focus-within{
+   .controls-ValidateContainer__border-invalid {
+      background-color: rgba(208, 77, 77, 0.2);
+   }
 }
