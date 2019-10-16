@@ -23,8 +23,6 @@ function loadTemplate(name: string) {
 
 /**
  * Слой совместимости для базового опенера для открытия старых шаблонов
- * @class Controls/_compatiblePopup/BaseOpener
- * @public
  */
 const BaseOpener = {
    _prepareConfigForOldTemplate(cfg, templateClass) {
