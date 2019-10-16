@@ -102,7 +102,7 @@ class NotificationController extends BaseController {
          * It takes into account the indentation between the notification popups,
          * specified in the template via css. This is done to support theming.
          */
-        this._stack.each((item) => {
+        this._stack.each((item: INotificationItem) => {
             item.position = NotificationStrategy.getPosition(height);
             height += item.height;
         });
@@ -119,8 +119,8 @@ class NotificationController extends BaseController {
         return null;
     }
     private _isLinkedPopup(popupItems: collection.List<INotificationItem>,
-                          parentItem: INotificationItem,
-                          item: INotificationItem): boolean {
+                           parentItem: INotificationItem,
+                           item: INotificationItem): boolean {
         while (item && item.parentId) {
             item = this._findItemById(popupItems, item.parentId);
             if (item === parentItem) {
