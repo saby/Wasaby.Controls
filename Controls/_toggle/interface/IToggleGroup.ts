@@ -105,12 +105,12 @@ export interface IToggleGroup {
      *    <li>readOnly - defines the display field in readOnly or non readOnly states.</li>
      * </ul>
      * @example
-     * RadioGroup with iteemTemplate and contentTemplate.
+     * RadioGroup with itemTemplate and contentTemplate.
      * <pre>
      *    <Controls.toggle:RadioGroup ... >
      *       <ws:itemTemplate>
      *          <ws:partial
-     *             template="wml!Controls/_toggle/RadioGroup/resources/ItemTemplate" >
+     *             template="Controls/toggle:ItemTemplate" >
      *             <ws:contentTemplate>
      *                <span attr:class="controls-RadioItem__caption_{{selected ? 'selected' : 'unselected'}}_{{readOnly ? 'disabled' : 'enabled'}}_custom controls-RadioItem__caption_custom">
      *                </span>
