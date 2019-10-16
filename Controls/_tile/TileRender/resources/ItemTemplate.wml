@@ -21,7 +21,7 @@
             itemActionsTemplate="{{ itemActionsTemplate }}"
             swipeTemplate="{{ swipeTemplate }}"
             hasTitle="{{ hasTitle }}"
-            width="{{ width || item.getTileWidth() }}" />
+            width="{{ item.getTileWidth(width) }}" />
       </ws:if>
       <ws:else>
          <div

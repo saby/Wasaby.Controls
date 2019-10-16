@@ -3,7 +3,7 @@ import { TemplateFunction } from 'UI/Base';
 import { Render as BaseRender, IRenderOptions } from 'Controls/listRender';
 
 import template = require('wml!Controls/_tile/TileRender/TileRender');
-import defaultItemTemplate = require('wml!Controls/_tile/TileRender/resources/ItemTemplate');
+import defaultItemTemplate = require('wml!Controls/_tile/TileRender/resources/ItemTemplateWrapper');
 
 import { TileCollection, TileCollectionItem } from 'Controls/display';
 import { SyntheticEvent } from 'Vdom/Vdom';
