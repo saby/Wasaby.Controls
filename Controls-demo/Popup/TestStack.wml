@@ -1,11 +1,11 @@
 <Controls.popupTemplate:Stack headingCaption="PopupManager">
    <ws:headerContentTemplate>
       <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
-         <Controls.buttons:Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
+         <Controls.buttons:Button caption="Закрыть {{_options.type  || ''}}" on:click="_close()"/>
       </div>
    </ws:headerContentTemplate>
    <ws:bodyContentTemplate>
-      <div style="padding-right: {{ _options.padding || '200px'}}">
+      <div style="width: {{ _options.width || '700px'}}">
          <Controls.popup:Stack name="stack" template="Controls-demo/Popup/TestStack">
             <ws:componentOptions type="stack"/>
          </Controls.popup:Stack>

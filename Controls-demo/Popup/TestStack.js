@@ -28,7 +28,7 @@ define('Controls-demo/Popup/TestStack',
          _openStack: function() {
             this._children.stack.open({
                templateOptions: {
-                  padding: '75px'
+                  width: '600px'
                }
             });
          },
