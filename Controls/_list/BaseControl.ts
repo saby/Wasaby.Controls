@@ -603,7 +603,7 @@ var _private = {
             }
             _private.checkVirtualScrollCapability(self);
         } else if (_private.needLoadByMaxCountNavigation(self._listViewModel, self._options.navigation)) {
-            self._loadByMaxCountNavigation = true;
+            _private.loadToDirectionIfNeed(self, 'down', self._options.filter);
         }
     },
 
@@ -2000,16 +2000,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._savedStopIndex = this._listViewModel.getStopIndex();
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
-            this._checkShouldLoadToDirection = true;
-            this._forceUpdate();
-        } else if (this._checkShouldLoadToDirection) {
-            // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
-            // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
             this._checkLoadToDirectionTimeout = setTimeout(() => {
                 _private.checkLoadToDirectionCapability(this);
                 this._checkLoadToDirectionTimeout = null;
             });
-            this._checkShouldLoadToDirection = false;
         }
 
         if (this._restoredScroll !== null) {
@@ -2054,11 +2048,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._itemReloaded) {
             this._listViewModel.clearReloadedMarks();
             this._itemReloaded = false;
-        }
-
-        if (this._loadByMaxCountNavigation) {
-            this._loadByMaxCountNavigation = false;
-            _private.loadToDirectionIfNeed(this, 'down', this._options.filter);
         }
     },
 
