@@ -299,11 +299,11 @@ define([
                ]
             ];
             var goodHtml = '<div><p>some test</p></div>';
-            var goodError = 'Невалидное значение атрибута class, ожидается строковый тип.';
+            var goodError = 'Ошибка разбора JsonML: Невалидное значение атрибута class, ожидается строковое значение. Ошибочный узел: {"class":true}';
             var checkHtml = decorator.Converter.jsonToHtml(json);
-            var chechError = errorArray.shift()[1];
+            var checkError = errorArray.shift()[1];
             equalsHtml(goodHtml, checkHtml);
-            assert.equal(goodError, chechError);
+            assert.ok(checkError.indexOf(goodError) !== -1);
          });
 
          it('invalid JsonML', function() {
@@ -318,11 +318,11 @@ define([
                ]
             ];
             var goodHtml = '<div><p class="myClass"></p></div>';
-            var goodError = 'Узел в JsonML должен быть строкой или массивом.';
+            var goodError = 'Ошибка разбора JsonML: Узел в JsonML должен быть строкой или массивом. Ошибочный узел: {"text":"some text"}';
             var checkHtml = decorator.Converter.jsonToHtml(json);
-            var chechError = errorArray.shift()[1];
+            var checkError = errorArray.shift()[1];
             equalsHtml(goodHtml, checkHtml);
-            assert.equal(goodError, chechError);
+            assert.ok(checkError.indexOf(goodError) !== -1);
          });
 
          it('all valid tags and attributes', function() {

@@ -3,7 +3,7 @@
  */
 import thelpers = require('View/Executor/TClosure');
 import validHtml = require('Core/validHtml');
-import {IoC} from 'Env/Env';
+import {error} from 'UI/Logger';
 import 'css!theme?Controls/decorator';
 
    var markupGenerator,
@@ -48,6 +48,16 @@ import 'css!theme?Controls/decorator';
       return typeof value === 'string' || value instanceof String;
    }
 
+   function logError(text: string, node?: any[]|string|object) {
+       let strNode: string;
+       try {
+           strNode = JSON.stringify(node);
+       } catch (e) {
+           strNode = '"Невалидный Json узел"';
+       }
+       error(`Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}\n`, control, {});
+   }
+
    function generateEventSubscribeObject(handlerName) {
       return {
          name: 'event',
@@ -84,8 +94,7 @@ import 'css!theme?Controls/decorator';
          }
          const sourceAttributeValue = sourceAttributes[attributeName];
          if (!isString(sourceAttributeValue)) {
-            IoC.resolve('ILogger')
-               .error(control._moduleName, `Невалидное значение атрибута ${attributeName}, ожидается строковый тип.`);
+            logError(`Невалидное значение атрибута ${attributeName}, ожидается строковое значение`, sourceAttributes);
             continue;
          }
          if (!validAttributes[attributeName] && !dataAttributeRegExp.test(attributeName)) {
@@ -114,8 +123,7 @@ import 'css!theme?Controls/decorator';
          return [];
       }
       if (!Array.isArray(valueToBuild)) {
-         IoC.resolve('ILogger')
-            .error(control._moduleName, `Узел в JsonML должен быть строкой или массивом.`);
+         logError(`Узел в JsonML должен быть строкой или массивом`, valueToBuild);
          return [];
       }
       wasResolved = value !== valueToBuild;
@@ -209,7 +217,7 @@ import 'css!theme?Controls/decorator';
       try {
          elements = recursiveMarkup(value, attrsToDecorate, key + '0_');
       } catch (e) {
-         thelpers.templateError(control._moduleName, e, control);
+         error(e.message, control, e);
       } finally {
          markupGenerator.escape = oldEscape;
       }
