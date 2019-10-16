@@ -1,4 +1,4 @@
-<div attr:class="{{ item.getWrapperClassList() }}">
+<div attr:class="{{ item.getWrapperClasses() }}">
    <ws:if data="{{ multiSelectVisibility !== 'hidden' }}">
       <ws:partial template="{{ multiSelectTpl }}" attr:class="{{ item.getMultiSelectClasses() }}">
          <ws:templateOptions multiSelectStatus="{{ item.isSelected() }}" key="{{ item.getContents().getId() }}"/>
@@ -8,7 +8,7 @@
       <div class="controls-ListView__itemV_marker"></div>
    </ws:if>
    <ws:if data="{{ contentTemplate }}">
-      <div attr:class="{{ item.getContentClassList() }}">
+      <div attr:class="{{ item.getContentClasses() }}">
          <ws:partial
             template="{{ contentTemplate }}"
             item="{{ item }}"
@@ -19,7 +19,7 @@
       </div>
    </ws:if>
    <ws:else>
-      <div attr:class="{{ item.getContentClassList() }}">
+      <div attr:class="{{ item.getContentClasses() }}">
          {{ item.getContents()[item.getDisplayProperty() || 'title'] }}
       </div>
    </ws:else>

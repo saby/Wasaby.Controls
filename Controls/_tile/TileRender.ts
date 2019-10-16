@@ -21,7 +21,7 @@ export default class TileRender extends BaseRender {
     protected _animatedItemTargetPosition: string;
 
     protected _beforeMount(options: ITileRenderOptions): void {
-        // not calling super._beforeMount(), this is sufficient
+        super._beforeMount(options);
         this._templateKeyPrefix = `tile-render-${this.getInstanceId()}`;
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
     }
@@ -33,8 +33,9 @@ export default class TileRender extends BaseRender {
     }
 
     protected _afterUpdate(): void {
+        super._afterUpdate();
         if (this._animatedItem) {
-            // FIXME This should probably be moved to some kind of animation manager
+            // TODO This should probably be moved to some kind of animation manager
             if (this._animatedItem.isFixed() && !this._animatedItem.isAnimated()) {
                 this._animatedItem.setAnimated(true);
                 this._animatedItem.setFixedPositionStyle(this._animatedItemTargetPosition);
@@ -100,7 +101,7 @@ export default class TileRender extends BaseRender {
             documentRect
         );
 
-        // FIXME This should probably be moved to some kind of animation manager
+        // TODO This should probably be moved to some kind of animation manager
         if (targetItemPositionInDocument) {
             const targetPositionStyle = this._convertPositionToStyle(targetItemPositionInDocument);
             if (this._options.tileScalingMode !== 'overlap') {

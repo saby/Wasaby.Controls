@@ -30,17 +30,14 @@ export default class Render extends Control<IRenderOptions> {
 
     private _debouncedSetHoveredItem: typeof Render.prototype._setHoveredItem;
 
-    constructor(options: IRenderOptions) {
-        super(options);
+    protected _beforeMount(options: IRenderOptions): void {
+        this._templateKeyPrefix = `list-render-${this.getInstanceId()}`;
+        this._itemTemplate = options.itemTemplate || defaultItemTemplate;
+
         this._debouncedSetHoveredItem = debounce(
             this._setHoveredItem.bind(this),
             HOVERED_ITEM_CHANGE_DELAY
         ) as typeof Render.prototype._setHoveredItem;
-    }
-
-    protected _beforeMount(options: IRenderOptions): void {
-        this._templateKeyPrefix = `list-render-${this.getInstanceId()}`;
-        this._itemTemplate = options.itemTemplate || defaultItemTemplate;
     }
 
     getItemsContainer(): HTMLDivElement {

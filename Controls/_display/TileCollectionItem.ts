@@ -77,7 +77,15 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         return this._$animated;
     }
 
-    getTileWrapperStyle(templateWidth?: number): string {
+    getWrapperClasses(templateClickable?: boolean): string {
+        let classes = 'controls-TileView__item controls-ListView__itemV';
+        if (templateClickable !== false) {
+            classes += ' controls-ListView__itemV_cursor-pointer';
+        }
+        return classes;
+    }
+
+    getWrapperStyle(templateWidth?: number): string {
         const width = this.getTileWidth(templateWidth);
         const compressedWidth = width * this.getCompressionCoefficient();
         return `

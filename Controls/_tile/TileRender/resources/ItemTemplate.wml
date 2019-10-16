@@ -1,7 +1,7 @@
 
 <div
-   attr:class="controls-TileView__item controls-ListView__itemV controls-ListView__itemV_cursor-pointer"
-   attr:style="{{ item.getTileWrapperStyle(width) }}">
+   attr:class="{{ item.getWrapperClasses(clickable) }}"
+   attr:style="{{ item.getWrapperStyle(width) }}">
    <div
       attr:class="{{ item.getTileContentClasses(shadowVisibility, marker) }}"
       attr:style="{{ item.getFixedPositionStyle() }}">
@@ -10,7 +10,7 @@
             template="{{ multiSelectTpl }}"
             checkboxReadOnly="{{ checkboxReadOnly }}"
             attr:class="{{ item.getMultiSelectClasses() }}">
-            <ws:templateOptions multiSelectStatus="{{ itemData.multiSelectStatus }}" key="{{ item.getContents().getId() }}" />
+            <ws:templateOptions multiSelectStatus="{{ item.isSelected() }}" key="{{ item.getContents().getId() }}" />
          </ws:partial>
       </ws:if>
       <ws:if data="{{ contentTemplate }}">
