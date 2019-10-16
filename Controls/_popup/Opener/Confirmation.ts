@@ -95,7 +95,7 @@ export interface IPopupOptions {
 /*
  * Open confirmation popup.
  * @function Controls/_popup/Opener/Confirmation#open
- * @param {popupOptions[]} templateOptions Confirmation options.
+ * @param {PopupOptions} templateOptions Confirmation options.
  * @returns {Deferred} The deferral will end with the result when the user closes the popup.
  * @remark
  * If you want use custom layout in the dialog you need to open popup via {@link dialog opener} using the basic template {@link ConfirmationTemplate}.
