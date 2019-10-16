@@ -1,0 +1,6 @@
+<ws:if data="{{ useNewModel }}">
+   <ws:partial template="{{ 'wml!Controls/_tile/TileRender/resources/ItemTemplateWrapper' }}" scope="{{ _options }}" />
+</ws:if>
+<ws:else>
+   <ws:partial template="wml!Controls/_tile/TreeTileView/DefaultItemTpl" scope="{{ _options }}" />
+</ws:else>
