@@ -364,106 +364,6 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          assert.deepEqual(filter, {testId2: 'testValue', testId3: 'testValue'});
       });
 
-      it('_private.mergeFilterItems', function () {
-         var items = [{
-            id: 'testId',
-            value: '',
-            textValue: '',
-            resetValue: ''
-         }, {
-            id: 'testId2',
-            value: 'testValue',
-            textValue: '',
-            resetValue: '',
-            visibility: false
-         },
-         {
-            id: 'testId3',
-            value: 'testValue2',
-            textValue: 'textTextValue',
-            resetValue: ''
-         },
-         {
-            id: 'testId4',
-            value: 'testValue2',
-            resetValue: '',
-            visibility: true
-         }];
-
-         var history = [{
-            id: 'testId',
-            value: 'testValue',
-            resetValue: '',
-            textValue: 'textTextValue'
-         }, {
-            id: 'testId2',
-            value: 'testValue1',
-            resetValue: '',
-            textValue: '',
-            visibility: true
-         }, {
-            id: 'testId4',
-            value: 'testValue1',
-            resetValue: '',
-            textValue: '',
-            visibility: undefined
-         }];
-
-         var result = [{
-            id: 'testId',
-            value: 'testValue',
-            textValue: 'textTextValue',
-            resetValue: ''
-         }, {
-            id: 'testId2',
-            value: 'testValue1',
-            textValue: '',
-            resetValue: '',
-            visibility: true
-         },
-         {
-            id: 'testId3',
-            value: 'testValue2',
-            textValue: 'textTextValue',
-            resetValue: ''
-         },
-         {
-            id: 'testId4',
-            value: 'testValue1',
-            resetValue: '',
-            visibility: undefined
-         }];
-
-         Filter._private.mergeFilterItems(items, history);
-         assert.deepEqual(result, items);
-
-         items = [{
-            name: 'testId',
-            value: '',
-            textValue: '',
-            resetValue: '',
-            viewMode: 'frequent'
-         }];
-
-         history = [{
-            name: 'testId',
-            value: 'testValue',
-            resetValue: '',
-            textValue: 'textTextValue'
-         }];
-
-         result = [{
-            name: 'testId',
-            value: 'testValue',
-            textValue: 'textTextValue',
-            resetValue: '',
-            viewMode: 'frequent'
-         }];
-
-         Filter._private.mergeFilterItems(items, history);
-         assert.deepEqual(result, items);
-      });
-
       it('_filterChanged', function() {
          let filterLayout = new Filter();
          let filterChangedNotifyed = false;
@@ -801,22 +701,6 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             assert.deepEqual(items, {});
             done();
          });
-      });
-
-      it('_private.updateHistory', function() {
-         let filterButtonItem = { id: '1' };
-         let fastFilterItem = { id: '1' };
-         assert.isTrue(Filter._private.isEqualItems(filterButtonItem, fastFilterItem));
-
-         filterButtonItem = {id: '2'};
-         assert.isFalse(Filter._private.isEqualItems(filterButtonItem, fastFilterItem));
-
-         filterButtonItem = {name: '2'};
-         fastFilterItem = {name: '1'};
-         assert.isFalse(Filter._private.isEqualItems(filterButtonItem, fastFilterItem));
-
-         fastFilterItem = {name: '2'};
-         assert.isTrue(Filter._private.isEqualItems(filterButtonItem, fastFilterItem));
       });
 
       it('_private.minimizeItem', function() {
