@@ -21,14 +21,26 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             textValue: 'test',
             resetValue: ''
          }];
+         var historyUpdated = false;
+         var sandbox = sinon.createSandbox();
          filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems });
          assert.deepEqual(filterLayout._filterButtonItems[0].textValue, 'testText');
          assert.deepEqual(filterLayout._filterButtonItems[1].textValue, 'testText2');
 
          return new Promise(function(resolve) {
+            sandbox.replace(Filter._private, 'processHistoryOnItemsChanged', () => {
+               historyUpdated = true;
+            });
             filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems, historyId: 'TEST_HISTORY_ID', historyItems: []}).addCallback(function(items) {
                assert.deepEqual(items, []);
-               resolve();
+               assert.isFalse(historyUpdated);
+
+               filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems, historyId: 'TEST_HISTORY_ID', historyItems: [], prefetchParams: {}}).addCallback((res) => {
+                  assert.isTrue(historyUpdated);
+                  sandbox.restore();
+                  resolve();
+                  return res;
+               });
                return items;
             });
          });
@@ -772,7 +784,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
 
       it('_private.getHistoryItems', function(done) {
          Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(history) {
-            assert.deepEqual(history.items.length, 2);
+            assert.deepEqual(history.length, 15);
 
             var self = {
                _sourceController: {
