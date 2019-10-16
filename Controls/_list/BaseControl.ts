@@ -1577,6 +1577,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 self._viewModelConstructor = newOptions.viewModelConstructor;
                 if (receivedData) {
                     viewModelConfig.items = receivedData;
+                } else {
+                    delete viewModelConfig.items;
                 }
                 self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
             } else if (newOptions.useNewModel && receivedData) {
