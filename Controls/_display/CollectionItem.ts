@@ -87,6 +87,10 @@ export default class CollectionItem<T> extends mixin<
 
     protected _$editingContents: T;
 
+    protected _$active: boolean;
+
+    protected _$hovered: boolean;
+
     protected _instancePrefix: string;
 
     /**
@@ -323,6 +327,36 @@ export default class CollectionItem<T> extends mixin<
         }
     }
 
+    isActive(): boolean {
+        return this._$active;
+    }
+
+    setActive(active: boolean, silent?: boolean): void {
+        if (this._$active === active) {
+            return;
+        }
+        this._$active = active;
+        this._nextVersion();
+        if (!silent) {
+            this._notifyItemChangeToOwner('active');
+        }
+    }
+
+    isHovered(): boolean {
+        return this._$hovered;
+    }
+
+    setHovered(hovered: boolean, silent?: boolean): void {
+        if (this._$hovered === hovered) {
+            return;
+        }
+        this._$hovered = hovered;
+        this._nextVersion();
+        if (!silent) {
+            this._notifyItemChangeToOwner('hovered');
+        }
+    }
+
     getWrapperClassList(): string {
         let classList = `controls-ListView__itemV
             controls-ListView__item_highlightOnHover_default_theme_default
@@ -457,6 +491,8 @@ Object.assign(CollectionItem.prototype, {
     _$actions: null,
     _$swiped: false,
     _$editingContents: null,
+    _$active: false,
+    _$hovered: false,
     _instancePrefix: 'collection-item-',
     _contentsIndex: undefined,
     _version: 0,

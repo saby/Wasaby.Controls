@@ -12,7 +12,6 @@ import 'css!theme?Controls/list';
 import { CollectionItem } from 'Controls/display';
 
 import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
-import * as renderActionsTemplate from 'wml!Controls/_list/Render/resources/ItemActionsTemplate';
 
 const ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
 const ACTION_TYPE = 'itemActionsUpdated';
@@ -160,7 +159,9 @@ var ItemActionsControl = Control.extend({
             return;
         }
         if (newOptions.useNewModel) {
-            this._itemActionsTemplate = renderActionsTemplate;
+            return import('Controls/listRender').then((listRender) => {
+                this._itemActionsTemplate = listRender.itemActionsTemplate;
+            });
         }
     },
 
