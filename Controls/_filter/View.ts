@@ -14,6 +14,7 @@ import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
 import {getItemsWithHistory, isHistorySource} from 'Controls/_filter/HistoryUtils';
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
+import mergeSource from 'Controls/_filter/Utils/mergeSource';
 
 /**
  * Контрол для фильтрации данных. Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
@@ -619,8 +620,8 @@ var Filter = Control.extend({
 
     _resultHandler: function(event, result) {
         if (!result.action) {
-            var filterSource = converterFilterItems.convertToFilterSource(result.items);
-            _private.prepareItems(this, filterSource);
+            const filterSource = converterFilterItems.convertToFilterSource(result.items);
+            _private.prepareItems(this, mergeSource(this._source, filterSource));
             _private.updateText(this, this._source, this._configs, false);
         } else {
             _private[result.action].call(this, result);
