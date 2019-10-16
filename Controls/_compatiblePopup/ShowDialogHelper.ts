@@ -2,11 +2,6 @@ import Deferred = require('Core/Deferred');
 import moduleStubs = require('Core/moduleStubs');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 
-/**
- * @class Controls/_compatiblePopup/ShowDialogHelpers
- * @public
- */
-
 var _private = {
    prepareDeps: function(config) {
       var dependencies = ['Controls/popup'];
