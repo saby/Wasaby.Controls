@@ -12,6 +12,10 @@
  * @includes Converter Controls/_decorator/Markup/Converter
  * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
  * @includes linkDecorateUtils Controls/_decorator/Markup/resources/linkDecorateUtils
+ * @includes HighlightResolver Controls/_decorator/Markup/resolvers/highlight
+ * @includes LinkDecorateResolver Controls/_decorator/Markup/resolvers/linkDecorate
+ * @includes LinkWrapResolver Controls/_decorator/Markup/resolvers/linkWrap
+ * @includes NoOuterTagResolver Controls/_decorator/Markup/resolvers/noOuterTag
  * @public
  * @author Крайнов Д.О.
  */
@@ -30,6 +34,10 @@
  * @includes Converter Controls/_decorator/Markup/Converter
  * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
  * @includes linkDecorateUtils Controls/_decorator/Markup/resources/linkDecorateUtils
+ * @includes HighlightResolver Controls/_decorator/Markup/resolvers/highlight
+ * @includes LinkDecorateResolver Controls/_decorator/Markup/resolvers/linkDecorate
+ * @includes LinkWrapResolver Controls/_decorator/Markup/resolvers/linkWrap
+ * @includes NoOuterTagResolver Controls/_decorator/Markup/resolvers/noOuterTag
  * @public
  * @author Крайнов Д.О.
  */
