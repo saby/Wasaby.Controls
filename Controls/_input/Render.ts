@@ -114,10 +114,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
             return options.borderStyle;
         }
 
-        /**
-         * Only for ie and edge. Other browsers can work with :focus-within pseudo selector.
-         */
-        if (this._contentActive && detection.isIE) {
+        if (this._contentActive && Render.notSupportFocusWithin()) {
             return this._validationStatus + '-active';
         }
         return this._validationStatus;
@@ -143,6 +140,10 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         this._contentActive = newContentActive;
 
         this.updateState(this._options);
+    }
+
+    private static notSupportFocusWithin(): boolean {
+        return detection.isIE || (detection.isWinXP && detection.yandex);
     }
 
     static getDefaultTypes() {
