@@ -265,7 +265,7 @@ var Mover = Control.extend({
         _private.updateDataOptions(this, context.dataOptions);
         if (options.moveDialogTemplate instanceof Function) {
            this._moveDialogTemplate = options.moveDialogTemplate;
-           Env.IoC.resolve('ILogger').warn('Mover', 'Use options templateOptions and templateName in moveDialogTemplate');
+           Env.IoC.resolve('ILogger').warn('Mover', 'Wrong type of moveDialogTemplate option, use object notation instead of template function');
         } else if (options.moveDialogTemplate){
            this._moveDialogTemplate = options.moveDialogTemplate.templateName;
            this._moveDialogOptions = options.moveDialogTemplate.templateOptions;
