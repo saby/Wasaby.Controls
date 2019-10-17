@@ -557,6 +557,9 @@ define([
                      any: true,
                      tag: true,
                      link: true,
+                     additional: {
+                        add: true
+                     },
                      script: true
                   },
                   validAttributes: {
@@ -570,12 +573,14 @@ define([
                   ['any', { name: 'name', value: 'value', id: 'id' }],
                   ['tag', 'inner text'],
                   ['link'],
+                  ['additional', { add: 'add', name: 'name', id: 'id' }],
                   ['script', 'alert(123);']
                ],
                goodHtml =
                   '<any name="name" value="value"></any>' +
                   '<tag>inner text</tag>' +
                   '<link />' +
+                  '<additional add="add" name="name"></additional>' +
                   '<script>alert(123);</script>',
                checkHtml = template({
                   _options: {
