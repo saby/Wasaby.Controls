@@ -28,7 +28,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 
 type Direction = 'direct' | 'reverse';
 
-export interface IContainerOptions extends IControlOptions {
+export interface IResizingLineOptions extends IControlOptions {
     /**
      * @name Controls/_dragnDrop/ResizingLine#maxOffset
      * @cfg {Number} Максимальное значение сдвига при изменении значения размера
@@ -66,9 +66,9 @@ interface IOffset {
     value: number;
 }
 
-class ResizingLine extends Control<IContainerOptions> {
+class ResizingLine extends Control<IResizingLineOptions> {
     protected _children: IChildren;
-    protected _options: IContainerOptions;
+    protected _options: IResizingLineOptions;
     protected _template: TemplateFunction = template;
     protected _styleArea: string = '';
     protected _dragging: boolean = false;
