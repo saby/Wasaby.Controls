@@ -1,0 +1,3 @@
+<Controls.Application.ApplicationWrapper caption="filter:View demo" demoname="client/Controls-demo/FilterView" repositoryName='controls'>
+   <Controls-demo.FilterView.FilterView/>
+</Controls.Application.ApplicationWrapper>

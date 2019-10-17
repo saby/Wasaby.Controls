@@ -1,0 +1,7 @@
+<Controls.filterPopup:SimplePanel
+            items="{{_items}}"
+            on:selectedKeysChangedIntent="_keysChangedHandler()">
+   <ws:itemTemplate>
+      <ws:partial template="Controls/filterPopup:SimplePanelItemTemplate" showSeparator="{{false}}" />
+   </ws:itemTemplate>
+</Controls.filterPopup:SimplePanel>
