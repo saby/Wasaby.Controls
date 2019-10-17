@@ -8,7 +8,7 @@ import IEditor from 'Controls/_propertyGrid/IEditor';
  * Редактор для перечисляемого типа данных.
  * @class Controls/_propertyGrid/defaultEditors/Enum
  * @extends Core/Control
- * @interface Controls/_propertyGrid/IEditor
+ * @mixes Controls/_propertyGrid/IEditor
  * @control
  * @public
  * @author Герасимов А.М.
@@ -18,7 +18,7 @@ import IEditor from 'Controls/_propertyGrid/IEditor';
  * Editor for enum type.
  * @class Controls/_propertyGrid/defaultEditors/Enum
  * @extends Core/Control
- * @interface Controls/_propertyGrid/IEditor
+ * @mixes Controls/_propertyGrid/IEditor
  * @control
  * @public
  * @author Герасимов А.М.

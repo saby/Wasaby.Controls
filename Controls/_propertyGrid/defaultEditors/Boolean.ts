@@ -9,7 +9,7 @@ import 'Controls/toggle';
  * Редактор для логического типа данных.
  * @class Controls/_propertyGrid/defaultEditors/Boolean
  * @extends Core/Control
- * @interface Controls/_propertyGrid/IEditor
+ * @mixes Controls/_propertyGrid/IEditor
  * @control
  * @public
  * @author Герасимов А.М.
@@ -19,7 +19,7 @@ import 'Controls/toggle';
  * Editor for boolean type.
  * @class Controls/_propertyGrid/defaultEditors/Boolean
  * @extends Core/Control
- * @interface Controls/_propertyGrid/IEditor
+ * @mixes Controls/_propertyGrid/IEditor
  * @control
  * @public
  * @author Герасимов А.М.
