@@ -1,8 +1,5 @@
 <div class="controls-ValidateContainer">
-    <ws:partial template="{{ _options.content }}"/>
-    <div class="controls-ValidateContainer__border-{{_options.style}}"></div>
+    <ws:partial template="{{ _options.content }}" on:activated="_activateHandler()" on:deactivated="_deactivateHandler()"/>
+    <div class="controls-ValidateContainer__border-{{_options.style}}
+                controls-ValidateContainer__border-{{_options.style}}__{{_activeState ? 'active'}}"></div>
 </div>
-<!--<div class="controls-ValidateContainer_style-{{_options.style}}">-->
-<!--    <ws:partial template="{{ _options.content }}"-->
-<!--                scope="{{_options}}"/>-->
-<!--</div>-->

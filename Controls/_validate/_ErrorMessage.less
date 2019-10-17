@@ -23,18 +23,16 @@
    border: @border-thickness solid @danger_color;
    width: 100%;
    height: 100%;
-   left: -4px;
+   left: -5px;
    pointer-events: none;
-   bottom: -4px;
-   padding: 4px;
+   bottom: -3px;
+   padding: 2px 4px;
 }
 
 .controls-ValidateContainer{
-   position: relative;
+  position: relative;
 }
 
-.controls-ValidateContainer:focus-within{
-   .controls-ValidateContainer__border-invalid {
-      background-color: rgba(208, 77, 77, 0.2);
-   }
+.controls-ValidateContainer__border-invalid__active {
+   background-color: rgba(208, 77, 77, 0.2);
 }

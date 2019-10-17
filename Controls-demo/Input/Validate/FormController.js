@@ -44,6 +44,9 @@ define('Controls-demo/Input/Validate/FormController', [
       _eventHandler: function(e, value) {
          this._eventResult = e.type + ': ' + value;
       },
+      _cleanValid: function(e,value) {
+         this._children.formController.setValidationResult(null);
+      },
       isTrue: function(args) {
          return args.value ? true : 'Обязательное поле';
       },
