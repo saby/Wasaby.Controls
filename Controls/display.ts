@@ -8,6 +8,11 @@
  * @includes Ladder Controls/_display/Ladder
  * @includes Search Controls/_display/Search
  * @includes Tree Controls/_display/Tree
+ * @includes Controls/_display/GroupItem
+ * @includes Controls/_display/CollectionItem
+ * @includes Controls/_display/IBind
+ * @includes Controls/_display/TreeChildren
+ * @includes Controls/_display/TreeItem
  * @public
  * @author Мальцев А.А.
  */
@@ -22,6 +27,11 @@
  * @includes Ladder Controls/_display/Ladder
  * @includes Search Controls/_display/Search
  * @includes Tree Controls/_display/Tree
+ * @includes Controls/_display/GroupItem
+ * @includes Controls/_display/CollectionItem
+ * @includes Controls/_display/IBind
+ * @includes Controls/_display/TreeChildren
+ * @includes Controls/_display/TreeItem
  * @public
  * @author Мальцев А.А.
  */
