@@ -7,6 +7,7 @@ import keysHandler = require('Controls/Utils/keysHandler');
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
+import tmplNotify = require('Controls/Utils/tmplNotify');
 
 var
     HOT_KEYS = {
@@ -360,6 +361,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _afterReloadCallback: null,
     _beforeLoadToDirectionCallback: null,
     _expandOnDragData: null,
+    _notifyHandler: tmplNotify,
     constructor: function(cfg) {
         this._nodesSourceControllers = {};
         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);

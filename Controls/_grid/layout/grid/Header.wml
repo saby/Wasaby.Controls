@@ -9,7 +9,8 @@
                         listModel="{{listModel}}"
                         headerColumn="{{ headerRow.getCurrentHeaderColumn() }}"
                         class="{{listModel.isPartialGridSupport()?'controls-Grid__header':''}}"
-                        multiselect="{{ listModel.getMultiSelectVisibility() }}"/>
+                        multiselect="{{ listModel.getMultiSelectVisibility() }}"
+                        on:arrowClick="_notifyHandler('arrowClick')"/>
          </ws:if>
       </ws:for>
 </ws:template>

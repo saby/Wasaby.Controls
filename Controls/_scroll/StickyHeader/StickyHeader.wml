@@ -1,8 +1,10 @@
 <ws:if data="{{_isStickySupport}}">
-   <Controls._scroll.StickyHeader._StickyHeader scope="{{_options}}"/>
+   <Controls._scroll.StickyHeader._StickyHeader scope="{{_options}}"
+                                                on:arrowClick="_notifyHandler('arrowClick')"/>
 </ws:if>
 <ws:else>
    <div>
-      <ws:partial if="{{_options.content}}" template="{{_options.content}}"/>
+      <ws:partial if="{{_options.content}}" template="{{_options.content}}"
+                  on:arrowClick="_notifyHandler('arrowClick')"/>
    </div>
 </ws:else>

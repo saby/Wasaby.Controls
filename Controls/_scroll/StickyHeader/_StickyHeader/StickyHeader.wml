@@ -11,6 +11,7 @@
    <ws:partial template="{{_options.content}}"
                attr:class="controls-StickyHeader__content"
                scope="{{_options}}"
+               on:arrowClick="_notifyHandler('arrowClick')"
                on:controlResize="_resizeHandler()"/>
    <div name="observationTargetBottom" class="controls-StickyHeader__observationTargetBottom" style="{{_getObserverStyle('bottom')}}"></div>
    <!--We use visibility style insted of "if" statement to prevent jumps when scrolling on iPad-->
