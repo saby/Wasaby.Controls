@@ -265,12 +265,9 @@ var Mover = Control.extend({
         _private.updateDataOptions(this, context.dataOptions);
         if (options.moveDialogTemplate instanceof Function) {
            this._moveDialogTemplate = options.moveDialogTemplate;
-           Env.IoC.resolve('ILogger').warn('Mover', 'Use options templateOptions and template in moveDialogTemplate');
+           Env.IoC.resolve('ILogger').warn('Mover', 'Use options templateOptions and templateName in moveDialogTemplate');
         } else if (options.moveDialogTemplate){
-           this._moveDialogTemplate = options.moveDialogTemplate.template;
-           if (!(typeof this._moveDialogTemplate === 'string')) {
-              Env.IoC.resolve('ILogger').warn('Mover', 'Option "template" must be a string');
-           }
+           this._moveDialogTemplate = options.moveDialogTemplate.templateName;
            this._moveDialogOptions = options.moveDialogTemplate.templateOptions;
         }
     },
@@ -323,7 +320,7 @@ var Mover = Control.extend({
 
         _private.getItemsBySelection.call(this, items).addCallback(function (items) {
             if (items.length > 0) {
-               let templateOptions = Object.assign({
+               const templateOptions = Object.assign({
                   movedItems: _private.prepareMovedItems(self, items),
                   source: self._source,
                   keyProperty: self._keyProperty
