@@ -11,10 +11,12 @@
                                 style="disabled"/>
    </ws:if>
    <ws:if data="{{ _options.showActionButton }}">
-      <div class="controls-BreadCrumbsPath__backButtonArrow icon-View
+      <div class="controls-BreadCrumbsPath__backButtonArrow-container
                {{_options.showArrowOutsideOfBackButton ? ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton' : ''}}
                {{_options.readOnly ? ' controls-Path__backButtonArrow_readonly'}}"
            title="{[Подробнее]}"
-           on:click="_onArrowClick()"></div>
+           on:click="_onArrowClick()">
+         <div class="icon-ForwardBaseLine controls-BreadCrumbsPath__backButtonArrow"></div>
+      </div>
    </ws:if>
 </div>

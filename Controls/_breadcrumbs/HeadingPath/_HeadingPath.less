@@ -42,14 +42,21 @@
    align-self: flex-start;
 }
 
-.controls-BreadCrumbsPath__backButtonArrow {
-   .icon(@font-size_Path-backButtonArrow);
+.controls-BreadCrumbsPath__backButtonArrow-container {
+   .baseline-fix();
    height: 100%;
    position: absolute;
-   align-self: center;
-   align-items: center;
-   background-color: @background-color_Path-backButtonArrow;
+   align-self: baseline;
+   align-items: baseline;
    right: 0;
+   background-color: @background-color_Path-backButtonArrow;
+   &:before {
+      font-size:@font-size_BreadCrumbs-baseline;
+   }
+}
+
+.controls-BreadCrumbsPath__backButtonArrow {
+   .icon(@font-size_Path-backButtonArrow);
    display: none;
    color: @color_Path-backButtonArrow;
    cursor: pointer;
@@ -74,6 +81,7 @@
 .controls-BreadCrumbsPath__breadCrumbs_home-path-spacing {
    padding-left: @spacing_Path-between-home-and-crumbs;
 }
+
 .controls-BreadCrumbsPath__homeContainer {
    .baseline-fix();
    position: relative;
