@@ -1,0 +1,19 @@
+<div attr:style="display: flex; justify-content: space-around;">
+   <Controls.scroll:Container scn="1" attr:style="width: 50%; height: 600px;">
+      <Controls.listRender:Container
+         kind="tile"
+         items="{{ _items }}"
+         itemActions="{{ _itemActions }}"
+
+         keyProperty="id"
+         displayProperty="title"
+         imageProperty="image"
+         multiSelectVisibility="hidden"
+         tileMode="dynamic"
+         tileScalingMode="outside">
+         <ws:itemTemplate>
+            <ws:partial template="Controls/tile:ItemTemplate" hasTitle="{{ true }}" />
+         </ws:itemTemplate>
+      </Controls.listRender:Container>
+   </Controls.scroll:Container>
+</div>

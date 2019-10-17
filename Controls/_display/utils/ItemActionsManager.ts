@@ -1,20 +1,42 @@
 import BaseManager from './BaseManager';
 
+import { showType } from 'Controls/Utils/Toolbar';
+
+export type TItemActionVisibilityCallback = (action, item: unknown) => boolean;
+
 // TODO Написать реальный тип для action'ов
 type TItemAction = any;
+
 interface IItemActionsContainer {
     all: TItemAction[];
     showed: TItemAction[];
 }
 
+export interface IVirtualScrollManageableCollection {
+    each(callback: (item: IItemActionsManageableItem) => void): void;
+}
+
 export interface IItemActionsManageableItem {
     getActions(): IItemActionsContainer;
+    getContents(): unknown;
     setActions(actions: IItemActionsContainer): void;
     setActive(active: boolean): void;
 }
 
-export default class ItemActionsManager extends BaseManager {
+const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
+
+export default class ItemActionsManager extends BaseManager<IVirtualScrollManageableCollection> {
     protected _activeItem: IItemActionsManageableItem;
+
+    assignItemActions(actionList: TItemAction[], visibilityCallback: TItemActionVisibilityCallback = () => true): void {
+        // TODO Support itemActionsProperty
+        // NB Deprecated style names are intentionally no longer supported
+        const actions = actionList.map(this._fixActionIcon);
+        this._collection.each((item) => {
+            const assignedActions = actions.filter((action) => visibilityCallback(action, item.getContents()));
+            this.setItemActions(item, this._wrapActionsInContainer(assignedActions));
+        });
+    }
 
     setItemActions(item: IItemActionsManageableItem, actions: IItemActionsContainer): void {
         const oldActions = item.getActions();
@@ -61,5 +83,49 @@ export default class ItemActionsManager extends BaseManager {
             }
         }
         return true;
+    }
+
+    protected _fixActionIcon(action: TItemAction): TItemAction {
+        if (!action.icon || action.icon.includes(ITEM_ACTION_ICON_CLASS)) {
+            return action;
+        }
+        return {
+            ...action,
+            icon: `${action.icon} ${ITEM_ACTION_ICON_CLASS}`
+        };
+    }
+
+    protected _wrapActionsInContainer(actions: TItemAction[]): IItemActionsContainer {
+        let showed = actions;
+        if (showed.length > 1) {
+            showed = showed.filter(
+                (action) => action.showType === showType.TOOLBAR || action.showType === showType.MENU_TOOLBAR
+            );
+            if (this._isMenuButtonRequired(actions)) {
+                showed.push({
+                    icon: `icon-ExpandDown ${ITEM_ACTION_ICON_CLASS}`,
+                    style: 'secondary',
+                    iconStyle: 'secondary',
+                    _isMenu: true
+                });
+            }
+        }
+        return {
+            all: actions,
+            showed
+        };
+    }
+
+    protected _isMenuButtonRequired(actions: TItemAction[]): boolean {
+        return actions.some((action) => {
+            return (
+                !action.parent &&
+                (
+                    !action.showType ||
+                    action.showType === showType.MENU ||
+                    action.showType === showType.MENU_TOOLBAR
+                )
+            );
+        });
     }
 }

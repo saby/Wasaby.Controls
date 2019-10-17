@@ -5,6 +5,7 @@ import itemActionsTemplate = require('wml!Controls/_listRender/Render/resources/
 import swipeTemplate = require('wml!Controls/_listRender/Render/resources/SwipeTemplate');
 
 export { default as Render, IRenderOptions, IRenderChildren } from 'Controls/_listRender/Render';
+export { default as Container } from 'Controls/_listRender/Container';
 export {
     forTemplate,
     editingTemplate,

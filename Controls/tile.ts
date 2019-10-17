@@ -30,10 +30,16 @@ import ItemTemplate = require('wml!Controls/_tile/ItemTemplateChooser');
 import TreeViewModel = require('Controls/_tile/TreeTileView/TreeTileViewModel');
 import TreeView = require('Controls/_tile/TreeTileView/TreeTileView');
 
+// FIXME Remove this before merging, tile render should probably moved to the
+// listRender library as well
+import TileRender from 'Controls/_tile/TileRender';
+
 export {
    View,
    ItemTemplate,
 
    TreeViewModel,
-   TreeView
+   TreeView,
+
+   TileRender
 };
