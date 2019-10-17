@@ -62,14 +62,13 @@ define('Controls/interface/IMovable', [
     * @example
     * <pre>
     *    <Controls.list:Mover>
-    *       <ws:moveDialogTemplate>
-    *          <Controls.MoveDialog
-    *                root="rootId"
-    *                searchParam="folderTitle"
-    *                parentProperty="parent"
-    *                nodeProperty="parent@">
-    *             <ws:filter moveDialog="{{true}}"/>
-    *          </Controls.MoveDialog>
+    *       <ws:moveDialogTemplate template="Controls/MoveDialog">
+    *          <ws:templateOptions
+    *             root="rootId"
+    *             searchParam="folderTitle"
+    *             parentProperty="parent"
+    *             nodeProperty="parent@">
+    *          <ws:filter moveDialog="{{true}}"/>
     *       </ws:moveDialogTemplate>
     *    </Controls.list:Mover>
     * </pre>
@@ -84,14 +83,13 @@ define('Controls/interface/IMovable', [
     * The following example shows how to using default template {@link Controls/MoveDialog}.
     * <pre>
     *    <Controls.list:Mover>
-    *       <ws:moveDialogTemplate>
-    *          <Controls.MoveDialog
-    *                root="rootId"
-    *                searchParam="folderTitle"
-    *                parentProperty="parent"
-    *                nodeProperty="parent@">
-    *             <ws:filter moveDialog="{{true}}"/>
-    *          </Controls.MoveDialog>
+    *       <ws:moveDialogTemplate template="Controls/MoveDialog">
+    *          <ws:templateOptions
+    *             root="rootId"
+    *             searchParam="folderTitle"
+    *             parentProperty="parent"
+    *             nodeProperty="parent@">
+    *          <ws:filter moveDialog="{{true}}"/>
     *       </ws:moveDialogTemplate>
     *    </Controls.list:Mover>
     * </pre>
@@ -110,14 +108,13 @@ define('Controls/interface/IMovable', [
     * В следующем примере показано, как задать сортировку по убыванию.
     * <pre>
     *    <Controls.list:Mover sortingOrder="desc">
-    *       <ws:moveDialogTemplate>
-    *          <Controls.MoveDialog
-    *                root="rootId"
-    *                searchParam="folderTitle"
-    *                parentProperty="parent"
-    *                nodeProperty="parent@">
-    *             <ws:filter moveDialog="{{true}}"/>
-    *          </Controls.MoveDialog>
+    *       <ws:moveDialogTemplate template="Controls/MoveDialog">
+    *          <ws:templateOptions
+    *             root="rootId"
+    *             searchParam="folderTitle"
+    *             parentProperty="parent"
+    *             nodeProperty="parent@">
+    *          <ws:filter moveDialog="{{true}}"/>
     *       </ws:moveDialogTemplate>
     *    </Controls.list:Mover>
     * </pre>
@@ -135,14 +132,13 @@ define('Controls/interface/IMovable', [
     * The following example shows how to set a descending sort.
     * <pre>
     *    <Controls.list:Mover sortingOrder="desc">
-    *       <ws:moveDialogTemplate>
-    *          <Controls.MoveDialog
-    *                root="rootId"
-    *                searchParam="folderTitle"
-    *                parentProperty="parent"
-    *                nodeProperty="parent@">
-    *             <ws:filter moveDialog="{{true}}"/>
-    *          </Controls.MoveDialog>
+    *       <ws:moveDialogTemplate template="Controls/MoveDialog">
+    *          <ws:templateOptions
+    *             root="rootId"
+    *             searchParam="folderTitle"
+    *             parentProperty="parent"
+    *             nodeProperty="parent@">
+    *          <ws:filter moveDialog="{{true}}"/>
     *       </ws:moveDialogTemplate>
     *    </Controls.list:Mover>
     * </pre>
