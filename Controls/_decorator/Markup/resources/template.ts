@@ -35,6 +35,7 @@ import 'css!theme?Controls/decorator';
          'file:(//|\\\\)',
          'smb:(//|\\\\)',
          'mailto:',
+         '#',
          './',
          '/'
       ],
