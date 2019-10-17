@@ -4,7 +4,25 @@ import themeConstantsGetter = require('Controls/_popupTemplate/InfoBox/Opener/re
 import cMerge = require('Core/core-merge');
 import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
+import {IPopupItem, IPopupSizes, IPopupPosition} from 'Controls/_popupTemplate/BaseController';
+import collection = require('Types/collection');
 import 'css!theme?Controls/popupTemplate';
+
+interface IInfoBoxThemeConstants {
+    ARROW_WIDTH?: number;
+    ARROW_H_OFFSET?: number;
+    ARROW_V_OFFSET?: number;
+    TARGET_OFFSET?: number;
+    MAX_WIDTH?: number;
+}
+
+interface IInfoBoxSide {
+    t: string;
+    r: string;
+    b: string;
+    l: string;
+    c: string;
+}
 
 function getConstants() {
     return themeConstantsGetter('controls-InfoBox__themeConstants', {
@@ -17,18 +35,18 @@ function getConstants() {
 }
 
 // todo: https://online.sbis.ru/opendoc.html?guid=b385bef8-31dd-4601-9716-f3593dfc9d41
-let constants = {};
+let constants: IInfoBoxThemeConstants = {};
 if (document) {
     if (document.body) {
         constants = getConstants();
     } else {
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             constants = getConstants();
         });
     }
 }
 
-const SIDES = {
+const SIDES: IInfoBoxSide = {
     t: 'top',
     r: 'right',
     b: 'bottom',
@@ -36,7 +54,7 @@ const SIDES = {
     c: 'center'
 };
 
-const INVERTED_SIDES = {
+const INVERTED_SIDES: IInfoBoxSide = {
     t: 'bottom',
     r: 'left',
     b: 'top',
@@ -44,12 +62,96 @@ const INVERTED_SIDES = {
     c: 'center'
 };
 
-const _private = {
+/**
+ * InfoBox Popup Controller
+ * @class Controls/_popupTemplate/InfoBox/Opener/InfoBoxController
+ * @control
+ * @private
+ * @category Popup
+ */
+class InfoBoxController extends StickyController.constructor {
+    _openedPopupId: string = null;
+    TYPE: string = 'InfoBox';
+
+    elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {
+        // Only one popup can be opened
+        if (this._openedPopupId) {
+            require('Controls/popup').Controller.remove(this._openedPopupId);
+        }
+        this._openedPopupId = item.id;
+
+        // Remove the width obtained in getDefaultOptions
+        item.position.maxWidth = undefined;
+
+        return super.elementCreated.apply(this, arguments);
+    }
+
+    elementUpdated(): boolean {
+        // Hide popup then page scroll or resize
+        require('Controls/popup').Controller.remove(this._openedPopupId);
+        return true;
+    }
+
+    popupResize(item: IPopupItem, container: HTMLDivElement): boolean {
+        return super.elementUpdated.call(this, item, container);
+    }
+
+    elementDestroyed(item: IPopupItem): Promise<null> {
+        if (item.id === this._openedPopupId) {
+            this._openedPopupId = null;
+        }
+        return (new Deferred()).callback();
+    }
+
+    needRestoreFocus(isActive: boolean): boolean {
+        return isActive;
+    }
+
+    getDefaultConfig(item: IPopupItem): void {
+        super.getDefaultConfig.apply(this, arguments);
+        const defaultPosition: IPopupPosition = {
+            left: -10000,
+            top: -10000,
+            right: undefined,
+            bottom: undefined
+        };
+        if (item.popupOptions.target) {
+            // Calculate the width of the infobox before its positioning.
+            // It is impossible to count both the size and the position at the same time, because the position is related to the size.
+            cMerge(item.popupOptions, this._prepareConfig(item.popupOptions.position, item.popupOptions.target));
+            const sizes: IPopupSizes = {width: constants.MAX_WIDTH, height: 1, margins: {left: 0, top: 0}};
+            const position: IPopupPosition = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), TargetCoords.get(item.popupOptions.target));
+            this.prepareConfig(item, sizes);
+            item.position.maxWidth = position.width;
+        }
+        item.position = {...item.position, ...defaultPosition};
+    }
+
+    _getPopupConfig(item: IPopupItem, sizes: IPopupSizes): IPopupItem {
+        const baseConfig: IPopupItem = super._getPopupConfig.apply(this, arguments);
+        // Protection against incorrect page design
+        baseConfig.checkNegativePosition = false;
+        return baseConfig;
+    }
+
+    getCustomZIndex(popupItems: collection.List<IPopupItem>, item: IPopupItem): number|null {
+        const parentItem: IPopupItem = this._findItemById(popupItems, item.parentId);
+        if (parentItem) {
+            const parentZIndex = parentItem.currentZIndex;
+            return parentZIndex + 1;
+        }
+        return null;
+    }
+
+    prepareConfig(item: IPopupItem, sizes: IPopupSizes): IPopupItem {
+        cMerge(item.popupOptions, this._prepareConfig(item.popupOptions.position, item.popupOptions.target));
+        return super.prepareConfig.apply(this, arguments);
+    }
 
     // Checks if the target width is enough for the correct positioning of the arrow.
     // Returns offset to which you want to move the popup.
-    getOffset(targetSize, alignSide, arrowOffset, arrowWidth) {
-        const align = INVERTED_SIDES[alignSide];
+    private _getOffset(targetSize: number, alignSide: string, arrowOffset: number, arrowWidth: number): number {
+        const align: string = INVERTED_SIDES[alignSide];
 
         // Check if we have enough width of the target for the correct positioning of the arrow, if not, just
         // move the popup arrow to the center of the target
@@ -64,13 +166,13 @@ const _private = {
             }
         }
         return 0;
-    },
+    }
 
     // Return the configuration prepared for StickyStrategy
-    prepareConfig(position, target) {
-        const side = position[0];
-        const alignSide = position[1];
-        const topOrBottomSide = side === 't' || side === 'b';
+    private _prepareConfig(position: string, target: HTMLDivElement): IPopupItem {
+        const side: string = position[0];
+        const alignSide: string = position[1];
+        const topOrBottomSide: boolean = side === 't' || side === 'b';
 
         const config = {
             verticalAlign: {
@@ -87,8 +189,8 @@ const _private = {
             }
         };
 
-        const verticalOffset = _private.getVerticalOffset(target, topOrBottomSide, side, alignSide);
-        const horizontalOffset = _private.getHorizontalOffset(target, topOrBottomSide, side, alignSide);
+        const verticalOffset: number = this._getVerticalOffset(target, topOrBottomSide, alignSide);
+        const horizontalOffset: number = this._getHorizontalOffset(target, topOrBottomSide, alignSide);
 
         if (verticalOffset) {
             config.verticalAlign.offset = verticalOffset;
@@ -99,116 +201,29 @@ const _private = {
         }
 
         return config;
-    },
+    }
 
-    getVerticalOffset(target, topOrBottomSide, side, alignSide) {
+    private _getVerticalOffset(target: HTMLDivElement, topOrBottomSide: boolean, alignSide: string): number {
         if (!topOrBottomSide) {
             // svg hasn't offsetHeight property
-            const targetHeight = target.offsetHeight || target.clientHeight;
-            return _private.getOffset(targetHeight, alignSide, constants.ARROW_V_OFFSET, constants.ARROW_WIDTH);
+            const targetHeight: number = target.offsetHeight || target.clientHeight;
+            return this._getOffset(targetHeight, alignSide, constants.ARROW_V_OFFSET, constants.ARROW_WIDTH);
         }
-    },
+    }
 
-    getHorizontalOffset(target, topOrBottomSide, side, alignSide) {
+    private _getHorizontalOffset(target: HTMLDivElement, topOrBottomSide: boolean, alignSide: string): number {
         if (topOrBottomSide) {
             // svg hasn't offsetWidth property
-            const targetWidth = target.offsetWidth || target.clientWidth;
-            return _private.getOffset(targetWidth, alignSide, constants.ARROW_H_OFFSET, constants.ARROW_WIDTH);
+            const targetWidth: number = target.offsetWidth || target.clientWidth;
+            return this._getOffset(targetWidth, alignSide, constants.ARROW_H_OFFSET, constants.ARROW_WIDTH);
         }
-    },
-    findItemById(popupItems, id) {
-        const index = popupItems && popupItems.getIndexByValue('id', id);
+    }
+    private _findItemById(popupItems: collection.List<IPopupItem>, id: string): IPopupItem|null {
+        const index: number = popupItems && popupItems.getIndexByValue('id', id);
         if (index > -1) {
             return popupItems.at(index);
         }
         return null;
-    }
-};
-
-/**
- * InfoBox Popup Controller
- * @class Controls/_popupTemplate/InfoBox/Opener/InfoBoxController
- * @control
- * @private
- * @category Popup
- */
-class InfoBoxController extends StickyController.constructor {
-    _openedPopupId = null;
-    TYPE = 'InfoBox';
-    _private = _private;
-
-    elementCreated(cfg, container, id) {
-        // Only one popup can be opened
-        if (this._openedPopupId) {
-            require('Controls/popup').Controller.remove(this._openedPopupId);
-        }
-        this._openedPopupId = id;
-
-        // Remove the width obtained in getDefaultOptions
-        cfg.position.maxWidth = undefined;
-
-        return super.elementCreated.apply(this, arguments);
-    }
-
-    elementUpdated() {
-        // Hide popup then page scroll or resize
-        require('Controls/popup').Controller.remove(this._openedPopupId);
-    }
-
-    popupResize(element, container) {
-        return super.elementUpdated.call(this, element, container);
-    }
-
-    elementDestroyed(item) {
-        if (item.id === this._openedPopupId) {
-            this._openedPopupId = null;
-        }
-        return (new Deferred()).callback();
-    }
-
-    needRestoreFocus(isActive) {
-        return isActive;
-    }
-
-    getDefaultConfig(item) {
-        super.getDefaultConfig.apply(this, arguments);
-        const defaultPosition = {
-            left: -10000,
-            top: -10000,
-            right: undefined,
-            bottom: undefined
-        };
-        if (item.popupOptions.target) {
-            // Calculate the width of the infobox before its positioning.
-            // It is impossible to count both the size and the position at the same time, because the position is related to the size.
-            cMerge(item.popupOptions, _private.prepareConfig(item.popupOptions.position, item.popupOptions.target));
-            const sizes = {width: constants.MAX_WIDTH, height: 1, margins: {left: 0, top: 0}};
-            const position = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), TargetCoords.get(item.popupOptions.target));
-            this.prepareConfig(item, sizes);
-            item.position.maxWidth = position.width;
-        }
-        item.position = {...item.position, ...defaultPosition};
-    }
-
-    _getPopupConfig() {
-        const baseConfig = super._getPopupConfig.apply(this, arguments);
-        // Protection against incorrect page design
-        baseConfig.checkNegativePosition = false;
-        return baseConfig;
-    }
-
-    getCustomZIndex(popupItems, item) {
-        const parentItem = _private.findItemById(popupItems, item.parentId);
-        if (parentItem) {
-            const parentZIndex = parentItem.currentZIndex;
-            return parentZIndex + 1;
-        }
-        return null;
-    }
-
-    prepareConfig(cfg, sizes) {
-        cMerge(cfg.popupOptions, _private.prepareConfig(cfg.popupOptions.position, cfg.popupOptions.target));
-        return super.prepareConfig.apply(this, arguments);
     }
 }
 export = new InfoBoxController();
