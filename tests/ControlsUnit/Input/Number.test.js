@@ -111,7 +111,7 @@ define(
 
                assert.deepEqual(calls, [{
                   name: 'notify',
-                  arguments: ['valueChanged', [1111, '1 111.0']]
+                  arguments: ['valueChanged', [1111, '1 111']]
                }]);
             });
             it('Triad partitioning is disabled. Enter 123456', function() {
@@ -127,7 +127,7 @@ define(
 
                assert.deepEqual(calls, [{
                   name: 'notify',
-                  arguments: ['valueChanged', [123456, '123456.0']]
+                  arguments: ['valueChanged', [123456, '123456']]
                }]);
             });
             it('On iPad, enter twice "-"', function() {
@@ -139,6 +139,11 @@ define(
                ctrl._getField().value = '123';
                ctrl._getField().selectionStart = 3;
                ctrl._getField().selectionEnd = 3;
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
+
+               ctrl._getField().value = '123.';
+               ctrl._getField().selectionStart = 4;
+               ctrl._getField().selectionEnd = 4;
                ctrl._inputHandler(new Vdom.SyntheticEvent({}));
 
                ctrl._getField().value = '123-.0';
@@ -157,6 +162,10 @@ define(
                ctrl._inputHandler(new Vdom.SyntheticEvent({}));
 
                assert.deepEqual(calls, [
+                  {
+                     name: 'notify',
+                     arguments: ['valueChanged', [123, '123']]
+                  },
                   {
                      name: 'notify',
                      arguments: ['valueChanged', [123, '123.0']]

@@ -2528,6 +2528,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._reIndex();
 
         if (reset) {
+            this._itemsUid.clear();
+            this._itemToUid.clear();
             itemsStrategy.reset();
         }
 
