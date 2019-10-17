@@ -1,0 +1,24 @@
+<div class="controls-demo-FilterView__lookupTemplate">
+   <Controls.filterPopup:Lookup
+           caption="{{_options.caption}}"
+           bind:value="_value"
+           bind:selectedKeys="_options.selectedKeys"
+           source="{{_options.source}}"
+           placeholder="{{_options.placeholder}}"
+           searchParam="title"
+           keyProperty="{{_options.keyProperty}}"
+           displayProperty="title"
+           multiSelect="{{_options.multiSelect}}"
+           on:selectedKeysChanged="_selectedKeysHandler()"
+           on:textValueChanged="_textValueHandler()"
+           attr:class="controls-demo-Lookup__control {{_options.className}}">
+      <ws:selectorTemplate templateName="{{_options.selectorTemplateName}}" templateOptions="{{_options.selectorTemplateOptions}}"/>
+      <ws:navigation source="page" view="page">
+         <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
+      </ws:navigation>
+      <ws:suggestTemplate templateName="{{_options.suggestTemplateName}}" />
+      <ws:itemTemplate>
+         <ws:partial template="Controls/lookup:ItemTemplate" displayProperty="title" />
+      </ws:itemTemplate>
+   </Controls.filterPopup:Lookup>
+</div>
