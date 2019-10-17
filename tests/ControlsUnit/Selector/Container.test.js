@@ -1,5 +1,11 @@
 define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collection', 'Controls/operations'], function(lookupPopup, entity, sourceLib, collection, operations) {
 
+   var getRawData = function(id) {
+      return {
+         id: id
+      };
+   };
+
    var getItems = function() {
       var items = [];
       var i;
@@ -7,9 +13,7 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
       for (i = 0; i < 5; i++) {
          items.push(new entity.Model(
             {
-               rawData: {
-                  id: i
-               },
+               rawData: getRawData(i),
                keyProperty: 'id'
             })
          );
@@ -196,6 +200,87 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          assert.isTrue(eventFired);
       });
 
+
+      it('_private::prepareRecursiveSelection', () => {
+         let items = new collection.RecordSet({
+            rawData: [
+               {
+                  'id': 0,
+                  'parent': null,
+                  '@parent': false
+               },
+               {
+                  'id': 1,
+                  'parent': null,
+                  '@parent': true
+               },
+               {
+                  'id': 2,
+                  'parent': null,
+                  '@parent': true
+               },
+               {
+                  'id': 3,
+                  'parent': 2,
+                  '@parent': false
+               },
+               {
+                  'id': 4,
+                  'parent': 2,
+                  '@parent': false
+               }
+            ],
+            keyProperty: 'id'
+         });
+         let selection = {
+            selected: [0, 1, 2],
+            excluded: [3]
+         };
+
+         let preparedSelection = lookupPopup.Container._private.prepareRecursiveSelection({
+            selection: selection,
+            items: items,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: '@parent'
+         });
+
+         assert.deepEqual(preparedSelection, {
+            selected: [0, 1, 2],
+            excluded: [3, 2]
+         });
+      });
+
+      it('_private::getSelection', () => {
+         let selectionType = 'invalidSelectionType';
+         let selection = {
+            selected: [1, 2, 3],
+            excluded: [1]
+         };
+         let adapter = (new sourceLib.Memory()).getAdapter();
+         let selectionRecord = lookupPopup.Container._private.getSelection(selection, adapter, selectionType, false);
+
+         assert.deepEqual(
+            selectionRecord.getRawData(),
+            {
+               marked: ['1', '2', '3'],
+               excluded: ['1'],
+               type: 'all',
+               recursive: false
+            });
+
+         selectionType = 'node';
+         selectionRecord = lookupPopup.Container._private.getSelection(selection, adapter, selectionType, true);
+         assert.deepEqual(
+            selectionRecord.getRawData(),
+            {
+               marked: ['1', '2', '3'],
+               excluded: ['1'],
+               type: 'node',
+               recursive: true
+            });
+      });
+
       describe('_selectComplete', function() {
          let
             container = new lookupPopup.Container(),
@@ -203,6 +288,11 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
             isSelectionLoad = false,
             items = getItems(),
             recordSet = new collection.List({items: items});
+
+         container.saveOptions({
+            recursiveSelection: true
+         });
+
          recordSet.getRecordById = function(id) {
             return items[id];
          };

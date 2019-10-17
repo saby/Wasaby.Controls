@@ -10,8 +10,8 @@
  * @includes MonthViewTableBodyTemplate wml!Controls/_calendar/MonthView/MonthViewTableBody
  * @includes MonthViewModel Controls/_calendar/MonthView/MonthViewModel
  * @includes MonthView Controls/_calendar/MonthView
- * @includes IMonthListCustomDays Controls/_calendar/interface/IMonthListCustomDays
- * @includes IMonth Controls/_calendar/interface/IMonth
+ * @includes IMonthListCustomDays Controls/_calendar/interfaces/IMonthListCustomDays
+ * @includes IMonth Controls/_calendar/interfaces/IMonth
  * @public
  * @author Крайнов Д.О.
  */
@@ -28,8 +28,8 @@
  * @includes MonthViewTableBodyTemplate wml!Controls/_calendar/MonthView/MonthViewTableBody
  * @includes MonthViewModel Controls/_calendar/MonthView/MonthViewModel
  * @includes MonthView Controls/_calendar/MonthView
- * @includes IMonthListCustomDays Controls/_calendar/interface/IMonthListCustomDays
- * @includes IMonth Controls/_calendar/interface/IMonth
+ * @includes IMonthListCustomDays Controls/_calendar/interfaces/IMonthListCustomDays
+ * @includes IMonth Controls/_calendar/interfaces/IMonth
  * @public
  * @author Крайнов Д.О.
  */

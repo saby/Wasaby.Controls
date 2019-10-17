@@ -1,32 +1,21 @@
 import Deferred = require('Core/Deferred');
 import collection = require('Types/collection');
-import {default as BaseController} from 'Controls/_popupTemplate/BaseController';
+import {default as BaseController, IPopupItem, IPopupOptions} from 'Controls/_popupTemplate/BaseController';
 import NotificationStrategy = require('Controls/_popupTemplate/Notification/Opener/NotificationStrategy');
 import NotificationContent = require('Controls/_popupTemplate/Notification/Opener/NotificationContent');
 
 const timeAutoClose = 5000;
 
-const _private = {
-    setNotificationContent(item) {
-        item.popupOptions.content = NotificationContent;
-    },
-    findItemById(popupItems, id) {
-        const index = popupItems && popupItems.getIndexByValue('id', id);
-        if (index > -1) {
-            return popupItems.at(index);
-        }
-        return null;
-    },
-    isLinkedPopup(popupItems, parentItem, item): Boolean {
-        while (item && item.parentId) {
-            item = _private.findItemById(popupItems, item.parentId);
-            if (item === parentItem) {
-                return true;
-            }
-        }
-        return false;
-    }
-};
+interface INotificationItem extends IPopupItem {
+    height: number;
+    closeId: number;
+    popupOptions: INotificationOptions;
+}
+
+interface INotificationOptions extends IPopupOptions {
+    autoClose: boolean;
+    maximize: boolean;
+}
 
 /**
  * Notification Popup Controller
@@ -38,82 +27,107 @@ const _private = {
  */
 class NotificationController extends BaseController {
     TYPE: string = 'Notification';
-    _stack = new collection.List();
+    _stack: collection.List<INotificationItem> = new collection.List();
 
-    elementCreated(item, container) {
+    elementCreated(item: INotificationItem, container: HTMLDivElement): boolean {
         item.height = container.offsetHeight;
-        _private.setNotificationContent(item);
+        this._setNotificationContent(item);
         this._stack.add(item, 0);
         this._updatePositions();
         if (item.popupOptions.autoClose) {
             this._closeByTimeout(item);
         }
+        return true;
     }
 
-    elementUpdated(item, container) {
-        _private.setNotificationContent(item);
+    elementUpdated(item: INotificationItem, container: HTMLDivElement): boolean {
+        this._setNotificationContent(item);
         item.height = container.offsetHeight;
         this._updatePositions();
+        return true;
     }
 
-    elementDestroyed(item) {
+    elementDestroyed(item: INotificationItem): Promise<null> {
         this._stack.remove(item);
         this._updatePositions();
 
         super.elementDestroyed.call(item);
-
         return new Deferred().callback();
     }
 
-    popupMouseEnter(item) {
+    popupMouseEnter(item: INotificationItem): void {
         if (item.popupOptions.autoClose) {
             clearTimeout(item.closeId);
         }
     }
 
-    popupMouseLeave(item) {
+    popupMouseLeave(item: INotificationItem): void {
         if (item.popupOptions.autoClose) {
             this._closeByTimeout(item);
         }
     }
 
-    _closeByTimeout(item) {
-        item.closeId = setTimeout(function() {
+    getCustomZIndex(popupItems: collection.List<INotificationItem>, item: INotificationItem): number {
+        // Notification windows must be above all popup windows
+        // will be fixed by https://online.sbis.ru/opendoc.html?guid=e6a136fc-be49-46f3-84d5-be135fae4761
+        const count: number = popupItems.getCount();
+        const zIndexStep: number = 10;
+        const baseZIndex: number = 100;
+        for (let i = 0; i < count; i++) {
+            // if popups are linked, then notification must be higher then parent
+            if (popupItems.at(i).popupOptions.maximize && !this._isLinkedPopup(popupItems, popupItems.at(i), item)) {
+                const maximizedPopupZIndex = (i + 1) * zIndexStep;
+                return maximizedPopupZIndex - 1;
+            }
+        }
+        return baseZIndex;
+    }
+
+    getDefaultConfig(item: INotificationItem): void {
+        super.getDefaultConfig.apply(this, arguments);
+        this._setNotificationContent(item);
+    }
+
+    private _closeByTimeout(item: INotificationItem): void  {
+        item.closeId = setTimeout(() => {
             require('Controls/popup').Controller.remove(item.id);
         }, timeAutoClose);
     }
 
-    getCustomZIndex(popupItems, item): Number {
-        // Notification windows must be above all popup windows
-        // will be fixed by https://online.sbis.ru/opendoc.html?guid=e6a136fc-be49-46f3-84d5-be135fae4761
-        const count = popupItems.getCount();
-        for (let i = 0; i < count; i++) {
-            // if popups are linked, then notification must be higher then parent
-            if (popupItems.at(i).popupOptions.maximize && !_private.isLinkedPopup(popupItems, popupItems.at(i), item)) {
-                const maximizedPopupZIndex = (i + 1) * 10;
-                return maximizedPopupZIndex - 1;
-            }
-        }
-        return 100;
-    }
-
-    getDefaultConfig(item) {
-        super.getDefaultConfig.apply(this, arguments);
-        _private.setNotificationContent(item);
-    }
-
-    _updatePositions() {
-        let height = 0;
+    private _updatePositions(): void {
+        let height: number = 0;
 
         /**
          * In item.height is the height of the popup.
          * It takes into account the indentation between the notification popups,
          * specified in the template via css. This is done to support theming.
          */
-        this._stack.each(function(item) {
+        this._stack.each((item: INotificationItem) => {
             item.position = NotificationStrategy.getPosition(height);
             height += item.height;
         });
+    }
+
+    private _setNotificationContent(item: INotificationItem): void {
+        item.popupOptions.content = NotificationContent;
+    }
+    private _findItemById(popupItems: collection.List<INotificationItem>, id: string): INotificationItem | null {
+        const index = popupItems && popupItems.getIndexByValue('id', id);
+        if (index > -1) {
+            return popupItems.at(index);
+        }
+        return null;
+    }
+    private _isLinkedPopup(popupItems: collection.List<INotificationItem>,
+                           parentItem: INotificationItem,
+                           item: INotificationItem): boolean {
+        while (item && item.parentId) {
+            item = this._findItemById(popupItems, item.parentId);
+            if (item === parentItem) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 export = new NotificationController();

@@ -64,7 +64,7 @@ var _private = {
 /**
  * @author Герасимов Александр
  * @class Controls/_search/_Search
- * @public
+ * @private
  */
 
 /**

@@ -22,10 +22,10 @@ interface IPosition {
    var _private = {
       getWindowSizes: function() {
          // Ширина берется по body специально. В случае, когда уменьшили окно браузера и появился горизонтальный скролл
-         // надо правильно вычислить координату right.
+         // надо правильно вычислить координату right. Для высоты аналогично.
          return {
             width: document.body.clientWidth,
-            height: window.innerHeight - TouchKeyboardHelper.getKeyboardHeight(true)
+            height: document.body.clientHeight - TouchKeyboardHelper.getKeyboardHeight(true)
          };
       },
 

@@ -5,7 +5,7 @@
  * @includes Misspell Controls/_search/Misspell
  * @includes MisspellContainer Controls/_search/Misspell/Container
  * @includes Controller Controls/_search/Controller
- * @includes Input Controls/_search/Input
+ * @includes Input Controls/_search/Input/Search
  * @includes Styles Controls/_search/Styles
  * @public
  * @author Крайнов Д.О.
@@ -18,7 +18,7 @@
  * @includes Misspell Controls/_search/Misspell
  * @includes MisspellContainer Controls/_search/Misspell/Container
  * @includes Controller Controls/_search/Controller
- * @includes Input Controls/_search/Input
+ * @includes Input Controls/_search/Input/Search
  * @includes Styles Controls/_search/Styles
  * @public
  * @author Крайнов Д.О.

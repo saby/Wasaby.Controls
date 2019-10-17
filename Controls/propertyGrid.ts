@@ -19,6 +19,8 @@
  * @includes EnumEditor Controls/_propertyGrid/defaultEditors/Enum
  * @includes PropertyGridStyles Controls/_propertyGrid/PropertyGrid/Styles
  * @includes IPropertyGrid Controls/_propertyGrid/IPropertyGrid
+ * @includes IEditor Controls/_propertyGrid/IEditor
+ * @includes IProperty Controls/_propertyGrid/IProperty
  * @author Герасимов А.М.
  */
 

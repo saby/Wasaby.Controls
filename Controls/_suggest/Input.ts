@@ -9,7 +9,7 @@ import 'css!theme?Controls/suggest';
  * которое помогает пользователю ввести текст,
  * предлагая подходящие варианты по первым набранным символам.
  *
- * <a href="/materials/demo-suggest-input">Демо-пример</a>
+ * <a href="/materials/demo/demo-suggest-input">Демо-пример</a>
  *
  * @class Controls/_suggest/Input
  * @extends Core/Control
@@ -31,7 +31,7 @@ import 'css!theme?Controls/suggest';
 /*
  * The Input/Suggest control is a normal text input enhanced by a panel of suggested options.
  *
- * Here you can see the <a href="/materials/demo-ws4-input">demo examples</a>.
+ * Here you can see the <a href="/materials/demo/demo-suggest-input">demo examples</a>.
  *
  * @class Controls/_suggest/Input
  * @extends Core/Control

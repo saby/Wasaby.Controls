@@ -324,7 +324,7 @@ const _private = {
     popupAnimated(id) {
         const item = _private.findItemById(id);
         if (item) {
-            return item.controller.elementAnimated(item, _private.getItemContainer(id));
+            return item.controller._elementAnimated(item, _private.getItemContainer(id));
         }
         return false;
     },
@@ -464,6 +464,29 @@ const _private = {
         } else {
             item.popupOptions = oldOptions;
         }
+    },
+    // TODO Должно быть удалено после https://online.sbis.ru/opendoc.html?guid=f2b13a65-f404-4fbd-a05c-bbf6b59358e6
+    navigationHandler(event, activeElement, isIconClick): void {
+        let hasPendings = false;
+        let registrator;
+        let popupId;
+        // Если пытаются перейти по аккордеону, то закрываем все открытые окна
+        // Если есть пендинги - отменяем переход.
+        _private.popupItems.each((item) => {
+            const registrator = _private.getPopupContainer().getPendingById(item.id);
+            if (registrator) {
+                if (registrator._hasRegisteredPendings()) {
+                    hasPendings = true;
+                }
+            }
+            // Закрываю окна первого уровня, дочерние закроются вместе с ними
+            if (!item.parentId) {
+                _private.remove(this, item.id);
+            }
+        });
+        if (!isIconClick) {
+            event.setResult(!hasPendings);
+        }
     }
 };
 
@@ -483,12 +506,14 @@ const Manager = Control.extend({
         ManagerController.setPopupHeaderTheme(this._options.popupHeaderTheme);
         this._hasMaximizePopup = false;
         _private.initializePopupItems();
+        EnvEvent.Bus.channel('navigation').subscribe('onBeforeNavigate', _private.navigationHandler.bind(this));
         if (Env.detection.isMobileIOS) {
             _private.controllerVisibilityChangeHandler = _private.controllerVisibilityChangeHandler.bind(_private);
             EnvEvent.Bus.globalChannel().subscribe('MobileInputFocus', _private.controllerVisibilityChangeHandler);
             EnvEvent.Bus.globalChannel().subscribe('MobileInputFocusOut', _private.controllerVisibilityChangeHandler);
         }
     },
+
     _afterUpdate() {
         // Theme of the popup header can be changed dynamically.
         // The option is not inherited, so in order for change option in 1 synchronization cycle, we have to make an event model on ManagerController.

@@ -1,4 +1,5 @@
-import { Record, adapter } from 'Types/entity';
+import {adapter, Record} from 'Types/entity';
+import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/interface';
 
 const SELECTION_FORMAT = [
    {
@@ -16,33 +17,31 @@ const SELECTION_FORMAT = [
       type: 'string',
       kind: 'string'
    },
+   {
+      name: 'recursive',
+      type: 'boolean',
+      kind: 'boolean'
+   }
 ];
 
-type SelectionType = 'all' | 'leaf' | 'node';
-
-type Selection = {
-   selected:Array[string|number],
-   excluded:Array[string|number]
-}
-
-function prepareArray(array:Array[any]):Array[string] {
-   return array.map(function(value) {
-      return value !== null ? '' + value : value;
+function prepareArray(array: string[]|number[]): string[] {
+   return array.map((value) => {
+      return (value !== null ? '' + value : value) as string;
    });
 }
 
-function getSelectionRecord(selection:Selection, adapter:adapter.IAdapter, selectionType:SelectionType = 'all'):Record {
-   var result = new Record({
-      adapter: adapter,
+function getSelectionRecord(selection: ISelectionObject, adapter: adapter.IAdapter, selectionType?: TSelectionType = 'all', recursive?: boolean = true): TSelectionRecord {
+   const result = new Record({
+      adapter,
       format: SELECTION_FORMAT
    });
 
    result.set('marked', prepareArray(selection.selected));
    result.set('excluded', prepareArray(selection.excluded));
    result.set('type', selectionType);
+   result.set('recursive', recursive);
 
    return result;
 }
 
 export = getSelectionRecord;
-

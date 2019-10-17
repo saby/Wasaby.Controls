@@ -12,7 +12,7 @@
          <div attr:class="controls-Swipe_{{ swipeConfig.twoColumns ? 'columns' : actionAlignment }}">
                <ws:if data="{{ swipeConfig.twoColumns }}">
                   <ws:partial
-                     template="wml!Controls/_list/Render/resources/SwipeTwoColumns"
+                     template="wml!Controls/_listRender/Render/resources/SwipeTwoColumns"
                      item="{{ item }}"
 
                      showedActions="{{swipeConfig.twoColumnsActions}}"
@@ -25,7 +25,7 @@
                </ws:if>
                <ws:else>
                   <ws:partial
-                     template="wml!Controls/_list/Render/resources/SwipeFor"
+                     template="wml!Controls/_listRender/Render/resources/SwipeFor"
                      item="{{ item }}"
                      showedActions="{{ item.getActions().showed }}"
 

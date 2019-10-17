@@ -11,6 +11,7 @@ import {selectionToRecord} from 'Controls/operations';
 import {adapter} from 'Types/entity';
 import {IData, IDecorator} from 'Types/source';
 import {List, RecordSet} from 'Types/collection';
+import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/interface';
 
 /**
  * Контейнер принимает опцию selectedItems от Controls/lookupPopup:Controller и устанавливает опцию selectedKeys для дочернего списка.
@@ -26,6 +27,7 @@ import {List, RecordSet} from 'Types/collection';
  * @extends Core/Control
  * @control
  * @mixes Controls/_interface/ISource
+ * @mixes Controls/_interface/ISelectionType
  * @public
  * @author Герасимов Александр Максимович
  */
@@ -186,7 +188,7 @@ import {List, RecordSet} from 'Types/collection';
             if (SELECTION_TYPES.indexOf(selectionType) !== -1) {
                type = selectionType;
             } else {
-               type = 'all'
+               type = 'all';
             }
 
             return type;
@@ -250,6 +252,48 @@ import {List, RecordSet} from 'Types/collection';
             });
 
             return selectedItems;
+         },
+         // remove after https://online.sbis.ru/opendoc.html?guid=e4a032d4-d462-495f-a209-70a601455b11
+         // Задача: необходимо поддержать выбора папки без вложений, если чекбоксом отмечена только папка.
+         // Для этого используем флаг recursive у платформенного итератора,
+         // который как раз позволяет реализовать выбор папки без вложений.
+         // Но сейчас есть проблема, если выделить папку и у дочернего элемента снять чекбокс,
+         // то всё равно будет выбрана папка, хотя в этом случае должны выбраться вложения.
+         // Решаем это добавлением папки в excluded, если снят чекбокс хотя бы у одного дочернего элемента.
+         prepareRecursiveSelection({selection, items, keyProperty, parentProperty, nodeProperty}): ISelectionObject {
+            const isNode = (key): boolean => {
+               return items.getRecordById(key).get(nodeProperty);
+            };
+
+            const hasExcludedChildren = (key): boolean => {
+               const node = isNode(key);
+               let hasExcludedChild = false;
+               let itemId;
+
+               if (node) {
+                  items.each((item) => {
+                     if (!hasExcludedChild && item.get(parentProperty) === key) {
+                        itemId = item.get(keyProperty);
+                        hasExcludedChild = selection.excluded.includes(itemId) || hasExcludedChildren(itemId);
+                     }
+                  });
+               }
+
+               return hasExcludedChild;
+            };
+
+            selection.selected.forEach((key) => {
+               if (!selection.excluded.includes(key) && hasExcludedChildren(key)) {
+                  selection.excluded.push(key);
+               }
+            });
+
+            return selection;
+         },
+
+         getSelection(selection: ISelectionObject, adapter, selectionType: TSelectionType, recursiveSelection: boolean): TSelectionRecord {
+            const type = _private.getValidSelectionType(selectionType);
+            return selectionToRecord(selection, adapter, type, recursiveSelection);
          }
       };
 
@@ -276,11 +320,12 @@ import {List, RecordSet} from 'Types/collection';
             }
          },
 
-         _selectComplete: function():void {
+         _selectComplete(): void {
             const self = this;
             const dataOptions = this.context.get('dataOptions');
             const keyProperty = dataOptions.keyProperty;
             const items = dataOptions.items;
+            const options = this._options;
 
             let loadDef;
             let indicatorId;
@@ -289,12 +334,13 @@ import {List, RecordSet} from 'Types/collection';
                const source = dataOptions.source;
                const adapter = _private.getSourceAdapter(source);
                const sourceController = _private.getSourceController(source);
-               const selection = {
+               const multiSelect = options.multiSelect;
+               const selectedItem = items.getRecordById(this._selectedKeys[0]);
+
+               let selection = {
                   selected: this._selectedKeys,
                   excluded: this._excludedKeys
                };
-               const multiSelect = this._options.multiSelect;
-               const selectedItem = items.getRecordById(this._selectedKeys[0]);
 
                if (!multiSelect && selectedItem) {
                   const selectedItems = _private.getEmptyItems(items);
@@ -302,12 +348,22 @@ import {List, RecordSet} from 'Types/collection';
                   selectedItems.add(selectedItem);
                   loadDef = Deferred.success(selectedItems);
                } else {
+                  // remove after https://online.sbis.ru/opendoc.html?guid=e4a032d4-d462-495f-a209-70a601455b11
+                  if (!this._options.recursiveSelection) {
+                     selection = _private.prepareRecursiveSelection({
+                        selection,
+                        items,
+                        keyProperty,
+                        parentProperty: options.parentProperty,
+                        nodeProperty: options.nodeProperty
+                     });
+                  }
                   indicatorId = this._notify('showIndicator', [], {bubbling: true});
                   loadDef = sourceController.load(
                      _private.prepareFilter(
                         dataOptions.filter,
-                        selectionToRecord(selection, adapter, _private.getValidSelectionType(this._options.selectionType)),
-                        self._options.searchParam
+                        _private.getSelection(selection, adapter, options.selectionType, options.recursiveSelection),
+                         options.searchParam
                      )
                   );
                }
@@ -315,7 +371,7 @@ import {List, RecordSet} from 'Types/collection';
                loadDef = Deferred.success(_private.getEmptyItems(items));
             }
 
-            loadDef.addCallback(function(result) {
+            loadDef.addCallback((result) => {
                if (indicatorId) {
                   self._notify('hideIndicator', [indicatorId], {bubbling: true});
                }
@@ -343,6 +399,12 @@ import {List, RecordSet} from 'Types/collection';
          return {
             selectorControllerContext: ControllerContext,
             dataOptions: ContextOptions
+         };
+      };
+
+      Container.getDefaultOptions = function() {
+         return {
+            recursiveSelection: true
          };
       };
 

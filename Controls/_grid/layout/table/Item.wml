@@ -41,7 +41,7 @@
 </ws:template>
 
 <ws:template name="columnContentWrapper">
-    <ws:if data="{{itemData.shouldDrawMarker(marker, currentColumn.columnIndex)}}">
+    <ws:if data="{{itemData.shouldDrawMarker(marker)}}">
         <div class="controls-GridView__itemV_marker {{itemData.rowSeparatorVisibility ? 'controls-GridView-with-rowSeparator_item_marker' : 'controls-GridView-without-rowSeparator_item_marker'}}"></div>
     </ws:if>
     <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>

@@ -76,7 +76,7 @@ var _private = {
             !_private.isExpandAll(self._options.expandedItems) &&
             !self._nodesSourceControllers[nodeKey] &&
             !dispItem.isRoot() &&
-            _private.shouldLoadChildren(self, item)
+            (_private.shouldLoadChildren(self, item) || self._options.task1178031650)
         ) {
             self._nodesSourceControllers[nodeKey] = _private.createSourceController(self._options.source, self._options.navigation);
 
@@ -567,8 +567,15 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         e.stopPropagation();
         const eventResult = this._notify('itemClick', [item, originalEvent], { bubbling: true });
         if (eventResult !== false && this._options.expandByItemClick && item.get(this._options.nodeProperty) !== null) {
-            let display = this._children.baseControl.getViewModel().getDisplay();
-            _private.toggleExpanded(this, display.getItemBySourceItem(item));
+            const display = this._children.baseControl.getViewModel().getDisplay();
+            const dispItem = display.getItemBySourceItem(item);
+
+            // Если в проекции нет такого элемента, по которому произошел клик, то это хлебная крошка, а не запись.
+            // После исправления ошибки событие itemClick не будет стрелять при клике на крошку.
+            // https://online.sbis.ru/opendoc.html?guid=4017725f-9e22-41b9-adab-0d79ad13fdc9
+            if (dispItem) {
+                _private.toggleExpanded(this, dispItem);
+            }
         }
     },
 

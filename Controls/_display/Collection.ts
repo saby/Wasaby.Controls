@@ -32,6 +32,7 @@ import MarkerManager from './utils/MarkerManager';
 import EditInPlaceManager from './utils/EditInPlaceManager';
 import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
+import HoverManager from './utils/HoverManager';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -606,6 +607,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _editInPlaceManager: EditInPlaceManager;
     protected _itemActionsManager: ItemActionsManager;
     protected _virtualScrollManager: VirtualScrollManager;
+    protected _hoverManager: HoverManager;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -658,6 +660,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._editInPlaceManager = new EditInPlaceManager(this);
         this._itemActionsManager = new ItemActionsManager(this);
         this._virtualScrollManager = new VirtualScrollManager(this);
+        this._hoverManager = new HoverManager(this);
     }
 
     destroy(): void {
@@ -1858,8 +1861,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         );
         this._notifyAfterCollectionChange();
 
-        // TODO Make a list of properties that lead to version update
-        if (properties as String === 'editingContents') {
+        // FIXME Make a list of properties that lead to version update
+        if (properties as String === 'editingContents' || properties as String === 'animated') {
             this._nextVersion();
         }
     }
@@ -2008,6 +2011,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setActiveItem(item: CollectionItem<S>): void {
         this._itemActionsManager.setActiveItem(item);
+        this._nextVersion();
     }
 
     getActiveItem(): CollectionItem<S> {
@@ -2046,6 +2050,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         throw new Error('Collection#getItemBySourceId is implemented for RecordSet only');
     }
 
+    getIndexByKey(key: string|number): number {
+        return this.getIndex(this.getItemBySourceId(key) as T);
+    }
+
     getFirstItem(): S {
         return this.getFirst().getContents();
     }
@@ -2070,6 +2078,15 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setHasMoreData(hasMoreData: boolean): void {
         this._$hasMoreData = hasMoreData;
+    }
+
+    setHoveredItem(item: CollectionItem<S>): void {
+        this._hoverManager.setHoveredItem(item);
+        this._nextVersion();
+    }
+
+    getHoveredItem(): CollectionItem<S> {
+        return this._hoverManager.getHoveredItem() as CollectionItem<S>;
     }
 
     // region SerializableMixin
@@ -2511,6 +2528,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._reIndex();
 
         if (reset) {
+            this._itemsUid.clear();
+            this._itemToUid.clear();
             itemsStrategy.reset();
         }
 

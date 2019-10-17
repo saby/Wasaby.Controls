@@ -12,6 +12,8 @@ import {Controller as SourceController} from 'Controls/source';
 import {RecordSet} from 'Types/Collection';
 import Prefetch from 'Controls/_filter/Prefetch';
 import {IPrefetchHistoryParams} from './IPrefetch';
+import mergeSource from 'Controls/_filter/Utils/mergeSource';
+import isEqualItems from 'Controls/_filter/Utils/isEqualItems';
 
 export interface IFilterHistoryData {
    items: object[];
@@ -29,8 +31,8 @@ const _private = {
                if (typeof option === 'function') {
                   result = option(history);
                } else if (history) {
-                  _private.mergeFilterItems(option, history);
-                  result = option;
+                   mergeSource(option, history);
+                   result = option;
                } else {
                   result = option;
                }
@@ -39,15 +41,10 @@ const _private = {
             return result;
          },
 
-         isEqualItems: function(item1, item2) {
-            return !!(getPropValue(item1, 'id') && (getPropValue(item1, 'id') === getPropValue(item2, 'id'))
-            || (getPropValue(item1, 'name') && getPropValue(item1, 'name') === getPropValue(item2, 'name')));
-         },
-
          equalItemsIterator: function(filterButtonItems, fastFilterItems, prepareCallback) {
             chain.factory(filterButtonItems).each(function(buttonItem, index) {
                chain.factory(fastFilterItems).each(function(fastItem) {
-                  if (_private.isEqualItems(buttonItem, fastItem)
+                  if (isEqualItems(buttonItem, fastItem)
                       && fastItem.hasOwnProperty('textValue') && buttonItem.hasOwnProperty('textValue')) {
                      prepareCallback(index, fastItem);
                   }
@@ -324,12 +321,12 @@ const _private = {
          updateFilterItems: function(self, newItems) {
             if (self._filterButtonItems) {
                self._filterButtonItems = _private.cloneItems(self._filterButtonItems);
-               _private.mergeFilterItems(self._filterButtonItems, newItems);
+               mergeSource(self._filterButtonItems, newItems);
             }
 
             if (self._fastFilterItems) {
                self._fastFilterItems = _private.cloneItems(self._fastFilterItems);
-               _private.mergeFilterItems(self._fastFilterItems, newItems);
+               mergeSource(self._fastFilterItems, newItems);
             }
 
             _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
@@ -341,35 +338,6 @@ const _private = {
             return historyItemsDef.addCallback(function(historyItems) {
                _private.setFilterItems(self, filterButtonItems, fastFilterItems, historyItems);
                return historyItems;
-            });
-         },
-
-         mergeFilterItems: function(items, historyItems) {
-            chain.factory(items).each(function(item) {
-               chain.factory(historyItems).each(function(historyItem) {
-                  if (_private.isEqualItems(item, historyItem)) {
-                     var value = getPropValue(historyItem, 'value');
-                     var textValue = getPropValue(historyItem, 'textValue');
-                     var visibility = getPropValue(historyItem, 'visibility');
-                     var viewMode = getPropValue(historyItem, 'viewMode');
-
-                     if (item.hasOwnProperty('value') && historyItem.hasOwnProperty('value')) {
-                        setPropValue(item, 'value', value);
-                     }
-
-                     if (item.hasOwnProperty('textValue') && historyItem.hasOwnProperty('textValue')) {
-                        setPropValue(item, 'textValue', textValue);
-                     }
-
-                     if (item.hasOwnProperty('visibility') && historyItem.hasOwnProperty('visibility')) {
-                        setPropValue(item, 'visibility', visibility);
-                     }
-
-                     if (viewMode !== undefined && item.hasOwnProperty('viewMode')) {
-                        setPropValue(item, 'viewMode', viewMode);
-                     }
-                  }
-               });
             });
          },
 
@@ -718,7 +686,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                 return _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource, options.historyItems).addCallback((history) => {
                     _private.itemsReady(this, filter, history);
 
-                    if (options.historyItems && options.historyId) {
+                    if (options.historyItems && options.historyId && options.prefetchParams) {
                         _private.processHistoryOnItemsChanged(this, options.historyItems, options);
                     }
                     return history;

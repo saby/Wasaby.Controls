@@ -28,6 +28,8 @@
    height: @size_Infobox-arrow;
    border-width: @border-width_Infobox;
    border-style: solid;
+   border-top: none;
+   border-left: none;
    background: @background-color_Infobox_default;
    content: '';
    box-sizing: border-box;
@@ -35,8 +37,6 @@
 }
 
 .controls-InfoBoxTemplate__arrow {
-  border-top-color: transparent;
-  border-left-color: transparent;
   @variants: default, danger, info, secondary, warning, success, primary;
   .for(@variants, {
     &-@{_item} {

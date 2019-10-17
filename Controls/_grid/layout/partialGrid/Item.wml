@@ -41,7 +41,7 @@
 </ws:template>
 
 <ws:template name="columnContentWrapper">
-    <ws:if data="{{itemData.shouldDrawMarker(marker, currentColumn.columnIndex)}}">
+    <ws:if data="{{itemData.shouldDrawMarker(marker)}}">
         <div attr:class="controls-GridView__itemV_marker {{itemData.rowSeparatorVisibility ? 'controls-GridView-with-rowSeparator_item_marker' : 'controls-GridView-without-rowSeparator_item_marker'}}"></div>
     </ws:if>
     <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
@@ -117,7 +117,7 @@
 
 <!-- Строка в режиме просмотра -->
 <ws:else>
-    <ws:for data="itemData.resetColumnIndex(); itemData.itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(!itemData.hasMultiSelect ? 1 : 0)); itemData.goToNextColumn();">
+    <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(!itemData.hasMultiSelect ? 1 : 0)); itemData.goToNextColumn();">
         <!-- To avoid closures, need to give all generating in itemData as a template options. -->
         <!-- For-loop creates it's own scope. In for scope itemData is always the same object. -->
         <!-- The template engine first builds the first level templates located in the body of the loop and does not enter them. -->

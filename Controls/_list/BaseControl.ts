@@ -29,7 +29,7 @@ import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 import uDimension = require("Controls/Utils/getDimensions");
 
-import { Abstract } from 'Controls/display';
+import { create as diCreate } from 'Types/di';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -190,7 +190,7 @@ var _private = {
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, self._sourceController.hasMoreData('down') || self._sourceController.hasMoreData('up'));
                     }
-                    
+
                     if (self._virtualScroll) {
                         self._virtualScroll.ItemsCount = listModel.getCount();
                         self._virtualScroll.resetItemsIndexes();
@@ -564,7 +564,7 @@ var _private = {
         if (_private.applyVirtualScrollIndexesToListModel(self)) {
             _private.applyPlaceholdersSizes(self);
             _private.updateShadowMode(self);
-        } else {
+        } else if (self._applyScrollTopCallback) {
             // если индексы не поменялись, то зовем коллбэк, если поменялись он позовется в beforePaint
             self._applyScrollTopCallback();
             self._applyScrollTopCallback = null;
@@ -581,10 +581,21 @@ var _private = {
 
     checkLoadToDirectionCapability: function(self, filter) {
         if (self._needScrollCalculation) {
-            if (self._loadTriggerVisibility.up) {
+            // TODO Когда список становится пустым (например после поиска или смены фильтра),
+            // если он находится вверху страницы, нижний загрузочный триггер может "вылететь"
+            // за пределы экрана (потому что у него статически задан отступ от низа списка,
+            // и при пустом списке этот отступ может вывести триггер выше верхней границы
+            // страницы).
+            // Сейчас сделал, что если список пуст, мы пытаемся сделать загрузку данных,
+            // даже если триггеры не видны (если что, sourceController.hasMore нас остановит).
+            // Но скорее всего это как-то по другому нужно решать, например на уровне стилей
+            // (уменьшать отступ триггеров, когда список пуст???). Выписал задачу:
+            // https://online.sbis.ru/opendoc.html?guid=fb5a67de-b996-49a9-9312-349a7831f8f1
+            const hasNoItems = self.getViewModel() && self.getViewModel().getCount() === 0;
+            if (self._loadTriggerVisibility.up || hasNoItems) {
                 _private.onScrollLoadEdge(self, 'up', filter);
             }
-            if (self._loadTriggerVisibility.down) {
+            if (self._loadTriggerVisibility.down || hasNoItems) {
                 _private.onScrollLoadEdge(self, 'down', filter);
             }
             _private.checkVirtualScrollCapability(self);
@@ -971,34 +982,47 @@ var _private = {
                 self._virtualScroll.ItemsCount = newCount;
                 if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
                     self._virtualScroll.insertItemsHeights(newItemsIndex - 1, newItems.length);
-                    const
-                       direction = newItemsIndex <= self._listViewModel.getStartIndex() ? 'up' : 'down';
-                    if (direction === 'down') {
-                        // если это не подгрузка с БЛ по скролу и
-                        // если мы были в конце списка (отрисована последняя запись и виден нижний триггер)
-                        // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
-                        if (self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
-                           self._virtualScrollTriggerVisibility.down && !self._itemsFromLoadToDirection) {
-                           self._virtualScroll.recalcToDirection(direction, self._scrollParams, self._loadOffset.top);
+
+                    // Сдвигаем виртуальный скролл только если он уже проинициализирован. Если коллекция
+                    // изменилась после создания BaseControl'a, но до инициализации скролла, (или сразу
+                    // после уничтожения BaseControl), сдвинуть его мы все равно не можем.
+                    if (self._scrollParams) {
+                        const direction = newItemsIndex <= self._listViewModel.getStartIndex() ? 'up' : 'down';
+                        if (direction === 'down') {
+                            // если это не подгрузка с БЛ по скролу и
+                            // если мы были в конце списка (отрисована последняя запись и виден нижний триггер)
+                            // то нужно сместить виртуальное окно вниз, чтобы отобразились новые добавленные записи
+                            if (
+                                self._virtualScroll.ItemsIndexes.stop === newCount - newItems.length &&
+                                self._virtualScrollTriggerVisibility.down && !self._itemsFromLoadToDirection
+                            ) {
+                                self._virtualScroll.recalcToDirection(direction, self._scrollParams, self._loadOffset.top);
+                            } else {
+                                // если данные добавились сверху - просто обновляем индексы видимых записей
+                                self._virtualScroll.recalcItemsIndexes(direction, self._scrollParams, self._loadOffset.top);
+                            }
                         } else {
-                            // если данные добавились сверху - просто обновляем индексы видимых записей
+                            if (self._itemsFromLoadToDirection) {
+                                // если элементы были подгружены с БЛ, то увеличиваем стартовый индекс на кол-во
+                                // загруженных элементов. работаем именно через проекцию, т.к. может быть группировка и
+                                // кол-во загруженных элементов может отличаться от кол-ва рисуемых элементов
+                                self._savedStartIndex += newItems.length;
+                                self._savedStopIndex += newItems.length;
+                                self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + newItems.length;
+                            }
                             self._virtualScroll.recalcItemsIndexes(direction, self._scrollParams, self._loadOffset.top);
                         }
-                    } else {
-                        if (self._itemsFromLoadToDirection) {
-                            // если элементы были подгружены с БЛ, то увеличиваем стартовый индекс на кол-во
-                            // загруженных элементов. работаем именно через проекцию, т.к. может быть группировка и
-                            // кол-во загруженных элементов может отличаться от кол-ва рисуемых элементов
-                            self._savedStartIndex += newItems.length;
-                            self._savedStopIndex += newItems.length;
-                            self._virtualScroll.StartIndex = self._virtualScroll.ItemsIndexes.start + newItems.length;
-                        }
-                        self._virtualScroll.recalcItemsIndexes(direction, self._scrollParams, self._loadOffset.top);
                     }
                 }
                 if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
                     self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
-                    self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down', self._scrollParams, self._loadOffset.top);
+
+                    // Сдвигаем виртуальный скролл только если он уже проинициализирован. Если коллекция
+                    // изменилась после создания BaseControl'a, но до инициализации скролла, (или сразу
+                    // после уничтожения BaseControl), сдвинуть его мы все равно не можем.
+                    if (self._scrollParams) {
+                        self._virtualScroll.recalcItemsIndexes(removedItemsIndex < self._listViewModel.getStartIndex() ? 'up' : 'down', self._scrollParams, self._loadOffset.top);
+                    }
                 }
                 _private.applyVirtualScrollIndexesToListModel(self);
             }
@@ -1349,7 +1373,10 @@ var _private = {
     },
     resetPagingNavigation: function(self, navigation) {
         self._knownPagesCount = INITIAL_PAGES_COUNT;
-        self._currentPage = navigation && navigation.sourceConfig && navigation.sourceConfig.page || INITIAL_PAGES_COUNT;
+
+        //TODO: KINGO
+        // нумерация страниц пейджинга начинается с 1, а не с 0 , поэтому текущая страница пейджига это страница навигации + 1
+        self._currentPage = navigation && navigation.sourceConfig && navigation.sourceConfig.page + 1 || INITIAL_PAGES_COUNT;
     },
 
     initializeNavigation: function(self, cfg) {
@@ -1546,14 +1573,20 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 viewModelConfig = cMerge(viewModelConfig, { collapsedGroups });
             }
 
-            if (newOptions.viewModelConstructor) {
+            if (!newOptions.useNewModel && newOptions.viewModelConstructor) {
                 self._viewModelConstructor = newOptions.viewModelConstructor;
                 if (receivedData) {
                     viewModelConfig.items = receivedData;
+                } else {
+                    delete viewModelConfig.items;
                 }
                 self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
             } else if (newOptions.useNewModel && receivedData) {
-                self._listViewModel = Abstract.getDefaultDisplay(receivedData, viewModelConfig);
+                self._listViewModel = self._createNewModel(
+                    receivedData,
+                    viewModelConfig,
+                    newOptions.viewModelConstructor
+                );
                 if (newOptions.itemsReadyCallback) {
                     newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                 }
@@ -1600,7 +1633,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 }
                 return _private.reload(self, newOptions).addCallback((result) => {
                     if (newOptions.useNewModel && !self._listViewModel && result.data) {
-                        self._listViewModel = Abstract.getDefaultDisplay(result.data, viewModelConfig);
+                        self._listViewModel = self._createNewModel(
+                            result.data,
+                            viewModelConfig,
+                            newOptions.viewModelConstructor
+                        );
                         if (newOptions.itemsReadyCallback) {
                             newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                         }
@@ -1688,7 +1725,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         _private.updateNavigation(this);
 
-        if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
+        if (
+            !newOptions.useNewModel &&
+            (
+                newOptions.groupMethod !== this._options.groupMethod ||
+                newOptions.viewModelConstructor !== this._viewModelConstructor
+            )
+        ) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
             this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
                 items: this._listViewModel.getItems()
@@ -2438,7 +2481,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._notify('hoveredItemChanged', [item, container]);
     },
 
-
+    _createNewModel(items, modelConfig, modelName) {
+        // Подразумеваем, что Controls/display уже загружен. Он загружается при подключении
+        // библиотеки Controls/listRender
+        if (typeof modelName !== 'string') {
+            throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
+        }
+        return diCreate(modelName, { ...modelConfig, collection: items });
+    }
 
 });
 

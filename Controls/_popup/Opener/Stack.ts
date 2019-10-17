@@ -59,7 +59,7 @@ const Stack = BaseOpener.extend({
      * Метод открытия стековой панели.
      * Повторный вызов этого метода вызовет переририсовку контрола.
      * @function Controls/_popup/Opener/Stack#open
-     * @param {PopupOptions[]} popupOptions Конфигурация стековой панели
+     * @param {PopupOptions} popupOptions Конфигурация стековой панели
      * @remark
      * Если требуется открыть окно, без создания popup:Stack в верстке, следует использовать статический метод {@link openPopup}.
      * @example
@@ -96,7 +96,7 @@ const Stack = BaseOpener.extend({
      * If you call this method while the window is already opened, it will cause the redrawing of the window.
      * @function Controls/_popup/Opener/Stack#open
      * @returns {Undefined}
-     * @param {PopupOptions[]} popupOptions Stack popup options.
+     * @param {PopupOptions} popupOptions Stack popup options.
      */
 
     open(popupOptions) {
@@ -108,7 +108,7 @@ const Stack = BaseOpener.extend({
  * Статический метод для открытия стекового окна. При использовании метода не требуется создавать popup:Stack в верстке.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ Подробнее}.
  * @function Controls/_popup/Opener/Stack#openPopup
- * @param {PopupOptions[]} config Конфигурация стекового окна
+ * @param {PopupOptions} config Конфигурация стекового окна
  * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
  * @remark
  * Для обновления уже открытого окна в config нужно передать св-во id с идентификатором открытого окна.
@@ -140,7 +140,7 @@ const Stack = BaseOpener.extend({
  * Open Stack popup.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ See more}.
  * @function Controls/_popup/Opener/Stack#openPopup
- * @param {PopupOptions[]} config Stack popup options.
+ * @param {PopupOptions} config Stack popup options.
  * @return {Promise<string>} Returns id of popup. This id used for closing popup.
  * @static
  * @see closePopup
@@ -161,7 +161,7 @@ Stack.openPopup = (config: object): Promise<string> => {
 
 /**
  * Статический метод для закрытия окна по идентификатору.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ Подробнее}.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/#open-popup Подробнее}.
  * @function Controls/_popup/Opener/Stack#closePopup
  * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
  * @static
@@ -217,7 +217,7 @@ export = Stack;
  * @property {Number} minWidth Минимально допустимая ширина всплывающего окна
  * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна
  * @property {Number} width Текущая ширина всплывающего окна
- * @property {Node} opener Логический инициатор открытия всплывающего окна
+ * @property {Node} opener Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
  */
 
 
