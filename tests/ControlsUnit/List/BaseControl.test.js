@@ -74,6 +74,21 @@ define([
       afterEach(function() {
          sandbox.restore();
       });
+      it('remove incorrect config', async function() {
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            keyProperty: 'id',
+            viewModelConstructor: lists.ListViewModel,
+            items: new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: data
+            })
+         };
+         var baseControl = new lists.BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         assert.equal(baseControl._listViewModel.getItems(), null);
+      });
       it('life cycle', function(done) {
          var dataLoadFired = false;
          var filter = {
@@ -2295,12 +2310,11 @@ define([
          ctrl._onCheckBoxClick({}, 1, 1);
       });
 
-      it('_onItemClick', function() {
+      it('_onItemClick', async function() {
          var cfg = {
             keyProperty: 'id',
             viewName: 'Controls/List/ListView',
             source: source,
-            items: rs,
             viewModelConstructor: lists.ListViewModel
          };
          var originalEvent = {
@@ -2321,10 +2335,10 @@ define([
          };
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
-         ctrl._onItemClick(event, rs.at(2), originalEvent);
+         await ctrl._beforeMount(cfg);
+         ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), originalEvent);
          assert.isTrue(stopPropagationCalled);
-         assert.equal(rs.at(2), ctrl._listViewModel.getMarkedItem().getContents());
+         assert.equal(ctrl._listViewModel.getItems().at(2), ctrl._listViewModel.getMarkedItem().getContents());
       });
       it ('needFooterPadding', function() {
          let cfg = {
@@ -2881,7 +2895,7 @@ define([
          assert.strictEqual(notifiedEvent, 'dragEnter');
          assert.strictEqual(notifiedEntity, goodDragObject.entity);
       });
-      it('native drag prevent only by native "dragstart" event', function() {
+      it('native drag prevent only by native "dragstart" event', async function() {
          let isDefaultPrevented = false;
 
          const
@@ -2910,7 +2924,6 @@ define([
                      pagingMode: 'direct'
                   }
                },
-               items: rs,
                selectedKeys: [null],
                excludedKeys: [],
                readOnly: false,
@@ -2931,7 +2944,7 @@ define([
             };
 
          ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
+         await ctrl._beforeMount(cfg);
 
          // по mouseDown нельзя вызывать preventDefault, иначе сломается фокусировка
          ctrl._itemMouseDown({}, { key: 1 }, fakeMouseDown);
@@ -2942,7 +2955,7 @@ define([
          assert.isTrue(isDefaultPrevented);
       });
 
-      it('_itemMouseDown places dragKey first', () => {
+      it('_itemMouseDown places dragKey first', async () => {
          let dragKeys;
          const
             cfg = {
@@ -2970,7 +2983,6 @@ define([
                      pagingMode: 'direct'
                   }
                },
-               items: rs,
                selectedKeys: [null],
                excludedKeys: [],
                readOnly: false,
@@ -2988,7 +3000,7 @@ define([
             };
 
          ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
+         await ctrl._beforeMount(cfg);
 
          ctrl._notify = (eventName, eventArgs) => {
             if (eventName === 'dragStart') {
