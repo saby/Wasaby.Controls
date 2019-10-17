@@ -465,6 +465,7 @@ const _private = {
             item.popupOptions = oldOptions;
         }
     },
+    // TODO Должно быть удалено после https://online.sbis.ru/opendoc.html?guid=f2b13a65-f404-4fbd-a05c-bbf6b59358e6
     navigationHandler(event, activeElement, isIconClick): void {
         let hasPendings = false;
         let registrator;
