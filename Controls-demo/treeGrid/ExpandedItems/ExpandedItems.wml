@@ -1,6 +1,5 @@
 <div class="controlsDemo__wrapper">
     <Controls.treeGrid:View
-            useTableInOldBrowsers="{{true}}"
             source="{{_viewSource}}"
             keyProperty="id"
             columns="{{_columns}}"

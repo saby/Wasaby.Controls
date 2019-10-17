@@ -4,7 +4,6 @@
     <div class="controlsDemo__cell controlsDemo__mr2">
         <div class="controls-text-label_theme-{{_options.theme}}">Стандартные отступы</div>
         <Controls.treeGrid:View
-            useTableInOldBrowsers="{{true}}"
                 keyProperty="id"
                 source="{{_viewSource}}"
                 columns="{{_columns}}"
@@ -19,7 +18,6 @@
             <div class="controlsDemo__cell controlsDemo__mr2">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру M</div>
                 <Controls.treeGrid:View
-            useTableInOldBrowsers="{{true}}"
                         keyProperty="id"
                         source="{{_viewSource}}"
                         columns="{{_columns}}"
@@ -32,7 +30,6 @@
             <div class="controlsDemo__cell controlsDemo__mr2">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру L</div>
                 <Controls.treeGrid:View
-            useTableInOldBrowsers="{{true}}"
                         keyProperty="id"
                         source="{{_viewSource}}"
                         columns="{{_columns}}"
@@ -51,7 +48,6 @@
             <div class="controlsDemo__cell controlsDemo__mr2">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру null</div>
                 <Controls.treeGrid:View
-            useTableInOldBrowsers="{{true}}"
                         keyProperty="id"
                         source="{{_viewSource}}"
                         columns="{{_columns}}"
@@ -64,7 +60,6 @@
             <div class="controlsDemo__cell controlsDemo__mr2">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру S</div>
                 <Controls.treeGrid:View
-            useTableInOldBrowsers="{{true}}"
                         keyProperty="id"
                         source="{{_viewSource}}"
                         columns="{{_columns}}"
@@ -77,7 +72,6 @@
             <div class="controlsDemo__cell controlsDemo__mr2">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру M</div>
                 <Controls.treeGrid:View
-            useTableInOldBrowsers="{{true}}"
                         keyProperty="id"
                         source="{{_viewSource}}"
                         columns="{{_columns}}"
@@ -90,7 +84,6 @@
             <div class="controlsDemo__cell controlsDemo__mr2">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру L</div>
                 <Controls.treeGrid:View
-            useTableInOldBrowsers="{{true}}"
                         keyProperty="id"
                         source="{{_viewSource}}"
                         columns="{{_columns}}"
@@ -103,7 +96,6 @@
             <div class="controlsDemo__cell controlsDemo__mr2">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру XL</div>
                 <Controls.treeGrid:View
-            useTableInOldBrowsers="{{true}}"
                         keyProperty="id"
                         source="{{_viewSource}}"
                         columns="{{_columns}}"
@@ -116,7 +108,6 @@
             <div class="controlsDemo__cell controlsDemo__mr2">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру XXL</div>
                 <Controls.treeGrid:View
-            useTableInOldBrowsers="{{true}}"
                         keyProperty="id"
                         source="{{_viewSource}}"
                         columns="{{_columns}}"
