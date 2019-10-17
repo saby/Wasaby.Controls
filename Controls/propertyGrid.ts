@@ -6,8 +6,6 @@
  * @includes StringEditor Controls/_propertyGrid/defaultEditors/String
  * @includes TextEditor Controls/_propertyGrid/defaultEditors/Text
  * @includes EnumEditor Controls/_propertyGrid/defaultEditors/Enum
- * @includes IEditor Controls/_propertyGrid/IEditor
- * @includes IProperty Controls/_propertyGrid/IProperty
  * @author Герасимов А.М.
  */
 
@@ -31,15 +29,11 @@ import BooleanEditor = require("Controls/_propertyGrid/defaultEditors/Boolean");
 import StringEditor = require("Controls/_propertyGrid/defaultEditors/String");
 import TextEditor = require("Controls/_propertyGrid/defaultEditors/Text");
 import EnumEditor = require("Controls/_propertyGrid/defaultEditors/Enum");
-import IEditor = require("Controls/_propertyGrid/IEditor");
-import IProperty = require("Controls/_propertyGrid/IProperty");
 
 export {
     PropertyGrid,
     BooleanEditor,
     StringEditor,
     TextEditor,
-    EnumEditor,
-    IEditor,
-    IProperty
+    EnumEditor
 }
