@@ -10,6 +10,7 @@ interface IItemActionsContainer {
 export interface IItemActionsManageableItem {
     getActions(): IItemActionsContainer;
     setActions(actions: IItemActionsContainer): void;
+    setActive(active: boolean): void;
 }
 
 export default class ItemActionsManager extends BaseManager {
@@ -23,6 +24,15 @@ export default class ItemActionsManager extends BaseManager {
     }
 
     setActiveItem(item: IItemActionsManageableItem): void {
+        if (this._activeItem === item) {
+            return;
+        }
+        if (this._activeItem) {
+            this._activeItem.setActive(false);
+        }
+        if (item) {
+            item.setActive(true);
+        }
         this._activeItem = item;
     }
 

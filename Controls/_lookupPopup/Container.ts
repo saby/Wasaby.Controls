@@ -349,7 +349,7 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
                   loadDef = Deferred.success(selectedItems);
                } else {
                   // remove after https://online.sbis.ru/opendoc.html?guid=e4a032d4-d462-495f-a209-70a601455b11
-                  if (!this._options.recursiveSeleciton) {
+                  if (!this._options.recursiveSelection) {
                      selection = _private.prepareRecursiveSelection({
                         selection,
                         items,
@@ -362,7 +362,7 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
                   loadDef = sourceController.load(
                      _private.prepareFilter(
                         dataOptions.filter,
-                        _private.getSelection(selection, adapter, options.selectionType, options.recursiveSeleciton),
+                        _private.getSelection(selection, adapter, options.selectionType, options.recursiveSelection),
                          options.searchParam
                      )
                   );
@@ -404,7 +404,7 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
 
       Container.getDefaultOptions = function() {
          return {
-            recursiveSeleciton: true
+            recursiveSelection: true
          };
       };
 

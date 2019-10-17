@@ -288,6 +288,11 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
             isSelectionLoad = false,
             items = getItems(),
             recordSet = new collection.List({items: items});
+
+         container.saveOptions({
+            recursiveSelection: true
+         });
+
          recordSet.getRecordById = function(id) {
             return items[id];
          };
