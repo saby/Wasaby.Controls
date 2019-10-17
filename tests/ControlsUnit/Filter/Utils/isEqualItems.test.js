@@ -16,5 +16,8 @@ define(['Controls/_filter/Utils/isEqualItems'],
          fastFilterItem = {name: '2'};
          assert.isTrue(isEqualItems.default(filterButtonItem, fastFilterItem));
 
+         filterButtonItem = {id: 'test', name: 'test'};
+         fastFilterItem = {name: 'test'};
+         assert.isTrue(isEqualItems.default(filterButtonItem, fastFilterItem));
       });
    });
