@@ -1,4 +1,4 @@
-import * as BaseOpener from 'Controls/_popup/Opener/BaseOpener';
+import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import * as Deferred from 'Core/Deferred';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {default as IConfirmation, IConfirmationOptions} from 'Controls/_popup/Opener/interface/IConfirmation';
@@ -132,8 +132,8 @@ export interface IPopupOptions {
 
 const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';
 
-class Confirmation extends BaseOpener<IConfirmationOptions> implements IConfirmation{
-    '[Controls/_popup/Opener/interface/IConfirmation]' : true;
+class Confirmation extends BaseOpener<IConfirmationOptions> implements IConfirmation {
+    '[Controls/_popup/Opener/interface/IConfirmation]': boolean = true;
     private _resultDef: Deferred<boolean> = null;
 
     protected _beforeMount(options: IConfirmationOptions): void {

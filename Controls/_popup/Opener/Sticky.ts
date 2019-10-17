@@ -1,4 +1,4 @@
-import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
+import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import coreMerge = require('Core/core-merge');
 import {IoC} from 'Env/Env';
 
@@ -38,7 +38,7 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
  * @public
  */
 
-const Sticky = BaseOpener.extend({
+class Sticky extends BaseOpener {
 
     /**
      * @typedef {Object} PopupOptions
@@ -124,7 +124,7 @@ const Sticky = BaseOpener.extend({
     open(config) {
         BaseOpener.prototype.open.call(this, _private.getStickyConfig(config), POPUP_CONTROLLER);
     }
-});
+}
 
 /**
  * Статический метод для открытия всплывающего окна. При использовании метода не требуется создавать popup:Sticky в верстке.

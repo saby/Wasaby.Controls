@@ -48,7 +48,6 @@ import GlobalTemplate = require('wml!Controls/_popup/Global/Global');
 import PreviewerTemplate = require('Controls/_popup/Previewer/PreviewerTemplate');
 import {default as IConfirmation, IConfirmationOptions} from 'Controls/_popup/Opener/interface/IConfirmation';
 
-import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
 import EditContainer = require('Controls/_popup/Opener/Edit/Container');
 
 export {default as Global} from './_popup/Global';
@@ -57,7 +56,7 @@ export {default as Infobox} from './_popup/Opener/InfoBox';
 export {default as Previewer} from './_popup/Opener/Previewer';
 export {default as Confirmation} from './_popup/Opener/Confirmation';
 export {default as InfoboxButton} from './_popup/InfoBox/InfoboxButton';
-
+export {default as BaseOpener} from 'Controls/_popup/Opener/BaseOpener';
 
 export {
     Stack,
@@ -74,6 +73,5 @@ export {
     IConfirmation,
     IConfirmationOptions,
 
-    BaseOpener,
     EditContainer
 };

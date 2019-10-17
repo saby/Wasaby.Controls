@@ -5,6 +5,8 @@ define([
 ], function (dataSource, Env, Transport) {
     describe('Controls/dataSource:error.Controller', function () {
         var Controller = dataSource.error.Controller;
+        // eslint-disable-next-line no-empty-function
+        Controller.prototype._getDefault = () => {};
         it('is defined', function () {
             assert.isDefined(Controller);
         });
@@ -186,7 +188,7 @@ define([
                     done();
                 }).catch(done);
             });
-            
+
             // call application handler
             // default mode in handler's config
             // default mode in result
