@@ -29,7 +29,6 @@
                                     on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
                                     on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
                                     on:afterEndEdit="_notifyHandler('afterEndEdit')"
-                                    on:arrowClick="_notifyHandler('arrowClick')"
                                     on:actionClick="_notifyHandler('actionClick')"
                                     on:dragStart="_notifyHandler('dragStart')"
                                     on:dragEnd="_notifyHandler('dragEnd')"
