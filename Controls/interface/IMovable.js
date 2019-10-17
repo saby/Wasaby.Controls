@@ -56,8 +56,20 @@ define('Controls/interface/IMovable', [
     */
 
    /**
+    * @typedef {Object} IMoveDialogTemplateProp
+    * @property {String} templateName Имя контрола, который будет отображаться в диалоговом окне выбора целевой записи для перемещения.
+    * @property {Object} templateOptions Опции для контрола, который будет отображаться в диалоговом окне.
+    */
+
+   /*
+    * @typedef {Object} IMoveDialogTemplateProp
+    * @property {String} templateName Control name, that will be displayed in dialog for selecting the target record to move.
+    * @property {Object} templateOptions Options for control, which is specified in the dialog for selecting the target record to move.
+    */
+
+   /**
     * @name Controls/interface/IMovable#moveDialogTemplate
-    * @cfg {Function} Шаблон диалогового окна выбора целевой записи для перемещения.
+    * @cfg {IMoveDialogTemplateProp|null} Шаблон диалогового окна выбора целевой записи для перемещения.
     * Рекомендуется использовать стандартный шаблон {@link Controls/MoveDialog}.
     * @example
     * <pre>
@@ -78,7 +90,7 @@ define('Controls/interface/IMovable', [
 
    /*
     * @name Controls/interface/IMovable#moveDialogTemplate
-    * @cfg {Function} The template of the dialog for selecting the target record to move.
+    * @cfg {IMoveDialogTemplateProp|null} The template of the dialog for selecting the target record to move.
     * @example
     * The following example shows how to using default template {@link Controls/MoveDialog}.
     * <pre>
