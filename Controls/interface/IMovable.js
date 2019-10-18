@@ -80,7 +80,8 @@ define('Controls/interface/IMovable', [
     *             searchParam="folderTitle"
     *             parentProperty="parent"
     *             nodeProperty="parent@">
-    *          <ws:filter moveDialog="{{true}}"/>
+    *             <ws:filter moveDialog="{{true}}"/>
+    *          </ws:templateOptions>
     *       </ws:moveDialogTemplate>
     *    </Controls.list:Mover>
     * </pre>
@@ -101,7 +102,8 @@ define('Controls/interface/IMovable', [
     *             searchParam="folderTitle"
     *             parentProperty="parent"
     *             nodeProperty="parent@">
-    *          <ws:filter moveDialog="{{true}}"/>
+    *             <ws:filter moveDialog="{{true}}"/>
+    *          </ws:templateOptions>
     *       </ws:moveDialogTemplate>
     *    </Controls.list:Mover>
     * </pre>
@@ -126,7 +128,8 @@ define('Controls/interface/IMovable', [
     *             searchParam="folderTitle"
     *             parentProperty="parent"
     *             nodeProperty="parent@">
-    *          <ws:filter moveDialog="{{true}}"/>
+    *             <ws:filter moveDialog="{{true}}"/>
+    *          </ws:templateOptions>
     *       </ws:moveDialogTemplate>
     *    </Controls.list:Mover>
     * </pre>
@@ -150,7 +153,8 @@ define('Controls/interface/IMovable', [
     *             searchParam="folderTitle"
     *             parentProperty="parent"
     *             nodeProperty="parent@">
-    *          <ws:filter moveDialog="{{true}}"/>
+    *             <ws:filter moveDialog="{{true}}"/>
+    *          </ws:templateOptions>
     *       </ws:moveDialogTemplate>
     *    </Controls.list:Mover>
     * </pre>
