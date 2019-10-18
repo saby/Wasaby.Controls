@@ -59,6 +59,8 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _selectedKeysLong: null,
       _selectedKeysMultiSelect: null,
       _selectedKeysMultiSelect2: null,
+      _selectedKeysMultiSelect3: null,
+      _selectedKeysMultiSelect4: null,
       _selectedKeysGroup: null,
       _selectedKeysGroupText: null,
       _selectedKeysGroupHierarchy: null,
@@ -273,6 +275,8 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          this._selectedKeysLong = [2];
          this._selectedKeysMultiSelect = [1];
          this._selectedKeysMultiSelect2 = [6, 7];
+         this._selectedKeysMultiSelect3 = [];
+         this._selectedKeysMultiSelect4 = [1];
          this._selectedKeysGroup = [1];
          this._selectedKeysGroupText = [1];
          this._selectedKeysGroupHierarchy = [1];
