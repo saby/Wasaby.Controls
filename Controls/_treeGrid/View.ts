@@ -11,9 +11,10 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * Вспомогательные материалы:
     * * <a href="/doc/platform/developmentapl/interface-development/controls/list/tree/">Руководство разработчика</a>
     * * <a href="http://axure.tensor.ru/standarts/v7/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html">Спецификация контрола</a>
-    * * <a href="/materials/demo-ws4-edit-in-place">Демо-пример</a> с функционалом редактирования по месту
     * * <a href="/materials/demo-ws4-tree-singleexpand">Демо-пример</a> с множественным выбором элементов и с единичным раскрытием содержимого папок
-    *
+    * * <a href="/materials/demo-ws4-tree-grid-item-template">Демо-пример</a> с пользовательским шаблоном элемента списка
+    * * <a href="/materials/demo-ws4-tree-with-photo">Демо-пример</a> с пользовательским шаблоном элемента списка с фото
+    * * <a href="/materials/demo-ws4-tree-grid-extended">Демо-пример</a> с пользовательским шаблоном подвала (футера)
     * @class Controls/_treeGrid/View
     * @extends Controls/_grid/Grid
     * @mixes Controls/_interface/ISource
