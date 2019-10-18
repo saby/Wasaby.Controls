@@ -44,6 +44,7 @@
                bind:position="_month"
                source="{{_source}}"
                viewMode="month"
+               displayedRanges="{{_displayedRanges}}"
                on:positionChanged="_monthPositionChangedHandler()">
                <ws:monthTemplate>
                   <ws:partial template="Controls/calendar:MonthListMonthTemplate">
