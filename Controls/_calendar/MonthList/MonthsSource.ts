@@ -1,11 +1,8 @@
 import Deferred = require('Core/Deferred');
 import {Date as WSDate} from 'Types/entity';
 import { Memory, Query, DataSet } from 'Types/source';
-import { date as formatDate } from 'Types/formatter';
 import ITEM_TYPES from './ItemTypes';
 import monthListUtils from './Utils';
-// import Query from "Types/source/Query";
-// import DataSet from "../../../application/Types/_source/DataSet";
 
 /**
  * Источник данных который возвращает данные для построения календарей в списочных контролах.
@@ -28,11 +25,15 @@ export default class MonthsSource extends Memory {
 
     _header: boolean = false;
     protected _dateConstructor: Function;
+    protected _displayedRanges: [];
+    protected _viewMode: string;
 
     constructor(options) {
         super(options);
         this._header = options.header;
         this._dateConstructor = options.dateConstructor || WSDate;
+        this._displayedRanges = options.displayedRanges;
+        this._viewMode = options.viewMode;
     }
 
     query(query: Query)/*: ExtendPromise<DataSet>*/ {
@@ -49,35 +50,70 @@ export default class MonthsSource extends Memory {
                 monthEqual = where['id~'],
                 monthGt = where['id>='],
                 monthLt = where['id<='],
-                month = monthEqual || monthGt || monthLt
+                month = monthEqual || monthGt || monthLt,
+                delta: number = 1,
+                before: boolean = true,
+                monthHeader: Date,
+                period: Date[]
             ;
 
             month = monthListUtils.idToDate(month, this._dateConstructor);
 
-            month.setMonth(month.getMonth() + offset);
+            month = this._shiftRange(month, offset);
 
             if (monthLt) {
-                month.setMonth(month.getMonth() - limit);
-            } else if (monthGt) {
-                month.setMonth(month.getMonth() + 1);
+                delta = -1;
+            }
+            if (!monthEqual) {
+                month = this._shiftRange(month, delta);
             }
 
             for (let i = 0; i < limit; i++) {
-                items.push({
-                    id: monthListUtils.dateToId(month),
-                    date: month,
-                    type: ITEM_TYPES.body
-                });
-                month = new this._dateConstructor(month);
-                month.setMonth(month.getMonth() + 1);
-
-                if (this._header) {
-                    items.push({
-                        id: 'h' + monthListUtils.dateToId(month),
-                        date: month,
-                        type: ITEM_TYPES.header
-                    });
+                if (this._header && delta < 0) {
+                    monthHeader = this._shiftRange(month, 1);
+                    if (this._isDisplayed(monthHeader)) {
+                        this._pushHeader(items, monthHeader);
+                    }
                 }
+
+                if (this._isDisplayed(month)) {
+                    items.push({
+                        id: monthListUtils.dateToId(month),
+                        date: month,
+                        type: ITEM_TYPES.body
+                    });
+                } else {
+                    period = this._getHiddenPeriod(month, delta);
+                    if (period[0] && period[1]) {
+                        items.push({
+                            id: monthListUtils.dateToId(period[0]),
+                            date: period[0],
+                            startValue: period[0],
+                            endValue: period[1],
+                            type: ITEM_TYPES.stub
+                        });
+                    }
+                    if (i === 0 && !period[0]) {
+                        before = false;
+                    }
+                    month =  delta > 0 ? period[1] : period[0];
+                }
+
+                if (this._header && delta > 0) {
+                    monthHeader = this._shiftRange(month, delta);
+                    if (this._isDisplayed(monthHeader)) {
+                        this._pushHeader(items, monthHeader);
+                    }
+                }
+
+                if (!month) {
+                    break;
+                }
+                month = this._shiftRange(month, delta);
+            }
+
+            if (monthLt) {
+                items = items.reverse();
             }
 
             this._each(
@@ -88,8 +124,11 @@ export default class MonthsSource extends Memory {
             );
             items = this._prepareQueryResult({
                 items: adapter.getData(),
-                meta: {total: monthEqual ? {before: true, after: true} : true}
-            });
+                meta: {
+                    total: monthEqual ?
+                        { before, after: Boolean(month) } : Boolean(month)
+                }
+            }, null);
 
             return items;
         });
@@ -99,5 +138,45 @@ export default class MonthsSource extends Memory {
         } else {
             return Deferred.success(executor());
         }
+    }
+
+    private _pushHeader(items: any[], month: Date): void {
+        items.push({
+            id: 'h' + monthListUtils.dateToId(month),
+            date: month,
+            type: ITEM_TYPES.header
+        });
+    }
+
+    private _isDisplayed(date: Date): boolean {
+        if (!this._displayedRanges || !this._displayedRanges.length) {
+            return true;
+        }
+        for (const range of this._displayedRanges) {
+            if (date >= range[0] && (date <= range[1] || !range[1])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private _getHiddenPeriod(date: Date): Date[] {
+        for (let i = 0; i < this._displayedRanges.length; i++) {
+            const range = this._displayedRanges[i];
+            if (date < range[0]) {
+                return [
+                    i === 0 ? null : date,
+                    this._shiftRange(range[0], -1)
+                ];
+            }
+        }
+        return [date, null];
+    }
+
+    private _shiftRange(date: Date, delta: number): Date {
+        if (this._viewMode === 'month') {
+            return new this._dateConstructor(date.getFullYear(), date.getMonth() + delta);
+        }
+        return new this._dateConstructor(date.getFullYear() + delta, date.getMonth());
     }
 }
