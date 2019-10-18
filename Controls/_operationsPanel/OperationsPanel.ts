@@ -183,13 +183,22 @@ var OperationsPanel = Control.extend({
    _initialized: false,
    _notifyHandler: notifyHandler,
 
-   _beforeMount(options: object): Promise<RecordSet> {
-      return _private.loadData(this, options.source).then((items) => {
-         if (!items.getCount()) {
+   _beforeMount(options: object): Promise<RecordSet>|void {
+      const loadDataCallback = (data?: RecordSet): RecordSet|void => {
+         if (!data || !data.getCount()) {
             _private.initialized(this, options);
          }
-         return items;
-      });
+         return data;
+      };
+      let result;
+
+      if (options.source) {
+         result = _private.loadData(this, options.source).then(loadDataCallback);
+      } else {
+         loadDataCallback();
+      }
+
+      return result;
    },
 
    _afterMount(): void {
