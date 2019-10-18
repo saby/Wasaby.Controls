@@ -1,12 +1,12 @@
-import {GridViewModel} from 'Controls/grid'
-import {GridLayoutUtil} from 'Controls/list'
+import {GridViewModel} from 'Controls/grid';
+import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import {
     getBottomPaddingRowIndex,
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
     getResultsIndex, getTopOffset, IBaseTreeGridRowIndexOptions
-} from 'Controls/_treeGrid/utils/TreeGridRowIndexUtil'
-import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel')
+} from 'Controls/_treeGrid/utils/TreeGridRowIndexUtil';
+import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel');
 
 function isLastColumn(
    itemData: object,
@@ -16,10 +16,9 @@ function isLastColumn(
    return itemData.getLastColumnIndex() >= itemData.columnIndex && (!colspan || itemData.columnIndex < columnWidth);
 }
 
+export type TreeGridColspanableElements = GridColspanableElements | 'node' | 'nodeFooter';
+
 var _private = {
-
-    // region only for browsers with partial grid support
-
     // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
     prepareGroupGridStyles: function (self, current) {
         current.rowIndex = self._getRowIndexHelper().getIndexByDisplayIndex(current.index);
@@ -34,35 +33,6 @@ var _private = {
             }
         ]);
     },
-
-    // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
-    getFooterStyles: function (self, rowIndex, columnsCount) {
-        let offsetForMultiselect = self._options.multiSelectVisibility === 'hidden' ? 0 : 1;
-
-        return GridLayoutUtil.toCssString([
-            {
-                name: 'grid-row',
-                value: rowIndex + 1
-            },
-            {
-                name: '-ms-grid-row',
-                value: rowIndex + 1
-            },
-            {
-                name: 'grid-column',
-                value: `${offsetForMultiselect + 1} / ${columnsCount}`
-            },
-            {
-                name: '-ms-grid-column',
-                value: offsetForMultiselect + 1
-            },
-            {
-                name: '-ms-grid-column-span',
-                value: columnsCount - 1
-            },
-        ]);
-    },
-    // endregion
 
     getExpandedItems<T = unknown>(display, expandedItems: Array<T>, nodeProperty: string): Array<T> {
         if (expandedItems.length === 1 && expandedItems[0] === null) {
@@ -141,9 +111,9 @@ var
             }
         },
         getItemDataByItem: function(dispItem) {
-            var
-                current = TreeGridViewModel.superclass.getItemDataByItem.apply(this, arguments),
-                superGetCurrentColumn = current.getCurrentColumn;
+            const current = TreeGridViewModel.superclass.getItemDataByItem.apply(this, arguments);
+            const superGetCurrentColumn = current.getCurrentColumn;
+            const self = this;
 
             if (current._treeGridViewModelCached) {
                 return current;
@@ -155,7 +125,7 @@ var
 
             // For browsers with partial grid support need to calc real rows' index and set explicit rows' style
             // with grid-row and grid-column
-            if (GridLayoutUtil.isPartialGridSupport()) {
+            if (self._isPartialGridSupport && !self._shouldUseTableLayout) {
                 if (current.isGroup) {
                     _private.prepareGroupGridStyles(this, current);
                 }
@@ -177,8 +147,11 @@ var
                     currentColumn.cellClasses += ' controls-TreeGrid__row-cell__item';
                 }
 
-                if (GridLayoutUtil.isPartialGridSupport()) {
-                    currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles(current.rowIndex, currentColumn.columnIndex);
+                if (self._isPartialGridSupport && !self._shouldUseTableLayout) {
+                    currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles({
+                        columnStart: currentColumn.columnIndex,
+                        rowStart: current.rowIndex
+                    });
                 }
 
                 return currentColumn;
@@ -204,24 +177,35 @@ var
                 return `controls-TreeGrid__row-levelPadding_size_${resultPaddingSize}`;
             };
 
-            let setFooterRowStyles = (footer, index) => {
+            const setNodeFooterRowStyles = (footer, index) => {
                 footer.columns = current.columns;
-                footer.isPartialGridSupport = GridLayoutUtil.isPartialGridSupport;
+                footer.isPartialGridSupport = self._isPartialGridSupport;
+                footer.shouldUseTableLayout = self._shouldUseTableLayout;
+                footer.colspan = self.getColspanFor('nodeFooter');
                 footer.getLevelIndentClasses = current.getLevelIndentClasses;
-                if (GridLayoutUtil.isPartialGridSupport() || current.columnScroll) {
+                const colspanCfg = {
+                    columnStart: self._options.multiSelectVisibility !== 'hidden' ? 1 : 0,
+                    columnSpan: self._columns.length,
+                };
+                if ((self._isPartialGridSupport && !self._shouldUseTableLayout) || current.columnScroll) {
                     footer.rowIndex = current.rowIndex + index + 1;
-                    footer.gridStyles = _private.getFooterStyles(this, footer.rowIndex, current.columns.length);
+
+                    // TODO: Удалить rowStart после полного перехода на table-layout. Заменить вызов getCellStyles на getColumnStyles.
+                    // По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+                    footer.colspanStyles = GridLayoutUtil.getCellStyles({...colspanCfg, rowStart: footer.rowIndex});
+                } else if (self._isFullGridSupport) {
+                    footer.colspanStyles = GridLayoutUtil.getColumnStyles(colspanCfg);
                 }
             };
 
             if (this._options.task1177672941) {
                 if (current.nodeFooter && current.nodeFooter.length > 0) {
-                    current.nodeFooter.forEach(setFooterRowStyles);
+                    current.nodeFooter.forEach(setNodeFooterRowStyles);
                 }
             } else {
                 // For browsers with partial grid support need to calc real rows' index and set explicit rows' style with grid-row and grid-column
                 if (current.nodeFooter) {
-                    setFooterRowStyles(current.nodeFooter, 0);
+                    setNodeFooterRowStyles(current.nodeFooter, 0);
                 }
             }
             return current;
@@ -236,6 +220,14 @@ var
         destroy: function () {
             this._model.unsubscribe('onNodeRemoved', this._onNodeRemovedFn);
             TreeGridViewModel.superclass.destroy.apply(this, arguments);
+        },
+
+        getColspanFor(gridElementName: TreeGridColspanableElements): number {
+            if (gridElementName === 'node' || gridElementName === 'nodeFooter') {
+                return this._columns.length;
+            } else {
+                return TreeGridViewModel.superclass.getColspanFor.apply(this, arguments);
+            }
         },
 
         _getRowIndexHelper() {

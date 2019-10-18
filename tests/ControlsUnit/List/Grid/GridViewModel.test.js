@@ -1299,7 +1299,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_min-height controls-Grid__header-cell-checkbox',
                index: 0,
                cellContentClasses: '',
-               cellStyles:`grid-column: 1/2; grid-row: 1/${gridViewModel._maxEndRow};`,
+               cellStyles: 'grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 2;',
                shadowVisibility: 'visible',
                offsetTop: 0,
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
@@ -1317,11 +1317,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                shadowVisibility: "visible",
                offsetTop: 0,
                cellContentClasses: " control-Grid__cell_header-nowrap",
-               cellStyles:`grid-column: ${secondCell.startColumn + 1}/${secondCell.endColumn + 1}; grid-row: ${secondCell.startRow}/${secondCell.endRow};`,
+               cellStyles: 'grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;',
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
 
             assert.equal(
-               `grid-column: ${secondCell.startColumn + 1}/${secondCell.endColumn + 1}; grid-row: ${secondCell.startRow}/${secondCell.endRow};`,
+               'grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;',
                GridLayoutUtil.getMultyHeaderStyles(secondCell.startColumn, secondCell.endColumn, secondCell.startRow, secondCell.endRow, 1),
                'Incorrect headerCellGridStyles'
                )
@@ -1337,13 +1337,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                index: 2,
                sortingDirection: 'DESC',
                cellContentClasses: " control-Grid__cell_header-nowrap controls-Grid__header-cell_justify_content_right",
-               cellStyles: `grid-column: ${thirdCell.startColumn + 1}/${thirdCell.endColumn + 1}; grid-row: ${thirdCell.startRow}/${thirdCell.endRow};`,
+               cellStyles: 'grid-column-start: 3; grid-column-end: 4; grid-row-start: 1; grid-row-end: 2;',
                shadowVisibility: "visible",
                offsetTop: 0
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
 
             assert.equal(
-               `grid-column: ${thirdCell.startColumn + 1}/${thirdCell.endColumn + 1}; grid-row: ${thirdCell.startRow}/${thirdCell.endRow};`,
+               'grid-column-start: 3; grid-column-end: 4; grid-row-start: 1; grid-row-end: 2;',
                GridLayoutUtil.getMultyHeaderStyles(thirdCell.startColumn, thirdCell.endColumn, thirdCell.startRow, thirdCell.endRow, 1),
                'Incorrect headerCellGridStyles'
             )
@@ -1358,13 +1358,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_min-height controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default',
                index: 3,
                cellContentClasses: " control-Grid__cell_header-nowrap controls-Grid__header-cell_justify_content_right",
-               cellStyles: `grid-column: ${fourthCell.startColumn + 1}/${fourthCell.endColumn + 1}; grid-row: ${fourthCell.startRow}/${fourthCell.endRow};`,
+               cellStyles: 'grid-column-start: 4; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;',
                shadowVisibility: "visible",
                offsetTop: 0
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
 
             assert.equal(
-               `grid-column: ${fourthCell.startColumn + 1}/${fourthCell.endColumn + 1}; grid-row: ${fourthCell.startRow}/${fourthCell.endRow};`,
+               'grid-column-start: 4; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;',
                GridLayoutUtil.getMultyHeaderStyles(fourthCell.startColumn, fourthCell.endColumn, fourthCell.startRow, fourthCell.endRow, 1),
                'Incorrect headerCellGridStyles'
             )
@@ -1386,7 +1386,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_min-height controls-Grid__header-cell-checkbox',
                index: 0,
                cellContentClasses: '',
-               cellStyles:`grid-column: 1/2; grid-row: 1/${gridViewModel._maxEndRow};`,
+               cellStyles: 'grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 2;',
                shadowVisibility: 'visible',
                offsetTop: 0,
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
@@ -1402,7 +1402,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                shadowVisibility: "visible",
                offsetTop: 0,
                cellContentClasses: " control-Grid__cell_header-nowrap",
-               cellStyles:`grid-column: ${secondCell.startColumn + 1}/${secondCell.endColumn + 1}; grid-row: 1/2;`,
+               cellStyles: 'grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;',
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
 
          });
@@ -1596,7 +1596,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   endColumn: 2
               };
               const firstHeaderCell = gridViewModel.getCurrentHeaderColumn(0, 1);
-              assert.equal(firstHeaderCell.cellStyles, 'grid-column: 2/3; grid-row: 1/2;');
+              assert.equal(firstHeaderCell.cellStyles, 'grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;');
 
               gridViewModel._headerRows[0][1] = originBreadcrumbsCell;
           });
@@ -2058,7 +2058,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.equal(
                 editingItemData.getEditingRowStyles(),
-                'display: grid; display: -ms-grid; grid-template-columns: 1fr 123px 321px; grid-column: 1 / 2; grid-row: 3;'
+                'display: grid; grid-template-columns: 1fr 123px 321px; grid-column-start: 1; grid-column-end: 2; grid-row-start: 3; grid-row-end: 4;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
          });
@@ -2082,7 +2082,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.equal(
                 editingItemData.getEditingRowStyles(),
-                'display: grid; display: -ms-grid; grid-template-columns: max-content 1fr 123px 321px; grid-column: 1 / 4; grid-row: 3;'
+                'display: grid; grid-template-columns: max-content 1fr 123px 321px; grid-column-start: 1; grid-column-end: 4; grid-row-start: 3; grid-row-end: 4;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
          });
@@ -2116,7 +2116,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.equal(
                 editingItemData.getEditingRowStyles(),
-                'display: grid; display: -ms-grid; grid-template-columns: max-content 1fr 123px 321px; grid-column: 1 / 4; grid-row: 3;'
+                'display: grid; grid-template-columns: max-content 1fr 123px 321px; grid-column-start: 1; grid-column-end: 4; grid-row-start: 3; grid-row-end: 4;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
 
@@ -2138,7 +2138,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'top';
                   assert.equal(
-                      'grid-column: 1 / 4; grid-row: 3; -ms-grid-column: 1; -ms-grid-row: 3; -ms-grid-column-span: 3;',
+                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 3; grid-row-end: 4; -ms-grid-row: 3; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2147,7 +2147,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'top';
                   assert.equal(
-                      'grid-column: 2 / 5; grid-row: 3; -ms-grid-column: 2; -ms-grid-row: 3; -ms-grid-column-span: 3;',
+                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 3; grid-row-end: 4; -ms-grid-row: 3; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2156,7 +2156,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = 'top';
                   assert.equal(
-                      'grid-column: 1 / 4; grid-row: 2; -ms-grid-column: 1; -ms-grid-row: 2; -ms-grid-column-span: 3;',
+                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2165,7 +2165,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = 'top';
                   assert.equal(
-                      'grid-column: 2 / 5; grid-row: 2; -ms-grid-column: 2; -ms-grid-row: 2; -ms-grid-column-span: 3;',
+                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2175,7 +2175,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'bottom';
                   assert.equal(
-                      'grid-column: 1 / 4; grid-row: 2; -ms-grid-column: 1; -ms-grid-row: 2; -ms-grid-column-span: 3;',
+                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2184,7 +2184,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'bottom';
                   assert.equal(
-                      'grid-column: 2 / 5; grid-row: 2; -ms-grid-column: 2; -ms-grid-row: 2; -ms-grid-column-span: 3;',
+                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2193,7 +2193,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = 'bottom';
                   assert.equal(
-                      'grid-column: 1 / 4; grid-row: 1; -ms-grid-column: 1; -ms-grid-row: 1; -ms-grid-column-span: 3;',
+                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2202,7 +2202,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = 'bottom';
                   assert.equal(
-                      'grid-column: 2 / 5; grid-row: 1; -ms-grid-column: 2; -ms-grid-row: 1; -ms-grid-column-span: 3;',
+                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2212,7 +2212,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = null;
                   assert.equal(
-                      'grid-column: 1 / 4; grid-row: 2; -ms-grid-column: 1; -ms-grid-row: 2; -ms-grid-column-span: 3;',
+                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2221,7 +2221,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = null;
                   assert.equal(
-                      'grid-column: 2 / 5; grid-row: 2; -ms-grid-column: 2; -ms-grid-row: 2; -ms-grid-column-span: 3;',
+                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2230,7 +2230,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = null;
                   assert.equal(
-                      'grid-column: 1 / 4; grid-row: 1; -ms-grid-column: 1; -ms-grid-row: 1; -ms-grid-column-span: 3;',
+                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2239,7 +2239,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = null;
                   assert.equal(
-                      'grid-column: 2 / 5; grid-row: 1; -ms-grid-column: 2; -ms-grid-row: 1; -ms-grid-column-span: 3;',
+                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2250,75 +2250,75 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model.setMultiSelectVisibility('hidden');
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'top';
-                  assert.equal('grid-column: 1 / 4; grid-row: 3;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 3; grid-row-end: 4;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && has header && results in top', () => {
                   model.setMultiSelectVisibility('visible');
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'top';
-                  assert.equal('grid-column: 2 / 5; grid-row: 3;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 3; grid-row-end: 4;', model.getEmptyTemplateStyles());
                });
                it('no checkbox && hasn\'t header && results in top', () => {
                   model.setMultiSelectVisibility('hidden');
                   model._header = null;
                   model._options.resultsPosition = 'top';
-                  assert.equal('grid-column: 1 / 4; grid-row: 2;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && hasn\'t header && results in top', () => {
                   model.setMultiSelectVisibility('visible');
                   model._header = null;
                   model._options.resultsPosition = 'top';
-                  assert.equal('grid-column: 2 / 5; grid-row: 2;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
 
                it('no checkbox && has header && results in bottom', () => {
                   model.setMultiSelectVisibility('hidden');
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'bottom';
-                  assert.equal('grid-column: 1 / 4; grid-row: 2;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && has header && results in bottom', () => {
                   model.setMultiSelectVisibility('visible');
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'bottom';
-                  assert.equal('grid-column: 2 / 5; grid-row: 2;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
                it('no checkbox && hasn\'t header && results in bottom', () => {
                   model.setMultiSelectVisibility('hidden');
                   model._header = null;
                   model._options.resultsPosition = 'bottom';
-                  assert.equal('grid-column: 1 / 4; grid-row: 1;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && hasn\'t header && results in bottom', () => {
                   model.setMultiSelectVisibility('visible');
                   model._header = null;
                   model._options.resultsPosition = 'bottom';
-                  assert.equal('grid-column: 2 / 5; grid-row: 1;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
                });
 
                it('no checkbox && has header && no results', () => {
                   model.setMultiSelectVisibility('hidden');
                   model._setHeader([{}]);
                   model._options.resultsPosition = null;
-                  assert.equal('grid-column: 1 / 4; grid-row: 2;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && has header && no results', () => {
                   model.setMultiSelectVisibility('visible');
                   model._setHeader([{}]);
                   model._options.resultsPosition = null;
-                  assert.equal('grid-column: 2 / 5; grid-row: 2;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
                it('no checkbox && hasn\'t header && no results', () => {
                   model.setMultiSelectVisibility('hidden');
                   model._header = null;
                   model._options.resultsPosition = null;
-                  assert.equal('grid-column: 1 / 4; grid-row: 1;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && hasn\'t header && no results', () => {
                   model.setMultiSelectVisibility('visible');
                   model._header = null;
                   model._options.resultsPosition = null;
-                  assert.equal('grid-column: 2 / 5; grid-row: 1;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
                });
             });
          });

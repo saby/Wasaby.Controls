@@ -1,4 +1,4 @@
-define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection'], function(SearchViewModel, Collection) {
+define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Controls/_treeGrid/TreeGridView/TreeGridView'], function(SearchViewModel, Collection, TreeGridView) {
    describe('Controls.List.SearchView.SearchViewModel', function() {
       it('getDisplayFilter', function() {
          var
@@ -40,25 +40,26 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection'], fu
          var
             itemData,
             searchViewModel,
-            superclassGetItemDataByItem = SearchViewModel.superclass.getItemDataByItem;
+            superclassGetItemDataByItem = SearchViewModel.superclass.getItemDataByItem,
+            treeView = new TreeGridView({});
+         treeView._isFullGridSupport = true;
          SearchViewModel.superclass.getItemDataByItem = function(breadCrumbs) {
-            if (breadCrumbs) {
-               return {
-                  item: {
-                     forEach: function() {}
-                  }
-               };
-            }
-            return {
-               item: {}
+            const itemData = {
+               item: {},
+               resolveBaseItemTemplate: treeView._resolveBaseItemTemplate.bind(treeView)
             };
+
+            if (breadCrumbs) {
+               itemData.item.forEach = () => {}
+            }
+            return itemData;
          };
 
          searchViewModel = new SearchViewModel({});
          itemData = searchViewModel.getItemDataByItem(false);
-         assert.equal(itemData.resolveItemTemplate(itemData).prototype._moduleName, 'Controls/treeGrid:ItemTemplate');
+         assert.equal(itemData.resolveItemTemplate(itemData).name, 'Controls__treeGrid_TreeGridView_layout_grid_Item');
          itemData = searchViewModel.getItemDataByItem(true);
-         assert.equal(itemData.resolveItemTemplate(itemData).prototype._moduleName, 'Controls/treeGrid:ItemTemplate');
+         assert.equal(itemData.resolveItemTemplate(itemData).name, 'Controls__treeGrid_TreeGridView_layout_grid_Item');
 
          searchViewModel = new SearchViewModel({
             itemTemplate: {
@@ -70,7 +71,7 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection'], fu
          itemData = searchViewModel.getItemDataByItem(false);
          assert.equal(itemData.resolveItemTemplate(itemData).prototype._moduleName, 'testItemTemplate');
          itemData = searchViewModel.getItemDataByItem(true);
-         assert.equal(itemData.resolveItemTemplate(itemData).prototype._moduleName, 'Controls/treeGrid:ItemTemplate');
+         assert.equal(itemData.resolveItemTemplate(itemData).name, 'Controls__treeGrid_TreeGridView_layout_grid_Item');
 
          SearchViewModel.superclass.getItemDataByItem = superclassGetItemDataByItem;
       });
