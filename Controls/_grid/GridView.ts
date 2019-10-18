@@ -199,13 +199,11 @@ var
             return cells;
         },
 
-        setGridSupportStatus(self: GridView, useTableInOldBrowsers: boolean): void {
+        setGridSupportStatus(self: GridView): void {
             self._isNoGridSupport = GridLayoutUtil.isNoGridSupport();
             self._isPartialGridSupport = GridLayoutUtil.isPartialGridSupport();
             self._isFullGridSupport = GridLayoutUtil.isFullGridSupport();
-
-            const canUseTableLayout = !!useTableInOldBrowsers || self._isNoGridSupport;
-            self._shouldUseTableLayout = canUseTableLayout && !self._isFullGridSupport;
+            self._shouldUseTableLayout = self._isNoGridSupport && !self._isFullGridSupport;
         }
     },
     GridView = ListView.extend({
@@ -228,7 +226,7 @@ var
 
         _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
-            _private.setGridSupportStatus(this, cfg.useTableInOldBrowsers);
+            _private.setGridSupportStatus(this);
             this._gridTemplate = _private.chooseGridTemplate(this._isFullGridSupport, this._shouldUseTableLayout);
             const resultSuper = GridView.superclass._beforeMount.apply(this, arguments);
             _private.setGridSupportStatus(this._listModel, cfg.useTableInOldBrowsers);
