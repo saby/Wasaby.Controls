@@ -8,12 +8,13 @@ import VirtualScroll = require('Controls/_list/Controllers/VirtualScroll');
 import Deferred = require('Core/Deferred');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import scrollToElement = require('Controls/Utils/scrollToElement');
-import collection = require('Types/collection');
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import ScrollPagingController = require('Controls/_list/Controllers/ScrollPaging');
 import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
+import uDimension = require("Controls/Utils/getDimensions");
+import {IObservable, RecordSet} from 'Types/collection';
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import {showType} from 'Controls/Utils/Toolbar';
@@ -27,7 +28,6 @@ import {TouchContextField} from 'Controls/context';
 import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
-import uDimension = require("Controls/Utils/getDimensions");
 
 import { create as diCreate } from 'Types/di';
 
@@ -213,7 +213,7 @@ var _private = {
                 }
 
                 // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
-                if (!list.getCount()) {
+                if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, cfg.navigation)) {
                     _private.checkLoadToDirectionCapability(self, filter);
                 }
             }).addErrback(function(error) {
@@ -242,7 +242,7 @@ var _private = {
 
     resolveIndicatorStateAfterReload: function(self, list):void {
         if (!self._isMounted) {
-            return
+            return;
         }
 
         const hasMoreDataDown = self._sourceController.hasMoreData('down');
@@ -401,6 +401,8 @@ var _private = {
     },
 
     loadToDirection: function(self, direction, userCallback, userErrback, receivedFilter) {
+        const navigation = self._options.navigation;
+        const listViewModel = self._listViewModel;
         const beforeAddItems = (addedItems) => {
             if (addedItems.getCount()) {
                 self._loadedItems = addedItems;
@@ -423,7 +425,8 @@ var _private = {
             // If received list is empty, make another request.
             // If it’s not empty, the following page will be requested in resize event
             // handler after current items are rendered on the page.
-            if (!addedItems.getCount() || (self._options.task1176625749 && countCurrentItems === cnt2)) {
+            if (_private.needLoadNextPageAfterLoad(addedItems, listViewModel, navigation) ||
+                (self._options.task1176625749 && countCurrentItems === cnt2)) {
                 _private.checkLoadToDirectionCapability(self);
             }
             if (self._virtualScroll) {
@@ -599,8 +602,43 @@ var _private = {
                 _private.onScrollLoadEdge(self, 'down', filter);
             }
             _private.checkVirtualScrollCapability(self);
+        } else if (_private.needLoadByMaxCountNavigation(self._listViewModel, self._options.navigation)) {
+            _private.loadToDirectionIfNeed(self, 'down', self._options.filter);
         }
     },
+
+    needLoadNextPageAfterLoad(loadedList: RecordSet, listViewModel, navigation): boolean {
+        let result = false;
+
+        if (navigation) {
+            switch (navigation.view) {
+                case 'infinity':
+                    result = !loadedList.getCount();
+                    break;
+                case 'maxCount':
+                    result = _private.needLoadByMaxCountNavigation(listViewModel, navigation);
+                    break;
+            }
+        }
+
+        return  result;
+    },
+
+    needLoadByMaxCountNavigation(listViewModel, navigation): boolean {
+        let result = false;
+
+        if (navigation && navigation.view === 'maxCount') {
+            if (!navigation.viewConfig || typeof navigation.viewConfig.maxCountValue !== 'number') {
+                IoC.resolve('ILogger')
+                   .error('BaseControl', 'maxCountValue is required for "maxCount" navigation type.');
+            } else {
+                result = navigation.viewConfig.maxCountValue > listViewModel.getCount();
+            }
+        }
+
+        return result;
+    },
+
     onScrollLoadEdgeStart: function (self, direction) {
         self._loadTriggerVisibility[direction] = true;
         _private.onScrollLoadEdge(self, direction);
@@ -969,7 +1007,7 @@ var _private = {
             if (self._options.navigation && self._options.navigation.source) {
                 self._sourceController.setState(self._listViewModel);
             }
-            if (action === collection.IObservable.ACTION_REMOVE && self._menuIsShown) {
+            if (action === IObservable.ACTION_REMOVE && self._menuIsShown) {
                 if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
                     self._closeActionsMenu();
                     self._children.itemActionsOpener.close();
@@ -980,7 +1018,7 @@ var _private = {
                 let
                    newCount = self.getViewModel().getCount();
                 self._virtualScroll.ItemsCount = newCount;
-                if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
+                if (action === IObservable.ACTION_ADD || action === IObservable.ACTION_MOVE) {
                     self._virtualScroll.insertItemsHeights(newItemsIndex - 1, newItems.length);
 
                     // Сдвигаем виртуальный скролл только если он уже проинициализирован. Если коллекция
@@ -1014,7 +1052,7 @@ var _private = {
                         }
                     }
                 }
-                if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
+                if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
                     self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
 
                     // Сдвигаем виртуальный скролл только если он уже проинициализирован. Если коллекция
@@ -1083,7 +1121,7 @@ var _private = {
          */
         const target = context ? null : _private.mockTarget(childEvent.target);
         if (showActions && showActions.length) {
-            const rs = new collection.RecordSet({ rawData: showActions, keyProperty: 'id' });
+            const rs = new RecordSet({ rawData: showActions, keyProperty: 'id' });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             self._listViewModel.setActiveItem(itemData);
@@ -1154,7 +1192,7 @@ var _private = {
                 opener: self._children.listView,
                 target: childEvent.target,
                 templateOptions: {
-                   items: new collection.RecordSet({ rawData: children, keyProperty: 'id' }),
+                   items: new RecordSet({ rawData: children, keyProperty: 'id' }),
                    keyProperty: 'id',
                    parentProperty: 'parent',
                    nodeProperty: 'parent@',
@@ -1962,16 +2000,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._savedStopIndex = this._listViewModel.getStopIndex();
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
-            this._checkShouldLoadToDirection = true;
-            this._forceUpdate();
-        } else if (this._checkShouldLoadToDirection) {
-            // Видимость триггеров меняется сразу после отрисовки и если звать checkLoadToDirectionCapability синхронно,
-            // то метод отработает по старому состоянию триггеров. Поэтому добавляем таймаут.
             this._checkLoadToDirectionTimeout = setTimeout(() => {
                 _private.checkLoadToDirectionCapability(this);
                 this._checkLoadToDirectionTimeout = null;
             });
-            this._checkShouldLoadToDirection = false;
         }
 
         if (this._restoredScroll !== null) {
