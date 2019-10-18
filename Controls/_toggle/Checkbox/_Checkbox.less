@@ -7,6 +7,15 @@
 .controls-Checkbox__enabled {
    cursor: pointer;
 }
+.controls-Checkbox__invalid_theme-@{themeName}{
+   outline: @border-thickness solid @danger_color;
+   padding-right: 2px;
+}
+.controls-Checkbox__invalid_theme-@{themeName}:focus-within{
+   outline: @border-thickness solid @danger_color;
+   padding-right: 2px;
+   background-color: @background-color_focus_validate;
+}
 .controls-Checkbox__wrapper_theme_@{themeName}:before {
    content: '\200b';
 }

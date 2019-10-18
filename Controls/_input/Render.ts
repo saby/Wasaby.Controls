@@ -3,11 +3,10 @@ import {descriptor} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as ActualAPI from 'Controls/_input/ActualAPI';
-import {default as IValidationStatus, IValidationStatusOptions} from 'Controls/_input/interface/IValidationStatus';
 import {
    IHeight, IHeightOptions, IFontColorStyle,
    IFontColorStyleOptions, IFontSize, IFontSizeOptions,
-   IBorderStyle, IBorderStyleOptions
+   IBorderStyle, IBorderStyleOptions, IValidationStatus, IValidationStatusOptions
 } from 'Controls/interface';
 
 import * as template from 'wml!Controls/_input/Render/Render';
@@ -60,7 +59,7 @@ IFontColorStyleOptions, IFontSizeOptions, IValidationStatusOptions, IBorderStyle
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_input/interface/ITag
- * @mixes Controls/_input/interface/IValidationStatus
+ * @mixes Controls/_interface/IValidationStatus
  * @mixes Controls/interface/IBorderStyle
  *
  * @author Красильников А.С.
@@ -81,7 +80,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
    readonly '[Controls/_interface/IHeight]': true;
    readonly '[Controls/_interface/IFontSize]': true;
    readonly '[Controls/_interface/IFontColorStyle]': true;
-   readonly '[Controls/_input/interface/IValidationStatus]': true;
+   readonly '[Controls/_interface/IValidationStatus]': true;
    readonly '[Controls/interface/IBorderStyle]': true;
 
    private updateState(options: IRenderOptions): void {

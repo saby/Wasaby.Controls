@@ -64,9 +64,7 @@
                         <ws:Function value="{{_instruction }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
                      </ws:validators>
                      <ws:content>
-                        <Controls.validate:RedFrame>
-                           <Controls.toggle:Checkbox bind:value="_instruction" caption="Ознакомлен(-а) с инструкцией"/>
-                        </Controls.validate:RedFrame>
+                        <Controls.toggle:Checkbox bind:value="_instruction" caption="Ознакомлен(-а) с инструкцией"/>
                      </ws:content>
                   </Controls.validate:Container>
                   <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
