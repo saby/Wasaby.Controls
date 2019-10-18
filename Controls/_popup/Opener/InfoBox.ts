@@ -1,7 +1,7 @@
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
-import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
+import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import getZIndex = require('Controls/Utils/getZIndex');
 import {DefaultOpenerFinder} from "UI/Focus";
 
@@ -123,10 +123,10 @@ const _private = {
 
 };
 
-const InfoBox = BaseOpener.extend({
-    _openId: null,
-    _closeId: null,
-    _style: null,
+class InfoBox extends BaseOpener {
+    _openId: number = null;
+    _closeId: number = null;
+    _style: number = null;
 
     /**
      * @name Controls/_popup/Opener/Infobox#isOpened
@@ -162,7 +162,7 @@ const InfoBox = BaseOpener.extend({
 
     _beforeUnmount() {
         this.close(0);
-    },
+    }
 
     open(cfg) {
         // Only one popup can be opened
@@ -177,10 +177,10 @@ const InfoBox = BaseOpener.extend({
         } else {
             this._open(newCfg);
         }
-    },
+    }
     _open(cfg) {
-        InfoBox.superclass.open.call(this, cfg, POPUP_CONTROLLER);
-    },
+        super.open(cfg, POPUP_CONTROLLER);
+    }
 
     /**
      * Close popup.
@@ -190,21 +190,21 @@ const InfoBox = BaseOpener.extend({
         delay = delay === undefined ? INFOBOX_HIDE_DELAY : delay;
         this._clearTimeout();
         if (delay > 0) {
-            this._closeId = setTimeout(InfoBox.superclass.close.bind(this), delay);
+            this._closeId = setTimeout(super.close.bind(this), delay);
         } else {
-            InfoBox.superclass.close.call(this);
+            super.close();
         }
-    },
+    }
 
     _closeOnTargetScroll() {
         this.close(0);
-    },
+    }
 
     _clearTimeout() {
         clearTimeout(this._openId);
         clearTimeout(this._closeId);
     }
-});
+}
 
 /**
  * Open InfoBox popup.

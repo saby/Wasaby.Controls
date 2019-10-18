@@ -1,4 +1,4 @@
-import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
+import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import {parse as load} from 'Core/library';
@@ -88,8 +88,8 @@ const _private = {
     }
 };
 
-const Notification = BaseOpener.extend({
-    _notificationId: null,
+class Notification extends BaseOpener {
+    _notificationId: string = '';
     /**
      * Метод открытия нотификационного окна.
      * Повторный вызов этого метода вызовет переририсовку контрола.
@@ -131,7 +131,7 @@ const Notification = BaseOpener.extend({
 
     isOpened(): boolean {
         return !!ManagerController.find(this._notificationId);
-    },
+    }
 
     /*
      * Open dialog popup.
@@ -146,12 +146,12 @@ const Notification = BaseOpener.extend({
             this._notificationId = popupId;
             return popupId;
         });
-    },
+    }
     close() {
         Notification.closePopup(this._notificationId);
         _private.compatibleClose(this);
     }
-});
+}
 
 /**
  * Статический метод для открытия нотификационного окна. При использовании метода не требуется создавать popup:Notification в верстке.

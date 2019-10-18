@@ -1,4 +1,4 @@
-import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
+import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import {IoC} from 'Env/Env';
 
 /**
@@ -53,7 +53,7 @@ const _private = {
 
 const POPUP_CONTROLLER = 'Controls/popupTemplate:StackController';
 
-const Stack = BaseOpener.extend({
+class Stack extends BaseOpener {
 
     /**
      * Метод открытия стековой панели.
@@ -100,9 +100,9 @@ const Stack = BaseOpener.extend({
      */
 
     open(popupOptions) {
-        return BaseOpener.prototype.open.call(this, _private.getStackConfig(popupOptions), POPUP_CONTROLLER);
+        return super.open(_private.getStackConfig(popupOptions), POPUP_CONTROLLER);
     }
-});
+}
 
 /**
  * Статический метод для открытия стекового окна. При использовании метода не требуется создавать popup:Stack в верстке.

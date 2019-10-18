@@ -1,105 +1,100 @@
 import cClone = require('Core/core-clone');
-import Base = require('Controls/_popup/Opener/BaseOpener');
+import Base from 'Controls/_popup/Opener/BaseOpener';
 
+var _private = {
+    displayDuration: 1000,
 
-      var _private = {
-         displayDuration: 1000,
+    clearOpeningTimeout: function(self) {
+        var id = self._openingTimerId;
 
-         clearOpeningTimeout: function(self) {
-            var id = self._openingTimerId;
+        if (id) {
+            clearTimeout(id);
+            self._openingTimerId = null;
+        }
+    },
 
-            if (id) {
-               clearTimeout(id);
-               self._openingTimerId = null;
-            }
-         },
+    clearClosingTimeout: function(self) {
+        var id = self._closingTimerId;
 
-         clearClosingTimeout: function(self) {
-            var id = self._closingTimerId;
+        if (id) {
+            clearTimeout(id);
+            self._closingTimerId = null;
+        }
+    }
+};
 
-            if (id) {
-               clearTimeout(id);
-               self._closingTimerId = null;
-            }
-         },
+class Previewer extends Base {
+    _openingTimerId: number = null;
 
-         open: function(self, cfg) {
-            var myCfg = cClone(cfg);
+    _closingTimerId: number = null;
+    _beforeUnmount() {
+        _private.clearClosingTimeout(this);
+        _private.clearOpeningTimeout(this);
 
-            myCfg.closeOnOutsideClick = true;
-            myCfg.className = 'controls-PreviewerController';
-            Previewer.superclass.open.call(self, myCfg, 'Controls/popupTemplate:PreviewerController');
-         }
-      };
+    }
 
-      var Previewer = Base.extend({
-         _openingTimerId: null,
+    open(cfg, type) {
+        _private.clearClosingTimeout(this);
 
-         _closingTimerId: null,
-         _beforeUnmount: function() {
-            _private.clearClosingTimeout(this);
-            _private.clearOpeningTimeout(this);
+        // Previewer - singleton
+        this.close();
 
-         },
+        if (type === 'hover') {
+            this._openingTimerId = setTimeout(() => {
+                this.openingTimerId = null;
 
-         open: function(cfg, type) {
-            var self = this;
+                this._open(cfg);
+            }, _private.displayDuration);
+        } else {
+            this._open(cfg);
+        }
+    }
 
-            _private.clearClosingTimeout(this);
+    close(type) {
+        _private.clearOpeningTimeout(this);
 
-            // Previewer - singleton
-            this.close();
+        if (type === 'hover') {
+            this._closingTimerId = setTimeout(() => {
+                this.closingTimerId = null;
 
-            if (type === 'hover') {
-               this._openingTimerId = setTimeout(function() {
-                  self.openingTimerId = null;
+                super.close();
+            }, _private.displayDuration);
+        } else {
+            super.close();
+            this._popupIds = [];
+        }
+    }
 
-                  _private.open(self, cfg);
-               }, _private.displayDuration);
-            } else {
-               _private.open(self, cfg);
-            }
-         },
+    /**
+     * Cancel a delay in opening or closing.
+     * @param {String} action Action to be undone.
+     * @variant opening
+     * @variant closing
+     */
+    cancel(action) {
+        switch (action) {
+            case 'opening':
+                _private.clearOpeningTimeout(this);
+                break;
+            case 'closing':
+                _private.clearClosingTimeout(this);
+                break;
+        }
+    }
 
-         close: function(type) {
-            var self = this;
+    private _open(cfg): void {
+        const myCfg = cClone(cfg);
 
-            _private.clearOpeningTimeout(this);
+        myCfg.closeOnOutsideClick = true;
+        myCfg.className = 'controls-PreviewerController';
+        super.open(myCfg, 'Controls/popupTemplate:PreviewerController');
+    }
+}
 
-            if (type === 'hover') {
-               this._closingTimerId = setTimeout(function() {
-                  self.closingTimerId = null;
-
-                  Previewer.superclass.close.call(self);
-               }, _private.displayDuration);
-            } else {
-               Previewer.superclass.close.call(this);
-               this._popupIds = [];
-            }
-         },
-
-         /**
-          * Cancel a delay in opening or closing.
-          * @param {String} action Action to be undone.
-          * @variant opening
-          * @variant closing
-          */
-         cancel: function(action) {
-            switch (action) {
-               case 'opening':
-                  _private.clearOpeningTimeout(this);
-                  break;
-               case 'closing':
-                  _private.clearClosingTimeout(this);
-                  break;
-            }
-         }
-      });
-
-      Previewer.getDefaultOptions = function() {
-         var baseOptions = Base.getDefaultOptions();
-         baseOptions._vdomOnOldPage = true;
-         return baseOptions;
-      };
+Previewer.getDefaultOptions = function() {
+    var baseOptions = Base.getDefaultOptions();
+    baseOptions._vdomOnOldPage = true;
+    return baseOptions;
+};
 
 export default Previewer;

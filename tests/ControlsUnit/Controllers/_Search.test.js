@@ -124,7 +124,8 @@ define(
             var now = +new Date();
 
             search.search({}, true).addCallback(function(result) {
-               assert.isTrue((now - (+new Date())) > -50);
+               let curDate = (+new Date());
+               assert.isTrue((now - curDate) > -50);
                done();
                return result;
             });
