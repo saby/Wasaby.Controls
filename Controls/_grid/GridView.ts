@@ -4,6 +4,7 @@ import {IoC, detection} from 'Env/Env';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import * as GridIsEqualUtil from 'Controls/_grid/utils/GridIsEqualUtil';
 import {TouchContextField as isTouch} from "Controls/context";
+import tmplNotify = require('Controls/Utils/tmplNotify');
 
 import * as GridViewTemplateChooser from 'wml!Controls/_grid/GridViewTemplateChooser';
 import * as GridLayout from 'wml!Controls/_grid/layout/grid/GridView';
@@ -223,6 +224,7 @@ var
         _isPartialGridSupport: false,
         _isFullGridSupport: false,
         _shouldUseTableLayout: false,
+        _notifyHandler: tmplNotify,
 
         _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
