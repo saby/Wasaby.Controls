@@ -4,6 +4,7 @@ import cInstance = require('Core/core-instance');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 import template = require('wml!Controls/_list/Mover/Mover');
+import Env = require('Env/Env');
 import {ContextOptions as dataOptions} from 'Controls/context';
 import {Confirmation} from 'Controls/popup';
 
@@ -257,9 +258,18 @@ var _private = {
 
 var Mover = Control.extend({
     _template: template,
+    _moveDialogTemplate: null,
+    _moveDialogOptions: null,
     _beforeMount: function (options, context) {
-        this._onDialogResult = this._onDialogResult.bind(this);
+       this._onDialogResult = this._onDialogResult.bind(this);
         _private.updateDataOptions(this, context.dataOptions);
+        if (options.moveDialogTemplate instanceof Function) {
+           this._moveDialogTemplate = options.moveDialogTemplate;
+           Env.IoC.resolve('ILogger').warn('Mover', 'Wrong type of moveDialogTemplate option, use object notation instead of template function');
+        } else if (options.moveDialogTemplate){
+           this._moveDialogTemplate = options.moveDialogTemplate.templateName;
+           this._moveDialogOptions = options.moveDialogTemplate.templateOptions;
+        }
     },
 
     _beforeUpdate: function (options, context) {
@@ -310,12 +320,13 @@ var Mover = Control.extend({
 
         _private.getItemsBySelection.call(this, items).addCallback(function (items) {
             if (items.length > 0) {
+               const templateOptions = Object.assign({
+                  movedItems: _private.prepareMovedItems(self, items),
+                  source: self._source,
+                  keyProperty: self._keyProperty
+               }, self._moveDialogOptions);
                 self._children.dialogOpener.open({
-                    templateOptions: {
-                        movedItems: _private.prepareMovedItems(self, items),
-                        source: self._source,
-                        keyProperty: self._keyProperty
-                    }
+                    templateOptions: templateOptions
                 });
             } else {
                 Confirmation.openPopup({
