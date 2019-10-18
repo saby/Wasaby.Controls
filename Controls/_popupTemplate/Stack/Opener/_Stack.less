@@ -13,8 +13,11 @@
    left: 0;
 }
 .ws-is-mobile-platform .controls-Stack__resizingLine_theme-@{themeName} {
-   left: @size_DragBordersContainer-border - @resizing-line_mobile_width_stack;
+   left: -@resizing-line_mobile_left_stack;
    width: @resizing-line_mobile_width_stack;
+   .controls-ResizingLine__areaWrapper_theme-@{themeName} {
+      width: @resizing-line_mobile_width_stack - @resizing-line_mobile_left_stack;
+   }
 }
 
 .controls-Stack__content {
