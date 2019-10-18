@@ -325,6 +325,20 @@ define([
             assert.ok(checkError.indexOf(goodError) !== -1);
          });
 
+         it('link to id on current page', function () {
+            var json = [
+               ['a',
+                  {
+                     href: '#someId'
+                  },
+                  'goto'
+               ]
+            ];
+            var goodHtml = '<div><a href="#someId">goto</a></div>';
+            var checkHtml = decorator.Converter.jsonToHtml(json);
+            assert.equal(goodHtml, checkHtml);
+         });
+
          it('all valid tags and attributes', function() {
             var json = [
                ['p',
