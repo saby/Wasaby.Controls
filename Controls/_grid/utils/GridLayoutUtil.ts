@@ -1,13 +1,7 @@
-import {detection} from "Env/Env";
+import {detection} from 'Env/Env';
 
-const compatibleWidthRegExp = new RegExp('(px|%)$');
-
-enum CssTemplatesEnum {
-    GridIE = 'GridIE',
-    GridChrome = 'GridChrome',
-    Grid = 'Grid'
-}
-
+const FULL_GRID_IOS_VERSION = 12;
+const OLD_IE_LAST_VERSION = 11;
 const DEFAULT_COLUMN_WIDTH = '1fr';
 
 const RegExps = {
@@ -15,19 +9,32 @@ const RegExps = {
     percentValue: new RegExp('^[0-9]+%$')
 };
 
-type CssRule = {
+interface ICssRule {
     name: string;
-    value: string | number | Array<string>
-};
+    value: string | number;
+    applyIf?: boolean;
+}
+
+interface IColumnOptions {
+    columnStart: number;
+    columnSpan?: number;
+    columnEnd?: number;
+}
+
+interface IRowOptions {
+    rowStart: number;
+    rowSpan?: number;
+    rowEnd?: number;
+}
 
 function _isFullGridSafari(): boolean {
     return (
         detection.safari &&
         (
-            detection.IOSVersion >= 12 ||
+            detection.IOSVersion >= FULL_GRID_IOS_VERSION ||
             detection.isMacOSDesktop
         )
-    )
+    );
 }
 
 function isFullGridSupport(): boolean {
@@ -35,10 +42,9 @@ function isFullGridSupport(): boolean {
 }
 
 function isPartialGridSupport(): boolean {
-    let
-        isOldIE = detection.isIE && !detection.isModernIE,
-        noGridSupport = (detection.isWinXP && !detection.yandex) || isOldIE,
-        fullGridSupport = _isFullGridSafari();
+    const isOldIEBrowser = detection.isIE && !detection.isModernIE;
+    const noGridSupport = (detection.isWinXP && !detection.yandex) || isOldIEBrowser;
+    const fullGridSupport = _isFullGridSafari();
 
     return detection.isNotFullGridSupport && !(noGridSupport || fullGridSupport);
 }
@@ -48,155 +54,80 @@ function isNoGridSupport(): boolean {
 }
 
 function isOldIE(): boolean {
-    return detection.isIE && detection.IEVersion <= 11;
+    return detection.isIE && detection.IEVersion <= OLD_IE_LAST_VERSION;
 }
 
-
-function getCellStyles(rowIndex: number, columnIndex: number, rowSpan: number = 1, colSpan: number = 1): string {
-    let rules: Array<CssRule> = [
-        {
-            name: 'grid-column',
-            value: ((columnIndex + 1) + ' / ' + (columnIndex + 1 + colSpan))
-        },
-        {
-            name: 'grid-row',
-            value: rowIndex + 1
-        }
-    ];
-
-    if (detection.isIE) {
-        rules.push(
-            {
-                name: '-ms-grid-column',
-                value: columnIndex + 1
-            },
-            {
-                name: '-ms-grid-row',
-                value: rowIndex + 1
-            },
-            {
-                name: '-ms-grid-column-span',
-                value: colSpan
-            }
-        );
-    }
-    return toCssString(rules);
+function isCompatibleWidth(width: string | number): boolean {
+    return !!width && !!(`${width}`.match(RegExps.percentValue) || `${width}`.match(RegExps.pxValue));
 }
 
-function getMultyHeaderStyles(startColumn, endColumn, startRow, endRow, additionalColumn) {
-    let gridStyles = [
-        {
-            name: 'grid-column',
-            value: `${startColumn + additionalColumn}/${endColumn + additionalColumn}`
-        },
-        {
-            name: 'grid-row',
-            value: `${startRow}/${endRow}`
-        },
-    ];
+function getColumnStyles(cfg: IColumnOptions): string {
+    const columnStart = cfg.columnStart + 1;
+    const columnSpan = typeof cfg.columnEnd !== 'undefined' ? (cfg.columnEnd - cfg.columnStart) : (cfg.columnSpan || 1);
+    const columnEnd = (cfg.columnEnd || (cfg.columnStart + columnSpan)) + 1;
 
-    if (detection.isIE) {
-        gridStyles.push(
-            {
-                name: '-ms-grid-column',
-                value: `${startColumn + additionalColumn}`
-            },
-            {
-                name: '-ms-grid-row',
-                value: `${startRow}`
-            },
-            {
-                name: '-ms-grid-column-span',
-                value: `${endColumn - startColumn}`
-            },
-            {
-                name: '-ms-grid-row-span',
-                value: `${endRow - startRow}`
-            }
-        );
-    }
-    return toCssString(gridStyles);
+    return toCssString([
+        {name: 'grid-column-start', value: columnStart},
+        {name: 'grid-column-end', value: columnEnd},
+        {name: '-ms-grid-column', value: columnStart, applyIf: detection.isIE},
+        {name: '-ms-grid-column-span', value: columnSpan, applyIf: detection.isIE}
+    ]);
 }
 
+function getRowStyles(cfg: IRowOptions): string {
+    const rowStart = cfg.rowStart + 1;
+    const rowSpan = typeof cfg.rowEnd !== 'undefined' ? (cfg.rowEnd - cfg.rowStart) : (cfg.rowSpan || 1);
+    const rowEnd = (cfg.rowEnd || (cfg.rowStart + rowSpan)) + 1;
 
-function getTemplateColumnsStyle(columnsWidth: Array<string | number>) {
-    let
-        widths = columnsWidth.join(' '),
-        rules = [
-            {
-                name: 'grid-template-columns',
-                value: widths
-            }
-        ];
-
-    if (detection.isIE) {
-        rules.push({
-            name: '-ms-grid-columns',
-            value: widths
-        });
-    }
-
-    return toCssString(rules);
+    return toCssString([
+        {name: 'grid-row-start', value: rowStart},
+        {name: 'grid-row-end', value: rowEnd},
+        {name: '-ms-grid-row', value: rowStart, applyIf: detection.isIE},
+        {name: '-ms-grid-row-span', value: rowSpan, applyIf: detection.isIE}
+    ]);
 }
 
-function getDefaultStylesFor(...cssTemplates: CssTemplatesEnum[]): string {
-    let styles = '';
+function getCellStyles(cfg: IColumnOptions & IRowOptions): string {
+    return getColumnStyles(cfg) + ' ' + getRowStyles(cfg);
+}
 
-    cssTemplates.forEach(function (element) {
-        let templateName = CssTemplatesEnum[element];
-        styles += toCssString(_cssTemplatesStyles[templateName]) + ' ';
+function getMultyHeaderStyles(columnStart: number, columnEnd: number, rowStart: number, rowEnd: number, additionalColumn: number): string {
+    return getCellStyles({
+        columnStart: columnStart + additionalColumn - 1,
+        columnEnd: columnEnd + additionalColumn - 1,
+        rowStart: rowStart - 1,
+        rowEnd: rowEnd - 1
     });
-
-    return styles.trim();
 }
 
-function toCssString(cssRules: Array<CssRule>): string {
+function getTemplateColumnsStyle(columnsWidth: Array<string | number>): string {
+    const widths = columnsWidth.join(' ');
+    return toCssString([
+        {name: 'grid-template-columns', value: widths},
+        {name: '-ms-grid-columns', value: widths, applyIf: detection.isIE}
+    ]);
+}
+
+function getGridLayoutStyles(): string {
+    return toCssString([
+        {name: 'display', value: 'grid'},
+        {name: 'display', value: '-ms-grid', applyIf: detection.isIE}
+    ]);
+}
+
+function toCssString(cssRules: ICssRule[]): string {
     let cssString = '';
 
-    cssRules.forEach(rule => {
-        if (rule.value instanceof Array) {
-            rule.value.forEach(value => {
-                cssString += `${rule.name}: ${value}; `
-            });
-        } else {
-            cssString += `${rule.name}: ${rule.value}; `
-        }
+    cssRules.forEach((rule) => {
+        // Применяем правило если нет условия или оно задано и выполняется
+        cssString += (!rule.hasOwnProperty('applyIf') || !!rule.applyIf) ? `${rule.name}: ${rule.value}; ` : '';
     });
 
     return cssString.trim();
 }
 
-function isCompatibleWidth(width: string | number): boolean {
-    return !!width && !!`${width}`.match(compatibleWidthRegExp);
-}
-
-const _cssTemplatesStyles = {
-    GridChrome: [
-        {
-            name: 'display',
-            value: 'grid'
-        }
-    ],
-    GridIE: [
-        {
-            name: 'display',
-            value: '-ms-grid'
-        }
-    ],
-    Grid: [
-        {
-            name: 'display',
-            value: ['grid', '-ms-grid']
-        }
-    ]
-};
-
 export {
-    CssRule,
-    CssTemplatesEnum,
-
     isCompatibleWidth,
-
     DEFAULT_COLUMN_WIDTH,
     RegExps,
 
@@ -205,9 +136,11 @@ export {
     isNoGridSupport,
     isOldIE,
 
+    getColumnStyles,
+    getRowStyles,
     getCellStyles,
     getTemplateColumnsStyle,
-    getDefaultStylesFor,
+    getGridLayoutStyles,
     toCssString,
     getMultyHeaderStyles
 };
