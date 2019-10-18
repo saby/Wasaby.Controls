@@ -1,17 +1,23 @@
 <ws:if data="{{_isResizing(_options.minOffset, _options.maxOffset)}}">
    <div class="controls-ResizingLine">
-      <Controls._dragnDrop.Container name="dragNDrop"
-                                     on:dragmove="_onDragHandler()"
-                                     on:dragstart="_onStartDragHandler()"
-                                     on:documentdragend="_onEndDragHandler()"><div name="{{border}}"
-                                                                                   attr:class="controls-ResizingLine controls-ResizingLine__border_theme_{{_options.theme}}"
-                                                                                   on:mousedown="_beginDragHandler()" on:touchstart="_beginDragHandler()"></div></Controls._dragnDrop.Container>
-      <ws:if data="{{_dragging}}">
-         <div class="controls-ResizingLine__area_theme_{{_options.theme}}"
-              style="{{_styleArea}}">
-            <div class="controls-ResizingLine__areaOverlay"></div>
+      <div class="controls-ResizingLine__wrapper">
+         <div class="controls-ResizingLine__areaWrapper controls-ResizingLine__areaWrapper_theme-{{_options.theme}}
+                     controls-ResizingLine__areaWrapper_direction-{{_options.direction}}">
+            <ws:if data="{{_dragging}}">
+               <div style="{{_styleArea}}"
+                    class="controls-ResizingLine__area controls-ResizingLine__area_theme_{{_options.theme}}">
+                  <div class="controls-ResizingLine__areaOverlay"></div>
+               </div>
+            </ws:if>
          </div>
-      </ws:if>
+         <Controls._dragnDrop.Container name="dragNDrop"
+                                        on:dragmove="_onDragHandler()"
+                                        on:dragstart="_onStartDragHandler()"
+                                        on:documentdragend="_onEndDragHandler()">
+            <div attr:class="controls-ResizingLine__border"
+                 on:mousedown="_beginDragHandler()" on:touchstart="_beginDragHandler()"></div>
+         </Controls._dragnDrop.Container>
+      </div>
    </div>
 </ws:if>
 <ws:else>
