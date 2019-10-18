@@ -70,6 +70,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          var controller = getSearchController();
          var filterChanged = false;
          var itemsChanged = false;
+         var searchValue;
          var filter;
          var isBubbling;
 
@@ -83,6 +84,10 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             if (eventName === 'itemsChanged') {
                itemsChanged = true;
                isBubbling = eventArgs && eventArgs.bubbling;
+            }
+
+            if (eventName === 'searchValueChanged') {
+               searchValue = value[0];
             }
          };
 
@@ -98,6 +103,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(controller._viewMode, 'search');
          assert.equal(controller._previousViewMode, 'tile');
          assert.equal(controller._searchValue, 'testFilterValue');
+         assert.equal(searchValue, 'testFilterValue');
 
 
          var rs = new collection.RecordSet({
@@ -166,17 +172,19 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
          searchMod.Controller._private.abortCallback(controller, filter);
 
-         assert.isTrue(stubNotify.calledOnce);
+         assert.isTrue(stubNotify.calledTwice);
          assert.isTrue(controller._viewMode === 'search');
          assert.isFalse(controller._loading);
          assert.equal(controller._misspellValue, '');
          assert.equal(controller._searchValue, '');
          assert.equal(controller._inputSearchValue, 'testInputValue');
          assert.deepEqual(filter, {test: 'test'});
+         assert.isTrue(stubNotify.withArgs('searchValueChanged', ['']).calledOnce);
+         assert.isTrue(stubNotify.withArgs('filterChanged', [filter]).calledOnce);
 
          controller._options.filter = { test: 'test' };
          searchMod.Controller._private.abortCallback(controller, filter);
-         assert.isTrue(stubNotify.calledOnce);
+         assert.isTrue(stubNotify.withArgs('filterChanged', [filter]).calledOnce);
          assert.deepEqual(filter, {test: 'test'});
       });
 
