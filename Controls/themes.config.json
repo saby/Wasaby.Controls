@@ -12,7 +12,11 @@
             "ws4-plugin",
             "ws3-plugin",
             "wasaby-consultant",
-            "wasaby-consultant-dark"
+            "wasaby-consultant-dark",
+            "ws4-richeditor",
+            "ws4-graphs",
+            "ws4-user",
+            "ws4-headers"
         ]
     }
 }
