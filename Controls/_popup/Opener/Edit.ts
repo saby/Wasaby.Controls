@@ -235,15 +235,20 @@ import Deferred = require('Core/Deferred');
                 * @param {Object} record Data from formController
                 * @param {additionalData} additionalData Additional data from formController
                 */
-               var eventResult = this._notify('beforeItemEndEdit', [data.formControllerEvent, data.record, data.additionalData || {}], { bubbling: true });
-               var self = this;
+               const eventResult = this._notify('beforeItemEndEdit', [data.formControllerEvent, data.record, data.additionalData || {}], { bubbling: true });
                if (eventResult !== Edit.CANCEL && this._options.items) {
-                  _private.loadSynchronizer().addCallback(function(Synchronizer) {
-                     _private.synchronize(self, eventResult, data, Synchronizer);
+                  _private.loadSynchronizer().addCallback((Synchronizer) => {
+                     _private.synchronize(this, eventResult, data, Synchronizer);
+                     if (data.formControllerEvent === 'update') {
+                        // Если было создание, запоминаем ключ, чтобы при повторном сохранении знать, какую запись в реестре обновлять
+                        if (data.additionalData.isNewRecord && !this._linkedKey) {
+                           this._linkedKey = data.additionalData.key || data.record.getId();
+                        }
+                     }
                   });
                }
             } else {
-               var args = Array.prototype.slice.call(arguments);
+               const args = Array.prototype.slice.call(arguments);
                if (this._resultHandler) {
                   this._resultHandler.apply(this, args);
                }
