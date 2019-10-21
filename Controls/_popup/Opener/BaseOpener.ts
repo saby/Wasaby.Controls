@@ -4,7 +4,7 @@ import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import { DefaultOpenerFinder } from 'UI/Focus';
 import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
-import Env = require('Env/Env');
+import {IoC} from 'Env/Env';
 import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import {parse as parserLib, load} from 'Core/library';
@@ -61,8 +61,8 @@ class BaseOpener extends Control<IControlOptions> {
      * Closes a popup
      * @function Controls/_popup/Opener/BaseOpener#close
      */
-    close(id: string): void {
-        const popupId: string = id || this._getCurrentPopupId();
+    close(): void {
+        const popupId: string = this._getCurrentPopupId();
         if (popupId) {
             BaseOpener.closeDialog(popupId).addCallback(() => {
                 this._popupId = null;
@@ -351,7 +351,7 @@ class BaseOpener extends Control<IControlOptions> {
                     }
                     def.callback(action);
                 } catch (err) {
-                    Env.IoC.resolve('ILogger').error(BaseOpener.prototype._moduleName, 'Ошибка при открытии окна: ' + err.message);
+                    IoC.resolve('ILogger').error(BaseOpener.prototype._moduleName, 'Ошибка при открытии окна: ' + err.message);
                 }
 
             });
@@ -381,7 +381,7 @@ class BaseOpener extends Control<IControlOptions> {
             BaseOpener.requireModule(config.template),
             BaseOpener.requireModule(controller)
         ]).catch((error: Error) => {
-            Env.IoC.resolve('ILogger').error(this._moduleName, error.message);
+            IoC.resolve('ILogger').error(this._moduleName, error.message);
             return error;
         });
     }
@@ -492,7 +492,7 @@ class BaseOpener extends Control<IControlOptions> {
         }
 
         if (baseCfg.hasOwnProperty('verticalAlign') || baseCfg.hasOwnProperty('horizontalAlign')) {
-            Env.IoC.resolve('ILogger').warn(BaseOpener.prototype._moduleName, 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
+            IoC.resolve('ILogger').warn(BaseOpener.prototype._moduleName, 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
         }
 
         return baseCfg;

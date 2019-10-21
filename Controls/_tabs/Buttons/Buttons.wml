@@ -16,9 +16,10 @@
             </ws:if>
             <div class="controls-Tabs__itemSeparator controls-Tabs__itemSeparator_theme_{{_options.theme}}
                         controls-Tabs__itemSeparator_align_{{item.get('contentTab') ? 'right' : item.get('align') || 'right'}}"></div>
-            <ws:if data="{{item[_options.keyProperty] !== _options.selectedKey}}">
-                <div class="controls-Tabs__overlay" on:click="_onItemClick(item.get(_options.keyProperty))"></div>
-            </ws:if>
+<!--            todo: https://online.sbis.ru/opendoc.html?guid=be4df8fc-5c9f-4cb0-b4aa-933bc3a326df-->
+<!--            <ws:if data="{{item[_options.keyProperty] !== _options.selectedKey}}">-->
+<!--                <div class="controls-Tabs__overlay" on:click="_onItemClick(item.get(_options.keyProperty))"></div>-->
+<!--            </ws:if>-->
         </div>
     </ws:for>
     <div class="controls-Tabs__space controls-Tabs__space_theme_{{_options.theme}}">
