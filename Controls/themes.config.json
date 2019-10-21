@@ -11,7 +11,8 @@
             "ws4-cloud",
             "ws4-plugin",
             "ws3-plugin",
-            "wasaby-events"
+            "wasaby-events",
+            "wasaby-booking-widget"
         ]
     }
 }
