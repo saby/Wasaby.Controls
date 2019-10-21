@@ -9,10 +9,10 @@
            keyProperty="{{_options.keyProperty}}"
            displayProperty="title"
            multiSelect="{{_options.multiSelect}}"
+           selectorTemplate="{{_options.selectorTemplate}}"
            on:selectedKeysChanged="_selectedKeysHandler()"
            on:textValueChanged="_textValueHandler()"
            attr:class="controls-demo-Lookup__control {{_options.className}}">
-      <ws:selectorTemplate templateName="{{_options.selectorTemplateName}}" templateOptions="{{_options.selectorTemplateOptions}}"/>
       <ws:navigation source="page" view="page">
          <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
       </ws:navigation>
