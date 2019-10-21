@@ -255,7 +255,8 @@ define(
                right: 410,
                width: 10,
                height: 10,
-               leftScroll: 50
+               leftScroll: 50,
+               topScroll: 50
             };
 
             // 3 position
@@ -265,8 +266,8 @@ define(
             cfg.align.vertical.side = 'bottom';
             cfg.align.horizontal.side = 'left';
             let position = StickyStrategy.getPosition(cfg, targetC);
-            assert.equal(position.top, 410);
-            assert.equal(position.right, 640);
+            assert.equal(position.top, 460);
+            assert.equal(position.right, 590);
             assert.equal(Object.keys(position).length, 4);
          });
 
@@ -322,13 +323,15 @@ define(
             cfg.align.vertical.side = 'top';
             cfg.align.horizontal.side = 'left';
             targetCoords.topScroll = 10;
+            targetCoords.leftScroll = 10;
 
             StickyStrategy._private.getTopScroll = () => targetCoords.topScroll;
 
             position = StickyStrategy.getPosition(cfg, targetCoords);
             targetCoords.topScroll = 0;
-            assert.equal(position.left, 400);
-            assert.equal(position.bottom, 610);
+            targetCoords.leftScroll = 0;
+            assert.equal(position.left, 410);
+            assert.equal(position.bottom, 600);
             assert.equal(Object.keys(position).length, 4);
          });
 
