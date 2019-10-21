@@ -17,8 +17,8 @@
    /**
     *
     * Module with a function to highlight searched string.
-    * Takes textToHighlight from resolverParams {@link Controls/_decorator/Markup#resolverParams}.
-    * Tag resolver for {@link Controls/_decorator/Markup}.
+    * Takes textToHighlight from resolverParams {@link Controls/decorator:Markup#resolverParams}.
+    * Tag resolver for {@link Controls/decorator:Markup}.
     *
     * @class Controls/_decorator/Markup/resolvers/highlight
     * @public
