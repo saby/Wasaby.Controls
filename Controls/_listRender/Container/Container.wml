@@ -1,4 +1,38 @@
-<ws:partial
-   template="{{ _render }}"
-   listModel="{{ _collection }}"
-   scope="{{ _options }}" />
+<ws:template name="conditionalItemActions">
+   <ws:if data="{{ _options.itemActions }}">
+      <Controls._listRender.Managers.ItemActions
+         listModel="{{ _collection }}"
+         itemActions="{{ _options.itemActions }}"
+         itemActionVisibilityCallback="{{ _options.itemActionVisibilityCallback }}"
+         itemActionsPosition="{{ _options.itemActionsPosition }}"
+         itemActionsProperty="{{ _options.itemActionsProperty }}"
+         contextMenuConfig="{{ _options.contextMenuConfig }}"
+
+         toolbarVisibility="{{ _options.editingConfig.toolbarVisibility }}"
+         style="{{ _options.style }}"
+         menuIsShown="{{ _dropdownMenuIsOpen }}"
+
+         on:requestDropdownMenuOpen="_onDropdownMenuOpenRequested()"
+         on:requestDropdownMenuClose="_onDropdownMenuCloseRequested()">
+         <ws:partial template="{{ contentTemplate }}" />
+      </Controls._listRender.Managers.ItemActions>
+      <Controls.dropdown:Opener
+         name="dropdownMenuOpener"
+         keyProperty="id"
+         menuStyle="cross"/>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="{{ contentTemplate }}" />
+   </ws:else>
+</ws:template>
+
+<div class="controls-BaseControl controls-BaseControl__renderContainer">
+   <ws:partial template="conditionalItemActions">
+      <ws:contentTemplate>
+         <ws:partial
+            template="{{ _options.render }}"
+            listModel="{{ _collection }}">
+         </ws:partial>
+      </ws:contentTemplate>
+   </ws:partial>
+</div>

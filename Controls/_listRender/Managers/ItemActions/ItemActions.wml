@@ -1,0 +1,17 @@
+<ws:partial
+   template="{{ _options.content }}"
+
+   attr:class="{{ _options.menuIsShown ? 'controls-itemActionsV_invisible' }}"
+
+   on:itemContextMenu="_onItemContextMenu()">
+   <ws:itemActionsTemplate>
+      <ws:partial
+         template="{{ _itemActionsTemplate }}"
+         toolbarVisibility="{{ _options.toolbarVisibility }}"
+         style="{{ _options.style }}"
+         size="{{ _options.editingConfig ? 's' : 'm' }}"
+         itemActionsPosition="{{ _options.itemActionsPosition }}"
+         actionMenuIsShown="{{ _options.actionMenuIsShown }}"
+         scope="{{ itemActionsTemplate }}" />
+   </ws:itemActionsTemplate>
+</ws:partial>

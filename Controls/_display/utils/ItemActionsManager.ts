@@ -62,6 +62,13 @@ export default class ItemActionsManager extends BaseManager<IVirtualScrollManage
         return this._activeItem;
     }
 
+    getMenuActions(item: IItemActionsManageableItem): TItemAction[] {
+        const actions = item.getActions();
+        return actions && actions.all && actions.all.filter(
+            (action) => action.showType !== showType.TOOLBAR
+        );
+    }
+
     protected _isMatchingActions(oldContainer: IItemActionsContainer, newContainer: IItemActionsContainer): boolean {
         return (
             this._isMatchingActionIds(oldContainer.all, newContainer.all) &&

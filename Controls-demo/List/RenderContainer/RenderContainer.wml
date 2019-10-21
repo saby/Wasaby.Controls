@@ -1,7 +1,9 @@
 <div attr:style="display: flex; justify-content: space-around;">
    <Controls.scroll:Container scn="1" attr:style="width: 50%; height: 600px;">
       <Controls.listRender:Container
-         kind="tile"
+         collection="Controls/display:TileCollection"
+         render="Controls/tile:TileRender"
+
          items="{{ _items }}"
          itemActions="{{ _itemActions }}"
 
