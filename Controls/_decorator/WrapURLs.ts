@@ -3,7 +3,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_decorator/WrapURLs/WrapURLs';
 
 /**
- * Выделяет цветом текст, содержащий ссылку.
+ * Выделяет цветом текст, в котором содержится ссылка.
  *
  * @class Controls/_decorator/WrapURLs
  * @extends Core/Control
