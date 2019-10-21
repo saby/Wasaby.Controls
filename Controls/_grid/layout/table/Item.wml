@@ -71,7 +71,7 @@
 
 <tr class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} controls-Grid__row_{{itemData.style || 'default'}}
            {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}}">
-    <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(!itemData.hasMultiSelect ? 1 : 0)); itemData.goToNextColumn();">
+    <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
         <ws:partial template="colTpl"
                     currentColumn="{{itemData.getCurrentColumn()}}"
                     attr:class="{{itemData.getCurrentColumn().cellClasses}} js-controls-SwipeControl__actionsContainer
