@@ -910,11 +910,6 @@ var _private = {
             }
         }
     },
-    unlockItemActions: debounce(function(self) {
-        self._lockItemActionsByScroll = false;
-        self._canUpdateItemsActions = self._savedCanUpdateItemsActions || self._canUpdateItemsActions;
-        self._savedCanUpdateItemsActions = false;
-    }, ITEMACTIONS_UNLOCK_DELAY),
 
     setMarkerAfterScrolling: function(self, scrollTop) {
         let itemsContainer = self._children.listView.getItemsContainer();
@@ -958,11 +953,6 @@ var _private = {
 
 
     handleListScrollSync(self, params) {
-        if (self._hasItemActions){
-            self._savedCanUpdateItemsActions = self._canUpdateItemsActions || self._savedCanUpdateItemsActions;
-        }
-        self._lockItemActionsByScroll = true;
-        _private.unlockItemActions(self);
         if (detection.isMobileIOS) {
             _private.getIntertialScrolling(self).scrollStarted();
         }
@@ -1556,7 +1546,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _pagingNavigationVisible: false,
     _pagingLabelData: null,
 
-    _canUpdateItemsActions: false,
     _blockItemActionsByScroll: false,
 
     _needBottomPadding: false,
@@ -1738,7 +1727,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.startScrollEmitter(this);
         }
         if (this._hasItemActions) {
-            this._canUpdateItemsActions = true;
+            this._children.itemActions.updateActions();
         }
         if (this._options.itemsDragNDrop) {
             let container = this._container[0] || this._container;
@@ -1808,7 +1797,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             //Нужно обновлять опции записи не только при наведении мыши,
             //так как запись может поменяться в то время, как курсор находится на ней
-            self._canUpdateItemsActions = true;
+            if (this._hasItemActions){
+                this._children.itemActions.updateActions();
+            }
         }
 
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
@@ -1834,12 +1825,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
             if (this._hasItemActions){
-                if(!this._lockItemActionsByScroll) {
-                    this._canUpdateItemsActions = true;
-                    this._savedCanUpdateItemsActions = false;
-                } else {
-                    this._savedCanUpdateItemsActions = true;
-                }
+               this._children.itemActions.updateActions();
             }
         }
 
@@ -2015,9 +2001,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _afterUpdate: function(oldOptions) {
         if (this._needScrollCalculation) {
             _private.startScrollEmitter(this);
-        }
-        if (this._hasItemActions) {
-            this._canUpdateItemsActions = false;
         }
         if (this._resetScrollAfterReload) {
             this._notify('doScroll', ['top'], { bubbling: true });
@@ -2283,7 +2266,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
     _onAfterEndEdit: function(event, item, isAdd) {
-        this._canUpdateItemsActions = true;
+        if (this._hasItemActions){
+        this._children.itemActions.updateActions();
+    }
         return this._notify('afterEndEdit', [item, isAdd]);
     },
     _onAfterBeginEdit: function (event, item, isAdd) {
@@ -2365,13 +2350,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragStart: function(event, dragObject, domEvent) {
-        this._savedCanUpdateItemsActions = this._canUpdateItemsActions || this._savedCanUpdateItemsActions;
         this._listViewModel.setDragEntity(dragObject.entity);
         this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._itemDragData.dispItem));
     },
 
     _dragEnd: function(event, dragObject) {
-        this._canUpdateItemsActions = this._savedCanUpdateItemsActions || this._canUpdateItemsActions;
         if (this._options.itemsDragNDrop) {
             this._dragEndHandler(dragObject);
         }
@@ -2491,25 +2474,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return _private.getLoadingIndicatorClasses(hasItems, this._loadingIndicatorState);
     },
     _onHoveredItemChanged: function(e, item, container) {
-        if (this._hasItemActions){
-            let isDragging = !!this._listViewModel.getDragEntity();
-
-            // itemMouseEnter иногда срабатывает между _beforeUpdate и _afterUpdate.
-            // при этом, в _afterUpdate затирается _canUpdateItemsActions, и обновления опций не происходит
-            // hoveredItemChanged происходит вне цикла обновления списка, поэтому, когда требуется, опции обновятся
-
-            // do not need to update itemAction on touch devices, if mouseenter event was fired,
-            // otherwise actions will updated and redraw, because of this click on action will not work.
-            // actions on touch devices drawing on swipe.
-            if (!this._context.isTouch.isTouch){
-                if(!this._lockItemActionsByScroll && !isDragging && item) {
-                    this._canUpdateItemsActions = true;
-                    this._savedCanUpdateItemsActions = false;
-                } else {
-                    this._savedCanUpdateItemsActions = true;
-                }
-            }
-        }
         this._notify('hoveredItemChanged', [item, container]);
     },
 
