@@ -185,7 +185,7 @@ var
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             if (isBreadCrumbs) {
                 preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
-                if (params.multiSelectVisibility) {
+                if (params.multiSelectVisibility && !params.isTableLayout) {
                     preparedClasses += ' controls-Grid__cell_spacingBackButton_with_multiSelection';
                 }
             }
@@ -866,12 +866,21 @@ var
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0 && !cell.title) {
                 cellClasses += ' controls-Grid__header-cell-checkbox';
+
+                // В grid-layout хлебные крошки нельзя расположить в первой ячейке, если в таблице включен множественный выбор,
+                // т.к. крошки растянут колонку, поэтому размещаем крошки во второй колонке и задаем отрицательный margin слева.
+                // https://online.sbis.ru/doc/9fcac920-479a-40a3-8b8a-5aabb2886628
+                // В table-layout проблемы с растягиванием нет, поэтому используем colspan на крошке.
+                if (this._shouldUseTableLayout && this._headerRows[0][1] && this._headerRows[0][1].isBreadCrumbs) {
+                    headerColumn.isHiddenForBreadcrumbs = true;
+                }
             } else {
                 cellClasses += _private.getPaddingHeaderCellClasses({
                     style: this._options.style,
                     columns: this._headerRows[rowIndex],
                     columnIndex: columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
+                    isTableLayout: this._shouldUseTableLayout,
                     itemPadding: this._model.getItemPadding(),
                     isHeader: true,
                     cell,
