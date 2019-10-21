@@ -1241,6 +1241,25 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._isPartialGridSupport = native;
          });
 
+         it('isLastColumn', function () {
+            // has multiselect, 5 columns
+            const itemData = gridViewModel.getItemDataByItem(gridViewModel.getDisplay().at(2));
+
+            // checkBox
+            assert.equal(itemData.hasNextColumn(), true);
+            assert.equal(itemData.hasNextColumn(true), true);
+
+            itemData.goToNextColumn();
+
+            assert.equal(itemData.hasNextColumn(), true);
+            assert.equal(itemData.hasNextColumn(true), true);
+
+            itemData.goToNextColumn();
+
+            assert.equal(itemData.hasNextColumn(), true);
+            assert.equal(itemData.hasNextColumn(true), false);
+         });
+
          it('setEditingItemData', function () {
 
             const nativeFn = gridViewModel._model._setEditingItemData;

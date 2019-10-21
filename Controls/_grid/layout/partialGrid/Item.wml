@@ -102,7 +102,7 @@
 <!-- Строка в режиме редактирования  -->
 <ws:if data="{{itemData.isEditing}}">
     <div style="{{itemData.getEditingRowStyles()}}">
-        <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(!itemData.hasMultiSelect ? 1 : 0)); itemData.goToNextColumn();">
+        <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
             <!-- To avoid closures, need to give all generating in itemData as a template options. -->
             <!-- For-loop creates it's own scope. In for scope itemData is always the same object. -->
             <!-- The template engine first builds the first level templates located in the body of the loop and does not enter them. -->
@@ -117,7 +117,7 @@
 
 <!-- Строка в режиме просмотра -->
 <ws:else>
-    <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(!itemData.hasMultiSelect ? 1 : 0)); itemData.goToNextColumn();">
+    <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
         <!-- To avoid closures, need to give all generating in itemData as a template options. -->
         <!-- For-loop creates it's own scope. In for scope itemData is always the same object. -->
         <!-- The template engine first builds the first level templates located in the body of the loop and does not enter them. -->

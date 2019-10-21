@@ -1406,6 +1406,13 @@ var
             current.getLastColumnIndex = () => {
                 return current.columns.length - 1;
             };
+            current.hasNextColumn = (isColumnColspaned: boolean) => {
+                if (isColumnColspaned) {
+                    return current.columnIndex <= (current.hasMultiSelect ? 1 : 0);
+                } else {
+                    return current.getLastColumnIndex() >= current.columnIndex;
+                }
+            };
             current.isDrawActions = _private.isDrawActions;
             current.getCellStyle = _private.getCellStyle;
             current.getColspan = _private.getColspan;
