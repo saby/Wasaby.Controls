@@ -4470,6 +4470,41 @@ define([
             assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
             assert.equal(ctrl._loadingState, null);
          });
+
+         it('notify itemMouseEnter to parent', function () {
+            const cfg = {
+               viewName: 'Controls/List/ListView',
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  idProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               source: source,
+               selectedKeysCount: 1
+            };
+            const instance = new lists.BaseControl(cfg);
+            const enterItemData = {};
+            const enterNativeEvent = {};
+            let called = false;
+
+            instance._notify = (eName, args) => {
+               if (eName === 'itemMouseEnter') {
+                  called = true;
+                  assert.equal(args[0], enterItemData);
+                  assert.equal(args[1], enterNativeEvent);
+               }
+            };
+            instance._listViewModel = {
+               getDragEntity: () => {}
+            };
+
+            instance._itemMouseEnter({}, enterItemData, enterNativeEvent);
+            assert.isTrue(called);
+         });
+
          it('Reload with empty results', async function() {
             let src = new sourceLib.Memory({
                keyProperty: 'id',
