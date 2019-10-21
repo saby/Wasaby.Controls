@@ -246,8 +246,8 @@ class Popup extends Control<IPopupOptions> {
     private static _isResized(oldOptions: IPopupOptions, newOptions: IPopupOptions): boolean {
         const {position: oldPosition, hidden: oldHidden}: IPopupOptions = oldOptions;
         const {position: newPosition, hidden: newHidden}: IPopupOptions = newOptions;
-        const hasWidthChanged: boolean = oldPosition.width && oldPosition.width !== newPosition.width;
-        const hasHeightChanged: boolean = oldPosition.height && oldPosition.height !== newPosition.height;
+        const hasWidthChanged: boolean = oldPosition.width !== newPosition.width;
+        const hasHeightChanged: boolean = oldPosition.height !== newPosition.height;
         const hasHiddenChanged: boolean = oldHidden !== newHidden;
 
         return hasWidthChanged || hasHeightChanged || (hasHiddenChanged && newHidden === false);
