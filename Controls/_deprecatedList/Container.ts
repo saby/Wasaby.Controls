@@ -56,33 +56,21 @@ var _private = {
    },
 
    updateSource: function(self, data) {
-      let
-         source = _private.getOriginSource(self._options.source),
-         items = data.getRawData();
+      const source = _private.getOriginSource(self._options.source);
+      let items = data.getRawData();
 
       if (self._options.reverseList) {
          items = _private.reverseData(items, source);
       }
 
-      /* TODO will be a cached source */
-      _private.cachedSourceFix(self);
-      const memorySource = new Memory({
-         model: data.getModel(),
-         keyProperty: data.getKeyProperty(),
-         data: items,
-         adapter: source.getAdapter()
+      self._source = new PrefetchProxy({
+         data: {
+            query: self._options.reverseList ? items : data
+         },
+         target: source
       });
-
-      if (self._options.reverseList) {
-         self._source = memorySource;
-      } else {
-         self._source = new PrefetchProxy({
-            data: {
-               query: data
-            },
-            target: memorySource
-         });
-      }
+      self._navigation = self._options.navigation;
+      self._filter = self._options.filter;
    },
 
    reverseData: function(data, source) {
