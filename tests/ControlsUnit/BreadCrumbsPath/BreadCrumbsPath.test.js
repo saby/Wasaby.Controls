@@ -231,12 +231,15 @@ define([
    });
 
    describe('Controls.BreadCrumbs.Path', function() {
+
+      var calculateBreadCrumbsToDraw = BreadCrumbsUtil.calculateBreadCrumbsToDraw;
+      BreadCrumbsUtil.calculateBreadCrumbsToDraw = function() {};
       describe('resize notify', function() {
          Path = Path.default;
          var data, path, data1;
          var resizeNotified = false;
 
-         
+
          data = [
             {
                id: 1,
@@ -324,5 +327,7 @@ define([
             resizeNotified = false;
          });
       });
+
+      BreadCrumbsUtil.calculateBreadCrumbsToDraw = calculateBreadCrumbsToDraw;
    });
 });
