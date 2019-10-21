@@ -6,12 +6,15 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
 
 
    /**
-    * Иерархический список с пользовательским шаблоном элемента. Может загружать данные из источника данных.
-    * Подробное описание и инструкции по настройке вы можете прочитать <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>здесь</a>.
-    * Подробное описание и инструкции по настройке редактирования по месту можно прочитать <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/edit-at-list/'>здесь</a>.
-    * <a href="/materials/demo-ws4-edit-in-place">Демо-пример</a>
-    * <a href="/materials/demo-ws4-tree-singleexpand">Дерево с опцией singleExpand</a>.
-    *
+    * Контрол "Дерево".
+    * @description
+    * Вспомогательные материалы:
+    * * <a href="/doc/platform/developmentapl/interface-development/controls/list/tree/">Руководство разработчика</a>
+    * * <a href="http://axure.tensor.ru/standarts/v7/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html">Спецификация контрола</a>
+    * * <a href="/materials/demo-ws4-tree-singleexpand">Демо-пример</a> с множественным выбором элементов и с единичным раскрытием содержимого папок
+    * * <a href="/materials/demo-ws4-tree-grid-item-template">Демо-пример</a> с пользовательским шаблоном элемента списка
+    * * <a href="/materials/demo-ws4-tree-with-photo">Демо-пример</a> с пользовательским шаблоном элемента списка с фото
+    * * <a href="/materials/demo-ws4-tree-grid-extended">Демо-пример</a> с пользовательским шаблоном подвала (футера)
     * @class Controls/_treeGrid/View
     * @extends Controls/_grid/Grid
     * @mixes Controls/_interface/ISource
@@ -23,7 +26,6 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_treeGrid/interface/ITreeControl
-    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/ITreeGridItemTemplate
     * @mixes Controls/interface/IDraggable
     * @mixes Controls/_grid/interface/IGridControl
@@ -72,7 +74,6 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_treeGrid/interface/ITreeControl
     * @mixes Controls/interface/ITreeGridItemTemplate
-    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IDraggable
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/interface/IGroupedGrid
