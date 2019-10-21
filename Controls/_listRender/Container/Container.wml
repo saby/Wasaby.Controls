@@ -31,7 +31,8 @@
       <ws:contentTemplate>
          <ws:partial
             template="{{ _options.render }}"
-            listModel="{{ _collection }}">
+            listModel="{{ _collection }}"
+            scope="{{ _options }}">
          </ws:partial>
       </ws:contentTemplate>
    </ws:partial>
