@@ -6,6 +6,7 @@
     "compatibility": {
         "**/*.less": [
             "ws4-retail",
+            "ws4-retail-sizes",
             "ws4-default",
             "ws4-default-layout",
             "ws4-cloud",
