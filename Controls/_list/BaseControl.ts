@@ -2437,7 +2437,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._listViewModel.setDragEntity(null);
     },
 
-    _itemMouseEnter: function(event, itemData) {
+    _itemMouseEnter: function(event, itemData, nativeEvent) {
         var
             dragPosition,
             dragEntity = this._listViewModel.getDragEntity();
@@ -2449,6 +2449,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 this._listViewModel.setDragTargetPosition(dragPosition);
             }
         }
+        this._notify('itemMouseEnter', [itemData, nativeEvent]);
     },
 
     _itemMouseMove(event, itemData, nativeEvent) {

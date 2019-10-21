@@ -255,6 +255,48 @@
  */
 
 /**
+ * @event Controls/_list/interface/IList#itemMouseEnter Происходит в момент, когда курсор оказывается над элементом списка.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Экземпляр записи, на которую был наведен курсор.
+ * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Дескриптор события мыши.
+ */
+
+/*
+ * @event Controls/_list/interface/IList#itemMouseEnter Occurs when the cursor is over the list item.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Types/entity:Model} item Instance of the item that the cursor was over.
+ * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Descriptor of the mouse event
+ */
+
+/**
+ * @event Controls/_list/interface/IList#itemMouseLeave Происходит в момент, когда курсор уходит за пределы элемента списка.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Экземпляр записи, за пределы которой ушел курсор.
+ * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Дескриптор события мыши.
+ */
+
+/*
+ * @event Controls/_list/interface/IList#itemMouseLeave Occurs when the cursor leaves the list item.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Types/entity:Model} item Instance of the item that the cursor was over.
+ * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Descriptor of the mouse event
+ */
+
+/**
+ * @event Controls/_list/interface/IList#itemMouseMove Происходит в момент, когда курсор двигается по элементам списка.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Экземпляр записи, по которой двигается курсор.
+ * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Дескриптор события мыши.
+ */
+
+/*
+ * @event Controls/_list/interface/IList#itemMouseMove Occurs when the cursor moves over list items.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Types/entity:Model} item Instance of the item that the cursor is moving along.
+ * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Descriptor of the mouse event
+ */
+
+/**
  * @event Controls/_list/interface/IList#actionClick Происходит при клике на элемент панели действий над записью.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {ItemAction} action Запись, по которой был выполнен клик.
