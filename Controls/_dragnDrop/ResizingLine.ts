@@ -50,6 +50,7 @@ export interface IResizingLineOptions extends IControlOptions {
      * @cfg {String} Задает направление оси для сдвига
      * @variant direct Прямое направление. Слева направо
      * @variant reverse Обратное направление. Справа налево
+     * @default direct
      * @remark
      * Влияет на то, каким будет результат события offset. Если сдвиг идет вдоль направления оси, offset положительный. Если против, то отрицательный
      * @see event offset()
@@ -148,6 +149,10 @@ class ResizingLine extends Control<IResizingLineOptions> {
 
     static getDefaultTypes() {
         return {
+            direction: descriptor(String).oneOf([
+                'direct',
+                'reverse'
+            ]),
             minOffset: descriptor(Number),
             maxOffset: descriptor(Number)
         };
@@ -156,7 +161,8 @@ class ResizingLine extends Control<IResizingLineOptions> {
     static getDefaultOptions(): object {
         return {
             minOffset: 1000,
-            maxOffset: 1000
+            maxOffset: 1000,
+            direction: 'direct'
         }
     }
 }
