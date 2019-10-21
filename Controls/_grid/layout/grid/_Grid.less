@@ -467,11 +467,10 @@
       box-shadow: @box-shadow_Grid-masterList-item_selected;
       width: ~'calc(100% + @{border-width_List-masterList-right})';
       position: absolute;
-      bottom: 0;
       left: 0;
       pointer-events: none;
-      //Top border of grid element is 1px;
-      height: ~'calc(100% + 1px)';
+      top: -@border-width_List-masterList-item-top;
+      bottom: -@border-width_List-masterList-item-bottom;
    }
 }
 
