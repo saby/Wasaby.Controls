@@ -393,7 +393,15 @@ define('Controls-demo/FilterView/FilterView',
                })},
                {name: 'ourOrganisation', value: [], resetValue: [], textValue: '', viewMode: 'extended', visibility: false,
                   editorOptions: {
-                     selectorTemplate: { templateName: 'Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector'},
+                     selectorTemplate: {
+                        templateName: 'Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector',
+                        templateOptions: {
+                           source: new sourceLib.Memory({
+                              data: SelectorData.companies,
+                              keyProperty: 'id'
+                           })
+                        }
+                     },
                      suggestTemplateName: 'Controls-demo/Input/Lookup/Suggest/SuggestTemplate',
                      className: 'controls-demo-FilterView__lookupTemplate',
                      caption: 'Our company',
