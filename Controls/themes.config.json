@@ -11,6 +11,8 @@
             "ws4-cloud",
             "ws4-plugin",
             "ws3-plugin",
+            "wasaby-events",
+            "wasaby-booking-widget",
             "wasaby-consultant",
             "wasaby-consultant-dark",
             "ws4-richeditor",
