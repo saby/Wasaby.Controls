@@ -7,7 +7,7 @@ export interface IOptions<S, T> {
 /**
  * Интерфейс стратегии получения элементов проекции.
  * @interface Controls/_display/IItemsStrategy
- * @public
+ * @private
  * @author Мальцев А.А.
  */
 export default interface IItemsStrategy<S, T> {
