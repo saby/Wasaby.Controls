@@ -93,7 +93,7 @@
             <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
             <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
             {{itemData.resetColumnIndex()}}
-            <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(!itemData.hasMultiSelect ? 1 : 0)); itemData.goToNextColumn();">
+            <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
                <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="{{className}}"/>
             </ws:for>
          </div>
@@ -101,7 +101,7 @@
    </ws:if>
    <ws:else>
       <div attr:class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
-         <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<(!itemData.hasMultiSelect ? 1 : 0)); itemData.goToNextColumn();">
+         <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
             <ws:partial template="colTpl" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="{{className}}"/>
          </ws:for>
       </div>
