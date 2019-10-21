@@ -52,6 +52,42 @@ export const Gadgets = {
                 photo: 'https://fakeimg.pl/250x100/'
             },
             {
+                id: 11,
+                title: 'Smartphones',
+                parent: 1,
+                rating: '9.2',
+                type: true,
+                hasChild: true,
+                photo: 'https://fakeimg.pl/250x100/'
+            },
+            {
+                id: 12,
+                title: 'Smartphones',
+                parent: 1,
+                rating: '9.2',
+                type: true,
+                hasChild: true,
+                photo: 'https://fakeimg.pl/250x100/'
+            },
+            {
+                id: 13,
+                title: 'Smartphones',
+                parent: 1,
+                rating: '9.2',
+                type: true,
+                hasChild: true,
+                photo: 'https://fakeimg.pl/250x100/'
+            },
+            {
+                id: 14,
+                title: 'Smartphones',
+                parent: 1,
+                rating: '9.2',
+                type: true,
+                hasChild: true,
+                photo: 'https://fakeimg.pl/250x100/'
+            },
+            {
                 id: 3,
                 title: 'iPhone 4s',
                 rating: '9.5',
