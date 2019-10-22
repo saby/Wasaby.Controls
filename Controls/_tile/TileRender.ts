@@ -6,7 +6,10 @@ import template = require('wml!Controls/_tile/TileRender/TileRender');
 import defaultItemTemplate = require('wml!Controls/_tile/TileRender/resources/ItemTemplateWrapper');
 
 import { TileCollection, TileCollectionItem } from 'Controls/display';
+import { debounce } from 'Types/function';
 import { SyntheticEvent } from 'Vdom/Vdom';
+
+const HOVERED_ITEM_CHANGE_DELAY = 150;
 
 export interface ITileRenderOptions extends IRenderOptions {
     listModel: TileCollection<unknown>;
@@ -20,10 +23,17 @@ export default class TileRender extends BaseRender {
     protected _animatedItem: TileCollectionItem<unknown> = null;
     protected _animatedItemTargetPosition: string;
 
+    private _debouncedSetHoveredItem: typeof TileRender.prototype._setHoveredItem;
+
     protected _beforeMount(options: ITileRenderOptions): void {
         super._beforeMount(options);
         this._templateKeyPrefix = `tile-render-${this.getInstanceId()}`;
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
+
+        this._debouncedSetHoveredItem = debounce(
+            this._setHoveredItem.bind(this),
+            HOVERED_ITEM_CHANGE_DELAY
+        ) as typeof TileRender.prototype._setHoveredItem;
     }
 
     protected _afterMount(options: ITileRenderOptions): void {
@@ -70,6 +80,16 @@ export default class TileRender extends BaseRender {
             this._setHoveredItemPosition(e, item);
         }
         super._onItemMouseMove(e, item);
+    }
+
+    protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
+        super._onItemMouseEnter(e, item);
+        this._debouncedSetHoveredItem(item);
+    }
+
+    protected _onItemMouseLeave(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
+        super._onItemMouseLeave(e, item);
+        this._debouncedSetHoveredItem(null);
     }
 
     protected _setHoveredItemPosition(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
@@ -126,5 +146,9 @@ export default class TileRender extends BaseRender {
             }
         }
         return result;
+    }
+
+    private _setHoveredItem(item: CollectionItem<unknown>): void {
+        this._options.listModel.setHoveredItem(item);
     }
 }

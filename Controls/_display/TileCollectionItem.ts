@@ -52,6 +52,21 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         }
     }
 
+    isHovered(): boolean {
+        return this._$hovered;
+    }
+
+    setHovered(hovered: boolean, silent?: boolean): void {
+        if (this._$hovered === hovered) {
+            return;
+        }
+        this._$hovered = hovered;
+        this._nextVersion();
+        if (!silent) {
+            this._notifyItemChangeToOwner('hovered');
+        }
+    }
+
     isFixed(): boolean {
         return !!this.getFixedPositionStyle();
     }

@@ -344,21 +344,6 @@ export default class CollectionItem<T> extends mixin<
         }
     }
 
-    isHovered(): boolean {
-        return this._$hovered;
-    }
-
-    setHovered(hovered: boolean, silent?: boolean): void {
-        if (this._$hovered === hovered) {
-            return;
-        }
-        this._$hovered = hovered;
-        this._nextVersion();
-        if (!silent) {
-            this._notifyItemChangeToOwner('hovered');
-        }
-    }
-
     getWrapperClasses(): string {
         let classes = `controls-ListView__itemV
             controls-ListView__item_highlightOnHover_default_theme_default
