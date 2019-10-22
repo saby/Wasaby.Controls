@@ -24,15 +24,13 @@
 <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
 {{ headerRow.resetHeaderColumns() }}
 <ws:for data="headerRow.resetHeaderColumns(); headerRow.isEndHeaderColumn(); headerRow.goToNextHeaderColumn();">
-    <ws:if data="{{!headerRow.getCurrentHeaderColumn().column.hiddenForBreadCrumbs}}">
-        <ws:partial template="cell"
-                    defaultHeaderContent="{{defaultHeaderContent}}"
-                    listModel="{{listModel}}"
-                    headerColumn="{{ headerRow.getCurrentHeaderColumn() }}"
-                    class="{{listModel.isPartialGridSupport()?'controls-Grid__header':''}}"
-                    multiselect="{{ listModel.getMultiSelectVisibility() }}"
-                    on:arrowClick="_notifyHandler('arrowClick')"/>
-    </ws:if>
+    <ws:partial template="cell"
+                defaultHeaderContent="{{defaultHeaderContent}}"
+                listModel="{{listModel}}"
+                headerColumn="{{ headerRow.getCurrentHeaderColumn() }}"
+                class="{{listModel.isPartialGridSupport()?'controls-Grid__header':''}}"
+                multiselect="{{ listModel.getMultiSelectVisibility() }}"
+                on:arrowClick="_notifyHandler('arrowClick')"/>
 </ws:for>
 </ws:template>
 
