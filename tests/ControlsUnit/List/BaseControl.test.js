@@ -1999,6 +1999,72 @@ define([
          assert.isTrue(lists.BaseControl._private.hasItemActions(undefined, itemActionsProp));
          assert.isFalse(lists.BaseControl._private.hasItemActions(undefined, undefined));
       });
+
+      describe('updateItemActions', function() {
+         var source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               keyProperty: 'id',
+               itemActions: [
+                  {
+                     id: 1,
+                     title: '123'
+                  }
+               ],
+               viewModelConstructor: lists.ListViewModel
+            },
+            baseControl = new lists.BaseControl(cfg);
+
+         baseControl.saveOptions(cfg);
+         baseControl._beforeMount(cfg);
+         var actionsUpdateCount = 0;
+         baseControl._children = {
+            itemActions: {
+               updateActions: function() {
+                  actionsUpdateCount++;
+               }
+            }
+         }
+         it('afterMount', function() {
+            baseControl._afterMount(cfg);
+            assert.equal(actionsUpdateCount, 1);
+         });
+         it('itemsChanged', async function() {
+            baseControl._itemsChanged = true;
+            await baseControl._beforeUpdate(cfg);
+            assert.equal(actionsUpdateCount, 2);
+         });
+         it('_onAfterEndEdit', function() {
+            baseControl._onAfterEndEdit({}, {});
+            assert.equal(actionsUpdateCount, 3);
+         });
+         it('update on recreating source', async function() {
+            let newSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            });
+            let newCfg = {
+               viewName: 'Controls/List/ListView',
+               source: newSource,
+               keyProperty: 'id',
+               itemActions: [
+                  {
+                     id: 1,
+                     title: '123'
+                  }
+               ],
+               viewModelConstructor: lists.ListViewModel
+            };
+            await baseControl._beforeUpdate(newCfg);
+            assert.equal(actionsUpdateCount, 4);
+         });
+
+      });
+
       describe('resetScrollAfterReload', function() {
          var source = new sourceLib.Memory({
                keyProperty: 'id',

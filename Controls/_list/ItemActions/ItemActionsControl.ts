@@ -198,9 +198,6 @@ var ItemActionsControl = Control.extend({
         }
     },
 
-    _beforeUnmount: function() {
-    },
-
     updateActions(): void {
         _private.updateActions(this, this._options);
     }

@@ -1726,9 +1726,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._setLoadOffset(this._loadOffsetTop, this._loadOffsetBottom);
             _private.startScrollEmitter(this);
         }
-        if (this._hasItemActions) {
-            this._children.itemActions.updateActions();
-        }
+        this.updateItemActions();
         if (this._options.itemsDragNDrop) {
             let container = this._container[0] || this._container;
             container.addEventListener('dragstart', this._nativeDragStart);
@@ -1797,9 +1795,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             //Нужно обновлять опции записи не только при наведении мыши,
             //так как запись может поменяться в то время, как курсор находится на ней
-            if (this._hasItemActions){
-                this._children.itemActions.updateActions();
-            }
+            this.updateItemActions();
         }
 
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
@@ -1824,9 +1820,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
-            if (this._hasItemActions){
-               this._children.itemActions.updateActions();
-            }
+            this.updateItemActions();
         }
 
         if (this._loadedItems) {
@@ -2265,10 +2259,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _showActionsMenu: function(event, itemData, childEvent, showAll) {
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
-    _onAfterEndEdit: function(event, item, isAdd) {
-        if (this._hasItemActions){
-        this._children.itemActions.updateActions();
+    updateItemActions: function() {
+        if (this._hasItemActions) {
+            this._children.itemActions.updateActions();
+        }
     }
+    _onAfterEndEdit: function(event, item, isAdd) {
+        this.updateItemActions();
         return this._notify('afterEndEdit', [item, isAdd]);
     },
     _onAfterBeginEdit: function (event, item, isAdd) {
