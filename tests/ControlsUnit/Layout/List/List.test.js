@@ -177,9 +177,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
          listLayout._searchDeferred = new Deferred();
          deprecatedList.Container._private.searchCallback(listLayout, {data: recordSet}, {testField: 'testValue'});
          assert.deepEqual(recordSet.getRawData(), listLayout._source._$data.query.getRawData());
-         //FIXME вернуть как будет cached source
-         //assert.deepEqual(listLayout._filter, {testField: 'testValue'});
-         assert.deepEqual(listLayout._filter, {});
+         assert.deepEqual(listLayout._filter, {testField: 'testValue'});
       });
 
       it('.searchValueChanged', function(done) {
@@ -195,9 +193,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
          assert.isFalse(searchStarted);
 
          setTimeout(function() {
-            //FIXME вернуть как будет cached source
-            //assert.deepEqual(listLayout._filter, {title: 'Sasha'});
-            assert.deepEqual(listLayout._filter, {});
+            assert.deepEqual(listLayout._filter, {title: 'Sasha'});
             assert.deepEqual(listLayout._source._$data.query.getRawData(), [
                { id: 1, title: 'Sasha' },
                { id: 5, title: 'Sasha' }
@@ -256,9 +252,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
          listLayout._beforeUpdate(listOptions, context);
 
          setTimeout(function() {
-            //FIXME вернуть как будет cached source
-            //assert.deepEqual(listLayout._filter, {title: 'Sasha'});
-            assert.deepEqual(listLayout._filter, {});
+            assert.deepEqual(listLayout._filter, {title: 'Sasha'});
             assert.deepEqual(listLayout._source._$data.query.getRawData(), [
                { id: 1, title: 'Sasha' },
                { id: 5, title: 'Sasha' }
@@ -328,9 +322,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
          context.searchLayoutField.searchValue = 'Sasha';
          listLayout._beforeUpdate(listOptions, context);
          setTimeout(function() {
-            //FIXME вернуть как будет cached source
-            //assert.deepEqual(listLayout._filter, {title: 'Sasha'});
-            assert.deepEqual(listLayout._filter, {});
+            assert.deepEqual(listLayout._filter, {title: 'Sasha'});
             assert.deepEqual(listLayout._source._$data.query.getRawData(), [
                { id: 1, title: 'Sasha' },
                { id: 5, title: 'Sasha' }

@@ -70,7 +70,7 @@ var _private = {
          target: source
       });
       self._navigation = self._options.navigation;
-      self._filter = self._options.filter;
+      self._filter = _private.getCurrentFilter(self);
    },
 
    reverseData: function(data, source) {
@@ -269,6 +269,12 @@ var _private = {
             })
          });
       }
+   },
+
+   getCurrentFilter(self): object {
+      return self._searchController ?
+          self._searchController.getFilter() :
+          _private.getFilterFromContext(self, self._context);
    }
 };
 
@@ -309,7 +315,7 @@ var List = Control.extend({
       let oldReverseList = this._options.reverseList;
 
       if (this._options.source !== newOptions.source || !isEqual(this._options.navigation, newOptions.navigation) || this._options.searchDelay !== newOptions.searchDelay) {
-         var currentFilter = this._searchController ? this._searchController.getFilter() : _private.getFilterFromContext(this, this._context);
+         var currentFilter = _private.getCurrentFilter(this);
          var source = this._source;
 
          _private.resolveOptions(this, newOptions);
