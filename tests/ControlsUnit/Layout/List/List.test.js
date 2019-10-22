@@ -125,7 +125,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
          it('list is reverse', function() {
             listLayout._options.reverseList = true;
             deprecatedList.Container._private.updateSource(listLayout, recordSet);
-            assert.deepEqual(recordSet.getRawData().reverse(), listLayout._source._$data.query);
+            assert.deepEqual(recordSet.getRawData().reverse(), listLayout._source._$data.query.getRawData());
          });
       });
 

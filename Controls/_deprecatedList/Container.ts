@@ -4,7 +4,7 @@ import merge = require('Core/core-merge');
 import Deferred = require('Core/Deferred');
 import cInstance = require('Core/core-instance');
 import clone = require('Core/core-clone');
-import {Memory, PrefetchProxy} from 'Types/source';
+import {DataSet, Memory, PrefetchProxy} from 'Types/source';
 import {_SearchController} from 'Controls/search';
 import {isEqual} from 'Types/object';
 import {FilterContextField, SearchContextField} from 'Controls/context';
@@ -65,7 +65,14 @@ var _private = {
 
       self._source = new PrefetchProxy({
          data: {
-            query: self._options.reverseList ? items : data
+            query: self._options.reverseList ?
+                new DataSet({
+                   rawData: items,
+                   adapter: data.getAdapter(),
+                   keyProperty: data.getKeyProperty(),
+                   model: data.getModel()
+                }) :
+                data
          },
          target: source
       });
