@@ -139,7 +139,7 @@ define([
          evType = [];
          scrollMod.Watcher._private.onResizeContainer(ins, containerMock, true);
          assert.deepEqual({clientHeight: 300, scrollHeight: 400}, ins._sizeCache, 'Wrong size cache values');
-         assert.deepEqual(['canScroll', 'viewPortResize'], evType);
+         assert.deepEqual(['canScroll', 'viewPortResize', 'scrollResize'], evType);
          registrarMock.start = nativeMockStart;
       });
 

@@ -762,9 +762,14 @@ var _private = {
     needShowPagingByScrollSize: function(self, doubleRatio) {
         let result = false;
 
+        // если мы для списка раз вычислили, что нужен пэйджинг, то возвращаем этот статус
+        // это нужно для ситуации, если первая пачка данных вернула естьЕще (в этом случае пэйджинг нужен)
+        // а вторая вернула мало записей и суммарный объем менее двух вьюпортов, пэйджинг не должен исчезнуть
         if (self._cachedPagingState === true) {
             result = true;
         } else if (self._sourceController) {
+
+            // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             const hasMoreData = {
                 up: self._sourceController.hasMoreData('up'),
                 down: self._sourceController.hasMoreData('down')
@@ -773,10 +778,13 @@ var _private = {
                 result = true;
             }
         }
+
+        // если условия выше не прошли, то начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
         if (!result) {
             result = doubleRatio;
         }
 
+        // если пэйджинг был показан, запомним этот факт
         if (result) {
             self._cachedPagingState = true;
         }
