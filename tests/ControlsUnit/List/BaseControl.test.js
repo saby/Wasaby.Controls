@@ -1469,6 +1469,11 @@ define([
          }
       };
       it('ScrollPagingController', function(done) {
+         var heightParams = {
+            scrollHeight: 400,
+            clientHeight: 1000
+         };
+
          var rs = new collection.RecordSet({
             keyProperty: 'id',
             rawData: data
@@ -1509,7 +1514,7 @@ define([
 
          ctrl._children = triggers;
          // эмулируем появление скролла
-         lists.BaseControl._private.onScrollShow(ctrl);
+         lists.BaseControl._private.onScrollShow(ctrl, heightParams);
 
          // скроллпэйджиг контроллер создается асинхронном
          setTimeout(function() {
@@ -1567,7 +1572,10 @@ define([
              getBoundingClientRect: () => ({}),
              clientHeight: 480
          };
-         lists.BaseControl._private.onScrollShow(bc);
+         lists.BaseControl._private.onScrollShow(bc, {
+            scrollHeight: 400,
+            clientHeight: 1000
+         });
          bc._onViewPortResize(bc, 600);
          assert.deepEqual(bc._loadOffset, {top: 200, bottom: 200});
 
@@ -1600,6 +1608,10 @@ define([
                }
             }
          };
+         var heightParams = {
+            scrollHeight: 400,
+            clientHeight: 1000
+         };
          var baseControl = new lists.BaseControl(cfg);
          baseControl._children = triggers;
          baseControl.saveOptions(cfg);
@@ -1611,9 +1623,50 @@ define([
          assert.deepEqual({top: 0, bottom: 0}, baseControl._loadOffset);
          assert.isFalse(baseControl._isScrollShown);
 
-         lists.BaseControl._private.onScrollShow(baseControl);
+         lists.BaseControl._private.onScrollShow(baseControl, heightParams);
          assert.deepEqual({top: 100, bottom: 100}, baseControl._loadOffset);
          assert.isTrue(baseControl._isScrollShown);
+
+      });
+
+      it('needShowPagingByScrollSize', function() {
+         var cfg = {
+            navigation: {
+               view: 'infinity',
+               source: 'page',
+               viewConfig: {
+                  pagingMode: 'direct'
+               },
+               sourceConfig: {
+                  pageSize: 3,
+                  page: 0,
+                  hasMore: false
+               }
+            }
+         };
+         var heightParams = {
+            scrollHeight: 400,
+            clientHeight: 1000
+         };
+         var baseControl = new lists.BaseControl(cfg);
+         baseControl._sourceController = {
+            nav: false,
+            hasMoreData: function() {
+               return this.nav;
+            }
+         };
+
+         var res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, false);
+         assert.isFalse(res, 'Wrong paging state');
+
+         baseControl._sourceController.nav = true;
+         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, false);
+         assert.isTrue(res, 'Wrong paging state');
+
+         //one time true - always true
+         baseControl._sourceController.nav = false;
+         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, false);
+         assert.isTrue(res, 'Wrong paging state');
 
       });
 
@@ -1709,12 +1762,16 @@ define([
                }
             }
          };
+         var heightParams = {
+            scrollHeight: 400,
+            clientHeight: 1000
+         };
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          ctrl._children = triggers;
          // эмулируем появление скролла
-         lists.BaseControl._private.onScrollShow(ctrl);
+         lists.BaseControl._private.onScrollShow(ctrl, heightParams);
 
          // скроллпэйджиг контроллер создается асинхронном
          setTimeout(function() {
@@ -1777,13 +1834,17 @@ define([
                }
             }
          };
+         var heightParams = {
+            scrollHeight: 400,
+            clientHeight: 1000
+         };
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          ctrl._children = triggers;
 
          // эмулируем появление скролла
-         lists.BaseControl._private.onScrollShow(ctrl);
+         lists.BaseControl._private.onScrollShow(ctrl, heightParams);
 
          // скроллпэйджиг контроллер создается асинхронном
          setTimeout(function() {
@@ -1797,7 +1858,7 @@ define([
             ctrl.__onEmitScroll({}, 'listTop');
             ctrl.__onEmitScroll({}, 'listBottom');
             ctrl.__onEmitScroll({}, 'scrollMove', { scrollTop: 200 });
-            ctrl.__onEmitScroll({}, 'canScroll');
+            ctrl.__onEmitScroll({}, 'canScroll', { scrollHeight: 400, clientHeight: 1000 });
             ctrl.__onEmitScroll({}, 'cantScroll');
 
             ctrl.reload();

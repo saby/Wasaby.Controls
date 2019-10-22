@@ -35,26 +35,31 @@ import {SyntheticEvent} from "Vdom/Vdom"
             return scrollHeight - clientHeight > 1;
          },
 
-         sendCanScroll: function(self, clientHeight, scrollHeight) {
-            var eventName;
+          sendCanScroll: function (self, clientHeight, scrollHeight) {
+              let eventName;
+              let params = {};
 
-            if (_private.isCanScroll(clientHeight, scrollHeight)) {
-               if (self._canScrollCache !== true) {
-                  self._canScrollCache = true;
-                  eventName = 'canScroll';
-               }
-            } else {
-               if (self._canScrollCache !== false) {
-                  self._canScrollCache = false;
-                  eventName = 'cantScroll';
-               }
-            }
-            if (eventName) {
-               _private.sendByRegistrar(self, eventName);
-            }
-         },
+              if (_private.isCanScroll(clientHeight, scrollHeight)) {
+                  if (self._canScrollCache !== true) {
+                      self._canScrollCache = true;
+                      eventName = 'canScroll';
+                      params = {
+                          clientHeight,
+                          scrollHeight
+                      };
+                  }
+              } else {
+                  if (self._canScrollCache !== false) {
+                      self._canScrollCache = false;
+                      eventName = 'cantScroll';
+                  }
+              }
+              if (eventName) {
+                  _private.sendByRegistrar(self, eventName, params);
+              }
+          },
 
-         sendEdgePositions: function(self, clientHeight, scrollHeight, scrollTop) {
+          sendEdgePositions: function(self, clientHeight, scrollHeight, scrollTop) {
             var eventNames = [], i;
 
             //Проверка на триггеры начала/конца блока
@@ -112,6 +117,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
          onResizeContainer: function(self, container, withObserver) {
             let sizeCache = _private.getSizeCache(self, container);
             const oldClientHeight = sizeCache.clientHeight;
+            const oldScrollHeight = sizeCache.scrollHeight;
 
             _private.calcSizeCache(self, container);
             sizeCache = _private.getSizeCache(self, container);
@@ -122,7 +128,9 @@ import {SyntheticEvent} from "Vdom/Vdom"
             if (oldClientHeight !== sizeCache.clientHeight) {
                 _private.sendByRegistrar(self, 'viewPortResize', [sizeCache.clientHeight]);
             }
-
+            if ((oldClientHeight !== sizeCache.clientHeight) || (oldScrollHeight !== sizeCache.scrollHeight)) {
+                _private.sendByRegistrar(self, 'scrollResize', {...sizeCache});
+            }
          },
 
          onScrollContainer: function(self, container, withObserver) {
@@ -257,7 +265,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
                sizeCache = _private.getSizeCache(self, container);
             }
             if (_private.isCanScroll(sizeCache.clientHeight, sizeCache.scrollHeight)) {
-               self._registrar.startOnceTarget(component, 'canScroll');
+               self._registrar.startOnceTarget(component, 'canScroll', {...sizeCache});
             } else {
                self._registrar.startOnceTarget(component, 'cantScroll');
             }
