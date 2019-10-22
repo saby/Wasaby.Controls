@@ -1,12 +1,12 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/PropertyGrid/PropertyGrid');
 import Utils = require('Types/util');
-import {isEqual} from 'Types/object';
 import Clone = require('Core/core-clone');
 import chain = require('Types/chain');
+import {isEqual} from 'Types/object';
 import 'css!theme?Controls/filterPopup';
 
-   /**
+/**
     * Control PropertyGrid
     * Provides a user interface for browsing and editing the properties of an object.
     *
@@ -61,7 +61,7 @@ import 'css!theme?Controls/filterPopup';
          Object.defineProperty(obj, propName, {
             set(newValue) {
                value = newValue;
-               self._notify('itemsChanged', [self._items]);
+               _private.itemsChanged(self);
             },
 
             get() {
@@ -81,8 +81,12 @@ import 'css!theme?Controls/filterPopup';
       },
 
       setItems: function(self, items) {
-         self._items = _private.cloneItems(items);
+         self._items = items;
          _private.observeItems(self, self._items);
+      },
+
+      itemsChanged(self): void {
+         self._notify('itemsChanged', [self._items]);
       },
 
       getLastVisibleItemIndex: function (items) {
@@ -111,7 +115,7 @@ import 'css!theme?Controls/filterPopup';
       _beforeUpdate: function(newOptions) {
          if (!isEqual(newOptions.items, this._items)) {
             this._changedIndex = _private.getIndexChangedVisibility(newOptions.items, this._items);
-            _private.setItems(this, newOptions.items);
+            _private.setItems(this, _private.cloneItems(newOptions.items));
          } else {
             this._changedIndex = -1;
          }
@@ -130,9 +134,11 @@ import 'css!theme?Controls/filterPopup';
       },
 
       _updateItem: function(index, field, value) {
-         this._items[index][field] = value;
-         _private.setItems(this, this._items);
-         this._notify('itemsChanged', [this._items]);
+         const items = _private.cloneItems(this._items);
+
+         items[index][field] = value;
+         _private.setItems(this, items);
+         _private.itemsChanged(this);
       },
 
       _valueChangedHandler: function(event, index, value) {
