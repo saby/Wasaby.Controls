@@ -53,6 +53,8 @@ const LOAD_TRIGGER_OFFSET = 100;
 const INITIAL_PAGES_COUNT = 1;
 const ITEMACTIONS_UNLOCK_DELAY = 200;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
+
+const MIN_SCROLL_PAGING_PROPORTION = 2;
 /**
  * Object with state from server side rendering
  * @typedef {Object}
@@ -158,6 +160,8 @@ var _private = {
                 if (cfg.dataLoadCallback instanceof Function) {
                     cfg.dataLoadCallback(list);
                 }
+
+                self._cachedPagingState = null;
 
                 if (listModel) {
                     if (self._isActive) {
@@ -755,22 +759,49 @@ var _private = {
         scrollEmitter.__started = true;
     },
 
-    onScrollShow: function(self) {
+    needShowPagingByScrollSize: function(self, doubleRatio) {
+        let result = false;
+
+        if (self._cachedPagingState === true) {
+            result = true;
+        } else if (self._sourceController) {
+            const hasMoreData = {
+                up: self._sourceController.hasMoreData('up'),
+                down: self._sourceController.hasMoreData('down')
+            };
+            if (hasMoreData.up || hasMoreData.down) {
+                result = true;
+            }
+        }
+        if (!result) {
+            result = doubleRatio;
+        }
+
+        if (result) {
+            self._cachedPagingState = true;
+        }
+
+        return result;
+    },
+
+    onScrollShow: function(self, params) {
         // ToDo option "loadOffset" is crutch for contacts.
         // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
         if (self._needScrollCalculation) {
             self._setLoadOffset(self._loadOffsetTop, self._loadOffsetBottom);
         }
         self._isScrollShown = true;
+
+        const doubleRatio = (params.scrollHeight / params.clientHeight) > MIN_SCROLL_PAGING_PROPORTION;
         if (!self._scrollPagingCtr) {
             if (_private.needScrollPaging(self._options.navigation)) {
                 _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
                     self._scrollPagingCtr = scrollPagingCtr;
-                    self._pagingVisible = true;
+                    self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
                 });
             }
         } else if (_private.needScrollPaging(self._options.navigation)) {
-            self._pagingVisible = true;
+            self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
         }
     },
 
@@ -1535,6 +1566,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _pagingCfg: null,
     _pagingVisible: false,
 
+    // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
+    _cachedPagingState: false,
+
     _itemTemplate: null,
 
     _isScrollShown: false,
@@ -2095,6 +2129,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
+    _onScrollResize: function(self, params) {
+        const doubleRatio = (params.scrollHeight / params.clientHeight) > MIN_SCROLL_PAGING_PROPORTION;
+        self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
+    },
+
     __onEmitScroll: function(e, type, params) {
         var self = this;
         switch (type) {
@@ -2112,10 +2151,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             case 'scrollMoveSync': _private.handleListScrollSync(self, params); break;
             case 'scrollMove': _private.handleListScroll(self, params); break;
             case 'virtualScrollMove': _private.virtualScrollMove(self, params); break;
-            case 'canScroll': _private.onScrollShow(self); break;
+            case 'canScroll': _private.onScrollShow(self, params); break;
             case 'cantScroll': _private.onScrollHide(self); break;
 
             case 'viewPortResize': self._onViewPortResize(self, params[0]); break;
+            case 'scrollResize': self._onScrollResize(self, params); break;
         }
     },
 
