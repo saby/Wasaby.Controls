@@ -1,5 +1,4 @@
 /// <amd-module name="Controls/_dataSource/_error/Controller" />
-import { Confirmation } from 'Controls/popup';
 import { Controller as ParkingController } from 'Controls/_dataSource/parking';
 import {
     Handler,
@@ -157,13 +156,10 @@ export default class ErrorController {
     private _getDefault<T extends Error = Error>(config: HandlerConfig<T>): void {
         const message = config.error.message;
         const details = config.error.details;
-
-        Confirmation.openPopup({
-            type: 'ok',
-            style: 'danger',
-            message,
-            details
-        });
+        const style = 'danger';
+        const type = 'ok';
+        // @ts-ignore
+        import('Controls/popup').then((popup) => { popup.Confirmation.openPopup({ type, style, message, details }); });
     }
 
 }
