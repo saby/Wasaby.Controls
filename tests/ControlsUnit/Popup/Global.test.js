@@ -17,14 +17,13 @@ define([
          };
          let result = [];
 
-         ctrl.getInfoBox = () => ({
-            open: function() {
-               result.push('open');
-            },
-            close: function() {
-               result.push('close');
-            }
-         });
+         ctrl._openInfoBox = () => {
+            result.push('open');
+         };
+
+         ctrl._closeInfoBox = () => {
+            result.push('close');
+         };
 
          ctrl._openInfoBoxHandler(event1);
          ctrl._openInfoBoxHandler(event2);

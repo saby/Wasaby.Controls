@@ -1,68 +1,92 @@
 import cClone = require('Core/core-clone');
-import Base from 'Controls/_popup/Opener/BaseOpener';
+import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
+import ManagerController = require('Controls/_popup/Manager/ManagerController');
 
-var _private = {
-    displayDuration: 1000,
+const DISPLAY_DURATION: number = 1000;
+const POPUP_CONTROLLER = 'Controls/popupTemplate:PreviewerController';
+let openingTimerId: number = null;
+let closingTimerId: number = null;
+let previewerId: string;
 
-    clearOpeningTimeout: function(self) {
-        var id = self._openingTimerId;
-
-        if (id) {
-            clearTimeout(id);
-            self._openingTimerId = null;
-        }
-    },
-
-    clearClosingTimeout: function(self) {
-        var id = self._closingTimerId;
-
-        if (id) {
-            clearTimeout(id);
-            self._closingTimerId = null;
-        }
+const clearClosingTimeout = () => {
+    if (closingTimerId) {
+        clearTimeout(closingTimerId);
+        closingTimerId = null;
     }
 };
 
-class Previewer extends Base {
-    _openingTimerId: number = null;
+const clearOpeningTimeout = () => {
+    if (openingTimerId) {
+        clearTimeout(openingTimerId);
+        openingTimerId = null;
+    }
+};
 
-    _closingTimerId: number = null;
-    _beforeUnmount() {
-        _private.clearClosingTimeout(this);
-        _private.clearOpeningTimeout(this);
+const prepateConfig = (config) => {
+    const newConfig = cClone(config);
 
+    newConfig.closeOnOutsideClick = true;
+    newConfig.className = 'controls-PreviewerController';
+    newConfig._vdomOnOldPage = true;
+    return newConfig;
+};
+
+const open = (callback: Function, config: object, type?: string): void => {
+    clearClosingTimeout();
+    const newCfg = prepateConfig(config);
+    // Previewer - singleton
+
+    if (type === 'hover') {
+        openingTimerId = setTimeout(() => {
+            openingTimerId = null;
+            callback(newCfg);
+        }, DISPLAY_DURATION);
+    } else {
+        callback(newCfg);
+    }
+};
+
+const close = (callback: Function, type?: string): void => {
+    clearOpeningTimeout();
+    if (type === 'hover') {
+        closingTimerId = setTimeout(() => {
+            closingTimerId = null;
+            callback();
+        }, DISPLAY_DURATION);
+    } else {
+        callback();
+    }
+};
+
+const cancel = (action: string): void => {
+    switch (action) {
+        case 'opening':
+            clearOpeningTimeout();
+            break;
+        case 'closing':
+            clearClosingTimeout();
+            break;
+    }
+};
+
+class Previewer extends BaseOpener {
+
+    protected _beforeUnmount(): void {
+        clearClosingTimeout();
+        clearOpeningTimeout();
     }
 
-    open(cfg, type) {
-        _private.clearClosingTimeout(this);
-
-        // Previewer - singleton
+    open(cfg: object, type?: string): void {
         this.close();
-
-        if (type === 'hover') {
-            this._openingTimerId = setTimeout(() => {
-                this.openingTimerId = null;
-
-                this._open(cfg);
-            }, _private.displayDuration);
-        } else {
-            this._open(cfg);
-        }
+        open((newCfg) => {
+            super.open(newCfg, POPUP_CONTROLLER);
+        }, cfg, type);
     }
 
-    close(type) {
-        _private.clearOpeningTimeout(this);
-
-        if (type === 'hover') {
-            this._closingTimerId = setTimeout(() => {
-                this.closingTimerId = null;
-
-                super.close();
-            }, _private.displayDuration);
-        } else {
+    close(type?: string): void {
+        close(() => {
             super.close();
-            this._popupIds = [];
-        }
+        }, type);
     }
 
     /**
@@ -71,30 +95,41 @@ class Previewer extends Base {
      * @variant opening
      * @variant closing
      */
-    cancel(action) {
-        switch (action) {
-            case 'opening':
-                _private.clearOpeningTimeout(this);
-                break;
-            case 'closing':
-                _private.clearClosingTimeout(this);
-                break;
-        }
+    cancel(action: string): void {
+        cancel(action);
     }
 
-    private _open(cfg): void {
-        const myCfg = cClone(cfg);
+    static openPopup(config: object, type?: string): void {
+        this.closePopup();
+        open((newCfg) => {
+            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
+                BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
+                    previewerId = popupId;
+                });
+            });
+        }, config, type);
+    }
 
-        myCfg.closeOnOutsideClick = true;
-        myCfg.className = 'controls-PreviewerController';
-        super.open(myCfg, 'Controls/popupTemplate:PreviewerController');
+    static closePopup(type?: string): void {
+        close(() => {
+            BaseOpener.closeDialog(previewerId);
+        }, type);
+    }
+
+    static cancelPopup(action: string): void {
+        cancel(action);
+    }
+
+    // TODO перенести метод в baseOpener, ManagerController здесь не нужен
+    static isOpenedPopup(): boolean {
+        return !!ManagerController.find(previewerId);
+    }
+
+    static getDefaultOptions() {
+        const baseOptions = BaseOpener.getDefaultOptions();
+        baseOptions._vdomOnOldPage = true;
+        return baseOptions;
     }
 }
-
-Previewer.getDefaultOptions = function() {
-    var baseOptions = Base.getDefaultOptions();
-    baseOptions._vdomOnOldPage = true;
-    return baseOptions;
-};
 
 export default Previewer;
