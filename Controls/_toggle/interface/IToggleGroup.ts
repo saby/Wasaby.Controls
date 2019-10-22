@@ -68,12 +68,12 @@ export interface IToggleGroup {
      *    <li>readOnly - определяет отображаемое поле записи в состоянии readOnly или non-readOnly.</li>
      * </ul>
      * @example
-     * RadioGroup с iteemTemplate и contentTemplate.
+     * RadioGroup с itemTemplate и contentTemplate.
      * <pre>
      *    <Controls.toggle:RadioGroup ... >
      *       <ws:itemTemplate>
      *          <ws:partial
-     *             template="wml!Controls/_toggle/RadioGroup/resources/ItemTemplate" >
+     *             template="Controls/toggle:ItemTemplate" displayProperty="mydisplayproperty" >
      *             <ws:contentTemplate>
      *                <span attr:class="controls-RadioItem__caption_{{selected ? 'selected' : 'unselected'}}_{{readOnly ? 'disabled' : 'enabled'}}_custom controls-RadioItem__caption_custom">
      *                </span>
@@ -110,7 +110,7 @@ export interface IToggleGroup {
      *    <Controls.toggle:RadioGroup ... >
      *       <ws:itemTemplate>
      *          <ws:partial
-     *             template="Controls/toggle:ItemTemplate" >
+     *             template="Controls/toggle:ItemTemplate" displayProperty="mydisplayproperty" >
      *             <ws:contentTemplate>
      *                <span attr:class="controls-RadioItem__caption_{{selected ? 'selected' : 'unselected'}}_{{readOnly ? 'disabled' : 'enabled'}}_custom controls-RadioItem__caption_custom">
      *                </span>
