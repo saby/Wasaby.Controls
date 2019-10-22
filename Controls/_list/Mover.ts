@@ -261,14 +261,17 @@ var Mover = Control.extend({
     _moveDialogTemplate: null,
     _moveDialogOptions: null,
     _beforeMount: function (options, context) {
-       this._onDialogResult = this._onDialogResult.bind(this);
+        this._onDialogResult = this._onDialogResult.bind(this);
         _private.updateDataOptions(this, context.dataOptions);
-        if (options.moveDialogTemplate instanceof Function) {
-           this._moveDialogTemplate = options.moveDialogTemplate;
-           Env.IoC.resolve('ILogger').warn('Mover', 'Wrong type of moveDialogTemplate option, use object notation instead of template function');
-        } else if (options.moveDialogTemplate){
-           this._moveDialogTemplate = options.moveDialogTemplate.templateName;
-           this._moveDialogOptions = options.moveDialogTemplate.templateOptions;
+
+        if (options.moveDialogTemplate) {
+            if (options.moveDialogTemplate.templateName) {
+                this._moveDialogTemplate = options.moveDialogTemplate.templateName;
+                this._moveDialogOptions = options.moveDialogTemplate.templateOptions;
+            } else {
+                this._moveDialogTemplate = options.moveDialogTemplate;
+                Env.IoC.resolve('ILogger').warn('Mover', 'Wrong type of moveDialogTemplate option, use object notation instead of template function');
+            }
         }
     },
 
