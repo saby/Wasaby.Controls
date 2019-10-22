@@ -85,6 +85,9 @@
    .flex-shrink(0);
    z-index: 2;
    padding: 0 @spacing_PeriodDialog-monthRange-monthWrapper-between-content-leftRightBorder;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
 }
 
 .controls-PeriodDialog-MonthsRange__item {
@@ -92,13 +95,10 @@
    border-bottom: @border-width_PeriodDialog-monthRange solid @border-color_PeriodDialog-monthRange;
    height: @height_PeriodDialog-monthRange-monthWrapper;
    width: @width_PeriodDialog-monthRange-monthWrapper - @border-width_PeriodDialog-monthRange;
-   display: flex;
-   flex-direction: column;
-   justify-content: space-between;
 }
 
 .controls-PeriodDialog-MonthsRange__item-selected {
-   width: @width_PeriodDialog-monthRange-monthWrapper - @border-width_PeriodDialog-monthRange;
+   width: @width_PeriodDialog-monthRange-monthWrapper - 2*@border-width_PeriodDialog-monthRange;
    margin-right: @border-width_PeriodDialog-monthRange;
    height: @height_PeriodDialog-monthRange-monthWrapper - @border-width_PeriodDialog-monthRange;
    margin-bottom: @border-width_PeriodDialog-monthRange;
@@ -173,8 +173,21 @@
      padding-bottom: @padding-bottom_PeriodLiteDialog-month;
    }
 
+   .controls-MonthViewVDOM__item-title {
+      height: @height_PeriodDialog-monthRange-month-date;
+      width: @width_PeriodDialog-monthRange-month-date;
+   }
+
    .controls-MonthViewVDOM__tableRow {
       flex-basis: @height_PeriodDialog-monthRange-month-date;
+      flex-grow: 0;
+   }
+
+   .controls-MonthViewVDOM__item-today-background {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
    }
 
    .controls-MonthViewVDOM__item {
