@@ -103,7 +103,7 @@ class Popup extends Control<IPopupOptions> {
     protected _afterUpdate(oldOptions: IPopupOptions): void {
         this._notify('popupAfterUpdated', [this._options.id], {bubbling: true});
 
-        if (Popup._isResized(oldOptions, this._options)) {
+        if (this._isResized(oldOptions, this._options)) {
             const eventCfg = {
                 type: 'controlResize',
                 target: this,
@@ -243,7 +243,7 @@ class Popup extends Control<IPopupOptions> {
         }
     }
 
-    private static _isResized(oldOptions: IPopupOptions, newOptions: IPopupOptions): boolean {
+    private _isResized(oldOptions: IPopupOptions, newOptions: IPopupOptions): boolean {
         const {position: oldPosition, hidden: oldHidden}: IPopupOptions = oldOptions;
         const {position: newPosition, hidden: newHidden}: IPopupOptions = newOptions;
         const hasWidthChanged: boolean = oldPosition.width !== newPosition.width;
@@ -252,14 +252,14 @@ class Popup extends Control<IPopupOptions> {
 
         return hasWidthChanged || hasHeightChanged || (hasHiddenChanged && newHidden === false);
     }
-}
 
-Popup.getDefaultOptions = function () {
-    return {
-        content: PopupContent,
-        autofocus: true
-    };
-};
+    static getDefaultOptions() {
+        return {
+            content: PopupContent,
+            autofocus: true
+        };
+    }
+}
 
 // _moduleName is assign in the callback of require.
 // Private modules are not visible for this mechanism, _moduleName must be specified manually for them.
