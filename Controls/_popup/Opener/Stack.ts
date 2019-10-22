@@ -298,6 +298,7 @@ export = Stack;
 
 /**
  * @name Controls/_popup/Opener/Stack#propStorageId
- * @cfg {String} Уникальный идентификатор
- * Для работы этой опции необходимо задать опции {@link width}, {@link minWidth}, {@link maxWidth}.
+ * @cfg {String} Уникальный идентификатор контрола, по которому будет сохраняться конфигурация в хранилище данных.
+ * С помощью этой опции включается функционал движения границ.
+ * Помимо propStorageId необходимо задать опции {@link width}, {@link minWidth}, {@link maxWidth}.
  */
