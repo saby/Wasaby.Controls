@@ -48,6 +48,10 @@ class Notification extends Control<INotificationBaseOptions> implements INotific
         this._borderStyle = this._prepareBorderStyle(options);
     }
 
+    protected _beforeUpdate(options: INotificationSimpleOptions): void {
+        this._borderStyle = this._prepareBorderStyle(options);
+    }
+
     private _closeClick(): void {
         this._notify('close', []);
     }
