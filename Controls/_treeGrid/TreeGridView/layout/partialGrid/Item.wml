@@ -57,7 +57,7 @@
    </ws:else>
 </ws:template>
 <ws:template name="columnContentWrapper">
-   <ws:if data="{{itemData.shouldDrawMarker(marker)}}">
+   <ws:if data="{{itemData.shouldDrawMarker(marker, currentColumn.columnIndex)}}">
       <div attr:class="controls-ListView__itemV_marker"></div>
    </ws:if>
    <div if="{{!!itemData.dragTargetNode}}" class="controls-TreeGridView__dragTargetNode {{currentColumn.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}
