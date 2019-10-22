@@ -1,7 +1,7 @@
 import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
 
 import template = require('wml!Controls/_listRender/Managers/ItemActions/ItemActions');
-import itemActionsTemplate = require('wml!Controls/_listRender/Render/resources/ItemActionsTemplate');
+
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { CollectionItem, Collection } from 'Controls/display';
 import { Model } from 'Types/entity';
@@ -22,7 +22,7 @@ export interface IItemActionsControlOptions extends IControlOptions {
 export default class ItemActionsControl extends Control<IItemActionsControlOptions> {
     protected _template: TemplateFunction = template;
 
-    protected _itemActionsTemplate: TemplateFunction = itemActionsTemplate;
+    // TODO React to collection change here or in the manager
 
     protected _afterMount(): void {
         // TODO Item actions should be set on first mouse enter (what about touch devices?)

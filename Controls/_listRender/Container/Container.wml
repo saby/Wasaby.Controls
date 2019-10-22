@@ -1,21 +1,27 @@
 <ws:template name="conditionalItemActions">
    <ws:if data="{{ _options.itemActions }}">
-      <Controls._listRender.Managers.ItemActions
+      <Controls._listRender.Managers.Swipe
          listModel="{{ _collection }}"
          itemActions="{{ _options.itemActions }}"
-         itemActionVisibilityCallback="{{ _options.itemActionVisibilityCallback }}"
-         itemActionsPosition="{{ _options.itemActionsPosition }}"
-         itemActionsProperty="{{ _options.itemActionsProperty }}"
-         contextMenuConfig="{{ _options.contextMenuConfig }}"
+         actionAlignment="{{ _options.actionAlignment }}"
+         actionCaptionPosition="{{ _options.actionCaptionPosition }}">
+         <Controls._listRender.Managers.ItemActions
+            listModel="{{ _collection }}"
+            itemActions="{{ _options.itemActions }}"
+            itemActionVisibilityCallback="{{ _options.itemActionVisibilityCallback }}"
+            itemActionsPosition="{{ _options.itemActionsPosition }}"
+            itemActionsProperty="{{ _options.itemActionsProperty }}"
+            contextMenuConfig="{{ _options.contextMenuConfig }}"
 
-         toolbarVisibility="{{ _options.editingConfig.toolbarVisibility }}"
-         style="{{ _options.style }}"
-         menuIsShown="{{ _dropdownMenuIsOpen }}"
+            toolbarVisibility="{{ _options.editingConfig.toolbarVisibility }}"
+            style="{{ _options.style }}"
+            menuIsShown="{{ _dropdownMenuIsOpen }}"
 
-         on:requestDropdownMenuOpen="_onDropdownMenuOpenRequested()"
-         on:requestDropdownMenuClose="_onDropdownMenuCloseRequested()">
-         <ws:partial template="{{ contentTemplate }}" />
-      </Controls._listRender.Managers.ItemActions>
+            on:requestDropdownMenuOpen="_onDropdownMenuOpenRequested()"
+            on:requestDropdownMenuClose="_onDropdownMenuCloseRequested()">
+            <ws:partial template="{{ contentTemplate }}" />
+         </Controls._listRender.Managers.ItemActions>
+      </Controls._listRender.Managers.Swipe>
       <Controls.dropdown:Opener
          name="dropdownMenuOpener"
          keyProperty="id"

@@ -64,8 +64,8 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemSwipe(e: SyntheticEvent<null>, item: CollectionItem<unknown>): void {
-        this._notify('itemSwipe', [item, e]);
         e.stopPropagation();
+        this._notify('itemSwipe', [item, e]);
     }
 
     protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {

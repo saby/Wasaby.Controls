@@ -1,12 +1,13 @@
 <ws:partial
    template="{{ _options.content }}"
+   swipeTemplate="{{ _options.swipeTemplate }}"
 
    attr:class="{{ _options.menuIsShown ? 'controls-itemActionsV_invisible' }}"
 
    on:itemContextMenu="_onItemContextMenu()">
    <ws:itemActionsTemplate>
       <ws:partial
-         template="{{ _itemActionsTemplate }}"
+         template="wml!Controls/_listRender/Render/resources/ItemActionsTemplate"
          toolbarVisibility="{{ _options.toolbarVisibility }}"
          style="{{ _options.style }}"
          size="{{ _options.editingConfig ? 's' : 'm' }}"
