@@ -462,6 +462,10 @@ var _Controller = Control.extend({
       this._depsDeferred = null;
    },
 
+   _deactivated(): void {
+      this.closeMenu();
+   },
+
    openMenu(popupOptions?: object): void {
       this._open(null, popupOptions);
    },
