@@ -96,5 +96,22 @@ define([
          assert.isTrue(instance._multiselection._limit === 7);
          assert.deepEqual(instance._multiselection._excludedKeys, [4, 5, 6]);
       });
+
+      it('getCount with isAllItemsLoaded == true', async function() {
+         await instance._beforeMount(cfg);
+         const stubExpandLimit = sandbox.stub(instance._multiselection, '_increaseLimit');
+         SelectionController._private.selectedTypeChangedHandler.call(instance, 'selectAll', 100);
+         assert.isTrue(instance._multiselection.getCount() === 7);
+      });
+
+      it('getCount with isAllItemsLoaded == false', async function() {
+         await instance._beforeMount(cfg);
+         const stubExpandLimit = sandbox.stub(instance._multiselection, '_increaseLimit');
+         instance._multiselection._isAllItemsLoaded = function() {
+            return false;
+         };
+         SelectionController._private.selectedTypeChangedHandler.call(instance, 'selectAll', 100);
+         assert.isTrue(instance._multiselection.getCount() === 100);
+      });
    });
 });
