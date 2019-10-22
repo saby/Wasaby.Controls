@@ -173,7 +173,7 @@ const _private = {
     },
     getMargins(item) {
         // If the classes have not changed, then the indents remain the same
-        if (item.className === item.popupOptions.className) {
+        if ((item.className || '') === (item.popupOptions.className || '')) {
             if (!item.margins) {
                 item.margins = {
                     top: 0,
