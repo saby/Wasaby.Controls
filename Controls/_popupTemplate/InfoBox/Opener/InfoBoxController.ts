@@ -183,7 +183,7 @@ class InfoBoxController extends StickyController.constructor {
                 side: topOrBottomSide ? INVERTED_SIDES[alignSide] : SIDES[side]
             },
 
-            corner: {
+            targetPoint: {
                 vertical: topOrBottomSide ? SIDES[side] : SIDES[alignSide],
                 horizontal: topOrBottomSide ? SIDES[alignSide] : SIDES[side]
             }

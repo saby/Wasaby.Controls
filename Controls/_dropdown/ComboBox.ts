@@ -75,7 +75,7 @@ var ComboBox = Control.extend({
    },
 
    _afterMount: function () {
-      this._corner = {
+      this._targetPoint = {
          vertical: 'bottom'
       };
       this._width = _private.getContainerNode(this._container).offsetWidth;
