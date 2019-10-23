@@ -1951,6 +1951,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
+    getMarkedItem(): CollectionItem<S> {
+        return this._markerManager.getMarkedItem() as CollectionItem<S>;
+    }
+
     getItemCounters(): ICollectionCounters[] {
         const result: ICollectionCounters[] = [];
         this.each((item: unknown) => {
