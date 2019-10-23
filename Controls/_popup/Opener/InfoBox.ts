@@ -1,5 +1,4 @@
 import cClone = require('Core/core-clone');
-import Env = require('Env/Env');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import getZIndex = require('Controls/Utils/getZIndex');
@@ -205,8 +204,13 @@ class InfoBox extends BaseOpener {
             super.open(newCfg, POPUP_CONTROLLER);
         }, cfg);
     }
-    _open(cfg) {
-        super.open(cfg, POPUP_CONTROLLER);
+
+    _getIndicatorConfig() {
+        // В случае с подсказкой оверлей не нужен. Только мешает работе ховеров для открытия/закрытия.
+        // Открытие подсказки всегда быстрее 2с, поэтому визуально оверлея с индикатором не появляется.
+        const baseConfig = super._getIndicatorConfig();
+        baseConfig.overlay = 'none';
+        return baseConfig;
     }
 
     /**
