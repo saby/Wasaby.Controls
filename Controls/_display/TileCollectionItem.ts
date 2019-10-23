@@ -38,7 +38,7 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
     }
 
     getFixedPositionStyle(): string {
-        return this.isScaled() ? this._$fixedPosition || undefined : undefined;
+        return this.isHovered() && this.isScaled() ? this._$fixedPosition || undefined : undefined;
     }
 
     setFixedPositionStyle(position: string, silent?: boolean): void {
@@ -89,7 +89,7 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
             // animation manager
             this.setAnimated(false, true);
         }
-        return this._$animated;
+        return this.isHovered() && this._$animated;
     }
 
     getWrapperClasses(templateClickable?: boolean): string {

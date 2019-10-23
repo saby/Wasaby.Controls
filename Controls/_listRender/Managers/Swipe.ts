@@ -56,7 +56,9 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
     }
 
     protected _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: any, item: CollectionItem<Model>): void {
-
+        event.stopPropagation();
+        event.preventDefault();
+        // TODO process the action click
     }
 
     private _openSwipe(item: CollectionItem<Model>, swipeEvent: SyntheticEvent<ISwipeEvent>): void {

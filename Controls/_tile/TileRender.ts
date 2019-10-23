@@ -8,6 +8,7 @@ import defaultItemTemplate = require('wml!Controls/_tile/TileRender/resources/It
 import { TileCollection, TileCollectionItem } from 'Controls/display';
 import { debounce } from 'Types/function';
 import { SyntheticEvent } from 'Vdom/Vdom';
+import { TouchContextField } from 'Controls/context';
 
 const HOVERED_ITEM_CHANGE_DELAY = 150;
 
@@ -84,12 +85,16 @@ export default class TileRender extends BaseRender {
 
     protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
         super._onItemMouseEnter(e, item);
-        this._debouncedSetHoveredItem(item);
+        if (!this._context.isTouch.isTouch) {
+            this._debouncedSetHoveredItem(item);
+        }
     }
 
     protected _onItemMouseLeave(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
         super._onItemMouseLeave(e, item);
-        this._debouncedSetHoveredItem(null);
+        if (!this._context.isTouch.isTouch) {
+            this._debouncedSetHoveredItem(null);
+        }
     }
 
     protected _setHoveredItemPosition(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
@@ -150,5 +155,11 @@ export default class TileRender extends BaseRender {
 
     private _setHoveredItem(item: CollectionItem<unknown>): void {
         this._options.listModel.setHoveredItem(item);
+    }
+
+    static contextTypes() {
+        return {
+            isTouch: TouchContextField
+        };
     }
 }
