@@ -4,7 +4,7 @@ import source = require('Types/source');
 
 var _defaultItems = [{
       id: 'selectAll',
-      title: rk('Всё')
+      title: rk('Все')
    }, {
       id: 'unselectAll',
       title: rk('Снять')
