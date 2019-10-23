@@ -2121,7 +2121,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _onScrollResize: function(self, params) {
         const doubleRatio = (params.scrollHeight / params.clientHeight) > MIN_SCROLL_PAGING_PROPORTION;
-        self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
+        if (_private.needScrollPaging(self._options.navigation)) {
+            self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
+        }
     },
 
     __onEmitScroll: function(e, type, params) {
