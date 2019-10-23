@@ -19,4 +19,8 @@ export default class MarkerManager extends BaseManager {
         }
         this._lastMarkedItem = item;
     }
+
+    getMarkedItem(): IMarkerManageableItem {
+        return this._lastMarkedItem;
+    }
 }
