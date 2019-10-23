@@ -108,6 +108,21 @@ define([
             event: 'itemClick'
          }]
       }, {
+         method: '_onMonthTitleClick',
+         tests: [{
+            options: { selectionProcessing: false, monthClickable: true },
+            event: 'itemClick'
+         }, {
+            options: { selectionProcessing: false, monthClickable: false },
+            event: null
+         }, {
+            options: { selectionProcessing: true, monthClickable: true },
+            event: null
+         }, {
+            options: { selectionProcessing: false, monthClickable: true, quantum: { days: [1] } },
+            event: null
+         }]
+      }, {
          method: '_onMonthMouseEnter',
          tests: [{
             options: { selectionProcessing: true, monthClickable: true },
