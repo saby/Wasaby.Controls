@@ -711,7 +711,21 @@ var
             this.updateMarker(this._markedKey);
             this._nextModelVersion();
         },
-
+        setNodeProperty(nodeProperty: string): void {
+            if (nodeProperty !== this._options.nodeProperty) {
+                this._options.nodeProperty = nodeProperty;
+            }
+        },
+        setParentProperty(parentProperty: string): void {
+            if (parentProperty !== this._options.parentProperty) {
+                this._options.parentProperty = parentProperty;
+            }
+        },
+        setHasChildrenProperty(hasChildrenProperty: string): void {
+            if (hasChildrenProperty !== this._options.hasChildrenProperty) {
+                this._options.hasChildrenProperty = hasChildrenProperty;
+            }
+        },
         getChildren: function(rootId) {
             return this._hierarchyRelation.getChildren(rootId, this._items);
         }

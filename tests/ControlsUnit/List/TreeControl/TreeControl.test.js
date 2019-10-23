@@ -841,6 +841,37 @@ define([
             }, 1);
          }, 1);
       });
+      it('TreeControl._beforeUpdate name of property', function() {
+         var
+            source = new sourceLib.Memory({
+               data: [],
+               keyProperty: 'id'
+            }),
+            treeControl = correctCreateTreeControl({
+               columns: [],
+               source: source,
+               items: new collection.RecordSet({
+                  rawData: [],
+                  keyProperty: 'id'
+               }),
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               nodeProperty: 'type'
+            }),
+            treeGridViewModel = treeControl._children.baseControl.getViewModel();
+         treeControl._beforeUpdate({
+            root: 'testRoot',
+            parentProperty: 'parentKey',
+            nodeProperty: 'itemType',
+            hasChildrenProperty: 'hasChildren'
+         });
+         assert.equal(treeGridViewModel._options.parentProperty, 'parentKey');
+         assert.equal(treeGridViewModel._model._options.parentProperty, 'parentKey');
+         assert.equal(treeGridViewModel._options.nodeProperty, 'itemType');
+         assert.equal(treeGridViewModel._model._options.nodeProperty, 'itemType');
+         assert.equal(treeGridViewModel._options.hasChildrenProperty, 'hasChildren');
+         assert.equal(treeGridViewModel._model._options.hasChildrenProperty, 'hasChildren');
+      });
       it('TreeControl._beforeUpdate', function() {
          var
             reloadCalled = false,
