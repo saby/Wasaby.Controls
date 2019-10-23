@@ -89,14 +89,20 @@ define(
          it('update linked key', () => {
             let data = {
                formControllerEvent: 'update',
-               record: dataRS.at(0),
+               record: dataRS.at(1),
                additionalData: {
                   isNewRecord: true
                }
             };
+            let baseSynchronize = popup.Edit._private.synchronize;
+
+            popup.Edit._private.loadSynchronizer = () => (new Deferred()).callback();
+            popup.Edit._private.synchronize = () => {};
+
             editOpener._linkedKey = null;
             editOpener._onResult(data);
             assert.equal(editOpener._linkedKey, 1);
+            popup.Edit._private.synchronize = baseSynchronize;
          });
 
          it('processing result', () => {
