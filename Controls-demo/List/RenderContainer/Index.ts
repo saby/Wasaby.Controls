@@ -1,17 +1,31 @@
 import { Control, TemplateFunction } from 'UI/Base';
 import template = require('wml!Controls-demo/List/RenderContainer/RenderContainer');
 
+import * as images from 'Controls-demo/Explorer/ExplorerImages';
+
 import { RecordSet } from 'Types/collection';
+import { Memory as MemorySource } from 'Types/source';
+
+const NUMBER_OF_ITEMS = 100;
 
 export default class RenderContainerDemo extends Control {
     protected _template: TemplateFunction = template;
 
-    private _items: RecordSet;
+    protected _items: RecordSet;
+    protected _itemsSource: MemorySource;
+
     protected _itemActions: any[];
+
+    protected _showNewView: boolean = true;
+    protected _showOldView: boolean = true;
 
     protected _beforeMount(): void {
         this._items = new RecordSet({
-            rawData: this._generateRawData(10),
+            rawData: this._generateRawData(NUMBER_OF_ITEMS),
+            keyProperty: 'id'
+        });
+        this._itemsSource = new MemorySource({
+            data: this._generateRawData(NUMBER_OF_ITEMS),
             keyProperty: 'id'
         });
         this._itemActions = [
@@ -28,11 +42,19 @@ export default class RenderContainerDemo extends Control {
                 id: 2,
                 icon: 'icon-Edit',
                 title: 'fake',
-                style: 'success',
-                iconStyle: 'success',
+                style: 'danger',
+                iconStyle: 'danger',
                 showType: 0
             }
         ];
+    }
+
+    protected _toggleNewView(): void {
+        this._showNewView = !this._showNewView;
+    }
+
+    protected _toggleOldView(): void {
+        this._showOldView = !this._showOldView;
     }
 
     private _generateRawData(n: number): any[] {
@@ -41,7 +63,7 @@ export default class RenderContainerDemo extends Control {
             rawData.push({
                 id: i,
                 title: `${i} item`,
-                image: `https://picsum.photos/600/500?uniqueKey=${i}`
+                image: images[i % images.length]
             });
         }
         return rawData;
