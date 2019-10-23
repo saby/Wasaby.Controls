@@ -6,6 +6,7 @@
 
          items="{{ _items }}"
          itemActions="{{ _itemActions }}"
+         actionAlignment="vertical"
 
          keyProperty="id"
          displayProperty="title"

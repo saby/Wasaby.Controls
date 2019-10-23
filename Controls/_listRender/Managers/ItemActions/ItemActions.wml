@@ -1,9 +1,11 @@
 <ws:partial
    template="{{ _options.content }}"
-   swipeTemplate="{{ _options.swipeTemplate }}"
+   scope="{{ _options }}"
 
    attr:class="{{ _options.menuIsShown ? 'controls-itemActionsV_invisible' }}"
 
+   on:mouseenter="_onContainerMouseEnter()"
+   on:touchstart="_onContainerMouseEnter()"
    on:itemContextMenu="_onItemContextMenu()">
    <ws:itemActionsTemplate>
       <ws:partial

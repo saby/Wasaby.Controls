@@ -14,6 +14,7 @@ interface IItemActionsContainer {
 
 export interface IVirtualScrollManageableCollection {
     each(callback: (item: IItemActionsManageableItem) => void): void;
+    setEventRaising?(raising: boolean, analyze?: boolean): void;
 }
 
 export interface IItemActionsManageableItem {
@@ -32,10 +33,18 @@ export default class ItemActionsManager extends BaseManager<IVirtualScrollManage
         // TODO Support itemActionsProperty
         // NB Deprecated style names are intentionally no longer supported
         const actions = actionList.map(this._fixActionIcon);
+        const supportsEventPause = typeof this._collection.setEventRaising === 'function';
+
+        if (supportsEventPause) {
+            this._collection.setEventRaising(false, true);
+        }
         this._collection.each((item) => {
             const assignedActions = actions.filter((action) => visibilityCallback(action, item.getContents()));
             this.setItemActions(item, this._wrapActionsInContainer(assignedActions));
         });
+        if (supportsEventPause) {
+            this._collection.setEventRaising(true, true);
+        }
     }
 
     setItemActions(item: IItemActionsManageableItem, actions: IItemActionsContainer): void {

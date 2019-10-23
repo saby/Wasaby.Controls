@@ -38,7 +38,7 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
     }
 
     getFixedPositionStyle(): string {
-        return this.isHovered() && this.isScaled() ? this._$fixedPosition || undefined : undefined;
+        return this.isScaled() ? this._$fixedPosition || undefined : undefined;
     }
 
     setFixedPositionStyle(position: string, silent?: boolean): void {
@@ -88,8 +88,9 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
             // reset the animation state. Should probably be in that same
             // animation manager
             this.setAnimated(false, true);
+            this.setFixedPositionStyle('', true);
         }
-        return this.isHovered() && this._$animated;
+        return this._$animated;
     }
 
     getWrapperClasses(templateClickable?: boolean): string {

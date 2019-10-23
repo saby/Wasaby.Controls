@@ -1,5 +1,6 @@
 <ws:partial
    template="{{ _options.content }}"
+   scope="{{ _options }}"
 
    on:itemSwipe="_onItemSwipe()"
    on:itemClick="_closeSwipe()"

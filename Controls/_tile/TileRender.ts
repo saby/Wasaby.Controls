@@ -73,7 +73,7 @@ export default class TileRender extends BaseRender {
     }
 
     protected _onItemMouseMove(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
-        if (!item.isFixed() /* TODO && !_private.isTouch(this) && !this._listModel.getDragEntity() */) {
+        if (!item.isFixed() && !this._context.isTouch.isTouch /* && !this._listModel.getDragEntity() */) {
             // TODO Might be inefficient, can get called multiple times per hover. Should
             // be called immediately before or after the hovered item is set in the model,
             // but then we can't get the hover target element.
@@ -83,16 +83,16 @@ export default class TileRender extends BaseRender {
         super._onItemMouseMove(e, item);
     }
 
-    protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
+    protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
         super._onItemMouseEnter(e, item);
         if (!this._context.isTouch.isTouch) {
             this._debouncedSetHoveredItem(item);
         }
     }
 
-    protected _onItemMouseLeave(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
+    protected _onItemMouseLeave(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
         super._onItemMouseLeave(e, item);
-        if (!this._context.isTouch.isTouch) {
+        if (!this._context.isTouch.isTouch && !item.isActive()) {
             this._debouncedSetHoveredItem(null);
         }
     }

@@ -7,6 +7,8 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { CollectionItem, Collection } from 'Controls/display';
 import { Model } from 'Types/entity';
 
+import * as itemActionsUtil from './ItemActions/processItemActions';
+
 interface ISwipeEvent extends Event {
     direction: string;
 }
@@ -57,8 +59,12 @@ export default class SwipeControl extends Control<ISwipeControlOptions> {
 
     protected _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: any, item: CollectionItem<Model>): void {
         event.stopPropagation();
-        event.preventDefault();
-        // TODO process the action click
+        itemActionsUtil.processItemActionClick.call(
+            this,
+            event,
+            action,
+            item
+        );
     }
 
     private _openSwipe(item: CollectionItem<Model>, swipeEvent: SyntheticEvent<ISwipeEvent>): void {
