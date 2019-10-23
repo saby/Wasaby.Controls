@@ -145,7 +145,7 @@ define(
             verticalAlign: {
                side: vAlign
             },
-            corner: {
+            targetPoint: {
                vertical: vCorner,
                horizontal: hCorner
             }

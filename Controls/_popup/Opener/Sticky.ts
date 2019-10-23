@@ -84,8 +84,7 @@ class Sticky extends BaseOpener {
      * wml
      * <pre>
      *    <Controls.popup:Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
-     *          <ws:verticalAlign side="bottom"/>
-     *          <ws:horizontalAlign side="left"/>
+     *          <ws:direction vertical="bottom" horizontal="left"/>
      *          <ws:targetPoint vertical="bottom" horizontal="left"/>
      *   </Controls.popup:Sticky>
      *
@@ -235,8 +234,7 @@ export = Sticky;
  * wml
  * <pre>
  *    <Controls.popup:Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
- *          <ws:verticalAlign side="bottom"/>
- *          <ws:horizontalAlign side="left"/>
+ *          <ws:direction vertical="bottom" horizontal="left"/>
  *          <ws:targetPoint vertical="bottom" horizontal="left"/>
  *    </Controls.popup:Sticky>
  *
