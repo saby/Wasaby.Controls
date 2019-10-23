@@ -1,0 +1,28 @@
+<Controls.list:DataContainer scope="{{_options}}">
+    <Controls.operations:Controller
+            bind:selectedKeys="_selectedKeys"
+            bind:excludedKeys="_excludedKeys"
+            on:selectedKeysCountChanged="_notifyHandler('selectedKeysCountChanged')">
+        <div>
+            <Controls.operations:Button
+                    on:expandedChanged="_expandedChangedHandler()"
+                    expanded="{{_expanded && _operationsPanelVisible}}">
+            </Controls.operations:Button>
+
+            <ws:if data="{{_expanded}}">
+                <Controls.operations:Panel
+                        on:operationsPanelOpened="_onOperationsPanelOpened()"
+                        selectedKeys="{{_selectedKeys}}"
+                        excludedKeys="{{_excludedKeys}}"
+                        selectedKeysCount="{{content._options.selectedKeysCount}}">
+                </Controls.operations:Panel>
+            </ws:if>
+
+            <Controls.list:Container>
+                <Controls.operations:Container>
+                    <ws:partial template="{{_options.content}}" multiSelectVisibility="{{_expanded && _operationsPanelVisible ? 'visible'}}"/>
+                </Controls.operations:Container>
+            </Controls.list:Container>
+        </div>
+    </Controls.operations:Controller>
+</Controls.list:DataContainer>
