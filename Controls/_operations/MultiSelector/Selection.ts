@@ -194,6 +194,9 @@ var Selection = cExtend.extend({
       let itemsCount = null;
 
       if (this._isAllSelection(this._getParams())) {
+         if (this._limit) {
+            itemsCount = this._limit - this._excludedKeys.length;
+         }
          if (this._isAllItemsLoaded() && (!this._limit || this._items.getCount() <= this._limit)) {
             itemsCount = this._items.getCount() - this._excludedKeys.length;
          }
