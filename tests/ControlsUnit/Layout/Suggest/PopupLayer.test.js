@@ -34,6 +34,27 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
          assert.deepEqual(resultPopupOptions, layer._popupOptions)
       });
 
+      it('_resizeCallback', function() {
+         var layer = new PopupLayer.default();
+         var resizeCalled = false;
+
+         layer._children = {
+            popupContent: {
+               resize: () => {
+                  resizeCalled = true;
+               }
+            }
+         };
+
+         layer._resizeCallback();
+         assert.isTrue(resizeCalled);
+
+         resizeCalled = false;
+         layer._children = {};
+         layer._resizeCallback();
+         assert.isFalse(resizeCalled);
+      });
+
    });
 
 });

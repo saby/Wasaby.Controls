@@ -88,9 +88,11 @@ var __PopupLayer = Control.extend({
       this._popupOptions.fittingMode = 'fixed';
    },
 
-   _resizeCallback: function() {
-      this._children.popupContent.resize();
-   },
+   _resizeCallback(): void {
+      if (this._children.popupContent) {
+         this._children.popupContent.resize();
+      }
+   }
 });
 
 __PopupLayer._private = _private;
