@@ -1,3 +1,5 @@
+import {default as ArraySimpleValuesUtil} from 'Controls/Utils/ArraySimpleValuesUtil';
+
 type TKeys = number[] | string[];
 
 interface ISelection {
@@ -50,7 +52,7 @@ class FlatSelectionStrategy {
             // Зовем прикладной метод
          }
       } else {
-         itemsCount = this.selectedKeys.length;
+         itemsCount = selectedKeys.length;
       }
 
       return new Promise((resolve) => {
@@ -58,8 +60,8 @@ class FlatSelectionStrategy {
       });
    }
 
-   public isSelected(item, selectedKeys: TKeys, excludedKeys: TKeys, keyProperty: string): boolean {
-      let itemId = item.get(keyProperty);
+   public isSelected(item, selectedKeys: TKeys, excludedKeys: TKeys, configSelection: Object): boolean {
+      let itemId = item.get(configSelection.keyProperty);
 
       return selectedKeys.includes(itemId) || this.isAllSelected(selectedKeys) && !excludedKeys.includes(itemId);
    }

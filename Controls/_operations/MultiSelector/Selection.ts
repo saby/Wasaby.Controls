@@ -123,7 +123,7 @@ class Selection {
     * Invert selection.
     */
    public toggleAll(): void {
-      if (this._selectionStrategy.isAllSelected()) {
+      if (this._selectionStrategy.isAllSelected(this._selectedKeys)) {
          let excludedKeys: TKeys = this._excludedKeys.slice();
          this.unselectAll();
          this.select(excludedKeys);
@@ -171,7 +171,7 @@ class Selection {
 
       this._items.forEach((item) => {
          let isSelected: boolean = (!limit || selectedItemsCount < limit) &&
-            this._selectionStrategy.isSelected(item, this._selectedKeys, this._excludedKeys, this._keyProperty);
+            this._selectionStrategy.isSelected(item, this._selectedKeys, this._excludedKeys, this._getConfigSelection());
 
          isSelected && selectedItemsCount++;
          selectionResult[item.get(this._keyProperty)] = isSelected;
@@ -213,6 +213,12 @@ class Selection {
             }
          }
       });
+   }
+
+   protected _getConfigSelection(): Object {
+      return {
+         keyProperty: this._keyProperty
+      };
    }
 }
 

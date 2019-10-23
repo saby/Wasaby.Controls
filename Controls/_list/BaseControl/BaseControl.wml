@@ -232,6 +232,7 @@
                 selectedKeys="{{ _options.selectedKeys }}"
                 excludedKeys="{{ _options.excludedKeys }}"
                 listModel="{{ _listViewModel }}"
+                selectionStrategy="{{_options.selectionStrategy}}"
                 on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
                 on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
             />

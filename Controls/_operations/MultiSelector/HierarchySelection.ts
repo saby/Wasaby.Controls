@@ -65,7 +65,7 @@ class HierarchySelection extends Selection {
          super.selectAll();
       } else {
          this.select([root]);
-         this._removeSelectionChildren(rootId);
+         this._removeSelectionChildren(root);
       }
 
       this._excludedKeys = ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
@@ -78,7 +78,7 @@ class HierarchySelection extends Selection {
    public unselectAll(): void {
       if (this._items.getMetaData()[FIELD_ENTRY_PATH]) {
          this.unselect([this._getRoot()]);
-         this._removeSelectionChildren(rootId);
+         this._removeSelectionChildren(this._getRoot());
       } else {
          super.unselectAll();
       }
@@ -86,32 +86,36 @@ class HierarchySelection extends Selection {
 
    public toggleAll(): void {
       let
-         rootId = this._getRoot(),
+         root = this._getRoot(),
          oldSelectedKeys = this._selectedKeys.slice(),
          oldExcludedKeys = this._excludedKeys.slice(),
-         childrenIdsRoot = SelectionHelper.getChildrenIds(this._hierarchyRelation, rootId, this._items);
+         childrenIdsRoot = SelectionHelper.getChildrenIds(root, this._items, this._hierarchyRelation);
 
       if (this._selectionStrategy.isAllSelected(this._selectedKeys, this._excludedKeys, this._getConfigSelection())) {
          // toDO после решения https://online.sbis.ru/opendoc.html?guid=d48b9e94-5236-429c-b124-d3b3909886c9 перейти на unselectAll
-         this.unselect([rootId]);
-         this._removeSelectionChildren(rootId);
+         this.unselect([root]);
+         this._removeSelectionChildren(root);
          this.select(ArraySimpleValuesUtil.getIntersection(childrenIdsRoot, oldExcludedKeys));
       } else {
-         this.selectAll([rootId]);
+         this.selectAll([root]);
          // toDO Надо делать через getIntersection, если пришел ENTRY_PATH
          this.unselect(oldSelectedKeys);
       }
    }
 
+   public getCount(): Promise {
+      return this._selectionStrategy.getCount(this._selectedKeys, this._excludedKeys, this._getConfigSelection());
+   }
+
    private _getRoot(): string|number|null {
-      return this._options.listModel.getRoot().getContents();
+      return this._listModel.getRoot().getContents();
    }
 
    private _removeSelectionChildren(nodeId) {
       SelectionHelper.removeSelectionChildren(nodeId, this._selectedKeys, this._excludedKeys, this._items, this._hierarchyRelation);
    }
 
-   private _getConfigSelection(): Object {
+   protected _getConfigSelection(): Object {
       return {
          model: this._listModel,
          items: this._items,

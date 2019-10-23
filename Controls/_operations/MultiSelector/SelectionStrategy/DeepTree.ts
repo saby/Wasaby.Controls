@@ -11,7 +11,7 @@ class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
          let itemId: string|number|null = selectedKeys[index];
          let item = configSelection.items.getRecordById(itemId);
 
-         if (!item || SelectionHelper.isNode(item, hierarchyRelation)) {
+         if (!item || SelectionHelper.isNode(item, configSelection.hierarchyRelation)) {
             let itemsSelectedInFolder: number|null = SelectionHelper.getSelectedChildrenCount(itemId, selectedKeys, excludedKeys, configSelection.items, configSelection.hierarchyRelation);
 
             if (itemsSelectedInFolder === null) {
@@ -37,9 +37,9 @@ class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
       let isSelected: boolean|null = super.isSelected(...arguments);
 
       // Надо так же учесть ENTRY_PATH в метаданных
-      if (SelectionHelper.isNode(item, hierarchyRelation)) {
-         if (isSelected && this._hasChildrenInList(itemId, excludedKeys, items, hierarchyRelation) ||
-            !isSelected && this._hasChildrenInList(itemId, selectedKeys, items, hierarchyRelation)) {
+      if (SelectionHelper.isNode(item, configSelection.hierarchyRelation)) {
+         if (isSelected && this._hasChildrenInList(itemId, excludedKeys, configSelection.items, configSelection.hierarchyRelation) ||
+            !isSelected && this._hasChildrenInList(itemId, selectedKeys, configSelection.items, configSelection.hierarchyRelation)) {
 
             isSelected = null;
          }
@@ -60,9 +60,10 @@ class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
       let children: [] = hierarchyRelation.getChildren(itemId, items);
 
       for (let index = 0; index < children.length; index++) {
-         let childrenId = children.getId();
+         let child = children[index];
+         let childrenId = child.getId();
 
-         if (listKeys.includes(childrenId) || SelectionHelper.isNode(children, hierarchyRelation) &&
+         if (listKeys.includes(childrenId) || SelectionHelper.isNode(child, hierarchyRelation) &&
             this._hasChildrenInList(childrenId, listKeys, items, hierarchyRelation)) {
 
             hasChildrenInList = true;
@@ -85,7 +86,7 @@ class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
 
    protected _isParentSelectedWithChild(itemId: string|number, selectedKeys: TKeys, excludedKeys: TKeys, configSelection: Object): boolean {
       return SelectionHelper.getSelectedParent(
-         configSelection.hierarchyRelation, itemId, selectedKeys, excludedKeys, configSelection.items) !== undefined;
+         itemId, selectedKeys, excludedKeys, configSelection.hierarchyRelation, configSelection.items) !== undefined;
    }
 }
 

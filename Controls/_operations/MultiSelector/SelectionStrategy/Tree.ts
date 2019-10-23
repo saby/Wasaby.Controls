@@ -16,7 +16,7 @@ class TreeSelectionStrategy {
       keys.forEach((key) => {
          let item = configSelection.items.getRecordById(key);
 
-         if (SelectionHelper.isNode(item, configSelection.hierarchyRelation)) {
+         if (!item || SelectionHelper.isNode(item, configSelection.hierarchyRelation)) {
             this._selectNode(key, selectedKeys, excludedKeys, configSelection);
          } else {
             this._selectLeaf(key, selectedKeys, excludedKeys, configSelection);
@@ -36,19 +36,24 @@ class TreeSelectionStrategy {
       keys.forEach((key) => {
          let item = configSelection.items.getRecordById(key);
 
-         if (SelectionHelper.isNode(item, configSelection.hierarchyRelation)) {
+         if (!item || SelectionHelper.isNode(item, configSelection.hierarchyRelation)) {
             this._unSelectNode(key, selectedKeys, excludedKeys, configSelection);
          } else {
             this._unSelectLeaf(key, selectedKeys, excludedKeys, configSelection);
          }
       });
+
+      return {
+         selectedKeys: selectedKeys,
+         excludedKeys: excludedKeys
+      };
    }
 
    public getCount(selectedKeys: TKeys, excludedKeys: TKeys, configSelection: Object): Promise {
       let countItemsSelected: number|null = null;
       let selectedFolders: [];
 
-      if (!this.isAllSelected() || this._isAllRootItemsLoaded()) {
+      if (!this.isAllSelected(selectedKeys, excludedKeys, configSelection) || this._isAllRootItemsLoaded(configSelection.items)) {
          selectedFolders = ArraySimpleValuesUtil.getIntersection(selectedKeys, excludedKeys);
          countItemsSelected = selectedKeys.length - selectedFolders.length;
 
@@ -110,7 +115,7 @@ class TreeSelectionStrategy {
 
    protected _isParentSelectedWithChild(itemId: string|number, selectedKeys: TKeys, excludedKeys: TKeys, configSelection: Object): boolean {
       let parentSelected = SelectionHelper.getSelectedParent(
-         configSelection.hierarchyRelation, itemId, selectedKeys, excludedKeys, configSelection.items);
+         itemId, selectedKeys, excludedKeys, configSelection.hierarchyRelation, configSelection.items);
 
       // Если выбранный родитель также находится в исключениях, то он был выбран через selectAll, значит и дети выбраны
       return parentSelected !== undefined && excludedKeys.includes(parentSelected);

@@ -14,8 +14,8 @@ export default {
       let children: [] = hierarchyRelation.getChildren(nodeId, items);
 
       if (children.length) {
-         for (let index = 0; index < children.length; i++) {
-            let childItem = children[0];
+         for (let index = 0; index < children.length; index++) {
+            let childItem = children[index];
             let childId: number|string = childItem.getId();
 
             if (!excludedKeys.includes(childId)) {
@@ -43,7 +43,7 @@ export default {
       let currentParentId: string|number|null = this.getParentId(key, items, hierarchyRelation.getParentProperty());
       let isParentExcluded: boolean = false;
 
-      for (;currentParentId; currentParentId = this.getParentId(key, items, hierarchyRelation.getParentProperty())) {
+      for (;currentParentId; currentParentId = this.getParentId(currentParentId, items, hierarchyRelation.getParentProperty())) {
          if (selectedKeys.includes(currentParentId)) {
             selectedParent = currentParentId;
             break;
@@ -69,7 +69,7 @@ export default {
    },
 
    getChildrenIds: function(nodeId, items, hierarchyRelation) {
-      return this.getAllChildren(hierarchyRelation, nodeId, items).map((child) => {
+      return this.getAllChildren(nodeId, items, hierarchyRelation).map((child) => {
          return child.getId();
       });
    },

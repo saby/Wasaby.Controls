@@ -8,6 +8,7 @@ import selectionToRecord = require('Controls/_operations/MultiSelector/selection
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
+import {default as DeepTreeSelectionStrategy} from 'Controls/_operations/MultiSelector/SelectionStrategy/DeepTree';
 
 var
     HOT_KEYS = {
@@ -636,7 +637,8 @@ TreeControl.getDefaultOptions = function() {
         markItemByExpanderClick: true,
         expandByItemClick: false,
         root: null,
-        columns: DEFAULT_COLUMNS_VALUE
+        columns: DEFAULT_COLUMNS_VALUE,
+        selectionStrategy: DeepTreeSelectionStrategy
     };
 };
 

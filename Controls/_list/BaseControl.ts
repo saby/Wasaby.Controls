@@ -31,6 +31,7 @@ import {CssClassList} from "../Utils/CssClassList";
 import {Memory} from 'Types/source';
 
 import {create as diCreate} from 'Types/di';
+import {default as FlatSelectionStrategy} from 'Controls/_operations/MultiSelector/SelectionStrategy/Flat';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -2679,7 +2680,8 @@ BaseControl.getDefaultOptions = function() {
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
         markedKey: null,
-        stickyHeader: true
+        stickyHeader: true,
+        selectionStrategy: FlatSelectionStrategy
     };
 };
 export = BaseControl;
