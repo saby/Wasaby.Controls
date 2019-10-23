@@ -90,7 +90,8 @@ class Label extends Control<ILabelOptions> implements ICaption {
    static getOptionTypes(): object {
       return {
          href: EntityDescriptor(String),
-         caption: EntityDescriptor(String).required(),
+         //Object для случаев, когда нужно собрать шаблон.
+         caption: EntityDescriptor(Object, String).required(),
          underline: EntityDescriptor(String).oneOf([
             'none',
             'fixed',
