@@ -91,7 +91,7 @@ class HierarchySelection extends Selection {
          oldExcludedKeys = this._excludedKeys.slice(),
          childrenIdsRoot = SelectionHelper.getChildrenIds(this._hierarchyRelation, rootId, this._items);
 
-      if (this._selectionStrategy.isAllSelection(this._selectedKeys, this._excludedKeys, this._getConfigSelection())) {
+      if (this._selectionStrategy.isAllSelected(this._selectedKeys, this._excludedKeys, this._getConfigSelection())) {
          // toDO после решения https://online.sbis.ru/opendoc.html?guid=d48b9e94-5236-429c-b124-d3b3909886c9 перейти на unselectAll
          this.unselect([rootId]);
          this._removeSelectionChildren(rootId);

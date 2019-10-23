@@ -48,7 +48,7 @@ class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
       return isSelected;
    }
 
-   public isAllSelection(selectedKeys, excludedKeys, configSelection): boolean {
+   public isAllSelected(selectedKeys, excludedKeys, configSelection): boolean {
       let rootId = this._getRoot(configSelection.model);
 
       return selectedKeys.includes(rootId) || !excludedKeys.includes(rootId) &&

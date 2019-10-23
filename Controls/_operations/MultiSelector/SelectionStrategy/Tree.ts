@@ -48,7 +48,7 @@ class TreeSelectionStrategy {
       let countItemsSelected: number|null = null;
       let selectedFolders: [];
 
-      if (!this.isAllSelection() || this._isAllRootItemsLoaded()) {
+      if (!this.isAllSelected() || this._isAllRootItemsLoaded()) {
          selectedFolders = ArraySimpleValuesUtil.getIntersection(selectedKeys, excludedKeys);
          countItemsSelected = selectedKeys.length - selectedFolders.length;
 
@@ -77,7 +77,7 @@ class TreeSelectionStrategy {
          this._isParentSelectedWithChild(itemId, selectedKeys, excludedKeys, configSelection);
    }
 
-   public isAllSelection(selectedKeys, excludedKeys, configSelection): boolean {
+   public isAllSelected(selectedKeys, excludedKeys, configSelection): boolean {
       let rootId = this._getRoot(configSelection.model);
 
       return selectedKeys.includes(rootId) && excludedKeys.includes(rootId) || !excludedKeys.includes(rootId) &&

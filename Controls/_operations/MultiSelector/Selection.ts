@@ -123,7 +123,7 @@ class Selection {
     * Invert selection.
     */
    public toggleAll(): void {
-      if (this._isAllSelection()) {
+      if (this._selectionStrategy.isAllSelected()) {
          let excludedKeys: TKeys = this._excludedKeys.slice();
          this.unselectAll();
          this.select(excludedKeys);
@@ -183,10 +183,6 @@ class Selection {
    public setListModel(listModel): void {
       this._listModel = listModel;
       this.updateSelectionForRender();
-   }
-
-   protected _isAllSelection(): boolean {
-      return this._selectedKeys.includes(ALL_SELECTION_VALUE);
    }
 
    /**
