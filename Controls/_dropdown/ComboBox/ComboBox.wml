@@ -2,7 +2,7 @@
         name="controller"
         scope="{{_options}}"
         selectedKeys="{{[_options.selectedKey]}}"
-        corner="{{_corner}}"
+        targetPoint="{{_targetPoint}}"
         width="{{_width}}"
         marker="{{false}}"
         popupClassName="{{_options.popupClassName ? _options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup'}} controls-ComboBox-popup_theme-{{_options.theme}}"

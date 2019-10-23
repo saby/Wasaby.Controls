@@ -31,7 +31,7 @@ define(
 
          function getPositionConfig() {
             return {
-               corner: {
+               targetPoint: {
                   vertical: 'top',
                   horizontal: 'left'
                },
@@ -165,7 +165,7 @@ define(
 
             var position = StickyStrategy.getPosition({
                fittingMode: 'overflow',
-               corner: {
+               targetPoint: {
                   vertical: 'bottom',
                   horizontal: 'left'
                },
@@ -209,7 +209,7 @@ define(
 
             // 2 position
             cfg = getPositionConfig();
-            cfg.corner.horizontal = 'right';
+            cfg.targetPoint.horizontal = 'right';
             cfg.align.vertical.side = 'bottom';
 
 
@@ -220,8 +220,8 @@ define(
 
             // 3 position
             cfg = getPositionConfig();
-            cfg.corner.horizontal = 'right';
-            cfg.corner.vertical = 'bottom';
+            cfg.targetPoint.horizontal = 'right';
+            cfg.targetPoint.vertical = 'bottom';
             cfg.align.vertical.side = 'bottom';
             cfg.align.horizontal.side = 'left';
 
@@ -232,8 +232,8 @@ define(
 
             // 4 position
             cfg = getPositionConfig();
-            cfg.corner.horizontal = 'left';
-            cfg.corner.vertical = 'bottom';
+            cfg.targetPoint.horizontal = 'left';
+            cfg.targetPoint.vertical = 'bottom';
             cfg.align.vertical.side = 'top';
             cfg.align.horizontal.side = 'left';
 
@@ -261,8 +261,8 @@ define(
 
             // 3 position
             let cfg = getPositionConfig();
-            cfg.corner.horizontal = 'right';
-            cfg.corner.vertical = 'bottom';
+            cfg.targetPoint.horizontal = 'right';
+            cfg.targetPoint.vertical = 'bottom';
             cfg.align.vertical.side = 'bottom';
             cfg.align.horizontal.side = 'left';
             let position = StickyStrategy.getPosition(cfg, targetC);
@@ -278,7 +278,7 @@ define(
                height: 1000
             });
             let cfg = getPositionConfig();
-            cfg.corner.horizontal = 'right';
+            cfg.targetPoint.horizontal = 'right';
             cfg.align.vertical.side = 'bottom';
             cfg.sizes.margins.top = 10;
             cfg.sizes.margins.left = 10;
@@ -289,8 +289,8 @@ define(
             assert.equal(Object.keys(position).length, 4);
 
             cfg = getPositionConfig();
-            cfg.corner.horizontal = 'left';
-            cfg.corner.vertical = 'bottom';
+            cfg.targetPoint.horizontal = 'left';
+            cfg.targetPoint.vertical = 'bottom';
             cfg.align.vertical.side = 'top';
             cfg.align.horizontal.side = 'left';
             cfg.sizes.margins.top = 10;
@@ -318,8 +318,8 @@ define(
 
             cfg = getPositionConfig();
             cfg.sizes.width = 400;
-            cfg.corner.horizontal = 'left';
-            cfg.corner.vertical = 'bottom';
+            cfg.targetPoint.horizontal = 'left';
+            cfg.targetPoint.vertical = 'bottom';
             cfg.align.vertical.side = 'top';
             cfg.align.horizontal.side = 'left';
             targetCoords.topScroll = 10;
@@ -352,8 +352,8 @@ define(
             cfg = getPositionConfig();
             cfg.fittingMode = 'fixed';
             cfg.sizes.width = 400;
-            cfg.corner.horizontal = 'left';
-            cfg.corner.vertical = 'bottom';
+            cfg.targetPoint.horizontal = 'left';
+            cfg.targetPoint.vertical = 'bottom';
             cfg.align.vertical.side = 'top';
             cfg.align.horizontal.side = 'left';
 
@@ -390,7 +390,7 @@ define(
             popupCfg.align.vertical.offset = 10;
             popupCfg.sizes.margins.top = 15;
             StickyStrategy._private.invertPosition(popupCfg, direction);
-            assert.equal(popupCfg.corner.vertical, 'bottom');
+            assert.equal(popupCfg.targetPoint.vertical, 'bottom');
             assert.equal(popupCfg.align.vertical.side, 'bottom');
             assert.equal(popupCfg.align.vertical.offset, -10);
             assert.equal(popupCfg.sizes.margins.top, -15);
@@ -398,7 +398,7 @@ define(
 
          it('Sticky fix position', () => {
             let cfg = getPositionConfig();
-            cfg.corner.horizontal = 'right';
+            cfg.targetPoint.horizontal = 'right';
             cfg.align.vertical.side = 'bottom';
             let baseFixPosition = StickyStrategy._private.fixPosition;
             let baseCheckOverflow = StickyStrategy._private.checkOverflow;
@@ -477,13 +477,13 @@ define(
             assert.equal(position.maxHeight, BODY_HEIGHT);
          });
 
-         it('Centered corner sticky', () => {
+         it('Centered targetPoint sticky', () => {
             StickyStrategy._private.getWindowSizes = () => ({
                width: 1920,
                height: 1040
             });
             let popupCfg = { ...getPositionConfig() };
-            popupCfg.corner.horizontal = 'center';
+            popupCfg.targetPoint.horizontal = 'center';
 
             popupCfg.sizes.width = 100;
             popupCfg.sizes.height = 100;
@@ -491,8 +491,8 @@ define(
             let position = StickyStrategy.getPosition(popupCfg, targetCoords);
             assert.equal(position.left, 300);
 
-            popupCfg.corner.horizontal = 'left';
-            popupCfg.corner.vertical = 'center';
+            popupCfg.targetPoint.horizontal = 'left';
+            popupCfg.targetPoint.vertical = 'center';
 
             position = StickyStrategy.getPosition(popupCfg, targetCoords);
             assert.equal(position.bottom, 740);
