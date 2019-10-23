@@ -18,4 +18,6 @@
             multiSelectTpl="{{multiSelectTpl}}"
             itemActionsTemplate="{{itemActionsTemplate}}"
             itemActionsContainerStyles="{{itemActionsContainerStyles}}"
-            className="{{className}}"/>
+            className="{{className}}"
+            clickable="{{clickable}}"
+/>

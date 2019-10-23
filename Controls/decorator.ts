@@ -6,12 +6,16 @@
  * @includes Money Controls/_decorator/Money
  * @includes MoneyStyles Controls/_decorator/MoneyStyles
  * @includes Number Controls/_decorator/Number
- * @includes PhoneNumber Controls/_decorator/PhoneNumber
+ * @includes Phone Controls/_decorator/Phone
  * @includes WrapURLs Controls/_decorator/WrapURLs
  * @includes MoneyStyles Controls/_decorator/Money/Styles
  * @includes Converter Controls/_decorator/Markup/Converter
  * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
  * @includes linkDecorateUtils Controls/_decorator/Markup/resources/linkDecorateUtils
+ * @includes HighlightResolver Controls/_decorator/Markup/resolvers/highlight
+ * @includes LinkDecorateResolver Controls/_decorator/Markup/resolvers/linkDecorate
+ * @includes LinkWrapResolver Controls/_decorator/Markup/resolvers/linkWrap
+ * @includes NoOuterTagResolver Controls/_decorator/Markup/resolvers/noOuterTag
  * @public
  * @author Крайнов Д.О.
  */
@@ -24,12 +28,16 @@
  * @includes Money Controls/_decorator/Money
  * @includes MoneyStyles Controls/_decorator/MoneyStyles
  * @includes Number Controls/_decorator/Number
- * @includes PhoneNumber Controls/_decorator/PhoneNumber
+ * @includes Phone Controls/_decorator/Phone
  * @includes WrapURLs Controls/_decorator/WrapURLs
  * @includes MoneyStyles Controls/_decorator/Money/Styles
  * @includes Converter Controls/_decorator/Markup/Converter
  * @includes InnerText Controls/_decorator/Markup/resolvers/innerText
  * @includes linkDecorateUtils Controls/_decorator/Markup/resources/linkDecorateUtils
+ * @includes HighlightResolver Controls/_decorator/Markup/resolvers/highlight
+ * @includes LinkDecorateResolver Controls/_decorator/Markup/resolvers/linkDecorate
+ * @includes LinkWrapResolver Controls/_decorator/Markup/resolvers/linkWrap
+ * @includes NoOuterTagResolver Controls/_decorator/Markup/resolvers/noOuterTag
  * @public
  * @author Крайнов Д.О.
  */
@@ -39,6 +47,7 @@ import Money = require('Controls/_decorator/Money');
 import Number = require('Controls/_decorator/Number');
 import PhoneNumber = require('Controls/_decorator/PhoneNumber');
 
+export {default as Phone} from 'Controls/_decorator/Phone';
 import {default as WrapURLs, IWrapURLsOptions} from 'Controls/_decorator/WrapURLs';
 import {Highlight, SearchMode, IHighlightOptions} from 'Controls/_decorator/Highlight';
 

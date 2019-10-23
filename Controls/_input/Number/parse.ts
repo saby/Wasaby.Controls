@@ -4,6 +4,7 @@ export interface IParsedNumber {
     negative: number;
     integer: string;
     fractional: string;
+    hasSplitter: boolean;
 }
 
 export interface IOptions {
@@ -54,8 +55,9 @@ function calcParts(value: string): IParsedNumber {
     const negative: number = +(value[0] === '-');
     const integer: string = value.substring(negative, splitterPosition);
     const fractional: string = value.substring(splitterPosition + 1);
+    const hasSplitter = !!value[splitterPosition];
 
-    return {negative, integer, fractional};
+    return {negative, integer, fractional, hasSplitter};
 }
 
 function calcSplitterPosition(value: string): number {

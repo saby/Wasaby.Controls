@@ -1,0 +1,153 @@
+<ws:template name="date">
+   <Controls.filter:DateRangeEditor scope="{{item.editorOptions}}" value="{{item.value}}" attr:class="controls-FilterPanel__DateRange"/>
+</ws:template>
+
+<ws:template name="period">
+   <Controls.filterPopup:Dropdown bind:selectedKeys="item.value"
+                                          bind:textValue="item.textValue"
+                                          displayProperty="title"
+                                          source="{{item.source}}"
+                                          keyProperty="id"/>
+</ws:template>
+
+<ws:template name="category">
+<Controls.filterPopup:Dropdown bind:selectedKeys="item.value"
+                                       bind:textValue="item.textValue"
+                                       displayProperty="title"
+                                       emptyText="All categories"
+                                       multiSelect="{{true}}"
+                                       source="{{item.editorOptions.source}}"
+                                       keyProperty="id"/>
+</ws:template>
+
+<ws:template name="operations">
+<Controls.filterPopup:Dropdown bind:selectedKeys="item.value"
+                                       bind:textValue="item.textValue"
+                                       displayProperty="title"
+                                       source="{{item.editorOptions.source}}"
+                                       keyProperty="id"/>
+</ws:template>
+
+<ws:template name="state">
+<Controls.filterPopup:Dropdown bind:selectedKeys="item.value"
+                                       bind:textValue="item.textValue"
+                                       displayProperty="title"
+                                       emptyText="All state"
+                                       source="{{item.editorOptions.source}}"
+                                       keyProperty="id"/>
+</ws:template>
+
+<ws:template name="limit">
+<Controls.filterPopup:Dropdown
+        keyProperty="id"
+        source="{{item.source}}"
+        showCross="{{true}}"
+        bind:selectedKeys="item.value">
+   <ws:contentTemplate>
+      <ws:if data="{{contentTemplate.item.getId() === 2}}">
+         Long text value for testing. The length of this text is greater than the width of the filter panel.
+      </ws:if>
+      <ws:else>
+         {{contentTemplate.text}}
+      </ws:else>
+   </ws:contentTemplate>
+</Controls.filterPopup:Dropdown>
+</ws:template>
+
+<ws:template name="sender">
+<Controls-demo.Filter.Button.resources.FilterInput.FilterInput bind:value="item.value" bind:textValue="item.textValue"
+                                                               caption="Sender"/>
+</ws:template>
+
+<ws:template name="author">
+<Controls-demo.Filter.Button.resources.FilterInput.FilterInput bind:value="item.value" bind:textValue="item.textValue"
+                                                               caption="Author"/>
+</ws:template>
+
+<ws:template name="responsible">
+<Controls-demo.Filter.Button.resources.FilterInput.FilterInput bind:value="item.value" bind:textValue="item.textValue"
+                                                               caption="Responsible"/>
+</ws:template>
+
+<ws:template name="tagging">
+<Controls.toggle:Checkbox bind:value="item.value" caption="{{item.textValue}}"/>
+</ws:template>
+
+<ws:template name="operation">
+   <Controls-demo.FilterView.lookupTemplate
+           scope="{{item.editorOptions}}"
+           selectedKeys="{{item.value}}" />
+</ws:template>
+
+<ws:template name="group">
+<Controls.filterPopup:Dropdown
+        keyProperty="id"
+        displayProperty="title"
+        showCross="{{true}}"
+        source="{{item.source}}"
+        bind:textValue="item.textValue"
+        bind:selectedKeys="item.value"/>
+</ws:template>
+
+<ws:template name="unread">
+<Controls.filterPopup:Text bind:value="item.value" caption="{{item.textValue}}"/>
+</ws:template>
+
+<ws:template name="loose">
+<Controls.filterPopup:Text bind:value="item.value" caption="{{item.textValue}}"/>
+</ws:template>
+
+<ws:template name="own">
+<Controls.source:SelectedKey bind:selectedKey="item.value">
+   <Controls.filterPopup:Dropdown
+           emptyText="Not selected"
+           displayProperty="title"
+           keyProperty="id"
+           source="{{item.source}}"
+           showCross="{{true}}"
+           bind:textValue="item.textValue"/>
+</Controls.source:SelectedKey>
+</ws:template>
+
+<ws:template name="ourOrganisation">
+   <Controls-demo.FilterView.lookupTemplate
+           scope="{{item.editorOptions}}"
+           selectedKeys="{{item.value}}" />
+</ws:template>
+
+<ws:template name="document">
+<Controls.source:SelectedKey bind:selectedKey="item.value">
+   <Controls.filterPopup:Dropdown
+           keyProperty="id"
+           source="{{item.editorOptions ? item.editorOptions.source : item.source}}"
+           emptyText="All documents"
+           displayProperty="title"
+           bind:textValue="item.textValue"/>
+</Controls.source:SelectedKey>
+</ws:template>
+
+<ws:template name="activity">
+<Controls.filterPopup:Dropdown
+        keyProperty="id"
+        source="{{item.source}}"
+        displayProperty="title"
+        showCross="{{true}}"
+        bind:textValue="item.textValue"
+        bind:selectedKeys="item.value"/>
+</ws:template>
+
+<ws:template name="detailingPeriod">
+<Controls.filterPopup:Dropdown displayProperty="title"
+                                       bind:selectedKeys="item.value"
+                                       keyProperty="id"
+                                       parentProperty="parent"
+                                       nodeProperty="parent@"
+                                       source="{{item.source}}">
+   <ws:contentTemplate>
+      <div>{{contentTemplate.item.get('text') || contentTemplate.item.get('title')}}</div>
+   </ws:contentTemplate>
+</Controls.filterPopup:Dropdown>
+</ws:template>
+
+
+<ws:partial template="{{item.id}}" item="{{item}}"/>

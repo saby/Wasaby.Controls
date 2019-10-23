@@ -358,14 +358,14 @@ import entity = require('Types/entity');
          /**
           * Метод открытия всплывающей подсказки.
           * @function Controls/_popup/InfoBox#open
-          * @param {PopupOptions[]} popupOptions Опции всплывающей подсказки.
+          * @param {PopupOptions} popupOptions Опции всплывающей подсказки.
           * @see close
           */
 
          /*
           * Open InfoBox
           * @function Controls/_popup/InfoBox#open
-          * @param {PopupOptions[]} popupOptions InfoBox popup options.
+          * @param {PopupOptions} popupOptions InfoBox popup options.
           */
          open: function() {
             this._open();

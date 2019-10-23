@@ -144,7 +144,7 @@ var ViewModel = BaseViewModel.extend({
         return displayValue;
     },
 
-    _getStartingPosition: function() {
+    _getStartingPosition: function () {
         /**
          * Каретка должна находится в конце целой части.
          */
@@ -154,18 +154,23 @@ var ViewModel = BaseViewModel.extend({
     handleInput: function (splitValue, inputType) {
         let text: IText;
 
-        /**
-         * To enter the fractional part, you can go directly by pressing a dot or a comma.
-         */
         if (decimalSplitters.includes(splitValue.insert) && splitValue.delete === '') {
+            /**
+             * To enter the fractional part, you can go directly by pressing a dot or a comma.
+             */
             text = {
                 value: splitValue.before + splitValue.after,
                 carriagePosition: splitValue.before.length
             };
-            const splitterPosition: number = text.value.indexOf(decimalSplitter);
+            if (this._displayValue.includes(decimalSplitter)) {
+                const splitterPosition: number = text.value.indexOf(decimalSplitter);
 
-            if (splitterPosition !== -1) {
-                text.carriagePosition = splitterPosition + 1;
+                if (splitterPosition !== -1) {
+                    text.carriagePosition = splitterPosition + 1;
+                }
+            } else if (this._options.precision !== 0) {
+                text.value = this._displayValue === '' ? '0.0' : this._displayValue + '.0';
+                text.carriagePosition = text.value.length - 1;
             }
 
             return _private.superHandleInput(this, text, inputType);
@@ -176,10 +181,6 @@ var ViewModel = BaseViewModel.extend({
         _private.handleRemovalSplitterTriad(splitValue, inputType);
 
         text = _private.recoverText(splitValue);
-
-        if (inputType !== 'insert' && text.value === '') {
-            return _private.superHandleInput(this, text, inputType);
-        }
 
         if (inputType === 'insert') {
             parsedNumber = parse(splitValue.insert, this._options);
@@ -200,6 +201,19 @@ var ViewModel = BaseViewModel.extend({
                 text = splitterPosition < text.carriagePosition ?
                     _private.pasteInFractionalPart(text, parsedNumber) :
                     _private.pasteInIntegerPart(text, parsedNumber, splitterPosition);
+            }
+        } else if (inputType === 'deleteBackward' || inputType === 'deleteForward') {
+            if (text.value === '') {
+                return _private.superHandleInput(this, {
+                    value: '0',
+                    carriagePosition: 1
+                }, inputType);
+            }
+            if (text.value === '-' || splitValue.delete === decimalSplitter && splitValue.after === '') {
+                return _private.superHandleInput(this, {
+                    value: splitValue.before,
+                    carriagePosition: splitValue.before.length
+                }, inputType);
             }
         }
 
@@ -222,16 +236,16 @@ var ViewModel = BaseViewModel.extend({
             : _private.valueWithoutTrailingZerosRegExp;
         var trimmedValue = this._displayValue.match(regExp)[0];
 
-            if (this._displayValue !== trimmedValue) {
-               var oldValue = this._displayValue;
-               this._displayValue = trimmedValue;
+        if (this._displayValue !== trimmedValue) {
+            var oldValue = this._displayValue;
+            this._displayValue = trimmedValue;
 
-               // если ничего не поменялось - не надо изменять версию
-               if (oldValue !== trimmedValue) {
-                  this._nextVersion();
-               }
+            // если ничего не поменялось - не надо изменять версию
+            if (oldValue !== trimmedValue) {
+                this._nextVersion();
+            }
 
-               this._shouldBeChanged = true;
+            this._shouldBeChanged = true;
 
             return true;
         }
@@ -239,11 +253,11 @@ var ViewModel = BaseViewModel.extend({
         return false;
     },
 
-         addTrailingZero: function() {
-            if (this._options.precision !== 0 && _private.onlyIntegerPart(this._displayValue)) {
-               this._displayValue += '.0';
-               this._nextVersion();
-               this._shouldBeChanged = true;
+    addTrailingZero: function () {
+        if (this._options.precision !== 0 && _private.onlyIntegerPart(this._displayValue)) {
+            this._displayValue += '.0';
+            this._nextVersion();
+            this._shouldBeChanged = true;
 
             return true;
         }

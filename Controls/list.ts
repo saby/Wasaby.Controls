@@ -72,6 +72,8 @@ import Remover = require('Controls/_list/Remover');
 import VirtualScroll = require('Controls/_list/Controllers/VirtualScroll');
 import DataContainer = require('Controls/_list/Data');
 import _forTemplate = require('wml!Controls/_list/resources/For');
+import _swipeActionTemplate = require('wml!Controls/_list/Swipe/resources/SwipeAction');
+import _itemActionsForTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsFor');
 
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
@@ -113,6 +115,8 @@ export {
     VirtualScroll,
     DataContainer,
     _forTemplate,
+    _swipeActionTemplate,
+    _itemActionsForTemplate,
 
     GridLayoutUtil,
     EditingTemplate,

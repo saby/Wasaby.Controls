@@ -142,7 +142,8 @@
  * @property {String} caption Текст заголовка ячейки.
  * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
- * @property {String} template Шаблон заголовка ячейки. CSS-класс устанавливает правый отступ для заголовка ячейки в целях выравнивания по целым числам в полях ввода денег.  По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
+ * @property {String} template Шаблон заголовка ячейки. По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
+ * Для базового шаблона можно задать класс controls-Grid__header-cell_spacing_money, который добавляет отступ в заголовке столбца при рендере денежных данных.
  * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
  * @property {String} sortingProperty Свойство, по которому выполняется сортировка. 
  * В качестве значения принимает имя поля. 
@@ -173,11 +174,6 @@
  *    ];
  * }
  * </pre>
- * <pre class="brush: html>"
- * <Controls.grid:View bind:sorting="_sorting" header="{{_header}}">
- *    ...
- * </Controls.grid:View>
- * </pre>
  * @property {Number} startRow Порядковый номер строки на которой начинается ячейка.
  * @property {Number} endRow Порядковый номер строки на которой заканчивается ячейка.
  * @property {Number} startColumn Порядковый номер колонки на которой начинается ячейка.
@@ -201,7 +197,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#header
- * @cfg {Array.<HeaderCell>} Описывает шапку таблицы. В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки. Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки. Условно ячейки таблицы нумеруются слева направо. Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке. 
+ * @cfg {Array.<HeaderCell>} Описывает шапку таблицы. В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки. Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки. Условно ячейки шапки нумеруются слева направо. Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке. 
  * <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
  * <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
  * @example

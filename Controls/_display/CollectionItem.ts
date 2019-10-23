@@ -87,6 +87,10 @@ export default class CollectionItem<T> extends mixin<
 
     protected _$editingContents: T;
 
+    protected _$active: boolean;
+
+    protected _$hovered: boolean;
+
     protected _instancePrefix: string;
 
     /**
@@ -206,6 +210,8 @@ export default class CollectionItem<T> extends mixin<
     /**
      * Возвращает признак, что элемент выбран
      */
+    // TODO This is not implemented yet, but will be working when
+    // multiselect manager is created
     isSelected(): boolean {
         return this._$selected;
     }
@@ -323,41 +329,71 @@ export default class CollectionItem<T> extends mixin<
         }
     }
 
-    getWrapperClassList(): string {
-        let classList = `controls-ListView__itemV
+    isActive(): boolean {
+        return this._$active;
+    }
+
+    setActive(active: boolean, silent?: boolean): void {
+        if (this._$active === active) {
+            return;
+        }
+        this._$active = active;
+        this._nextVersion();
+        if (!silent) {
+            this._notifyItemChangeToOwner('active');
+        }
+    }
+
+    isHovered(): boolean {
+        return this._$hovered;
+    }
+
+    setHovered(hovered: boolean, silent?: boolean): void {
+        if (this._$hovered === hovered) {
+            return;
+        }
+        this._$hovered = hovered;
+        this._nextVersion();
+        if (!silent) {
+            this._notifyItemChangeToOwner('hovered');
+        }
+    }
+
+    getWrapperClasses(): string {
+        let classes = `controls-ListView__itemV
             controls-ListView__item_highlightOnHover_default_theme_default
             controls-ListView__item_default
             controls-ListView__item_showActions
             js-controls-SwipeControl__actionsContainer`;
 
         if (this.isEditing()) {
-            classList += ' controls-ListView__item_editing';
+            classes += ' controls-ListView__item_editing';
         }
 
-        return classList;
+        return classes;
     }
 
-    getContentClassList(): string {
-        return `controls-ListView__itemContent ${this._getSpacingClassList()}`;
+    getContentClasses(): string {
+        return `controls-ListView__itemContent ${this._getSpacingClasses()}`;
     }
 
-    protected _getSpacingClassList(): string {
-        let classList = '';
+    protected _getSpacingClasses(): string {
+        let classes = '';
 
         const rowSpacing = this._$owner.getRowSpacing().toLowerCase();
         const rightSpacing = this._$owner.getRightSpacing().toLowerCase();
 
-        classList += ` controls-ListView__item-topPadding_${rowSpacing}`;
-        classList += ` controls-ListView__item-bottomPadding_${rowSpacing}`;
-        classList += ` controls-ListView__item-rightPadding_${rightSpacing}`;
+        classes += ` controls-ListView__item-topPadding_${rowSpacing}`;
+        classes += ` controls-ListView__item-bottomPadding_${rowSpacing}`;
+        classes += ` controls-ListView__item-rightPadding_${rightSpacing}`;
 
         if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
-           classList += ' controls-ListView__itemContent_withCheckboxes';
+           classes += ' controls-ListView__itemContent_withCheckboxes';
         } else {
-           classList += ` controls-ListView__item-leftPadding_${this._$owner.getLeftSpacing().toLowerCase()}`;
+           classes += ` controls-ListView__item-leftPadding_${this._$owner.getLeftSpacing().toLowerCase()}`;
         }
 
-        return classList;
+        return classes;
     }
 
     protected _setEditingContents(editingContents: T): void {
@@ -457,6 +493,8 @@ Object.assign(CollectionItem.prototype, {
     _$actions: null,
     _$swiped: false,
     _$editingContents: null,
+    _$active: false,
+    _$hovered: false,
     _instancePrefix: 'collection-item-',
     _contentsIndex: undefined,
     _version: 0,

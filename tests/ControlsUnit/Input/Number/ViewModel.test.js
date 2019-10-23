@@ -31,7 +31,7 @@ define(
                   delete: ''
                }, 'insert');
 
-               assert.equal(model.displayValue, '1.0');
+               assert.equal(model.displayValue, '1');
                assert.deepEqual(model.selection, getSelection(1));
             });
             it('Enter "test1test2test3test".', function() {
@@ -42,7 +42,7 @@ define(
                   delete: ''
                }, 'insert');
 
-               assert.equal(model.displayValue, '123.0');
+               assert.equal(model.displayValue, '123');
                assert.deepEqual(model.selection, getSelection(3));
             });
             it('Enter "1". No fractional part.', function() {
@@ -67,7 +67,7 @@ define(
                   delete: ''
                }, 'insert');
 
-               assert.equal(model.displayValue, '-1.0');
+               assert.equal(model.displayValue, '-1');
                assert.deepEqual(model.selection, getSelection(2));
             });
             it('Enter "-1". Only positive numbers.', function() {
@@ -81,7 +81,7 @@ define(
                   delete: ''
                }, 'insert');
 
-               assert.equal(model.displayValue, '1.0');
+               assert.equal(model.displayValue, '1');
                assert.deepEqual(model.selection, getSelection(1));
             });
             it('Enter "-". Only positive numbers.', function() {
@@ -216,6 +216,7 @@ define(
                assert.deepEqual(model.selection, getSelection(1));
             });
             it('Enter "." before is "123 456"', function() {
+               model._displayValue = '123 456';
                model.handleInput({
                   after: '',
                   before: '123 456',
@@ -223,8 +224,8 @@ define(
                   delete: ''
                }, 'insert');
 
-               assert.equal(model.displayValue, '123 456');
-               assert.deepEqual(model.selection, getSelection(7));
+               assert.equal(model.displayValue, '123 456.0');
+               assert.deepEqual(model.selection, getSelection(8));
             });
             it('Enter "12,34".', function() {
                model.handleInput({

@@ -1,0 +1,13 @@
+<ws:partial template="Controls/dropdown:ItemTemplate"
+            itemData="{{itemData}}"
+            multiLine="{{true}}">
+   <ws:contentTemplate>
+      <div class="controls-demo-FilterView-TemplateItem">
+         <img class="controls-demo-FilterView-template-photo" src="{{itemData.item['photo']}}" />
+         <div class="controls-demo-FilterView-template-content">
+            <div class="controls-demo-FilterView-template-text">{{itemData.item['title']}}</div>
+            <div class="controls-demo-FilterView-template-comment controls-demo-FilterView-template-text">{{itemData.item['comment']}}</div>
+         </div>
+      </div>
+   </ws:contentTemplate>
+</ws:partial>

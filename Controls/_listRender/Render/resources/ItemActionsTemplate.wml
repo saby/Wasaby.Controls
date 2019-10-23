@@ -9,7 +9,7 @@
             {{item.isSwiped() ? 'controls-itemActionsV_swiped'}}">
         <div attr:class="controls-itemActionsV__wrapper">
             <ws:partial
-                    template="wml!Controls/_list/ItemActions/resources/ItemActionsFor"
+                    template="Controls/list:_itemActionsForTemplate"
                     itemData="{{item}}"
                     size="{{size}}"
                     showedActions="{{item.getActions().showed}}"/>
