@@ -90,7 +90,7 @@ export function closeActionsMenu(args?: { action: string, event: SyntheticEvent<
     // the action handler first
     if (args && args.action === 'itemClick') {
         const action = args.data && args.data[0] && args.data[0].getRawData();
-        this._onItemActionsClick(args.event, action, this._options.listModel.getActiveItem());
+        processItemActionClick.call(this, args.event, action, this._options.listModel.getActiveItem());
 
         // If this action has children, don't close the menu if it was clicked
         if (action['parent@']) {
