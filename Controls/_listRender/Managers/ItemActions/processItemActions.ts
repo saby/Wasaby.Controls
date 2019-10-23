@@ -37,7 +37,7 @@ export function openActionsMenu(
     // over if needed
     // TODO Part of this should probably be moved into the manager
     // FIXME This should not be calling the manager itself
-    const menuActions = this._options.listModel._itemActionsManager.getMenuActions(item);
+    const menuActions = this._options.listModel.getItemActionsManager().getMenuActions(item);
     if (menuActions && menuActions.length > 0) {
         event.stopPropagation();
         event.preventDefault();

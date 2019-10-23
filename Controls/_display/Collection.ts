@@ -1945,6 +1945,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // endregion
 
+    // FIXME Will be removed, managers will be created from the outside of
+    // the model in Stage 2. For now we have to create them here and access
+    // them from the model to stay compatible with BaseControl.
+    getItemActionsManager(): ItemActionsManager {
+        return this._itemActionsManager;
+    }
+
     getDisplayProperty(): string {
         return this._$displayProperty;
     }

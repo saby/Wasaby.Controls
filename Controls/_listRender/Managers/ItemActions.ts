@@ -28,7 +28,7 @@ export default class ItemActionsControl extends Control<IItemActionsControlOptio
 
     protected _onContainerMouseEnter(): void {
         if (!this._initializedActions) {
-            this._options.listModel._itemActionsManager.assignItemActions(
+            this._options.listModel.getItemActionsManager().assignItemActions(
                 this._options.itemActions,
                 this._options.itemActionsVisibilityCallback
             );
