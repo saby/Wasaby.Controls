@@ -2059,11 +2059,15 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     getFirstItem(): S {
-        return this.getFirst().getContents();
+        if (this.getCount() > 0) {
+            return this.getFirst().getContents();
+        }
     }
 
     getLastItem(): S {
-        return this.getLast().getContents();
+        if (this.getCount() > 0) {
+            return this.getLast().getContents();
+        }
     }
 
     getViewIterator(): {
