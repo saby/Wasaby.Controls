@@ -88,7 +88,6 @@ var _private = {
                         _private.updateItemActions(self, item, options);
                     }
                 }
-                self._isActual = true;
                 options.listModel.nextModelVersion(collectionChanged, ACTION_TYPE);
             }
         }
@@ -96,10 +95,6 @@ var _private = {
 
     updateModel: function(self, newOptions) {
         _private.updateActions(self, newOptions);
-        newOptions.listModel.subscribe(
-            self._options.useNewModel ? 'onCollectionChange' : 'onListChange',
-            self._onCollectionChangeFn
-        );
     },
 
     needActionsMenu: function(actions) {
@@ -141,11 +136,9 @@ var ItemActionsControl = Control.extend({
 
     _template: template,
     _itemActionsTemplate: itemActionsTemplate,
-    _isActual: false,
 
     constructor: function() {
         ItemActionsControl.superclass.constructor.apply(this, arguments);
-        this._onCollectionChangeFn = this._onCollectionChange.bind(this);
         this._hierarchyRelation = new relation.Hierarchy({
            keyProperty: 'id',
            parentProperty: 'parent',
@@ -173,13 +166,8 @@ var ItemActionsControl = Control.extend({
             this._options.itemActions !== newOptions.itemActions ||
             this._options.itemActionVisibilityCallback !== newOptions.itemActionVisibilityCallback ||
             this._options.toolbarVisibility !== newOptions.toolbarVisibility ||
-            this._options.itemActionsPosition !== newOptions.itemActionsPosition ||
-            !this._isActual && newOptions.canUpdateItemsActions
+            this._options.itemActionsPosition !== newOptions.itemActionsPosition
         ) {
-            this._options.listModel.unsubscribe(
-                this._options.useNewModel ? 'onCollectionChange' : 'onListChange',
-                this._onCollectionChangeFn
-            );
             _private.updateModel.apply(null, args);
         }
     },
@@ -210,50 +198,9 @@ var ItemActionsControl = Control.extend({
         }
     },
 
-    _beforeUnmount: function() {
-        this._options.listModel.unsubscribe(
-            this._options.useNewModel ? 'onCollectionChange' : 'onListChange',
-            this._onCollectionChangeFn
-        );
-    },
-
-    _onCollectionChange(
-       e: EventObject,
-       type: string
-    ): void {
-        // TODO Нужно подумать, как правильно фильтровать тип изменений модели
-        // Возможно после вынесения этого в менеджер, он будет сам слушать нужные
-        // методы, и это не понадобится
-        if (
-            type === 'collectionChanged' || type === 'indexesChanged' ||
-            (this._options.useNewModel && type !== 'ch')
-        ) {
-           this._isActual = false;
-           /**
-            * In general, we don't know what we should update.
-            * For example, if a user adds an item we can't just calculate actions for the newest item, we should also calculate
-            * actions for it's neighbours. They may have arrows for moving, so they should also get updated.
-            *
-            * It's logical to think that we should update the item and it's neighbours if items get added\removed.
-            * This wouldn't work because sometimes items can be far away from each other.
-            * For example:
-            * folder
-            * -child
-            * -child
-            * -child
-            * new folder
-            *
-            * In this example we should update actions of both folders, but they're not neighbours.
-            * And sometimes people can add\remove actions based on number of items in the list, so it becomes even harder to know what we should update.
-            *
-            * So, we should calculate actions for every item everytime.
-            */
-            if(this._options.canUpdateItemsActions) {
-               _private.updateActions(this, this._options, type === 'collectionChanged');
-           }
-        }
-    },
-
+    updateActions(): void {
+        _private.updateActions(this, this._options);
+    }
    getChildren(
       action: object,
       actions: object[]
