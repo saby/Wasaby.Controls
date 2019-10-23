@@ -35,7 +35,15 @@
            placeholder="{{_options.placeholder}}"
            class="controls-ComboBox-InputRender">
       <ws:afterFieldWrapper>
-         <Controls.toggle:Separator attr:class="controls-SelectorSuggest__button-separator" attr:ws-no-focus="{{true}}" if="{{!_options.readOnly}}" value="{{_suggestState}}" on:click="_open()"/>
+         <ws:if data="{{!_options.readOnly}}">
+            <Controls.Container.Async templateName="Controls/toggle:Separator">
+               <ws:partial template="{{content.resolvedTemplate}}"
+                           attr:class="controls-SelectorSuggest__button-separator"
+                           attr:ws-no-focus="{{true}}"
+                           value="{{_suggestState}}"
+                           on:click="_open()"/>
+            </Controls.Container.Async>
+         </ws:if>
       </ws:afterFieldWrapper>
    </Controls._suggest.Input.Render>
 </Controls._suggest._InputController>
