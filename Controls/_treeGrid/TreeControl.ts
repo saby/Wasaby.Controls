@@ -86,7 +86,6 @@ var _private = {
             !dispItem.isRoot() &&
             (_private.shouldLoadChildren(self, item) || self._options.task1178031650)
         ) {
-            _private.createSourceControllerForNode(self, nodeKey, options.source, options.navigation);
             filter[options.parentProperty] = nodeKey;
             _private.createSourceControllerForNode(self, nodeKey, options.source, options.navigation)
                 .load(filter, options.sorting)
