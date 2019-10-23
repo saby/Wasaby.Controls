@@ -1,4 +1,4 @@
-import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
+import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import coreMerge = require('Core/core-merge');
 import {IoC} from 'Env/Env';
 
@@ -38,7 +38,7 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
  * @public
  */
 
-const Sticky = BaseOpener.extend({
+class Sticky extends BaseOpener {
 
     /**
      * @typedef {Object} PopupOptions
@@ -84,8 +84,7 @@ const Sticky = BaseOpener.extend({
      * wml
      * <pre>
      *    <Controls.popup:Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
-     *          <ws:verticalAlign side="bottom"/>
-     *          <ws:horizontalAlign side="left"/>
+     *          <ws:direction vertical="bottom" horizontal="left"/>
      *          <ws:targetPoint vertical="bottom" horizontal="left"/>
      *   </Controls.popup:Sticky>
      *
@@ -124,7 +123,7 @@ const Sticky = BaseOpener.extend({
     open(config) {
         BaseOpener.prototype.open.call(this, _private.getStickyConfig(config), POPUP_CONTROLLER);
     }
-});
+}
 
 /**
  * Статический метод для открытия всплывающего окна. При использовании метода не требуется создавать popup:Sticky в верстке.
@@ -223,7 +222,7 @@ Sticky.closePopup = (popupId: string): void => {
 
 Sticky.getDefaultOptions = function() {
     // На старом WindowManager пофиксили все известные баги, пробую все стики окна открывать всегда вдомными
-    return coreMerge(BaseOpener.getDefaultOptions(), {});
+    return coreMerge(BaseOpener.getDefaultOptions(), {_vdomOnOldPage: true});
 };
 export = Sticky;
 
@@ -235,8 +234,7 @@ export = Sticky;
  * wml
  * <pre>
  *    <Controls.popup:Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
- *          <ws:verticalAlign side="bottom"/>
- *          <ws:horizontalAlign side="left"/>
+ *          <ws:direction vertical="bottom" horizontal="left"/>
  *          <ws:targetPoint vertical="bottom" horizontal="left"/>
  *    </Controls.popup:Sticky>
  *
@@ -300,7 +298,7 @@ export = Sticky;
 
 /**
  * @name Controls/_popup/Opener/Sticky#target
- * @cfg {Node|Control} target Элемент (DOM-элемент или контрол), относительно которого позиционнируется всплывающее окно.
+ * @cfg {Node|Control} Элемент (DOM-элемент или контрол), относительно которого позиционнируется всплывающее окно.
  */
 
 /**

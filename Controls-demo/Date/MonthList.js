@@ -25,6 +25,11 @@ define('Controls-demo/Date/MonthList', [
       _selectionHoveredValue: null,
       _selectionBaseValue: null,
       _source: null,
+      _displayedRanges: [
+         [null, new Date(2018, 8)],
+         [new Date(2019, 3), new Date(2020, 8)],
+         [new Date(2022, 0), null]
+      ],
 
       _yearHeader: null,
       _monthHeader: null,

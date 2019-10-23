@@ -1,105 +1,135 @@
 import cClone = require('Core/core-clone');
-import Base = require('Controls/_popup/Opener/BaseOpener');
+import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
+import ManagerController = require('Controls/_popup/Manager/ManagerController');
 
+const DISPLAY_DURATION: number = 1000;
+const POPUP_CONTROLLER = 'Controls/popupTemplate:PreviewerController';
+let openingTimerId: number = null;
+let closingTimerId: number = null;
+let previewerId: string;
 
-      var _private = {
-         displayDuration: 1000,
+const clearClosingTimeout = () => {
+    if (closingTimerId) {
+        clearTimeout(closingTimerId);
+        closingTimerId = null;
+    }
+};
 
-         clearOpeningTimeout: function(self) {
-            var id = self._openingTimerId;
+const clearOpeningTimeout = () => {
+    if (openingTimerId) {
+        clearTimeout(openingTimerId);
+        openingTimerId = null;
+    }
+};
 
-            if (id) {
-               clearTimeout(id);
-               self._openingTimerId = null;
-            }
-         },
+const prepateConfig = (config) => {
+    const newConfig = cClone(config);
 
-         clearClosingTimeout: function(self) {
-            var id = self._closingTimerId;
+    newConfig.closeOnOutsideClick = true;
+    newConfig.className = 'controls-PreviewerController';
+    newConfig._vdomOnOldPage = true;
+    return newConfig;
+};
 
-            if (id) {
-               clearTimeout(id);
-               self._closingTimerId = null;
-            }
-         },
+const open = (callback: Function, config: object, type?: string): void => {
+    clearClosingTimeout();
+    const newCfg = prepateConfig(config);
+    // Previewer - singleton
 
-         open: function(self, cfg) {
-            var myCfg = cClone(cfg);
+    if (type === 'hover') {
+        openingTimerId = setTimeout(() => {
+            openingTimerId = null;
+            callback(newCfg);
+        }, DISPLAY_DURATION);
+    } else {
+        callback(newCfg);
+    }
+};
 
-            myCfg.closeOnOutsideClick = true;
-            myCfg.className = 'controls-PreviewerController';
-            Previewer.superclass.open.call(self, myCfg, 'Controls/popupTemplate:PreviewerController');
-         }
-      };
+const close = (callback: Function, type?: string): void => {
+    clearOpeningTimeout();
+    if (type === 'hover') {
+        closingTimerId = setTimeout(() => {
+            closingTimerId = null;
+            callback();
+        }, DISPLAY_DURATION);
+    } else {
+        callback();
+    }
+};
 
-      var Previewer = Base.extend({
-         _openingTimerId: null,
+const cancel = (action: string): void => {
+    switch (action) {
+        case 'opening':
+            clearOpeningTimeout();
+            break;
+        case 'closing':
+            clearClosingTimeout();
+            break;
+    }
+};
 
-         _closingTimerId: null,
-         _beforeUnmount: function() {
-            _private.clearClosingTimeout(this);
-            _private.clearOpeningTimeout(this);
+class Previewer extends BaseOpener {
 
-         },
+    protected _beforeUnmount(): void {
+        clearClosingTimeout();
+        clearOpeningTimeout();
+    }
 
-         open: function(cfg, type) {
-            var self = this;
+    open(cfg: object, type?: string): void {
+        this.close();
+        open((newCfg) => {
+            super.open(newCfg, POPUP_CONTROLLER);
+        }, cfg, type);
+    }
 
-            _private.clearClosingTimeout(this);
+    close(type?: string): void {
+        close(() => {
+            super.close();
+        }, type);
+    }
 
-            // Previewer - singleton
-            this.close();
+    /**
+     * Cancel a delay in opening or closing.
+     * @param {String} action Action to be undone.
+     * @variant opening
+     * @variant closing
+     */
+    cancel(action: string): void {
+        cancel(action);
+    }
 
-            if (type === 'hover') {
-               this._openingTimerId = setTimeout(function() {
-                  self.openingTimerId = null;
+    static openPopup(config: object, type?: string): void {
+        this.closePopup();
+        open((newCfg) => {
+            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
+                BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
+                    previewerId = popupId;
+                });
+            });
+        }, config, type);
+    }
 
-                  _private.open(self, cfg);
-               }, _private.displayDuration);
-            } else {
-               _private.open(self, cfg);
-            }
-         },
+    static closePopup(type?: string): void {
+        close(() => {
+            BaseOpener.closeDialog(previewerId);
+        }, type);
+    }
 
-         close: function(type) {
-            var self = this;
+    static cancelPopup(action: string): void {
+        cancel(action);
+    }
 
-            _private.clearOpeningTimeout(this);
+    // TODO перенести метод в baseOpener, ManagerController здесь не нужен
+    static isOpenedPopup(): boolean {
+        return !!ManagerController.find(previewerId);
+    }
 
-            if (type === 'hover') {
-               this._closingTimerId = setTimeout(function() {
-                  self.closingTimerId = null;
-
-                  Previewer.superclass.close.call(self);
-               }, _private.displayDuration);
-            } else {
-               Previewer.superclass.close.call(this);
-               this._popupIds = [];
-            }
-         },
-
-         /**
-          * Cancel a delay in opening or closing.
-          * @param {String} action Action to be undone.
-          * @variant opening
-          * @variant closing
-          */
-         cancel: function(action) {
-            switch (action) {
-               case 'opening':
-                  _private.clearOpeningTimeout(this);
-                  break;
-               case 'closing':
-                  _private.clearClosingTimeout(this);
-                  break;
-            }
-         }
-      });
-
-      Previewer.getDefaultOptions = function() {
-         var baseOptions = Base.getDefaultOptions();
-         baseOptions._vdomOnOldPage = true;
-         return baseOptions;
-      };
+    static getDefaultOptions() {
+        const baseOptions = BaseOpener.getDefaultOptions();
+        baseOptions._vdomOnOldPage = true;
+        return baseOptions;
+    }
+}
 
 export default Previewer;

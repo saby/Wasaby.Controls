@@ -1,5 +1,5 @@
 /**
- * @mixin Controls/_popupTemplate/Confirmation/ConfirmationStyles
+ * @mixin Controls/_popupConfirmation/style
  * @public
  * @css @background-color_InformationPopup Background color.
  * @css @border-color_InformationPopup_default Border color when option style is set to default.

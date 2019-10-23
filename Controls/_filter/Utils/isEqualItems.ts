@@ -9,7 +9,8 @@ export default function isEqualItems(item1: object, item2: object): boolean {
 
     if (id) {
         result = getPropValue(item1, 'id') === getPropValue(item2, 'id');
-    } else if (name) {
+    }
+    if (!result && name) {
         result = getPropValue(item1, 'name') === getPropValue(item2, 'name');
     }
     return result;

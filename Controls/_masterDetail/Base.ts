@@ -78,6 +78,13 @@ class Base extends Control<IMasterDetail> {
      * Значение можно задавать как в пикселях, так и в процентах.
      */
 
+    /**
+     * @name Controls/_interface/IPropStorage#propStorageId
+     * @cfg {String} Уникальный идентификатор контрола, по которому будет сохраняться конфигурация в хранилище данных.
+     * С помощью этой опции включается функционал движения границ.
+     * Помимо propStorageId необходимо задать опции {@link masterWidth}, {@link masterMinWidth}, {@link masterMaxWidth}.
+     */
+
     protected _template: TemplateFunction = template;
     protected _selected: Boolean|null;
     protected _minOffset: number;

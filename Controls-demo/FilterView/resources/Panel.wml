@@ -1,0 +1,7 @@
+<Controls.filterPopup:DetailPanel attr:class="{{_limitWidth ? 'controls-FilterPanel__width-m'}}"
+                                  headingCaption="{{_caption}}"
+                                  topTemplate="{{_topTemplate}}"
+                                  items="{{_options.items}}">
+   <ws:itemTemplate templateName="wml!Controls-demo/FilterView/resources/itemTemplateMainBlock"/>
+   <ws:additionalTemplate templateName="wml!Controls-demo/FilterView/resources/additionalTemplateItems"/>
+</Controls.filterPopup:DetailPanel>

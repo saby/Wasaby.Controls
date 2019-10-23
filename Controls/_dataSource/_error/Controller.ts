@@ -1,5 +1,4 @@
 /// <amd-module name="Controls/_dataSource/_error/Controller" />
-import { Confirmation } from 'Controls/popup';
 import { Controller as ParkingController } from 'Controls/_dataSource/parking';
 import {
     Handler,
@@ -56,18 +55,6 @@ let prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): Han
     }
 };
 
-let getDefault = <T extends Error = Error>(config: HandlerConfig<T>) => {
-    let message = config.error.message;
-    // @ts-ignore
-    let details = config.error.details;
-
-    Confirmation.openPopup({
-        type: "ok",
-        style: "danger",
-        message,
-        details
-    });
-};
 /// endregion helpers
 
 /**
@@ -153,7 +140,7 @@ export default class ErrorController {
         }
         return this.__controller.process(_config).then((handlerResult: ViewConfig | void) => {
             if (!handlerResult) {
-                return getDefault(_config);
+                return this._getDefault(_config);
             }
             // @ts-ignore
             _config.error.processed = true;
@@ -165,4 +152,14 @@ export default class ErrorController {
             };
         });
     }
+
+    private _getDefault<T extends Error = Error>(config: HandlerConfig<T>): void {
+        const message = config.error.message;
+        const details = config.error.details;
+        const style = 'danger';
+        const type = 'ok';
+        // @ts-ignore
+        import('Controls/popup').then((popup) => { popup.Confirmation.openPopup({ type, style, message, details }); });
+    }
+
 }

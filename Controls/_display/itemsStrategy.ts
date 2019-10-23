@@ -10,6 +10,7 @@
  * @includes Root Controls/_display/itemsStrategy/Root
  * @includes Search Controls/_display/itemsStrategy/Search
  * @includes User Controls/_display/itemsStrategy/User
+ * @private
  * @author Мальцев А.А.
  */
 

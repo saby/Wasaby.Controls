@@ -16,16 +16,16 @@ var InfoBoxTemplate = Control.extend({
     },
 
     _setPositionSide: function(stickyPosition) {
-        if (stickyPosition.horizontalAlign.side === 'left' && stickyPosition.corner.horizontal === 'left') {
+        if (stickyPosition.horizontalAlign.side === 'left' && stickyPosition.targetPoint.horizontal === 'left') {
             this._arrowSide = 'right';
             this._arrowPosition = this._getArrowPosition(stickyPosition.verticalAlign.side);
-        } else if (stickyPosition.horizontalAlign.side === 'right' && stickyPosition.corner.horizontal === 'right') {
+        } else if (stickyPosition.horizontalAlign.side === 'right' && stickyPosition.targetPoint.horizontal === 'right') {
             this._arrowSide = 'left';
             this._arrowPosition = this._getArrowPosition(stickyPosition.verticalAlign.side);
-        } else if (stickyPosition.verticalAlign.side === 'top' && stickyPosition.corner.vertical === 'top') {
+        } else if (stickyPosition.verticalAlign.side === 'top' && stickyPosition.targetPoint.vertical === 'top') {
             this._arrowSide = 'bottom';
             this._arrowPosition = this._getArrowPosition(stickyPosition.horizontalAlign.side);
-        } else if (stickyPosition.verticalAlign.side === 'bottom' && stickyPosition.corner.vertical === 'bottom') {
+        } else if (stickyPosition.verticalAlign.side === 'bottom' && stickyPosition.targetPoint.vertical === 'bottom') {
             this._arrowSide = 'top';
             this._arrowPosition = this._getArrowPosition(stickyPosition.horizontalAlign.side);
         }

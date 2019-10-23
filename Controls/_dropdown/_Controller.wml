@@ -1,7 +1,8 @@
 <div>
    <ws:partial template="{{_options.content}}"
                on:click="_clickHandler()"
-               on:keydown="_keyDown()"/>
+               on:keydown="_keyDown()"
+               on:deactivated="_deactivated()"/>
 
    <Controls._dropdown.Opener name="DropdownOpener"
                              on:open="_onOpen()"

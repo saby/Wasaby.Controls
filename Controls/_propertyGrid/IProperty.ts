@@ -1,10 +1,12 @@
 /**
  * Интерфейс свойств PropertyGrid.
+ * @interface Controls/_propertyGrid/IProperty
  * @author Герасимов А.М.
  */
 
 /*
  * Interface of PropertyGrid property.
+ * @interface Controls/_propertyGrid/IProperty
  * @author Герасимов А.М.
  */
 

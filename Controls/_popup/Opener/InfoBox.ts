@@ -1,7 +1,6 @@
 import cClone = require('Core/core-clone');
-import Env = require('Env/Env');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
-import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
+import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import getZIndex = require('Controls/Utils/getZIndex');
 import {DefaultOpenerFinder} from "UI/Focus";
 
@@ -59,6 +58,7 @@ const _private = {
     getInfoBoxConfig(cfg: object): object {
         // smart merge of two objects. Standart "core-merge util" will rewrite field value of first object even if value of second object will be undefined
         const newCfg = cClone(DEFAULT_CONFIG);
+        cfg = cfg || {};
         for (const i in cfg) {
             if (cfg.hasOwnProperty(i)) {
                 if (cfg[i] !== undefined) {
@@ -98,6 +98,7 @@ const _private = {
                 style: newCfg.style || 'secondary',
                 floatCloseButton: newCfg.floatCloseButton
             },
+            _vdomOnOldPage: true,
             template: 'Controls/popupTemplate:templateInfoBox'
         };
     },
@@ -119,14 +120,44 @@ const _private = {
             position += topBottom[alignment];
         }
         return position;
-    }
+    },
+    clearTimeout() {
+        if (openId) {
+            clearTimeout(openId);
+        }
+        if (closeId) {
+            clearTimeout(closeId);
+        }
+    },
+    close(callback: Function, delay?: number): void {
+        delay = delay === undefined ? INFOBOX_HIDE_DELAY : delay;
+        _private.clearTimeout();
+        if (delay > 0) {
+            closeId = setTimeout(callback, delay);
+        } else {
+            callback();
+        }
+    },
 
+    open(callback: Function, cfg: object): void {
+        _private.clearTimeout();
+
+        const newCfg = _private.getInfoBoxConfig(cfg);
+        if (newCfg.showDelay > 0) {
+            openId = setTimeout(() => {
+                callback(newCfg);
+            }, newCfg.showDelay);
+        } else {
+            callback(newCfg);
+        }
+    }
 };
 
-const InfoBox = BaseOpener.extend({
-    _openId: null,
-    _closeId: null,
-    _style: null,
+let openId: number;
+let closeId: number;
+
+class InfoBox extends BaseOpener {
+    _style: number = null;
 
     /**
      * @name Controls/_popup/Opener/Infobox#isOpened
@@ -162,49 +193,40 @@ const InfoBox = BaseOpener.extend({
 
     _beforeUnmount() {
         this.close(0);
-    },
+    }
 
-    open(cfg) {
+    open(cfg: object): void {
         // Only one popup can be opened
         if (this.isOpened()) {
             this.close(0);
         }
-        this._clearTimeout();
+        _private.open((newCfg: object) => {
+            super.open(newCfg, POPUP_CONTROLLER);
+        }, cfg);
+    }
 
-        const newCfg = _private.getInfoBoxConfig(cfg);
-        if (newCfg.showDelay > 0) {
-            this._openId = setTimeout(this._open.bind(this, newCfg), newCfg.showDelay);
-        } else {
-            this._open(newCfg);
-        }
-    },
-    _open(cfg) {
-        InfoBox.superclass.open.call(this, cfg, POPUP_CONTROLLER);
-    },
+    _getIndicatorConfig() {
+        // В случае с подсказкой оверлей не нужен. Только мешает работе ховеров для открытия/закрытия.
+        // Открытие подсказки всегда быстрее 2с, поэтому визуально оверлея с индикатором не появляется.
+        const baseConfig = super._getIndicatorConfig();
+        baseConfig.overlay = 'none';
+        return baseConfig;
+    }
 
     /**
      * Close popup.
      * @function Controls/_popup/Opener/InfoBox#close
      */
-    close(delay) {
-        delay = delay === undefined ? INFOBOX_HIDE_DELAY : delay;
-        this._clearTimeout();
-        if (delay > 0) {
-            this._closeId = setTimeout(InfoBox.superclass.close.bind(this), delay);
-        } else {
-            InfoBox.superclass.close.call(this);
-        }
-    },
+    close(delay?: number): void {
+        _private.close(() => {
+            super.close();
+        }, delay);
+    }
 
     _closeOnTargetScroll() {
         this.close(0);
-    },
-
-    _clearTimeout() {
-        clearTimeout(this._openId);
-        clearTimeout(this._closeId);
     }
-});
+}
 
 /**
  * Open InfoBox popup.
@@ -215,13 +237,13 @@ const InfoBox = BaseOpener.extend({
  * @see closePopup
  */
 InfoBox.openPopup = (config: object): void => {
-    const newCfg = _private.getInfoBoxConfig(config);
-    newCfg._vdomOnOldPage = true;
-    BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
-        BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
-            InfoBoxId = popupId;
+    _private.open((newCfg) => {
+        BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
+            BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
+                InfoBoxId = popupId;
+            });
         });
-    });
+    }, config);
 };
 
 /**
@@ -231,8 +253,10 @@ InfoBox.openPopup = (config: object): void => {
  * @see openPopup
  * @static
  */
-InfoBox.closePopup = (): void => {
-    BaseOpener.closeDialog(InfoBoxId);
+InfoBox.closePopup = (delay?: number): void => {
+    _private.close(() => {
+        BaseOpener.closeDialog(InfoBoxId);
+    }, delay);
 };
 
 InfoBox.getDefaultOptions = () => {

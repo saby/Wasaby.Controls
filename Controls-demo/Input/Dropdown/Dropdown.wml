@@ -76,6 +76,23 @@
          </Controls.dropdown:Input>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">
+         <h3>MultiSelect and "more" button</h3>
+         <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMultiSelect4"
+                                  keyProperty="id"
+                                  displayProperty="title"
+                                  multiSelect="{{true}}"
+                                  emptyText="All categories"
+                                  attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__multiSelect"
+                                  source="{{_createMemory(_multiSelectItems)}}">
+            <ws:selectorTemplate templateName="Controls-demo/Dropdown/StackTemplate">
+               <ws:templateOptions multiSelect="{{true}}" items="{{_multiSelectItems}}"/>
+            </ws:selectorTemplate>
+            <ws:navigation view="page" source="page">
+               <ws:sourceConfig pageSize="{{4}}" page="{{0}}" hasMore="{{false}}"/>
+            </ws:navigation>
+         </Controls.dropdown:Input>
+      </div>
+      <div class="ControlsDemo-InputDropdown__wrapper">
          <h3>With comment(and icon on the right)</h3>
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMyTemplate"
                                   keyProperty="id"
@@ -145,6 +162,8 @@
                                   nodeFooterTemplate="wml!Controls-demo/Input/Dropdown/footerHierarchyItem"
                                   source="{{_createMemory(_hierarchyFooterItems)}}"/>
       </div>
+   </div>
+   <div class="ControlsDemo-InputDropdown_column">
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h3>With history</h3>
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysHistory"
@@ -176,8 +195,6 @@
             </ws:itemTemplate>
          </Controls.dropdown:Input>
       </div>
-   </div>
-   <div class="ControlsDemo-InputDropdown_column">
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h3>With grouping</h3>
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysGroup"

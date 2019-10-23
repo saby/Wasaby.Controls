@@ -1,6 +1,7 @@
 const ITEM_TYPES: object = {
     header: 'header',
-    body: 'body'
+    body: 'body',
+    stub: 'stub'
 };
 
 export default ITEM_TYPES;

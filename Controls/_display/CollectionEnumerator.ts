@@ -9,7 +9,7 @@ import {mixin} from 'Types/util';
  * @mixes Types/_entity/OptionsMixin
  * @implements Types/_collection/IEnumerator
  * @mixes Types/_collection/IndexedEnumeratorMixin
- * @public
+ * @private
  * @author Мальцев А.А.
  */
 export default class CollectionEnumerator<T> extends mixin<

@@ -12,7 +12,7 @@ export interface IOptions<T> extends ICollectionItemOptions<T> {
  * Хлебная крошка
  * @class Controls/_display/BreadcrumbsItem
  * @extends Controls/_display/CollectionItem
- * @public
+ * @private
  * @author Мальцев А.А.
  */
 export default class BreadcrumbsItem<T> extends CollectionItem<T> {

@@ -7,6 +7,7 @@ import keysHandler = require('Controls/Utils/keysHandler');
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
+import tmplNotify = require('Controls/Utils/tmplNotify');
 
 var
     HOT_KEYS = {
@@ -360,6 +361,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _afterReloadCallback: null,
     _beforeLoadToDirectionCallback: null,
     _expandOnDragData: null,
+    _notifyHandler: tmplNotify,
     constructor: function(cfg) {
         this._nodesSourceControllers = {};
         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
@@ -402,6 +404,15 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         }
         if (newOptions.expanderVisibility !== this._options.expanderVisibility) {
             this._children.baseControl.getViewModel().setExpanderVisibility(newOptions.expanderVisibility);
+        }
+        if (newOptions.nodeProperty !== this._options.nodeProperty) {
+            this._children.baseControl.getViewModel().setNodeProperty(newOptions.nodeProperty);
+        }
+        if (newOptions.parentProperty !== this._options.parentProperty) {
+            this._children.baseControl.getViewModel().setParentProperty(newOptions.parentProperty);
+        }
+        if (newOptions.hasChildrenProperty !== this._options.hasChildrenProperty) {
+            this._children.baseControl.getViewModel().setHasChildrenProperty(newOptions.hasChildrenProperty);
         }
     },
     _afterUpdate: function(oldOptions) {

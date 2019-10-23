@@ -243,6 +243,12 @@ var _private = {
 
         isMaskWithDays: function(mask: string) {
             return mask.indexOf('D') !== -1;
+        },
+
+        isInputsValid: function(self): Promise<boolean> {
+            return self._children.formController.submit().then((results: object) => {
+                return !Object.keys(results).find((key) => Array.isArray(results[key]));
+            });
         }
     },
     HEADER_TYPES = {
@@ -472,8 +478,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _applyClick: function (e) {
-        this._children.formController.submit().addCallback((results: object) => {
-            if (!Object.keys(results).find((key) => Array.isArray(results[key]))) {
+        return _private.isInputsValid(this).then((valid: boolean) => {
+            if (valid) {
                 _private.sendResult(this);
             }
         });
@@ -508,10 +514,18 @@ var Component = BaseControl.extend([EventProxyMixin], {
         }
     },
 
-    _inputFocusOutHandler: function(event): void {
-        if (!this._children.inputs.contains(event.nativeEvent.relatedTarget)) {
-            this._headerType = this._options.headerType;
-        }
+    _inputFocusOutHandler: function(event): Promise<boolean> {
+        return new Promise((resolve) => {
+            if (!this._children.inputs.contains(event.nativeEvent.relatedTarget)) {
+                return _private.isInputsValid(this).then((valid: boolean) => {
+                    if (valid) {
+                        this._headerType = this._options.headerType;
+                    }
+                    resolve(valid);
+                });
+            }
+            resolve(false);
+        });
     }
 });
 

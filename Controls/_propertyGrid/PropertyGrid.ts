@@ -93,7 +93,6 @@ function getGroupingKeyCallback(items: PropertyGridItems): Function|null {
  * По умолчанию propertyGrid будет автоматически генерировать все свойства для данного объекта.
  * @class Controls/_propertyGrid/PropertyGrid
  * @extends Core/Control
- * @interface Controls/_propertyGrid/IPropertyGridOptions
  * @control
  * @public
  * @author Герасимов А.М.

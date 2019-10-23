@@ -58,6 +58,23 @@ define([
          mover.destroy();
       });
 
+      it('_beforeMount', function() {
+         mover._beforeMount({
+            moveDialogTemplate: {
+               templateName: 'testTemplateName',
+               templateOptions: {
+                  testOptions: 'testValueOfOption'
+               }
+            }
+         }, {});
+
+         assert.equal(mover._moveDialogTemplate, 'testTemplateName');
+         assert.deepEqual(mover._moveDialogOptions, { testOptions: 'testValueOfOption' });
+
+         mover._beforeMount({ moveDialogTemplate: 'testTemplate' }, {});
+         assert.equal(mover._moveDialogTemplate, 'testTemplate');
+      });
+
       it('moveItemsWithDialog', function(done) {
          var items = [1, 2, 3];
 

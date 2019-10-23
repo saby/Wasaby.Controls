@@ -114,6 +114,15 @@ define([
             });
          });
 
+         it('without source', () => {
+            var cfgWithoutSource = {
+               keyProperty: 'id'
+            };
+            instance._initialized = false;
+            instance._beforeMount(cfgWithoutSource);
+            assert.isTrue(instance._initialized);
+         });
+
       });
 
       describe('_afterMount', function() {

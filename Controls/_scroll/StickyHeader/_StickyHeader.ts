@@ -6,6 +6,7 @@ import stickyUtils = require('Controls/_scroll/StickyHeader/Utils');
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
 import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/_StickyHeader/StickyHeader');
+import tmplNotify = require('Controls/Utils/tmplNotify');
 import 'css!theme?Controls/scroll';
 
 
@@ -81,10 +82,12 @@ var StickyHeader = Control.extend({
 
    _height: 0,
 
-   _padding: 0,
+   _reverseOffsetStyle: null,
    _minHeight: 0,
    _cachedStyles: null,
    _cssClassName: null,
+
+   _notifyHandler: tmplNotify,
 
    constructor: function() {
       StickyHeader.superclass.constructor.apply(this, arguments);
@@ -294,11 +297,19 @@ var StickyHeader = Control.extend({
             if (this._minHeight) {
                style += 'min-height:' + this._minHeight + 'px;';
             }
-            // Increase padding by offset. If the padding is already set by the style attribute, then do not touch it.
-            if (!container.style.paddingTop) {
-               this._padding = parseInt(styles.paddingTop, 10) + offset;
+            // Increase border or padding by offset.
+            // If the padding or border is already set by the style attribute, then don't change it.
+            if (this._reverseOffsetStyle === null) {
+               const borderWidth: number = parseInt(styles['border-' + fixedPosition + '-width'], 10);
+
+               if (borderWidth) {
+                  this._reverseOffsetStyle = 'border-' + fixedPosition + '-width:' + (borderWidth + offset) + 'px;';
+               } else {
+                  this._reverseOffsetStyle = 'padding-' + fixedPosition + ':' + (parseInt(styles.paddingTop, 10) + offset) + 'px;';
+               }
             }
-            style += 'padding-' + fixedPosition + ': ' + this._padding + 'px;';
+
+            style += this._reverseOffsetStyle;
             style += 'margin-' + fixedPosition + ': -' + offset + 'px;';
          }
 

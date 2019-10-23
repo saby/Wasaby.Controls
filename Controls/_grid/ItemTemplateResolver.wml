@@ -7,17 +7,4 @@
         делать шаблон публичным и обращаться по библиотечному пути;
         звать partial со строкой-именем шаблона, а не с переменной, в которой лежит имя -->
 
-<ws:partial template="{{itemData.resolveBaseItemTemplate()}}"
-            itemData="{{itemData}}"
-            highlightOnHover="{{highlightOnHover}}"
-            marker="{{marker}}"
-            colspan="{{colspan}}"
-            colspanTemplate="{{colspanTemplate}}"
-            checkboxReadOnly="{{checkboxReadOnly}}"
-            editArrowTemplate="{{editArrowTemplate}}"
-            multiSelectTpl="{{multiSelectTpl}}"
-            itemActionsTemplate="{{itemActionsTemplate}}"
-            itemActionsContainerStyles="{{itemActionsContainerStyles}}"
-            className="{{className}}"
-            clickable="{{clickable}}"
-/>
+<ws:partial template="{{itemData.resolveBaseItemTemplate()}}" scope="{{_options}}"/>

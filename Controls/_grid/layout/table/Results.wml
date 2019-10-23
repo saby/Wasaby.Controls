@@ -15,7 +15,7 @@
             <td>&nbsp;</td>
         </ws:if>
         <td class="{{listModel.getCurrentResultsColumn().cellClasses}}"
-            colspan="{{listModel._getColspanFor('customResults')}}">
+            colspan="{{listModel.getColspanFor('customResults')}}">
             <ws:partial template="{{contentTemplate}}" listModel="{{listModel}}"/>
         </td>
     </ws:if>

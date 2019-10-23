@@ -2,7 +2,7 @@
  * Библиотека контролов, которые реализуют иерархический список, отображающийся в виде дерева.
  * @library Controls/treeGrid
  * @includes View Controls/_treeGrid/View
- * @includes ItemTemplate wml!Controls/_treeGrid/TreeGridView/Item
+ * @includes ItemTemplate wml!Controls/_grid/ItemTemplateResolver
  * @includes TreeGridStyles Controls/_treeGrid/TreeGrid/Styles
  * @includes ITreeControl Controls/_treeGrid/interface/ITreeControl
  * @includes RowEditor wml!Controls/_treeGrid/TreeGrid/RowEditor
@@ -11,7 +11,7 @@
  */
 
 import View = require('Controls/_treeGrid/View');
-import ItemTemplate = require('wml!Controls/_treeGrid/TreeGridView/Item');
+import ItemTemplate = require('wml!Controls/_grid/ItemTemplateResolver');
 
 import ViewModel = require('Controls/_treeGrid/TreeGridView/TreeGridViewModel');
 import TreeControl = require('Controls/_treeGrid/TreeControl');

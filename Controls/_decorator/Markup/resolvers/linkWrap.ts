@@ -6,7 +6,7 @@ import { wrapLinksInString } from '../resources/linkDecorateUtils';
 /**
  *
  * Функция для оборачивания ссылок и адресов электронной почты в тег а.
- * Рассчитан для передачи в опцию tagResolver модуля {@link Controls/_decorator/Markup}.
+ * Рассчитан для передачи в опцию tagResolver модуля {@link Controls/decorator:Markup}.
  *
  * @class Controls/_decorator/Markup/resolvers/linkWrap
  * @public

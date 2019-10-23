@@ -193,28 +193,6 @@ define([
          assert.deepEqual(data[1].test, listViewModel._actions[1].all);
       });
 
-      it('unsubscribe old model', function() {
-         var cfg = {
-            listModel: listViewModel,
-            itemActions: actions
-         };
-         var eHandler = function() {};
-         var ctrl = new lists.ItemActionsControl(cfg);
-         ctrl._onCollectionChangeFn = eHandler;
-         listViewModel.subscribe('onListChange', eHandler);
-         ctrl._options.listModel = listViewModel;
-
-         assert.isTrue(listViewModel.hasEventHandlers('onListChange'));
-
-         ctrl._beforeUpdate({
-            listModel: new lists.ListViewModel({
-               items: rs,
-               keyProperty: 'id'
-            })
-         });
-
-         assert.isFalse(listViewModel.hasEventHandlers('onListChange'));
-      });
 
       it('getChildren', function() {
          const
@@ -251,54 +229,6 @@ define([
          assert.deepEqual(actionsWithHierarchy.slice(-2), ctrl.getChildren(actionsWithHierarchy[1], actionsWithHierarchy));
       });
 
-      describe('_onCollectionChange', function() {
-         it('items should not update if the type is neither collectionChanged nor indexesChanged', function() {
-            var
-               cfg = {
-                  listModel: listViewModel,
-                  canUpdateItemsActions: true,
-                  itemActions: actions
-               },
-               ctrl = new lists.ItemActionsControl(cfg),
-               spy = sandbox.spy(listViewModel, 'nextModelVersion');
-            ctrl.saveOptions(cfg);
-            ctrl._onCollectionChange({}, 'test');
-
-            assert.isFalse(spy.called);
-         });
-
-         it('items should update once if the type is collectionChanged', function() {
-            var
-               cfg = {
-                  listModel: listViewModel,
-                  canUpdateItemsActions: true,
-                  itemActions: actions
-               },
-               ctrl = new lists.ItemActionsControl(cfg),
-               spy = sandbox.spy(listViewModel, 'nextModelVersion');
-            ctrl.saveOptions(cfg);
-            ctrl._onCollectionChange({}, 'collectionChanged');
-
-            assert.isTrue(spy.calledOnce);
-            assert.isTrue(spy.firstCall.args[0]);
-         });
-
-         it('items should update once if the type is indexesChanged', function() {
-            var
-               cfg = {
-                  listModel: listViewModel,
-                  canUpdateItemsActions: true,
-                  itemActions: actions
-               },
-               ctrl = new lists.ItemActionsControl(cfg),
-               spy = sandbox.spy(listViewModel, 'nextModelVersion');
-            ctrl.saveOptions(cfg);
-            ctrl._onCollectionChange({}, 'indexesChanged');
-
-            assert.isTrue(spy.calledOnce);
-            assert.isFalse(spy.firstCall.args[0]);
-         });
-      });
 
       it('_onItemActionClick', function() {
            var cfg = {

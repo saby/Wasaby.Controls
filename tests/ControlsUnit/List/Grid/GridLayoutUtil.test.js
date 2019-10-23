@@ -31,7 +31,7 @@ define([
       });
 
       it('getCellStyles', function () {
-         assert.equal(Util.getCellStyles(1, 9), 'grid-column: 10 / 11; grid-row: 2;');
+         assert.equal(Util.getCellStyles({rowStart: 1, columnStart: 9}), 'grid-column-start: 10; grid-column-end: 11; grid-row-start: 2; grid-row-end: 3;');
       });
 
       describe('detect grid support', () => {

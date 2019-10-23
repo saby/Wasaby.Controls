@@ -28,7 +28,7 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
          layer._onResult({
             verticalAlign: {side: 'test', offset: 10},
             horizontalAlign: {side: 'test', offset: 20},
-            corner: {side: 'test'}
+            targetPoint: {side: 'test'}
          });
 
          assert.deepEqual(resultPopupOptions, layer._popupOptions)

@@ -23,6 +23,17 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  * @mixes Controls/interface/IInputField
  * @mixes Controls/_input/interface/IText
  *
+ * @ignoreOptions style
+ *
+ * @control
+ * @public
+ * @demo Controls-demo/Search/Input/Base/Index
+ *
+ * @category Input
+ * @author Золотова Э.Е.
+ */
+
+/**
  * @name Controls/_search/Input/Search#contrastBackground
  * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
  * @default false
@@ -38,16 +49,6 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  *    <Controls.search:Input contrastBackground="{{true}}" bind:value="_searchValue"/>
  * </pre>
  * @see style
- *
- *
- * @ignoreOptions style
- *
- * @control
- * @public
- * @demo Controls-demo/Search/Input/Base/Index
- *
- * @category Input
- * @author Золотова Э.Е.
  */
 
 /*
