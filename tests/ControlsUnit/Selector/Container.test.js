@@ -127,16 +127,18 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
 
       it('prepareFilter', function() {
          var filter = {
-            searchParam: 'test'
+            searchParam: 'test',
+            parent: 123
          };
          var source = new sourceLib.Memory();
          var selection = operations.selectionToRecord({ selected: [1, 2], excluded: [3, 4] }, source.getAdapter());
-         var preparedFilter = lookupPopup.Container._private.prepareFilter(filter, selection, 'searchParam');
+         var preparedFilter = lookupPopup.Container._private.prepareFilter(filter, selection, 'searchParam', 'parent');
 
          assert.deepEqual(preparedFilter.selection.get('marked'), ['1', '2']);
          assert.deepEqual(preparedFilter.selection.get('excluded'), ['3', '4']);
          assert.isTrue(preparedFilter !== filter);
          assert.isTrue(!preparedFilter.searchParam);
+         assert.isTrue(!preparedFilter.parent);
 
          selection = operations.selectionToRecord({ selected: [null], excluded: [null] }, source.getAdapter());
          preparedFilter = lookupPopup.Container._private.prepareFilter(filter, selection, 'searchParam');
