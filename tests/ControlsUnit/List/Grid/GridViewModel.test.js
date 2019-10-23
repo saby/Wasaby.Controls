@@ -435,6 +435,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                      top: 'L',
                      bottom: 'L'
                   },
+                  cell: {},
                   style: 'default'
                },
                paramsWithMultiselect = {
@@ -446,6 +447,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                      top: 'L',
                      bottom: 'L'
                   },
+                  cell: {},
                   style: 'default'
                },
                expectedResultWithoutMultiselect = [
@@ -504,6 +506,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   top: 'L',
                   bottom: 'L'
                },
+                cell: {},
                columnIndex: 1,
                rowIndex: 0,
                style: 'default'
@@ -520,6 +523,77 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 gridMod.GridViewModel._private.getPaddingHeaderCellClasses(paramsWithMultiselect)
             );
          });
+         it('getPaddingHeaderCellClasses for multiHeader', function() {
+           /*
+             ________________________
+            |  1  |__2__|__3__|   4  |
+            |_____|__5__|__6__|______|
+           */
+            const headerRows = [
+                [
+                    {startRow: 1, endRow: 3, startColumn: 1, endColumn: 2},
+                    {startRow: 1, endRow: 2, startColumn: 2, endColumn: 3},
+                    {startRow: 1, endRow: 2, startColumn: 3, endColumn: 4},
+                    {startRow: 1, endRow: 3, startColumn: 4, endColumn: 5},
+                ],
+               [
+                  {startRow: 2, endRow: 3, startColumn: 2, endColumn: 3},
+                  {startRow: 2, endRow: 3, startColumn: 3, endColumn: 4},
+               ]
+            ];
+
+            const expectedResultRow = [
+               ' controls-Grid__cell_spacingRight controls-Grid__cell_spacingFirstCol_xl controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
+               ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
+               ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
+            ]
+            const paramsForFirstRow = {
+               columns: headerRows[0],
+               multiSelectVisibility: false,
+               maxEndColumn: 5,
+               style: 'default',
+               itemPadding: {
+                  left: 'XL',
+                  right: 'L',
+                  top: 'L',
+                  bottom: 'L'
+               },
+            };
+
+            assert.equal(expectedResultRow[0],
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 0, rowIndex: 0, cell: headerRows[0][0]}),
+                'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
+            assert.equal(expectedResultRow[1],
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 1, rowIndex: 0, cell: headerRows[0][1]}),
+                'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
+            assert.equal(expectedResultRow[1],
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 2, rowIndex: 0, cell: headerRows[0][2]}),
+                'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
+            assert.equal(expectedResultRow[2],
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 3, rowIndex: 0, cell: headerRows[0][3]}),
+                'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
+
+            const paramsForSecondRow = {
+               columns: headerRows[1],
+               multiSelectVisibility: false,
+               maxEndColumn: 5,
+               style: 'default',
+               itemPadding: {
+                  left: 'XL',
+                  right: 'L',
+                  top: 'L',
+                  bottom: 'L'
+               },
+            };
+
+            assert.equal(expectedResultRow[1],
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForSecondRow, columnIndex: 0, rowIndex: 1, cell: headerRows[1][0]}),
+                'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
+            assert.equal(expectedResultRow[1],
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForSecondRow, columnIndex: 1, rowIndex: 1, cell: headerRows[1][1]}),
+                'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
+         });
+
          it('getSortingDirectionByProp', function() {
             assert.equal(gridMod.GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test'), 'ASC');
             assert.equal(gridMod.GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test2'), 'DESC');
