@@ -628,6 +628,13 @@ define([
                      'https:\\\\ya.ru\\som"e'
                   ]
                ],
+               ['p',
+                  'outer text one',
+                  ['br'],
+                  'outer text two',
+                  ['p', 'inner text'],
+                  'outer text three'
+               ],
                ['p', ['a', { href: longLink }, longLink]],
                ['p', ['a', { href: 'https://ya.ru' }, 'text']]
             ];
@@ -642,6 +649,7 @@ define([
                '<p>' + decoratedLinkHtml + '   <br />text</p>',
                '<p><strong>' + linkHtml + '</strong>text</p>',
                '<p><span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer noopener" href="https:\\\\ya.ru\\som&quot;e" target="_blank"><img class="LinkDecorator__image" alt="https:\\\\ya.ru\\som&quot;e" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6XFxcXHlhLnJ1XFxzb21cImUifQ%3D%3D&amp;id=0&amp;srv=1" /></a></span></p>',
+               '<p>outer text one<br />outer text two<p>inner text</p>outer text three</p>',
                '<p><a href="' + longLink + '">' + longLink + '</a></p>',
                '<p><a href="https://ya.ru">text</a></p>'
             ];
@@ -651,6 +659,7 @@ define([
                equalsHtml(checkHtml, goodHtml, 'fail in index ' + i);
             }
          });
+
          it('with highlight resolver', function() {
             var json = [
                ['p', ['strong', 'BaBare;gjwergo'], 'aBaweruigerhw', ['em', 'aBa']],

@@ -304,7 +304,7 @@ export function needDecorate(jsonNode, parentNode) {
             canBeDecorated = tagName === 'br';
          }
       }
-      stringReplacersArray = stringReplacersArray.concat(localStringReplacersArray);
+      stringReplacersArray = localStringReplacersArray.concat(stringReplacersArray);
    }
 
    if (isTextNode(jsonNode)) {

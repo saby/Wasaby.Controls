@@ -152,12 +152,15 @@ define(
          it('_valueChangedHandler', function() {
             let pGrid = getPropertyGrid(config);
             let result;
+            let items = pGrid._items;
+
             pGrid._notify = (event, data) => {
                if (event === 'itemsChanged') {
                   result = data[0];
                }
             };
             pGrid._valueChangedHandler('_valueChangedHandler', 2, true);
+            assert.isTrue(items !== pGrid._items);
             assert.strictEqual(pGrid._items[2].value, true);
             assert.deepStrictEqual(result[2], {
                id: 'bool',

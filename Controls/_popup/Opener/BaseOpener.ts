@@ -173,15 +173,18 @@ class BaseOpener extends Control<IControlOptions> {
             if (this._getCurrentPopupId() || this._action) {
                 return;
             }
-            const cfg = {
-                id: this._indicatorId,
-                message: rk('Загрузка')
-            };
-            this._indicatorId = this._notify('showIndicator', [cfg], {bubbling: true});
+            this._indicatorId = this._notify('showIndicator', [this._getIndicatorConfig()], {bubbling: true});
         } else if (this._indicatorId) {
             this._notify('hideIndicator', [this._indicatorId], {bubbling: true});
             this._indicatorId = null;
         }
+    }
+
+    protected _getIndicatorConfig() {
+        return {
+            id: this._indicatorId,
+            message: rk('Загрузка')
+        };
     }
 
     protected _scrollHandler(event: Event): void {

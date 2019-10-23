@@ -90,6 +90,18 @@ var
         setRoot: function (root) {
             this._model.setRoot(root);
         },
+        setParentProperty(parentProperty: string): void {
+            this._model.setParentProperty.apply(this, arguments);
+            this._options.parentProperty = parentProperty;
+        },
+        setHasChildrenProperty(hasChildrenProperty: string): void {
+            this._model.setHasChildrenProperty.apply(this, arguments);
+            this._options.hasChildrenProperty = hasChildrenProperty;
+        },
+        setNodeProperty(nodeProperty: string): void {
+            this._model.setNodeProperty.apply(this, arguments);
+            this._options.nodeProperty = nodeProperty;
+        },
         setNodeFooterTemplate: function (nodeFooterTemplate) {
             this._model.setNodeFooterTemplate(nodeFooterTemplate);
         },

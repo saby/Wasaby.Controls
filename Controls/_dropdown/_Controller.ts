@@ -290,7 +290,7 @@ var _private = {
  * @cfg {String} Specifies the type of shadow around the popup.
  * @variant default Default shadow.
  * @variant suggestionsContainer Shadow on the right, left, bottom.
- */ 
+ */
 
 /**
  * @name Controls/_dropdown/_Controller#marker
@@ -394,7 +394,7 @@ var _Controller = Control.extend({
                afterSelectorOpenCallback: this._afterSelectorOpenCallback.bind(this)
             },
             target: this._container,
-            targetPoint: this._options.corner,
+            targetPoint: this._options.targetPoint,
             opener: this,
             autofocus: false,
             closeOnOutsideClick: true
@@ -460,6 +460,10 @@ var _Controller = Control.extend({
    _setItems: function(items) {
       this._items = items;
       this._depsDeferred = null;
+   },
+
+   _deactivated(): void {
+      this.closeMenu();
    },
 
    openMenu(popupOptions?: object): void {

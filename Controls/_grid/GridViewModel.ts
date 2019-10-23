@@ -1349,8 +1349,8 @@ var
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => _private.getColumnAlignGroupStyles(current, columnAlignGroup);
 
             const superShouldDrawMarker = current.shouldDrawMarker;
-            current.shouldDrawMarker = (marker?: boolean): boolean => {
-                return current.columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
+            current.shouldDrawMarker = (marker?: boolean, columnIndex: number): boolean => {
+                return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
             };
 
             if (current.multiSelectVisibility !== 'hidden') {

@@ -115,10 +115,10 @@ define(
             let combobox = getCombobox(config);
             combobox._container = {offsetWidth: 250};
             assert.equal(combobox._width, undefined);
-            assert.equal(combobox._corner, undefined);
+            assert.equal(combobox._targetPoint, undefined);
             combobox._afterMount();
             assert.equal(combobox._width, 250);
-            assert.deepEqual(combobox._corner, {vertical: 'bottom'});
+            assert.deepEqual(combobox._targetPoint, {vertical: 'bottom'});
          });
       });
    }

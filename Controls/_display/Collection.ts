@@ -1951,6 +1951,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
+    getMarkedItem(): CollectionItem<S> {
+        return this._markerManager.getMarkedItem() as CollectionItem<S>;
+    }
+
     getItemCounters(): ICollectionCounters[] {
         const result: ICollectionCounters[] = [];
         this.each((item: unknown) => {
@@ -2055,11 +2059,15 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     getFirstItem(): S {
-        return this.getFirst().getContents();
+        if (this.getCount() > 0) {
+            return this.getFirst().getContents();
+        }
     }
 
     getLastItem(): S {
-        return this.getLast().getContents();
+        if (this.getCount() > 0) {
+            return this.getLast().getContents();
+        }
     }
 
     getViewIterator(): {

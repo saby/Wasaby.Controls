@@ -405,6 +405,15 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         if (newOptions.expanderVisibility !== this._options.expanderVisibility) {
             this._children.baseControl.getViewModel().setExpanderVisibility(newOptions.expanderVisibility);
         }
+        if (newOptions.nodeProperty !== this._options.nodeProperty) {
+            this._children.baseControl.getViewModel().setNodeProperty(newOptions.nodeProperty);
+        }
+        if (newOptions.parentProperty !== this._options.parentProperty) {
+            this._children.baseControl.getViewModel().setParentProperty(newOptions.parentProperty);
+        }
+        if (newOptions.hasChildrenProperty !== this._options.hasChildrenProperty) {
+            this._children.baseControl.getViewModel().setHasChildrenProperty(newOptions.hasChildrenProperty);
+        }
     },
     _afterUpdate: function(oldOptions) {
         if (this._updatedRoot) {

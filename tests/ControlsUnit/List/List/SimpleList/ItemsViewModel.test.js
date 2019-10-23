@@ -210,6 +210,11 @@ define([
             keyProperty: 'id'
          });
 
+         var rs4 = new collection.RecordSet({
+            rawData: data3,
+            keyProperty: 'key'
+         });
+
          var cfg1 = {
             items: data,
             keyProperty: 'id',
@@ -240,6 +245,11 @@ define([
 
          iv.setItems(rs3);
          assert.equal(2, iv.getVersion(), 'Incorrect version setItems');
+         assert.equal(iv._items.getIdProperty(), 'id', 'Incorrect keyProperty');
+
+         iv.setItems(rs4);
+         assert.equal(4, iv.getVersion(), 'Incorrect version setItems');
+         assert.equal(iv._items.getIdProperty(), 'key', 'Incorrect keyProperty');
 
       });
 
