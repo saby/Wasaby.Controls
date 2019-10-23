@@ -1385,7 +1385,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.equal(
                'grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;',
-               GridLayoutUtil.getMultyHeaderStyles(secondCell.startColumn, secondCell.endColumn, secondCell.startRow, secondCell.endRow, 1),
+               GridLayoutUtil.getMultiHeaderStyles(secondCell.startColumn, secondCell.endColumn, secondCell.startRow, secondCell.endRow, 1),
                'Incorrect headerCellGridStyles'
                )
 
@@ -1407,7 +1407,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.equal(
                'grid-column-start: 3; grid-column-end: 4; grid-row-start: 1; grid-row-end: 2;',
-               GridLayoutUtil.getMultyHeaderStyles(thirdCell.startColumn, thirdCell.endColumn, thirdCell.startRow, thirdCell.endRow, 1),
+               GridLayoutUtil.getMultiHeaderStyles(thirdCell.startColumn, thirdCell.endColumn, thirdCell.startRow, thirdCell.endRow, 1),
                'Incorrect headerCellGridStyles'
             )
 
@@ -1428,7 +1428,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.equal(
                'grid-column-start: 4; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;',
-               GridLayoutUtil.getMultyHeaderStyles(fourthCell.startColumn, fourthCell.endColumn, fourthCell.startRow, fourthCell.endRow, 1),
+               GridLayoutUtil.getMultiHeaderStyles(fourthCell.startColumn, fourthCell.endColumn, fourthCell.startRow, fourthCell.endRow, 1),
                'Incorrect headerCellGridStyles'
             )
 
@@ -1545,8 +1545,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('is multiheader', function() {
 
             let gridViewModel = new gridMod.GridViewModel(cfg);
-            assert.isFalse(gridViewModel.isMultyHeader([{startRow: 1, endRow: 2}]),"simple header");
-            assert.isTrue(gridViewModel.isMultyHeader([{startRow: 1, endRow: 3}]),"multyHeader header");
+            assert.isFalse(gridViewModel.isMultiHeader([{startRow: 1, endRow: 2}]),"simple header");
+            assert.isTrue(gridViewModel.isMultiHeader([{startRow: 1, endRow: 3}]),"multiHeader header");
          });
          it('_prepareHeaderColumns', function() {
             gridViewModel._headerRows = [];
@@ -1969,7 +1969,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                stickyColumnsCount: 1,
                columnIndex: 0,
                rowIndex: 0,
-               isMultyHeader: true
+               isMultiHeader: true
             })
             assert.isTrue(firstRow);
             var secondRow = gridMod.GridViewModel._private.isFixedCell({
@@ -1977,7 +1977,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                stickyColumnsCount: 1,
                columnIndex: 0,
                rowIndex: 1,
-               isMultyHeader: true
+               isMultiHeader: true
             })
             assert.isFalse(secondRow);
          });
@@ -2074,7 +2074,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridModel.setMultiSelectVisibility('visible');
             assert.isFalse(isMultiHeader);
             gridModel._cachaedHeaderColumns = [[{}, {}], [{}]];
-            gridModel._isMultyHeader = true;
+            gridModel._isMultiHeader = true;
             gridModel.setMultiSelectVisibility('visible');
             assert.isTrue(isMultiHeader);
          })

@@ -101,6 +101,8 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
    var Tree = Grid.extend(/** @lends Controls/TreeGrid */{
       _viewName: TreeGridView,
       _viewTemplate: TreeControl,
+
+      _theme: ['Controls/grid', 'Controls/treeGrid'],
       _getModelConstructor: function() {
          return TreeGridViewModel;
       },

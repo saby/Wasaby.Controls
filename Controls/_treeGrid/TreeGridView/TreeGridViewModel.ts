@@ -126,6 +126,7 @@ var
             const current = TreeGridViewModel.superclass.getItemDataByItem.apply(this, arguments);
             const superGetCurrentColumn = current.getCurrentColumn;
             const self = this;
+            const theme = this._options.theme;
 
             if (current._treeGridViewModelCached) {
                 return current;
@@ -149,14 +150,14 @@ var
                 currentColumn.nodeType = current.item.get && current.item.get(current.nodeProperty);
 
                 currentColumn.isExpanded = current.isExpanded;
-                currentColumn.cellClasses += ' controls-TreeGrid__row-cell';
+                currentColumn.cellClasses += ' controls-TreeGrid__row-cell' + `_theme-${theme}`;
 
                 if (currentColumn.nodeType) {
-                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__node';
+                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__node' + `_theme-${theme}`;
                 } else if (currentColumn.nodeType === false) {
-                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__hiddenNode';
+                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__hiddenNode' + `_theme-${theme}`;
                 } else {
-                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__item';
+                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__item' + `_theme-${theme}`;
                 }
 
                 if (self._isPartialGridSupport && !self._shouldUseTableLayout) {
@@ -186,7 +187,7 @@ var
                     resultPaddingSize = expanderSize || levelIndentSize;
                 }
 
-                return `controls-TreeGrid__row-levelPadding_size_${resultPaddingSize}`;
+                return `controls-TreeGrid__row-levelPadding_size_${resultPaddingSize}_theme-${theme}`;
             };
 
             const setNodeFooterRowStyles = (footer, index) => {
@@ -251,7 +252,7 @@ var
                     hasHeader: !!this.getHeader(),
                     hasBottomPadding: this._options._needBottomPadding,
                     resultsPosition: this.getResultsPosition(),
-                    multyHeaderOffset: this.getMultyHeaderOffset(),
+                    multiHeaderOffset: this.getMultiHeaderOffset(),
                     hierarchyRelation: self._model.getHierarchyRelation(),
                     hasMoreStorage: self._model.getHasMoreStorage() || {},
                     expandedItems: _private.getExpandedItems(self.getDisplay(), self._model.getExpandedItems() || [], self._options.nodeProperty),
@@ -271,7 +272,7 @@ var
                 getResultsIndex: () => getResultsIndex({hasEmptyTemplate, ...cfg}),
                 getBottomPaddingRowIndex: () => getBottomPaddingRowIndex(cfg),
                 getFooterIndex: () => getFooterIndex({hasEmptyTemplate, ...cfg}),
-                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multyHeaderOffset, cfg.hasColumnScroll),
+                getTopOffset: () => getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multiHeaderOffset, cfg.hasColumnScroll),
             };
         }
     });
