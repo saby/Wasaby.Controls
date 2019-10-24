@@ -1656,10 +1656,22 @@ define([
             }
          };
 
+         baseControl._loadTriggerVisibility = {
+            up: true,
+            down: true
+         };
+
          var res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, false);
          assert.isFalse(res, 'Wrong paging state');
 
          baseControl._sourceController.nav = true;
+         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, false);
+         assert.isFalse(res, 'Wrong paging state');
+
+         baseControl._loadTriggerVisibility = {
+            up: false,
+            down: false
+         };
          res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, false);
          assert.isTrue(res, 'Wrong paging state');
 
