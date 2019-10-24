@@ -80,11 +80,13 @@ define([
             sandbox.stub(ml, '_canScroll');
             ml._children.months = { reload: sinon.fake() };
             ml._container = {};
+            ml._displayedDates = [1, 2];
 
             ml._beforeUpdate(calendarTestUtils.prepareOptions(calendar.MonthList, { position: position }));
             assert.isTrue(DateUtil.isDatesEqual(ml._positionToScroll, position));
             assert.strictEqual(ml._displayedPosition, position);
             assert.equal(ml._startPositionId, '2018-01-01');
+            assert.isEmpty(ml._displayedDates);
             sinon.assert.called(ml._children.months.reload);
             sandbox.restore();
          });

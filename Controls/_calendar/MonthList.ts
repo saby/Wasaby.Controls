@@ -179,6 +179,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             // Update scroll position without waiting view modification
             this._updateScrollAfterViewModification();
         } else {
+            this._displayedDates = [];
             this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
             // After changing the navigation options, we must call the "reload" to redraw the control.
             // Position option is the initial position from which control is initially drawn.
