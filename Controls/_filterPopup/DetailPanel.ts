@@ -164,7 +164,8 @@ import 'Controls/form';
                      const textValue = getPropValue(history[i], 'textValue');
                      const value = getPropValue(history[i], 'value');
 
-                     if (textValue !== '' && textValue !== undefined) {
+                     // 0 and false is valid
+                     if (textValue !== '' && textValue !== undefined && textValue !== null) {
                         originalItem = getOriginalItem(self, history[i]);
                         hasResetValue = originalItem && originalItem.hasOwnProperty('resetValue');
 
