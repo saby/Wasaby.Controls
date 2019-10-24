@@ -33,7 +33,6 @@ export default class TileCollection<
     protected _$tileScalingMode: string;
 
     setHoveredItem(item: CollectionItem<S>): void {
-        // TODO Move manager to tilecollection
         this._hoverManager.setHoveredItem(item);
         this._nextVersion();
     }

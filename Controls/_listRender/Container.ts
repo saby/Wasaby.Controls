@@ -21,7 +21,6 @@ export interface IContainerOptions extends IControlOptions {
 export default class Container extends Control<IContainerOptions> {
     protected _template: TemplateFunction = template;
 
-    protected _itemActionsTemplate: TemplateFunction = null;
     protected _collection: Collection<Model>;
 
     protected _dropdownMenuIsOpen: boolean = false;
@@ -29,6 +28,11 @@ export default class Container extends Control<IContainerOptions> {
     protected async _beforeMount(options: IContainerOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
         return libraryLoad(options.render).then(() => null);
+    }
+
+    protected _beforeUnmount(): void {
+        this._collection.destroy();
+        this._collection = null;
     }
 
     protected _onDropdownMenuOpenRequested(event: SyntheticEvent<null>, dropdownConfig: any): void {
