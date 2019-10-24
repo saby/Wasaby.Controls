@@ -161,7 +161,7 @@ var
         getPaddingHeaderCellClasses: function(params) {
             let preparedClasses = '';
             const { multiSelectVisibility, columnIndex, columns,
-                rowIndex, itemPadding, isBreadCrumbs, style } = params;
+                rowIndex, itemPadding, isBreadCrumbs, style, maxEndColumn, cell: { endColumn } } = params;
             if (rowIndex === 0) {
                 if (multiSelectVisibility ? columnIndex > 1 : columnIndex > 0) {
                     preparedClasses += ' controls-Grid__cell_spacingLeft';
@@ -170,12 +170,20 @@ var
                 preparedClasses += ' controls-Grid__cell_spacingLeft';
             }
 
-            if (columnIndex < columns.length - 1) {
+            if (columnIndex < columns.length - 1 || (maxEndColumn && endColumn < maxEndColumn)) {
                 preparedClasses += ' controls-Grid__cell_spacingRight';
             }
             // Отступ для последней колонки
-            if (columnIndex === columns.length - 1) {
-                preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase();
+            const lastColClass = ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase();
+            if (maxEndColumn) {
+                // у мультихэдера последняя ячейка определяется по endColumn, а не по последнему элементу массива.
+                if (maxEndColumn === endColumn) {
+                    preparedClasses += lastColClass;
+                }
+            } else {
+                if (columnIndex === columns.length - 1) {
+                    preparedClasses += lastColClass;
+                }
             }
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
             if (columnIndex === 0 && !multiSelectVisibility && rowIndex === 0 && !isBreadCrumbs) {
@@ -885,6 +893,7 @@ var
                     isHeader: true,
                     cell,
                     rowIndex,
+                    maxEndColumn: this._maxEndColumn,
                     // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
                     isBreadCrumbs: headerColumn.column.isBreadCrumbs,
                 });
