@@ -115,12 +115,19 @@ var _private = {
         }
         return true;
     },
-    prepareHasMoreStorage: function(sourceControllers) {
-        var
-            hasMore = {};
-        for (var i in sourceControllers) {
+    prepareHasMoreStorage(sourceControllers: Record<string, SourceController>): Record<string, boolean> {
+        const hasMore = {};
+        let hasMoreForNode;
+
+        for (const i in sourceControllers) {
             if (sourceControllers.hasOwnProperty(i)) {
-                hasMore[i] = sourceControllers[i].hasMoreData('down', i);
+                hasMoreForNode = sourceControllers[i].hasMoreData('down', i);
+
+                if (hasMoreForNode === undefined) {
+                    hasMoreForNode = sourceControllers[i].hasMoreData('down');
+                }
+
+                hasMore[i] = hasMoreForNode;
             }
         }
         return hasMore;
