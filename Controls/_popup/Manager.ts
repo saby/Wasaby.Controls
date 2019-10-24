@@ -256,12 +256,8 @@ const _private = {
         return document && document.activeElement;
     },
 
-    goUpByControlTree(target) {
-        return goUpByControlTree(target);
-    },
-
     getActiveControl() {
-        return _private.goUpByControlTree(_private.getActiveElement())[0];
+        return goUpByControlTree(_private.getActiveElement())[0];
     },
 
     popupDragStart(id, offset) {
@@ -590,10 +586,13 @@ const Manager = Control.extend({
     },
 
     _findParentPopup(control) {
-        while (control && control._moduleName !== 'Controls/_popup/Manager/Popup') {
-            control = control._logicParent || (control.getParent && control.getParent());
+        const parentControls = goUpByControlTree(control._container);
+        for (let i = 0; i < parentControls.length; i++) {
+            if (parentControls[i]._moduleName === 'Controls/_popup/Manager/Popup') {
+                return parentControls[i];
+            }
         }
-        return control;
+        return false;
     },
 
     _mouseDownHandler(event) {
@@ -604,7 +603,7 @@ const Manager = Control.extend({
             _private.popupItems.each((item) => {
                 // if we have deactivated popup
                 if (item && (item.waitDeactivated || isResizingLine)) {
-                    const parentControls = _private.goUpByControlTree(event.target);
+                    const parentControls = goUpByControlTree(event.target);
                     const popupInstance = ManagerController.getContainer().getPopupById(item.id);
 
                     // Check the link between target and popup
