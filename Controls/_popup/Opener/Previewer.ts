@@ -4,21 +4,18 @@ import ManagerController = require('Controls/_popup/Manager/ManagerController');
 
 const DISPLAY_DURATION: number = 1000;
 const POPUP_CONTROLLER = 'Controls/popupTemplate:PreviewerController';
-let openingTimerId: number = null;
-let closingTimerId: number = null;
-let previewerId: string;
 
-const clearClosingTimeout = () => {
-    if (closingTimerId) {
-        clearTimeout(closingTimerId);
-        closingTimerId = null;
+const clearClosingTimeout = (config) => {
+    if (config.closingTimerId) {
+        clearTimeout(config.closingTimerId);
+        config.closingTimerId = null;
     }
 };
 
-const clearOpeningTimeout = () => {
-    if (openingTimerId) {
-        clearTimeout(openingTimerId);
-        openingTimerId = null;
+const clearOpeningTimeout = (config) => {
+    if (config.openingTimerId) {
+        clearTimeout(config.openingTimerId);
+        config.openingTimerId = null;
     }
 };
 
@@ -32,13 +29,13 @@ const prepateConfig = (config) => {
 };
 
 const open = (callback: Function, config: object, type?: string): void => {
-    clearClosingTimeout();
     const newCfg = prepateConfig(config);
-    // Previewer - singleton
+    clearOpeningTimeout(newCfg);
+    clearClosingTimeout(newCfg);
 
     if (type === 'hover') {
-        openingTimerId = setTimeout(() => {
-            openingTimerId = null;
+        newCfg.openingTimerId = setTimeout(() => {
+            newCfg.openingTimerId = null;
             callback(newCfg);
         }, DISPLAY_DURATION);
     } else {
@@ -46,11 +43,12 @@ const open = (callback: Function, config: object, type?: string): void => {
     }
 };
 
-const close = (callback: Function, type?: string): void => {
-    clearOpeningTimeout();
+const close = (callback: Function, config: object, type?: string): void => {
+    clearOpeningTimeout(config);
+    clearClosingTimeout(config);
     if (type === 'hover') {
-        closingTimerId = setTimeout(() => {
-            closingTimerId = null;
+        config.closingTimerId = setTimeout(() => {
+            config.closingTimerId = null;
             callback();
         }, DISPLAY_DURATION);
     } else {
@@ -58,18 +56,19 @@ const close = (callback: Function, type?: string): void => {
     }
 };
 
-const cancel = (action: string): void => {
+const cancel = (config, action: string): void => {
     switch (action) {
         case 'opening':
-            clearOpeningTimeout();
+            clearOpeningTimeout(config);
             break;
         case 'closing':
-            clearClosingTimeout();
+            clearClosingTimeout(config);
             break;
     }
 };
 
 class Previewer extends BaseOpener {
+    private _currentConfig;
 
     protected _beforeUnmount(): void {
         clearClosingTimeout();
@@ -79,6 +78,7 @@ class Previewer extends BaseOpener {
     open(cfg: object, type?: string): void {
         this.close();
         open((newCfg) => {
+            this._currentConfig = newCfg;
             super.open(newCfg, POPUP_CONTROLLER);
         }, cfg, type);
     }
@@ -86,7 +86,7 @@ class Previewer extends BaseOpener {
     close(type?: string): void {
         close(() => {
             super.close();
-        }, type);
+        }, this._currentConfig, type);
     }
 
     /**
@@ -96,33 +96,39 @@ class Previewer extends BaseOpener {
      * @variant closing
      */
     cancel(action: string): void {
-        cancel(action);
+        cancel(this._currentConfig, action);
     }
 
-    static openPopup(config: object, type?: string): void {
-        this.closePopup();
-        open((newCfg) => {
-            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
-                BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
-                    previewerId = popupId;
+    static openPopup(config: object, type?: string): Promise<string> {
+        return new Promise((resolve: Function) => {
+            open((newCfg) => {
+                BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result) => {
+                    BaseOpener.showDialog(result[0], newCfg, result[1]).then((popupId: string) => {
+                        newCfg.id = popupId;
+                        resolve(newCfg);
+                    });
                 });
-            });
-        }, config, type);
+            }, config, type);
+        });
     }
 
-    static closePopup(type?: string): void {
-        close(() => {
-            BaseOpener.closeDialog(previewerId);
-        }, type);
+    static closePopup(config: object, type?: string): void {
+        if (config) {
+            close(() => {
+                BaseOpener.closeDialog(config.id);
+            }, config, type);
+        }
     }
 
-    static cancelPopup(action: string): void {
-        cancel(action);
+    static cancelPopup(config, action: string): void {
+        if (config) {
+            cancel(config, action);
+        }
     }
 
     // TODO перенести метод в baseOpener, ManagerController здесь не нужен
-    static isOpenedPopup(): boolean {
-        return !!ManagerController.find(previewerId);
+    static isOpenedPopup(config): boolean {
+        return config && !!ManagerController.find(config.id);
     }
 
     static getDefaultOptions() {
