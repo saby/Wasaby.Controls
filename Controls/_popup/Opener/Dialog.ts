@@ -1,4 +1,4 @@
-import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
+import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import {IoC} from 'Env/Env';
 /**
  * Контрол, открывающий всплывающее окно, которое позиционнируется по центру экрана.
@@ -40,7 +40,7 @@ const _private = {
 
 const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';
 
-const Dialog = BaseOpener.extend({
+class Dialog extends BaseOpener {
     /*
      * Open dialog popup.
      * If you call this method while the window is already opened, it will cause the redrawing of the window.
@@ -89,9 +89,9 @@ const Dialog = BaseOpener.extend({
      * @see closePopup
      */
     open(popupOptions) {
-        BaseOpener.prototype.open.call(this, _private.getDialogConfig(popupOptions), POPUP_CONTROLLER);
+        super.open(_private.getDialogConfig(popupOptions), POPUP_CONTROLLER);
     }
-});
+}
 
 /**
  * Статический метод для открытия диалогового окна. При использовании метода не требуется создавать popup:Dialog в верстке.
@@ -268,5 +268,5 @@ export default Dialog;
  * @property {Number} minWidth Минимально допустимая ширина всплывающего окна.
  * @property {Number} top Расстояние от всплывающего окна до верхнего края экрана.
  * @property {Number} left Расстояние от всплывающего окна до левого края экрана.
- * @property {Node} opener Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}. 
+ * @property {Node} opener Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
  */

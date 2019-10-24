@@ -804,16 +804,22 @@ define(
                      historyEventFired = true;
                   }
                };
+               view._source = [{name: 'author', value: '', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic'},
+                  {name: 'sender', value: 'Sander123', resetValue: '', viewMode: 'extended', visibility: false},
+                  {name: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false},
+                  {name: 'document', value: '11111', resetValue: '', textValue: 'new document', viewMode: 'frequent', visibility: false}];
+
                let eventResult = {
                   id: 'state',
-                  items: [{id: 'author', value: '', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic'},
-                        {id: 'sender', value: 'Sander123', resetValue: '', viewMode: 'extended', visibility: false},
-                        {id: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false},
-                     {id: 'document', value: '11111', resetValue: '', textValue: 'new document', viewMode: 'frequent', visibility: false}],
+                  items: [{ id: 'author', value: '', textValue: 'Author: Ivanov K.K.'},
+                     { id: 'sender', value: 'Sander123', visibility: false },
+                     { id: 'responsible', value: '', visibility: false },
+                     { id: 'document', value: '11111', resetValue: '', textValue: 'new document', visibility: false }],
                   history: [{ test: 'test' }]
                };
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[1].value, 'Sander123');
+               assert.deepStrictEqual(view._source[1].viewMode, 'extended');
                assert.deepStrictEqual(view._source[3].textValue, 'new document');
                assert.deepStrictEqual(filterChanged, {'document': '11111', 'sender': 'Sander123'});
                assert.deepStrictEqual(view._displayText, {document: { hasMoreText: '', text: '', title: ''}});

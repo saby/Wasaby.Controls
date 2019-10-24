@@ -28,10 +28,31 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
          layer._onResult({
             verticalAlign: {side: 'test', offset: 10},
             horizontalAlign: {side: 'test', offset: 20},
-            corner: {side: 'test'}
+            targetPoint: {side: 'test'}
          });
 
          assert.deepEqual(resultPopupOptions, layer._popupOptions)
+      });
+
+      it('_resizeCallback', function() {
+         var layer = new PopupLayer.default();
+         var resizeCalled = false;
+
+         layer._children = {
+            popupContent: {
+               resize: () => {
+                  resizeCalled = true;
+               }
+            }
+         };
+
+         layer._resizeCallback();
+         assert.isTrue(resizeCalled);
+
+         resizeCalled = false;
+         layer._children = {};
+         layer._resizeCallback();
+         assert.isFalse(resizeCalled);
       });
 
    });

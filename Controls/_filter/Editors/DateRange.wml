@@ -3,5 +3,5 @@
         scope="{{_options}}"
         startValue="{{_options.value[0]}}"
         endValue="{{_options.value[1]}}"
-        on:rangeChanged="_tmplNotify('rangeChanged')"
+        on:rangeChanged="_rangeChanged()"
 />

@@ -1,7 +1,6 @@
-import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel');
-import TreeGridDefaultItemTemplate = require('wml!Controls/_treeGrid/TreeGridView/Item');
+import * as TreeViewModel from 'Controls/_treeGrid/Tree/TreeViewModel';
 import {SearchItemsUtil} from 'Controls/list';
-import {Record} from 'Types/entity'
+import {Record} from 'Types/entity';
 
 var
    SearchViewModel = TreeViewModel.extend({
@@ -60,7 +59,7 @@ var
             if (!itemData.breadCrumbs && self._options.itemTemplate) {
                return self._options.itemTemplate;
             }
-            return TreeGridDefaultItemTemplate;
+            return data.resolveBaseItemTemplate();
          };
          return data;
       },

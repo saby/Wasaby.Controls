@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import stickyUtils = require('Controls/_scroll/StickyHeader/Utils');
 import template = require('wml!Controls/_scroll/StickyHeader/StickyHeader');
 import 'Controls/_scroll/StickyHeader/_StickyHeader';
+import tmplNotify = require('Controls/Utils/tmplNotify');
 
 
 
@@ -51,11 +52,11 @@ import 'Controls/_scroll/StickyHeader/_StickyHeader';
        * @cfg {String} Sticky header mode.
        * @variant replaceable Replaceable header. The next header replaces the current one.
        * @variant stackable Stackable header.  The next header is stick to the bottom of the current one.
-       */      
+       */
 
       /**
        * @name Controls/_scroll/StickyHeader#shadowVisibility
-       * @cfg {String} Устанавливает видимость тени. 
+       * @cfg {String} Устанавливает видимость тени.
        * @variant visible Показать тень.
        * @variant hidden Не показывать.
        * @default visible
@@ -118,6 +119,7 @@ import 'Controls/_scroll/StickyHeader/_StickyHeader';
       var StickyHeader = Control.extend({
 
          _template: template,
+         _notifyHandler: tmplNotify,
 
          /**
           * The position property with sticky value is not supported in ie and edge lower version 16.

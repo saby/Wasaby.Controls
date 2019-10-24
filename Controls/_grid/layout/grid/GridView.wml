@@ -44,14 +44,14 @@
             </div>
         </ws:if>
         <ws:else>
-            <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{'grid-column: 1 / span ' + (_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0)) + ';'}}"/>
+            <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{_listModel.getEmptyTemplateStyles()}}"/>
         </ws:else>
     </ws:if>
     <ws:if data="{{_listModel.getResultsPosition() === 'bottom'}}">
         <ws:partial template="{{_resultsTemplate}}" listModel="{{_listModel}}"/>
     </ws:if>
     <div attr:class="{{_calcFooterPaddingClass(_options)}}"
-         attr:style="{{'grid-column: 1 / ' + (_options.columns.length + 1 + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0)) + ';'}}">
+         attr:style="{{_listModel.getFooterStyles()}}">
         <ws:partial template="{{_options.footerTemplate}}"/>
     </div>
 </div>

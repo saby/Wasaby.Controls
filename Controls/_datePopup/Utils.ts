@@ -2,6 +2,7 @@ import {detection} from 'Env/Env';
 import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import isEmpty = require('Core/helpers/Object/isEmpty');
+import {IDateRangeSelectable} from 'Controls/dateRange';
 
 export default {
     /**
@@ -10,8 +11,10 @@ export default {
      */
     isYearStateEnabled: function (options) {
         var quantum = options.quantum;
-        return options.selectionType !== 'single' && (!quantum ||
-            (isEmpty(quantum) || 'months' in quantum || 'quarters' in quantum || 'halfyears' in quantum || 'years' in quantum));
+        return (options.selectionType === IDateRangeSelectable.SELECTION_TYPES.single && options.minRange === IDateRangeSelectable.minRange.month) ||
+            (options.selectionType !== IDateRangeSelectable.SELECTION_TYPES.single && (!quantum ||
+                (isEmpty(quantum) || 'months' in quantum || 'quarters' in quantum ||
+                    'halfyears' in quantum || 'years' in quantum)));
     },
 
     /**

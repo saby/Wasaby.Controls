@@ -79,6 +79,10 @@ define(
                   keyProperty: 'id',
                   rawData: [
                      {
+                        id: 0,
+                        nav_result: true
+                     },
+                     {
                         id: 1,
                         nav_result: true
                      },
@@ -94,6 +98,9 @@ define(
                assert.isTrue(pNav._more.getMoreMeta(), 'State more is incorrect after reload');
                assert.isTrue(pNav._more.getMoreMeta(1), 'State more is incorrect after reload');
                assert.isFalse(pNav._more.getMoreMeta(2), 'State more is incorrect after reload');
+               assert.isTrue(pNav.hasMoreData('down', 0), 'Method hasMoreData returns incorrect value for root "0" after reload');
+               assert.isTrue(pNav.hasMoreData('down', 1), 'Method hasMoreData returns incorrect value for root "1" after reload');
+               assert.isTrue(pNav.hasMoreData('down', 1234) === undefined, 'Method hasMoreData returns incorrect value for root "1234" after reload');
 
             });
 

@@ -6,10 +6,10 @@ import cMerge = require('Core/core-merge');
 import Env = require('Env/Env');
 
 interface IPosition {
-    left?: Number,
-    right?: Number,
-    top?: Number,
-    bottom?: Number
+    left?: Number;
+    right?: Number;
+    top?: Number;
+    bottom?: Number;
 }
    const INVERTING_CONST = {
       top: 'bottom',
@@ -41,16 +41,16 @@ interface IPosition {
          } else {
             if (popupCfg.align[direction].side === (isHorizontal ? 'left' : 'top')) {
                position[isHorizontal ? 'right' : 'bottom'] = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] -
-                   _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - _private.getMargins(popupCfg, direction) + targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+                   _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - _private.getMargins(popupCfg, direction);
             } else {
-               position[isHorizontal ? 'left' : 'top'] = _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'left' : 'top', direction) + _private.getMargins(popupCfg, direction);
+               position[isHorizontal ? 'left' : 'top'] = _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'left' : 'top', direction) + _private.getMargins(popupCfg, direction) + targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
             }
          }
          return position;
       },
 
       getTargetCoords: function(popupCfg, targetCoords, coord, direction) {
-         if (popupCfg.corner[direction] === 'center') {
+         if (popupCfg.targetPoint[direction] === 'center') {
             if (coord === 'right' || coord === 'left') {
                return targetCoords.left + targetCoords.width / 2;
             }
@@ -58,7 +58,7 @@ interface IPosition {
                return targetCoords.top + targetCoords.height / 2;
             }
          }
-         return targetCoords[popupCfg.corner[direction]];
+         return targetCoords[popupCfg.targetPoint[direction]];
       },
 
       checkOverflow: function(popupCfg, targetCoords, position, direction) {
@@ -82,7 +82,7 @@ interface IPosition {
       },
 
       invertPosition: function(popupCfg, direction) {
-         popupCfg.corner[direction] = INVERTING_CONST[popupCfg.corner[direction]];
+         popupCfg.targetPoint[direction] = INVERTING_CONST[popupCfg.targetPoint[direction]];
          popupCfg.align[direction].side = INVERTING_CONST[popupCfg.align[direction].side];
          popupCfg.align[direction].offset *= -1;
          popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;

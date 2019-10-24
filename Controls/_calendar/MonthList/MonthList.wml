@@ -36,6 +36,8 @@
                            template="{{_getTemplate(itemTemplate.itemData.item)}}"
                            date="{{itemTemplate.itemData.item.date}}"
                            extData="{{ _extData.getData(itemTemplate.itemData.item.id) }}"
+                           startValue="{{itemTemplate.itemData.item.startValue}}"
+                           endValue="{{itemTemplate.itemData.item.endValue}}"
                            _extDataVersion="{{_extData._version}}"
                            monthTemplate="{{_options.monthTemplate}}"
                            dayTemplate="{{_options.dayTemplate}}"

@@ -25,6 +25,7 @@
 .controls-Grid__header {
    display: contents;
    color: @color_Grid-header;
+   cursor: default;
 }
 
 .controls-Grid__header-cell {
@@ -174,7 +175,7 @@
 .controls-Grid__row_editing {
    display: contents;
 }
-.controls-Grid_partial-support .controls-Grid__row_editing{
+.controls-Grid_partial-support .controls-Grid__row_editing {
    display: grid;
    display: -ms-grid;
 }
@@ -182,10 +183,15 @@
    .controls-Grid__row_highlightOnHover_default:hover .controls-Grid__row-cell-background-hover {
       background-color: @background-color_Grid-row_hover;
    }
-
-   .controls-Grid__row:hover .controls-itemActionsV {
-      display: inline-block;
+   .controls-Grid__row:hover {
+      > .controls-Grid__row-cell,
+      > .controls-itemActionsV__container {
+         > .controls-itemActionsV {
+            display: inline-block;
+         }
+      }
    }
+
 }
 .ws-is-hover {
    .controls-Grid__row_highlightOnHover_default.controls-Grid_row-cell_hovered {
@@ -200,7 +206,7 @@
       }
    }
 
-   .controls-Grid_row-cell_hovered .controls-itemActionsV {
+   .controls-Grid_row-cell_hovered > .controls-itemActionsV {
       display: inline-block;
    }
 
@@ -466,11 +472,10 @@
       box-shadow: @box-shadow_Grid-masterList-item_selected;
       width: ~'calc(100% + @{border-width_List-masterList-right})';
       position: absolute;
-      bottom: 0;
       left: 0;
       pointer-events: none;
-      //Top border of grid element is 1px;
-      height: ~'calc(100% + 1px)';
+      top: -@border-width_List-masterList-item-top;
+      bottom: -@border-width_List-masterList-item-bottom;
    }
 }
 

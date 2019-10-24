@@ -4,7 +4,6 @@ import {Memory} from 'Types/source';
 import {Model} from 'Types/entity';
 import {Confirmation} from 'Controls/popup';
 import * as Clone from 'Core/core-clone';
-
 import DialogTemplate = require('wml!Controls/_filterPopup/History/_Favorite/EditDialog');
 
 interface IEditDialog extends IControlOptions {
@@ -32,10 +31,11 @@ class EditDialog extends Control<IEditDialog> {
     private _selectedFilters: string[];
     private _source: Memory;
 
-    private getItemsSource(self: EditDialog, items: object[]) {
-        let data = factory(items).filter((item) => {
+    private getItemsSource(self: EditDialog, items: object[]): Memory {
+        const data = factory(items).filter((item) => {
+            self._selectedFilters.push(item.id);
+            
             if (item.hasOwnProperty('value') && item.value && item.value.length !== 0 && item.textValue && item.visibility !== false) {
-                self._selectedFilters.push(item.id);
                 return item;
             }
         }).value();
@@ -73,7 +73,7 @@ class EditDialog extends Control<IEditDialog> {
         if (!this._selectedFilters.length) {
             this.showConfirmation();
         } else {
-            let result = {
+            const result = {
                 action: 'save',
                 record: new Model({
                     rawData: {

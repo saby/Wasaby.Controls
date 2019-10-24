@@ -975,7 +975,11 @@ var CompoundArea = CompoundContainer.extend([
          showLoadingIndicator: false,
          validateCompatible(): boolean {
             if (cInstance.instanceOfModule(self._childControl, 'SBIS3.CONTROLS/FormController')) {
-               self.close();
+               // _beforeCloseHandlerResult = true выставляется, если не отменили закрытие на onBeforeClose,
+               // соответственно второй раз закрытие звать не нужно
+               if (self._beforeCloseHandlerResult !== true) {
+                  self.close();
+               }
                return !self._beforeCloseHandlerResult;
             }
             return false;

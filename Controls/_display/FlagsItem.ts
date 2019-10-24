@@ -6,7 +6,7 @@ import {register} from 'Types/di';
  * Элемент коллекции флагов
  * @class Controls/_display/FlagsItem
  * @extends Controls/_display/CollectionItem
- * @public
+ * @private
  * @author Мальцев А.А.
  */
 export default class FlagsItem<T> extends CollectionItem<T> {

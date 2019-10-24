@@ -464,9 +464,10 @@ define([
                   }
                }
             };
-            component._applyClick(null);
-            sinon.assert.calledWith(component._notify, 'sendResult', [start, end]);
-            sandbox.restore();
+            return component._applyClick(null).then(() => {
+               sinon.assert.calledWith(component._notify, 'sendResult', [start, end]);
+               sandbox.restore();
+            });
          });
          it('should generate "sendResult" event if validation failed.', function() {
             const sandbox = sinon.sandbox.create(),
@@ -482,9 +483,10 @@ define([
                   }
                }
             };
-            component._applyClick(null);
-            sinon.assert.notCalled(component._notify);
-            sandbox.restore();
+            return component._applyClick(null).then(() => {
+               sinon.assert.notCalled(component._notify);
+               sandbox.restore();
+            });
          });
       });
 
@@ -540,13 +542,19 @@ define([
                   contains: function() {
                      return false;
                   }
+               },
+               formController: {
+                  submit: function() {
+                     return (new Deferred()).callback({ '0': null, '1': null });
+                  }
                }
             };
 
             component._headerType = 'someHeaderType';
-            component._inputFocusOutHandler(event);
-            assert.strictEqual(component._headerType, defaultOptions.headerType);
-            sandbox.restore();
+            return component._inputFocusOutHandler(event).then(() => {
+               assert.strictEqual(component._headerType, defaultOptions.headerType);
+               sandbox.restore();
+            });
          });
 
          it('should\'t reset header type if the focus is on the input fields.', function() {
@@ -564,9 +572,36 @@ define([
             };
 
             component._headerType = headerType;
-            component._inputFocusOutHandler(event);
-            assert.strictEqual(component._headerType, headerType);
-            sandbox.restore();
+            return component._inputFocusOutHandler(event).then(() => {
+               assert.strictEqual(component._headerType, headerType);
+               sandbox.restore();
+            });
+         });
+
+         it('should\'t reset header type if validation of the input fields is failed.', function() {
+            const
+               sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(PeriodDialog, {}),
+               headerType = 'someHeaderType';
+
+            component._children = {
+               inputs: {
+                  contains: function() {
+                     return false;
+                  }
+               },
+               formController: {
+                  submit: function() {
+                     return (new Deferred()).callback({ '0': [], '1': null });
+                  }
+               }
+            };
+
+            component._headerType = headerType;
+            return component._inputFocusOutHandler(event).then(() => {
+               assert.strictEqual(component._headerType, headerType);
+               sandbox.restore();
+            });
          });
       });
 

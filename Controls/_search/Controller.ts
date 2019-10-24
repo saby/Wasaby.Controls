@@ -61,6 +61,7 @@ var _private = {
       self._searchValue = filter[self._options.searchParam] || '';
       self._notify('filterChanged', [filter]);
       self._notify('itemsChanged', [result.data]);
+      self._notify('searchValueChanged', [self._searchValue]);
       self._misspellValue = getSwitcherStrFromData(result.data);
    },
 
@@ -79,6 +80,7 @@ var _private = {
          if (!isEqual(self._options.filter, filter)) {
             self._notify('filterChanged', [filter]);
          }
+         self._notify('searchValueChanged', [self._searchValue]);
       }
    },
 

@@ -17,7 +17,7 @@ const DEFAULT_OPTIONS = {
         side: 'bottom',
         offset: 0
     },
-    corner: {
+    targetPoint: {
         vertical: 'top',
         horizontal: 'left'
     }
@@ -46,18 +46,6 @@ const _private = {
                 newCfg.verticalAlign.offset = config.offset.vertical;
             }
         }
-        if (config.targetPoint) {
-            newCfg.corner = newCfg.corner || {};
-            if ('vertical' in config.targetPoint) {
-                newCfg.corner = {
-                    vertical: config.targetPoint.vertical
-                };
-            }
-            if ('horizontal' in config.targetPoint) {
-                newCfg.corner.horizontal = config.targetPoint.horizontal;
-            }
-
-        }
         return newCfg;
     },
     prepareConfig(self, cfg, sizes) {
@@ -79,8 +67,8 @@ const _private = {
     },
 
     getOrientationClasses(cfg) {
-        let className = 'controls-Popup-corner-vertical-' + cfg.corner.vertical;
-        className += ' controls-Popup-corner-horizontal-' + cfg.corner.horizontal;
+        let className = 'controls-Popup-corner-vertical-' + cfg.targetPoint.vertical;
+        className += ' controls-Popup-corner-horizontal-' + cfg.targetPoint.horizontal;
         className += ' controls-Popup-align-horizontal-' + cfg.align.horizontal.side;
         className += ' controls-Popup-align-vertical-' + cfg.align.vertical.side;
         className += ' controls-Sticky__reset-margins';
@@ -161,7 +149,8 @@ const _private = {
         return {
             horizontalAlign: cfg.align.horizontal,
             verticalAlign: cfg.align.vertical,
-            corner: cfg.corner
+            targetPoint: cfg.targetPoint,
+            corner: cfg.corner // TODO: to remove
         };
     },
 
@@ -173,7 +162,7 @@ const _private = {
     },
     getMargins(item) {
         // If the classes have not changed, then the indents remain the same
-        if (item.className === item.popupOptions.className) {
+        if ((item.className || '') === (item.popupOptions.className || '')) {
             if (!item.margins) {
                 item.margins = {
                     top: 0,
@@ -335,7 +324,7 @@ class StickyController extends BaseController {
 
     _getPopupConfig(cfg, sizes) {
         return {
-            corner: cMerge(cClone(DEFAULT_OPTIONS.corner), cfg.popupOptions.corner || {}),
+            targetPoint: cMerge(cClone(DEFAULT_OPTIONS.targetPoint), cfg.popupOptions.targetPoint || {}),
             align: {
                 horizontal: cMerge(cClone(DEFAULT_OPTIONS.horizontalAlign), cfg.popupOptions.horizontalAlign || {}),
                 vertical: cMerge(cClone(DEFAULT_OPTIONS.verticalAlign), cfg.popupOptions.verticalAlign || {})

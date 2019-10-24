@@ -124,7 +124,9 @@ app.get('/:moduleName/*', function(req, res){
       resourceRoot: '/',
       application: cmp,
       appRoot: '/',
-      preInitScript: 'window.wsConfig.debug = true;'
+      _options: {
+         preInitScript: 'window.wsConfig.debug = true;'
+      }
    });
 
    if (html.addCallback) {

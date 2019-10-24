@@ -35,6 +35,7 @@ import 'css!theme?Controls/decorator';
          'file:(//|\\\\)',
          'smb:(//|\\\\)',
          'mailto:',
+         '#',
          './',
          '/'
       ],
@@ -86,7 +87,10 @@ import 'css!theme?Controls/decorator';
       return linkAttributesMap[attributeName] && !goodLinkAttributeRegExp.test(attributeValue);
    }
 
-   function validAttributesInsertion(targetAttributes: Object, sourceAttributes: Object) {
+   function validAttributesInsertion(targetAttributes: object,
+                                     sourceAttributes: object,
+                                     additionalValidAttributes?: object
+   ) {
       const validAttributes: Object = currentValidHtml.validAttributes;
       for (let attributeName in sourceAttributes) {
          if (!sourceAttributes.hasOwnProperty(attributeName)) {
@@ -97,7 +101,9 @@ import 'css!theme?Controls/decorator';
             logError(`Невалидное значение атрибута ${attributeName}, ожидается строковое значение`, sourceAttributes);
             continue;
          }
-         if (!validAttributes[attributeName] && !dataAttributeRegExp.test(attributeName)) {
+         const isStrictValid = validAttributes[attributeName];
+         const isAdditionalValid = additionalValidAttributes && additionalValidAttributes[attributeName];
+         if (!isStrictValid && !isAdditionalValid && !dataAttributeRegExp.test(attributeName)) {
             continue;
          }
 
@@ -136,20 +142,25 @@ import 'css!theme?Controls/decorator';
          resolverMode ^= wasResolved;
          return children;
       }
-      var firstChildIndex = 1,
-         tagName = valueToBuild[0],
-         attrs = {
+      let firstChildIndex = 1;
+      const tagName = valueToBuild[0];
+      const attrs = {
             attributes: {},
             events: {},
             key: key
          };
-      if (!currentValidHtml.validNodes[tagName]) {
+      const validNodesValue = currentValidHtml.validNodes[tagName];
+      let additionalValidAttributes;
+      if (!validNodesValue) {
          resolverMode ^= wasResolved;
          return [];
       }
+      if (typeof validNodesValue === 'object') {
+         additionalValidAttributes = validNodesValue;
+      }
       if (valueToBuild[1] && !isString(valueToBuild[1]) && !Array.isArray(valueToBuild[1])) {
          firstChildIndex = 2;
-         validAttributesInsertion(attrs.attributes, valueToBuild[1]);
+         validAttributesInsertion(attrs.attributes, valueToBuild[1], additionalValidAttributes);
       }
       for (i = firstChildIndex; i < valueToBuild.length; ++i) {
          children.push(recursiveMarkup(valueToBuild[i], {}, key + i + '_', valueToBuild));

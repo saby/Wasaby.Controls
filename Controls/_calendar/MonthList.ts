@@ -9,7 +9,6 @@ import {IMonthListSource, IMonthListSourceOptions} from './interfaces/IMonthList
 import {IMonthList, IMonthListOptions} from './interfaces/IMonthList';
 import {IMonthListVirtualPageSize, IMonthListVirtualPageSizeOptions} from './interfaces/IMonthListVirtualPageSize';
 import ExtDataModel from './MonthList/ExtDataModel';
-import YearsSource from './MonthList/YearsSource';
 import MonthsSource from './MonthList/MonthsSource';
 import monthListUtils from './MonthList/Utils';
 import ITEM_TYPES from './MonthList/ItemTypes';
@@ -21,6 +20,7 @@ import scrollToElement = require('Controls/Utils/scrollToElement');
 import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
 import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
+import stubTemplate = require('wml!Controls/_calendar/MonthList/Stub');
 
 
 
@@ -33,10 +33,6 @@ interface IModuleComponentOptions extends
 }
 
 const
-    sourceMap: object = {
-        year: YearsSource,
-        month: MonthsSource
-    },
     ITEM_BODY_SELECTOR = {
         year: '.controls-MonthList__year-months',
         month: '.controls-MonthList__month-body'
@@ -135,18 +131,23 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             options.yearTemplate : options.monthTemplate;
     }
     private _getTemplate(data): TemplateFunction {
-        if (data.get('type') === ITEM_TYPES.header) {
-            return this._itemHeaderTemplate;
-        } else {
-            return this._itemTemplate;
+        switch (data.get('type')) {
+            case ITEM_TYPES.header:
+                return this._itemHeaderTemplate;
+            case ITEM_TYPES.stub:
+                return this._options.stubTemplate;
+            default:
+                return this._itemTemplate;
         }
     }
 
     private _updateSource(options: IModuleComponentOptions): void {
         if (options.viewMode !== this._options.viewMode) {
-            this._viewSource = new sourceMap[options.viewMode]({
+            this._viewSource = new MonthsSource({
                 header: Boolean(this._itemHeaderTemplate),
-                dateConstructor: options.dateConstructor
+                dateConstructor: options.dateConstructor,
+                displayedRanges: options.displayedRanges,
+                viewMode: options.viewMode
             });
         }
         if (options.viewMode !== this._options.viewMode || options.source !== this._options.source) {
@@ -340,10 +341,12 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             viewMode: 'year',
             yearTemplate,
             monthTemplate,
+            stubTemplate,
             // In most places where control is used, no more than 4 elements are displayed at the visible area.
             // Draw the elements above and below.
             virtualPageSize: 6,
-            dateConstructor: WSDate
+            dateConstructor: WSDate,
+            displayedRanges: null
         };
     }
 }

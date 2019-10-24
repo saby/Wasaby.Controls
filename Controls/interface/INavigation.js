@@ -34,6 +34,8 @@ define('Controls/interface/INavigation', [
     * @variant infinity Бесконечный скролл.
     * @variant pages Страницы с постраничной навигацией.
     * @variant demand Подгружать данные при нажатии на кнопку "Еще".
+    * @variant maxCount Подгружать данные, пока не будет достигут порог,
+    * указанный в maxCountValue, указанный в {@link NavigationViewConfig}.
     */
 
    /*
@@ -97,6 +99,8 @@ define('Controls/interface/INavigation', [
     *    <li><b>basic</b> - отображается только общее число записей. (по умолчанию)/li>
     *    <li><b>extended</b> - отображается общее число записей, номера первой и последней записей на текущей странице, а также размер страницы.</li>
     * </ul>
+    * @property maxCountValue Кол-во записей, когда необходимо прекратить загрузку в режиме навигации maxCount.
+    * О режиме навигации maxCount вы можете посмотреть тут {@link NavigationView}.
     */
 
    /*

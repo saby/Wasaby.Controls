@@ -206,7 +206,7 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
             return adapter;
          },
 
-         prepareFilter: function(filter:object, selection, searchParam:string|undefined):object {
+         prepareFilter: function(filter: object, selection, searchParam: string|undefined, parentProperty: string): object {
             filter = Utils.object.clone(filter);
 
              // FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
@@ -222,6 +222,9 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
              // и запрос с searchParam в фильтре вернёт не все записи, которые есть в selection'e.
             if (searchParam && selection.get('marked')[0] !== null) {
                delete filter[searchParam];
+            }
+            if (parentProperty) {
+               delete filter[parentProperty];
             }
             filter.selection = selection;
             return filter;
@@ -349,7 +352,7 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
                   loadDef = Deferred.success(selectedItems);
                } else {
                   // remove after https://online.sbis.ru/opendoc.html?guid=e4a032d4-d462-495f-a209-70a601455b11
-                  if (!this._options.recursiveSeleciton) {
+                  if (!this._options.recursiveSelection) {
                      selection = _private.prepareRecursiveSelection({
                         selection,
                         items,
@@ -362,8 +365,9 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
                   loadDef = sourceController.load(
                      _private.prepareFilter(
                         dataOptions.filter,
-                        _private.getSelection(selection, adapter, options.selectionType, options.recursiveSeleciton),
-                         options.searchParam
+                        _private.getSelection(selection, adapter, options.selectionType, options.recursiveSelection),
+                         options.searchParam,
+                         options.parentProperty
                      )
                   );
                }
@@ -404,7 +408,7 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
 
       Container.getDefaultOptions = function() {
          return {
-            recursiveSeleciton: true
+            recursiveSelection: true
          };
       };
 

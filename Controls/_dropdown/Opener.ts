@@ -1,4 +1,5 @@
 import {Sticky} from 'Controls/popup';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import Merge = require('Core/core-merge');
 import getZIndex = require('Controls/Utils/getZIndex');
 
@@ -108,18 +109,18 @@ var _private = {
  * @category Popup
  */
 
-var DropdownOpener = Sticky.extend({
-   _itemTemplateDeferred: undefined,
+class DropdownOpener extends Sticky {
+   _itemTemplateDeferred: any = undefined;
 
-   open: function (popupOptions, opener) {
+   open(popupOptions, opener) {
       _private.setTemplateOptions(this, popupOptions);
       _private.setPopupOptions(this, popupOptions);
 
       // To place zIndex in the old environment
       popupOptions.zIndex = getZIndex(this);
-      DropdownOpener.superclass.open.apply(this, arguments);
+      super.open.apply(this, arguments);
    }
-});
+}
 
 DropdownOpener._private = _private;
 

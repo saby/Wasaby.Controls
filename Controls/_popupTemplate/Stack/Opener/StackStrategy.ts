@@ -4,13 +4,13 @@
 import {detection} from 'Env/Env';
 
 interface IPosition {
-    right: Number;
-    top: Number;
-    bottom: Number;
-    width?: Number;
-    minWidth?: Number;
-    maxWidth?: Number;
-    position?: String;
+    right: number;
+    top: number;
+    bottom: number;
+    width?: number;
+    minWidth?: number;
+    maxWidth?: number;
+    position?: string;
 }
 
 // Minimum popup indentation from the right edge
