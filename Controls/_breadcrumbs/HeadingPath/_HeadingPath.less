@@ -49,6 +49,7 @@
    align-self: baseline;
    align-items: baseline;
    right: 0;
+   bottom: 0;
    background-color: @background-color_Path-backButtonArrow;
    &:before {
       font-size:@font-size_BreadCrumbs-baseline;
@@ -142,13 +143,4 @@
 
 .controls-BreadCrumbsPath__backButton_zeroWidth {
    width: 0;
-}
-
-.ws-is-ie {
-   .controls-BreadCrumbsPath__backButtonArrow {
-      //IE can't correctly align absolutely-positioned flex children: https://codepen.io/anon/pen/MqazJv
-      top: 50%;
-      bottom: 50%;
-      transform: translateY(-50%);
-   }
 }
