@@ -1,0 +1,12 @@
+<div class="asyncDemo__column">
+    <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="Run" on:click="_setOpen()"/>
+    <ws:if data="{{ _isOpen }}">
+        <div class="asyncDemo__row">
+            <Controls.heading:Title  caption="_isSearch" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+            <Controls.heading:Title  caption="_isButton" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+            <div name="filterWrapper" class="asyncDemo__row">
+                <Controls.heading:Title  caption="_isFilterWrapper" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+            </div>
+        </div>
+    </ws:if>
+</div>

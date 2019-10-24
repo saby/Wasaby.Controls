@@ -1,0 +1,15 @@
+<div class="firstCase__columnArea">
+    <Controls.heading:Title  caption="I'm Second Child {{_options.indexOpt}}" readOnly="{{true}}" fontColorStyle="primary" fontSize="4xl"/>
+    <div class="firstCase__rowArea">
+        <ws:partial template="wml!Controls-demo/AsyncTest/Templates/Async"/>
+        <ws:partial template="wml!Controls-demo/AsyncTest/Templates/NotAsync"/>
+        <ws:for data="i in _multipleControls">
+            <ws:partial template="wml!Controls-demo/AsyncTest/Templates/Combination" indexOpt="{{i}}"/>
+        </ws:for>
+    </div>
+    <div class="firstCase__rowArea">
+        <ws:for data="i in _multipleChildControls">
+            <Controls-demo.AsyncTest.Childs.ThirdChild indexOpt="{{i}}"/>
+        </ws:for>
+    </div>
+</div>

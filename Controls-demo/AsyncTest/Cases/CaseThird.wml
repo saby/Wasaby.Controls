@@ -1,0 +1,87 @@
+<div class="thirdCase">
+    <div class="thirdCase__headerArea">
+        <h1>Case #3</h1>
+    </div>
+
+    <div class="thirdCase__headerArea">
+        <Controls.heading:Title  caption="State of boolean variable" readOnly="{{true}}" fontColorStyle="secondary" fontSize="4xl"/>
+        <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="_isSearch: {{_isSearch}}" on:click="_setSearchState()" attr:class="thirdCase__headerArea__button"/>
+        <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="_isButton: {{_isButton}}" on:click="_setButtonState()" attr:class="thirdCase__headerArea__button"/>
+        <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="_isFilterWrapper: {{_isFilterWrapper}}" on:click="_setFilterWrapperState()" attr:class="thirdCase__headerArea__button"/>
+    </div>
+    <div class="thirdCase__headerArea">
+        <Controls.heading:Title  caption="Start/Stop Test" readOnly="{{true}}" fontColorStyle="secondary" fontSize="4xl"/>
+        <ws:for data="key, value in _testState">
+            <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="Test #{{key + 1}}" on:click="_setTestState(key)" attr:class="thirdCase__headerArea__button"/>
+        </ws:for>
+    </div>
+
+    <div class="thirdCase__columnArea">
+        <ws:if data="{{_isSearch || _isButton || _isFilterWrapper}}">
+            <ws:if data="{{_testState[0]}}">
+                <Controls.heading:Title  caption="Test #1 not async" readOnly="{{true}}" fontColorStyle="primary" fontSize="4xl"/>
+                <div class="thirdCase__rowArea">
+                    <ws:if data="{{_isSearch}}">
+                        <Controls.heading:Title  caption="_isSearch" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                    </ws:if>
+                    <ws:if data="{{_isButton}}">
+                        <Controls.heading:Title  caption="_isButton" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                    </ws:if>
+                    <ws:if data="{{_isFilterWrapper}}">
+                        <div name="filterWrapper" class="ithirdCase__rowArea">
+                            <Controls.heading:Title  caption="_isFilterWrapper" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+                        </div>
+                    </ws:if>
+                </div>
+            </ws:if>
+            <ws:if data="{{_testState[1]}}">
+                <Controls.heading:Title  caption="Test #2 async Decrease delay" readOnly="{{true}}" fontColorStyle="primary" fontSize="4xl"/>
+                <div class="thirdCase__rowArea">
+                    <ws:if data="{{_isSearch}}">
+                        <Controls-demo.AsyncTest.Childs.CaseThird.First delay="2000" value="0"/>
+                    </ws:if>
+                    <ws:if data="{{_isButton}}">
+                        <Controls-demo.AsyncTest.Childs.CaseThird.Second delay="1000" value="0"/>
+                    </ws:if>
+                    <ws:if data="{{_isFilterWrapper}}">
+                        <div name="filterWrapper" class="ithirdCase__rowArea">
+                            <Controls-demo.AsyncTest.Childs.CaseThird.Third delay="500" value="0" />
+                        </div>
+                    </ws:if>
+                </div>
+            </ws:if>
+            <ws:if data="{{_testState[2]}}">
+                <Controls.heading:Title  caption="Test #3 async Increase delay" readOnly="{{true}}" fontColorStyle="primary" fontSize="4xl"/>
+                <div class="thirdCase__rowArea">
+                    <ws:if data="{{_isSearch}}">
+                        <Controls-demo.AsyncTest.Childs.CaseThird.First delay="400" value="1"/>
+                    </ws:if>
+                    <ws:if data="{{_isButton}}">
+                        <Controls-demo.AsyncTest.Childs.CaseThird.Second delay="1200" value="1"/>
+                    </ws:if>
+                    <ws:if data="{{_isFilterWrapper}}">
+                        <div name="filterWrapper" class="ithirdCase__rowArea">
+                            <Controls-demo.AsyncTest.Childs.CaseThird.Third delay="2500" value="1" />
+                        </div>
+                    </ws:if>
+                </div>
+            </ws:if>
+            <ws:if data="{{_testState[3]}}">
+                <Controls.heading:Title  caption="Test #4 async Random delay" readOnly="{{true}}" fontColorStyle="primary" fontSize="4xl"/>
+                <div class="thirdCase__rowArea">
+                    <ws:if data="{{_isSearch}}">
+                        <Controls-demo.AsyncTest.Childs.CaseThird.First delay="900" value="2"/>
+                    </ws:if>
+                    <ws:if data="{{_isButton}}">
+                        <Controls-demo.AsyncTest.Childs.CaseThird.Second delay="2000" value="2"/>
+                    </ws:if>
+                    <ws:if data="{{_isFilterWrapper}}">
+                        <div name="filterWrapper" class="ithirdCase__rowArea">
+                            <Controls-demo.AsyncTest.Childs.CaseThird.Third delay="600" value="2" />
+                        </div>
+                    </ws:if>
+                </div>
+            </ws:if>
+        </ws:if>
+    </div>
+</div>
