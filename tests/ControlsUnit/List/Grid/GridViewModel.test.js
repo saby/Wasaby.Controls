@@ -545,9 +545,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             ];
 
             const expectedResultRow = [
-               ' controls-Grid__cell_spacingRight controls-Grid__cell_spacingFirstCol_xl controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
-               ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
-               ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingLastCol_l controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
+               ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_spacingFirstCol_xl_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
+               ' controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
+               ' controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
             ]
             const paramsForFirstRow = {
                columns: headerRows[0],
@@ -563,16 +563,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             };
 
             assert.equal(expectedResultRow[0],
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 0, rowIndex: 0, cell: headerRows[0][0]}),
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 0, rowIndex: 0, cell: headerRows[0][0]}, theme),
                 'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
             assert.equal(expectedResultRow[1],
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 1, rowIndex: 0, cell: headerRows[0][1]}),
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 1, rowIndex: 0, cell: headerRows[0][1]}, theme),
                 'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
             assert.equal(expectedResultRow[1],
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 2, rowIndex: 0, cell: headerRows[0][2]}),
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 2, rowIndex: 0, cell: headerRows[0][2]}, theme),
                 'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
             assert.equal(expectedResultRow[2],
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 3, rowIndex: 0, cell: headerRows[0][3]}),
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 3, rowIndex: 0, cell: headerRows[0][3]}, theme),
                 'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
 
             const paramsForSecondRow = {
@@ -589,10 +589,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             };
 
             assert.equal(expectedResultRow[1],
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForSecondRow, columnIndex: 0, rowIndex: 1, cell: headerRows[1][0]}),
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForSecondRow, columnIndex: 0, rowIndex: 1, cell: headerRows[1][0]}, theme),
                 'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
             assert.equal(expectedResultRow[1],
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForSecondRow, columnIndex: 1, rowIndex: 1, cell: headerRows[1][1]}),
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForSecondRow, columnIndex: 1, rowIndex: 1, cell: headerRows[1][1]}, theme),
                 'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
          });
 
