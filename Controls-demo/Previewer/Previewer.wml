@@ -25,7 +25,6 @@
                      <div id="popup_{{image}}" attr:style="padding: 50px; border: 2px solid red;">
                         <Controls.popup:PreviewerTarget attr:class="ControlsDemo-Previewer__previewer"
                                                         on:dblClick="_clickHandler(image)"
-                                                        name="{{image}}"
                                                         trigger="hover">
                            <ws:content>
                               <img src="{{_resourceRoot}}Controls-demo/Previewer/image/{{image}}.png" style="height: 150px; width: 150px;"/>

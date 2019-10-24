@@ -30,6 +30,7 @@ const prepateConfig = (config) => {
 
 const open = (callback: Function, config: object, type?: string): void => {
     const newCfg = prepateConfig(config);
+    clearOpeningTimeout(newCfg);
     clearClosingTimeout(newCfg);
 
     if (type === 'hover') {
