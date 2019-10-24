@@ -57,9 +57,9 @@ let _private = {
     open(self, event, type) {
         if (!self._isPopupOpened()) {
             const newConfig = _private.getCfg(self);
+            self._isOpened = true;
             return PreviewerOpener.openPopup(newConfig, type).then((id) => {
                 self._previewerId = id;
-                self._isOpened = true;
             });
         }
     },
