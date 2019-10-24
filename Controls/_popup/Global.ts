@@ -74,21 +74,19 @@ const Global = Control.extend({
    },
    _openPreviewerHandler(event, config, type) {
       this._activePreviewer = event.target;
-      return Previewer.openPopup(config, type).then((id: string) => {
-         this._previewerId = id;
-      });
+      Previewer.openPopup(config, type);
    },
 
    _closePreviewerHandler(event, type) {
-      Previewer.closePopup(this._previewerId, type);
+      Previewer.closePopup(type);
    },
 
    _cancelPreviewerHandler(event, action) {
-      Previewer.cancelPopup(this._previewerId, action);
+      Previewer.cancelPopup(action);
    },
    _isPreviewerOpenedHandler(event) {
-      if (this._activePreviewer === event.target && this._previewerId) {
-         return Previewer.isOpenedPopup(this._previewerId);
+      if (this._activePreviewer === event.target) {
+         return Previewer.isOpenedPopup();
       }
       return false;
    },

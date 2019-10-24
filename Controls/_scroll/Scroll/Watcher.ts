@@ -169,7 +169,12 @@ import {SyntheticEvent} from "Vdom/Vdom"
                   }
                }, 0);
                self._scrollPositionCache = curPosition;
-               self._scrollTopTimer = null;
+
+               // если не почисчтить таймер, то может выполняться таймер из ветки ниже, т.к. он с паузой 100
+               if (self._scrollTopTimer) {
+                   clearTimeout(self._scrollTopTimer);
+                   self._scrollTopTimer = null;
+               }
             } else {
                if (!self._scrollTopTimer) {
                   self._scrollTopTimer = setTimeout(function() {
@@ -183,6 +188,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
                         if (!withObserver) {
                            _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
                         }
+                        clearTimeout(self._scrollTopTimer);
                         self._scrollTopTimer = null;
                      }
                   }, 100);
