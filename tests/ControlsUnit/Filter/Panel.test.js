@@ -400,6 +400,20 @@ define(
                               resetValue: true
                            }
                         ])
+                     },
+                     { ObjectData: JSON.stringify([
+                           {
+                              id: 'Methods',
+                              value: '1234',
+                              resetValue: '',
+                              textValue: null
+                           },
+                           {
+                              id: 'Faces',
+                              value: true,
+                              resetValue: true
+                           }
+                        ])
                      }
                   ]
                });
