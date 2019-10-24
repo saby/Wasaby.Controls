@@ -5,6 +5,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
    describe('Controls.ColumnScroll', function() {
       var
          cfg = {
+            theme: 'default',
             items: {
                getCount: () => 1
             },
@@ -458,9 +459,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
       });
       it('_calculateShadowClasses', function() {
          assert.equal(columnScroll._calculateShadowClasses('start'),
-            'controls-ColumnScroll__shadow controls-ColumnScroll__shadow-start controls-ColumnScroll__shadow_invisible');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-ColumnScroll__shadow_invisible');
          assert.equal(columnScroll._calculateShadowClasses('end'),
-            'controls-ColumnScroll__shadow controls-ColumnScroll__shadow-end');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default');
       });
       it('_resizeHandler', function() {
          var
@@ -517,6 +518,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
       it('borderScrollPosition(end) with changes table width', function() {
          var newCfg = {
+            theme: 'default',
             items: {
                getCount: () => 1
             },
@@ -761,9 +763,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(columnScroll._calculateShadowStyles('start'), 'left: 100px;');
          assert.equal(columnScroll._calculateShadowStyles('end'), '');
          assert.equal(columnScroll._calculateShadowClasses('start'),
-            'controls-ColumnScroll__shadow controls-ColumnScroll__shadow-start');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default');
          assert.equal(columnScroll._calculateShadowClasses('end'),
-            'controls-ColumnScroll__shadow controls-ColumnScroll__shadow-end');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default');
          assert.equal(columnScroll._children.contentStyle.innerHTML, '.controls-ColumnScroll__transform-1234567890' +
             ' .controls-Grid__cell_transform { transform: translateX(-100px); }');
 
@@ -774,9 +776,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(columnScroll._calculateShadowStyles('start'), 'left: 100px;');
          assert.equal(columnScroll._calculateShadowStyles('end'), '');
          assert.equal(columnScroll._calculateShadowClasses('start'),
-            'controls-ColumnScroll__shadow controls-ColumnScroll__shadow-start');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default');
          assert.equal(columnScroll._calculateShadowClasses('end'),
-            'controls-ColumnScroll__shadow controls-ColumnScroll__shadow-end controls-ColumnScroll__shadow_invisible');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-ColumnScroll__shadow_invisible');
          assert.equal(columnScroll._children.contentStyle.innerHTML, '.controls-ColumnScroll__transform-1234567890' +
             ' .controls-Grid__cell_transform { transform: translateX(-250px); }');
       });
