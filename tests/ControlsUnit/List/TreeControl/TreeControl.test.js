@@ -783,6 +783,81 @@ define([
          assert.deepEqual([], treeViewModel.getExpandedItems());
       });
 
+      it('TreeControl.afterReloadCallback created source controller with multi root navigation', function () {
+         const source = new sourceLib.Memory({
+            data: [],
+            idProperty: 'id'
+         });
+         const treeControl = correctCreateTreeControl({
+            columns: [],
+            root: null,
+            parentProperty: 'testParentProperty',
+            nodeProperty: '@parent',
+            source: source,
+            expandedItems: [1, 2],
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 10,
+                  page: 0,
+                  hasMore: true
+               }
+            }
+         });
+         const treeViewModel = treeControl._children.baseControl.getViewModel();
+         const moreDataRs = new collection.RecordSet({
+            keyProperty: 'id',
+            rawData: [
+               {
+                  id: 1,
+                  nav_result: true
+               },
+               {
+                  id: 2,
+                  nav_result: false
+               }
+            ]
+         });
+         const items = new collection.RecordSet({
+            keyProperty: 'id',
+            rawData: [
+               {
+                  'id': 1,
+                  '@parent': true
+               },
+               {
+                  'id': 2,
+                  '@parent': true
+               },
+               {
+                  'id': 3,
+                  '@parent': false
+               }
+            ]
+         });
+         items.setMetaData({ more: moreDataRs });
+         treeControl._children.baseControl.getSourceController().calculateState(items);
+
+         // Mock TreeViewModel and TreeControl
+
+         treeViewModel._model._display = {
+            setFilter: () => undefined,
+            setRoot: (root) => {
+               treeViewModel._model._root = root;
+            },
+            getRoot: () => treeViewModel._model._root,
+            getExpandedItems: () => [1, 2],
+            getItems: () => items
+         };
+         treeControl._deepReload = true;
+
+         treeGrid.TreeControl._private.afterReloadCallback(treeControl, treeControl._options, items);
+
+         assert.equal(Object.keys(treeControl._nodesSourceControllers).length, 2);
+         assert.isTrue(treeControl._nodesSourceControllers['1'].hasMoreData('down', 1));
+         assert.isFalse(treeControl._nodesSourceControllers['2'].hasMoreData('down', 2));
+      });
+
       it('List navigation by keys', function(done) {
          // mock function working with DOM
          listMod.BaseControl._private.scrollToItem = function() {};

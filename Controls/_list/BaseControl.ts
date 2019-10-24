@@ -29,7 +29,7 @@ import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 
-import { create as diCreate } from 'Types/di';
+import {create as diCreate} from 'Types/di';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -150,7 +150,7 @@ var _private = {
                     listModel = self._listViewModel;
 
                 if (cfg.afterReloadCallback) {
-                    cfg.afterReloadCallback(cfg);
+                    cfg.afterReloadCallback(cfg, list);
                 }
 
                 if (cfg.serviceDataLoadCallback instanceof Function) {

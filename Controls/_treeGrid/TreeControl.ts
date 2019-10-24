@@ -5,9 +5,9 @@ import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
 import keysHandler = require('Controls/Utils/keysHandler');
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
+import tmplNotify = require('Controls/Utils/tmplNotify');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
-import tmplNotify = require('Controls/Utils/tmplNotify');
 
 var
     HOT_KEYS = {
@@ -43,6 +43,12 @@ var _private = {
             navigation: navigation
         });
     },
+    createSourceControllerForNode(self, node, source, navigation): SourceController {
+        if (!self._nodesSourceControllers[node]) {
+            self._nodesSourceControllers[node] = _private.createSourceController(source, navigation);
+        }
+        return self._nodesSourceControllers[node];
+    },
     toggleExpandedOnModel: function(self, listViewModel, dispItem, expanded) {
         listViewModel.toggleExpanded(dispItem, expanded);
         self._notify(expanded ? 'itemExpanded' : 'itemCollapsed', [dispItem.getContents()]);
@@ -66,12 +72,13 @@ var _private = {
         }
     },
     toggleExpanded: function(self, dispItem) {
-        var
-            filter = cClone(self._options.filter),
-            listViewModel = self._children.baseControl.getViewModel(),
-            item = dispItem.getContents(),
-            nodeKey = item.getId(),
-            expanded = !listViewModel.isExpanded(dispItem);
+        const filter = cClone(self._options.filter);
+        const listViewModel = self._children.baseControl.getViewModel();
+        const item = dispItem.getContents();
+        const nodeKey = item.getId();
+        const expanded = !listViewModel.isExpanded(dispItem);
+        const options = self._options;
+
         self._notify(expanded ? 'itemExpand' : 'itemCollapse', [item]);
         if (
             !_private.isExpandAll(self._options.expandedItems) &&
@@ -79,21 +86,21 @@ var _private = {
             !dispItem.isRoot() &&
             (_private.shouldLoadChildren(self, item) || self._options.task1178031650)
         ) {
-            self._nodesSourceControllers[nodeKey] = _private.createSourceController(self._options.source, self._options.navigation);
-
-            filter[self._options.parentProperty] = nodeKey;
-            self._nodesSourceControllers[nodeKey].load(filter, self._options.sorting).addCallback(function(list) {
-                listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(self._nodesSourceControllers));
-                if (self._options.uniqueKeys) {
-                    listViewModel.mergeItems(list);
-                } else {
-                    listViewModel.appendItems(list);
-                }
-                _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
-                if (self._options.nodeLoadCallback) {
-                    self._options.nodeLoadCallback(list, nodeKey);
-                }
-            });
+            filter[options.parentProperty] = nodeKey;
+            _private.createSourceControllerForNode(self, nodeKey, options.source, options.navigation)
+                .load(filter, options.sorting)
+                .addCallback((list) => {
+                    listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(self._nodesSourceControllers));
+                    if (options.uniqueKeys) {
+                        listViewModel.mergeItems(list);
+                    } else {
+                        listViewModel.appendItems(list);
+                    }
+                    _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+                    if (options.nodeLoadCallback) {
+                        options.nodeLoadCallback(list, nodeKey);
+                    }
+                });
         } else {
             _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
         }
@@ -108,12 +115,19 @@ var _private = {
         }
         return true;
     },
-    prepareHasMoreStorage: function(sourceControllers) {
-        var
-            hasMore = {};
-        for (var i in sourceControllers) {
+    prepareHasMoreStorage(sourceControllers: Record<string, SourceController>): Record<string, boolean> {
+        const hasMore = {};
+        let hasMoreForNode;
+
+        for (const i in sourceControllers) {
             if (sourceControllers.hasOwnProperty(i)) {
-                hasMore[i] = sourceControllers[i].hasMoreData('down');
+                hasMoreForNode = sourceControllers[i].hasMoreData('down', i);
+
+                if (hasMoreForNode === undefined) {
+                    hasMoreForNode = sourceControllers[i].hasMoreData('down');
+                }
+
+                hasMore[i] = hasMoreForNode;
             }
         }
         return hasMore;
@@ -207,7 +221,7 @@ var _private = {
         }
     },
 
-    afterReloadCallback: function(self, options) {
+    afterReloadCallback: function(self, options, loadedList) {
         const baseControl = self._children.baseControl;
         const viewModel = baseControl && baseControl.getViewModel();
 
@@ -215,6 +229,7 @@ var _private = {
             const modelRoot = viewModel.getRoot();
             const root = self._options.root !== undefined ? self._options.root : self._root;
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
+            const modelExpandedItems = viewModel.getExpandedItems();
 
             // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
             if (!_private.isDeepReload(options, self._deepReload) || self._needResetExpandedItems) {
@@ -225,16 +240,27 @@ var _private = {
             if (viewModelRoot !== root) {
                 viewModel.setRoot(root);
             }
-            if (self._deepReload && viewModel.getExpandedItems().length) {
+            if (self._deepReload && modelExpandedItems.length) {
                 const sourceController = baseControl.getSourceController();
                 const hasMore = {};
+                const expandedItems = modelExpandedItems.slice();
                 let hasMoreData: unknown;
 
-                viewModel.getExpandedItems().forEach((key) => {
+                if (_private.isExpandAll(modelExpandedItems) && options.nodeProperty) {
+                    loadedList.each((item) => {
+                        if (item.get(options.nodeProperty)) {
+                            expandedItems.push(item.get(options.keyProperty));
+                        }
+                    });
+                }
+
+                expandedItems.forEach((key) => {
                     hasMoreData = sourceController.hasMoreData('down', key);
 
                     if (hasMoreData !== undefined) {
                         hasMore[key] = hasMoreData;
+                        _private.createSourceControllerForNode(self, key, options.source, options.navigation)
+                                .calculateState(loadedList);
                     }
                 });
 

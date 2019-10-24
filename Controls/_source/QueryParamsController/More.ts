@@ -43,7 +43,7 @@ class More {
         let moreIndex: Number;
 
         if (this.more) {
-            if (key) {
+            if (key !== undefined) {
                 moreIndex = this.more.getIndexByValue('id', key);
             } else {
                 moreIndex = 0;
