@@ -2,6 +2,10 @@ import * as TreeViewModel from 'Controls/_treeGrid/Tree/TreeViewModel';
 import {SearchItemsUtil} from 'Controls/list';
 import {Record} from 'Types/entity';
 
+function isBreadCrumbsItem(item: Record|Record[]): item is Record[] {
+    return !!item.forEach;
+}
+
 var
    SearchViewModel = TreeViewModel.extend({
       _prepareDisplay: function (items, cfg) {
@@ -31,7 +35,7 @@ var
       },
       setHoveredItem(item) {
          let actualItem = item;
-         if (item && this.isBredCrumbsItem(item)) {
+         if (item && isBreadCrumbsItem(item)) {
             actualItem = item[item.length - 1];
          }
          SearchViewModel.superclass.setHoveredItem.call(this, actualItem);
@@ -63,13 +67,19 @@ var
          };
          return data;
       },
-
-       isBredCrumbsItem: function(item:Record) {
-           return !!item.forEach;
+       _getItemVersion(item: Record|Record[]): string {
+           if (isBreadCrumbsItem(item)) {
+               const versions = [];
+               item.forEach((rec) => {
+                   versions.push(rec.getVersion());
+               });
+               return versions.join('_');
+           }
+           return SearchViewModel.superclass._getItemVersion.apply(this, arguments);
        },
        isValidItemForMarkedKey: function(item) {
           const isGroup = SearchViewModel.superclass.isValidItemForMarkedKey.call(this, item);
-          return isGroup && !this.isBredCrumbsItem(item);
+          return isGroup && !isBreadCrumbsItem(item);
        },
       _isGroup: function(item:Record):boolean {
           let result;
