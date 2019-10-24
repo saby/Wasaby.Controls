@@ -143,7 +143,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _onMonthTitleClick: function (e, date) {
-        if (this._monthsSelectionEnabled && !this._options.selectionProcessing) {
+        if (this._monthsSelectionEnabled && !this._options.selectionProcessing && this._options.monthClickable) {
             this._selectionViewType = SELECTION_VEIW_TYPES.months;
             this._notify('selectionViewTypeChanged', [this._selectionViewType]);
 
