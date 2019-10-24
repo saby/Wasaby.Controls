@@ -208,16 +208,18 @@ var ItemsViewModel = BaseViewModel.extend({
         this._nextModelVersion(notUpdatePrefixItemVersion, changesType);
     },
 
+    _getItemVersion(item) {
+        // records have defined method getVersion, groups haven't
+        if (item.getVersion) {
+            return '' + item.getVersion();
+        }
+        return '' + item;
+    },
+
     _calcItemVersion: function(item) {
         var
             version = '' + this._prefixItemVersion;
-
-        // records have defined method getVersion, groups haven't
-        if (item.getVersion) {
-            version += item.getVersion();
-        } else {
-            version += item;
-        }
+        version += this._getItemVersion(item);
         return version;
     },
 
