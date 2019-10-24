@@ -46,7 +46,7 @@ export interface IResizingLineOptions extends IControlOptions {
      */
     minOffset: number;
     /**
-     * @name Controls/_toggle/Checkbox#direction
+     * @name Controls/_dragnDrop/ResizingLine#direction
      * @cfg {String} Задает направление оси для сдвига
      * @variant direct Прямое направление. Слева направо
      * @variant reverse Обратное направление. Справа налево
