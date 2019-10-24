@@ -120,24 +120,30 @@ class PageNavigation {
       return this._nextPage * this._options.pageSize;
    }
 
-   hasMoreData(direction: Direction, rootKey: number|string): boolean {
+   hasMoreData(direction: Direction, rootKey: number|string): boolean | undefined {
+      let result;
+
       if (direction === 'down') {
          const moreResult = this.getMore().getMoreMeta(rootKey);
 
-         if (this._options.hasMore === false) {
-
+         // moreResult === undefined, when navigation for passed rootKey is not defined
+         if (moreResult === undefined) {
+            result = moreResult;
+         } else if (this._options.hasMore === false) {
             // в таком случае в more приходит общее число записей в списке
             // значит умножим номер след. страницы на число записей на одной странице и сравним с общим
-            return typeof moreResult === 'boolean' ? moreResult : this.getLoadedDataCount() < this.getAllDataCount(rootKey);
+            result = typeof moreResult === 'boolean' ? moreResult : this.getLoadedDataCount() < this.getAllDataCount(rootKey);
          } else {
             // !! for TypeScript
-            return !!moreResult;
+            result = !!moreResult;
          }
       } else if (direction === 'up') {
-         return this._prevPage >= 0;
+         result = this._prevPage >= 0;
       } else {
          throw new Error('Parameter direction is not defined in hasMoreData call');
       }
+
+      return result;
    }
 
    setEdgeState(direction: Direction): void {
