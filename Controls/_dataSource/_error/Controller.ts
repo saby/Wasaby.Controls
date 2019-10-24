@@ -155,11 +155,10 @@ export default class ErrorController {
 
     private _getDefault<T extends Error = Error>(config: HandlerConfig<T>): void {
         const message = config.error.message;
-        const details = config.error.details;
         const style = 'danger';
         const type = 'ok';
         // @ts-ignore
-        import('Controls/popup').then((popup) => { popup.Confirmation.openPopup({ type, style, message, details }); });
+        import('Controls/popup').then((popup) => { popup.Confirmation.openPopup({ type, style, message }); });
     }
 
 }
