@@ -65,7 +65,7 @@ export default class TileRender extends BaseRender {
     }
 
     protected _resetHoverState(): void {
-        this._options.listModel.setHoveredItem(null);
+        this._setHoveredItem(null);
     }
 
     protected _onItemWheel(): void {
@@ -154,7 +154,13 @@ export default class TileRender extends BaseRender {
     }
 
     private _setHoveredItem(item: CollectionItem<unknown>): void {
-        this._options.listModel.setHoveredItem(item);
+        // TODO Adding this to prevent constantly resetting null and
+        // causing version change. But version should only change when
+        // the state actually changes, so probably managers should
+        // keep track of the version and not the collection itself.
+        if (this._options.listModel.getHoveredItem() !== item) {
+            this._options.listModel.setHoveredItem(item);
+        }
     }
 
     static contextTypes() {
