@@ -1,0 +1,19 @@
+<div class="asyncDemo__column">
+    <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="Run" on:click="_setOpen()"/>
+    <ws:if data="{{ _isOpen }}">
+        <Controls.Container.Async templateName="Controls/heading:Title">
+            <ws:partial template="{{ content.resolvedTemplate }}"  caption="Async" readOnly="{{true}}" fontColorStyle="primary" fontSize="4xl"/>
+        </Controls.Container.Async>
+        <div class="asyncDemo_row">
+            <ws:for data="i in 3">
+                <div class="asyncDemo_column">
+                    <ws:for data="j in 3">
+                        <Controls.Container.Async templateName="Controls-demo/AsyncTest/Childs/Simple/Second">
+                            <ws:partial template="{{ content.resolvedTemplate }}" i="{{i}}" j="{{j}}"/>
+                        </Controls.Container.Async>
+                    </ws:for>
+                </div>
+            </ws:for>
+        </div>
+    </ws:if>
+</div>

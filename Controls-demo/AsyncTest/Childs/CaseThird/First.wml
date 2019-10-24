@@ -1,0 +1,3 @@
+<div>
+    <Controls.heading:Title  caption="_isSearch" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
+</div>

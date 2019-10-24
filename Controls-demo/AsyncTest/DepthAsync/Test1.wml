@@ -1,0 +1,42 @@
+<div class="asyncDemo__column">
+    <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="Step 1" on:click="_setGridState()"/>
+    <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="Step 2" on:click="_setReadState()"/>
+    <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="Step 3" on:click="_setGridState()"/>
+    <div class="asyncDemo__column">
+        <div class="asyncDemo__scheme">
+            <div class="asyncDemo__scheme__canvas">
+                <ws:partial template="wml!Controls-demo/AsyncTest/Childs/CaseSecond/NotAsync/Background"/>
+                <ws:partial if="{{_isGrid}}" template="wml!Controls-demo/AsyncTest/Childs/CaseSecond/NotAsync/Grid"/>
+                <Controls.dragnDrop:Container name="dragNDrop">
+                    <ws:if data="{{_readOnly}}">
+                        <ws:partial template="wml!Controls-demo/AsyncTest/Childs/CaseSecond/NotAsync/Element"
+                                    value="10"/>
+                    </ws:if>
+                    <ws:else>
+                        <div class="asyncDemo__scheme__wrapper">
+                            <ws:partial
+                                    template="wml!Controls-demo/AsyncTest/Childs/CaseSecond/NotAsync/Element"
+                                    value="1"/>
+                        </div>
+                    </ws:else>
+                </Controls.dragnDrop:Container>
+            </div>
+        </div>
+        <div class="asyncDemo__scheme">
+            <div class="asyncDemo__scheme__canvas">
+                <ws:partial template="wml!Controls-demo/AsyncTest/Childs/CaseSecond/NotAsync/Background"/>
+                <ws:partial if="{{_isGrid}}" template="wml!Controls-demo/AsyncTest/Childs/CaseSecond/NotAsync/Grid"/>
+                <Controls.scroll:Container attr:class="asyncDemo__column__scroll">
+                    <ws:if data="{{_readOnly}}">
+                        <ws:partial template="wml!Controls-demo/AsyncTest/Childs/CaseSecond/NotAsync/Element" value="10"/>
+                    </ws:if>
+                    <ws:else>
+                        <div class="asyncDemo__scheme__wrapper">
+                            <ws:partial template="wml!Controls-demo/AsyncTest/Childs/CaseSecond/NotAsync/Element" value="1"/>
+                        </div>
+                    </ws:else>
+                </Controls.scroll:Container>
+            </div>
+        </div>
+    </div>
+</div>
