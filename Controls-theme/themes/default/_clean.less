@@ -3,11 +3,11 @@
 @tensorFontForIE:                         '1.0.3';
 @tensorFontVer:                           '1.0.3';
 @emojiFontVer:                            '1.0.1';
-
 //colors
 @color_shadow_default:              rgba(0,0,0,0.2);
 @color_shadow_popup:                rgba(0,0,0,0.35);
 @color_shadow_danger:               rgba(239, 70, 58, 0.4);
+
 
 @color_warning:                       @warning_color; // дублирует стиль новой спецификации, удаляем
 @color_success:                       @success_color; // дублирует стиль новой спецификации, удаляем
@@ -18,21 +18,29 @@
 @color_primary:                       @primary_color; // дублирует стиль новой спецификации, удаляем
 @color_active-element:                @color_primary; // дублирует стиль новой спецификации, удаляем
 @color_info:                          @unaccented_icon-color; // дублирует стиль новой спецификации, удаляем
+
+
 @color_active-element_disabled:		  #313E78;
+
+
 @color_secondary:                     @secondary_color; // дублирует стиль новой спецификации, удаляем
 @color_unselected:                    @unaccented_color; // дублирует стиль новой спецификации, удаляем
 @color_additional:                    @label_text-color; // дублирует стиль новой спецификации, удаляем
 @color_readOnly:                      @readonly_color; // дублирует стиль новой спецификации, удаляем
+
+
 @color_separator:                     #EAEAEA;
 
-@color_text_default:                  @text-color;
-@color_text_readonly:                 @color_readOnly;
-@color_placeholder:                   #CCC;
-@color_text_additional:               @unaccented_text-color;
 
-@background-color_footer:           #F5F5F5;
-@background-color_default:          #FFFFFF;
-@background-color_danger:           #FADADD;
+@color_text_default:                  @text-color; // дублирует стиль новой спецификации, удаляем
+@color_text_readonly:                 @color_readOnly; // дублирует стиль новой спецификации, удаляем
+@color_placeholder:                   @placeholder-color_inputText; // дублирует стиль новой спецификации, удаляем
+@color_text_additional:               @unaccented_text-color; // дублирует стиль новой спецификации, удаляем
+@background-color_footer:           @footer_background-color_dialog; // дублирует стиль новой спецификации, удаляем
+@background-color_default:          @background-color; // дублирует стиль новой спецификации, удаляем
+@background-color_danger:           @invalid_focus_background-color_inputText; // дублирует стиль новой спецификации, удаляем
+
+
 @background-color_toolbar:          #e5ecf5; //используется в пмо и в тулбаре бтра
 @background_color_editing:          #F3F3F3;
 @background-color_additional:       #F8F8F8;
@@ -62,7 +70,6 @@
 @height_xl:          @inline_height_xl; // дублирует стиль новой спецификации, удаляем
 @height_2xl:         44px;
 
-@line-height_default:       18px;
 @size_shadow_default:       0 0 6px 0;
 
 @border-radius_size_m:        4px;
@@ -105,11 +112,8 @@
 @width_DraggingTemplate-icon_val:                  40px;
 @height_DraggingTemplate-icon_val:                 40px;
 @width_DraggingTemplate_val:                       200px;
-@color_DraggingTemplate-counter_val:               #FFFFFF;
+@color_DraggingTemplate-counter_val:               @background-color;
 @background-color_DraggingTemplate-counter_val:    #0055BB;
-
-// stack
-@color_border_lite:                 #F0F0F0;
 
 // tile
 @color_shadow_light:                rgba(0,0,0,.15);
@@ -148,9 +152,9 @@
 
 // unic vars
 // DecoratorMoney
-@color_DecoratorMoney-integer_style_noAccentResults_val:          #999999;
-@color_DecoratorMoney-integer_style_noBasicRegistry_val:          #999999;
-@color_DecoratorMoney-integer_style_noAccentRegistry_val:         #999999;
+@color_DecoratorMoney-integer_style_noAccentResults_val:          @unaccented_text-color;
+@color_DecoratorMoney-integer_style_noBasicRegistry_val:          @unaccented_text-color;
+@color_DecoratorMoney-integer_style_noAccentRegistry_val:         @unaccented_text-color;
 
 @font-weight_DecoratorMoney-integer_style_default_val:            normal;
 @font-weight_DecoratorMoney-integer_style_accentResults_val:      bold;
@@ -195,9 +199,9 @@
 @spacing_Infobox-between-arrow-border_val:                        9px;
 @spacing_Infobox-between-top-close-button_val:                    5px;
 @background-color_Infobox_val:                                    #F7F8FA;
-@border-color_Infobox_success_val:                                #069922;
-@border-color_Infobox_danger_val:                                 #D04D4D;
-@border-color_Infobox_info_val:                                   #999999;
+@border-color_Infobox_success_val:                                @success_color;
+@border-color_Infobox_danger_val:                                 @danger_color;
+@border-color_Infobox_info_val:                                   @unaccented_color;
 
 // Mask
 @paddings_Mask-stretcher:                                         0 2px 0 1px;
@@ -263,7 +267,7 @@
 @spacing_DatePicker-between-input-button:                                 7px;
 
 // DateRangeRelationButton
-@color_DateRangeRelationButton-byCapacity_hovered_val:            #999;
+@color_DateRangeRelationButton-byCapacity_hovered_val:            @unaccented_color;
 
 // PeriodDialog
 @thickness_PeriodDialog-header-dash_val:                          1px;
@@ -272,10 +276,10 @@
 @animation-duration_Previewer:                                    200ms;
 
 // FilterLink
-@color_FilterLink:                                                #313e78;
+@color_FilterLink:                                                @secondary_text-color;
 
 // Render
-@size_Render-tagStyle_val:                                        8px;
+//TODO удалить после ошибки https://online.sbis.ru/opendoc.html?guid=fe0fde33-e866-464e-9954-f9b34d2999e5
 @font-weight_Render_fontStyle_primary_size_s_val:                 bold;
 @font-weight_Render_fontStyle_secondary_size_s_val:               bold;
 @font-weight_Render_fontStyle_primary_size_m_val:                 bold;
@@ -288,8 +292,7 @@
 @font-weight_Render_fontStyle_default_size_m_val:                 normal;
 @font-weight_Render_fontStyle_default_size_l_val:                 normal;
 @font-weight_Render_fontStyle_default_size_default_val:           normal;
-@border-color_input_val:                                          #EAEAEA;
-@border-color-bottom_Render_val:                                  #AAB0C1;
+
 
 // SelectedCollection
 @width_SelectedCollection-counter-shadow_val:                     20px;
@@ -302,19 +305,11 @@
 
 // Lookup
 @spacing_Lookup-between-inputRender-rightBorder_val:              0;
-@color_Lookup-input-for-comment_val:                              #999999;
-@caret-color_Lookup-input-for-comment_val:                        #999999;
+@color_Lookup-input-for-comment_val:                              @unaccented_color;
+@caret-color_Lookup-input-for-comment_val:                        @unaccented_color;
 
 // StackTemplate
 @size_Stack-shadow_val:                                           12px -8px 6px 12px;
-@min-height_StackTemplate-head_val:                               38px;
-@spacing_StackTemplate-between-maximized-button-content-top_val:  7px;
-@spacing_StackTemplate-between-close-button-border-top_val:       5px;
-@font-weight_StackTemplate-caption_secondary_val:                 700;
-@font-weight_StackTemplate-caption_primary_val:                   700;
-@font-weight_StackTemplate-caption_info_val:                      normal;
-@spacing_StackTemplate-between-caption-border-top_val:            25px;
-
 
 // Suggest
 @box-shadow-size_Suggest-popup-verticalAlign_top_val:             0 -4px 6px;
@@ -361,11 +356,8 @@
 @border-color_TreeGridView-item_dragging_val:                     #0055BB;
 
 // DialogTemplate
-@spacing_dialogTemplate-between-head-border-right_val:                    48px;
 @line-height_dialogTemplate_caption_val:                                  42px;
-@height_DialogTemplate-top-area-val:                                      44px;
-@height_dialogTemplate_footer_val:                                        64px;
-@font-weight_dialogTemplate_head_val:                                     bold;
+
 
 // TileView
 @spacing_TileView-between-title-topBorder_val:                            3px;
@@ -414,14 +406,14 @@
 @content_Back_secondary_val:                                              '';
 @content_Back_primary_val:                                                '';
 @font-weight_Back_val:                                                    bold;
-@color-Back__caption_style-primary_val:                                   #D94700;
-@color-Back__caption_style-secondary_val:                                 #313E78;
-@color-Back__caption_style-secondary_hovered_val:                         #0055BB;
+@color-Back__caption_style-primary_val:                                   @primary_text-color;
+@color-Back__caption_style-secondary_val:                                 @secondary_text-color;
+@color-Back__caption_style-secondary_hovered_val:                         @secondary_hover_text-color;
 
 // Link
 @color_Link_magic_val:                                                    #9122BF;
-@color_App-link_val:                                                      #313E78;
-@color_App-link_hover_val:                                                #0055BB;
+@color_App-link_val:                                                      @link_hover_text-color;
+@color_App-link_hover_val:                                                @link_text-color;
 
 // Checkbox
 @left_CheckBox__iconSuccessful_val:                                       5px;
@@ -529,11 +521,7 @@
 @box-shadow-spread_DropdownList:                                          -6px;
 @background_DropdownList-header_val:                                      #F4F4F4;
 @color-marker_dark_val:                                                   #D94700;
-@color-marker_val:                                                        #FF7033;
-
-// InputBase
-@spacing_InputBase_between-topBorder-text_val:                            0;
-@spacing_InputBase_between-bottomBorder-text_val:                         0;
+@color-marker_val:                                                        @primary_color;
 
 // ProgressBar
 @height-ProgressBar_bar_val:                                              3px;
@@ -547,7 +535,7 @@
 @border-color_Search_readOnly_val:                                        transparent;
 @border-color_Search_active_val:                                          #DFDFDF;
 @background-color_Search_val:                                             #F2F2F2;
-@background-color_Search_contrast_background_val:                         #ffffff;
+@background-color_Search_contrast_background_val:                         @background-color;
 
 // ToggleButton
 @background_ToggleButton_common_val:                                      transparent;
@@ -557,18 +545,6 @@
 @background_ToggleButton_pushButton_toggled_val:                          #F3F3F3;
 @text-shadow_ToggleButton_pushButton_val:                                  none;
 @padding_Button-wrapper-pushButton_size_s_val:                            0;
-
-//Heading
-@color-Separator__icon_style-secondary_hovered_val:     #313E78;
-@color-Separator__icon_style-additional_hovered_val:    #313E78;
-@color_Heading__caption_style-secondary_hovered_val:    #0055BB;
-@color_Heading_primary:                                 #D94700;
-@color_Heading_secondary:                               #313E78;
-@size_Heading_s:                                        @font-size_text_m;
-@size_Heading_m:                                        @font-size_text_l;
-@size_Heading_l:                                        @font-size_text_3xl;
-@size_Heading_xl:                                       @font-size_text_4xl;
-@font-weight_Heading-caption_val:                        bold;
 
 //BigSeparator
 @size-BigSeparator__icon:                               26px;
