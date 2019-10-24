@@ -22,7 +22,7 @@
             <ws:template>
                <Controls.popupTemplate:Dialog>
                   <ws:bodyContentTemplate>
-                     <div attr:style="padding: 50px; border: 2px solid red;">
+                     <div id="popup_{{image}}" attr:style="padding: 50px; border: 2px solid red;">
                         <Controls.popup:PreviewerTarget attr:class="ControlsDemo-Previewer__previewer"
                                                         on:dblClick="_clickHandler(image)"
                                                         name="{{image}}"
