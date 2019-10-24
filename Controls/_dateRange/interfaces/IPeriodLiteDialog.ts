@@ -22,17 +22,6 @@ export default {
         return {
 
             /**
-             * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#year
-             * @cfg {Date} Отображает период.
-             */
-
-            /*
-             * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#year
-             * @cfg {Date} Displayed period
-             */
-            year: undefined,
-
-            /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#chooseMonths
              * @cfg {Boolean} В значении false недоступен выбор месяца.
              */
