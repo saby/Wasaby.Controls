@@ -29,7 +29,7 @@ import IntertialScrolling from 'Controls/_list/resources/utils/InertialScrolling
 import {debounce, throttle} from 'Types/function';
 import {CssClassList} from "../Utils/CssClassList";
 
-import { create as diCreate } from 'Types/di';
+import {create as diCreate} from 'Types/di';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -150,7 +150,7 @@ var _private = {
                     listModel = self._listViewModel;
 
                 if (cfg.afterReloadCallback) {
-                    cfg.afterReloadCallback(cfg);
+                    cfg.afterReloadCallback(cfg, list);
                 }
 
                 if (cfg.serviceDataLoadCallback instanceof Function) {
@@ -774,7 +774,11 @@ var _private = {
                 up: self._sourceController.hasMoreData('up'),
                 down: self._sourceController.hasMoreData('down')
             };
-            if (hasMoreData.up || hasMoreData.down) {
+            // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
+            // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
+            // далее может быть два варианта. След запрос вернет данные, тогда произойдет ресайз и мы проверим еще раз
+            // след. запрос не вернет данные, а скажет ЕстьЕще: false тогда решать будет условие ниже, по высоте
+            if ((hasMoreData.up && !self._loadTriggerVisibility.up) || (hasMoreData.down && !self._loadTriggerVisibility.down)) {
                 result = true;
             }
         }
@@ -2122,7 +2126,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onScrollResize: function(self, params) {
         const doubleRatio = (params.scrollHeight / params.clientHeight) > MIN_SCROLL_PAGING_PROPORTION;
         if (_private.needScrollPaging(self._options.navigation)) {
-            self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
+            // внутри метода проверки используется состояние триггеров, а их IO обновляет не синхронно,
+            // поэтому нужен таймаут
+            setTimeout(() => {
+                self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
+            }, 18);
         }
     },
 
