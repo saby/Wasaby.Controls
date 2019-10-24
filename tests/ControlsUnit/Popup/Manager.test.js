@@ -449,19 +449,11 @@ define(
             let id1 = Manager.show({
             }, new BaseController());
 
-            let fakePopupControl1 = {
-               _moduleName: 'Controls/_popup/Manager/Popup',
-               _options: {
-                  id: id1
-               }
-            };
-
             let id2 = Manager.show({
-               opener: fakePopupControl1
             }, new BaseController());
 
-            assert.equal(Manager._private.popupItems.at(0).childs[0].id, id2);
-            assert.equal(Manager._private.popupItems.at(1).parentId, id1);
+            Manager._private.popupItems.at(0).childs = [Manager._private.popupItems.at(1)];
+            Manager._private.popupItems.at(1).parentId = id1;
 
             let item1 = Manager._private.popupItems.at(0);
             let removeDeferred2 = new Deferred();
@@ -494,18 +486,11 @@ define(
             let id1 = Manager.show({
             }, new BaseController());
 
-            let fakePopupControl1 = {
-               _moduleName: 'Controls/_popup/Manager/Popup',
-               _options: {
-                  id: id1
-               }
-            };
-
             let id2 = Manager.show({
-               opener: fakePopupControl1
             }, new BaseController());
 
-            assert.equal(Manager._private.popupItems.at(0).childs.length, 1);
+            Manager._private.popupItems.at(0).childs = [Manager._private.popupItems.at(1)];
+            Manager._private.popupItems.at(1).parentId = id1;
             Manager._private.removeFromParentConfig(Manager._private.popupItems.at(1));
             assert.equal(Manager._private.popupItems.at(0).childs.length, 0);
 
