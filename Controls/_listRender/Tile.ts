@@ -1,9 +1,9 @@
 import { TemplateFunction } from 'UI/Base';
 
-import { Render as BaseRender, IRenderOptions } from 'Controls/listRender';
+import { default as BaseRender, IRenderOptions } from './Render';
 
-import template = require('wml!Controls/_tile/TileRender/TileRender');
-import defaultItemTemplate = require('wml!Controls/_tile/TileRender/resources/ItemTemplateWrapper');
+import template = require('wml!Controls/_listRender/Tile/Tile');
+import defaultItemTemplate = require('wml!Controls/_listRender/Tile/resources/ItemTemplateWrapper');
 
 import { TileCollection, TileCollectionItem } from 'Controls/display';
 import { debounce } from 'Types/function';

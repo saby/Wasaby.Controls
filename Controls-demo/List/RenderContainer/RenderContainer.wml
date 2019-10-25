@@ -3,7 +3,7 @@
       <Controls.scroll:Container scn="1" attr:style="width: 50%; height: 600px;">
          <Controls.listRender:Container
             collection="Controls/display:TileCollection"
-            render="Controls/tile:TileRender"
+            render="Controls/listRender:Tile"
 
             items="{{ _items }}"
             itemActions="{{ _itemActions }}"
