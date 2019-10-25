@@ -235,6 +235,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
         if (entry.nativeEntry.isIntersecting && !isDisplayed) {
             this._displayedDates.push(time);
+            this._enrichItemsDebounced();
         } else if (!entry.nativeEntry.isIntersecting && isDisplayed) {
             this._displayedDates.splice(index, 1);
         }
