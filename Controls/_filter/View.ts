@@ -21,6 +21,7 @@ import mergeSource from 'Controls/_filter/Utils/mergeSource';
  * Состоит из кнопки-иконки, строкового представления выбранного фильтра и параметров быстрого фильтра.
  * При клике на кнопку-иконку или строковое представления, открывается панель фильтров {@link Controls/filterPopup:DetailPanel}.
  * Клик на параметры быстрого фильтра открывает панель "Быстрых фильтров" {@link Controls/filterPopup:SimplePanel}.
+ * Подробное описание и инструкции по настройке контрола можно найти <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/'>здесь</a>
  * Здесь вы можете посмотреть <a href="/materials/demo-ws4-filter-view">демонстрационный пример</a>.
  *
  * @class Controls/_filter/View

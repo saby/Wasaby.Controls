@@ -19,6 +19,7 @@
                   hasMoreText="{{_hasMoreText}}"
                   isEmptyItem="{{_isEmptyItem}}"
                   readOnly="{{_options.readOnly}}"
-                  multiSelect="{{_options.multiSelect}}"/>
+                  multiSelect="{{_options.multiSelect}}"
+                  footerTemplate="{{_options.footerTemplate}}"/>
    </ws:content>
 </Controls._dropdown._Controller>

@@ -832,6 +832,19 @@ define(
 
             dropdownController.openMenu({ testOption: 'testValue' });
             assert.equal(openConfig.testOption, 'testValue');
+
+            dropdownController._items = new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: [{
+                  id: 1,
+                  title: 'testTitle'
+               }]
+            });
+            openConfig = null;
+            dropdownController._options.footerTemplate = {};
+
+            dropdownController.openMenu({ testOption: 'testValue' });
+            assert.equal(openConfig.testOption, 'testValue');
          });
 
          it('closeMenu', () => {
