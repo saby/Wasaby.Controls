@@ -25,8 +25,6 @@ class ModuleLoader {
         let promiseResult;
         if (this.isCached(parsedInfo.name)) {
             if(this.isLoaded(parsedInfo.name)) {
-                IoC.resolve("ILogger").error("Module " + parsedInfo.name + ' is already loaded. ' +
-                    'Use loadSync to load it synchronous.');
                 return new Promise((resolve) => {
                     let cachedLib = cache[parsedInfo.name];
                     let loadedModule = this.getFromLib(cachedLib, parsedInfo)
