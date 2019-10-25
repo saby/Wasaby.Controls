@@ -1,7 +1,7 @@
 import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
 import { SwipeVerticalMeasurer, SwipeHorizontalMeasurer } from 'Controls/list';
 
-import template = require('wml!Controls/_listRender/Managers/Swipe/Swipe');
+import template = require('wml!Controls/_listRender/Containers/Swipe/Swipe');
 
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { CollectionItem, Collection } from 'Controls/display';

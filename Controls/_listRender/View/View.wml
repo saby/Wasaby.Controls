@@ -1,11 +1,11 @@
 <ws:template name="conditionalItemActions">
    <ws:if data="{{ _options.itemActions }}">
-      <Controls._listRender.Managers.Swipe
+      <Controls._listRender.Containers.Swipe
          listModel="{{ _collection }}"
          itemActions="{{ _options.itemActions }}"
          actionAlignment="{{ _options.actionAlignment }}"
          actionCaptionPosition="{{ _options.actionCaptionPosition }}">
-         <Controls._listRender.Managers.ItemActions
+         <Controls._listRender.Containers.ItemActions
             listModel="{{ _collection }}"
             itemActions="{{ _options.itemActions }}"
             itemActionVisibilityCallback="{{ _options.itemActionVisibilityCallback }}"
@@ -20,8 +20,8 @@
             on:requestDropdownMenuOpen="_onDropdownMenuOpenRequested()"
             on:requestDropdownMenuClose="_onDropdownMenuCloseRequested()">
             <ws:partial template="{{ contentTemplate }}" />
-         </Controls._listRender.Managers.ItemActions>
-      </Controls._listRender.Managers.Swipe>
+         </Controls._listRender.Containers.ItemActions>
+      </Controls._listRender.Containers.Swipe>
       <Controls.dropdown:Opener
          name="dropdownMenuOpener"
          keyProperty="id"

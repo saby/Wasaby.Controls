@@ -1,6 +1,6 @@
 import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
 
-import template = require('wml!Controls/_listRender/Managers/ItemActions/ItemActions');
+import template = require('wml!Controls/_listRender/Containers/ItemActions/ItemActions');
 
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { CollectionItem, Collection } from 'Controls/display';

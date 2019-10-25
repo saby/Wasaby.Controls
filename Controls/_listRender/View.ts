@@ -1,6 +1,6 @@
 import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
 
-import template = require('wml!Controls/_listRender/Container/Container');
+import template = require('wml!Controls/_listRender/View/View');
 
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
@@ -11,21 +11,21 @@ import { Collection } from 'Controls/display';
 import { load as libraryLoad } from 'Core/library';
 import { SyntheticEvent } from 'Vdom/Vdom';
 
-export interface IContainerOptions extends IControlOptions {
+export interface IViewOptions extends IControlOptions {
     items: RecordSet;
 
     collection: string;
     render: string;
 }
 
-export default class Container extends Control<IContainerOptions> {
+export default class View extends Control<IViewOptions> {
     protected _template: TemplateFunction = template;
 
     protected _collection: Collection<Model>;
 
     protected _dropdownMenuIsOpen: boolean = false;
 
-    protected async _beforeMount(options: IContainerOptions): Promise<void> {
+    protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
         return libraryLoad(options.render).then(() => null);
     }
@@ -52,7 +52,7 @@ export default class Container extends Control<IContainerOptions> {
     private _createCollection(
         module: string,
         items: RecordSet,
-        collectionOptions: IContainerOptions
+        collectionOptions: IViewOptions
     ): Collection<Model> {
         return diCreate(module, { ...collectionOptions, collection: items });
     }

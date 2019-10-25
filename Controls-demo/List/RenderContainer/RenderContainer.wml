@@ -1,7 +1,7 @@
 <div attr:style="display: flex; justify-content: space-around; flex-direction: column;">
    <ws:if data="{{ _showNewView }}">
       <Controls.scroll:Container scn="1" attr:style="width: 50%; height: 600px;">
-         <Controls.listRender:TileContainer
+         <Controls.listRender:TileView
             items="{{ _items }}"
             itemActions="{{ _itemActions }}"
             actionAlignment="vertical"
@@ -17,7 +17,7 @@
             <ws:itemTemplate>
                <ws:partial template="Controls/tile:ItemTemplate" hasTitle="{{ true }}" />
             </ws:itemTemplate>
-         </Controls.listRender:TileContainer>
+         </Controls.listRender:TileView>
       </Controls.scroll:Container>
    </ws:if>
    <ws:if data="{{ _showOldView }}">
