@@ -1,7 +1,18 @@
 <ws:if data="{{caption || icon}}">
-    <div class="{{icon ? 'controls-Checkbox_iconInCaption_theme_'+(_options.theme) :
-                 'controls-Checkbox__caption controls-Checkbox__caption_theme_'+(_options.theme)}}
-                  controls-Checkbox__caption-color__{{readOnly ? 'disabled':'enabled'}}_theme_{{_options.theme}}">
-        <ws:partial template="{{caption || icon}}"/>
+    <div class="{{icon ? 'controls-Checkbox_iconInCaption_theme-'+(_options.theme) :
+                 'controls-Checkbox__caption controls-Checkbox__caption_theme-'+(_options.theme)}}
+                  controls-Checkbox__caption-color__{{readOnly ? 'disabled':'enabled'}}_theme-{{_options.theme}}">
+        <ws:if data="{{caption}}">
+            <ws:partial template="{{caption}}"/>
+        </ws:if>
+        <ws:else data="{{icon}}">
+            <ws:if data="{{isTemplate(icon)}}">
+                <ws:partial template="{{icon}}"/>
+            </ws:if>
+            <ws:else>
+                <i class="controls-icon {{icon}} controls-icon_size-{{iconSize}}_theme-{{_options.theme}}
+                          controls-icon_style-{{iconStyle}}_theme-{{_options.theme}}"/>
+            </ws:else>
+        </ws:else>
     </div>
 </ws:if>
