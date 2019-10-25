@@ -1365,7 +1365,7 @@ var
             };
             const superGetMarkerClasses = current.getMarkerClasses;
             current.getMarkerClasses = (rowSeparatorVisibility): string => {
-                let classes = ' controls-GridView__itemV_marker_theme-' + self._options.theme;
+                let classes = ' controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-' + self._options.theme;
 
                 if (rowSeparatorVisibility) {
                     classes += ' controls-GridView-with-rowSeparator_item_marker';

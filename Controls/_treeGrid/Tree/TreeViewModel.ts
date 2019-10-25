@@ -156,7 +156,7 @@ var
             }
         },
         getExpanderPaddingClasses: function(expanderSize, theme) {
-            let expanderPaddingClasses = 'controls-TreeGrid__row-expanderPadding';
+            let expanderPaddingClasses = 'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding' + `_theme-${theme}`;
             expanderPaddingClasses += ' controls-TreeGrid__row-expanderPadding_size_' + (expanderSize || 'default') + `_theme-${theme}`;
             return expanderPaddingClasses;
         },
@@ -184,7 +184,7 @@ var
             expanderClasses += expanderIconClass + `_theme-${theme}`;
 
             // добавляем класс свертнутости развернутости для тестов
-            expanderClasses += ' controls-TreeGrid__row-expander' + (itemData.isExpanded ? '_expanded' : '_collapsed') + `_theme-${theme}`;
+            expanderClasses += ' controls-TreeGrid__row-expander' + (itemData.isExpanded ? '_expanded' : '_collapsed');
             // добавляем класс свертнутости развернутости стилевой
             expanderClasses += expanderIconClass + (itemData.isExpanded ? '_expanded' : '_collapsed') + `_theme-${theme}`;
 
