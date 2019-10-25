@@ -27,9 +27,10 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
       };
 
       var ViewModel = BaseViewModel.extend({
-         _convertToDisplayValue: function(value) {
-            var replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
-            var displayValue = ViewModel.superclass._convertToDisplayValue.call(this, value);
+         _convertToDisplayValue: function(value: string | null) {
+            const curValue = ViewModel.superclass._convertToDisplayValue.call(this, value);
+            const replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
+            const displayValue = ViewModel.superclass._convertToDisplayValue.call(this, curValue);
 
             return _private.calcDisplayValue(replaceWithAsterisks, displayValue);
          },
@@ -38,7 +39,7 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
             var replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
 
             if (replaceWithAsterisks) {
-               _private.adjustSplitValue(splitValue, this._value);
+               _private.adjustSplitValue(splitValue, this._value || '');
             }
 
             var result = ViewModel.superclass.handleInput.call(this, splitValue, inputType);

@@ -12,6 +12,24 @@ define(
                autoComplete: model.options.autoComplete
             };
          };
+         it('Init value to null.', function() {
+            currentModel = new ViewModel({
+               readOnly: false,
+               autoComplete: false,
+               passwordVisible: false
+            }, null);
+            assert.equal(currentModel.value, null);
+            assert.equal(currentModel.displayValue, '');
+
+            currentModel.handleInput({
+               before: '',
+               insert: 'a',
+               after: '',
+               delete: ''
+            });
+            assert.equal(currentModel.value, 'a');
+            assert.equal(currentModel.displayValue, '•');
+         });
          describe('Auto-completion is disabled and mode is edit and password is hidden and value is equal "12345".', function() {
             beforeEach(function() {
                currentModel = new ViewModel({
