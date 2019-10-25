@@ -19,11 +19,20 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
  * @private
  * @author Красильников А.С.
  */
+
+interface ILoadDependencies {
+    template: Control;
+    controller: Control;
+}
+
+let ManagerWrapperCreatingPromise; // TODO: Compatible
+
 class BaseOpener extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
     private _actionOnScroll: string = 'none';
     private _popupId: string = '';
     private _indicatorId: string = '';
+    private _loadModulesPromise: Promise<ILoadDependencies>;
     private _openerUpdateCallback: Function;
     private _action: any; // compatible
 
@@ -116,23 +125,26 @@ class BaseOpener extends Control<IControlOptions> {
         }));
     }
 
-    private _requireModules(cfg: string, controller: string): Promise<null> {
-        return BaseOpener.requireModules(cfg, controller).then((results) => {
-            // todo https://online.sbis.ru/opendoc.html?guid=b954dff3-9aa5-4415-a9b2-7d3430bb20a5
-            // If Opener was destroyed while template loading, then don't open popup.
-            if (!this._destroyed || this._options.closePopupBeforeUnmount === false) {
-                return {
-                    template: results[0],
-                    controller: results[1]
-                };
-            }
-            return new Error('Opener was destroyed');
-        });
+    private _requireModules(cfg: string, controller: string): Promise<ILoadDependencies|Error> {
+        if (!this._loadModulesPromise) {
+            this._loadModulesPromise = BaseOpener.requireModules(cfg, controller).then((results) => {
+                this._loadModulesPromise = null;
+                // todo https://online.sbis.ru/opendoc.html?guid=b954dff3-9aa5-4415-a9b2-7d3430bb20a5
+                // If Opener was destroyed while template loading, then don't open popup.
+                if (!this._destroyed || this._options.closePopupBeforeUnmount === false) {
+                    return {
+                        template: results[0],
+                        controller: results[1]
+                    };
+                }
+                return new Error('Opener was destroyed');
+            });
+        }
+        return this._loadModulesPromise;
     }
 
     private _getConfig(popupOptions: Object): Object {
-        // TODO: Удалить 1 аргумент в getConfig
-        const baseConfig = BaseOpener.getConfig({}, this._options, popupOptions);
+        const baseConfig = BaseOpener.getConfig(this._options, popupOptions);
         // if the .opener property is not set, then set the defaultOpener or the current control
         if (!baseConfig.hasOwnProperty('opener')) {
             baseConfig.opener = DefaultOpenerFinder.find(this) || this;
@@ -232,7 +244,7 @@ class BaseOpener extends Control<IControlOptions> {
 
         if (BaseOpener.isNewEnvironment() || cfg._vdomOnOldPage) {
             if (!BaseOpener.isNewEnvironment()) {
-                BaseOpener.getManager().addCallback(function() {
+                BaseOpener.getManager().then(() => {
                     BaseOpener.getZIndexUtil().addCallback(function(getZIndex) {
                         const popupOpener = opener || cfg.opener;
                         if (popupOpener) {
@@ -420,11 +432,12 @@ class BaseOpener extends Control<IControlOptions> {
         return Promise.resolve(module);
     }
 
-    static getConfig(baseConfig, options, popupOptions) {
+    static getConfig(options, popupOptions) {
         // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
         // Возвращаю правки. usedOptions - набор опций, которые мы берем с opener'a (с opener._options) и передаем в окно.
         // Все опции опенера брать нельзя, т.к. ядро добавляет свои опции опенеру (в режиме совместимости), которые на окно
         // попасть не должны.
+        const baseConfig = {};
         const usedOptions = [
             'showOldIndicator',
             'closeByExternalClick',
@@ -547,31 +560,19 @@ class BaseOpener extends Control<IControlOptions> {
 
     // TODO Compatible
     static getManager() {
-        let managerContainer = document.body.querySelector('.controls-PopupContainer');
-        const deferred = new Deferred();
-        if (!managerContainer) {
-            managerContainer = document.createElement('div');
+        if (!ManagerWrapperCreatingPromise) {
+            const managerContainer = document.createElement('div');
             managerContainer.classList.add('controls-PopupContainer');
             document.body.insertBefore(managerContainer, document.body.firstChild);
 
-            require(['Core/Control', 'Controls/compatiblePopup'], function(control, compatiblePopup) {
-                const wrapper = control.createControl(compatiblePopup.ManagerWrapper, {}, managerContainer);
-
-                // wait until the Manager is added to the DOM
-                if (!wrapper._mounted) {
-                    const intervalId = setInterval(function() {
-                        if (wrapper._mounted) {
-                            clearInterval(intervalId);
-                            deferred.callback();
-                        }
-                    }, 20);
-                } else {
-                    deferred.callback();
-                }
+            ManagerWrapperCreatingPromise = new Promise((resolve) => {
+                require(['Core/Creator', 'Controls/compatiblePopup'], (Creator, compatiblePopup) => {
+                    Creator(compatiblePopup.ManagerWrapper, {}, managerContainer).then(resolve);
+                });
             });
-            return deferred;
         }
-        return deferred.callback();
+
+        return ManagerWrapperCreatingPromise;
     }
 }
 
