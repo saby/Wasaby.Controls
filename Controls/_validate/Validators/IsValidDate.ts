@@ -1,4 +1,5 @@
 import dateUtils = require('Controls/Utils/Date');
+import cInstance = require('Core/core-instance');
 /**
  * Функция проверяет дату и время на валидность.
  * @class
@@ -35,6 +36,12 @@ import dateUtils = require('Controls/Utils/Date');
 export = function (args) {
    if (args.doNotValidate || !args.value || dateUtils.isValidDate(args.value)) {
       return true;
+   }
+
+   if ( cInstance.instanceOfModule(args.value, 'Types/entity:Date')) {
+      return rk('Дата заполнена некорректно.');
+   } else if (cInstance.instanceOfModule(args.value, 'Types/entity:Time')) {
+      return rk('Время заполнено некорректно.');
    }
 
    return rk('Дата или время заполнены некорректно.');

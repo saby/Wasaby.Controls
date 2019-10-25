@@ -137,7 +137,7 @@ define([
             it(`should return ${test.value} if "${test.stringValue}" is passed`, function() {
                let converter = new input.StringValueConverter(),
                   rDate;
-               converter.update(cMerge({ mask: test.mask }, options, { preferSource: true }));
+               converter.update(cMerge({ mask: test.mask, dateConstructor: Date }, options, { preferSource: true }));
                rDate = converter.getValueByString(test.stringValue, test.baseDate, test.autocomplete || true);
                assert(dateUtils.isDatesEqual(rDate, test.value), `${rDate} is not equal ${test.value}`);
             });
