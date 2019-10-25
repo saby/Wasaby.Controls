@@ -138,7 +138,6 @@ define([
          var res = ml.loadAsync('Controls/list');
          res.then(function(loaded) {
             var res2 = ml.loadAsync('Controls/list');
-            checkError(logErrors, 'Module Controls/list is already loaded.');
             res2.then(function(loaded2) {
                assert.equal(loaded, loaded2);
                assert.equal(ml.loadedAsync.length, 1);
@@ -158,7 +157,6 @@ define([
          var res = ml.loadAsync('Controls/list:MyList');
          res.then(function(loaded) {
             var res2 = ml.loadAsync('Controls/list:MyList2');
-            checkError(logErrors, 'Module Controls/List is already loaded.');
             res2.then(function(loaded2) {
                assert.equal(loaded, lib.MyList);
                assert.equal(loaded2, lib.MyList2);
