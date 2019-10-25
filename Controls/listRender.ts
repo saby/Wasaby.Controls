@@ -1,4 +1,3 @@
-import forTemplate = require('wml!Controls/_listRender/Render/resources/For');
 import editingTemplate = require('wml!Controls/_listRender/Render/resources/EditingTemplate');
 import itemTemplateWrapper = require('wml!Controls/_listRender/Render/resources/ItemTemplateWrapper');
 import itemActionsTemplate = require('wml!Controls/_listRender/Render/resources/ItemActionsTemplate');
@@ -13,6 +12,9 @@ export {
     itemActionsTemplate,
     swipeTemplate
 };
+
+import TileContainer = require('wml!Controls/_listRender/TileContainer');
+export { TileContainer };
 
 // Если используется новый рендер, то используется новая модель. Грузим ее
 // здесь, чтобы не заморачиваться с асинхронной подгрузкой в BaseControl
