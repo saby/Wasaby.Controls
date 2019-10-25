@@ -778,7 +778,25 @@ var _private = {
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
             // далее может быть два варианта. След запрос вернет данные, тогда произойдет ресайз и мы проверим еще раз
             // след. запрос не вернет данные, а скажет ЕстьЕще: false тогда решать будет условие ниже, по высоте
-            if ((hasMoreData.up && !self._loadTriggerVisibility.up) || (hasMoreData.down && !self._loadTriggerVisibility.down)) {
+            let visbilityTriggerUp = self._loadTriggerVisibility.up;
+            let visbilityTriggerDown = self._loadTriggerVisibility.down;
+
+            // TODO оказалось что нельзя доверять состоянию триггеров
+            // https://online.sbis.ru/opendoc.html?guid=e0927a79-c520-4864-8d39-d99d36767b31
+            // поэтому приходится вычислять видны ли они на экране
+            if (!visbilityTriggerUp) {
+                visbilityTriggerUp = self._scrollTop > self._loadOffsetTop * 1.3;
+            }
+
+            if (!visbilityTriggerDown && self._viewSize && self._viewPortSize) {
+                let bottomScroll = self._viewSize - self._viewPortSize - self._scrollTop;
+                if (self._pagingVisible) {
+                    bottomScroll -= 32;
+                }
+                visbilityTriggerDown = bottomScroll < self._loadOffsetBottom * 1.3;
+            }
+
+            if ((hasMoreData.up && !visbilityTriggerUp) || (hasMoreData.down && !visbilityTriggerDown)) {
                 result = true;
             }
         }
@@ -1009,6 +1027,8 @@ var _private = {
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, params.scrollTop);
         }
+
+        self._scrollTop = params.scrollTop;
     },
 
     getIntertialScrolling: function(self): IntertialScrolling {
@@ -1588,6 +1608,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _menuIsShown: null,
     _viewSize: null,
     _viewPortSize: null,
+    _scrollTop: 0,
     _popupOptions: null,
 
     //Variables for paging navigation
