@@ -8,16 +8,19 @@ export function getScrollbarWidth(detection): number {
     } else if (detection.isIE10 || detection.isIE11) {
         return 17;
     } else if (typeof window !== 'undefined') {
-        return getScrollbarWidthByMeasuredBlock();
+        return _private.getScrollbarWidthByMeasuredBlock();
     }
 }
 
-export function getScrollbarWidthByMeasuredBlock(): number {
-    const measuredBlock: HTMLDivElement = document.createElement('div');
-    measuredBlock.className = 'controls-Scroll__measuredBlock';
-    document.body.appendChild(measuredBlock);
-    const scrollbarWidth = measuredBlock.offsetWidth - measuredBlock.clientWidth;
-    document.body.removeChild(measuredBlock);
+// For unit test.
+export const _private = {
+    getScrollbarWidthByMeasuredBlock: function (): number {
+        const measuredBlock: HTMLDivElement = document.createElement('div');
+        measuredBlock.className = 'controls-Scroll__measuredBlock';
+        document.body.appendChild(measuredBlock);
+        const scrollbarWidth = measuredBlock.offsetWidth - measuredBlock.clientWidth;
+        document.body.removeChild(measuredBlock);
 
-    return scrollbarWidth;
-}
+        return scrollbarWidth;
+    }
+};

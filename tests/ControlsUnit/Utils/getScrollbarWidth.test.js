@@ -3,14 +3,15 @@ define([
 ], function(ScrollbarWidth) {
    describe('Controls.Utils.getScrollbarWidth', function() {
       const constWidthScrollbar = 20;
-      const getScrollbarWidthByMeasuredBlock = ScrollbarWidth.getScrollbarWidthByMeasuredBlock;
+      const getScrollbarWidthByMeasuredBlock = ScrollbarWidth._private.getScrollbarWidthByMeasuredBlock;
+      let detection, result;
       beforeEach(function() {
-         ScrollbarWidth.getScrollbarWidthByMeasuredBlock = function() {
+         ScrollbarWidth._private.getScrollbarWidthByMeasuredBlock = function() {
             return constWidthScrollbar;
          };
       });
       afterEach(function() {
-         ScrollbarWidth.getScrollbarWidthByMeasuredBlock = getScrollbarWidthByMeasuredBlock;
+         ScrollbarWidth._private.getScrollbarWidthByMeasuredBlock = getScrollbarWidthByMeasuredBlock;
       });
       it('webKit', function() {
          detection = {
