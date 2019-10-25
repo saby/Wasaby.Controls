@@ -73,7 +73,7 @@
         name="{{name}}"
         template="{{ _options.content }}"
         scope="{{_options}}"
-        loadingState="{{_loadingState}}"
+        loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
         _pagingVisible="{{_pagingVisible}}"
         _needBottomPadding="{{_needBottomPadding}}"
         multiSelectReady="{{_multiSelectReady}}"
