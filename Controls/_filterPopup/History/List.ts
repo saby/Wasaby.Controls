@@ -166,13 +166,21 @@ var MAX_NUMBER_ITEMS = 5;
          _private.convertToItems(favoriteList);
       },
 
-      updateFavorite: function(self, item, text) {
-         let templateOptions = _private.getEditDialogOptions(self, item, self._options.historyId, text);
-         let popupOptions = {
+      updateFavorite(self, item, text, target): void {
+         const templateOptions = _private.getEditDialogOptions(self, item, self._options.historyId, text);
+         const popupOptions = {
             opener: self,
-            templateOptions: templateOptions
+            target,
+            templateOptions,
+            targetPoint: {
+               vertical: 'bottom',
+               horizontal: 'left'
+            },
+            direction: {
+               horizontal: 'left'
+            }
          };
-         self._children.dialogOpener.open(popupOptions);
+         self._children.stickyOpener.open(popupOptions);
       },
 
       convertToItems: function(favoriteList) {
@@ -229,7 +237,7 @@ var MAX_NUMBER_ITEMS = 5;
 
       _onFavoriteClick: function(event, item, text) {
          this._editItem = item;
-         _private.updateFavorite(this, item, text);
+         _private.updateFavorite(this, item, text, event.target);
       },
 
       _editDialogResult: function(event, data) {
