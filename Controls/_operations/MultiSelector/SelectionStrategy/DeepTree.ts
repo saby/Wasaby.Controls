@@ -12,7 +12,8 @@ class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
          let item = configSelection.items.getRecordById(itemId);
 
          if (!item || SelectionHelper.isNode(item, configSelection.hierarchyRelation)) {
-            let itemsSelectedInFolder: number|null = SelectionHelper.getSelectedChildrenCount(itemId, selectedKeys, excludedKeys, configSelection.items, configSelection.hierarchyRelation);
+            let itemsSelectedInFolder: number|null = SelectionHelper.getSelectedChildrenCount(
+               itemId, selectedKeys, excludedKeys, configSelection.items, configSelection.hierarchyRelation);
 
             if (itemsSelectedInFolder === null) {
                countItemsSelected = null;

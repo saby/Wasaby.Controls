@@ -9,7 +9,7 @@ export default {
    },
 
    // Возвращает кол-во выбранных записей в папке, идет в глубь до первого исключения
-   getSelectedChildrenCount: function(nodeId, selectedKeys, excludedKeys, items, hierarchyRelation): number|null {
+   getSelectedChildrenCount: function(nodeId, selectedKeys, excludedKeys, items, hierarchyRelation, deep): number|null {
       let countSelectedChildren: number|null = null;
       let children: [] = hierarchyRelation.getChildren(nodeId, items);
 
@@ -21,7 +21,7 @@ export default {
             if (!excludedKeys.includes(childId)) {
                countSelectedChildren++;
 
-               if (hierarchyRelation.isNode(childItem) !== null) {
+               if (hierarchyRelation.isNode(childItem) !== null && deep !== false) {
                   let countSelectedChildren2: number|null = this.getSelectedChildrenCount(childId, selectedKeys, excludedKeys, items, hierarchyRelation);
 
                   if (countSelectedChildren2 === null) {
@@ -86,6 +86,25 @@ export default {
       });
 
       return children;
+   },
+
+   hasChildrenInList: function(itemId, listKeys, items, hierarchyRelation) {
+      let hasChildrenInList: boolean = false;
+      let children: [] = hierarchyRelation.getChildren(itemId, items);
+
+      for (let index = 0; index < children.length; index++) {
+         let child = children[index];
+         let childrenId = child.getId();
+
+         if (listKeys.includes(childrenId) || SelectionHelper.isNode(child, hierarchyRelation) &&
+            this._hasChildrenInList(childrenId, listKeys, items, hierarchyRelation)) {
+
+            hasChildrenInList = true;
+            break;
+         }
+      }
+
+      return hasChildrenInList;
    },
 
    removeSelectionChildren: function(nodeId, selectedKeys, excludedKeys, items, hierarchyRelation) {

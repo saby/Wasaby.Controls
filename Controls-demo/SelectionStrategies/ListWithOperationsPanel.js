@@ -14,14 +14,6 @@ define('Controls-demo/SelectionStrategies/ListWithOperationsPanel', [
       _beforeMount: function() {
          this._selectedKeys = [];
          this._excludedKeys = [];
-      },
-
-      _onOperationsPanelOpened: function() {
-         this._operationsPanelVisible = true;
-      },
-
-      _expandedChangedHandler: function (event, state) {
-         this._expanded = state;
       }
    });
 });

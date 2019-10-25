@@ -59,7 +59,8 @@ class TreeSelectionStrategy {
 
          for (let index = 0; index < selectedFolders.length; index++) {
             let folderKey = selectedFolders[index];
-            let itemsSelectedInFolder = SelectionHelper.getSelectedChildrenCount(folderKey, selectedKeys, excludedKeys, configSelection.items, configSelection.hierarchyRelation);
+            let itemsSelectedInFolder = SelectionHelper.getSelectedChildrenCount(
+               folderKey, selectedKeys, excludedKeys, configSelection.items, configSelection.hierarchyRelation, false);
 
             if (itemsSelectedInFolder === null) {
                countItemsSelected = null;
@@ -78,8 +79,8 @@ class TreeSelectionStrategy {
    public isSelected(item, selectedKeys, excludedKeys, configSelection): boolean {
       let itemId = item.getId();
 
-      return selectedKeys.includes(itemId) || !excludedKeys.includes(itemId) &&
-         this._isParentSelectedWithChild(itemId, selectedKeys, excludedKeys, configSelection);
+      return !excludedKeys.includes(itemId) &&
+         (selectedKeys.includes(itemId) || this._isParentSelectedWithChild(itemId, selectedKeys, excludedKeys, configSelection));
    }
 
    public isAllSelected(selectedKeys, excludedKeys, configSelection): boolean {

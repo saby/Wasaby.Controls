@@ -2,13 +2,14 @@ define('Controls-demo/SelectionStrategies/SelectionStrategies', [
    'Core/Control',
    'wml!Controls-demo/SelectionStrategies/SelectionStrategies',
    'Controls/_operations/MultiSelector/SelectionStrategy/Tree',
-   'Controls-demo/List/Tree/TreeMemory',
-   'Controls-demo/OperationsPanel/Demo/Data',
+   'Engine-demo/Selector/SelectorData',
+   'Engine-demo/Selector/TreeListSelector/SelectorMemory',
 
    // Зависит от другой демки, надо переписать
+   'Controls-demo/OperationsPanel/Demo/Data',
    'wml!Controls-demo/OperationsPanel/Demo/PersonInfo',
    'css!Controls-demo/OperationsPanel/Demo/Demo'
-], function(Control, template, TreeSelectionStrategy, TreeMemory, Data) {
+], function(Control, template, TreeSelectionStrategy, SelectorData, MemorySource, Data) {
    'use strict';
 
    return Control.extend({
@@ -21,7 +22,7 @@ define('Controls-demo/SelectionStrategies/SelectionStrategies', [
          this._gridColumns = [{
             template: 'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
          }];
-         this._viewSource = new TreeMemory({
+         this._viewSource = new MemorySource({
             keyProperty: 'id',
             data: Data.employees
          });
