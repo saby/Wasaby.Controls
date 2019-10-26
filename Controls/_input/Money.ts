@@ -3,6 +3,11 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Money/ReadOnly');
 
 import {descriptor} from 'Types/entity';
 import ViewModel from 'Controls/_input/Money/ViewModel';
+import {default as INumberLength, INumberLengthOptions} from 'Controls/_input/interface/INumberLength';
+
+interface IMoneyOptions extends INumberLengthOptions {
+    onlyPositive: boolean;
+}
 
 /**
  * Поле ввода денег.
@@ -12,6 +17,7 @@ import ViewModel from 'Controls/_input/Money/ViewModel';
  * @extends Controls/_input/Base
  *
  * @mixes Controls/interface/IOnlyPositive
+ * @mixes Controls/_input/interface/INumberLength
  *
  * @public
  * @demo Controls-demo/Input/SizesAndHeights/Index
@@ -24,22 +30,10 @@ import ViewModel from 'Controls/_input/Money/ViewModel';
  * @author Красильников А.С.
  */
 
-/*
- * Input for entering currency.
- * <a href="/materials/demo-ws4-input">Demo examples.</a>.
- *
- * @class Controls/_input/Money
- * @extends Controls/_input/Base
- *
- * @mixes Controls/interface/IOnlyPositive
- *
- * @public
- * @demo Controls-demo/Input/Money/Money
- *
- * @author Красильников А.С.
- */
+class Money extends Base implements INumberLength {
+    _options: IMoneyOptions;
+    readonly '[Controls/_input/interface/INumberLength]' = true;
 
-class Money extends Base {
     protected _initProperties(): void {
         super._initProperties();
 
@@ -48,11 +42,12 @@ class Money extends Base {
         this._readOnlyField.scope.fractionPart = Money.fractionPart;
     }
 
-    protected _getViewModelOptions(options) {
+    protected _getViewModelOptions(options: IMoneyOptions) {
         return {
             useGrouping: true,
             showEmptyDecimals: true,
-            precision: Money.PRECISION,
+            precision: options.precision,
+            integersLength: options.integersLength,
             useAdditionToMaxPrecision: true,
             onlyPositive: options.onlyPositive
         };
@@ -62,25 +57,24 @@ class Money extends Base {
         return ViewModel;
     }
 
-    private static PRECISION: number = 2;
-
-    private static calcStartFractionPart(value: string): number {
+    private static calcStartFractionPart(value: string, precision: number): number {
         const splitterLength = 1;
 
-        return value.length - Money.PRECISION - splitterLength;
+        return value.length - precision - splitterLength;
     }
 
-    private static integerPart(value: string): string {
-        return value.substring(0, Money.calcStartFractionPart(value));
+    private static integerPart(value: string, precision: number): string {
+        return value.substring(0, Money.calcStartFractionPart(value, precision));
     }
 
-    private static fractionPart(value: string): string {
-        return value.substring(Money.calcStartFractionPart(value));
+    private static fractionPart(value: string, precision: number): string {
+        return value.substring(Money.calcStartFractionPart(value, precision));
     }
 
     static getDefaultOptions() {
         const defaultOptions = Base.getDefaultOptions();
 
+        defaultOptions.precision = 2;
         defaultOptions.onlyPositive = false;
 
         return defaultOptions;
@@ -90,6 +84,8 @@ class Money extends Base {
         const optionTypes = Base.getOptionTypes();
 
         optionTypes.onlyPositive = descriptor(Boolean);
+        optionTypes.precision = descriptor(Number);
+        optionTypes.integersLength = descriptor(Number);
 
         return optionTypes;
     }
