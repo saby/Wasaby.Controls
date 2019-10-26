@@ -2199,6 +2199,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var direction = childEvent.nativeEvent.direction;
         this._children.itemActionsOpener.close();
 
+        const isSwiped = this._options.useNewModel ? itemData.isSwiped() : itemData.isSwiped;
+
         /**
          * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
          * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
@@ -2208,29 +2210,36 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
          * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
          * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
          */
-        if (direction === 'right' && !itemData.isSwiped && typeof this._options.selectedKeysCount !== 'undefined') {
+        if (direction === 'right' && !isSwiped && typeof this._options.selectedKeysCount !== 'undefined') {
+            const key = this._options.useNewModel ? itemData.getId() : itemData.key;
+            const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
             /**
              * After the right swipe the item should get selected.
              * But, because selectionController is a component, we can't create it and call it's method in the same event handler.
              */
             this._needSelectionController = true;
             this._delayedSelect = {
-                key: itemData.key,
-                status: itemData.multiSelectStatus
+                key,
+                status: multiSelectStatus
             };
 
+            // TODO Right swiping for new model
             //Animation should be played only if checkboxes are visible.
             if (this._options.multiSelectVisibility !== 'hidden') {
                 this.getViewModel().setRightSwipedItem(itemData);
             }
         }
         if (direction === 'right' || direction === 'left') {
-            var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
-            this._listViewModel.setMarkedKey(newKey);
+            if (this._options.useNewModel) {
+                this._listViewModel.setMarkedItem(itemData);
+            } else {
+                var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
+                this._listViewModel.setMarkedKey(newKey);
+            }
             this._listViewModel.setActiveItem(itemData);
         }
-        let actionsItem = itemData.actionsItem;
-        if (direction === 'left' && this._hasItemActions) {
+        const actionsItem = this._options.useNewModel ? itemData : itemData.actionsItem;
+        if (direction === 'left' && this._hasItemActions && !this._options.useNewModel) {
             this._children.itemActions.updateItemActions(actionsItem);
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8

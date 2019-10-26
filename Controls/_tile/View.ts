@@ -83,16 +83,11 @@ import {TreeControl} from 'Controls/treeGrid';
 var View = List.extend({
    _viewName: TreeTileView,
    _viewTemplate: TreeControl,
-   _beforeMount: function(options) {
-      this._viewModelConstructor = this._getModelConstructor(options.useNewModel);
-      if (options.useNewModel) {
-         return import('Controls/_tile/TileRender').then((TileRender) => {
-            this._viewName = TileRender.default;
-         });
-      }
+   _beforeMount: function() {
+      this._viewModelConstructor = this._getModelConstructor();
    },
-   _getModelConstructor: function(useNewModel: boolean) {
-      return !useNewModel ? TreeTileViewModel : 'Controls/display:TileCollection';
+   _getModelConstructor: function() {
+      return TreeTileViewModel;
    }
 });
 
