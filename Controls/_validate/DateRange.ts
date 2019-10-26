@@ -1,19 +1,20 @@
-import Controller = require('Controls/_validate/Container');
+import Container from 'Controls/_validate/Container';
+import {TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/DateRange');
 
-const DateRange = Controller.extend({
-    _template: template,
-    _rangeChangedHandler: function(){
+class DateRange extends Container {
+    _template: TemplateFunction = template;
+    _rangeChangedHandler(): void {
         if (!this._options.readOnly) {
             this._shouldValidate = true;
             this._forceUpdate();
         }
-    },
-    _afterUpdate: function(oldOptions) {
+    }
+    protected _afterUpdate(oldOptions): void {
         if (this._shouldValidate || this._options.value !== oldOptions.value) {
             this._shouldValidate = false;
             this.validate();
         }
     }
-});
-export = DateRange;
+}
+export default DateRange;
