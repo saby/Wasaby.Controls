@@ -1,7 +1,7 @@
 <div attr:class="controls-ListView controls-TileView" name="itemsContainer">
    <ws:if data="{{ _options.listModel }}">
       <ws:partial
-         template="Controls/listRender:forTemplate"
+         template="wml!Controls/_listRender/Render/resources/For"
          collection="{{ _options.listModel }}"
          keyPrefix="{{ _templateKeyPrefix }}"
 

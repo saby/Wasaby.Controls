@@ -47,7 +47,8 @@ export default class SwipeControl extends Control {
       itemData: IItemData,
       childEvent: ISwipeEvent
    ): void {
-      if (childEvent.nativeEvent.direction === 'left' && itemData.itemActions) {
+      const itemActions = this._options.useNewModel ? itemData.getActions() : itemData.itemActions;
+      if (childEvent.nativeEvent.direction === 'left' && itemActions) {
          this._initSwipe(this._options.listModel, itemData, childEvent);
       } else {
          this.closeSwipe(true);
@@ -133,20 +134,27 @@ export default class SwipeControl extends Control {
    }
    private _updateActionsOnCurrentItem(): void{
       this._setMeasurer(this._options.actionAlignment);
+
+      const itemActions = this._options.useNewModel
+         ? this._currentItemData.getActions().all
+         : this._currentItemData.itemActions.all;
+
       this._swipeConfig = this._measurer.getSwipeConfig(
-          this._currentItemData.itemActions.all,
+          itemActions,
           this._actionsHeight,
           this._options.actionCaptionPosition
       );
       if (this._needHorizontalRecalc(this._swipeConfig)) {
          this._setMeasurer('horizontal');
          this._swipeConfig = this._measurer.getSwipeConfig(
-             this._currentItemData.itemActions.all,
+             itemActions,
              this._actionsHeight,
              this._options.actionCaptionPosition
          );
       }
-      this._options.listModel.setItemActions(this._currentItemData.actionsItem, this._swipeConfig.itemActions);
+
+      const actionsItem = this._options.useNewModel ? this._currentItemData : this._currentItemData.actionsItem;
+      this._options.listModel.setItemActions(actionsItem, this._swipeConfig.itemActions);
       if (this._swipeConfig.twoColumns) {
          this._swipeConfig.twoColumnsActions = this._prepareTwoColumns(this._swipeConfig.itemActions.showed);
       }
@@ -248,7 +256,7 @@ export default class SwipeControl extends Control {
    closeSwipe(withAnimation: boolean = false): void {
       if (this._animationState === 'open') {
          this._animationState = 'close';
-         if (withAnimation) {
+         if (withAnimation && !this._options.useNewModel) {
             this._options.listModel.nextModelVersion();
          } else {
             this._notifyAndResetSwipe();
