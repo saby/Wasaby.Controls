@@ -1,0 +1,15 @@
+<div class="asyncDemo__column">
+    <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="Run" on:click="_setOpen()"/>
+    <ws:if data="{{ _isOpen }}">
+        <Controls.heading:Title  caption="Not Async" readOnly="{{true}}" fontColorStyle="primary" fontSize="4xl"/>
+        <div class="asyncDemo_row">
+            <ws:for data="i in 3">
+                <div class="asyncDemo_column">
+                    <ws:for data="j in 3">
+                        <div>{{i}} {{j}}</div>
+                    </ws:for>
+                </div>
+            </ws:for>
+        </div>
+    </ws:if>
+</div>

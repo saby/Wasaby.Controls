@@ -425,6 +425,12 @@
             Range
          </a>
       </div>
+      <h1>Async Controls</h1>
+      <div>
+         <a href="/Controls-demo/app/Controls-demo%252FAsyncTest%252FAsyncTestDemo">
+            AsyncDemo
+         </a>
+      </div>
    </div>
    <ws:if data="{{_successfullyMounted}}">
       <div class="test-mount"></div>
