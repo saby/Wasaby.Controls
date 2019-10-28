@@ -50,7 +50,7 @@ const _private = {
         }
     },
     compatibleOpen(self, popupOptions): Promise<string> {
-        const config = BaseOpener.getConfig({}, {}, popupOptions);
+        const config = BaseOpener.getConfig({}, popupOptions);
         return new Promise((resolve) => {
             Promise.all([
                 BaseOpener.requireModule('Controls/compatiblePopup:BaseOpener'),
@@ -193,7 +193,7 @@ class Notification extends BaseOpener {
 
 Notification.openPopup = (config: object, id: string): Promise<string> => {
     return new Promise((resolve) => {
-        const newConfig = BaseOpener.getConfig({}, BASE_OPTIONS, config);
+        const newConfig = BaseOpener.getConfig(BASE_OPTIONS, config);
         if (isNewEnvironment()) {
             if (!newConfig.hasOwnProperty('opener')) {
                 newConfig.opener = null;
