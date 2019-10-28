@@ -84,15 +84,14 @@ export default class MonthsSource extends Memory {
                     });
                 } else {
                     period = this._getHiddenPeriod(month, delta);
-                    if (period[0] && period[1]) {
-                        items.push({
-                            id: monthListUtils.dateToId(period[0]),
-                            date: period[0],
-                            startValue: period[0],
-                            endValue: period[1],
-                            type: ITEM_TYPES.stub
-                        });
-                    }
+                    // для заглешки от минус бесконечности до даты используем в качестве id дату конца(period[1])
+                    items.push({
+                        id: monthListUtils.dateToId(period[0] || period[1]),
+                        date: period[0] || period[1],
+                        startValue: period[0],
+                        endValue: period[1],
+                        type: ITEM_TYPES.stub
+                    });
                     if (i === 0 && !period[0]) {
                         before = false;
                     }
@@ -165,7 +164,7 @@ export default class MonthsSource extends Memory {
             const range = this._displayedRanges[i];
             if (date < range[0]) {
                 return [
-                    i === 0 ? null : date,
+                    i === 0 ? null : this._shiftRange(this._displayedRanges[i - 1][1], 1),
                     this._shiftRange(range[0], -1)
                 ];
             }
