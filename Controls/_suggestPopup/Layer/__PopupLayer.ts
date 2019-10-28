@@ -11,15 +11,15 @@ import 'css!theme?Controls/suggest';
 var POPUP_CLASS_NAME = 'controls-Suggest__suggestionsContainer_popup';
 
 var _private = {
-   openPopup: function(self, opener, options) {
+   openPopup(self, opener, options): void {
        // !!closeOnOutsideClick не добавлять, иначе саггест закрывается при клике на саггест
-      opener.open({
+      const dynamicConfig = {
          target: options.target,
          opener: self,
          actionOnScroll: detection.isMobileIOS ? 'none' : 'close',
-         zIndex: getZIndex(self), // _vdomOnOldPage для слоя совместимости, уйдёт с удалением опции.
-         resizeCallback: self._resizeCallback
-      });
+         zIndex: getZIndex(self) // _vdomOnOldPage для слоя совместимости, уйдёт с удалением опции.k
+      };
+      opener.open({...dynamicConfig, ...self._popupOptions});
    },
 
    getPopupClassName: function(verAlign) {
@@ -38,7 +38,8 @@ var _private = {
          },
          eventHandlers: {
             onResult: self._onResult
-         }
+         },
+         resizeCallback: self._resizeCallback
       };
    }
 };
@@ -72,7 +73,7 @@ var __PopupLayer = Control.extend({
    },
 
    _onResult: function(position) {
-      //fix suggest position after show
+      // fix suggest position after show
       this._popupOptions.direction = {
          vertical: position.verticalAlign.side,
          horizontal: position.horizontalAlign.side
@@ -86,6 +87,9 @@ var __PopupLayer = Control.extend({
       this._popupOptions.targetPoint = position.targetPoint;
       this._popupOptions.className = _private.getPopupClassName(position.verticalAlign.side);
       this._popupOptions.fittingMode = 'fixed';
+
+      // update popup's options
+      _private.openPopup(this, this._children.suggestPopup, this._options);
    },
 
    _resizeCallback(): void {
