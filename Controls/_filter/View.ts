@@ -436,17 +436,22 @@ var _private = {
         this._configs[result.id].initSelectorItems = result.selectedItems;
     },
 
-    isNeedReload: function(oldItems, newItems) {
+    isNeedReload(oldItems, newItems): boolean {
+        const optionsToCheck = ['source', 'filter', 'navigation'];
+        const getOptionsChecker = (oldItem, newItem) => {
+            return (changed, optName) => changed || !isEqual(oldItem.editorOptions[optName], newItem.editorOptions[optName]);
+        };
         let result = false;
+
         if (oldItems.length !== newItems.length) {
             result = true;
         } else {
             factory(oldItems).each((oldItem) => {
                 const newItem = _private.getItemByName(newItems, oldItem.name);
-                if (newItem && _private.isFrequentItem(oldItem) &&
-                    (!isEqual(oldItem.editorOptions.source, newItem.editorOptions.source) ||
-                        !isEqual(oldItem.editorOptions.filter, newItem.editorOptions.filter) ||
-                        !isEqual(oldItem.editorOptions.navigation, newItem.editorOptions.navigation))) {
+                const isFrequent = _private.isFrequentItem(oldItem);
+                if (newItem &&
+                    isFrequent &&
+                    (optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false) || isFrequent !== _private.isFrequentItem(newItem))) {
                     result = true;
                 }
             });

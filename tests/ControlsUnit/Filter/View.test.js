@@ -168,7 +168,16 @@ define(
                //isNeedReload = false
                view._beforeUpdate(newConfig);
                assert.deepStrictEqual(view._displayText, expectedDisplayText);
-               done();
+
+               newConfig = Clone(defaultConfig);
+               newConfig.source[0].viewMode = 'basic';
+               newConfig.source[1].viewMode = 'basic';
+
+               //isNeedReload = true
+               view._beforeUpdate(newConfig).addCallback(function() {
+                  assert.equal(Object.keys(view._configs).length, 0);
+                  done();
+               });
             });
          });
 
