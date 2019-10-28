@@ -425,6 +425,70 @@ define([
          assert.equal(listViewModel.getVersion() - oldVersion, 1);
       });
 
+      describe('beforeUpdate updates model', function() {
+         var visibilityCallback = function() {
+            return true;
+         };
+         var lvm = new lists.ListViewModel({
+            items: rs,
+            keyProperty: 'id'
+         });
+         var cfg = {
+            listModel: listViewModel,
+            readOnly: false,
+            tooblarVisibility: false,
+            itemActions: [{
+               id: 0,
+               title: 'first',
+               showType: tUtil.showType.MENU
+            },
+               {
+                  id: 1,
+                  title: 'second',
+                  showType: tUtil.showType.TOOLBAR
+               }],
+            itemActionsPosition: 'outside'
+            };
+
+         var ctrl = new lists.ItemActionsControl(cfg);
+         var modelVersion = 0;
+         ctrl._beforeMount(cfg);
+         ctrl.saveOptions(cfg);
+         var originalUpdateModel = lists.ItemActionsControl._private.updateModel;
+
+         beforeEach(function() {
+            lists.ItemActionsControl._private.updateModel = function() {
+               modelVersion++;
+            }
+         });
+         afterEach(function() {
+            lists.ItemActionsControl._private.updateModel = originalUpdateModel;
+         });
+         it('readOnly', function() {
+            ctrl._beforeUpdate({...cfg, readOnly: true});
+            assert.equal(modelVersion, 1);
+         });
+         it('listModel', function() {
+            ctrl._beforeUpdate({...cfg, listModel: lvm});
+            assert.equal(modelVersion, 2);
+         });
+         it('itemActions', function() {
+            ctrl._beforeUpdate({...cfg, itemActions: []});
+            assert.equal(modelVersion, 3);
+         });
+         it('itemActionVisibilityCallback', function() {
+            ctrl._beforeUpdate({...cfg, itemActionVisibilityCallback: visibilityCallback});
+            assert.equal(modelVersion, 4);
+         });
+         it('toolbarVisibility', function() {
+            ctrl._beforeUpdate({...cfg, toolbarVisibility: true});
+            assert.equal(modelVersion, 5);
+         });
+         it('itemActionsPosition', function() {
+            ctrl._beforeUpdate({...cfg, itemActionsPosition: 'inside'});
+            assert.equal(modelVersion, 6);
+         });
+      });
       it('updateItemActions', function() {
          var cfg = {
             listModel: listViewModel,

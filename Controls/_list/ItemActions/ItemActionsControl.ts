@@ -162,6 +162,7 @@ var ItemActionsControl = Control.extend({
         var args = [this, newOptions];
 
         if (
+            this._options.readOnly !== newOptions.readOnly ||
             this._options.listModel !== newOptions.listModel ||
             this._options.itemActions !== newOptions.itemActions ||
             this._options.itemActionVisibilityCallback !== newOptions.itemActionVisibilityCallback ||
