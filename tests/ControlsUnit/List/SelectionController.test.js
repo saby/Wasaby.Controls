@@ -247,6 +247,11 @@ define([
          instance._multiselection.unselectAll = sandbox.stub();
          SelectionController._private.selectedTypeChangedHandler.call(instance, 'unselectAll');
          assert.isTrue(instance._multiselection.unselectAll.calledOnce);
+
+         cfg.items = cfg.items.clone();
+         cfg.items.clear();
+         SelectionController._private.selectedTypeChangedHandler.call(instance, 'selectAll');
+         assert.isTrue(instance._multiselection.selectAll.calledOnce);
       });
 
       describe('_onCollectionChange', function() {
