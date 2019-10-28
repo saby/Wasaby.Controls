@@ -32,6 +32,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @control
  * @public
  * @author Золотова Э.Е.
+ * @demo Controls-demo/FilterView/ItemTemplates/Index
  */
 
 /*
