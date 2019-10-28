@@ -25,6 +25,7 @@ interface ILoadDependencies {
     controller: Control;
 }
 
+const OPEN_POPUP_DEBOUNCE_DELAY: number = 10;
 let ManagerWrapperCreatingPromise; // TODO: Compatible
 
 class BaseOpener extends Control<IControlOptions> {
@@ -34,6 +35,7 @@ class BaseOpener extends Control<IControlOptions> {
     private _indicatorId: string = '';
     private _loadModulesPromise: Promise<ILoadDependencies>;
     private _openerUpdateCallback: Function;
+    private _openPopupTimerId: number;
     private _action: any; // compatible
 
     protected _afterMount(): void {
@@ -61,7 +63,7 @@ class BaseOpener extends Control<IControlOptions> {
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                 this._compatibleOpen(cfg, controller).then((popupId) => resolve(popupId));
             } else {
-                this._openPopup(cfg, controller).then((popupId) => resolve(popupId));
+                this._openPopupDebounce(cfg, controller).then((popupId) => resolve(popupId));
             }
         }));
     }
@@ -95,6 +97,20 @@ class BaseOpener extends Control<IControlOptions> {
             return !!this._action.getDialog();
         }
         return null;
+    }
+
+    /* Защита от множественного вызова. собираем все синхронные вызовы, открываем окно с последним конфигом */
+    private _openPopupDebounce(cfg, controller): Promise<string> {
+        return new Promise((resolve) => {
+            if (this._openPopupTimerId) {
+                clearTimeout(this._openPopupTimerId);
+            }
+            this._openPopupTimerId = setTimeout(() => {
+                this._openPopupTimerId = null;
+                this._openPopup(cfg, controller).then(resolve);
+            }, OPEN_POPUP_DEBOUNCE_DELAY);
+        });
+
     }
 
     private _openPopup(cfg, controller: string): Promise<string | undefined> {
@@ -233,7 +249,7 @@ class BaseOpener extends Control<IControlOptions> {
         return new Promise((resolve) => {
             requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], (Layer) => {
                 Layer.load().addCallback(() => {
-                    this._openPopup(cfg, controller).then((popupId: string) => resolve(popupId));
+                    this._openPopupDebounce(cfg, controller).then((popupId: string) => resolve(popupId));
                 });
             });
         });
