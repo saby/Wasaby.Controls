@@ -27,13 +27,7 @@ define(
          oldEnvValue;
 
       describe('Controls.Container.Scroll.Utils', function() {
-         var
-            constWidthScrollbar = 20,
-            detection, result;
-
-         ScrollWidthUtil._private.calcScrollbarWidthByMeasuredBlock = function() {
-            return constWidthScrollbar;
-         };
+         var detection, result;
 
          describe('calcOverflow', function() {
             var container;
@@ -95,58 +89,6 @@ define(
                   assert.equal(result, undefined);
                }
                restoreEnv('firefox');
-            });
-         });
-
-         describe('calcScrollbarWidth', function() {
-            it('webKit', function() {
-               detection = {
-                  webkit: true
-               };
-
-               result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
-               assert.equal(result, 0);
-            });
-            it('ie12', function() {
-               detection = {
-                  isIE12: true
-               };
-
-               detection.IEVersion = 16;
-               result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
-               assert.equal(result, 12);
-
-               detection.IEVersion = 17;
-               result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
-               assert.equal(result, 16);
-            });
-            it('ie11', function() {
-               detection = {
-                  isIE11: true
-               };
-
-               result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
-               assert.equal(result, 17);
-            });
-            it('ie10', function() {
-               detection = {
-                  isIE10: true
-               };
-
-               result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
-               assert.equal(result, 17);
-            });
-            it('firefox', function() {
-               detection = {
-                  firefox: true
-               };
-
-               result = ScrollWidthUtil._private.calcScrollbarWidth(detection);
-               if (typeof window === 'undefined') {
-                  assert.equal(result, undefined);
-               } else {
-                  assert.equal(result, 20);
-               }
             });
          });
 
