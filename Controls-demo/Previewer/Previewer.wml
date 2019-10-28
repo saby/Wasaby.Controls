@@ -1,45 +1,54 @@
 <div class="ControlsDemo-Previewer">
-   <h2 id="info">Previewer</h2>
-	<Controls.dropdown:Combobox
-		source="{{_triggerSource}}"
-		keyProperty="title"
-		placeholder="select"
-		displayProperty="title"
-		selectedKey="{{_selectedTrigger}}"
-		on:selectedKeyChanged="changeTrigger()"
-		attr:class="ControlsDemo-Previewer__trigger"
-	/>
-   <Controls.scroll:Container attr:style="height: 400px;">
-   <ws:for data="image in _images">
-      <div>
-         <Controls.popup:PreviewerTarget attr:class="ControlsDemo-Previewer__previewer"
-                                         on:dblClick="_clickHandler(image)"
-                                         name="{{image}}"
-                                         trigger="{{_trigger}}" trigger_1="{{_options.previewerTrigger}}">
-            <ws:content>
-               <img id="target_{{image}}" src="{{_resourceRoot}}Controls-demo/Previewer/image/{{image}}.png"/>
-            </ws:content>
-            <ws:template>
-               <Controls.popupTemplate:Dialog>
-                  <ws:bodyContentTemplate>
-                     <div id="popup_{{image}}" attr:style="padding: 50px; border: 2px solid red;">
-                        <Controls.popup:PreviewerTarget attr:class="ControlsDemo-Previewer__previewer"
-                                                        on:dblClick="_clickHandler(image)"
-                                                        trigger="hover">
-                           <ws:content>
-                              <img src="{{_resourceRoot}}Controls-demo/Previewer/image/{{image}}.png" style="height: 150px; width: 150px;"/>
-                           </ws:content>
-                           <ws:template>
-                              <div class="ControlsDemo-Previewer__previewer_name">{{image}}</div>
-                           </ws:template>
-                        </Controls.popup:PreviewerTarget>
-                     </div>
-                  </ws:bodyContentTemplate>
-               </Controls.popupTemplate:Dialog>
-            </ws:template>
-         </Controls.popup:PreviewerTarget>
-      </div>
-   </ws:for>
-   <div style="height: 400px;"></div>
-   </Controls.scroll:Container>
+    <h2 id="info">Previewer</h2>
+    <Controls.dropdown:Combobox
+            source="{{_triggerSource}}"
+            keyProperty="title"
+            placeholder="select"
+            displayProperty="title"
+            selectedKey="{{_selectedTrigger}}"
+            on:selectedKeyChanged="changeTrigger()"
+            attr:class="ControlsDemo-Previewer__trigger"
+    />
+    <Controls.scroll:Container attr:style="height: 400px;">
+        <ws:for data="image in _images">
+            <div>
+                <Controls.popup:PreviewerTarget attr:class="ControlsDemo-Previewer__previewer"
+                                                on:dblClick="_clickHandler(image)"
+                                                name="{{image}}"
+                                                trigger="{{_trigger}}" trigger_1="{{_options.previewerTrigger}}">
+                    <ws:content>
+                        <img id="target_{{image}}" src="{{_resourceRoot}}Controls-demo/Previewer/image/{{image}}.png"/>
+                    </ws:content>
+                    <ws:template>
+                        <Controls.popupTemplate:Dialog>
+                            <ws:bodyContentTemplate>
+                                <div id="popup_{{image}}" class="ws-flexbox ws-flex-column" attr:style="padding: 50px; padding-top: 20px; align-items: center; border: 2px solid red; ">
+                                    <Controls.toolbars:View
+                                            name="myToolbar"
+                                            parentProperty="parent"
+                                            nodeProperty="@parent"
+                                            keyProperty="id"
+                                            source="{{_getMemorySource(_defaultItemsWithoutToolbutton)}}"
+                                            popupClassName="controls-Toolbar_test_popupClassName"
+                                            itemsSpacing="big"
+                                    />
+                                    <Controls.popup:PreviewerTarget attr:class="controlsDemo__margin-top"
+                                                                    on:dblClick="_clickHandler(image)"
+                                                                    trigger="hover">
+                                        <ws:content>
+                                            <img src="{{_resourceRoot}}Controls-demo/Previewer/image/{{image}}.png" style="height: 150px; width: 150px;"/>
+                                        </ws:content>
+                                        <ws:template>
+                                            <div class="ControlsDemo-Previewer__previewer_name">{{image}}</div>
+                                        </ws:template>
+                                    </Controls.popup:PreviewerTarget>
+                                </div>
+                            </ws:bodyContentTemplate>
+                        </Controls.popupTemplate:Dialog>
+                    </ws:template>
+                </Controls.popup:PreviewerTarget>
+            </div>
+        </ws:for>
+        <div style="height: 400px;"></div>
+    </Controls.scroll:Container>
 </div>
