@@ -199,6 +199,8 @@ var
             return cells;
         },
 
+        // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+        // И перейти на detection после лечения https://online.sbis.ru/opendoc.html?guid=c058ed70-f505-4861-a906-96453ae6485f
         setGridSupportStatus(self: GridView, useTableInOldBrowsers: boolean): void {
             self._isNoGridSupport = GridLayoutUtil.isNoGridSupport();
             self._isPartialGridSupport = GridLayoutUtil.isPartialGridSupport();

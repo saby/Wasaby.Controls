@@ -1622,6 +1622,17 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isFalse(gridViewModel.isMultyHeader([{startRow: 1, endRow: 2}]),"simple header");
             assert.isTrue(gridViewModel.isMultyHeader([{startRow: 1, endRow: 3}]),"multyHeader header");
          });
+
+         it('right breadcrumbs colspan for table layout', function() {
+
+            const gridViewModel = new gridMod.GridViewModel({...cfg, multiSelectVisibility: 'visible'});
+            gridViewModel._shouldUseTableLayout = true;
+            gridViewModel._isMultyHeader = true;
+            gridViewModel._headerRows[0][1].isBreadCrumbs = true;
+
+            assert.equal(2, gridViewModel.getCurrentHeaderColumn(0, 1).colSpan);
+         });
+
          it('_prepareHeaderColumns', function() {
             gridViewModel._headerRows = [];
             // gridViewModel._prepareHeaderColumns(gridHeader, false);
@@ -2157,14 +2168,18 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
       describe('partial grid support', () => {
          let
              nativeIsPartialGridSupport,
+             nativeIsFullGridSupport,
              model;
 
          before(() => {
             nativeIsPartialGridSupport = GridLayoutUtil.isPartialGridSupport;
             GridLayoutUtil.isPartialGridSupport = () => true;
+            nativeIsFullGridSupport = GridLayoutUtil.isFullGridSupport;
+            GridLayoutUtil.isFullGridSupport = () => false;
          });
          after(() => {
             GridLayoutUtil.isPartialGridSupport = nativeIsPartialGridSupport;
+            GridLayoutUtil.isFullGridSupport = nativeIsFullGridSupport;
          });
 
          beforeEach(() => {
