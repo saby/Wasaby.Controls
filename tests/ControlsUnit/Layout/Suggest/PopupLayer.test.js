@@ -25,7 +25,6 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
          const resultOpenConfig = Object.assign({
             opener: layer,
             actionOnScroll: 'close',
-            zIndex: undefined,
             target: undefined
          }, resultPopupOptions);
          let openedWithConfig;
@@ -45,8 +44,10 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
             targetPoint: {side: 'test'}
          });
 
-         assert.deepEqual(resultPopupOptions, layer._popupOptions);
-         assert.deepEqual(resultOpenConfig, openedWithConfig);
+         assert.deepStrictEqual(resultPopupOptions, layer._popupOptions);
+         
+         delete openedWithConfig.zIndex;
+         assert.deepStrictEqual(resultOpenConfig, openedWithConfig);
       });
 
       it('_resizeCallback', function() {
