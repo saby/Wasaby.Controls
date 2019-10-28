@@ -190,7 +190,7 @@ var _private = {
     },
 
     getKeysUnloadedItems: function(config, value) {
-        let selectedKeys = value instanceof Array ? value : [value];
+        let selectedKeys = value instanceof Object ? value : [value];
         let flattenKeys = factory(selectedKeys).flatten().value();
         let newKeys = [];
         factory(flattenKeys).each((key) => {
@@ -382,7 +382,7 @@ var _private = {
         let resultSelectedKeys = {};
         folderIds.forEach((parentKey, index) => {
             // selectedKeys - { folderId1: [selected keys for folder] , folderId2: [selected keys for folder], ... }
-            let nodeSelectedKeys = selectedKeys[parentKey];
+            let nodeSelectedKeys = selectedKeys[parentKey] || [];
             // if folder is selected, delete other keys
             if (nodeSelectedKeys.includes(parentKey)) {
                 resultSelectedKeys[parentKey] = [parentKey];
