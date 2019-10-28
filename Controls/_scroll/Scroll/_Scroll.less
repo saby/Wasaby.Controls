@@ -92,6 +92,9 @@
 
 .controls-Scroll__content_hideNativeScrollbar::-webkit-scrollbar {
    width: 0px;
+   // It's Magic. Only these two styles together allows to hide the scroll on the iPad.
+   -webkit-appearance: none;
+   display: none;
 }
 
 .controls-Scroll__content_scroll {
