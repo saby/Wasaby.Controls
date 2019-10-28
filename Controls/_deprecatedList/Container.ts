@@ -18,8 +18,8 @@ var FILTER_CONTEXT_FIELD = 'filterLayoutField';
 var FILTER_VALUE_FIELD = 'filter';
 
 var _private = {
-   getSearchController: function(self) {
-      var options = self._options;
+   getSearchController: function(self, options) {
+      var options = options || self._options;
 
       if (!self._searchController) {
          self._searchController = new _SearchController({
@@ -322,21 +322,16 @@ var List = Control.extend({
       let oldReverseList = this._options.reverseList;
 
       if (this._options.source !== newOptions.source || !isEqual(this._options.navigation, newOptions.navigation) || this._options.searchDelay !== newOptions.searchDelay) {
-         var currentFilter = _private.getCurrentFilter(this);
-          const oldSource = this._source;
-          const oldFilter = this._filter;
+         const currentFilter = _private.getCurrentFilter(this);
+         this._navigation = newOptions.navigation;
 
-         _private.resolveOptions(this, newOptions);
-
-         if (this._searchMode) {
-            // source and filter will updated after data loading
-            this._source = oldSource;
-            this._filter = oldFilter;
+         if (!this._searchMode) {
+            _private.resolveOptions(this, newOptions);
          }
 
          /* create searchController with new options */
          this._searchController = null;
-         _private.getSearchController(this).setFilter(currentFilter);
+         _private.getSearchController(this, newOptions).setFilter(currentFilter);
       }
       if (oldReverseList !== newOptions.reverseList) {
          _private.reverseSourceData(this);
