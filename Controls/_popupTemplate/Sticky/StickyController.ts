@@ -299,18 +299,15 @@ class StickyController extends BaseController {
         item.popupOptions = _private.prepareOriginPoint(item.popupOptions);
         const popupCfg = this._getPopupConfig(item);
         item.popupOptions.stickyPosition = _private.prepareStickyPosition(popupCfg);
-
-        // Error on ios when position: absolute container is created outside the screen and stretches the page
-        // which leads to incorrect positioning due to incorrect coordinates. + on page scroll event firing
-        // Treated position:fixed when positioning pop-up outside the screen
-        // Also only on ios 12.3/12.4 the page will scroll anyway, but not stably.
-        // Set 0 position for popup and set ws-invisible class before popup will mount
         item.position = {
-            top: 0,
-            left: 0,
+            top: -10000,
+            left: -10000,
             maxWidth: item.popupOptions.maxWidth || _private.getWindowWidth(),
-            position: 'fixed',
-            hidden: true
+
+            // Error on ios when position: absolute container is created outside the screen and stretches the page
+            // which leads to incorrect positioning due to incorrect coordinates. + on page scroll event firing
+            // Treated position:fixed when positioning pop-up outside the screen
+            position: 'fixed'
         };
     }
 
