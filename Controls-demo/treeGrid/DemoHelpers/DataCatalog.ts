@@ -2,33 +2,33 @@ export const Gadgets = {
     getDataSet() {
         return [
             {
-                id: 1, title: 'Node', 'Раздел': null, 'Раздел@': true, 'Раздел$': null, hasChild: true
+                id: 1, title: 'Node', Раздел: null, 'Раздел@': true, Раздел$: null, hasChild: true
             },
             {
-                id: 11, title: 'Node', 'Раздел': 1, 'Раздел@': true, 'Раздел$': null,
+                id: 11, title: 'Node', Раздел: 1, 'Раздел@': true, Раздел$: null
             },
             {
-                id: 111, title: 'Leaf', 'Раздел': 11, 'Раздел@': null, 'Раздел$': null,
+                id: 111, title: 'Leaf', Раздел: 11, 'Раздел@': null, Раздел$: null
             },
             {
-                id: 12, title: 'Hidden node', 'Раздел': 1, 'Раздел@': false, 'Раздел$': true,
+                id: 12, title: 'Hidden node', Раздел: 1, 'Раздел@': false, Раздел$: true
             },
             {
-                id: 13, title: 'Leaf', 'Раздел': 1, 'Раздел@': null, 'Раздел$': null,
+                id: 13, title: 'Leaf', Раздел: 1, 'Раздел@': null, Раздел$: null
             },
             {
-                id: 2, title: 'Node 2', 'Раздел': null, 'Раздел@': true, 'Раздел$': null, hasChild: true
+                id: 2, title: 'Node 2', Раздел: null, 'Раздел@': true, Раздел$: null, hasChild: true
             },
             {
-                id: 21, title: 'Leaf 21', 'Раздел': 2, 'Раздел@': null, 'Раздел$': null,
+                id: 21, title: 'Leaf 21', Раздел: 2, 'Раздел@': null, Раздел$: null
             },
             {
-                id: 3, title: 'Node 3', 'Раздел': null, 'Раздел@': true, 'Раздел$': null, hasChild: false
-            },
+                id: 3, title: 'Node 3', Раздел: null, 'Раздел@': true, Раздел$: null, hasChild: false
+            }
         ];
     },
 
-    getFlatData(){
+    getFlatData() {
         return [
             {
                 id: 1,
@@ -192,18 +192,18 @@ export const Gadgets = {
                 country: 'Тайвань',
                 parent: null,
                 type: false
-            },
+            }
 
-        ]
+        ];
     },
     getColumnsForFlat() {
         return [
             {
                 displayProperty: 'title'
             }
-        ]
+        ];
     },
-    getGridColumnsForFlat(){
+    getGridColumnsForFlat() {
         return [
             {
                 displayProperty: 'title'
@@ -214,7 +214,7 @@ export const Gadgets = {
             {
                 displayProperty: 'country'
             }
-        ]
+        ];
     },
     getColumnsWithFixedWidth() {
         return [
@@ -230,7 +230,7 @@ export const Gadgets = {
                 displayProperty: 'country',
                 width: '150px'
             }
-        ]
+        ];
     },
     getHeaderForFlat() {
         return [
@@ -243,7 +243,7 @@ export const Gadgets = {
             {
                 title: 'Страна производитель'
             }
-        ]
+        ];
     },
     getLongHeader: () => [
         {
@@ -286,5 +286,53 @@ export const Gadgets = {
             startColumn: 3,
             endColumn: 4
         }
-    ],
+    ]
+};
+
+export const VirtualScrollHasMore = {
+    // 70 записей. У первой записи 100 детей.
+    getData: (): Array<{
+        id: number,
+        title: string,
+        parent: number | null,
+        type: boolean | null
+    }> => {
+        const result = [];
+        const itemsCount = 70;
+
+        result[0] = {
+            id: 0,
+            title: `Запись первого уровня с id = ${0}. Много дочерних элементов.`,
+            parent: null,
+            type: true
+        };
+
+        for (let i = 1; i < itemsCount; i++) {
+            result.push(
+                {
+                    id: i,
+                    title: `Запись первого уровня с id = ${i}. Без детей.`,
+                    parent: null,
+                    type: true
+                },
+                {
+                    id: itemsCount + i,
+                    title: `Запись второго уровня с id = ${itemsCount + i}`,
+                    parent: 0,
+                    type: null
+                },
+                {
+                    id: itemsCount + (2 * i),
+                    title: `Запись второго уровня с id = ${itemsCount + itemsCount + (2 * i)}`,
+                    parent: 0,
+                    type: null
+                },
+            );
+        }
+
+        return result.sort((a, b) => a.id > b.id ? 1 : -1);
+    },
+    getColumns: () => ([{
+        displayProperty: 'title'
+    }])
 };
