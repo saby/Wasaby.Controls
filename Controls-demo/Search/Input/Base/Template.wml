@@ -28,4 +28,13 @@
                                      attr:class="controlsDemo__searchButton"/>
         </div>
    </div>
+   <div class="controlsDemo__cell">
+        <div class="controlsDemo__search-tooltip">
+            <div class="controls-text-label_theme-{{_options.theme}}">search with tooltip</div>
+            <Controls.search:Input
+                     placeholder="Подсказка не умещается в поле поиска, при наведении есть тултип"
+                     tooltip="Подсказка не умещается в поле поиска, при наведении есть тултип"
+                     attr:class="controlsDemo__searchBase_field"/>
+        </div>
+   </div>
 </div>
