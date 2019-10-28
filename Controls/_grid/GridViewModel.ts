@@ -597,8 +597,18 @@ var
                 fixedColumns: `grid-column: ${start} / ${center}; -ms-grid-column: ${start}; -ms-grid-column-span: ${stickyColumnsCount}; z-index: 3;`,
                 scrollableColumns: `grid-column: ${center} / ${end}; -ms-grid-column: ${center}; -ms-grid-column-span: ${scrollableColumnsCount}; z-index: auto;`,
             };
-        }
+        },
 
+        // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+        // И перейти на detection после лечения https://online.sbis.ru/opendoc.html?guid=c058ed70-f505-4861-a906-96453ae6485f
+        setGridSupportStatus(self: GridViewModel, useTableInOldBrowsers: boolean): void {
+            self._isNoGridSupport = GridLayoutUtil.isNoGridSupport();
+            self._isPartialGridSupport = GridLayoutUtil.isPartialGridSupport();
+            self._isFullGridSupport = GridLayoutUtil.isFullGridSupport();
+
+            const canUseTableLayout = !!useTableInOldBrowsers || self._isNoGridSupport;
+            self._shouldUseTableLayout = canUseTableLayout && !self._isFullGridSupport;
+        }
     },
 
     GridViewModel = BaseViewModel.extend({
@@ -635,6 +645,7 @@ var
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
+            _private.setGridSupportStatus(this, cfg.useTableInOldBrowsers);
             this._onListChangeFn = function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
                 if (changesType === 'collectionChanged') {
                     this._ladder = _private.prepareLadder(this);
@@ -932,7 +943,10 @@ var
                 }
                 if (this._shouldUseTableLayout) {
                     headerColumn.rowSpan = endRow - startRow;
-                    headerColumn.colSpan = endColumn - startColumn;
+                    // Для хлебных крошек колспан проставляется выше и не зависит от мультишапки.
+                    if (!headerColumn.column.isBreadCrumbs) {
+                        headerColumn.colSpan = endColumn - startColumn;
+                    }
                 } else {
                     if (this.isStickyHeader()) {
                         offsetTop = cell.offsetTop ? cell.offsetTop : 0;
