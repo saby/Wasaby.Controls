@@ -589,8 +589,7 @@ var Filter = Control.extend({
                 rawData: _private.getPopupConfig(this, this._configs, this._source)
             });
             const popupOptions = {
-                template: this._options.panelTemplateName,
-                actionOnScroll: 'close'
+                template: this._options.panelTemplateName
             };
 
             if (name) {
@@ -615,7 +614,8 @@ var Filter = Control.extend({
                 historyId: this._options.historyId,
                 theme: this._options.theme
             },
-            target: this._container[0] || this._container
+            target: this._container[0] || this._container,
+            actionOnScroll: 'close'
         };
         this._children.StickyOpener.open(Merge(popupOptions, panelPopupOptions), this);
     },
