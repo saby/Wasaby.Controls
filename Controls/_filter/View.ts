@@ -311,7 +311,7 @@ var _private = {
             keyProperty = config.keyProperty;
 
         factory(selectedItems).each(function(item) {
-            if (!curItems.getRecordById(object.getPropertyValue(item, keyProperty))) {
+            if (item.has(keyProperty) && !curItems.getRecordById(object.getPropertyValue(item, keyProperty))) {
                 newItems.push(item);
             }
         });
