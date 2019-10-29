@@ -785,6 +785,15 @@ define(
                assert.deepStrictEqual(view._source[1].value, [3, 20, 28]);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'new item', title: 'new item, new item 2, Completed', hasMoreText: ', еще 2'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});
+               assert.strictEqual(view._configs.state.items.getCount(), 9);
+
+               newItems = new collection.RecordSet({
+                  keyProperty: 'key',
+                  rawData: [{key: 15, text: 'Completed'}] // without id field
+               });
+               eventResult.data = newItems;
+               view._resultHandler('resultEvent', eventResult);
+               assert.strictEqual(view._configs.state.items.getCount(), 9);
             });
 
             it('selectorResult selectorCallback', function() {
