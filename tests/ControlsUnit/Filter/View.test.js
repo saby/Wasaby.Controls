@@ -631,13 +631,14 @@ define(
             assert.deepEqual(view._source[0].value, []);
          });
 
-         it('_private:setPopupConfig', function() {
+         it('_private:getPopupConfig', function() {
             let isLoading = false;
             let source = Clone(defaultSource);
+            source[0].editorOptions.itemTemplate = 'new';
             let configs = {
                document: {
                   items: Clone(defaultItems[0]),
-                  displayProperty: 'title',
+                  itemTemplate: 'old',
                   keyProperty: 'id',
                   source: new sourceLib.Memory({
                      keyProperty: 'id',
@@ -661,8 +662,10 @@ define(
                _onSelectorTemplateResult: () => {}
             };
 
-            filter.View._private.getPopupConfig(self, configs, source);
+            let resultItems = filter.View._private.getPopupConfig(self, configs, source);
             assert.isTrue(isLoading);
+            assert.equal(resultItems[0].displayProperty, 'title');
+            assert.equal(resultItems[0].itemTemplate, 'new');
          });
 
          it('_beforeUpdate loadSelectedItems', function(done) {
