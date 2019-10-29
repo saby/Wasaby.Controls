@@ -3,7 +3,7 @@
  * @library Controls/popupTemplate
  * @includes CloseButton Controls/_popupTemplate/CloseButton
  * @includes Stack Controls/_popupTemplate/Stack
- * @includes StackHeader wml!Controls/_popupTemplate/Stack/resources/Header
+ * @includes Header wml!Controls/_popupTemplate/Stack/resources/Header
  * @includes Dialog Controls/_popupTemplate/Dialog
  * @includes Confirmation Controls/popupConfirmation
  * @includes InfoBox Controls/_popupTemplate/InfoBox
@@ -20,7 +20,7 @@
  * @library Controls/popupTemplate
  * @includes CloseButton Controls/_popupTemplate/CloseButton
  * @includes Stack Controls/_popupTemplate/Stack
- * @includes StackHeader wml!Controls/_popupTemplate/Stack/resources/Header
+ * @includes Header wml!Controls/_popupTemplate/Stack/resources/Header
  * @includes Dialog Controls/_popupTemplate/Dialog
  * @includes Confirmation Controls/popupConfirmation
  * @includes InfoBox Controls/_popupTemplate/InfoBox
@@ -34,7 +34,7 @@
 
 import CloseButton = require('Controls/_popupTemplate/CloseButton');
 import Stack = require('Controls/_popupTemplate/Stack');
-import StackHeader = require('wml!Controls/_popupTemplate/Stack/resources/Header');
+import Header = require('wml!Controls/_popupTemplate/Stack/resources/Header');
 import Dialog = require('Controls/_popupTemplate/Dialog');
 import { Template as Confirmation, DialogTemplate as ConfirmationDialog } from 'Controls/popupConfirmation';
 import InfoBox = require('Controls/_popupTemplate/InfoBox');
@@ -58,7 +58,7 @@ import StackStrategy = require('Controls/_popupTemplate/Stack/Opener/StackStrate
 export {
    CloseButton,
    Stack,
-   StackHeader,
+   Header,
    Dialog,
    Confirmation,
    InfoBox,
