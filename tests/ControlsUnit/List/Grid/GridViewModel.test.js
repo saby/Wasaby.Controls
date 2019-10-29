@@ -2061,45 +2061,43 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             let itemData = {
                hasMultiSelect: false,
-               columns: [{}, {}, {}]
+               columns: [{}, {}, {}, {}]
             };
 
             assert.deepEqual(
-                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, undefined),
-                {
-                   left: `grid-column: 1 / 4; -ms-grid-column: 1; -ms-grid-column-span: 3;`,
-                   right: ''
-                }
+               gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData),
+               {
+                  left: 'grid-column-start: 1; grid-column-end: 5;',
+                  right: ''
+               }
             );
 
             assert.deepEqual(
-                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, 2),
-                {
-                   left: 'grid-column: 1 / 3; -ms-grid-column: 1; -ms-grid-column-span: 2;',
-                   right: 'grid-column: 3 / 4; -ms-grid-column: 3; -ms-grid-column-span: 1;'
-                }
+               gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, 2),
+               {
+                  left: 'grid-column-start: 1; grid-column-end: 4;',
+                  right: 'grid-column-start: 4; grid-column-end: 5;'
+               }
             );
 
             itemData.hasMultiSelect = true;
             itemData.columns = [{}, {}, {}, {}];
 
             assert.deepEqual(
-                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, undefined),
-                {
-                   left: `grid-column: 1 / 5; -ms-grid-column: 1; -ms-grid-column-span: 4;`,
-                   right: ''
-                }
+               gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData),
+               {
+                  left: 'grid-column-start: 1; grid-column-end: 5;',
+                  right: ''
+               }
             );
 
             assert.deepEqual(
-                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, 2),
-                {
-                   left: 'grid-column: 1 / 4; -ms-grid-column: 1; -ms-grid-column-span: 3;',
-                   right: 'grid-column: 4 / 5; -ms-grid-column: 4; -ms-grid-column-span: 1;'
-                }
+               gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, 2),
+               {
+                  left: 'grid-column-start: 1; grid-column-end: 4;',
+                  right: 'grid-column-start: 4; grid-column-end: 5;'
+               }
             );
-
-
          });
 
          it('getColspanForColumnScroll', function () {
