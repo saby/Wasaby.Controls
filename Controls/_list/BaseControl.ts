@@ -1803,9 +1803,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             let container = this._container[0] || this._container;
             container.addEventListener('dragstart', this._nativeDragStart);
         }
-        if (this._virtualScroll) {
-            this._setScrollItemContainer();
-        }
         _private.updateShadowMode(this);
     },
 
@@ -2021,6 +2018,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforePaint(): void {
+        if (this._virtualScroll && !this._virtualScroll.ItemsContainer) {
+            this._setScrollItemContainer();
+        }
         if (this._virtualScroll && this._itemsChanged) {
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);

@@ -817,6 +817,57 @@ define([
            assert.deepEqual(callStack, ['item_15', 'item_10', 'item_5']);
        });
 
+       it('set items container in virtual scroll', async function () {
+           const source = new sourceLib.Memory({
+                   keyProperty: 'key',
+                   data: (() => {
+                       let result = [];
+                       for (var i = 1; i <= 10; i++) {
+                           result.push({
+                               key: i
+                           });
+                       }
+                       return result;
+                   })()
+               }),
+               cfg = {
+                   viewModelConstructor: lists.ListViewModel,
+                   keyProperty: 'key',
+                   source: source,
+                   navigation: {
+                       view: 'infinity'
+                   },
+                   virtualScrolling: true
+               },
+               baseControl = new lists.BaseControl(cfg);
+
+           baseControl._children = {
+               listView: {
+                   getItemsContainer: function () {
+                       var childrenArr = [];
+                       for (var i = 1; i <= 10; i++) {
+                           childrenArr.push({
+                               offsetHeight: i
+                           });
+                       }
+                       return {
+                           children: childrenArr
+                       };
+                   }
+               }
+           };
+           baseControl.saveOptions(cfg);
+           await baseControl._beforeMount(cfg);
+           const native = baseControl._virtualScroll._updateItemsSizes;
+           baseControl._virtualScroll._updateItemsSizes = (startUpdateIndex, updateLength) => {
+               native.apply(baseControl._virtualScroll, [startUpdateIndex, updateLength, true]);
+           };
+           baseControl._beforePaint();
+           assert.deepEqual([
+               1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+           ], baseControl._virtualScroll._itemsHeights);
+       });
+
       it('moveMarker activates the control', async function() {
          const
             cfg = {
