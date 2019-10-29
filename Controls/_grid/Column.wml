@@ -33,6 +33,6 @@
         <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
     </ws:if>
     <ws:else>
-        <ws:partial template="cellContent"/>
+        <ws:partial template="cellContent" attr:class="controls-Grid__row-cell__content-item"/>
     </ws:else>
 </div>
