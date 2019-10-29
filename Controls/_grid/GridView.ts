@@ -39,7 +39,7 @@ var
 
         getGridTemplateColumns(columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
             // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-            const columnsWidths: string[] = (hasMultiSelect ? ['max-content'] : []).concat(columns.map(((column) => column.width || GridLayoutUtil.DEFAULT_COLUMN_WIDTH)));
+            const columnsWidths: string[] = ['max-content'].concat(columns.map(((column) => column.width || GridLayoutUtil.DEFAULT_COLUMN_WIDTH)));
             return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
         },
 
