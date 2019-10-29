@@ -1,12 +1,16 @@
 import { TemplateFunction } from 'UI/Base';
 
-import { Render as BaseRender, IRenderOptions } from 'Controls/listRender';
+import { default as BaseRender, IRenderOptions } from './Render';
 
-import template = require('wml!Controls/_tile/TileRender/TileRender');
-import defaultItemTemplate = require('wml!Controls/_tile/TileRender/resources/ItemTemplateWrapper');
+import template = require('wml!Controls/_listRender/Tile/Tile');
+import defaultItemTemplate = require('wml!Controls/_listRender/Tile/resources/ItemTemplateWrapper');
 
 import { TileCollection, TileCollectionItem } from 'Controls/display';
+import { debounce } from 'Types/function';
 import { SyntheticEvent } from 'Vdom/Vdom';
+import { TouchContextField } from 'Controls/context';
+
+const HOVERED_ITEM_CHANGE_DELAY = 150;
 
 export interface ITileRenderOptions extends IRenderOptions {
     listModel: TileCollection<unknown>;
@@ -20,10 +24,17 @@ export default class TileRender extends BaseRender {
     protected _animatedItem: TileCollectionItem<unknown> = null;
     protected _animatedItemTargetPosition: string;
 
+    private _debouncedSetHoveredItem: typeof TileRender.prototype._setHoveredItem;
+
     protected _beforeMount(options: ITileRenderOptions): void {
         super._beforeMount(options);
         this._templateKeyPrefix = `tile-render-${this.getInstanceId()}`;
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
+
+        this._debouncedSetHoveredItem = debounce(
+            this._setHoveredItem.bind(this),
+            HOVERED_ITEM_CHANGE_DELAY
+        ) as typeof TileRender.prototype._setHoveredItem;
     }
 
     protected _afterMount(options: ITileRenderOptions): void {
@@ -54,7 +65,7 @@ export default class TileRender extends BaseRender {
     }
 
     protected _resetHoverState(): void {
-        this._options.listModel.setHoveredItem(null);
+        this._setHoveredItem(null);
     }
 
     protected _onItemWheel(): void {
@@ -62,7 +73,7 @@ export default class TileRender extends BaseRender {
     }
 
     protected _onItemMouseMove(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
-        if (!item.isFixed() /* TODO && !_private.isTouch(this) && !this._listModel.getDragEntity() */) {
+        if (!item.isFixed() && !this._context.isTouch.isTouch /* && !this._listModel.getDragEntity() */) {
             // TODO Might be inefficient, can get called multiple times per hover. Should
             // be called immediately before or after the hovered item is set in the model,
             // but then we can't get the hover target element.
@@ -70,6 +81,20 @@ export default class TileRender extends BaseRender {
             this._setHoveredItemPosition(e, item);
         }
         super._onItemMouseMove(e, item);
+    }
+
+    protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
+        super._onItemMouseEnter(e, item);
+        if (!this._context.isTouch.isTouch) {
+            this._debouncedSetHoveredItem(item);
+        }
+    }
+
+    protected _onItemMouseLeave(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
+        super._onItemMouseLeave(e, item);
+        if (!this._context.isTouch.isTouch && !item.isActive()) {
+            this._debouncedSetHoveredItem(null);
+        }
     }
 
     protected _setHoveredItemPosition(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
@@ -126,5 +151,21 @@ export default class TileRender extends BaseRender {
             }
         }
         return result;
+    }
+
+    private _setHoveredItem(item: CollectionItem<unknown>): void {
+        // TODO Adding this to prevent constantly resetting null and
+        // causing version change. But version should only change when
+        // the state actually changes, so probably managers should
+        // keep track of the version and not the collection itself.
+        if (this._options.listModel.getHoveredItem() !== item) {
+            this._options.listModel.setHoveredItem(item);
+        }
+    }
+
+    static contextTypes() {
+        return {
+            isTouch: TouchContextField
+        };
     }
 }

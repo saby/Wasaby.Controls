@@ -1,4 +1,5 @@
-import Controller = require('Controls/_validate/Container');
+import Container from 'Controls/_validate/Container';
+import {TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/Selection');
 
 /**
@@ -12,25 +13,26 @@ import template = require('wml!Controls/_validate/Selection');
  * @author Красильников А.С.
  */
 
-      
+class Selection extends Container {
+    _template: TemplateFunction = template;
+    _shouldValidate: boolean;
 
-      const Selection = Controller.extend({
-         _template: template,
-         _deactivatedHandler: function() {
-            this._shouldValidate = true;
-            this._forceUpdate();
-         },
-         _selectedKeysChangedHandler: function(event, value) {
-            this._notify('selectedKeysChanged', [value]);
-            this._cleanValid();
-         },
+    _deactivatedHandler(): void {
+        this._shouldValidate = true;
+        this._forceUpdate();
+    }
 
-         _afterUpdate: function() {
-            if (this._shouldValidate) {
-               this._shouldValidate = false;
-               this.validate();
-            }
-         }
-      });
-      export = Selection;
-   
+    _selectedKeysChangedHandler(event: Event, value: string): void {
+        this._notify('selectedKeysChanged', [value]);
+        this._cleanValid();
+    }
+
+    protected _afterUpdate(): void {
+        if (this._shouldValidate) {
+            this._shouldValidate = false;
+            this.validate();
+        }
+    }
+}
+
+export default Selection;

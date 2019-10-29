@@ -778,7 +778,25 @@ var _private = {
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
             // далее может быть два варианта. След запрос вернет данные, тогда произойдет ресайз и мы проверим еще раз
             // след. запрос не вернет данные, а скажет ЕстьЕще: false тогда решать будет условие ниже, по высоте
-            if ((hasMoreData.up && !self._loadTriggerVisibility.up) || (hasMoreData.down && !self._loadTriggerVisibility.down)) {
+            let visbilityTriggerUp = self._loadTriggerVisibility.up;
+            let visbilityTriggerDown = self._loadTriggerVisibility.down;
+
+            // TODO оказалось что нельзя доверять состоянию триггеров
+            // https://online.sbis.ru/opendoc.html?guid=e0927a79-c520-4864-8d39-d99d36767b31
+            // поэтому приходится вычислять видны ли они на экране
+            if (!visbilityTriggerUp) {
+                visbilityTriggerUp = self._scrollTop > self._loadOffsetTop * 1.3;
+            }
+
+            if (!visbilityTriggerDown && self._viewSize && self._viewPortSize) {
+                let bottomScroll = self._viewSize - self._viewPortSize - self._scrollTop;
+                if (self._pagingVisible) {
+                    bottomScroll -= 32;
+                }
+                visbilityTriggerDown = bottomScroll < self._loadOffsetBottom * 1.3;
+            }
+
+            if ((hasMoreData.up && !visbilityTriggerUp) || (hasMoreData.down && !visbilityTriggerDown)) {
                 result = true;
             }
         }
@@ -1009,6 +1027,8 @@ var _private = {
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, params.scrollTop);
         }
+
+        self._scrollTop = params.scrollTop;
     },
 
     getIntertialScrolling: function(self): IntertialScrolling {
@@ -1588,6 +1608,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _menuIsShown: null,
     _viewSize: null,
     _viewPortSize: null,
+    _scrollTop: 0,
     _popupOptions: null,
 
     //Variables for paging navigation
@@ -1781,9 +1802,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._options.itemsDragNDrop) {
             let container = this._container[0] || this._container;
             container.addEventListener('dragstart', this._nativeDragStart);
-        }
-        if (this._virtualScroll) {
-            this._setScrollItemContainer();
         }
         _private.updateShadowMode(this);
     },
@@ -2000,6 +2018,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforePaint(): void {
+        if (this._virtualScroll && !this._virtualScroll.ItemsContainer) {
+            this._setScrollItemContainer();
+        }
         if (this._virtualScroll && this._itemsChanged) {
             this._virtualScroll.updateItemsSizes();
             _private.applyPlaceholdersSizes(this);
@@ -2178,6 +2199,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var direction = childEvent.nativeEvent.direction;
         this._children.itemActionsOpener.close();
 
+        const isSwiped = this._options.useNewModel ? itemData.isSwiped() : itemData.isSwiped;
+
         /**
          * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
          * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
@@ -2187,29 +2210,36 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
          * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
          * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
          */
-        if (direction === 'right' && !itemData.isSwiped && typeof this._options.selectedKeysCount !== 'undefined') {
+        if (direction === 'right' && !isSwiped && typeof this._options.selectedKeysCount !== 'undefined') {
+            const key = this._options.useNewModel ? itemData.getId() : itemData.key;
+            const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
             /**
              * After the right swipe the item should get selected.
              * But, because selectionController is a component, we can't create it and call it's method in the same event handler.
              */
             this._needSelectionController = true;
             this._delayedSelect = {
-                key: itemData.key,
-                status: itemData.multiSelectStatus
+                key,
+                status: multiSelectStatus
             };
 
+            // TODO Right swiping for new model
             //Animation should be played only if checkboxes are visible.
             if (this._options.multiSelectVisibility !== 'hidden') {
                 this.getViewModel().setRightSwipedItem(itemData);
             }
         }
         if (direction === 'right' || direction === 'left') {
-            var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
-            this._listViewModel.setMarkedKey(newKey);
+            if (this._options.useNewModel) {
+                this._listViewModel.setMarkedItem(itemData);
+            } else {
+                var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
+                this._listViewModel.setMarkedKey(newKey);
+            }
             this._listViewModel.setActiveItem(itemData);
         }
-        let actionsItem = itemData.actionsItem;
-        if (direction === 'left' && this._hasItemActions) {
+        const actionsItem = this._options.useNewModel ? itemData : itemData.actionsItem;
+        if (direction === 'left' && this._hasItemActions && !this._options.useNewModel) {
             this._children.itemActions.updateItemActions(actionsItem);
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8

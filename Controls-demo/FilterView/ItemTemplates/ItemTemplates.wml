@@ -1,0 +1,39 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label_theme-{{_options.theme}}">default itemTemplate</div>
+      <Controls.filter:View source="{{_source}}"
+                            alignment="left"
+                            detailPanelTemplateName="Controls-demo/FilterView/resources/Panel"
+                            panelTemplateName="Controls/filterPopup:SimplePanel">
+      </Controls.filter:View>
+   </div>
+
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label_theme-{{_options.theme}}">custom itemTemplate beforeContentTemplate=null</div>
+      <Controls.filter:View source="{{_source}}"
+                            alignment="left"
+                            detailPanelTemplateName="Controls-demo/FilterView/resources/Panel"
+                            panelTemplateName="Controls/filterPopup:SimplePanel">
+         <ws:itemTemplate>
+            <ws:partial template="Controls/filter:ViewItemTemplate"
+                        beforeContentTemplate="{{null}}">
+            </ws:partial>
+         </ws:itemTemplate>
+      </Controls.filter:View>
+   </div>
+
+   <div class="controlsDemo__cell">
+      <div class="controls-text-label_theme-{{_options.theme}}">custom itemTemplate change display text</div>
+      <Controls.filter:View source="{{_source}}"
+                            alignment="left"
+                            detailPanelTemplateName="Controls-demo/FilterView/resources/Panel"
+                            panelTemplateName="Controls/filterPopup:SimplePanel">
+         <ws:itemTemplate>
+            <ws:partial template="Controls/filter:ViewItemTemplate"
+                        text="{{itemTemplate.itemName === 'category' ? ('Category: ' + itemTemplate.text) :
+                           itemTemplate.itemName === 'document' ? ('Documents: ' + itemTemplate.text) : itemTemplate.text}}">
+            </ws:partial>
+         </ws:itemTemplate>
+      </Controls.filter:View>
+   </div>
+</div>

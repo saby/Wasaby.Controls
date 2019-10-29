@@ -126,21 +126,15 @@ var
                 preparedClasses = '';
 
             // Колонки
-            if (params.multiSelectVisibility ? params.columnIndex > 1 : params.columnIndex > 0) {
+
+            if (params.columnIndex > 1) {
                 preparedClasses += (cellPadding && cellPadding.left ? ` controls-Grid__cell_spacingLeft_${cellPadding.left}` : ' controls-Grid__cell_spacingLeft') + `_theme-${theme}`;
             }
-            if (params.columnIndex < params.columns.length - 1) {
-                preparedClasses += (cellPadding && cellPadding.right ? ` controls-Grid__cell_spacingRight_${cellPadding.right}` : ' controls-Grid__cell_spacingRight') + `_theme-${theme}`;
-            }
-
-            // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
             if (params.columnIndex === 0 && !params.multiSelectVisibility) {
-                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.itemPadding.left || 'default').toLowerCase() + `_theme-${theme}`;
+                preparedClasses += ' controls-Grid__cell_firstSpacingColumn_' + (params.itemPadding.left || 'default').toLowerCase() + `_theme-${theme}`;
             }
-
-            // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-            if (params.isBreadCrumbs) {
-               preparedClasses += ' controls-Grid__cell_spacingFirstCol_null' + `_theme-${theme}`;
+            if (params.columnIndex > 0 && params.columnIndex < params.columns.length - 1) {
+                preparedClasses += (cellPadding && cellPadding.right ? ` controls-Grid__cell_spacingRight_${cellPadding.right}` : ' controls-Grid__cell_spacingRight') + `_theme-${theme}`;
             }
 
             // Стиль колонки
@@ -155,7 +149,6 @@ var
                 preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase() + `_theme-${theme}`;
             }
 
-
             return preparedClasses;
         },
         getPaddingHeaderCellClasses: function(params, theme) {
@@ -163,14 +156,16 @@ var
             const { multiSelectVisibility, columnIndex, columns,
                 rowIndex, itemPadding, isBreadCrumbs, style, maxEndColumn, cell: { endColumn } } = params;
             if (rowIndex === 0) {
-                if (multiSelectVisibility ? columnIndex > 1 : columnIndex > 0) {
+                if (columnIndex > 1) {
                     preparedClasses += ' controls-Grid__cell_spacingLeft' + `_theme-${theme}`;
+
                 }
             } else {
                 preparedClasses += ' controls-Grid__cell_spacingLeft' + `_theme-${theme}`;
             }
 
-            if (columnIndex < columns.length - 1 || (maxEndColumn && endColumn < maxEndColumn)) {
+
+            if ((columnIndex > 0 || isBreadCrumbs) && columnIndex < columns.length - 1 || (maxEndColumn && endColumn < maxEndColumn)) {
                 preparedClasses += ' controls-Grid__cell_spacingRight' + `_theme-${theme}`;
             }
             // Отступ для последней колонки
@@ -188,15 +183,12 @@ var
 
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
             if (columnIndex === 0 && !multiSelectVisibility && rowIndex === 0 && !isBreadCrumbs) {
-                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (itemPadding.left || 'default').toLowerCase() + `_theme-${theme}`;
+                preparedClasses += ' controls-Grid__cell_firstSpacingColumn_' + (itemPadding.left || 'default').toLowerCase() + `_theme-${theme}`;
             }
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-            if (isBreadCrumbs) {
-                preparedClasses += ' controls-Grid__cell_spacingFirstCol_null' + `_theme-${theme}`;
-                if (params.multiSelectVisibility && !params.isTableLayout) {
-                    preparedClasses += ` controls-Grid__cell_spacingBackButton_with_multiSelection_theme-${theme}`;
-                }
+            if (isBreadCrumbs && params.multiSelectVisibility && !params.isTableLayout) {
+                preparedClasses += ' controls-Grid__cell_spacingBackButton_with_multiSelection' + `_theme-${theme}`;
             }
             // Стиль колонки
             preparedClasses += ' controls-Grid__cell_' + (style || 'default');
@@ -567,20 +559,26 @@ var
             right: string
         } {
 
-            let
-                start = 1,
-                center = columnAlignGroup + (itemData.hasMultiSelect ? 1 : 0) + 1,
-                stop = itemData.columns.length + 1,
-                result = {right: '', left: ''};
+            const center = columnAlignGroup + 1;
+            const stop = itemData.columns.length;
+            const result = {right: '', left: ''};
 
             if (columnAlignGroup) {
-                result.left = `grid-column: ${start} / ${center}; -ms-grid-column: ${start}; -ms-grid-column-span: ${center - 1};`;
-                result.right = `grid-column: ${center} / ${stop}; -ms-grid-column: ${center}; -ms-grid-column-span: ${stop - center};`;
+                result.left = GridLayoutUtil.getColumnStyles({
+                    columnStart: 0,
+                    columnEnd: center
+                });
+                result.right = GridLayoutUtil.getColumnStyles({
+                    columnStart: center,
+                    columnEnd: stop
+                });
             } else {
-                result.left = `grid-column: ${start} / ${stop}; -ms-grid-column: ${start}; -ms-grid-column-span: ${stop - 1};`;
+                result.left = GridLayoutUtil.getColumnStyles({
+                    columnStart: 0,
+                    columnEnd: stop
+                });
             }
-
-            return result
+            return result;
         },
 
         getColspanForColumnScroll(self): {
@@ -752,10 +750,8 @@ var
                 this._isMultiHeader = this.isMultiHeader(columns);
                 this._headerRows = getRowsArray(columns, multiSelectVisibility, this._isMultiHeader);
                 [this._maxEndRow, this._maxEndColumn] = getMaxEndRow(this._headerRows);
-            } else if (multiSelectVisibility) {
-                this._headerRows = [{}];
             } else {
-                this._headerRows = [];
+                this._headerRows = [{}];
             }
             this._multiHeaderOffset = this._headerRows.length ? this._headerRows.length - 1 : 0;
             this.resetHeaderRows();
@@ -1032,13 +1028,8 @@ var
             );
         },
 
-        _prepareResultsColumns: function(columns, multiSelectVisibility) {
-            if (multiSelectVisibility) {
-                this._resultsColumns = [{}].concat(columns);
-            } else {
-                this._resultsColumns = columns;
-            }
-
+        _prepareResultsColumns: function(columns) {
+            this._resultsColumns = [{}].concat(columns);
             this.resetResultsColumns();
         },
 
@@ -1117,7 +1108,7 @@ var
         _setColumns(columns: IGridColumn[]): void {
             this._columns = this._prepareColumns(columns);
             this._ladder = _private.prepareLadder(this);
-            this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
+            this._prepareResultsColumns(this._columns);
             this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             this._columnsVersion++;
         },
@@ -1174,7 +1165,7 @@ var
             } else {
                 this._prepareHeaderColumns(this._header, hasMultiSelect);
             }
-            this._prepareResultsColumns(this._columns, hasMultiSelect);
+            this._prepareResultsColumns(this._columns);
         },
 
         hasItemById: function(id, keyProperty) {
@@ -1367,20 +1358,8 @@ var
             current.getMarkerClasses = (rowSeparatorVisibility): string => {
                 let classes = ' controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-' + self._options.theme;
 
-                if (rowSeparatorVisibility) {
-                    classes += ' controls-GridView-with-rowSeparator_item_marker';
-                } else {
-                    classes += ' controls-GridView-without-rowSeparator_item_marker';
-                }
-                classes += '_theme-' + self._options.theme;
+            current.columns = [{}].concat(this._columns);
 
-                return superGetMarkerClasses.apply(this) + classes;
-            }
-            if (current.multiSelectVisibility !== 'hidden') {
-                current.columns = [{}].concat(this._columns);
-            } else {
-                current.columns = this._columns;
-            }
 
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 

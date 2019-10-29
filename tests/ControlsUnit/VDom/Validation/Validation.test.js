@@ -102,7 +102,7 @@ define([
 
          FC.destroy();
       });
-      it('activateFirstValidField', () => {
+      it('activateFirstValidField', (done) => {
          let FC = new validateMod.Controller();
          let validator1 = getValidator();
          let validator2 = getValidator(null, true);
@@ -110,10 +110,12 @@ define([
          let validator4 = getValidator('Error');
 
          FC._validates.push(validator1, validator2, validator3, validator4);
-         FC.submit();
-         assert.equal(validator3._activateCall, true);
+         FC.submit().then(() => {
+            assert.equal(validator3._activateCall, true);
+            FC.destroy();
+            done();
+         });
 
-         FC.destroy();
       });
 
       it('setValidationResult', () => {

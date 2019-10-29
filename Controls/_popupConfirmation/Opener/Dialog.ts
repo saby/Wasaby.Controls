@@ -26,6 +26,7 @@ import template = require('wml!Controls/_popupConfirmation/Opener/Dialog/Dialog'
  * @private
  * @author Красильников А.С.
  * @mixes Controls/_popupConfirmation/Opener/Dialog/DialogStyles
+ * @demo Controls-demo/Popup/Confirmation/Template
  */
 
 /**

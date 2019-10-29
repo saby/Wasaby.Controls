@@ -406,9 +406,11 @@ var _Controller = Control.extend({
       };
 
       const itemsLoadCallback = (items: RecordSet): void => {
-         if (items.getCount() > 1 || items.getCount() === 1 && this._options.emptyText) {
+         const count = items.getCount();
+
+         if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerTemplate)) {
             open();
-         } else if (items.getCount() === 1) {
+         } else if (count === 1) {
             this._notify('selectedItemsChanged', [
                [items.at(0)]
             ]);

@@ -8,8 +8,8 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
       });
 
       it('_onResult', function() {
-         var layer = new PopupLayer.default();
-         var resultPopupOptions = {
+         const layer = new PopupLayer.default();
+         const resultPopupOptions = {
             direction: {
                vertical: 'test',
                horizontal: 'test'
@@ -22,8 +22,21 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
             className: 'controls-Suggest__suggestionsContainer_popup_test',
             fittingMode: 'fixed'
          };
+         const resultOpenConfig = Object.assign({
+            opener: layer,
+            actionOnScroll: 'close',
+            target: undefined
+         }, resultPopupOptions);
+         let openedWithConfig;
 
          layer._popupOptions = {};
+         layer._children = {
+            suggestPopup: {
+               open: (cfg) => {
+                  openedWithConfig = cfg;
+               }
+            }
+         };
 
          layer._onResult({
             verticalAlign: {side: 'test', offset: 10},
@@ -31,7 +44,10 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
             targetPoint: {side: 'test'}
          });
 
-         assert.deepEqual(resultPopupOptions, layer._popupOptions)
+         assert.deepStrictEqual(resultPopupOptions, layer._popupOptions);
+         
+         delete openedWithConfig.zIndex;
+         assert.deepStrictEqual(resultOpenConfig, openedWithConfig);
       });
 
       it('_resizeCallback', function() {

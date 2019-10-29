@@ -126,6 +126,44 @@ define(
             });
          });
 
+         it('_onFavoriteClick', () => {
+            const event = {
+               target: 'testTarget'
+            };
+            const favoriteItem = new entity.Model({
+               rawData: {
+                  id: 'testId',
+                  data: new entity.Model({
+                     rawData: {
+                        linkText: 'testLinkText',
+                        filterPanelItems: items1,
+                        globalParams: 0
+                     }
+                  })
+               }
+            });
+            const text = 'savedText';
+
+            let openConfig;
+
+            list._children = {
+               stickyOpener: {
+                  open: (cfg) => {
+                     openConfig = cfg;
+                  }
+               }
+            };
+            list._onFavoriteClick(event, favoriteItem, text);
+            assert.equal(openConfig.target, 'testTarget');
+            assert.deepEqual(openConfig.targetPoint, {
+               vertical: 'bottom',
+               horizontal: 'left'
+            });
+            assert.deepEqual(openConfig.direction, {
+               horizontal: 'left'
+            });
+         });
+
          describe('_private::mapByField', function() {
 
             it('map by resetValues', function() {

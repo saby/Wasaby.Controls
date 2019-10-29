@@ -15,12 +15,15 @@ import {RecordSet} from 'Types/collection';
 import {getItemsWithHistory, isHistorySource} from 'Controls/_filter/HistoryUtils';
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
+import * as defaultItemTemplate from 'wml!Controls/_filter/View/ItemTemplate';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  * Контрол для фильтрации данных. Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
  * Состоит из кнопки-иконки, строкового представления выбранного фильтра и параметров быстрого фильтра.
  * При клике на кнопку-иконку или строковое представления, открывается панель фильтров {@link Controls/filterPopup:DetailPanel}.
  * Клик на параметры быстрого фильтра открывает панель "Быстрых фильтров" {@link Controls/filterPopup:SimplePanel}.
+ * Подробное описание и инструкции по настройке контрола можно найти <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/'>здесь</a>
  * Здесь вы можете посмотреть <a href="/materials/demo-ws4-filter-view">демонстрационный пример</a>.
  *
  * @class Controls/_filter/View
@@ -29,6 +32,7 @@ import mergeSource from 'Controls/_filter/Utils/mergeSource';
  * @control
  * @public
  * @author Золотова Э.Е.
+ * @demo Controls-demo/FilterView/ItemTemplates/Index
  */
 
 /*
@@ -95,11 +99,12 @@ var _private = {
         return dateRangeItem;
     },
 
-    setPopupConfig: function(self, configs, items) {
+    getPopupConfig: function(self, configs, items) {
         var popupItems = [];
         factory(items).each(function(item) {
             if (_private.isFrequentItem(item)) {
-                var popupItem = configs[item.name];
+                var popupItem = CoreClone(configs[item.name]);
+                Merge(popupItem, item.editorOptions);
                 popupItem.id = item.name;
                 popupItem.selectedKeys = (item.value instanceof Object) ? item.value : [item.value];
                 popupItem.resetValue = (item.resetValue instanceof Object) ? item.resetValue : [item.resetValue];
@@ -307,7 +312,7 @@ var _private = {
             keyProperty = config.keyProperty;
 
         factory(selectedItems).each(function(item) {
-            if (!curItems.getRecordById(object.getPropertyValue(item, keyProperty))) {
+            if (item.has(keyProperty) && !curItems.getRecordById(object.getPropertyValue(item, keyProperty))) {
                 newItems.push(item);
             }
         });
@@ -435,17 +440,22 @@ var _private = {
         this._configs[result.id].initSelectorItems = result.selectedItems;
     },
 
-    isNeedReload: function(oldItems, newItems) {
+    isNeedReload(oldItems, newItems): boolean {
+        const optionsToCheck = ['source', 'filter', 'navigation'];
+        const getOptionsChecker = (oldItem, newItem) => {
+            return (changed, optName) => changed || !isEqual(oldItem.editorOptions[optName], newItem.editorOptions[optName]);
+        };
         let result = false;
+
         if (oldItems.length !== newItems.length) {
             result = true;
         } else {
             factory(oldItems).each((oldItem) => {
                 const newItem = _private.getItemByName(newItems, oldItem.name);
-                if (newItem && _private.isFrequentItem(oldItem) &&
-                    (!isEqual(oldItem.editorOptions.source, newItem.editorOptions.source) ||
-                        !isEqual(oldItem.editorOptions.filter, newItem.editorOptions.filter) ||
-                        !isEqual(oldItem.editorOptions.navigation, newItem.editorOptions.navigation))) {
+                const isFrequent = _private.isFrequentItem(oldItem);
+                if (newItem &&
+                    isFrequent &&
+                    (optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false) || isFrequent !== _private.isFrequentItem(newItem))) {
                     result = true;
                 }
             });
@@ -574,17 +584,18 @@ var Filter = Control.extend({
         }
     },
 
-    _openPanel: function(event, name) {
+    _openPanel(event: SyntheticEvent<'click'>, name?: string): void {
         if (this._options.panelTemplateName) {
-            let items = new RecordSet({
-                rawData: _private.setPopupConfig(this, this._configs, this._source)
+            const items = new RecordSet({
+                rawData: _private.getPopupConfig(this, this._configs, this._source)
             });
-            let popupOptions = {
-                template: this._options.panelTemplateName,
-                actionOnScroll: 'close'
+            const popupOptions = {
+                template: this._options.panelTemplateName
             };
+
             if (name) {
-                popupOptions.target = this._children[name];
+                const eventTarget =  event.currentTarget;
+                popupOptions.target = eventTarget.getElementsByClassName('js-controls-FilterView__target')[0];
                 popupOptions.className = 'controls-FilterView-SimplePanel-popup';
             } else {
                 popupOptions.className = 'controls-FilterView-SimplePanel__buttonTarget-popup';
@@ -604,7 +615,8 @@ var Filter = Control.extend({
                 historyId: this._options.historyId,
                 theme: this._options.theme
             },
-            target: this._container[0] || this._container
+            target: this._container[0] || this._container,
+            actionOnScroll: 'close'
         };
         this._children.StickyOpener.open(Merge(popupOptions, panelPopupOptions), this);
     },
@@ -689,7 +701,8 @@ var Filter = Control.extend({
 
 Filter.getDefaultOptions = function() {
     return {
-        alignment: 'right'
+        alignment: 'right',
+        itemTemplate: defaultItemTemplate
     };
 };
 

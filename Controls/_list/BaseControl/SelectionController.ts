@@ -1,9 +1,9 @@
 import Control = require('Core/Control');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import collection = require('Types/collection');
-import {isEqual} from 'Types/object';
 import Deferred = require('Core/Deferred');
 import template = require('wml!Controls/_list/BaseControl/SelectionController');
+import {isEqual} from 'Types/object';
 
 /**
  * @class Controls/_list/BaseControl/SelectionController
@@ -12,6 +12,8 @@ import template = require('wml!Controls/_list/BaseControl/SelectionController');
  * @author Авраменко А.С.
  * @private
  */
+
+type TChangeSelectionType = 'selectAll'|'unselectAll'|'toggleAll';
 
 var _private = {
     notifyAndUpdateSelection: function (self, oldSelectedKeys, oldExcludedKeys) {
@@ -68,10 +70,21 @@ var _private = {
         _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
     },
 
-    selectedTypeChangedHandler: function (typeName, limit) {
-        this._multiselection.setLimit(limit);
-        this._multiselection[typeName]();
-        _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
+    selectedTypeChangedHandler(typeName: TChangeSelectionType, limit?: number|void): void {
+        const selectedKeys = this._options.selectedKeys;
+        const excludedKeys = this._options.excludedKeys;
+        const items = this._options.items;
+        let needChangeSelection = true;
+
+        if (typeName === 'selectAll' && !selectedKeys.length && !excludedKeys.length && !items.getCount()) {
+            needChangeSelection = false;
+        }
+
+        if (needChangeSelection) {
+            this._multiselection.setLimit(limit);
+            this._multiselection[typeName]();
+            _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);
+        }
     },
 
     getMultiselection: function (options) {

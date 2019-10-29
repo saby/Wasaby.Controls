@@ -377,15 +377,18 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
 
                listLayout._searchMode = true;
                context.filterLayoutField.filter = {test: 'testFilter'};
+               let listLayoutSource = listLayout._source;
                listLayout._beforeUpdate(newOpts, context);
 
                assert.deepEqual(listLayout._searchController._options.navigation, newNavigation);
                assert.deepEqual(listLayout._searchController._options.filter, {test: 'testFilter'});
                assert.isTrue(listLayout._source !== newOpts.source);
+               assert.isTrue(listLayout._source === listLayoutSource);
 
                listLayout._filter = {scTest: 'scTest'};
                listLayout._beforeUpdate(newOpts, context);
                assert.deepEqual(listLayout._searchController.getFilter(), {test: 'testFilter'});
+               assert.isTrue(listLayout._source === listLayoutSource);
 
                done();
             }, 50);

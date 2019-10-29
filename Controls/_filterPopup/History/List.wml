@@ -46,7 +46,7 @@
    </ws:if>
 
    <ws:if data="{{ _options.saveMode === 'favorite' }}">
-      <Controls.popup:Dialog name="dialogOpener"
+      <Controls.popup:Sticky name="stickyOpener"
                              closeOnOutsideClick="{{true}}"
                              on:result="_editDialogResult()"
                              template="Controls/_filterPopup/History/_EditDialog"/>

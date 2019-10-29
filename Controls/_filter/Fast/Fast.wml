@@ -1,7 +1,9 @@
 <div class="controls-FastFilter_theme_{{_options.theme}}" name="fastFilter">
    <ws:for data="index, item in _items">
       <ws:if data="{{_configs[index]._items && _configs[index]._items.getCount()}}">
-         <div class="controls-FastFilter__wrapper_theme_{{_options.theme}} controls-FastFilter__wrapper_state{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}}">
+         <div class="controls-FastFilter__wrapper_theme_{{_options.theme}}
+                     controls-FastFilter__wrapper_state{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}}
+                     {{ _needShowCross(item) ? 'controls-FastFilter__wrapper-changed'}}">
             <div class="controls-FastFilter__block_theme_{{_options.theme}}" on:click="_open(item, index)">
                <div class="controls-FastFilter__iconArrow_theme_{{_options.theme}} icon-DayForward controls-FastFilter__iconArrow_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}}"></div>
                <div class="controls-FastFilter__text-wrapper_theme_{{_options.theme}} controls-FastFilter__text_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}_theme_{{_options.theme}}"
