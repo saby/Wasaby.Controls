@@ -547,10 +547,10 @@ define(
             var validationResult = [null];
             assert.isTrue(filterPopup.DetailPanel._private.isPassedValidation(validationResult));
 
-            validationResult = [null, 'Дата заполнена некорректно.'];
+            validationResult = [null, 'Дата заполнена некорректно'];
             assert.isFalse(filterPopup.DetailPanel._private.isPassedValidation(validationResult));
 
-            validationResult = ['Дата заполнена некорректно.', null];
+            validationResult = ['Дата заполнена некорректно', null];
             assert.isFalse(filterPopup.DetailPanel._private.isPassedValidation(validationResult));
          });
       });
