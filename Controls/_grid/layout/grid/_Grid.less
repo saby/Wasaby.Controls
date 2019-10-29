@@ -442,10 +442,16 @@
 
 .controls-Grid__row-cell__content {
    width: 100%;
-   display: inline-flex;
    align-items: baseline;
+   display: inline-flex;
    min-width: 0; //https://css-tricks.com/flexbox-truncated-text/
    flex-shrink: 1;
+}
+
+.controls-Grid__row-cell__content-item {
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   overflow: hidden;
 }
 
 //MasterList styles
