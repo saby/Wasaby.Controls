@@ -79,27 +79,30 @@ var View = Control.extend({
     },
 
     _correctSelectedKey: function (options) {
-        this._selectedKey = null;
+        let selectedKey;
         factory(options.items).each((item) => {
             if (item.get) {
                 if (options.selectedKey === item.get('id') || options.selectedKey === item.get('key')) {
-                    this._selectedKey = options.selectedKey;
+                    selectedKey = options.selectedKey;
                 }
             } else {
                 if (options.selectedKey === item.id || options.selectedKey === item.key) {
-                    this._selectedKey = options.selectedKey;
+                    selectedKey = options.selectedKey;
                 }
             }
         });
 
-        if (!this._selectedKey) {
+        if (selectedKey === undefined) {
             IoC.resolve('ILogger').error(this._moduleName, 'Incorrect selectedKey');
             if (options.items instanceof Array) {
-                this._selectedKey = options.items[0].id || options.items[0].key;
+                selectedKey = options.items[0].id || options.items[0].key;
             } else {
-                this._selectedKey = options.items.at(0).get('id') || options.items.at(0).get('key');
+                selectedKey = options.items.at(0).get('id') || options.items.at(0).get('key');
             }
         }
+
+        // Меняю состояние 1 раз, чтобы не вызывать лишних циклов синхронизации
+        this._selectedKey = selectedKey;
     }
 });
 
