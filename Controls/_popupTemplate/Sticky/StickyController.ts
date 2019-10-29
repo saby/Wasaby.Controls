@@ -309,6 +309,12 @@ class StickyController extends BaseController {
             // Treated position:fixed when positioning pop-up outside the screen
             position: 'fixed'
         };
+
+        if (Env.detection.isMobileIOS && Env.detection.IOSVersion === 12) {
+            item.position.top = 0;
+            item.position.left = 0;
+            item.position.hidden = true;
+        }
     }
 
     prepareConfig(item, container) {
