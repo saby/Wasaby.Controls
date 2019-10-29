@@ -5,8 +5,14 @@
  *
  * @css @spacing_Lookup-multiLine-between-inputRenderWrapper-rightBorderLookup Интервал между оберткой контента и правой границей в режиме множественного выбора.
  * @css @min-height_Lookup-input-render_multiLine Минимальная высота контента в многострочном режиме.
- * @css @height_Lookup-input-wrapper Высота обертки над полем ввода.
- * @css @line-height_Lookup-input-wrapper Высота строки обертки над полем ввода.
+ * @css @height_Lookup-input-wrapper_default Высота обертки над полем ввода.
+ * @css @line-height_Lookup-input-wrapper_default Высота строки обертки над полем ввода.
+ * @css @height_Lookup-input-wrapper_l Высота обертки над полем ввода размера l.
+ * @css @line-height_Lookup-input-wrapper_l Высота строки обертки над полем ввода размера l.
+ * @css @height_Lookup-input-wrapper_xl Высота обертки над полем ввода размера xl.
+ * @css @line-height_Lookup-input-wrapper_xl Высота строки обертки над полем ввода размера xl.
+ * @css @height_Lookup-input-wrapper_2xl Высота обертки над полем ввода размера 2xl.
+ * @css @line-height_Lookup-input-wrapper_2xl Высота строки обертки над полем ввода размера 2xl.
  * @css @font-size_Lookup-showSelector Размер кнопки открывающей справочник.
  * @css @spacing_Lookup-between-showSelector-border Интервал между кнопкой отркывающей справочник и границами.
  * @css @color_Lookup-showSelector Цвет кнопки открывающей справочник.
