@@ -1344,11 +1344,7 @@ var
                 return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
             };
 
-            if (current.multiSelectVisibility !== 'hidden') {
-                current.columns = [{}].concat(this._columns);
-            } else {
-                current.columns = [{ width: '20px'}].concat(this._columns);
-            }
+            current.columns = [{}].concat(this._columns);
 
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
