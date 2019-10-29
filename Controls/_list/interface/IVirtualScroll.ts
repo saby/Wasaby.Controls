@@ -53,3 +53,7 @@
  * </ul>
  * <b>Note for Controls/Grid:View and Controls/TreeGrid:View</b>: the value of the virtualPageSize should be less then 1000/total columns count in grid.
  */
+
+export type IDirection = 'up' | 'down';
+export type IVirtualScrollMode = 'remove' | 'hide';
+export type IVirtualPageSizeMode = 'static' | 'dynamic';

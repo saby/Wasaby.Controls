@@ -165,6 +165,8 @@ var ListView = BaseControl.extend(
             if (this._options.markedKey === undefined && (this._options.markerVisibility === 'always' || this._options.markerVisibility === 'visible')) {
                 this._notify('markedKeyChanged', [this._listModel.getMarkedKey()]);
             }
+
+            this._notify('itemsContainerReady', [this.getItemsContainer()]);
         },
 
         _afterRender: function() {

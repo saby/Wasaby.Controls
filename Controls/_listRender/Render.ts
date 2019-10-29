@@ -30,6 +30,10 @@ export default class Render extends Control<IRenderOptions> {
         this._itemTemplate = options.itemTemplate || defaultItemTemplate;
     }
 
+    protected _afterMount(): void {
+        this._notify('itemsContainerReady', [this.getItemsContainer()]);
+    }
+
     getItemsContainer(): HTMLDivElement {
         return this._children.itemsContainer;
     }

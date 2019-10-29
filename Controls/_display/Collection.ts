@@ -34,6 +34,8 @@ import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
 import HoverManager from './utils/HoverManager';
 import SwipeManager from './utils/SwipeManager';
+import HideScrollManager from './utils/HideScrollManager';
+import {IVirtualScrollMode} from 'Controls/list';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -98,6 +100,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     editingConfig: any;
     unique?: boolean;
     importantItemProperties?: string[];
+    virtualScrollMode: IVirtualScrollMode;
 }
 
 export interface ICollectionCounters {
@@ -152,6 +155,11 @@ function onCollectionChange<T>(
             this._reBuild(true);
             projectionNewItems = toArray(this);
             this._notifyBeforeCollectionChange();
+
+            if (this._virtualScrollMode === 'hide') {
+                this._virtualScrollManager.reset();
+            }
+
             this._notifyCollectionChange(
                 action,
                 projectionNewItems,
@@ -607,7 +615,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _markerManager: MarkerManager;
     protected _editInPlaceManager: EditInPlaceManager;
     protected _itemActionsManager: ItemActionsManager;
-    protected _virtualScrollManager: VirtualScrollManager;
+    protected _virtualScrollManager: VirtualScrollManager | HideScrollManager;
+    protected _virtualScrollMode: IVirtualScrollMode;
     protected _hoverManager: HoverManager;
     protected _swipeManager: SwipeManager;
 
@@ -658,10 +667,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         this._stopIndex = this.getCount();
 
+        this._virtualScrollMode = options.virtualScrollMode;
+
         this._markerManager = new MarkerManager(this);
         this._editInPlaceManager = new EditInPlaceManager(this);
         this._itemActionsManager = new ItemActionsManager(this);
-        this._virtualScrollManager = new VirtualScrollManager(this);
+        this._virtualScrollManager = options.virtualScrollMode === 'remove' ?
+            new VirtualScrollManager(this) : new HideScrollManager(this);
         this._hoverManager = new HoverManager(this);
         this._swipeManager = new SwipeManager(this);
     }
@@ -2059,6 +2071,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (newStart !== this._startIndex || newStop !== this._stopIndex) {
             this._startIndex = newStart;
             this._stopIndex = newStop;
+
+            if (this._virtualScrollMode === 'hide') {
+                this._virtualScrollManager.applyRenderedItems(this._startIndex, this._stopIndex);
+            }
+
             this._nextVersion();
             return true;
         }
@@ -2105,6 +2122,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setHasMoreData(hasMoreData: boolean): void {
         this._$hasMoreData = hasMoreData;
+    }
+
+    isDisplaying(index: number): boolean {
+        if (this._virtualScrollMode === 'hide') {
+            return index >= this.getStartIndex() && index <= this.getStopIndex();
+        } else {
+            return true;
+        }
     }
 
     // region SerializableMixin
