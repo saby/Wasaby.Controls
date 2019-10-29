@@ -1,4 +1,4 @@
-import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
+import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import coreMerge = require('Core/core-merge');
 import {IoC} from 'Env/Env';
 
@@ -6,7 +6,7 @@ const _private = {
     getStickyConfig(config) {
         config = config || {};
         config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
-        config._type = 'sticky'; // TODO: Compatible for compoundArea
+        config._vdomOnOldPage = true; // Открывается всегда вдомным
         return config;
     }
 };
@@ -38,7 +38,7 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
  * @public
  */
 
-const Sticky = BaseOpener.extend({
+class Sticky extends BaseOpener {
 
     /**
      * @typedef {Object} PopupOptions
@@ -58,7 +58,7 @@ const Sticky = BaseOpener.extend({
      * @property {Number} maxHeight Максимальная высота всплывающего окна
      * @property {Number} height Текущая высота всплывающего окна
      * @property {Number} width Текущая ширина всплывающего окна
-     * @property {Node|Control} target Элемент, относительно которого позиционнируется всплывающее окно.
+     * @property {Node|Control} target Элемент (DOM-элемент или контрол), относительно которого позиционнируется всплывающее окно.
      * @property {Node} opener Логический инициатор открытия всплывающего окна
      * @property {String} fittingMode Определеяет поведение окна, в случае, если оно не помещается на экране с заданным позиционнированием.
      */
@@ -67,7 +67,7 @@ const Sticky = BaseOpener.extend({
      * Open sticky popup.
      * If you call this method while the window is already opened, it will cause the redrawing of the window.
      * @function Controls/_popup/Opener/Sticky#open
-     * @param {PopupOptions[]} popupOptions Sticky popup options.
+     * @param {PopupOptions} popupOptions Sticky popup options.
      * @remark {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
      * @example
      * wml
@@ -78,14 +78,13 @@ const Sticky = BaseOpener.extend({
      * Метод открытия диалогового окна.
      * Повторный вызов этого метода инициирует перерисовку окна с новыми опциями.
      * @function Controls/_popup/Opener/Sticky#open
-     * @param {PopupOptions[]} popupOptions Конфигурация прилипающего блока {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
+     * @param {PopupOptions} popupOptions Конфигурация прилипающего блока {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
      * @remark Если требуется открыть окно, без создания popup:Sticky в верстке, следует использовать статический метод {@link openPopup}
      * @example
      * wml
      * <pre>
      *    <Controls.popup:Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
-     *          <ws:verticalAlign side="bottom"/>
-     *          <ws:horizontalAlign side="left"/>
+     *          <ws:direction vertical="bottom" horizontal="left"/>
      *          <ws:targetPoint vertical="bottom" horizontal="left"/>
      *   </Controls.popup:Sticky>
      *
@@ -124,13 +123,13 @@ const Sticky = BaseOpener.extend({
     open(config) {
         BaseOpener.prototype.open.call(this, _private.getStickyConfig(config), POPUP_CONTROLLER);
     }
-});
+}
 
 /**
  * Статический метод для открытия всплывающего окна. При использовании метода не требуется создавать popup:Sticky в верстке.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ Подробнее}.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/#open-popup Подробнее}.
  * @function Controls/_popup/Opener/Sticky#openPopup
- * @param {PopupOptions[]} config Конфигурация прилипающего блока.
+ * @param {PopupOptions} config Конфигурация прилипающего блока.
  * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
  * @remark
  * Для обновления уже открытого окна в config нужно передать св-во id с идентификатором открытого окна.
@@ -164,7 +163,7 @@ const Sticky = BaseOpener.extend({
  * Open Sticky popup.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
  * @function Controls/_popup/Opener/Sticky#openPopup
- * @param {PopupOptions[]} config Sticky popup options.
+ * @param {PopupOptions} config Sticky popup options.
  * @return {Promise<string>} Returns id of popup. This id used for closing popup.
  * @static
  * @see closePopup
@@ -184,7 +183,7 @@ Sticky.openPopup = (config: object): Promise<string> => {
 };
 /**
  * Статический метод для закрытия окна по идентификатору.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ Подробнее}.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/#open-popup Подробнее}.
  * @function Controls/_popup/Opener/Sticky#closePopup
  * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
  * @static
@@ -235,8 +234,7 @@ export = Sticky;
  * wml
  * <pre>
  *    <Controls.popup:Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
- *          <ws:verticalAlign side="bottom"/>
- *          <ws:horizontalAlign side="left"/>
+ *          <ws:direction vertical="bottom" horizontal="left"/>
  *          <ws:targetPoint vertical="bottom" horizontal="left"/>
  *    </Controls.popup:Sticky>
  *
@@ -300,7 +298,7 @@ export = Sticky;
 
 /**
  * @name Controls/_popup/Opener/Sticky#target
- * @cfg {Node} target Элемент, относительно которого позиционнируется всплывающее окно.
+ * @cfg {Node|Control} Элемент (DOM-элемент или контрол), относительно которого позиционнируется всплывающее окно.
  */
 
 /**

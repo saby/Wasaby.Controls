@@ -1,4 +1,4 @@
-import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
+import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import {IoC} from 'Env/Env';
 /**
  * Контрол, открывающий всплывающее окно, которое позиционнируется по центру экрана.
@@ -40,20 +40,20 @@ const _private = {
 
 const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';
 
-const Dialog = BaseOpener.extend({
+class Dialog extends BaseOpener {
     /*
      * Open dialog popup.
      * If you call this method while the window is already opened, it will cause the redrawing of the window.
      * @function Controls/_popup/Opener/Dialog#open
      * @returns {Undefined}
-     * @param {PopupOptions[]} popupOptions Dialog popup options.
+     * @param {PopupOptions} popupOptions Dialog popup options.
      */
 
     /**
      * Метод открытия диалогового окна.
      * Повторный вызов этого метода инициирует перерисовку окна с новыми опциями.
      * @function Controls/_popup/Opener/Dialog#open
-     * @param {PopupOptions[]} popupOptions Конфигурация диалогового окна.
+     * @param {PopupOptions} popupOptions Конфигурация диалогового окна.
      * @remark
      * Если требуется открыть окно, без создания popup:Dialog в верстке, следует использовать статический метод {@link openPopup}.
      * @example
@@ -89,15 +89,15 @@ const Dialog = BaseOpener.extend({
      * @see closePopup
      */
     open(popupOptions) {
-        BaseOpener.prototype.open.call(this, _private.getDialogConfig(popupOptions), POPUP_CONTROLLER);
+        super.open(_private.getDialogConfig(popupOptions), POPUP_CONTROLLER);
     }
-});
+}
 
 /**
  * Статический метод для открытия диалогового окна. При использовании метода не требуется создавать popup:Dialog в верстке.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ Подробнее}.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#open-popup Подробнее}.
  * @function Controls/_popup/Opener/Dialog#openPopup
- * @param {PopupOptions[]} config Конфигурация диалогового окна
+ * @param {PopupOptions} config Конфигурация диалогового окна
  * @return {Promise<string>} Метод возвращает Promise, который в качестве результата отдаёт идентификатор окна. Идентификатор используется для закрытия диалога с помощью метода {@link closePopup}.
  * @remark
  * Для обновления уже открытого окна в config нужно передать свойство id с идентификатором открытого окна.
@@ -139,7 +139,7 @@ Dialog.openPopup = (config: object): Promise<string> => {
 
 /**
  * Статический метод для закрытия окна по идентификатору.
- * Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ здесь}.
+ * Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#open-popup здесь}.
  * @function Controls/_popup/Opener/Dialog#closePopup
  * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
  * @static
@@ -268,5 +268,5 @@ export default Dialog;
  * @property {Number} minWidth Минимально допустимая ширина всплывающего окна.
  * @property {Number} top Расстояние от всплывающего окна до верхнего края экрана.
  * @property {Number} left Расстояние от всплывающего окна до левого края экрана.
- * @property {Node} opener Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}. 
+ * @property {Node} opener Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
  */

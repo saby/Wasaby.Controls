@@ -6,7 +6,7 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
 /**
 *
 * Module with a function to replace common link on decorated link, if it needs.
-* Tag resolver for {@link Controls/_decorator/Markup}.
+* Tag resolver for {@link Controls/decorator:Markup}.
 *
 * @class Controls/_decorator/Markup/resolvers/linkDecorate
 * @public

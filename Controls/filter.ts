@@ -4,6 +4,7 @@
  * @includes Selector Controls/_filter/Button
  * @includes Fast Controls/_filter/Fast
  * @includes View Controls/_filter/View
+ * @includes ViewItemTemplate Controls/_filter/View/ItemTemplate
  * @includes ButtonContainer Controls/_filter/Button/Container
  * @includes FastContainer Controls/_filter/Fast/Container
  * @includes ViewContainer Controls/_filter/View/Container
@@ -13,6 +14,7 @@
  * @includes FilterViewStyles Controls/_filter/View/FilterViewStyles
  * @includes IFilterView Controls/_filter/View/interface/IFilterView
  * @includes IPrefetch Controls/_filter/IPrefetch
+ * @includes Prefetch Controls/_filter/Prefetch
  * @public
  * @author Крайнов Д.О.
  */
@@ -31,6 +33,7 @@
  * @includes FastStyles Controls/_filter/Fast/FastStyles
  * @includes IFilterView Controls/_filter/View/interface/IFilterView
  * @includes IPrefetch Controls/_filter/IPrefetch
+ * @includes Prefetch Controls/_filter/Prefetch
  * @public
  * @author Крайнов Д.О.
  */
@@ -38,6 +41,7 @@
 import Selector = require('Controls/_filter/Button');
 import Fast = require('Controls/_filter/Fast');
 import View = require('Controls/_filter/View');
+import ViewItemTemplate = require('wml!Controls/_filter/View/ItemTemplate');
 import FastContainer = require('Controls/_filter/Fast/Container');
 import Controller = require('Controls/_filter/Controller');
 import HistoryUtils = require('Controls/_filter/HistoryUtils');
@@ -51,6 +55,7 @@ export {
    Selector,
    Fast,
    View,
+   ViewItemTemplate,
    FastContainer,
    Controller,
    HistoryUtils

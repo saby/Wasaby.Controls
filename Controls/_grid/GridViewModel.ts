@@ -30,6 +30,8 @@ interface IColgroupColumn {
     index: number;
 }
 
+type GridColspanableElements = 'customResults' | 'fixedColumnOfColumnScroll' | 'scrollableColumnOfColumnScroll' | 'editingRow';
+
 var
     _private = {
         calcItemColumnVersion: function(self, itemVersion, columnIndex, index) {
@@ -124,21 +126,14 @@ var
                 preparedClasses = '';
 
             // Колонки
-            if (params.multiSelectVisibility ? params.columnIndex > 1 : params.columnIndex > 0) {
+            if (params.columnIndex > 1) {
                 preparedClasses += cellPadding && cellPadding.left ? ` controls-Grid__cell_spacingLeft_${cellPadding.left}` : ' controls-Grid__cell_spacingLeft';
             }
-            if (params.columnIndex < params.columns.length - 1) {
-                preparedClasses += cellPadding && cellPadding.right ? ` controls-Grid__cell_spacingRight_${cellPadding.right}` : ' controls-Grid__cell_spacingRight';
-            }
-
-            // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
             if (params.columnIndex === 0 && !params.multiSelectVisibility) {
-                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.itemPadding.left || 'default').toLowerCase();
+                preparedClasses += ' controls-Grid__cell_firstSpacingColumn_' + (params.itemPadding.left || 'default').toLowerCase();
             }
-
-            // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-            if (params.isBreadCrumbs) {
-               preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
+            if (params.columnIndex > 0 && params.columnIndex < params.columns.length - 1) {
+                preparedClasses += cellPadding && cellPadding.right ? ` controls-Grid__cell_spacingRight_${cellPadding.right}` : ' controls-Grid__cell_spacingRight';
             }
 
             // Стиль колонки
@@ -153,39 +148,43 @@ var
                 preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
             }
 
-
             return preparedClasses;
         },
         getPaddingHeaderCellClasses: function(params) {
             let preparedClasses = '';
             const { multiSelectVisibility, columnIndex, columns,
-                rowIndex, itemPadding, isBreadCrumbs, style } = params;
+                rowIndex, itemPadding, isBreadCrumbs, style, maxEndColumn, cell: { endColumn } } = params;
             if (rowIndex === 0) {
-                if (multiSelectVisibility ? columnIndex > 1 : columnIndex > 0) {
+                if (columnIndex > 1) {
                     preparedClasses += ' controls-Grid__cell_spacingLeft';
                 }
             } else {
                 preparedClasses += ' controls-Grid__cell_spacingLeft';
             }
 
-            if (columnIndex < columns.length - 1) {
+            if ((columnIndex > 0 || isBreadCrumbs) && columnIndex < columns.length - 1 || (maxEndColumn && endColumn < maxEndColumn)) {
                 preparedClasses += ' controls-Grid__cell_spacingRight';
             }
             // Отступ для последней колонки
-            if (columnIndex === columns.length - 1) {
-                preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase();
+            const lastColClass = ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase();
+            if (maxEndColumn) {
+                // у мультихэдера последняя ячейка определяется по endColumn, а не по последнему элементу массива.
+                if (maxEndColumn === endColumn) {
+                    preparedClasses += lastColClass;
+                }
+            } else {
+                if (columnIndex === columns.length - 1) {
+                    preparedClasses += lastColClass;
+                }
             }
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
             if (columnIndex === 0 && !multiSelectVisibility && rowIndex === 0 && !isBreadCrumbs) {
-                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (itemPadding.left || 'default').toLowerCase();
+                preparedClasses += ' controls-Grid__cell_firstSpacingColumn_' + (itemPadding.left || 'default').toLowerCase();
             }
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-            if (isBreadCrumbs) {
-                preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
-                if (params.multiSelectVisibility) {
-                    preparedClasses += ' controls-Grid__cell_spacingBackButton_with_multiSelection';
-                }
+            if (isBreadCrumbs && params.multiSelectVisibility && !params.isTableLayout) {
+                preparedClasses += ' controls-Grid__cell_spacingBackButton_with_multiSelection';
             }
             // Стиль колонки
             preparedClasses += ' controls-Grid__cell_' + (style || 'default');
@@ -412,38 +411,38 @@ var
             return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
         },
 
-        calcResultsRowIndex: function (self): number {
-            return self._getRowIndexHelper().getResultsIndex();
-        },
-
         getFooterStyles: function (self): string {
-            let styles = '';
+            const cfg = {
+                columnStart: 0,
+                columnSpan: self._columns.length + (self.getMultiSelectVisibility() !== 'hidden' ? 1 : 0)
+            };
 
-            if (GridLayoutUtil.isPartialGridSupport()) {
-                let
-                    columnStart = self._options.multiSelectVisibility === 'hidden' ? 0 : 1,
-                    columnEnd = self._columns.length + columnStart,
-                    rowIndex = self._getRowIndexHelper().getFooterIndex();
-
-                styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, null, columnEnd-columnStart);
+            if (self._isFullGridSupport) {
+                return GridLayoutUtil.getColumnStyles(cfg);
+            } else {
+                // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+                return GridLayoutUtil.getCellStyles({
+                    ...cfg,
+                    rowStart: self._getRowIndexHelper().getFooterIndex(),
+                })
             }
-
-            return styles;
         },
 
         getEmptyTemplateStyles: function (self): string {
-            let
-                styles = '';
+            const cfg = {
+                columnStart: self.getMultiSelectVisibility() !== 'hidden' ? 1 : 0,
+                columnSpan: self._columns.length,
+            };
 
-            if (GridLayoutUtil.isPartialGridSupport()) {
-                let
-                    columnStart = self.getMultiSelectVisibility() === 'hidden' ? 0 : 1,
-                    rowIndex = self._getRowIndexHelper().getTopOffset();
-
-                styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, 1, self._columns.length);
+            if (self._isFullGridSupport) {
+                return GridLayoutUtil.getColumnStyles(cfg);
+            } else {
+                // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
+                return GridLayoutUtil.getCellStyles({
+                    ...cfg,
+                    rowStart: self._getRowIndexHelper().getTopOffset(),
+                })
             }
-
-            return styles;
         },
 
         prepareColumnsWidth: function (self, itemData): Array<string> {
@@ -482,11 +481,15 @@ var
             // т.к. больше его некому растянуть.
             // Также, если в таблице есть колонка чекбоксов (ее ширина задается как max-content), то попавшая на место
             // первой ячейки строка редактирования, растянет всю колонку на ширину таблицы. Поэтому нужно ее заколспанить.
-            const colspan = ((self.getItems().getCount() || !!self.getHeader()) && self._options.multiSelectVisibility === 'hidden') ? 1 : self._columns.length;
+            const columnSpan = ((self.getItems().getCount() || !!self.getHeader()) && self._options.multiSelectVisibility === 'hidden') ? 1 : self._columns.length;
 
-            editingRowStyles += GridLayoutUtil.getDefaultStylesFor(GridLayoutUtil.CssTemplatesEnum.Grid) + ' ';
+            editingRowStyles += GridLayoutUtil.getGridLayoutStyles() + ' ';
             editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
-            editingRowStyles += GridLayoutUtil.getCellStyles(itemData.rowIndex, 0, 1, colspan);
+            editingRowStyles += GridLayoutUtil.getCellStyles({
+                columnStart: 0,
+                columnSpan,
+                rowStart: itemData.rowIndex
+            });
 
             return editingRowStyles;
         },
@@ -552,20 +555,26 @@ var
             right: string
         } {
 
-            let
-                start = 1,
-                center = columnAlignGroup + (itemData.hasMultiSelect ? 1 : 0) + 1,
-                stop = itemData.columns.length + 1,
-                result = {right: '', left: ''};
+            const center = columnAlignGroup + 1;
+            const stop = itemData.columns.length;
+            const result = {right: '', left: ''};
 
             if (columnAlignGroup) {
-                result.left = `grid-column: ${start} / ${center}; -ms-grid-column: ${start}; -ms-grid-column-span: ${center - 1};`;
-                result.right = `grid-column: ${center} / ${stop}; -ms-grid-column: ${center}; -ms-grid-column-span: ${stop - center};`;
+                result.left = GridLayoutUtil.getColumnStyles({
+                    columnStart: 0,
+                    columnEnd: center
+                });
+                result.right = GridLayoutUtil.getColumnStyles({
+                    columnStart: center,
+                    columnEnd: stop
+                });
             } else {
-                result.left = `grid-column: ${start} / ${stop}; -ms-grid-column: ${start}; -ms-grid-column-span: ${stop - 1};`;
+                result.left = GridLayoutUtil.getColumnStyles({
+                    columnStart: 0,
+                    columnEnd: stop
+                });
             }
-
-            return result
+            return result;
         },
 
         getColspanForColumnScroll(self): {
@@ -737,10 +746,8 @@ var
                 this._isMultyHeader = this.isMultyHeader(columns);
                 this._headerRows = getRowsArray(columns, multiSelectVisibility, this._isMultyHeader);
                 [this._maxEndRow, this._maxEndColumn] = getMaxEndRow(this._headerRows);
-            } else if (multiSelectVisibility) {
-                this._headerRows = [{}];
             } else {
-                this._headerRows = [];
+                this._headerRows = [{}];
             }
             this._multyHeaderOffset = this._headerRows.length ? this._headerRows.length - 1 : 0;
             this.resetHeaderRows();
@@ -858,18 +865,28 @@ var
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0) {
+            if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0 && !cell.title) {
                 cellClasses += ' controls-Grid__header-cell-checkbox';
+
+                // В grid-layout хлебные крошки нельзя расположить в первой ячейке, если в таблице включен множественный выбор,
+                // т.к. крошки растянут колонку, поэтому размещаем крошки во второй колонке и задаем отрицательный margin слева.
+                // https://online.sbis.ru/doc/9fcac920-479a-40a3-8b8a-5aabb2886628
+                // В table-layout проблемы с растягиванием нет, поэтому используем colspan на крошке.
+                if (this._shouldUseTableLayout && this._headerRows[0][1] && this._headerRows[0][1].isBreadCrumbs) {
+                    headerColumn.isHiddenForBreadcrumbs = true;
+                }
             } else {
                 cellClasses += _private.getPaddingHeaderCellClasses({
                     style: this._options.style,
                     columns: this._headerRows[rowIndex],
                     columnIndex: columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
+                    isTableLayout: this._shouldUseTableLayout,
                     itemPadding: this._model.getItemPadding(),
                     isHeader: true,
                     cell,
                     rowIndex,
+                    maxEndColumn: this._maxEndColumn,
                     // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
                     isBreadCrumbs: headerColumn.column.isBreadCrumbs,
                 });
@@ -925,7 +942,7 @@ var
                 cellContentClasses += endRow - startRow === 1 ? ' control-Grid__cell_header-nowrap' : '';
             } else if (this._isPartialGridSupport && !this._shouldUseTableLayout) {
                 // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-                cellStyles += GridLayoutUtil.getCellStyles(rowIndex, columnIndex);
+                cellStyles += GridLayoutUtil.getCellStyles({rowStart: rowIndex, columnStart: columnIndex});
             }
 
             if (columnIndex === 0 && rowIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerRows[rowIndex][columnIndex + 1].startColumn && !cell.title) {
@@ -1006,13 +1023,8 @@ var
             );
         },
 
-        _prepareResultsColumns: function(columns, multiSelectVisibility) {
-            if (multiSelectVisibility) {
-                this._resultsColumns = [{}].concat(columns);
-            } else {
-                this._resultsColumns = columns;
-            }
-
+        _prepareResultsColumns: function(columns) {
+            this._resultsColumns = [{}].concat(columns);
             this.resetResultsColumns();
         },
 
@@ -1068,7 +1080,10 @@ var
             // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
             if (this._isPartialGridSupport && !this._shouldUseTableLayout) {
                 resultsColumn.rowIndex = this._getRowIndexHelper().getResultsIndex();
-                resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles(resultsColumn.rowIndex, columnIndex);
+                resultsColumn.gridCellStyles = GridLayoutUtil.getCellStyles({
+                    rowStart: resultsColumn.rowIndex,
+                    columnStart: columnIndex
+                });
             }
             return resultsColumn;
         },
@@ -1088,7 +1103,7 @@ var
         _setColumns(columns: IGridColumn[]): void {
             this._columns = this._prepareColumns(columns);
             this._ladder = _private.prepareLadder(this);
-            this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
+            this._prepareResultsColumns(this._columns);
             this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             this._columnsVersion++;
         },
@@ -1145,7 +1160,7 @@ var
             } else {
                 this._prepareHeaderColumns(this._header, hasMultiSelect);
             }
-            this._prepareResultsColumns(this._columns, hasMultiSelect);
+            this._prepareResultsColumns(this._columns);
         },
 
         hasItemById: function(id, keyProperty) {
@@ -1322,7 +1337,7 @@ var
 
             current.columnScroll = this._options.columnScroll;
             current.getColspanForColumnScroll = () => _private.getColspanForColumnScroll(self);
-            current.getColspanFor = (elementName: string) => self._getColspanFor.apply(self, [elementName]);
+            current.getColspanFor = (elementName: string) => self.getColspanFor.apply(self, [elementName]);
             current.stickyColumnsCount = this._options.stickyColumnsCount;
 
             current.style = this._options.style;
@@ -1331,15 +1346,11 @@ var
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => _private.getColumnAlignGroupStyles(current, columnAlignGroup);
 
             const superShouldDrawMarker = current.shouldDrawMarker;
-            current.shouldDrawMarker = (marker?: boolean): boolean => {
-                return current.columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
+            current.shouldDrawMarker = (marker?: boolean, columnIndex: number): boolean => {
+                return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
             };
 
-            if (current.multiSelectVisibility !== 'hidden') {
-                current.columns = [{}].concat(this._columns);
-            } else {
-                current.columns = this._columns;
-            }
+            current.columns = [{}].concat(this._columns);
 
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
@@ -1396,6 +1407,13 @@ var
             };
             current.getLastColumnIndex = () => {
                 return current.columns.length - 1;
+            };
+            current.hasNextColumn = (isColumnColspaned: boolean) => {
+                if (isColumnColspaned) {
+                    return current.columnIndex <= (current.hasMultiSelect ? 1 : 0);
+                } else {
+                    return current.getLastColumnIndex() >= current.columnIndex;
+                }
             };
             current.isDrawActions = _private.isDrawActions;
             current.getCellStyle = _private.getCellStyle;
@@ -1455,7 +1473,10 @@ var
                 // For browsers with partial grid support need to set explicit rows' style with grid-row and grid-column
                 // TODO: Удалить проверку после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
                 if (self._isPartialGridSupport && !self._shouldUseTableLayout || current.columnScroll) {
-                    currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles(current.rowIndex, currentColumn.columnIndex);
+                    currentColumn.gridCellStyles = GridLayoutUtil.getCellStyles({
+                        rowStart: current.rowIndex,
+                        columnStart: currentColumn.columnIndex
+                    });
                 } else {
                     currentColumn.gridCellStyles = '';
                 }
@@ -1741,7 +1762,11 @@ var
                 const columnStart = this.getMultiSelectVisibility() === 'hidden' ? 0 : 1;
                 const rowIndex = this._getRowIndexHelper().getBottomPaddingRowIndex();
 
-                styles += GridLayoutUtil.getCellStyles(rowIndex, columnStart, 1, this._columns.length);
+                styles += GridLayoutUtil.getCellStyles({
+                    rowStart: rowIndex,
+                    columnStart,
+                    columnSpan: this._columns.length
+                });
             }
 
             return styles;
@@ -1829,28 +1854,18 @@ var
             return resultWidth;
         },
 
-        _getColspanFor(gridElementName: 'customResults' | 'fixedColumnOfColumnScroll' | 'scrollableColumnOfColumnScroll' | 'editingRow'): number {
-            // Стандартный colspan любого элемента таблицы/грида;
-            let colspan;
-
+        getColspanFor(gridElementName: GridColspanableElements): number {
             switch (gridElementName) {
                 case 'customResults':
-                    colspan = this._columns.length;
-                    break;
-                case 'fixedColumnOfColumnScroll':
-                    colspan = this._options.stickyColumnsCount || 1;
-                    break;
-                case 'scrollableColumnOfColumnScroll':
-                    colspan = this._columns.length - (this._options.stickyColumnsCount || 1);
-                    break;
                 case 'editingRow':
-                    colspan = this._columns.length;
-                    break;
+                    return this._columns.length;
+                case 'fixedColumnOfColumnScroll':
+                    return this._options.stickyColumnsCount || 1;
+                case 'scrollableColumnOfColumnScroll':
+                    return this._columns.length - (this._options.stickyColumnsCount || 1);
                 default:
-                    colspan = 1;
+                    return 1;
             }
-
-            return colspan;
         },
 
         // region Colgroup columns

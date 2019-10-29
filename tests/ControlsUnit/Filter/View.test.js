@@ -168,7 +168,16 @@ define(
                //isNeedReload = false
                view._beforeUpdate(newConfig);
                assert.deepStrictEqual(view._displayText, expectedDisplayText);
-               done();
+
+               newConfig = Clone(defaultConfig);
+               newConfig.source[0].viewMode = 'basic';
+               newConfig.source[1].viewMode = 'basic';
+
+               //isNeedReload = true
+               view._beforeUpdate(newConfig).addCallback(function() {
+                  assert.equal(Object.keys(view._configs).length, 0);
+                  done();
+               });
             });
          });
 
@@ -215,11 +224,18 @@ define(
 
          it('_openPanel', function() {
             let view = getView(defaultConfig),
-               popupOptions;
+               popupOptions, filterClassName = '';
+            let event = {
+               currentTarget: {
+                  getElementsByClassName: () => [filterClassName]
+               }
+            };
             view._children = {
                StickyOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} }
             };
-            view._container = ['filter_container'];
+            view._container = {
+               0: 'filter_container',
+            };
             view._options.panelTemplateName = 'panelTemplateName.wml';
             view._source = defaultConfig.source;
             view._configs = {
@@ -239,8 +255,8 @@ define(
             assert.strictEqual(popupOptions.templateOptions.items.getCount(), 2);
             assert.strictEqual(popupOptions.className, 'controls-FilterView-SimplePanel__buttonTarget-popup');
 
-            view._children['second_filter'] = 'div_second_filter';
-            view._openPanel('click', 'second_filter');
+            filterClassName = 'div_second_filter';
+            view._openPanel(event, 'second_filter');
             assert.strictEqual(popupOptions.target, 'div_second_filter');
             assert.strictEqual(popupOptions.className, 'controls-FilterView-SimplePanel-popup');
 
@@ -264,6 +280,7 @@ define(
             view._open([1, 2, 4], {template: 'templateName'});
 
             assert.strictEqual(popupOptions.template, 'templateName');
+            assert.strictEqual(popupOptions.actionOnScroll, 'close');
             assert.deepStrictEqual(popupOptions.templateOptions.items, [1, 2, 4]);
          });
 
@@ -614,13 +631,14 @@ define(
             assert.deepEqual(view._source[0].value, []);
          });
 
-         it('_private:setPopupConfig', function() {
+         it('_private:getPopupConfig', function() {
             let isLoading = false;
             let source = Clone(defaultSource);
+            source[0].editorOptions.itemTemplate = 'new';
             let configs = {
                document: {
                   items: Clone(defaultItems[0]),
-                  displayProperty: 'title',
+                  itemTemplate: 'old',
                   keyProperty: 'id',
                   source: new sourceLib.Memory({
                      keyProperty: 'id',
@@ -644,8 +662,10 @@ define(
                _onSelectorTemplateResult: () => {}
             };
 
-            filter.View._private.setPopupConfig(self, configs, source);
+            let resultItems = filter.View._private.getPopupConfig(self, configs, source);
             assert.isTrue(isLoading);
+            assert.equal(resultItems[0].displayProperty, 'title');
+            assert.equal(resultItems[0].itemTemplate, 'new');
          });
 
          it('_beforeUpdate loadSelectedItems', function(done) {
@@ -769,6 +789,15 @@ define(
                assert.deepStrictEqual(view._source[1].value, [3, 20, 28]);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'new item', title: 'new item, new item 2, Completed', hasMoreText: ', еще 2'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});
+               assert.strictEqual(view._configs.state.items.getCount(), 9);
+
+               newItems = new collection.RecordSet({
+                  keyProperty: 'key',
+                  rawData: [{key: 15, text: 'Completed'}] // without id field
+               });
+               eventResult.data = newItems;
+               view._resultHandler('resultEvent', eventResult);
+               assert.strictEqual(view._configs.state.items.getCount(), 9);
             });
 
             it('selectorResult selectorCallback', function() {
@@ -804,16 +833,22 @@ define(
                      historyEventFired = true;
                   }
                };
+               view._source = [{name: 'author', value: '', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic'},
+                  {name: 'sender', value: 'Sander123', resetValue: '', viewMode: 'extended', visibility: false},
+                  {name: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false},
+                  {name: 'document', value: '11111', resetValue: '', textValue: 'new document', viewMode: 'frequent', visibility: false}];
+
                let eventResult = {
                   id: 'state',
-                  items: [{id: 'author', value: '', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic'},
-                        {id: 'sender', value: 'Sander123', resetValue: '', viewMode: 'extended', visibility: false},
-                        {id: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false},
-                     {id: 'document', value: '11111', resetValue: '', textValue: 'new document', viewMode: 'frequent', visibility: false}],
+                  items: [{ id: 'author', value: '', textValue: 'Author: Ivanov K.K.'},
+                     { id: 'sender', value: 'Sander123', visibility: false },
+                     { id: 'responsible', value: '', visibility: false },
+                     { id: 'document', value: '11111', resetValue: '', textValue: 'new document', visibility: false }],
                   history: [{ test: 'test' }]
                };
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[1].value, 'Sander123');
+               assert.deepStrictEqual(view._source[1].viewMode, 'extended');
                assert.deepStrictEqual(view._source[3].textValue, 'new document');
                assert.deepStrictEqual(filterChanged, {'document': '11111', 'sender': 'Sander123'});
                assert.deepStrictEqual(view._displayText, {document: { hasMoreText: '', text: '', title: ''}});

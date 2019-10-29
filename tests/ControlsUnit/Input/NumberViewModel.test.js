@@ -168,7 +168,7 @@ define(
                   },
                   result: {
                      value: '12',
-                     position: 2
+                     position: 3
                   },
                   inputType: 'insert'
                },
@@ -220,7 +220,7 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '',
+                     value: '0.0',
                      position: 2
                   },
                   inputType: 'insert'
@@ -237,7 +237,7 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '5.0',
+                     value: '5',
                      position: 1
                   },
                   inputType: 'insert'
@@ -272,8 +272,8 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '123.0',
-                     position: 4
+                     value: '123',
+                     position: 3
                   },
                   inputType: 'insert'
                },
@@ -307,7 +307,7 @@ define(
                   },
                   result: {
                      value: '123.456789',
-                     position: 7
+                     position: 4
                   },
                   inputType: 'insert'
                },
@@ -341,8 +341,8 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '-0.0',
-                     position: 2
+                     value: '-',
+                     position: 21
                   },
                   inputType: 'insert'
                },
@@ -375,7 +375,7 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '1.0',
+                     value: '1',
                      position: 1
                   },
                   inputType: 'insert'
@@ -410,7 +410,7 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '-1.0',
+                     value: '-1',
                      position: 2
                   },
                   inputType: 'insert'
@@ -447,7 +447,7 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '62 345.0',
+                     value: '62 345',
                      position: 1
                   },
                   inputType: 'insert'
@@ -466,7 +466,7 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '5 234.0',
+                     value: '5 234',
                      position: 1
                   },
                   inputType: 'insert'
@@ -595,7 +595,7 @@ define(
                      delete: '1'
                   },
                   result: {
-                     value: '',
+                     value: '0',
                      position: 0
                   },
                   inputType: 'deleteBackward'
@@ -687,7 +687,7 @@ define(
                      delete: '0'
                   },
                   result: {
-                     value: '123.0',
+                     value: '123.',
                      position: 3
                   },
                   inputType: 'deleteBackward'
@@ -760,7 +760,7 @@ define(
                      delete: '0'
                   },
                   result: {
-                     value: '',
+                     value: '0',
                      position: 0
                   },
                   inputType: 'deleteForward'
@@ -868,7 +868,7 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '-0.0',
+                     value: '-',
                      position: 2
                   },
                   inputType: 'insert'
@@ -944,7 +944,7 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '-1.0',
+                     value: '-1',
                      position: 1
                   },
                   inputType: 'insert'
@@ -1076,7 +1076,7 @@ define(
                      delete: ''
                   },
                   result: {
-                     value: '12 345.6789',
+                     value: '12 345',
                      position: 11
                   },
                   inputType: 'insert'
@@ -1163,6 +1163,7 @@ define(
             it(item.testName, function() {
                var numberViewModel = new NumberViewModel(item.controlConfig, 0);
 
+               numberViewModel._displayValue = item.splitValue.before + item.splitValue.delete + item.splitValue.after;
                numberViewModel.handleInput(item.splitValue, item.inputType);
                assert.equal(numberViewModel.displayValue, item.result.value);
             });

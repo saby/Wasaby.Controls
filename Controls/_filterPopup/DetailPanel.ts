@@ -11,7 +11,6 @@ import Env = require('Env/Env');
 import {isEqual} from 'Types/object';
 import {factory, List} from 'Types/collection';
 import {HistoryUtils} from 'Controls/filter';
-import 'css!theme?Controls/filterPopup';
 import 'Controls/form';
 /**
     * Контрол для отображения шаблона панели фильтров. Отображает каждый фильтр по заданным шаблонам.
@@ -165,7 +164,8 @@ import 'Controls/form';
                      const textValue = getPropValue(history[i], 'textValue');
                      const value = getPropValue(history[i], 'value');
 
-                     if (textValue !== '' && textValue !== undefined) {
+                     // 0 and false is valid
+                     if (textValue !== '' && textValue !== undefined && textValue !== null) {
                         originalItem = getOriginalItem(self, history[i]);
                         hasResetValue = originalItem && originalItem.hasOwnProperty('resetValue');
 
@@ -376,6 +376,7 @@ import 'Controls/form';
          filterPanelOptionsField: _FilterPanelOptions
       };
    };
+   FilterPanel._theme = ['Controls/filterPopup'];
 
    FilterPanel._private = _private;
    export = FilterPanel;

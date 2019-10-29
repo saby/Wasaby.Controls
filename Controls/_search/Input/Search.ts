@@ -17,13 +17,24 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  * <a href="/materials/demo-ws4-search-container">Демо с контролами search:Input и List</a>.
  * <a href="/materials/demo-ws4-filter-search-new">Демо с контролами filter:Selector, search:Input и List</a>.
  *
- * @class Controls/_search/Input
+ * @class Controls/_search/Input/Search
  * @extends Controls/_input/Base
  *
  * @mixes Controls/interface/IInputField
  * @mixes Controls/_input/interface/IText
  *
- * @name Controls/_search/Input#contrastBackground
+ * @ignoreOptions style
+ *
+ * @control
+ * @public
+ * @demo Controls-demo/Search/Input/Base/Index
+ *
+ * @category Input
+ * @author Золотова Э.Е.
+ */
+
+/**
+ * @name Controls/_search/Input/Search#contrastBackground
  * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
  * @default false
  * @remark
@@ -38,16 +49,6 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  *    <Controls.search:Input contrastBackground="{{true}}" bind:value="_searchValue"/>
  * </pre>
  * @see style
- *
- *
- * @ignoreOptions style
- *
- * @control
- * @public
- * @demo Controls-demo/Search/Input/Base/Index
- *
- * @category Input
- * @author Золотова Э.Е.
  */
 
 /*
@@ -59,7 +60,7 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  * <a href="/materials/demo-ws4-search-container">Demo with Input/Search and List control</a>.
  * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List control</a>.
  *
- * @class Controls/_search/Input
+ * @class Controls/_search/Input/Search
  * @extends Controls/_input/Base
  *
  * @mixes Controls/interface/IInputField
@@ -69,7 +70,7 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  *
  * @control
  * @public
- * @demo Controls-demo/Input/Search/SearchPG
+ * @demo Controls-demo/Search/Input/Base/Index
  *
  * @category Input
  * @author Золотова Э.Е.
@@ -99,12 +100,12 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  */
 
 /**
- * @event Controls/_search/Input#searchClick Происходит при клике на кнопку поиска.
+ * @event Controls/_search/Input/Search#searchClick Происходит при клике на кнопку поиска.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
 /**
- * @event Controls/_search/Input#resetClick Происходит при клике на кнопку сброса.
+ * @event Controls/_search/Input/Search#resetClick Происходит при клике на кнопку сброса.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
@@ -129,8 +130,8 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  */
 
 /*
- * @event Controls/_search/Input#searchClick Occurs when search button is clicked.
- * @event Controls/_search/Input#resetClick Occurs when reset button is clicked.
+ * @event Controls/_search/Input/Search#searchClick Occurs when search button is clicked.
+ * @event Controls/_search/Input/Search#resetClick Occurs when reset button is clicked.
  */
 var _private = {
    isVisibleResetButton: function() {

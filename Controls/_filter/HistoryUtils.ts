@@ -68,32 +68,30 @@ function isHistorySource(source) {
 }
 
 function prependNewItems(oldItems, newItems, sourceController, keyProperty) {
-   let getUniqItems = (items) => {
-      let uniqItems = factory(items).filter((item) => {
-         if (!newItems.getRecordById(item.get(keyProperty))) {
-            return item;
-         }
-      }).value();
-      newItems.append(uniqItems);
-   };
+   const allCount = oldItems.getCount();
+   const uniqItems = factory(oldItems).filter((item) => {
+      if (!newItems.getRecordById(item.get(keyProperty))) {
+         return item;
+      }
+   }).value();
 
    if (sourceController.hasMoreData('down')) {
-      const allCount = oldItems.getCount();
-      const firstItems = factory(oldItems).first(allCount - newItems.getCount()).value();
-      getUniqItems(firstItems);
+      let lastItems = factory(uniqItems).first(allCount - newItems.getCount()).value();
+      newItems.append(lastItems);
    } else {
-      getUniqItems(oldItems);
+      newItems.append(uniqItems);
    }
    newItems.setMetaData(oldItems.getMetaData());
+   return newItems;
 }
 
 function getItemsWithHistory(oldItems, newItems, sourceController, source, keyProperty) {
    let itemsWithHistory;
-   prependNewItems(oldItems, newItems, sourceController, keyProperty);
+   const resultItems = prependNewItems(oldItems, newItems, sourceController, keyProperty);
    if (isHistorySource(source)) {
-      itemsWithHistory = source.prepareItems(newItems);
+      itemsWithHistory = source.prepareItems(resultItems);
    } else {
-      itemsWithHistory = newItems;
+      itemsWithHistory = resultItems;
    }
    return itemsWithHistory;
 }

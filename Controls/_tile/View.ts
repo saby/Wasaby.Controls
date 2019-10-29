@@ -83,6 +83,9 @@ import {TreeControl} from 'Controls/treeGrid';
 var View = List.extend({
    _viewName: TreeTileView,
    _viewTemplate: TreeControl,
+   _beforeMount: function() {
+      this._viewModelConstructor = this._getModelConstructor();
+   },
    _getModelConstructor: function() {
       return TreeTileViewModel;
    }

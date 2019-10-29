@@ -48,6 +48,7 @@ var _private = {
     isEqualItems: function(oldList, newList) {
         return oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
             (newList.getModel() === oldList.getModel()) &&
+            (newList.getKeyProperty() === oldList.getKeyProperty()) &&
             (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor) &&
             (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
     },
@@ -207,16 +208,18 @@ var ItemsViewModel = BaseViewModel.extend({
         this._nextModelVersion(notUpdatePrefixItemVersion, changesType);
     },
 
+    _getItemVersion(item) {
+        // records have defined method getVersion, groups haven't
+        if (item.getVersion) {
+            return '' + item.getVersion();
+        }
+        return '' + item;
+    },
+
     _calcItemVersion: function(item) {
         var
             version = '' + this._prefixItemVersion;
-
-        // records have defined method getVersion, groups haven't
-        if (item.getVersion) {
-            version += item.getVersion();
-        } else {
-            version += item;
-        }
+        version += this._getItemVersion(item);
         return version;
     },
 

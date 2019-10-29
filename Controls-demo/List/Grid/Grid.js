@@ -201,7 +201,7 @@ define('Controls-demo/List/Grid/Grid', [
                   icon: 'icon-primary icon-EmptyMessage',
                   title: 'message',
                   handler: function() {
-                     alert('Message Click');
+                     Env.IoC.resolve('ILogger').info('action Message Click');
                   }
                },
                {

@@ -76,24 +76,70 @@ var _private = {
     getYearModel: function (year, dateConstructor) {
         return [{
             name: 'I',
+            tooltip: formatDate(new dateConstructor(year, 0, 1), formatDate.FULL_HALF_YEAR),
             quarters: [{
                 name: 'I',
-                months: [new dateConstructor(year, 0, 1), new dateConstructor(year, 1, 1), new dateConstructor(year, 2, 1)],
+                fullName: formatDate(new dateConstructor(year, 0, 1), 'QQQQr'),
+                tooltip: formatDate(new dateConstructor(year, 0, 1), formatDate.FULL_QUATER),
+                months: [{
+                    name: new dateConstructor(year, 0, 1),
+                    tooltip: formatDate(new dateConstructor(year, 0, 1), formatDate.FULL_MONTH)
+                }, {
+                    name: new dateConstructor(year, 1, 1),
+                    tooltip: formatDate(new dateConstructor(year, 1, 1), formatDate.FULL_MONTH)
+                }, {
+                    name: new dateConstructor(year, 2, 1),
+                    tooltip: formatDate(new dateConstructor(year, 2, 1), formatDate.FULL_MONTH)
+                }],
                 number: 0
             }, {
                 name: 'II',
-                months: [new dateConstructor(year, 3, 1), new dateConstructor(year, 4, 1), new dateConstructor(year, 5, 1)],
+                fullName: formatDate(new dateConstructor(year, 3, 1), 'QQQQr'),
+                tooltip: formatDate(new dateConstructor(year, 3, 1), formatDate.FULL_QUATER),
+                months: [{
+                    name: new dateConstructor(year, 3, 1),
+                    tooltip: formatDate(new dateConstructor(year, 3, 1), formatDate.FULL_MONTH)
+                }, {
+                    name: new dateConstructor(year, 4, 1),
+                    tooltip: formatDate(new dateConstructor(year, 4, 1), formatDate.FULL_MONTH)
+                }, {
+                    name: new dateConstructor(year, 5, 1),
+                    tooltip: formatDate(new dateConstructor(year, 5, 1), formatDate.FULL_MONTH)
+                }],
                 number: 1
             }]
         }, {
             name: 'II',
+            tooltip: formatDate(new dateConstructor(year, 6, 1), formatDate.FULL_HALF_YEAR),
             quarters: [{
                 name: 'III',
-                months: [new dateConstructor(year, 6, 1), new dateConstructor(year, 7, 1), new dateConstructor(year, 8, 1)],
+                fullName: formatDate(new dateConstructor(year, 6, 1), 'QQQQr'),
+                tooltip: formatDate(new dateConstructor(year, 6, 1), formatDate.FULL_QUATER),
+                months: [{
+                    name: new dateConstructor(year, 6, 1),
+                    tooltip: formatDate(new dateConstructor(year, 6, 1), formatDate.FULL_MONTH)
+                }, {
+                    name: new dateConstructor(year, 7, 1),
+                    tooltip: formatDate(new dateConstructor(year, 7, 1), formatDate.FULL_MONTH)
+                }, {
+                    name: new dateConstructor(year, 8, 1),
+                    tooltip: formatDate(new dateConstructor(year, 8, 1), formatDate.FULL_MONTH)
+                }],
                 number: 2
             }, {
                 name: 'IV',
-                months: [new dateConstructor(year, 9, 1), new dateConstructor(year, 10, 1), new dateConstructor(year, 11, 1)],
+                fullName: formatDate(new dateConstructor(year, 9, 1), 'QQQQr'),
+                tooltip: formatDate(new dateConstructor(year, 9, 1), formatDate.FULL_QUATER),
+                months: [{
+                    name: new dateConstructor(year, 9, 1),
+                    tooltip: formatDate(new dateConstructor(year, 9, 1), formatDate.FULL_MONTH)
+                }, {
+                    name: new dateConstructor(year, 10, 1),
+                    tooltip: formatDate(new dateConstructor(year, 10, 1), formatDate.FULL_MONTH)
+                }, {
+                    name: new dateConstructor(year, 11, 1),
+                    tooltip: formatDate(new dateConstructor(year, 11, 1), formatDate.FULL_MONTH)
+                }],
                 number: 3
             }]
         }];

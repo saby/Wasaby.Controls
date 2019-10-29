@@ -3,7 +3,7 @@
  */
 import thelpers = require('View/Executor/TClosure');
 import validHtml = require('Core/validHtml');
-import {IoC} from 'Env/Env';
+import {error} from 'UI/Logger';
 import 'css!theme?Controls/decorator';
 
    var markupGenerator,
@@ -35,6 +35,7 @@ import 'css!theme?Controls/decorator';
          'file:(//|\\\\)',
          'smb:(//|\\\\)',
          'mailto:',
+         '#',
          './',
          '/'
       ],
@@ -46,6 +47,16 @@ import 'css!theme?Controls/decorator';
 
    function isString(value) {
       return typeof value === 'string' || value instanceof String;
+   }
+
+   function logError(text: string, node?: any[]|string|object) {
+       let strNode: string;
+       try {
+           strNode = JSON.stringify(node);
+       } catch (e) {
+           strNode = '"Невалидный Json узел"';
+       }
+       error(`Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}\n`, control, {});
    }
 
    function generateEventSubscribeObject(handlerName) {
@@ -76,7 +87,10 @@ import 'css!theme?Controls/decorator';
       return linkAttributesMap[attributeName] && !goodLinkAttributeRegExp.test(attributeValue);
    }
 
-   function validAttributesInsertion(targetAttributes: Object, sourceAttributes: Object) {
+   function validAttributesInsertion(targetAttributes: object,
+                                     sourceAttributes: object,
+                                     additionalValidAttributes?: object
+   ) {
       const validAttributes: Object = currentValidHtml.validAttributes;
       for (let attributeName in sourceAttributes) {
          if (!sourceAttributes.hasOwnProperty(attributeName)) {
@@ -84,11 +98,12 @@ import 'css!theme?Controls/decorator';
          }
          const sourceAttributeValue = sourceAttributes[attributeName];
          if (!isString(sourceAttributeValue)) {
-            IoC.resolve('ILogger')
-               .error(control._moduleName, `Невалидное значение атрибута ${attributeName}, ожидается строковый тип.`);
+            logError(`Невалидное значение атрибута ${attributeName}, ожидается строковое значение`, sourceAttributes);
             continue;
          }
-         if (!validAttributes[attributeName] && !dataAttributeRegExp.test(attributeName)) {
+         const isStrictValid = validAttributes[attributeName];
+         const isAdditionalValid = additionalValidAttributes && additionalValidAttributes[attributeName];
+         if (!isStrictValid && !isAdditionalValid && !dataAttributeRegExp.test(attributeName)) {
             continue;
          }
 
@@ -114,8 +129,7 @@ import 'css!theme?Controls/decorator';
          return [];
       }
       if (!Array.isArray(valueToBuild)) {
-         IoC.resolve('ILogger')
-            .error(control._moduleName, `Узел в JsonML должен быть строкой или массивом.`);
+         logError(`Узел в JsonML должен быть строкой или массивом`, valueToBuild);
          return [];
       }
       wasResolved = value !== valueToBuild;
@@ -128,20 +142,25 @@ import 'css!theme?Controls/decorator';
          resolverMode ^= wasResolved;
          return children;
       }
-      var firstChildIndex = 1,
-         tagName = valueToBuild[0],
-         attrs = {
+      let firstChildIndex = 1;
+      const tagName = valueToBuild[0];
+      const attrs = {
             attributes: {},
             events: {},
             key: key
          };
-      if (!currentValidHtml.validNodes[tagName]) {
+      const validNodesValue = currentValidHtml.validNodes[tagName];
+      let additionalValidAttributes;
+      if (!validNodesValue) {
          resolverMode ^= wasResolved;
          return [];
       }
+      if (typeof validNodesValue === 'object') {
+         additionalValidAttributes = validNodesValue;
+      }
       if (valueToBuild[1] && !isString(valueToBuild[1]) && !Array.isArray(valueToBuild[1])) {
          firstChildIndex = 2;
-         validAttributesInsertion(attrs.attributes, valueToBuild[1]);
+         validAttributesInsertion(attrs.attributes, valueToBuild[1], additionalValidAttributes);
       }
       for (i = firstChildIndex; i < valueToBuild.length; ++i) {
          children.push(recursiveMarkup(valueToBuild[i], {}, key + i + '_', valueToBuild));
@@ -209,7 +228,7 @@ import 'css!theme?Controls/decorator';
       try {
          elements = recursiveMarkup(value, attrsToDecorate, key + '0_');
       } catch (e) {
-         thelpers.templateError(control._moduleName, e, control);
+         error(e.message, control, e);
       } finally {
          markupGenerator.escape = oldEscape;
       }

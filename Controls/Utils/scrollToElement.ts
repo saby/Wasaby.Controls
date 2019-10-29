@@ -120,7 +120,7 @@ function scrollToElement(element: HTMLElement, toBottom?: Boolean, force?: Boole
 
       if (force || parentOffset.bottom < elemOffset.bottom) {
          if (toBottom) {
-            elemToScroll.scrollTop += elemOffset.bottom - parentOffset.bottom + stickyHeaderHeight.bottom;
+            elemToScroll.scrollTop += Math.ceil(elemOffset.bottom - parentOffset.bottom + stickyHeaderHeight.bottom);
          } else {
             elemToScroll.scrollTop += elemOffset.top - parentOffset.top - stickyHeaderHeight.top;
          }

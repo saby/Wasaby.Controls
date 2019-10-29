@@ -9,7 +9,7 @@ import 'Controls/search';
 /**
  * Строка поиска с автодополнением, позволяет пользователю вводить однострочный текст.
  * Подробное описание и инструкцию по настройке смотрите <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>здесь</a>.
- * <a href="/materials/demo-suggest-search-input">Демо-пример</a>
+ * <a href="/materials/demo/demo-suggest-search-input">Демо-пример</a>
  *
  * @class Controls/_suggest/Input/Search/Suggest
  * @extends Controls/_input/Text

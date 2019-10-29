@@ -63,6 +63,7 @@ define(
                inst._isShadowVisible = ctrl._isShadowVisible;
                inst._getObserverStyle = ctrl._getObserverStyle;
                inst._options.shadowVisibility = 'visible';
+               inst._reverseOffsetStyle = ctrl._reverseOffsetStyle;
                template = TemplateUtil.clearTemplate(ctrl._template);
             });
 
@@ -90,7 +91,7 @@ define(
                });
                inst._container = { style: { paddingTop: '' } };
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: -1px;padding-top: 1px;margin-top: -1px;z-index: 2;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: -1px;padding-top:1px;margin-top: -1px;z-index: 2;">' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                                                 '<div></div>' +
                                                 '<div></div>' +

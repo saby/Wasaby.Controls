@@ -1,89 +1,61 @@
 import Env = require('Env/Env');
+import {getScrollbarWidth} from 'Controls/Utils/getScrollbarWidth'
 
-      
 
-      var _private = {
+var _private = {
 
-         styleHideScrollbar: null,
+    styleHideScrollbar: null,
 
-         /**
-          * Расчет ширины нативного скролла с помощью вспомогательного контейнера.
-          * @return {number}
-          */
-         calcScrollbarWidthByMeasuredBlock: function() {
-            var scrollbarWidth, measuredBlock;
+    /**
+     * Расчет ширины нативного скролла.
+     * @param detection
+     * @return {number}
+     */
+    calcScrollbarWidth: function() {
+        return getScrollbarWidth(Env.detection);
+    },
 
-            measuredBlock = document.createElement('div');
-            measuredBlock.className = 'controls-Scroll__measuredBlock';
-            document.body.appendChild(measuredBlock);
-            scrollbarWidth = measuredBlock.offsetWidth - measuredBlock.clientWidth;
-            document.body.removeChild(measuredBlock);
+    /**
+     * Расчет css стиля для скрытия нативного скролла.
+     * @param scrollbarWidth
+     * @param detection
+     * @param compatibility
+     * @return {string}
+     */
+    calcStyleHideScrollbar: function (scrollbarWidth) {
+        var style;
 
-            return scrollbarWidth;
-         },
+        if (scrollbarWidth) {
+            style = 'margin-right: -' + scrollbarWidth + 'px;';
+        } else if (scrollbarWidth === 0) {
+            style = '';
+        }
 
-         /**
-          * Расчет ширины нативного скролла.
-          * @param detection
-          * @return {number}
-          */
-         calcScrollbarWidth: function(detection) {
-            var scrollbarWidth;
+        return style;
+    }
+};
 
-            if (detection.webkit || detection.chrome) {
-               scrollbarWidth = 0;
-            } else if (detection.isIE12) {
-               scrollbarWidth = detection.IEVersion < 17 ? 12 : 16;
-            } else if (detection.isIE10 || detection.isIE11) {
-               scrollbarWidth = 17;
-            } else if (typeof window !== 'undefined') {
-               scrollbarWidth = _private.calcScrollbarWidthByMeasuredBlock();
-            }
+export = {
+    _private: _private,
 
-            return scrollbarWidth;
-         },
+    calcStyleHideScrollbar: function () {
+        var scrollbarWidth, styleHideScrollbar;
 
-         /**
-          * Расчет css стиля для скрытия нативного скролла.
-          * @param scrollbarWidth
-          * @param detection
-          * @param compatibility
-          * @return {string}
-          */
-         calcStyleHideScrollbar: function(scrollbarWidth) {
-            var style;
+        if (typeof _private.styleHideScrollbar === 'string') {
+            styleHideScrollbar = _private.styleHideScrollbar;
+        } else {
+            scrollbarWidth = _private.calcScrollbarWidth(Env.detection);
+            styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth);
+        }
 
-            if (scrollbarWidth) {
-               style = 'margin-right: -' + scrollbarWidth + 'px;';
-            } else if (scrollbarWidth === 0) {
-               style = '';
-            }
+        /**
+         * Do not cache on the server and firefox.
+         */
+        if (!(typeof window === 'undefined' || Env.detection.firefox)) {
+            _private.styleHideScrollbar = styleHideScrollbar;
+        }
 
-            return style;
-         }
-      };
-
-      export = {
-         _private: _private,
-
-         calcStyleHideScrollbar: function() {
-            var scrollbarWidth, styleHideScrollbar;
-
-            if (typeof _private.styleHideScrollbar === 'string') {
-               styleHideScrollbar = _private.styleHideScrollbar;
-            } else {
-               scrollbarWidth = _private.calcScrollbarWidth(Env.detection);
-               styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth);
-            }
-
-            /**
-             * Do not cache on the server and firefox.
-             */
-            if (!(typeof window === 'undefined' || Env.detection.firefox)) {
-               _private.styleHideScrollbar = styleHideScrollbar;
-            }
-
-            return styleHideScrollbar;
-         }
-      };
+        return styleHideScrollbar;
+    }
+};
    

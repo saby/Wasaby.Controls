@@ -6,6 +6,7 @@ import stickyUtils = require('Controls/_scroll/StickyHeader/Utils');
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
 import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/_StickyHeader/StickyHeader');
+import tmplNotify = require('Controls/Utils/tmplNotify');
 import 'css!theme?Controls/scroll';
 
 
@@ -81,10 +82,12 @@ var StickyHeader = Control.extend({
 
    _height: 0,
 
-   _padding: 0,
+   _reverseOffsetStyle: null,
    _minHeight: 0,
    _cachedStyles: null,
    _cssClassName: null,
+
+   _notifyHandler: tmplNotify,
 
    constructor: function() {
       StickyHeader.superclass.constructor.apply(this, arguments);
@@ -118,6 +121,7 @@ var StickyHeader = Control.extend({
 
    _beforeUnmount: function() {
       this._model.destroy();
+      this._stickyDestroy = true;
       this._observer.disconnect();
 
       //Let the listeners know that the element is no longer fixed before the unmount.
@@ -173,6 +177,13 @@ var StickyHeader = Control.extend({
     * @private
     */
    _observeHandler: function(entries) {
+      /**
+       * Баг IntersectionObserver на Mac OS: сallback может вызываться после отписки от слежения. Отписка происходит в
+       * _beforeUnmount. Устанавливаем защиту.
+       */
+      if (this._stickyDestroy) {
+         return;
+      }
       // FIXME: this._container - jQuery element in old controls envirmoment https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
       let container = this._container[0] || this._container;
       let popupContainer = container.closest('.controls-Popup__template');
@@ -286,11 +297,19 @@ var StickyHeader = Control.extend({
             if (this._minHeight) {
                style += 'min-height:' + this._minHeight + 'px;';
             }
-            // Increase padding by offset. If the padding is already set by the style attribute, then do not touch it.
-            if (!container.style.paddingTop) {
-               this._padding = parseInt(styles.paddingTop, 10) + offset;
+            // Increase border or padding by offset.
+            // If the padding or border is already set by the style attribute, then don't change it.
+            if (this._reverseOffsetStyle === null) {
+               const borderWidth: number = parseInt(styles['border-' + fixedPosition + '-width'], 10);
+
+               if (borderWidth) {
+                  this._reverseOffsetStyle = 'border-' + fixedPosition + '-width:' + (borderWidth + offset) + 'px;';
+               } else {
+                  this._reverseOffsetStyle = 'padding-' + fixedPosition + ':' + (parseInt(styles.paddingTop, 10) + offset) + 'px;';
+               }
             }
-            style += 'padding-' + fixedPosition + ': ' + this._padding + 'px;';
+
+            style += this._reverseOffsetStyle;
             style += 'margin-' + fixedPosition + ': -' + offset + 'px;';
          }
 

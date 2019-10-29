@@ -41,7 +41,7 @@ define([
             assert.equal(a, 'm');
          });
          it('open', () => {
-            popupOpener._openPopup = () => {};
+            popupOpener._openPopup = () => Promise.resolve();
             let def = popupOpener.open({});
 
             assert.equal(def instanceof Deferred, true);

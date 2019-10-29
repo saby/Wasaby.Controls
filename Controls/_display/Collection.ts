@@ -32,6 +32,8 @@ import MarkerManager from './utils/MarkerManager';
 import EditInPlaceManager from './utils/EditInPlaceManager';
 import ItemActionsManager from './utils/ItemActionsManager';
 import VirtualScrollManager from './utils/VirtualScrollManager';
+import HoverManager from './utils/HoverManager';
+import SwipeManager from './utils/SwipeManager';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -606,6 +608,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _editInPlaceManager: EditInPlaceManager;
     protected _itemActionsManager: ItemActionsManager;
     protected _virtualScrollManager: VirtualScrollManager;
+    protected _hoverManager: HoverManager;
+    protected _swipeManager: SwipeManager;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -658,6 +662,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._editInPlaceManager = new EditInPlaceManager(this);
         this._itemActionsManager = new ItemActionsManager(this);
         this._virtualScrollManager = new VirtualScrollManager(this);
+        this._hoverManager = new HoverManager(this);
+        this._swipeManager = new SwipeManager(this);
     }
 
     destroy(): void {
@@ -1858,8 +1864,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         );
         this._notifyAfterCollectionChange();
 
-        // TODO Make a list of properties that lead to version update
-        if (properties as String === 'editingContents') {
+        // FIXME Make a list of properties that lead to version update
+        if (properties as String === 'editingContents' || properties as String === 'animated') {
             this._nextVersion();
         }
     }
@@ -1939,6 +1945,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // endregion
 
+    // FIXME Will be removed, managers will be created from the outside of
+    // the model in Stage 2. For now we have to create them here and access
+    // them from the model to stay compatible with BaseControl.
+    getItemActionsManager(): ItemActionsManager {
+        return this._itemActionsManager;
+    }
+
     getDisplayProperty(): string {
         return this._$displayProperty;
     }
@@ -1946,6 +1959,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     setMarkedItem(item: CollectionItem<S>): void {
         this._markerManager.markItem(item);
         this._nextVersion();
+    }
+
+    getMarkedItem(): CollectionItem<S> {
+        return this._markerManager.getMarkedItem() as CollectionItem<S>;
     }
 
     getItemCounters(): ICollectionCounters[] {
@@ -2008,6 +2025,16 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setActiveItem(item: CollectionItem<S>): void {
         this._itemActionsManager.setActiveItem(item);
+        this._nextVersion();
+    }
+
+    setSwipeItem(item: CollectionItem<S>): void {
+        this._swipeManager.setSwipeItem(item);
+        this._nextVersion();
+    }
+
+    getSwipeItem(): CollectionItem<S> {
+        return this._swipeManager.getSwipeItem() as CollectionItem<S>;
     }
 
     getActiveItem(): CollectionItem<S> {
@@ -2046,12 +2073,20 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         throw new Error('Collection#getItemBySourceId is implemented for RecordSet only');
     }
 
+    getIndexByKey(key: string|number): number {
+        return this.getIndex(this.getItemBySourceId(key) as T);
+    }
+
     getFirstItem(): S {
-        return this.getFirst().getContents();
+        if (this.getCount() > 0) {
+            return this.getFirst().getContents();
+        }
     }
 
     getLastItem(): S {
-        return this.getLast().getContents();
+        if (this.getCount() > 0) {
+            return this.getLast().getContents();
+        }
     }
 
     getViewIterator(): {
@@ -2511,6 +2546,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._reIndex();
 
         if (reset) {
+            this._itemsUid.clear();
+            this._itemToUid.clear();
             itemsStrategy.reset();
         }
 
@@ -3171,6 +3208,8 @@ Object.assign(Collection.prototype, {
     _editInPlaceManager: null,
     _itemActionsManager: null,
     _virtualScrollManager: null,
+    _hoverManager: null,
+    _swipeManager: null,
     _startIndex: 0,
     _stopIndex: 0,
     getIdProperty: Collection.prototype.getKeyProperty

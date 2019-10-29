@@ -34,7 +34,6 @@
            on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
            on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
            on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
-           on:keyDown="_onExplorerKeyDown()"
            on:sortingChanged="_notifyHandler('sortingChanged')"
    />
    <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>

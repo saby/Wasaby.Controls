@@ -193,28 +193,6 @@ define([
          assert.deepEqual(data[1].test, listViewModel._actions[1].all);
       });
 
-      it('unsubscribe old model', function() {
-         var cfg = {
-            listModel: listViewModel,
-            itemActions: actions
-         };
-         var eHandler = function() {};
-         var ctrl = new lists.ItemActionsControl(cfg);
-         ctrl._onCollectionChangeFn = eHandler;
-         listViewModel.subscribe('onListChange', eHandler);
-         ctrl._options.listModel = listViewModel;
-
-         assert.isTrue(listViewModel.hasEventHandlers('onListChange'));
-
-         ctrl._beforeUpdate({
-            listModel: new lists.ListViewModel({
-               items: rs,
-               keyProperty: 'id'
-            })
-         });
-
-         assert.isFalse(listViewModel.hasEventHandlers('onListChange'));
-      });
 
       it('getChildren', function() {
          const
@@ -251,54 +229,6 @@ define([
          assert.deepEqual(actionsWithHierarchy.slice(-2), ctrl.getChildren(actionsWithHierarchy[1], actionsWithHierarchy));
       });
 
-      describe('_onCollectionChange', function() {
-         it('items should not update if the type is neither collectionChanged nor indexesChanged', function() {
-            var
-               cfg = {
-                  listModel: listViewModel,
-                  canUpdateItemsActions: true,
-                  itemActions: actions
-               },
-               ctrl = new lists.ItemActionsControl(cfg),
-               spy = sandbox.spy(listViewModel, 'nextModelVersion');
-            ctrl.saveOptions(cfg);
-            ctrl._onCollectionChange({}, 'test');
-
-            assert.isFalse(spy.called);
-         });
-
-         it('items should update once if the type is collectionChanged', function() {
-            var
-               cfg = {
-                  listModel: listViewModel,
-                  canUpdateItemsActions: true,
-                  itemActions: actions
-               },
-               ctrl = new lists.ItemActionsControl(cfg),
-               spy = sandbox.spy(listViewModel, 'nextModelVersion');
-            ctrl.saveOptions(cfg);
-            ctrl._onCollectionChange({}, 'collectionChanged');
-
-            assert.isTrue(spy.calledOnce);
-            assert.isTrue(spy.firstCall.args[0]);
-         });
-
-         it('items should update once if the type is indexesChanged', function() {
-            var
-               cfg = {
-                  listModel: listViewModel,
-                  canUpdateItemsActions: true,
-                  itemActions: actions
-               },
-               ctrl = new lists.ItemActionsControl(cfg),
-               spy = sandbox.spy(listViewModel, 'nextModelVersion');
-            ctrl.saveOptions(cfg);
-            ctrl._onCollectionChange({}, 'indexesChanged');
-
-            assert.isTrue(spy.calledOnce);
-            assert.isFalse(spy.firstCall.args[0]);
-         });
-      });
 
       it('_onItemActionClick', function() {
            var cfg = {
@@ -495,6 +425,94 @@ define([
          assert.equal(listViewModel.getVersion() - oldVersion, 1);
       });
 
+      describe('beforeUpdate updates model', function() {
+         var visibilityCallback = function() {
+            return true;
+         };
+         var lvm = new lists.ListViewModel({
+            items: rs,
+            keyProperty: 'id'
+         });
+         var cfg = {
+            listModel: listViewModel,
+            readOnly: false,
+            tooblarVisibility: false,
+            itemActions: [{
+               id: 0,
+               title: 'first',
+               showType: tUtil.showType.MENU
+            },
+               {
+                  id: 1,
+                  title: 'second',
+                  showType: tUtil.showType.TOOLBAR
+               }],
+            itemActionsPosition: 'outside'
+            };
+
+         var ctrl = new lists.ItemActionsControl(cfg);
+         var modelVersion = 0;
+         ctrl._beforeMount(cfg);
+         ctrl.saveOptions(cfg);
+         var originalUpdateModel = lists.ItemActionsControl._private.updateModel;
+
+         beforeEach(function() {
+            lists.ItemActionsControl._private.updateModel = function() {
+               modelVersion++;
+            }
+         });
+         afterEach(function() {
+            lists.ItemActionsControl._private.updateModel = originalUpdateModel;
+         });
+         it('readOnly', function() {
+            ctrl._beforeUpdate({...cfg, readOnly: true});
+            assert.equal(modelVersion, 1);
+         });
+         it('listModel', function() {
+            ctrl._beforeUpdate({...cfg, listModel: lvm});
+            assert.equal(modelVersion, 2);
+         });
+         it('itemActions', function() {
+            ctrl._beforeUpdate({...cfg, itemActions: []});
+            assert.equal(modelVersion, 3);
+         });
+         it('itemActionVisibilityCallback', function() {
+            ctrl._beforeUpdate({...cfg, itemActionVisibilityCallback: visibilityCallback});
+            assert.equal(modelVersion, 4);
+         });
+         it('toolbarVisibility', function() {
+            ctrl._beforeUpdate({...cfg, toolbarVisibility: true});
+            assert.equal(modelVersion, 5);
+         });
+         it('itemActionsPosition', function() {
+            ctrl._beforeUpdate({...cfg, itemActionsPosition: 'inside'});
+            assert.equal(modelVersion, 6);
+         });
+      });
+      it('updateActions', function() {
+         let data, rs, lvm;
+         data = [];
+         rs = new collection.RecordSet({
+            keyProperty: 'id',
+            rawData: data
+         });
+         lvm = new lists.ListViewModel({
+            items: rs,
+            keyProperty: 'id'
+         });
+         var cfg = {
+            listModel: lvm,
+            itemActions: [],
+            itemActionsPosition: 'outside'
+         };
+         let modelUpdated = false;
+         lvm.nextModelVersion = function() {
+            modelUpdated = true;
+         }
+         var ctrl = new lists.ItemActionsControl(cfg);
+         lists.ItemActionsControl._private.updateActions(ctrl, cfg);
+         assert.isTrue(modelUpdated);
+      });
       it('updateItemActions', function() {
          var cfg = {
             listModel: listViewModel,

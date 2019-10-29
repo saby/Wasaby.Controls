@@ -44,5 +44,21 @@ define([
          });
          assert.equal(SwitchArea._viewModel._items[0].title, 'title', '_beforeUpdate. Items updating is uncorrect');
       });
+
+      it('correctSelectedKey', () => {
+         var opt1 = {
+            items: testItems,
+            selectedKey: '1'
+         };
+         var opt2 = {
+            items: testItems,
+            selectedKey: '7'
+         };
+         SwitchArea._correctSelectedKey(opt1);
+         assert.equal(SwitchArea._selectedKey, '1', 'incorrect');
+
+         SwitchArea._correctSelectedKey(opt2);
+         assert.equal(SwitchArea._selectedKey, '1', 'incorrect selected key');
+      });
    });
 });

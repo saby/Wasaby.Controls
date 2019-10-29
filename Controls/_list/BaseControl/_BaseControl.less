@@ -1,0 +1,134 @@
+.controls-BaseControl__fakeFocusElem {
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   width: 1px;
+   height: 1px;
+}
+
+/*
+https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
+*/
+.ws-is-desktop-safari,
+.ws-is-sbis-desktop,
+.ws-is-mobile-safari {
+   .controls-BaseControl__fakeFocusElem {
+      left: 0;
+   }
+}
+
+.controls-BaseControl__loadMore {
+   height: @height_BaseControl-button-loadMore;
+}
+.controls-BaseControl__pagingContainer {
+   pointer-events: none;
+   position: absolute;
+   bottom: 0;
+   right: 0;
+   z-index: 6;
+   display: flex;
+   justify-content: flex-end;
+}
+
+/* paging with position: absolute work bad on Ipad/IPhone,
+   becouse of -webkit-overflow-scrolling: touch breaks absolute positioning.*/
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
+   .controls-BaseControl__pagingContainer {
+      position: sticky;
+      top: auto;
+   }
+}
+
+.controls-BaseControl_paging-Padding {
+   height: @height_Paging-button;
+}
+.ws-is-mobile-safari .controls-BaseControl_paging-Padding {
+   height: 0;
+}
+
+.controls-BaseControl__scrollPaging {
+   pointer-events: auto;
+   border: 0 solid @border-color_BaseControl-scrollPaging;
+   border-top-width: @border-width_BaseControl-scrollPaging-top;
+}
+.controls-BaseControl__loadingIndicator {
+   background-color: transparent;
+   display: flex;
+   justify-content: center;
+   cursor: auto;
+
+   // TODO: KINGO
+   // Локальный индикатор загрузки на весь экран должен блокировать список, перевкрывая кнопки навигации и скроллбар.
+   z-index: 7;
+}
+
+.controls-BaseControl__loadingIndicator__state-up {
+   position: relative;
+}
+.controls-BaseControl__loadingIndicator__state-down {
+   position: relative;
+}
+
+.controls-BaseControl__loadingIndicator__state-up .controls-BaseControl__loadingIndicatorImg-wrapper {
+   position: absolute;
+   top: 0
+}
+
+.controls-BaseControl__loadingIndicator__state-down .controls-BaseControl__loadingIndicatorImg-wrapper {
+   position: absolute;
+   bottom: 0;
+}
+
+.controls-BaseControl_empty__loadingIndicator__state-down .controls-BaseControl__loadingIndicatorImg-wrapper {
+   top: 0;
+}
+.controls-BaseControl_withPaging__loadingIndicator__state-down {
+   top: @height_Paging-button;
+}
+.controls-BaseControl__loadingIndicator__state-all {
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   align-items: center;
+}
+
+.controls-BaseControl__loadingIndicatorImg-wrapper {
+   padding: @spacing_BaseControl-loadingIndicator-between-top-border-content @spacing_BaseControl-loadingIndicator-between-right-border-content @spacing_BaseControl-loadingIndicator-between-bottom-border-content @spacing_BaseControl-loadingIndicator-between-left-border-content;
+   background-color: @background-color_BaseControl-loadingIndicator;
+   border-radius: @border-radius_BaseControl-loadingIndicator;
+   z-index: 1;
+}
+.controls-BaseControl__loadingIndicatorImg {
+   background: @background-image_BaseControl-loadingIndicator 0 0 no-repeat;/**/
+   width: @width_BaseControl-loadingIndicator-img;
+   height: @height_BaseControl-loadingIndicator-img;
+   background-size: @width_BaseControl-loadingIndicator-img;
+}
+.controls-BaseControl__trigger  {
+   position: relative;
+}
+.controls-BaseControl__footer-content {
+   min-height: @min-height_BaseControl-footer-content;
+   display: flex;
+   align-items: baseline;
+}
+
+.controls-BaseControl__footer-content::before {
+   content: '\200b';
+   font-size: @font-size_BaseControl-footer-content-baseline;
+}
+
+.controls-BaseControl__footerPaging {
+   background: @background-color_BaseControl-footer-paging;
+}
+.controls-BaseControl__footerPaging_wrapper {
+   display: flex;
+   justify-content: flex-end;
+}
+.controls-BaseControl_paging-label {
+   display: flex;
+   align-items: center;
+   color: @color_BaseControl-paging_label;
+   font-size: @font-size_BaseControl-paging_label;
+}

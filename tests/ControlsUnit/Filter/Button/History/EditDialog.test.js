@@ -25,7 +25,7 @@ define(
             assert.equal(dialog._placeholder, defaultConfig.editedTextValue);
             assert.equal(dialog._textValue, '');
             assert.equal(dialog._globalKey, 0);
-            assert.deepEqual(dialog._selectedFilters, ['period', 'author']);
+            assert.deepEqual(dialog._selectedFilters, ['period', 'warehouse', 'sender', 'author', 'responsible']);
             assert.isOk(dialog._source);
          });
 
@@ -40,7 +40,7 @@ define(
             dialog._beforeUpdate(newConfig);
             assert.equal(dialog._textValue, newConfig.editedTextValue);
             assert.equal(dialog._globalKey, newConfig.globalParams);
-            assert.deepEqual(dialog._selectedFilters, ['period', 'author']);
+            assert.deepEqual(dialog._selectedFilters, ['period', 'warehouse', 'sender', 'author', 'responsible']);
          });
 
          it('_delete', function() {

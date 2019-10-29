@@ -55,13 +55,11 @@ define(
 
          it('open', () => {
             let opener = getOpener(config);
-            opener._children.StickyOpener = {
-               open: function(cfg) {
-                  let compOptions = cfg.templateOptions;
-                  assert.isTrue(compOptions.itemTemplate === 'itemTemplate' &&
-                     compOptions.headTemplate === 'headTemplate' &&
-                     compOptions.footerTemplate === 'footerTemplate');
-               }
+            opener.__proto__.__proto__.open = (cfg) => {
+               let compOptions = cfg.templateOptions;
+               assert.isTrue(compOptions.itemTemplate === 'itemTemplate' &&
+                  compOptions.headTemplate === 'headTemplate' &&
+                  compOptions.footerTemplate === 'footerTemplate');
             };
             opener.open({
                templateOptions: {

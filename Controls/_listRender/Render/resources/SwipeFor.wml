@@ -1,0 +1,17 @@
+<ws:for data="actionIndex, action in showedActions">
+   <ws:partial
+      template="Controls/list:_swipeActionTemplate"
+      action="{{ action }}"
+      needIcon="{{ needIcon }}"
+      needTitle="{{ needTitle }}"
+      actionAlignment="{{ actionAlignment }}"
+      itemActionsSize="{{ swipeConfig.itemActionsSize }}"
+      paddingSize="{{ swipeConfig.paddingSize }}"
+      actionCaptionPosition="{{ actionCaptionPosition }}"
+      hasActionWithIcon="{{ item.hasActionWithIcon() }}"
+      on:click="_onItemActionsClick(action, item)"/>
+
+   <ws:if data="{{actionIndex !== showedActions.length - 1}}">
+      <div attr:class="controls-Swipe__separator controls-Swipe__separator_{{ actionAlignment }}"></div>
+   </ws:if>
+</ws:for>

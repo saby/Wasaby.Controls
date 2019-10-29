@@ -1,5 +1,5 @@
 <ws:if data="{{ useNewModel }}">
-   <ws:partial template="wml!Controls/_list/Render/resources/EditingTemplate" scope="{{ _options }}" />
+   <ws:partial template="{{ 'Controls/listRender:editingTemplate' }}" scope="{{ _options }}" />
 </ws:if>
 <ws:else>
    <ws:partial template="wml!Controls/_list/EditInPlace/EditingTemplate" scope="{{ _options }}" />

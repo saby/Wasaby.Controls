@@ -299,11 +299,11 @@ define([
                ]
             ];
             var goodHtml = '<div><p>some test</p></div>';
-            var goodError = 'Невалидное значение атрибута class, ожидается строковый тип.';
+            var goodError = 'Ошибка разбора JsonML: Невалидное значение атрибута class, ожидается строковое значение. Ошибочный узел: {"class":true}';
             var checkHtml = decorator.Converter.jsonToHtml(json);
-            var chechError = errorArray.shift()[1];
+            var checkError = errorArray.shift()[1];
             equalsHtml(goodHtml, checkHtml);
-            assert.equal(goodError, chechError);
+            assert.ok(checkError.indexOf(goodError) !== -1);
          });
 
          it('invalid JsonML', function() {
@@ -318,11 +318,25 @@ define([
                ]
             ];
             var goodHtml = '<div><p class="myClass"></p></div>';
-            var goodError = 'Узел в JsonML должен быть строкой или массивом.';
+            var goodError = 'Ошибка разбора JsonML: Узел в JsonML должен быть строкой или массивом. Ошибочный узел: {"text":"some text"}';
             var checkHtml = decorator.Converter.jsonToHtml(json);
-            var chechError = errorArray.shift()[1];
+            var checkError = errorArray.shift()[1];
             equalsHtml(goodHtml, checkHtml);
-            assert.equal(goodError, chechError);
+            assert.ok(checkError.indexOf(goodError) !== -1);
+         });
+
+         it('link to id on current page', function () {
+            var json = [
+               ['a',
+                  {
+                     href: '#someId'
+                  },
+                  'goto'
+               ]
+            ];
+            var goodHtml = '<div><a href="#someId">goto</a></div>';
+            var checkHtml = decorator.Converter.jsonToHtml(json);
+            assert.equal(goodHtml, checkHtml);
          });
 
          it('all valid tags and attributes', function() {
@@ -557,6 +571,9 @@ define([
                      any: true,
                      tag: true,
                      link: true,
+                     additional: {
+                        add: true
+                     },
                      script: true
                   },
                   validAttributes: {
@@ -570,12 +587,14 @@ define([
                   ['any', { name: 'name', value: 'value', id: 'id' }],
                   ['tag', 'inner text'],
                   ['link'],
+                  ['additional', { add: 'add', name: 'name', id: 'id' }],
                   ['script', 'alert(123);']
                ],
                goodHtml =
                   '<any name="name" value="value"></any>' +
                   '<tag>inner text</tag>' +
                   '<link />' +
+                  '<additional add="add" name="name"></additional>' +
                   '<script>alert(123);</script>',
                checkHtml = template({
                   _options: {
@@ -609,6 +628,13 @@ define([
                      'https:\\\\ya.ru\\som"e'
                   ]
                ],
+               ['p',
+                  'outer text one',
+                  ['br'],
+                  'outer text two',
+                  ['p', 'inner text'],
+                  'outer text three'
+               ],
                ['p', ['a', { href: longLink }, longLink]],
                ['p', ['a', { href: 'https://ya.ru' }, 'text']]
             ];
@@ -623,6 +649,7 @@ define([
                '<p>' + decoratedLinkHtml + '   <br />text</p>',
                '<p><strong>' + linkHtml + '</strong>text</p>',
                '<p><span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer noopener" href="https:\\\\ya.ru\\som&quot;e" target="_blank"><img class="LinkDecorator__image" alt="https:\\\\ya.ru\\som&quot;e" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6XFxcXHlhLnJ1XFxzb21cImUifQ%3D%3D&amp;id=0&amp;srv=1" /></a></span></p>',
+               '<p>outer text one<br />outer text two<p>inner text</p>outer text three</p>',
                '<p><a href="' + longLink + '">' + longLink + '</a></p>',
                '<p><a href="https://ya.ru">text</a></p>'
             ];
@@ -632,6 +659,7 @@ define([
                equalsHtml(checkHtml, goodHtml, 'fail in index ' + i);
             }
          });
+
          it('with highlight resolver', function() {
             var json = [
                ['p', ['strong', 'BaBare;gjwergo'], 'aBaweruigerhw', ['em', 'aBa']],

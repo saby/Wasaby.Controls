@@ -6,113 +6,47 @@ define([
 
    describe('Controls.dragnDrop.ResizingLine', function() {
 
-      it('_calculateCoordinates', function() {
+      it('_offset', function() {
          let rlInstance = new dragnDrop.ResizingLine({});
 
-         rlInstance._clientRect = {
-            left: 800,
-            top: 400
+         rlInstance._options = {
+            minOffset: 300,
+            maxOffset: 300,
+            direction: 'direct'
          };
+         let offset = rlInstance._offset(100);
+         assert.strictEqual('left: 100%', offset.style, 'Wrong offset');
+         assert.strictEqual(100, offset.value, 'Wrong offset');
 
-         let coords = rlInstance._calculateCoordinates(100, 200, -200, 5, 300, 'direct');
-         assert.strictEqual(100, coords.cOffset, 'Wrong coords');
-         assert.strictEqual('805px', coords.cLeft, 'Wrong coords');
-         assert.strictEqual('100px', coords.cWidth, 'Wrong coords');
-         assert.strictEqual('auto', coords.cRight, 'Wrong coords');
-         assert.strictEqual('400px', coords.cTop, 'Wrong coords');
-         assert.strictEqual('300px', coords.cHeight, 'Wrong coords');
-         assert.strictEqual('auto', coords.cBottom, 'Wrong coords');
+         offset = rlInstance._offset(400);
+         assert.strictEqual('left: 100%', offset.style, 'Wrong offset');
+         assert.strictEqual(300, offset.value, 'Wrong offset');
 
-         coords = rlInstance._calculateCoordinates(-5, 200, 0, 5, 300, 'direct');
-         assert.strictEqual(-0, coords.cOffset, 'Wrong coords');
-         assert.strictEqual('805px', coords.cLeft, 'Wrong coords');
-         assert.strictEqual('0px', coords.cWidth, 'Wrong coords');
-         assert.strictEqual('auto', coords.cRight, 'Wrong coords');
-         assert.strictEqual('400px', coords.cTop, 'Wrong coords');
-         assert.strictEqual('300px', coords.cHeight, 'Wrong coords');
-         assert.strictEqual('auto', coords.cBottom, 'Wrong coords');
+         offset = rlInstance._offset(-100);
+         assert.strictEqual('right: 0', offset.style, 'Wrong offset');
+         assert.strictEqual(-100, offset.value, 'Wrong offset');
 
-         coords = rlInstance._calculateCoordinates(300, 200, -200, 5, 300, 'direct');
-         assert.strictEqual(200, coords.cOffset, 'Wrong coords');
-         assert.strictEqual('805px', coords.cLeft, 'Wrong coords');
-         assert.strictEqual('200px', coords.cWidth, 'Wrong coords');
-         assert.strictEqual('auto', coords.cRight, 'Wrong coords');
-         assert.strictEqual('400px', coords.cTop, 'Wrong coords');
-         assert.strictEqual('300px', coords.cHeight, 'Wrong coords');
-         assert.strictEqual('auto', coords.cBottom, 'Wrong coords');
+         offset = rlInstance._offset(-400);
+         assert.strictEqual('right: 0', offset.style, 'Wrong offset');
+         assert.strictEqual(-300, offset.value, 'Wrong offset');
 
-         coords = rlInstance._calculateCoordinates(-100, 200, -200, 5, 300, 'direct');
-         assert.strictEqual(-100, coords.cOffset, 'Wrong coords');
-         assert.strictEqual('705px', coords.cLeft, 'Wrong coords');
-         assert.strictEqual('100px', coords.cWidth, 'Wrong coords');
-         assert.strictEqual('auto', coords.cRight, 'Wrong coords');
-         assert.strictEqual('400px', coords.cTop, 'Wrong coords');
-         assert.strictEqual('300px', coords.cHeight, 'Wrong coords');
-         assert.strictEqual('auto', coords.cBottom, 'Wrong coords');
+         rlInstance._options.direction = 'reverse';
 
-         coords = rlInstance._calculateCoordinates(-300, 200, -150, 5, 300, 'direct');
-         assert.strictEqual(-150, coords.cOffset, 'Wrong coords');
-         assert.strictEqual('655px', coords.cLeft, 'Wrong coords');
-         assert.strictEqual('150px', coords.cWidth, 'Wrong coords');
-         assert.strictEqual('auto', coords.cRight, 'Wrong coords');
-         assert.strictEqual('400px', coords.cTop, 'Wrong coords');
-         assert.strictEqual('300px', coords.cHeight, 'Wrong coords');
-         assert.strictEqual('auto', coords.cBottom, 'Wrong coords');
+         offset = rlInstance._offset(100);
+         assert.strictEqual('left: 0', offset.style, 'Wrong offset');
+         assert.strictEqual(-100, offset.value, 'Wrong offset');
 
-         coords = rlInstance._calculateCoordinates(100, 200, -200, 5, 300, 'reverse');
-         assert.strictEqual(-100, coords.cOffset, 'Wrong coords');
-         assert.strictEqual('800px', coords.cLeft, 'Wrong coords');
-         assert.strictEqual('100px', coords.cWidth, 'Wrong coords');
-         assert.strictEqual('auto', coords.cRight, 'Wrong coords');
-         assert.strictEqual('400px', coords.cTop, 'Wrong coords');
-         assert.strictEqual('300px', coords.cHeight, 'Wrong coords');
-         assert.strictEqual('auto', coords.cBottom, 'Wrong coords');
+         offset = rlInstance._offset(400);
+         assert.strictEqual('left: 0', offset.style, 'Wrong offset');
+         assert.strictEqual(-300, offset.value, 'Wrong offset');
 
-         coords = rlInstance._calculateCoordinates(300, 200, -200, 5, 300, 'reverse');
-         assert.strictEqual(-200, coords.cOffset, 'Wrong coords');
-         assert.strictEqual('800px', coords.cLeft, 'Wrong coords');
-         assert.strictEqual('200px', coords.cWidth, 'Wrong coords');
-         assert.strictEqual('auto', coords.cRight, 'Wrong coords');
-         assert.strictEqual('400px', coords.cTop, 'Wrong coords');
-         assert.strictEqual('300px', coords.cHeight, 'Wrong coords');
-         assert.strictEqual('auto', coords.cBottom, 'Wrong coords');
+         offset = rlInstance._offset(-100);
+         assert.strictEqual('right: 100%', offset.style, 'Wrong offset');
+         assert.strictEqual(100, offset.value, 'Wrong offset');
 
-         coords = rlInstance._calculateCoordinates(-100, 200, -200, 5, 300, 'reverse');
-         assert.strictEqual(100, coords.cOffset, 'Wrong coords');
-         assert.strictEqual('700px', coords.cLeft, 'Wrong coords');
-         assert.strictEqual('100px', coords.cWidth, 'Wrong coords');
-         assert.strictEqual('auto', coords.cRight, 'Wrong coords');
-         assert.strictEqual('400px', coords.cTop, 'Wrong coords');
-         assert.strictEqual('300px', coords.cHeight, 'Wrong coords');
-         assert.strictEqual('auto', coords.cBottom, 'Wrong coords');
-
-         coords = rlInstance._calculateCoordinates(-300, 200, -150, 5, 300, 'reverse');
-         assert.strictEqual(200, coords.cOffset, 'Wrong coords');
-         assert.strictEqual('600px', coords.cLeft, 'Wrong coords');
-         assert.strictEqual('200px', coords.cWidth, 'Wrong coords');
-         assert.strictEqual('auto', coords.cRight, 'Wrong coords');
-         assert.strictEqual('400px', coords.cTop, 'Wrong coords');
-         assert.strictEqual('300px', coords.cHeight, 'Wrong coords');
-         assert.strictEqual('auto', coords.cBottom, 'Wrong coords');
-      });
-      it('_onEndDragHandler', function() {
-         var calls = [];
-         let rlInstance = new dragnDrop.ResizingLine({});
-         rlInstance._notify = ProxyCall.apply(rlInstance._notify, 'notify', calls, true);
-         rlInstance.getInstanceId = function() {
-            return 'testId';
-         };
-         rlInstance._offset = 100;
-
-         rlInstance._onEndDragHandler({}, {entity: null});
-         assert.strictEqual(calls.length, 0);
-         rlInstance._onEndDragHandler({}, {entity: new dragnDrop.Entity({})});
-         assert.strictEqual(calls.length, 0);
-         rlInstance._onEndDragHandler({}, {entity: new dragnDrop.Entity({itemId: 'testId'})});
-         assert.deepStrictEqual(calls, [{
-            name: 'notify',
-            arguments: ['offset', [100]]
-         }]);
+         offset = rlInstance._offset(-400);
+         assert.strictEqual('right: 100%', offset.style, 'Wrong offset');
+         assert.strictEqual(300, offset.value, 'Wrong offset');
       });
       it('_isResizing', function() {
          var ctrl = new dragnDrop.ResizingLine({});

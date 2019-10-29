@@ -1,4 +1,4 @@
-import BaseOpener = require('Controls/_popup/Opener/BaseOpener');
+import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
 import ManagerController = require('Controls/_popup/Manager/ManagerController');
 import {parse as load} from 'Core/library';
@@ -50,7 +50,7 @@ const _private = {
         }
     },
     compatibleOpen(self, popupOptions): Promise<string> {
-        const config = BaseOpener.getConfig({}, {}, popupOptions);
+        const config = BaseOpener.getConfig({}, popupOptions);
         return new Promise((resolve) => {
             Promise.all([
                 BaseOpener.requireModule('Controls/compatiblePopup:BaseOpener'),
@@ -88,13 +88,13 @@ const _private = {
     }
 };
 
-const Notification = BaseOpener.extend({
-    _notificationId: null,
+class Notification extends BaseOpener {
+    _notificationId: string = '';
     /**
      * Метод открытия нотификационного окна.
      * Повторный вызов этого метода вызовет переририсовку контрола.
      * @function Controls/_popup/Opener/Notification#open
-     * @param {PopupOptions[]} popupOptions Конфигурация нотифицационного окна
+     * @param {PopupOptions} popupOptions Конфигурация нотифицационного окна
      * @remark
      * Если требуется открыть окно, без создания popup:Notification в верстке, следует использовать статический метод {@link openPopup}
      * @example
@@ -131,12 +131,12 @@ const Notification = BaseOpener.extend({
 
     isOpened(): boolean {
         return !!ManagerController.find(this._notificationId);
-    },
+    }
 
     /*
      * Open dialog popup.
      * @function Controls/_popup/Opener/Notification#open
-     * @param {PopupOptions[]} popupOptions Notification popup options.
+     * @param {PopupOptions} popupOptions Notification popup options.
      */
 
     open(popupOptions) {
@@ -146,18 +146,18 @@ const Notification = BaseOpener.extend({
             this._notificationId = popupId;
             return popupId;
         });
-    },
+    }
     close() {
         Notification.closePopup(this._notificationId);
         _private.compatibleClose(this);
     }
-});
+}
 
 /**
  * Статический метод для открытия нотификационного окна. При использовании метода не требуется создавать popup:Notification в верстке.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ Подробнее}.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/#open-popup Подробнее}.
  * @function Controls/_popup/Opener/Notification#openPopup
- * @param {PopupOptions[]} config Конфигурация нотификационного окна
+ * @param {PopupOptions} config Конфигурация нотификационного окна
  * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
  * @static
  * @example
@@ -187,13 +187,13 @@ const Notification = BaseOpener.extend({
  * Open Notification popup.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ See more}.
  * @function Controls/_popup/Opener/Notification#openPopup
- * @param {PopupOptions[]} config Notification popup options.
+ * @param {PopupOptions} config Notification popup options.
  * @return {Promise<string>} Returns id of popup. This id used for closing popup.
 */
 
 Notification.openPopup = (config: object, id: string): Promise<string> => {
     return new Promise((resolve) => {
-        const newConfig = BaseOpener.getConfig({}, BASE_OPTIONS, config);
+        const newConfig = BaseOpener.getConfig(BASE_OPTIONS, config);
         if (isNewEnvironment()) {
             if (!newConfig.hasOwnProperty('opener')) {
                 newConfig.opener = null;
@@ -214,7 +214,7 @@ Notification.openPopup = (config: object, id: string): Promise<string> => {
 
 /**
  * Статический метод для закрытия окна по идентификатору.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ Подробнее}.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/#open-popup Подробнее}.
  * @function Controls/_popup/Opener/Notification#closePopup
  * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
  * @static

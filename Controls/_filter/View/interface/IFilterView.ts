@@ -420,6 +420,33 @@
  */
 
 /**
+ * @name Controls/_filter/View/interface/IFilterView#itemTemplate
+ * @cfg {Function} Шаблон отображения элементов быстрого фильтра.
+ * @remark
+ * В качестве шаблона рекоммендуется использовать базовый шаблон - "Controls/filter:ViewItemTemplate".
+ *
+ * Базовый шабон itemTemplate поддерживает следующие параметры:
+ *  - contentTemplate {Function} - Шаблон содержимого элемента. По-умолчанию выводится текст выбранного фильтра.
+ *  - beforeContentTemplate {Function} - Шаблон, расположенный слева от contentTemplate. По-умолчанию отображается стрелка, если передать null, стрелка отображаться не будет.
+ * @example
+ * В приведённом примере скрывается стрелка перед текстом быстрого фильтра.
+ * WML:
+ * <pre>
+ *    <Controls.filter:View
+ *       source={{_source}}
+ *       detailPanelTemplateName="wml!MyModule/detailPanelTemplate"
+ *       panelTemplateName="Controls/filterPopup:SimplePanel">
+ *
+ *       <ws:itemTemplate>
+ *          <ws:partial template="Controls/filter:ViewItemTemplate"
+ *                      beforeContentTemplate="{{null}}">
+ *          </ws:partial>
+ *       </ws:itemTemplate>
+ *    </Controls.filter:View>
+ * </pre>
+ */
+
+/**
  * @event Controls/_filter/View/interface/IFilterView#filterChanged Происходит при изменении фильтра.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object} filter Новый фильтр.

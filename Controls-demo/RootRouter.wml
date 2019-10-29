@@ -17,11 +17,7 @@
                </ws:else>
             </ws:if>
             <ws:else>
-               <div>{{_options.correctTemplate ? 'Не указан шаблон.' : 'Шаблон не найден.'}} Может быть перейти на&nbsp;
-                  <Router.router:Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
-                     <ws:content><a href="{{ content.href }}">разводящую</a></ws:content>
-                  </Router.router:Reference> ?
-               </div>
+               <div>{{_options.correctTemplate ? 'Не указан шаблон.' : 'Шаблон не найден.'}} Может быть перейти на&nbsp;<a href='#' on:click="goHomeHandler()">разводящую</a></div>
             </ws:else>
          </Controls-demo.RootTemplateWrapper>
       </Router.router:Route>

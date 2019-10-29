@@ -1,5 +1,6 @@
 import datePopupUtils from 'Controls/_datePopup/Utils';
 import dateUtils = require('Controls/Utils/Date');
+import {IDateRangeSelectable} from 'Controls/dateRange';
 
 describe('Controls/_datePopup/Utils', function() {
     describe('dataStringToDate', function() {
@@ -35,6 +36,35 @@ describe('Controls/_datePopup/Utils', function() {
         }].forEach((test) => {
             it(`should return ${test.isEnabled} if ${test.options} passed.`, () => {
                 assert.equal(datePopupUtils.isMonthStateEnabled(test.options), test.isEnabled);
+            });
+        });
+    });
+
+    describe('isYearStateEnabled', () => {
+        [{
+            options: {
+                selectionType: IDateRangeSelectable.SELECTION_TYPES.single,
+                minRange: IDateRangeSelectable.minRange.month
+            },
+            isEnabled: true
+        }, {
+            options: { selectionType: IDateRangeSelectable.SELECTION_TYPES.range },
+            isEnabled: true
+        }, {
+            options: {
+                selectionType: IDateRangeSelectable.SELECTION_TYPES.range,
+                quantum: {}
+            },
+            isEnabled: true
+        }, {
+            options: {
+                selectionType: IDateRangeSelectable.SELECTION_TYPES.range,
+                quantum: { months: [1] }
+            },
+            isEnabled: true
+        }].forEach((test) => {
+            it(`should return ${test.isEnabled} if ${test.options} passed.`, () => {
+                assert.equal(datePopupUtils.isYearStateEnabled(test.options), test.isEnabled);
             });
         });
     });

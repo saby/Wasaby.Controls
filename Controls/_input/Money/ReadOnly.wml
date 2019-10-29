@@ -1,4 +1,4 @@
 <div name="readOnlyField" class="controls-InputBase__field_readOnly controls-InputBase__field_theme_{{options.theme}}_margin">
-   <span>{{integerPart(value)}}</span>
-   <span class="controls-Money__fractionPart_theme_{{options.theme}}_readOnly">{{fractionPart(value)}}</span>
+   <span>{{integerPart(value, options.precision)}}</span>
+   <span class="controls-Money__fractionPart_theme_{{options.theme}}_readOnly">{{fractionPart(value, options.precision)}}</span>
 </div>

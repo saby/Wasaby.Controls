@@ -49,5 +49,5 @@ export default function isValidDateRange(args): boolean {
       return true;
    }
 
-   return rk('Дата конца периода должна быть больше даты начала.');
+   return rk('Дата конца периода должна быть больше даты начала');
 }

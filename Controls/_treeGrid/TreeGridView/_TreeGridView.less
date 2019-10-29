@@ -172,7 +172,7 @@
 }
 
 // For right vertiacal align of items inside block with display: table-cell.
-.ws-is-chrome-xp .controls-TreeGridView__row-cell_innerWrapper {
+.controls-Grid_table-layout .controls-TreeGridView__row-cell_innerWrapper {
    display: flex;
 }
 
@@ -184,4 +184,10 @@
 
 .controls-Grid__cell_fixed.controls-TreeGrid__row-cell {
    overflow-x: hidden;
+}
+
+.ws-is-hover {
+   .controls-Grid__row:hover > .controls-TreeGrid__row-cell > .controls-TreeGridView__row-cell_innerWrapper > .controls-itemActionsV {
+      display: inline-block;
+   }
 }

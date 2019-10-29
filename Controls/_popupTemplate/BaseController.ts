@@ -1,22 +1,41 @@
 import Deferred = require('Core/Deferred');
 import Utils = require('Types/util');
+import collection = require('Types/collection');
 import {Controller as ManagerController} from 'Controls/popup';
 
 export interface IPopupItem {
     id: string;
-    position: object;
+    parentId: string;
+    position: IPopupPosition;
     popupOptions: IPopupOptions;
     popupState: string;
-    sizes: ISizes;
+    sizes: IPopupSizes;
     _destroyDeferred: Promise<undefined>;
 }
 
-interface ISizes {
+export interface IPopupSizes {
     width: number;
     height: number;
 }
 
-interface IPopupOptions {
+export interface IPopupPosition {
+    top?: number;
+    left?: number;
+    bottom?: number;
+    right?: number;
+    minWidth?: number;
+    maxWidth?: number;
+    minHeight?: number;
+    maxHeight?: number;
+}
+
+export interface IDragOffset {
+    x: number;
+    y: number;
+}
+
+export interface IPopupOptions {
+    className: string;
     template: string;
     closeOnOutsideClick: boolean;
     width: number;
@@ -25,6 +44,7 @@ interface IPopupOptions {
     maxWidth: number;
     minHeight: number;
     maxHeight: number;
+    content: Function;
 }
 
 /**
@@ -42,27 +62,26 @@ abstract class BaseController {
     POPUP_STATE_UPDATED: string = 'updated';
     POPUP_STATE_DESTROYING: string = 'destroying';
     POPUP_STATE_DESTROYED: string = 'destroyed';
+
     abstract elementCreated(item: IPopupItem, container: HTMLDivElement): boolean;
 
-    abstract  elementUpdated(item: IPopupItem, container: HTMLDivElement): boolean;
+    abstract elementUpdated(item: IPopupItem, container: HTMLDivElement): boolean;
 
-    protected elementAfterUpdated(item: IPopupItem, container: HTMLDivElement): boolean {
-        return false;
-    }
+    abstract elementAfterUpdated(item: IPopupItem, container: HTMLDivElement): boolean;
 
-    abstract  elementMaximized(item: IPopupItem, container: HTMLDivElement, state: boolean): boolean;
+    abstract elementMaximized(item: IPopupItem, container: HTMLDivElement, state: boolean): boolean;
 
-    abstract  popupResizingLine(item: IPopupItem, offset: object): boolean;
+    abstract popupResizingLine(item: IPopupItem, offset: IDragOffset): boolean;
 
-    abstract  popupDragStart(item: IPopupItem, offset: object): boolean;
+    abstract popupDragStart(item: IPopupItem, container: HTMLDivElement, offset: IDragOffset): void;
 
-    abstract  popupDragEnd(item: IPopupItem): boolean;
+    abstract popupDragEnd(item: IPopupItem): void;
 
-    abstract  popupMouseEnter(item: IPopupItem): boolean;
+    abstract popupMouseEnter(item: IPopupItem): void;
 
-    abstract  popupMouseLeave(item: IPopupItem): boolean;
+    abstract popupMouseLeave(item: IPopupItem): void;
 
-    abstract  elementAnimated(item: IPopupItem): boolean;
+    abstract elementAnimated(item: IPopupItem): boolean;
 
     _elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {
         if (this._checkContainer(item, container, 'elementCreated')) {
@@ -117,8 +136,12 @@ abstract class BaseController {
         return this.elementMaximized && this.elementMaximized(item, container, state);
     }
 
-    _popupResizingLine(item: IPopupItem, offset: object): boolean {
+    _popupResizingLine(item: IPopupItem, offset: IDragOffset): boolean {
         return this.popupResizingLine && this.popupResizingLine(item, offset);
+    }
+
+    _elementAnimated(item: IPopupItem): boolean {
+        return this.elementAnimated && this.elementAnimated(item);
     }
 
     getDefaultConfig(item: IPopupItem): void {
@@ -162,12 +185,12 @@ abstract class BaseController {
         return true;
     }
 
-    protected getCustomZIndex(): number | null {
+    protected getCustomZIndex(popupItems: collection.List<IPopupItem>, item: IPopupItem): number | null {
         return null;
     }
 
-    protected _getPopupSizes(item: IPopupItem, container: HTMLDivElement): ISizes {
-        const containerSizes: ISizes = this.getContentSizes(container);
+    protected _getPopupSizes(item: IPopupItem, container: HTMLDivElement): IPopupSizes {
+        const containerSizes: IPopupSizes = this.getContentSizes(container);
 
         item.sizes = {
             width: item.popupOptions.width || containerSizes.width,
@@ -199,7 +222,7 @@ abstract class BaseController {
         return true;
     }
 
-    private getContentSizes(container: HTMLDivElement): ISizes {
+    private getContentSizes(container: HTMLDivElement): IPopupSizes {
         return {
             width: container.offsetWidth,
             height: container.offsetHeight

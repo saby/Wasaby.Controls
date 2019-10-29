@@ -8,6 +8,11 @@
  * @includes Ladder Controls/_display/Ladder
  * @includes Search Controls/_display/Search
  * @includes Tree Controls/_display/Tree
+ * @includes GroupItem Controls/_display/GroupItem
+ * @includes CollectionItem Controls/_display/CollectionItem
+ * @includes IBind Controls/_display/IBind
+ * @includes TreeChildren Controls/_display/TreeChildren
+ * @includes TreeItem Controls/_display/TreeItem
  * @public
  * @author Мальцев А.А.
  */
@@ -22,10 +27,17 @@
  * @includes Ladder Controls/_display/Ladder
  * @includes Search Controls/_display/Search
  * @includes Tree Controls/_display/Tree
+ * @includes GroupItem Controls/_display/GroupItem
+ * @includes CollectionItem Controls/_display/CollectionItem
+ * @includes IBind Controls/_display/IBind
+ * @includes TreeChildren Controls/_display/TreeChildren
+ * @includes TreeItem Controls/_display/TreeItem
  * @public
  * @author Мальцев А.А.
  */
 
+export {default as IBind} from './_display/IBind';
+export {default as TreeChildren} from './_display/TreeChildren';
 export {default as Abstract} from './_display/Abstract';
 export {default as Collection} from './_display/Collection';
 export {default as CollectionItem} from './_display/CollectionItem';
@@ -39,3 +51,6 @@ export {default as Ladder} from './_display/Ladder';
 export {default as Search} from './_display/Search';
 export {default as Tree} from './_display/Tree';
 export {default as TreeItem} from './_display/TreeItem';
+
+export {default as TileCollection} from './_display/TileCollection';
+export {default as TileCollectionItem} from './_display/TileCollectionItem';

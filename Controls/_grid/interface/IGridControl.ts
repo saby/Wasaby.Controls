@@ -142,7 +142,8 @@
  * @property {String} caption Текст заголовка ячейки.
  * @property {GridCellAlign} align Выравнивание содержимого ячейки по горизонтали.
  * @property {GridCellVAlign} valign Выравнивание содержимого ячейки по вертикали.
- * @property {String} template Шаблон заголовка ячейки. CSS-класс устанавливает правый отступ для заголовка ячейки в целях выравнивания по целым числам в полях ввода денег.  По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
+ * @property {String} template Шаблон заголовка ячейки. По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
+ * Для базового шаблона можно задать класс controls-Grid__header-cell_spacing_money, который добавляет отступ в заголовке столбца при рендере денежных данных.
  * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
  * @property {String} sortingProperty Свойство, по которому выполняется сортировка. 
  * В качестве значения принимает имя поля. 
@@ -173,11 +174,6 @@
  *    ];
  * }
  * </pre>
- * <pre class="brush: html>"
- * <Controls.grid:View bind:sorting="_sorting" header="{{_header}}">
- *    ...
- * </Controls.grid:View>
- * </pre>
  * @property {Number} startRow Порядковый номер строки на которой начинается ячейка.
  * @property {Number} endRow Порядковый номер строки на которой заканчивается ячейка.
  * @property {Number} startColumn Порядковый номер колонки на которой начинается ячейка.
@@ -201,7 +197,7 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#header
- * @cfg {Array.<HeaderCell>} Описывает шапку таблицы. В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки. Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки. Условно ячейки таблицы нумеруются слева направо. Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке. 
+ * @cfg {Array.<HeaderCell>} Описывает шапку таблицы. В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки. Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки. Условно ячейки шапки нумеруются слева направо. Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке. 
  * <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
  * <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
  * @example
@@ -289,6 +285,10 @@
  * В качестве значения опции можно указать пиксели (px), проценты (%), доли (1fr), "auto" или "minmax".
  * В значении "auto" ширина столбца устанавливается исходя из типа и содержимого элемента.
  * В значении "minmax(,)" устанавливаются минимальная и максимальная ширина столбца, например "minmax(600px, 1fr)".
+ * Ширина, указанная в долях, "auto" и "minmax" не будет применятся в браузерах, не поддерживающих "CSS Grid Layout", в таком случае используйте опцию compatibleWidth.
+ * @property {String} compatibleWidth Ширина столбца в браузерах, не поддерживающих "CSS Grid Layout".
+ * В качестве значения опции можно указать только пиксели (px), проценты (%). Если не задана, применяется значение "auto".
+ * Более подробно о кросбраузерной настройке ширины колонок вы можете почитать в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/cross-browser/'>статье</a>
  * @property {String} displayProperty Имя поля, данные которого по умолчанию отображаются в столбце.
  * @property {String} [template=Controls/grid:ColumnTemplate] Шаблон отображения ячейки.
  * По умолчанию используется базовый шаблон {@link Controls/grid:ColumnTemplate}. На его основе можно задать пользовательский шаблон (см. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/">руководство разработчика</a>).
@@ -331,7 +331,8 @@
 
 /*
  * @typedef {Object} Column
- * @property {String} [width] Column width. Supported the value specified in pixels (for example, 4px) or percent (for example, 50%) or fraction (for example 1fr) and the value “auto”.
+ * @property {String} [width] Column width. Supported the value specified in pixels (for example, 4px) or percent (for example, 50%) or fraction (for example 1fr) and the value “auto”. The width specified in fr, "auto" and "minmax" will not be applied in browsers that do not support "CSS Grid Layout", in this case use the compatibleWidth option.
+ * @property {String} [compatibleWidth] Column width in browsers that do not support CSS Grid Layout. Only pixels (px), percent (%) can be specified as the option value. If not set, the value "auto" is used.
  * @property {String} [displayProperty] Name of the field that will shown in the column by default.
  * @property {String} [template] Template for cell rendering.
  * @property {String} [resultTemplate] Template for cell rendering in results row. CSS class controls-Grid__header-cell_spacing_money sets the right indent for the content of the header cell to align by integers in money fields.
@@ -534,7 +535,8 @@
  */
 
 /**
- * @event Controls/_grid/interface/IGridControl#editArrowClick Происходит при клике на "шеврон" элемента.
+ * @event Происходит при клике на "шеврон" элемента.
+ * @name Controls/_grid/interface/IGridControl#editArrowClick
  * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
  * @param {Types/entity:Model} item Элемент, по которому произвели клик.
  */

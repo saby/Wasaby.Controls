@@ -4,7 +4,7 @@ import merge = require('Core/core-merge');
 import Deferred = require('Core/Deferred');
 import cInstance = require('Core/core-instance');
 import clone = require('Core/core-clone');
-import {Memory, PrefetchProxy} from 'Types/source';
+import {DataSet, Memory, PrefetchProxy} from 'Types/source';
 import {_SearchController} from 'Controls/search';
 import {isEqual} from 'Types/object';
 import {FilterContextField, SearchContextField} from 'Controls/context';
@@ -18,8 +18,8 @@ var FILTER_CONTEXT_FIELD = 'filterLayoutField';
 var FILTER_VALUE_FIELD = 'filter';
 
 var _private = {
-   getSearchController: function(self) {
-      var options = self._options;
+   getSearchController: function(self, options) {
+      var options = options || self._options;
 
       if (!self._searchController) {
          self._searchController = new _SearchController({
@@ -56,33 +56,28 @@ var _private = {
    },
 
    updateSource: function(self, data) {
-      let
-         source = _private.getOriginSource(self._options.source),
-         items = data.getRawData();
+      const source = _private.getOriginSource(self._options.source);
+      let items = data.getRawData();
 
       if (self._options.reverseList) {
          items = _private.reverseData(items, source);
       }
 
-      /* TODO will be a cached source */
-      _private.cachedSourceFix(self);
-      const memorySource = new Memory({
-         model: data.getModel(),
-         keyProperty: data.getKeyProperty(),
-         data: items,
-         adapter: source.getAdapter()
+      self._source = new PrefetchProxy({
+         data: {
+            query: self._options.reverseList ?
+                new DataSet({
+                   rawData: items,
+                   adapter: data.getAdapter(),
+                   keyProperty: data.getKeyProperty(),
+                   model: data.getModel()
+                }) :
+                data
+         },
+         target: source
       });
-
-      if (self._options.reverseList) {
-         self._source = memorySource;
-      } else {
-         self._source = new PrefetchProxy({
-            data: {
-               query: data
-            },
-            target: memorySource
-         });
-      }
+      self._navigation = self._options.navigation;
+      self._filter = _private.getCurrentFilter(self);
    },
 
    reverseData: function(data, source) {
@@ -281,6 +276,12 @@ var _private = {
             })
          });
       }
+   },
+
+   getCurrentFilter(self): object {
+      return self._searchController ?
+          self._searchController.getFilter() :
+          _private.getFilterFromContext(self, self._context);
    }
 };
 
@@ -321,21 +322,16 @@ var List = Control.extend({
       let oldReverseList = this._options.reverseList;
 
       if (this._options.source !== newOptions.source || !isEqual(this._options.navigation, newOptions.navigation) || this._options.searchDelay !== newOptions.searchDelay) {
-         var currentFilter = this._searchController ? this._searchController.getFilter() : _private.getFilterFromContext(this, this._context);
-         var source = this._source;
+         const currentFilter = _private.getCurrentFilter(this);
+         this._navigation = newOptions.navigation;
 
-         _private.resolveOptions(this, newOptions);
-
-         if (this._searchMode) {
-            _private.cachedSourceFix(this);
-
-            /* back memory source if now searchMode is on. (Will used cached source by task https://online.sbis.ru/opendoc.html?guid=ab4d807e-9e1a-4a0a-b95b-f0c3f6250f63) */
-            this._source = source;
+         if (!this._searchMode) {
+            _private.resolveOptions(this, newOptions);
          }
 
          /* create searchController with new options */
          this._searchController = null;
-         _private.getSearchController(this).setFilter(currentFilter);
+         _private.getSearchController(this, newOptions).setFilter(currentFilter);
       }
       if (oldReverseList !== newOptions.reverseList) {
          _private.reverseSourceData(this);

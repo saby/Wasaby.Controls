@@ -42,14 +42,22 @@
    align-self: flex-start;
 }
 
-.controls-BreadCrumbsPath__backButtonArrow {
-   .icon(@font-size_Path-backButtonArrow);
+.controls-BreadCrumbsPath__backButtonArrow-container {
+   .baseline-fix();
    height: 100%;
    position: absolute;
-   align-self: center;
-   align-items: center;
-   background-color: @background-color_Path-backButtonArrow;
+   align-self: baseline;
+   align-items: baseline;
    right: 0;
+   bottom: 0;
+   background-color: @background-color_Path-backButtonArrow;
+   &:before {
+      font-size:@font-size_BreadCrumbs-baseline;
+   }
+}
+
+.controls-BreadCrumbsPath__backButtonArrow {
+   .icon(@font-size_Path-backButtonArrow);
    display: none;
    color: @color_Path-backButtonArrow;
    cursor: pointer;
@@ -74,8 +82,12 @@
 .controls-BreadCrumbsPath__breadCrumbs_home-path-spacing {
    padding-left: @spacing_Path-between-home-and-crumbs;
 }
+
 .controls-BreadCrumbsPath__homeContainer {
    .baseline-fix();
+
+   // sets line-height === content's fontSize for correctly padding rounded border on drag&drop
+   line-height: 1;
    position: relative;
    display: inline-flex;
    align-items: baseline;
@@ -131,13 +143,4 @@
 
 .controls-BreadCrumbsPath__backButton_zeroWidth {
    width: 0;
-}
-
-.ws-is-ie {
-   .controls-BreadCrumbsPath__backButtonArrow {
-      //IE can't correctly align absolutely-positioned flex children: https://codepen.io/anon/pen/MqazJv
-      top: 50%;
-      bottom: 50%;
-      transform: translateY(-50%);
-   }
 }

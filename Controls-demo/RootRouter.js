@@ -26,6 +26,10 @@ define('Controls-demo/RootRouter', [
           _template: template,
          backClickHdl: function() {
             window.history.back();
+         },
+
+         goHomeHandler: function() {
+             window.location = "/Controls-demo/app/Controls-demo%2FIndexOld";
          }
       }
    );

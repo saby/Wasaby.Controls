@@ -56,6 +56,7 @@
          <ws:if data="{{_isShowCollection()}}">
             <Controls._lookup.SelectedCollection
                   name="collection"
+                  counterClassName="controls-Lookup__counter"
                   itemTemplate="{{_options.itemTemplate}}"
                   displayProperty="{{_options.displayProperty}}"
                   itemsLayout="{{_multiLineState ? 'default' : 'oneRow'}}"

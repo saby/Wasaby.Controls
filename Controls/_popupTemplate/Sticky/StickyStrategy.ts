@@ -6,10 +6,10 @@ import cMerge = require('Core/core-merge');
 import Env = require('Env/Env');
 
 interface IPosition {
-    left?: Number,
-    right?: Number,
-    top?: Number,
-    bottom?: Number
+    left?: Number;
+    right?: Number;
+    top?: Number;
+    bottom?: Number;
 }
    const INVERTING_CONST = {
       top: 'bottom',
@@ -22,10 +22,10 @@ interface IPosition {
    var _private = {
       getWindowSizes: function() {
          // Ширина берется по body специально. В случае, когда уменьшили окно браузера и появился горизонтальный скролл
-         // надо правильно вычислить координату right.
+         // надо правильно вычислить координату right. Для высоты аналогично.
          return {
             width: document.body.clientWidth,
-            height: window.innerHeight - TouchKeyboardHelper.getKeyboardHeight(true)
+            height: document.body.clientHeight - TouchKeyboardHelper.getKeyboardHeight(true)
          };
       },
 
@@ -41,16 +41,19 @@ interface IPosition {
          } else {
             if (popupCfg.align[direction].side === (isHorizontal ? 'left' : 'top')) {
                position[isHorizontal ? 'right' : 'bottom'] = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] -
-                   _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - _private.getMargins(popupCfg, direction) + targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+                   _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - _private.getMargins(popupCfg, direction);
             } else {
                position[isHorizontal ? 'left' : 'top'] = _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'left' : 'top', direction) + _private.getMargins(popupCfg, direction);
+               if (!_private.isIOS13() || !isHorizontal) {
+                  position[isHorizontal ? 'left' : 'top'] += targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
+               }
             }
          }
          return position;
       },
 
       getTargetCoords: function(popupCfg, targetCoords, coord, direction) {
-         if (popupCfg.corner[direction] === 'center') {
+         if (popupCfg.targetPoint[direction] === 'center') {
             if (coord === 'right' || coord === 'left') {
                return targetCoords.left + targetCoords.width / 2;
             }
@@ -58,7 +61,7 @@ interface IPosition {
                return targetCoords.top + targetCoords.height / 2;
             }
          }
-         return targetCoords[popupCfg.corner[direction]];
+         return targetCoords[popupCfg.targetPoint[direction]];
       },
 
       checkOverflow: function(popupCfg, targetCoords, position, direction) {
@@ -82,7 +85,7 @@ interface IPosition {
       },
 
       invertPosition: function(popupCfg, direction) {
-         popupCfg.corner[direction] = INVERTING_CONST[popupCfg.corner[direction]];
+         popupCfg.targetPoint[direction] = INVERTING_CONST[popupCfg.targetPoint[direction]];
          popupCfg.align[direction].side = INVERTING_CONST[popupCfg.align[direction].side];
          popupCfg.align[direction].offset *= -1;
          popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
@@ -121,9 +124,8 @@ interface IPosition {
        },
 
        isIOS13() {
-         // https://online.sbis.ru/opendoc.html?guid=ab98bd55-19b7-4ed6-869e-8252d88ea68b
-         return this._isMobileIOS() && (Env.detection.IOSVersion > 12 || Env.detection.IOSVersion === null);
-       },
+         return this._isMobileIOS() && Env.detection.IOSVersion > 12;
+      },
 
        _isMobileIOS() {
           return Env.detection.isMobileIOS;

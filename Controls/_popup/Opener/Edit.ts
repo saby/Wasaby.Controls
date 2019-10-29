@@ -124,12 +124,12 @@ import Deferred = require('Core/Deferred');
          /**
           * Открывает всплывающее окно диалога редактирования.
           * @function Controls/_popup/Opener/Edit#open
-          * @param {Object} meta Данные для редактирования: key, record.
+          * @param {Object} meta Данные, по которым определяется, откуда диалог получит редактируемую запись. В объект можно передать свойства key и record. Политика обработки свойств подробно описана {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/#step4 здесь}.
           * @param {Object} popupOptions Опции всплывающего окна диалога редактирования.
           * В зависимости от значения опции 'mode':
           * * 'stack' — смотреть {@link Controls/_popup/Opener/Stack/PopupOptions.typedef popupOptions стекового окна}
           * * 'dialog' — смотреть {@link Controls/_popup/Opener/Dialog/PopupOptions.typedef popupOptions диалогового окна}
-          * *'sticky' — смотреть {@link Controls/_popup/Opener/Sticky/PopupOptions.typedef popupOptions окна прилипающего блока}
+          * * 'sticky' — смотреть {@link Controls/_popup/Opener/Sticky/PopupOptions.typedef popupOptions окна прилипающего блока}
           * @returns {undefined}
           * @example
           * * WML
@@ -235,15 +235,20 @@ import Deferred = require('Core/Deferred');
                 * @param {Object} record Data from formController
                 * @param {additionalData} additionalData Additional data from formController
                 */
-               var eventResult = this._notify('beforeItemEndEdit', [data.formControllerEvent, data.record, data.additionalData || {}], { bubbling: true });
-               var self = this;
+               const eventResult = this._notify('beforeItemEndEdit', [data.formControllerEvent, data.record, data.additionalData || {}], { bubbling: true });
                if (eventResult !== Edit.CANCEL && this._options.items) {
-                  _private.loadSynchronizer().addCallback(function(Synchronizer) {
-                     _private.synchronize(self, eventResult, data, Synchronizer);
+                  _private.loadSynchronizer().addCallback((Synchronizer) => {
+                     _private.synchronize(this, eventResult, data, Synchronizer);
+                     if (data.formControllerEvent === 'update') {
+                        // Если было создание, запоминаем ключ, чтобы при повторном сохранении знать, какую запись в реестре обновлять
+                        if (data.additionalData.isNewRecord && !this._linkedKey) {
+                           this._linkedKey = data.additionalData.key || data.record.getId();
+                        }
+                     }
                   });
                }
             } else {
-               var args = Array.prototype.slice.call(arguments);
+               const args = Array.prototype.slice.call(arguments);
                if (this._resultHandler) {
                   this._resultHandler.apply(this, args);
                }

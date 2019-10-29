@@ -2,7 +2,9 @@
      class="controls-Area__field_readOnly
             controls-Area__field_theme_{{options.theme}}_margin controls-Area__fieldWrapper">
    <ws:if data="{{value}}">
-      <Controls.decorator:WrapURLs attr:class="controls-Area__wrapURLs" if="{{value}}" text="{{value}}"/>
+      <div class="controls-Area__wrapURLs">
+         <Controls.decorator:WrapURLs text="{{value}}"/>
+      </div>
       <span class="controls-Area__emptySymbol">{{emptySymbol}}</span>
    </ws:if>
    <ws:else>{{emptySymbol}}</ws:else>

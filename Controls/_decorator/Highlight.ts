@@ -98,7 +98,14 @@ export class Highlight extends Control<IHighlightOptions> {
     protected _theme: string[] = ['Controls/decorator'];
 
     private _parseText(text: string, highlight: string, searchMode: SearchMode): Element[] {
-        const escapedHighlight: string = RegExpUtil.escapeSpecialChars(highlight);
+        /**
+         * Подсвечиваемый текст нужно ограничить, потому что в дальнейшем он будет преобразован в регулярное выражение, которое
+         * имеет ограничение длины. При превышении длины регулярное выражение будет считаться невалидным, и с ним невозможно будет работать.
+         * Возьмем максимум 10000 символов. Этого точно должно хватить для покрытия всех адекватных сценариев.
+         */
+        const maxLength: number = 10000;
+        const limitHighlight: string = highlight.length > maxLength ? highlight.substring(0, maxLength) : highlight;
+        const escapedHighlight: string = RegExpUtil.escapeSpecialChars(limitHighlight);
         const searchResultByAnd: Element[] = this._searchBy(text, escapedHighlight, searchMode, 'and');
 
         if (searchResultByAnd.length) {

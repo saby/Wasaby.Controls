@@ -90,14 +90,14 @@ var ListControl = Control.extend(/** @lends Controls/_list/List.prototype */{
     _beforeMount: function(options) {
         this._viewModelConstructor = this._getModelConstructor(options.useNewModel);
         if (options.useNewModel) {
-            return import('Controls/_list/Render').then((Render) => {
-                this._viewName = Render.default;
+            return import('Controls/listRender').then((listRender) => {
+                this._viewName = listRender.Render;
             });
         }
     },
 
     _getModelConstructor: function(useNewModel: boolean) {
-        return !useNewModel ? ListViewModel : null;
+        return !useNewModel ? ListViewModel : 'Controls/display:Collection';
     },
 
     reload: function() {
