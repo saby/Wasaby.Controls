@@ -230,9 +230,10 @@ var _private = {
             const root = self._options.root !== undefined ? self._options.root : self._root;
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
             const modelExpandedItems = viewModel.getExpandedItems();
+            const isDeepReload = _private.isDeepReload(options, self._deepReload);
 
             // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-            if (!_private.isDeepReload(options, self._deepReload) || self._needResetExpandedItems) {
+            if (!isDeepReload || self._needResetExpandedItems) {
                 viewModel.resetExpandedItems();
                 self._needResetExpandedItems = false;
             }
@@ -240,7 +241,7 @@ var _private = {
             if (viewModelRoot !== root) {
                 viewModel.setRoot(root);
             }
-            if (self._deepReload && modelExpandedItems.length) {
+            if (isDeepReload && modelExpandedItems.length) {
                 const sourceController = baseControl.getSourceController();
                 const hasMore = {};
                 const expandedItems = modelExpandedItems.slice();
