@@ -103,7 +103,8 @@ var _private = {
         var popupItems = [];
         factory(items).each(function(item) {
             if (_private.isFrequentItem(item)) {
-                var popupItem = configs[item.name];
+                var popupItem = CoreClone(configs[item.name]);
+                Merge(popupItem, item.editorOptions);
                 popupItem.id = item.name;
                 popupItem.selectedKeys = (item.value instanceof Object) ? item.value : [item.value];
                 popupItem.resetValue = (item.resetValue instanceof Object) ? item.resetValue : [item.resetValue];
