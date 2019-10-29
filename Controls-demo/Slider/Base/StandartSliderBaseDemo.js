@@ -14,7 +14,7 @@ define('Controls-demo/Slider/Base/StandartSliderBaseDemo',
          _maxValueI: undefined,
          _valueI: undefined,
          _beforeMount: function() {
-            this._inputValue = 0;
+            this._inputValue = 100;
             this._minValueI = 0;
             this._maxValueI = 100;
          },
