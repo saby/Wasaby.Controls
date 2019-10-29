@@ -489,6 +489,30 @@ define([
             assert.equal(modelVersion, 6);
          });
       });
+      it('updateActions', function() {
+         let data, rs, lvm;
+         data = [];
+         rs = new collection.RecordSet({
+            keyProperty: 'id',
+            rawData: data
+         });
+         lvm = new lists.ListViewModel({
+            items: rs,
+            keyProperty: 'id'
+         });
+         var cfg = {
+            listModel: lvm,
+            itemActions: [],
+            itemActionsPosition: 'outside'
+         };
+         let modelUpdated = false;
+         lvm.nextModelVersion = function() {
+            modelUpdated = true;
+         }
+         var ctrl = new lists.ItemActionsControl(cfg);
+         lists.ItemActionsControl._private.updateActions(ctrl, cfg);
+         assert.isTrue(modelUpdated);
+      });
       it('updateItemActions', function() {
          var cfg = {
             listModel: listViewModel,

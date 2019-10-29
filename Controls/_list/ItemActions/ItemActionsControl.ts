@@ -71,7 +71,7 @@ var _private = {
     },
 
     updateActions: function(self, options, collectionChanged: boolean = false): void {
-        if (options.itemActionsProperty || options.itemActions && options.itemActions.length) {
+        if (options.itemActionsProperty || options.itemActions) {
             if (options.useNewModel) {
                 options.listModel.setEventRaising(false, true);
                 options.listModel.each((collectionItem: CollectionItem<unknown>) => {
