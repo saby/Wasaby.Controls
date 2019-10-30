@@ -386,7 +386,7 @@ var _private = {
 
    /**
     * @name Controls/_tabs/Buttons#itemTemplateProperty
-    * @cfg {String} Имя поля, которое содердит шаблон отображения элемента.
+    * @cfg {String} Имя поля, которое содержит шаблон отображения элемента.
     * @default Если параметр не задан, вместо него используется itemTemplate.
     * @remark
     * Чтобы определить шаблон, вы должны вызвать базовый шаблон 'wml!Controls/_tabs/Buttons/ItemTemplate'.
