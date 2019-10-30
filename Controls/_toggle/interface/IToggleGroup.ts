@@ -1,7 +1,7 @@
 export interface IToggleGroupOptions {
     direction?: string;
     itemTemplate?: string | Function;
-    itemTemplateProperty?: string;
+    itemTemplateProperty?: string | Function;
 }
 
 /**
