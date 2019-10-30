@@ -111,7 +111,7 @@
       <ws:master>
 
          <div>
-            <div class="ws-flexbox controls-demo_MasterDetail_master_search">
+            <div class="controls-demo_MasterDetail_master_search">
                <Controls.search:Input placeholder="Введите"
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
