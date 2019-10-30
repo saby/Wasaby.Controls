@@ -233,9 +233,7 @@ define(['Controls/grid'], function(gridMod) {
                   if (className === 'controls-Grid__header-cell') {
                      return [
                         {
-                           getBoundingClientRect: () => {
-                              return {width: 10}
-                           }
+                           getBoundingClientRect: () => ({width: 10})
                         },
                         {
                            getBoundingClientRect: () => {
@@ -311,7 +309,7 @@ define(['Controls/grid'], function(gridMod) {
          };
 
 
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['10px', '11px', '12px']);
+         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['11px', '12px', '13px']);
 
          gridView._options.multiSelectVisibility = 'visible';
          assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['11px', '12px', '13px']);
@@ -333,9 +331,9 @@ define(['Controls/grid'], function(gridMod) {
 
       it('getNoColspanRowCells', () => {
          const
-            row1 = [{}],
-            row2 = [{}, {}],
-            row3 = [{}, {}, {}],
+            row1 = [{}, {}],
+            row2 = [{}, {}, {}],
+            row3 = [{}, {}, {}, {}],
             container = {
                querySelectorAll: (selector) => {
                   if (selector.indexOf('data-r="0"') >= 0) {
@@ -357,7 +355,7 @@ define(['Controls/grid'], function(gridMod) {
 
          assert.strictEqual(
             gridMod.GridView._private.getNoColspanRowCells(null, container, [{}], true),
-            row2,
+            row1,
             'failed scenario: 1 column, multiselect'
          );
 
@@ -374,13 +372,13 @@ define(['Controls/grid'], function(gridMod) {
          );
 
          assert.deepEqual(
-            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}, {}], true),
+            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}, {}, {}], true),
             [],
             'failed scenario: 3 column, multiselect (more columns than exist in the grid)'
          );
 
          assert.deepEqual(
-            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}, {}, {}], false),
+            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}, {}, {}, {}], false),
             [],
             'failed scenario: 4 columns, no multiselect (more columns than exist in the grid)'
          );
