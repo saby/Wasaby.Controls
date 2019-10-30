@@ -117,14 +117,13 @@ var
             }
 
             const container = (self._container[0] || self._container);
-            const hasMultiSelect = self._options.multiSelectVisibility !== 'hidden';
             const columnsWidths = [];
             let cells;
 
             if (hasHeader) {
                 cells = container.getElementsByClassName('controls-Grid__header-cell');
             } else {
-                cells = _private.getNoColspanRowCells(self, container, self._options.columns, hasMultiSelect);
+                cells = _private.getNoColspanRowCells(self, container, self._options.columns);
                 if (cells.length === 0) {
                     // If we were unable to find a row with no colspan cells, fallback to the previous
                     // getElementsByClassName solution
@@ -132,10 +131,12 @@ var
                 }
             }
 
+            // Удаляем первую ячейку-отступ
+            cells = Array.prototype.slice.call(cells, 1);
+
             self._options.columns.forEach((column, index: number) => {
                 if (!GridLayoutUtil.isCompatibleWidth(column.width)) {
-                    const realIndex = index + (hasMultiSelect ? 1 : 0);
-                    columnsWidths.push(cells[realIndex].getBoundingClientRect().width + 'px');
+                    columnsWidths.push(cells[index].getBoundingClientRect().width + 'px');
                 } else {
                     columnsWidths.push(column.width || GridLayoutUtil.DEFAULT_COLUMN_WIDTH);
                 }
@@ -181,8 +182,8 @@ var
         // getNoColspanRowCells ищет в гриде строку, в которой нет колонок с colspan'ом, и возвращает
         // ее колонки.
         // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-        getNoColspanRowCells: function(self, container, columnsCfg, hasMultiselect) {
-            const totalColumns = columnsCfg.length + (hasMultiselect ? 1 : 0);
+        getNoColspanRowCells(self, container, columnsCfg) {
+            const totalColumns = columnsCfg.length + 1;
             let currentRow = 0;
             let cells = [];
 
