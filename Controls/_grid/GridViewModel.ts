@@ -449,7 +449,7 @@ var
         prepareColumnsWidth: function (self, itemData): Array<string> {
             let
                 columns: Array<{ width: string }> = self._columns,
-                columnsWidth = ['max-content'],
+                columnsWidth = [],
                 hasDynamicWidth = !!columns.find((column) => {
                     return !GridLayoutUtil.isCompatibleWidth(column.width);
                 });
@@ -459,11 +459,11 @@ var
             // при его создании. Если его еще нет, используем ширину из конфигурации
             // колонок (вызывается только в IE)
             if (!hasDynamicWidth || !self.getColumnsWidthForEditingRow) {
-                columnsWidth = columnsWidth.concat(columns.map((column) => column.width || '1fr'));
+                columnsWidth = columns.map((column) => column.width || '1fr');
             } else {
-                columnsWidth = columnsWidth.concat(self.getColumnsWidthForEditingRow(itemData));
+                columnsWidth = self.getColumnsWidthForEditingRow(itemData);
             }
-
+            columnsWidth.unshift('max-content');
             return columnsWidth;
         },
         getEditingRowStyles(self, itemData): string {
@@ -481,7 +481,7 @@ var
             // т.к. больше его некому растянуть.
             // Также, если в таблице есть колонка чекбоксов (ее ширина задается как max-content), то попавшая на место
             // первой ячейки строка редактирования, растянет всю колонку на ширину таблицы. Поэтому нужно ее заколспанить.
-            const columnSpan = ((self.getItems().getCount() || !!self.getHeader()) && self._options.multiSelectVisibility === 'hidden') ? 1 : self._columns.length;
+            const columnSpan = 1 + (((self.getItems().getCount() || !!self.getHeader()) && self._options.multiSelectVisibility === 'hidden') ? 1 : self._columns.length);
 
             editingRowStyles += GridLayoutUtil.getGridLayoutStyles() + ' ';
             editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
