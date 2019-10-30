@@ -7,8 +7,6 @@ import {decimalSplitter} from 'Controls/_input/Number/constant';
 import {startingPosition} from "../Number/startingPosition";
 
 class ViewModel extends BaseViewModel {
-    handleInput = NumberViewModel.prototype.handleInput;
-
     protected _convertToValue(displayValue: string): string {
         return ViewModel.removeTrailingZeros(
             ViewModel.removeSpaces(displayValue)
@@ -21,8 +19,6 @@ class ViewModel extends BaseViewModel {
         return format(parse(displayValue), this._options, 0).value;
     }
 
-    protected _getStartingPosition = NumberViewModel.prototype._getStartingPosition;
-
     private static zeroFractionalPart: RegExp = new RegExp(`\\${decimalSplitter}?0*$`, 'g');
 
     private static removeSpaces(value: string): string {
@@ -33,5 +29,8 @@ class ViewModel extends BaseViewModel {
         return value.replace(ViewModel.zeroFractionalPart, '');
     }
 }
+
+ViewModel.prototype._getStartingPosition = NumberViewModel.prototype._getStartingPosition;
+ViewModel.prototype.handleInput = NumberViewModel.prototype.handleInput;
 
 export default ViewModel;
