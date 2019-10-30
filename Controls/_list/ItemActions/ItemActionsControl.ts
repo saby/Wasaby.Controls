@@ -195,7 +195,7 @@ var ItemActionsControl = Control.extend({
     updateItemActions: function(item) {
         _private.updateItemActions(this, item, this._options);
         if (!this._options.useNewModel) {
-            this._options.listModel.nextModelVersion(false, ACTION_TYPE);
+            this._options.listModel.nextModelVersion(true, ACTION_TYPE);
         }
     },
 
