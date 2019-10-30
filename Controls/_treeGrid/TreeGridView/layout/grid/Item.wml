@@ -29,7 +29,7 @@
          <div class="{{itemData.getExpanderPaddingClasses(expanderSize)}} js-controls-ListView__notEditable"></div>
       </ws:else>
    </ws:if>
-   <ws:if data="{{colspan}}">
+   <ws:if data="{{colspan && (!itemData.hasMultiSelect || currentColumn.columnIndex !== 0)}}">
       <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"/>
    </ws:if>
    <ws:else>
