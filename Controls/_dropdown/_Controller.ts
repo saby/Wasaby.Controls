@@ -322,7 +322,7 @@ var _Controller = Control.extend({
       _private.setHandlers(this, options);
       if (!options.lazyItemsLoading) {
          if (receivedState) {
-            this._setItems(receivedState);
+            this._setItems(receivedState.items);
             _private.getSourceController(this, options).addCallback((sourceController) => {
                sourceController.calculateState(this._items);
 
@@ -337,8 +337,7 @@ var _Controller = Control.extend({
          } else if (options.source) {
             return _private.loadItems(this, options).addCallback((items) => {
                const beforeMountResult = {
-                  items,
-                  history: undefined
+                  items
                };
 
                if (historyUtils.isHistorySource(this._source)) {

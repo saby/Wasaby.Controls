@@ -184,7 +184,7 @@ define(
 
          it('check received state', () => {
             let dropdownController = getDropdownController(config);
-            dropdownController._beforeMount(config, null, itemsRecords);
+            dropdownController._beforeMount(config, null, {items: itemsRecords});
             assert.deepEqual(dropdownController._items.getRawData(), itemsRecords.getRawData());
          });
 
