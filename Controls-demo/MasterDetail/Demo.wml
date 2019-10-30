@@ -71,7 +71,7 @@
                      <ws:itemTemplate>
                         <ws:partial template="Controls/list:ItemTemplate">
                            <ws:contentTemplate>
-                              <div>{{itemTemplate.itemData.item.name}}</div>
+                              <div class="controls-demo_MasterDetail-item-list">{{itemTemplate.itemData.item.name}}</div>
                            </ws:contentTemplate>
                         </ws:partial>
                      </ws:itemTemplate>
