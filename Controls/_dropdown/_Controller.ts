@@ -322,17 +322,30 @@ var _Controller = Control.extend({
       _private.setHandlers(this, options);
       if (!options.lazyItemsLoading) {
          if (receivedState) {
-            let self = this;
-            this._setItems(receivedState);
+            this._setItems(receivedState.items);
             _private.getSourceController(this, options).addCallback((sourceController) => {
-                sourceController.calculateState(self._items);
+               sourceController.calculateState(this._items);
+
+               if (receivedState.history) {
+                  this._source.setHistory(receivedState.history);
+               }
             });
             _private.updateSelectedItems(this, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
             if (options.dataLoadCallback) {
-               options.dataLoadCallback(self._items);
+               options.dataLoadCallback(this._items);
             }
          } else if (options.source) {
-            return _private.loadItems(this, options);
+            return _private.loadItems(this, options).addCallback((items) => {
+               const beforeMountResult = {
+                  items
+               };
+
+               if (historyUtils.isHistorySource(this._source)) {
+                  beforeMountResult.history = this._source.getHistory();
+               }
+
+               return beforeMountResult;
+            });
          }
       }
    },
