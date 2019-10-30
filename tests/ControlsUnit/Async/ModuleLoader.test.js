@@ -1,7 +1,6 @@
 define([
    'Controls/Container/Async/ModuleLoader',
-   'Core/IoC',
-   'Core/ConsoleLogger'
+   'Core/IoC'
 ], function(
    ModuleLoader,
    IoC

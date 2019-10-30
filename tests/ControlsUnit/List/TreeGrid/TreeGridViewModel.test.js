@@ -240,7 +240,7 @@ define(['Controls/treeGrid',
          model._isFullGridSupport = true;
 
          assert.equal(model.getFooterStyles(),
-             'grid-column-start: 1; grid-column-end: 2;'
+             'grid-column-start: 1; grid-column-end: 3;'
          );
 
          model._options.multiSelectVisibility = 'visible';

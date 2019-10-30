@@ -99,7 +99,8 @@ const _private = {
                 floatCloseButton: newCfg.floatCloseButton
             },
             _vdomOnOldPage: true,
-            template: 'Controls/popupTemplate:templateInfoBox'
+            template: 'Controls/popupTemplate:templateInfoBox',
+            showDelay: newCfg.showDelay
         };
     },
     preparePosition(targetSide, alignment) {

@@ -6,8 +6,8 @@
             <ws:if data="{{_dragging}}">
                <div style="{{_styleArea}}"
                     class="controls-ResizingLine__area controls-ResizingLine__area_theme_{{_options.theme}}">
-                  <div class="controls-ResizingLine__areaOverlay"></div>
                </div>
+               <div class="controls-ResizingLine__cursor"></div>
             </ws:if>
          </div>
          <Controls._dragnDrop.Container name="dragNDrop"

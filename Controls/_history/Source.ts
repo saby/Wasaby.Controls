@@ -556,6 +556,14 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
 
    addOptions: function (options) {
       return this.originSource.addOptions(options);
+   },
+
+   getHistory() {
+      return this._history;
+   },
+
+   setHistory(history) {
+      this._history = history;
    }
 
    // </editor-fold>

@@ -216,6 +216,7 @@ import entity = require('Types/entity');
                targetSide: self._options.targetSide,
                alignment: self._options.alignment,
                style: self._options.style,
+               showDelay: self._options.showDelay,
                 //InfoBox close by outside click only if trigger is set to 'demand' or 'click'.
                closeOnOutsideClick: self._options.trigger === 'click' || self._options.trigger === 'demand',
                floatCloseButton: self._options.floatCloseButton,
