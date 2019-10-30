@@ -22,7 +22,7 @@
         </ws:partial>
     </ws:if>
     <ws:else>
-        <ws:if data="{{colspan}}">
+        <ws:if data="{{colspan && (!itemData.hasMultiSelect || currentColumn.columnIndex !== 0)}}">
             <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}"/>
         </ws:if>
         <ws:else>
