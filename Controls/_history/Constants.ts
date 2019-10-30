@@ -1,5 +1,13 @@
 var Constants = {
 
+
+/**
+ * Константы, необходимые для работы с историей выбора.
+ * @class Controls/_history/Constants
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ */
     /**
      * The maximum count of history
      */
