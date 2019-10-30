@@ -6,6 +6,7 @@
  * @css @background-color_FilterPanel Background color of filter panel.
  * @css @background-color_FilterPanel_horizontal Background color of filter panel, when orientation option set to "horizontal".
  *
+ * @css @width_FilterPanel-size_s The width of the panel on which css class controls-FilterPanel__width-s is set.
  * @css @width_FilterPanel-size_m The width of the panel on which css class controls-FilterPanel__width-m is set.
  * @css @width_FilterPanel-size_l The width of the panel on which css class controls-FilterPanel__width-l is set.
  * @css @width_FilterPanel-size_xl The width of the panel on which css class controls-FilterPanel__width-xl is set.

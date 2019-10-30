@@ -26,6 +26,7 @@ import 'Controls/form';
     * @public
     * @author Золотова Э.Е.
     *
+    * @cssModifier controls-FilterPanel__width-s Small panel width.
     * @cssModifier controls-FilterPanel__width-m Medium panel width.
     * @cssModifier controls-FilterPanel__width-l Large panel width.
     * @cssModifier controls-FilterPanel__width-xl Extra large panel width.
@@ -48,6 +49,7 @@ import 'Controls/form';
     * @public
     * @author Золотова Э.Е.
     *
+    * @cssModifier controls-FilterPanel__width-s Small panel width.
     * @cssModifier controls-FilterPanel__width-m Medium panel width.
     * @cssModifier controls-FilterPanel__width-l Large panel width.
     * @cssModifier controls-FilterPanel__width-xl Extra large panel width.
