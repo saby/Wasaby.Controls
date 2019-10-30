@@ -1778,14 +1778,18 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             ], 'Incorrect value "_colgroupColumns" before "_prepareColgroupColumns([])" without multiselect.');
 
             gridViewModel._prepareColgroupColumns([], false);
-            assert.deepEqual([], gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns([])" without multiselect.');
+            assert.deepEqual([{
+               classes: 'controls-Grid__colgroup-column',
+               style: '',
+               index: 0
+            }], gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns([])" without multiselect.');
 
             gridViewModel._prepareColgroupColumns(gridColumns, false);
             assert.deepEqual(gridViewModel._colgroupColumns, [
                {
                   classes: 'controls-Grid__colgroup-column',
-                  index: 0,
-                  style: 'width: auto;',
+                  style: '',
+                  index: 0
                },
                {
                   classes: 'controls-Grid__colgroup-column',
@@ -1795,6 +1799,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                {
                   classes: 'controls-Grid__colgroup-column',
                   index: 2,
+                  style: 'width: auto;',
+               },
+               {
+                  classes: 'controls-Grid__colgroup-column',
+                  index: 3,
                   style: 'width: auto;',
                },
             ], 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns(gridColumns)" without multiselect.');
@@ -2276,7 +2285,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'top';
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 3; grid-row-end: 4; -ms-grid-row: 3; -ms-grid-row-span: 1;',
+                      'grid-column-start: 2; grid-column-end: 6; -ms-grid-column: 2; -ms-grid-column-span: 4; grid-row-start: 3; grid-row-end: 4; -ms-grid-row: 3; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2285,7 +2294,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'top';
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 3; grid-row-end: 4; -ms-grid-row: 3; -ms-grid-row-span: 1;',
+                      'grid-column-start: 2; grid-column-end: 6; -ms-grid-column: 2; -ms-grid-column-span: 4; grid-row-start: 3; grid-row-end: 4; -ms-grid-row: 3; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2294,7 +2303,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = 'top';
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
+                      'grid-column-start: 2; grid-column-end: 6; -ms-grid-column: 2; -ms-grid-column-span: 4; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2303,7 +2312,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = 'top';
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
+                      'grid-column-start: 2; grid-column-end: 6; -ms-grid-column: 2; -ms-grid-column-span: 4; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2313,7 +2322,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'bottom';
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
+                      'grid-column-start: 2; grid-column-end: 6; -ms-grid-column: 2; -ms-grid-column-span: 4; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2322,7 +2331,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'bottom';
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
+                      'grid-column-start: 2; grid-column-end: 6; -ms-grid-column: 2; -ms-grid-column-span: 4; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2331,7 +2340,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = 'bottom';
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
+                      'grid-column-start: 2; grid-column-end: 6; -ms-grid-column: 2; -ms-grid-column-span: 4; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2340,7 +2349,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = 'bottom';
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
+                      'grid-column-start: 2; grid-column-end: 6; -ms-grid-column: 2; -ms-grid-column-span: 4; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2350,7 +2359,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = null;
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
+                      'grid-column-start: 2; grid-column-end: 6; -ms-grid-column: 2; -ms-grid-column-span: 4; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2359,7 +2368,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = null;
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
+                      'grid-column-start: 2; grid-column-end: 6; -ms-grid-column: 2; -ms-grid-column-span: 4; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2368,7 +2377,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = null;
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
+                      'grid-column-start: 2; grid-column-end: 6; -ms-grid-column: 2; -ms-grid-column-span: 4; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2377,7 +2386,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = null;
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
+                      'grid-column-start: 2; grid-column-end: 6; -ms-grid-column: 2; -ms-grid-column-span: 4; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2388,75 +2397,75 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model.setMultiSelectVisibility('hidden');
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'top';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 3; grid-row-end: 4;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 6; grid-row-start: 3; grid-row-end: 4;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && has header && results in top', () => {
                   model.setMultiSelectVisibility('visible');
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'top';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 3; grid-row-end: 4;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 6; grid-row-start: 3; grid-row-end: 4;', model.getEmptyTemplateStyles());
                });
                it('no checkbox && hasn\'t header && results in top', () => {
                   model.setMultiSelectVisibility('hidden');
                   model._header = null;
                   model._options.resultsPosition = 'top';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 6; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && hasn\'t header && results in top', () => {
                   model.setMultiSelectVisibility('visible');
                   model._header = null;
                   model._options.resultsPosition = 'top';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 6; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
 
                it('no checkbox && has header && results in bottom', () => {
                   model.setMultiSelectVisibility('hidden');
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'bottom';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 6; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && has header && results in bottom', () => {
                   model.setMultiSelectVisibility('visible');
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'bottom';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 6; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
                it('no checkbox && hasn\'t header && results in bottom', () => {
                   model.setMultiSelectVisibility('hidden');
                   model._header = null;
                   model._options.resultsPosition = 'bottom';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 6; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && hasn\'t header && results in bottom', () => {
                   model.setMultiSelectVisibility('visible');
                   model._header = null;
                   model._options.resultsPosition = 'bottom';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 6; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
                });
 
                it('no checkbox && has header && no results', () => {
                   model.setMultiSelectVisibility('hidden');
                   model._setHeader([{}]);
                   model._options.resultsPosition = null;
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 6; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && has header && no results', () => {
                   model.setMultiSelectVisibility('visible');
                   model._setHeader([{}]);
                   model._options.resultsPosition = null;
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 6; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
                it('no checkbox && hasn\'t header && no results', () => {
                   model.setMultiSelectVisibility('hidden');
                   model._header = null;
                   model._options.resultsPosition = null;
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 6; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && hasn\'t header && no results', () => {
                   model.setMultiSelectVisibility('visible');
                   model._header = null;
                   model._options.resultsPosition = null;
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 2; grid-column-end: 6; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
                });
             });
          });
