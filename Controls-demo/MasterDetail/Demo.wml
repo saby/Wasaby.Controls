@@ -41,7 +41,6 @@
                      <ws:partial template="Controls/list:ItemTemplate">
                         <ws:contentTemplate>
                            <ws:partial
-                                   attr:class="controls-demo_MasterDetail-item-list"
                                    item="{{itemTemplate.itemData.item}}"
                                    template="wml!Controls-demo/MasterDetail/itemTemplates/TaskItemTemplate"
                            />
@@ -96,7 +95,6 @@
                      <ws:partial template="Controls/list:ItemTemplate">
                         <ws:contentTemplate>
                            <ws:partial
-                                   attr:class="controls-demo_MasterDetail-item-list"
                                    item="{{itemTemplate.itemData.item}}"
                                    template="wml!Controls-demo/MasterDetail/itemTemplates/TaskItemTemplate"
                            />
@@ -148,7 +146,6 @@
                      <ws:partial template="Controls/list:ItemTemplate">
                         <ws:contentTemplate>
                            <ws:partial
-                                   attr:class="controls-demo_MasterDetail-item-list"
                                    item="{{itemTemplate.itemData.item}}"
                                    template="wml!Controls-demo/MasterDetail/itemTemplates/TaskItemTemplate"
                            />
