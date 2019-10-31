@@ -16,6 +16,10 @@ define('Controls-demo/FilterView/lookupTemplate',
             this._notify('selectedKeysChanged', [keys]);
          },
 
+         _itemsChangedHandler: function(event, keys) {
+            this._notify('itemsChanged', [keys]);
+         },
+
          _textValueHandler: function(event, textValue) {
             this._notify('textValueChanged', [textValue]);
          }
