@@ -39,7 +39,7 @@
     </ws:if>
     <ws:if data="{{_options.emptyTemplate}}">
         <ws:if data="{{_options.columnScroll}}">
-            <div attr:style="{{_listModel.getEmptyTemplateStyles()}}">
+            <div style="{{'grid-column: 1 / span ' + (_options.columns.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0)) + ';'}}">
                 <ws:partial template="{{_options.emptyTemplate}}" attr:style="{{containerSize ? 'max-width: ' + containerSize + 'px;' : 'visibility: hidden;'}}"/>
             </div>
         </ws:if>
