@@ -96,14 +96,23 @@ define(
                loadedItems;
             newConfig.dataLoadCallback = (items) => {loadedItems = items;};
             let dropdownController = getDropdownController(newConfig);
-            dropdownController._beforeMount(newConfig).addCallback(function(beforeMountResult) {
+            dropdownController._beforeMount(newConfig).then((beforeMountResult) => {
                assert.deepEqual(beforeMountResult.items.getRawData(), itemsRecords.getRawData());
                assert.deepEqual(loadedItems.getRawData(), itemsRecords.getRawData());
 
                newConfig.historyId = 'TEST_HISTORY_ID';
-               dropdownController._beforeMount(newConfig).addCallback(function(res) {
+               dropdownController._beforeMount(newConfig).then((res) => {
                   assert.isTrue(res.hasOwnProperty('history'));
-                  done();
+
+                  newConfig.selectedKeys = [];
+                  dropdownController._beforeMount(newConfig, {}, { history: 'testHistory', items: 'testItems' }).then((historyRes) => {
+                     assert.equal(dropdownController._source._oldItems, 'testItems');
+                     assert.equal(dropdownController._source.getHistory(), 'testHistory');
+                     done();
+                     return historyRes;
+                  });
+
+                  return res;
                });
             });
          });

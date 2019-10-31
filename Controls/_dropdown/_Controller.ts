@@ -318,24 +318,29 @@ var _Controller = Control.extend({
    _depsDeferred: null,
 
    _beforeMount: function (options, context, receivedState) {
+      let result;
+
       this._onResult = _private.onResult.bind(this);
       _private.setHandlers(this, options);
       if (!options.lazyItemsLoading) {
          if (receivedState) {
             this._setItems(receivedState.items);
-            _private.getSourceController(this, options).addCallback((sourceController) => {
+            result = _private.getSourceController(this, options).addCallback((sourceController) => {
                sourceController.calculateState(this._items);
 
                if (receivedState.history) {
+                  this._source.prepareItems(receivedState.items);
                   this._source.setHistory(receivedState.history);
                }
+
+               return sourceController;
             });
             _private.updateSelectedItems(this, options.emptyText, options.selectedKeys, options.keyProperty, options.selectedItemsChangedCallback);
             if (options.dataLoadCallback) {
                options.dataLoadCallback(this._items);
             }
          } else if (options.source) {
-            return _private.loadItems(this, options).addCallback((items) => {
+            result = _private.loadItems(this, options).addCallback((items) => {
                const beforeMountResult = {
                   items
                };
@@ -348,6 +353,8 @@ var _Controller = Control.extend({
             });
          }
       }
+
+      return result;
    },
 
    _beforeUpdate: function (newOptions) {

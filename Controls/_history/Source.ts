@@ -535,7 +535,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
 
    prepareItems: function(items) {
       this._oldItems = clone(items);
-      return _private.getItemsWithHistory(this, this._history, this._oldItems);
+      return this.getItems();
    },
 
    resetHistoryFields: function(item, keyProperty) {
