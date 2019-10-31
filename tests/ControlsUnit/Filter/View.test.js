@@ -264,6 +264,17 @@ define(
             assert.deepStrictEqual(popupOptions.target, 'filter_container');
          });
 
+         it('_needShowFastFilter', () => {
+            let view = getView({});
+            let source = Clone(defaultSource);
+            source[0].viewMode = 'basic';
+            source[1].viewMode = 'basic';
+
+            assert.isTrue(view._needShowFastFilter(defaultSource, 'test'));
+            assert.isFalse(view._needShowFastFilter(source, 'test'));
+            assert.isFalse(view._needShowFastFilter(defaultSource, null));
+         });
+
          it('_open', function() {
             let view = getView(defaultConfig),
                popupOptions,

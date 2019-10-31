@@ -665,6 +665,20 @@ var Filter = Control.extend({
         return isReseted;
     },
 
+    _needShowFastFilter(source: object[], panelTemplateName?: string): boolean {
+        let needShowFastFilter = false;
+
+        if (panelTemplateName) {
+            factory(source).each((item) => {
+                if (!needShowFastFilter && _private.isFrequentItem(item)) {
+                    needShowFastFilter = true;
+                }
+            });
+        }
+
+        return needShowFastFilter;
+    },
+
     reset: function() {
         resetFilter(this._source);
         _private.notifyChanges(this, this._source);
