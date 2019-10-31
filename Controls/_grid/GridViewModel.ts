@@ -555,26 +555,20 @@ var
             right: string
         } {
 
-            const center = columnAlignGroup + 1;
-            const stop = itemData.columns.length;
-            const result = {right: '', left: ''};
+            let
+                start = 1,
+                center = columnAlignGroup + (itemData.hasMultiSelect ? 1 : 0) + 1,
+                stop = itemData.columns.length + 1,
+                result = {right: '', left: ''};
 
             if (columnAlignGroup) {
-                result.left = GridLayoutUtil.getColumnStyles({
-                    columnStart: 1,
-                    columnEnd: center
-                });
-                result.right = GridLayoutUtil.getColumnStyles({
-                    columnStart: center,
-                    columnEnd: stop
-                });
+                result.left = `grid-column: ${start} / ${center}; -ms-grid-column: ${start}; -ms-grid-column-span: ${center - 1};`;
+                result.right = `grid-column: ${center} / ${stop}; -ms-grid-column: ${center}; -ms-grid-column-span: ${stop - center};`;
             } else {
-                result.left = GridLayoutUtil.getColumnStyles({
-                    columnStart: 1,
-                    columnEnd: stop
-                });
+                result.left = `grid-column: ${start} / ${stop}; -ms-grid-column: ${start}; -ms-grid-column-span: ${stop - 1};`;
             }
-            return result;
+
+            return result
         },
 
         getColspanForColumnScroll(self): {
