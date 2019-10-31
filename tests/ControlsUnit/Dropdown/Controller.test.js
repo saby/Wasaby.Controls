@@ -105,9 +105,14 @@ define(
                   assert.isTrue(res.hasOwnProperty('history'));
 
                   newConfig.selectedKeys = [];
-                  dropdownController._beforeMount(newConfig, {}, { history: 'testHistory', items: 'testItems' }).then((historyRes) => {
-                     assert.equal(dropdownController._source._oldItems, 'testItems');
-                     assert.equal(dropdownController._source.getHistory(), 'testHistory');
+                  let history = {
+                     frequent: [],
+                     pinned: [],
+                     recent: []
+                  };
+                  dropdownController._beforeMount(newConfig, {}, { history: history, items: itemsRecords }).then((historyRes) => {
+                     assert.deepEqual(dropdownController._source._oldItems.getRawData(), itemsRecords.getRawData());
+                     assert.deepEqual(dropdownController._source.getHistory(), history);
                      done();
                      return historyRes;
                   });
