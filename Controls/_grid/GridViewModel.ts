@@ -30,7 +30,7 @@ interface IColgroupColumn {
     index: number;
 }
 
-type GridColspanableElements = 'customResults' | 'fixedColumnOfColumnScroll' | 'scrollableColumnOfColumnScroll' | 'editingRow' | 'emptyTemplate' | 'bottomPadding' | 'footer';
+type GridColspanableElements = 'customResults' | 'fixedColumnOfColumnScroll' | 'scrollableColumnOfColumnScroll' | 'editingRow';
 
 var
     _private = {
@@ -432,7 +432,7 @@ var
         getEmptyTemplateStyles: function (self): string {
             const cfg = {
                 columnStart: 1,
-                columnSpan: self._columns.length + 1
+                columnSpan: self._columns.length
             };
 
             if (self._isFullGridSupport) {
@@ -441,8 +441,8 @@ var
                 // TODO: Удалить после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
                 return GridLayoutUtil.getCellStyles({
                     ...cfg,
-                    rowStart: self._getRowIndexHelper().getTopOffset()
-                });
+                    rowStart: self._getRowIndexHelper().getTopOffset(),
+                })
             }
         },
 
@@ -1873,10 +1873,6 @@ var
                 case 'customResults':
                 case 'editingRow':
                     return this._columns.length;
-                case 'emptyTemplate':
-                case 'bottomPadding':
-                case 'footer':
-                    return this._columns.length + 1;
                 case 'fixedColumnOfColumnScroll':
                     return this._options.stickyColumnsCount || 1;
                 case 'scrollableColumnOfColumnScroll':
@@ -1896,7 +1892,7 @@ var
                 colgroupColumns.push({
                     classes: 'controls-Grid__colgroup-column',
                     style: `width: ${this._prepareWidthForTableColumn(column)};`,
-                    index: index + 1
+                    index: index + (hasMultiSelect ? 1 : 0)
                 });
             });
 
@@ -1904,12 +1900,6 @@ var
                 colgroupColumns.unshift({
                     classes: 'controls-Grid__colgroup-column controls-Grid__colgroup-columnMultiSelect',
                     // Ширина колонки чекбоксов задается через CSS класс
-                    style: '',
-                    index: 0
-                });
-            } else {
-                colgroupColumns.unshift({
-                    classes: 'controls-Grid__colgroup-column',
                     style: '',
                     index: 0
                 });
