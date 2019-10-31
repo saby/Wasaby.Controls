@@ -343,6 +343,7 @@ class BaseOpener extends Control<IControlOptions> {
                     let openedDialog = null;
                     if (!opener || !opener._action) {
                         action = new Action({
+                            withIndicator: !isFormController,
                             closeByFocusOut: true,
                             dialogCreatedCallback: (newDialog) => openedDialog = newDialog
                         });
