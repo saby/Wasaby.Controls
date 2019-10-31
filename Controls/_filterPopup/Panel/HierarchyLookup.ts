@@ -40,7 +40,7 @@ class HierarchyLookup extends Control {
     }
 
     protected _itemsChanged(event, items): void {
-        if (items && items.getCount()) {
+        if (items) {
             let self = this;
             let selectedKeys = {};
             factory(items).each((item) => {

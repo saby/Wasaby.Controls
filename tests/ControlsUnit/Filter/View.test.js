@@ -960,6 +960,14 @@ define(
                view._resultHandler('resultEvent', eventResult);
                assert.deepStrictEqual(view._source[0].value, []);
                assert.deepStrictEqual(view._displayText.document, {});
+
+               eventResult = {
+                  action: 'applyClick',
+                  selectedKeys: { document: {'-2': [4]} }
+               };
+               view._resultHandler('resultEvent', eventResult);
+               assert.deepStrictEqual(view._source[0].value, {'-1': [], '-2': [4]});
+               assert.deepStrictEqual(view._displayText.document, {text: 'Deleted', title: 'Deleted', hasMoreText: '' });
             });
          });
       });
