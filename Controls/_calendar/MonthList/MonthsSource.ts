@@ -63,8 +63,10 @@ export default class MonthsSource extends Memory {
 
             if (monthLt) {
                 delta = -1;
+                month = this._shiftRange(month, delta);
             }
-            if (!monthEqual) {
+
+            if (monthGt && !this._header) {
                 month = this._shiftRange(month, delta);
             }
 
