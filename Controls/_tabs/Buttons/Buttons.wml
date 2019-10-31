@@ -9,6 +9,7 @@
                     template="{{ _options.itemTemplateProperty ? item.get(_options.itemTemplateProperty) ?  item.get(_options.itemTemplateProperty) : (_options.itemTemplate || _defaultItemTemplate) : (_options.itemTemplate || _defaultItemTemplate)}}"
                     selected="{{item[_options.keyProperty] === _options.selectedKey ? true : false}}"
                     displayProperty="{{_options.displayProperty}}"
+                    keyProperty="{{_options.keyProperty}}"
                     item="{{item}}"/>
             <ws:if data="{{item.get('contentTab')}}">
                 <div class="controls-Tabs__itemSeparator controls-Tabs__itemSeparator_theme_{{_options.theme}}
