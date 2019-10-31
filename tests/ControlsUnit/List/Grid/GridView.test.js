@@ -65,7 +65,7 @@ define(['Controls/grid'], function(gridMod) {
          }
       ],
       preparedColumnsWithMultiselect = 'grid-template-columns: max-content 1fr auto 100px 1fr;',
-      preparedColumnsWithoutMiltiselect = 'grid-template-columns: max-content 1fr auto 100px 1fr;';
+      preparedColumnsWithoutMiltiselect = 'grid-template-columns: 1fr auto 100px 1fr;';
 
    describe('Controls.List.Grid.GridView', function() {
       it('GridView.prepareGridTemplateColumns', function() {
@@ -205,7 +205,7 @@ define(['Controls/grid'], function(gridMod) {
              ];
 
          assert.equal(gridMod.GridView._private.getGridTemplateColumns(columns, true), 'grid-template-columns: max-content 1fr auto 1fr;');
-         assert.equal(gridMod.GridView._private.getGridTemplateColumns(columns, false), 'grid-template-columns: max-content 1fr auto 1fr;');
+         assert.equal(gridMod.GridView._private.getGridTemplateColumns(columns, false), 'grid-template-columns: 1fr auto 1fr;');
       });
 
       it('getColumnsWidthForEditingRow', function () {

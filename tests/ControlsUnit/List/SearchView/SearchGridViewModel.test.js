@@ -24,10 +24,6 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
             assert.equal(current.getCurrentColumn().searchValue, 'tes');
 
             current.goToNextColumn();
-            assert.isFalse(!!current.getCurrentColumn().column.needSearchHighlight);
-            assert.equal(current.getCurrentColumn().searchValue, 'tes');
-
-            current.goToNextColumn();
             assert.isTrue(!!current.getCurrentColumn().column.needSearchHighlight);
             assert.equal(current.getCurrentColumn().searchValue, 'tes');
          });

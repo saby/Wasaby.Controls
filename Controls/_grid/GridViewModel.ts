@@ -126,14 +126,21 @@ var
                 preparedClasses = '';
 
             // Колонки
-            if (params.columnIndex > 1) {
+            if (params.multiSelectVisibility ? params.columnIndex > 1 : params.columnIndex > 0) {
                 preparedClasses += cellPadding && cellPadding.left ? ` controls-Grid__cell_spacingLeft_${cellPadding.left}` : ' controls-Grid__cell_spacingLeft';
             }
-            if (params.columnIndex === 0 && !params.multiSelectVisibility) {
-                preparedClasses += ' controls-Grid__cell_firstSpacingColumn_' + (params.itemPadding.left || 'default').toLowerCase();
-            }
-            if (params.columnIndex > 0 && params.columnIndex < params.columns.length - 1) {
+            if (params.columnIndex < params.columns.length - 1) {
                 preparedClasses += cellPadding && cellPadding.right ? ` controls-Grid__cell_spacingRight_${cellPadding.right}` : ' controls-Grid__cell_spacingRight';
+            }
+
+            // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
+            if (params.columnIndex === 0 && !params.multiSelectVisibility) {
+                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.itemPadding.left || 'default').toLowerCase();
+            }
+
+            // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+            if (params.isBreadCrumbs) {
+               preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
             }
 
             // Стиль колонки
@@ -148,6 +155,7 @@ var
                 preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
             }
 
+
             return preparedClasses;
         },
         getPaddingHeaderCellClasses: function(params) {
@@ -155,14 +163,14 @@ var
             const { multiSelectVisibility, columnIndex, columns,
                 rowIndex, itemPadding, isBreadCrumbs, style, maxEndColumn, cell: { endColumn } } = params;
             if (rowIndex === 0) {
-                if (columnIndex > 1) {
+                if (multiSelectVisibility ? columnIndex > 1 : columnIndex > 0) {
                     preparedClasses += ' controls-Grid__cell_spacingLeft';
                 }
             } else {
                 preparedClasses += ' controls-Grid__cell_spacingLeft';
             }
 
-            if ((columnIndex > 0 || isBreadCrumbs) && columnIndex < columns.length - 1 || (maxEndColumn && endColumn < maxEndColumn)) {
+            if (columnIndex < columns.length - 1 || (maxEndColumn && endColumn < maxEndColumn)) {
                 preparedClasses += ' controls-Grid__cell_spacingRight';
             }
             // Отступ для последней колонки
@@ -179,12 +187,15 @@ var
             }
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
             if (columnIndex === 0 && !multiSelectVisibility && rowIndex === 0 && !isBreadCrumbs) {
-                preparedClasses += ' controls-Grid__cell_firstSpacingColumn_' + (itemPadding.left || 'default').toLowerCase();
+                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (itemPadding.left || 'default').toLowerCase();
             }
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-            if (isBreadCrumbs && params.multiSelectVisibility && !params.isTableLayout) {
-                preparedClasses += ' controls-Grid__cell_spacingBackButton_with_multiSelection';
+            if (isBreadCrumbs) {
+                preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
+                if (params.multiSelectVisibility && !params.isTableLayout) {
+                    preparedClasses += ' controls-Grid__cell_spacingBackButton_with_multiSelection';
+                }
             }
             // Стиль колонки
             preparedClasses += ' controls-Grid__cell_' + (style || 'default');
@@ -751,8 +762,10 @@ var
                 this._isMultyHeader = this.isMultyHeader(columns);
                 this._headerRows = getRowsArray(columns, multiSelectVisibility, this._isMultyHeader);
                 [this._maxEndRow, this._maxEndColumn] = getMaxEndRow(this._headerRows);
-            } else {
+            } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
+            } else {
+                this._headerRows = [];
             }
             this._multyHeaderOffset = this._headerRows.length ? this._headerRows.length - 1 : 0;
             this.resetHeaderRows();
@@ -1031,8 +1044,13 @@ var
             );
         },
 
-        _prepareResultsColumns: function(columns) {
-            this._resultsColumns = [{}].concat(columns);
+        _prepareResultsColumns: function(columns, multiSelectVisibility) {
+            if (multiSelectVisibility) {
+                this._resultsColumns = [{}].concat(columns);
+            } else {
+                this._resultsColumns = columns;
+            }
+
             this.resetResultsColumns();
         },
 
@@ -1111,7 +1129,7 @@ var
         _setColumns(columns: IGridColumn[]): void {
             this._columns = this._prepareColumns(columns);
             this._ladder = _private.prepareLadder(this);
-            this._prepareResultsColumns(this._columns);
+            this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             this._columnsVersion++;
         },
@@ -1168,7 +1186,7 @@ var
             } else {
                 this._prepareHeaderColumns(this._header, hasMultiSelect);
             }
-            this._prepareResultsColumns(this._columns);
+            this._prepareResultsColumns(this._columns, hasMultiSelect);
         },
 
         hasItemById: function(id, keyProperty) {
@@ -1361,7 +1379,7 @@ var
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
             } else {
-                current.columns = [{ width: '20px'}].concat(this._columns);
+                current.columns = this._columns;
             }
 
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
