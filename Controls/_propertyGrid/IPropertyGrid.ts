@@ -37,13 +37,12 @@ export interface IPropertyGrid {
 
 /**
  * @typedef {Object} IPropertyGridProperty
- * @property {String} name Имя параметра.
- * @property {String} caption Пользовательский заголовок, который будет отображаться как метка для поля.
- * Если этот параметр указан, заголовок будет отображаться в столбце name вместо имени свойства.
+ * @property {String} name Имя свойства.
+ * @property {String} caption Пользовательский заголовок, который будет отображаться как метка для редактора.
  * @property {String} editorTemplateName Имя контрола, который будет использоваться в качестве редактора. Если параметр не задан, будет использоваться редактор по умолчанию.
- * @property {Object} editorOptions Параметры редактора.
- * @property {String} type Тип параметра, доступные значения:
- * ‘int’, ‘boolean’, ‘string’, ‘enum’, ‘date’. Если параметр не задан, тип будет определен по значению.
+ * @property {Object} editorOptions Опции редактора.
+ * @property {String} type Тип свойства, доступные значения:
+ * ‘int’, ‘boolean’, ‘string’, ‘enum’, ‘date’. Если параметр не задан, тип будет определен по значению параметра value.
  * @property {String} group Поле, по которому будут сгруппированы редакторы.
  */
 
