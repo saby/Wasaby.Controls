@@ -561,7 +561,7 @@ var
 
             if (columnAlignGroup) {
                 result.left = GridLayoutUtil.getColumnStyles({
-                    columnStart: 0,
+                    columnStart: 1,
                     columnEnd: center
                 });
                 result.right = GridLayoutUtil.getColumnStyles({
@@ -570,7 +570,7 @@ var
                 });
             } else {
                 result.left = GridLayoutUtil.getColumnStyles({
-                    columnStart: 0,
+                    columnStart: 1,
                     columnEnd: stop
                 });
             }
