@@ -46,7 +46,7 @@ var
         isDrawActions: function(itemData, currentColumn, colspan) {
             return itemData.drawActions &&
                 (itemData.getLastColumnIndex() === currentColumn.columnIndex ||
-                colspan && currentColumn.columnIndex === 1);
+                colspan && currentColumn.columnIndex === (itemData.multiSelectVisibility === 'hidden' ? 0 : 1));
         },
         getCellStyle: function(itemData, currentColumn, colspan) {
            var
@@ -67,7 +67,7 @@ var
             if (!isColspaned) {
                 return 1;
             }
-            return itemData.columns.length - 1;
+            return itemData.columns.length - (itemData.multiSelectVisibility === 'hidden' ? 0 : 1);
         },
 
         //Google Chrome on winXP doesn't support colspan style, so we need to set colspan on <th> element
@@ -93,7 +93,7 @@ var
            maxEndRow: number
         ): string {
             let
-                multiselectOffset = 1;
+                multiselectOffset = (multiSelectVisibility === 'hidden' ? 0 : 1);
 
           if (columnIndex === multiselectOffset) {
               if (isHeaderBreadCrumbs) {
@@ -118,7 +118,6 @@ var
                   }
               }
           }
-          return '';
         },
         getPaddingCellClasses: function(params) {
             const { columns, columnIndex } = params;
@@ -228,7 +227,7 @@ var
             const { multiSelectVisibility, stickyColumnsCount, columnIndex, rowIndex, isMultyHeader } = params;
             const
                 hasMultiSelect = multiSelectVisibility !== 'hidden',
-                columnOffset = 1;
+                columnOffset = hasMultiSelect ? 1 : 0;
             const isCellIndexLessTheFixedIndex = columnIndex < (stickyColumnsCount + columnOffset);
             if (isMultyHeader !== undefined) {
                 return isCellIndexLessTheFixedIndex && rowIndex === 0;
@@ -268,7 +267,7 @@ var
                     style: current.style,
                     columnIndex: current.columnIndex,
                     multiSelectVisibility: current.multiSelectVisibility !== 'hidden',
-                    itemPadding: current.itemPadding
+                    itemPadding: current.itemPadding,
                 });
             }
 
@@ -415,7 +414,7 @@ var
         getFooterStyles: function (self): string {
             const cfg = {
                 columnStart: 0,
-                columnSpan: self._columns.length + 1
+                columnSpan: self._columns.length + (self.getMultiSelectVisibility() !== 'hidden' ? 1 : 0)
             };
 
             if (self._isFullGridSupport) {
@@ -431,8 +430,8 @@ var
 
         getEmptyTemplateStyles: function (self): string {
             const cfg = {
-                columnStart: 1,
-                columnSpan: self._columns.length
+                columnStart: self.getMultiSelectVisibility() !== 'hidden' ? 1 : 0,
+                columnSpan: self._columns.length,
             };
 
             if (self._isFullGridSupport) {
@@ -449,7 +448,8 @@ var
         prepareColumnsWidth: function (self, itemData): Array<string> {
             let
                 columns: Array<{ width: string }> = self._columns,
-                columnsWidth = ['max-content'],
+                hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
+                columnsWidth = hasMultiselect ? ['max-content'] : [],
                 hasDynamicWidth = !!columns.find((column) => {
                     return !GridLayoutUtil.isCompatibleWidth(column.width);
                 });
@@ -584,7 +584,7 @@ var
 
             const stickyColumnsCount = self._options.stickyColumnsCount || 1;
             const scrollableColumnsCount = self._columns.length - self._options.stickyColumnsCount;
-            const start = 2;
+            const start = (self._options.multiSelectVisibility !== 'hidden' ? 1 : 0) + 1;
             const center = start + (self._options.stickyColumnsCount || 1);
             const end = start + self._columns.length;
 
@@ -1424,7 +1424,7 @@ var
             };
             current.hasNextColumn = (isColumnColspaned: boolean) => {
                 if (isColumnColspaned) {
-                    return current.columnIndex <= 1;
+                    return current.columnIndex <= (current.hasMultiSelect ? 1 : 0);
                 } else {
                     return current.getLastColumnIndex() >= current.columnIndex;
                 }
@@ -1471,7 +1471,7 @@ var
                     currentColumn.searchValue = current.searchValue;
                 }
                 if (stickyColumn) {
-                    isStickedColumn = stickyColumn.index === currentColumn.columnIndex + 1;
+                    isStickedColumn = stickyColumn.index === (current.multiSelectVisibility !== 'hidden' ? currentColumn.columnIndex + 1 : currentColumn.columnIndex);
                     if (detection.isNotFullGridSupport) {
                         currentColumn.hiddenForLadder = isStickedColumn && !self._ladder.stickyLadder[current.index].ladderLength;
                     } else {
@@ -1773,7 +1773,7 @@ var
             // Везде, кроме таблиц
             // TODO: Поправить проверку после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
             if (!this._shouldUseTableLayout) {
-                const columnStart = 1;
+                const columnStart = this.getMultiSelectVisibility() === 'hidden' ? 0 : 1;
                 const rowIndex = this._getRowIndexHelper().getBottomPaddingRowIndex();
 
                 styles += GridLayoutUtil.getCellStyles({
