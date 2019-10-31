@@ -58,7 +58,7 @@
             <Controls.dateRange:LiteSelector attr:class="controlsDemo-dateRange-RelationController__selector demo-dateRange-RelationController__selector1"/>
          </Controls.dateRange:RelationWrapper>
          <Controls.dateRange:RelationButton 
-               attr:class="controlsDemo-dateRange-RelationController__relationButton"
+               attr:class="controlsDemo-dateRange-RelationController__relationButton demo-dateRange-RelationController__{{_bindType2}}"
                bind:value="_bindType2"/>
          <Controls.dateRange:RelationWrapper
                number="{{1}}"
