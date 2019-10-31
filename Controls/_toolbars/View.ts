@@ -4,7 +4,7 @@ import template = require('wml!Controls/_toolbars/View');
 import toolbarItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
 import {factory} from 'Types/collection';
 import {getMenuItems, showType} from 'Controls/Utils/Toolbar';
-import {ActualApi as ButtonActualApi} from 'Controls/buttons';
+import {ActualApi as ButtonActualApi, ButtonTemplate, Button} from 'Controls/buttons';
 
 /**
  * Графический контрол, отображаемый в виде панели с размещенными на ней кнопками, клик по которым вызывает соответствующие им команды.
@@ -526,6 +526,7 @@ var Toolbar = Control.extend({
     showType: showType,
     _template: template,
     _defaultItemTemplate: toolbarItemTemplate,
+    _buttonTemplate: ButtonTemplate,
     _needShowMenu: null,
     _menuItems: null,
     _parentProperty: null,
@@ -536,6 +537,7 @@ var Toolbar = Control.extend({
     constructor: function () {
         this._onResult = this._onResult.bind(this);
         this._closeHandler = this._closeHandler.bind(this);
+        this._getButtonConfig = this._getButtonConfig.bind(this);
         Toolbar.superclass.constructor.apply(this, arguments);
     },
     _beforeMount: function (options, context, receivedState) {
@@ -612,6 +614,30 @@ var Toolbar = Control.extend({
 
     _closeHandler: function () {
         this._notify('menuClosed', [], {bubbling: true});
+    },
+
+    _clickHandler: function() {
+        Button.prototype._clickHandler.apply(this, arguments);
+    },
+
+    _keyUpHandler: function() {
+        Button.prototype._keyUpHandler.apply(this, arguments);
+    },
+
+    _getButtonConfig: function(item) {
+        const size = 'm';
+        const icon = item.get('buttonIcon') || item.get('icon');
+        const style = item.get('buttonStyle');
+        const viewMode = item.get('buttonViewMode');
+        const iconStyle = item.get('buttonIconStyle') || item.get('iconStyle');
+        const transparent = item.get('buttonTransparent');
+        const caption = item.get('displayProperty') || item.get('buttonCaption');
+        const readOnly = item.get('buttonReadOnly') || item.get('readOnly');
+        const cfg = {};
+        Button.prototype.cssStyleGeneration.call(cfg, {
+            size, icon, style, viewMode, iconStyle, transparent, caption, readOnly
+        });
+        return cfg
     }
 });
 
