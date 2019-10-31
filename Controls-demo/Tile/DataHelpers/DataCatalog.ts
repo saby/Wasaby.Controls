@@ -32,4 +32,19 @@ export const Gadgets = {
       isShadow: true
    }],
 
+   getActions: () => [
+      {
+         id: 1,
+         icon: 'icon-PhoneNull',
+         title: 'phone',
+         showType: 0
+      },
+      {
+         id: 2,
+         icon: 'icon-EmptyMessage',
+         title: 'message',
+         showType: 0
+      }
+   ],
+
 }

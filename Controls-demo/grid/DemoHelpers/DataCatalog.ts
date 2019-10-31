@@ -718,6 +718,71 @@ function getPorts() {
     }
 }
 
+function getEditing() {
+    return {
+        getEditingData: () => [
+            {
+                id: '1',
+                title: 'Время',
+                description: 'Погода',
+                price: 1,
+                balance: 1,
+                balanceCostSumm: 2,
+                reserve: 2,
+                costPrice: 3
+            },
+            {
+                id: '2',
+                title: 'Масса',
+                description: 'Скорость',
+                price: 1,
+                balance: 1,
+                balanceCostSumm: 2,
+                reserve: 2,
+                costPrice: 3
+            },
+            {
+                id: '3',
+                title: 'Давление',
+                description: 'Плотность',
+                price: 1,
+                balance: 1,
+                balanceCostSumm: 2,
+                reserve: 2,
+                costPrice: 3
+            },
+        ],
+        getEditingColumns: () => [
+            {
+                displayProperty: 'title',
+                width: '1fr',
+                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor'
+            },
+            {
+                displayProperty: 'price',
+                width: 'auto',
+            },
+            {
+                displayProperty: 'balance',
+                width: 'auto',
+            },
+            {
+                displayProperty: 'description',
+                width: '1fr',
+                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor'
+            },
+            {
+                displayProperty: 'costPrice',
+                width: 'auto',
+            },
+            {
+                displayProperty: 'balanceCostSumm',
+                width: 'auto',
+            }
+        ]
+    };
+}
+
 function forShowWidths() {
     return {
         getData() {
@@ -799,5 +864,6 @@ export {
     getCountriesStats,
     getTasks,
     getPorts,
-    forShowWidths
+    forShowWidths,
+    getEditing
 }
