@@ -46,7 +46,7 @@ var
         isDrawActions: function(itemData, currentColumn, colspan) {
             return itemData.drawActions &&
                 (itemData.getLastColumnIndex() === currentColumn.columnIndex ||
-                colspan && currentColumn.columnIndex === 1);
+                colspan && currentColumn.columnIndex === (itemData.multiSelectVisibility === 'hidden' ? 0 : 1));
         },
         getCellStyle: function(itemData, currentColumn, colspan) {
            var
@@ -67,7 +67,7 @@ var
             if (!isColspaned) {
                 return 1;
             }
-            return itemData.columns.length - 1;
+            return itemData.columns.length - (itemData.multiSelectVisibility === 'hidden' ? 0 : 1);
         },
 
         //Google Chrome on winXP doesn't support colspan style, so we need to set colspan on <th> element
@@ -93,7 +93,7 @@ var
            maxEndRow: number
         ): string {
             let
-                multiselectOffset = 1;
+                multiselectOffset = (multiSelectVisibility === 'hidden' ? 0 : 1);
 
           if (columnIndex === multiselectOffset) {
               if (isHeaderBreadCrumbs) {
@@ -118,7 +118,6 @@ var
                   }
               }
           }
-          return '';
         },
         getPaddingCellClasses: function(params) {
             const { columns, columnIndex } = params;
@@ -127,14 +126,21 @@ var
                 preparedClasses = '';
 
             // Колонки
-            if (params.columnIndex > 1) {
+            if (params.multiSelectVisibility ? params.columnIndex > 1 : params.columnIndex > 0) {
                 preparedClasses += cellPadding && cellPadding.left ? ` controls-Grid__cell_spacingLeft_${cellPadding.left}` : ' controls-Grid__cell_spacingLeft';
             }
-            if (params.columnIndex === 0 && !params.multiSelectVisibility) {
-                preparedClasses += ' controls-Grid__cell_firstSpacingColumn_' + (params.itemPadding.left || 'default').toLowerCase();
-            }
-            if (params.columnIndex > 0 && params.columnIndex < params.columns.length - 1) {
+            if (params.columnIndex < params.columns.length - 1) {
                 preparedClasses += cellPadding && cellPadding.right ? ` controls-Grid__cell_spacingRight_${cellPadding.right}` : ' controls-Grid__cell_spacingRight';
+            }
+
+            // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
+            if (params.columnIndex === 0 && !params.multiSelectVisibility) {
+                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.itemPadding.left || 'default').toLowerCase();
+            }
+
+            // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+            if (params.isBreadCrumbs) {
+               preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
             }
 
             // Стиль колонки
@@ -149,6 +155,7 @@ var
                 preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
             }
 
+
             return preparedClasses;
         },
         getPaddingHeaderCellClasses: function(params) {
@@ -156,14 +163,14 @@ var
             const { multiSelectVisibility, columnIndex, columns,
                 rowIndex, itemPadding, isBreadCrumbs, style, maxEndColumn, cell: { endColumn } } = params;
             if (rowIndex === 0) {
-                if (columnIndex > 1) {
+                if (multiSelectVisibility ? columnIndex > 1 : columnIndex > 0) {
                     preparedClasses += ' controls-Grid__cell_spacingLeft';
                 }
             } else {
                 preparedClasses += ' controls-Grid__cell_spacingLeft';
             }
 
-            if ((columnIndex > 0 || isBreadCrumbs) && columnIndex < columns.length - 1 || (maxEndColumn && endColumn < maxEndColumn)) {
+            if (columnIndex < columns.length - 1 || (maxEndColumn && endColumn < maxEndColumn)) {
                 preparedClasses += ' controls-Grid__cell_spacingRight';
             }
             // Отступ для последней колонки
@@ -180,12 +187,15 @@ var
             }
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
             if (columnIndex === 0 && !multiSelectVisibility && rowIndex === 0 && !isBreadCrumbs) {
-                preparedClasses += ' controls-Grid__cell_firstSpacingColumn_' + (itemPadding.left || 'default').toLowerCase();
+                preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (itemPadding.left || 'default').toLowerCase();
             }
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-            if (isBreadCrumbs && params.multiSelectVisibility && !params.isTableLayout) {
-                preparedClasses += ' controls-Grid__cell_spacingBackButton_with_multiSelection';
+            if (isBreadCrumbs) {
+                preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
+                if (params.multiSelectVisibility && !params.isTableLayout) {
+                    preparedClasses += ' controls-Grid__cell_spacingBackButton_with_multiSelection';
+                }
             }
             // Стиль колонки
             preparedClasses += ' controls-Grid__cell_' + (style || 'default');
@@ -228,7 +238,7 @@ var
             const { multiSelectVisibility, stickyColumnsCount, columnIndex, rowIndex, isMultyHeader } = params;
             const
                 hasMultiSelect = multiSelectVisibility !== 'hidden',
-                columnOffset = 1;
+                columnOffset = hasMultiSelect ? 1 : 0;
             const isCellIndexLessTheFixedIndex = columnIndex < (stickyColumnsCount + columnOffset);
             if (isMultyHeader !== undefined) {
                 return isCellIndexLessTheFixedIndex && rowIndex === 0;
@@ -268,7 +278,7 @@ var
                     style: current.style,
                     columnIndex: current.columnIndex,
                     multiSelectVisibility: current.multiSelectVisibility !== 'hidden',
-                    itemPadding: current.itemPadding
+                    itemPadding: current.itemPadding,
                 });
             }
 
@@ -415,7 +425,7 @@ var
         getFooterStyles: function (self): string {
             const cfg = {
                 columnStart: 0,
-                columnSpan: self._columns.length + 1
+                columnSpan: self._columns.length + (self.getMultiSelectVisibility() !== 'hidden' ? 1 : 0)
             };
 
             if (self._isFullGridSupport) {
@@ -431,8 +441,8 @@ var
 
         getEmptyTemplateStyles: function (self): string {
             const cfg = {
-                columnStart: 1,
-                columnSpan: self._columns.length
+                columnStart: self.getMultiSelectVisibility() !== 'hidden' ? 1 : 0,
+                columnSpan: self._columns.length,
             };
 
             if (self._isFullGridSupport) {
@@ -449,7 +459,8 @@ var
         prepareColumnsWidth: function (self, itemData): Array<string> {
             let
                 columns: Array<{ width: string }> = self._columns,
-                columnsWidth = [],
+                hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
+                columnsWidth = hasMultiselect ? ['max-content'] : [],
                 hasDynamicWidth = !!columns.find((column) => {
                     return !GridLayoutUtil.isCompatibleWidth(column.width);
                 });
@@ -459,11 +470,11 @@ var
             // при его создании. Если его еще нет, используем ширину из конфигурации
             // колонок (вызывается только в IE)
             if (!hasDynamicWidth || !self.getColumnsWidthForEditingRow) {
-                columnsWidth = columns.map((column) => column.width || '1fr');
+                columnsWidth = columnsWidth.concat(columns.map((column) => column.width || '1fr'));
             } else {
-                columnsWidth = self.getColumnsWidthForEditingRow(itemData);
+                columnsWidth = columnsWidth.concat(self.getColumnsWidthForEditingRow(itemData));
             }
-            columnsWidth.unshift('max-content');
+
             return columnsWidth;
         },
         getEditingRowStyles(self, itemData): string {
@@ -481,7 +492,7 @@ var
             // т.к. больше его некому растянуть.
             // Также, если в таблице есть колонка чекбоксов (ее ширина задается как max-content), то попавшая на место
             // первой ячейки строка редактирования, растянет всю колонку на ширину таблицы. Поэтому нужно ее заколспанить.
-            const columnSpan = 1 + (((self.getItems().getCount() || !!self.getHeader()) && self._options.multiSelectVisibility === 'hidden') ? 1 : self._columns.length);
+            const columnSpan = ((self.getItems().getCount() || !!self.getHeader()) && self._options.multiSelectVisibility === 'hidden') ? 1 : self._columns.length;
 
             editingRowStyles += GridLayoutUtil.getGridLayoutStyles() + ' ';
             editingRowStyles += GridLayoutUtil.getTemplateColumnsStyle(_private.prepareColumnsWidth(self, itemData)) + ' ';
@@ -555,26 +566,20 @@ var
             right: string
         } {
 
-            const center = columnAlignGroup + 1;
-            const stop = itemData.columns.length;
-            const result = {right: '', left: ''};
+            let
+                start = 1,
+                center = columnAlignGroup + (itemData.hasMultiSelect ? 1 : 0) + 1,
+                stop = itemData.columns.length + 1,
+                result = {right: '', left: ''};
 
             if (columnAlignGroup) {
-                result.left = GridLayoutUtil.getColumnStyles({
-                    columnStart: 0,
-                    columnEnd: center
-                });
-                result.right = GridLayoutUtil.getColumnStyles({
-                    columnStart: center,
-                    columnEnd: stop
-                });
+                result.left = `grid-column: ${start} / ${center}; -ms-grid-column: ${start}; -ms-grid-column-span: ${center - 1};`;
+                result.right = `grid-column: ${center} / ${stop}; -ms-grid-column: ${center}; -ms-grid-column-span: ${stop - center};`;
             } else {
-                result.left = GridLayoutUtil.getColumnStyles({
-                    columnStart: 0,
-                    columnEnd: stop
-                });
+                result.left = `grid-column: ${start} / ${stop}; -ms-grid-column: ${start}; -ms-grid-column-span: ${stop - 1};`;
             }
-            return result;
+
+            return result
         },
 
         getColspanForColumnScroll(self): {
@@ -584,7 +589,7 @@ var
 
             const stickyColumnsCount = self._options.stickyColumnsCount || 1;
             const scrollableColumnsCount = self._columns.length - self._options.stickyColumnsCount;
-            const start = 2;
+            const start = (self._options.multiSelectVisibility !== 'hidden' ? 1 : 0) + 1;
             const center = start + (self._options.stickyColumnsCount || 1);
             const end = start + self._columns.length;
 
@@ -757,8 +762,10 @@ var
                 this._isMultyHeader = this.isMultyHeader(columns);
                 this._headerRows = getRowsArray(columns, multiSelectVisibility, this._isMultyHeader);
                 [this._maxEndRow, this._maxEndColumn] = getMaxEndRow(this._headerRows);
-            } else {
+            } else if (multiSelectVisibility) {
                 this._headerRows = [{}];
+            } else {
+                this._headerRows = [];
             }
             this._multyHeaderOffset = this._headerRows.length ? this._headerRows.length - 1 : 0;
             this.resetHeaderRows();
@@ -1037,8 +1044,13 @@ var
             );
         },
 
-        _prepareResultsColumns: function(columns) {
-            this._resultsColumns = [{}].concat(columns);
+        _prepareResultsColumns: function(columns, multiSelectVisibility) {
+            if (multiSelectVisibility) {
+                this._resultsColumns = [{}].concat(columns);
+            } else {
+                this._resultsColumns = columns;
+            }
+
             this.resetResultsColumns();
         },
 
@@ -1117,7 +1129,7 @@ var
         _setColumns(columns: IGridColumn[]): void {
             this._columns = this._prepareColumns(columns);
             this._ladder = _private.prepareLadder(this);
-            this._prepareResultsColumns(this._columns);
+            this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             this._columnsVersion++;
         },
@@ -1174,7 +1186,7 @@ var
             } else {
                 this._prepareHeaderColumns(this._header, hasMultiSelect);
             }
-            this._prepareResultsColumns(this._columns);
+            this._prepareResultsColumns(this._columns, hasMultiSelect);
         },
 
         hasItemById: function(id, keyProperty) {
@@ -1364,7 +1376,11 @@ var
                 return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
             };
 
-            current.columns = [{}].concat(this._columns);
+            if (current.multiSelectVisibility !== 'hidden') {
+                current.columns = [{}].concat(this._columns);
+            } else {
+                current.columns = this._columns;
+            }
 
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
@@ -1424,7 +1440,7 @@ var
             };
             current.hasNextColumn = (isColumnColspaned: boolean) => {
                 if (isColumnColspaned) {
-                    return current.columnIndex <= 1;
+                    return current.columnIndex <= (current.hasMultiSelect ? 1 : 0);
                 } else {
                     return current.getLastColumnIndex() >= current.columnIndex;
                 }
@@ -1471,7 +1487,7 @@ var
                     currentColumn.searchValue = current.searchValue;
                 }
                 if (stickyColumn) {
-                    isStickedColumn = stickyColumn.index === currentColumn.columnIndex + 1;
+                    isStickedColumn = stickyColumn.index === (current.multiSelectVisibility !== 'hidden' ? currentColumn.columnIndex + 1 : currentColumn.columnIndex);
                     if (detection.isNotFullGridSupport) {
                         currentColumn.hiddenForLadder = isStickedColumn && !self._ladder.stickyLadder[current.index].ladderLength;
                     } else {
@@ -1773,7 +1789,7 @@ var
             // Везде, кроме таблиц
             // TODO: Поправить проверку после полного перехода на table-layout. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
             if (!this._shouldUseTableLayout) {
-                const columnStart = 1;
+                const columnStart = this.getMultiSelectVisibility() === 'hidden' ? 0 : 1;
                 const rowIndex = this._getRowIndexHelper().getBottomPaddingRowIndex();
 
                 styles += GridLayoutUtil.getCellStyles({

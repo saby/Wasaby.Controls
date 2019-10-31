@@ -211,7 +211,8 @@ class BaseOpener extends Control<IControlOptions> {
     protected _getIndicatorConfig() {
         return {
             id: this._indicatorId,
-            message: rk('Загрузка')
+            message: rk('Загрузка'),
+            delay: 2000 // by standart
         };
     }
 
@@ -342,6 +343,7 @@ class BaseOpener extends Control<IControlOptions> {
                     let openedDialog = null;
                     if (!opener || !opener._action) {
                         action = new Action({
+                            withIndicator: !isFormController,
                             closeByFocusOut: true,
                             dialogCreatedCallback: (newDialog) => openedDialog = newDialog
                         });

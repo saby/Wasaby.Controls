@@ -65,7 +65,7 @@ define(['Controls/grid'], function(gridMod) {
          }
       ],
       preparedColumnsWithMultiselect = 'grid-template-columns: max-content 1fr auto 100px 1fr;',
-      preparedColumnsWithoutMiltiselect = 'grid-template-columns: max-content 1fr auto 100px 1fr;';
+      preparedColumnsWithoutMiltiselect = 'grid-template-columns: 1fr auto 100px 1fr;';
 
    describe('Controls.List.Grid.GridView', function() {
       it('GridView.prepareGridTemplateColumns', function() {
@@ -205,7 +205,7 @@ define(['Controls/grid'], function(gridMod) {
              ];
 
          assert.equal(gridMod.GridView._private.getGridTemplateColumns(columns, true), 'grid-template-columns: max-content 1fr auto 1fr;');
-         assert.equal(gridMod.GridView._private.getGridTemplateColumns(columns, false), 'grid-template-columns: max-content 1fr auto 1fr;');
+         assert.equal(gridMod.GridView._private.getGridTemplateColumns(columns, false), 'grid-template-columns: 1fr auto 1fr;');
       });
 
       it('getColumnsWidthForEditingRow', function () {
@@ -233,7 +233,9 @@ define(['Controls/grid'], function(gridMod) {
                   if (className === 'controls-Grid__header-cell') {
                      return [
                         {
-                           getBoundingClientRect: () => ({width: 10})
+                           getBoundingClientRect: () => {
+                              return {width: 10}
+                           }
                         },
                         {
                            getBoundingClientRect: () => {
@@ -309,7 +311,7 @@ define(['Controls/grid'], function(gridMod) {
          };
 
 
-         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['11px', '12px', '13px']);
+         assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['10px', '11px', '12px']);
 
          gridView._options.multiSelectVisibility = 'visible';
          assert.deepEqual(gridMod.GridView._private.getColumnsWidthForEditingRow(gridView, {}), ['11px', '12px', '13px']);
@@ -331,9 +333,9 @@ define(['Controls/grid'], function(gridMod) {
 
       it('getNoColspanRowCells', () => {
          const
-            row1 = [{}, {}],
-            row2 = [{}, {}, {}],
-            row3 = [{}, {}, {}, {}],
+            row1 = [{}],
+            row2 = [{}, {}],
+            row3 = [{}, {}, {}],
             container = {
                querySelectorAll: (selector) => {
                   if (selector.indexOf('data-r="0"') >= 0) {
@@ -355,7 +357,7 @@ define(['Controls/grid'], function(gridMod) {
 
          assert.strictEqual(
             gridMod.GridView._private.getNoColspanRowCells(null, container, [{}], true),
-            row1,
+            row2,
             'failed scenario: 1 column, multiselect'
          );
 
@@ -372,13 +374,13 @@ define(['Controls/grid'], function(gridMod) {
          );
 
          assert.deepEqual(
-            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}, {}, {}], true),
+            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}, {}], true),
             [],
             'failed scenario: 3 column, multiselect (more columns than exist in the grid)'
          );
 
          assert.deepEqual(
-            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}, {}, {}, {}], false),
+            gridMod.GridView._private.getNoColspanRowCells(null, container, [{}, {}, {}, {}], false),
             [],
             'failed scenario: 4 columns, no multiselect (more columns than exist in the grid)'
          );

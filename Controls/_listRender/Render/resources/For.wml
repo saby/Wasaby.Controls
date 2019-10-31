@@ -15,6 +15,7 @@
       on:mousemove="_onItemMouseMove(item)"
       on:mouseleave="_onItemMouseLeave(item)"
       on:wheel="_onItemWheel(item)"
+      on:keydown="_onItemKeyDown(item)"
 
       itemActionsPosition="{{ itemActionsPosition }}"
       itemActionsTemplate="{{ itemActionsTemplate }}"

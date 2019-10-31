@@ -16,6 +16,17 @@
 
    /**
     *
+    * Модуль с функцией выделения искомой строки.
+    * Берет textToHighlight из resolverParams {@link Controls/decorator:Markup#resolverParams}.
+    * Распознаватель тегов для {@link Controls/decorator:Markup}.
+    *
+    * @class Controls/_decorator/Markup/resolvers/highlight
+    * @public
+    * @author Кондаков Р.Н.
+    */
+
+   /*
+    *
     * Module with a function to highlight searched string.
     * Takes textToHighlight from resolverParams {@link Controls/decorator:Markup#resolverParams}.
     * Tag resolver for {@link Controls/decorator:Markup}.
@@ -23,7 +34,7 @@
     * @class Controls/_decorator/Markup/resolvers/highlight
     * @public
     * @author Кондаков Р.Н.
-    */
+    */    
    export default function highlight(value, parent, resolverParams) {
       // Resolve only strings and only if text to highlight exists and not empty.
       if ((typeof value !== 'string' && !(value instanceof String)) || !resolverParams.textToHighlight) {

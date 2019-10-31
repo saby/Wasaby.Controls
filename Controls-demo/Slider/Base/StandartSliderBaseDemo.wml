@@ -105,6 +105,24 @@
             />
          </div>
       </div>
+      <div class="demo__block">
+         <div class="demo__label">
+            with input
+         </div>
+         <div class="demo__element">
+            <Controls.slider:Base attr:class="demo-standartSliderRange__inputS"
+                                   size="s"
+                                   minValue="{{_minValueI}}"
+                                   maxValue="{{_maxValueI}}"
+                                   borderVisible="{{true}}"
+                                   on:valueChanged="_inputCompleted()"
+                                   bind:value="_valueI"
+            />
+            <div class="demo_slider_input-wrapper">
+               <Controls.input:Number class="demo_slider_input_field" name="inputValue" precision="{{0}}" bind:value="_inputValue" on:inputCompleted="_inputCompleted()"></Controls.input:Number>
+            </div>
+         </div>
+      </div>
 
    </div>
 </div>

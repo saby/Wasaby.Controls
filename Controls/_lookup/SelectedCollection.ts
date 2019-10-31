@@ -1,15 +1,15 @@
-import Control = require('Core/Control');
+import { Control, TemplateFunction } from 'UI/Base';
 import template = require('wml!Controls/_lookup/SelectedCollection/SelectedCollection');
 import ItemTemplate = require('wml!Controls/_lookup/SelectedCollection/ItemTemplate');
 import chain = require('Types/chain');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Utils');
-import utils = require('Types/util');
 import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
 import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTemplate');
 import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {Model} from 'Types/entity';
+import { Model } from 'Types/entity';
+import { ObservableList } from 'Types/collection';
 import 'css!theme?Controls/lookup';
 
 /**
@@ -33,95 +33,55 @@ import 'css!theme?Controls/lookup';
  */
 
 
-var
+const
    JS_CLASS_CAPTION_ITEM = '.js-controls-SelectedCollection__item__caption',
    JS_CLASS_CROSS_ITEM = '.js-controls-SelectedCollection__item__cross';
 
-var _private = {
-   clickCallbackPopup: function (eventType, item) {
-      if (eventType === 'crossClick') {
-         this._notify('crossClick', [item]);
-      } else if (eventType === 'itemClick') {
-         this._notify('itemClick', [item]);
-      }
-   },
+class SelectedCollection extends Control {
+   protected _template: TemplateFunction = template;
+   protected _visibleItems = null;
+   protected _notifyHandler = tmplNotify;
+   protected _counterWidth: number = 0;
+   protected _contentTemplate: TemplateFunction = ContentTemplate;
+   protected _crossTemplate: TemplateFunction = CrossTemplate;
+   protected _counterTemplate: TemplateFunction = CounterTemplate;
 
-   getItemsInArray: function (items) {
-      return chain.factory(items).value();
-   },
-
-   getVisibleItems: function (items, maxVisibleItems) {
-      return maxVisibleItems ? items.slice(Math.max(items.length - maxVisibleItems, 0)) : items;
-   },
-
-   getTemplateOptions: function (self, options) {
-      var
-         templateOptions = {},
-         options = self._options,
-
-      if (options.items) {
-         templateOptions.items = utils.object.clone(options.items);
-      }
-
-      templateOptions.readOnly = options.readOnly;
-      templateOptions.displayProperty = options.displayProperty;
-      templateOptions.itemTemplate = options.itemTemplate;
-      templateOptions.clickCallback = self._clickCallbackPopup;
-
-      return templateOptions;
-   },
-
-   getCounterWidth: function (itemsCount, readOnly, itemsLayout) {
-      // in mode read only and single line, counter does not affect the collection
-      if (readOnly && itemsLayout === 'oneRow') {
-         return 0;
-      }
-
-      return selectedCollectionUtils.getCounterWidth(itemsCount);
-   },
-
-   isShowCounter: function (itemsLength, maxVisibleItems) {
-      return itemsLength > maxVisibleItems;
+   public static getDefaultOptions(): Object {
+      return {
+         itemTemplate: ItemTemplate,
+         itemsLayout: 'default'
+      };
    }
-};
 
-var Collection = Control.extend({
-   _template: template,
-   _items: null,
-   _notifyHandler: tmplNotify,
-   _counterWidth: 0,
-   _contentTemplate: ContentTemplate,
-   _crossTemplate: CrossTemplate,
-   _counterTemplate: CounterTemplate,
-
-   _beforeMount: function (options) {
+   protected _beforeMount(options): void {
       this._getItemMaxWidth = selectedCollectionUtils.getItemMaxWidth;
-      this._clickCallbackPopup = _private.clickCallbackPopup.bind(this);
-      this._items = _private.getItemsInArray(options.items);
-      this._visibleItems = _private.getVisibleItems(this._items, options.maxVisibleItems);
+      this._clickCallbackPopup = this._clickCallbackPopup.bind(this);
+      this._visibleItems = this._getVisibleItems(options.items, options.maxVisibleItems);
       this._counterWidth = options._counterWidth || 0;
-   },
+   }
 
-   _beforeUpdate: function (newOptions) {
-      this._items = _private.getItemsInArray(newOptions.items);
-      this._visibleItems = _private.getVisibleItems(this._items, newOptions.maxVisibleItems);
+   protected _beforeUpdate(newOptions): void {
+      let itemsCount: number = newOptions.items.getCount();
+      this._visibleItems = this._getVisibleItems(newOptions.items, newOptions.maxVisibleItems);
 
-      if (_private.isShowCounter(this._items.length, newOptions.maxVisibleItems)) {
-         this._counterWidth = newOptions._counterWidth || _private.getCounterWidth(this._items.length, newOptions.readOnly, newOptions.itemsLayout);
+      if (this._isShowCounter(itemsCount, newOptions.maxVisibleItems)) {
+         this._counterWidth = newOptions._counterWidth || this._getCounterWidth(itemsCount, newOptions.readOnly, newOptions.itemsLayout);
       }
-   },
+   }
 
-   _afterMount: function () {
-      if (_private.isShowCounter(this._items.length, this._options.maxVisibleItems) && !this._counterWidth) {
-         this._counterWidth = this._counterWidth || _private.getCounterWidth(this._items.length, this._options.readOnly, this._options.itemsLayout);
+   protected _afterMount(): void {
+      let itemsCount: number = this._options.items.getCount();
+
+      if (this._isShowCounter(itemsCount, this._options.maxVisibleItems) && !this._counterWidth) {
+         this._counterWidth = this._counterWidth || this._getCounterWidth(itemsCount, this._options.readOnly, this._options.itemsLayout);
 
          if (this._counterWidth) {
             this._forceUpdate();
          }
       }
-   },
+   }
 
-   _itemClick(event: SyntheticEvent, item: Model): void {
+   protected _itemClick(event: SyntheticEvent, item: Model): void {
       let eventName: string;
 
       if (event.target.closest(JS_CLASS_CAPTION_ITEM)) {
@@ -134,28 +94,53 @@ var Collection = Control.extend({
          event.stopPropagation();
          this._notify(eventName, [item]);
       }
-   },
+   }
 
-   _openInfoBox: function (event) {
-      var config = {
+   protected _clickCallbackPopup(eventType: SyntheticEvent, item: Model): void {
+      if (eventType === 'crossClick') {
+         this._notify('crossClick', [item]);
+      } else if (eventType === 'itemClick') {
+         this._notify('itemClick', [item]);
+      }
+   }
+
+   protected _openInfoBox(): void {
+      let config: Object = {
          target: this._children.infoBoxLink,
          opener: this,
          width: this._container.offsetWidth,
-         templateOptions: _private.getTemplateOptions(this)
+         templateOptions: {
+            items: this._options.items.clone(),
+            readOnly: this._options.readOnly,
+            displayProperty: this._options.displayProperty,
+            itemTemplate: this._options.itemTemplate,
+            clickCallback: this._clickCallbackPopup
+         }
       };
 
       this._notify('openInfoBox', [config]);
       this._children.infoBox.open(config);
    }
-});
 
-Collection.getDefaultOptions = function () {
-   return {
-      itemTemplate: ItemTemplate,
-      itemsLayout: 'default'
-   };
-};
+   private _getVisibleItems(items, maxVisibleItems: number): Array<Model> {
+      let itemsInArray: Model = chain.factory(items).value();
+      let indexFirstVisibleItem: number = Math.max(maxVisibleItems ? items.getCount() - maxVisibleItems : 0, 0);
 
-Collection._private = _private;
-export = Collection;
+      return itemsInArray.slice(indexFirstVisibleItem);
+   }
 
+   private _getCounterWidth(itemsCount, readOnly: boolean, itemsLayout: String): number {
+      // in mode read only and single line, counter does not affect the collection
+      if (readOnly && itemsLayout === 'oneRow') {
+         return 0;
+      }
+
+      return selectedCollectionUtils.getCounterWidth(itemsCount);
+   }
+
+   private _isShowCounter(itemsCount: number, maxVisibleItems: number): boolean {
+      return itemsCount > maxVisibleItems;
+   }
+}
+
+export default SelectedCollection;

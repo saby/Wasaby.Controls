@@ -318,7 +318,9 @@ function getRowsArray(array, hasMultiselect, isMultiHeader) {
         }
         result = sortedColumns(result);
     }
-    result[0] = [{}, ...result[0]];
+    if (hasMultiselect) {
+        result[0] = [{}, ...result[0]];
+    }
     return result;
 }
 
