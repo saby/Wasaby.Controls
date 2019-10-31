@@ -329,8 +329,8 @@ var _Controller = Control.extend({
                sourceController.calculateState(this._items);
 
                if (receivedState.history) {
-                  this._source.prepareItems(receivedState.items);
                   this._source.setHistory(receivedState.history);
+                  this._setItems(this._source.prepareItems(this._items));
                }
 
                return sourceController;
@@ -341,12 +341,13 @@ var _Controller = Control.extend({
             }
          } else if (options.source) {
             result = _private.loadItems(this, options).addCallback((items) => {
-               const beforeMountResult = {
-                  items
-               };
+               const beforeMountResult = {};
 
                if (historyUtils.isHistorySource(this._source)) {
                   beforeMountResult.history = this._source.getHistory();
+                  beforeMountResult.items = this._source.getItems(false);
+               } else {
+                  beforeMountResult.items = items;
                }
 
                return beforeMountResult;
