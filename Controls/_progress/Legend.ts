@@ -7,16 +7,24 @@ export interface ILegendOptions extends IControlOptions {
    data?: IIndicatorCategory[];
 }
 /**
- * Legend for StateIndicator
+ * Легенда для StateIndicator.
  * @class Controls/_progress/Legend
  * @author Колесов В.А.
  */
+
+/*
+ * Legend for StateIndicator
+ * @class Controls/_progress/Legend
+ * @author Колесов В.А.
+ */ 
+
 /**
  * @typedef {Object} IndicatorCategory
  * @property {Number} value=0 Percents of the corresponding category
  * @property {String} className='' Name of css class, that will be applied to sectors of this category. If not specified, default color will be used
  * @property {String} title='' category note
  */
+
 /**
  * @cfg {Array.<IndicatorCategory>} Array of indicator categories
  * <pre class="brush:html">
@@ -42,3 +50,14 @@ class Legend extends Control<ILegendOptions> {
 }
 
 export default Legend;
+
+/**
+ * @name Controls/_progress/Legend#data
+ * @cfg {Array.<IndicatorCategory>} Массив легенд диаграммы.
+ * <pre class="brush:html">
+ *   <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]}}"/>
+ * </pre>
+ * @remark 
+ * Используется, если для диаграммы нужно установить несколько легенд. Количество элементов массива задает количество легенд диаграммы.
+ */
+
