@@ -211,7 +211,8 @@ class BaseOpener extends Control<IControlOptions> {
     protected _getIndicatorConfig() {
         return {
             id: this._indicatorId,
-            message: rk('Загрузка')
+            message: rk('Загрузка'),
+            delay: 2000 // by standart
         };
     }
 
