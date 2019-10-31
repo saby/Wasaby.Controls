@@ -425,6 +425,31 @@ define([
          assert.equal(listViewModel.getVersion() - oldVersion, 1);
       });
 
+      it('updateItemActions should not update prefix item version', function() {
+         var
+            cfg = {
+               listModel: listViewModel,
+               itemActions: [{
+                  id: 0,
+                  title: 'first',
+                  showType: tUtil.showType.MENU
+               },
+               {
+                  id: 1,
+                  title: 'second',
+                  showType: tUtil.showType.TOOLBAR
+               }],
+               itemActionsPosition: 'outside'
+            },
+            ctrl = new lists.ItemActionsControl(cfg);
+         ctrl.saveOptions(cfg);
+
+         var prefixItemVersion = listViewModel._prefixItemVersion;
+         ctrl.updateItemActions(listViewModel.getCurrent().item);
+
+         assert.strictEqual(listViewModel._prefixItemVersion, prefixItemVersion);
+      });
+
       describe('beforeUpdate updates model', function() {
          var visibilityCallback = function() {
             return true;

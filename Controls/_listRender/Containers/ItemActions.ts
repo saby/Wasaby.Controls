@@ -14,7 +14,7 @@ export interface IItemActionsControlOptions extends IControlOptions {
     listModel: Collection<Model>;
 
     itemActions?: any[];
-    itemActionsVisibilityCallback?: TItemActionVisibilityCallback;
+    itemActionVisibilityCallback?: TItemActionVisibilityCallback;
     itemActionsPosition?: string;
 
     contextMenuConfig?: any;
@@ -30,7 +30,7 @@ export default class ItemActionsControl extends Control<IItemActionsControlOptio
         if (!this._initializedActions) {
             this._options.listModel.getItemActionsManager().assignItemActions(
                 this._options.itemActions,
-                this._options.itemActionsVisibilityCallback
+                this._options.itemActionVisibilityCallback
             );
             this._initializedActions = true;
         }

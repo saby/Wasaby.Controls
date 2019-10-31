@@ -262,6 +262,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._editingItemData && this._editingItemData.key === key) {
             version = 'EDITING_' + version;
         }
+        if (this._swipeItem && this._swipeItem.key === key) {
+            version = 'SWIPE_' + version;
+        }
 
         return version;
     },
@@ -447,7 +450,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setSwipeItem: function(itemData) {
         if (!this._swipeItem || !itemData || itemData.item !== this._swipeItem.item) {
            this._swipeItem = itemData;
-           this._nextModelVersion();
+           this._nextModelVersion(true);
         }
     },
 

@@ -16,7 +16,7 @@
 </ws:template>
 
 <ws:template name="cellPartialTemplate">
-   <ws:if data="{{currentColumn.columnIndex === 1}}">
+   <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 1 || !itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
        <ws:if data="{{!withoutLevelPadding && itemData.level > 1}}">
            <ws:for data="i in itemData.level - 1">
                <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
@@ -30,7 +30,7 @@
            <div class="{{itemData.getExpanderPaddingClasses(expanderSize, _options.theme)}} js-controls-ListView__notEditable"></div>
        </ws:else>
    </ws:if>
-   <ws:if data="{{colspan && (!itemData.hasMultiSelect || currentColumn.columnIndex !== 0)}}">
+   <ws:if data="{{colspan}}">
        <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"/>
    </ws:if>
    <ws:else>

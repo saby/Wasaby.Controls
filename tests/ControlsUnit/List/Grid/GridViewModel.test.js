@@ -377,12 +377,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         },
                         currentColumn: {
                            styleForLadder: 'LADDER_STYLE;',
-                           columnIndex: 1
+                           columnIndex: 0
                         },
                         isNotFullGridSupport: false,
                         colspan: true
                      },
-                     resultData: 'LADDER_STYLE; grid-column: 2 / 3;'
+                     resultData: 'LADDER_STYLE; grid-column: 1 / 3;'
                   },
                   {
                      inputData: {
@@ -392,12 +392,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         },
                         currentColumn: {
                            styleForLadder: 'LADDER_STYLE;',
-                           columnIndex: 1
+                           columnIndex: 0
                         },
                         isNotFullGridSupport: false,
                         colspan: true
                      },
-                     resultData: 'LADDER_STYLE; grid-column: 2 / 3;'
+                     resultData: 'LADDER_STYLE; grid-column: 1 / 3;'
                   }
                ];
             testCases.forEach(function(testCase, idx) {
@@ -411,26 +411,25 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             GridLayoutUtil.isPartialGridSupport = () => true;
 
             let
-               itemData = {
-                  multiSelectVisibility: 'hidden',
-                  columns: [{}, {}, {}]
-               },
-               currentColumn = {
-                  columnIndex: 0
-               };
+                itemData = {
+                   multiSelectVisibility: 'hidden',
+                   columns: [{}, {}]
+                },
+                currentColumn = {
+                   columnIndex: 0
+                };
 
-            assert.equal('', gridMod.GridViewModel._private.getCellStyle(itemData, currentColumn, true));
-
-            currentColumn.columnIndex++;
-            assert.equal(' grid-column: 2 / 4; -ms-grid-column: 2; -ms-grid-column-span: 2;',
-               gridMod.GridViewModel._private.getCellStyle(itemData, currentColumn, true));
+            assert.equal(
+                gridMod.GridViewModel._private.getCellStyle(itemData, currentColumn, true),
+                ' grid-column: 1 / 3; -ms-grid-column: 1; -ms-grid-column-span: 2;'
+            );
 
             GridLayoutUtil.isPartialGridSupport = nativeFn;
          });
          it('getPaddingCellClasses', function() {
             var
                paramsWithoutMultiselect = {
-                  columns: [{}].concat(gridColumns),
+                  columns: gridColumns,
                   multiSelectVisibility: false,
                   itemPadding: {
                      left: 'XL',
@@ -454,17 +453,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   style: 'default'
                },
                expectedResultWithoutMultiselect = [
-                  ' controls-Grid__cell_firstSpacingColumn_xl_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
-                  ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
+                  ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_spacingFirstCol_xl_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
                   ' controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
                   ' controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
-                  ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default'],
+                  ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_spacingFirstCol_null_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default'],
                expectedResultWithMultiselect = [
-                  ' controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
+                  ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
                   ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
                   ' controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
                   ' controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
-                  ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_spacingBackButton_with_multiSelection_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default'];
+                  ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_spacingFirstCol_null_theme-default controls-Grid__cell_spacingBackButton_with_multiSelection controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default'];
             assert.equal(expectedResultWithoutMultiselect[0],
                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0, rowIndex: 0}), theme),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
@@ -475,9 +473,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 2, rowIndex: 0}), theme),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
             assert.equal(expectedResultWithoutMultiselect[3],
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 3, rowIndex: 0}), theme),
-               'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
-            assert.equal(expectedResultWithoutMultiselect[4],
                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(cMerge(paramsWithoutMultiselect, {columnIndex: 0, rowIndex: 0, isBreadCrumbs: true}), theme),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithoutMultiselect)".');
 
@@ -513,28 +508,28 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   top: 'L',
                   bottom: 'L'
                },
-               cell: {},
+                cell: {},
                columnIndex: 1,
                rowIndex: 0,
                style: 'default'
             };
             assert.equal(
-               ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
-               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(paramsWithMultiselect, theme)
+                ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_spacingFirstCol_null_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(paramsWithMultiselect, theme)
             );
 
             paramsWithMultiselect.isTableLayout = false;
 
             assert.equal(
-               ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_spacingBackButton_with_multiSelection_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
-               gridMod.GridViewModel._private.getPaddingHeaderCellClasses(paramsWithMultiselect, theme)
+                ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_spacingFirstCol_null_theme-default controls-Grid__cell_spacingBackButton_with_multiSelection_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses(paramsWithMultiselect, theme)
             );
          });
          it('getPaddingHeaderCellClasses for multiHeader', function() {
            /*
-             __________________________
-            |  |  1  |__2__|__3__|  4  |
-            |__|_____|__5__|__6__|_____|
+             ________________________
+            |  1  |__2__|__3__|   4  |
+            |_____|__5__|__6__|______|
            */
             const headerRows = [
                 [
@@ -550,14 +545,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             ];
 
             const expectedResultRow = [
-               ' controls-Grid__cell_firstSpacingColumn_xl_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
-               ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
-               ' controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
+               ' controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_spacingFirstCol_xl_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
                ' controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
                ' controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
-            ];
+            ]
             const paramsForFirstRow = {
-               columns: [{}, ...headerRows[0]],
+               columns: headerRows[0],
                multiSelectVisibility: false,
                maxEndColumn: 5,
                style: 'default',
@@ -570,19 +563,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             };
 
             assert.equal(expectedResultRow[0],
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 0, rowIndex: 0, cell: paramsForFirstRow.columns[0]}, theme),
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 0, rowIndex: 0, cell: headerRows[0][0]}, theme),
                 'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
             assert.equal(expectedResultRow[1],
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 1, rowIndex: 0, cell: paramsForFirstRow.columns[1]}, theme),
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 1, rowIndex: 0, cell: headerRows[0][1]}, theme),
+                'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
+            assert.equal(expectedResultRow[1],
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 2, rowIndex: 0, cell: headerRows[0][2]}, theme),
                 'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
             assert.equal(expectedResultRow[2],
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 2, rowIndex: 0, cell: paramsForFirstRow.columns[2]}, theme),
-                'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
-            assert.equal(expectedResultRow[3],
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 3, rowIndex: 0, cell: paramsForFirstRow.columns[3]}, theme),
-                'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
-            assert.equal(expectedResultRow[4],
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 4, rowIndex: 0, cell: paramsForFirstRow.columns[4]}, theme),
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForFirstRow, columnIndex: 3, rowIndex: 0, cell: headerRows[0][3]}, theme),
                 'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
 
             const paramsForSecondRow = {
@@ -597,13 +587,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   bottom: 'L'
                },
             };
-
-
-            assert.equal(expectedResultRow[2],
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForSecondRow, columnIndex: 0, rowIndex: 1, cell: paramsForSecondRow.columns[0]}, theme),
+            assert.equal(expectedResultRow[1],
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForSecondRow, columnIndex: 0, rowIndex: 1, cell: headerRows[1][0]}, theme),
                 'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
-            assert.equal(expectedResultRow[2],
-                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForSecondRow, columnIndex: 1, rowIndex: 1, cell: paramsForSecondRow.columns[1]}, theme),
+            assert.equal(expectedResultRow[1],
+                gridMod.GridViewModel._private.getPaddingHeaderCellClasses({...paramsForSecondRow, columnIndex: 1, rowIndex: 1, cell: headerRows[1][1]}, theme),
                 'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
          });
 
@@ -1454,7 +1442,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             let headerRow = gridViewModel.getCurrentHeaderRow();
             assert.deepEqual({
                column: {title : '123'},
-               cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-Grid__cell_default',
+               cellClasses: 'controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default',
                index: 0,
                cellContentClasses: '',
                cellStyles: '',
@@ -1669,11 +1657,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          it('_prepareHeaderColumns', function() {
             gridViewModel._headerRows = [];
+            // gridViewModel._prepareHeaderColumns(gridHeader, false);
             assert.deepEqual([], gridViewModel._headerRows, 'Incorrect value "_headerColumns" before "_prepareHeaderColumns([])" without multiselect.');
+            console.log('hello', gridViewModel._headerRows);
             gridViewModel._prepareHeaderColumns([], false);
-            assert.deepEqual([{}], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" without multiselect.');
+            assert.deepEqual([], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" without multiselect.');
             gridViewModel._prepareHeaderColumns(gridHeader, false);
-            assert.deepEqual([[{}, ...gridHeader]], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" without multiselect.');
+            assert.deepEqual([gridHeader], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns(gridHeader)" without multiselect.');
             gridViewModel._prepareHeaderColumns([], true);
             assert.deepEqual([{}], gridViewModel._headerRows, 'Incorrect value "_headerColumns" after "_prepareHeaderColumns([])" with multiselect.');
             gridViewModel._prepareHeaderColumns(gridHeader, true);
@@ -1681,11 +1671,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
 
          it('_prepareResultsColumns', function() {
-            assert.deepEqual([{}].concat(gridColumns), gridViewModel._resultsColumns, 'Incorrect value "_headerColumns" before "_prepareResultsColumns([])".');
-            gridViewModel._prepareResultsColumns([]);
-            assert.deepEqual([{}], gridViewModel._resultsColumns, 'Incorrect value "_resultsColumns" after "_prepareResultsColumns([])".');
-            gridViewModel._prepareResultsColumns(gridColumns);
-            assert.deepEqual([{}, ...gridColumns], gridViewModel._resultsColumns, 'Incorrect value "_resultsColumns" after "_prepareResultsColumns(gridColumns)".');
+            assert.deepEqual([{}].concat(gridColumns), gridViewModel._resultsColumns, 'Incorrect value "_headerColumns" before "_prepareResultsColumns([])" without multiselect.');
+            gridViewModel._prepareResultsColumns([], false);
+            assert.deepEqual([], gridViewModel._resultsColumns, 'Incorrect value "_resultsColumns" after "_prepareResultsColumns([])" without multiselect.');
+            gridViewModel._prepareResultsColumns(gridColumns, false);
+            assert.deepEqual(gridColumns, gridViewModel._resultsColumns, 'Incorrect value "_resultsColumns" after "_prepareResultsColumns(gridColumns)" without multiselect.');
+
+            gridViewModel._prepareResultsColumns([], true);
+            assert.deepEqual([{}], gridViewModel._resultsColumns, 'Incorrect value "_resultsColumns" after "_prepareResultsColumns([])" with multiselect.');
+            gridViewModel._prepareResultsColumns(gridColumns, true);
+            assert.deepEqual([{}].concat(gridColumns), gridViewModel._resultsColumns, 'Incorrect value "_resultsColumns" after "_prepareResultsColumns(gridColumns)" with multiselect.');
          });
 
          it('getFooterStyles without display', function() {
@@ -1869,7 +1864,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             };
 
             gridViewModel.setMultiSelectVisibility('hidden');
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1fr', '15px', '16px']);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), realWidths);
             assert.isTrue(calledCallback);
 
             calledCallback = false;
@@ -1880,7 +1875,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             calledCallback = false;
             gridViewModel.setMultiSelectVisibility('hidden');
             gridViewModel.setColumns([{width:'1px'}]);
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1px']);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['1px']);
             assert.isFalse(calledCallback);
 
             gridViewModel.setMultiSelectVisibility('visible');
@@ -1890,7 +1885,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             calledCallback = false;
             gridViewModel.setMultiSelectVisibility('hidden');
             gridViewModel.setColumns([{width:'minmax(100px, 1fr)'}]);
-            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['max-content', '1fr', '15px', '16px']);
+            assert.deepEqual(gridMod.GridViewModel._private.prepareColumnsWidth(gridViewModel, paramItemData), ['1fr', '15px', '16px']);
             assert.isTrue(calledCallback);
 
             calledCallback = false;
@@ -1952,20 +1947,37 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(gridMod.GridViewModel._private.getColspanForNoGridSupport('visible', false), 1);
          });
          it('getColspanStyles', function() {
-            assert.equal(gridMod.GridViewModel._private.getColspanStyles('hidden', 0, 2), '');
+            assert.equal(
+               gridMod.GridViewModel._private.getColspanStyles('hidden', 0, 2),
+               ' grid-column: 1 / 3;'
+            );
 
-            assert.equal(gridMod.GridViewModel._private.getColspanStyles('hidden', 1, 2), ' grid-column: 2 / 3;');
-
-            // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-            assert.equal(gridMod.GridViewModel._private.getColspanStyles('hidden', 0, 2, true), '');
-            assert.equal(gridMod.GridViewModel._private.getColspanStyles('hidden', 1, 2, true), ' grid-column: 2 / 3;');
-
-            assert.equal(gridMod.GridViewModel._private.getColspanStyles('visible', 0, 2), '');
-
-            assert.equal(gridMod.GridViewModel._private.getColspanStyles('visible', 1, 2), ' grid-column: 2 / 3;');
+            assert.equal(
+               gridMod.GridViewModel._private.getColspanStyles('hidden', 1, 2),
+               undefined
+            );
 
             // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-            assert.equal(gridMod.GridViewModel._private.getColspanStyles('visible', 1, 2, true), ' grid-column: 2 / 3;');
+            assert.equal(
+               gridMod.GridViewModel._private.getColspanStyles('hidden', 0, 2, true),
+               ' grid-column: 1 / 2;'
+            );
+
+            assert.equal(
+               gridMod.GridViewModel._private.getColspanStyles('visible', 0, 2),
+               undefined
+            );
+
+            assert.equal(
+               gridMod.GridViewModel._private.getColspanStyles('visible', 1, 2),
+               ' grid-column: 2 / 3;'
+            );
+
+            // TODO: удалить isHeaderBreadCrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+            assert.equal(
+               gridMod.GridViewModel._private.getColspanStyles('visible', 1, 2, true),
+               ' grid-column: 2 / 3;'
+            );
          });
          it('getItemDataByItem: hovered item should be compared by key', function () {
             let current = gridViewModel.getCurrent();
@@ -2021,8 +2033,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   },
                   tests: [
                      [0, true],
-                     [1, true],
-                     [2, false]
+                     [1, false]
                   ]
                },
                {
@@ -2045,8 +2056,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   tests: [
                      [0, true],
                      [1, true],
-                     [2, true],
-                     [3, false]
+                     [2, false]
                   ]
                }
             ];
@@ -2082,50 +2092,52 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             let itemData = {
                hasMultiSelect: false,
-               columns: [{}, {}, {}, {}]
+               columns: [{}, {}, {}]
             };
 
             assert.deepEqual(
-               gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData),
-               {
-                  left: 'grid-column-start: 1; grid-column-end: 5;',
-                  right: ''
-               }
+                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, undefined),
+                {
+                   left: `grid-column: 1 / 4; -ms-grid-column: 1; -ms-grid-column-span: 3;`,
+                   right: ''
+                }
             );
 
             assert.deepEqual(
-               gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, 2),
-               {
-                  left: 'grid-column-start: 1; grid-column-end: 4;',
-                  right: 'grid-column-start: 4; grid-column-end: 5;'
-               }
+                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, 2),
+                {
+                   left: 'grid-column: 1 / 3; -ms-grid-column: 1; -ms-grid-column-span: 2;',
+                   right: 'grid-column: 3 / 4; -ms-grid-column: 3; -ms-grid-column-span: 1;'
+                }
             );
 
             itemData.hasMultiSelect = true;
             itemData.columns = [{}, {}, {}, {}];
 
             assert.deepEqual(
-               gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData),
-               {
-                  left: 'grid-column-start: 1; grid-column-end: 5;',
-                  right: ''
-               }
+                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, undefined),
+                {
+                   left: `grid-column: 1 / 5; -ms-grid-column: 1; -ms-grid-column-span: 4;`,
+                   right: ''
+                }
             );
 
             assert.deepEqual(
-               gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, 2),
-               {
-                  left: 'grid-column-start: 1; grid-column-end: 4;',
-                  right: 'grid-column-start: 4; grid-column-end: 5;'
-               }
+                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, 2),
+                {
+                   left: 'grid-column: 1 / 4; -ms-grid-column: 1; -ms-grid-column-span: 3;',
+                   right: 'grid-column: 4 / 5; -ms-grid-column: 4; -ms-grid-column-span: 1;'
+                }
             );
+
+
          });
 
          it('getColspanForColumnScroll', function () {
             assert.deepEqual(
                 {
-                   fixedColumns: 'grid-column: 2 / 4; -ms-grid-column: 2; -ms-grid-column-span: 2; z-index: 3;',
-                   scrollableColumns: 'grid-column: 4 / 12; -ms-grid-column: 4; -ms-grid-column-span: 8; z-index: auto;'
+                   fixedColumns: 'grid-column: 1 / 3; -ms-grid-column: 1; -ms-grid-column-span: 2; z-index: 3;',
+                   scrollableColumns: 'grid-column: 3 / 11; -ms-grid-column: 3; -ms-grid-column-span: 8; z-index: auto;'
                 },
                 gridMod.GridViewModel._private.getColspanForColumnScroll({
                    _options: {
@@ -2220,7 +2232,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.equal(
                 editingItemData.getEditingRowStyles(),
-                'display: grid; grid-template-columns: max-content 1fr 123px 321px; grid-column-start: 1; grid-column-end: 2; grid-row-start: 3; grid-row-end: 4;'
+                'display: grid; grid-template-columns: 1fr 123px 321px; grid-column-start: 1; grid-column-end: 2; grid-row-start: 3; grid-row-end: 4;'
             );
             assert.equal(groupItemData.gridGroupStyles, "grid-row: 3; -ms-grid-row: 3;");
          });
@@ -2300,7 +2312,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'top';
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 3; grid-row-end: 4; -ms-grid-row: 3; -ms-grid-row-span: 1;',
+                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 3; grid-row-end: 4; -ms-grid-row: 3; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2318,7 +2330,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = 'top';
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
+                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2337,7 +2349,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'bottom';
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
+                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2355,7 +2367,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = 'bottom';
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
+                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2374,7 +2386,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._setHeader([{}]);
                   model._options.resultsPosition = null;
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
+                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 2; grid-row-end: 3; -ms-grid-row: 2; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2392,7 +2404,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model._header = null;
                   model._options.resultsPosition = null;
                   assert.equal(
-                      'grid-column-start: 2; grid-column-end: 5; -ms-grid-column: 2; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
+                      'grid-column-start: 1; grid-column-end: 4; -ms-grid-column: 1; -ms-grid-column-span: 3; grid-row-start: 1; grid-row-end: 2; -ms-grid-row: 1; -ms-grid-row-span: 1;',
                       model.getEmptyTemplateStyles()
                   );
                });
@@ -2412,7 +2424,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model.setMultiSelectVisibility('hidden');
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'top';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 3; grid-row-end: 4;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 3; grid-row-end: 4;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && has header && results in top', () => {
                   model.setMultiSelectVisibility('visible');
@@ -2424,7 +2436,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model.setMultiSelectVisibility('hidden');
                   model._header = null;
                   model._options.resultsPosition = 'top';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && hasn\'t header && results in top', () => {
                   model.setMultiSelectVisibility('visible');
@@ -2437,7 +2449,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model.setMultiSelectVisibility('hidden');
                   model._setHeader([{}]);
                   model._options.resultsPosition = 'bottom';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && has header && results in bottom', () => {
                   model.setMultiSelectVisibility('visible');
@@ -2449,7 +2461,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model.setMultiSelectVisibility('hidden');
                   model._header = null;
                   model._options.resultsPosition = 'bottom';
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && hasn\'t header && results in bottom', () => {
                   model.setMultiSelectVisibility('visible');
@@ -2462,7 +2474,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model.setMultiSelectVisibility('hidden');
                   model._setHeader([{}]);
                   model._options.resultsPosition = null;
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 2; grid-row-end: 3;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && has header && no results', () => {
                   model.setMultiSelectVisibility('visible');
@@ -2474,7 +2486,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   model.setMultiSelectVisibility('hidden');
                   model._header = null;
                   model._options.resultsPosition = null;
-                  assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
+                  assert.equal('grid-column-start: 1; grid-column-end: 4; grid-row-start: 1; grid-row-end: 2;', model.getEmptyTemplateStyles());
                });
                it('has checkbox && hasn\'t header && no results', () => {
                   model.setMultiSelectVisibility('visible');
@@ -2535,7 +2547,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             };
             assert.equal(1, gridMod.GridViewModel._private.getColspan(itemData));
             assert.equal(1, gridMod.GridViewModel._private.getColspan(itemData, false));
-            assert.equal(4, gridMod.GridViewModel._private.getColspan(itemData, true));
+            assert.equal(5, gridMod.GridViewModel._private.getColspan(itemData, true));
             itemData.multiSelectVisibility = 'visible';
             assert.equal(4, gridMod.GridViewModel._private.getColspan(itemData, true));
          });
