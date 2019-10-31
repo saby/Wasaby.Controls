@@ -38,14 +38,14 @@ var
     defaultSelectedKeys = [],
     defaultExcludedKeys = [];
 
-const PAGE_SIZE_ARRAY = [{id: 1, title: 5},
-                         {id: 2, title: 10},
-                         {id: 3, title: 25},
-                         {id: 4, title: 50},
-                         {id: 5, title: 100},
-                         {id: 6, title: 200},
-                         {id: 7, title: 500},
-                         {id: 8, title: 1000}];
+const PAGE_SIZE_ARRAY = [{id: 1, title: '5', pageSize: 5},
+                         {id: 2, title: '10', pageSize: 10},
+                         {id: 3, title: '25', pageSize: 25},
+                         {id: 4, title: '50', pageSize: 50},
+                         {id: 5, title: '100', pageSize: 100},
+                         {id: 6, title: '200', pageSize: 200},
+                         {id: 7, title: '500', pageSize: 500},
+                         {id: 8, title: '1000', pageSize: 1000}];
 const
     HOT_KEYS = {
         moveMarkerToNext: constants.key.down,
@@ -2556,21 +2556,22 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     __pagingChangePage: function (event, page) {
         this._currentPage = page;
-        var newNavigation = cClone(this._options.navigation);
-        newNavigation.sourceConfig.page = page - 1;
-        newNavigation.sourceConfig.pageSize = this._currentPageSize;
-        this._recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
-        var self = this;
-        _private.reload(self, self._options);
-        this._shouldRestoreScrollPosition = true;
+        this._applyPagingNavigationState({page: this._currentPage});
     },
     _changePageSize: function(e, item) {
-        this._currentPageSize = item.get('title');
+        this._currentPageSize = item.get('pageSize');
+        this._applyPagingNavigationState({pageSize: this._currentPageSize});
+    },
+    _applyPagingNavigationState: function(params) {
         var newNavigation = cClone(this._options.navigation);
-        newNavigation.sourceConfig.pageSize = this._currentPageSize;
+        if (params.pageSize) {
+            newNavigation.sourceConfig.pageSize = this._currentPageSize;
+        }
+        if (params.page) {
+            newNavigation.sourceConfig.page = page - 1;
+        }
         this._recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
-        var self = this;
-        _private.reload(self, self._options);
+        _private.reload(this, this._options);
         this._shouldRestoreScrollPosition = true;
     },
     _recreateSourceController: function(newSource, newNavigation, newKeyProperty) {
