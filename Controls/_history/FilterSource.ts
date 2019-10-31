@@ -244,7 +244,7 @@ var _private = {
 };
 
 /**
- * A proxy that works only takes data from the history source
+ * Объект, который принимает данные из источника истории.
  * @class Controls/_history/FilterSource
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
@@ -266,6 +266,30 @@ var _private = {
  *       });
  * </pre>
  */
+
+/*
+ * A proxy that works only takes data from the history source
+ * @class Controls/_history/FilterSource
+ * @extends Core/core-extend
+ * @mixes Types/_entity/OptionsToPropertyMixin
+ * @control
+ * @private
+ * @author Герасимов А.М.
+ * @category Menu
+ * @example
+ * <pre>
+ *    var source = new filterSource({
+ *           originSource: new Memory({
+ *               keyProperty: 'id',
+ *               data: []
+ *           }),
+ *           historySource: new historyService({
+ *               historyId: 'TEST_FILTER_HISTORY_ID',
+ *               dataLoaded: true
+ *           })
+ *       });
+ * </pre>
+ */ 
 
 /**
  * @name Controls/_history/FilterSource#originSource
