@@ -61,7 +61,7 @@ export interface IPropertyGrid {
 
 /**
  * @name Controls/_propertyGrid/IPropertyGrid#source
- * @cfg {Array[IPropertyGridProperty]}
+ * @cfg {Array[IPropertyGridProperty]} Источник данных.
  */
 
 /**
