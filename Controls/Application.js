@@ -231,11 +231,13 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#compat
+    * @deprecated Способы вставки старых контролов внутри нового окружения описаны в этой статье: {@link https://wi.sbis.ru/doc/platform/developmentapl/ws3/compound-wasaby/}
     * @cfg {Boolean} В значении true создаётся "слой совместимости" для работы с контролами из пространства имён SBIS3.CONTROLS/* и Lib/*.
     */
 
    /*
     * @name Controls/Application#compat
+    * @deprecated There are several ways to use old controls in new environment: {@link https://wi.sbis.ru/doc/platform/developmentapl/ws3/compound-wasaby/}.
     * @cfg {Boolean} If it's true, compatible layer will be loaded
     */
 
@@ -487,7 +489,15 @@ define('Controls/Application',
             }
          },
 
+         _checkDeprecatedOptions: function(opts) {
+            if (opts.compat) {
+               Env.IoC.resolve('ILogger').warning('Опция compat является устаревшей. Для вставки старых контролов внутри VDOM-ного окружения ' +
+                'используйте один из способов, описанных в этой статье: https://wi.sbis.ru/doc/platform/developmentapl/ws3/compound-wasaby/');
+            }
+         },
+
          _beforeMount: function(cfg) {
+            this._checkDeprecatedOptions(cfg);
             this.headTagResolver = this._headTagResolver.bind(this);
             this.BodyClasses = _private.calculateBodyClasses;
             this._scrollData = new scroll._scrollContext({ pagingVisible: cfg.pagingVisible });
