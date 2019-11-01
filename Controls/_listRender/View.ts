@@ -7,6 +7,7 @@ import { Model } from 'Types/entity';
 import { create as diCreate } from 'Types/di';
 
 import { Collection } from 'Controls/display';
+import tmplNotify = require('Controls/Utils/tmplNotify');
 
 import { load as libraryLoad } from 'Core/library';
 import { SyntheticEvent } from 'Vdom/Vdom';
@@ -20,6 +21,7 @@ export interface IViewOptions extends IControlOptions {
 
 export default class View extends Control<IViewOptions> {
     protected _template: TemplateFunction = template;
+    protected _tmplNotify: Function = tmplNotify;
 
     protected _collection: Collection<Model>;
 
@@ -31,8 +33,10 @@ export default class View extends Control<IViewOptions> {
     }
 
     protected _beforeUnmount(): void {
-        this._collection.destroy();
-        this._collection = null;
+        if (this._collection) {
+            this._collection.destroy();
+            this._collection = null;
+        }
     }
 
     protected _onDropdownMenuOpenRequested(event: SyntheticEvent<null>, dropdownConfig: any): void {
