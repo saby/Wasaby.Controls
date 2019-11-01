@@ -71,12 +71,12 @@ export default class VirtualScrollController {
             newStopIndex = newStartIndex + this.pageSize - 1;
 
             if (newStopIndex >= this.itemsCount) {
-                newStopIndex = this.itemsCount - 1;
+                newStopIndex = this.itemsCount;
                 newStartIndex = this.stopIndex - this.pageSize;
             }
         } else {
             newStartIndex = 0;
-            newStopIndex = this.itemsCount - 1;
+            newStopIndex = this.itemsCount;
         }
 
         this.checkIndexesChanged(newStartIndex, newStopIndex);
@@ -103,13 +103,13 @@ export default class VirtualScrollController {
         if (sub > 0) {
             if (direction === 'up') {
                 newStartIndex = Math.max(newStartIndex - sub, 0);
-                newStopIndex = Math.min(newStartIndex + this.pageSize, this.itemsCount - 1);
+                newStopIndex = Math.min(newStartIndex + this.pageSize, this.itemsCount);
 
                 if (newStopIndex < this.stopIndex) {
-                    newStopIndex = Math.min(newStopIndex + quantity, this.itemsCount - 1);
+                    newStopIndex = Math.min(newStopIndex + quantity, this.itemsCount);
                 }
             } else {
-                newStopIndex = Math.min(newStartIndex + this.pageSize, this.itemsCount - 1);
+                newStopIndex = Math.min(newStartIndex + this.pageSize, this.itemsCount);
                 newStartIndex = Math.max(newStopIndex - this.pageSize, 0);
                 newStartIndex = Math.max(newStartIndex - quantity, 0);
             }
@@ -142,7 +142,7 @@ export default class VirtualScrollController {
                 needToLoadMore = true;
             }
 
-            newStopIndex = Math.min( newStopIndex + segmentSize, this.itemsCount - 1);
+            newStopIndex = Math.min( newStopIndex + segmentSize, this.itemsCount);
             newStartIndex += quantity;
         }
 
@@ -152,7 +152,7 @@ export default class VirtualScrollController {
 
             if (difference < this.pageSize) {
                 if (direction === 'up') {
-                    newStopIndex = Math.min(this.itemsCount - 1, newStopIndex + sub);
+                    newStopIndex = Math.min(this.itemsCount, newStopIndex + sub);
                 } else {
                     newStartIndex = Math.max(0, newStartIndex - sub);
                 }
@@ -181,7 +181,7 @@ export default class VirtualScrollController {
 
         this.indexesChangedCallback(
             this.startIndex = Math.max(newStartIndex - (Math.trunc(this.pageSize / 2)), 0),
-            this.stopIndex = Math.min(this.startIndex + this.pageSize, this.itemsCount - 1));
+            this.stopIndex = Math.min(this.startIndex + this.pageSize, this.itemsCount));
         this.placeholderChangedCallback(this.calcPlaceholderSize());
 
     }
@@ -193,7 +193,7 @@ export default class VirtualScrollController {
         this.itemsHeights = [];
         this.itemsOffsets = [];
         this.indexesChangedCallback(this.startIndex = 0, this.stopIndex = Math.min(this.startIndex + this.pageSize,
-            this.itemsCount - 1));
+            this.itemsCount));
         this.placeholderChangedCallback(this.calcPlaceholderSize());
     }
 
@@ -278,7 +278,7 @@ export default class VirtualScrollController {
      */
     setStartIndex(index: number): void {
         this.startIndex = Math.max(0, index);
-        this.stopIndex = Math.min(this.itemsCount - 1, this.startIndex + this.pageSize);
+        this.stopIndex = Math.min(this.itemsCount, this.startIndex + this.pageSize);
     }
 
     /**
@@ -301,7 +301,7 @@ export default class VirtualScrollController {
     private calcPlaceholderSize(): IPlaceholders {
         return [
             this.getItemsHeights(0, this.startIndex),
-            this.getItemsHeights(this.stopIndex, this.itemsCount - 1)
+            this.getItemsHeights(this.stopIndex, this.itemsCount)
         ];
     }
 
@@ -316,7 +316,7 @@ export default class VirtualScrollController {
                 this.itemsHeights[startUpdateIndex + i] = this._itemsContainer.children[i].offsetHeight;
             }
         } else {
-            for (let i = this.startIndex; i <= this.stopIndex; i++) {
+            for (let i = this.startIndex; i < this.stopIndex; i++) {
                 if (this._itemsContainer.children[i]) {
                     this.itemsHeights[i] = this._itemsContainer.children[i].offsetHeight;
                 }
@@ -330,7 +330,7 @@ export default class VirtualScrollController {
     private updateItemsOffsets(): void {
         let sum: number = 0;
 
-        for (let i = this.startIndex; i <= this.stopIndex; i++) {
+        for (let i = this.startIndex; i < this.stopIndex; i++) {
             this.itemsOffsets[i] = sum;
             sum += this.itemsHeights[i];
         }
@@ -346,7 +346,7 @@ export default class VirtualScrollController {
         const items = this.itemsHeights;
 
         if (direction === 'up') {
-            let stopIndex = this.stopIndex;
+            let stopIndex = this.stopIndex - 1;
             const triggerDistance = this.viewportHeight + this.scrollTop + this.triggerOffset;
 
             while (this.itemsOffsets[stopIndex] > triggerDistance) {

@@ -44,7 +44,7 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             assert.isTrue(affectingInstance.indexesChanged);
             assert.isTrue(affectingInstance.placeholderChanged);
             assert.equal(0, vsInstance.startIndex);
-            assert.equal(19, vsInstance.stopIndex);
+            assert.equal(20, vsInstance.stopIndex);
         });
         it('recalcItemsHeights', () => {
             const itemsHeight = heights.slice(0, 20);
@@ -64,7 +64,7 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             vsInstance.recalcFromIndex(1);
 
             assert.equal(0, vsInstance.startIndex);
-            assert.equal(19, vsInstance.stopIndex);
+            assert.equal(20, vsInstance.stopIndex);
 
             vsInstance.itemsCount = 40;
             vsInstance.recalcFromIndex(5);
@@ -84,7 +84,7 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             vsInstance.setStartIndex(4);
             vsInstance.recalcFromScrollTop();
             assert.equal(0, vsInstance.startIndex);
-            assert.equal(19, vsInstance.stopIndex);
+            assert.equal(20, vsInstance.stopIndex);
         });
 
         it('recalcFromNewItems', () => {
@@ -129,14 +129,14 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             vsInstance.scrollTop = 160;
             vsInstance.recalcToDirection('down');
             assert.equal(5, vsInstance.startIndex);
-            assert.equal(23, vsInstance.stopIndex);
+            assert.equal(24, vsInstance.stopIndex);
             vsInstance.setStartIndex(10);
             vsInstance.recalcItemsHeights();
             vsInstance.viewportHeight = 200;
             vsInstance.scrollTop = 10;
             vsInstance.recalcToDirection('up');
             assert.equal(6, vsInstance.startIndex);
-            assert.equal(17, vsInstance.stopIndex);
+            assert.equal(18, vsInstance.stopIndex);
         });
     });
     describe('static virtual scroll', () => {
@@ -165,8 +165,8 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             vsInstance.itemsCount = 40;
             vsInstance.scrollTop = 160;
             vsInstance.recalcToDirection('down');
-            assert.equal(3, vsInstance.startIndex);
-            assert.equal(23, vsInstance.stopIndex);
+            assert.equal(4, vsInstance.startIndex);
+            assert.equal(24, vsInstance.stopIndex);
             vsInstance.setStartIndex(10);
             vsInstance.recalcItemsHeights();
             vsInstance.viewportHeight = 200;

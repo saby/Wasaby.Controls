@@ -225,7 +225,7 @@ export default class ScrollController extends Control<IOptions> {
                     const direction = newItemsIndex <= this._options.viewModel.getStartIndex() ? 'up' : 'down';
 
                     if (direction === 'down') {
-                        if (this.actualStopIndex === newCount - newItems.length - 1 && this.triggerVisibility.down && !this.itemsFromLoadToDirection) {
+                        if (this.actualStopIndex === newCount - newItems.length && this.triggerVisibility.down && !this.itemsFromLoadToDirection) {
                             this.virtualScroll.recalcToDirection(direction);
                         } else {
                             this.virtualScroll.recalcFromNewItems(direction);
@@ -281,7 +281,8 @@ export default class ScrollController extends Control<IOptions> {
      * @remark Для повышения производительности используем throttle, чтобы не вызывать пересчет "видимого" набора
      * данных слишком часто
      */
-    protected throttledUpdateIndexesByVirtualScrollMove = throttle(() => {
+    protected throttledUpdateIndexesByVirtualScrollMove = throttle((params) => {
+        this.virtualScroll.scrollTop = params.scrollTop;
         this.virtualScroll.recalcFromScrollTop();
     }, 150, true);
 
@@ -475,7 +476,7 @@ export default class ScrollController extends Control<IOptions> {
 
     static getDefaultOptions(): Partial<IOptions> {
         return {
-            virtualSegmentSize: 20,
+            virtualSegmentSize: 25,
             virtualPageSize: 100,
             virtualPageSizeMode: 'static',
             virtualScrollMode: 'remove'
