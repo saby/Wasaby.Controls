@@ -310,7 +310,9 @@ var _private = {
         }
     },
     setMarkerAfterScroll(self, event) {
-       self._setMarkerAfterScroll = true;
+       if (self._options.moveMarkerOnScrollPaging !== false) {
+           self._setMarkerAfterScroll = true;
+       }
     },
     keyDownHome: function(self, event) {
         _private.setMarkerAfterScroll(self, event);

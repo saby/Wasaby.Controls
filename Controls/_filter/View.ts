@@ -103,7 +103,8 @@ var _private = {
         var popupItems = [];
         factory(items).each(function(item) {
             if (_private.isFrequentItem(item)) {
-                var popupItem = configs[item.name];
+                var popupItem = CoreClone(configs[item.name]);
+                Merge(popupItem, item.editorOptions);
                 popupItem.id = item.name;
                 popupItem.selectedKeys = (item.value instanceof Object) ? item.value : [item.value];
                 popupItem.resetValue = (item.resetValue instanceof Object) ? item.resetValue : [item.resetValue];
@@ -189,7 +190,7 @@ var _private = {
     },
 
     getKeysUnloadedItems: function(config, value) {
-        let selectedKeys = value instanceof Array ? value : [value];
+        let selectedKeys = value instanceof Object ? value : [value];
         let flattenKeys = factory(selectedKeys).flatten().value();
         let newKeys = [];
         factory(flattenKeys).each((key) => {
@@ -381,7 +382,7 @@ var _private = {
         let resultSelectedKeys = {};
         folderIds.forEach((parentKey, index) => {
             // selectedKeys - { folderId1: [selected keys for folder] , folderId2: [selected keys for folder], ... }
-            let nodeSelectedKeys = selectedKeys[parentKey];
+            let nodeSelectedKeys = selectedKeys[parentKey] || [];
             // if folder is selected, delete other keys
             if (nodeSelectedKeys.includes(parentKey)) {
                 resultSelectedKeys[parentKey] = [parentKey];
@@ -662,6 +663,20 @@ var Filter = Control.extend({
             }
         });
         return isReseted;
+    },
+
+    _needShowFastFilter(source: object[], panelTemplateName?: string): boolean {
+        let needShowFastFilter = false;
+
+        if (panelTemplateName) {
+            factory(source).each((item) => {
+                if (!needShowFastFilter && _private.isFrequentItem(item)) {
+                    needShowFastFilter = true;
+                }
+            });
+        }
+
+        return needShowFastFilter;
     },
 
     reset: function() {

@@ -124,7 +124,7 @@
          <h4>Icon with text displayed in the header</h4>
          <Controls.dropdown:Button
                  keyProperty="id"
-                 size="s"
+                 inlineHeight="m"
                  icon="icon-AddButtonNew"
                  iconSize="s"
                  viewMode="toolButton"
@@ -140,7 +140,7 @@
                  viewMode="toolButton"
                  style="secondary"
                  iconSize="m"
-                 size="m"
+                 inlineHeight="l"
                  source="{{_createMemory(_iconAddMedium)}}"
                  attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconHeaderBig"
                  tooltip="Add">

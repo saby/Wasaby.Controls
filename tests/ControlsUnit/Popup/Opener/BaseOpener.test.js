@@ -82,5 +82,19 @@ define(
             opener.destroy();
          });
       });
+
+      it('getIndicatorConfig', () => {
+         const opener = new popup.BaseOpener();
+         const standartCfg = {
+            id: '',
+            message: rk('Загрузка'),
+            delay: 2000
+         };
+         assert.deepEqual(standartCfg, opener._getIndicatorConfig());
+         opener._indicatorId = '123';
+         standartCfg.id = '123';
+         assert.deepEqual(standartCfg, opener._getIndicatorConfig());
+         opener.destroy();
+      });
    }
 );

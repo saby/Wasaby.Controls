@@ -176,6 +176,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h3>With history and multiSelect</h3>
          <Controls.dropdown:Input bind:selectedKeys="_selectedKeysHistoryMulti"
+                                  emptyText="All categories"
                                   keyProperty="id"
                                   multiSelect="{{true}}"
                                   displayProperty="title"

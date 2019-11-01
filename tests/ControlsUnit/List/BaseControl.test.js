@@ -1967,6 +1967,16 @@ define([
                { getBoundingClientRect: getBCR },
             ]
          };
+         it('moveMarkerOnScrollPaging option', function() {
+            let inst = {_options: {}, _setMarkerAfterScroll: false};
+            lists.BaseControl._private.setMarkerAfterScroll(inst);
+            assert.isTrue(inst._setMarkerAfterScroll);
+
+            inst._setMarkerAfterScroll = false;
+            inst._options.moveMarkerOnScrollPaging = false;
+            lists.BaseControl._private.setMarkerAfterScroll(inst);
+            assert.isFalse(inst._setMarkerAfterScroll);
+         });
          it('setMarkerToFirstVisibleItem', function() {
             var expectedIndex = 0;
             lnBaseControl._listViewModel.setMarkerOnValidItem = function(index) {

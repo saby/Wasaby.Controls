@@ -18,6 +18,22 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
                 type: ITEM_TYPES.body
             }]
         }, {
+            options: { viewMode: 'month', header: true },
+            query: (new Query()).where({'id~': monthListUtils.dateToId(new Date(2019, 0))}),
+            resp: [{
+                id: monthListUtils.dateToId(new Date(2019, 0)),
+                type: ITEM_TYPES.body
+            }, {
+                id: 'h' + monthListUtils.dateToId(new Date(2019, 1)),
+                type: ITEM_TYPES.header
+            }, {
+                id: monthListUtils.dateToId(new Date(2019, 1)),
+                type: ITEM_TYPES.body
+            }, {
+                id: 'h' + monthListUtils.dateToId(new Date(2019, 2)),
+                type: ITEM_TYPES.header
+            }]
+        }, {
             options: { viewMode: 'month' },
             query: (new Query()).where({'id>=': monthListUtils.dateToId(new Date(2019, 0))}),
             resp: [{
@@ -28,6 +44,22 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
                 type: ITEM_TYPES.body
             }]
         }, {
+            options: { viewMode: 'month', header: true },
+            query: (new Query()).where({'id>=': 'h' + monthListUtils.dateToId(new Date(2019, 0))}),
+            resp: [{
+                id: monthListUtils.dateToId(new Date(2019, 0)),
+                type: ITEM_TYPES.body
+            }, {
+                id: 'h' + monthListUtils.dateToId(new Date(2019, 1)),
+                type: ITEM_TYPES.header
+            }, {
+                id: monthListUtils.dateToId(new Date(2019, 1)),
+                type: ITEM_TYPES.body
+            }, {
+                id: 'h' + monthListUtils.dateToId(new Date(2019, 2)),
+                type: ITEM_TYPES.header
+            }]
+        }, {
             options: { viewMode: 'month' },
             query: (new Query()).where({'id<=': monthListUtils.dateToId(new Date(2019, 0))}),
             resp: [{
@@ -36,6 +68,22 @@ describe('Controls/_calendar/MonthList/MonthsSource', () => {
             }, {
                 id: monthListUtils.dateToId(new Date(2018, 11)),
                 type: ITEM_TYPES.body
+            }]
+        }, {
+            options: { viewMode: 'month', header: true },
+            query: (new Query()).where({'id<=': monthListUtils.dateToId(new Date(2019, 0))}),
+            resp: [{
+                id: monthListUtils.dateToId(new Date(2018, 10)),
+                type: ITEM_TYPES.body
+            }, {
+                id: 'h' + monthListUtils.dateToId(new Date(2018, 11)),
+                type: ITEM_TYPES.header
+            }, {
+                id: monthListUtils.dateToId(new Date(2018, 11)),
+                type: ITEM_TYPES.body
+            }, {
+                id: 'h' + monthListUtils.dateToId(new Date(2019, 0)),
+                type: ITEM_TYPES.header
             }]
         }, {
             options: {
