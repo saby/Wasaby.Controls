@@ -69,7 +69,6 @@ import ItemTemplate = require('wml!Controls/_list/ItemTemplateChooser');
 import View = require('Controls/_list/List');
 import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
-import VirtualScroll = require('Controls/_list/Controllers/VirtualScroll');
 import DataContainer = require('Controls/_list/Data');
 import _forTemplate = require('wml!Controls/_list/resources/For');
 import _swipeActionTemplate = require('wml!Controls/_list/Swipe/resources/SwipeAction');
@@ -114,7 +113,6 @@ export {
     Mover,
     Remover,
     Paging,
-    VirtualScroll,
     DataContainer,
     _forTemplate,
     _swipeActionTemplate,

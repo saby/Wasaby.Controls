@@ -37,6 +37,7 @@ const SIZE_RELATION_TO_VIEWPORT = 0.5;
 export default class ScrollController extends Control<IOptions> {
     protected _template: TemplateFunction = template;
     protected virtualScroll: VirtualScroll;
+    private itemsContainer: HTMLElement;
 
     // Сущность управляющая инерционным скроллингом на мобильных устройствах
     private inertialScrolling: InertialScrolling = new InertialScrolling();
@@ -61,7 +62,7 @@ export default class ScrollController extends Control<IOptions> {
 
     // Флаг и стейт для индикации необходимости сохранения позиции скролла и его направления
     private saveScrollPosition: boolean;
-    private savedSrollDirection: IDirection;
+    private savedScrollDirection: IDirection;
 
     // Предыдущие индексы отображаемых записей
     private savedStopIndex: number;
@@ -144,13 +145,13 @@ export default class ScrollController extends Control<IOptions> {
 
         if (this.saveScrollPosition) {
             this._notify('restoreScrollPosition', [
-                this.savedSrollDirection === 'up' ?
+                this.savedScrollDirection === 'up' ?
                     this.virtualScroll.scrollTop + this.virtualScroll.getItemsHeights(this.actualStartIndex, this.savedStartIndex) :
                     this.virtualScroll.scrollTop - this.virtualScroll.getItemsHeights(this.savedStartIndex, this.actualStartIndex),
-                this.savedSrollDirection
+                this.savedScrollDirection
             ], {bubbling: true});
             this.saveScrollPosition = false;
-            this.savedSrollDirection = null;
+            this.savedScrollDirection = null;
             this.checkCapabilityTimeout = setTimeout(() => {
                 this.checkCapability();
                 this.checkCapabilityTimeout = null;
@@ -166,6 +167,8 @@ export default class ScrollController extends Control<IOptions> {
         if (this._options.virtualScrolling) {
             this.virtualScroll.itemsContainer = itemsContainer;
         }
+
+        this.itemsContainer = itemsContainer;
     }
 
     /**
@@ -187,10 +190,10 @@ export default class ScrollController extends Control<IOptions> {
 
         if (useNewModel) {
             model.subscribe('onCollectionChange', (...args: unknown[]) => {
-                this.listChangeHandler.apply(this, [args[0], null, ...args.slice(1)]);
+                this.collectionChangedHandler.apply(this, [args[0], null, ...args.slice(1)]);
             });
         } else {
-            model.subscribe('onListChange', this.listChangeHandler);
+            model.subscribe('onListChange', this.collectionChangedHandler);
         }
     }
 
@@ -204,7 +207,7 @@ export default class ScrollController extends Control<IOptions> {
      * @param {CollectionItem<Record>[]} removedItems
      * @param {number} removedItemsIndex
      */
-    private listChangeHandler = (
+    private collectionChangedHandler = (
         event: string, changesType: string, action: string, newItems: CollectionItem<Record>[],
         newItemsIndex: number, removedItems: CollectionItem<Record>[], removedItemsIndex: number): void => {
         const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
@@ -314,7 +317,7 @@ export default class ScrollController extends Control<IOptions> {
                         itemIndex -= this.actualStartIndex;
                     }
 
-                    this.scrollToElement(this._logicParent._children[this._options.childName].getItemsContainer().children[itemIndex]);
+                    this.scrollToElement(this.itemsContainer.children[itemIndex] as HTMLElement);
                 } else {
                     this.virtualScroll.recalcFromIndex(itemIndex);
                     this.afterRenderCallback = () => {
@@ -322,10 +325,10 @@ export default class ScrollController extends Control<IOptions> {
                     }
                 }
             } else {
-                const container = this._logicParent._children[this._options.childName].getItemsContainer().children[itemIndex];
+                const container = this.itemsContainer.children[itemIndex];
 
                 if (container) {
-                    scrollToElement(container, false);
+                    this.scrollToElement(container as HTMLElement);
                 }
             }
         }
@@ -442,7 +445,7 @@ export default class ScrollController extends Control<IOptions> {
         if (this.applyIndexesToModel(model, startIndex, stopIndex)) {
             if (direction) {
                 this.saveScrollPosition = true;
-                this.savedSrollDirection = direction;
+                this.savedScrollDirection = direction;
                 this.itemsChanged = true;
             }
         } else if (this.applyScrollTopCallback) {
