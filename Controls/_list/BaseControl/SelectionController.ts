@@ -104,10 +104,10 @@ var _private = {
                 def.callback(new operations.HierarchySelection({
                     selectedKeys: options.selectedKeys,
                     excludedKeys: options.excludedKeys,
-                    items: options.items,
                     keyProperty: options.keyProperty,
                     parentProperty: options.parentProperty,
                     nodeProperty: options.nodeProperty,
+                    hasChildrenProperty: options.hasChildrenProperty,
                     listModel: options.listModel,
                     selectionStrategy: new options.selectionStrategy()
                 }));
@@ -117,7 +117,6 @@ var _private = {
                 def.callback(new operations.Selection({
                     selectedKeys: options.selectedKeys,
                     excludedKeys: options.excludedKeys,
-                    items: options.items,
                     keyProperty: options.keyProperty,
                     listModel: options.listModel,
                     selectionStrategy: new options.selectionStrategy()
@@ -139,10 +138,10 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
         if (options.multiSelectReadyCallback) {
             options.multiSelectReadyCallback(multiSelectReady);
         }
-        var self = this;
-        return _private.getMultiselection(options).addCallback(function (multiselectionInstance) {
-            self._multiselection = multiselectionInstance;
-            self._multiselection.updateSelectionForRender();
+
+        return _private.getMultiselection(options).addCallback((multiselectionInstance) => {
+            this._multiselection = multiselectionInstance;
+            this._multiselection.updateSelectionForRender();
             multiSelectReady.callback();
         });
     },

@@ -40,32 +40,33 @@ class HierarchySelection extends Selection {
       this._hierarchyRelation = new relation.Hierarchy({
          keyProperty: options.keyProperty || 'id',
          parentProperty: options.parentProperty || 'Раздел',
-         nodeProperty: options.nodeProperty || 'Раздел@'
+         nodeProperty: options.nodeProperty || 'Раздел@',
+         declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
       });
    }
 
    public select(keys: TKeys): void {
-      let selection: ISelection = this._selectionStrategy.select(keys, this._selectedKeys, this._excludedKeys, this._getConfigSelection());
+      let selection: ISelection = this._selectionStrategy.select(keys, this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation);
 
       this._selectedKeys = selection.selectedKeys;
       this._excludedKeys = selection.excludedKeys;
    }
 
    public unselect(keys: TKeys): void {
-      let selection: ISelection = this._selectionStrategy.unSelect(keys, this._selectedKeys, this._excludedKeys, this._getConfigSelection());
+      let selection: ISelection = this._selectionStrategy.unSelect(keys, this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation);
 
       this._selectedKeys = selection.selectedKeys;
       this._excludedKeys = selection.excludedKeys;
    }
 
    public selectAll(): void {
-      let root = this._getRoot();
+      let rootId = this._getRoot();
 
-      if (root === ALL_SELECTION_VALUE) {
+      if (rootId === ALL_SELECTION_VALUE) {
          super.selectAll();
       } else {
-         this.select([root]);
-         this._removeSelectionChildren(root);
+         this.select([rootId]);
+         this._removeSelectionChildren(rootId);
       }
 
       this._excludedKeys = ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
@@ -76,9 +77,12 @@ class HierarchySelection extends Selection {
     Поправится после задачи https://online.sbis.ru/opendoc.html?guid=d48b9e94-5236-429c-b124-d3b3909886c9
 
    public unselectAll(): void {
-      if (this._items.getMetaData()[FIELD_ENTRY_PATH]) {
-         this.unselect([this._getRoot()]);
-         this._removeSelectionChildren(this._getRoot());
+      let rootId: string|number|null = this._getRoot();
+
+      if (this._listModel.getItems().getMetaData()[FIELD_ENTRY_PATH]) {
+         this.unselect([rootId]);
+         this._removeSelectionChildren(rootId);
+         this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [rootId]);
       } else {
          super.unselectAll();
       }
@@ -86,25 +90,31 @@ class HierarchySelection extends Selection {
 
    public toggleAll(): void {
       let
-         root = this._getRoot(),
+         rootId = this._getRoot(),
          oldSelectedKeys = this._selectedKeys.slice(),
          oldExcludedKeys = this._excludedKeys.slice(),
-         childrenIdsRoot = SelectionHelper.getChildrenIds(root, this._items, this._hierarchyRelation);
+         childrenIdsRoot = SelectionHelper.getChildrenIds(rootId, this._listModel.getItems(), this._hierarchyRelation);
 
-      if (this._selectionStrategy.isAllSelected(this._selectedKeys, this._excludedKeys, this._getConfigSelection())) {
+      if (this._selectionStrategy.isAllSelected(this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation)) {
          // toDO после решения https://online.sbis.ru/opendoc.html?guid=d48b9e94-5236-429c-b124-d3b3909886c9 перейти на unselectAll
-         this.unselect([root]);
-         this._removeSelectionChildren(root);
+         this.unselect([rootId]);
+         this._removeSelectionChildren(rootId);
+         this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [rootId]);
          this.select(ArraySimpleValuesUtil.getIntersection(childrenIdsRoot, oldExcludedKeys));
       } else {
-         this.selectAll([root]);
+         this.selectAll([rootId]);
          // toDO Надо делать через getIntersection, если пришел ENTRY_PATH
          this.unselect(oldSelectedKeys);
       }
    }
 
    public getCount(): Promise {
-      return this._selectionStrategy.getCount(this._selectedKeys, this._excludedKeys, this._getConfigSelection());
+      return this._selectionStrategy.getCount(this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation);
+   }
+
+   public updateSelectionForRender(): void {
+      this._listModel.updateSelection(this._selectionStrategy.getSelectionForModel(
+         this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation));
    }
 
    private _getRoot(): string|number|null {
@@ -112,15 +122,7 @@ class HierarchySelection extends Selection {
    }
 
    private _removeSelectionChildren(nodeId) {
-      SelectionHelper.removeSelectionChildren(nodeId, this._selectedKeys, this._excludedKeys, this._items, this._hierarchyRelation);
-   }
-
-   protected _getConfigSelection(): Object {
-      return {
-         model: this._listModel,
-         items: this._items,
-         hierarchyRelation: this._hierarchyRelation
-      };
+      SelectionHelper.removeSelectionChildren(nodeId, this._selectedKeys, this._excludedKeys, this._listModel.getItems(), this._hierarchyRelation);
    }
 }
 

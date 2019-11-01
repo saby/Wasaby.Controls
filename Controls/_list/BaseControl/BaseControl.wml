@@ -229,6 +229,7 @@
                 parentProperty="{{ _options.parentProperty }}"
                 items="{{ _items }}"
                 nodeProperty="{{ _options.nodeProperty }}"
+                hasChildrenProperty="{{ _options.hasChildrenProperty }}"
                 selectedKeys="{{ _options.selectedKeys }}"
                 excludedKeys="{{ _options.excludedKeys }}"
                 listModel="{{ _listViewModel }}"

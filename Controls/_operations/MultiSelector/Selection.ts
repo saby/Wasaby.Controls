@@ -32,7 +32,6 @@ class Selection {
    protected _selectionStrategy: FlatSelectionStrategy;
    protected _listModel;
    protected _keyProperty: string;
-   protected _items;
    protected _selectedKeys: TKeys = [];
    protected _excludedKeys: TKeys = [];
    protected _limit: number = 0;
@@ -58,7 +57,6 @@ class Selection {
       this._keyProperty = options.keyProperty;
       this._selectedKeys = options.selectedKeys.slice();
       this._excludedKeys = options.excludedKeys.slice();
-      this._items = options.items;
       this._selectionStrategy = options.selectionStrategy;
    }
 
@@ -143,20 +141,11 @@ class Selection {
    }
 
    /**
-    * Set items which will be used to calculate selectedKeys for render.
-    * @param {Types/collection:RecordSet} items
-    */
-   public setItems(items): void {
-      this._items = items;
-      this.updateSelectionForRender();
-   }
-
-   /**
     * Returns the number of selected items.
     * @returns {number}
     */
    public getCount(): Promise {
-      return this._selectionStrategy.getCount(this._selectedKeys, this._excludedKeys, this._items, this._limit);
+      return this._selectionStrategy.getCount(this._selectedKeys, this._excludedKeys, this._listModel, this._limit);
    }
 
    /**
@@ -164,20 +153,8 @@ class Selection {
     * @returns {Object}
     */
    public updateSelectionForRender(): void {
-      let
-         selectionResult: Object = {},
-         selectedItemsCount: number = 0,
-         limit: number = this._limit ? this._limit - this._excludedKeys.length : 0;
-
-      this._items.forEach((item) => {
-         let isSelected: boolean = (!limit || selectedItemsCount < limit) &&
-            this._selectionStrategy.isSelected(item, this._selectedKeys, this._excludedKeys, this._getConfigSelection());
-
-         isSelected && selectedItemsCount++;
-         selectionResult[item.get(this._keyProperty)] = isSelected;
-      });
-
-      this._listModel.updateSelection(selectionResult);
+      this._listModel.updateSelection(this._selectionStrategy.getSelectionForModel(
+         this._selectedKeys, this._excludedKeys, this._listModel, this._keyProperty, this._limit));
    }
 
    public setListModel(listModel): void {
@@ -194,13 +171,14 @@ class Selection {
    protected _increaseLimit(keys: TKeys): void {
       let
          selectedItemsCount: number = 0,
-         limit: number = this._limit ? this._limit - this._excludedKeys.length : 0;
+         limit: number = this._limit ? this._limit - this._excludedKeys.length : 0,
+         selectionForModel = this._selectionStrategy.getSelectionForModel(
+            this._selectedKeys, this._excludedKeys, this._listModel, this._keyProperty, this._limit);
 
-      this._items.forEach((item) => {
+      this._listModel.getItems().forEach((item) => {
          let key: string|number = item.get(this._keyProperty);
-         let isSelected: boolean = this._selectionStrategy.isSelected(item, this._selectedKeys, this._excludedKeys, this._keyProperty);
 
-         if (selectedItemsCount < limit && isSelected !== false) {
+         if (selectedItemsCount < limit && selectionForModel[key] !== false) {
             selectedItemsCount++;
          } else if (selectedItemsCount >= limit && keys.length) {
             selectedItemsCount++;
@@ -213,12 +191,6 @@ class Selection {
             }
          }
       });
-   }
-
-   protected _getConfigSelection(): Object {
-      return {
-         keyProperty: this._keyProperty
-      };
    }
 }
 

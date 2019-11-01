@@ -4,28 +4,33 @@ import {default as SelectionHelper} from 'Controls/_operations/MultiSelector/Sel
 type TKeys = number[] | string[];
 
 class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
-   public getCount(selectedKeys: TKeys, excludedKeys: TKeys, configSelection: Object): Promise {
+   public getCount(selectedKeys: TKeys, excludedKeys: TKeys, model, hierarchyRelation): Promise {
       let countItemsSelected: number|null = 0;
+      let items = model.getItems();
 
-      for (let index = 0; index < selectedKeys.length; index++) {
-         let itemId: string|number|null = selectedKeys[index];
-         let item = configSelection.items.getRecordById(itemId);
+      if (!this.isAllSelected(selectedKeys, excludedKeys, model, hierarchyRelation) || this._isAllRootItemsLoaded(model, hierarchyRelation)) {
+         for (let index = 0; index < selectedKeys.length; index++) {
+            let itemId: string|number|null = selectedKeys[index];
+            let item =items.getRecordById(itemId);
 
-         if (!item || SelectionHelper.isNode(item, configSelection.hierarchyRelation)) {
-            let itemsSelectedInFolder: number|null = SelectionHelper.getSelectedChildrenCount(
-               itemId, selectedKeys, excludedKeys, configSelection.items, configSelection.hierarchyRelation);
+            if (!item || SelectionHelper.isNode(item, hierarchyRelation)) {
+               let countItemsSelectedInNode: number|null = SelectionHelper.getSelectedChildrenCount(
+                  itemId, selectedKeys, excludedKeys, items, hierarchyRelation);
 
-            if (itemsSelectedInFolder === null) {
-               countItemsSelected = null;
-               break;
-            } else {
-               countItemsSelected += itemsSelectedInFolder;
+               if (countItemsSelectedInNode === null) {
+                  countItemsSelected = null;
+                  break;
+               } else {
+                  countItemsSelected += countItemsSelectedInNode;
+               }
+            }
+
+            if (!excludedKeys.includes(itemId)) {
+               countItemsSelected++;
             }
          }
-
-         if (!excludedKeys.includes(itemId)) {
-            countItemsSelected++;
-         }
+      } else if (selectedKeys.length) {
+         countItemsSelected = null;
       }
 
       return new Promise((resolve) => {
@@ -33,14 +38,32 @@ class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
       });
    }
 
-   public isSelected(item, selectedKeys, excludedKeys, configSelection): boolean|null {
+   public isAllSelected(selectedKeys, excludedKeys, model, hierarchyRelation): boolean {
+      let rootId = this._getRoot(model);
+
+      return selectedKeys.includes(rootId) || !excludedKeys.includes(rootId) &&
+         this._isParentSelectedWithChild(rootId, selectedKeys, excludedKeys, model, hierarchyRelation);
+   }
+
+   protected _selectNode(nodeId: string|number, selectedKeys: TKeys, excludedKeys: TKeys, model, hierarchyRelation): void {
+      super._selectNode(...arguments);
+      SelectionHelper.removeSelectionChildren(nodeId, selectedKeys, excludedKeys, model.getItems(), hierarchyRelation);
+   }
+
+   protected _unSelectNode(nodeId: string|number, selectedKeys: TKeys, excludedKeys: TKeys, model, hierarchyRelation): void {
+      super._unSelectNode(...arguments);
+      SelectionHelper.removeSelectionChildren(nodeId, selectedKeys, excludedKeys, model.getItems(), hierarchyRelation);
+   }
+
+   protected _isSelected(item, selectedKeys, excludedKeys, model, hierarchyRelation): boolean|null {
       let itemId = item.getId();
-      let isSelected: boolean|null = super.isSelected(...arguments);
+      let items = model.getItems();
+      let isSelected: boolean|null = super._isSelected(...arguments);
 
       // Надо так же учесть ENTRY_PATH в метаданных
-      if (SelectionHelper.isNode(item, configSelection.hierarchyRelation)) {
-         if (isSelected && this._hasChildrenInList(itemId, excludedKeys, configSelection.items, configSelection.hierarchyRelation) ||
-            !isSelected && this._hasChildrenInList(itemId, selectedKeys, configSelection.items, configSelection.hierarchyRelation)) {
+      if (SelectionHelper.isNode(item, hierarchyRelation)) {
+         if (isSelected && this._hasChildrenInList(itemId, excludedKeys, items, hierarchyRelation) ||
+            !isSelected && this._hasChildrenInList(itemId, selectedKeys, items, hierarchyRelation)) {
 
             isSelected = null;
          }
@@ -49,16 +72,13 @@ class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
       return isSelected;
    }
 
-   public isAllSelected(selectedKeys, excludedKeys, configSelection): boolean {
-      let rootId = this._getRoot(configSelection.model);
-
-      return selectedKeys.includes(rootId) || !excludedKeys.includes(rootId) &&
-         this._isParentSelectedWithChild(rootId, selectedKeys, excludedKeys, configSelection);
+   protected _isParentSelectedWithChild(itemId: string|number, selectedKeys: TKeys, excludedKeys: TKeys, model, hierarchyRelation): boolean {
+      return SelectionHelper.hasSelectedParent(itemId, selectedKeys, excludedKeys, hierarchyRelation, model.getItems());
    }
 
-   private _hasChildrenInList(itemId, listKeys, items, hierarchyRelation) {
+   private _hasChildrenInList(nodeId, listKeys, items, hierarchyRelation) {
       let hasChildrenInList: boolean = false;
-      let children: [] = hierarchyRelation.getChildren(itemId, items);
+      let children: [] = hierarchyRelation.getChildren(nodeId, items);
 
       for (let index = 0; index < children.length; index++) {
          let child = children[index];
@@ -73,21 +93,6 @@ class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
       }
 
       return hasChildrenInList;
-   }
-
-   protected _selectNode(nodeId: string|number, selectedKeys: TKeys, excludedKeys: TKeys, configSelection: Object): void {
-      super._selectNode(...arguments);
-      SelectionHelper.removeSelectionChildren(nodeId, selectedKeys, excludedKeys, configSelection.items, configSelection.hierarchyRelation);
-   }
-
-   protected _unSelectNode(nodeId: string|number, selectedKeys: TKeys, excludedKeys: TKeys, configSelection: Object): void {
-      super._unSelectNode(...arguments);
-      SelectionHelper.removeSelectionChildren(nodeId, selectedKeys, excludedKeys, configSelection.items, configSelection.hierarchyRelation);
-   }
-
-   protected _isParentSelectedWithChild(itemId: string|number, selectedKeys: TKeys, excludedKeys: TKeys, configSelection: Object): boolean {
-      return SelectionHelper.getSelectedParent(
-         itemId, selectedKeys, excludedKeys, configSelection.hierarchyRelation, configSelection.items) !== undefined;
    }
 }
 

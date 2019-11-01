@@ -10,7 +10,8 @@ export default {
 
    // Возвращает кол-во выбранных записей в папке, идет в глубь до первого исключения
    getSelectedChildrenCount: function(nodeId, selectedKeys, excludedKeys, items, hierarchyRelation, deep): number|null {
-      let countSelectedChildren: number|null = null;
+      let countSelectedChildren: number|null = 0;
+      let nodeItem = items.getRecordById(nodeId);
       let children: [] = hierarchyRelation.getChildren(nodeId, items);
 
       if (children.length) {
@@ -21,7 +22,7 @@ export default {
             if (!excludedKeys.includes(childId)) {
                countSelectedChildren++;
 
-               if (hierarchyRelation.isNode(childItem) !== null && deep !== false) {
+               if (hierarchyRelation.isNode(childItem) !== null && hierarchyRelation.hasDeclaredChildren(childItem) !== false && deep !== false) {
                   let countSelectedChildren2: number|null = this.getSelectedChildrenCount(childId, selectedKeys, excludedKeys, items, hierarchyRelation);
 
                   if (countSelectedChildren2 === null) {
@@ -33,32 +34,34 @@ export default {
                }
             }
          }
+      } else if (!nodeItem || hierarchyRelation.hasDeclaredChildren(nodeItem) !== false) {
+         countSelectedChildren = null;
       }
 
       return countSelectedChildren;
    },
 
-   getSelectedParent: function(key, selectedKeys, excludedKeys, hierarchyRelation, items) {
-      let selectedParent: string|number|null|undefined;
+   hasSelectedParent: function(key, selectedKeys, excludedKeys, hierarchyRelation, items) {
+      let hasSelectedParent: boolean = false;
+      let hasExcludedParent: boolean = false;
       let currentParentId: string|number|null = this.getParentId(key, items, hierarchyRelation.getParentProperty());
-      let isParentExcluded: boolean = false;
 
       for (;currentParentId; currentParentId = this.getParentId(currentParentId, items, hierarchyRelation.getParentProperty())) {
          if (selectedKeys.includes(currentParentId)) {
-            selectedParent = currentParentId;
+            hasSelectedParent = true;
             break;
          } else if (excludedKeys.includes(currentParentId)) {
-            isParentExcluded = true;
+            hasExcludedParent = true;
             break;
          }
       }
 
       // Надо добавить работу с ENTRY_PATH
-      if (!isParentExcluded && selectedParent === undefined && selectedKeys.includes(ALL_SELECTION_VALUE)) {
-         selectedParent = null;
+      if (!hasExcludedParent && !currentParentId && selectedKeys.includes(ALL_SELECTION_VALUE)) {
+         hasSelectedParent = true;
       }
 
-      return selectedParent;
+      return hasSelectedParent;
    },
 
 

@@ -42,8 +42,9 @@ class FlatSelectionStrategy {
       };
    }
 
-   public getCount(selectedKeys: TKeys, excludedKeys: TKeys, items, limit: number): Promise {
+   public getCount(selectedKeys: TKeys, excludedKeys: TKeys, model, limit: number): Promise {
       let itemsCount: number|null = null;
+      let items = model.getItems();
 
       if (this.isAllSelected(selectedKeys)) {
          if (this._isAllItemsLoaded(items, limit) && (!limit || items.getCount() <= limit)) {
@@ -60,10 +61,30 @@ class FlatSelectionStrategy {
       });
    }
 
-   public isSelected(item, selectedKeys: TKeys, excludedKeys: TKeys, configSelection: Object): boolean {
-      let itemId = item.get(configSelection.keyProperty);
+   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model, keyProperty: String, limit: number): Object {
+      let
+         selectionResult: Object = {},
+         selectedItemsCount: number = 0,
+         isAllSelected: boolean = this.isAllSelected(selectedKeys);
 
-      return selectedKeys.includes(itemId) || this.isAllSelected(selectedKeys) && !excludedKeys.includes(itemId);
+      if (limit > 0) {
+         limit -= excludedKeys.length;
+      }
+
+      model.getItems().forEach((item) => {
+         let itemId = item.get(keyProperty);
+         let isSelected: boolean = (!limit || selectedItemsCount < limit) &&
+            (selectedKeys.includes(itemId) || isAllSelected && !excludedKeys.includes(itemId));
+
+         if (isSelected) {
+            selectedItemsCount++;
+         }
+         if (isSelected !== false) {
+            selectionResult[itemId] = isSelected;
+         }
+      });
+
+      return selectionResult;
    }
 
    public isAllSelected(selectedKeys: TKeys) {
