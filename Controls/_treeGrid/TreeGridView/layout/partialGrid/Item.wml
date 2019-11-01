@@ -25,7 +25,7 @@
          <ws:partial template="{{itemData.expanderTemplate}}" itemData="{{itemData}}" expanderIcon="{{expanderIcon}}" expanderSize="{{expanderSize}}"/>
       </ws:if>
       <ws:else data="{{itemData.shouldDrawExpanderPadding(itemData, expanderIcon, expanderSize)}}">
-         <div class="{{itemData.getExpanderPaddingClasses(expanderSize)}} js-controls-ListView__notEditable"></div>
+         <div class="{{itemData.getExpanderPaddingClasses(expanderSize, _options.theme)}} js-controls-ListView__notEditable"></div>
       </ws:else>
    </ws:if>
    <ws:if data="{{colspan}}">
@@ -58,10 +58,10 @@
 </ws:template>
 <ws:template name="columnContentWrapper">
    <ws:if data="{{itemData.shouldDrawMarker(marker, currentColumn.columnIndex)}}">
-      <div attr:class="controls-ListView__itemV_marker"></div>
+      <div attr:class="{{itemData.getMarkerClasses(itemData.rowSeparatorVisibility)}}"></div>
    </ws:if>
-   <div if="{{!!itemData.dragTargetNode}}" class="controls-TreeGridView__dragTargetNode {{currentColumn.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}
-                                 {{currentColumn.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last'}}"></div>
+   <div if="{{!!itemData.dragTargetNode}}" class="controls-TreeGridView__dragTargetNode_theme-'{{_options.theme}} {{currentColumn.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first_theme-' + _options.theme}}
+                                 {{currentColumn.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last_theme-' + _options.theme}}"></div>
    <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
 </ws:template>
 <ws:template name="colTpl">
@@ -70,7 +70,7 @@
    </ws:if>
    <ws:else>
          <div attr:class="{{currentColumn.cellClasses}}
-                       {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}
+                       {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
                                 {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                                 {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                                 controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"

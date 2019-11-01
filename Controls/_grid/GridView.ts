@@ -43,7 +43,7 @@ var
             return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
         },
 
-        calcFooterPaddingClass: function(params) {
+        calcFooterPaddingClass: function(params, theme) {
             var
                 paddingLeft,
                 result = 'controls-GridView__footer controls-GridView__footer__paddingLeft_';
@@ -57,6 +57,7 @@ var
                 }
                 result += (paddingLeft || 'default').toLowerCase();
             }
+            result+=`_theme-${theme}`
             return result;
         },
 
@@ -144,10 +145,10 @@ var
             return columnsWidths;
         },
 
-        getQueryForHeaderCell: function(isSafari: boolean, cur, multyselectVisibility: number): string {
+        getQueryForHeaderCell: function(isSafari: boolean, cur, multiselectVisibility: number): string {
             return isSafari ?
-                `div[style*="grid-column-start: ${cur.startColumn + multyselectVisibility}; grid-column-end: ${cur.endColumn + multyselectVisibility}; grid-row-start: ${cur.startRow}; grid-row-end: ${cur.endRow}"]` :
-                `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multyselectVisibility} / ${cur.endRow} / ${cur.endColumn + multyselectVisibility}"]`;
+                `div[style*="grid-column-start: ${cur.startColumn + multiselectVisibility}; grid-column-end: ${cur.endColumn + multiselectVisibility}; grid-row-start: ${cur.startRow}; grid-row-end: ${cur.endRow}"]` :
+                `div[style*="grid-area: ${cur.startRow} / ${cur.startColumn + multiselectVisibility} / ${cur.endRow} / ${cur.endColumn + multiselectVisibility}"]`;
         },
 
         getHeaderCellOffset: function(header, cur) {
@@ -166,9 +167,9 @@ var
             return upperCellsHeight;
         },
 
-        prepareHeaderCells: function(header, container, multyselectVisibility) {
+        prepareHeaderCells: function(header, container, multiselectVisibility) {
             return header.map((cur) => ({...cur, height: container.querySelector(
-                    _private.getQueryForHeaderCell(detection.safari, cur, multyselectVisibility)
+                    _private.getQueryForHeaderCell(detection.safari, cur, multiselectVisibility)
                 ).offsetHeight}));
         },
 
@@ -319,7 +320,7 @@ var
         },
 
         _calcFooterPaddingClass(params): string {
-            return _private.calcFooterPaddingClass(params);
+            return _private.calcFooterPaddingClass(params, this._options.theme);
         },
 
         getItemsContainer(): HTMLDivElement | HTMLTableElement | { children: HTMLCollection } {
@@ -333,7 +334,7 @@ var
         },
 
         _beforePaint: function() {
-            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._isHeaderChanged && this._listModel.isDrawHeaderWithEmptyList()) {
+            if (this._options.header && this._listModel._isMultiHeader && this._listModel.isStickyHeader() && this._isHeaderChanged && this._listModel.isDrawHeaderWithEmptyList()) {
                 const newHeader = this._setHeaderWithHeight();
                 this._listModel.setHeaderCellMinHeight(newHeader);
                 this._isHeaderChanged = false;
@@ -346,8 +347,8 @@ var
             let resultOffset = 0;
             // toDO Такое получение контейнера до исправления этой ошибки https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
             const container = this._container.length !== undefined ? this._container[0] : this._container;
-            const multyselectVisibility = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
-            const cellsArray = _private.prepareHeaderCells(this._options.header, container, multyselectVisibility);
+            const multiselectVisibility = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
+            const cellsArray = _private.prepareHeaderCells(this._options.header, container, multiselectVisibility);
             const newColumns = cellsArray.map((cur) => {
                     const upperCellsOffset = _private.getHeaderCellOffset(cellsArray, cur);
                     return {
@@ -372,7 +373,7 @@ var
         },
         _afterMount: function() {
             GridView.superclass._afterMount.apply(this, arguments);
-            if (this._options.header && this._listModel._isMultyHeader && this._listModel.isStickyHeader() && this._listModel.isDrawHeaderWithEmptyList()) {
+            if (this._options.header && this._listModel._isMultiHeader && this._listModel.isStickyHeader() && this._listModel.isDrawHeaderWithEmptyList()) {
                 this._listModel.setHeaderCellMinHeight(this._setHeaderWithHeight());
             }
         },

@@ -8,16 +8,19 @@
 	align-items: baseline;
 }
 
-.controls-SortButton__icon {
+.controls-SortButton__icon_theme-@{themeName} {
 	.icon-size(@font-size_SortButton-icon);
 	color: @color_SortButton-icon;
 	align-self: center;
 }
 
 .controls-SortButton__caption {
+	cursor: pointer;
+}
+
+.controls-SortButton__caption_theme-@{themeName} {
 	font-size: @font-size_SortButton-caption;
 	color: @color_SortButton-caption;
-	cursor: pointer;
 }
 
 .ws-is-hover {

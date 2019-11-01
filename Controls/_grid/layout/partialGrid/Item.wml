@@ -42,7 +42,7 @@
 
 <ws:template name="columnContentWrapper">
     <ws:if data="{{itemData.shouldDrawMarker(marker, currentColumn.columnIndex)}}">
-        <div attr:class="controls-GridView__itemV_marker {{itemData.rowSeparatorVisibility ? 'controls-GridView-with-rowSeparator_item_marker' : 'controls-GridView-without-rowSeparator_item_marker'}}"></div>
+        <div attr:class="{{itemData.getMarkerClasses(itemData.rowSeparatorVisibility)}}"></div>
     </ws:if>
     <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
 </ws:template>
@@ -53,15 +53,15 @@
     </ws:if>
 
     <ws:if data="{{itemData.columnScroll && colspan}}">
-        <div attr:class="{{currentColumn.cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
+        <div attr:class="{{currentColumn.cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
              attr:style="{{currentColumn.gridCellStyles}} {{itemData.getCellStyle(itemData, currentColumn, false)}} {{itemData.getColspanForColumnScroll().fixedColumns}}">
             <ws:partial template="columnContentWrapper"/>
         </div>
-        <div attr:class="{{currentColumn.cellClasses}} {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}} {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
+        <div attr:class="{{currentColumn.cellClasses}} {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}} {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
              attr:style="{{currentColumn.gridCellStyles}} {{itemData.getCellStyle(itemData, currentColumn, false)}} {{itemData.getColspanForColumnScroll().scrollableColumns}}"></div>
     </ws:if>
     <ws:else>
-        <div attr:class="{{currentColumn.cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
+        <div attr:class="{{currentColumn.cellClasses}}{{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
              attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan)}}">
             <ws:partial template="columnContentWrapper"/>
         </div>
@@ -92,7 +92,7 @@
 
 <ws:if data="{{itemData.styleLadderHeading}}">
     <div class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData)}} js-controls-SwipeControl__actionsContainer
-                {{!!itemData.isActive ? ' controls-GridView__item_active'}}
+                {{!!itemData.isActive ? ' controls-GridView__item_active_theme-' + _options.theme}}
                 {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}"
          style="{{itemData.styleLadderHeading}}">
         <ws:partial template="columnContent" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="controls-Grid__row-ladder-cell__content"/>
