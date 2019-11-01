@@ -2160,10 +2160,12 @@ define([
          it('itemsChanged', async function() {
             baseControl._itemsChanged = true;
             await baseControl._beforeUpdate(cfg);
+            baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 2);
          });
          it('_onAfterEndEdit', function() {
             baseControl._onAfterEndEdit({}, {});
+            baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 3);
          });
          it('update on recreating source', async function() {
@@ -2184,6 +2186,7 @@ define([
                viewModelConstructor: lists.ListViewModel
             };
             await baseControl._beforeUpdate(newCfg);
+            baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 4);
          });
 
