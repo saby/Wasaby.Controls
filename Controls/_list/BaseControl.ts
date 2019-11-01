@@ -1759,9 +1759,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterUpdate: function(oldOptions) {
-        if (this._needScrollCalculation) {
-            _private.startScrollEmitter(this);
-        }
         if (this._resetScrollAfterReload) {
             this._notify('doScroll', ['top'], { bubbling: true });
             this._resetScrollAfterReload = false;
