@@ -200,7 +200,7 @@ describe('Controls/_list/ScrollController', () => {
             instance.virtualScroll.recalcDirection = null;
         });
         it('action - items added, direction - down, items from user action', () => {
-            instance.actualStopIndex = 19;
+            instance.actualStopIndex = 20;
             instance._options.viewModel.__count = 30;
             instance.itemsFromLoadToDirection = false;
             instance.triggerVisibility = { down: true };
