@@ -39,6 +39,7 @@ define([
       567 (лист)
    */
    var
+      theme = 'default',
       treeData = [
          {
             'id': '123',
@@ -334,17 +335,17 @@ define([
          });
          it('getExpanderPaddingClasses', function() {
             let expectation = [
-                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_default',
-                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_s',
-                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_m',
-                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_l',
-                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_xl',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_default_theme-default',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_s_theme-default',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_m_theme-default',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_l_theme-default',
+                'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_size_xl_theme-default',
             ];
-            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses(), expectation[0]);
-            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('s'), expectation[1]);
-            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('m'), expectation[2]);
-            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('l'), expectation[3]);
-            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('xl'), expectation[4]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses(undefined, theme), expectation[0]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('s', theme), expectation[1]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('m', theme), expectation[2]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('l', theme), expectation[3]);
+            assert(treeGrid.TreeViewModel._private.getExpanderPaddingClasses('xl', theme), expectation[4]);
          });
          it('prepareExpanderClasses', function() {
             var
@@ -402,15 +403,15 @@ define([
                   expanderIcon: 'hiddenNode'
                }],
                testsResultPrepareExpanderClasses = [
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode_default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed',
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed',
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node_default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed',
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed',
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node_default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed',
-                  'controls-TreeGrid__row-expander controls-TreeGrid__row-expander_size_default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode_default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed'
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default'
                ];
             testsPrepareExpanderClasses.forEach(function(item, i) {
-               assert.equal(treeGrid.TreeViewModel._private.prepareExpanderClasses(testsPrepareExpanderClasses[i].itemData, testsPrepareExpanderClasses[i].expanderIcon),
+               assert.equal(treeGrid.TreeViewModel._private.prepareExpanderClasses(testsPrepareExpanderClasses[i].itemData, testsPrepareExpanderClasses[i].expanderIcon, undefined, theme),
                   testsResultPrepareExpanderClasses[i],
                   'Invalid value "prepareExpanderClasses(...)" for step ' + i + '.');
             });

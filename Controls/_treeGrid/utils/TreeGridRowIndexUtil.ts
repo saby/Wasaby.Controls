@@ -58,7 +58,7 @@ interface IBaseTreeGridRowIndexOptions {
     hasHeader: boolean
     hasBottomPadding: boolean
     resultsPosition?: 'top' | 'bottom'
-    multyHeaderOffset: number
+    multiHeaderOffset: number
     hierarchyRelation: relation.Hierarchy
     hasMoreStorage: HasMoreStorage
     expandedItems: ExpandedItems
@@ -131,7 +131,7 @@ function getIndexByDisplayIndex(cfg: TreeGridRowIndexOptions<DisplayItemIndex>):
  */
 function getResultsIndex(cfg: TreeGridRowIndexOptions<HasEmptyTemplate>) {
     let index = cfg.hasHeader ? 1 : 0;
-    index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
+    index += cfg.multiHeaderOffset ? cfg.multiHeaderOffset : 0;
     if (cfg.resultsPosition === "bottom") {
         let
             itemsCount = cfg.display.getCount(),
@@ -170,7 +170,7 @@ function getBottomPaddingRowIndex(cfg: TreeGridRowIndexOptions): number {
     index += cfg.hasHeader ? 1 : 0;
     index += isResultsInTop ? 1 : 0;
     index += hasEditingItem ? 1 : 0;
-    index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
+    index += cfg.multiHeaderOffset ? cfg.multiHeaderOffset : 0;
     index += cfg.hasColumnScroll ? 1 : 0;
 
     return index;
@@ -195,7 +195,7 @@ function getFooterIndex(cfg: TreeGridRowIndexOptions<HasEmptyTemplate>): number 
     index += hasResults ? 1 : 0;
     index += hasEditingItem ? 1 : 0;
     index += cfg.hasBottomPadding ? 1 : 0;
-    index += cfg.multyHeaderOffset ? cfg.multyHeaderOffset : 0;
+    index += cfg.multiHeaderOffset ? cfg.multiHeaderOffset : 0;
     index += cfg.hasColumnScroll ? 1 : 0;
 
     if (itemsCount) {
@@ -215,13 +215,13 @@ function getFooterIndex(cfg: TreeGridRowIndexOptions<HasEmptyTemplate>): number 
  * @param {TreeGridRowIndexOptions.resultsPosition} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
  * @return {Number} Отступ сверху для первой записи списка
  */
-function getTopOffset(hasHeader: TreeGridRowIndexOptions["hasHeader"], resultsPosition: TreeGridRowIndexOptions["resultsPosition"] = null, multyHeaderOffset: number, hasColumnScroll: boolean): number {
+function getTopOffset(hasHeader: TreeGridRowIndexOptions["hasHeader"], resultsPosition: TreeGridRowIndexOptions["resultsPosition"] = null, multiHeaderOffset: number, hasColumnScroll: boolean): number {
     let
         topOffset = 0;
 
     topOffset += hasHeader ? 1 : 0;
     topOffset += resultsPosition === "top" ? 1 : 0;
-    topOffset += multyHeaderOffset ? multyHeaderOffset : 0;
+    topOffset += multiHeaderOffset ? multiHeaderOffset : 0;
     topOffset += hasColumnScroll ? 1 : 0;
 
     return topOffset;
@@ -260,7 +260,7 @@ export {
 function getItemRealIndex(cfg: TreeGridRowIndexOptions<DisplayItem & DisplayItemIndex & ItemId>): number {
 
 
-    let realIndex = cfg.index + getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multyHeaderOffset, cfg.hasColumnScroll);
+    let realIndex = cfg.index + getTopOffset(cfg.hasHeader, cfg.resultsPosition, cfg.multiHeaderOffset, cfg.hasColumnScroll);
 
     if (cfg.display.getCount() === 1) {
         return realIndex;

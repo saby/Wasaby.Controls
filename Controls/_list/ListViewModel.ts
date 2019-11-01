@@ -192,6 +192,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             return canDrawMarker && (itemsModelCurrent.isAdd ? true : _private.isSelected(self, itemsModelCurrent));
         };
 
+        itemsModelCurrent.getMarkerClasses = (): string => {
+            return 'controls-ListView__itemV_marker ';
+        };
+
         if (itemsModelCurrent.itemActions) {
            drawnActions = itemsModelCurrent.itemActions.showed;
         }

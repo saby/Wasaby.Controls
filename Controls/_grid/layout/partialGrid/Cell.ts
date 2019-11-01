@@ -21,13 +21,13 @@ export class Cell extends Control<ICellOptions> {
     getCellClasses(): string {
         const itemData = this._options.itemData;
         const canBeHighlighted = this._options.highlightOnHover !== false;
-
+        const theme = this._options.theme || 'default';
         return CssClassList.add('controls-ListView__itemV')
             .add('controls-ListView__itemV_cursor-default', this._options.clickable === false)
             .add('controls-ListView__itemV_cursor-pointer', this._options.clickable !== false)
-            .add('controls-Grid__row_' + (itemData.style || 'default'))
-            .add('controls-Grid_row-cell_hovered', itemData.isHovered)
-            .add('controls-Grid__row_highlightOnHover_' + (itemData.style || 'default'), canBeHighlighted)
+            .add('controls-Grid__row_' + (itemData.style || 'default') + `_theme-${theme}`)
+            .add('controls-Grid_row-cell_hovered_theme-' + theme, itemData.isHovered)
+            .add('controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + `_theme-${theme}`, canBeHighlighted)
             .compile();
     }
 

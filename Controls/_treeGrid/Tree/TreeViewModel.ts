@@ -155,18 +155,18 @@ var
                 return !expanderSize && expanderIcon !== 'none';
             }
         },
-        getExpanderPaddingClasses: function(expanderSize) {
-            let expanderPaddingClasses = 'controls-TreeGrid__row-expanderPadding';
-            expanderPaddingClasses += ' controls-TreeGrid__row-expanderPadding_size_' + (expanderSize || 'default');
+        getExpanderPaddingClasses: function(expanderSize, theme) {
+            let expanderPaddingClasses = 'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding' + `_theme-${theme}`;
+            expanderPaddingClasses += ' controls-TreeGrid__row-expanderPadding_size_' + (expanderSize || 'default') + `_theme-${theme}`;
             return expanderPaddingClasses;
         },
-        prepareExpanderClasses: function(itemData, expanderIcon, expanderSize) {
+        prepareExpanderClasses: function(itemData, expanderIcon, expanderSize, theme) {
             var
                 itemType = itemData.item.get(itemData.nodeProperty),
-                expanderClasses = 'controls-TreeGrid__row-expander',
+                expanderClasses = `controls-TreeGrid__row-expander_theme-${theme}`,
                 expanderIconClass;
 
-            expanderClasses += ' controls-TreeGrid__row-expander_size_' + (expanderSize || 'default');
+            expanderClasses += ' controls-TreeGrid__row-expander_size_' + (expanderSize || 'default') + `_theme-${theme}`;
             expanderClasses += ' js-controls-ListView__notEditable';
 
             if (expanderIcon) {
@@ -181,12 +181,12 @@ var
                 + (itemData.style === 'master' ? 'master' : 'default');
             }
 
-            expanderClasses += expanderIconClass;
+            expanderClasses += expanderIconClass + `_theme-${theme}`;
 
             // добавляем класс свертнутости развернутости для тестов
             expanderClasses += ' controls-TreeGrid__row-expander' + (itemData.isExpanded ? '_expanded' : '_collapsed');
             // добавляем класс свертнутости развернутости стилевой
-            expanderClasses += expanderIconClass + (itemData.isExpanded ? '_expanded' : '_collapsed');
+            expanderClasses += expanderIconClass + (itemData.isExpanded ? '_expanded' : '_collapsed') + `_theme-${theme}`;
 
             return expanderClasses;
         },
