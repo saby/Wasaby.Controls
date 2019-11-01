@@ -358,6 +358,7 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
          _beforeMount(options, context): void {
             this._selectedKeys = _private.getSelectedKeys(options, context);
             this._excludedKeys = [];
+            this._initialSelection = _private.getInitialSelectedItems(this, options, context);
          },
 
          _beforeUpdate(newOptions, context): void {
