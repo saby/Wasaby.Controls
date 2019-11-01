@@ -121,6 +121,15 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
  * </pre>
  */
 
+/**
+ * @name Controls/_lookupPopup/Container#selectionLoadMode
+ * @cfg {Boolean} Опеределяет, будует ли загрузжаться выбранные записи при завершении выбора.
+ * @default true
+ * @remark
+ * Если значение опции установить в false, то в качестве результата выбора будет возвращён
+ * объект фильтра с сформированным selection'ом по отмеченным записям в списке.
+ */
+
 /*
  * @name Controls/_lookupPopup/Container#selectionType
  * @cfg {String} Type of records that can be selected.
