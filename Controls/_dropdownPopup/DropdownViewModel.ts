@@ -294,6 +294,7 @@ var _private = {
                emptyItem.isSelected = this._options.selectedKeys.length ? this._isItemSelected(item) : true;
                emptyItem.getPropValue = ItemsUtil.getPropertyValue;
                emptyItem.emptyText = this._options.emptyText;
+               emptyItem.hasClose = this._options.hasClose;
                emptyItem.spacingClassList = _private.getSpacingClassList(this._options.itemPadding, this._options.multiSelect, emptyItem, this.hasHierarchy(), this._options.hasApplyButton);
                return emptyItem;
             }
