@@ -89,23 +89,20 @@ var ManagerWrapper = Control.extend({
       }
    },
 
-   _scrollHandler: function() {
+   _scrollHandler: function(scrollContainer) {
       if (!this._destroyed) {
-         this.closePopups();
+         this.closePopups(scrollContainer);
       }
    },
 
-   closePopups: function() {
-      var items = this.getItems().clone();
-      var self = this;
+   closePopups: function(scrollContainer) {
+      const items = this.getItems().clone();
 
-      // todo: Задача: научить Listener'ы, лежащие в старом окружени, регистрироваться в ManagerWrapper'e
-      // https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
-      items.forEach(function(item) {
+      items.forEach((item) => {
          // Если попап не следует за таргетом при скролле - закроем его.
          // Избавимся только когда сделают задачу, описанную комментом выше
-         if (item.popupOptions.actionOnScroll === 'close') {
-            self._children.Manager.remove(item.id);
+         if (item.popupOptions.actionOnScroll === 'close' && $(scrollContainer).find(item.popupOptions.target).length) {
+            this._children.Manager.remove(item.id);
          }
       });
    },
