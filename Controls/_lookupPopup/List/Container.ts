@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('tmpl!Controls/_lookupPopup/List/Container');
+import template = require('wml!Controls/_lookupPopup/List/Container');
 import {showType} from 'Controls/Utils/Toolbar';
 
 /**
