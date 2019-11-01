@@ -2,7 +2,6 @@
             scope="{{_options}}"
             bind:markedKey="_markedKey"
             on:itemClick="_itemClick()"
-            on:checkboxClick="_checkboxClick()"
             on:actionClick="_itemActionsClick()"
             itemActions="{{_itemActions}}"
             itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"

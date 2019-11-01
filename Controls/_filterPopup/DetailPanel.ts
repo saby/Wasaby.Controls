@@ -26,9 +26,10 @@ import 'Controls/form';
     * @public
     * @author Золотова Э.Е.
     *
-    * @cssModifier controls-FilterPanel__width-m Medium panel width.
-    * @cssModifier controls-FilterPanel__width-l Large panel width.
-    * @cssModifier controls-FilterPanel__width-xl Extra large panel width.
+    * @cssModifier controls-FilterPanel__width-s Маленькая ширина панели.
+    * @cssModifier controls-FilterPanel__width-m Средняя ширина панели.
+    * @cssModifier controls-FilterPanel__width-l Большая ширина панели.
+    * @cssModifier controls-FilterPanel__width-xl Очень большая ширина панели.
     *
     * @cssModifier controls-FilterPanel__DateRange Кастомизирует контрол DateRange для отображения на панели фильтров.
     * Необходимо навесить на шаблон фильтра DateRange.
@@ -48,9 +49,10 @@ import 'Controls/form';
     * @public
     * @author Золотова Э.Е.
     *
-    * @cssModifier controls-FilterPanel__width-m Medium panel width.
-    * @cssModifier controls-FilterPanel__width-l Large panel width.
-    * @cssModifier controls-FilterPanel__width-xl Extra large panel width.
+    * @cssModifier controls-FilterPanel__width-s Маленькая ширина панели.
+    * @cssModifier controls-FilterPanel__width-m Средняя ширина панели.
+    * @cssModifier controls-FilterPanel__width-l Большая ширина панели.
+    * @cssModifier controls-FilterPanel__width-xl Очень большая ширина панели.
     */
 
    /**

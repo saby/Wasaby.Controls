@@ -5,7 +5,13 @@ import template = require('Controls/_decorator/Markup/resources/template');
 import linkDecorateUtils = require('Controls/_decorator/Markup/resources/linkDecorateUtils');
 import objectMerge = require('Core/core-merge');
 import { IoC } from 'Env/Env';
-
+/**
+ * Преобразователь типов из JsonML в HTML и обратно с возможностью клонирования JsonML массива.
+ *
+ * @class Controls/_decorator/Markup/Converter
+ * @public
+ * @author Кондаков Р.Н.
+ */
 
    // Convert node to jsonML array.
    function nodeToJson(node) {

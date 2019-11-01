@@ -5,6 +5,7 @@ import defaultItemTemplate = require('wml!Controls/_listRender/Render/resources/
 
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { CollectionItem, Collection } from 'Controls/display';
+import { constants } from 'Env/Env';
 
 export interface IRenderOptions extends IControlOptions {
     listModel: Collection<unknown>;
@@ -72,6 +73,21 @@ export default class Render extends Control<IRenderOptions> {
 
     protected _onItemWheel(e: SyntheticEvent<WheelEvent>, item: CollectionItem<unknown>): void {
         // Empty handler
+    }
+
+    protected _onItemKeyDown(e: SyntheticEvent<KeyboardEvent>, item: CollectionItem<unknown>): void {
+        // TODO (moved from editing row)
+        // keydown event should not bubble if processed here, but if we stop propagation
+        // the rich text editor and tab focus movement would break because they listen
+        // to the keydown event on the bubbling phase
+        // https://online.sbis.ru/opendoc.html?guid=cefa8cd9-6a81-47cf-b642-068f9b3898b7
+        if (!e.target.closest('.richEditor_TinyMCE') && e.nativeEvent.keyCode !== constants.key.tab) {
+            event.stopPropagation();
+        }
+        if (item.isEditing()) {
+            // Compatibility with BaseControl and EditInPlace control
+            this._notify('editingRowKeyDown', [e.nativeEvent], {bubbling: true});
+        }
     }
 
     protected _canHaveMultiselect(options: IRenderOptions): boolean {
