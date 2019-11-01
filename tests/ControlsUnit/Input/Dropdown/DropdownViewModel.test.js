@@ -317,6 +317,22 @@ define(
             assert.isFalse(viewModel.isGroupNext());
          });
 
+         it('getCurrent', function() {
+            let curConfig = clone(config);
+            curConfig.hasIconPin = true;
+
+            const getItem = () => {
+               let ddlViewModel = new DropdownViewModel(curConfig);
+               return ddlViewModel.getCurrent();
+            };
+            let item = getItem();
+            assert.isFalse(item.hasPinned);
+
+            curConfig.items.at(0).set('pinned', false);
+            item = getItem();
+            assert.isTrue(item.hasPinned);
+         });
+
          it('_private.getSpacingClassList', () => {
             let itemPadding = {}, multiSelect = true, itemData = { emptyText: 'test' }, hasHierarchy = false;
             let expectedClassList = 'controls-DropdownList__emptyItem-leftPadding_multiSelect controls-DropdownList__item-rightPadding_default';

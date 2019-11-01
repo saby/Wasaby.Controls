@@ -215,7 +215,7 @@ var _private = {
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
             itemsModelCurrent.multiSelect = this._options.multiSelect;
             itemsModelCurrent.hasClose = this._options.hasClose;
-            itemsModelCurrent.hasPinned = this._options.hasIconPin;
+            itemsModelCurrent.hasPinned = this._options.hasIconPin && itemsModelCurrent.item.has('pinned');
             itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options.itemPadding, this._options.multiSelect, itemsModelCurrent, this.hasHierarchy());
             return itemsModelCurrent;
          },
