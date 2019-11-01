@@ -7,6 +7,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 import chain = require('Types/chain');
 import {Model} from 'Types/entity';
 import {List, RecordSet} from 'Types/collection';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  *
@@ -191,29 +192,32 @@ var Controller = Control.extend({
       }
    },
 
-   _selectComplete: function(event, multiSelect) {
-      var self = this;
-      var selectCallback = function() {
-         self._notify('sendResult', [self._selectedItems], {bubbling: true});
-         self._notify('close', [], {bubbling: true});
+   _selectComplete(event: SyntheticEvent<'selectComplete'>, multiSelect: boolean): void {
+      const selectCallback = (selectResult) => {
+         this._notify('sendResult', [selectResult], {bubbling: true});
+         this._notify('close', [], {bubbling: true});
       };
 
       this._children.selectComplete.start();
 
       if (this._selectionLoadDef) {
-         this._selectionLoadDef.done().getResult().addCallback(function(result) {
-            if (multiSelect === false) {
-               // toDO !KONGO Если выбрали элемент из справочника в режиме единичного выбора,
-               // то очистим список выбранных элементов и возьмем только запись из этого справочника
-               self._selectedItems.clear();
+         this._selectionLoadDef.done().getResult().addCallback((result) => {
+            if (this._options.selectionLoadMode) {
+               if (multiSelect === false) {
+                  // toDO !KONGO Если выбрали элемент из справочника в режиме единичного выбора,
+                  // то очистим список выбранных элементов и возьмем только запись из этого справочника
+                  this._selectedItems.clear();
+               }
+               _private.processSelectionResult(result, this._selectedItems, multiSelect, this._options.keyProperty);
+               selectCallback(this._selectedItems);
+            } else {
+               selectCallback(result);
             }
-            _private.processSelectionResult(result, self._selectedItems, multiSelect, self._options.keyProperty);
-            selectCallback();
-            self._selectionLoadDef = null;
+            this._selectionLoadDef = null;
             return result;
          });
       } else {
-         selectCallback();
+         selectCallback(this._selectedItems);
       }
    },
 
@@ -233,7 +237,10 @@ var Controller = Control.extend({
 });
 
 Controller._private = _private;
+Controller.getDefaultOptions = function getDefaultOptions() {
+   return {
+      selectionLoadMode: true
+   };
+};
 
 export = Controller;
-
-
