@@ -279,6 +279,7 @@ var Input = Control.extend({
       }
    },
 
+   //Навешивается событие deactivated, т.к в Input.wml в content вместо контрола передается шаблон, который не обладает состоянием активности
    _deactivated: function () {
       this.closeMenu();
    },
