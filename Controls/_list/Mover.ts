@@ -277,6 +277,9 @@ var Mover = Control.extend({
 
     _beforeUpdate: function (options, context) {
         _private.updateDataOptions(this, context.dataOptions);
+        if (options.moveDialogTemplate) {
+           this._moveDialogOptions = options.moveDialogTemplate.templateOptions;
+        }
     },
 
     _onDialogResult: function (event, target, items) {
