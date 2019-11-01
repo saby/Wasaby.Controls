@@ -63,7 +63,7 @@ class BaseOpener extends Control<IControlOptions> {
             if (cfg.isCompoundTemplate) { // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
                 this._compatibleOpen(cfg, controller).then((popupId) => resolve(popupId));
             } else {
-                this._openPopupDebounce(cfg, controller).then((popupId) => resolve(popupId));
+                this._openPopup(cfg, controller).then((popupId) => resolve(popupId));
             }
         }));
     }
@@ -100,17 +100,28 @@ class BaseOpener extends Control<IControlOptions> {
     }
 
     /* Защита от множественного вызова. собираем все синхронные вызовы, открываем окно с последним конфигом */
-    private _openPopupDebounce(cfg, controller): Promise<string> {
-        return new Promise((resolve) => {
-            if (this._openPopupTimerId) {
-                clearTimeout(this._openPopupTimerId);
-            }
-            this._openPopupTimerId = setTimeout(() => {
-                this._openPopupTimerId = null;
-                this._openPopup(cfg, controller).then(resolve);
-            }, OPEN_POPUP_DEBOUNCE_DELAY);
-        });
-
+    private _showDialog(template, cfg, controller, popupId, resolve): void {
+        if (this._openPopupTimerId) {
+            clearTimeout(this._openPopupTimerId);
+        }
+        this._openPopupTimerId = setTimeout(() => {
+            this._openPopupTimerId = null;
+            BaseOpener.showDialog(template, cfg, controller, popupId, this).addCallback((id: string) => {
+                if (this._useVDOM()) {
+                    this._popupId = id;
+                    // Call redraw to create emitter on scroll after popup opening
+                    this._forceUpdate();
+                } else {
+                    // if old environment and old template, then we haven't compatible layer =>
+                    // hide indicator immediately
+                    if (!isNewEnvironment() && !BaseOpener.isVDOMTemplate(template)) {
+                        this._toggleIndicator(false);
+                    }
+                    this._action = id;
+                }
+                resolve(id);
+            });
+        }, OPEN_POPUP_DEBOUNCE_DELAY);
     }
 
     private _openPopup(cfg, controller: string): Promise<string | undefined> {
@@ -118,22 +129,7 @@ class BaseOpener extends Control<IControlOptions> {
             this._requireModules(cfg, controller).addCallback((result) => {
                 this._clearPopupIds();
                 const popupId = this._getCurrentPopupId();
-
-                BaseOpener.showDialog(result.template, cfg, result.controller, popupId, this).addCallback((popupId) => {
-                    if (this._useVDOM()) {
-                        this._popupId = popupId;
-                        // Call redraw to create emitter on scroll after popup opening
-                        this._forceUpdate();
-                    } else {
-                        // if old environment and old template, then we haven't compatible layer =>
-                        // hide indicator immediately
-                        if (!isNewEnvironment() && !BaseOpener.isVDOMTemplate(result.template)) {
-                            this._toggleIndicator(false);
-                        }
-                        this._action = popupId;
-                    }
-                    resolve(popupId);
-                });
+                this._showDialog(result.template, cfg, result.controller, popupId, resolve);
             }).addErrback(() => {
                 this._toggleIndicator(false);
                 resolve();
@@ -250,7 +246,7 @@ class BaseOpener extends Control<IControlOptions> {
         return new Promise((resolve) => {
             requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], (Layer) => {
                 Layer.load().addCallback(() => {
-                    this._openPopupDebounce(cfg, controller).then((popupId: string) => resolve(popupId));
+                    this._openPopup(cfg, controller).then((popupId: string) => resolve(popupId));
                 });
             });
         });
