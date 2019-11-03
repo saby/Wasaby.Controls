@@ -17,7 +17,7 @@ define('Controls-demo/SelectionStrategies/SelectionStrategies', [
       _treeSelectionStrategy: null,
       _gridColumns: null,
 
-      _beforeMount() {
+      _beforeMount: function() {
          this._treeSelectionStrategy = TreeSelectionStrategy.default;
          this._gridColumns = [{
             template: 'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
