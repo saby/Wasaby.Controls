@@ -1,6 +1,6 @@
 import Selection from 'Controls/_operations/MultiSelector/Selection';
 import {relation} from 'Types/entity';
-import {default as ArraySimpleValuesUtil} from 'Controls/Utils/ArraySimpleValuesUtil';
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import {default as SelectionHelper} from 'Controls/_operations/MultiSelector/SelectionHelper';
 import {default as TreeSelectionStrategy} from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';
 

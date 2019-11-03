@@ -1,5 +1,5 @@
 import {relation} from 'Types/entity';
-import {default as ArraySimpleValuesUtil} from 'Controls/Utils/ArraySimpleValuesUtil';
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 const ALL_SELECTION_VALUE = null;
 

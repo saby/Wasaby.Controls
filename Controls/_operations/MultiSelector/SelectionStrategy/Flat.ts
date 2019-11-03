@@ -1,4 +1,4 @@
-import {default as ArraySimpleValuesUtil} from 'Controls/Utils/ArraySimpleValuesUtil';
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 type TKeys = number[] | string[];
 

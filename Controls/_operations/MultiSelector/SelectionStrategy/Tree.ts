@@ -1,4 +1,4 @@
-import {default as ArraySimpleValuesUtil} from 'Controls/Utils/ArraySimpleValuesUtil';
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import {default as SelectionHelper} from 'Controls/_operations/MultiSelector/SelectionHelper';
 
 type TKeys = number[] | string[];

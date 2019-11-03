@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import {default as ArraySimpleValuesUtil} from 'Controls/Utils/ArraySimpleValuesUtil';
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import collection = require('Types/collection');
 import Deferred = require('Core/Deferred');
 import template = require('wml!Controls/_list/BaseControl/SelectionController');
