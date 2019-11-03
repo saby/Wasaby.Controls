@@ -9,7 +9,7 @@ interface IDifferenceArrays {
    removed: Array
 }
 
-export default {
+export = {
    addSubArray: function(array: Array, items: Array): Array {
       items.forEach((item) => {
          if (!this.hasInArray(array, item)) {
