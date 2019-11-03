@@ -65,11 +65,11 @@ class Selection {
     * @param {Array} keys Keys to add to selection.
     */
    public select(keys: TKeys): void {
-      let selection: ISelection = this._selectionStrategy.select(keys, this._selectedKeys, this._excludedKeys);
-
       if (this._limit && keys.length === 1 && !this._excludedKeys.includes(keys[0])) {
          this._increaseLimit(keys.slice());
       }
+
+      let selection: ISelection = this._selectionStrategy.select(keys, this._selectedKeys, this._excludedKeys);
 
       this._selectedKeys = selection.selectedKeys;
       this._excludedKeys = selection.excludedKeys;

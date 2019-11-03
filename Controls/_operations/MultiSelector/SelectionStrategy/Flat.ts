@@ -49,6 +49,8 @@ class FlatSelectionStrategy {
       if (this.isAllSelected(selectedKeys)) {
          if (this._isAllItemsLoaded(items, limit) && (!limit || items.getCount() <= limit)) {
             itemsCount = items.getCount() - excludedKeys.length;
+         } else if (limit) {
+            itemsCount = limit - excludedKeys.length;
          } else {
             // Зовем прикладной метод
          }

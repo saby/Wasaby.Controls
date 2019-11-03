@@ -163,7 +163,7 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
         if (newOptions.items !== this._options.items) {
             this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
             newOptions.items.subscribe('onCollectionChange', this._onCollectionChangeHandler);
-            this._multiselection.setItems(newOptions.items);
+            this._multiselection.updateSelectionForRender();
         }
 
         if (selectionChanged) {

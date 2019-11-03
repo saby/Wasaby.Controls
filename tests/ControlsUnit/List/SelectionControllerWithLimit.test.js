@@ -2,12 +2,16 @@ define([
    'Controls/_list/BaseControl/SelectionController',
    'Types/collection',
    'Types/entity',
-   'Controls/operations'
+   'Controls/operations',
+   'Controls/list',
+   'Controls/_operations/MultiSelector/SelectionStrategy/Flat'
 ], function(
    SelectionController,
    collection,
    entity,
-   operations
+   operations,
+   list,
+   FlatSelectionStrategy
 ) {
    'use strict';
    describe('Controls.List.BaseControl.SelectionControllerWithLimit', function() {
@@ -45,9 +49,8 @@ define([
             excludedKeys: [],
             items: rs,
             keyProperty: 'id',
-            listModel: {
-               updateSelection: sandbox.stub()
-            }
+            selectionStrategy: FlatSelectionStrategy.default,
+            listModel: new list.ListViewModel({items: rs})
          };
          instance = new SelectionController();
          instance.saveOptions(cfg);
@@ -101,17 +104,21 @@ define([
          await instance._beforeMount(cfg);
          const stubExpandLimit = sandbox.stub(instance._multiselection, '_increaseLimit');
          SelectionController._private.selectedTypeChangedHandler.call(instance, 'selectAll', 100);
-         assert.isTrue(instance._multiselection.getCount() === 7);
+         return instance._multiselection.getCount().then((itemsCount) => {
+            assert.isTrue(itemsCount === 7);
+         });
       });
 
       it('getCount with isAllItemsLoaded == false', async function() {
          await instance._beforeMount(cfg);
          const stubExpandLimit = sandbox.stub(instance._multiselection, '_increaseLimit');
-         instance._multiselection._isAllItemsLoaded = function() {
+         instance._multiselection._selectionStrategy._isAllItemsLoaded = function() {
             return false;
          };
          SelectionController._private.selectedTypeChangedHandler.call(instance, 'selectAll', 100);
-         assert.isTrue(instance._multiselection.getCount() === 100);
+         return instance._multiselection.getCount().then((itemsCount) => {
+            assert.isTrue(itemsCount === 100);
+         });
       });
    });
 });
