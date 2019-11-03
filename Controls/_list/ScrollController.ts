@@ -65,12 +65,12 @@ export default class ScrollController extends Control<IOptions> {
     private savedScrollDirection: IDirection;
 
     // Предыдущие индексы отображаемых записей
-    private savedStopIndex: number;
-    private savedStartIndex: number;
+    private savedStopIndex: number = 0;
+    private savedStartIndex: number = 0;
 
     // Актуальные индексы отображаемых записей
-    private actualStartIndex: number;
-    private actualStopIndex: number;
+    private actualStartIndex: number = 0;
+    private actualStopIndex: number = 0;
 
     // Стейт, хранящий ссылку на модель, нужен для сохранения индексов на _beforeMount, так как во время выполнения
     // _beforeMount модель не лежит в _options
@@ -121,7 +121,7 @@ export default class ScrollController extends Control<IOptions> {
 
     protected _beforeRender(): void {
         if (this.saveScrollPosition) {
-            this._notify('saveScrollPosition', [], { bubbling: true });
+            this._notify('saveScrollPosition', [], {bubbling: true});
         }
     }
 
@@ -136,6 +136,11 @@ export default class ScrollController extends Control<IOptions> {
         if (this.virtualScroll && this.applyScrollTopCallback) {
             this.applyScrollTopCallback();
             this.applyScrollTopCallback = null;
+
+            this.checkCapabilityTimeout = setTimeout(() => {
+                this.checkCapability();
+                clearTimeout(this.checkCapabilityTimeout);
+            });
         }
 
         if (this.afterRenderCallback) {
@@ -150,11 +155,13 @@ export default class ScrollController extends Control<IOptions> {
                     this.virtualScroll.scrollTop - this.virtualScroll.getItemsHeights(this.savedStartIndex, this.actualStartIndex),
                 this.savedScrollDirection
             ], {bubbling: true});
+            this.savedStartIndex = this.actualStartIndex;
+            this.savedStopIndex = this.actualStopIndex;
             this.saveScrollPosition = false;
             this.savedScrollDirection = null;
             this.checkCapabilityTimeout = setTimeout(() => {
                 this.checkCapability();
-                this.checkCapabilityTimeout = null;
+                clearTimeout(this.checkCapabilityTimeout);
             });
         }
     }
@@ -207,9 +214,8 @@ export default class ScrollController extends Control<IOptions> {
      * @param {CollectionItem<Record>[]} removedItems
      * @param {number} removedItemsIndex
      */
-    private collectionChangedHandler = (
-        event: string, changesType: string, action: string, newItems: CollectionItem<Record>[],
-        newItemsIndex: number, removedItems: CollectionItem<Record>[], removedItemsIndex: number): void => {
+    private collectionChangedHandler = (event: string, changesType: string, action: string, newItems: CollectionItem<Record>[],
+                                        newItemsIndex: number, removedItems: CollectionItem<Record>[], removedItemsIndex: number): void => {
         const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
 
         if (this.virtualScroll && (changesType === 'collectionChanged' || newModelChanged) && action) {
@@ -232,12 +238,15 @@ export default class ScrollController extends Control<IOptions> {
                         }
                     } else {
                         if (this.itemsFromLoadToDirection) {
-                            this.actualStartIndex += newItems.length;
-                            this.actualStopIndex += newItems.length;
+                            this.savedStopIndex += newItems.length;
+                            this.savedStartIndex += newItems.length;
                             this.virtualScroll.setStartIndex(this.actualStartIndex);
                         }
                         this.virtualScroll.recalcFromNewItems(direction);
                     }
+
+                    this.saveScrollPosition = true;
+                    this.savedScrollDirection = direction;
                 }
             }
 
@@ -288,17 +297,33 @@ export default class ScrollController extends Control<IOptions> {
 
     protected emitListScrollHandler(event: SyntheticEvent<Event>, type: string, params: unknown[]): void {
         switch (type) {
-            case 'virtualPageTopStart': this.updateViewWindow('up', params); break;
-            case 'virtualPageTopStop': this.changeTriggerVisibility('up', false); break;
-            case 'virtualPageBottomStart': this.updateViewWindow('down', params); break;
-            case 'virtualPageBottomStop': this.changeTriggerVisibility('down', false); break;
-            case 'scrollMoveSync': this.handleListScrollSync(params); break;
-            case 'viewportRize': this.updateViewport(params[0]); break;
-            case 'virtualScrollMove': this.virtualScrollMoveHandler(params); break;
+            case 'virtualPageTopStart':
+                this.updateViewWindow('up', params);
+                break;
+            case 'virtualPageTopStop':
+                this.changeTriggerVisibility('up', false);
+                break;
+            case 'virtualPageBottomStart':
+                this.updateViewWindow('down', params);
+                break;
+            case 'virtualPageBottomStop':
+                this.changeTriggerVisibility('down', false);
+                break;
+            case 'scrollMoveSync':
+                this.handleListScrollSync(params);
+                break;
+            case 'viewportRize':
+                this.updateViewport(params[0]);
+                break;
+            case 'virtualScrollMove':
+                this.virtualScrollMoveHandler(params);
+                break;
             case 'scrollResize':
             case 'scrollMove':
             case 'canScroll':
-            case 'cantScroll': this.proxyEvent(type, params); break;
+            case 'cantScroll':
+                this.proxyEvent(type, params);
+                break;
         }
     }
 
@@ -352,11 +377,13 @@ export default class ScrollController extends Control<IOptions> {
      * @remark Иногда, уже после загрузки данных триггер остается видимым, в таком случае вызвать повторную загрузку
      * данных
      */
-    private checkCapability(): void {
-        if (this.virtualScroll && !this.applyScrollTopCallback) {
+    checkCapability(): void {
+        if (!this.applyScrollTopCallback) {
             if (this.triggerVisibility.up) {
                 this.updateViewWindow('up');
-            } else if (this.triggerVisibility.down) {
+            }
+
+            if (this.triggerVisibility.down) {
                 this.updateViewWindow('down');
             }
         }
@@ -438,8 +465,6 @@ export default class ScrollController extends Control<IOptions> {
     private indexesChangedCallback = (startIndex: number, stopIndex: number, direction?: IDirection): void => {
         // Пересчет активных элементов
         const model = this.viewModel;
-        this.savedStopIndex = this.actualStopIndex;
-        this.savedStartIndex = this.actualStartIndex;
         this.actualStartIndex = startIndex;
         this.actualStopIndex = stopIndex;
 

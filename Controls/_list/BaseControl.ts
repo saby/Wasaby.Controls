@@ -267,7 +267,7 @@ var _private = {
     },
 
     scrollToItem: function(self, key) {
-        this._children.scrollController.scrollToItem(key);
+        self._children.scrollController.scrollToItem(key);
     },
     setMarkedKey: function(self, key) {
         if (key !== undefined) {
@@ -384,7 +384,7 @@ var _private = {
             }
             _private.resolveIndicatorStateAfterReload(self, addedItems);
 
-            if (self._options.virtualScrolling) {
+            if (self._options.virtualScrolling && self._isMounted) {
                 self._children.scrollController.itemsFromLoadToDirection = true;
             }
         };
@@ -398,7 +398,7 @@ var _private = {
                 (self._options.task1176625749 && countCurrentItems === cnt2)) {
                 _private.checkLoadToDirectionCapability(self);
             }
-            if (self._options.virtualScrolling) {
+            if (self._options.virtualScrolling && self._isMounted) {
                 self._children.scrollController.itemsFromLoadToDirection = false;
             }
 
@@ -1748,8 +1748,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // todo 2 Фантастически, но свежеиспеченный afterRender НЕ ПОДХОДИТ! Падают тесты. ХФ на носу, разбираться
         // некогда, завел подошибку: https://online.sbis.ru/opendoc.html?guid=d83711dd-a110-4e10-b279-ade7e7e79d38
         if (this._shouldRestoreScrollPosition) {
-            this._loadedItems = null;
             _private.restoreScrollPosition(this);
+            this._loadedItems = null;
+            this._shouldRestoreScrollPosition = false;
+
+            if (!this._options.virtualScrolling) {
+                this._checkLoadToDirectionTimeout = setTimeout(() => {
+                    this._children.scrollController.checkCapability();
+                    clearTimeout(this._checkLoadToDirectionTimeout);
+                });
+            }
         }
 
         if (this._restoredScroll !== null) {
