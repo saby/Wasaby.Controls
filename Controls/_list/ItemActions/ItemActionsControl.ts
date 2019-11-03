@@ -4,7 +4,7 @@ import {showType} from 'Controls/Utils/Toolbar';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import ControlsConstants = require('Controls/Constants');
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
-import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
+import {default as ArraySimpleValuesUtil} from 'Controls/Utils/ArraySimpleValuesUtil';
 import { relation } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { Object as EventObject } from 'Env/Event';
