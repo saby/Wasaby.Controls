@@ -5,6 +5,9 @@
       <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
    </ws:if>
    <ws:else data="{{_options.type === 'stack'}}">
+      <div class="controls-StackTemplate-shadow controls-StackTemplate-shadow_theme_{{_options.theme}}">
+         <div  class="controls-StackTemplate-shadow__content controls-StackTemplate-shadow__content_theme_{{_options.theme}}"></div>
+      </div>
       <Controls.popupTemplate:Stack
          closeButtonVisibility="{{!_options.hideCross}}"
          showMaximizedButton="{{_options.canMaximize}}"

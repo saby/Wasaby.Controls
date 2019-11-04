@@ -3,6 +3,11 @@
    width: 100%;
    height: 100%;
 
+   //в слое совместимости рисуем свою тень в стеке
+   .controls-StackTemplate .controls-StackTemplate-shadow {
+      display: none!important;
+   }
+
    // maximizedButton and closeButton in CompoundArea must be above the content.
    // for example core/switchablearea has z-index 100
    .controls-DialogTemplate__close_button, .controls-StackTemplate__close_button {
