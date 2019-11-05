@@ -715,6 +715,10 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                    this._fastFilterItems
                );
             }
+
+            if (newOptions.historyId !== this._options.historyId) {
+                this._sourceController = null;
+            }
          },
 
          _itemsChanged(event, items) {
