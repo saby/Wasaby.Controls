@@ -5,7 +5,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import {factory} from 'Types/chain';
 import cInstance = require('Core/core-instance');
-import {Ioc, constants} from 'Env/Env';
+import {IoC, constants} from 'Env/Env';
 import keysHandler = require('Controls/Utils/keysHandler');
 import randomId = require('Core/helpers/Number/randomId');
 import 'css!theme?Controls/explorer';
@@ -147,19 +147,19 @@ import 'Types/entity';
             if (viewMode === 'search' && cfg.searchStartingWith === 'root' && dataRoot !== currentRoot) {
                _private.setRoot(self, dataRoot);
             }
-            self._viewMode = viewMode;
-            _private.setVirtualScrolling(self, self._viewMode, cfg);
+
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-               result = new Promise((resolve) => {
-                  _private.loadTileViewMode().then((tile) => {
-                     _private.setViewConfig(self, viewMode);
-                     resolve();
-                  })
-               })
+               result = _private.loadTileViewMode();
             } else {
-               _private.setViewConfig(self, viewMode);
                result = Promise.resolve();
             }
+
+            result.then(() => {
+               self._viewMode = viewMode;
+               _private.setVirtualScrolling(self, self._viewMode, cfg);
+               _private.setViewConfig(self, self._viewMode);
+            });
+
             return result;
          },
          backByPath: function(self) {
@@ -280,7 +280,7 @@ import 'Types/entity';
    /**
     * @name Controls/_explorer/View#displayProperty
     * @cfg {string} Имя свойства элемента, содержимое которого будет отображаться.
-    * @remark Поле используется для вывода хлебных крошек. 
+    * @remark Поле используется для вывода хлебных крошек.
     * @example
     * <pre>
     * <Controls.explorers:View displayProperty="title">
@@ -453,9 +453,9 @@ import 'Types/entity';
    };
 
    export = Explorer;
-   
+
    /**
     * @event Controls/_explorer/View#arrowClick  Происходит при клике на кнопку "Просмотр записи".
     * @remark Кнопка отображается при наведении курсора на текущую папку хлебных крошек. Отображение кнопки "Просмотр записи" задаётся с помощью опции {@link Controls/_explorer/interface/IExplorer#showActionButton}. По умолчанию кнопка показывается.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    */ 
+    */
