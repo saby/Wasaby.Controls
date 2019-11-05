@@ -32,9 +32,9 @@ import MultiSelector from 'Controls/_operations/__MultiSelector';
 
 export {default as HierarchySelection} from 'Controls/_operations/MultiSelector/HierarchySelection';
 export {default as Selection} from 'Controls/_operations/MultiSelector/Selection';
-import {default as FlatSelectionStrategy} from 'Controls/_operations/MultiSelector/SelectionStrategy/Flat';
-import {default as TreeSelectionStrategy} from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';
-import {default as DeepTreeSelectionStrategy} from 'Controls/_operations/MultiSelector/SelectionStrategy/DeepTree';
+import FlatSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Flat';
+import TreeSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';
+import DeepTreeSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/DeepTree';
 
 export {
    Panel,

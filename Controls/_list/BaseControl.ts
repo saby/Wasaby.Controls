@@ -31,7 +31,6 @@ import {CssClassList} from "../Utils/CssClassList";
 import {Memory} from 'Types/source';
 
 import {create as diCreate} from 'Types/di';
-import {FlatSelectionStrategy} from 'Controls/operations';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -2419,7 +2418,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._hasItemActions) {
             this._children.itemActions.updateActions();
         }
-    }
+    },
     _onAfterEndEdit: function(event, item, isAdd) {
         this._shouldUpdateItemActions = true;
         return this._notify('afterEndEdit', [item, isAdd]);
@@ -2681,7 +2680,7 @@ BaseControl.getDefaultOptions = function() {
         excludedKeys: defaultExcludedKeys,
         markedKey: null,
         stickyHeader: true,
-        selectionStrategy: FlatSelectionStrategy
+        selectionStrategy: 'Controls/operations:FlatSelectionStrategy'
     };
 };
 export = BaseControl;

@@ -1,4 +1,5 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
+import { Collection } from 'Controls/display';
 
 type TKeys = number[] | string[];
 
@@ -43,29 +44,30 @@ class FlatSelectionStrategy {
    }
 
    public getCount(selectedKeys: TKeys, excludedKeys: TKeys, model, limit: number): Promise {
-      let itemsCount: number|null = null;
-      let items = model.getItems();
+      let itemsSelectedCount: number|null = null;
+      let items = this._getItems(model);
+      let itemsCount: number = items.getCount();
 
       if (this.isAllSelected(selectedKeys)) {
-         if (this._isAllItemsLoaded(items, limit) && (!limit || items.getCount() <= limit)) {
-            itemsCount = items.getCount() - excludedKeys.length;
+         if (this._isAllItemsLoaded(items, limit) && (!limit || itemsCount <= limit)) {
+            itemsSelectedCount = itemsCount - excludedKeys.length;
          } else if (limit) {
-            itemsCount = limit - excludedKeys.length;
+            itemsSelectedCount = limit - excludedKeys.length;
          } else {
             // Зовем прикладной метод
          }
       } else {
-         itemsCount = selectedKeys.length;
+         itemsSelectedCount = selectedKeys.length;
       }
 
       return new Promise((resolve) => {
-         resolve(itemsCount);
+         resolve(itemsSelectedCount);
       });
    }
 
-   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model, keyProperty: String, limit: number): Object {
+   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model, keyProperty: String, limit: number): Map {
       let
-         selectionResult: Object = {},
+         selectionResult: Map = new Map(),
          selectedItemsCount: number = 0,
          isAllSelected: boolean = this.isAllSelected(selectedKeys);
 
@@ -73,7 +75,7 @@ class FlatSelectionStrategy {
          limit -= excludedKeys.length;
       }
 
-      model.getItems().forEach((item) => {
+      this._getItems(model).forEach((item) => {
          let itemId = item.get(keyProperty);
          let isSelected: boolean = (!limit || selectedItemsCount < limit) &&
             (selectedKeys.includes(itemId) || isAllSelected && !excludedKeys.includes(itemId));
@@ -82,7 +84,7 @@ class FlatSelectionStrategy {
             selectedItemsCount++;
          }
          if (isSelected !== false) {
-            selectionResult[itemId] = isSelected;
+            selectionResult.set(itemId, isSelected);
          }
       });
 
@@ -100,6 +102,14 @@ class FlatSelectionStrategy {
          hasMore = typeof more === 'number' ? more > itemsCount : more;
 
       return !hasMore || (limit && itemsCount >= limit);
+   }
+
+   private _getItems(model) {
+      if (model instanceof Collection) {
+         return model.getCollection();
+      } else {
+         return model.getItems();
+      }
    }
 }
 

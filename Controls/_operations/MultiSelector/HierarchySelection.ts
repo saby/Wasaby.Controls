@@ -1,8 +1,8 @@
 import Selection from 'Controls/_operations/MultiSelector/Selection';
 import {relation} from 'Types/entity';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import {default as SelectionHelper} from 'Controls/_operations/MultiSelector/SelectionHelper';
-import {default as TreeSelectionStrategy} from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';
+import SelectionHelper from 'Controls/_operations/MultiSelector/SelectionHelper';
+import TreeSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';
 
 type TKeys = number[] | string[];
 
@@ -93,7 +93,7 @@ class HierarchySelection extends Selection {
          rootId = this._getRoot(),
          oldSelectedKeys = this._selectedKeys.slice(),
          oldExcludedKeys = this._excludedKeys.slice(),
-         childrenIdsRoot = SelectionHelper.getChildrenIds(rootId, this._listModel.getItems(), this._hierarchyRelation);
+         childrenIdsRoot = SelectionHelper.getChildrenIds(rootId, this._getItems(), this._hierarchyRelation);
 
       if (this._selectionStrategy.isAllSelected(this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation)) {
          // toDO после решения https://online.sbis.ru/opendoc.html?guid=d48b9e94-5236-429c-b124-d3b3909886c9 перейти на unselectAll
@@ -112,9 +112,9 @@ class HierarchySelection extends Selection {
       return this._selectionStrategy.getCount(this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation);
    }
 
-   public updateSelectionForRender(): void {
-      this._listModel.updateSelection(this._selectionStrategy.getSelectionForModel(
-         this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation));
+   protected _getSelectionForModel(): void {
+      return this._selectionStrategy.getSelectionForModel(
+         this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation);
    }
 
    private _getRoot(): string|number|null {
@@ -122,7 +122,7 @@ class HierarchySelection extends Selection {
    }
 
    private _removeSelectionChildren(nodeId) {
-      SelectionHelper.removeSelectionChildren(nodeId, this._selectedKeys, this._excludedKeys, this._listModel.getItems(), this._hierarchyRelation);
+      SelectionHelper.removeSelectionChildren(nodeId, this._selectedKeys, this._excludedKeys, this._getItems(), this._hierarchyRelation);
    }
 }
 

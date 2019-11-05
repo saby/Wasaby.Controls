@@ -12,7 +12,7 @@
     </Controls-demo.SelectionStrategies.ListWithOperationsPanel>
 
     <Controls-demo.SelectionStrategies.ListWithOperationsPanel source="{{_viewSource}}" nodeProperty="Раздел@" parentProperty="Раздел" keyProperty="id">
-        <Controls.explorer:View displayProperty="name" columns="{{_gridColumns}}" selectionStrategy="{{_treeSelectionStrategy}}"/>
+        <Controls.explorer:View displayProperty="name" columns="{{_gridColumns}}" selectionStrategy="Controls/operations:TreeSelectionStrategy"/>
     </Controls-demo.SelectionStrategies.ListWithOperationsPanel>
 
     <Controls-demo.SelectionStrategies.ListWithOperationsPanel source="{{_viewSource}}" nodeProperty="Раздел@" parentProperty="Раздел" keyProperty="id">

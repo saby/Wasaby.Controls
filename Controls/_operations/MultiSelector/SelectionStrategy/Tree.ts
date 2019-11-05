@@ -1,5 +1,6 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import {default as SelectionHelper} from 'Controls/_operations/MultiSelector/SelectionHelper';
+import SelectionHelper from 'Controls/_operations/MultiSelector/SelectionHelper';
+import { Collection } from 'Controls/display';
 
 type TKeys = number[] | string[];
 
@@ -14,7 +15,7 @@ class TreeSelectionStrategy {
       excludedKeys = excludedKeys.slice();
 
       keys.forEach((key) => {
-         let item = model.getItems().getRecordById(key);
+         let item = this._getItems(model).getRecordById(key);
 
          if (!item || SelectionHelper.isNode(item, hierarchyRelation)) {
             this._selectNode(key, selectedKeys, excludedKeys, model, hierarchyRelation);
@@ -34,7 +35,7 @@ class TreeSelectionStrategy {
       excludedKeys = excludedKeys.slice();
 
       keys.forEach((key) => {
-         let item = model.getItems().getRecordById(key);
+         let item = this._getItems(model).getRecordById(key);
 
          if (!item || SelectionHelper.isNode(item, hierarchyRelation)) {
             this._unSelectNode(key, selectedKeys, excludedKeys, model, hierarchyRelation);
@@ -60,7 +61,7 @@ class TreeSelectionStrategy {
          for (let index = 0; index < selectedNodes.length; index++) {
             let nodeKey = selectedNodes[index];
             let countItemsSelectedInNode = SelectionHelper.getSelectedChildrenCount(
-               nodeKey, selectedKeys, excludedKeys, model.getItems(), hierarchyRelation, false);
+               nodeKey, selectedKeys, excludedKeys, this._getItems(model), hierarchyRelation, false);
 
             if (countItemsSelectedInNode === null) {
                countItemsSelected = null;
@@ -78,14 +79,14 @@ class TreeSelectionStrategy {
       });
    }
 
-   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model, hierarchyRelation): Object {
-      let selectionResult: Object = {};
+   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model, hierarchyRelation): Map {
+      let selectionResult: Map = new Map();
 
-      model.getItems().forEach((item) => {
+      this._getItems(model).forEach((item) => {
          let isSelected: boolean = this._isSelected(item, selectedKeys, excludedKeys, model, hierarchyRelation);
 
          if (isSelected !== false) {
-            selectionResult[item.getId()] = isSelected;
+            selectionResult.set(item.getId(), isSelected);
          }
       });
 
@@ -130,7 +131,7 @@ class TreeSelectionStrategy {
    }
 
    protected _isParentSelectedWithChild(itemId: string|number, selectedKeys: TKeys, excludedKeys: TKeys, model, hierarchyRelation): boolean {
-      let parentId = SelectionHelper.getParentId(itemId, model.getItems(), hierarchyRelation.getParentProperty());
+      let parentId = SelectionHelper.getParentId(itemId, this._getItems(model), hierarchyRelation.getParentProperty());
 
       return selectedKeys.includes(parentId) && excludedKeys.includes(parentId);
    }
@@ -141,7 +142,7 @@ class TreeSelectionStrategy {
 
    private _isAllRootItemsLoaded(model, hierarchyRelation) {
       let hasMore: boolean = true;
-      let items = model.getItems();
+      let items = this._getItems(model);
       let more = items.getMetaData().more;
 
       if (typeof more === 'number') {
@@ -154,6 +155,14 @@ class TreeSelectionStrategy {
       }
 
       return !hasMore;
+   }
+
+   private _getItems(model) {
+      if (model instanceof Collection) {
+         return model.getCollection();
+      } else {
+         return model.getItems();
+      }
    }
 }
 

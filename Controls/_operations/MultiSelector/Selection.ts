@@ -1,5 +1,6 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import FlatSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Flat';
+import { Collection } from 'Controls/display';
 
 type TKeys = number[] | string[];
 /**
@@ -153,13 +154,28 @@ class Selection {
     * @returns {Object}
     */
    public updateSelectionForRender(): void {
-      this._listModel.updateSelection(this._selectionStrategy.getSelectionForModel(
-         this._selectedKeys, this._excludedKeys, this._listModel, this._keyProperty, this._limit));
+      let selectionForModel = this._getSelectionForModel();
+
+      if (this._listModel instanceof Collection) {
+         this._listModel.setSelection(selectionForModel);
+      } else {
+         let selectionForOldModel = {};
+
+         selectionForModel.forEach((stateSelection, itemId) => {
+            selectionForOldModel[itemId] = stateSelection;
+         });
+         this._listModel.updateSelection(selectionForOldModel);
+      }
    }
 
    public setListModel(listModel): void {
       this._listModel = listModel;
       this.updateSelectionForRender();
+   }
+
+   protected _getSelectionForModel(): Map {
+      return this._selectionStrategy.getSelectionForModel(
+         this._selectedKeys, this._excludedKeys, this._listModel, this._keyProperty, this._limit);
    }
 
    /**
@@ -175,7 +191,7 @@ class Selection {
          selectionForModel = this._selectionStrategy.getSelectionForModel(
             this._selectedKeys, this._excludedKeys, this._listModel, this._keyProperty, this._limit);
 
-      this._listModel.getItems().forEach((item) => {
+      this._getItems().forEach((item) => {
          let key: string|number = item.get(this._keyProperty);
 
          if (selectedItemsCount < limit && selectionForModel[key] !== false) {
@@ -191,6 +207,14 @@ class Selection {
             }
          }
       });
+   }
+
+   private _getItems() {
+      if (this._listModel instanceof Collection) {
+         return this._listModel.getCollection();
+      } else {
+         return this._listModel.getItems();
+      }
    }
 }
 

@@ -1,7 +1,6 @@
 define('Controls-demo/SelectionStrategies/SelectionStrategies', [
    'Core/Control',
    'wml!Controls-demo/SelectionStrategies/SelectionStrategies',
-   'Controls/_operations/MultiSelector/SelectionStrategy/Tree',
    'Engine-demo/Selector/SelectorData',
    'Engine-demo/Selector/TreeListSelector/SelectorMemory',
 
@@ -9,7 +8,7 @@ define('Controls-demo/SelectionStrategies/SelectionStrategies', [
    'Controls-demo/OperationsPanel/Demo/Data',
    'wml!Controls-demo/OperationsPanel/Demo/PersonInfo',
    'css!Controls-demo/OperationsPanel/Demo/Demo'
-], function(Control, template, TreeSelectionStrategy, SelectorData, MemorySource, Data) {
+], function(Control, template, SelectorData, MemorySource, Data) {
    'use strict';
 
    return Control.extend({
@@ -18,7 +17,6 @@ define('Controls-demo/SelectionStrategies/SelectionStrategies', [
       _gridColumns: null,
 
       _beforeMount: function() {
-         this._treeSelectionStrategy = TreeSelectionStrategy.default;
          this._gridColumns = [{
             template: 'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
          }];

@@ -4,10 +4,10 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
 import keysHandler = require('Controls/Utils/keysHandler');
+import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
-import {selectionToRecord, DeepTreeSelectionStrategy} from 'Controls/operations';
 
 var
     HOT_KEYS = {
@@ -637,7 +637,7 @@ TreeControl.getDefaultOptions = function() {
         expandByItemClick: false,
         root: null,
         columns: DEFAULT_COLUMNS_VALUE,
-        selectionStrategy: DeepTreeSelectionStrategy
+        selectionStrategy: 'Controls/operations:DeepTreeSelectionStrategy'
     };
 };
 

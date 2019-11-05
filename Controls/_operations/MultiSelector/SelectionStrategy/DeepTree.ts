@@ -1,5 +1,5 @@
-import {default as TreeSelectionStrategy} from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';
-import {default as SelectionHelper} from 'Controls/_operations/MultiSelector/SelectionHelper';
+import TreeSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';
+import SelectionHelper from 'Controls/_operations/MultiSelector/SelectionHelper';
 
 type TKeys = number[] | string[];
 interface IEntryPath {
@@ -12,7 +12,7 @@ const FIELD_ENTRY_PATH = 'ENTRY_PATH';
 class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
    public getCount(selectedKeys: TKeys, excludedKeys: TKeys, model, hierarchyRelation): Promise {
       let countItemsSelected: number|null = 0;
-      let items = model.getItems();
+      let items = this._getItems(model);
 
       if (!this.isAllSelected(selectedKeys, excludedKeys, model, hierarchyRelation) || this._isAllRootItemsLoaded(model, hierarchyRelation)) {
          for (let index = 0; index < selectedKeys.length; index++) {
@@ -45,7 +45,7 @@ class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
    }
 
    public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model): Object {
-      this._selectedKeysWithEntryPath = this._mergeEntryPath(selectedKeys, model.getItems());
+      this._selectedKeysWithEntryPath = this._mergeEntryPath(selectedKeys, this._getItems(model));
       return super.getSelectionForModel(...arguments);
    }
 
@@ -58,17 +58,17 @@ class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
 
    protected _selectNode(nodeId: string|number, selectedKeys: TKeys, excludedKeys: TKeys, model, hierarchyRelation): void {
       super._selectNode(...arguments);
-      SelectionHelper.removeSelectionChildren(nodeId, selectedKeys, excludedKeys, model.getItems(), hierarchyRelation);
+      SelectionHelper.removeSelectionChildren(nodeId, selectedKeys, excludedKeys, this._getItems(model), hierarchyRelation);
    }
 
    protected _unSelectNode(nodeId: string|number, selectedKeys: TKeys, excludedKeys: TKeys, model, hierarchyRelation): void {
       super._unSelectNode(...arguments);
-      SelectionHelper.removeSelectionChildren(nodeId, selectedKeys, excludedKeys, model.getItems(), hierarchyRelation);
+      SelectionHelper.removeSelectionChildren(nodeId, selectedKeys, excludedKeys, this._getItems(model), hierarchyRelation);
    }
 
    protected _isSelected(item, selectedKeys, excludedKeys, model, hierarchyRelation): boolean|null {
       let itemId = item.getId();
-      let items = model.getItems();
+      let items = this._getItems(model);
       let isSelected: boolean|null = super._isSelected(...arguments);
 
       if (SelectionHelper.isNode(item, hierarchyRelation)) {
@@ -111,7 +111,7 @@ class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
    }
 
    protected _isParentSelectedWithChild(itemId: string|number, selectedKeys: TKeys, excludedKeys: TKeys, model, hierarchyRelation): boolean {
-      return SelectionHelper.hasSelectedParent(itemId, selectedKeys, excludedKeys, hierarchyRelation, model.getItems());
+      return SelectionHelper.hasSelectedParent(itemId, selectedKeys, excludedKeys, hierarchyRelation, this._getItems(model));
    }
 
    private _hasChildrenInList(nodeId, listKeys, items, hierarchyRelation) {

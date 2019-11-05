@@ -4,6 +4,7 @@ import collection = require('Types/collection');
 import Deferred = require('Core/Deferred');
 import template = require('wml!Controls/_list/BaseControl/SelectionController');
 import {isEqual} from 'Types/object';
+import { load } from 'Core/library';
 
 /**
  * @class Controls/_list/BaseControl/SelectionController
@@ -97,11 +98,13 @@ var _private = {
         }
     },
 
-    getMultiselection: function (options) {
-        var def = new Deferred();
-        if (options.parentProperty) {
-            require(['Controls/operations'], function (operations) {
-                def.callback(new operations.HierarchySelection({
+    getMultiselection: function(options): Promise {
+        return Promise.all([load('Controls/operations'), load(options.selectionStrategy)]).then((dependencies) => {
+            let operations = dependencies[0];
+            let SelectionStrategy = dependencies[1];
+
+            if (options.parentProperty) {
+                return new operations.HierarchySelection({
                     selectedKeys: options.selectedKeys,
                     excludedKeys: options.excludedKeys,
                     keyProperty: options.keyProperty,
@@ -109,21 +112,18 @@ var _private = {
                     nodeProperty: options.nodeProperty,
                     hasChildrenProperty: options.hasChildrenProperty,
                     listModel: options.listModel,
-                    selectionStrategy: new options.selectionStrategy()
-                }));
-            });
-        } else {
-            require(['Controls/operations'], function (operations) {
-                def.callback(new operations.Selection({
+                    selectionStrategy: new SelectionStrategy()
+                });
+            } else {
+               return new operations.Selection({
                     selectedKeys: options.selectedKeys,
                     excludedKeys: options.excludedKeys,
                     keyProperty: options.keyProperty,
                     listModel: options.listModel,
-                    selectionStrategy: new options.selectionStrategy()
-                }));
-            });
-        }
-        return def;
+                    selectionStrategy: new SelectionStrategy()
+                });
+            }
+        });
     }
 };
 
@@ -139,7 +139,7 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
             options.multiSelectReadyCallback(multiSelectReady);
         }
 
-        return _private.getMultiselection(options).addCallback((multiselectionInstance) => {
+        return _private.getMultiselection(options).then((multiselectionInstance) => {
             this._multiselection = multiselectionInstance;
             this._multiselection.updateSelectionForRender();
             multiSelectReady.callback();
