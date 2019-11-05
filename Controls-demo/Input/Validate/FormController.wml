@@ -82,13 +82,11 @@
                         <ws:Function value="{{_sourceNumber }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
                      </ws:validators>
                      <ws:content>
-                        <Controls.validate:RedFrame>
                            <Controls.toggle:RadioGroup
                                    on:selectedKeyChanged="_selectedHandler()"
                                    keyProperty="id"
                                    selectedKey="{{_sourceNumber}}"
                                    source="{{_sourceConfig}}"/>
-                        </Controls.validate:RedFrame>
                      </ws:content>
                   </Controls.validate:Container>
                   <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
