@@ -202,6 +202,10 @@ var Controller = Control.extend({
 
       if (this._selectionLoadDef) {
          this._selectionLoadDef.done().getResult().addCallback((result) => {
+            // FIXME https://online.sbis.ru/opendoc.html?guid=7ff270b7-c815-4633-aac5-92d14032db6f 
+            // необходимо уйти от опции selectionLoadMode и вынести загрузку
+            // выбранный записей в отдельный слой.
+            // Результат контроллера должен быть однозначный (только фильтры)
             if (this._options.selectionLoadMode) {
                if (multiSelect === false) {
                   // toDO !KONGO Если выбрали элемент из справочника в режиме единичного выбора,
