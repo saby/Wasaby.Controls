@@ -1,7 +1,6 @@
 <!-- TODO: KINGO -->
 <!-- Флаг canUpdateItemsActions нужен только ItemActionsController. -->
 <!-- Опция является константой для предотвращения перерисовок вложенного контента из-за ее изменения. -->
-{{debug();}}
 <ws:partial template="{{_options.content}}"
             scope="{{_options}}"
             canUpdateItemsActions="{{ null }}"

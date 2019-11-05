@@ -1,4 +1,3 @@
-{{debug();}}
 <ws:template name="localItemActionsTemplate">
     <div attr:class="controls-itemActionsV
             {{highlightOnHover !== false ? 'controls-itemActionsV_style_' + (style ? style : 'default') }}
