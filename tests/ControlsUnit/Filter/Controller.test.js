@@ -181,6 +181,14 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          assert.deepEqual(filterLayout._filter, {testKey: 'testValueFast', testKey2: ''});
       });
 
+      it('_beforeUpdate new historyId', function () {
+         var filterLayout = new Filter();
+         filterLayout.saveOptions({historyId: 'HISTORY_ID'});
+         filterLayout._sourceController = 'history_loader';
+         filterLayout._beforeUpdate({ historyId: 'UPDATED_HISTORY_ID' });
+         assert.isNull(filterLayout._sourceController);
+      });
+
       it('_itemsChanged', function () {
          var filterLayout = new Filter();
          var items = [{
