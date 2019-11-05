@@ -23,7 +23,6 @@ import * as DefaultResultsTemplate from 'wml!Controls/_grid/ResultsTemplateResol
 import 'wml!Controls/_grid/layout/grid/Results';
 import 'wml!Controls/_grid/layout/partialGrid/Results';
 import 'wml!Controls/_grid/layout/table/Results';
-import 'css!theme?Controls/grid';
 
 var
     _private = {
@@ -411,5 +410,6 @@ GridView.contextTypes = () => {
     };
 };
 
+GridView._theme = ['Controls/grid'];
 
 export = GridView;
