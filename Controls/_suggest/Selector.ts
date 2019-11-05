@@ -168,7 +168,8 @@ Suggest.getDefaultOptions = function() {
       suggestState: false,
       suggestTemplate: {
          templateName: 'Controls/suggestPopup:SuggestTemplate'
-      }
+      },
+      footerTemplate: null
    };
 };
 
