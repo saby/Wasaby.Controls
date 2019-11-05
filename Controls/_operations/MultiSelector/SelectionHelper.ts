@@ -56,7 +56,6 @@ export default {
          }
       }
 
-      // Надо добавить работу с ENTRY_PATH
       if (!hasExcludedParent && !currentParentId && selectedKeys.includes(ALL_SELECTION_VALUE)) {
          hasSelectedParent = true;
       }

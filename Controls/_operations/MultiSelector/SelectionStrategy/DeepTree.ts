@@ -2,6 +2,12 @@ import {default as TreeSelectionStrategy} from 'Controls/_operations/MultiSelect
 import {default as SelectionHelper} from 'Controls/_operations/MultiSelector/SelectionHelper';
 
 type TKeys = number[] | string[];
+interface IEntryPath {
+   id: String|number,
+   parent: String|number
+}
+
+const FIELD_ENTRY_PATH = 'ENTRY_PATH';
 
 class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
    public getCount(selectedKeys: TKeys, excludedKeys: TKeys, model, hierarchyRelation): Promise {
@@ -38,6 +44,11 @@ class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
       });
    }
 
+   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model): Object {
+      this._selectedKeysWithEntryPath = this._mergeEntryPath(selectedKeys, model.getItems());
+      return super.getSelectionForModel(...arguments);
+   }
+
    public isAllSelected(selectedKeys, excludedKeys, model, hierarchyRelation): boolean {
       let rootId = this._getRoot(model);
 
@@ -60,16 +71,43 @@ class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
       let items = model.getItems();
       let isSelected: boolean|null = super._isSelected(...arguments);
 
-      // Надо так же учесть ENTRY_PATH в метаданных
       if (SelectionHelper.isNode(item, hierarchyRelation)) {
          if (isSelected && this._hasChildrenInList(itemId, excludedKeys, items, hierarchyRelation) ||
-            !isSelected && this._hasChildrenInList(itemId, selectedKeys, items, hierarchyRelation)) {
+            !isSelected && (this._selectedKeysWithEntryPath.includes(itemId) || this._hasChildrenInList(itemId, this._selectedKeysWithEntryPath, items, hierarchyRelation))) {
 
             isSelected = null;
          }
       }
 
       return isSelected;
+   }
+
+   private _mergeEntryPath(selectedKeys: TKeys, items): void {
+      let entryPathObject: Object = {};
+      let entryPath: Array<IEntryPath> = items.getMetaData()[FIELD_ENTRY_PATH];
+      let selectedKeysWithEntryPath: TKeys = selectedKeys.slice();
+
+      if (entryPath) {
+         entryPath.forEach((pathData: IEntryPath) => {
+            entryPathObject[pathData.id] = pathData.parent;
+         });
+
+         entryPath.forEach((pathData) => {
+            if (selectedKeys.includes(pathData.id)) {
+               for (let keyItem = pathData.parent; entryPathObject[keyItem]; keyItem = entryPathObject[keyItem]) {
+                  if (!selectedKeys.includes(keyItem)) {
+                     selectedKeysWithEntryPath.push(keyItem);
+                  }
+               }
+
+               if (!selectedKeys.includes(keyItem)) {
+                  selectedKeysWithEntryPath.push(keyItem);
+               }
+            }
+         });
+      }
+
+      return selectedKeysWithEntryPath;
    }
 
    protected _isParentSelectedWithChild(itemId: string|number, selectedKeys: TKeys, excludedKeys: TKeys, model, hierarchyRelation): boolean {

@@ -2,12 +2,14 @@ define([
    'Controls/operations',
    'Types/collection',
    'Controls/treeGrid',
-   'Controls/_operations/MultiSelector/SelectionStrategy/DeepTree'
+   'Controls/_operations/MultiSelector/SelectionStrategy/DeepTree',
+   'ControlsUnit/ListData'
 ], function(
    operations,
    collection,
    treeGrid,
-   DeepTreeSelectionStrategy
+   DeepTreeSelectionStrategy,
+   ListData
 ) {
    'use strict';
    describe('Controls.operations:HierarchySelection', function() {
@@ -15,108 +17,20 @@ define([
          return Object.assign({
             selectedKeys: [],
             excludedKeys: [],
-            keyProperty: 'id',
+            keyProperty: ListData.KEY_PROPERTY,
             listModel: getListModel(),
             selectionStrategy: new DeepTreeSelectionStrategy.default()
          }, config || {});
       }
       
-      function getListModel(items) {
-         return new treeGrid.ViewModel({columns: [], items: items || allData});
+      function getListModel(recordSet) {
+         return new treeGrid.ViewModel({columns: [], items: recordSet || allData});
       }
 
       var
          cfg,
          selection,
          selectionInstance,
-         items = [{
-            'id': 1,
-            'Раздел': null,
-            'Раздел@': true,
-            'Раздел$': true
-         }, {
-            'id': 2,
-            'Раздел': 1,
-            'Раздел@': true,
-            'Раздел$': true
-         }, {
-            'id': 3,
-            'Раздел': 2,
-            'Раздел@': false,
-            'Раздел$': false
-         }, {
-            'id': 4,
-            'Раздел': 2,
-            'Раздел@': false,
-            'Раздел$': false
-         }, {
-            'id': 5,
-            'Раздел': 1,
-            'Раздел@': false,
-            'Раздел$': false
-         }, {
-            'id': 6,
-            'Раздел': null,
-            'Раздел@': true,
-            'Раздел$': false
-         }, {
-            'id': 7,
-            'Раздел': null,
-            'Раздел@': false,
-            'Раздел$': false
-         }],
-         flatItems = [{
-            'id': 1,
-            'Раздел': null,
-            'Раздел@': false,
-            'Раздел$': true
-         }, {
-            'id': 2,
-            'Раздел': 1,
-            'Раздел@': false,
-            'Раздел$': true
-         }, {
-            'id': 3,
-            'Раздел': 2,
-            'Раздел@': false,
-            'Раздел$': false
-         }, {
-            'id': 4,
-            'Раздел': 2,
-            'Раздел@': false,
-            'Раздел$': false
-         }, {
-            'id': 5,
-            'Раздел': 1,
-            'Раздел@': false,
-            'Раздел$': false
-         }, {
-            'id': 6,
-            'Раздел': null,
-            'Раздел@': false,
-            'Раздел$': false
-         }, {
-            'id': 7,
-            'Раздел': null,
-            'Раздел@': false,
-            'Раздел$': false
-         }],
-         rootItems = [{
-            'id': 1,
-            'Раздел': null,
-            'Раздел@': true,
-            'Раздел$': true
-         }, {
-            'id': 6,
-            'Раздел': null,
-            'Раздел@': true,
-            'Раздел$': false
-         }, {
-            'id': 7,
-            'Раздел': null,
-            'Раздел@': false,
-            'Раздел$': false
-         }],
          hiddenNodeWithChildren,
          allData, flatData, rootData;
 
@@ -131,16 +45,16 @@ define([
        */
       beforeEach(function() {
          allData = new collection.RecordSet({
-            rawData: items.slice(),
-            keyProperty: 'id'
+            rawData: ListData.getItems(),
+            keyProperty: ListData.KEY_PROPERTY
          });
          flatData = new collection.RecordSet({
-            rawData: flatItems.slice(),
-            keyProperty: 'id'
+            rawData: ListData.getFlatItems(),
+            keyProperty: ListData.KEY_PROPERTY
          });
          rootData = new collection.RecordSet({
-            rawData: rootItems.slice(),
-            idProperty: 'id'
+            rawData: ListData.getRootItems(),
+            idProperty: ListData.KEY_PROPERTY
          });
          hiddenNodeWithChildren = new collection.RecordSet({
             rawData: [{
@@ -621,7 +535,7 @@ define([
 
       describe('getSelectedKeysForRender', function() {
          it('duplicate ids', function() {
-            var itemsWithDuplicateIds = items.slice();
+            let itemsWithDuplicateIds = ListData.getItems();
             itemsWithDuplicateIds.push({
                'id': 1,
                'Раздел': null,
@@ -631,7 +545,7 @@ define([
                selectedKeys: [1],
                listModel: getListModel(new collection.RecordSet({
                   rawData: itemsWithDuplicateIds,
-                  keyProperty: 'id'
+                  keyProperty: ListData.KEY_PROPERTY
                }))
             });
             selectionInstance = new operations.HierarchySelection(cfg);
@@ -784,7 +698,7 @@ define([
             });
             selectionInstance = new operations.HierarchySelection(cfg);
             selectionInstance.updateSelectionForRender();
-            assert.isTrue(selectionInstance._listModel._model._selectedKeys[0] === undefined);
+            assert.isTrue(selectionInstance._listModel._model._selectedKeys[1] === undefined);
          });
 
          it('with entry path', function() {
@@ -793,12 +707,18 @@ define([
                listModel: getListModel(rootData)
             });
             selectionInstance = new operations.HierarchySelection(cfg);
-            selectionInstance.updateSelectionForRender();
             selectionInstance._listModel.getItems().setMetaData({
-               ENTRY_PATH: [1, 2]
+               ENTRY_PATH: [{
+                  id: 4,
+                  parent: 2
+               }, {
+                  id: 2,
+                  parent: 1
+               }]
             });
+            selectionInstance.updateSelectionForRender();
 
-            //assert.isTrue(selectionInstance._listModel._model._selectedKeys[0] === null);
+            assert.isTrue(selectionInstance._listModel._model._selectedKeys[1] === null);
          });
       });
    });

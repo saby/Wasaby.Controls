@@ -5,12 +5,14 @@ define([
    'Types/collection',
    'Controls/operations',
    'Controls/list',
-   'Controls/_operations/MultiSelector/SelectionStrategy/Flat'
+   'Controls/_operations/MultiSelector/SelectionStrategy/Flat',
+   'ControlsUnit/ListData'
 ], function(
    collection,
    operations,
    list,
-   FlatSelectionStrategy
+   FlatSelectionStrategy,
+   ListData
 ) {
    describe('Controls.operations:Selection', function() {
       function getConfig(config) {
@@ -27,24 +29,9 @@ define([
       let
          cfg,
          selectionInstance,
-         data = [{
-            'id': 1
-         }, {
-            'id': 2
-         }, {
-            'id': 3
-         }, {
-            'id': 4
-         }, {
-            'id': 5
-         }, {
-            'id': 6
-         }, {
-            'id': 7
-         }],
          items = new collection.RecordSet({
-            rawData: data,
-            keyProperty: 'id'
+            rawData: ListData.getFlatItems(),
+            keyProperty: ListData.KEY_PROPERTY
          });
 
       it('ctor', function() {

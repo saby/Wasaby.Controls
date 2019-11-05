@@ -12,7 +12,7 @@ define('Controls-demo/SelectionStrategies/ListWithOperationsPanel', [
       _excludedKeys: null,
 
       _beforeMount: function() {
-         this._selectedKeys = [];
+         this._selectedKeys = [28];
          this._excludedKeys = [];
       }
    });

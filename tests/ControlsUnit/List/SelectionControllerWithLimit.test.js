@@ -4,36 +4,21 @@ define([
    'Types/entity',
    'Controls/operations',
    'Controls/list',
-   'Controls/_operations/MultiSelector/SelectionStrategy/Flat'
+   'Controls/_operations/MultiSelector/SelectionStrategy/Flat',
+   'ControlsUnit/ListData'
 ], function(
    SelectionController,
    collection,
    entity,
    operations,
    list,
-   FlatSelectionStrategy
+   FlatSelectionStrategy,
+   ListData
 ) {
    'use strict';
    describe('Controls.List.BaseControl.SelectionControllerWithLimit', function() {
       var
          instance,
-         items = [
-            {
-               'id': 1
-            }, {
-               'id': 2
-            }, {
-               'id': 3
-            }, {
-               'id': 4
-            }, {
-               'id': 5
-            }, {
-               'id': 6
-            }, {
-               'id': 7
-            }
-         ],
          rs,
          cfg,
          sandbox;
@@ -41,14 +26,14 @@ define([
       beforeEach(function() {
          sandbox = sinon.createSandbox();
          rs = new collection.RecordSet({
-            keyProperty: 'id',
-            rawData: items
+            keyProperty: ListData.KEY_PROPERTY,
+            rawData: ListData.getFlatItems()
          });
          cfg = {
             selectedKeys: [],
             excludedKeys: [],
             items: rs,
-            keyProperty: 'id',
+            keyProperty: ListData.KEY_PROPERTY,
             selectionStrategy: FlatSelectionStrategy.default,
             listModel: new list.ListViewModel({items: rs})
          };

@@ -26,6 +26,19 @@ define('Controls-demo/SelectionStrategies/SelectionStrategies', [
             keyProperty: 'id',
             data: Data.employees
          });
+      },
+
+      _dataLoadCallback: function() {
+         let entryPath = Data.employees.map(function(employeeData) {
+            return {
+               id: employeeData.id,
+               parent: employeeData['Раздел']
+            }
+         });
+
+         this.items.setMetaData({
+            ENTRY_PATH: entryPath
+         });
       }
    });
 });

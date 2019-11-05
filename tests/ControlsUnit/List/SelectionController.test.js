@@ -6,7 +6,8 @@ define([
    'Controls/list',
    'Controls/treeGrid',
    'Controls/_operations/MultiSelector/SelectionStrategy/Flat',
-   'Controls/_operations/MultiSelector/SelectionStrategy/DeepTree'
+   'Controls/_operations/MultiSelector/SelectionStrategy/DeepTree',
+   'ControlsUnit/ListData'
 ], function(
    SelectionController,
    collection,
@@ -15,50 +16,13 @@ define([
    list,
    treeGrid,
    FlatSelectionStrategy,
-   DeepTreeSelectionStrategy
+   DeepTreeSelectionStrategy,
+   ListData
 ) {
    'use strict';
    describe('Controls.List.BaseControl.SelectionController', function() {
       var
          instance,
-         items = [
-            {
-               'id': 1,
-               'Раздел': null,
-               'Раздел@': true,
-               'Раздел$': true
-            }, {
-               'id': 2,
-               'Раздел': 1,
-               'Раздел@': true,
-               'Раздел$': true
-            }, {
-               'id': 3,
-               'Раздел': 2,
-               'Раздел@': false,
-               'Раздел$': false
-            }, {
-               'id': 4,
-               'Раздел': 2,
-               'Раздел@': false,
-               'Раздел$': false
-            }, {
-               'id': 5,
-               'Раздел': 1,
-               'Раздел@': false,
-               'Раздел$': false
-            }, {
-               'id': 6,
-               'Раздел': null,
-               'Раздел@': true,
-               'Раздел$': false
-            }, {
-               'id': 7,
-               'Раздел': null,
-               'Раздел@': false,
-               'Раздел$': false
-            }
-         ],
          rs,
          cfg,
          sandbox;
@@ -66,17 +30,17 @@ define([
       beforeEach(function() {
          sandbox = sinon.createSandbox();
          rs = new collection.RecordSet({
-            keyProperty: 'id',
-            rawData: items
+            keyProperty: ListData.KEY_PROPERTY,
+            rawData: ListData.getItems()
          });
          cfg = {
             selectedKeys: [],
             excludedKeys: [],
             items: rs,
-            parentProperty: 'Раздел',
-            nodeProperty: 'Раздел@',
+            parentProperty: ListData.PARENT_PROPERTY,
+            nodeProperty: ListData.NODE_PROPERTY,
             selectionStrategy: DeepTreeSelectionStrategy.default,
-            keyProperty: 'id',
+            keyProperty: ListData.KEY_PROPERTY,
             listModel: new treeGrid.ViewModel({columns: [], items: rs})
          };
          instance = new SelectionController();
@@ -116,8 +80,8 @@ define([
             await instance._beforeMount(cfg);
             instance._afterMount();
             var newItems = new collection.RecordSet({
-               keyProperty: 'id',
-               rawData: items.slice(0)
+               keyProperty: ListData.KEY_PROPERTY,
+               rawData: ListData.getItems()
             });
             var newCfg = Object.assign({}, cfg);
             newCfg.items = newItems;
