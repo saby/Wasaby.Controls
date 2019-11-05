@@ -3,7 +3,7 @@
          class="controls-Checkbox__wrapper
                 controls-Checkbox__wrapper_theme-{{_options.theme}}
                 {{_options.readOnly ? 'controls-Checkbox__disabled' : 'controls-Checkbox__enabled'}}
-                {{_options.validationStatus ? 'controls-Checkbox__' + _options.validationStatus + '_theme-' + _options.theme}}
+                {{_options.validationStatus ? 'controls-' + _options.validationStatus + '_theme-' + _options.theme}}
                 {{_options.value ? ' controls-Checked__checked'}}
                 {{_options.value === null && _options.triState ? ' controls-ToggleButton__null'}}"
          title="{{_options.tooltip}}">

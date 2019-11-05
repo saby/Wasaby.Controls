@@ -6,33 +6,3 @@
 .controls-ValidateController__errorMessage_theme-@{themeName} {
    font-size: @font-size_Infobox-message;
 }
-
-.controls-ValidateContainer_style-invalid {
-   padding: 4px;
-   border: @border-thickness solid @danger_color;
-}
-
-.controls-ValidateContainer_style-invalid:focus-within {
-   background-color: rgba(208, 77, 77, 0.2);
-   padding: 4px;
-   border: @border-thickness solid @danger_color;
-}
-
-.controls-ValidateContainer__border-invalid{
-   position: absolute;
-   border: @border-thickness solid @danger_color;
-   width: 100%;
-   height: 100%;
-   left: -5px;
-   pointer-events: none;
-   bottom: -3px;
-   padding: 2px 4px;
-}
-
-.controls-ValidateContainer{
-  position: relative;
-}
-
-.controls-ValidateContainer__border-invalid__active {
-   background-color: @background-color_focus_validate;
-}

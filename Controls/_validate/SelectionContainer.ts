@@ -1,12 +1,12 @@
 import Container from 'Controls/_validate/Container';
 import {TemplateFunction} from 'UI/Base';
-import template = require('wml!Controls/_validate/Selection');
+import template = require('wml!Controls/_validate/SelectionContainer');
 
 /**
  * Контрол, регулирующий валидацию своего контента.
  * Используется с контролами, поддерживающими интерфейс IMultiSelectable( {@link Controls/_interface/IMultiSelectable} )
  * Автоматически запускает валидацию при смене значения в контроле и при его деактивации.
- * @class Controls/_validate/Selection
+ * @class Controls/_validate/SelectionContainer
  * @extends Controls/_validate/Container
  * @control
  * @public

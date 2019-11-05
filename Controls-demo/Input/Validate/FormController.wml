@@ -64,7 +64,8 @@
                         <ws:Function value="{{_instruction }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
                      </ws:validators>
                      <ws:content>
-                        <Controls.toggle:Checkbox bind:value="_instruction" caption="Ознакомлен(-а) с инструкцией"/>
+                        <Controls.toggle:Checkbox attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"
+                                                  bind:value="_instruction" caption="Ознакомлен(-а) с инструкцией"/>
                      </ws:content>
                   </Controls.validate:Container>
                   <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
@@ -72,31 +73,28 @@
                         <ws:Function value="{{_switchState}}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
                      </ws:validators>
                      <ws:content>
-                        <Controls.validate:RedFrame>
-                           <Controls.toggle:Switch bind:value="_switchState" captionPosition="right" caption="State"/>
-                        </Controls.validate:RedFrame>
+                        <Controls.toggle:Switch bind:value="_switchState" captionPosition="right" caption="State"
+                                                attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
                      </ws:content>
                   </Controls.validate:Container>
-                  <Controls.validate:Selection name="ControllerValidate3" attr:class="validateDemo_element">
+                  <Controls.validate:SelectionContainer name="ControllerValidate3" attr:class="validateDemo_element">
                      <ws:validators>
                         <ws:Function value="{{_sourceNumber }}">Controls-demo/Input/Validate/FormController:prototype.isSelected</ws:Function>
                      </ws:validators>
                      <ws:content>
                            <Controls.toggle:RadioGroup
-                                   on:selectedKeyChanged="_selectedHandler()"
-                                   keyProperty="id"
-                                   selectedKey="{{_sourceNumber}}"
-                                   source="{{_sourceConfig}}"/>
+                                   attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"
+                                   on:selectedKeyChanged="_selectedHandler()" keyProperty="id"
+                                   selectedKey="{{_sourceNumber}}" source="{{_sourceConfig}}"/>
                      </ws:content>
-                  </Controls.validate:Selection>
+                  </Controls.validate:SelectionContainer>
                   <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
                      <ws:validators>
                         <ws:Function value="{{false }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
                      </ws:validators>
                      <ws:content>
-                        <Controls.validate:RedFrame>
-                           <Controls.buttons:Button readOnly="{{false}}" caption="Выбрать адрес" fontColorStyle="link" viewMode="link" fontSize="m"/>
-                        </Controls.validate:RedFrame>
+                        <Controls.buttons:Button caption="Выбрать адрес" fontColorStyle="link" viewMode="link" fontSize="m"
+                                                 attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
                      </ws:content>
                   </Controls.validate:Container>
                   <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
@@ -104,9 +102,9 @@
                         <ws:Function value="{{false }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
                      </ws:validators>
                      <ws:content>
-                        <Controls.validate:RedFrame>
-                           <Controls.buttons:Button readOnly="{{false}}" icon="icon-Send" iconSize="s" iconStyle="secondary" caption="Отправить" fontColorStyle="link" viewMode="link" fontSize="m"/>
-                        </Controls.validate:RedFrame>
+                        <Controls.buttons:Button icon="icon-Send" iconSize="s" caption="Отправить" fontColorStyle="link"
+                                                 viewMode="link" fontSize="m"
+                                                 attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
                      </ws:content>
                   </Controls.validate:Container>
                   <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
@@ -114,9 +112,8 @@
                         <ws:Function value="{{false }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
                      </ws:validators>
                      <ws:content>
-                        <Controls.validate:RedFrame>
-                           <Controls.list:AddButton readOnly="{{false}}" caption="Наименование"/>
-                        </Controls.validate:RedFrame>
+                        <Controls.list:AddButton readOnly="{{false}}" caption="Наименование"
+                                                 attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
                      </ws:content>
                   </Controls.validate:Container>
                   <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
@@ -124,9 +121,8 @@
                         <ws:Function value="{{false }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
                      </ws:validators>
                      <ws:content>
-                        <Controls.validate:RedFrame>
-                           <Controls.buttons:Button readOnly="{{false}}" iconSize="m" icon="icon-Save" fontColorStyle="link" viewMode="link" fontSize="m"/>
-                        </Controls.validate:RedFrame>
+                        <Controls.buttons:Button iconSize="m" icon="icon-Save" fontColorStyle="link" viewMode="link" fontSize="m"
+                                                 attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
                      </ws:content>
                   </Controls.validate:Container>
                   <Controls.buttons:Button caption="Проверить данные" attr:style="margin: 10px 0 0 16px;" name="updateButton" on:click="_clickHandler()"
