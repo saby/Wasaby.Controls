@@ -76,15 +76,26 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemKeyDown(e: SyntheticEvent<KeyboardEvent>, item: CollectionItem<unknown>): void {
-        // TODO (moved from editing row)
-        // keydown event should not bubble if processed here, but if we stop propagation
-        // the rich text editor and tab focus movement would break because they listen
-        // to the keydown event on the bubbling phase
-        // https://online.sbis.ru/opendoc.html?guid=cefa8cd9-6a81-47cf-b642-068f9b3898b7
-        if (!e.target.closest('.richEditor_TinyMCE') && e.nativeEvent.keyCode !== constants.key.tab) {
-            event.stopPropagation();
-        }
         if (item.isEditing()) {
+            // TODO Will probably be moved to EditInPlace container
+            // keydown event should not bubble if processed here, but if we stop propagation
+            // the rich text editor and tab focus movement would break because they listen
+            // to the keydown event on the bubbling phase
+            // https://online.sbis.ru/opendoc.html?guid=cefa8cd9-6a81-47cf-b642-068f9b3898b7
+            //
+            // Escape should not bubble above the edit in place row, because it is only
+            // used to cancel the edit mode. If the keydown event bubbles, some parent
+            // control might handle the event when it is not needed (e.g. if edit in
+            // place is inside of a popup, the popup will be closed).
+            if (
+                e.nativeEvent.keyCode === constants.key.esc ||
+                (
+                    !e.target.closest('.richEditor_TinyMCE') &&
+                    e.nativeEvent.keyCode !== constants.key.tab
+                )
+            ) {
+                e.stopPropagation();
+            }
             // Compatibility with BaseControl and EditInPlace control
             this._notify('editingRowKeyDown', [e.nativeEvent], {bubbling: true});
         }
