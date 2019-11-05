@@ -12,6 +12,7 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
     * @extends Core/Control
     * @mixes Controls/_interface/ISource
     * @mixes Controls/_interface/ISingleSelectable
+    * @mixes Controls/_interface/IValidationStatus
     * @implements Controls/_toggle/interface/IToggleGroup
     * @control
     * @public

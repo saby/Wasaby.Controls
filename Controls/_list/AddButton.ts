@@ -12,6 +12,7 @@ import 'css!theme?Controls/list';
  * @public
  * @author Красильников А.С.
  * @mixes Controls/_list/AddButton/Styles
+ * @mixes Controls/_interface/IValidationStatus
  *
  *
  * @name Controls/_list/AddButton#caption

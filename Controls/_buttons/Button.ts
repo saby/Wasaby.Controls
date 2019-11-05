@@ -19,13 +19,15 @@ import {
     IIconStyle,
     IIconStyleOptions,
     ITooltip,
-    ITooltipOptions
+    ITooltipOptions,
+    IValidationStatus,
+    IValidationStatusOptions
 } from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import ButtonTemplate = require('wml!Controls/_buttons/Button');
 
 export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
-   IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions,
+   IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions, IValidationStatusOptions,
    IButtonOptions {}
 
 /**
@@ -85,7 +87,7 @@ export interface IButtonOptions extends IControlOptions, IHrefOptions, ICaptionO
  * @demo Controls-demo/Buttons/ButtonDemoPG
  */
 class Button extends Control<IButtonOptions> implements
-      IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize, IClick, IFontColorStyle, IFontSize, IHeight, IButton {
+      IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize, IClick, IFontColorStyle, IFontSize, IHeight, IValidationStatus, IButton {
    protected _template: TemplateFunction = ButtonTemplate;
 
    // Называть _style нельзя, так как это состояние используется для темизации
