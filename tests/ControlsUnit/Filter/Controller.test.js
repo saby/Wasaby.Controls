@@ -270,6 +270,19 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          assert.deepEqual(items, opt);
       });
 
+      it('_private.processPrefetchOnItemsChanged', () => {
+         const sandbox = sinon.createSandbox();
+         const self = {};
+
+         self._filter = {
+            PrefetchSessionId: 'testId',
+            testFilterFilter: 'testValue'
+         };
+         sandbox.replace(Filter._private, 'getHistoryByItems', () => null);
+
+         assert.deepEqual(Filter._private.processPrefetchOnItemsChanged(self, {}), { testFilterFilter: 'testValue' });
+      });
+
       it('_private.getItemsByOption::function', function () {
          var opt = [{
             id: 'testId',
