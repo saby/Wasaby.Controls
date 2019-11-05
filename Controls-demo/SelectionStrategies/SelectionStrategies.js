@@ -29,7 +29,7 @@ define('Controls-demo/SelectionStrategies/SelectionStrategies', [
       },
 
       _dataLoadCallback: function() {
-         let entryPath = Data.employees.map(function(employeeData) {
+         var entryPath = Data.employees.map(function(employeeData) {
             return {
                id: employeeData.id,
                parent: employeeData['Раздел']
