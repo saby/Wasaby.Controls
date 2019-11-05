@@ -17,13 +17,13 @@ const ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
 const ACTION_TYPE = 'itemActionsUpdated';
 
 var _private = {
-    fillItemAllActions: function(item, options) {
+    fillItemAllActions: function(item, options, isSwipe) {
         var actions = [];
         if (options.itemActionsProperty) {
             actions = item.get(options.itemActionsProperty);
         } else {
             options.itemActions.forEach(function(action) {
-                if (!options.itemActionVisibilityCallback || options.itemActionVisibilityCallback(action, item)) {
+                if (!options.itemActionVisibilityCallback || options.itemActionVisibilityCallback(action, item, isSwipe)) {
                     if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
                         action.icon += ' ' + ACTION_ICON_CLASS;
                     }
@@ -36,7 +36,7 @@ var _private = {
         return actions;
     },
 
-    updateItemActions: function(self, item, options) {
+    updateItemActions: function(self, item, options, isSwipe) {
         // TODO Remove this, compatibility between management controls
         if (options.useNewModel && !item.getContents) {
             item = options.listModel.getItemBySourceId(item.get(options.listModel.getKeyProperty()));
@@ -44,7 +44,8 @@ var _private = {
 
         const all = _private.fillItemAllActions(
             options.useNewModel ? item.getContents() : item,
-            options
+            options,
+            isSwipe
         );
 
         let showed = all;
@@ -192,8 +193,8 @@ var ItemActionsControl = Control.extend({
         this._notify('cancelActionClick', [item]);
     },
 
-    updateItemActions: function(item) {
-        _private.updateItemActions(this, item, this._options);
+    updateItemActions: function(item, isSwipe) {
+        _private.updateItemActions(this, item, this._options, isSwipe);
         if (!this._options.useNewModel) {
             this._options.listModel.nextModelVersion(true, ACTION_TYPE);
         }

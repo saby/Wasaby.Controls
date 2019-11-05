@@ -142,7 +142,7 @@
  * В свойству задают имя прикладного класса, которое в результате преобразуется в класс вида "controls-itemActionsV__action_style_имя_прикладного_класса".
  * Он будет установлен для html-контейнера самой операции над записью, а его свойства будут применены как к тексту (свойство title), так и к иконке (свойство icon).
  * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/#config-style">руководство разработчика</a>.
- * @property {String} [iconStyle=default] Стиль иконки. 
+ * @property {String} [iconStyle=default] Стиль иконки.
  * Возможные значения: default, attention, error и done.
  * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/#config-style">руководство разработчика</a>.
  * @property {Function} handler Обработчик операции.
@@ -169,7 +169,7 @@
  * @name Controls/_list/interface/IList#itemActions
  * @cfg {Array.<ItemAction>} Конфигурация кнопок, которые будут отображаться при наведении указателя мыши на элемент.
  * <a href="/materials/demo-ws4-list-item-actions">См. демо-пример</a>.
- * Внимание: обязательно установите значение в опции <a href="/docs/js/Controls/grid/View/options/keyProperty/">keyProperty</a>, чтобы операции над записью работали корректно. 
+ * Внимание: обязательно установите значение в опции <a href="/docs/js/Controls/grid/View/options/keyProperty/">keyProperty</a>, чтобы операции над записью работали корректно.
  */
 
 /*
@@ -350,10 +350,11 @@
  * @name Controls/_list/interface/IList#itemActionVisibilityCallback
  * @cfg {Function} Функция обратного вызова для определения видимости элементов в панели действий над записью.
  * @remark
- * Функция принимает два аргумента:
+ * Функция принимает три аргумента:
  * <ol>
  *    <li>action — объект с конфигурацией конкретной операции. Свойства объекта описаны <a href="/docs/js/Controls/list/IList/typedefs/ItemAction/">здесь</a>.</li>
  *    <li>item — модель (см. {@link Types/entity:Model}), содержащая данные записи. </li>
+ *    <li>isSwipe — логический. Принимает значение true, если вызвали меню по свайпу. </li>
  * </ol>
  * Для видимости элемента, из функции следует вернуть true.
  * @example
@@ -389,6 +390,7 @@
  * @cfg {Function} item operation visibility filter function
  * @param {ItemAction} action Object with configuration of an action.
  * @param {Types/entity:Model} item Instance of the item whose action is being processed.
+ * @param {Boolean} isSwipe Indicates if swipe menu is opening.
  * @returns {Boolean} Determines whether the action should be rendered.
  * @example
  * Item action Read don't display if item has property isNew === false

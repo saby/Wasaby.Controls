@@ -2270,7 +2270,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         const actionsItem = this._options.useNewModel ? itemData : itemData.actionsItem;
         if (direction === 'left' && this._hasItemActions && !this._options.useNewModel) {
-            this._children.itemActions.updateItemActions(actionsItem);
+            this._children.itemActions.updateItemActions(actionsItem, true);
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
             itemData.itemActions = this.getViewModel().getItemActions(actionsItem);
