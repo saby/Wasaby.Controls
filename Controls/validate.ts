@@ -27,9 +27,14 @@
  * @author Красильников А.С.
  */
 
+import Controller = require('Controls/_validate/Controller');
+import Container = require('Controls/_validate/Container');
+import InputContainer = require('Controls/_validate/InputContainer');
+import DateRangeContainer = require('Controls/_validate/DateRange');
 import isEmail = require('Controls/_validate/Validators/IsEmail');
 import isRequired = require('Controls/_validate/Validators/IsRequired');
 import isValidDate = require('Controls/_validate/Validators/IsValidDate');
+import Selection = require('Controls/_validate/Selection');
 import isValidDateRange from 'Controls/_validate/Validators/IsValidDateRange';
 
 export {default as Controller} from 'Controls/_validate/Controller';
@@ -37,7 +42,7 @@ export {default as Container} from 'Controls/_validate/Container';
 export {default as InputContainer} from 'Controls/_validate/InputContainer';
 export {default as DateRangeContainer} from 'Controls/_validate/DateRange';
 export {default as Selection} from 'Controls/_validate/Selection';
-
+export {default as RedFrame} from 'Controls/_validate/RedFrame';
 export {
     isEmail,
     isRequired,

@@ -27,6 +27,11 @@ class Selection extends Container {
         this._cleanValid();
     }
 
+    _selectedKeyChangedHandler(event: Event, value: string): void {
+        this._notify('selectedKeyChanged', [value]);
+        this._cleanValid();
+    }
+
     protected _afterUpdate(): void {
         if (this._shouldValidate) {
             this._shouldValidate = false;
