@@ -468,6 +468,77 @@ define(
          });
       });
 
+      it('restores scroll after scrollbar drag end', () => {
+         let scrollContainer = new scrollMod.Container({});
+         scrollContainer._children = {
+            content: {
+               scrollHeight: 200,
+               offsetHeight: 100,
+               scrollTop: 100
+            },
+            scrollDetect: {
+               start: () => null
+            }
+         };
+
+         // Dragging scrollbar to 0
+         scrollContainer._dragging = true;
+         scrollContainer._children.content.scrollTop = 0;
+         scrollContainer._scrollTop = 0;
+         scrollContainer._scrollHandler({});
+
+         // Scroll position is restored from outside
+         scrollContainer._children.content.scrollTop = 50;
+         scrollContainer._scrollHandler({});
+
+         assert.strictEqual(scrollContainer._scrollTop, 0,
+            'scroll top should not change because scroll bar is being dragged');
+
+         // Dragging stops
+         scrollContainer._draggingChangedHandler({}, false);
+
+         assert.strictEqual(scrollContainer._scrollTop, 50,
+            'restored scroll top value should be applied after drag end');
+      });
+
+      it('does not restore scroll after drag end if it was cancelled by dragging', () => {
+         let scrollContainer = new scrollMod.Container({});
+         scrollContainer._children = {
+            content: {
+               scrollHeight: 200,
+               offsetHeight: 100,
+               scrollTop: 100
+            },
+            scrollDetect: {
+               start: () => null
+            }
+         };
+
+         // Dragging scrollbar to 0
+         scrollContainer._dragging = true;
+         scrollContainer._children.content.scrollTop = 0;
+         scrollContainer._scrollTop = 0;
+         scrollContainer._scrollHandler({});
+
+         // Scroll position is restored from outside
+         scrollContainer._children.content.scrollTop = 50;
+         scrollContainer._scrollHandler({});
+
+         assert.strictEqual(scrollContainer._scrollTop, 0,
+            'scroll top should not change because scroll bar is being dragged');
+
+         // Dragging scrollbar to 100
+         scrollContainer._children.content.scrollTop = 100;
+         scrollContainer._scrollHandler({});
+         scrollContainer._scrollTop = 100;
+
+         // Dragging stops
+         scrollContainer._draggingChangedHandler({}, false);
+
+         assert.strictEqual(scrollContainer._scrollTop, 100,
+            'restored scroll top value should not be applied after drag end, because it was changed by dragging');
+      });
+
       describe('Controls.Container.Shadow', function() {
          var result;
          describe('calcShadowPosition', function() {
