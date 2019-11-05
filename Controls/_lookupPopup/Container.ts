@@ -332,8 +332,9 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
                   loadItemsPromise = Promise.resolve(selectedItems);
                } else {
                   const sourceController = _private.getSourceController(dataOptions.source);
-                  const loadItemsCallback = () => {
+                  const loadItemsCallback = (loadedItems) => {
                      self._notify('hideIndicator', [indicatorId], {bubbling: true});
+                     return loadedItems;
                   };
 
                   indicatorId = self._notify('showIndicator', [], {bubbling: true});
