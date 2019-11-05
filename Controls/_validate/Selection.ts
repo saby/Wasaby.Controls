@@ -24,6 +24,10 @@ import template = require('wml!Controls/_validate/Selection');
             this._notify('selectedKeysChanged', [value]);
             this._cleanValid();
          },
+         _selectedKeyChangedHandler: function(event, value) {
+            this._notify('selectedKeyChanged', [value]);
+            this._cleanValid();
+         },
 
          _afterUpdate: function() {
             if (this._shouldValidate) {

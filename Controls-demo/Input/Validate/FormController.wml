@@ -77,9 +77,9 @@
                         </Controls.validate:RedFrame>
                      </ws:content>
                   </Controls.validate:Container>
-                  <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
+                  <Controls.validate:Selection name="ControllerValidate3" attr:class="validateDemo_element">
                      <ws:validators>
-                        <ws:Function value="{{_sourceNumber }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>
+                        <ws:Function value="{{_sourceNumber }}">Controls-demo/Input/Validate/FormController:prototype.isSelected</ws:Function>
                      </ws:validators>
                      <ws:content>
                            <Controls.toggle:RadioGroup
@@ -88,7 +88,7 @@
                                    selectedKey="{{_sourceNumber}}"
                                    source="{{_sourceConfig}}"/>
                      </ws:content>
-                  </Controls.validate:Container>
+                  </Controls.validate:Selection>
                   <Controls.validate:Container name="ControllerValidate3" attr:class="validateDemo_element">
                      <ws:validators>
                         <ws:Function value="{{false }}">Controls-demo/Input/Validate/FormController:prototype.isTrue</ws:Function>

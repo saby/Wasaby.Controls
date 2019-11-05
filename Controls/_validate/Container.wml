@@ -2,7 +2,6 @@
             style="{{_isValidResult() ? 'invalid': 'info'}}"
             validationStatus="{{_isValidResult() ? 'invalid': 'valid'}}"
             scope="{{_options}}"
-            validationErrors="{{isValid()}}"
             on:mouseenter="_hoverHandler()"
             on:focusIn="_focusInHandler()"
             on:valueChanged="_valueChangedHandler()"

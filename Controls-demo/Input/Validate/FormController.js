@@ -27,7 +27,7 @@ define('Controls-demo/Input/Validate/FormController', [
       _valueReadOnly: '234567',
       _items: null,
       _sourceConfig: null,
-      _sourceNumber: 0,
+      _sourceNumber: undefined,
       _placeholder: 'Input text',
       _beforeMount: function() {
          this._sourceConfig = new source.Memory({
@@ -49,6 +49,9 @@ define('Controls-demo/Input/Validate/FormController', [
       },
       isTrue: function(args) {
          return args.value ? true : 'Обязательное поле';
+      },
+      isSelected: function(args) {
+         return args.value != undefined ? true : 'Обязательное поле';
       },
       _clickHandler: function() {
          var self = this;
