@@ -121,15 +121,6 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
  * </pre>
  */
 
-/**
- * @name Controls/_lookupPopup/Container#selectionLoadMode
- * @cfg {Boolean} Опеределяет, будует ли загрузжаться выбранные записи при завершении выбора.
- * @default true
- * @remark
- * Если значение опции установить в false, то в качестве результата выбора будет возвращён
- * объект фильтра с сформированным selection'ом по отмеченным записям в списке.
- */
-
 /*
  * @name Controls/_lookupPopup/Container#selectionType
  * @cfg {String} Type of records that can be selected.
@@ -397,6 +388,10 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
             const selection = _private.getSelection(selectionObject, adapter, options.selectionType, isRecursive);
             const filter = _private.prepareFilter(dataOptions.filter, selection, options.searchParam, options.parentProperty);
 
+            // FIXME https://online.sbis.ru/opendoc.html?guid=7ff270b7-c815-4633-aac5-92d14032db6f 
+            // необходимо уйти от опции selectionLoadMode и вынести загрузку
+            // выбранный записей в отдельный слой.
+            // здесь будет только формирование фильтра
             if (this._options.selectionLoadMode) {
                loadPromise = new Promise((resolve) => {
                   _private.loadSelectedItems(this, filter).then((loadedItems) => {
