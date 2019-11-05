@@ -20,6 +20,13 @@ interface IOptions extends IControlOptions {
     useNewModel: boolean;
     virtualScrolling: boolean;
     scrollCalculation: boolean;
+    shouldCheckActiveElement: boolean;
+}
+
+interface IScrollParams {
+    scrollTop: number;
+    clientHeight: number;
+    scrollHeight: number;
 }
 
 const DEFAULT_TRIGGER_OFFSET = 100;
@@ -38,6 +45,7 @@ export default class ScrollController extends Control<IOptions> {
     protected _template: TemplateFunction = template;
     protected virtualScroll: VirtualScroll;
     private itemsContainer: HTMLElement;
+    private scrollParams: IScrollParams;
 
     // Сущность управляющая инерционным скроллингом на мобильных устройствах
     private inertialScrolling: InertialScrolling = new InertialScrolling();
@@ -240,7 +248,7 @@ export default class ScrollController extends Control<IOptions> {
                         if (this.itemsFromLoadToDirection) {
                             this.savedStopIndex += newItems.length;
                             this.savedStartIndex += newItems.length;
-                            this.virtualScroll.setStartIndex(this.actualStartIndex);
+                            this.virtualScroll.setStartIndex(this.actualStartIndex + newItems.length);
                         }
                         this.virtualScroll.recalcFromNewItems(direction);
                     }
@@ -409,16 +417,28 @@ export default class ScrollController extends Control<IOptions> {
         this.proxyEvent('viewPortResize', [viewportHeight]);
     }
 
-    private handleListScrollSync(params: unknown): void {
+    private handleListScrollSync(params: IScrollParams): void {
         if (detection.isMobileIOS) {
             this.inertialScrolling.scrollStarted();
         }
 
         if (this._options.virtualScrolling) {
             this.virtualScroll.scrollTop = params.scrollTop;
+            this.virtualScroll.viewportHeight = params.clientHeight;
+            this.virtualScroll.itemsContainerHeight = params.scrollHeight;
+
+            if (this._options.shouldCheckActiveElement && !this.afterRenderCallback) {
+                const activeIndex = this.virtualScroll.getActiveElement();
+
+                if (activeIndex) {
+                    this._notify('activeElementChanged', [
+                        this._options.viewModel.at(activeIndex).getUid()
+                    ]);
+                }
+            }
         }
 
-        this.proxyEvent('scrollMoveSync', params);
+        this.proxyEvent('scrollMoveSync', [params]);
     }
 
     private proxyEvent(type: string, params: unknown[]): void {
@@ -436,8 +456,9 @@ export default class ScrollController extends Control<IOptions> {
      * @param {unknown} params
      * @remark Если виртуальный скроллинг отключен, то вызывает подгрузку данных
      */
-    private updateViewWindow(direction: IDirection, params?: unknown): void {
+    private updateViewWindow(direction: IDirection, params?: IScrollParams): void {
         this.changeTriggerVisibility(direction, true);
+        this.scrollParams = params;
         if (this._options.virtualScrolling) {
             if (params) {
                 this.virtualScroll.viewportHeight = params.clientHeight;
@@ -501,7 +522,6 @@ export default class ScrollController extends Control<IOptions> {
 
     static getDefaultOptions(): Partial<IOptions> {
         return {
-            virtualSegmentSize: 25,
             virtualPageSize: 100,
             virtualPageSizeMode: 'static',
             virtualScrollMode: 'remove'

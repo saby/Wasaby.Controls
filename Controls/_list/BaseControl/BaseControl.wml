@@ -81,6 +81,7 @@
             on:updateShadowMode="updateShadowModeHandler()"
             on:triggerVisibilityChanged="triggerVisibilityChangedHandler()"
             on:triggerOffsetChanged="triggerOffsetChangedHandler()"
+            on:activeElementChanged="_notifyHandler('activeElementChanged')"
             viewModel="{{_listViewModel}}"
             scrollCalculation="{{_needScrollCalculation}}"
             scope="{{_options}}">

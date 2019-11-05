@@ -36,6 +36,7 @@ export default class VirtualScrollController {
     itemsCount: number = 0;
     viewportHeight: number = 0;
     scrollTop: number = 0;
+    itemsContainerHeight: number = 0;
 
     private _itemsContainer: HTMLElement;
 
@@ -279,6 +280,37 @@ export default class VirtualScrollController {
     setStartIndex(index: number): void {
         this.startIndex = Math.max(0, index);
         this.stopIndex = Math.min(this.itemsCount, this.startIndex + this.pageSize);
+    }
+
+    getActiveElement(): number {
+        if (this.isScrolledToBottom()) {
+            return this.stopIndex - 1;
+        } else if (this.isScrolledToTop()) {
+            return this.startIndex;
+        } else {
+            let itemIndex;
+            const halfDivider = 2;
+            const viewportCenter = this.scrollTop + (this.viewportHeight / halfDivider);
+
+            for (let i = this.startIndex; i < this.stopIndex; i++) {
+                if (this.itemsOffsets[i] < viewportCenter) {
+                    itemIndex = i;
+                } else {
+                    break;
+                }
+            }
+
+            return itemIndex;
+        }
+    }
+
+    private isScrolledToBottom(): boolean {
+        return this.stopIndex === this.itemsCount &&
+            this.scrollTop + this.viewportHeight === this.itemsContainerHeight;
+    }
+
+    private isScrolledToTop(): boolean {
+        return this.scrollTop === 0 && this.startIndex === 0;
     }
 
     /**

@@ -101,6 +101,15 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             assert.equal(10, vsInstance.startIndex);
             assert.equal(30, vsInstance.stopIndex);
         });
+        it('getActiveElement', () => {
+            vsInstance.itemsContainerHeight = 600;
+            vsInstance.scrollTop = 0;
+            assert.equal(0, vsInstance.getActiveElement());
+            vsInstance.scrollTop = 200;
+            assert.equal(19, vsInstance.getActiveElement());
+            vsInstance.scrollTop = 100;
+            assert.equal(9, vsInstance.getActiveElement());
+        });
     });
     describe('dynamic virtual scroll', () => {
         let vsInstance = new VirtualScroll({

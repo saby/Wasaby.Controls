@@ -21,7 +21,7 @@ export default class VirtualScrollManager extends BaseManager<IVirtualScrollMana
     private _rendered: Record<string, boolean> = {};
 
     applyRenderedItems(startIndex: number, stopIndex: number) {
-        for (let i = startIndex; i <= stopIndex; i++) {
+        for (let i = startIndex; i < stopIndex; i++) {
             this._rendered[this._collection.at(i).getUid()] = true;
         }
     }
