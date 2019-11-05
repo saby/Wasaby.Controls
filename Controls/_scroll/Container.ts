@@ -272,6 +272,8 @@ var
       _topPlaceholderSize: 0,
       _bottomPlaceholderSize: 0,
 
+      _scrollTopAfterDragEnd: undefined,
+
       constructor: function(cfg) {
          Scroll.superclass.constructor.call(this, cfg);
       },
@@ -505,6 +507,13 @@ var
             if (!this._dragging) {
                this._scrollTop = scrollTop;
                this._notify('scroll', [this._scrollTop]);
+            } else {
+               // scrollTop нам во время перетаскивания могут проставить извне (например
+               // восстановив скролл после подгрузки новых данных). Во время перетаскивания,
+               // мы не меняем наш scrollTop, чтобы сам скролл и позиция ползунка не
+               // перепрыгнули из под мышки пользователя, но запомним эту позицию,
+               // возможно нужно будет установить ее после завершения перетаскивания
+               this._scrollTopAfterDragEnd = scrollTop;
             }
             this._children.scrollDetect.start(ev, this._scrollTop);
          }
@@ -629,6 +638,15 @@ var
 
       _draggingChangedHandler: function(event, dragging) {
          this._dragging = dragging;
+         if (!dragging && typeof this._scrollTopAfterDragEnd !== 'undefined') {
+            // В случае если запомненная позиция скролла для восстановления не совпадает с
+            // текущей, установим ее при окончании перетаскивания
+            if (this._scrollTopAfterDragEnd !== this._scrollTop) {
+               this._scrollTop = this._scrollTopAfterDragEnd;
+               this._notify('scroll', [this._scrollTop]);
+            }
+            this._scrollTopAfterDragEnd = undefined;
+         }
       },
 
       /**
@@ -825,4 +843,3 @@ Scroll.contextTypes = function() {
 Scroll._private = _private;
 
 export = Scroll;
-
