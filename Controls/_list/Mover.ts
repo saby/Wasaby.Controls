@@ -4,6 +4,7 @@ import cInstance = require('Core/core-instance');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 import template = require('wml!Controls/_list/Mover/Mover');
+import {isEqual} from 'Types/object';
 import Env = require('Env/Env');
 import {ContextOptions as dataOptions} from 'Controls/context';
 import {Confirmation} from 'Controls/popup';
@@ -277,6 +278,9 @@ var Mover = Control.extend({
 
     _beforeUpdate: function (options, context) {
         _private.updateDataOptions(this, context.dataOptions);
+        if (options.moveDialogTemplate && options.moveDialogTemplate.templateOptions && !isEqual(this._moveDialogOptions, options.moveDialogTemplate.templateOptions)) {
+           this._moveDialogOptions = options.moveDialogTemplate.templateOptions;
+        }
     },
 
     _onDialogResult: function (event, target, items) {

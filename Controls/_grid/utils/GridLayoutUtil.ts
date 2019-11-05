@@ -91,7 +91,7 @@ function getCellStyles(cfg: IColumnOptions & IRowOptions): string {
     return getColumnStyles(cfg) + ' ' + getRowStyles(cfg);
 }
 
-function getMultyHeaderStyles(columnStart: number, columnEnd: number, rowStart: number, rowEnd: number, additionalColumn: number): string {
+function getMultiHeaderStyles(columnStart: number, columnEnd: number, rowStart: number, rowEnd: number, additionalColumn: number): string {
     return getCellStyles({
         columnStart: columnStart + additionalColumn - 1,
         columnEnd: columnEnd + additionalColumn - 1,
@@ -142,5 +142,5 @@ export {
     getTemplateColumnsStyle,
     getGridLayoutStyles,
     toCssString,
-    getMultyHeaderStyles
+    getMultiHeaderStyles
 };

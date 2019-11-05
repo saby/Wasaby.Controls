@@ -2,7 +2,7 @@
     <ws:if data="{{ multiselect === 'hidden' || headerColumn.index !== 0 || headerColumn.column.title}}">
         <ws:if data="{{!!headerColumn.column.template}}">
             <ws:partial
-                    attr:class="controls-Grid__header-cell__content {{listModel._isMultyHeader ? ' controls-Grid__row-multy-header__content_baseline' : ' controls-Grid__row-header__content_baseline'}} {{headerColumn.cellContentClasses}}"
+                    attr:class="controls-Grid__header-cell__content_theme-{{_options.theme}} {{listModel._isMultiHeader ? ' controls-Grid__row-multi-header__content_baseline' : ' controls-Grid__row-header__content_baseline'}}_theme-{{_options.theme}} {{headerColumn.cellContentClasses}}"
                     template="{{headerColumn.column.template}}"
                     scope="{{ headerColumn.column.templateOptions }}"
                     colData="{{headerColumn}}"/>
@@ -10,7 +10,7 @@
         </ws:if>
         <ws:else>
             <ws:partial
-                    attr:class="{{listModel._isMultyHeader ? ' controls-Grid__row-multy-header__content_baseline' : ' controls-Grid__row-header__content_baseline'}}{{headerColumn.cellContentClasses}}"
+                    attr:class="{{listModel._isMultiHeader ? ' controls-Grid__row-multi-header__content_baseline' : ' controls-Grid__row-header__content_baseline'}}_theme-{{_options.theme}} {{headerColumn.cellContentClasses}}"
                     template="{{defaultHeaderContent}}"
                     colData="{{headerColumn}}"/>
         </ws:else>
@@ -37,14 +37,13 @@
                         defaultHeaderContent="{{defaultHeaderContent}}"
                         listModel="{{listModel}}"
                         headerColumn="{{ headerRow.getCurrentHeaderColumn() }}"
-                        class="{{listModel.isPartialGridSupport()?'controls-Grid__header':''}}"
                         multiselect="{{ listModel.getMultiSelectVisibility() }}"
                         on:arrowClick="_notifyHandler('arrowClick')"/>
         </ws:if>
     </ws:for>
 </ws:template>
 
-<thead class="controls-Grid__header">
+<thead class="controls-Grid__header controls-Grid__header_theme-{{_options.theme}}">
     {{ listModel.resetHeaderRows() }}
     <ws:for data="listModel.resetHeaderRows(); listModel.isEndHeaderRow(); listModel.goToNextHeaderRow();">
         <tr>

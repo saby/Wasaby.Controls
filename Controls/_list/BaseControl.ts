@@ -292,7 +292,13 @@ var _private = {
     },
     setMarkedKey: function(self, key) {
         if (key !== undefined) {
-            self.getViewModel().setMarkedKey(key);
+            // TODO Update after MarkerManager is fully implemented
+            const model = self.getViewModel();
+            if (self._options.useNewModel) {
+                model.setMarkedItem(model.getItemBySourceId(key));
+            } else {
+                model.setMarkedKey(key);
+            }
             _private.scrollToItem(self, key);
         }
     },
@@ -333,7 +339,18 @@ var _private = {
         if (self._options.markerVisibility !== 'hidden') {
             event.preventDefault();
             var model = self.getViewModel();
-            _private.moveMarker(self, model.getNextItemKey(model.getMarkedKey()));
+
+            // TODO Update after MarkerManager is fully implemented
+            let nextKey;
+            if (self._options.useNewModel) {
+                const nextItem = model.getNext(model.getMarkedItem());
+                const contents = nextItem && nextItem.getContents();
+                nextKey = contents && contents.getId();
+            } else {
+                nextKey = model.getNextItemKey(model.getMarkedKey());
+            }
+
+            _private.moveMarker(self, nextKey);
         }
     },
     moveMarkerToPrevious: function (self, event) {
@@ -343,7 +360,18 @@ var _private = {
         if (self._options.markerVisibility !== 'hidden') {
             event.preventDefault();
             var model = self.getViewModel();
-            _private.moveMarker(self, model.getPreviousItemKey(model.getMarkedKey()));
+
+            // TODO Update after MarkerManager is fully implemented
+            let prevKey;
+            if (self._options.useNewModel) {
+                const prevItem = model.getPrevious(model.getMarkedItem());
+                const contents = prevItem && prevItem.getContents();
+                prevKey = contents && contents.getId();
+            } else {
+                prevKey = model.getPreviousItemKey(model.getMarkedKey());
+            }
+
+            _private.moveMarker(self, prevKey);
         }
     },
     setMarkerAfterScroll(self, event) {
