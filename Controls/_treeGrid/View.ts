@@ -102,7 +102,7 @@ import TreeControl = require('Controls/_treeGrid/TreeControl');
       _viewName: TreeGridView,
       _viewTemplate: TreeControl,
 
-      _theme: ['Controls/grid', 'Controls/treeGrid'],
+
       _getModelConstructor: function() {
          return TreeGridViewModel;
       },
