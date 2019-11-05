@@ -158,16 +158,19 @@
 .controls-TreeGrid__row-levelPadding_size_l_theme-@{themeName} {
    width: @width-TreeGridView-levelPadding_size_l;
 }
-.controls-TreeGrid__row-levelPadding_size_xl_theme-@{themeName} {
+.controls-TreeGrid__row-levelPadding_size_xl_theme-@{themeName}{
    width: @width-TreeGridView-levelPadding_size_xl;
 }
-.controls-TreeGrid__row-cell_theme-@{themeName}.controls-TreeGrid__row-cell__node_theme-@{themeName} {
+.controls-TreeGrid__row-cell_theme-@{themeName}.controls-TreeGrid__row-cell__node_theme-@{themeName},
+.controls-TreeGrid__row-cell__node_theme-@{themeName} .controls-EditingTemplateText {
   font-size: @font-size_TreeGridView-row-cell-node;
 }
-.controls-TreeGrid__row-cell_theme-@{themeName}.controls-TreeGrid__row-cell__hiddenNode_theme-@{themeName} {
+.controls-TreeGrid__row-cell_theme-@{themeName}.controls-TreeGrid__row-cell__hiddenNode_theme-@{themeName},
+.controls-TreeGrid__row-cell__hiddenNode_theme-@{themeName} .controls-EditingTemplateText {
   font-size: @font-size_TreeGridView-row-cell-hiddenNode;
 }
-.controls-TreeGrid__row-cell_theme-@{themeName}.controls-TreeGrid__row-cell__item_theme-@{themeName} {
+.controls-TreeGrid__row-cell_theme-@{themeName}.controls-TreeGrid__row-cell__item_theme-@{themeName},
+.controls-TreeGrid__row-cell__item_theme-@{themeName} .controls-EditingTemplateText {
   font-size: @font-size_TreeGridView-row-cell-item;
 }
 
