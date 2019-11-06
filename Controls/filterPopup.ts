@@ -19,6 +19,7 @@
  * @includes DropdownStyles Controls/_filterPopup/Panel/Dropdown/Styles
  * @includes AdditionalParamsStyles Controls/_filterPopup/Panel/AdditionalParams/Styles
  * @includes SimplePanelStyles Controls/_filterPopup/SimplePanel/SimplePanelStyles
+ * @includes HierarchyLookup Controls/_filterPopup/Panel/HierarchyLookup
  * @public
  * @author Крайнов Д.О.
  */
@@ -43,6 +44,7 @@
  * @includes DropdownStyles Controls/_filterPopup/Panel/Dropdown/Styles
  * @includes AdditionalParamsStyles Controls/_filterPopup/Panel/AdditionalParams/Styles
  * @includes SimplePanelStyles Controls/_filterPopup/SimplePanel/SimplePanelStyles
+ * @includes HierarchyLookup Controls/_filterPopup/Panel/HierarchyLookup
  * @public
  * @author Крайнов Д.О.
  */
