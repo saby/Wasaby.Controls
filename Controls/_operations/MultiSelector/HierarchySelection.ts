@@ -72,21 +72,18 @@ class HierarchySelection extends Selection {
       this._excludedKeys = ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
    }
 
-    /* toDo Когда пытаются снять выделение, надо его снимать полностью для всех разделов
-    Иначе сейчас люди в окнах выбора не могут снять выделение. Запись может быть выделена глубоко в иерархии
-    Поправится после задачи https://online.sbis.ru/opendoc.html?guid=d48b9e94-5236-429c-b124-d3b3909886c9
-
    public unselectAll(): void {
       let rootId: string|number|null = this._getRoot();
+      let metaData = this._getItems().getMetaData();
 
-      if (this._listModel.getItems().getMetaData()[FIELD_ENTRY_PATH]) {
+      if (metaData[FIELD_ENTRY_PATH]) {
          this.unselect([rootId]);
          this._removeSelectionChildren(rootId);
          this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [rootId]);
       } else {
          super.unselectAll();
       }
-   } */
+   }
 
    public toggleAll(): void {
       let
@@ -96,13 +93,12 @@ class HierarchySelection extends Selection {
          childrenIdsRoot = SelectionHelper.getChildrenIds(rootId, this._getItems(), this._hierarchyRelation);
 
       if (this._selectionStrategy.isAllSelected(this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation)) {
-         // toDO после решения https://online.sbis.ru/opendoc.html?guid=d48b9e94-5236-429c-b124-d3b3909886c9 перейти на unselectAll
          this.unselect([rootId]);
          this._removeSelectionChildren(rootId);
          this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [rootId]);
          this.select(ArraySimpleValuesUtil.getIntersection(childrenIdsRoot, oldExcludedKeys));
       } else {
-         this.selectAll([rootId]);
+         this.selectAll();
          // toDO Надо делать через getIntersection, если пришел ENTRY_PATH
          this.unselect(oldSelectedKeys);
       }

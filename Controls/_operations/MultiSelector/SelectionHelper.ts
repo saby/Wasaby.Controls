@@ -2,6 +2,7 @@ import {relation} from 'Types/entity';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 const ALL_SELECTION_VALUE = null;
+const FIELD_ENTRY_PATH = 'ENTRY_PATH';
 
 export default {
    isNode: function(item, hierarchyRelation: relation.Hierarchy): boolean {
@@ -71,9 +72,34 @@ export default {
    },
 
    getChildrenIds: function(nodeId, items, hierarchyRelation) {
-      return this.getAllChildren(nodeId, items, hierarchyRelation).map((child) => {
+      let entriesPath = items.getMetaData()[FIELD_ENTRY_PATH];
+      let childrenIds = this.getAllChildren(nodeId, items, hierarchyRelation).map((child) => {
          return child.getId();
       });
+
+      if (entriesPath) {
+         entriesPath.forEach((entryPath) => {
+            if ((childrenIds.includes(entryPath.parent) || nodeId === entryPath.parent) && !childrenIds.includes(entryPath.id)) {
+               childrenIds.push(entryPath.id);
+               childrenIds = childrenIds.concat(this.getChildrenInEntryPath(entryPath.id, entriesPath));
+            }
+         });
+      }
+
+      return childrenIds;
+   },
+
+   getChildrenInEntryPath: function(parentId, entriesPath) {
+      let children = [];
+
+      entriesPath.forEach((entryPath) => {
+         if (entryPath.parent === parentId) {
+            children.push(entryPath.id);
+            children = children.concat(this.getChildrenInEntryPath(entryPath.id, entriesPath));
+         }
+      });
+
+      return children;
    },
 
    getAllChildren: function(nodeId, items, hierarchyRelation) {
