@@ -173,8 +173,9 @@
 }
 
 .controls-Slider__tooltipContainer {
-  display: flex;
-  justify-content: center;
+  /*display: flex;
+  justify-content: center;*/
+  position: relative;
 }
 .controls-Slider__tooltipValue {
   padding-top: @Slider-tooltip-padding-top-bottom;
@@ -186,6 +187,9 @@
   box-shadow: @Slider-tooltip-box-shadow;
   font-size: @Slider-tooltip-font-size;
   position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  bottom: 20px;
 }
 .controls-Slider__point_big_tooltipValue {
   bottom: @Slider-big_point-size + @Slider-tooltip-interval;
