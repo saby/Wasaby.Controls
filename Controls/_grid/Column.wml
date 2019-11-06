@@ -27,9 +27,9 @@
     </ws:else>
 </ws:template>
 
-<div class="controls-Grid__row-cell__content controls-Grid__row-cell__content_baseline_L">
+<div class="controls-Grid__row-cell__content controls-Grid__row-cell__content_baseline_L_theme-{{_options.theme}}">
     <ws:if data="{{itemData.showEditArrow && itemData.columnIndex === 0}}">
-        <ws:partial template="cellContent" attr:class="controls-Grid__editArrow-cellContent controls-Grid__editArrow-overflow-{{itemData.column.textOverflow ? itemData.column.textOverflow}}"/>
+        <ws:partial template="cellContent" attr:class="controls-Grid__editArrow-cellContent_theme-{{_options.theme}} controls-Grid__editArrow-overflow-{{itemData.column.textOverflow ? itemData.column.textOverflow}}_theme-{{_options.theme}}"/>
         <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
     </ws:if>
     <ws:else>

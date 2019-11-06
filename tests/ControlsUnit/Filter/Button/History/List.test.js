@@ -164,6 +164,28 @@ define(
             });
          });
 
+         it('_private::deleteFavorite', () => {
+            let closed = false;
+            const sandBox = sinon.createSandbox();
+            const self = {
+               _children: {
+                  stickyOpener: {
+                     close: () => closed = true
+                  }
+               },
+               _notify: () => {}
+            };
+
+            sandBox.stub(List._private, 'removeRecord');
+            sandBox.stub(List._private, 'updateFavoriteList');
+
+            List._private.deleteFavorite(self);
+            assert.isTrue(closed);
+            sinon.assert.calledOnce(List._private.removeRecord);
+            sinon.assert.calledOnce(List._private.updateFavoriteList);
+            sandBox.restore();
+         });
+
          describe('_private::mapByField', function() {
 
             it('map by resetValues', function() {

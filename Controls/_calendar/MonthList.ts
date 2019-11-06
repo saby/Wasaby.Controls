@@ -347,6 +347,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             // In most places where control is used, no more than 4 elements are displayed at the visible area.
             // Draw the elements above and below.
             virtualPageSize: 6,
+            _limit: 8,
             dateConstructor: WSDate,
             displayedRanges: null
         };

@@ -214,6 +214,8 @@ const _private = {
                 } else {
                     self._filter = Prefetch.applyPrefetchFromHistory(self._filter, history.data);
                 }
+            } else {
+                self._filter = Prefetch.clearPrefetchSession(self._filter);
             }
             return self._filter;
         },
@@ -714,6 +716,10 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                    this._filterButtonItems,
                    this._fastFilterItems
                );
+            }
+
+            if (newOptions.historyId !== this._options.historyId) {
+                this._sourceController = null;
             }
          },
 

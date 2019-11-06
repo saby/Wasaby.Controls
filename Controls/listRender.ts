@@ -2,9 +2,13 @@ import editingTemplate = require('wml!Controls/_listRender/Render/resources/Edit
 import itemTemplateWrapper = require('wml!Controls/_listRender/Render/resources/ItemTemplateWrapper');
 import itemActionsTemplate = require('wml!Controls/_listRender/Render/resources/ItemActionsTemplate');
 import swipeTemplate = require('wml!Controls/_listRender/Render/resources/SwipeTemplate');
+import TileItemTemplateWrapper = require('wml!Controls/_listRender/Tile/resources/ItemTemplateWrapper');
 
 export { default as Render, IRenderOptions, IRenderChildren } from 'Controls/_listRender/Render';
+
 export { default as Tile } from 'Controls/_listRender/Tile';
+export { TileItemTemplateWrapper };
+
 export { default as View } from 'Controls/_listRender/View';
 export {
     editingTemplate,

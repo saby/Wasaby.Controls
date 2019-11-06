@@ -86,6 +86,7 @@ import {ListControl as viewTemplate} from 'Controls/list';
       Grid = List.extend(/** @lends Controls/grid:View */{
          _viewName: viewName,
          _viewTemplate: viewTemplate,
+
          _getModelConstructor: function() {
             return GridViewModel;
          }

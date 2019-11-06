@@ -18,7 +18,7 @@ import 'css!theme?Controls/datePopup';
  * @extends Core/Control
  * @control
  * @author Красильников А.С.
- *
+ * @private
  */
 
 const _private = {

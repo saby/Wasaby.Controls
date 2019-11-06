@@ -11,7 +11,7 @@
                            afterReloadCallback="{{_afterReloadCallback}}">
    <ws:expanderTemplate>
       <div on:click="_onExpanderClick(expanderTemplate.itemData.dispItem)"
-           class="{{expanderTemplate.itemData.prepareExpanderClasses(expanderTemplate.itemData, expanderTemplate.expanderIcon, expanderTemplate.expanderSize)}}"></div>
+           class="{{expanderTemplate.itemData.prepareExpanderClasses(expanderTemplate.itemData, expanderTemplate.expanderIcon, expanderTemplate.expanderSize, _options.theme)}}"></div>
    </ws:expanderTemplate>
    <ws:content>
       <ws:partial template="{{content.viewTemplate}}" on:expanderClick="_onExpanderClick()" on:loadMoreClick="_onLoadMoreClick()"
