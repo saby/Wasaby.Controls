@@ -5,12 +5,12 @@ import ITEM_TYPES from './ItemTypes';
 import monthListUtils from './Utils';
 
 /**
- * Источник данных который возвращает данные для построения календарей в списочных контролах.
- * Каждый элемент это месяц.
+ * Источник данных, который возвращает данные для построения календарей в списочных контролах.
+ * Каждый элемент - это месяц.
  *
- * @class Controls/_calendar/MonthList/MonthSource
- * @extends Types/source:Base
- * @author Красильников А.С.
+ * Controls/_calendar/MonthList/MonthSource
+ * Types/source:Base
+ * Красильников А.С.
  */
 
 export default class MonthsSource extends Memory {
