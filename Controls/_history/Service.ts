@@ -246,7 +246,7 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
          STORAGES_DATA_LOAD[historyId].addBoth(() => {
             resultDef.callback(self.getHistory(historyId));
          });
-      } else if (!STORAGES[historyId] || typeof process !== 'undefined') {
+      } else if (!STORAGES[historyId] || Env.constants.isServerSide) {
          resultDef = _private.getHistoryDataSource(this).call('UnionMultiHistoryIndexesList', {
             params: {
                historyIds: historyId ? [historyId] : this._historyIds,
