@@ -178,6 +178,7 @@
                 menuIsShown="{{_menuIsShown}}"
                 fix1177894367="{{_options.fix1177894367}}"
                 actionMenuIsShown="{{_actionMenuIsShown}}"
+                itemPadding="{{_options.itemPadding}}"
                 itemActions="{{_options.itemActions}}"
                 itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
                 itemActionsProperty="{{_options.itemActionsProperty}}"
