@@ -97,7 +97,7 @@ define(
             }, 60);
          });
 
-         it('abort', function() {
+         it('abort', function(done) {
             var aborted = false;
             var searchController = new searchLib._SearchController({
                minSearchLength: 3,
@@ -105,9 +105,7 @@ define(
                searchDelay: 50,
                searchParam: 'name',
                filter: {},
-               abortCallback: function() {
-                  aborted = true;
-               },
+               abortCallback: () => { done(); },
             });
 
             searchController.search('test');
@@ -117,7 +115,6 @@ define(
             assert.isFalse(aborted);
 
             searchController.abort(true);
-            assert.isTrue(aborted);
          });
 
          it('search with sorting', function(done) {
@@ -166,9 +163,7 @@ define(
                searchController.search('1', true);
                assert.isTrue(searched);
                assert.isTrue(forced);
-               done();
-               return search;
-            });
+            }).then(done, done);
          });
 
          it('search, trim: true', function() {
