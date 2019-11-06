@@ -777,7 +777,7 @@ var
           * Otherwise we can accidentally scroll a wrong element.
           */
          e.stopPropagation();
-         this._children.content.scrollTop = position;
+         this._children.scrollWatcher.setScrollTop(position, true);
           // todo KINGO. Костыль с родословной из старых списков. Инерционный скролл приводит к дерганью: мы уже
          // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
          // дерганья и лишняя загрузка данных.

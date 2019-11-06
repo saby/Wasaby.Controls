@@ -15,7 +15,6 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             };
             vsInstance = new VirtualScroll({
                 pageSize: 20,
-                pageSizeMode: 'dynamic',
                 segmentSize: 4,
                 virtualScrollMode: 'hide',
                 indexesChangedCallback() {
@@ -110,34 +109,18 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             vsInstance.scrollTop = 100;
             assert.equal(9, vsInstance.getActiveElement());
         });
-    });
-    describe('dynamic virtual scroll', () => {
-        let vsInstance = new VirtualScroll({
-            pageSize: 20,
-            pageSizeMode: 'dynamic',
-            segmentSize: 4,
-            virtualScrollMode: 'hide',
-            indexesChangedCallback() {
-            },
-            loadMoreCallback() {
-            },
-            placeholderChangedCallback() {
-            }
-        });
-
-        vsInstance.itemsCount = 20;
-        vsInstance.reset();
-        vsInstance.viewportHeight = 400;
-        vsInstance.itemsContainer = {
-            children, offsetHeight: 600
-        };
-
-        it('recalcFromDirection', () => {
+        it('recalcToDirection', () => {
+            vsInstance.itemsCount = 20;
+            vsInstance.reset();
+            vsInstance.viewportHeight = 400;
+            vsInstance.itemsContainer = {
+                children, offsetHeight: 600
+            };
             vsInstance.setStartIndex(0);
             vsInstance.itemsCount = 40;
             vsInstance.scrollTop = 160;
             vsInstance.recalcToDirection('down');
-            assert.equal(5, vsInstance.startIndex);
+            assert.equal(0, vsInstance.startIndex);
             assert.equal(24, vsInstance.stopIndex);
             vsInstance.setStartIndex(10);
             vsInstance.recalcItemsHeights();
@@ -145,44 +128,7 @@ describe('Controls/_list/ScrollController/VirtualScroll', () => {
             vsInstance.scrollTop = 10;
             vsInstance.recalcToDirection('up');
             assert.equal(6, vsInstance.startIndex);
-            assert.equal(18, vsInstance.stopIndex);
-        });
-    });
-    describe('static virtual scroll', () => {
-        let vsInstance = new VirtualScroll({
-            pageSize: 20,
-            pageSizeMode: 'static',
-            segmentSize: 4,
-            virtualScrollMode: 'hide',
-            indexesChangedCallback() {
-            },
-            loadMoreCallback() {
-            },
-            placeholderChangedCallback() {
-            }
-        });
-
-        vsInstance.itemsCount = 20;
-        vsInstance.reset();
-        vsInstance.viewportHeight = 400;
-        vsInstance.itemsContainer = {
-            children, offsetHeight: 600
-        };
-
-        it('recalcFromDirection', () => {
-            vsInstance.setStartIndex(0);
-            vsInstance.itemsCount = 40;
-            vsInstance.scrollTop = 160;
-            vsInstance.recalcToDirection('down');
-            assert.equal(4, vsInstance.startIndex);
             assert.equal(24, vsInstance.stopIndex);
-            vsInstance.setStartIndex(10);
-            vsInstance.recalcItemsHeights();
-            vsInstance.viewportHeight = 200;
-            vsInstance.scrollTop = 10;
-            vsInstance.recalcToDirection('up');
-            assert.equal(6, vsInstance.startIndex);
-            assert.equal(26, vsInstance.stopIndex);
         });
     });
 });

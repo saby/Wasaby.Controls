@@ -2210,7 +2210,8 @@ BaseControl.getDefaultOptions = function() {
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
         markedKey: null,
-        stickyHeader: true
+        stickyHeader: true,
+        virtualScrollMode: 'remove'
     };
 };
 export = BaseControl;

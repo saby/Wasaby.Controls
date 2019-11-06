@@ -155,11 +155,6 @@ function onCollectionChange<T>(
             this._reBuild(true);
             projectionNewItems = toArray(this);
             this._notifyBeforeCollectionChange();
-
-            if (this._virtualScrollMode === 'hide') {
-                this._virtualScrollManager.reset();
-            }
-
             this._notifyCollectionChange(
                 action,
                 projectionNewItems,
@@ -2071,6 +2066,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (newStart !== this._startIndex || newStop !== this._stopIndex) {
             this._startIndex = newStart;
             this._stopIndex = newStop;
+            this._stopIndex = newStop;
 
             if (this._virtualScrollMode === 'hide') {
                 this._virtualScrollManager.applyRenderedItems(this._startIndex, this._stopIndex);
@@ -2124,12 +2120,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$hasMoreData = hasMoreData;
     }
 
-    isDisplaying(index: number): boolean {
-        if (this._virtualScrollMode === 'hide') {
-            return index >= this.getStartIndex() && index <= this.getStopIndex();
-        } else {
-            return true;
-        }
+    isItemVisible(index: number): boolean {
+        return this._virtualScrollManager.isItemVisible(index);
     }
 
     // region SerializableMixin

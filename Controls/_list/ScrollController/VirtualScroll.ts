@@ -1,5 +1,4 @@
-import {ObservableMixin as Observable} from 'Types/entity';
-import {IDirection, IVirtualPageSizeMode, IVirtualScrollMode} from '../interface/IVirtualScroll';
+import {IDirection, IVirtualScrollMode} from '../interface/IVirtualScroll';
 
 
 type IVirtualItem = number;
@@ -7,7 +6,6 @@ type IVirtualItem = number;
 interface IVirtualScrollControllerOptions {
     pageSize: number;
     segmentSize: number;
-    pageSizeMode: IVirtualPageSizeMode;
     virtualScrollMode: IVirtualScrollMode;
     indexesChangedCallback: Function;
     loadMoreCallback: Function;
@@ -25,7 +23,6 @@ export default class VirtualScrollController {
     private stopIndex: number = 0;
     private segmentSize: number = 0;
     private pageSize: number = 0;
-    private pageSizeMode: 'dynamic' | 'static';
     private virtualScrollMode: 'hide' | 'remove';
     private itemsHeights: IVirtualItem[] = [];
     private itemsOffsets: number[] = [];
@@ -51,7 +48,6 @@ export default class VirtualScrollController {
 
     constructor(options: IVirtualScrollControllerOptions) {
         this.pageSize = options.pageSize || 100;
-        this.pageSizeMode = options.pageSizeMode;
         this.segmentSize = options.segmentSize || this.pageSize / 4;
         this.virtualScrollMode = options.virtualScrollMode;
         this.indexesChangedCallback = options.indexesChangedCallback;
@@ -73,7 +69,7 @@ export default class VirtualScrollController {
 
             if (newStopIndex >= this.itemsCount) {
                 newStopIndex = this.itemsCount;
-                newStartIndex = this.stopIndex - this.pageSize;
+                newStartIndex = newStopIndex - this.pageSize;
             }
         } else {
             newStartIndex = 0;
@@ -129,38 +125,31 @@ export default class VirtualScrollController {
         let newStartIndex = this.startIndex;
         let newStopIndex = this.stopIndex;
         let needToLoadMore: boolean = false;
-        const quantity = this.getItemsToHideQuantity(direction);
 
-        if (direction === 'up') {
-            if (newStartIndex <= segmentSize) {
-                needToLoadMore = true;
-            }
-
-            newStartIndex = Math.max(0, newStartIndex - segmentSize);
-            newStopIndex -= quantity;
+        if (this.startIndex === 0 && direction === 'up' || this.stopIndex === this.itemsCount && direction === 'down') {
+            needToLoadMore = true;
         } else {
-            if (newStopIndex + segmentSize >= this.itemsCount) {
-                needToLoadMore = true;
-            }
+            const quantity = this.getItemsToHideQuantity(direction);
 
-            newStopIndex = Math.min( newStopIndex + segmentSize, this.itemsCount);
-            newStartIndex += quantity;
-        }
-
-        if (this.pageSizeMode === 'static') {
-            const difference = newStopIndex - newStartIndex;
-            const sub = this.pageSize - difference;
-
-            if (difference < this.pageSize) {
-                if (direction === 'up') {
-                    newStopIndex = Math.min(this.itemsCount, newStopIndex + sub);
-                } else {
-                    newStartIndex = Math.max(0, newStartIndex - sub);
+            if (direction === 'up') {
+                if (newStartIndex <= segmentSize) {
+                    needToLoadMore = true;
                 }
+
+                newStartIndex = Math.max(0, newStartIndex - segmentSize);
+                newStopIndex -= quantity;
+            } else {
+                if (newStopIndex + segmentSize >= this.itemsCount) {
+                    needToLoadMore = true;
+                }
+
+                newStopIndex = Math.min(newStopIndex + segmentSize, this.itemsCount);
+                newStartIndex += quantity;
             }
+
+            this.checkIndexesChanged(newStartIndex, newStopIndex, direction);
         }
 
-        this.checkIndexesChanged(newStartIndex, newStopIndex, direction);
 
         if (needToLoadMore) {
             this.loadMoreCallback(direction);
@@ -304,6 +293,10 @@ export default class VirtualScrollController {
         }
     }
 
+    getItemOffset(index: number): number {
+        return this.itemsOffsets[index];
+    }
+
     private isScrolledToBottom(): boolean {
         return this.stopIndex === this.itemsCount &&
             this.scrollTop + this.viewportHeight === this.itemsContainerHeight;
@@ -343,16 +336,17 @@ export default class VirtualScrollController {
      * @param {number} updateLength
      */
     private updateItemsHeights(startUpdateIndex: number, updateLength: number): void {
-        if (this.virtualScrollMode === 'remove') {
-            for (let i = 0; i < updateLength; i++) {
-                this.itemsHeights[startUpdateIndex + i] = this._itemsContainer.children[i].offsetHeight;
+        let startChildrenIndex = 0;
+
+        for (let i = startChildrenIndex, len = this._itemsContainer.children.length; i < len; i++) {
+            if (this._itemsContainer.children[i].className.indexOf('ws-hidden') === - 1) {
+                startChildrenIndex = i;
+                break;
             }
-        } else {
-            for (let i = this.startIndex; i < this.stopIndex; i++) {
-                if (this._itemsContainer.children[i]) {
-                    this.itemsHeights[i] = this._itemsContainer.children[i].offsetHeight;
-                }
-            }
+        }
+
+        for (let i = 0; i < updateLength; i++) {
+            this.itemsHeights[startUpdateIndex + i] = this._itemsContainer.children[startChildrenIndex + i].offsetHeight;
         }
     }
 
@@ -379,19 +373,19 @@ export default class VirtualScrollController {
 
         if (direction === 'up') {
             let stopIndex = this.stopIndex - 1;
-            const triggerDistance = this.viewportHeight + this.scrollTop + this.triggerOffset;
+            const offsetDistance = this.viewportHeight * 2 + this.scrollTop + this.triggerOffset;
 
-            while (this.itemsOffsets[stopIndex] > triggerDistance) {
+            while (this.itemsOffsets[stopIndex] > offsetDistance) {
                 stopIndex--;
                 quantity++;
             }
         } else {
             let startIndex = this.startIndex;
             let sumHeight = 0;
-            const triggerDistance = this.scrollTop - this.triggerOffset;
+            const offsetDistance = this.scrollTop - this.triggerOffset - this.viewportHeight;
 
 
-            while (sumHeight + items[startIndex] < triggerDistance) {
+            while (sumHeight + items[startIndex] < offsetDistance) {
                 sumHeight += items[startIndex];
                 quantity++;
                 startIndex++;

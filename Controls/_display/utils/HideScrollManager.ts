@@ -18,16 +18,14 @@ export interface IVirtualScrollManageableCollection {
 }
 
 export default class VirtualScrollManager extends BaseManager<IVirtualScrollManageableCollection> {
-    private _rendered: Record<string, boolean> = {};
+    isItemVisible(index: number): boolean {
+        return index >= this._collection.getStartIndex() && index <= this._collection.getStopIndex();
+    }
 
     applyRenderedItems(startIndex: number, stopIndex: number) {
         for (let i = startIndex; i < stopIndex; i++) {
-            this._rendered[this._collection.at(i).getUid()] = true;
+            this._collection.at(i).setRendered(true);
         }
-    }
-
-    reset(): void {
-        this._rendered = {};
     }
 
     each(callback: EnumeratorCallback<unknown>, context?: object): void {
@@ -36,7 +34,7 @@ export default class VirtualScrollManager extends BaseManager<IVirtualScrollMana
         enumerator.setPosition(-1);
 
         while (enumerator.moveNext()) {
-            if (this._rendered[enumerator.getCurrent().getUid()]) {
+            if (enumerator.getCurrent().isRendered()) {
                 callback.call(
                     context,
                     enumerator.getCurrent(),

@@ -8,19 +8,17 @@ import scrollToElement = require('Controls/Utils/scrollToElement');
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {CollectionItem} from 'Controls/display';
 import {throttle} from 'Types/function';
-import {Record, descriptor} from 'Types/entity';
+import {Record as entityRecord, descriptor} from 'Types/entity';
 import {IDirection, IVirtualPageSizeMode, IVirtualScrollMode} from './interface/IVirtualScroll';
 
 interface IOptions extends IControlOptions {
     virtualPageSize: number;
     virtualSegmentSize: number;
-    virtualPageSizeMode: IVirtualPageSizeMode;
     virtualScrollMode: IVirtualScrollMode;
     viewModel: unknown;
     useNewModel: boolean;
     virtualScrolling: boolean;
     scrollCalculation: boolean;
-    shouldCheckActiveElement: boolean;
 }
 
 interface IScrollParams {
@@ -30,7 +28,7 @@ interface IScrollParams {
 }
 
 const DEFAULT_TRIGGER_OFFSET = 100;
-const SIZE_RELATION_TO_VIEWPORT = 0.5;
+const SIZE_RELATION_TO_VIEWPORT = 0.3;
 
 /**
  * Компонент управляющий скроллированием в списочных контролах
@@ -45,7 +43,10 @@ export default class ScrollController extends Control<IOptions> {
     protected _template: TemplateFunction = template;
     protected virtualScroll: VirtualScroll;
     private itemsContainer: HTMLElement;
-    private scrollParams: IScrollParams;
+    private scrollRegistered: boolean = false;
+
+    // Флаг фейкового скролла, необходим для корректного рассчета активного элемента
+    private fakeScroll: boolean = false;
 
     // Сущность управляющая инерционным скроллингом на мобильных устройствах
     private inertialScrolling: InertialScrolling = new InertialScrolling();
@@ -101,7 +102,6 @@ export default class ScrollController extends Control<IOptions> {
             this.virtualScroll = new VirtualScroll({
                 pageSize: options.virtualPageSize,
                 segmentSize: options.virtualSegmentSize,
-                pageSizeMode: options.virtualPageSizeMode,
                 virtualScrollMode: options.virtualScrollMode,
                 placeholderChangedCallback: this.placeholdersChangedCallback,
                 indexesChangedCallback: this.indexesChangedCallback,
@@ -124,6 +124,10 @@ export default class ScrollController extends Control<IOptions> {
     protected _beforeUpdate(options: IOptions): void {
         if (this._options.viewModel !== options.viewModel) {
             this.initModel(options.viewModel, options.useNewModel);
+        }
+
+        if (this._options.scrollCalculation) {
+            this.registerScroll();
         }
     }
 
@@ -157,12 +161,12 @@ export default class ScrollController extends Control<IOptions> {
         }
 
         if (this.saveScrollPosition) {
-            this._notify('restoreScrollPosition', [
-                this.savedScrollDirection === 'up' ?
+            if (this.savedScrollDirection) {
+                this.scrollToPosition(this.savedScrollDirection === 'up' ?
                     this.virtualScroll.scrollTop + this.virtualScroll.getItemsHeights(this.actualStartIndex, this.savedStartIndex) :
-                    this.virtualScroll.scrollTop - this.virtualScroll.getItemsHeights(this.savedStartIndex, this.actualStartIndex),
-                this.savedScrollDirection
-            ], {bubbling: true});
+                    this.virtualScroll.scrollTop - this.virtualScroll.getItemsHeights(this.savedStartIndex, this.actualStartIndex)
+                );
+            }
             this.savedStartIndex = this.actualStartIndex;
             this.savedStopIndex = this.actualStopIndex;
             this.saveScrollPosition = false;
@@ -217,13 +221,13 @@ export default class ScrollController extends Control<IOptions> {
      * @param {string} event
      * @param {string} changesType
      * @param {string} action
-     * @param {CollectionItem<Record>[]} newItems
+     * @param {CollectionItem<entityRecord>[]} newItems
      * @param {number} newItemsIndex
-     * @param {CollectionItem<Record>[]} removedItems
+     * @param {CollectionItem<entityRecord>[]} removedItems
      * @param {number} removedItemsIndex
      */
-    private collectionChangedHandler = (event: string, changesType: string, action: string, newItems: CollectionItem<Record>[],
-                                        newItemsIndex: number, removedItems: CollectionItem<Record>[], removedItemsIndex: number): void => {
+    private collectionChangedHandler = (event: string, changesType: string, action: string, newItems: CollectionItem<entityRecord>[],
+                                        newItemsIndex: number, removedItems: CollectionItem<entityRecord>[], removedItemsIndex: number): void => {
         const newModelChanged = this._options.useNewModel && action && action !== IObservable.ACTION_CHANGE;
 
         if (this.virtualScroll && (changesType === 'collectionChanged' || newModelChanged) && action) {
@@ -303,22 +307,22 @@ export default class ScrollController extends Control<IOptions> {
         this.virtualScroll.recalcFromScrollTop();
     }, 150, true);
 
-    protected emitListScrollHandler(event: SyntheticEvent<Event>, type: string, params: unknown[]): void {
+    protected emitListScrollHandler(event: SyntheticEvent<Event>, type: string, params: IScrollParams | unknown[]): void {
         switch (type) {
             case 'virtualPageTopStart':
-                this.updateViewWindow('up', params);
+                this.updateViewWindow('up', params as IScrollParams);
                 break;
             case 'virtualPageTopStop':
                 this.changeTriggerVisibility('up', false);
                 break;
             case 'virtualPageBottomStart':
-                this.updateViewWindow('down', params);
+                this.updateViewWindow('down', params as IScrollParams);
                 break;
             case 'virtualPageBottomStop':
                 this.changeTriggerVisibility('down', false);
                 break;
             case 'scrollMoveSync':
-                this.handleListScrollSync(params);
+                this.handleListScrollSync(params as IScrollParams);
                 break;
             case 'viewportRize':
                 this.updateViewport(params[0]);
@@ -326,11 +330,14 @@ export default class ScrollController extends Control<IOptions> {
             case 'virtualScrollMove':
                 this.virtualScrollMoveHandler(params);
                 break;
+            case 'canScroll':
+                this.updateViewport(params.clientHeight, false);
+                this.proxyEvent(type, params as IScrollParams);
+                break;
             case 'scrollResize':
             case 'scrollMove':
-            case 'canScroll':
             case 'cantScroll':
-                this.proxyEvent(type, params);
+                this.proxyEvent(type, params as IScrollParams);
                 break;
         }
     }
@@ -341,22 +348,19 @@ export default class ScrollController extends Control<IOptions> {
      * @remark Функция подскролливает к записи, если это возможно, в противном случае вызовется перестроение
      * от элемента
      */
-    scrollToItem(key: string|number): void {
+    scrollToItem(key: string|number, toBottom?: boolean): void {
         let itemIndex = this._options.viewModel.getIndexByKey(key);
 
         if (itemIndex !== -1) {
             if (this._options.virtualScrolling) {
+                const callback = () => {
+                    this.scrollToPosition(this.virtualScroll.getItemOffset(itemIndex));
+                };
                 if (this.virtualScroll.canScrollToItem(itemIndex)) {
-                    if (this._options.virtualScrollMode === 'remove') {
-                        itemIndex -= this.actualStartIndex;
-                    }
-
-                    this.scrollToElement(this.itemsContainer.children[itemIndex] as HTMLElement);
+                    callback();
                 } else {
                     this.virtualScroll.recalcFromIndex(itemIndex);
-                    this.afterRenderCallback = () => {
-                        this.scrollToItem(key);
-                    }
+                    this.afterRenderCallback = callback;
                 }
             } else {
                 const container = this.itemsContainer.children[itemIndex];
@@ -398,6 +402,12 @@ export default class ScrollController extends Control<IOptions> {
 
     }
 
+    private scrollToPosition(position: number): void {
+        this.fakeScroll = true;
+        this._notify('restoreScrollPosition', [ position ], {bubbling: true});
+        this.fakeScroll = false;
+    }
+
     /**
      * Подскролливает к переданному HTML-элементу
      * @param {HTMLElement} container
@@ -406,7 +416,7 @@ export default class ScrollController extends Control<IOptions> {
         scrollToElement(container, false);
     }
 
-    private updateViewport(viewportHeight: number): void {
+    private updateViewport(viewportHeight: number, shouldNotify: boolean = true): void {
         if (this._options.virtualScrolling) {
             this.virtualScroll.viewportHeight = viewportHeight;
             this.virtualScroll.triggerOffset =
@@ -414,7 +424,9 @@ export default class ScrollController extends Control<IOptions> {
             this._notify('triggerOffsetChanged', [this.topTriggerOffset, this.bottomTriggerOffset]);
         }
 
-        this.proxyEvent('viewPortResize', [viewportHeight]);
+        if (shouldNotify) {
+            this.proxyEvent('viewPortResize', [viewportHeight]);
+        }
     }
 
     private handleListScrollSync(params: IScrollParams): void {
@@ -427,10 +439,10 @@ export default class ScrollController extends Control<IOptions> {
             this.virtualScroll.viewportHeight = params.clientHeight;
             this.virtualScroll.itemsContainerHeight = params.scrollHeight;
 
-            if (this._options.shouldCheckActiveElement && !this.afterRenderCallback) {
+            if (!this.afterRenderCallback && !this.fakeScroll) {
                 const activeIndex = this.virtualScroll.getActiveElement();
 
-                if (activeIndex) {
+                if (typeof activeIndex !== 'undefined') {
                     this._notify('activeElementChanged', [
                         this._options.viewModel.at(activeIndex).getUid()
                     ]);
@@ -441,7 +453,7 @@ export default class ScrollController extends Control<IOptions> {
         this.proxyEvent('scrollMoveSync', [params]);
     }
 
-    private proxyEvent(type: string, params: unknown[]): void {
+    private proxyEvent(type: string, params: unknown): void {
         this._notify(type, [params]);
     }
 
@@ -458,7 +470,6 @@ export default class ScrollController extends Control<IOptions> {
      */
     private updateViewWindow(direction: IDirection, params?: IScrollParams): void {
         this.changeTriggerVisibility(direction, true);
-        this.scrollParams = params;
         if (this._options.virtualScrolling) {
             if (params) {
                 this.virtualScroll.viewportHeight = params.clientHeight;
@@ -491,10 +502,11 @@ export default class ScrollController extends Control<IOptions> {
 
         if (this.applyIndexesToModel(model, startIndex, stopIndex)) {
             if (direction) {
-                this.saveScrollPosition = true;
                 this.savedScrollDirection = direction;
-                this.itemsChanged = true;
             }
+
+            this.saveScrollPosition = true;
+            this.itemsChanged = true;
         } else if (this.applyScrollTopCallback) {
             this.applyScrollTopCallback();
             this.applyScrollTopCallback = null;
@@ -517,27 +529,22 @@ export default class ScrollController extends Control<IOptions> {
     }
 
     private registerScroll(): void {
-        this._children.scrollEmitter.startRegister(this._children);
+        if (!this.scrollRegistered) {
+            this._children.scrollEmitter.startRegister(this._children);
+            this.scrollRegistered = true;
+        }
     }
 
     static getDefaultOptions(): Partial<IOptions> {
         return {
-            virtualPageSize: 100,
-            virtualPageSizeMode: 'static',
-            virtualScrollMode: 'remove'
+            virtualPageSize: 100
         };
     }
 
     static getOptionTypes(): Record<string, Function> {
         return {
             virtualSegmentSize: descriptor(Number),
-            virtualPageSize: descriptor(Number),
-            virtualPageSizeMode: descriptor(String).oneOf([
-                'static', 'dynamic'
-            ]),
-            virtualScrollMode: descriptor(String).oneOf([
-                'remove', 'hide'
-            ])
+            virtualPageSize: descriptor(Number)
         }
     }
 }

@@ -15,6 +15,7 @@ export interface IVirtualScrollManageableCollection {
 }
 
 export default class VirtualScrollManager extends BaseManager<IVirtualScrollManageableCollection> {
+    isItemVisible = () => true;
     each(callback: EnumeratorCallback<unknown>, context?: object): void {
         const startIndex = this._collection.getStartIndex();
         const stopIndex = this._collection.getStopIndex();
