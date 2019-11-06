@@ -3,6 +3,8 @@ import * as Template from "wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto/Wit
 import {Memory} from "Types/source"
 import {Gadgets} from "../../DemoHelpers/DataCatalog"
 
+import "css!Controls-demo/treeGrid/ItemTemplate/WithPhoto/styles";
+
 import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
