@@ -2595,10 +2595,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _applyPagingNavigationState: function(params) {
         var newNavigation = cClone(this._options.navigation);
         if (params.pageSize) {
-            newNavigation.sourceConfig.pageSize = this._currentPageSize;
+            newNavigation.sourceConfig.pageSize = params.pageSize;
         }
         if (params.page) {
-            newNavigation.sourceConfig.page = page - 1;
+            newNavigation.sourceConfig.page = params.page - 1;
+            newNavigation.sourceConfig.pageSize = this._currentPageSize;
         }
         this._recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
         _private.reload(this, this._options);
