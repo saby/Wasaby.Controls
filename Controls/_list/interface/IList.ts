@@ -350,11 +350,10 @@
  * @name Controls/_list/interface/IList#itemActionVisibilityCallback
  * @cfg {Function} Функция обратного вызова для определения видимости элементов в панели действий над записью.
  * @remark
- * Функция принимает три аргумента:
+ * Функция принимает два аргумента:
  * <ol>
  *    <li>action — объект с конфигурацией конкретной операции. Свойства объекта описаны <a href="/docs/js/Controls/list/IList/typedefs/ItemAction/">здесь</a>.</li>
  *    <li>item — модель (см. {@link Types/entity:Model}), содержащая данные записи. </li>
- *    <li>isSwipe — логический. Принимает значение true, если вызвали меню по свайпу. </li>
  * </ol>
  * Для видимости элемента, из функции следует вернуть true.
  * @example
@@ -390,7 +389,6 @@
  * @cfg {Function} item operation visibility filter function
  * @param {ItemAction} action Object with configuration of an action.
  * @param {Types/entity:Model} item Instance of the item whose action is being processed.
- * @param {Boolean} isSwipe Indicates if swipe menu is opening.
  * @returns {Boolean} Determines whether the action should be rendered.
  * @example
  * Item action Read don't display if item has property isNew === false

@@ -19,22 +19,12 @@ define('Controls-demo/List/Tree/EditArrow', [
          _header: null,
          _customColumns: null,
          _editArrowClickSurfaced: false,
-         _itemActionVisibilityCallback: function(action, item, isSwipe) {
-            if (action.id === 'view' && item.get('parent@') && isSwipe) {
+         _editArrowVisibilityCallback: function(item) {
+            if (item.get('parent@')) {
                return true;
             }
          },
-         _editArrowHandler: function(item) {
-            this._editArrowClick({}, item);
-         },
          _beforeMount: function() {
-            this._itemActionsWithEditArrow = [{
-               id: 'view',
-               icon: 'icon-Forward',
-               title: rk('Просмотреть'),
-               showType: 2,
-               handler: this._editArrowHandler.bind(this)
-            }];
             this._header = [{
                title: ''
             }, {

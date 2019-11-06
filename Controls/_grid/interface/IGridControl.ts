@@ -145,10 +145,10 @@
  * @property {String} template Шаблон заголовка ячейки. По умолчанию используется базовый шаблон Controls/grid:HeaderContent.
  * Для базового шаблона можно задать класс controls-Grid__header-cell_spacing_money, который добавляет отступ в заголовке столбца при рендере денежных данных.
  * Подробнее о работе с шаблоном читайте в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">документации</a>.
- * @property {String} sortingProperty Свойство, по которому выполняется сортировка. 
- * В качестве значения принимает имя поля. 
- * Если в конфигурации ячейки задать это свойство, то в шапке таблицы в конкретной ячейки будет отображаться кнопка для изменения сортировки. 
- * Клик по кнопке будет менять порядок сортировки элементов на противоположный. 
+ * @property {String} sortingProperty Свойство, по которому выполняется сортировка.
+ * В качестве значения принимает имя поля.
+ * Если в конфигурации ячейки задать это свойство, то в шапке таблицы в конкретной ячейки будет отображаться кнопка для изменения сортировки.
+ * Клик по кнопке будет менять порядок сортировки элементов на противоположный.
  * При этом элементы будут отсортированы по полю, имя которого указано в свойстве sortingProperty.
  * <pre class="brush: js">
  * _sorting: null,
@@ -197,14 +197,14 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#header
- * @cfg {Array.<HeaderCell>} Описывает шапку таблицы. В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки. Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки. Условно ячейки шапки нумеруются слева направо. Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке. 
+ * @cfg {Array.<HeaderCell>} Описывает шапку таблицы. В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки. Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки. Условно ячейки шапки нумеруются слева направо. Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке.
  * <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
  * <a href="/materials/demo-ws4-grid-base">См. демо-пример</a>
  * @example
  * Пример 1. Для первой ячейки задаём пользовательский шаблон.
  * <pre>
  *    <Controls.grid:View>
- *       <ws:header> 
+ *       <ws:header>
  *          <ws:Array>
  *              <ws:template>
  *                  <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
@@ -517,19 +517,25 @@
  */
 
 /**
+ * @name Controls/_list/interface/IList#itemActionVisibilityCallback
+ * @cfg {Function} Функция обратного вызова для определения видимости кнопки открытия карточки в панели действий по свайпу для конкретной записи.
+ * @remark Первый и единственный аргумент - текущая запись, на которой открывается свайп.
+ */
+
+/**
  * @name Controls/_grid/interface/IGridControl#showEditArrow
- * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке
+ * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке и в меню по свайпу.
  * <a href="/materials/demo-ws4-edit-arrow">Example</a>
- * @remark Чтобы расположить кнопку в произвольном месте прикладного шаблона колонки, следует встроить шаблон editArrowTemplate
+ * @remark Чтобы расположить кнопка отображалась в прикладном шаблоне колонки, следует встроить шаблон editArrowTemplate в нужное место
  * @example
  * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
  */
 
 /*
  * @name Controls/_grid/interface/IGridControl#showEditArrow
- * @cfg {Boolean} Allows showing button in first column on hover.
+ * @cfg {Boolean} Allows showing button in first column on hover and in swipe menu.
  * <a href="/materials/demo-ws4-edit-arrow">Example</a>
- * @remark To place the button in any place of the column template, you should use the editArrowTemplate
+ * @remark To place the button in the user column template, you should use the editArrowTemplate
  * @example
  * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
  */

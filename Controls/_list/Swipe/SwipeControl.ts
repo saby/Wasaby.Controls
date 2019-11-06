@@ -144,14 +144,16 @@ export default class SwipeControl extends Control {
 
 
       if (this._options.showEditArrow) {
-         let editArrow = {
-            id: 'view',
-            icon: 'icon-Forward',
-            title: rk('Просмотреть'),
-            showType: ShowType.TOOLBAR,
-            handler: this.editArrowHandler.bind(this)
-         };
-         itemActions = [editArrow, ...itemActions];
+         if (!this._options.editArrowVisibilityCallback || this._options.editArrowVisibilityCallback(this._currentItemData.actionsItem)){
+            let editArrow = {
+               id: 'view',
+               icon: 'icon-Forward',
+               title: rk('Просмотреть'),
+               showType: ShowType.TOOLBAR,
+               handler: this.editArrowHandler.bind(this)
+            };
+            itemActions = [editArrow, ...itemActions];
+         }
       }
 
       this._swipeConfig = this._measurer.getSwipeConfig(
