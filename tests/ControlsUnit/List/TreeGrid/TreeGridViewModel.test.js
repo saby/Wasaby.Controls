@@ -430,22 +430,22 @@ define(['Controls/treeGrid',
 
          let
             ladderViewModel = new treeGrid.ViewModel({
-            items: new collection.RecordSet({
+               items: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [
+                     { id: 0, title: 'i0', date: '01 янв', parent: null, type: true },
+                     { id: 1, title: 'i1', date: '03 янв', parent: 0, type: null },
+                     { id: 2, title: 'i2', date: '03 янв', parent: 0, type: null },
+                     { id: 3, title: 'i3', date: '03 янв', parent: 0, type: null },
+                     { id: 4, title: 'i4', date: '01 янв', parent: null, type: true },
+                  ]
+               }),
                keyProperty: 'id',
-               rawData: [
-                  { id: 0, title: 'i0', date: '01 янв', parent: null, type: true },
-                  { id: 1, title: 'i1', date: '03 янв', parent: 0, type: null },
-                  { id: 2, title: 'i2', date: '03 янв', parent: 0, type: null },
-                  { id: 3, title: 'i3', date: '03 янв', parent: 0, type: null },
-                  { id: 4, title: 'i4', date: '01 янв', parent: null, type: true },
-               ]
-            }),
-            keyProperty: 'id',
-            nodeProperty: 'type',
-            parentProperty: 'parent',
-            columns: initialColumns,
-            ladderProperties: ['date']
-         });
+               nodeProperty: 'type',
+               parentProperty: 'parent',
+               columns: initialColumns,
+               ladderProperties: ['date']
+            });
 
 
          ladderViewModel.getItems = () => ladderViewModel._model.getItems();
@@ -453,12 +453,12 @@ define(['Controls/treeGrid',
             getRoot: () => ({
                getContents: () => null
             })
-         })
-         assert.isTrue(ladderViewModel.isDrawResults())
+         });
+         assert.isTrue(ladderViewModel.isDrawResults());
          ladderViewModel.getItems().removeAt(4);
-         assert.isFalse(ladderViewModel.isDrawResults())
+         assert.isFalse(ladderViewModel.isDrawResults());
          ladderViewModel.getDisplay = () => null;
-         assert.equal(undefined, ladderViewModel.isDrawResults())
+         assert.equal(undefined, ladderViewModel.isDrawResults());
       });
    });
    function MockedDisplayItem(cfg) {
