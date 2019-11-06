@@ -239,14 +239,13 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
       const historyId = self._historyId;
 
       let resultDef;
-      throw new Error('isBuildOnServer: ' + Env.constants.isBuildOnServer + ' isServerSide:' + Env.constants.isServerSide);
-      if (STORAGES_DATA_LOAD[historyId] && !Env.constants.isBuildOnServer) {
+      if (STORAGES_DATA_LOAD[historyId] && Env.constants.isBrowserPlatform) {
          resultDef = new Deferred();
          // create new deferred, so in the first callback function, the result of the query will be changed
          STORAGES_DATA_LOAD[historyId].addBoth(() => {
             resultDef.callback(self.getHistory(historyId));
          });
-      } else if (!STORAGES[historyId] || Env.constants.isBuildOnServer) {
+      } else if (!STORAGES[historyId] || Env.constants.isServerSide) {
          resultDef = _private.getHistoryDataSource(this).call('UnionMultiHistoryIndexesList', {
             params: {
                historyIds: historyId ? [historyId] : this._historyIds,
