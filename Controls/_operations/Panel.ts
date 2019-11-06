@@ -72,7 +72,7 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  * </pre>
  * JS:
  * <pre>
- *    onPanelItemClick: function(e, selection) {
+ *    onPanelItemClick: function(e, item) {
     *       var itemId = item.get('id');
     *       switch (itemId) {
     *          case 'remove':
@@ -97,7 +97,7 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  * </pre>
  * JS:
  * <pre>
- *    onPanelItemClick: function(e, selection) {
+ *    onPanelItemClick: function(e, item) {
  *       var itemId = item.get('id');
  *       switch (itemId) {
  *          case 'remove':
