@@ -22,7 +22,6 @@
  * @includes ITag Controls/_input/interface/ITag
  * @includes IValue Controls/_input/interface/IValue
  * @includes IDateTimeMask Controls/_input/interface/IDateTimeMask
- * @includes INewLineKey Controls/_input/interface/INewLineKey
  *
  * @public
  * @author Крайнов Д.О.
@@ -51,7 +50,6 @@
  * @includes ITag Controls/_input/interface/ITag
  * @includes IValue Controls/_input/interface/IValue
  * @includes IDateTimeMask Controls/_input/interface/IDateTimeMask
- * @includes INewLineKey Controls/_input/interface/INewLineKey
  *
  * @public
  * @author Крайнов Д.О.
