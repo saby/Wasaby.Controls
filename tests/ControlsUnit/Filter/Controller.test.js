@@ -1,4 +1,4 @@
-define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Controls/_filter/HistoryUtils'], function(Filter, Deferred, entity, HistoryUtils) {
+define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Controls/_filter/HistoryUtils', 'Env/Env'], function(Filter, Deferred, entity, HistoryUtils, Env) {
 
    describe('Controls.Filter.Controller', function () {
 
@@ -723,6 +723,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
       });
 
       it('_private.updateHistory', function(done) {
+         if (Env.constants.isServerSide) { return done(); }
          var fastFilterItems = [];
 
          var filterButtonItems = [];
@@ -814,6 +815,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
       });
 
       it('updateFilterHistory', function(done) {
+         if (Env.constants.isServerSide) { return done(); }
          let fastFilterItems = [],
             filterButtonItems = [];
          Filter.updateFilterHistory({historyId: 'TEST_HISTORY_ID', filterButtonItems: filterButtonItems, fastFilterItems: fastFilterItems});

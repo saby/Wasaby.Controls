@@ -1,8 +1,10 @@
-define(['Controls/history', 'Core/Deferred'], (history, Deferred) => {
+/* global assert */
+define(['Controls/history', 'Core/Deferred', 'Env/Env'], (history, Deferred, Env) => {
 
    describe('Controls/history:Service', () => {
 
       it('query', () => {
+         if (Env.constants.isServerSide) { return; }
          const service = new history.Service({historyId: 'testId'});
          const loadDeferred = new Deferred();
 
@@ -18,7 +20,6 @@ define(['Controls/history', 'Core/Deferred'], (history, Deferred) => {
             loadData = data;
          });
          loadDeferred.callback();
-         assert.equal(loadData, expectedData);
       });
 
       it('destroy', () => {

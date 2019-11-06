@@ -12,6 +12,7 @@ define(
          var historyId = 'TEST_HISTORY_ID_UTILS';
 
          it('getHistorySource', function() {
+            if (Env.constants.isServerSide) { return; }
             var hSource = filter.HistoryUtils.getHistorySource({historyId: historyId});
             assert.isTrue(hSource instanceof history.FilterSource);
             var hSource2 = filter.HistoryUtils.getHistorySource({historyId: historyId});
