@@ -4,7 +4,8 @@ import template = require('wml!Controls/_toolbars/View');
 import toolbarItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
 import {factory} from 'Types/collection';
 import {getMenuItems, showType} from 'Controls/Utils/Toolbar';
-import {ActualApi as ButtonActualApi, ButtonTemplate, Button} from 'Controls/buttons';
+import * as ButtonTemplate from 'wml!Controls/_toolbars/buttonTemplate';
+import {ActualApi as ButtonActualApi, cssStyleGeneration} from 'Controls/buttons';
 
 /**
  * Графический контрол, отображаемый в виде панели с размещенными на ней кнопками, клик по которым вызывает соответствующие им команды.
@@ -616,14 +617,6 @@ var Toolbar = Control.extend({
         this._notify('menuClosed', [], {bubbling: true});
     },
 
-    _clickHandler: function() {
-        Button.prototype._clickHandler.apply(this, arguments);
-    },
-
-    _keyUpHandler: function() {
-        Button.prototype._keyUpHandler.apply(this, arguments);
-    },
-
     _getButtonConfig: function(item) {
         const size = 'm';
         const icon = item.get('buttonIcon') || item.get('icon');
@@ -634,7 +627,7 @@ var Toolbar = Control.extend({
         const caption = item.get('displayProperty') || item.get('buttonCaption');
         const readOnly = item.get('buttonReadOnly') || item.get('readOnly');
         const cfg = {};
-        Button.prototype.cssStyleGeneration.call(cfg, {
+        cssStyleGeneration.call(cfg, {
             size, icon, style, viewMode, iconStyle, transparent, caption, readOnly
         });
         return cfg
