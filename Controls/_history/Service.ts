@@ -114,7 +114,7 @@ var _private = {
  *       historyId: 'TEST_HISTORY_ID'
  *    })
  * </pre>
- */
+ */ 
 
 /**
  * @name Controls/_history/Service#historyId
@@ -124,7 +124,7 @@ var _private = {
 /*
  * @name Controls/_history/Service#historyId
  * @cfg {String} unique service history identifier
- */
+ */ 
 
 /**
  * @name Controls/_history/Service#historyIds
@@ -134,7 +134,7 @@ var _private = {
 /*
  * @name Controls/_history/Service#historyIds
  * @cfg {Array of String} unique service history identifiers
- */
+ */ 
 
 /**
  * @name Controls/_history/Service#pinned
@@ -150,7 +150,7 @@ var _private = {
  * @remark
  * true - Load items
  * false - No load items
- */
+ */ 
 
 /**
  * @name Controls/_history/Service#frequent
@@ -166,7 +166,7 @@ var _private = {
  * @remark
  * true - Load items
  * false - No load items
- */
+ */ 
 
 /**
  * @name Controls/_history/Service#recent
@@ -182,7 +182,7 @@ var _private = {
  * @remark
  * true - Load items
  * false - No load items
- */
+ */ 
 
 /**
  * @name Controls/_history/Service#dataLoaded
@@ -198,7 +198,7 @@ var _private = {
  * @remark
  * true - BL return items with data
  * false - BL return items without data
- */
+ */ 
 
 var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
    _historyDataSource: null,
@@ -239,13 +239,14 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
       const historyId = self._historyId;
 
       let resultDef;
+
       if (STORAGES_DATA_LOAD[historyId] && Env.constants.isBrowserPlatform) {
          resultDef = new Deferred();
          // create new deferred, so in the first callback function, the result of the query will be changed
          STORAGES_DATA_LOAD[historyId].addBoth(() => {
             resultDef.callback(self.getHistory(historyId));
          });
-      } else if (!STORAGES[historyId] || Env.constants.isServerSide) {
+      } else if (!STORAGES[historyId] || typeof process !== 'undefined') {
          resultDef = _private.getHistoryDataSource(this).call('UnionMultiHistoryIndexesList', {
             params: {
                historyIds: historyId ? [historyId] : this._historyIds,
@@ -283,8 +284,8 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
       return resultDef;
    },
 
-   destroy(keys: number | string | Array<number | string>): Deferred<null> {
-      let result;
+   destroy(keys: number|string|Array<number|string>): Deferred<null> {
+      let  result;
 
       if (keys) {
          const key = keys instanceof Array ? keys[0] : keys;
