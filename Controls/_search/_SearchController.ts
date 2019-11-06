@@ -74,6 +74,7 @@ var _private = {
  * @class Controls/_search/_SearchController
  * @mixes Controls/interface/ISearch
  * @mixes Controls/_interface/ISource
+ * @private
  */
 /**
  * @name searchCallback
