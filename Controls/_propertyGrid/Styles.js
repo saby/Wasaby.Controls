@@ -3,7 +3,7 @@ define('Controls/_propertyGrid/Styles', [], function() {}
    /**
     * @author Герасимов А.М.
     * @mixin Controls/_propertyGrid/Styles
-    * @public
+    * @private
     *
     * @css @spacing_PropertyGrid-between-top-border-content Empty spacing between top border and content
     * @css @spacing_PropertyGrid-between-right-border-content Empty spacing between right border and content
