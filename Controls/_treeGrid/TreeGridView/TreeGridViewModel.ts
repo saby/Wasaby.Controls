@@ -116,6 +116,9 @@ var
             this._model.resetExpandedItems();
         },
         isDrawResults: function() {
+            if (this._options.resultsVisibility === 'visible') {
+                return true;
+            }
             var items = this.getDisplay();
             if (items) {
                 var rootItems = this._model.getHierarchyRelation().getChildren(items.getRoot().getContents(), this.getItems());
