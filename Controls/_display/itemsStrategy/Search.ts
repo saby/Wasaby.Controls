@@ -154,87 +154,82 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
      * @param items Display items
      * @param options Options
      */
-    static sortItems<S, T extends TreeItem<S>>(items: T[], options: ISortOptions<S, T>): T[] {
-        const display = options.display;
-        const originalBreadcrumbs = options.originalBreadcrumbs;
-        const originalParents = options.originalParents;
-        const dump = {};
+    static sortItems<S, T extends TreeItem<S> = TreeItem<S>>(items: T[], options: ISortOptions<S, T>): T[] {
+        const {display, originalBreadcrumbs, originalParents}: ISortOptions<S, T> = options;
 
-        let currentBreadcrumbs = null;
-        let breadcrumbsLevel = null;
-
-        const sortedItems = items.map((item, index) => {
+        const sortedItems = [];
+        let prevBreadCrumbs;
+        items.forEach((item, index) => {
             if (item instanceof TreeItem) {
+                // Restore original parent
                 if (originalParents.has(item)) {
                     item.setParent(originalParents.get(item));
                     originalParents.delete(item);
                 }
 
                 if (item.isNode()) {
-                    // Look at the next item
-                    const next = items[index + 1];
+                    // Create breadcrumbs for each node even though it's not last in chain because it can be used later
+                    if (!originalBreadcrumbs.has(item)) {
+                        originalBreadcrumbs.set(item, new BreadcrumbsItem<S>({
+                            contents: null,
+                            owner: display,
+                            last: item
+                        }));
+                    }
 
-                    if (originalParents.has(next) && next instanceof TreeItem) {
+                    // Look at the next item after current node
+                    const next = items[index + 1];
+                    const nextIsTreeItem = next instanceof TreeItem;
+
+                    // Restore original parent in next tree item
+                    if (originalParents.has(next) && nextIsTreeItem) {
                         next.setParent(originalParents.get(next));
                         originalParents.delete(next);
                     }
 
-                    // Remember the level of the first breadcrumb item
-                    if (currentBreadcrumbs === null && breadcrumbsLevel === null) {
-                         breadcrumbsLevel = item.getLevel();
-                    }
-
-                     // Check that the next item is the node with bigger level.
-                    // If it's not true that means we reach the last item in current breadcrumbs.
-                    const isLastBreadcrumb = next instanceof TreeItem && next.isNode() ?
+                    // Check that the next tree item is a node with bigger level.
+                    // If it's not that means we've reached the end of current breadcrumbs.
+                    const isLastBreadcrumb = nextIsTreeItem && next.isNode() ?
                         item.getLevel() >= next.getLevel() :
                         true;
+
+                    // Add completed breadcrumbs to show even empty
                     if (isLastBreadcrumb) {
-                         // If there is no next breadcrumb item let's define current breadcrumbs
-
-                        // Try to use previously created instance if possible
-                        if (originalBreadcrumbs.has(item)) {
-                             currentBreadcrumbs = originalBreadcrumbs.get(item);
-                        } else {
-                             currentBreadcrumbs = new BreadcrumbsItem<S>({
-                                  contents: null,
-                                  owner: display as any,
-                                  last: item
-                             });
-                             originalBreadcrumbs.set(item, currentBreadcrumbs);
-                        }
-
-                        // Return completed breadcrumbs
-                        return currentBreadcrumbs;
+                        prevBreadCrumbs = originalBreadcrumbs.get(item);
+                        sortedItems.push(prevBreadCrumbs);
                     }
 
-                    // If there is previously created instance for this node - forget it
-                    if (originalBreadcrumbs.has(item)) {
-                        currentBreadcrumbs = originalBreadcrumbs.delete(item);
-                    }
-
-                    // This item is not the last node inside the breadcrumbs, therefore skip it and wait for the last
-                    // node
-                    currentBreadcrumbs = null;
-                    return dump;
-                } else if (item.getLevel() <= breadcrumbsLevel) {
-                     currentBreadcrumbs = null;
-                     breadcrumbsLevel = 0;
+                    // Finish here for any node
+                    return;
                 }
 
-                // This is an item outside breadcrumbs so set the current breadcrumbs as its parent.
-                // All items outside breadcrumbs should be at first level after breadcrumbs itself.
+                // Get breadcrumbs by leaf's parent
+                const currentBreadcrumbs = originalBreadcrumbs.get(item.getParent() as T);
                 if (currentBreadcrumbs) {
-                     originalParents.set(item, item.getParent());
-                     item.setParent(currentBreadcrumbs);
+                    // Add actual breadcrumbs if it has been changed
+                    if (currentBreadcrumbs !== prevBreadCrumbs) {
+                        sortedItems.push(currentBreadcrumbs);
+                    }
+
+                    // This is a leaf outside breadcrumbs so set the current breadcrumbs as its parent.
+                    // All leaves outside breadcrumbs should be at next level after breadcrumbs itself.
+                    originalParents.set(item, item.getParent());
+                    item.setParent(currentBreadcrumbs as any);
                 }
+                prevBreadCrumbs = currentBreadcrumbs;
             }
 
-            return item;
-        }).filter((item) => {
-            // Skip nodes included into breadcrumbs
-            return item !== dump;
+            sortedItems.push(item);
         });
+
+        // Forget unused breadcrumbs
+        const toDelete = [];
+        originalBreadcrumbs.forEach((value, key) => {
+            if (items.indexOf(key) === -1) {
+                toDelete.push(key);
+            }
+        });
+        toDelete.forEach((key) => originalBreadcrumbs.delete(key));
 
         return sortedItems;
     }
