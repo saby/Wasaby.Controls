@@ -3,6 +3,8 @@
             {{highlightOnHover !== false ? 'controls-itemActionsV_style_' + (style ? style : 'default') }}
             {{itemActionsPosition !== 'outside' ? itemActionsClass ? itemActionsClass : 'controls-itemActionsV_position_bottomRight' : ''}}
             controls-itemActionsV_{{itemActionsPosition}}
+            controls-itemActionsV_{{itemActionsPosition}}_padding-top_{{itemPadding.top === 'null' ? 'null' : 'default'}}
+            controls-itemActionsV_{{itemActionsPosition}}_padding-bottom_{{itemPadding.bottom === 'null' ? 'null' : 'default'}}
             {{itemData.isEditing ? 'controls-itemActionsV_editing'}}
             {{itemData.isEditing && toolbarVisibility ? 'controls-itemActionsV_editingToolbarVisible'}}
             {{itemData.isActive && actionMenuIsShown ? 'controls-itemActionsV_visible'}}
