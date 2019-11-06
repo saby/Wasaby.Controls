@@ -11,6 +11,7 @@ import monthListUtils from './Utils';
  * @class Controls/_calendar/MonthList/MonthSource
  * @extends Types/source:Base
  * @author Красильников А.С.
+ * @private
  */
 
 export default class MonthsSource extends Memory {
