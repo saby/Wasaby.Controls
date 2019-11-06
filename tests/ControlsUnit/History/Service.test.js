@@ -20,6 +20,7 @@ define(['Controls/history', 'Core/Deferred', 'Env/Env'], (history, Deferred, Env
             loadData = data;
          });
          loadDeferred.callback();
+         assert.equal(loadData, expectedData);
       });
 
       it('destroy', () => {
