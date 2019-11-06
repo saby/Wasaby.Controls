@@ -239,7 +239,7 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
       const historyId = self._historyId;
 
       let resultDef;
-      throw new Error('isBrowserPlatform: ' + Env.constants.isBrowserPlatform + ' isServerSide:' + Env.constants.isServerSide);
+      throw new Error('isBuildOnServer: ' + Env.constants.isBuildOnServer + ' isServerSide:' + Env.constants.isServerSide);
       if (STORAGES_DATA_LOAD[historyId] && !Env.constants.isBuildOnServer) {
          resultDef = new Deferred();
          // create new deferred, so in the first callback function, the result of the query will be changed
