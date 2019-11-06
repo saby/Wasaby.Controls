@@ -589,6 +589,20 @@ var Toolbar = Control.extend({
         }
     },
 
+    _isShowToolbar: function(item, parentProperty) {
+        const itemShowType = item.get('showType');
+        if (itemShowType === showType.MENU) {
+            return false;
+        }
+        const itemHasParentProperty = item.has(parentProperty) && item.get(parentProperty) !== null;
+
+        if (itemHasParentProperty) {
+            return itemShowType === showType.MENU_TOOLBAR;
+        }
+
+        return true;
+    },
+
     _showMenu: function (event) {
         var config = _private.generateMenuConfig(this);
         this._notify('menuOpened', [], {bubbling: true});
