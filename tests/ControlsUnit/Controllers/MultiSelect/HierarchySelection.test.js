@@ -27,6 +27,15 @@ define([
          return new treeGrid.ViewModel({columns: [], items: recordSet || allData});
       }
 
+      function getEntryPath() {
+         return ListData.getItems().map(function(item) {
+            return {
+               id: item[ListData.KEY_PROPERTY],
+               parent: item[ListData.PARENT_PROPERTY]
+            };
+         });
+      }
+
       var
          cfg,
          selection,
@@ -670,6 +679,9 @@ define([
             });
 
             selectionInstance = new operations.HierarchySelection(cfg);
+            selectionInstance._listModel.getItems().setMetaData({
+               ENTRY_PATH: getEntryPath()
+            });
             selectionInstance.selectAll();
 
             assert.deepEqual([null], selectionInstance.selectedKeys);

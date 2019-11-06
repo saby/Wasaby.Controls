@@ -1,16 +1,15 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
+import { getItems } from 'Controls/_operations/MultiSelector/SelectionHelper';
+
 import { Collection } from 'Controls/display';
+import { ListViewModel } from 'Controls/list';
+import { RecordSet, List } from 'Types/collection';
+import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
 
-type TKeys = number[] | string[];
-
-interface ISelection {
-   selectedKeys: TKeys,
-   excludedKeys: TKeys
-}
 
 const ALL_SELECTION_VALUE = null;
 
-class FlatSelectionStrategy {
+export default class FlatSelectionStrategy {
    public select(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys): ISelection {
       selectedKeys = selectedKeys.slice();
       excludedKeys = excludedKeys.slice();
@@ -22,8 +21,8 @@ class FlatSelectionStrategy {
       }
 
       return {
-         selectedKeys: selectedKeys,
-         excludedKeys: excludedKeys
+         selected: selectedKeys,
+         excluded: excludedKeys
       };
    }
 
@@ -38,14 +37,14 @@ class FlatSelectionStrategy {
       }
 
       return {
-         selectedKeys: selectedKeys,
-         excludedKeys: excludedKeys
+         selected: selectedKeys,
+         excluded: excludedKeys
       };
    }
 
-   public getCount(selectedKeys: TKeys, excludedKeys: TKeys, model, limit: number): Promise {
+   public getCount(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, limit: number): Promise {
       let itemsSelectedCount: number|null = null;
-      let items = this._getItems(model);
+      let items: RecordSet|List = getItems(model);
       let itemsCount: number = items.getCount();
 
       if (this.isAllSelected(selectedKeys)) {
@@ -65,9 +64,9 @@ class FlatSelectionStrategy {
       });
    }
 
-   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model, keyProperty: String, limit: number): Map {
+   public getSelectionForModel(selectedKeys: TKeys, excludedKeys: TKeys, model: Collection|ListViewModel, keyProperty: string, limit: number): Map<TKey, boolean> {
       let
-         selectionResult: Map = new Map(),
+         selectionResult: Map<TKey, boolean> = new Map(),
          selectedItemsCount: number = 0,
          isAllSelected: boolean = this.isAllSelected(selectedKeys);
 
@@ -75,8 +74,8 @@ class FlatSelectionStrategy {
          limit -= excludedKeys.length;
       }
 
-      this._getItems(model).forEach((item) => {
-         let itemId = item.get(keyProperty);
+      getItems(model).forEach((item) => {
+         let itemId: TKey = item.get(keyProperty);
          let isSelected: boolean = (!limit || selectedItemsCount < limit) &&
             (selectedKeys.includes(itemId) || isAllSelected && !excludedKeys.includes(itemId));
 
@@ -91,26 +90,16 @@ class FlatSelectionStrategy {
       return selectionResult;
    }
 
-   public isAllSelected(selectedKeys: TKeys) {
+   public isAllSelected(selectedKeys: TKeys): boolean {
       return selectedKeys.includes(ALL_SELECTION_VALUE);
    }
 
-   private _isAllItemsLoaded(items, limit: number): boolean {
+   private _isAllItemsLoaded(items: RecordSet|List, limit: number): boolean {
       let
-         itemsCount = items.getCount(),
-         more = items.getMetaData().more,
-         hasMore = typeof more === 'number' ? more > itemsCount : more;
+         itemsCount: number = items.getCount(),
+         more: number|boolean|undefined = items.getMetaData().more,
+         hasMore: boolean|undefined = typeof more === 'number' ? more > itemsCount : more;
 
       return !hasMore || (limit && itemsCount >= limit);
    }
-
-   private _getItems(model) {
-      if (model instanceof Collection) {
-         return model.getCollection();
-      } else {
-         return model.getItems();
-      }
-   }
 }
-
-export default FlatSelectionStrategy;

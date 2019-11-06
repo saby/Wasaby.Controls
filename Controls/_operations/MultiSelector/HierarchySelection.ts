@@ -1,15 +1,22 @@
-import Selection from 'Controls/_operations/MultiSelector/Selection';
+import { default as Selection, IOptions as ISelectionOptions} from 'Controls/_operations/MultiSelector/Selection';
 import {relation} from 'Types/entity';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import SelectionHelper from 'Controls/_operations/MultiSelector/SelectionHelper';
+import { getChildrenIds, removeSelectionChildren } from 'Controls/_operations/MultiSelector/SelectionHelper';
 import TreeSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';
+import { Tree as TreeCollection } from 'Controls/display';
 
-type TKeys = number[] | string[];
+import { ViewModel } from 'Controls/treeGrid';
+import { RecordSet } from 'Types/collection';
+import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
 
-interface ISelection {
-   selectedKeys: TKeys,
-   excludedKeys: TKeys
-}
+export interface IOptions extends ISelectionOptions {
+   listModel: TreeCollection|ViewModel,
+   parentProperty?: string,
+   nodeProperty?: string,
+   hasChildrenProperty?: string,
+   selectionStrategy: TreeSelectionStrategy
+};
+
 /**
  * @class Controls/_operations/MultiSelector/HierarchySelection
  * @extends Controls/_operations/MultiSelector/Selection
@@ -27,54 +34,50 @@ interface ISelection {
  * @cfg {String} Name of the field that contains information about parent node.
  */
 
-const ALL_SELECTION_VALUE = null;
 const FIELD_ENTRY_PATH = 'ENTRY_PATH';
 
-class HierarchySelection extends Selection {
+export default class HierarchySelection extends Selection {
    protected _selectionStrategy: TreeSelectionStrategy;
    protected _hierarchyRelation: relation.Hierarchy;
 
-   constructor(options: Object): void {
+   constructor(options: IOptions): void {
       super(options);
 
-      this._hierarchyRelation = new relation.Hierarchy({
-         keyProperty: options.keyProperty || 'id',
-         parentProperty: options.parentProperty || 'Раздел',
-         nodeProperty: options.nodeProperty || 'Раздел@',
-         declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
-      });
+      if (!(this._listModel instanceof TreeCollection)) {
+         this._hierarchyRelation = new relation.Hierarchy({
+            keyProperty: options.keyProperty || 'id',
+            parentProperty: options.parentProperty || 'Раздел',
+            nodeProperty: options.nodeProperty || 'Раздел@',
+            declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
+         });
+      }
    }
 
    public select(keys: TKeys): void {
       let selection: ISelection = this._selectionStrategy.select(keys, this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation);
 
-      this._selectedKeys = selection.selectedKeys;
-      this._excludedKeys = selection.excludedKeys;
+      this._selectedKeys = selection.selected;
+      this._excludedKeys = selection.excluded;
    }
 
    public unselect(keys: TKeys): void {
       let selection: ISelection = this._selectionStrategy.unSelect(keys, this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation);
 
-      this._selectedKeys = selection.selectedKeys;
-      this._excludedKeys = selection.excludedKeys;
+      this._selectedKeys = selection.selected;
+      this._excludedKeys = selection.excluded;
    }
 
    public selectAll(): void {
-      let rootId = this._getRoot();
+      let rootId: TKey = this._getRoot();
 
-      if (rootId === ALL_SELECTION_VALUE) {
-         super.selectAll();
-      } else {
-         this.select([rootId]);
-         this._removeSelectionChildren(rootId);
-      }
-
+      this.select([rootId]);
+      this._removeSelectionChildren(rootId);
       this._excludedKeys = ArraySimpleValuesUtil.addSubArray(this._excludedKeys, [this._getRoot()]);
    }
 
    public unselectAll(): void {
-      let rootId: string|number|null = this._getRoot();
-      let metaData = this._getItems().getMetaData();
+      let rootId: TKey = this._getRoot();
+      let metaData: Object = this._getItems().getMetaData();
 
       if (metaData[FIELD_ENTRY_PATH]) {
          this.unselect([rootId]);
@@ -87,12 +90,12 @@ class HierarchySelection extends Selection {
 
    public toggleAll(): void {
       let
-         rootId = this._getRoot(),
-         oldSelectedKeys = this._selectedKeys.slice(),
-         oldExcludedKeys = this._excludedKeys.slice(),
-         childrenIdsRoot = SelectionHelper.getChildrenIds(rootId, this._getItems(), this._hierarchyRelation);
+         rootId: TKey = this._getRoot(),
+         oldSelectedKeys: TKeys = this._selectedKeys.slice(),
+         oldExcludedKeys: TKeys = this._excludedKeys.slice(),
+         childrenIdsRoot: TKeys = getChildrenIds(rootId, this._listModel, this._hierarchyRelation);
 
-      if (this._selectionStrategy.isAllSelected(this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation)) {
+      if (this._selectionStrategy.isAllSelected(rootId, this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation)) {
          this.unselect([rootId]);
          this._removeSelectionChildren(rootId);
          this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, [rootId]);
@@ -113,13 +116,12 @@ class HierarchySelection extends Selection {
          this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation);
    }
 
-   private _getRoot(): string|number|null {
+   private _getRoot(): TKey {
       return this._listModel.getRoot().getContents();
    }
 
-   private _removeSelectionChildren(nodeId) {
-      SelectionHelper.removeSelectionChildren(nodeId, this._selectedKeys, this._excludedKeys, this._getItems(), this._hierarchyRelation);
+   private _removeSelectionChildren(nodeId): void {
+      removeSelectionChildren(nodeId, this._selectedKeys, this._excludedKeys, this._listModel, this._hierarchyRelation);
    }
 }
 
-export default HierarchySelection;

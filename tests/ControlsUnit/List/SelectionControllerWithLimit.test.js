@@ -4,7 +4,6 @@ define([
    'Types/entity',
    'Controls/operations',
    'Controls/list',
-   'Controls/_operations/MultiSelector/SelectionStrategy/Flat',
    'ControlsUnit/ListData'
 ], function(
    SelectionController,
@@ -12,7 +11,6 @@ define([
    entity,
    operations,
    list,
-   FlatSelectionStrategy,
    ListData
 ) {
    'use strict';
@@ -34,7 +32,7 @@ define([
             excludedKeys: [],
             items: rs,
             keyProperty: ListData.KEY_PROPERTY,
-            selectionStrategy: FlatSelectionStrategy.default,
+            selectionStrategy: 'Controls/operations:FlatSelectionStrategy',
             listModel: new list.ListViewModel({items: rs})
          };
          instance = new SelectionController();

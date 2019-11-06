@@ -2,7 +2,18 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import FlatSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Flat';
 import { Collection } from 'Controls/display';
 
-type TKeys = number[] | string[];
+import { ListViewModel } from 'Controls/list';
+import { RecordSet, List } from 'Types/collection';
+import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
+
+export interface IOptions {
+   listModel: Collection|ListViewModel,
+   keyProperty: string,
+   selectedKeys?: TKeys,
+   excludedKeys?: TKeys,
+   selectionStrategy: FlatSelectionStrategy
+};
+
 /**
  * @class Controls/_operations/MultiSelector/Selection
  * @extends Core/core-simpleExtend
@@ -29,9 +40,9 @@ type TKeys = number[] | string[];
 
 const ALL_SELECTION_VALUE = null;
 
-class Selection {
+export default class Selection {
    protected _selectionStrategy: FlatSelectionStrategy;
-   protected _listModel;
+   protected _listModel: Collection|ListViewModel;
    protected _keyProperty: string;
    protected _selectedKeys: TKeys = [];
    protected _excludedKeys: TKeys = [];
@@ -53,7 +64,7 @@ class Selection {
       this._excludedKeys = keys;
    }
 
-   constructor(options: Object): void {
+   constructor(options: IOptions): void {
       this._listModel = options.listModel;
       this._keyProperty = options.keyProperty;
       this._selectedKeys = options.selectedKeys.slice();
@@ -72,8 +83,8 @@ class Selection {
 
       let selection: ISelection = this._selectionStrategy.select(keys, this._selectedKeys, this._excludedKeys);
 
-      this._selectedKeys = selection.selectedKeys;
-      this._excludedKeys = selection.excludedKeys;
+      this._selectedKeys = selection.selected;
+      this._excludedKeys = selection.excluded;
    }
 
    /**
@@ -83,8 +94,8 @@ class Selection {
    public unselect(keys: TKeys): void {
       let selection: ISelection = this._selectionStrategy.unSelect(keys, this._selectedKeys, this._excludedKeys);
 
-      this._selectedKeys = selection.selectedKeys;
-      this._excludedKeys = selection.excludedKeys;
+      this._selectedKeys = selection.selected;
+      this._excludedKeys = selection.excluded;
    }
 
    /**
@@ -154,12 +165,12 @@ class Selection {
     * @returns {Object}
     */
    public updateSelectionForRender(): void {
-      let selectionForModel = this._getSelectionForModel();
+      let selectionForModel: Map<TKey, boolean> = this._getSelectionForModel();
 
       if (this._listModel instanceof Collection) {
          this._listModel.setSelection(selectionForModel);
       } else {
-         let selectionForOldModel = {};
+         let selectionForOldModel: Object = {};
 
          selectionForModel.forEach((stateSelection, itemId) => {
             selectionForOldModel[itemId] = stateSelection;
@@ -168,12 +179,12 @@ class Selection {
       }
    }
 
-   public setListModel(listModel): void {
+   public setListModel(listModel: Collection|ListViewModel): void {
       this._listModel = listModel;
       this.updateSelectionForRender();
    }
 
-   protected _getSelectionForModel(): Map {
+   protected _getSelectionForModel(): Map<TKey, boolean> {
       return this._selectionStrategy.getSelectionForModel(
          this._selectedKeys, this._excludedKeys, this._listModel, this._keyProperty, this._limit);
    }
@@ -188,13 +199,13 @@ class Selection {
       let
          selectedItemsCount: number = 0,
          limit: number = this._limit ? this._limit - this._excludedKeys.length : 0,
-         selectionForModel = this._selectionStrategy.getSelectionForModel(
+         selectionForModel: Map<TKey, boolean> = this._selectionStrategy.getSelectionForModel(
             this._selectedKeys, this._excludedKeys, this._listModel, this._keyProperty, this._limit);
 
       this._getItems().forEach((item) => {
-         let key: string|number = item.get(this._keyProperty);
+         let key: TKey = item.get(this._keyProperty);
 
-         if (selectedItemsCount < limit && selectionForModel[key] !== false) {
+         if (selectedItemsCount < limit && selectionForModel.get(key) !== false) {
             selectedItemsCount++;
          } else if (selectedItemsCount >= limit && keys.length) {
             selectedItemsCount++;
@@ -209,7 +220,7 @@ class Selection {
       });
    }
 
-   private _getItems() {
+   private _getItems(): RecordSet|List {
       if (this._listModel instanceof Collection) {
          return this._listModel.getCollection();
       } else {
@@ -217,5 +228,3 @@ class Selection {
       }
    }
 }
-
-export default Selection;

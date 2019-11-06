@@ -5,8 +5,6 @@ define([
    'Controls/operations',
    'Controls/list',
    'Controls/treeGrid',
-   'Controls/_operations/MultiSelector/SelectionStrategy/Flat',
-   'Controls/_operations/MultiSelector/SelectionStrategy/DeepTree',
    'ControlsUnit/ListData'
 ], function(
    SelectionController,
@@ -15,8 +13,6 @@ define([
    operations,
    list,
    treeGrid,
-   FlatSelectionStrategy,
-   DeepTreeSelectionStrategy,
    ListData
 ) {
    'use strict';
@@ -39,7 +35,7 @@ define([
             items: rs,
             parentProperty: ListData.PARENT_PROPERTY,
             nodeProperty: ListData.NODE_PROPERTY,
-            selectionStrategy: DeepTreeSelectionStrategy.default,
+            selectionStrategy: 'Controls/operations:DeepTreeSelectionStrategy',
             keyProperty: ListData.KEY_PROPERTY,
             listModel: new treeGrid.ViewModel({columns: [], items: rs})
          };
@@ -56,7 +52,7 @@ define([
             selectedKeys: [],
             excludedKeys: [],
             keyProperty: 'id',
-            selectionStrategy: FlatSelectionStrategy.default,
+            selectionStrategy: 'Controls/operations:FlatSelectionStrategy',
             listModel: new list.ListViewModel({items: rs})
          };
          var inst = new SelectionController();
