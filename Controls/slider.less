@@ -172,11 +172,6 @@
   left: -@Slider-segment-after-width;
 }
 
-.controls-Slider__tooltipContainer {
-  /*display: flex;
-  justify-content: center;*/
-  position: relative;
-}
 .controls-Slider__tooltipValue {
   padding-top: @Slider-tooltip-padding-top-bottom;
   padding-right: @Slider-tooltip-padding-left-right;
@@ -188,15 +183,14 @@
   font-size: @Slider-tooltip-font-size;
   position: absolute;
   left: 50%;
-  transform: translate(-50%, 50%);
-  bottom: 20px;
+  transform: translate(-50%, 0);
 }
-/*.controls-Slider__point_big_tooltipValue {
+.controls-Slider__point_big_tooltipValue {
   bottom: @Slider-big_point-size + @Slider-tooltip-interval;
 }
 .controls-Slider__point_small_tooltipValue {
   bottom: @Slider-point-size + @Slider-tooltip-interval;
-}*/
+}
 .controls-Slider__point_tooltip {
   border: @Slider-point-border-thickness solid @Slider-segment-color;
   background-color: @Slider-point-background-color;
