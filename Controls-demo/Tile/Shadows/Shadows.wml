@@ -1,5 +1,5 @@
 <div>
-        <h4>Тень на нечетных карточках</h4>
+        <h4>shadowVisibility false на второй карточке</h4>
         <Controls.tile:View
                 tileMode="dynamic"
                 displayProperty="title"
