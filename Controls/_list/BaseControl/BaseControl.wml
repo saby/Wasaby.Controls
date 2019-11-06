@@ -188,6 +188,8 @@
                 ws:content="listView"
                 on:menuActionsClick="_showActionsMenu()"
                 on:closeSwipe="_closeSwipe()"
+                showEditArrow="{{_options.showEditArrow}}"
+                editArrowVisibilityCallback="{{_options.editArrowVisibilityCallback}}"
                 actionAlignment="{{_options.actionAlignment}}"
                 actionCaptionPosition="{{_options.actionCaptionPosition}}"
                 viewName="{{ _options.viewName }}"
