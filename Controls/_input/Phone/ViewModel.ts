@@ -63,9 +63,25 @@ import InputProcessor = require('Controls/_input/Mask/InputProcessor');
          handleInput: function(splitValue, inputType) {
             // Let the user past phone numbers from buffer in any format. Clear data from unnecessary characters.
             splitValue.insert = splitValue.insert.replace(_private.NOT_PHONE_NUMBER_SYMBOLS_REGEXP, '');
-            var newMask = MaskBuilder.getMask(splitValue.before + splitValue.insert + splitValue.after);
-            var newFormat = FormatBuilder.getFormat(newMask, _private.FORMAT_MASK_CHARS, _private.REPLACER);
-            var result = InputProcessor.input(splitValue, inputType, _private.REPLACER, this._format, newFormat);
+            const clearSplitValue = InputProcessor.getClearSplitValue(
+                splitValue,
+                Formatter.getClearData(this._format, this._displayValue)
+            );
+            if (!clearSplitValue.delete) {
+               switch (inputType) {
+                  case 'deleteForward':
+                     clearSplitValue.after = clearSplitValue.after.substring(1);
+                     break;
+                  case 'deleteBackward':
+                     clearSplitValue.before = clearSplitValue.before.slice(0, -1);
+                     break;
+                  default:
+                     break;
+               }
+            }
+            const newMask = MaskBuilder.getMask(clearSplitValue.before + clearSplitValue.insert + clearSplitValue.after);
+            const newFormat = FormatBuilder.getFormat(newMask, _private.FORMAT_MASK_CHARS, _private.REPLACER);
+            const result = InputProcessor.input(splitValue, inputType, _private.REPLACER, this._format, newFormat);
 
             return ViewModel.superclass.handleInput.call(this, _private.prepareData(result), inputType);
          },
