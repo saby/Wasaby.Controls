@@ -296,6 +296,7 @@ var _private = {
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
+ * @private
  */
 
 /*
@@ -309,6 +310,7 @@ var _private = {
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/interface/INavigation
  * @control
+ * @private
  */
 var SuggestLayout = Control.extend({
    _template: template,
