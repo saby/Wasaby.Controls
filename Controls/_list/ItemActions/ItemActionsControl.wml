@@ -16,6 +16,7 @@
                  style="{{_options.style}}"
                  size="{{_options.editingConfig ? 's' : 'm'}}"
                  template="{{ _itemActionsTemplate }}"
+                 itemPadding="{{_options.itemPadding}}"
                  itemActionsPosition="{{_options.itemActionsPosition}}"
                  actionMenuIsShown="{{_options.actionMenuIsShown}}"
                  scope="{{itemActionsTemplate}}"/>
