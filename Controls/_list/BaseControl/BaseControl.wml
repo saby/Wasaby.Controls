@@ -23,7 +23,7 @@
         <div class="controls-BaseControl__footerPaging_wrapper">
             <ws:if data="{{_pagingLabelData}}">
                 <ws:if data="{{_options.navigation.viewConfig.totalInfo === 'extended'}}">
-                    <div class="controls-BaseControl_paging-label"><div>{{_pagingLabelData.firstItemNumber}} - {{_pagingLabelData.lastItemNumber}} из {{_pagingLabelData.totalItemsCount}}, по </div>
+                    <div class="controls-BaseControl_paging-label"><div>{{_pagingLabelData.firstItemNumber}} - {{_pagingLabelData.lastItemNumber}} {{rk('из')}} {{_pagingLabelData.totalItemsCount}}, {{rk('по')}} </div>
                     <Controls.dropdown:Button
                             attr:class="controls-BaseControl_paging-pageSizeChooser"
                             keyProperty="id"
@@ -37,7 +37,7 @@
                     </div>
                 </ws:if>
                 <ws:else>
-                    <div class="controls-BaseControl_paging-label">Всего {{_pagingLabelData.totalItemsCount}}</div>
+                    <div class="controls-BaseControl_paging-label">{{rk('Всего')}} {{_pagingLabelData.totalItemsCount}}</div>
                 </ws:else>
             </ws:if>
             <Controls.paging:Paging attr:class="controls-BaseControl__footerPaging"
