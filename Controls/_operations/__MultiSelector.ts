@@ -63,13 +63,13 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
    }
 
    private _updateSelection(selectedKeys: TKeys, excludedKeys: TKeys, count: TCount, root: TRoot): void {
-      const keyCount = count === undefined ? selectedKeys.length : count;
+      const selectedCount = count === undefined ? selectedKeys.length : count;
 
-      if (keyCount > 0 && selectedKeys.length) {
-         this._menuCaption = rk('Отмечено') + ': ' + keyCount;
+      if (selectedCount > 0 && selectedKeys.length) {
+         this._menuCaption = rk('Отмечено') + ': ' + selectedCount;
       } else if (selectedKeys[0] === root && (!excludedKeys.length || excludedKeys[0] === root && excludedKeys.length === 1)) {
          this._menuCaption = rk('Отмечено всё');
-      } else if (keyCount === null) {
+      } else if (selectedCount === null) {
          this._menuCaption = rk('Отмечено');
       } else {
          this._menuCaption = rk('Отметить');
