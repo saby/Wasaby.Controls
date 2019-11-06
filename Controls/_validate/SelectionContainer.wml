@@ -1,6 +1,6 @@
 <ws:partial template="{{ _options.content }}"
             validationErrors="{{isValid()}}"
-            validationStatus="{{_isValidResult() ? 'invalid': 'valid'}}"
+            validationStatus="{{_getValidStatus()}}"
             style="{{_isValidResult() ? 'invalid': 'info'}}"
             scope="{{_options}}"
             on:selectedKeysChanged="_selectedKeysChangedHandler()"

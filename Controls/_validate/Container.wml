@@ -1,8 +1,9 @@
 <ws:partial template="{{ _options.content }}"
             style="{{_isValidResult() ? 'invalid': 'info'}}"
-            validationStatus="{{_isValidResult() ? 'invalid': 'valid'}}"
+            validationStatus="{{_getValidStatus()}}"
             scope="{{_options}}"
             on:mouseenter="_hoverHandler()"
             on:focusIn="_focusInHandler()"
+            on:focusOut="_focusOutHandler()"
             on:valueChanged="_valueChangedHandler()"
             on:mouseleave="_mouseLeaveHandler()"/>
