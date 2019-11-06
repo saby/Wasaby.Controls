@@ -1,4 +1,4 @@
-<table class="controls-Grid controls-Grid_{{_options.style}} controls-Grid_table-layout
+<table class="controls-Grid controls-Grid_{{_options.style}}_theme-{{_options.theme}} controls-Grid_table-layout
               controls-Grid_table-layout_{{_listModel._isFixedLayout() ? 'fixed' : 'auto'}}">
     <ws:partial template="wml!Controls/_grid/layout/table/ColGroup" listModel="{{_listModel}}"/>
     <ws:if data="{{_listModel.getHeader() && _listModel.isDrawHeaderWithEmptyList()}}">

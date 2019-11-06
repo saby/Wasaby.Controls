@@ -203,6 +203,24 @@ define(
             });
          });
 
+         it('_private:reload', function(done) {
+            let view = getView(defaultConfig);
+            view._source = defaultConfig.source;
+            view._displayText = {};
+            view._configs = {
+               document: {
+                  items: Clone(defaultItems[1]),
+                  displayProperty: 'title',
+                  keyProperty: 'id'},
+               state: {}
+            };
+            filter.View._private.reload(view).addCallback(() => {
+               assert.equal(view._configs.document.items.getCount(), 2);
+               done();
+            });
+            assert.equal(view._configs.document.items.length, 7);
+         });
+
          it('openDetailPanel', function() {
             let view = getView(defaultConfig),
                popupOptions;

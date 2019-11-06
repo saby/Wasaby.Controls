@@ -7,7 +7,6 @@ import * as PartialGridItemTemplate from 'wml!Controls/_treeGrid/TreeGridView/la
 import * as TableItemTemplate from 'wml!Controls/_treeGrid/TreeGridView/layout/table/Item';
 
 import 'wml!Controls/_treeGrid/TreeGridView/NodeFooter';
-import 'css!theme?Controls/treeGrid';
 
 var
     TreeGridView = GridView.extend({
@@ -31,4 +30,5 @@ var
         }
     });
 
+TreeGridView._theme = ['Controls/grid', 'Controls/treeGrid'];
 export = TreeGridView;

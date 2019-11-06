@@ -243,7 +243,7 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
       if (STORAGES_DATA_LOAD[historyId] && !Env.constants.isBuildOnServer) {
          resultDef = new Deferred();
          // create new deferred, so in the first callback function, the result of the query will be changed
-         STORAGES_DATA_LOAD[historyId].addCallback(() => {
+         STORAGES_DATA_LOAD[historyId].addBoth(() => {
             resultDef.callback(self.getHistory(historyId));
          });
       } else if (!STORAGES[historyId] || Env.constants.isBuildOnServer) {
@@ -271,7 +271,7 @@ var Service = CoreExtend.extend([source.ICrud, entity.OptionsToPropertyMixin, en
             STORAGES_DATA_LOAD[historyId] = resultDef;
          }
 
-         resultDef.addCallback((res) => {
+         resultDef.addBoth((res) => {
             delete STORAGES_DATA_LOAD[historyId];
             return res;
          });

@@ -18,7 +18,8 @@
             menuIsShown="{{ _dropdownMenuIsOpen }}"
 
             on:requestDropdownMenuOpen="_onDropdownMenuOpenRequested()"
-            on:requestDropdownMenuClose="_onDropdownMenuCloseRequested()">
+            on:requestDropdownMenuClose="_onDropdownMenuCloseRequested()"
+            on:actionClick="_tmplNotify('actionClick')">
             <ws:partial template="{{ contentTemplate }}" />
          </Controls._listRender.Containers.ItemActions>
       </Controls._listRender.Containers.Swipe>

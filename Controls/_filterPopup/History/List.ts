@@ -122,7 +122,7 @@ var MAX_NUMBER_ITEMS = 5;
       deleteFavorite: function(self) {
          _private.removeRecord(self, self._editItem);
          _private.updateFavoriteList(self._favoriteList, self._historyStorage, self._historyGlobalStorage);
-         self._children.dialogOpener.close();
+         self._children.stickyOpener.close();
          self._notify('historyChanged');
       },
 

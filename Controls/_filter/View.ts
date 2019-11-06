@@ -243,7 +243,7 @@ var _private = {
     loadItems: function(self, item) {
         var options = item.editorOptions;
 
-        self._configs[item.name] = CoreClone(options);
+        self._configs[item.name] = Merge(self._configs[item.name] || {}, CoreClone(options));
         self._configs[item.name].emptyText = item.emptyText;
         self._configs[item.name].emptyKey = item.hasOwnProperty('emptyKey') ? item.emptyKey : null;
 
@@ -271,11 +271,12 @@ var _private = {
 
     reload: function(self) {
         var pDef = new ParallelDeferred();
-        self._configs = {};
         factory(self._source).each(function(item) {
             if (_private.isFrequentItem(item)) {
                 var result = _private.loadItems(self, item);
                 pDef.push(result);
+            } else if (self._configs[item.name]) {
+                delete self._configs[item.name];
             }
         });
 

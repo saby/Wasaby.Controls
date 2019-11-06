@@ -1,13 +1,13 @@
-<div class="controls-TreeGrid__nodeFooterContent"
+<div class="controls-TreeGrid__nodeFooterContent controls-TreeGrid__nodeFooterContent_theme-{{_options.theme}}"
      style="{{(itemData.multiSelectVisibility !== 'hidden' ? 'grid-column: 2; -ms-grid-column: 2; grid-column: 2 / ' : 'grid-column: 1; -ms-grid-column: 1; grid-column: 1 / ') + (itemData.columns.length + 1) + ';'}}">
     <ws:for data="i in itemData.level">
         <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
     </ws:for>
-    <div class="{{itemData.getExpanderPaddingClasses(expanderSize)}}"></div>
+    <div class="{{itemData.getExpanderPaddingClasses(expanderSize, _options.theme)}}"></div>
     <ws:if data="{{itemData.hasMoreStorage}}">
         <Controls.buttons:Button
                 fontSize="xs"
-                attr:class="controls-TreeGrid__nodeFooterLoadMore"
+                attr:class="controls-TreeGrid__nodeFooterLoadMore controls-TreeGrid__nodeFooterLoadMore_theme-{{_options.theme}}"
                 viewMode="link" fontColorStyle="link"
                 caption="{{rk('Еще') + '...'}}"
                 on:click="_onLoadMoreClick(itemData.dispItem)"
