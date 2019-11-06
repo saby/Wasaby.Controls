@@ -11,6 +11,8 @@ export default class extends Control {
    private _columns = Gadgets.getColumns();
    private _viewMode: string = 'table';
    private _root = null;
+   private _isBoxOpen = false;
+   private _currentText = '';
 
    protected _beforeMount() {
       this._viewSource = new MemorySource({
@@ -19,7 +21,19 @@ export default class extends Control {
       });
    }
 
-   private _editArrowClick() {
-      console.log('press arrow');
+   private _editArrowClick(e,item) {
+      if (!this._isBoxOpen) {
+         this._currentText = `Arrow was Clicked from item id: ${item.getId()}`
+         this._isBoxOpen = true;
+         this._hideBox();
+      } else {
+         this._currentText = `Arrow was Clicked from item id: ${item.getId()}`
+      }
+   }
+
+   private _hideBox() {
+      setTimeout(() => {
+         this._isBoxOpen = false;
+      }, 2000);
    }
 }

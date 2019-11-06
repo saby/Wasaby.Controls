@@ -28,6 +28,13 @@
   }
 }
 
+.controlsDemo_fixedWidth500 {
+  width: 500px;
+}
+.controlsDemo_fixedWidth550 {
+  width: 550px;
+}
+
 .controlsDemo__flex {
   display: flex;
 }
@@ -132,7 +139,9 @@
   margin-right: @spacing_demo_default * 4;
 }
 
-
+controlsDemo__wrapper_fixed_width {
+  width: 70%;
+}
 
 .controlsDemo__pt-none {
   padding-top: 0;
@@ -171,6 +180,52 @@
   .controls-Header__caption {
     margin-right: 5px;
   }
+}
+
+.controlsDemo_fade-text {
+  border: 1px solid red;
+  padding: 2rem 3rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 1rem;
+}
+
+.demoTreeWithProto__wrapper {
+  width: 1000px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.demoTreeWithProto__gridWrapper {
+  width: 50%;
+  padding: 12px;
+  box-sizing: border-box;
+}
+.demoTreeWithProto__imageBlock {
+  align-self: flex-start;
+}
+.demoTreeWithProto__treeGrid16 .demoTreeWithProto__imageBlock {
+  min-width: 16px;
+  height: 16px;
+  padding: 4px;
+  padding-left: 0;
+}
+.demoTreeWithProto__treeGrid24 .demoTreeWithProto__imageBlock {
+  min-width: 24px;
+  height: 24px;
+  padding-right: 6px;
+}
+.demoTreeWithProto__treeGrid32 .demoTreeWithProto__imageBlock,
+.demoTreeWithProto__treeGridTwoLevels .demoTreeWithProto__imageBlock {
+  min-width: 32px;
+  height: 32px;
+  padding-right: 6px;
+}
+.demoTreeWithProto__treeGrid40 .demoTreeWithProto__imageBlock {
+  min-width: 40px;
+  height: 40px;
+  padding-right: 6px;
 }
 
 .controls_Demo__TreeWithProto {

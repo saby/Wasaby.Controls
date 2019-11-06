@@ -9,8 +9,7 @@ import 'css!Controls-demo/Controls-demo';
 export default class extends Control {
    protected _template: TemplateFunction = Template;
    private _viewSource;
-   private _columns = Gadgets.getColumns();
-   private _viewMode: string = 'table';
+   private _columns = Gadgets.getSearchColumns();
    private _root = null;
    private _searchStartingWith: string = 'root';
    private _searchStartingWithSource: Memory = null;
@@ -19,7 +18,7 @@ export default class extends Control {
    protected _beforeMount() {
       this._viewSource = new MemorySource({
          keyProperty: 'id',
-         data: Gadgets.getData()
+         data: Gadgets.getSearchData()
       });
       this._searchStartingWithSource = new Memory({
          keyProperty: 'id',

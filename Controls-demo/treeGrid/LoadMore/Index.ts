@@ -13,7 +13,7 @@ export default class extends Control {
         source: 'page',
         view: 'demand',
         sourceConfig: {
-            pageSize: 5,
+            pageSize: 3,
             page: 0,
             hasMore: false
         },

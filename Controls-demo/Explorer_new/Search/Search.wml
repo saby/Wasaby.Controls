@@ -15,7 +15,6 @@
                                                     displayProperty="title"
                                                     parentProperty="parent"
                                                     nodeProperty="parent@"
-                                                    viewMode="search"
                                                     columns="{{_columns}}">
                                                 </Controls.explorer:View>
                                         </Controls.operations:Container>

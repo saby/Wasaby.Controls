@@ -9,6 +9,7 @@ export default class extends Control {
    protected _template: TemplateFunction = Template;
    private _viewSource: Memory;
    private _columns = Gadgets.getGridColumnsWithCellPadding();
+   private _header = Gadgets.getCellPaddingHeader();
 
    protected _beforeMount() {
       this._viewSource = new Memory({

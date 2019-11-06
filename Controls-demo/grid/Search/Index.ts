@@ -10,7 +10,7 @@ export default class extends Control {
     private _viewSource: Memory;
     private _filter = {};
     // private _searchStartingWith: string = 'country';
-    private _columns = getCountriesStats().getColumnsWithoutWidths();
+    private _columns = getCountriesStats().getColumnsWithFixedWidths();
 
     protected _beforeMount() {
         this._viewSource = new Memory({

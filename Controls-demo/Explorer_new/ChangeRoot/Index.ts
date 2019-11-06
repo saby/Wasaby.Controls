@@ -18,4 +18,12 @@ export default class extends Control {
          data: Gadgets.getData()
       });
    }
+
+   private _onToggleRoot() {
+      if (this._root === null) {
+         this._root = 1;
+      } else {
+         this._root = null;
+      }
+   }
 }

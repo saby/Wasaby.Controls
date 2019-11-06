@@ -1,4 +1,9 @@
 <div class="controlsDemo__wrapper">
+        <ws:if data="{{_isBoxOpen}}">
+                <div class="controlsDemo_fade-text">
+                        {{_currentText}}
+                </div>
+        </ws:if>
         <Controls.explorer:View
             source="{{_viewSource}}"
             bind:root="_root"
