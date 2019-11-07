@@ -135,7 +135,12 @@
 .controls-Grid__cell_fixed_theme-@{themeName} {
    z-index: 3;
    background-color: @background-color_Grid-row-sticky;
+   // stickyHeader считает что колонка не зафиксированна если повесить overflow-y: hidden;
+   &:not(.controls-StickyHeader) {
+      overflow-y: hidden;
+   }
 }
+
 
 // In IE z-index on positioned elements and transform by itself create new "stacking contexts" on elements.
 // Setting relative position for fixed column makes context-level higher then context-level of transformed column.
