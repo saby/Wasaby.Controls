@@ -253,7 +253,7 @@ var
         },
 
         getColumnScrollCellClasses: function(params, theme) {
-           return _private.isFixedCell(params) ? `controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
+           return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
         },
 
         getItemColumnCellClasses: function(current, theme) {
