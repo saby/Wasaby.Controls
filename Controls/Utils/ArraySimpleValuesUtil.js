@@ -19,10 +19,10 @@ define('Controls/Utils/ArraySimpleValuesUtil', [], function() {
       },
 
       invertTypeIndexOf: function(array, elem) {
-         let index = array.indexOf(elem);
+         var index = array.indexOf(elem);
 
          if (index === -1) {
-            const elementType = typeof elem;
+            var elementType = typeof elem;
 
             if (CONSTRUCTORS_FOR_TYPE_INVERTING[elementType]) {
                index = array.indexOf(CONSTRUCTORS_FOR_TYPE_INVERTING[elementType](elem));
