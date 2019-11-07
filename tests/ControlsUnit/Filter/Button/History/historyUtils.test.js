@@ -12,19 +12,20 @@ define(
          var historyId = 'TEST_HISTORY_ID_UTILS';
 
          it('getHistorySource', function() {
+            if (Env.constants.isServerSide) { return; }
             var hSource = filter.HistoryUtils.getHistorySource({historyId: historyId});
             assert.isTrue(hSource instanceof history.FilterSource);
             var hSource2 = filter.HistoryUtils.getHistorySource({historyId: historyId});
             assert.isTrue(hSource === hSource2);
          });
 
-         it('getHistorySource isBuildOnServer', function() {
-            var isBuildOnServer = Env.constants.isBuildOnServer;
-            Env.constants.isBuildOnServer = true;
+         it('getHistorySource isServerSide', function() {
+            var isServerSide = Env.constants.isServerSide;
+            Env.constants.isServerSide = true;
             var hSource = filter.HistoryUtils.getHistorySource({historyId: historyId});
             var hSource2 = filter.HistoryUtils.getHistorySource({historyId: historyId});
             assert.isTrue(hSource !== hSource2);
-            Env.constants.isBuildOnServer = isBuildOnServer;
+            Env.constants.isServerSide = isServerSide;
          });
 
 
