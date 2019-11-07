@@ -246,5 +246,31 @@ define([
             });
          });
       });
+
+      describe('_canScroll', function() {
+         [{
+            title: 'should scroll if viewMode === \'year\' and period is not the first month of the year',
+            options: { viewMode: 'year' },
+            date: new Date(2018, 3, 1),
+            result: true
+         }].forEach(function(test) {
+            it(test.title, function () {
+               let
+                  sandbox = sinon.createSandbox(),
+                  control = calendarTestUtils.createComponent(
+                     calendar.MonthList, coreMerge(test.options, config, { preferSource: true })),
+                  result;
+
+               sandbox.stub(control, '_findElementByDate').returns({});
+               result = control._canScroll(test.date);
+               if (test.result) {
+                  assert.isTrue(result);
+               } else {
+                  assert.isFalse(result);
+               }
+               sandbox.restore();
+            });
+         });
+      });
    });
 });
