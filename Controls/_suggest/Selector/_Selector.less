@@ -1,3 +1,21 @@
-.controls-SelectorSuggest__button-separator {
-    align-self: center;
+.controls-SelectorSuggest__arrow-wrapper:hover {
+   color: @color-Separator__icon_style-secondary_hovered;
+}
+
+.controls-SelectorSuggest__arrow-wrapper {
+   display: inline-flex;
+   align-items: center;
+   margin-right: @spacing_ComboBox-between-arrow-rightBorder;
+   cursor: pointer;
+   height: 100%;
+   color: @color-Separator__icon_style-secondary;
+   padding-right: @spacing_ComboBox-between-arrow-rightBorder;
+}
+
+.controls-SelectorSuggest__arrow-wrapper:before {
+   content: "\200b";
+}
+
+.controls-SelectorSuggest__iconArrow {
+   .icon-size-without-important(@size-Separator__icon);
 }
