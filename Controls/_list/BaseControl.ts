@@ -1857,9 +1857,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             )
         ) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
+            const items = this._listViewModel.getItems();
+            this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
-                items: this._listViewModel.getItems()
+                items
             }));
+            if (this._virtualScroll) {
+                this._virtualScroll.ItemsCount = this._listViewModel.getCount();
+                this._virtualScroll.recalcByIndex(0);
+            }
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
         }
 
