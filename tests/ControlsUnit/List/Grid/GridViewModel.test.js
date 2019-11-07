@@ -2088,6 +2088,20 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             })
             assert.isFalse(secondRow);
          });
+         it('getColumnScrollCellClasses', function() {
+            const fixedCell = ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}`;
+            const transformCell = ' controls-Grid__cell_transform';
+            const params = {
+               multiSelectVisibility: 'hidden',
+               stickyColumnsCount: 1,
+               columnIndex: 0,
+               rowIndex: 0,
+               isMultiHeader: false,
+            };
+            assert.equal(fixedCell, gridMod.GridViewModel._private.getColumnScrollCellClasses(params, theme));
+            assert.equal(transformCell, gridMod.GridViewModel._private.getColumnScrollCellClasses({ ...params, columnIndex: 2 }, theme));
+
+         });
          it('getColumnAlignGroupStyles', function () {
 
             let itemData = {
