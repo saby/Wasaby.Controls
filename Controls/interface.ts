@@ -57,3 +57,4 @@ export {default as IPropStorage, IPropStorageOptions} from './_interface/IPropSt
 export {default as IBorderStyle, IBorderStyleOptions} from './_interface/IBorderStyle';
 export {default as IDateConstructor, IDateConstructorOptions} from './_interface/IDateConstructor';
 export {default as ISelectionType, ISelectionTypeOptions, TSelectionType, TSelectionRecord, ISelectionObject, TKeySelection, TKeysSelection} from './_interface/ISelectionType';
+export { IFlatSelectionStrategy, ITreeSelectionStrategy } from './_interface/ISelectionStrategy';

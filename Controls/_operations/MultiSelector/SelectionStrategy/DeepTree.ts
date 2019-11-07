@@ -7,6 +7,7 @@ import { ViewModel } from 'Controls/treeGrid';
 import { Record } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys } from 'Controls/interface/';
+import { ITreeSelectionStrategy } from 'Controls/interface';
 
 interface IEntryPath {
    id: String|number|null,
@@ -15,7 +16,7 @@ interface IEntryPath {
 
 const FIELD_ENTRY_PATH = 'ENTRY_PATH';
 
-export default class DeepTreeSelectionStrategy extends TreeSelectionStrategy {
+export default class DeepTreeSelectionStrategy extends TreeSelectionStrategy implements ITreeSelectionStrategy {
    public getCount(selectedKeys: TKeys, excludedKeys: TKeys, model: TreeCollection|ViewModel, hierarchyRelation: relation.Hierarchy): Promise {
       let countItemsSelected: number|null = 0;
       let items: Record = SelectionHelper.getItems(model);

@@ -5,11 +5,12 @@ import { Collection } from 'Controls/display';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet, List } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
+import { IFlatSelectionStrategy } from 'Controls/interface';
 
 
 const ALL_SELECTION_VALUE = null;
 
-export default class FlatSelectionStrategy {
+export default class FlatSelectionStrategy implements IFlatSelectionStrategy {
    public select(keys: TKeys, selectedKeys: TKeys, excludedKeys: TKeys): ISelection {
       selectedKeys = selectedKeys.slice();
       excludedKeys = excludedKeys.slice();
