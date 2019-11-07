@@ -49,7 +49,6 @@ const Compatible = Control.extend({
        * Поддерка комманды close брошеная из дочерних контролов.
        */
       CommandDispatcher.declareCommand(this, 'close', this.close.bind(this));
-
    },
 
    init(): void {
