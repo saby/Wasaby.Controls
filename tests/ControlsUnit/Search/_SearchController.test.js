@@ -160,9 +160,10 @@ define(
                   return originalSearch.apply(search, arguments);
                };
 
-               searchController.search('1', true);
-               assert.isTrue(searched);
-               assert.isTrue(forced);
+               return searchController.search('1', true).then(() => {
+                  assert.isTrue(searched);
+                  assert.isTrue(forced);
+               });
             }).then(done, done);
          });
 
@@ -224,9 +225,10 @@ define(
             assert.isFalse(forced);
             assert.isFalse(reseted);
 
-            searchController.search('t', true);
-            assert.isTrue(searched);
-            assert.isTrue(forced);
+            searchController.search('t', true).then(() => {
+               assert.isTrue(searched);
+               assert.isTrue(forced);
+            });
 
             searchController.abort(true);
             reseted = false;
