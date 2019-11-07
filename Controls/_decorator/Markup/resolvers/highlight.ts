@@ -17,7 +17,7 @@
    /**
     *
     * Модуль с функцией выделения искомой строки.
-    * Берет textToHighlight из resolverParams {@link Controls/decorator:Markup#resolverParams}.
+    * Берет textToHighlight из {@link Controls/decorator:Markup#resolverParams}.
     * Распознаватель тегов для {@link Controls/decorator:Markup}.
     *
     * @class Controls/_decorator/Markup/resolvers/highlight
@@ -28,7 +28,7 @@
    /*
     *
     * Module with a function to highlight searched string.
-    * Takes textToHighlight from resolverParams {@link Controls/decorator:Markup#resolverParams}.
+    * Takes textToHighlight from {@link Controls/decorator:Markup#resolverParams}.
     * Tag resolver for {@link Controls/decorator:Markup}.
     *
     * @class Controls/_decorator/Markup/resolvers/highlight
